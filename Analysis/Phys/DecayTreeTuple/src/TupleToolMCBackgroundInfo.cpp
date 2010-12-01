@@ -33,18 +33,26 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 						      const std::string& name,
 						      const IInterface* parent )
   : TupleToolBase ( type, name , parent )
+  , m_backCatType("BackgroundCategory")
   , m_bkg(0)
 {
+
   declareInterface<IParticleTupleTool>(this);
+
+  declareProperty( "IBackgroundCategoryType", m_backCatType);
+  
 }
 
 //=============================================================================
 
 StatusCode TupleToolMCBackgroundInfo::initialize() {
+
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
-  m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
-  return StatusCode::SUCCESS;
+  m_bkg = tool<IBackgroundCategory>( m_backCatType, this );
+
+  return m_bkg != 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
+
 }
 
 //=============================================================================

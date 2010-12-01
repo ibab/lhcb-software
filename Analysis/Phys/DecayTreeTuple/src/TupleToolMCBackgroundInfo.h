@@ -13,11 +13,13 @@ namespace LHCb{
   class Particle;
 };
 
-/** @class TupleToolMCBackgroundInfo TupleToolMCBackgroundInfo.h jborel/TupleToolMCBackgroundInfo.h
+/** @class TupleToolMCBackgroundInfo TupleToolMCBackgroundInfo.h
  *
  * \brief Fill the info from IBackgroundCategory
  *
  * An answer is only filled for composite particles.
+ *
+ * IBackgroundCategory controlled by property <b>IBackgroundCatagoryType</b>, default "BackgroundCategory".
  * 
  * head_BKGCAT : category.
  * 
@@ -43,6 +45,7 @@ public:
 		   , Tuples::Tuple& );
 
 private:
+  std::string m_backCatType;
   IBackgroundCategory* m_bkg;
 };
 #endif // JBOREL_TUPLETOOLMCBACKGROUNDINFO_H
