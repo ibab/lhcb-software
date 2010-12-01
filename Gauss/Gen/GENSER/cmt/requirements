@@ -33,7 +33,8 @@ macro jimmy_native_version "4.31.3"
 
 #-- Hijing
 #============================================================================
-macro hijing_native_version "1.36.a.2"
+#macro hijing_native_version "1.36.a.2"
+macro hijing_native_version "1.383bs.2"
 
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
@@ -49,7 +50,7 @@ macro alpgen_name "alpgen"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "130"
+macro pythia8_native_version "145"
 macro_append pythia8_linkopts " -lhepmcinterface "
 
 

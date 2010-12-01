@@ -4,6 +4,13 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-12-01 - Gloria CORTI
+ - Use latest version of Pythia8: recommendation from P.Skands is to use at
+   least 412 as it has bug fixes and that 415 was only a minor update. 
+   Take 415 as it is the latest.
+ - Go back to use hijing 1.383bs.2 for next release of Gauss as it does not
+   work out of the box. Will need to review the interface algorithm.
+
 ! 2010-10-07 - Patrick Robbe
  - Adapt to Pythia 6.423:
    * remove src/pythia6/pyevnw.F src/pythia6/pyptfs.F which are not needed
