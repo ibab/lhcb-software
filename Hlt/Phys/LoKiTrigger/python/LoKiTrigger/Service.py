@@ -521,7 +521,7 @@ class iHltInspector(iService) :
             for i in inps :
                 if not selNode ( i ) in processed :
                     file.write    ( selLine ( i ) )
-                    processes.add ( selNode ( i ) )
+                    processed.add ( selNode ( i ) )
                     
             # the algorithm
             if not algNode ( a ) in processed :
@@ -703,7 +703,21 @@ class iHltInspector(iService) :
             for l in tess : file.write ( arrow ( tesNode ( l ) , algNode ( a ) ) ) 
 
             file.write ( '}; \n' )   ## end of subgraph
-            
+
+        # 
+        orphans = [ i for i in sels if not selNode ( i ) in processed ]
+        if orphans : 
+            file.write ( 'subgraph Orphan_Selections_%s {  \n' % name ( a )  )   ## start subgraph
+            for i in orphans : file.write    ( selLine ( i ) )
+            file.write ( '};\n' )   ## CLOSING LINE
+            print 'Orphan seelctions ', orphans
+        # 
+        orphans = [ i for i in tess if not tesNode ( i ) in processed ]
+        if orphans : 
+            file.write ( 'subgraph Orphan_TES_Selections_%s {  \n' % name ( a )  )   ## start subgraph
+            for i in orphans : file.write    ( tesLine ( i ) )
+            file.write ( '};\n' )   ## CLOSING LINE 
+            print 'Orphan TES-selections ', orphans
                         
         file.write ( '};\n' )   ## CLOSING LINE 
         file.flush ()
