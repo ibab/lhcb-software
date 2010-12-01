@@ -1,9 +1,13 @@
------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-12-01 - Rob Lambert
+ - Add new tool TupleToolNeutrinoReco
+   Calculates the variables required to reconstruct a missing neutrino
+   Includes detailed instructions on what to do with the calculated vars
 
 ! 2010-11-17 - Emilie Maurice
  - TupleToolGeometry: add 2 variables to obtain the min IP and the min chi2 wrt the 2nd best primary vertex
