@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v3r26 2010-12-01 =========================
 ! 2010-11-08 Greig Cowan
  - Fixed compilation warning in STRawBankMonitor.
 
