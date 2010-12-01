@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-12-01 - Gloria CORTI
+ - Use latest version of Pythia6 424.2 to check it for possibly adopting it
+   for MC10
  - Use latest version of Pythia8: recommendation from P.Skands is to use at
    least 412 as it has bug fixes and that 415 was only a minor update. 
    Take 415 as it is the latest.

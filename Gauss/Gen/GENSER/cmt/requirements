@@ -56,7 +56,7 @@ macro_append pythia8_linkopts " -lhepmcinterface "
 
 #-- Pythia 6
 #============================================================================
-macro pythia6_native_version "423.2"
+macro pythia6_native_version "424.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
