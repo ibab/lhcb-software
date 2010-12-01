@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================= RichMCTools v3r14 2010-12-01 =========================
 ! 2010-11-12 - Antonis Papanestis
  - Added methods to access easily the MC info on scintillation.
 
