@@ -62,12 +62,10 @@ Track::ConstNodeRange Track::nodes() const
     // cast the const container to a container of const pointers
     LHCb::TrackFitResult::NodeContainer::const_iterator begin = m_fitResult->nodes().begin() ;
     LHCb::TrackFitResult::NodeContainer::const_iterator end = m_fitResult->nodes().end() ;
-    // an ugly hack to cast the pointers. does this work in windows?
-    const LHCb::Node** qbegin = const_cast<const LHCb::Node**>(&(*begin)) ;
-    const LHCb::Node** qend   = const_cast<const LHCb::Node**>(&(*end)) ;
-    Track::ConstNodeRange::const_iterator pbegin(qbegin) ;
-    Track::ConstNodeRange::const_iterator pend(qend) ;
-    nodes = Track::ConstNodeRange(pbegin,pend) ;
+    typedef Track::ConstNodeRange::const_iterator Iterator ;
+    Iterator* pbegin = reinterpret_cast<Iterator*>(&begin);
+    Iterator* pend   = reinterpret_cast<Iterator*>(&end);
+    nodes = Track::ConstNodeRange(*pbegin,*pend);
   }
   return nodes ;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2010-12-01 - Wouter Hulsbergen
+ - Fix for Win vc9 in Track.cpp
+
 !======================= TrackEvent v5r8 2010-09-27 ==========================
 ! 2010-09-22 - Victor Coco
  - Remove VeloPix track type and related functions from LHCb::Track
