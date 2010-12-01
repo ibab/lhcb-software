@@ -7,6 +7,20 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v9r8>2010-12-01 LbcomSys v9r8</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r7
+
+- Minor release to follow LHCb v31r7 release
+
+- Packages updated: RichMCTools v3r14, STDAQ v3r26
+
+- In Rich/RichMCTools v3r14
+  . Added methods to access easily the MC info on scintillation.
+
+- In ST/STDAQ v3r26
+  . Added code to STRawBankMonitor to account for the double links to some TT and
+    IT TELL1 boards.
+
 </PRE><H1><A NAME=v9r7p1>2010-10-25 LbcomSys v9r7p1</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6p1
 
