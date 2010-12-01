@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-12-01 - Marco Musy
+ - cleanup, added control on verbosity level
+
 ! 2010-11-30 - Marco Musy
  - removed files cuts_* which are now picked directly from 
    $FLAVOURTAGGINGOPTS, unless a copy is not provided in the same directory

@@ -34,7 +34,7 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool() {
 Tagger* TaggerKaonOppositeTool::tag(Event& event) {
   tkaon->reset();
 
-  verbose() << "--Kaon Oppsite Tagger--"<<endmsg;
+  if(msgLevel(MSG::VERBOSE)) verbose() << "--Kaon Oppsite Tagger--"<<endmsg;
 
   Particle* ikaon=NULL;
   double ptmaxk=-999, ncand=0;
@@ -47,7 +47,7 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     double pidproton = axp->PIDp();
 
     if(!checkPIDhypo(Particle::kaon_opposite, axp)) continue;
-    verbose() << " Kaon PID pass"<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon PID pass"<<endreq;
 
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
@@ -55,19 +55,19 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     double P = axp->p();
     if( P < m_P_cut_kaon )  continue;
  
-    verbose() << " Kaon P="<< P <<" Pt="<<Pt<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon P="<< P <<" Pt="<<Pt<<endmsg;
     double lcs = axp->LCS();
     if(lcs > m_lcs_kaon) continue;
  
     double tsa = axp->likelihood();
     if( tsa < m_ghost_cut_kaon ) continue;
-    verbose() << " Kaon lcs="<< lcs <<" tsa="<<tsa<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     double IP    = axp->IP();
     double ipPU  = axp->IPPU();
-    verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" ipPU="<<ipPU<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" ipPU="<<ipPU<<endmsg;
 
     if(IPsig < m_IPs_cut_kaon ) continue;
  

@@ -26,7 +26,9 @@
 #include "CombineTaggersPID.h"
 #include "CombineTaggersNN.h"
 
-/* FlavourTagging Analysis package
+//be careful if changing the first line below!
+
+/* ! \ mainpage FlavourTagging Analysis package
 
  \section intro_sec Introduction
 
@@ -40,10 +42,10 @@ the retuning of the neural networks.
 
  The main() is contained in tag.cxx which represents the 
  Phys/FlavourTagging/src/BTaggingTool.cpp algorthm with extended 
- functionalities.
+ functionalities (like e.g. accessing the MC truth).
  All taggers source code that are in src/Tagger*.cxx are in one-to-one
  correspondence with the released DaVinci code, to keep the 
- manteinance of the package as simple as possible.
+ manteinance of the package as simple and transparent as possible.
 
 More general information and tables of performance are found here:
  
@@ -64,7 +66,15 @@ to run and make plots.
 Most of the properties that are declared in Tools and Algorithms
 can be accessed through the tag.opts file.
 This file is parsed at instantiation time of any object and values
-are assigned.
+are assigned. You can also include extra file with additional definition 
+of cuts for specific configurations (like for different strippings or 
+data conditions). To include just use:
+
+IncludeFile filename
+
+The program will search first in the current area and if not present it
+will look into $FLAVOURTAGGINGOPTS (useful if you are running on a lxplus node).
+This is made to avoid unnecessary duplication of option configurations.
 
 If a property is not present in this file the default value in the
 .cxx code will be used. If you want to change its value add it to 
@@ -72,11 +82,16 @@ tag.opts. Keep in mind that all separation characters
 will be ignored. The last declaration is always taken.
 At run time you will be informed that a property has changed from its default.
 
-Compilation produces a tag.exe that is automatically run. Simply type
+Compilation produces a tag.exe that is automatically run. Simply type:
 
-\b make or \b make \b run if you already have the executable.
+\b make 
 
-This compiles, runs and plots using default macro plot.C.
+this compiles, runs and plots using default macro plot.C
+
+or \b make \b run (if you don't want plots but just a performance table),
+
+or \b make \b (if you already ran and want to draw plots).
+
 
 
  \subsection data What input data is needed?
@@ -87,7 +102,7 @@ Phys/FlavourTaggingChecker/options/DVBTaggingAnalysis.py.
 
  Please refer to the DaVinci pages for further information on this.
 
-An example (default) ntuple is kept in the lxplus area: ~musy/public/analysis.root
+An example (default) ntuple is kept in the lxplus area: ~mgrabalo/public/analysis.root
 
 You can also just specify a directory: in this case all root files 
 will be parsed automatically.
@@ -102,7 +117,7 @@ goto statement that points to the block
 of plots that you you wish to look at.
 
  \subsection debug Compile in debug mode: 
- For debugging with gdb you can issue
+ For debugging with gdb you can type
 
  <b> make debug </b>
 
@@ -141,7 +156,6 @@ Type "make", and follow the instruction given by the program itself.
  Contact Marco Musy (Marco.Musy@cern.ch) or Marc Grabalosa (marc.grabalosa@cern.ch).
 
 */
-
 
 
 ///////////////////////////////////////////////////////////////////

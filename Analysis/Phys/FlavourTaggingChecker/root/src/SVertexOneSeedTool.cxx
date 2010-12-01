@@ -124,7 +124,7 @@ Vertices SVertexOneSeedTool::buildVertex(Particles& vtags,
   }
 
   double smass= (p1->momentum()+p2->momentum()).M();
-  verbose()<<"smass"<<smass<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<"smass"<<smass<<endreq;
   if(smass<0.2) return vtxvect; //////////// CUT
 
   if(twofromB && //p1->motherID()==p2->motherID() && p1->motherID() && 

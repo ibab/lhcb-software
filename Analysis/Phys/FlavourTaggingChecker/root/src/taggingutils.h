@@ -24,7 +24,13 @@ ostream& info()    ;
 ostream& warning() ;
 ostream& err()     ;
 ostream& fatal()   ;
+class MSG { 
+public:
+  enum { VERBOSE=1, DEBUG, INFO, WARNING, ERROR, FATAL };
+};
+bool msgLevel(int a);
 
+////////////////////////////////////////////////////////////////
 typedef std::map<const TString, const double > propertyMap;
 typedef std::map<const TString, const TString > propertyStringMap;
 

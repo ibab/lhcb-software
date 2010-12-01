@@ -166,24 +166,24 @@ FlavourTag* CombineTaggersPID::combineTaggers( Taggers& vtg ){
 
   if(vtg.empty()) return theTag; 
 
-  debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
 
   Taggers ostaggers;
   std::vector<int> itag;
   for(int j=0; j!=5; ++j) itag.push_back(0);
 
-  debug() << "Number of taggers = " << vtg.size() << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Number of taggers = " << vtg.size() << endmsg;
 
   //put pionSS if Bu, and kaonSS if Bs
   bool kaonSS=false;
   bool pionSS=false;
   if(m_isBs){
     kaonSS=true;
-    debug() << "has strange" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "has strange" << endmsg;
   }
   else{
     pionSS=true;
-    debug() << "hasdown" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "hasdown" << endmsg;
   }
   if ((kaonSS==false) && (pionSS==false)) return theTag;
   
@@ -192,31 +192,31 @@ FlavourTag* CombineTaggersPID::combineTaggers( Taggers& vtg ){
     if((*iter)->type() == Tagger::OS_Muon){ 
       ostaggers.push_back(*iter);
       itag[0] = (*iter)->decision();
-      debug() << "Muon decision =      " << itag[0] << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "Muon decision =      " << itag[0] << endmsg;
       //if(itag[0] != 0) theTag->addTagger(*iter);//not necessary here
     }
     if((*iter)->type() == Tagger::OS_Electron){      
       ostaggers.push_back(*iter);
       itag[1] = (*iter)->decision();
-      debug() << "Electron decision =  " << itag[1] << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "Electron decision =  " << itag[1] << endmsg;
       //if(itag[1] != 0) theTag->addTagger(*iter);
     }
     if((*iter)->type() == Tagger::OS_Kaon){      
       ostaggers.push_back(*iter);
       itag[2] = (*iter)->decision();
-      debug() << "Kaon decision =      " << itag[2] << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "Kaon decision =      " << itag[2] << endmsg;
       //if(itag[2] !=0 ) theTag->addTagger(*iter);
     }
     if(((*iter)->type() == Tagger::SS_Kaon) || ((*iter)->type() == Tagger::SS_Pion)){
       ostaggers.push_back(*iter);
       itag[3] = (*iter)->decision();
-      debug() << "Kaon/Pion SS decision =      " << itag[3] << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "Kaon/Pion SS decision =      " << itag[3] << endmsg;
       //if(itag[3] !=0 ) theTag->addTagger(*iter);
     }
     if((*iter)->type() == Tagger::VtxCharge){      
       ostaggers.push_back(*iter);
       itag[4] = (*iter)->decision();
-      debug() << "Vertex decision =    " << itag[4] << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "Vertex decision =    " << itag[4] << endmsg;
       //if(itag[4] != 0) theTag->addTagger(*iter);
     }
   }
@@ -249,7 +249,7 @@ FlavourTag* CombineTaggersPID::combineTaggers( Taggers& vtg ){
       if (kaonSS==true) m_index[ic]=m_pid_cats_bs[ic];
       if (pionSS==true) m_index[ic]=m_pid_cats_bu[ic];
       if (m_index[ic]==index){
-        debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;     
+        if(msgLevel(MSG::DEBUG)) debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;     
         if      (ic<=10) { catt=5; omega=m_cat5; }
         else if (ic<=18) { catt=4; omega=m_cat4; }
         else if (ic<=25) { catt=3; omega=m_cat3; }
@@ -265,7 +265,7 @@ FlavourTag* CombineTaggersPID::combineTaggers( Taggers& vtg ){
       }
     }
   }
-  debug() << "Category= " << catt << " omega= " << omega << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Category= " << catt << " omega= " << omega << endmsg;
 
   if(!catt) return theTag;
 

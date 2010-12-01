@@ -245,11 +245,10 @@ int main () {
       Particle*  iparticle = ikaon;
       Tagger* tparticle = tkaon;
       if ((iparticle) and (krec>1)) {
-        debug()<<"Variables: "	
-               <<"nippuerr: "<<iparticle->nippuerr()
-               <<"nippuchi2bs: "<<iparticle->ippuchi2bs()
-               <<"tracks: "<<iparticle->tracks()
-               <<endmsg;
+        if(msgLevel(MSG::DEBUG)) debug()<<"Variables: "	
+					<<"nippuerr: "<<iparticle->nippuerr()
+					<<"nippuchi2bs: "<<iparticle->ippuchi2bs()
+					<<"tracks: "<<iparticle->tracks()<<endmsg;
 
         double gippu=sqrt(iparticle->nippuerr());
         //double ipmeandif= pow(iparticle->IP()-iparticle->ipmean(),2)/pow(iparticle->ipmean(),2);
@@ -466,10 +465,9 @@ int main () {
       }
 
       //dump some info if in debug mode////////////////////////
-      if(DBGLEVEL<3 //&& tagdecision && event.multiplicity()<15
+      if(msgLevel(MSG::DEBUG)  //&& tagdecision && event.multiplicity()<15
          ) {
-        event.Print(); 
-        cout<< event.runNr()  << " " << event.eventNr(); theTag->Print();
+        event.Print(); theTag->Print();
         Particles::iterator ipa;
         int npcount=1;
         for(ipa=parts.begin(); ipa!=parts.end(); ipa++) {
@@ -485,7 +483,8 @@ int main () {
   //dump full list of declared properties:
   propertyMap::const_iterator ipro;
   for( ipro=property.begin(); ipro!=property.end(); ++ipro ) {
-    debug()<<"Property "<<(*ipro).first<<" = "<<(*ipro).second<<endreq;
+    if(msgLevel(MSG::DEBUG)) 
+      debug()<<"Property "<<(*ipro).first<<" = "<<(*ipro).second<<endreq;
   }
 
   if(NNetTrain!="none") {

@@ -28,7 +28,6 @@ LIBS          = $(ROOTLIBS)  $(SYSLIBS) $(EXTRALIBS)
 COMPILE       = $(CXX) $(CXXFLAGS)     -c $< -o $@
 COMPILE_DBG   = $(CXX) $(CXXFLAGS_DBG) -c $< -o $@
 DEPEND        = makedepend $(EXTRAFLAGS)
-NROFINSTANCES = $(shell ls -1 ../tagpackage*.zip | wc -l)
 
 SRCS          = tag.cxx src/*.cxx nnet/*.cxx 
 OBJETOS       = lib/tag.o $(shell ls src/*.cxx nnet/*.cxx \
@@ -82,7 +81,7 @@ clean:
 zip:
 	@make clean
 	@rm -f   ../tagpackage.zip
-	@zip -ry ../tagpackage.zip .
+	@zip -r ../tagpackage.zip . -x "*.svn*" -x "*html*"
 	@echo "Saved a zipped copy of code to" tagpackage.zip
 	@ls -ohrt ../*.zip
 

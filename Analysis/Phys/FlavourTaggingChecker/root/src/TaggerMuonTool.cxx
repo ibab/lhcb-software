@@ -27,7 +27,7 @@ TaggerMuonTool::TaggerMuonTool( ) {
 Tagger* TaggerMuonTool::tag(Event& event) {
   tmu->reset();
 
-  verbose()<<"--Muon Tagger--"<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<"--Muon Tagger--"<<endreq;
 
   Particle* imuon=NULL;
   double ptmaxm=-999, ncand=0;
@@ -38,31 +38,31 @@ Tagger* TaggerMuonTool::tag(Event& event) {
     Particle* axp = (*ipart);
 
     if(!checkPIDhypo(Particle::muon, axp)) continue;
-    verbose() << " Muon PIDm"<< axp->PIDm()<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Muon PIDm"<< axp->PIDm()<<endreq;
 
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_muon ) continue;
 
     double P = axp->p();
     if( P  < m_P_cut_muon ) continue;
-    verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
 
     double lcs = axp->LCS();
     if( lcs > m_lcs_cut_muon) continue;
-    verbose() << " Muon lcs="<< lcs <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Muon lcs="<< lcs <<endreq;
 
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     if(IPsig < m_IPs_cut_muon ) continue;
-    verbose() << " IPsig="<< IPsig <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " IPsig="<< IPsig <<endreq;
 
     //ip and phi wrt PU
     double ipPU  = axp->IPPU();
-    verbose() << " ipPU="<< ipPU <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " ipPU="<< ipPU <<endreq;
     if(ipPU < m_ipPU_cut_muon ) continue;
     double distPhi = axp->distPhi();
     if (distPhi < m_distPhi_cut_muon) continue;
-    verbose() << " distPhi="<< distPhi <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " distPhi="<< distPhi <<endreq;
 
     ncand++;
 
@@ -93,7 +93,7 @@ Tagger* TaggerMuonTool::tag(Event& event) {
   NNinputs.at(9) = ncand;
 
   double pn = nnet.MLPm( NNinputs );
-  verbose() << " Muon pn="<< pn <<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose() << " Muon pn="<< pn <<endreq;
 
   if( pn < m_ProbMin_muon ) return tmu;
 

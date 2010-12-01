@@ -18,8 +18,8 @@
 
   bool endblock = 1;
   //  goto taggercandidates;
-  //  goto general;
-  goto asymm;
+    goto general;
+  //  goto asymm;
   //  goto nnet;
   //  goto vertex;
   //  goto omegapt;
@@ -34,7 +34,7 @@ taggercandidates:////////////////////////////////////////////////////
   cout<<"plotting at taggercandidates"<<endl;
 
   //compare same plots on two different root files
-  TString f1 = "output/tag_s9.root"; //in red
+  TString f1 = "output/tag_s9.root";  //
   TString f2 = "output/tag_s10.root"; //in red
 
   c->Divide(2,2);

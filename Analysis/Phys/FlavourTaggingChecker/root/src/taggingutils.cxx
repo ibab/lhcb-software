@@ -102,7 +102,6 @@ bool isinTextFile(int run, int evt) {
   }
   
   return false;
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,15 +123,7 @@ bool isD(int id) {
 
   return false;
 }
-////////////////////////////////////////////////////////////////////////
-double dQ(const TLorentzVector& BSpart, const TLorentzVector& ipart) {
-  return (BSpart + ipart).M() - BSpart.M();
-}
-double dPhi(double f1, double f2){
-  double a = fabs(f1-f2);
-  if(a>PI) a = 2*PI-a;
-  return a;
-}
+
 ////////////////////////////////////////////////////////////////////////
 TLorentzVector build4V(double p, double pt, double phi, double ID) { 
   //if ID is a fractionary nr <9 it will be assumed as a mass in GeV
@@ -166,6 +157,22 @@ double calc_dQ(const TLorentzVector& BSpart, const TLorentzVector& ipart) {
   return (BSpart + ipart).M() - BSpart.M();
 }
 
+//======================================
+// buffers and streams
+
+int DBGLEVEL(3); //global
+
+nullbuf cnull_obj;
+std::ostream cnull(&cnull_obj);
+
+ostream& verbose() {if(DBGLEVEL>1) return cnull; else return cout;}
+ostream& debug()   {if(DBGLEVEL>2) return cnull; else return cout;}
+ostream& info()    {if(DBGLEVEL>3) return cnull; else return cout;}
+ostream& warning() {if(DBGLEVEL>4) return cnull; else return cout<<ROJO2<<"WARNING "<<ENDC;}
+ostream& err()     {if(DBGLEVEL>5) return cnull; else return cout<<ROJO2<<"ERROR "<<ENDC;}
+ostream& fatal()   {if(DBGLEVEL>6) return cnull; else return cout<<ROJO2<<"FATAL "<<ENDC;}
+bool msgLevel(int a) { if( DBGLEVEL > a ) return false; else return true; }
+
 //======================================================================
 void PrintAdvance(int n, float nmax, TString& filename) {
   if(DBGLEVEL!=3) return;
@@ -174,24 +181,6 @@ void PrintAdvance(int n, float nmax, TString& filename) {
   float r= float(n)/int(nmax/15.);
   if(r==int(r)) cout<<ROJO2<<"\b\b| \b"<<flush<<ENDC;
 }
-
-//======================================
-// buffers and streams
-
-int DBGLEVEL(3); //global
-
-nullbuf cnull_obj;
-std::ostream cnull(&cnull_obj);
-//wnullbuf wcnull_obj;
-//std::wostream wcnull(&wcnull_obj); 
-
-ostream& verbose() {if(DBGLEVEL>1) return cnull; else return cout;}
-ostream& debug()   {if(DBGLEVEL>2) return cnull; else return cout;}
-ostream& info()    {if(DBGLEVEL>3) return cnull; else return cout;}
-ostream& warning() {if(DBGLEVEL>4) return cnull; else return cout<<ROJO2<<"WARNING "<<ENDC;}
-ostream& err()     {if(DBGLEVEL>5) return cnull; else return cout<<ROJO2<<"ERROR "<<ENDC;}
-ostream& fatal()   {if(DBGLEVEL>6) return cnull; else return cout<<ROJO2<<"FATAL "<<ENDC;}
-
 
 //functions/////////////////////////////////////////////////////////////////
 TString getlastword(TString word){
@@ -237,8 +226,8 @@ TString readString(TString varname,
     indata.open(pPath+(TString)"/"+optsfilename); 
     if (!indata) {
       fatal() <<optsfilename
-	      << " file in FLAVOURTAGGINGOPTS ("<<pPath
-	      << ") not found." << endmsg;
+              << " file in FLAVOURTAGGINGOPTS ("<<pPath
+              << ") not found." << endmsg;
       exit(1);
     }
   }
@@ -284,7 +273,7 @@ TString readString(TString varname,
       TString word1= getword(0, line);
       if(word1.Contains(".") && !word1.IsFloat()) { //remove useless prefixes
         word1 = getlastword(word1);
-     }
+      }
 
       TString word2= getword(1, line);
       if(word2 == "=" && nwords>2) {

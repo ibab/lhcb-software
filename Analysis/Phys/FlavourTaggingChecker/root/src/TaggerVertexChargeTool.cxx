@@ -59,13 +59,13 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     maxprobf= mysecvtx->likelihood();
   }
 
-  debug()<<"Pfit.size: "<<Pfit.size()<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<"Pfit.size: "<<Pfit.size()<<endreq;
 
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
-  debug()<<"--- SVTOOL buildVertex returns vertex"
-         <<" with "<<Pfit.size()<<"tracks"<<endreq;
-  debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<"--- SVTOOL buildVertex returns vertex"
+				  <<" with "<<Pfit.size()<<"tracks"<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<" -- likelihood seed "<<maxprobf<<endreq;
 
 
   //calculate vertex charge and other variables for NN
@@ -73,7 +73,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   double Vptmin = 0, Vipsmin = 0, Vflaglong = 0, Vdocamax = 0;
   int vflagged = 0;
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
-    debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endmsg;
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
@@ -83,7 +83,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     if( (*ip)->type()== Particle::Long || 
         (*ip)->type()== Particle::Matched) Vflaglong++;
     Vdocamax += (*ip)->DOCA();
-    debug()<<"docaSV:"<<(*ip)->DOCA()<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<"docaSV:"<<(*ip)->DOCA()<<endmsg;
   }
   if(norm) {
     Vch /= norm;
@@ -92,7 +92,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     Vipsmin /= vflagged;
     Vdocamax/= vflagged;
   }
-  debug()<<"Vch: "<<Vch<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<"Vch: "<<Vch<<endreq;
 
   if(!m_UseObsoleteSV) { //needed by NNtuner
     mysecvtx->setVflagged(vflagged);
@@ -107,7 +107,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
 
 
   //calculate omega
-  debug()<<"calculate omega, use obsolete (0=no): "<<m_UseObsoleteSV<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<"calculate omega, use obsolete (0=no): "<<m_UseObsoleteSV<<endreq;
   double omega = m_AverageOmega;
   if(m_UseObsoleteSV) {
     if( fabs(Vch)<0.75 ) omega = m_P0 + m_P1*fabs(Vch) ;

@@ -12,7 +12,7 @@
 3. have fun :)
 
 By default the program will pick up the test ntuple:
-/afs/cern.ch/user/m/musy/public/analysis.root
+/afs/cern.ch/user/m/mgrabalo/public/analysis.root
 This was produced by:
 gaudirun.py $FLAVOURTAGGINGCHECKEROPTS/DVBTaggingAnalysis.py
 

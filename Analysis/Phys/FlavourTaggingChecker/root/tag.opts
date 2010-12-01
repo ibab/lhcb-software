@@ -9,7 +9,6 @@
 #   if a directory is given all root files in it will be read:
 
    datafile = .
-
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
    datafile = /afs/cern.ch/user/m/mgrabalo/public/analysis.root
 
@@ -27,9 +26,10 @@
 
    UseModBtime      = 0     Correct B proper time for semileptonic channels
    IsControlChannel = 0     Take as the true flavour the reconsted B
-   UseObsoleteSV    = 0     Use old likelihood for vtx                                                                 
+   UseObsoleteSV    = 0     Use old likelihood for vtx   
+
    NNetTrain        = none  "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "combNN"
-   ViewOptionLHCb   = -1
+   ViewOptionLHCb   = -1    do not visualize 3D lhcb picture
 
 #  Check that event is present in a list of run event numbers 
    EventListFileName = ./myfile.eventlist  Use this file for run-event nr

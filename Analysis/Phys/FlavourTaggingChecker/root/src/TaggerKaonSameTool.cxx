@@ -38,7 +38,7 @@ TaggerKaonSameTool::TaggerKaonSameTool() {
 Tagger* TaggerKaonSameTool::tag(Event& event) {
   tkaonS->reset();
 
-  verbose()<<"--Kaon SS Tagger--"<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<"--Kaon SS Tagger--"<<endreq;
 
   TLorentzVector ptotB = event.signalB()->momentum();
 
@@ -52,33 +52,33 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
   Particles vtags = event.particles();
   for (ipart=vtags.begin(); ipart!=vtags.end(); ++ipart) {
 
-    //verbose()<<" PIdk, pidp, pidkp: "<<(*ipart)->PIDk()<<", "<<(*ipart)->PIDp()<<", "
+    //if(msgLevel(MSG::VERBOSE)) verbose()<<" PIdk, pidp, pidkp: "<<(*ipart)->PIDk()<<", "<<(*ipart)->PIDp()<<", "
     //<<((*ipart)->PIDk()-(*ipart)->PIDp())<<endreq;
     //if(!checkPIDhypo(Particle::kaon_same, *ipart)) continue;
     if((*ipart)->PIDk()<m_KaonSPID_kS_cut) continue;
     if((*ipart)->PIDk()-(*ipart)->PIDp()<m_KaonSPID_kpS_cut) continue;
-    verbose()<<" KaonS PID pass" <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS PID pass" <<endreq;
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
 
     double P  = (*ipart)->p();
     if( P < m_P_cut_kaonS )  continue;
-    verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endreq;
 
     if( (*ipart)->LCS() > m_lcs_cut ) continue;
-    verbose()<<" KaonS lcs="<<(*ipart)->LCS()<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS lcs="<<(*ipart)->LCS()<<endreq;
 
     //calculate signed IP wrt RecVert
     double IPsig = (*ipart)->IPs();
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
-    verbose()<<" KaonS IPs="<<IPsig<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS IPs="<<IPsig<<endreq;
 
     //ip and phi wrt PU
     double ipPU  = (*ipart)->IPPU();
     if(ipPU < m_ipPU_cut_kS ) continue;
     double distPhi = (*ipart)->distPhi();
-    verbose()<<" KaonsS distPhi="<<distPhi<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonsS distPhi="<<distPhi<<endreq;
     if (distPhi < m_distPhi_cut_kS) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
@@ -92,8 +92,8 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
     double E = sqrt(pm.P() * pm.P()+ 493.677*MeV * 493.677*MeV);
     TLorentzVector pmK ( pm.Px(),pm.Py(),pm.Pz(), E);
     double dQ= (ptotB+pmK).M() - ptotB.M();
-    verbose()<<" KaonS Deta="<<deta<<" KaonS dQ="<<dQ
-             <<" Dphi="<<dphi<<endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS Deta="<<deta<<" KaonS dQ="<<dQ
+					<<" Dphi="<<dphi<<endreq;
 
     if(dQ > m_dQcut_kaonS ) continue;
  
@@ -138,7 +138,7 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
   NNinputs.at(9) = ncand;
 
   double pn = nnet.MLPkS( NNinputs );
-  verbose()<<" KaonS pn ="<<pn<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS pn ="<<pn<<endreq;
 
   if( pn < m_ProbMin_kaonS ) return tkaonS;
 

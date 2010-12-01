@@ -1,6 +1,6 @@
 #include "TaggerDZeroTool.h"
 
-// WARNING: CHEATING for study purposes //
+/// WARNING: CHEATING for study purposes //
 
 TaggerDZeroTool::TaggerDZeroTool() {
 
@@ -21,13 +21,13 @@ TaggerDZeroTool::TaggerDZeroTool() {
 Tagger* TaggerDZeroTool::tag(Event& event) {
 
   tDZ->reset();
-  verbose()<<"--DZeroTool Tagger--"<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<"--DZeroTool Tagger--"<<endreq;
 
   Particles parts = event.particles();
   Particles::iterator i, j;
   Particles Pfit; Pfit.clear();
 
-  ///--- Inclusive Secondary Vertex ---
+  //--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   //use DaVinci processed information
   int nD=0;

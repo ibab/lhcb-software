@@ -205,7 +205,7 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
       if(SecVtx_pt2[iv]==Pt[i]) i_seed2=i;
     }
     if( i_seed1==-1 || i_seed2==-1 )  {
-      debug()<<"could not find 2 seeds "<<endmsg;
+      if(msgLevel(MSG::DEBUG)) debug()<<"could not find 2 seeds "<<endmsg;
       continue;//info missing in N-block
     }
 

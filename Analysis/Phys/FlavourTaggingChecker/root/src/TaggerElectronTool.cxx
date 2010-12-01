@@ -35,7 +35,7 @@ TaggerElectronTool::TaggerElectronTool() {
 Tagger* TaggerElectronTool::tag(Event& event) {
   tele->reset();
 
-  verbose()<<"-- Electron Tagger --"<<endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose()<<"-- Electron Tagger --"<<endreq;
 
   Particle* iele=NULL;
   double ptmaxe=-999, ncand=0;
@@ -46,14 +46,14 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     Particle* axp = (*ipart);
 
     if(!checkPIDhypo(Particle::electron, axp)) continue;
-    verbose() << " Ele PIDe="<< axp->PIDe() <<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Ele PIDe="<< axp->PIDe() <<endmsg;
 
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
     double P = axp->p();
     if( P < m_P_cut_ele )  continue;
-    verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
     if( axp->LCS() > m_lcs_cut_ele ) continue;
 
@@ -64,7 +64,7 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     double tsa = axp->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
-    verbose() << " Ele lcs="<< axp->LCS() <<" tsa="<<tsa<<endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Ele lcs="<< axp->LCS() <<" tsa="<<tsa<<endmsg;
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     if(IPsig < m_IPs_cut_ele ) continue;
@@ -77,11 +77,11 @@ Tagger* TaggerElectronTool::tag(Event& event) {
 
     double eOverP = axp->eOverP();
     if(eOverP > m_EoverP || eOverP<-100) {
-      verbose() << " Elec E/P=" << eOverP <<endreq;
+      if(msgLevel(MSG::VERBOSE)) verbose() << " Elec E/P=" << eOverP <<endreq;
 
       double veloch = axp->VeloCharge();
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-        verbose() << " Elec veloch=" << veloch << endreq;
+        if(msgLevel(MSG::VERBOSE)) verbose() << " Elec veloch=" << veloch << endreq;
 
         ncand++;
 
@@ -117,7 +117,7 @@ Tagger* TaggerElectronTool::tag(Event& event) {
   NNinputs.at(9) = ncand;
 
   double pn = nnet.MLPe( NNinputs );
-  verbose() << " Elec pn=" << pn << endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;
 
   if( pn < m_ProbMin_ele ) return tele;
 

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////
 //To execute the script type:
-// root taggermin.C\+ | tee output/out
+// root minuittag.C\+ | tee output/out
 //REMEMBER: make a backup copy of tag.opts first !
 // ....and wait for optimization of your tagger
 //at the end tag.opts will contain as last lines the optimal cuts
@@ -53,7 +53,7 @@ void fcn (Int_t &npar,Double_t *gin,Double_t &f,Double_t *par,Int_t iflag){
 }
 
 ///////////////////////////////////////////////////////////////
-void taggermin() {
+void minuittag() {
 
   ///////////////////////////////////////////////////////////////
   //remember to also change the f above.
