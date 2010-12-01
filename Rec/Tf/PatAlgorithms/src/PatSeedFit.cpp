@@ -1,7 +1,6 @@
-// $Id: PatSeedFit.cpp,v 1.12 2009-12-07 09:45:09 mschille Exp $
-
 #include <boost/foreach.hpp>
 #include <boost/array.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -25,7 +24,7 @@
 // 2009-01-28 : Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PatSeedFit );
+DECLARE_TOOL_FACTORY( PatSeedFit )
 
 
 //=============================================================================
@@ -269,9 +268,9 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
   BOOST_FOREACH( PatFwdHit& ihit, hits ) {
     if (ihit.hit()->isX()) continue;
     tr.addCoord(&ihit);
-    const double x = ihit.hit()->xAtYEq0();
-    const double z = ihit.hit()->zAtYEq0();
-    ty += (tr.xAtZ(z)- x) / ihit.hit()->dxDy() / z;
+    const double xx = ihit.hit()->xAtYEq0();
+    const double zz = ihit.hit()->zAtYEq0();
+    ty += (tr.xAtZ(zz)- xx) / ihit.hit()->dxDy() / zz;
     ++nStereo;
   }
   tr.setYParams(0., ty / double(nStereo));

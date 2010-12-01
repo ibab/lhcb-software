@@ -1,4 +1,3 @@
-// $Id: PatSeedingTool.cpp,v 1.36 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -33,7 +32,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatSeedingTool );
+DECLARE_TOOL_FACTORY( PatSeedingTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -367,8 +366,8 @@ unsigned PatSeedingTool::prepareHits()
     for (unsigned reg = 0; reg < m_nReg; ++reg) {
       for (unsigned sta = 0; sta < m_nSta; ++sta) {
         for (unsigned lay = 0; lay < m_nLay; ++lay) {
-          HitRange range = hits(sta, lay, reg);
-          BOOST_FOREACH( const PatFwdHit* hit, range ) {
+          HitRange range1 = hits(sta, lay, reg);
+          BOOST_FOREACH( const PatFwdHit* hit, range1 ) {
             if ( ! hit->isUsed() ) continue;
             debugFwdHit( hit, verbose() );
           }
@@ -1460,7 +1459,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
     if ( 0 <= nCommonMax ) continue;
     //== enough common in stored track: Keep the best (longest / best chi2)
     if ( printing ) {
-      int nCommonMax = int(std::ceil(m_commonXFraction *
+      int nCommonMax2 = int(std::ceil(m_commonXFraction *
                                      std::min(othertrack.nCoords(), track.nCoords())));
       // if we're debugging, we can be slow in determining where othertrack
       // is in pool
@@ -1470,7 +1469,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
         ++nTrack;
       }
       info() << "Track " << nTrack << " size " <<  othertrack.nCoords()
-             << " chi2 " << othertrack.chi2() << " has <= " << nCommonMax
+             << " chi2 " << othertrack.chi2() << " has <= " << nCommonMax2
              << " hit shared with current track of size " << track.nCoords()
              << " chi2 " << track.chi2() << endmsg;
       BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
@@ -1745,8 +1744,8 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 
         if (m_fieldOff) {
           // cut on curvature when running without magnetic field
-          double dz = 0.5 * (z2 - z0);
-          if (m_tolCollect / dz / dz < fabs(track.curvature())) {
+          double dz2 = 0.5 * (z2 - z0);
+          if (m_tolCollect / dz2 / dz2 < fabs(track.curvature())) {
             if ( m_printing ) info() << "    magnet off: curvature too high: "
                                      << track.curvature() << endmsg;
             continue;

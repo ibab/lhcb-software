@@ -1,4 +1,3 @@
-// $Id: PatMatch.cpp,v 1.9 2009-02-25 22:37:58 mschille Exp $
 // Include files 
 
 // from Gaudi
@@ -14,8 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatMatch );
-
+DECLARE_ALGORITHM_FACTORY( PatMatch )
 
 //=============================================================================
 // Standard constructor, initializes variables

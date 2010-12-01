@@ -1,4 +1,3 @@
-// $Id: PatSeeding.cpp,v 1.3 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 #include <vector>
@@ -21,7 +20,7 @@
 
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatSeeding );
+DECLARE_ALGORITHM_FACTORY( PatSeeding )
 
 //=============================================================================
 // Standard constructor, initializes variables

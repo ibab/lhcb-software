@@ -1,4 +1,3 @@
-// $Id: PatMatchTool.cpp,v 1.8 2009-04-20 06:24:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatMatchTool );
+DECLARE_TOOL_FACTORY( PatMatchTool )
 
 
 //=============================================================================

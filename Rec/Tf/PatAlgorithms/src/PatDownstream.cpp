@@ -1,4 +1,3 @@
-// $Id: PatDownstream.cpp,v 1.18 2010-04-22 08:08:11 smenzeme Exp $
 // Include files 
 
 #include <algorithm>
@@ -38,7 +37,7 @@ using ROOT::Math::CholeskyDecomp;
 // 2009-10-07 : Sascha Stahl
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PatDownstream );
+DECLARE_ALGORITHM_FACTORY( PatDownstream )
 
 
 //=============================================================================
@@ -97,7 +96,7 @@ PatDownstream::PatDownstream( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatDownstream::~PatDownstream() {}; 
+PatDownstream::~PatDownstream() {}
 
 //=============================================================================
 // Initialization
@@ -155,7 +154,7 @@ StatusCode PatDownstream::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -344,7 +343,7 @@ StatusCode PatDownstream::execute() {
    
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

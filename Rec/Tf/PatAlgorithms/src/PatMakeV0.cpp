@@ -1,4 +1,3 @@
-// $Id: PatMakeV0.cpp,v 1.5 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatMakeV0 );
+DECLARE_ALGORITHM_FACTORY( PatMakeV0 )
 
 
 //=============================================================================

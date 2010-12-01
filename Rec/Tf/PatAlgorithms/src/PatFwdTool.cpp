@@ -1,4 +1,3 @@
-// $Id: PatFwdTool.cpp,v 1.15 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_TOOL_FACTORY( PatFwdTool );
+DECLARE_TOOL_FACTORY( PatFwdTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -55,7 +54,7 @@ PatFwdTool::PatFwdTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatFwdTool::~PatFwdTool() {};
+PatFwdTool::~PatFwdTool() {}
 
 //=========================================================================
 //  Initialisation, check parameters
@@ -525,13 +524,13 @@ bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
       PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       if ( onlyXPlanes && !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) continue;
-      double dist  = distanceForFit( track, hit );
+      double dist2 = distanceForFit( track, hit );
       dz    = hit->z() - m_zReference ;
       w     = hit->hit()->weight();
       if (!m_withoutBField)
-	parabola.addPoint( dz, dist, w );
+        parabola.addPoint( dz, dist2, w );
       else {
-	line.addPoint(dz, dist, w);
+        line.addPoint(dz, dist2, w);
       }
     }
 

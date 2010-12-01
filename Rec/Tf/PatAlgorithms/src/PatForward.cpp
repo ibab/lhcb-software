@@ -1,4 +1,3 @@
-// $Id: PatForward.cpp,v 1.6 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( PatForward );
+DECLARE_ALGORITHM_FACTORY( PatForward )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -50,7 +49,7 @@ PatForward::PatForward( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatForward::~PatForward() {};
+PatForward::~PatForward() {}
 
 //=============================================================================
 // Initialization
@@ -83,7 +82,7 @@ StatusCode PatForward::initialize() {
   m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=========================================================================
 //  Check if a track should be processed. Default flags, and selector if defined
@@ -316,6 +315,6 @@ StatusCode PatForward::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

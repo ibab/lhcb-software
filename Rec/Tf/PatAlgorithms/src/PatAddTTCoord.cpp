@@ -1,4 +1,3 @@
-// $Id: PatAddTTCoord.cpp,v 1.11 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -15,7 +14,7 @@
 //
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PatAddTTCoord );
+DECLARE_TOOL_FACTORY( PatAddTTCoord )
 
 using ROOT::Math::CholeskyDecomp; // -- Maybe copy locally if not running at CERN?
 //=============================================================================
@@ -284,16 +283,16 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
       double w    = tt->hit()->weight();
       double dz   = tt->z() - m_zTTProj;
       double t    = tt->hit()->sinT();
-      double dist = tt->projection();
+      double dist2= tt->projection();
       mat[0] += w;
       mat[1] += w * dz;
       mat[2] += w * dz * dz;
       mat[3] += w * t;
       mat[4] += w * dz * t ;
       mat[5] += w * t  * t ;
-      rhs[0] += w * dist;
-      rhs[1] += w * dist * dz;
-      rhs[2] += w * dist * t ;
+      rhs[0] += w * dist2;
+      rhs[1] += w * dist2 * dz;
+      rhs[2] += w * dist2 * t ;
 
       if ( 0 ==  differentPlanes[tt->planeCode()]++ ) ++nDoF;
 

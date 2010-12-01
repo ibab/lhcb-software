@@ -1,4 +1,3 @@
-// $Id: PatSeedTool.cpp,v 1.15 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -27,7 +26,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatSeedTool );
+DECLARE_TOOL_FACTORY( PatSeedTool )
 
 
 //=============================================================================

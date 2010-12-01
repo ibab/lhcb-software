@@ -1,4 +1,3 @@
-// $Id: PatForwardTool.cpp,v 1.17 2010-01-19 13:04:43 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_TOOL_FACTORY( PatForwardTool );
+DECLARE_TOOL_FACTORY( PatForwardTool )
 
 
 //=============================================================================
@@ -79,7 +78,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatForwardTool::~PatForwardTool() {};
+PatForwardTool::~PatForwardTool() {}
 
 //=========================================================================
 //  Initialization, get the tools
