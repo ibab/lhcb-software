@@ -9,6 +9,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v8r8 2010-12-02 =================
+! 2010-12-02 - Patrick Koppenburg
+ - Change line to NeuroBayes to be wused with Stripping12
+
 ! 2010-11-30 - Patrick Koppenburg
  - Patch to tutorial 8
 

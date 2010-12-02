@@ -9,7 +9,7 @@
 
 from Gaudi.Configuration import *
 
-line = 'DiMuonIncLine'
+line = 'NeuroBayesMuMuLine'
 location = '/Event/Dimuon/Phys/'+line 
 
 MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
@@ -52,13 +52,13 @@ tuple.InputLocations = [ JpsiSeq.outputLocation() ]
 tuple.addTool(TupleToolTISTOS)
 tuple.TupleToolTISTOS.TriggerList = [ "Hlt2DiMuonUnbiasedJPsiDecision" ]
 tuple.TupleToolTISTOS.VerboseHlt2 = True
+DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) 
 ##################
 
-DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) 
-EventSelector().Input   = [
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00008185/0000/00008185_00000453_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00008185/0000/00008185_00000454_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'"
-    ]
+#from Configurables import StoreExplorerAlg
+#from Configurables import LoKi__HDRFilter   as StripFilter
+#DaVinci().appendToMainSequence( [ StripFilter( 'StripPassFilter', Code="HLT_PASS('StrippingNeuroBayesMuMuLineDecision')", Location="/Event/Strip/Phys/DecReports" ) ])
+# DaVinci().appendToMainSequence( [ StoreExplorerAlg(PrintEvt=100) ] ) 
 
 DaVinci().DataType = "2010"
 DaVinci().EvtMax = -1
@@ -81,6 +81,5 @@ hh3.GetXaxis()->SetTitle("Dimuon mass [MeV]")
 T->Draw("J_psi_1S_MM >> hh3", "J_psi_1S_PT>1000")
 .L TwoGaussians.C
 TwoGaussians(&hh3,3095.,3680.)  // only PK has this...
-
 """
 
