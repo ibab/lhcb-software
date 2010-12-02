@@ -1,4 +1,5 @@
-// $: Track.cpp,v 1.39 2007/05/15 06:57:34 wouter Exp $ // Include files
+// $: Track.cpp,v 1.39 2007/05/15 06:57:34 wouter Exp $ 
+// Include files
 
 #include <functional>
 #include <string>
@@ -15,6 +16,12 @@
 
 using namespace Gaudi;
 using namespace LHCb;
+
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/static_assert.hpp"
+// ============================================================================
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Track
@@ -57,17 +64,36 @@ void Track::setFitResult(LHCb::TrackFitResult* absfit)
 //=============================================================================
 Track::ConstNodeRange Track::nodes() const 
 {
-  Track::ConstNodeRange nodes ;
-  if( m_fitResult ) {
-    // cast the const container to a container of const pointers
-    LHCb::TrackFitResult::NodeContainer::const_iterator begin = m_fitResult->nodes().begin() ;
-    LHCb::TrackFitResult::NodeContainer::const_iterator end = m_fitResult->nodes().end() ;
-    typedef Track::ConstNodeRange::const_iterator Iterator ;
-    Iterator* pbegin = reinterpret_cast<Iterator*>(&begin);
-    Iterator* pend   = reinterpret_cast<Iterator*>(&end);
-    nodes = Track::ConstNodeRange(*pbegin,*pend);
-  }
-  return nodes ;
+  if ( !m_fitResult ) { return Track::ConstNodeRange() ; }
+  //
+  const LHCb::TrackFitResult* _result = m_fitResult ;
+  // cast the const container to a container of const pointers
+  const LHCb::TrackFitResult::NodeContainer& nodes_ = _result->nodes() ;
+  //
+  typedef LHCb::TrackFitResult::NodeContainer::const_iterator Iterator1 ;
+  typedef Track::ConstNodeRange::const_iterator               Iterator2 ;
+  //
+  const Iterator1 begin = nodes_ . begin () ;
+  const Iterator1 end   = nodes_ . end   () ;
+  //
+  // Helper union to avoid reinterpret_cast 
+  union _IteratorCast
+  {
+    //
+    //
+    const Iterator1* input  ;
+    const Iterator2* output ;
+    //
+    BOOST_STATIC_ASSERT( sizeof(Iterator1) == sizeof(Iterator2) ) ;
+  } ;
+  //
+  volatile _IteratorCast _begin ;
+  volatile _IteratorCast _end   ;
+  //
+  _begin . input = &begin ;
+  _end   . input = &end   ;
+  //
+  return Track::ConstNodeRange ( *_begin.output , *_end.output ) ;  
 }
 
 //=============================================================================
