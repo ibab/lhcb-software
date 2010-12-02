@@ -528,13 +528,18 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
   SmartDataPtr<TabulatedProperty>tabPSF(detSvc,RichHpdPsfMatTabPropPath);
   SmartDataPtr<TabulatedProperty>tabPSFPhEn(detSvc,RichHpdPsfPhEnMatTabPropPath);
   SmartDataPtr<TabulatedProperty>tabPSFRadial(detSvc,RichHpdPsfRadialMatTabPropPath);
+  SmartDataPtr<TabulatedProperty>tabHpdSmear(detSvc,RichHpdHitSmearPath);
+  
   double HpdPsfSingle = 0.0;
   std::vector<double> aPsfValueVect;
   std::vector<double> aPsfPhEnergyVect;
   std::vector<double> aPsfRadValueVect;
+  std::vector<double> aSmearValueVect;
+  
   aPsfValueVect.clear();
   aPsfPhEnergyVect.clear();
   aPsfRadValueVect.clear();
+  aSmearValueVect.clear();
   
   
   if( (!tabPSF) || (!tabPSFPhEn) || (!tabPSFRadial) ) {
@@ -550,6 +555,9 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
     TabulatedProperty::Table tablePsf = tabPSF->table();
     TabulatedProperty::Table tablePsfPh = tabPSFPhEn->table();
     TabulatedProperty::Table tablePsfRadial = tabPSFRadial->table();
+    TabulatedProperty::Table tableHitSmear ;
+    if( tabHpdSmear != 0 ) tableHitSmear= tabHpdSmear ->table();
+
     // the following line can be removed in the future. Kept for backward compatibility.
     HpdPsfSingle=tablePsf.begin()->second;
 
@@ -557,6 +565,7 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
     TabulatedProperty::Table::iterator it;
     TabulatedProperty::Table::iterator itp;
     TabulatedProperty::Table::iterator itr;
+    TabulatedProperty::Table::iterator its;
     for (it = tablePsf.begin(); it != tablePsf.end(); it++) {      
       aPsfValueVect.push_back(it->second);
     }
@@ -568,6 +577,20 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
     for (itr = tablePsfRadial.begin(); itr != tablePsfRadial.end(); itr++) {      
       aPsfRadValueVect.push_back(itr->second);
     }
+
+    if( tabHpdSmear != 0 ) {
+      
+      for (its = tableHitSmear.begin(); its != tableHitSmear.end(); its++) {      
+        aSmearValueVect.push_back(its->second);
+      }
+    }else {
+      // the following is for backward compatibility for old DB.
+      aSmearValueVect.resize(3);
+      aSmearValueVect[0]=0.0;
+      aSmearValueVect[1]=0.0;
+      aSmearValueVect[2]=0.0;
+    }
+    
     
 
 
@@ -595,7 +618,8 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
       m_RichHpdPSFList[irichdet][ih]->sethpdPointSpreadFunctionVect(aPsfValueVect );
       m_RichHpdPSFList[irichdet][ih]->sethpdPSFPhoEnergyVect(aPsfPhEnergyVect );
       m_RichHpdPSFList[irichdet][ih]->sethpdPSFRadialPosVect(aPsfRadValueVect );
-
+      m_RichHpdPSFList[irichdet] [ih]->sethitSmearValueVect(aSmearValueVect);
+      
     }
   }
 }

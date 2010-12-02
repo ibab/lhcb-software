@@ -43,6 +43,15 @@ public:
     }
     return cVal;
   }
+  double hitSmearSingleValue (int kbin ){
+    double kVal=0.0;
+    if(kbin < (int)  m_hitSmearValueVect.size() ) {
+      kVal=  m_hitSmearValueVect[kbin];
+      
+    }
+    return kVal; 
+  }
+  
   void sethpdPointSpreadFunctionVect( std::vector<double> aVect) {
     m_hpdPointSpreadFunctionVect=aVect;
   }
@@ -52,6 +61,11 @@ public:
   void sethpdPSFRadialPosVect( std::vector<double>arVect) {
     m_hpdPSFRadialPosVect = arVect;
   }
+  void sethitSmearValueVect(std::vector<double>asVect) {
+    m_hitSmearValueVect=asVect;
+    
+  }
+  
 private:
 
   int m_curHpdNumber;
@@ -61,6 +75,8 @@ private:
   std::vector<double> m_hpdPointSpreadFunctionVect;
   std::vector<double> m_hpdPSFPhoEnergyVect;
   std::vector<double> m_hpdPSFRadialPosVect;
+  std::vector<double> m_hitSmearValueVect;
+  
   
 };
 

@@ -94,6 +94,30 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                                             "RICHG4HISTOSET2/511");
 
 
+   SmartDataPtr<IHistogram1D>hInterMediateMomChPartRich1(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/560");
+  SmartDataPtr<IHistogram1D>hLowMomChPartRich1(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/561");
+  SmartDataPtr<IHistogram1D>hVeryLowMomChPartRich1(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/562");
+  SmartDataPtr<IHistogram1D>hBelow1MeVMomChPartRich1(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/563");
+
+
+  SmartDataPtr<IHistogram1D>hIntermediateMomChPartRich2(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/570");
+
+  SmartDataPtr<IHistogram1D>hLowMomChPartRich2(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/571");
+
+  SmartDataPtr<IHistogram1D>hVeryLowMomChPartRich2(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/572");
+
+ SmartDataPtr<IHistogram1D>hBelow1MeVMomChPartRich2(CurrentHistoSvc,
+                                            "RICHG4HISTOSET2/573");
+
+
+
   SmartDataPtr<IHistogram2D>hCkvProdAgelRich1(CurrentHistoSvc,
                                               "RICHG4HISTOSET2/600");
   SmartDataPtr<IHistogram2D>hCkvProdC4F10Rich1(CurrentHistoSvc,
@@ -400,12 +424,19 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
     if(   TrajMadeHitRich1 &&  TrackMomAtCkv > 0.0 ) {
       if( hMomChPartRich1) hMomChPartRich1->fill( TrackMomAtCkv,1.0);
+      if( hInterMediateMomChPartRich1)hInterMediateMomChPartRich1->fill( TrackMomAtCkv,1.0);
+      if(hLowMomChPartRich1)hLowMomChPartRich1->fill(TrackMomAtCkv,1.0);
+      if(hVeryLowMomChPartRich1)hVeryLowMomChPartRich1->fill(TrackMomAtCkv,1.0);
+      if(hBelow1MeVMomChPartRich1)hBelow1MeVMomChPartRich1->fill(TrackMomAtCkv,1.0);
 
     }
 
     if(   TrajMadeHitRich2 &&  TrackMomAtCkv > 0.0 ) {
       if( hMomChPartRich2) hMomChPartRich2->fill( TrackMomAtCkv,1.0);
-
+      if(hIntermediateMomChPartRich2)hIntermediateMomChPartRich2->fill(TrackMomAtCkv,1.0);
+      if(hLowMomChPartRich2)hLowMomChPartRich2->fill(TrackMomAtCkv,1.0);
+      if(hVeryLowMomChPartRich2)hVeryLowMomChPartRich2->fill(TrackMomAtCkv,1.0);
+      if(hBelow1MeVMomChPartRich2)hBelow1MeVMomChPartRich2->fill(TrackMomAtCkv,1.0);
     }
 
 

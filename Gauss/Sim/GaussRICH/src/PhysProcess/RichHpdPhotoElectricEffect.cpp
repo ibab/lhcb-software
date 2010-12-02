@@ -280,7 +280,27 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //  G4cout<<"Current demag factors  in ph elec effect "
     // <<CurDemagFactor[0]<<"  "<< CurDemagFactor[1]<<G4endl;
 
-    std::vector<double>psfVectInXY = getCurrentHpdPSFXY(currentHpdNumber,currentRichDetNumber);
+    std::vector<double>psfVectInXY (2);
+
+    if(m_activateRichHitSmear) {
+      int currentRadiatorNumber=2;
+      if(currentRichDetNumber == 0) {
+        currentRadiatorNumber=RichPhotTkRadiatorNumber(aTrack);
+        if(currentRadiatorNumber > 2 )currentRadiatorNumber=0;
+      }
+      
+      double hitSmearValue = getCurrentHitSmearSigma(currentHpdNumber,
+                                                     currentRichDetNumber,
+                                                    currentRadiatorNumber);
+
+      psfVectInXY=GetPSFXYForASigma(hitSmearValue);
+      
+    } else {
+       
+      psfVectInXY = getCurrentHpdPSFXY(currentHpdNumber,currentRichDetNumber);
+      
+    }
+    
     
     //  G4cout<<" Photoelec: Current psfX psfY "<<psfVectInXY[0]<<"  "<<psfVectInXY[1]  <<G4endl;
 
@@ -442,6 +462,19 @@ std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFFullParamXY ( in
 
   return GetPSFXYForASigma( PsfStdSigma);
 
+}
+double RichHpdPhotoElectricEffect::getCurrentHitSmearSigma (int hpdnumb, 
+    int richdetnumb, int radiatorNum ){
+  double hitsmearSigma = 
+   HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)->hitSmearSingleValue(radiatorNum);
+  double apsfSigma= 
+    HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunctionVectSingleValue(0);
+  
+  double aTotalSigma= pow((hitsmearSigma*hitsmearSigma+apsfSigma*apsfSigma),0.5);
+  
+
+  return  aTotalSigma;
+  
 }
 
 std::vector<double> RichHpdPhotoElectricEffect::GetPSFXYForASigma(double aPSFsigma ) {

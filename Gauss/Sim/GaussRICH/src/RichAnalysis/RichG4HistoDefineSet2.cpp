@@ -57,6 +57,46 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
     m_hMomChPartRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"511",
                                         title,100,0.0,100000.0);
 
+  title=" Momentum of Charged Particles creating Hits in Rich1 Intermediate Mom region" ;
+  
+    m_hMomChPartRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"560",
+                                        title,100,0.0,1000.0);
+
+
+
+  title=" Momentum of Charged Particles creating Hits in Rich1 Low Mom region" ;
+  
+    m_hMomChPartRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"561",
+                                        title,100,0.0,100.0);
+   title=" Momentum of Charged Particles creating Hits in Rich1 Very Low Mom region" ;
+  
+    m_hMomChPartRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"562",
+                                        title,100,0.0,5.0);
+   title=" Momentum of Charged Particles creating Hits in Rich1 Below 1MeV Mom region" ;
+  
+    m_hMomChPartRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"563",
+                                        title,100,0.0,1.0);
+
+
+  title=" Momentum of Charged Particles creating Hits in Rich2 Intermediate Mom Region" ;
+    
+    m_hMomChPartRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"570",
+                                        title,100,0.0,1000.0);
+
+  title=" Momentum of Charged Particles creating Hits in Rich2 Low Mom Region" ;
+    
+    m_hMomChPartRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"571",
+                                        title,100,0.0,100.0);
+
+  title=" Momentum of Charged Particles creating Hits in Rich2 Very Low Mom Region" ;
+    
+    m_hMomChPartRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"572",
+                                        title,100,0.0,5.0);
+
+  title=" Momentum of Charged Particles creating Hits in Rich2 Below 1MeV Mom Region" ;
+    
+    m_hMomChPartRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet2+"573",
+                                        title,100,0.0,1.0);
 
 
  title="Total number of Rich1 Hits in Large events per event ";

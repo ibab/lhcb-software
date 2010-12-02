@@ -112,9 +112,15 @@ public:
   //  bool activateRICHCF4ScintillationHisto() 
   //{return m_activateRICHCF4ScintillationHisto;}
   
-
+  bool ActivateRICHHitSmearing() 
+  {
+    return m_ActivateRICHHitSmearing;
+  }
   
-      
+  void setActivateRICHHitSmearing(bool aS) 
+  { m_ActivateRICHHitSmearing=aS;}
+  
+
   
     
 private:
@@ -139,7 +145,10 @@ private:
   bool m_ActivateRICHOpticalPhysProc;
   bool m_activateRICHCF4Scintillation;
   // bool m_activateRICHCF4ScintillationHisto;
-    
+  bool m_ActivateRICHHitSmearing;
+  bool m_RichApplyScintillationYieldScaleFactor;
+  double m_RichScintillationYieldScaleFactor;
+  
   
     
   

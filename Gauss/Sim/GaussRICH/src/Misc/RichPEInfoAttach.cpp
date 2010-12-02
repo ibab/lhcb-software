@@ -6,6 +6,36 @@
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 
+int RichPhotTkRadiatorNumber ( const G4Track& aPhotonTrk ){
+  int aRadiator=1;
+  
+ G4VUserTrackInformation* aTkInfo=aPhotonTrk.GetUserInformation();
+ GaussTrackInformation* CurRichPhotTrackInfo=(GaussTrackInformation*)aTkInfo;
+  
+  if(CurRichPhotTrackInfo != 0 ){
+    if(CurRichPhotTrackInfo->detInfo()){
+      RichInfo* aPhRichInfo= (RichInfo*)(CurRichPhotTrackInfo->detInfo());
+      if( aPhRichInfo !=0 && aPhRichInfo-> HasUserPhotInfo() ) {
+        RichPhotInfo* aPhotInfo =
+          aPhRichInfo->RichPhotInformation() ;
+        if(aPhotInfo != 0 ) {
+
+          aRadiator = aPhotInfo->PhotProdRadiatorNum();
+          
+
+
+        }        
+        
+      }
+      
+    }
+  }
+
+  return  aRadiator;
+  
+}
+
+
 G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk,const G4ThreeVector & aLocalElectronOrigin)
 {
   G4VUserTrackInformation* aTkInfo=aPhotonTk.GetUserInformation();

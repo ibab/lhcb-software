@@ -77,8 +77,11 @@ public:
   std::vector<double> GetPSFXYForASigma(double aPSFSigma) ;
 
   std::vector<double> getCurrentHpdDemag(const int hpdnumber,
-                                         const int richdetnumber);
+                                         const int richdetenumber);
 
+  double getCurrentHitSmearSigma(const int hpdnumber,
+                                                const int richdetenumber,
+                                                const int radiatorNum);
   
 
   G4String PrePhotoElectricLogVolName() const
@@ -130,7 +133,18 @@ public:
   void setHpdQEUsingNominalTable(G4bool ahpdqetableoption) 
   {m_HpdQEUsingNominalTable=ahpdqetableoption;}  
   G4bool PSFPreDc06Flag() {return m_PSFPreDc06Flag;}
-  G4bool HpdQEUsingNominalTable()  {  return m_HpdQEUsingNominalTable;}
+  G4bool HpdQEUsingNominalTable()  {  return m_HpdQEUsingNominalTable;} 
+
+  void setactivateRichHitSmear( G4bool asFl ) 
+  {
+    m_activateRichHitSmear=asFl;
+  }
+  G4bool  activateRichHitSmear() 
+  {
+    return m_activateRichHitSmear;
+  }
+  
+
   
 private:
 
@@ -163,6 +177,8 @@ private:
   G4bool m_HpdQEUsingNominalTable; // if true using old Nominal QE Table for all hpds from sqldddb
                                    // if false using the new measured QE tables for the Hpds. 
 
+  G4bool m_activateRichHitSmear;
+  
 };
 
 inline G4bool

@@ -197,6 +197,11 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         
         //end modif by SE
 
+        //test check on the momentum of tracks arriving for scintillation
+
+        // G4cout<< "RichG4Scint TrackMom "<< aTrack.GetDynamicParticle()->GetTotalMomentum() <<G4endl;
+        
+        //end test
                 
 	G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
 	G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();

@@ -72,7 +72,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_IsPSFPreDc06Flag(false),
     m_HpdQEUseNominalTable(false),
     m_ActivateRICHOpticalPhysProc(true),
-    m_activateRICHCF4Scintillation(true)
+    m_activateRICHCF4Scintillation(true),
+    m_ActivateRICHHitSmearing(false)
 {
   // in the above 3 is for the three radiators.
 
@@ -105,8 +106,13 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
   declareProperty("RichOpticalPhysicsProcessActivate", m_ActivateRICHOpticalPhysProc);
 
   declareProperty("RichActivateCF4Scintillation",  m_activateRICHCF4Scintillation);
+  declareProperty("RichApplyScintillationYieldScaleFactor", 
+                                          m_RichApplyScintillationYieldScaleFactor);
+  declareProperty("RichScintillationYieldScaleFactor", m_RichScintillationYieldScaleFactor);
+  
 
   //  declareProperty("RichActivateCF4ScintHisto" , m_activateRICHCF4ScintillationHisto);
+  declareProperty("RichHitSmearingActivate", m_ActivateRICHHitSmearing);
   
 
 }
@@ -261,14 +267,17 @@ void GiGaPhysConstructorOp::ConstructOp() {
     new RichHpdPhotoElectricEffect(this,
                      "RichHpdPhotoelectricProcess", fOptical);
 
-
-
   RichG4Scintillation* theRichScintillationProcess= 0;
   
   if( m_activateRICHCF4Scintillation ) {
     
     theRichScintillationProcess = new RichG4Scintillation("RichG4Scintillation",fOptical);
     theRichScintillationProcess->SetVerboseLevel(0);
+    if(m_RichApplyScintillationYieldScaleFactor) {
+      
+      theRichScintillationProcess-> 
+        SetScintillationYieldFactor(m_RichScintillationYieldScaleFactor);
+    }
     
   }
   
@@ -281,6 +290,7 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theRichHpdPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
   theRichHpdPhotoElectricProcess->setHpdQEUsingNominalTable(m_HpdQEUseNominalTable);
   theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
+  theRichHpdPhotoElectricProcess->setactivateRichHitSmear( m_ActivateRICHHitSmearing);
   
 
   //  G4int MaxNumPhotons = 300;

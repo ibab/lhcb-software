@@ -48,6 +48,7 @@ static const G4String RichHpdPsfMatTabPropPath="/dd/Materials/RichMaterialTabPro
 static const G4String RichHpdPsfPhEnMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFPhotonEnergy";
 static const G4String RichHpdPsfRadialMatTabPropPath = "/dd/Materials/RichMaterialTabProperties/HpdPSFRadialDist";
 static const G4String RichHpdHVMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdHighVoltage";
+static const G4String RichHpdHitSmearPath="/dd/Materials/RichMaterialTabProperties/HpdHitSmear";
 
 static const G4String LogVolAgelNameAnalysis= 
                               "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Aerogel";
