@@ -59,9 +59,9 @@ namespace LoKi
         const std::string&           tracks2 ,   //   selection name  
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual desctructor 
-      virtual ~Match() {}
+      virtual ~Match() ;
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  Match* clone() const { return new Match(*this) ; }
+      virtual  Match* clone() const ; 
       /// MANDATORY: the only essential method
       virtual  result_type   operator() ( argument a ) const ;
       /// OPTIONAL: nice printout 
@@ -119,9 +119,9 @@ namespace LoKi
         const std::string&           tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual desctructor 
-      virtual ~Match2() {}
+      virtual ~Match2() ;
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  Match2* clone() const { return new Match2(*this) ; }
+      virtual  Match2* clone() const ;
       /// OPTIONAL: nice printout 
       virtual std::ostream&  fillStream ( std::ostream& s ) const ;
       // ======================================================================

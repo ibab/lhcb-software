@@ -43,19 +43,19 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      ///
+      /// constructor with the fake argument 
       HelperTool ( const int dummy ) ;
       // ======================================================================
-      /// copy constructor 
+      /// non-trivial copy constructor 
       HelperTool ( const HelperTool& right ) ;
       // ======================================================================
-      /// destructor 
-      virtual ~HelperTool() ;
+      /// virtual destructor 
+      virtual ~HelperTool() ;                             // virtual destructor 
       // ======================================================================
     private:
       // ======================================================================
-      /// the edfault constructor is disabled 
-      HelperTool() ;                     // the default constructor is disabled 
+      /// the default constructor is disabled 
+      HelperTool () ;                    // the default constructor is disabled 
       // ======================================================================
     public:
       // ======================================================================
