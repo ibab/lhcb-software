@@ -467,7 +467,7 @@ def getCMT(version=0):
             cmtvers = LbConfiguration.External.CMT_version
             log.debug("Extracting CMT version from LbConfiguration.External: %s" % cmtvers)
         except ImportError :
-            cmtvers = "v1r20p20090520"
+            cmtvers = "v1r22"
             log.debug("Using CMT version %s" % cmtvers)
     # get the cmt version number from the argument
     else:

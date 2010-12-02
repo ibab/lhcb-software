@@ -4,7 +4,7 @@ import sys
 
 
 Python_version     = "2.5"
-CMT_version        = "v1r20p20090520"
+CMT_version        = "v1r22"
 tbroadcast_version = "v2.0.5"
 doxygen_version    = "1.6.2"
 

@@ -453,7 +453,7 @@ class LbLoginScript(SourceScript):
             if ev.has_key("SITEROOT") :
                 ev["CONTRIBDIR"] = multiPathJoin(ev["SITEROOT"], "contrib")
 
-        if opts.cmtvers == "v1r20p20090520" :
+        if opts.cmtvers in [ "v1r20p20090520", "v1r21", "v1r22" ] :
             ev["CMTSTRUCTURINGSTYLE"] = "without_version_directory"
             ev["VERBOSE"] = "1"
         else :
@@ -486,18 +486,18 @@ class LbLoginScript(SourceScript):
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
                 ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
-                ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"], 
+                ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"],
                                                  multiPathJoin(opts.mysiteroot, os.path.join("lcg", "app", "releases")),
                                                  exist_check=True)
                 ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = pathAdd(ev["LHCBRELEASES"], ev["LCG_release_area"])
-                emacsdir = multiPathGetFirst(ev["LHCBRELEASES"], 
+                emacsdir = multiPathGetFirst(ev["LHCBRELEASES"],
                                              os.path.join("TOOLS", "Tools", "Emacs", "pro"))
                 if emacsdir :
                     ev["EMACSDIR"] = emacsdir
-                lhcbstyle = multiPathGetFirst(ev["LHCBRELEASES"], 
+                lhcbstyle = multiPathGetFirst(ev["LHCBRELEASES"],
                                               os.path.join("TOOLS", "Tools", "Styles", "pro"))
                 if lhcbstyle :
                     ev["LHCBSTYLE"] = lhcbstyle
@@ -684,7 +684,7 @@ class LbLoginScript(SourceScript):
                 debug = True
         else :
             supported_configs = self._nativemachine.CMTSupportedConfig(debug=debug)
-            if opts.cmtsite == "CERN" : 
+            if opts.cmtsite == "CERN" :
                 # every platform with a descent python at CERN
                 supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
             else :
@@ -697,7 +697,7 @@ class LbLoginScript(SourceScript):
                     if supported_configs :
                         log.warning("Please switch to a supported one with 'LbLogin -c' before building")
                         log.warning("Supported configs: %s" % ", ".join(supported_configs))
-            else :      
+            else :
                 theconf = self._nativemachine.CMTNativeConfig(debug=debug)
             self.binary = getArchitecture(theconf)
             self.platform = getPlatformType(theconf)
@@ -765,7 +765,7 @@ class LbLoginScript(SourceScript):
         if ev.has_key("LHCBRELEASES") :
 
             compat_dir = multiPathGetFirst(ev["LHCBRELEASES"], "COMPAT")
-    
+
             if compat_dir :
                 lastver = None
                 if (not opts.compat_version) or opts.compat_version == "v*" :
@@ -785,7 +785,7 @@ class LbLoginScript(SourceScript):
                     else :
                         envPathPrepend("PATH", compat_lib)
                     log.debug("Internal %s is set to %s" % ("PATH", os.environ["PATH"]))
-                        
+
 
     def setupLbScripts(self):
         """ Call to SetupProject with LbScripts and python """
@@ -795,7 +795,7 @@ class LbLoginScript(SourceScript):
         log.debug("Setting up LbScripts and appending to the output")
         for var in ev.keys() :
             os.environ[var] = ev[var]
-        
+
         log.debug("%s is set to %s" % ("PATH", ev.get("PATH", "")))
         if sys.platform != "win32" :
             log.debug("%s is set to %s" % ("LD_LIBRARY_PATH", ev.get("LD_LIBRARY_PATH", "")))
