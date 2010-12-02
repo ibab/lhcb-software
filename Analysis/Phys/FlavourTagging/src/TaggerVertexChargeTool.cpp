@@ -30,7 +30,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
   declareProperty( "PowerK",       m_PowerK               = 0.4 );
-  declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.15 );
+  declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.17 );
   declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.53);
 
   //For CombinationTechnique: "Probability"
@@ -93,14 +93,27 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
          <<", with "<<Pfit.size()<<"tracks"<<endreq;
   double maxprobf = vvec.at(0).info(1, 0.5 );
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+  const Gaudi::XYZPoint BoppPos = vvec.at(0).position();
+  double BoppX = BoppPos.x();
+  double BoppY = BoppPos.y();
+  double BoppZ = BoppPos.z();
+  double RVX = (*RecVert).position().x();
+  double RVY = (*RecVert).position().y();
+  double RVZ = (*RecVert).position().z();
+  Gaudi::XYZPoint BoppDir;
+  BoppDir.SetX(BoppX-RVX);
+  BoppDir.SetY(BoppY-RVY);
+  BoppDir.SetZ(BoppZ-RVZ);
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
   double Vptmin = 0, Vipsmin = 0, Vflaglong = 0, Vdocamax = 0;
   int vflagged = 0;
+  Gaudi::LorentzVector SVmomentum;
   Particle::ConstVector::const_iterator ip;
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
     debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+    SVmomentum += (*ip)->momentum();
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
@@ -128,6 +141,12 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
+  //add tau of Bopp
+  double SVP = SVmomentum.P();
+  double SVM = SVmomentum.M();
+  double SVGP = SVP/(0.16*SVM+0.12);
+  double SVtau = sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
+
   //calculate omega
   debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
   double omega = m_AverageOmega;
@@ -142,7 +161,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     pn = 1 - omega;
   }
   if(m_CombinationTechnique == "NNet") {
-    std::vector<double> NNinputs(10);
+    std::vector<double> NNinputs(11);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = allVtx.size();
     NNinputs.at(2) = AXB0->pt()/GeV;;
@@ -152,7 +171,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     NNinputs.at(6) = Vdocamax;
     NNinputs.at(7) = maxprobf;
     NNinputs.at(8) = Vflaglong/(vflagged? vflagged:1);
-    NNinputs.at(9) = fabs(Vch);
+    NNinputs.at(9) = Vch;
+    NNinputs.at(9) = SVtau;
     pn = m_nnet->MLPvtx( NNinputs );
     omega = 1 - pn;
   }

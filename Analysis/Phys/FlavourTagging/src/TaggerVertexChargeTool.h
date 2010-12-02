@@ -18,6 +18,7 @@
 #include "ITaggingUtils.h"
 #include "INNetTool.h"
 
+
 /** @class TaggerVertexChargeTool TaggerVertexChargeTool.h 
  *
  *  Tool to tag the B flavour with a VertexCharge Tagger

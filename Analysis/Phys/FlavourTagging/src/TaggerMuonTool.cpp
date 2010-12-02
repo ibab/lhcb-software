@@ -27,11 +27,11 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
 
   declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
-  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 2.0 );
-  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.5 );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 3.0 );
+  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 );
+  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
   declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
-  declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.04 );
+  declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
 
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
 
