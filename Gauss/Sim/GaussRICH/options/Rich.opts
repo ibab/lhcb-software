@@ -56,7 +56,7 @@ GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
 
-//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEOverRideDB=false;
+//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEOverRideDB=true;
 //GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEValueWhenOverRideDB=1.0;
 
 //GiGa.TrackSeq.RichG4AgelPhot.ActivateAerogelFilter=true;
@@ -69,6 +69,10 @@ GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" 
 // Use of Magnetic field distortions in Hpd: default is set to false, which means not used.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=false; 
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=true; 
+GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=true;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=2.0;
+
 // Use of PreDc06 PSF parametrization. If true it keeps the PSF as set in the beginning of Dc06.
 // The Default is set to false, which gives slightly worse resolution than that assumed at the beginning of dc06.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= true;

@@ -17,7 +17,7 @@ GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
-GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
+GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=false;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
 GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
 
