@@ -1,4 +1,3 @@
-// $Id: TrajFitter.cpp,v 1.2 2007-05-16 15:38:40 cattanem Exp $
 // Include files 
 // -------------
 #include <algorithm>
@@ -28,7 +27,7 @@ using namespace boost::lambda;
 using namespace std;
 using namespace Gaudi::Math;
 
-DECLARE_TOOL_FACTORY( TrajFitter );
+DECLARE_TOOL_FACTORY( TrajFitter )
 //=========================================================================
 // Standard Constructor, initializes variables
 //=========================================================================
@@ -129,7 +128,7 @@ namespace {
       traj+=mat*vec; // update the traj with this step.
       double deltachisq = Similarity(mat,vec);
       return deltachisq;
-    };
+    }
 }
 
 //=========================================================================
@@ -148,7 +147,7 @@ TrajFitter::fit(TRAJ* traj,
   vector<Resid> r;
   transform(measurements.begin(), measurements.end(), 
             back_inserter(r), 
-            bind(constructor<Resid>(),_1,m_poca,m_proj));
+            bind<Resid>(constructor<Resid>(),_1,m_poca,m_proj));
   bool converged(false);
   for (unsigned n = 0; !converged && n<m_maxIter; ++n) {
      double deltaChiSq = stepTowardMinimum(*traj,r);

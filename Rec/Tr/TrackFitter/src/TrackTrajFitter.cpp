@@ -1,4 +1,3 @@
-// $Id: TrackTrajFitter.cpp,v 1.5 2009-10-08 14:46:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -36,7 +35,7 @@ using namespace LHCb;
 //  Created: 31-10-2006
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackTrajFitter );
+DECLARE_TOOL_FACTORY( TrackTrajFitter )
 
 //=========================================================================
 // Standard Constructor, initializes variables
@@ -103,6 +102,6 @@ StatusCode TrackTrajFitter::fit( Track& track, LHCb::ParticleID )
   debug() << " got chisq = " << chisq
           << " for " << out.size()-LineDifTraj::kSize << " D.O.F. " << endmsg;
 
-  for_each(out.begin(),out.end(),bind(delete_ptr(),_1)); // delete the measurements we made...
+  for_each(out.begin(),out.end(),bind<void>(delete_ptr(),_1)); // delete the measurements we made...
   return sc;
 }

@@ -1,5 +1,3 @@
-// $Id: TrackMasterFitter.cpp,v 1.89 2010-04-26 21:13:18 wouter Exp $
-
 #ifdef _WIN32
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
@@ -55,7 +53,7 @@ using namespace LHCb;
 //  Adapted: 15-04-2005  Jose A. Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackMasterFitter );
+DECLARE_TOOL_FACTORY( TrackMasterFitter )
 
 //=========================================================================
 // Standard Constructor, initializes variables
@@ -532,8 +530,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   // Check if it is needed to populate the track with measurements
   if ( track.checkPatRecStatus( Track::PatRecIDs ) ||
        fitresult.measurements().empty() ) {
-    StatusCode sc = m_measProvider -> load( track );
-    if ( sc.isFailure() )
+    StatusCode sc1 = m_measProvider -> load( track );
+    if ( sc1.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
     track.setPatRecStatus( Track::PatRecMeas );
     if(m_debugLevel)

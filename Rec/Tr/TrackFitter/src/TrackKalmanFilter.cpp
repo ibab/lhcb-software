@@ -1,4 +1,3 @@
-// $Id: TrackKalmanFilter.cpp,v 1.79 2010-04-08 11:46:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -31,7 +30,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 
-DECLARE_TOOL_FACTORY( TrackKalmanFilter );
+DECLARE_TOOL_FACTORY( TrackKalmanFilter )
 
 //=========================================================================
 // Standard Constructor, initializes variables

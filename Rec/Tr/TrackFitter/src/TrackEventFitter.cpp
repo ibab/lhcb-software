@@ -1,5 +1,3 @@
-// $Id: TrackEventFitter.cpp,v 1.24 2010-03-24 12:50:15 rlambert Exp $
-
 #ifdef _WIN32
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
@@ -25,7 +23,7 @@ using namespace LHCb;
 // 2005-05-30 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackEventFitter );
+DECLARE_ALGORITHM_FACTORY( TrackEventFitter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +45,7 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackEventFitter::~TrackEventFitter() {}; 
+TrackEventFitter::~TrackEventFitter() {}
 
 //=============================================================================
 // Initialization
@@ -80,7 +78,7 @@ StatusCode TrackEventFitter::initialize() {
     << " " << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution

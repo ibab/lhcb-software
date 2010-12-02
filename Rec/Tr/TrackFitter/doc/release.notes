@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2010-12-02 - Marco Cattaneo
+ - Fix compilation problem with icc and Boost 1.44
+ - Fix also some icc remarks
+
 !=========================== TrackFitter v3r0 2010-08-25 ===================
 ! 2010-08-23 - Wouter Hulsbergen
  - adapt to interface change of IMaterialLocator
