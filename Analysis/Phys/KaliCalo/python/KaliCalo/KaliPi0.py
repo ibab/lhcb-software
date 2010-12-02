@@ -64,7 +64,7 @@ kali = secondPass (
     ## general 
     DataType         = '2010',
     PrintFreq        =  5000 ,
-    EvtMax           =  -1 
+    EvtMax           =  1000 
     )
 
 # =============================================================================
@@ -84,12 +84,12 @@ if '__main__' == __name__ :
     gaudi = AppMgr()
     
     evtSel = gaudi.evtSel()
-    castor   =  'castor:/castor/cern.ch/user/d/dsavrina/Real2010/'
-    pattern  =  'KaliPi0_20100404_%d.fmDST'
-    evtSel.open ( [ castor + pattern % i for i in range(1,3) ] )
-    gaudi.run(10000)
+    castor   =  'castor:/castor/cern.ch/user/d/dsavrina/1759/'
+    pattern  =  '%d/outputdata/KaliPi0_2010test.fmDST'
+    evtSel.open ( [ castor+pattern%i for i in range(0,11) ] )
+    gaudi.run(1000)
     
-    from   KaliCalo.Pi0HistoFit import fitPi0 , getPi0Params, s2b   
+    from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 
     pi0    = gaudi.algorithm('KaliPi0')
     histos = pi0.Histos()

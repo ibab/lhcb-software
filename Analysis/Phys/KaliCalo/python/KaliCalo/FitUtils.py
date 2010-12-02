@@ -23,7 +23,7 @@ import GaudiPython.HistoUtils
 import KaliCalo.Kali as Kali
 
 VE      = Kali.VE 
-pi0Mass = Kale.pi0Mass
+pi0Mass = Kali.pi0Mass
 
 # =============================================================================
 ## The function to fit pi0-mass distribution

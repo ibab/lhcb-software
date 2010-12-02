@@ -483,7 +483,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             # tracks, e.g. for electrons  
             "/Event/Rec#1"             ,
             "/Event/Rec/Track#1"       ,
-            "/Event/Rec/Track/Best#1"  
+            "/Event/Rec/Track/Best#1"  ,
+            # event header for time decoder
+            "/Event/Rec/Header#1"
             ] ,
             # 
             Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')

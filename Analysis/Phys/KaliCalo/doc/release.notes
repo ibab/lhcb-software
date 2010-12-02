@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-12-02 - Daria Savrina
+  - Added /Event/Rec/Header to the fmDST item list for the correct work of time
+    decoder during the second pass. Replaced the test fmDSTs with the new ones
+    in KaliPi0.py script.
+
 ! 2010-11-28 - Albert Puig
   - Removed Kali.py to avoid name clashes.
 
