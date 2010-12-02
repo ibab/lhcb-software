@@ -39,7 +39,7 @@ def getTarBallNameItems(tar_name):
             binary = b
             core_name = core_name.replace("_%s" %b, "")
             break
-    
+
     cptes = core_name.split("_")
     nm = cptes[0]
     if nm.upper() in [ x.upper() for x in Project.project_names ] :
@@ -64,12 +64,12 @@ def getTarBallNameItems(tar_name):
             name = pkgcfg.Name()
         else :
             raise NotATarBall
-        
+
     else :
         if nm.upper() == "LCGCMT" :
             name = "LCGCMT"
             version = Version.LCGVersion(cptes[1]).name()
-    
+
     return name, version, binary
 
 class TarBall(object):
@@ -95,7 +95,7 @@ class TarBall(object):
     def addExclusion(self, pattern):
         self._exclude += pattern
     def addConverter(self, target, source):
-        """ will convert the source into the target before the 
+        """ will convert the source into the target before the
             creation of the tar ball. A target can have many sources """
         self._converter.setdefault(target, []).append(source)
     def explodeSources(self):
@@ -135,7 +135,7 @@ def projectFilter(path, cmtconfig=None):
     for e in exclude_list :
         if fnmatch(path, e) :
             return False
-    
+
     if cmtconfig :
         return Platform.pathBinaryMatch(path, cmtconfig)
     else :
@@ -154,7 +154,7 @@ def generateMD5(project, version, cmtconfig=None, input_dir=None):
             os.remove(md5fname)
             log.info("Replacing %s for %s" % (md5fname, filename))
         else :
-            log.info("Creating %s for %s" % (md5fname, filename))                
+            log.info("Creating %s for %s" % (md5fname, filename))
         createMD5File(filename, md5fname, targetname)
     else :
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
@@ -172,7 +172,7 @@ def generateDataMD5(project, version, input_dir=None):
             os.remove(md5fname)
             log.info("Replacing %s for %s" % (md5fname, filename))
         else :
-            log.info("Creating %s for %s" % (md5fname, filename))                
+            log.info("Creating %s for %s" % (md5fname, filename))
         createMD5File(filename, md5fname, targetname)
     else :
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
@@ -253,13 +253,13 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
         if cmtconfig :
             depcont = "<H3>%s (%s binary files) </H3>\n" % (title, cmtconfig)
         else :
-            depcont = "<H3>%s (source files) </H3>\n" % title    
-        
+            depcont = "<H3>%s (source files) </H3>\n" % title
+
         depcont += "%s\n" % getHTMLLink(project, version, cmtconfig, with_name=True)
         dep_list = getTarDependencies(project, version, cmtconfig, top_dir, project_only=False, full=True)
         tobeadded = []
         if "LCGCMT" in dep_list.keys() :
-            tobeadded += [ "[%s]\n" % x for x in getLCGHTMLLinks(project, version, dep_list, cmtconfig) ]                
+            tobeadded += [ "[%s]\n" % x for x in getLCGHTMLLinks(project, version, dep_list, cmtconfig) ]
         for p in dep_list.keys() :
             if Project.isProject(p) :
                 tobeadded.append( "[%s]\n" % getHTMLLink(p, dep_list[p], cmtconfig, with_name=False))
@@ -269,13 +269,13 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
         if tobeadded :
             depcont += "<MENU><LI>\n"
             depcont += "".join(tobeadded)
-            depcont += "</MENU>\n" 
+            depcont += "</MENU>\n"
             htmlname = os.path.join(output_dir, prj_conf.htmlFileName(version, cmtconfig))
             if os.path.exists(htmlname) :
                 os.remove(htmlname)
                 log.info("Replacing %s for %s" % (htmlname, filename))
             else :
-                log.info("Creating %s for %s" % (htmlname, filename))                
+                log.info("Creating %s for %s" % (htmlname, filename))
 
             hf = AFSLockFile(htmlname, "w", force=False)
             hf.write(depcont)
@@ -296,8 +296,8 @@ def generateDataHTML(package, version, top_dir=None, output_dir=None) :
     prefix = pkg_conf.releasePrefix(version)
     pkg_path = os.path.join(top_dir, prefix)
     pkg = CMT.Package(pkg_path)
-    
-def generateTar(project, version=None, cmtconfig=None, 
+
+def generateTar(project, version=None, cmtconfig=None,
                 top_dir=None, output_dir=None, overwrite=False,
                 update=False, md5=True, html=True):
     log = logging.getLogger()
@@ -339,8 +339,8 @@ def generateTar(project, version=None, cmtconfig=None,
                 generateHTML(project, version, cmtconfig, top_dir, output_dir)
     return status
 
-def generateDataTar(package, version=None, top_dir=None, 
-                    output_dir=None, overwrite=False, 
+def generateDataTar(package, version=None, top_dir=None,
+                    output_dir=None, overwrite=False,
                     md5=True, html=True):
     log = logging.getLogger()
     pkg_conf = Package.getPackage(package)
@@ -362,7 +362,7 @@ def generateDataTar(package, version=None, top_dir=None,
         status = 2
     else :
         status = createTarBallFromFilter(srcdirs, filename, pathfilter,
-                                         prefix=prefix, dereference=pkg_conf.dereferenceTar(), 
+                                         prefix=prefix, dereference=pkg_conf.dereferenceTar(),
                                          update=False)
         if status == 1 :
             log.fatal("The source directories do not exist")
@@ -392,7 +392,7 @@ def getParentProjects(project, version=None, cmtconfig=None, top_dir=None):
             maindir = os.path.join(top_dir, pcfg.releasePrefix())
             version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
-    prj_dict = getTarDependencies(project, version, cmtconfig, 
+    prj_dict = getTarDependencies(project, version, cmtconfig,
                                   top_dir, project_only=False, full=False)
     par_dict = {}
     fulllist = [ x.upper() for x in Project.project_names ]
@@ -437,7 +437,7 @@ def getTarDependencies(project, version=None, cmtconfig=None, top_dir=None,
                 continue
             elif p.upper() == project.upper() :
                 del prj_dict[p]
-                continue                
+                continue
             else :
                 ver = Version.extractVersion(prj_dict[p])
                 if ver :
@@ -468,8 +468,8 @@ def getTarDependencies(project, version=None, cmtconfig=None, top_dir=None,
             del prj_dict[k]
     return prj_dict
 
-def buildTar(project, version=None, cmtconfig=None, 
-             top_dir=None, output_dir=None, 
+def buildTar(project, version=None, cmtconfig=None,
+             top_dir=None, output_dir=None,
              overwrite=False, overwrite_shared=False, update=False,
              md5=True, html=True, recursive=False):
     log = logging.getLogger()
@@ -492,7 +492,7 @@ def buildTar(project, version=None, cmtconfig=None,
                 overwrite_shared = True
         update_shared = False
         for c in cmtconfig :
-            status = generateTar(project, version, c, top_dir, output_dir, 
+            status = generateTar(project, version, c, top_dir, output_dir,
                                  overwrite, update, md5, html)
             if status == 1 :
                 return status
@@ -500,12 +500,12 @@ def buildTar(project, version=None, cmtconfig=None,
                 update_shared = True
         if update_shared :
             if overwrite_shared :
-                status = generateTar(project, version, cmtconfig=None, 
-                                     top_dir=top_dir, output_dir=output_dir, 
+                status = generateTar(project, version, cmtconfig=None,
+                                     top_dir=top_dir, output_dir=output_dir,
                                      overwrite=True, update=True, md5=md5, html=html)
             else :
-                status = generateTar(project, version, cmtconfig=None, 
-                                     top_dir=top_dir, output_dir=output_dir, 
+                status = generateTar(project, version, cmtconfig=None,
+                                     top_dir=top_dir, output_dir=output_dir,
                                      overwrite=False, update=True, md5=md5, html=html)
     elif Package.isPackage(project) :
         log.debug("%s is a data package" % project)
@@ -543,7 +543,7 @@ def checkDataMD5(package, version=None, input_dir=None):
                 good = False
         else :
             log.error("The file %s doesn't exist" % md5fname)
-            good = False                
+            good = False
     else :
         log.warning("The file %s doesn't exist. Skipping md5 check." % filename)
         good = True
@@ -574,13 +574,13 @@ def checkMD5(project, version=None, cmtconfig=None, input_dir=None):
                 good = False
         else :
             log.error("The file %s doesn't exist" % md5fname)
-            good = False                
+            good = False
     else :
         log.warning("The file %s doesn't exist. Skipping md5 check." % filename)
         good = True
     return good
 
-def checkTar(project, version=None, cmtconfig=None, input_dir=None, 
+def checkTar(project, version=None, cmtconfig=None, input_dir=None,
              keep_going=False):
     log = logging.getLogger()
     good = True
@@ -595,12 +595,12 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
             log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
         if not cmtconfig :
             cmtconfig = Platform.binary_list
-    
+
         for c in cmtconfig :
             log.debug("="*100)
             status = checkMD5(project, version, c, input_dir)
             if not status :
-                good = False 
+                good = False
                 if not keep_going and not good:
                     return good
         log.debug("="*100)
@@ -611,7 +611,7 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
     else :
         log.fatal("%s is neither a software project nor a data package" % project)
         status = 1
-        
+
     if not status :
         good = False
     return good
@@ -619,7 +619,10 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 #=========================================================================
 def generateLCGHTML(project, version, cmtconfig=None, input_dir=None):
-    pass
+    log = logging.getLogger()
+    prj_conf = Project.getProject(project)
+    if not input_dir :
+        input_dir = prj_conf.HTMLDir()
 
 def generateLCGMD5(project, version, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
@@ -646,7 +649,7 @@ def generateLCGMD5(project, version, cmtconfig=None, input_dir=None):
             os.remove(md5fname)
             log.info("Replacing %s for %s" % (md5fname, filename))
         else :
-            log.info("Creating %s for %s" % (md5fname, filename))                
+            log.info("Creating %s for %s" % (md5fname, filename))
         createMD5File(filename, md5fname, targetname)
     else :
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
@@ -656,7 +659,7 @@ def fixWinMacroValue(macro_value):
     fixed_value = fixed_value.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
     return fixed_value
 
-def generateLCGTar(project, version=None, cmtconfig=None, 
+def generateLCGTar(project, version=None, cmtconfig=None,
                    top_dir=None, output_dir=None, overwrite=False,
                    update=False, md5=True, html=True):
     log = logging.getLogger()
@@ -690,7 +693,7 @@ def generateLCGTar(project, version=None, cmtconfig=None,
             log.info("The file %s already exists. Skipping." % filename)
             status = 2
         else :
-            shared_pathfilter = projectFilter        
+            shared_pathfilter = projectFilter
             if cmtconfig :
                 binary_pathfilter = lambda x : projectFilter(x, cmtconfig)
             ext_shared_dict = {}
@@ -709,7 +712,7 @@ def generateLCGTar(project, version=None, cmtconfig=None,
             ext_dict = {}
             lcg_relloc = None
             lcg_extloc = None
-            for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"], 
+            for p in prj.binaryExternalPackages(cmtprojectpath=os.environ["CMTPROJECTPATH"],
                                                 binary=cmtconfig) :
                 if p.name().split(os.sep)[0] == "LCG_Interfaces" :
                     if not lcg_relloc :
@@ -753,8 +756,8 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                             ext_pathloc = os.sep.join(path_list)
                     ext_dict[ext_name].append(ext_pathloc)
                     ext_dict[ext_name].append(ext_coreloc)
-    
-                    
+
+
             for p in ext_dict.keys() :
                 if ext_dict[p][1] :
                     shared_prefix = os.path.join("external",ext_dict[p][6])
@@ -767,13 +770,13 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                             if os.path.exists(bin_location):
                                 ext_binary_dict[bin_location] = bin_prefix
                                 log.debug("Adding %s to %s" % (bin_location, bin_prefix))
-                                        
-            log.info("Adding %d shared locations" % len(ext_shared_dict))         
-            log.info("Adding %d binary locations" % len(ext_binary_dict))         
+
+            log.info("Adding %d shared locations" % len(ext_shared_dict))
+            log.info("Adding %d binary locations" % len(ext_binary_dict))
             log.debug("="*100)
             if overwrite :
                 os.remove(filename)
-            status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter, 
+            status = createTarBallFromFilterDict(ext_shared_dict, filename, shared_pathfilter,
                                                  dereference=False, update=update,
                                                  use_tmp=True)
             if status != 0 :
@@ -799,8 +802,8 @@ def generateLCGTar(project, version=None, cmtconfig=None,
     return status
 
 
-def buildLCGTar(project, version=None, cmtconfig=None, 
-             top_dir=None, output_dir=None, 
+def buildLCGTar(project, version=None, cmtconfig=None,
+             top_dir=None, output_dir=None,
              overwrite=False, update=False,
              md5=True, html=True):
     log = logging.getLogger()
@@ -820,7 +823,7 @@ def buildLCGTar(project, version=None, cmtconfig=None,
         if not cmtconfig :
             cmtconfig = Platform.binary_opt_list
         for c in cmtconfig :
-            status = generateLCGTar(project, version, c, top_dir, output_dir, 
+            status = generateLCGTar(project, version, c, top_dir, output_dir,
                                  overwrite, update, md5, html)
             if status == 1 :
                 return status
