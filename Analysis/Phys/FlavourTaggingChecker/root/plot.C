@@ -18,8 +18,8 @@
 
   bool endblock = 1;
   //  goto taggercandidates;
-    goto general;
-  //  goto asymm;
+  //  goto general;
+  goto asymm;
   //  goto nnet;
   //  goto vertex;
   //  goto omegapt;
@@ -27,7 +27,7 @@
   //  goto vtxcharge;
   //  goto pid;
   //  goto effeff_cut;
-  //  goto primaryvertex;
+  goto primaryvertex;
 
 taggercandidates:////////////////////////////////////////////////////
 
@@ -410,30 +410,59 @@ tag:
   plotPID("pion",       h1014, h1004, h1024); 
 
 primaryvertex: /////////////////////////////////////////////////////////////
+
   cout<<"plotting primary vertex"<<endl;
-  //  plotEffectiveEff(hpv_ipmean_r, hpv_ipmean_w         ); if(wait())return;
-  //  plotEffectiveEff(hpv_ippu_r, hpv_ippu_w                   ); if(wait())return;
-  //plotEffectiveEff(hpv_gippu_r, hpv_gippu_w                 ); if(wait())return;
-  //  plotEffectiveEff(hpv_difip_r, hpv_difip_w                 ); if(wait())return;
-  //  plotEffectiveEff(hpv_difip1_r, hpv_difip1_w               ); if(wait())return;
-  plotEffectiveEff(hpv_difip1_r, hpv_difip1_w, "right2left"); if(wait())return;
-  //  plotEffectiveEff(hpv_ipmeandif_r, hpv_ipmeandif_w         ); if(wait())return;
-  //  plotEffectiveEff(hpv_ipmeandif1_r, hpv_ipmeandif1_w       ); if(wait())return;
-  plotEffectiveEff(hpv_ipmeandif1_r, hpv_ipmeandif1_w, "right2left" ); if(wait())return;
-  //plotEffectiveEff(hpv_nippu_r, hpv_nippu_w           ); if(wait())return;
-  //plotEffectiveEff(hpv_nippuerr_r, hpv_nippuerr_w     ); if(wait())return;
-  //  plotEffectiveEff(hpv_ippubs_r, hpv_ippubs_w         ); if(wait())return;
-  //  plotEffectiveEff(hpv_ippubs_r, hpv_ippubs_w, "right2left" ); if(wait())return;
-  //plotEffectiveEff(hpv_ippuchi2bs_r, hpv_ippuchi2bs_w ); if(wait())return;
-  //plotEffectiveEff(hpv_tracks_r, hpv_tracks_w         ); if(wait())return;
-  //  plotEffectiveEff(hpv_trackzfirst_r, hpv_trackzfirst_w    ); if(wait())return;
-  //plotEffectiveEff(hpv_trackp_r, hpv_trackp_w         ); if(wait())return;
-  //  plotEffectiveEff(hpv_zpos_r, hpv_zpos_w             ); if(wait())return;
-  //  plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w       ); if(wait())return;
-  //  plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w, "right2left"); if(wait())return;
-  plotEffectiveEff(hpv_zposdif1_r, hpv_zposdif1_w       ); if(wait())return;
-  //  plotEffectiveEff(hpv_zerrpos_r, hpv_zerrpos_w, "right2left"); if(wait())return;
-  //plot_omega, plotEffectiveEff
+    
+  hv170->Draw(); if(wait())return;
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hv174->Draw(); hv174_true->SetLineColor(2); hv174_true->Draw("same");
+  c->cd(2); hv175->Draw(); hv175_true->SetLineColor(2); hv175_true->Draw("same");
+  c->cd(3); hv176->Draw(); hv176_true->SetLineColor(2); hv176_true->Draw("same");
+  if(wait())return;
+  c->Clear(); c->Divide(2,3);
+  c->cd(1); hv184->Draw(); hv184->Fit("gaus","same"); 
+  c->cd(2); hv184_true->SetLineColor(kRed); hv184_true->Draw(); hv184_true->Fit("gaus","same");
+  c->cd(3); hv185->Draw(); hv185->Fit("gaus","same"); 
+  c->cd(4); hv185_true->SetLineColor(kRed); hv185_true->Draw(); hv185_true->Fit("gaus","same");
+  c->cd(5); hv186->Draw(); hv186->Fit("gaus","same"); 
+  c->cd(6); hv185_true->SetLineColor(kRed); hv186_true->Draw(); hv186_true->Fit("gaus","same");
+  if(wait())return;
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hv177->Draw(); hv177_true->SetMarkerColor(2); hv177_true->Draw("same");
+  c->cd(2); hv178->Draw(); hv178_true->SetLineColor(2); hv178_true->Draw("same");
+  c->cd(3); hv179->Draw(); hv179_true->SetMarkerColor(2); hv179_true->Draw("same");
+  c->cd(4); hv180->Draw(); hv180_true->SetLineColor(2); hv180_true->Draw("same");
+  if(wait())return;
+    
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hv179->Draw(); hv179_true->SetMarkerColor(2); hv179_true->Draw("same"); hv179_true->Fit("pol2");
+  TH1D* tprofx = new TH1D("tprofx","tprofx", 50, 0.8, 5);
+  TH1D* tprofy = new TH1D("tprofy","tprofy", 50, 0, 2);
+  TH1D *tprofx = hv179->ProjectionX(); 
+  TH1D *tprofy = hv179->ProjectionY(); 
+  c->cd(2); tprofx->Draw(); 
+  c->cd(3); tprofy->Draw(); 
+  if(wait())return;
+  
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hv181->Draw();
+  c->cd(2); hv182->Draw();
+  c->cd(3); hv183->Draw();
+  if(wait())return;
+  plotEffectiveEff(hv181_r, hv181_w, "right2left");   if(wait())return;
+  plotEffectiveEff(hv182_r, hv182_w, "right2left");   if(wait())return;
+  //tau vs Bid
+  plot_Eff_Omega(hv183_r, hv183_w, "right2left");   if(wait())return;
+  plot_Eff_Omega(hvtaus_r, hvtaus_w, "right2left");   if(wait())return;
+  plot_Eff_Omega(hvtau0_r, hvtau0_w, "right2left");   if(wait())return;
+  plot_Eff_Omega(hvtau_r, hvtau_w, "right2left");   if(wait())return;
+
+  cout<<"plotting pointing to right primary vertex"<<endl;
+  plotEffectiveEff(hpv_gippu_r, hpv_gippu_w           ); if(wait())return;  
+  plotEffectiveEff(hpv_difip_r, hpv_difip_w, "right2left"); if(wait())return;
+  plotEffectiveEff(hpv_ipmeandif_r, hpv_ipmeandif_w, "right2left" ); if(wait())return;
+  plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w, "right2left"); if(wait())return;
+  plotEffectiveEff(hpv_zposabsdif_r, hpv_zposabsdif_w       ); if(wait())return;
 
  end:
 

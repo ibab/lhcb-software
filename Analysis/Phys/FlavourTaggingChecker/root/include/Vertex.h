@@ -36,6 +36,7 @@ class Vertex {
     m_Vdocamax=0;
     m_Vratio=0;
     m_VCharge=0;
+    m_SVtau=0;
 
  }
   ~Vertex( ){} ///< Destructor
@@ -66,6 +67,7 @@ class Vertex {
   double getVdocamax() {return m_Vdocamax;}
   double getVratio() {return m_Vratio;}
   double getVCharge() {return m_VCharge;}
+  double getSVtau() {return m_SVtau;}
     
 
   TVector3 position() { return m_position ; }///< position in space wrt to PV
@@ -90,6 +92,7 @@ class Vertex {
   void setVdocamax(double a) { m_Vdocamax=a;}
   void setVratio(double a)   { m_Vratio=a;}
   void setVCharge(double a)  { m_VCharge=a;}
+  void setSVtau(double a)  { m_SVtau=a;}
     
   void Print() {
     if(DBGLEVEL<3) {
@@ -110,7 +113,7 @@ class Vertex {
   int m_type;
   Particle* m_motherpart;
   double m_chisquare, m_likelihood;
-  double m_Vflagged, m_Vptmin, m_Vipsmin, m_Vdocamax,m_Vratio,m_VCharge;
+  double m_Vflagged, m_Vptmin, m_Vipsmin, m_Vdocamax,m_Vratio,m_VCharge,m_SVtau;
   
 };
 

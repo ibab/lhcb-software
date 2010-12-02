@@ -48,12 +48,11 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN, good for mc
 tag.BTaggingTool.OutputLevel = 4
 
-#Import cuts for MC2010
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
-#Import cuts for Stripping9
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip9.py')
-#Import cuts for Stripping10
+#Import cuts for MC2010/strip10/strip9
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10_v1.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10.py')
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip9.py')
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
 
 ########################################################################
 # Flavour tagging Checker:

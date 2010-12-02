@@ -6,6 +6,11 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-12-02 - Marc Grabalosa
+ - Add plots for Propertime
+ - Add proper time in NNvtx, change seedlikelihood
+ - Change MuonTagger cuts
+
 ! 2010-12-01 - Marco Musy
  - cleanup, added control on verbosity level
 

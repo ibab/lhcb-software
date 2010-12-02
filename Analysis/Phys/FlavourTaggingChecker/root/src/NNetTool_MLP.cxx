@@ -19,8 +19,8 @@ NNetTool_MLP::NNetTool_MLP( ) {
   declareProperty( "P0_ps_scale", m_P0ps =  1.05709);
   declareProperty( "P1_ps_scale", m_P1ps = -1.09695);
 
-  declareProperty( "P0_vtx_scale", m_P0vtx =  0.700654 );
-  declareProperty( "P1_vtx_scale", m_P1vtx = -0.421912 );
+  declareProperty( "P0_vtx_scale", m_P0vtx =  1.38505 );
+  declareProperty( "P1_vtx_scale", m_P1vtx = -1.62705 );
  
   m_rnet_mu= m_rnet_ele= m_rnet_k= m_rnet_kS= m_rnet_pS= m_rnet_vtx=0;
  
@@ -65,6 +65,7 @@ void NNetTool_MLP::normaliseVtx(std::vector<double>& par) {
   par.at(4) /= 2.;  //ptmin
   par.at(5) /= 30.; //ipsmin
   par.at(6) /= 0.1; //docamax
+  par.at(10)/= 5.;  //SVtau
 }
 //=============================================================================
 double NNetTool_MLP::MLPm(std::vector<double>& par) { 
@@ -159,7 +160,7 @@ double NNetTool_MLP::MLPvtx(std::vector<double>& par) {
   normaliseVtx( par );
   NNvtx net;
   double rnet = net.value(0,par.at(0),par.at(1),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(9));
+			  par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(10));
 
   double pn = 1.0-pol(rnet, m_P0vtx, m_P1vtx);// <=========
 

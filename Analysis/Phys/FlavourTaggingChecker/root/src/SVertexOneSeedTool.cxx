@@ -50,39 +50,29 @@ Vertices SVertexOneSeedTool::buildVertex(Particles& vtags,
 
   //evaluate likelihood
 
-  //double prob_chi2  = pol(Vfit->chi2PerDoF(), 0.615074, -0.081797, 0.00421188);
-  double prob_chi2  = pol(Vfit->chi2PerDoF(), 0.627107, -0.0561232, 0.00255272);
+  double prob_chi2  = pol(Vfit->chi2PerDoF(), 0.615074, -0.081797, 0.00421188);
 
-  //double prob_ptmin = pol(std::min(p1->pt(), p2->pt()) /GeV, 0.0662687, 1.10754, -0.350278);
-  double prob_ptmin = pol(std::min(p1->pt(), p2->pt()) /GeV, -0.058584, 1.52415, -0.795555, 0.138849);
+  double prob_ptmin = pol(std::min(p1->pt(), p2->pt()) /GeV, 0.0662687, 1.10754, -0.350278);
 
-  //double prob_ipmax = pol(std::max(p1->IP(), p2->IP()), 0.763837, -0.0822829, -0.0154407);
-  double ipmax = std::max(p1->IP(), p2->IP());
-  double prob_ipmax = 0;
-  if (ipmax>0.3)  prob_ipmax = pol(ipmax, 1.08349, -0.405747, 0.054368);
-  else prob_ipmax = pol(ipmax, 0.551005, 0.587514);
+  double prob_ipmax = pol(std::max(p1->IP(), p2->IP()), 0.763837, -0.0822829, -0.0154407);
 
   double ipsmin     = std::min(p1->IPs(), p2->IPs());
   if(ipsmin < 2.5) return vtxvect; //////////// CUT
   double prob_ipsmin = 0;
-  //if(ipsmin<6)  prob_ipsmin = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
-  //else prob_ipsmin = pol(ipsmin, 0.536929, 0.0254873, -0.000439594);
-  if(ipsmin>9)  prob_ipsmin = pol(ipsmin, 0.63096, 0.00377653);
-  else prob_ipsmin = pol(ipsmin, -0.155061, 0.185982, -0.0114987);
+  if(ipsmin<6)  prob_ipsmin = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
+  else prob_ipsmin = pol(ipsmin, 0.536929, 0.0254873, -0.000439594);
   
   double dphi= fabs(p1->Phi()-p2->Phi()); 
   if(dphi>3.1416) dphi= 2*3.1416-dphi;
-  //double prob_deltaphi = pol(dphi, 0.699251, -0.19263, 0.00319839);
-  double prob_deltaphi = pol(dphi, 0.588014, 0.122737, -0.179973, 0.036799);
+  double prob_deltaphi = pol(dphi, 0.699251, -0.19263, 0.00319839);
 
   double prob_rdist;
   TVector3 SVpoint = Vfit->position();
   double rdist = sqrt( SVpoint.x()*SVpoint.x()
 		       +SVpoint.y()*SVpoint.y()
 		       +SVpoint.z()*SVpoint.z()*.074*.074 );
-  //if(rdist<1) prob_rdist= pol(rdist, 9.61771e-05, 0.936598, -0.433183);
-  //else        prob_rdist= pol(rdist, 0.44296, 0.0956002, -0.0130237);
-  prob_rdist = pol(rdist, 0.681304, -0.120933, 0.0229825, -0.00147039);
+  if(rdist<1) prob_rdist= pol(rdist, 9.61771e-05, 0.936598, -0.433183);
+  else        prob_rdist= pol(rdist, 0.44296, 0.0956002, -0.0130237);
 
   // debug()<<prob_chi2<< " "<<  prob_ptmin<<  " "<<    prob_ipmax<< " "
   // 	 << prob_ipsmin<<  " "<< prob_deltaphi<<  " "<< prob_rdist<<endmsg;

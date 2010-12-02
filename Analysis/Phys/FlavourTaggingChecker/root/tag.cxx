@@ -47,6 +47,7 @@ int main () {
       //if( event.multiplicity()<30) continue;
       //if( event.TrueTag()== -1 ) continue;
       if(!isinTextFile(event.runNr(),event.eventNr())) continue;
+      //if( event.Btau()>=2.2 ) continue; //To look for Eeff in real data
       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
       debug()<<"============================ Process Event"<<endl;
@@ -105,18 +106,16 @@ int main () {
       if(tagdecision && i<10) viewer.storeClone( event );
 
       //**********************//
-      //**********************//
       //******Bd2DstarMu******//
       //**********************//
-      //*****to be check******//
       if (UseModBtime) {
         Particle* Dstar = event.Dstar();
         Particle* Mu    = event.Mu();
         TLorentzVector DstarMu = Dstar->momentum() + Mu->momentum();
-        //*****crash here******//
         double ChiP = DstarMu.P();
         double ChiM = DstarMu.M();
         double newChiP = 0;
+	//Marc
         if (UseModBtime==1) newChiP = ChiP/(0.283+ChiM*0.1283);
         //Stefania
         if (UseModBtime==2){
@@ -144,36 +143,119 @@ int main () {
       h3->Fill(BOpart->pt());
       h4->Fill(event.multiplicity());
 
-      //PV study
-      Vertices secvtx = event.getSecondaryVertices();
-      Double_t   sz=0;
-      if( !secvtx.empty()) {
-        int nsecpart = secvtx.at(0)->outgoingParticles().size();
-        sz = secvtx.at(0)->position().z();
-        TVector3 BoppDir = secvtx.at(0)->position();
-        Particles secparts = secvtx.at(0)->outgoingParticles();
-        TVector3 BoppMom;
-        for (int ip=0; ip<nsecpart; ip++) {
-          BoppMom += secparts.at(ip)->momentum().Vect();
-        }
-        //MC
-        double BMCDphiDir = BoppDir.DeltaPhi(BOpart->momentum().Vect());
-        double BMCDTheDir = BoppDir.Theta()-BOpart->momentum().Vect().Theta();
-        double BMCDphiVec = BoppMom.DeltaPhi(BOpart->momentum().Vect()); 
-        TVector3 truePV = event.MCVertex();
-        double distfromtrue = ((BOpart->endVertexPosition() - truePV)
-                               - secvtx.at(0)->position() ).Mag();
-        hv170->Fill(distfromtrue); 
-        if(distfromtrue<1.0) { //un millimetro di distanza
-          hv174_true->Fill(BMCDphiDir);
-          hv175_true->Fill(BMCDTheDir);
-          hv176_true->Fill(BMCDphiVec); 
+      //**********************//
+      //******PV studies******//
+      //**********************//
+      if (krec>=1){
+	Vertices secvtx = event.getSecondaryVertices();
+	Double_t   sz=0;
+	bool containskaon=false; 
+	if( !secvtx.empty()) {
+	  int nsecpart = secvtx.at(0)->outgoingParticles().size();
+	  sz = secvtx.at(0)->position().z();
+	  TVector3 BoppDir = secvtx.at(0)->position();
+	  Particles secparts = secvtx.at(0)->outgoingParticles();
+	  TVector3 BoppMom;
+	  TLorentzVector SVmomentum;
+	  for (int ip=0; ip<nsecpart; ip++) {
+	    BoppMom += secparts.at(ip)->momentum().Vect();
+	    SVmomentum += secparts.at(ip)->momentum();
+	    if (secparts.at(ip)->absID()==321) containskaon = true;
+	  }
+	  double SVP = SVmomentum.P();
+	  double SVM = SVmomentum.M();
+	  double SVGP = SVP/(0.16*SVM+0.12);
+	  double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
+	  double BDphiDir = BoppDir.DeltaPhi(SVmomentum.Vect());
+	  double BDTheDir = BoppDir.Theta()-SVmomentum.Vect().Theta();
+	  hv181->Fill(BDphiDir);
+	  hv182->Fill(BDTheDir);
+	  hv183->Fill(SVtau);
+	  //MC
+	  double BMCP = BOpart->p();
+	  double BMCM = BOpart->M();
+	  TVector3 truePV = event.MCVertex();
+	  double BMCsz = BOpart->endVertexPosition().z()-event.MCVertex().z();
+	  double BMCtau = (BOpart->endVertexPosition()-truePV).Mag()*5.28/BMCP/0.299792458;
+	  double BMCDphiDir = BoppDir.DeltaPhi(BOpart->momentum().Vect());
+	  double BMCDTheDir = BoppDir.Theta()-BOpart->momentum().Vect().Theta();
+	  double BMCDphiVec = BoppMom.DeltaPhi(BOpart->momentum().Vect());
+	  double distfromtrue = ((BOpart->endVertexPosition() - truePV)
+				 - secvtx.at(0)->position() ).Mag();
+	  hv170->Fill(distfromtrue);
+	  hv184->Fill(BMCP-SVGP);
+	  hv185->Fill(BMCtau-SVtau);
+	  hv186->Fill(BMCsz-sz);
+	  if(distfromtrue<1.0) { //un millimetro di distanza
+	    hv174_true->Fill(BMCDphiDir);
+	    hv175_true->Fill(BMCDTheDir);
+	    hv176_true->Fill(BMCDphiVec);
+	    hv177_true->Fill(SVP, BMCP);
+	    hv178_true->Fill(SVP/BMCP);
+	    hv179_true->Fill(SVM, SVP/BMCP);
+	    hv180_true->Fill(SVM/BMCM);
+	    hv184_true->Fill(BMCP-SVGP);
+	    hv185_true->Fill(BMCtau-SVtau);
+	    hv186_true->Fill(BMCsz-sz);
+	  } else {
+	    hv174->Fill(BMCDphiDir);
+	    hv175->Fill(BMCDTheDir);
+	    hv176->Fill(BMCDphiVec);
+	    hv177->Fill(SVP, BMCP);
+	    hv178->Fill(SVP/BMCP);
+	    hv179->Fill(SVM, SVP/BMCP);
+	    hv180->Fill(SVM/BMCM);
+	  }
+	  //study vtx properties
+	  if(tvtx->decision()){
+	    if(tvtx->decision()==TrueTag) {
+	      hv181_r->Fill(BDphiDir);
+	      hv182_r->Fill(BDTheDir);
+	      hv183_r->Fill(SVtau);
+	      //if (!containskaon) hv183_r->Fill(SVtau);
+	      if (fabs(BOpart->ID())==531) hvtaus_r->Fill(SVtau);
+	      if (fabs(BOpart->ID())==511) hvtau0_r->Fill(SVtau);
+	      if (fabs(BOpart->ID())==521) hvtau_r->Fill(SVtau);
+	    } else {
+	      hv181_w->Fill(BDphiDir);
+	      hv182_w->Fill(BDTheDir);
+	      hv183_w->Fill(SVtau);
+	      //if (!containskaon) hv183_w->Fill(SVtau);
+	      if (fabs(BOpart->ID())==531) hvtaus_w->Fill(SVtau);
+	      if (fabs(BOpart->ID())==511) hvtau0_w->Fill(SVtau);
+	      if (fabs(BOpart->ID())==521) hvtau_w->Fill(SVtau);
+	    }
+	  }   
+	}//sec not empty
+      }//krec
+      
+      //for primary vertex study
+      Particle*  iparticle = ikaon;
+      Tagger* tparticle = tkaon;
+      if ((iparticle) and (krec>1)) {
+        double gippu=sqrt(iparticle->nippuerr());
+        double ipmeandif= (iparticle->IP()-iparticle->ipmean());
+        double ipdif=(iparticle->IP()-iparticle->nippu());
+        double zposdif=(iparticle->trackzfirst()-iparticle->zpos());
+        double zposabsdif=fabs(iparticle->trackzfirst()-iparticle->zpos());
+        
+        //if (tparticle->decision()==TrueTag) {
+	if (iparticle->fromB()==1) {
+          hpv_gippu_r->Fill(gippu);
+          hpv_difip_r->Fill(ipdif);
+          hpv_ipmeandif_r->Fill(ipmeandif);
+          hpv_zposdif_r->Fill(zposdif);
+          hpv_zposabsdif_r->Fill(zposabsdif);
         } else {
-          hv174->Fill(BMCDphiDir);
-          hv175->Fill(BMCDTheDir);
-          hv176->Fill(BMCDphiVec); 
+          hpv_gippu_w->Fill(gippu);
+          hpv_difip_w->Fill(ipdif);
+          hpv_ipmeandif_w->Fill(ipmeandif);
+          hpv_zposdif_w->Fill(zposdif);
+          hpv_zposabsdif_w->Fill(zposabsdif);
         }
-      }    
+      }
+      //**********************//
+      //**********************//
 
       //plots
       double var = BSpart->pt();
@@ -240,68 +322,6 @@ int main () {
         { h1023->Fill(isame->PIDk()); h1024->Fill(isame->PIDk()-isame->PIDp()); }
       }
       
-      ////////////////////////////////////////////
-      //for primary vertex study
-      Particle*  iparticle = ikaon;
-      Tagger* tparticle = tkaon;
-      if ((iparticle) and (krec>1)) {
-        if(msgLevel(MSG::DEBUG)) debug()<<"Variables: "	
-					<<"nippuerr: "<<iparticle->nippuerr()
-					<<"nippuchi2bs: "<<iparticle->ippuchi2bs()
-					<<"tracks: "<<iparticle->tracks()<<endmsg;
-
-        double gippu=sqrt(iparticle->nippuerr());
-        //double ipmeandif= pow(iparticle->IP()-iparticle->ipmean(),2)/pow(iparticle->ipmean(),2);
-        double ipmeandif= pow(iparticle->IP()-iparticle->ipmean(),2)/pow(iparticle->IP(),2);
-        double ipmeandif1= (iparticle->IP()-iparticle->ipmean());
-        //double ipdif=pow(iparticle->IP()-iparticle->IPPU(),2)/pow(iparticle->IPPU(),2);
-        double ipdif=pow(iparticle->IP()-iparticle->nippu(),2)/pow(iparticle->IP(),2);
-        double ipdif1=(iparticle->IP()-iparticle->nippu());
-        double zposdif=(iparticle->trackzfirst()-iparticle->zpos());
-        double zposdif1=fabs(iparticle->trackzfirst()-iparticle->zpos());
-        
-        if (tparticle->decision()==TrueTag) {
-          //if (iparticle->fromB()==1) {
-          //if ((iparticle->absMCID()==321) && (iparticle->fromB()==1)) {
-          hpv_difip_r->Fill(ipdif);
-          hpv_difip1_r->Fill(ipdif1);
-          hpv_ipmeandif_r->Fill(ipmeandif);
-          hpv_ipmeandif1_r->Fill(ipmeandif1);
-          hpv_ippu_r->Fill(iparticle->IPPU());
-          hpv_gippu_r->Fill(gippu);
-          hpv_ipmean_r->Fill(iparticle->ipmean());
-          hpv_nippu_r->Fill(iparticle->nippu());
-          hpv_tracks_r->Fill(iparticle->tracks());
-          hpv_trackzfirst_r->Fill(iparticle->trackzfirst());
-          hpv_trackp_r->Fill(iparticle->trackp());
-          hpv_zposdif_r->Fill(zposdif);
-          hpv_zposdif1_r->Fill(zposdif1);
-          hpv_ippubs_r->Fill(iparticle->ippubs());
-          hpv_ippuchi2bs_r->Fill(iparticle->ippuchi2bs());
-          hpv_zpos_r->Fill(iparticle->zpos());
-          hpv_zerrpos_r->Fill(iparticle->zerrpos());
-        } else {
-          hpv_difip_w->Fill(ipdif);
-          hpv_difip1_w->Fill(ipdif1);
-          hpv_ipmeandif_w->Fill(ipmeandif);
-          hpv_ipmeandif1_w->Fill(ipmeandif1);
-          hpv_ippu_w->Fill(iparticle->IPPU());
-          hpv_gippu_w->Fill(gippu);
-          hpv_ipmean_w->Fill(iparticle->ipmean());
-          hpv_nippu_w->Fill(iparticle->nippu());
-          hpv_nippuerr_w->Fill(iparticle->nippuerr());
-          hpv_tracks_w->Fill(iparticle->tracks());
-          hpv_trackzfirst_w->Fill(iparticle->trackzfirst());
-          hpv_trackp_w->Fill(iparticle->trackp());
-          hpv_zposdif_w->Fill(zposdif);
-          hpv_zposdif1_w->Fill(zposdif1);
-          hpv_ippubs_w->Fill(iparticle->ippubs());
-          hpv_ippuchi2bs_w->Fill(iparticle->ippuchi2bs());
-          hpv_zpos_w->Fill(iparticle->zpos());
-          hpv_zerrpos_w->Fill(iparticle->zerrpos());
-        }
-      }
-
       /////////////////////////
       if(imuon) { 
         if(tmuon->decision()==TrueTag) { 

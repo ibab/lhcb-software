@@ -275,6 +275,83 @@ TH1F* plotEffectiveEff(TH1F* rh, TH1F* wh, TString direction="left2right"){
 
   return effeff;
 }
+////////////////////////////////////////////////////////////////////////
+TH1F* plot_Eff_Omega(TH1F* rh, TH1F* wh, TString direction="left2right"){
+
+  if(!rh->GetEntries()){
+    cout<<"plotEffectiveEff: histo "<<rh->GetName()<<" is empty"<<endl; 
+    return NULL;
+  }
+  if(!wh->GetEntries()){
+    cout<<"plotEffectiveEff: histo "<<wh->GetName()<<" is empty"<<endl;
+    return NULL;
+  }
+  TH1F* h1 = (TH1F*)gROOT->FindObject("h1");
+  if(!h1){
+    cout<<"plotEffectiveEff: histogram h1 does not exist! Needed to "
+	<<"get the total nr of events. Skip."<<endl;
+    return NULL;
+  }
+  if(!h1->GetEntries()){
+    cout<<"plotEffectiveEff: histo "<<h1->GetName()<<" is empty"<<endl;
+    return NULL;
+  }
+  double nsele = h1->GetEntries(); //get total nr of events
+
+  TH1F* effeff = (TH1F*) rh->Clone(); effeff->Reset();
+  effeff->SetName((TString)"heffom_"+rh->GetName()+wh->GetName());
+  effeff->SetTitle((TString)";"+rh->GetName()+(TString)";EffectiveEff(cut)");
+
+  for(int i=1; i!=rh->GetNbinsX(); ++i) {
+
+    double rtag=0, wtag=0;
+    if(direction == "left2right") {
+      for(int j=i; j!=rh->GetNbinsX()+1; j++)  {
+        rtag += rh->GetBinContent(j);
+        wtag += wh->GetBinContent(j);
+      }
+    } else if(direction == "right2left") {
+      for(int j=1; j!=i+1; j++)  {
+        rtag += rh->GetBinContent(j);
+        wtag += wh->GetBinContent(j);
+      }
+    } else cout<<"Error: unknown option "<<direction<<endl;
+
+    if(rtag && wtag) {
+      double utag  = nsele-rtag-wtag;              // untagged
+      double omtag = wtag/(rtag+wtag);
+      double eftag = (rtag+wtag)/nsele;           // tagging efficiency
+      double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
+      if(rtag<wtag) epsil= -epsil;
+      double epsilerr = sqrt((pow(rtag - wtag,2)*
+			      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
+			       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
+			     /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
+      effeff->SetBinContent(i, epsil*100);
+      effeff->SetBinError(i, epsilerr*100);
+    }
+  }
+
+  TCanvas* c= (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c");  
+  if(!c) return effeff;
+  c->Clear(); c->Divide(1,3); c->cd(1);
+  rh->SetFillColor(kGreen); 
+  rh->Draw();
+  wh->SetFillColor(kRed); 
+  wh->Draw("same"); 
+  c->cd(2); 
+  gPad->SetGrid(); 
+  effeff->Draw();
+  c->cd(3); c->GetPad(3)->SetGrid();
+  TH1F* hhhh = (TH1F*) rh->Clone(); hhhh->Reset();
+  calculateOmega(rh, wh, hhhh);
+  hhhh->SetName("hom");
+  hhhh->Draw("e");
+
+  c->Print((TString)"output/heff_om_"+rh->GetName()+(TString)".gif");
+
+  return effeff;
+}
 //////////////////////////////////////////////////////////////////////////
 TGraphErrors* asymmetry(TH1F* rh, TH1F* wh, TString name="asymplot" ){ 
 

@@ -34,6 +34,7 @@ NNTuner::NNTuner(TString& NNetTrain){
     nntrain->Branch("maxprobf", &maxprobf,"maxprobf/F");
     nntrain->Branch("vratio", &vratio,  "vratio/F");
     nntrain->Branch("vcharge",&vcharge, "vcharge/F");
+    nntrain->Branch("svtau",&svtau, "svtau/F");
 
     nntrain->Branch("om_muon",&om_muon, "om_muon/F");
     nntrain->Branch("om_ele", &om_ele,  "om_ele/F");
@@ -156,6 +157,7 @@ void NNTuner::Fill(Event& event, FlavourTag* thetag){
     maxprobf= mySV->likelihood();
     vratio  = mySV->getVratio();
     vcharge = mySV->getVCharge();
+    svtau   = mySV->getSVtau();
     
     nntrain->Fill();// <-- fills branch
     //cout << mult<<" "<< ptB<<" "<< partP<<" "<< partPt<<" "
@@ -217,11 +219,11 @@ void NNTuner::TrainNNet() {
   //**************************************************** NNet for vtx:
   if(name=="vtx" ) {
     cout<<"\nWill train NNet for tagger: "<<name<<endl;
-    Int_t ntrain = 100;
+    Int_t ntrain = 50;
 
     TMultiLayerPerceptron *mlp =
-      new TMultiLayerPerceptron("mult,nnkrec,ptB,vflag,ptmin,ipsmin,docamax,maxprobf,vratio,vcharge:11:@iscorrect",
-                                "1.",nntrain,"Entry$%2","(Entry$+1)%2");
+      new TMultiLayerPerceptron("mult,nnkrec,ptB,vflag,ptmin,ipsmin,docamax,maxprobf,vratio,vcharge,svtau:12:@iscorrect",
+				"1.",nntrain,"Entry$%2","(Entry$+1)%2");
     mlp->Train(ntrain, "text,graph,update=5");
     TCanvas* mlpc = new TCanvas("mlpc","Network analysis",1200,0,300,600);
     mlpc->Divide(1,3);

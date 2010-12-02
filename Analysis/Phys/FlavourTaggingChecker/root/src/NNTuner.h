@@ -65,7 +65,7 @@ class NNTuner {
 
   Int_t   iscorrect,tagger;
   Float_t mult,ptB,partP,partPt,IPPV,nndeta,nndphi,nndq, nnkrec;
-  Float_t vflag, ptmin, ipsmin, docamax, maxprobf, vratio, vcharge;
+  Float_t vflag, ptmin, ipsmin, docamax, maxprobf, vratio, vcharge, svtau;
   Float_t om_muon, om_ele, om_kaon, om_same, om_vtx;
   std::vector<double> pidvec_right, pidvec_wrong, pidvec_omega;  
   std::vector<double> pidvec_sumomega, pidvec_count, pidvec_averageomega;

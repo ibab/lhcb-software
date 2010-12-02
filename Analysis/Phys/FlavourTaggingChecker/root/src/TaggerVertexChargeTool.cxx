@@ -11,7 +11,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
   declareProperty( "AverageOmega",  m_AverageOmega        = 0.41 );
 
   declareProperty( "PowerK",        m_PowerK              = 0.4 );
-  declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.15 );
+  declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.17 );
   declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
 
   //For CombinationTechnique "Probability":
@@ -40,6 +40,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   Particles::iterator i, ip;
   Particles Pfit; Pfit.clear();
   double maxprobf = 0;
+  TVector3 BoppDir;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
@@ -57,6 +58,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     if( mysecvtx->type() != Vertex::Secondary ) return tVch;
     Pfit = mysecvtx->outgoingParticles();
     maxprobf= mysecvtx->likelihood();
+    BoppDir = mysecvtx->position();//point and svtau
   }
 
   if(msgLevel(MSG::DEBUG)) debug()<<"Pfit.size: "<<Pfit.size()<<endreq;
@@ -72,8 +74,10 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   double Vch = 0, norm = 0;
   double Vptmin = 0, Vipsmin = 0, Vflaglong = 0, Vdocamax = 0;
   int vflagged = 0;
+  TLorentzVector SVmomentum;
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
     if(msgLevel(MSG::DEBUG)) debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endmsg;
+    SVmomentum += (*ip)->momentum();//for tau and point
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
@@ -94,13 +98,34 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   }
   if(msgLevel(MSG::DEBUG)) debug()<<"Vch: "<<Vch<<endreq;
 
+  //add pointing
+  double BDphiDir = BoppDir.DeltaPhi(SVmomentum.Vect());
+  double BDTheDir = BoppDir.Theta()-SVmomentum.Vect().Theta();
+  //if (BDphiDir>1) return tVch; 
+  //if (BDphiDir>0.8) return tVch; 
+
+  //contain kaons
+  int nsecpart = Pfit.size();
+  bool containskaon=false;
+  for (int ip=0; ip<nsecpart; ip++) {
+    if (Pfit.at(ip)->absID()==321) containskaon = true;
+  }
+  //if(containskaon) return tVch;
+
+  //add tau of Bopp
+  double SVP = SVmomentum.P();
+  double SVM = SVmomentum.M();
+  double SVGP = SVP/(0.16*SVM+0.12);
+  double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
+
   if(!m_UseObsoleteSV) { //needed by NNtuner
     mysecvtx->setVflagged(vflagged);
     mysecvtx->setVptmin(Vptmin);
     mysecvtx->setVipsmin(Vipsmin);
     mysecvtx->setVdocamax(Vdocamax);
     mysecvtx->setVratio(Vflaglong/(vflagged? vflagged:1));
-    mysecvtx->setVCharge(fabs(Vch));
+    mysecvtx->setVCharge(Vch); 
+    mysecvtx->setSVtau(SVtau); 
   }
   
   if( Vch==0 ) return tVch;
@@ -118,7 +143,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     }
     nnet.m_rnet_vtx = fabs(Vch);
   } else {
-    std::vector<double> NNinputs(10);
+    std::vector<double> NNinputs(11);
     NNinputs.at(0) = parts.size();
     NNinputs.at(1) = event.pileup();
     NNinputs.at(2) = event.signalB()->pt();
@@ -128,7 +153,8 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     NNinputs.at(6) = Vdocamax;
     NNinputs.at(7) = maxprobf;
     NNinputs.at(8) = Vflaglong/(vflagged? vflagged:1);
-    NNinputs.at(9) = fabs(Vch);
+    NNinputs.at(9) = Vch; 
+    NNinputs.at(10) = SVtau;
 
     omega = 1 - nnet.MLPvtx( NNinputs );
   }
