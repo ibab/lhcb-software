@@ -5,7 +5,7 @@
 #include "TrackAssociator.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // from Event/TrackEvent
 #include "Event/Track.h"
@@ -68,7 +68,7 @@ StatusCode TrackAssociator::initialize() {
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) { return sc; }
-  
+
   // Set the path for the linker table Track - MCParticle
   if ( m_linkerOutTable == "" ) m_linkerOutTable = m_tracksInContainer;
 
@@ -103,7 +103,7 @@ StatusCode TrackAssociator::execute() {
             << endreq;
     return StatusCode::FAILURE;
   }
-  
+
   // Get the linker table TTCluster => MCParticle
   LinkedTo<MCParticle,STCluster>
     ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters );
@@ -136,7 +136,7 @@ StatusCode TrackAssociator::execute() {
     m_muonLink = MuonLink(evtSvc(),msgSvc(),LHCb::MuonCoordLocation::MuonCoords);
     if( m_muonLink.notFound() ) {
       error() << "Unable to retrieve MuonCoord to MCParticle linker table."
-	      << endreq;
+              << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -154,178 +154,157 @@ StatusCode TrackAssociator::execute() {
     m_nTT1.clear();
     m_nSeed.clear();
     m_nMuon.clear();
-    
+
     // Loop over the LHCbIDs of the Track
     static int nMeas;
     nMeas = 0;
     for( std::vector<LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
-         tr->lhcbIDs().end() != iId; ++iId ) 
-      {
-        if( (*iId).isVelo() ) {
-          ++nMeas;
-          VeloChannelID vID = (*iId).veloID();
-          // Count number of Velo hits
-          m_nTotVelo += 1.;
-          MCParticle* mcParticle = veloLink.first( vID );
-          if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with VeloCluster " << vID << endreq;
-          }
-          while( 0 != mcParticle ) {
-            if( mcParts != mcParticle->parent() ) {
-              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-            }
-            else { countMCPart( mcParticle, 1., 0., 0., 0. ); }
-            mcParticle = veloLink.next();
-          }
-          continue;
+         tr->lhcbIDs().end() != iId; ++iId )
+    {
+      if( (*iId).isVelo() ) {
+        ++nMeas;
+        VeloChannelID vID = (*iId).veloID();
+        // Count number of Velo hits
+        m_nTotVelo += 1.;
+        MCParticle* mcParticle = veloLink.first( vID );
+        if( m_debugLevel && 0 == mcParticle ) {
+          debug() << "No MCParticle linked with VeloCluster " << vID << endreq;
         }
-        if( (*iId).isTT() ) {
-          ++nMeas;
-          m_nTotTT1 += 1.;
-          STChannelID ttID = (*iId).stID();
-          MCParticle* mcParticle = ttLink.first( ttID );
-          if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with TTCluster " << ttID << endreq;
+        while( 0 != mcParticle ) {
+          if( mcParts != mcParticle->parent() ) {
+            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
           }
-          while( 0 != mcParticle ) {
-            if( mcParts != mcParticle->parent() ) {
-              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-            }
-            else { countMCPart( mcParticle, 0., 1., 0., 0. ); }
-            mcParticle = ttLink.next();
-          }
-          continue;
+          else { countMCPart( mcParticle, 1., 0., 0., 0. ); }
+          mcParticle = veloLink.next();
         }
-        if( (*iId).isIT() ) {
-          ++nMeas;
-          // Count number of IT+OT hits
-          m_nTotSeed += 1.;
-          STChannelID itID = (*iId).stID();
-          MCParticle* mcParticle = itLink.first( itID );
-          if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with ITCluster " << itID << endreq;
-          }
-          while( 0 != mcParticle ) {
-            if( mcParts != mcParticle->parent() ) {
-              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-            }
-            else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
-            mcParticle = itLink.next();
-          }
-          continue;
-        }
-        if( (*iId).isOT() ) {
-          ++nMeas;
-          // Count number of IT+OT hits
-          m_nTotSeed += 1.;
-          OTChannelID otID = (*iId).otID();
-          MCParticle* mcParticle = otLink.first( otID );
-          if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with OTTime " << otID << endreq;
-          }
-          while( 0 != mcParticle ) {
-            if( mcParts != mcParticle->parent() ) {
-              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-            }
-            else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
-            mcParticle = otLink.next();
-          }
-        }
-	if(m_decideUsingMuons) {
-	  if( (*iId).isMuon() ) {
-	    ++nMeas;
-	    // Count number of Muon hits
-	    m_nTotMuon += 1.;
-	    MuonTileID muonID = (*iId).muonID();
-	    MCParticle* mcParticle = m_muonLink.first( muonID );
-	    if( m_debugLevel && 0 == mcParticle ) {
-	      debug() << "No MCParticle linked with MuonCoord " << muonID << endreq;
-	    }
-	    while( 0 != mcParticle ) {
-	      if( mcParts != mcParticle->parent() ) {
-		debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-	      }
-	      else { countMCPart( mcParticle, 0., 0., 0., 1. ); }
-	      mcParticle = m_muonLink.next();
-	    }
-	  }
-	}
+        continue;
       }
-    
-    //== For ST match, count also parents hits if in VELO !
-    // If the Track has total # Velo hits > 2 AND total # IT+OT hits > 2
-    if( ( 2 < m_nTotVelo ) && ( 2 < m_nTotSeed ) ) {
-      unsigned int j1, j2;
-      // Loop over the vector of MCParticles which have a Measurement associated
-      for( j1 = 0; m_parts.size() > j1; ++j1 ) {
-        // If the # of IT+OT hits associated to the MCParticle is
-        // smaller than 0.70*total # of IT+OT hits, then go to the end
-        // of the loop over the MCParticles with a Measurement associated
-        // This prevents one from looking at the GodMother MCParticle
-        if( m_nSeed[j1] < m_fractionOK * m_nTotSeed ) { continue; }
-        const MCVertex* vOrigin = m_parts[j1]->originVertex();
-        while( 0 != vOrigin ) {
-          const MCParticle* mother = vOrigin->mother();
-          // If the originVertex has no mother, then exit the while loop
-          if( 0 == mother ) break;
-          // Loop over vector of MCParticles which have a Measurement associated
-          for( j2 = 0; m_parts.size() > j2; ++j2 ) {
-            // If the # of Velo hits associated to the MCParticle is
-            // smaller than 0.70*total # of Velo hits, then go to the end
-            // of the loop over the MCParticles with a Measurement associated
-            // This prevents one from looking at the GodMother MCParticle
-            if( m_nVelo[j2] < m_fractionOK * m_nTotVelo ) { continue;}
-            // If one of the MCParticles of m_parts is the mother of originVertex
-            if( mother == m_parts[j2] ) {
-              
-              debug() << "  *** Particle " << m_parts[j1]->key() 
-                      << "[" << m_parts[j1]->particleID().pid()
-                      << "] (" << m_nVelo[j1] << "," << m_nTT1[j1] 
-                      << "," << m_nSeed[j1] << ")" 
-                      << " is daughter of " << m_parts[j2]->key()
-                      << "[" << m_parts[j2]->particleID().pid()
-                      << "] (" << m_nVelo[j2] << "," << m_nTT1[j2] 
-                      << "," << m_nSeed[j2] << ")" 
-                      << ". Merge hits to tag both." << endreq;
-              
-              //== Daughter hits are added to mother.
-              m_nVelo[j2] += m_nVelo[j1];
-              m_nTT1 [j2] += m_nTT1 [j1];
-              m_nSeed[j2] += m_nSeed[j1];
-              
-              //== Mother hits overwrite Daughter hits
-              m_nVelo[j1] = m_nVelo[j2];
-              m_nTT1 [j1] = m_nTT1 [j2];
-              m_nSeed[j1] = m_nSeed[j2];
-            }
+      if( (*iId).isTT() ) {
+        ++nMeas;
+        m_nTotTT1 += 1.;
+        STChannelID ttID = (*iId).stID();
+        MCParticle* mcParticle = ttLink.first( ttID );
+        if( m_debugLevel && 0 == mcParticle ) {
+          debug() << "No MCParticle linked with TTCluster " << ttID << endreq;
+        }
+        while( 0 != mcParticle ) {
+          if( mcParts != mcParticle->parent() ) {
+            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
           }
-          // Go one step into the past of family line, so find grandmother
-          vOrigin = mother->originVertex();
+          else { countMCPart( mcParticle, 0., 1., 0., 0. ); }
+          mcParticle = ttLink.next();
+        }
+        continue;
+      }
+      if( (*iId).isIT() ) {
+        ++nMeas;
+        // Count number of IT+OT hits
+        m_nTotSeed += 1.;
+        STChannelID itID = (*iId).stID();
+        MCParticle* mcParticle = itLink.first( itID );
+        if( m_debugLevel && 0 == mcParticle ) {
+          debug() << "No MCParticle linked with ITCluster " << itID << endreq;
+        }
+        while( 0 != mcParticle ) {
+          if( mcParts != mcParticle->parent() ) {
+            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+          }
+          else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
+          mcParticle = itLink.next();
+        }
+        continue;
+      }
+      if( (*iId).isOT() ) {
+        ++nMeas;
+        // Count number of IT+OT hits
+        m_nTotSeed += 1.;
+        OTChannelID otID = (*iId).otID();
+        MCParticle* mcParticle = otLink.first( otID );
+        if( m_debugLevel && 0 == mcParticle ) {
+          debug() << "No MCParticle linked with OTTime " << otID << endreq;
+        }
+        while( 0 != mcParticle ) {
+          if( mcParts != mcParticle->parent() ) {
+            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+          }
+          else { countMCPart( mcParticle, 0., 0., 1., 0. ); }
+          mcParticle = otLink.next();
         }
       }
+      if(m_decideUsingMuons) {
+        if( (*iId).isMuon() ) {
+          ++nMeas;
+          // Count number of Muon hits
+          m_nTotMuon += 1.;
+          MuonTileID muonID = (*iId).muonID();
+          MCParticle* mcParticle = m_muonLink.first( muonID );
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with MuonCoord " << muonID << endreq;
+          }
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+            }
+            else { countMCPart( mcParticle, 0., 0., 0., 1. ); }
+            mcParticle = m_muonLink.next();
+          }
+        }
+      }
+    }
+
+    //== Handling of decays between Velo and T: Associate the hits also to the mother
+
+    for ( unsigned int j1 = 0; m_parts.size() > j1; ++j1 ) {
+      const MCVertex* vOrigin = m_parts[j1]->originVertex();
+      if ( 0 == vOrigin ) continue;
+      const MCParticle* mother = vOrigin->mother();
+      if( 0 == mother ) continue;
+      if ( vOrigin->type() != MCVertex::DecayVertex ) continue;
+      for( unsigned int j2 = 0; m_parts.size() > j2; ++j2 ) {
+        if ( mother == m_parts[j2] ) {
+          debug() << "  *** Particle " << m_parts[j1]->key()
+                  << "[" << m_parts[j1]->particleID().pid()
+                  << "] (" << m_nVelo[j1] << "," << m_nTT1[j1] << "," << m_nSeed[j1] << ")"
+                  << " is daughter at z=" << vOrigin->position().z()
+                  << " of " << m_parts[j2]->key()
+                  << "[" << m_parts[j2]->particleID().pid()
+                  << "] (" << m_nVelo[j2] << "," << m_nTT1[j2] << "," << m_nSeed[j2] << ")"
+                  << ". Merge hits to tag both." << endreq;
+          
+          //== Daughter hits are added to mother.
+          m_nVelo[j2] += m_nVelo[j1];
+          m_nTT1 [j2] += m_nTT1 [j1];
+          m_nSeed[j2] += m_nSeed[j1];
+          
+          //== Mother hits overwrite Daughter hits
+          m_nVelo[j1] = m_nVelo[j2];
+          m_nTT1 [j1] = m_nTT1 [j2];
+          m_nSeed[j1] = m_nSeed[j2];
+        }
+      }     
     }
 
     // Add parent muon hits to daughter MCParticle
     if(m_decideUsingMuons) {
       unsigned int j1, j2;
       for( j1 = 0; m_parts.size() > j1; ++j1 ) {
-	if( m_nMuon[j1] < m_fractionOK * m_nTotMuon ) { continue; }
-	const MCVertex* vOrigin = m_parts[j1]->originVertex();
-	while( 0 != vOrigin ) {
-	  const MCParticle* mother = vOrigin->mother();
-	  if( 0 == mother ) break;
-	  for( j2 = 0; m_parts.size() > j2; ++j2 ) {
-	    if( m_nSeed[j2] < m_fractionOK * m_nTotSeed ) { continue; }
-	    if( mother == m_parts[j2] ) {
-	      m_nMuon[j2] += m_nMuon[j1];
-	      m_nMuon[j1] = m_nMuon[j2];
-	    }
-	  }
-	  vOrigin = mother->originVertex();
-	}
+        if( m_nMuon[j1] < m_fractionOK * m_nTotMuon ) { continue; }
+        const MCVertex* vOrigin = m_parts[j1]->originVertex();
+        while( 0 != vOrigin ) {
+          const MCParticle* mother = vOrigin->mother();
+          if( 0 == mother ) break;
+          for( j2 = 0; m_parts.size() > j2; ++j2 ) {
+            if( m_nSeed[j2] < m_fractionOK * m_nTotSeed ) { continue; }
+            if( mother == m_parts[j2] ) {
+              m_nMuon[j2] += m_nMuon[j1];
+              m_nMuon[j1] = m_nMuon[j2];
+            }
+          }
+          vOrigin = mother->originVertex();
+        }
       }
     }
-    
+
     // For each MCParticle with a Measurement associated,
     //  Relate the Track to the MCParticles matching the below criteria,
     //  using as weight the ratio of ( total # Measurements associated
@@ -363,11 +342,11 @@ StatusCode TrackAssociator::execute() {
       if( 2 < m_nTotVelo && 2 < m_nTotSeed ) { TT1OK = true; }
       bool muonOK = true;
       if(m_decideUsingMuons) {
-	ratio = m_nMuon[jj] / m_nTotMuon;
-	if( m_fractionOK > ratio ) { muonOK = false; }
+        ratio = m_nMuon[jj] / m_nTotMuon;
+        if( m_fractionOK > ratio ) { muonOK = false; }
       }
 
-      verbose() << " MC " << m_parts[jj]->key() 
+      verbose() << " MC " << m_parts[jj]->key()
                 << " Velo " <<  m_nVelo[jj] << "/" << m_nTotVelo
                 << " TT1 " <<  m_nTT1[jj] << "/" << m_nTotTT1
                 << " Seed " <<  m_nSeed[jj] << "/" << m_nTotSeed
@@ -375,8 +354,8 @@ StatusCode TrackAssociator::execute() {
 
       //=== Decision. Use TT1. Fill Linker
       if( veloOK && seedOK && TT1OK && muonOK ) {
-	double muons = 0.;
-	if(m_decideUsingMuons) { muons = m_nMuon[jj]; }
+        double muons = 0.;
+        if(m_decideUsingMuons) { muons = m_nMuon[jj]; }
         ratio = ( m_nVelo[jj] + m_nSeed[jj] + m_nTT1[jj] + muons ) / nMeas;
         myLinker.link( tr, m_parts[jj], ratio );
       }
@@ -397,11 +376,11 @@ StatusCode TrackAssociator::finalize() {
 //=============================================================================
 // Adjust the counters for this MCParticle, create one if needed
 //=============================================================================
-void TrackAssociator::countMCPart( const MCParticle* part, 
-                                   double incVelo, 
+void TrackAssociator::countMCPart( const MCParticle* part,
+                                   double incVelo,
                                    double incTT1,
                                    double incSeed,
-				   double incMuon ) {
+                                   double incMuon ) {
   bool found = false;
   // Loop over the MCParticles vector to see whether part is already in m_parts
   for( unsigned int jj = 0; m_parts.size() > jj; ++jj ) {
@@ -412,7 +391,7 @@ void TrackAssociator::countMCPart( const MCParticle* part,
       m_nMuon[jj] += incMuon;
       // Prevent next if loop to run when this one already did the work
       found = true;
-      // Stop looping when successful 
+      // Stop looping when successful
       break;
     }
   }

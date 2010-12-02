@@ -4,6 +4,11 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2010-12-02 - Olivier Callot
+ - Re-implement the mother-daughter matching. Now it is doen for any position
+   of the decay vertex, but only from daughter to mother and if the vertex is
+   of type DecayVertex.
+
 ! 2010-11-25 - Olivier Callot
  - use getOrCreate method to access the tracks, so that non created containers
   (partial reconstruction) don't bomb
