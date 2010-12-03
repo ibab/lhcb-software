@@ -5,7 +5,7 @@
 
 ! 2010-12-03 - Marco Clemencic
  - Added dictionary for LHCb::Vertex::ConstVector
-   (needed by LoKi::SelectVertex in Phys).
+   (needed by LoKi::SelectVertex in Phys, fixes bug #75884).
 
 !======================== PhysEvent v11r12p1 2010-06-18 =====================
 ! 2010-05-26 - Marco Cattaneo
