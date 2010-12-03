@@ -1,0 +1,29 @@
+# $Id:$ 
+# =============================================================================
+# Created    : 2010-12-02
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@cern.ch
+# =============================================================================
+package            KalmanFilter 	
+version            v1r0	
+
+# ================ structure ==================================================
+branches           cmt doc src KalmanFilter
+
+# ================ dependencies ===============================================
+use                LHCbMath  v* Kernel 
+use                PhysEvent v* Event
+use                CaloUtils v* Calo
+
+# ================ own includes ===============================================
+apply_pattern install_more_includes more=KalmanFilter
+
+# ================ constituents ===============================================
+library            KalmanFilter  ../src/*.cpp
+
+# ================ patterns ===================================================
+apply_pattern      linker_library    library=KalmanFilter
+
+# =============================================================================
+# The END 
+# =============================================================================
+
