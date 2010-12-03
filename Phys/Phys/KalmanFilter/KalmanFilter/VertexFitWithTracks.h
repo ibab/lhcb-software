@@ -1,4 +1,4 @@
-// $Id$
+// $Id: TrackKalmanFilter.h 114335 2010-12-03 09:13:51Z ibelyaev $
 // ============================================================================
 #ifndef TRACKKALMANFILTER_H 
 #define TRACKKALMANFILTER_H 1
@@ -39,9 +39,9 @@ namespace LHCb { class State ; }  // Event/TrackEvent
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2010-11-02
  *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 114335 $
+ *  Last modification $Date: 2010-12-03 10:13:51 +0100 (Fri, 03 Dec 2010) $
+ *                 by $Author: ibelyaev $
  * 
  */
 // ============================================================================
@@ -58,7 +58,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev
      *  @date   2010-11-02
      */
-    class GAUDI_API TrackEntry4
+    class GAUDI_API TrEntry4
     {
     public:
       // ======================================================================
@@ -101,10 +101,10 @@ namespace LoKi
       /// \f$F=WB^{T}GA\f$
       Gaudi::Matrix2x3                  m_f    ; // auxillary matrix F 
       // ======================================================================
-    } ; //                         end of class LoKi::KalmanFilter::TrackEntry4
+    } ; //                         end of class LoKi::KalmanFilter::TrEntry4
     // ========================================================================
     /// the actual type of the container of entries 
-    typedef std::vector<TrackEntry4>                            TrackEntries4 ;
+    typedef std::vector<TrEntry4>                                  TrEntries4 ;
     // ========================================================================
     /** make one step of Kalman filter 
      *  @param entry (update)       measurement to be updated 
@@ -117,7 +117,7 @@ namespace LoKi
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrackEntry4&  entry , 
+    ( LoKi::KalmanFilter::TrEntry4&     entry , 
       const Gaudi::XYZPoint&            x     , 
       const Gaudi::SymMatrix3x3&        ci    , 
       const double                      chi2  ) ;
@@ -133,7 +133,7 @@ namespace LoKi
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrackEntry4&  entry , 
+    ( LoKi::KalmanFilter::TrEntry4&     entry , 
       const Gaudi::Vector3&             x     , 
       const Gaudi::SymMatrix3x3&        ci    , 
       const double                      chi2  ) ;
@@ -143,13 +143,13 @@ namespace LoKi
      *  @param entry2 (update)       measurements to be updated 
      *  @param chi2  (input)        the initial chi2 
      *  @return status code 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-02
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-      LoKi::KalmanFilter::TrackEntry4&  entry2   , 
+    ( LoKi::KalmanFilter::TrEntry4&     entry1   ,
+      LoKi::KalmanFilter::TrEntry4&     entry2   , 
       const double                      chi2     ) ;
     // ========================================================================
     /** make one step of Kalman filter (similar to seeding)
@@ -158,15 +158,15 @@ namespace LoKi
      *  @param entry3 (update)       measurements to be updated 
      *  @param chi2  (input)        the initial chi2 
      *  @return status code 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-02
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-      LoKi::KalmanFilter::TrackEntry4&  entry2   , 
-      LoKi::KalmanFilter::TrackEntry4&  entry3   , 
-      const double                      chi2     ) ;
+    ( LoKi::KalmanFilter::TrEntry4&  entry1   ,
+      LoKi::KalmanFilter::TrEntry4&  entry2   , 
+      LoKi::KalmanFilter::TrEntry4&  entry3   , 
+      const double                   chi2     ) ;
     // ========================================================================
     /** make one step of Kalman filter (similar to seeding)
      *  @param entry1 (update)       measurements to be updated 
@@ -180,19 +180,19 @@ namespace LoKi
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-      LoKi::KalmanFilter::TrackEntry4&  entry2   , 
-      LoKi::KalmanFilter::TrackEntry4&  entry3   , 
-      LoKi::KalmanFilter::TrackEntry4&  entry4   , 
-      const double                      chi2     ) ;
+    ( LoKi::KalmanFilter::TrEntry4&  entry1   ,
+      LoKi::KalmanFilter::TrEntry4&  entry2   , 
+      LoKi::KalmanFilter::TrEntry4&  entry3   , 
+      LoKi::KalmanFilter::TrEntry4&  entry4   , 
+      const double                   chi2     ) ;
     // ========================================================================
     /// kalman smoothing  
     GAUDI_API
-    StatusCode smooth  ( LoKi::KalmanFilter::TrackEntries4& entries ) ;
+    StatusCode smooth  ( LoKi::KalmanFilter::TrEntries4& entries ) ;
     // ========================================================================
     /// load the data from the state 
     GAUDI_API
-    StatusCode load    ( const LHCb::State* state , TrackEntry4& entry ) ;
+    StatusCode load    ( const LHCb::State* state , TrEntry4& entry ) ;
     // ========================================================================
   } //                                      end of namespace LoKi::KalmanFilter   
   // ==========================================================================

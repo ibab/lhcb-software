@@ -1,4 +1,4 @@
-// $Id$
+// $Id: KalmanFilter.h 114335 2010-12-03 09:13:51Z ibelyaev $
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -50,9 +50,9 @@ class IParticleTransporter ;
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-04-12
  *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 114335 $
+ *  Last modification $Date: 2010-12-03 10:13:51 +0100 (Fri, 03 Dec 2010) $
+ *                 by $Author: ibelyaev $
  * 
  */
 // ============================================================================
@@ -186,9 +186,9 @@ namespace LoKi
    *  R.K.Bock et al., "Data analysis techniques for high-energy physics experiemnts", 
    *                   Cambridge Univ.Press (1990), p319
    *
-   *                    $Revision$
-   *  Last modification $Date$
-   *                 by $Author$
+   *                    $Revision: 114335 $
+   *  Last modification $Date: 2010-12-03 10:13:51 +0100 (Fri, 03 Dec 2010) $
+   *                 by $Author: ibelyaev $
    *    
    */
   namespace KalmanFilter

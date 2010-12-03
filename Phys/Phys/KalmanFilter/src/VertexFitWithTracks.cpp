@@ -1,4 +1,4 @@
-// $Id$
+// $Id: TrackKalmanFilter.cpp 114343 2010-12-03 11:16:31Z ibelyaev $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,7 +17,7 @@
 // ============================================================================
 // Local
 // ============================================================================
-#include "KalmanFilter/TrackKalmanFilter.h"
+#include "KalmanFilter/VertexFitWithTracks.h"
 #include "KalmanFilter/ErrorCodes.h"
 // ============================================================================
 /** @file 
@@ -40,19 +40,19 @@
  *    with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-04-12
+ *  @author Vanya BELYAEV ibelyaev@cern.ch
+ *  @date   2010-12-02
  *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 114343 $
+ *  Last modification $Date: 2010-12-03 12:16:31 +0100 (Fri, 03 Dec 2010) $
+ *                 by $Author: ibelyaev $
  * 
  */
 // ============================================================================
 // make one step of Kalman filter 
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrackEntry4&  entry , 
+( LoKi::KalmanFilter::TrEntry4&     entry , 
   const Gaudi::XYZPoint&            x     , 
   const Gaudi::SymMatrix3x3&        ci    , 
   const double                      chi2  ) 
@@ -64,7 +64,7 @@ StatusCode LoKi::KalmanFilter::step
 // make one step of Kalman filter q
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrackEntry4&  entry , 
+( LoKi::KalmanFilter::TrEntry4&     entry , 
   const Gaudi::Vector3&             x     , 
   const Gaudi::SymMatrix3x3&        ci    , 
   const double                      chi2  ) 
@@ -103,13 +103,13 @@ StatusCode LoKi::KalmanFilter::step
  *  @param entry2 (update)       measurements to be updated 
  *  @param chi2  (input)        the initial chi2 
  *  @return status code 
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2008-03-06
  */
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-  LoKi::KalmanFilter::TrackEntry4&  entry2   , 
+( LoKi::KalmanFilter::TrEntry4&     entry1   ,
+  LoKi::KalmanFilter::TrEntry4&     entry2   , 
   const double                      chi2     ) 
 {
   //
@@ -157,10 +157,10 @@ StatusCode LoKi::KalmanFilter::step
  */
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-  LoKi::KalmanFilter::TrackEntry4&  entry2   , 
-  LoKi::KalmanFilter::TrackEntry4&  entry3   , 
-  const double                      chi2     ) 
+( LoKi::KalmanFilter::TrEntry4&  entry1   ,
+  LoKi::KalmanFilter::TrEntry4&  entry2   , 
+  LoKi::KalmanFilter::TrEntry4&  entry3   , 
+  const double                   chi2     ) 
 {
   //
   entry1.m_ci  = entry1.m_vxi ;
@@ -221,11 +221,11 @@ StatusCode LoKi::KalmanFilter::step
  */
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrackEntry4&  entry1   ,
-  LoKi::KalmanFilter::TrackEntry4&  entry2   , 
-  LoKi::KalmanFilter::TrackEntry4&  entry3   , 
-  LoKi::KalmanFilter::TrackEntry4&  entry4   , 
-  const double                      chi2     ) 
+( LoKi::KalmanFilter::TrEntry4&  entry1   ,
+  LoKi::KalmanFilter::TrEntry4&  entry2   , 
+  LoKi::KalmanFilter::TrEntry4&  entry3   , 
+  LoKi::KalmanFilter::TrEntry4&  entry4   , 
+  const double                   chi2     ) 
 {
   //
   entry1.m_ci  = entry1.m_vxi ;
@@ -288,12 +288,12 @@ StatusCode LoKi::KalmanFilter::step
 // kalman smoothing  
 // ============================================================================
 StatusCode LoKi::KalmanFilter::smooth
-( LoKi::KalmanFilter::TrackEntries4& entries ) 
+( LoKi::KalmanFilter::TrEntries4& entries ) 
 {
   if ( entries.empty() ) { return StatusCode::FAILURE ; }
   //
-  const TrackEntry4& last = entries.back() ;
-  for ( TrackEntries4::iterator entry = entries.begin() ; 
+  const TrEntry4& last = entries.back() ;
+  for ( TrEntries4::iterator entry = entries.begin() ; 
         entries.end() != entry ; ++entry ) 
   {
     /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
@@ -310,10 +310,12 @@ StatusCode LoKi::KalmanFilter::smooth
 /// load the data from the state 
 // ============================================================================
 StatusCode LoKi::KalmanFilter::load
-( const LHCb::State* state , LoKi::KalmanFilter::TrackEntry4& entry ) 
+( const LHCb::State* state , LoKi::KalmanFilter::TrEntry4& entry ) 
 {
   /// reset the state 
   entry.m_state = 0 ;                                       // reset the state 
+  //
+  if ( 0 == state ) { return StatusCode::FAILURE ; }        // RETURN 
   //
   const Gaudi::TrackVector&    vct = state -> stateVector () ;
   // Retrieve const  the state covariance matrix 
@@ -327,9 +329,10 @@ StatusCode LoKi::KalmanFilter::load
   entry.m_parq[0] = vct ( 2 )  ;     // tx 
   entry.m_parq[1] = vct ( 3 )  ;     // ty 
   //
+  // correlations:  ????
   for ( int i = 0 ; i < 2 ; ++i )  
   { 
-    for ( int j = 0 ; j < 0 ; ++j ) 
+    for ( int j = 0 ; j < 2 ; ++j ) 
     { 
       /// cov ( q , x ) 
       entry.m_qvsx ( i , j ) = cov ( i , j + 2 ) ; // cov ( q , x ) 
