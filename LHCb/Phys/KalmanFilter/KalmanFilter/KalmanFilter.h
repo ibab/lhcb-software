@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.h,v 1.4 2010-01-04 16:50:56 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -181,6 +181,15 @@ namespace LoKi
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-04-12
+   *
+   *  For details see:
+   *  R.K.Bock et al., "Data analysis techniques for high-energy physics experiemnts", 
+   *                   Cambridge Univ.Press (1990), p319
+   *
+   *                    $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
+   *    
    */
   namespace KalmanFilter
   {
