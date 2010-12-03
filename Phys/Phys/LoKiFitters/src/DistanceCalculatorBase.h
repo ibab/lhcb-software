@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.6 2009-12-15 15:24:26 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1

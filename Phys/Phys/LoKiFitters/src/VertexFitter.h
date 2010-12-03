@@ -1,4 +1,4 @@
-// $Id: VertexFitter.h,v 1.6 2010-01-22 10:21:12 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIFITTERS_VERTEXFITTER_H 
 #define LOKIFITTERS_VERTEXFITTER_H 1

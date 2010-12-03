@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.h,v 1.5 2009-08-13 14:44:42 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIFITTERS_DIRECTIONFITBASE_H 
 #define LOKIFITTERS_DIRECTIONFITBASE_H 1

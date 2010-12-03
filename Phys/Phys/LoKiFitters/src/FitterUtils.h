@@ -1,4 +1,4 @@
-// $Id: FitterUtils.h,v 1.3 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIFITTERS_FITTERUTILS_H 
 #define LOKIFITTERS_FITTERUTILS_H 1
