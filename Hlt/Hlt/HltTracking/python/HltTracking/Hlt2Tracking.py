@@ -992,15 +992,20 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Velo track reconstruction for Hlt2
         """
         from Configurables      import Tf__PatVeloGeneralTracking
-        from Configurables      import Tf__PatVeloSpaceTool
+        from Configurables      import Tf__PatVeloSpaceTool, FastVeloTracking
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
         from HltReco        import MinimalVelo
         from HltLine.HltLine    import bindMembers 
+        
+
             
         veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
+
+        recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation ) #"Hlt/Track/Velo" )
+        recoVeloExtra.HLT2Complement = True
        
-        recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
-                                           , OutputTracksLocation = veloTracksOutputLocation )
+        #recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
+        #                                   , OutputTracksLocation = veloTracksOutputLocation )
 
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
@@ -1009,7 +1014,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        bm_members      = MinimalVelo.members() + [recoVeloGeneral]
+        bm_members      = MinimalVelo.members() + [recoVeloExtra]#recoVeloGeneral]
         bm_output       = veloTracksOutputLocation
     
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
