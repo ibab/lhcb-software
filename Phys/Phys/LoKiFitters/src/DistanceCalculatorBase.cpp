@@ -34,7 +34,7 @@
  * 
  */
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param type tool type(?)
  *  @param name tool instance name 
  *  @param parent the pointer to the parent
@@ -47,12 +47,26 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   : GaudiTool ( type , name , parent ) 
 /// number of prints 
   , m_prints              ( 10 )
+/// The name of particle transporter tool 
+  , m_transporterName   ( "ParticleTransporter:PUBLIC" ) // The name of particle transpoter tool
+/// The transporter tool itself 
+  , m_transporter       ( 0 ) // The transporter tool itself 
+/// The name of track state provider 
+  , m_stateProviderName ( "TrackStateProvider:PUBLIC" )
+/// The state provider  tool itself 
+  , m_stateProvider     ( 0 ) // The state provider 
 {
   // ==========================================================================
   declareProperty 
     ( "MaxPrints"        , 
       m_prints           , 
       "Maximal number of prints "        ) ;
+  declareProperty 
+    ( "Transporter"      , m_transporterName      , 
+      "The Particle Transporter tool to be used"  ) ;
+  declareProperty 
+    ( "StateProvider"      , m_stateProviderName  , 
+      "The Track State Provider  tool to be used" );
   // ==========================================================================
 }
 // ============================================================================
@@ -74,6 +88,15 @@ StatusCode LoKi::DistanceCalculatorBase::initialize ()
   }
   //
   return StatusCode::SUCCESS ; 
+}
+// ============================================================================
+// initialize 
+// ============================================================================
+StatusCode LoKi::DistanceCalculatorBase::finalize () 
+{
+  m_transporter   = 0 ;
+  m_stateProvider = 0 ;
+  return GaudiTool::finalize () ;
 }
 // ============================================================================
 // The END 

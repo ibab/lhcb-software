@@ -13,7 +13,8 @@
 // ============================================================================
 /// KalmanFilter
 // ============================================================================
-#include "KalmanFilter/KalmanFilter.h"
+#include "KalmanFilter/VertexFit.h"
+#include "KalmanFilter/VertexFitWithTracks.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -489,6 +490,108 @@ namespace LoKi
     // ========================================================================
     /// @}
     // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup  TrackVertex  
+     *  Evaluation of the distance between the track and vertex 
+     *  @{
+     */
+    // ========================================================================    
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *track , *vertex , impact ) ;
+      imppar = impact.R() ;
+      return sc ;
+    }
+    // ========================================================================    
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     *  @param chi2   (output) chi2 of impact parameter 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   , 
+      double&                 chi2     ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *track , *vertex , impact , &chi2 ) ;
+      imppar = impact.R() ;
+      return sc ;
+    }
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      Gaudi::XYZVector&       impact   ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track , *vertex , impact ) ;
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup  TrackTrack
+     *  Evaluation of the distance between the tracks
+     *  @{
+     */
+    // ========================================================================    
+    /** evaluate the distance between two tracks
+     *  @param track1 (input)  the first track 
+     *  @param track2 (input)  the second track  
+     *  @param doca   (output) the value of distance 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track1 ,
+      const LHCb::Track*      track2 ,
+      double&                 doca   ) const 
+    {
+      StatusCode sc = check ( track1 , track2 ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track1 , *track2 , doca ) ;
+    }
+    // ========================================================================    
+    /** evaluate the distance between two tracks
+     *  @param track1 (input)  the first track 
+     *  @param track2 (input)  the second track  
+     *  @param doca   (output) the value of distance 
+     *  @param chi2   (output) the chi2 of distance 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track1 ,
+      const LHCb::Track*      track2 ,
+      double&                 doca   , 
+      double&                 chi2   ) const 
+    {
+      StatusCode sc = check ( track1 , track2 ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track1 , *track2 , doca , &chi2 ) ;
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
   protected: 
     // ========================================================================
     /** Standard constructor
@@ -510,7 +613,7 @@ namespace LoKi
     /// the copy    constructor is disabled 
     TrgDistanceCalculator ( const TrgDistanceCalculator&) ; // no copy 
     /// the assignement operator is disabled 
-    TrgDistanceCalculator& operator=( const TrgDistanceCalculator&) ; // no assignement
+    TrgDistanceCalculator& operator=( const TrgDistanceCalculator&) ;
     // ========================================================================
   private:
     // ========================================================================
@@ -609,12 +712,49 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-     /// Kalman filter object: 
+    /** The method for the evaluation of the impact parameter ("distance") 
+     *  vector of the particle with respect to some vertex. 
+     *  @param track    (input)  the track 
+     *  @param vertex   (input)  the vertex 
+     *  @param imppar   (output) the impact parameter ("distance") vector 
+     *  @param chi2     (output,optional) the chi2 of distance 
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Track&      track        ,
+      const LHCb::VertexBase& vertex       , 
+      Gaudi::XYZVector&       imppar       , 
+      double*                 chi2     = 0 ) const ;
+    // ========================================================================
+    /** The method for the evaluation of the distance between two tracks 
+     *  @param track1  (input)  the first tarck 
+     *  @param track2  (input)  the first tarck 
+     *  @param doca    (output) the distance 
+     *  @param chi2    (output,optional) the chi2 of distance 
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Track&      track1       ,
+      const LHCb::Track&      track2       ,
+      double&                 doca         ,
+      double*                 chi2     = 0 ) const ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// Kalman filter object: 
     mutable LoKi::KalmanFilter::Entry   m_entry   ; // Kalman filter object
     /// Kalman filter objects: 
     mutable LoKi::KalmanFilter::Entries m_entries ; // Kalman filter objects
     /// distance/path fitter
     mutable LoKi::Fitters::Fitter1      m_fitter  ; // distance/path fitter
+    // ========================================================================
+  private:  // tracks without momentum information 
+    // ========================================================================
+    /// Kalman filter object: 
+    mutable LoKi::KalmanFilter::TrEntry4   m_entry4   ; // Kalman filter object
+    /// Kalman filter objects: 
+    mutable LoKi::KalmanFilter::TrEntries4 m_entries4 ; // Kalman filter objects
+    // ========================================================================
   } ;
   // ==========================================================================
 } // end of namespace LoKi
@@ -867,6 +1007,110 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   }
   //
   return StatusCode::SUCCESS ;                                       // RETURN
+}
+// ============================================================================
+/*  The method for the evaluation of the impact parameter ("distance") 
+ *  vector of the particle with respect to some vertex. 
+ *  @param tarck    (input)  the tarck 
+ *  @param vertex   (input)  the vertex 
+ *  @param imppar   (output) the impact parameter ("distance") vector 
+ *  @param chi2     (output,optional) the chi2 of the impact parameter
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode LoKi::TrgDistanceCalculator::_distance   
+( const LHCb::Track&      track  ,
+  const LHCb::VertexBase& vertex , 
+  Gaudi::XYZVector&       imppar , 
+  double*                 chi2   ) const 
+{
+  const LHCb::State& s = state ( track ) ;
+  //
+  // get the distance 
+  // 
+  i_distance ( s , vertex , imppar ) ;
+  //
+  // evaluate chi2 (if needed) 
+  //
+  if ( 0 != chi2 ) 
+  {
+    // ========================================================================
+    *chi2 = -1.e+10 ;
+    // prepare the Kalman Filter machinery 
+    StatusCode sc = LoKi::KalmanFilter::load ( &s , m_entry4 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error("_distance(IV): error from KalmanFilter::load", sc ) ; }
+    // get the "the previus" Kalman Filter estimate == vertex
+    Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
+    if ( !ci.Invert() ) 
+    { return _Error ( "_distance(IV): unable to calculate the gain matrix" ) ; }
+    // make one step of Kalman filter 
+    sc = LoKi::KalmanFilter::step ( m_entry4 , vertex.position() , ci , 0 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(IV): error from Kalman Filter step" , sc ) ; }
+    // get the chi2 
+    *chi2 = m_entry4.m_chi2 ;
+    // ========================================================================
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  The method for the evaluation of the distance between two tracks 
+ *  @param track1  (input)  the first tarck 
+ *  @param track2  (input)  the first tarck 
+ *  @param doca    (output) the distance 
+ *  @param chi2    (output,optional) the chi2 of distance 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode LoKi::TrgDistanceCalculator::_distance   
+( const LHCb::Track&      track1 ,
+  const LHCb::Track&      track2 ,
+  double&                 doca   ,
+  double*                 chi2   ) const 
+{
+  //
+  Gaudi::XYZPoint point1 ;
+  Gaudi::XYZPoint point2 ;
+  //
+  const LHCb::State& s1 = state ( track1 );
+  const LHCb::State& s2 = state ( track2 );
+  // make the evaluation of the distance:
+  i_distance ( s1 , s2 , point1 , point2 ) ;
+  //
+  // evaluate the distance 
+  //
+  doca = ( point1 - point2 ) . R () ;
+  //
+  // evaluate chi2 (if needed) 
+  //
+  if ( 0 != chi2 ) 
+  {
+    // =======================================================================
+    *chi2 = 1.e+10 ;
+    // prepare the Kalman Filter machinery
+    m_entries4.resize ( 2 ) ;
+    LoKi::KalmanFilter::TrEntries4::iterator first  = m_entries4.begin() ;
+    LoKi::KalmanFilter::TrEntries4::iterator second = first + 1          ;   
+    //
+    StatusCode sc = LoKi::KalmanFilter::load ( &s1 , *first  ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(V): error from KalmanFilter::load(1)" , sc ) ; }
+    //
+    sc =            LoKi::KalmanFilter::load ( &s2 , *second ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(V): error from KalmanFilter::load(2)" , sc ) ; }
+    //
+    // make the special step of Kalman filter 
+    sc = LoKi::KalmanFilter::step ( *first  , *second , 0 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "distance(V): error from KalmanFilter::step(2)" , sc ) ; }
+    //
+    // get the final chi2 
+    *chi2 = second->m_chi2 ;
+    // ========================================================================
+  }
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 /// the factory (needed for instantiation)

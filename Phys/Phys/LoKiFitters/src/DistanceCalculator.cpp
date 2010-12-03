@@ -14,7 +14,8 @@
 // ============================================================================
 // KalmanFilter 
 // ============================================================================
-#include "KalmanFilter/KalmanFilter.h"
+#include "KalmanFilter/VertexFit.h"
+#include "KalmanFilter/VertexFitWithTracks.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -473,6 +474,110 @@ namespace LoKi
     // ========================================================================
     /// @}
     // ========================================================================
+
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup  TrackVertex  
+     *  Evaluation of the distance between the track and vertex 
+     *  @{
+     */
+    // ========================================================================    
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *track , *vertex , impact ) ;
+      imppar = impact.R() ;
+      return sc ;
+    }
+    // ========================================================================    
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     *  @param chi2   (output) chi2 of impact parameter 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   , 
+      double&                 chi2     ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *track , *vertex , impact , &chi2 ) ;
+      imppar = impact.R() ;
+      return sc ;
+    }
+    /** evaluate the impact parameter of the track with respect to the vertex 
+     *  @param track (input)   the track 
+     *  @param vertex (input)  the vertex 
+     *  @param imppar (output) the value of impact parameter
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track    ,
+      const LHCb::VertexBase* vertex   , 
+      Gaudi::XYZVector&       impact   ) const 
+    {
+      StatusCode sc = check ( track , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track , *vertex , impact ) ;
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup  TrackTrack
+     *  Evaluation of the distance between the tracks
+     *  @{
+     */
+    // ========================================================================    
+    /** evaluate the distance between two tracks
+     *  @param track1 (input)  the first track 
+     *  @param track2 (input)  the second track  
+     *  @param doca   (output) the value of distance 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track1 ,
+      const LHCb::Track*      track2 ,
+      double&                 doca   ) const 
+    {
+      StatusCode sc = check ( track1 , track2 ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track1 , *track2 , doca ) ;
+    }
+    // ========================================================================    
+    /** evaluate the distance between two tracks
+     *  @param track1 (input)  the first track 
+     *  @param track2 (input)  the second track  
+     *  @param doca   (output) the value of distance 
+     *  @param chi2   (output) the chi2 of distance 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Track*      track1 ,
+      const LHCb::Track*      track2 ,
+      double&                 doca   , 
+      double&                 chi2   ) const 
+    {
+      StatusCode sc = check ( track1 , track2 ) ;
+      if ( sc.isFailure() ) { return sc ; }
+      return _distance ( *track1 , *track2 , doca , &chi2 ) ;
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
   protected: 
     // ========================================================================
     /** Standard constructor
@@ -498,62 +603,20 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    /** transport the particle to a certain Z position
-     *  @param particle (input) the particle to be transported
-     *  @param newZ     (input) new position 
-     *  @param transported (output) the transported particle
-     *  @return status code 
-     */
-    inline StatusCode transport 
-    ( const LHCb::Particle* particle    , 
-      const double          newZ        , 
-      LHCb::Particle&       transported ) const 
+    /// get the state from the track at certain Z  
+    inline StatusCode stateAtZ  
+    ( LHCb::State&       s ,  
+      const LHCb::Track& t , 
+      const double       z ) const 
     {
-      if ( 0 == m_transporter ) 
-      { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
-      return m_transporter -> transport ( particle , newZ , transported ) ;
-    }  
-    // ========================================================================
-    /** transport the particle to a certain Z position
-     *  @param particle (input) the particle to be transported
-     *  @param z        (input) new position 
-     *  @param transported (output) the transported particle
-     *  @return status code 
-     */
-    inline StatusCode transport 
-    ( const LHCb::Particle*  particle    , 
-      const Gaudi::XYZPoint& z           , 
-      LHCb::Particle&        transported ) const 
-    { return transport ( particle , z.Z() , transported ) ; }
-    // ========================================================================
-    /** transport the particle to a certain Z position
-     *  @param particle (input) the particle to be transported
-     *  @param newZ     (input) new position 
-     *  @param transported (output) the transported particle
-     *  @return status code 
-     */
-    inline StatusCode transportAndProject 
-    ( const LHCb::Particle* particle    , 
-      const double          newZ        , 
-      LHCb::Particle&       transported ) const 
-    {
-      if ( 0 == m_transporter ) 
-      { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
-      return m_transporter -> 
-        transportAndProject ( particle , newZ , transported ) ;
-    }  
-    // ========================================================================
-    /** transport the particle to a certain Z position
-     *  @param particle (input) the particle to be transported
-     *  @param z        (input) new position 
-     *  @param transported (output) the transported particle
-     *  @return status code 
-     */
-    inline StatusCode transportAndProject 
-    ( const LHCb::Particle*  particle    , 
-      const Gaudi::XYZPoint& z           , 
-      LHCb::Particle&        transported ) const 
-    { return transportAndProject ( particle , z.Z() , transported ) ; }
+      StatusCode sc = stateProvider() -> state ( s , t, z , 0.25 * m_deltaZ ) ;
+      if ( sc.isSuccess() ) { return sc ; } // RETURN
+      //
+      _Warning( "State: unable to get the proper state" , sc ) ;
+      //
+      s = t.closestState ( z ) ;
+      return StatusCode::SUCCESS ;
+    }
     // ========================================================================
   private:
     // ========================================================================
@@ -652,6 +715,35 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
+    /** The method for the evaluation of the impact parameter ("distance") 
+     *  vector of the particle with respect to some vertex. 
+     *  @param track    (input)  the track 
+     *  @param vertex   (input)  the vertex 
+     *  @param imppar   (output) the impact parameter ("distance") vector 
+     *  @param chi2     (output,optional) the chi2 of distance 
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Track&      track        ,
+      const LHCb::VertexBase& vertex       , 
+      Gaudi::XYZVector&       imppar       , 
+      double*                 chi2     = 0 ) const ;
+    // ========================================================================
+    /** The method for the evaluation of the distance between two tracks 
+     *  @param track1  (input)  the first tarck 
+     *  @param track2  (input)  the first tarck 
+     *  @param doca    (output) the distance 
+     *  @param chi2    (output,optional) the chi2 of distance 
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Track&      track1       ,
+      const LHCb::Track&      track2       ,
+      double&                 doca         ,
+      double*                 chi2     = 0 ) const ;
+    // ========================================================================
+  private:
+    // ========================================================================
     /// the maximal number of iterations 
     unsigned int m_nIter_max  ; // the maximal number of iterations 
     /// the convergency criterion for impact parameter evaluations 
@@ -660,10 +752,7 @@ namespace LoKi
     double       m_delta_chi2 ; // the convergency criterion for delta(chi2) 
     // the convergency criteri for delta(path)
     double       m_delta_path ; // the convergency criterion for delta(path)
-    /// The name of particle transpoter tool 
-    std::string  m_transporterName ; // The name of particle transpoter tool    
-    /// The particle transporter itself 
-    mutable IParticleTransporter* m_transporter ; // The transporter itself
+    // ========================================================================
     /// some static particle 
     mutable LHCb::Particle        m_particle1   ; // some particle 
     /// another static particle 
@@ -674,6 +763,17 @@ namespace LoKi
     mutable LoKi::KalmanFilter::Entries m_entries ; // Kalman filter objects
     /// distance/path fitter
     mutable LoKi::Fitters::Fitter1      m_fitter  ; // distance/path fitter
+    // ========================================================================
+    /// track state to bve used 
+    mutable LHCb::State                   m_state1 ; // track state to bve used 
+    mutable LHCb::State                   m_state2 ; // track state to bve used 
+    // ========================================================================
+    // tracks without momentum information 
+    // ========================================================================
+    /// Kalman filter object: 
+    mutable LoKi::KalmanFilter::TrEntry4   m_entry4   ; // Kalman filter object
+    /// Kalman filter objects: 
+    mutable LoKi::KalmanFilter::TrEntries4 m_entries4 ; // Kalman filter objects
     // ========================================================================
   } ;
   // ==========================================================================
@@ -690,19 +790,15 @@ LoKi::DistanceCalculator::DistanceCalculator
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
   : base_class ( type , name , parent ) 
-  /// the maximal number of iterations 
+/// the maximal number of iterations 
   , m_nIter_max ( 10 ) // the maximal number of iterations 
-  /// the convergency criterion for ip-evaluation
+/// the convergency criterion for ip-evaluation
   , m_deltaZ     ( 2 * Gaudi::Units::micrometer ) // the criteria for ip-evaluation
-  /// the convergency criterion for delta(chi2) 
+/// the convergency criterion for delta(chi2) 
   , m_delta_chi2 ( 0.05 ) 
-  /// the convergency criterion for delta(path) 
+/// the convergency criterion for delta(path) 
   , m_delta_path ( 2 * Gaudi::Units::micrometer )
-  /// The name of particle transpoter tool 
-  , m_transporterName ( "ParticleTransporter:PUBLIC" ) // The name of particle transpoter tool
-  /// The tarnsported tool itself 
-  , m_transporter ( 0 ) // The transporter tool itself 
-  /// the local storages of particles
+/// the local storages of particles
   , m_particle1 ( LHCb::ParticleID ( 511 ) ) 
   , m_particle2 ( LHCb::ParticleID ( 511 ) )
 {
@@ -719,12 +815,9 @@ LoKi::DistanceCalculator::DistanceCalculator
   declareProperty 
     ( "DeltaPath"        , m_delta_path          , 
       "Delta c*tau (convergency criterion)"      ) ; 
-  declareProperty 
-    ( "Transporter"      , m_transporterName     , 
-      "The Particle Transporter tool to be used" );
 }
 // ============================================================================
-// virtual and protected desctrustor 
+// virtual and protected desctructor 
 // ============================================================================
 LoKi::DistanceCalculator::~DistanceCalculator(){}
 // ============================================================================
@@ -1143,6 +1236,172 @@ StatusCode LoKi::DistanceCalculator::_distance
   }
   //
   return StatusCode::SUCCESS ;                                       // RETURN
+}
+// ============================================================================
+/*  The method for the evaluation of the impact parameter ("distance") 
+ *  vector of the particle with respect to some vertex. 
+ *  @param tarck    (input)  the tarck 
+ *  @param vertex   (input)  the vertex 
+ *  @param imppar   (output) the impact parameter ("distance") vector 
+ *  @param chi2     (output,optional) the chi2 of the impact parameter
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode LoKi::DistanceCalculator::_distance   
+( const LHCb::Track&      track  ,
+  const LHCb::VertexBase& vertex , 
+  Gaudi::XYZVector&       impact , 
+  double*                 chi2   ) const 
+{
+  //
+  const LHCb::State& s = state ( track ) ;
+  //
+  // get the distance 
+  // 
+  i_distance ( s , vertex , impact ) ;
+  //
+  const double vZ = vertex.position().Z() ;
+  double dz = ::fabs ( vZ + impact.Z() - s.z() ) ;
+  //
+  // make iterations (if needed) 
+  //
+  unsigned int nIter = 0 ;
+  for ( unsigned int iIter = 0 ; dz >= m_deltaZ && iIter < m_nIter_max ; ++iIter ) 
+  { 
+    // transport the state 
+    StatusCode sc = stateAtZ ( m_state1 , track , vZ + impact.Z() ) ;    
+    if ( sc.isFailure() )
+    { _Warning ("distance(IV): can;t get the proper state(1)" , sc ) ; }
+    // get the distance 
+    i_distance ( m_state1 , vertex , impact ) ;
+    //
+    dz = ::fabs ( vZ + impact.Z() - m_state1.z() ) ;
+    // 
+    ++nIter ;
+  }
+  // check for  the convergency
+  if ( dz >= m_deltaZ )
+  { _Warning ( "There is no convergency-IV", NoConvergency ) ; }
+  //
+  //
+  // evaluate chi2 (if needed) 
+  //
+  if ( 0 != chi2 ) 
+  {
+    if ( 0 == nIter ) { m_state1 = s ; }
+    // ========================================================================
+    *chi2 = -1.e+10 ;
+    // prepare the Kalman Filter machinery 
+    StatusCode sc = LoKi::KalmanFilter::load ( &m_state1 , m_entry4 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error("_distance(IV): error from KalmanFilter::load", sc ) ; }
+    // get the "the previus" Kalman Filter estimate == vertex
+    Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
+    if ( !ci.Invert() ) 
+    { return _Error ( "_distance(IV): unable to calculate the gain matrix" ) ; }
+    // make one step of Kalman filter 
+    sc = LoKi::KalmanFilter::step ( m_entry4 , vertex.position() , ci , 0 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(IV): error from Kalman Filter step" , sc ) ; }
+    // get the chi2 
+    *chi2 = m_entry4.m_chi2 ;
+    // ========================================================================
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  The method for the evaluation of the distance between two tracks 
+ *  @param track1  (input)  the first tarck 
+ *  @param track2  (input)  the first tarck 
+ *  @param doca    (output) the distance 
+ *  @param chi2    (output,optional) the chi2 of distance 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode LoKi::DistanceCalculator::_distance   
+( const LHCb::Track&      track1 ,
+  const LHCb::Track&      track2 ,
+  double&                 doca   ,
+  double*                 chi2   ) const 
+{
+  //
+  Gaudi::XYZPoint point1 ;
+  Gaudi::XYZPoint point2 ;
+  //
+  const LHCb::State& s1 =  state ( track1 ) ;
+  const LHCb::State& s2 =  state ( track2 ) ;
+  //
+  // get the distance 
+  // 
+  i_distance ( s1 , s2 , point1 , point2 ) ;
+  //
+  double dz1 = ::fabs ( point1.Z() - s1.z() ) ;
+  double dz2 = ::fabs ( point2.Z() - s2.z() ) ;
+  double dz  = std::max ( dz1 , dz2 ) ;
+  //
+  if ( dz1 < m_deltaZ ) { m_state1 = s1 ; }
+  if ( dz2 < m_deltaZ ) { m_state2 = s2 ; }
+  //
+  // make the iterations (if needed) 
+  StatusCode sc = StatusCode::SUCCESS ;
+  unsigned int nIter = 0 ;
+  for ( unsigned int iIter = 0 ; dz >= m_deltaZ && iIter < m_nIter_max ; ++iIter ) 
+  {
+    //
+    if ( dz1 >= m_deltaZ  ) 
+    { sc = stateAtZ ( m_state1 , track1 , point1.Z () ) ; }
+    if ( sc.isFailure() )
+    { _Warning ("distance(V): can't get the proper state(1)" , sc ) ; }
+    if ( dz2 >= m_deltaZ  )    
+    { sc = stateAtZ ( m_state2 , track2 , point2.Z () ) ; }
+    if ( sc.isFailure() )
+    { _Warning ("distance(V): can't get the proper state(2)" , sc ) ; }
+    //
+    i_distance ( m_state1 , m_state2 , point1 , point2 ) ;
+    //    
+    dz1 = ::fabs ( point1.Z() - m_state1.z() ) ;
+    dz2 = ::fabs ( point2.Z() - m_state2.z() ) ;
+    dz  = std::max ( dz1 , dz2 ) ;
+    //
+    ++nIter ;
+  }
+  // check for  the convergency
+  if ( dz >= m_deltaZ )
+  { _Warning ( "There is no convergency-V", NoConvergency ) ; }
+  // 
+  // evaluate the distance 
+  doca = ( point1 - point2 ) . R () ;
+  //
+  // get chi2 if needed 
+  //
+  if ( 0 != chi2 ) 
+  {
+    // =======================================================================
+    *chi2 = 1.e+10 ;
+    // prepare the Kalman Filter machinery
+    m_entries4.resize ( 2 ) ;
+    LoKi::KalmanFilter::TrEntries4::iterator first  = m_entries4.begin() ;
+    LoKi::KalmanFilter::TrEntries4::iterator second = first + 1          ;   
+    //
+    StatusCode sc = LoKi::KalmanFilter::load ( &m_state1 , *first  ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(V): error from KalmanFilter::load(1)" , sc ) ; }
+    //
+    sc =            LoKi::KalmanFilter::load ( &m_state2 , *second ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "_distance(V): error from KalmanFilter::load(2)" , sc ) ; }
+    //
+    // make the special step of Kalman filter 
+    sc = LoKi::KalmanFilter::step ( *first  , *second , 0 ) ;
+    if ( sc.isFailure() ) 
+    { return _Error ( "distance(V): error from KalmanFilter::step(2)" , sc ) ; }
+    //
+    // get the final chi2 
+    *chi2 = second->m_chi2 ;
+    // ========================================================================
+  }  
+  //
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 /// the factory (needed for instantiation)
