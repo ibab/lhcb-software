@@ -5,6 +5,15 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2010-12-03 - Vanya Belyaev
+
+ - LHCb::RecVertexHolder
+
+    reasonable "return"-value for vertexfitters/refitters    
+
+ - cmt/requirements 
+    version increment to v2r1
+
 !======================== DaVinciTypes v2r0 2010-06-18 =======================
 ! 2010-06-09 - Vanya Belyaev
  - TreeClonetrs.h 

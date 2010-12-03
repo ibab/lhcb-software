@@ -15,6 +15,10 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-06-09
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace 
