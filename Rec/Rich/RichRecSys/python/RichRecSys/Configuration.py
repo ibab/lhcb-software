@@ -118,11 +118,6 @@ class RichRecSysConf(RichConfigurableUser):
         dataType = self.getProp("DataType")
         if dataType == "" :
             raise RuntimeError("ERROR : DataType is not correctly set")
-        if dataType == "2010" and self.getProp("Simulation"):
-            log.info( "Running 2010 MC Reconstruction -> " +
-                      "Smearing CK theta values to match data resolutions" )
-            self.richTools().PhotonCreatorType = "SmearCKTheta"
-            self.richTools().photonCreator().SmearingWidths = [ 0.004, 0.000844, 0.000266 ]
         
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])

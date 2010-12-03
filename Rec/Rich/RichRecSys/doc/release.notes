@@ -6,6 +6,7 @@
 
 ! 2010-12-03 - Chris Jones
  - Retire the package Rich/RichMarkovRingFinder.
+ - Remove the 2010 MC smearing options. Will be done by Gauss instead.
 
 !========================= RichRecSys v3r34 2010-11-23 =========================
 ! 2010-11-21 - Chris Jones
