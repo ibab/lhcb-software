@@ -34,6 +34,7 @@ use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
 use LoKiPhys                    HEAD     Phys    # Vanya Belyaev
 use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r1     Phys    # Vanya Belyaev
+use KalmanFilter                v*       Phys    # Vanya Belyaev
 
 #===================================================================
 use TisTosTobbing		v6r1	 Phys	 # Tomasz Skwarnicki
