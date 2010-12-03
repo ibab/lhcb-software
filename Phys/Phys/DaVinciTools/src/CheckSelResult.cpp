@@ -28,12 +28,11 @@ CheckSelResult::CheckSelResult( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_algorithms ()
-  , m_ANDmode(false)
 {
   m_algorithms.clear();
-  declareProperty( "Algorithms", m_algorithms );
-  declareProperty( "Andmode", m_ANDmode );
-  declareProperty( "Notmode", m_NOTmode );
+  declareProperty( "Algorithms", m_algorithms, "List of algorithms" );
+  declareProperty( "Andmode", m_ANDmode = false, "require all algos to pass" );
+  declareProperty( "Notmode", m_NOTmode = false, "revert decision");
 }
 //=============================================================================
 // Destructor
