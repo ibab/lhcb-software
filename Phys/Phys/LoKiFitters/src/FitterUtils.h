@@ -5,9 +5,7 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// 
-// ============================================================================
-// forward dclarations 
+// forward declarations 
 // ============================================================================
 namespace LHCb 
 {
@@ -16,14 +14,37 @@ namespace LHCb
 }
 // ============================================================================
 /** @file
- *  the colelction of the useful utilities for imeplmentation of 
+ *  The collection of the useful utilities for imeplmentation of 
  *  various fitters 
+ *
+ *  This file is a part of 
+ *  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+ *  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *   By usage of this code one clearly states the disagreement 
+ *    with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-03-07
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ * 
  */
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Fitters 
   {
     // ========================================================================
@@ -392,8 +413,9 @@ namespace LoKi
           &e_path    ) ; // the actual function to evaluate d(H)/d(var)
     }
     // ========================================================================
-  } // end of namespace LoKi::Fitters 
-} // end of namespace LoKi 
+  } //                                           end of namespace LoKi::Fitters 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

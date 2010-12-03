@@ -5,7 +5,7 @@
 # =============================================================================
 package           LoKiFitters
 author            Vanya Belyaev
-version           v3r3
+version           v4r0
 
 # =============== structure ===================================================
 branches          cmt doc src 
@@ -15,7 +15,7 @@ use               LHCbMath        v* Kernel
 use               DaVinciKernel   v* Phys       
 use               DecayTreeFitter v* Phys 
 use               LoKiPhys        v* Phys 
-use               CaloUtils       v* Calo 
+use               KalmanFilter    v* Phys 
 
 
 # =============== constituents ================================================

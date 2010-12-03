@@ -5,6 +5,15 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-03 - Vanya Belyaev
+
+ - move all Kalman-Filter utilities into the separate package 
+
+ - cmt/requirements 
+
+    make usage of Phys/KalmanFilter 
+    version increment to v4r0 
+
 ! 2010-11-20 - Vanya Belyaev
 
  - DistanceCalculators 
