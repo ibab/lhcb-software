@@ -11,7 +11,6 @@ from TrackCreator  import *
 from PixelCreator  import *
 from PhotonCreator import *
 from CKThetaResolution import *
-from Configurables import RichMarkovRingFinderConf
 from Configurables import RichENNRingFinderConf
 from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
@@ -26,8 +25,7 @@ from Configurables import GaudiSequencer
 class RichRecSysConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichMarkovRingFinderConf,None),
-                               (RichENNRingFinderConf,None),
+    __used_configurables__ = [ (RichENNRingFinderConf,None),
                                (RichTemplateRingFinderConf,None),
                                (RichGlobalPIDConfig,None),
                                (RichTrackCreatorConfig,None),
@@ -227,15 +225,6 @@ class RichRecSysConf(RichConfigurableUser):
         # Trackless rings
         #-----------------------------------------------------------------------------
         ringalgs = self.getProp("TracklessRingAlgs")
-
-        if "Markov" in ringalgs :
-            mfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"MarkovRingFinderSeq")
-            mfinderSeq.MeasureTime               = True
-            sequence.Members                    += [ mfinderSeq ]
-            markovConf = self.getRichCU(RichMarkovRingFinderConf)
-            self.setOtherProps(markovConf,["Context","OutputLevel"])
-            markovConf.setProp("Sequencer",mfinderSeq)
-            self.printInfo(markovConf)
 
         if "ENN" in ringalgs :
             ennfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"ENNRingFinderSeq")

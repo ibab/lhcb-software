@@ -37,7 +37,6 @@ use RichRecMonitors     v*    Rich
 use RichRecMCTools      v*   Rich
 
 # Ring finders
-use RichMarkovRingFinder  v*   Rich
 use RichENNRingFinder     v*   Rich
 use RichRecTemplateRings  v*   Rich
 
