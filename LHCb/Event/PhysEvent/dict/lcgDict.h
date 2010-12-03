@@ -7,6 +7,7 @@
 // begin include files
 #include <vector>
 #include "Event/Particle.h"
+#include "Event/Vertex.h"
 
 // end include files
 
@@ -15,6 +16,7 @@ namespace {
     // begin instantiations
     std::vector<const LHCb::Particle*>  _i1;
     std::vector<const LHCb::Particle*>::iterator  _i2;
+    std::vector<const LHCb::Vertex*>  _i3;
     // end instantiations
   };
 }

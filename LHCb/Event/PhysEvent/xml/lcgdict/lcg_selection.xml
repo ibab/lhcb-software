@@ -1,4 +1,5 @@
 <lcgdict>
   <class name = "std::vector<const LHCb::Particle*>" />
   <class name = "std::vector<const LHCb::Particle*>::iterator" />
+  <class name = "std::vector<const LHCb::Vertex*>" />
 </lcgdict>
