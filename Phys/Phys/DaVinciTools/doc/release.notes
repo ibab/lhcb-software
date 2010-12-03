@@ -4,6 +4,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2010-12-03 - Patrick Koppenburg
+ - Add Notmode in CheckSelResult
+
 !========================== DaVinciTools v21r6p1 2010-11-02 =================
 
 ! 2010-10-19 - Juan Palacios

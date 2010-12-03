@@ -33,6 +33,7 @@ CheckSelResult::CheckSelResult( const std::string& name,
   m_algorithms.clear();
   declareProperty( "Algorithms", m_algorithms );
   declareProperty( "Andmode", m_ANDmode );
+  declareProperty( "Notmode", m_NOTmode );
 }
 //=============================================================================
 // Destructor
@@ -54,6 +55,7 @@ StatusCode CheckSelResult::initialize() {
     warning() << "You have selected the 'AND' mode: "
               << "ALL algorithms are required to pass!" << endmsg;
   } else if (msgLevel(MSG::DEBUG)) debug() << "You have selected the default 'OR' mode." << endmsg;
+  if (m_NOTmode) warning() << "You have selected NOT mode: will invert decision" << endmsg ;
 
   m_readTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
 
@@ -67,7 +69,8 @@ StatusCode CheckSelResult::execute() {
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
-  const bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
+  bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
+  if (m_NOTmode) pass = !pass ;
   if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
   if (!sc) return sc;
   

@@ -32,7 +32,8 @@ protected:
 private:
 
   std::vector<std::string> m_algorithms ;          ///< Algorithms to check
-  bool m_ANDmode ;
+  bool m_ANDmode ;                                 ///< Require all algorithms
+  bool m_NOTmode ;                                 ///< Invert logic  
 
   ICheckSelResults* m_readTool ;                  ///< Selresults Reader
 
