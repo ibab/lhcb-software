@@ -1,0 +1,18 @@
+! $Id$ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/KalmanFilter
+! Responsible : Vanya Belyaev  Ivan.Belyaev@cern.ch
+! Purpose     : Kalman filter Utilities for Vertex fit 
+! -----------------------------------------------------------------------------
+
+! 2010-12-03 - Vanya Belyaev
+
+ - the first import : 
+
+     the functions have been moved from Phys/LoKiFitters package 
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
+
