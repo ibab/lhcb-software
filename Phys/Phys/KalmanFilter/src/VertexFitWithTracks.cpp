@@ -299,7 +299,6 @@ StatusCode LoKi::KalmanFilter::smooth
     /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
     entry -> m_x  = last.m_x ;
     //
-    // 
     const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
     /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
     entry -> m_q = entry -> m_parq - entry -> m_qvsx * entry -> m_vxi * dx ; 

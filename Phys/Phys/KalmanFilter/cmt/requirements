@@ -10,9 +10,10 @@ version            v1r0
 branches           cmt doc src KalmanFilter
 
 # ================ dependencies ===============================================
-use                LHCbMath  v* Kernel 
-use                PhysEvent v* Event
-use                CaloUtils v* Calo
+use                LHCbMath     v* Kernel 
+use                PhysEvent    v* Event
+use                CaloUtils    v* Calo
+use                DaVinciTypes v* Phys 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes more=KalmanFilter
