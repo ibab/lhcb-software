@@ -27,7 +27,7 @@ namespace Lester
 #include "factorialInitialiser.h"
       };
     return cache[n];
-  };
+  }
 
   inline double poissonProb(const int n, const double mu) {
     if (n<=40) {
@@ -37,7 +37,7 @@ namespace Lester
       return (std::exp((double)n*std::log(mu)-mu-n*logn -
                        0.5*logn+n)/std::sqrt(MathsConstants::twoPi)); // check!
     };
-  };
+  }
 
   inline double gaussianProb(const double x,
                              const double mu,
@@ -45,7 +45,7 @@ namespace Lester
     const double thing=(x-mu)/sig;
     const double thingSq=thing*thing;
     return 1./(std::sqrt(MathsConstants::twoPi)*sig)*std::exp(-0.5*thingSq);
-  };
+  }
   inline std::vector<int> getSetOfMDifferentIntsFromN(const int n, const int m) {
     assert(n>=m);
     assert(n>=0);
@@ -78,17 +78,17 @@ namespace Lester
     };
     assert(static_cast<int>(isAt.size())==m); //Still!
     return isAt;
-  };
+  }
 
   inline double exponentialProb(const double x,
                                 const double mean) {
     return (std::exp(-x/mean))/mean;
-  };
+  }
   inline double exponentialProbAbove(const double x,
                                      const double mean) {
     //prob that var distrib expntly with mean mu is greater than x
     return std::exp(-x/mean);
-  };
+  }
   inline double reciprocalSum(const int n) {
     // Could speed up // LESTER
     if (n>=20&&n<40) {
@@ -113,7 +113,7 @@ namespace Lester
       ans += reciprocal;
     };
     return ans;
-  };
+  }
   inline double reciprocalSqSum(const int n) {
     // Could speed up // LESTER
     if (n>=20&&n<40) {
@@ -138,7 +138,7 @@ namespace Lester
       ans += reciprocal*reciprocal;
     };
     return ans;
-  };
+  }
   inline int lestersRandomNumberToJitter1(const int nTot) {
     assert(nTot>=1);
     const double tot=reciprocalSum(nTot);
@@ -154,7 +154,7 @@ namespace Lester
     };
     assert(i<=nTot);
     return i;
-  };
+  }
   inline int lestersRandomNumberToJitter2(const int nTot) {
     const double tot=reciprocalSqSum(nTot);
     const double mark=tot*RandFlat::shoot();
@@ -169,8 +169,8 @@ namespace Lester
     };
     assert(i<=nTot);
     return i;
-  };
+  }
 
-};
+}
 
 #endif

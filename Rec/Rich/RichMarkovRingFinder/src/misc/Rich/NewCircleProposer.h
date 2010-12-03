@@ -40,9 +40,6 @@ namespace Lester
     }
   };
 
-};
-
-
-
+}
 #endif
 

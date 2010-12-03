@@ -70,7 +70,7 @@ namespace Lester
   template<class SampleType>
   inline std::ostream&operator<<(std::ostream & os, const ProbabilityModule<SampleType> & m) {
     return m.printMeTo(os);
-  };
+  }
 
 }
 

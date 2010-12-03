@@ -184,6 +184,6 @@ namespace Lester {
     };
   };
 
-};
+}
 
 #endif

@@ -94,6 +94,6 @@ namespace GenRingF {
 
 inline std::ostream & operator<<(std::ostream & os, const GenRingF::GenericConfiguration & obj) {
   return obj.printMeTo(os);
-};
+}
 
 #endif // GENERICRINGFINDER_GENERICCONFIGURATION_H

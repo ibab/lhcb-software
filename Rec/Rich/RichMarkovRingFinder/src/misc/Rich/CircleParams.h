@@ -41,7 +41,7 @@ namespace Lester
       return cp.printMeTo(os);
     }
   };
-};
+}
 
 
 #endif

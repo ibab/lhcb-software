@@ -5,7 +5,23 @@
 // ============================================================================
 // Include files
 // ============================================================================
-#ifndef _WIN32
+#if defined(_WIN32)
+#include <float.h>
+namespace Lester
+{
+  inline int lfin ( double x ) { return  _finite ( x ) ; }
+  inline int lnan ( double x ) { return  _isnan  ( x ) ; }
+  inline int linf ( double x ) { return ( _finite(x) ? 0 : ( x < 0 ? -1 : 1 ) ); }
+}
+#elif defined(__ICC)
+#include <mathimf.h>
+namespace Lester
+{
+  inline int lfin ( double x ) { return  isfinite ( x ) ; }
+  inline int lnan ( double x ) { return  isnan    ( x ) ; }
+  inline int linf ( double x ) { return  isinf    ( x ) ; }
+}
+#else // GCC
 #include <cmath>
 namespace Lester
 {
@@ -13,14 +29,6 @@ namespace Lester
   inline int lfin ( double x ) { return  std::isfinite ( x ) ; }
   inline int lnan ( double x ) { return  std::isnan    ( x ) ; }
   inline int linf ( double x ) { return  std::isinf    ( x ) ; }
-}
-#else
-#include <float.h>
-namespace Lester
-{
-  inline int lfin ( double x ) { return  _finite ( x ) ; }
-  inline int lnan ( double x ) { return  _isnan  ( x ) ; }
-  inline int linf ( double x ) { return ( _finite(x) ? 0 : ( x < 0 ? -1 : 1 ) ); }
 }
 #endif
 // ============================================================================

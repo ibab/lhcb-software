@@ -19,10 +19,10 @@
 using namespace Rich::Rec::MarkovRingFinder;
 
 // Declaration of the Algorithm Factories
-DECLARE_ALGORITHM_FACTORY( Rich1TopPanel    );
-DECLARE_ALGORITHM_FACTORY( Rich1BottomPanel );
-DECLARE_ALGORITHM_FACTORY( Rich2LeftPanel   );
-DECLARE_ALGORITHM_FACTORY( Rich2RightPanel  );
+DECLARE_ALGORITHM_FACTORY( Rich1TopPanel    )
+DECLARE_ALGORITHM_FACTORY( Rich1BottomPanel )
+DECLARE_ALGORITHM_FACTORY( Rich2LeftPanel   )
+DECLARE_ALGORITHM_FACTORY( Rich2RightPanel  )
 
 //=============================================================================
 // Standard constructor, initializes variables

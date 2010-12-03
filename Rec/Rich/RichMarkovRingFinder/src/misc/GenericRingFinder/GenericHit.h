@@ -40,7 +40,7 @@ namespace GenRingF {
 
 inline std::ostream & operator<<(std::ostream & os, const GenRingF::GenericHit & obj) {
   return obj.printMeTo(os);
-};
+}
 
 #endif
 

@@ -28,7 +28,7 @@ namespace GenRingF {
 
 inline std::ostream & operator<<(std::ostream & os, const GenRingF::GenericInput & obj) {
   return obj.printMeTo(os);
-};
+}
 
 #endif
 

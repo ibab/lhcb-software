@@ -42,7 +42,7 @@ namespace Lester
         throw LogOfZero();
       }
       return ans;
-    };
+    }
 
     /// If you have a list of numbers {n1,n2,n3,...} that are so large (or small) that you can only hold them by their logs {l1,l2,l3,...} and what you want to know is the log of their sum: lt=log(n1+n2+n3), then this is the class to use.  The method never exponentiates the individual logs.
 
