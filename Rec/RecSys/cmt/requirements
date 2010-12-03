@@ -40,7 +40,6 @@ use RecoUpgradeMC        v1r1    Rec  # Victor Coco
 use RichAlignment        v1r1    Rich # Chris Jones, Antonis Papanestis
 use RichGlobalPID        v3r14p2 Rich # Chris Jones
 use RichHPDImageAnalysis v1r4    Rich # Thomas Blake, Chris Jones
-use RichMarkovRingFinder v2r9    Rich # Chris Jones
 use RichPIDMerge         v2r9p1  Rich # Chris Jones
 use RichRecAlgorithms    v2r18p1 Rich # Chris Jones
 use RichRecMCAlgorithms  v1r3p2  Rich # Chris Jones
