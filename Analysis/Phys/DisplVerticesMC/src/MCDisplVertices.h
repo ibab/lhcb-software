@@ -109,6 +109,7 @@ private:
   void SaveGenPartinTuple( const HepMC::GenEvent* );
   void SaveMCPartinTuple( LHCb::MCParticles * );
   StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & ); 
+  StatusCode SavePVs( Tuple & );
 
   //questions
   double WhichMCPrey( const LHCb::Particle * );
@@ -177,6 +178,7 @@ private:
   double GetMCMass( LHCb::MCParticle::ConstVector & );
   double GetRFromBL( const Gaudi::XYZPoint& );  
   void GetUpstreamPV(); ///< Get the Upstream PV
+  void GetPVs(); ///< Get the PV candidates
   void GetPartsFromRecVtx(const LHCb::RecVertex*, 
 			  const LHCb::Particle::ConstVector &, 
 			  LHCb::Particle::ConstVector & );
@@ -257,8 +259,9 @@ private:
 
   bool   m_MC;                ///< Retrieve MC infos or not
   std::string m_HepMC;        ///< Retrieve HepMC infos or not
-  std::vector<Gaudi::XYZPoint> m_MCSVPos; //on array of ptr on MCSV
-  std::vector<Gaudi::XYZPoint> m_MCPos; //on array of ptr on MCPrey
+  std::vector<Gaudi::XYZPoint> m_MCSVPos;  //on array of ptr on MCSV
+  std::vector<Gaudi::XYZPoint> m_MCPos;    //on array of ptr on MCPrey
+  std::vector<const LHCb::RecVertex*> PVs; ///< The PV candidates
   const LHCb::RecVertex * PV; //The Primary Vertex !
   const LHCb::MCVertex* MCPV; //The MC Primary Vertex !
 

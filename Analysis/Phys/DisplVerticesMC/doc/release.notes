@@ -5,6 +5,11 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2010-12-03 - Neal Gauvin
+ - Propagate modifications done in DisplVertices
+ - Save the PV candidates in the tuple when SaveTuple is set.
+ - Removed bug : GetUpstreamPV was using beamline info before beamline info is actually retrieved...
+
 ! ======================= DisplVerticesMC v1r1 2010-11-02 ====================
 
 ! 2010-10-25 - Neal Gauvin
