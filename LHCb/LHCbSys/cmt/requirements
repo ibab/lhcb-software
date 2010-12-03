@@ -126,7 +126,6 @@ use XmlTools              v6r3p2  Tools   # Marco Clemencic
 use TrackInterfaces       v4r17   Tr      # Matt Needham
 use TrackKernel           v1r5    Tr      # Wouter Hulsbergen
 
-use KalmanFilter          v1r0    Phys    # Vanya Belyaev
 
 # Declare this as a container package
 apply_pattern container_package
