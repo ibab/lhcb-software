@@ -82,6 +82,7 @@ private:
   bool   m_HLT2Complement;
   unsigned int m_maxRZForExtra;
   bool   m_stateAtBeam;
+  bool   m_resetUsedFlags;
 
   //== Paramaters for RZ search  
   double m_zVertexMin;      ///< Minimal Z of a vertex for forward tracks

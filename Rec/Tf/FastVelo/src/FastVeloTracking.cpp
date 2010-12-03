@@ -33,6 +33,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "HLT2Complement"  , m_HLT2Complement = false );
   declareProperty( "MaxRZForExtra"   , m_maxRZForExtra  = 200  );
   declareProperty( "StateAtBeam"     , m_stateAtBeam    = true );
+  declareProperty( "ResetUsedFlags"  , m_resetUsedFlags = false );
 
   declareProperty( "ZVertexMin"      , m_zVertexMin     = -170. *Gaudi::Units::mm );
   declareProperty( "ZVertexMax"      , m_zVertexMax     = +120. *Gaudi::Units::mm );
@@ -122,6 +123,7 @@ StatusCode FastVeloTracking::execute() {
   }
   outputTracks->reserve(500);
   m_hitManager->buildFastHits();
+  if ( m_resetUsedFlags ) m_hitManager->resetUsedFlags();
   m_tracks.clear();
   m_spaceTracks.clear();
   unsigned int sensorNb;
@@ -672,7 +674,6 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     LHCb::Track *newTrack = new LHCb::Track();
     newTrack->setType( LHCb::Track::Velo );
     newTrack->setHistory( LHCb::Track::PatVelo );
-    newTrack->setFlag( LHCb::Track::Backward, (*itT).backward() );
     newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
     if ( m_debug ) {
       info() << "=== Store track Nb " << outputTracks->size() << endmsg;
@@ -701,7 +702,10 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
 
     LHCb::State state;
 
+    //== Define backward as z closest to beam downstream of hits
     double zBeam = (*itT).zBeam();
+    bool backward = zBeam > zMax;
+    newTrack->setFlag( LHCb::Track::Backward, backward );
 
     if ( m_stateAtBeam ) {
       state.setLocation( LHCb::State::ClosestToBeam );
@@ -715,7 +719,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       newTrack->addToStates( state );
     }
 
-    if ( !(*itT).backward() ) {
+    if ( !backward ) {
       state.setLocation( LHCb::State::EndVelo );
       state.setState( (*itT).state( zMax ) );
       state.setCovariance( (*itT).covariance( zMax ) );

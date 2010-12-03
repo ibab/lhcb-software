@@ -275,5 +275,14 @@ FastVeloHit* FastVeloHitManager::hitByLHCbID ( LHCb::LHCbID id) {
   }
   return 0;
 }
+
+//=========================================================================
+//  Clear teh used flags so that a second instance of Fast Velo will start properly
+//=========================================================================
+void FastVeloHitManager::resetUsedFlags ( ) {
+  for ( std::vector<FastVeloHit>::iterator itH = m_pool.begin(); m_nextInPool != itH; ++itH ) {
+    (*itH).resetUsed();
+  }
+}
 //=============================================================================
 

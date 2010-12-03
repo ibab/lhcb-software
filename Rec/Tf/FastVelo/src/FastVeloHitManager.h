@@ -58,6 +58,8 @@ public:
 
   FastVeloHit* hitByLHCbID( LHCb::LHCbID id );
 
+  void resetUsedFlags ( );
+  
 protected:
 
 private:
