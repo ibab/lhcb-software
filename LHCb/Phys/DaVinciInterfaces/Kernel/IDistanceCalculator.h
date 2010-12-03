@@ -14,9 +14,10 @@
 // ============================================================================
 namespace LHCb 
 {
-  class Particle   ;
-  class VertexBase ;
-}
+  class Particle   ;   // Event/PhysEvent 
+  class VertexBase ;   // Event/RecEvent  
+  class Track      ;   // Event/TrackEvent
+}  
 // =============================================================================
 /** @class IDistanceCalculator Kernel/IDistanceCalculator.h
  *
@@ -24,17 +25,19 @@ namespace LHCb
  *  is able to perform calculation of the various "distances"
  *
  *  Currenly it allows to evaluate "distances" for follwowing pairs of objects:
- *     - the particle and the vertex      ("impact parameter")
- *     - the particle and the fixed point ("impact parameter")
- *     - the particle and the vertex      ("impact parameter vector")
- *     - the particle and the fixed point ("impact parameter vector")
- *     - the particle and the particle    ("the distance of closest approach")
- *     - the vertex and the vertex        ("vertex separation")
- *     - the vertex and the fixed point   ("vertex separation"
+ *     - the particle and the vertex        ("impact parameter")
+ *     - the particle and the fixed point   ("impact parameter")
+ *     - the particle and the vertex        ("impact parameter vector")
+ *     - the particle and the fixed point   ("impact parameter vector")
+ *     - the particle and the particle      ("the distance of closest approach")
+ *     - the vertex   and the vertex        ("vertex separation")
+ *     - the vertex   and the fixed point   ("vertex separation"
+ *     - the track    and the vertex        ("impact parameter")
+ *     - the track    and the track         ("the distance of closest approach")
  *     - the "path-distance"      form the production vertex to decay vertex 
  *     - the "projected-distance" form the production vertex to decay vertex 
  *  
- *  @author Vanya BELYAEV Ivan.Belyave@nikhef.nl
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2008-03-05 
  * 
  *                    $Revision$
@@ -47,7 +50,7 @@ class GAUDI_API IDistanceCalculator : virtual public IAlgTool
 public:
   // ==========================================================================
   /// interface machinery
-  DeclareInterfaceID(IDistanceCalculator, 3, 0);
+  DeclareInterfaceID(IDistanceCalculator, 4, 0);
   // ==========================================================================
 public:
   // ==========================================================================
@@ -580,6 +583,77 @@ public:
   // ==========================================================================
   /// @} 
   // ==========================================================================
+public:
+  // ========================================================================
+  /** @defgroup  TrackVertex  
+   *  Evaluation of the distance between the track and vertex 
+   *  @{
+   */
+  // ========================================================================    
+  /** evaluate the impact parameter of the track with respect to the vertex 
+   *  @param track (input)   the track 
+   *  @param vertex (input)  the vertex 
+   *  @param imppar (output) the value of impact parameter
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Track*      track    ,
+    const LHCb::VertexBase* vertex   , 
+    double&                 imppar   ) const = 0 ;
+  // ========================================================================    
+  /** evaluate the impact parameter of the track with respect to the vertex 
+   *  @param track (input)   the track 
+   *  @param vertex (input)  the vertex 
+   *  @param imppar (output) the value of impact parameter
+   *  @param chi2   (output) chi2 of impact parameter 
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Track*      track    ,
+    const LHCb::VertexBase* vertex   , 
+    double&                 imppar   , 
+    double&                 chi2     ) const = 0 ;
+  /** evaluate the impact parameter of the track with respect to the vertex 
+   *  @param track (input)   the track 
+   *  @param vertex (input)  the vertex 
+   *  @param imppar (output) the value of impact parameter
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Track*      track    ,
+    const LHCb::VertexBase* vertex   , 
+    Gaudi::XYZVector&       impact   ) const = 0 ;
+  // ========================================================================    
+  /// @}
+  // ========================================================================
+public:
+  // ========================================================================
+  /** @defgroup  TrackTrack
+   *  Evaluation of the distance between the tracks
+   *  @{
+   */
+  // ========================================================================    
+  /** evaluate the distance between two tracks
+   *  @param track1 (input)  the first track 
+   *  @param track2 (input)  the second track  
+   *  @param doca   (output) the value of distance 
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Track*      track1 ,
+    const LHCb::Track*      track2 ,
+    double&                 doca   ) const = 0 ;
+  // ========================================================================    
+  /** evaluate the distance between two tracks
+   *  @param track1 (input)  the first track 
+   *  @param track2 (input)  the second track  
+   *  @param doca   (output) the value of distance 
+   *  @param chi2   (output) the chi2 of distance 
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Track*      track1 ,
+    const LHCb::Track*      track2 ,
+    double&                 doca   , 
+    double&                 chi2   ) const = 0 ;
+  // ========================================================================    
+  /// @}
+  // ========================================================================
 public:
   // ==========================================================================
   /** @defgroup OtherDistances Methods to evaluate of some other "distances"
