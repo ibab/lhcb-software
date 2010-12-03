@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-12-03 - Johannes Albrecht
+ - first draft of FastVelo tracking
+
 ! 2010-11-30 - Vanya Belyaev
 
  - HltReco.py
