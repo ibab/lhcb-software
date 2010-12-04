@@ -29,6 +29,7 @@
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
 #include "LoKi/TrMatch.h"
+#include "LoKi/VxMaker.h"
 #include "LoKi/Hlt1Wrappers.h"
 // ============================================================================
 #include "LoKi/Dicts.h"

@@ -403,7 +403,7 @@ namespace LoKi
     public:      
       // ======================================================================      
       /// get the unit 
-      const Hlt::IUnit*      unit () const { return m_unit ; }  // get unit 
+      const Hlt::IUnit*          unit () const { return m_unit ; }  // get unit 
       /// get the key 
       const std::string&         key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
@@ -472,7 +472,7 @@ namespace LoKi
       /// The Key 
       Hlt::IUnit::Key              m_key  ;                     //  The Key
       /// The Cut 
-      LoKi::Types::RVCut               m_cut  ;                     //  The Cut
+      LoKi::Types::RVCut           m_cut  ;                     //  The Cut
       // ======================================================================      
     };   
     // ========================================================================

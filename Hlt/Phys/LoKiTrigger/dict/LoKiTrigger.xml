@@ -79,6 +79,13 @@
   <class name    = "LoKi::Hlt1::Tool"                />
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
   
+  <class name    = "LoKi::Hlt1::VxMakerConf">
+    <field name = "m_vxcut"     transient = "true"/>
+  </class>
+  <class name    = "LoKi::Hlt1::VxMakerBase" />
+  <class name    = "LoKi::Hlt1::VxMaker"     />
+  
+
   <class name = "LoKi::Tracks::TrFunction"   />
   <class name = "LoKi::Hlt1::TrackFunction"  />
   

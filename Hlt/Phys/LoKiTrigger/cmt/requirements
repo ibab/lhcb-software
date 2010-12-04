@@ -17,6 +17,7 @@ use               TrackInterfaces v*    Tr
 use               LoKiCore        v*    Phys 
 use               LoKiNumbers     v*    Phys 
 use               LoKiTracks      v*    Phys 
+use               KalmanFilter    v*    Phys 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes  more=LoKi

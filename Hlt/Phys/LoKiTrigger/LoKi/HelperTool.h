@@ -134,6 +134,21 @@ namespace LoKi
         return _create<LHCb::RecVertex> ( m_hlt_recvertices ) ;
       }
       // ======================================================================
+    protected:
+      // ======================================================================
+      inline bool _store ( const LHCb::RecVertex* v ) const 
+      {
+        if ( 0 == v                     ) { return false ; } 
+        if ( 0 != v->parent()           ) { return true  ; } 
+        if ( 0 == m_hlt_recvertices     ) { _createRecVertices () ; }        
+        if ( 0 == m_hlt_recvertices     ) { return false ; }
+        //
+        LHCb::RecVertex* _v = const_cast<LHCb::RecVertex*> ( v ) ;
+        _add_ ( _v , m_hlt_recvertices ) ;
+        //
+        return true ;  
+      } 
+      // ======================================================================
     private:
       // ======================================================================
       /// get the storage for tracks 

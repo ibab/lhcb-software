@@ -22,6 +22,28 @@
 #include "LoKi/MatchConf.h"
 #include "LoKi/MatchTool.h"
 // ============================================================================
+/** @file  LoKi/TrMatch.h
+ *  
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2008-11-14
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -34,7 +56,7 @@ namespace LoKi
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Cuts::TC_MATCH
      *  @see LoKi::Hlt1::TC_MATCH2
-     *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
     class Match 
@@ -77,7 +99,7 @@ namespace LoKi
       /// the second source 
       const Source&      source () const { return m_source2.func() ; }
       // ======================================================================
-      /// the second sourcee 
+      /// the output selection 
       const std::string& output () const { return m_sink.output() ; }
       // ======================================================================
     private:
@@ -96,7 +118,7 @@ namespace LoKi
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Cuts::TC_MATCH
      *  @see LoKi::Hlt1::TC_MATCH2
-     *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
     class Match2 : public Match  
@@ -131,93 +153,7 @@ namespace LoKi
       Match2() ;                          // the default constructor is disabled 
       // ======================================================================
     };
-//     // ========================================================================
-//     /** @class TrMatch TrMatch.h LoKi/TrMatch.h
-//      *  Simple helper whicch represent the track matching concept  
-//      *  @see ITrackMatch 
-//      *  @see LoKi::Hlt1::MatchConf
-//      *  @see LoKi::Cuts::TrMATCH
-//      *  @see LoKi::Hlt1::TrMATCH2
-//      *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
-//      *  @date   2008-11-14
-//      */
-//     class TrMatch 
-//       : public virtual LoKi::BasicFunctors<const LHCb::Track*>::Pipe 
-//       , public LoKi::Hlt1::MatchTool 
-//     {
-//     protected:
-//       // ======================================================================
-//       /// the actual type of track source
-//       typedef LoKi::BasicFunctors<const LHCb::Track*>::Source TrSource ;
-//       // ======================================================================
-//     public:
-//       // ======================================================================
-//       /// constructor 
-//       TrMatch 
-//       ( const std::string&           output  ,   //   output selection name/key 
-//         const TrSource&              tracks2 ,   //   tracks to be matched with 
-//         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
-//       /// MANDATORY: virtual desctructor 
-//       virtual ~TrMatch() {}
-//       /// MANDATORY: clone method ("virtual constructor")
-//       virtual  TrMatch* clone() const { return new TrMatch(*this) ; }
-//       /// MANDATORY: the only essential method
-//       virtual  result_type   operator() ( argument a ) const ;
-//       /// OPTIONAL: nice printout 
-//       virtual std::ostream&  fillStream ( std::ostream& s ) const ;
-//       // ======================================================================
-//     private:
-//       // ======================================================================
-//       /// the default constructor is disabled 
-//       TrMatch() ;                        // the default constructor is disabled 
-//       // ======================================================================
-//     public:
-//       // ======================================================================
-//       /// the second source 
-//       const TrSource& tracks2() const { return m_tracks2.func() ; }
-//       // ======================================================================
-//     private:
-//       // ======================================================================
-//       /// souce of tracks to be matched 
-//       LoKi::Assignable<TrSource>::Type m_tracks2 ; //          source of tracks 
-//       // ======================================================================
-//       /// 'sink': the functor which register the selection in Hlt Data Svc
-//       LoKi::Hlt1::TrRegister         m_sink   ;  //                      'sink'
-//       // ======================================================================
-//     };
-//     // ========================================================================
-//     /** @class TrMatch2 TrMatch.h LoKi/TrMatch.h
-//      *  Simple helper which represent the track matching concept  
-//      *  @see ITrackMatch 
-//      *  @see LoKi::Hlt1::MatchConf
-//      *  @see LoKi::Hlt1::TrMatch
-//      *  @see LoKi::Cuts::TrMATCH2
-//      *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
-//      *  @date   2008-11-14
-//      */
-//     class TrMatch2 : public TrMatch
-//     {
-//     public :
-//       // ======================================================================
-//       /// constructor 
-//       TrMatch2 
-//       ( const std::string&           output  ,   //   output selection name/key 
-//         const TrSource&              tracks2 ,   //   tracks to be matched with 
-//         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
-//       /// MANDATORY: virtual desctructor 
-//       virtual ~TrMatch2() {}
-//       /// MANDATORY: clone method ("virtual constructor")
-//       virtual  TrMatch2* clone() const { return new TrMatch2(*this) ; }
-//       /// OPTIONAL: nice printout 
-//       virtual std::ostream&  fillStream ( std::ostream& s ) const ;
-//       // ======================================================================
-//     private:
-//       // ======================================================================
-//       /// the default constructor is disabled 
-//       TrMatch2() ;                       // the default constructor is disabled 
-//       // ======================================================================
-//     } ;
-//     // ========================================================================
+    // ========================================================================
   } //                                              end of namespace LoKi::Hlt1 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
