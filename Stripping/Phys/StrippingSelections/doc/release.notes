@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-12-05 - Anton Poluektov 
+ - StrippingB2DX.py
+   * Added [B0->D+Rho-]cc mode to the D2hhh StrippingLine
+
 ! 2010-11-12 - Juan Palacios
  - python/StrippingSelections
   . Remove direct use of SelectionSequences to construct StrippingLines.

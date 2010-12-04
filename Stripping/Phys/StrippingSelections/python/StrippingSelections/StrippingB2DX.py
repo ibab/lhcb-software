@@ -88,6 +88,16 @@ class B2DXLines(object) :
 	      "PtMin"	     : 1000, 
 	      "DMass"	     : 150, 
     	    }, 
+    	    "RhoChargedCuts" : {
+    	      "DauChi2Max"   : 5., 
+    	      "DauPtMin"     : 250., 
+    	      "DauPMin"      : 2000., 
+    	      "DauMIPChi2Min": 4., 
+	      "Pi0PtMin"     : 600, 
+	      "Pi0PMin"	     : 2000, 
+	      "PtMin"	     : 1000, 
+	      "DMass"	     : 150, 
+    	    }, 
     	    "D2hhCuts" : {
     	      "DauChi2Max"   : 5., 
     	      "DauPtMin"     : 250., 
@@ -254,7 +264,7 @@ class B2DXLines(object) :
     	}
     ) : 
     
-	__configuration_keys__ = ("KstarCuts","PhiCuts","RhoCuts","D2hhCuts","D2hhhCuts","D2hhhhCuts",
+	__configuration_keys__ = ("KstarCuts","PhiCuts","RhoCuts","RhoChargedCuts","D2hhCuts","D2hhhCuts","D2hhhhCuts",
 	                          "D2KPiPi0Cuts","D2KshhCuts","BCuts","UnbiasedBCuts","LambdaCCuts","LambdaBCuts",
 	                          "Prescales","CheckPV", "MaxTracksInEvent")
 	                          
@@ -303,6 +313,7 @@ class B2DXLines(object) :
         
 	RhoNoMW = makeRhoNoMW(moduleName, config["RhoCuts"])
 	Rho = makeRho(moduleName, RhoNoMW, config["RhoCuts"])
+	RhoCharged = makeRhoCharged(moduleName, config["RhoChargedCuts"])
         
     	# List of B selections
     	BSelections = []
@@ -316,7 +327,9 @@ class B2DXLines(object) :
 	    if name in ["D2hhh"] : 
     		selection1 = makeB02DK(moduleName, name, dsel, config["BCuts"])
     		selection2 = makeB02DPi(moduleName, name, dsel, config["BCuts"])
-    		list += [ selection1, selection2]
+    		selection3 = makeB02DRhoCharged(moduleName, name, dsel, RhoCharged, config["BCuts"])
+    		list += [ selection1, selection2, selection3 ]
+#    		list += [ selection3 ]
 	    elif name in ["D2hhhWS"] : 
     		selection1 = makeB02DKWS(moduleName, name, dsel, D2hhhWS, config["BCuts"])
     		selection2 = makeB02DPiWS(moduleName, name, dsel, D2hhhWS, config["BCuts"])
@@ -867,6 +880,38 @@ def makeRho(moduleName, RhoNoMWSel, config) :
     return Selection("SelRhoFor" + moduleName, 
     		     Algorithm = Rho, RequiredSelections = [ RhoNoMWSel ] )
 
+def makeRhoCharged(moduleName, config) : 
+
+    __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min", 
+                              "Pi0PtMin", "Pi0PMin", "PtMin", "DMass")
+
+    checkConfig(__configuration_keys__, config)
+    	     
+    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi0Merged = DataOnDemand(Location = "Phys/StdLooseMergedPi0")
+    StdPi0Resolved = DataOnDemand(Location = "Phys/StdLooseResolvedPi0")
+    
+    SelPi0 = MergedSelection("Pi0For" + moduleName, RequiredSelections = [ StdPi0Merged, StdPi0Resolved ] )
+    
+    Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
+    "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(DauMIPChi2Min)s))" % config
+    Pi0cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
+
+    Rho = CombineParticles("RhoChargedFor" + moduleName)
+    Rho.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+
+    Rho.DecayDescriptors = [ "[rho(770)+ -> pi+ pi0]cc" ]
+    Rho.DaughtersCuts =  { "pi+"	: Daughtercut, 
+                           "pi0"        : Pi0cut }
+
+    Rho.CombinationCut = "(APT>%(PtMin)s*MeV) & (ADAMASS('rho(770)+') < %(DMass)s *MeV)" % config
+    Rho.MotherCut = "ALL"
+
+    return Selection("SelRhoChargedFor" + moduleName, 
+		     Algorithm = Rho, RequiredSelections = [ StdPi, StdPi0Resolved ] )
+
+
 def makeB2D0Pi(moduleName, DName, D0Sel, config ) : 
 
     StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
@@ -930,6 +975,26 @@ def makeB02DPi(moduleName, DName, DSel, config ) :
 
     return Selection("SelB02DPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
 			RequiredSelections = [ DSel, StdPi ] )
+
+
+def makeB02DRhoCharged(moduleName, DName, DSel, RhoChargedSel, config ) : 
+
+    from Configurables import OfflineVertexFitter
+
+    B2DRho = CombineParticles("B02DRhoChargedWith" + DName + "For" + moduleName)
+    B2DRho.DecayDescriptors = [ "[B0 -> D- rho(770)+]cc" ]
+    B2DRho.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
+    B2DRho.addTool(OfflineVertexFitter())
+    B2DRho.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    B2DRho.OfflineVertexFitter.useResonanceVertex = False
+
+    B2DRho.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
+    "(BPVDIRA > %(DIRAMin)s))" % config
+
+    return Selection("SelB02DRhoChargedWith" + DName + "For" + moduleName, Algorithm = B2DRho, 
+			RequiredSelections = [ DSel, RhoChargedSel ] )
+
 
 def makeB02DPiWS(moduleName, DName, DSel, DWSSel, config ) : 
 
