@@ -19,12 +19,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-02-16 
+ *  @date 2006-02-16
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace  Vertices 
   {    
     // ========================================================================
@@ -418,6 +428,48 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
       // ======================================================================
      } ;
+    // ========================================================================
+    /** @class IsVertex 
+     *  simple  checker of vertex type 
+     *  @see LHCb::Vertex
+     *  @see LoKi::Cuts::ISVERTEX 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    class IsVertex 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual IsVertex* clone() const  ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class IsRecVertex 
+     *  simple  checker of vertex type 
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Cuts::ISRECVERTEX 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    class IsRecVertex 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual IsRecVertex* clone() const  ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                          end of namespace LoKi::Vertices 
   // ==========================================================================

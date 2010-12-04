@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v9r5p1
+version           v9r6
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -32,16 +32,9 @@ apply_pattern     reflex_dictionary                                       \
                   selectionfile=$(LOKIPHYSROOT)/dict/LoKiPhys.xml         \  
                   options=" -U__MINGW32__ "
 
-#apply_pattern     reflex_dictionary                                       \
-#                  dictionary=LoKiPhysFunctors                             \
-#                  headerfiles=$(LOKIPHYSROOT)/dict/LoKiPhysDict.h         \
-#                  selectionfile=$(LOKIPHYSROOT)/dict/LoKiPhysFunctors.xml \  
-#                  options=" -U__MINGW32__ "
-
 macro_append      LoKiPhys_dependencies             " LoKiPhysLib  " 
 macro_append      LoKiPhysDict_dependencies         " LoKiPhysLib  " 
 macro_append      DecayGrammarTest_dependencies     " LoKiPhysLib  " 
-#macro_append      LoKiPhysFunctorsDict_dependencies " LoKiPhysLib  " 
 
 # =============== patterns ===================================================
 apply_pattern     linker_library    library=LoKiPhysLib

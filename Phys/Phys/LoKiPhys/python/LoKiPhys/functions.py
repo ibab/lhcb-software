@@ -611,6 +611,10 @@ VIPCHI2    = LoKi.Vertices.ImpParChi2
 VDZ        = LoKi.Vertices.VertexDeltaZ 
 ## @see LoKi::Cuts::VABSDZ
 VABSDZ     = LoKi.Vertices.VertexAbsDeltaZ 
+## @see LoKi::Cuts::ISVERTEX
+ISVERTEX    = LoKi.Vertices.IsVertex    ()
+## @see LoKi::Cuts::ISRECVERTEX
+ISRECVERTEX = LoKi.Vertices.IsRecVertex ()
 
 # =============================================================================
 # Aliases from Vava GLIGOROV
@@ -684,6 +688,23 @@ BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
 # Functions for Lisa Dwyer 
 # =============================================================================
 BPVLTERR              = LoKi.Particles.LifeTimeErrorDV           
+
+
+# =============================================================================
+# new NN-based variables forPID by Chris Jones 
+# =============================================================================
+## @see LoKi::Cuts::PROBNNe 
+PROBNNe  = PPINFO( LHCb.ProtoParticle.CombDLLe  , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNmu
+PROBNNmu = PPINFO( LHCb.ProtoParticle.CombDLLmu , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNpi
+PROBNNpi = PPINFO( LHCb.ProtoParticle.CombDLLpi , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNk
+PROBNNk  = PPINFO( LHCb.ProtoParticle.CombDLLk  , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNK
+PROBNNK  = PPINFO( LHCb.ProtoParticle.CombDLLK  , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNp
+PROBNNp  = PPINFO( LHCb.ProtoParticle.CombDLLp  , -1 , -1000 )
 
 
 # =============================================================================

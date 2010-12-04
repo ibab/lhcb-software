@@ -28,12 +28,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-02-16
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Cuts 
   {   
     // ========================================================================    
@@ -735,10 +745,52 @@ namespace LoKi
      */
     typedef LoKi::Vertices::ImpParChi2 VIPCHI2 ;
     // ========================================================================
-  }  // end of namespace LoKi::Cuts
-} // end of the namespace LoKi 
+    /** @var ISVERTEX
+     *  Simple checker of the actual type of vertex 
+     *
+     * 
+     *  @code
+     * 
+     *  const LHCb::VertexBase* vx = ... ;
+     *
+     *  const bool vertex = ISVERTEX ( vx ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Vertex
+     *  @see LHCb::VertexBase 
+     *  @see LoKi::Vertices::IsVertex 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const LoKi::Vertices::IsVertex                                   ISVERTEX ;
+    // ========================================================================
+    /** @var ISRECVERTEX
+     *  Simple checker of the actual type of vertex 
+     *
+     *  @code
+     * 
+     *  const LHCb::VertexBase* vx = ... ;
+     *
+     *  const bool recvertex = ISRECVERTEX ( vx ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::RecVertex
+     *  @see LHCb::VertexBase 
+     *  @see LoKi::Vertices::IsRecVertex 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const LoKi::Vertices::IsRecVertex                             ISRECVERTEX ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts
+  // ==========================================================================
+} //                                                  end of the namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTEXCUTS_H
 // ============================================================================

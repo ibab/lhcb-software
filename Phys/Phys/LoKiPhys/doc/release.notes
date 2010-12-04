@@ -5,6 +5,19 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-04 - Vanya Belyaev
+
+ - new symbols :
+
+     ISVERTEX    : check if the actual vertex type is LHCb::Vertex 
+     ISRECVERTEX : check if the actual vertex type is LHCb::RecVertex 
+
+     PROBNNe,PROBNNmu,PROBNNpi,PROBNNk,PROBNNK and PROBNNp
+     new NN-based variables for PID by Chris Jones 
+
+ - cmt/requirements 
+     version inctrement to v9r6
+
 ! 2010-11-30 - Vanya Belyaev
 
  - SelectVertex:

@@ -202,8 +202,6 @@ namespace LoKi
       ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const SmartRef<LHCb::VertexBase>& o ) { return fun ( o ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -212,9 +210,6 @@ namespace LoKi
       { return o >> fun  ; }
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::RecVertex::ConstVector&     o ) 
-      { return o >> fun  ; }
-      static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const LHCb::Vertex::ConstVector&        o ) 
       { return o >> fun  ; }
       // ======================================================================
     public:
@@ -251,17 +246,12 @@ namespace LoKi
       ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const SmartRef<LHCb::VertexBase>& o ) { return fun ( o ) ; }
       // ======================================================================
       static LHCb::VertexBase::ConstVector  __rrshift__ 
       ( const Fun& fun  , const LHCb::VertexBase::ConstVector& o ) 
       { return o >> fun  ; }
       static LHCb::RecVertex::ConstVector   __rrshift__ 
       ( const Fun& fun  , const LHCb::RecVertex::ConstVector&  o ) 
-      { return o >> fun  ; }
-      static LHCb::Vertex::ConstVector      __rrshift__ 
-      ( const Fun& fun  , const LHCb::Vertex::ConstVector&     o ) 
       { return o >> fun  ; }
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            

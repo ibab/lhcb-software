@@ -12,6 +12,8 @@
 // ============================================================================
 // Event
 // ============================================================================
+#include "Event/VertexBase.h"
+#include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 // ============================================================================
 // LoKiCore
@@ -41,8 +43,17 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
 LoKi::Vertices::IsPrimary* 
@@ -365,6 +376,49 @@ LoKi::Vertices::Chi2Prob::fillStream ( std::ostream& s ) const
 // ============================================================================
 
 
+
+
+// ============================================================================
+LoKi::Vertices::IsVertex* 
+LoKi::Vertices::IsVertex::clone() const 
+{ return new IsVertex( *this ) ; }
+// ============================================================================
+LoKi::Vertices::IsVertex::result_type 
+LoKi::Vertices::IsVertex::operator() 
+  ( LoKi::Vertices::IsVertex::argument v ) const 
+{
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase points to NULL, return 'false'" ) ;
+    return false ;                                         // RETURN 
+  }
+  //
+  return 0 != dynamic_cast<const LHCb::Vertex*>( v ) ;
+}
+// ============================================================================
+std::ostream& LoKi::Vertices::IsVertex::fillStream ( std::ostream& s ) const 
+{ return s << "ISVERTEX" ; }
+
+// ============================================================================
+LoKi::Vertices::IsRecVertex* 
+LoKi::Vertices::IsRecVertex::clone() const 
+{ return new IsRecVertex( *this ) ; }
+// ============================================================================
+LoKi::Vertices::IsRecVertex::result_type 
+LoKi::Vertices::IsRecVertex::operator() 
+  ( LoKi::Vertices::IsRecVertex::argument v ) const 
+{
+  if ( 0 == v ) 
+  {
+    Error ( "LHCb::VertexBase points to NULL, return 'false'" ) ;
+    return false ;                                         // RETURN 
+  }
+  //
+  return 0 != dynamic_cast<const LHCb::RecVertex*>( v ) ;
+}
+// ============================================================================
+std::ostream& LoKi::Vertices::IsRecVertex::fillStream ( std::ostream& s ) const 
+{ return s << "ISRECVERTEX" ; }
 
 
 // ============================================================================

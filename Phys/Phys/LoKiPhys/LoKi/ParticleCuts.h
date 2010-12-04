@@ -31,8 +31,17 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-28 
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
 namespace LoKi
@@ -4307,6 +4316,114 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const PPINFO        PIDpi ( LHCb::ProtoParticle::CombDLLpi  , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNe 
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNe
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNe ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNNe  ( LHCb::ProtoParticle::ProbNNe  , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNmu
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNmu
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNmu ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNNmu ( LHCb::ProtoParticle::ProbNNmu , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNpi
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNpi
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNpi ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNNpi ( LHCb::ProtoParticle::ProbNNpi , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNk
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNk
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNk ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNk   ( LHCb::ProtoParticle::ProbNNk  , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNK
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNk
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNK ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNK   ( LHCb::ProtoParticle::ProbNNk  , 0 , -1000 ) ;
+    // ========================================================================
+    /** @var PROBNNp
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNp
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNp ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO      PROBNp   ( LHCb::ProtoParticle::ProbNNp  , 0 , -1000 ) ;
     // ========================================================================
     /** @typedef PINFO 
      *  Trivial function which evaluates LHCb::Particle::info
