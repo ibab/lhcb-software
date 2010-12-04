@@ -334,10 +334,82 @@ bool LoKi::FastVertex::checkDistance
   //
   return true ;
 }
-
-
-
-
+// ============================================================================
+/** check the distance between the track & the track ("doca")
+ *  @param track1  (INPUT) the first  track
+ *  @param track2  (INPUT) the second track
+ *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
+ *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
+ *  @param iterate (INPUT) iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+bool LoKi::FastVertex::checkDistance
+( const LHCb::Track*   track1   , 
+  const LHCb::Track*   track2   ,
+  const double         docamax  ,
+  const double         chi2max  , 
+  const bool           iterate  ) 
+{
+  //
+  if ( 0 == track1 || 0 == track2 ) { return false ; } 
+  //
+  double mu1 = 0 ;
+  double mu2 = 0 ;
+  //
+  const LHCb::State* state1 = state ( *track1 ) ;
+  const LHCb::State* state2 = state ( *track2 ) ;
+  //
+  Line_ line1 ( line ( *state1 ) ) ;
+  Line_ line2 ( line ( *state2 ) ) ;
+  //
+  // (re)use the nice functions by Matt&Juan
+  Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+  //
+  Gaudi::XYZPoint point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+  Gaudi::XYZPoint point2 = line2 ( mu2 ) ; // the point on the second trajectory
+  //
+  if ( iterate ) 
+  {
+    //
+    state1 = state ( *track1 , point1.Z() ) ;
+    state2 = state ( *track1 , point1.Z() ) ;
+    //
+    line1 = line ( *state1 )  ;
+    line2 = line ( *state2 )  ;
+    //
+    // (re)use the nice functions by Matt&Juan
+    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+    //
+    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+    point2 = line2 ( mu2 ) ; // the point on the second trajectory
+    //
+  }
+  //
+  // apply DOCA cut (if needed) 
+  //
+  if ( 0 < docamax && docamax*docamax < (point1-point2).Mag2() ) { return false ; }
+  //
+  // chi2 ? 
+  if ( chi2max < 0 ) { return true ;}
+  //
+  // normal vertex fit 
+  //
+  LoKi::KalmanFilter::TrEntry4 entry1 ;
+  LoKi::KalmanFilter::load ( state1 , entry1 );
+  LoKi::KalmanFilter::TrEntry4 entry2 ;
+  LoKi::KalmanFilter::load ( state2 , entry2 );
+  StatusCode sc = LoKi::KalmanFilter::step ( entry1 , entry2 , 0 ) ;
+  //
+  if ( sc.isFailure()          ) { return false ; } // RETURN 
+  // 
+  // apply chi2-cut
+  //
+  if ( chi2max < entry2.m_chi2 ) { return false ; } // RETURN 
+  //
+  return true ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

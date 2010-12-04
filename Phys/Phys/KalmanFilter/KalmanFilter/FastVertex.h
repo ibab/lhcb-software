@@ -124,6 +124,23 @@ namespace LoKi
       const double            chi2max         ,
       const bool              iterate = false ) ;
     // ========================================================================
+    /** check the distance between the track & the track ("doca")
+     *  @param track1  (INPUT) the first track  
+     *  @param track2  (INPUT) the second track  
+     *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
+     *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
+     *  @param iterate (INPUT)  iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    GAUDI_API 
+    bool checkDistance 
+    ( const LHCb::Track*      track1          , 
+      const LHCb::Track*      track2          ,
+      const double            docamax         , 
+      const double            chi2max         ,
+      const bool              iterate = false ) ;
+    // ========================================================================
   } //                                        end of namespace LoKi::FastVertex 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
