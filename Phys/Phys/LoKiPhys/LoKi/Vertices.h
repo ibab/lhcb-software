@@ -14,6 +14,7 @@
 #include "LoKi/Vertices0.h"
 #include "LoKi/Vertices1.h"
 #include "LoKi/Vertices2.h"
+#include "LoKi/Vertices3.h"
 // ============================================================================
 /** @file
  *
@@ -25,12 +26,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
+ *
+ *                    $Revision$
+ *  Last Modification $Date$
+ *                 by $Author$
+ *
  */
 // ============================================================================
 namespace LoKi 
-{  
+{ 
+  // ==========================================================================
   /** @namespace  LoKi::Vertices Vertices.h LoKi/Vertices.h
    *  
    *  Namespace with collection of "Particle" functions for LoKi
@@ -39,12 +50,13 @@ namespace LoKi
    *  @date   2006-02-16
    */
   namespace  Vertices 
-  {    
-  } ; // end of namespace LoKi::Vertices 
-  
-} ; // end of namespace LoKi
+  { 
+    // ========================================================================
+  } //                                          end of namespace LoKi::Vertices 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTICES_H
 // ============================================================================

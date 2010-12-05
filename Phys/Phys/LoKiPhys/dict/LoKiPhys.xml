@@ -15,7 +15,7 @@
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      *
-     *  $Revision:$
+     *  $Revision$
      *
      * ========================================================================
 -->
@@ -194,6 +194,20 @@
       <method name="=" />
     </class>
 
+
+    <class pattern="LoKi::Vertices::RecVertex2TrackMin">
+      <method name="="     />
+      <field name="m_fun" />
+    </class>
+    <class pattern="LoKi::Vertices::RecVertex2TrackHas">
+      <method name="="     />
+      <field name="m_cut" />
+    </class>
+    <class pattern="LoKi::Vertices::RecVertex2TrackNum">
+      <method name="="     />
+      <field name="m_cut" />
+    </class>
+    
   </exclusion>
   
 </lcgdict>

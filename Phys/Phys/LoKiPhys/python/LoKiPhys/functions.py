@@ -616,6 +616,19 @@ ISVERTEX    = LoKi.Vertices.IsVertex    ()
 ## @see LoKi::Cuts::ISRECVERTEX
 ISRECVERTEX = LoKi.Vertices.IsRecVertex ()
 
+## @see LoKi::Cuts::RV_TrMIN
+RV_TrMIN   = LoKi.Vertices.RecVertex2TrackMin
+## @see LoKi::Cuts::RV_TrMAX 
+RV_TrMAX   = LoKi.Vertices.RecVertex2TrackMax
+## @see LoKi::Cuts::RV_TrSUM
+RV_TrSUM   = LoKi.Vertices.RecVertex2TrackSum
+## @see LoKi::Cuts::RV_TrHAS
+RV_TrHAS   = LoKi.Vertices.RecVertex2TrackHas
+## @see LoKi::Cuts::RV_TrCUT
+RV_TrCUT   = LoKi.Vertices.RecVertex2TrackCut
+## @see LoKi::Cuts::RV_TrNUM
+RV_TrNUM   = LoKi.Vertices.RecVertex2TrackNum
+
 # =============================================================================
 # Aliases from Vava GLIGOROV
 # =============================================================================
