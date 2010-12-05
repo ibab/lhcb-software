@@ -702,7 +702,7 @@ PROBNNpi = PPINFO( LHCb.ProtoParticle.CombDLLpi , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNk
 PROBNNk  = PPINFO( LHCb.ProtoParticle.CombDLLk  , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNK
-PROBNNK  = PPINFO( LHCb.ProtoParticle.CombDLLK  , -1 , -1000 )
+PROBNNK  = PPINFO( LHCb.ProtoParticle.CombDLLk  , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNp
 PROBNNp  = PPINFO( LHCb.ProtoParticle.CombDLLp  , -1 , -1000 )
 

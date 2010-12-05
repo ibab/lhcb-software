@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-05 - Vanya Belyaev
+ - fix typo 
+
 ! 2010-12-04 - Vanya Belyaev
 
  - new symbols :
