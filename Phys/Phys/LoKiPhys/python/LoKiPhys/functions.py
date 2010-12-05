@@ -694,19 +694,20 @@ BPVLTERR              = LoKi.Particles.LifeTimeErrorDV
 # new NN-based variables forPID by Chris Jones 
 # =============================================================================
 ## @see LoKi::Cuts::PROBNNe 
-PROBNNe  = PPINFO( LHCb.ProtoParticle.CombDLLe  , -1 , -1000 )
+PROBNNe     = PPINFO( LHCb.ProtoParticle.ProbNNe     , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNmu
-PROBNNmu = PPINFO( LHCb.ProtoParticle.CombDLLmu , -1 , -1000 )
+PROBNNmu    = PPINFO( LHCb.ProtoParticle.ProbNNmu    , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNpi
-PROBNNpi = PPINFO( LHCb.ProtoParticle.CombDLLpi , -1 , -1000 )
+PROBNNpi    = PPINFO( LHCb.ProtoParticle.ProbNNpi    , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNk
-PROBNNk  = PPINFO( LHCb.ProtoParticle.CombDLLk  , -1 , -1000 )
+PROBNNk     = PPINFO( LHCb.ProtoParticle.ProbNNk     , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNK
-PROBNNK  = PPINFO( LHCb.ProtoParticle.CombDLLk  , -1 , -1000 )
+PROBNNK     = PPINFO( LHCb.ProtoParticle.ProbNNk     , -1 , -1000 )
 ## @see LoKi::Cuts::PROBNNp
-PROBNNp  = PPINFO( LHCb.ProtoParticle.CombDLLp  , -1 , -1000 )
-
-
+PROBNNp     = PPINFO( LHCb.ProtoParticle.ProbNNp     , -1 , -1000 )
+## @see LoKi::Cuts::PROBNNghost
+PROBNNghost = PPINFO( LHCb.ProtoParticle.ProbNNghost , -1 , -1000 )
+ 
 # =============================================================================
 # Functions for Olivier Leroy
 # =============================================================================

@@ -4425,6 +4425,24 @@ namespace LoKi
      */
     const PPINFO      PROBNp   ( LHCb::ProtoParticle::ProbNNp  , 0 , -1000 ) ;
     // ========================================================================
+    /** @var PROBNNghost
+     *  New NN-based variable for PID by Chris Jones
+     *  @see LHCb::ProtoParticle::ProbNNghost
+     *  
+     *  @code 
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *  
+     *  const double probability = PROBNNghost ( p ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Cuts::PPINFO 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    const PPINFO PROBNghost ( LHCb::ProtoParticle::ProbNNghost  , 0 , -1000 ) ;
+    // ========================================================================
     /** @typedef PINFO 
      *  Trivial function which evaluates LHCb::Particle::info
      *  
