@@ -84,10 +84,22 @@
   </class>
   <class name    = "LoKi::Hlt1::VxMakerBase" />
   <class name    = "LoKi::Hlt1::VxMaker"     />
+  <class name    = "LoKi::Hlt1::VxMaker2"    />
+  <class name    = "LoKi::Hlt1::VxMaker3"    />
   
 
   <class name = "LoKi::Tracks::TrFunction"   />
   <class name = "LoKi::Hlt1::TrackFunction"  />
+  
+  
+  <!-- Track functions --> 
+  <class name = "LoKi::Tracks::MuonDeltaP" />
+  <class name = "LoKi::Tracks::Hlt1TrackMinIp" >
+    <field name = "m_vxcut"        transient = "true"/>
+    <field name = "m_vertices"     transient = "true"/>
+  </class> 
+  <class name = "LoKi::Tracks::Hlt1TrackMinIpChi2" />
+
   
   <!-- 
        <class name    = "LoKi::Hlt1::TrackBiFunction"     />

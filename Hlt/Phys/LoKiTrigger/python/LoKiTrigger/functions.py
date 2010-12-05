@@ -206,17 +206,42 @@ TC_MATCH    = LoKi.Hlt1.Match
 TC_MATCH2   = LoKi.Hlt1.Match2
 
 # =============================================================================
+## vertex making 
+# =============================================================================
+
+## @see LoKi::Cuts::TC_VXMAKE 
+TC_VXMAKE      = LoKi.Hlt1.VxMaker
+## @see LoKi::Cuts::TC_VXMAKE2 
+TC_VXMAKE2     = LoKi.Hlt1.VxMaker2
+## @see LoKi::Cuts::TC_VXMAKE3 
+TC_VXMAKE3     = LoKi.Hlt1.VxMaker3
+
+# =============================================================================
 ## end of new stuff ##
 # =============================================================================
 
-
+# ============================================================================
 ## Hlt1Wrappers
+# ============================================================================
+
 TrackFunction       = LoKi.Hlt1.TrackFunction
 TrFUN               = LoKi.Tracks.TrFunction
 
+# ============================================================================
+## Hl1Functions
+# ============================================================================
+
+## @see LoKi::Cuts::TrDPMU_ 
+TrDPMU_             = LoKi.Tracks.MuonDeltaP
+## @see LoKi::Cuts::TrDPMU
+TrDPMU              = LoKi.Tracks.MuonDeltaP() 
+## @see LoKi::Cuts::Tr_HLTMIP 
+Tr_HLTMIP           = LoKi.Tracks.Hlt1TrackMinIp
+## @see LoKi::Cuts::Tr_HLTMIPCHI2  
+Tr_HLTMIPCHI2       = LoKi.Tracks.Hlt1TrackMinIpChi2
 
 
-## @todo to be done in LoKiTrigger:
+##
 LoKi.Hlt1.UpgradeConf      . __str__  =  LoKi.Hlt1.UpgradeConf     . toString
 LoKi.Hlt1.UpgradeConf      . __repr__ =  LoKi.Hlt1.UpgradeConf     . toString
 LoKi.Hlt1.MatchConf        . __str__  =  LoKi.Hlt1.MatchConf       . toString

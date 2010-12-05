@@ -16,7 +16,14 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Constants.h"
+#include "LoKi/Algs.h"
+#include "LoKi/Hlt1.h"
 #include "LoKi/Hlt1Functions.h"
+// ============================================================================
+// KalmanFilter 
+// ============================================================================
+#include "KalmanFilter/FastVertex.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -24,8 +31,25 @@
 // ============================================================================
 /** @file 
  *  implementation file for classed form the file LoKi/Hlt1Functions.h
+ *
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-03-30
+ * 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */  
 // ============================================================================
 namespace 
@@ -181,6 +205,264 @@ std::ostream& LoKi::Tracks::MuonDeltaP::fillStream
   //
   return    s << "TrDPMU_(" << m_deltaP << "," 
               << Gaudi::Utils::toString ( m_pCuts ) << ")" ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// constructor from vertex selection 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
+( const Hlt::TSelection<LHCb::RecVertex>* selection  ) 
+  : LoKi::TrackTypes::TrFunc () 
+  , m_vertices      ( selection ) 
+  , m_vxcut         ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) )
+  , m_vxcut_trivial ( true      ) 
+{}
+// ============================================================================
+// constructor from vertex selection & cuts 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
+( const Hlt::TSelection<LHCb::RecVertex>*            selection  , 
+  const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
+  : LoKi::TrackTypes::TrFunc () 
+  , m_vertices      ( selection ) 
+  , m_vxcut         ( cuts      )
+  , m_vxcut_trivial ( false     ) 
+{}
+// ============================================================================
+// constructor from vertex selection 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
+( const std::string& selection  ) 
+  : LoKi::TrackTypes::TrFunc () 
+  , m_vertices      ( selection ) 
+  , m_vxcut         ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) )
+  , m_vxcut_trivial ( true      ) 
+{}
+// ============================================================================
+// constructor from vertex selection & cuts 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
+( const std::string&                                 selection  , 
+  const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
+  : LoKi::TrackTypes::TrFunc () 
+  , m_vertices      ( selection ) 
+  , m_vxcut         ( cuts      )
+  , m_vxcut_trivial ( false     ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::~Hlt1TrackMinIp() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp*
+LoKi::Tracks::Hlt1TrackMinIp::clone() const 
+{ return new LoKi::Tracks::Hlt1TrackMinIp ( *this ) ; }
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @struct _IP 
+   *  helper structure to get IP for track with respect of the vertex 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-05
+   */
+  struct _IP : public std::unary_function<const LHCb::VertexBase*,double>
+  {
+  public :
+    // ========================================================================
+    _IP ( const LHCb::Track* t ) : m_track ( t ) {}
+    // ========================================================================
+    inline double operator() ( const LHCb::VertexBase* vertex ) const 
+    {
+      if ( 0 == vertex    ) { return LoKi::Constants::PositiveInfinity ; }
+      //
+      StatusCode sc = LoKi::FastVertex::distance 
+        ( m_track , vertex , m_impact , true ) ;
+      if ( sc.isFailure() ) { return LoKi::Constants::PositiveInfinity ; }
+      // 
+      return m_impact.R() ;
+    }
+    // ========================================================================
+  private:
+    // ========================================================================    
+    /// the default constuctor is disabled 
+    _IP () ;                             // the default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the stored track 
+    const LHCb::Track*       m_track  ;          // the stored track 
+    /// the impact parameter itself 
+    mutable Gaudi::XYZVector m_impact ;          // the impact parameter itself 
+    // ========================================================================
+  } ;
+  // ==========================================================================
+  /** @struct_IPchi2 
+   *  helper structure to get chi2(IP) for track with respect of the vertex 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-05
+   */
+  struct _IPchi2 : public std::unary_function<const LHCb::VertexBase*,double>
+  {
+  public :
+    // ========================================================================
+    _IPchi2 ( const LHCb::Track* t ) : m_track ( t ) {}
+    // ========================================================================
+    inline double operator() ( const LHCb::VertexBase* vertex ) const 
+    {
+      if ( 0 == vertex    ) { return LoKi::Constants::PositiveInfinity ; }
+      //
+      double impact = 0 ;
+      double ipchi2 = 0 ;
+      StatusCode sc = LoKi::FastVertex::distance 
+        ( m_track , vertex ,  impact , ipchi2 , true ) ;
+      if ( sc.isFailure() ) { return LoKi::Constants::PositiveInfinity ; }
+      // 
+      return ipchi2 ;
+    }
+    // ========================================================================
+  private:
+    // ========================================================================    
+    /// the default constuctor is disabled 
+    _IPchi2 () ;                         // the default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the stored track 
+    const LHCb::Track*       m_track  ;          // the stored track 
+    // ========================================================================
+  } ;
+  // ==========================================================================
+} //                                                 end of anonymous namespace 
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIp::result_type 
+LoKi::Tracks::Hlt1TrackMinIp::operator() 
+  ( LoKi::Tracks::Hlt1TrackMinIp::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return negative infinity ") ;
+    return LoKi::Constants::NegativeInfinity ;  
+  }
+  //
+  typedef Hlt::TSelection<LHCb::RecVertex> Selection ;
+  //
+  const Selection* s = selection() ;
+  //
+  Assert ( 0 != s , "Invalid Hlt::Selection!" ) ;
+  //
+  if ( s -> empty() ) { return LoKi::Constants::PositiveInfinity ; }
+  //
+  std::pair<Selection::const_iterator,double> r =
+    ( m_vxcut_trivial ) ?
+    LoKi::Algs::extremum 
+    ( s->begin ()  , s->end   ()  , _IP( t ) ,           std::less<double>() ) : 
+    LoKi::Algs::extremum 
+    ( s->begin ()  , s->end   ()  , _IP( t ) , m_vxcut , std::less<double>() ) ;
+  //
+  if ( s->end() == r.first ) { return LoKi::Constants::PositiveInfinity ; }
+  //
+  return r.second ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::Hlt1TrackMinIp::fillStream( std::ostream& s ) const 
+{
+  s <<  "Tr_HLTMIP(' " << m_vertices.selName() << "'" ;
+  if ( !m_vxcut_trivial ) { s << "," << m_vxcut ; }
+  return s << ")" ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from vertex selection 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const Hlt::TSelection<LHCb::RecVertex>* selection  ) 
+  : LoKi::Tracks::Hlt1TrackMinIp ( selection ) 
+{}
+// ============================================================================
+// constructor from vertex selection & cuts 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const Hlt::TSelection<LHCb::RecVertex>*            selection  , 
+  const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
+  : LoKi::Tracks::Hlt1TrackMinIp ( selection , cuts ) 
+{}
+// ============================================================================
+// constructor from vertex selection 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const std::string& selection  ) 
+  : LoKi::Tracks::Hlt1TrackMinIp ( selection ) 
+{}
+// ============================================================================
+// constructor from vertex selection & cuts 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const std::string&                                 selection  , 
+  const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
+  : LoKi::Tracks::Hlt1TrackMinIp ( selection , cuts ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::~Hlt1TrackMinIpChi2() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2*
+LoKi::Tracks::Hlt1TrackMinIpChi2::clone() const 
+{ return new LoKi::Tracks::Hlt1TrackMinIpChi2 ( *this ) ; }
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::Hlt1TrackMinIpChi2::fillStream( std::ostream& s ) const 
+{
+  s <<  "Tr_HLTMIPCHI2(' " << m_vertices.selName() << "'" ;
+  if ( !m_vxcut_trivial ) { s << "," << m_vxcut ; }
+  return s << ")" ;
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Hlt1TrackMinIpChi2::result_type 
+LoKi::Tracks::Hlt1TrackMinIpChi2::operator() 
+  ( LoKi::Tracks::Hlt1TrackMinIpChi2::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ( "LHCb::Track* points to NULL, return negative infinity ") ;
+    return LoKi::Constants::NegativeInfinity ;  
+  }
+  //
+  typedef Hlt::TSelection<LHCb::RecVertex> Selection ;
+  //
+  const Selection* s = selection() ;
+  //
+  Assert ( 0 != s , "Invalid Hlt::Selection!" ) ;
+  //
+  if ( s -> empty() ) { return LoKi::Constants::PositiveInfinity ; }
+  //
+  std::pair<Selection::const_iterator,double> r =
+    ( m_vxcut_trivial ) ?
+    LoKi::Algs::extremum 
+    ( s->begin ()  , s->end   ()  , _IPchi2 ( t ) ,           std::less<double>() ) : 
+    LoKi::Algs::extremum 
+    ( s->begin ()  , s->end   ()  , _IPchi2 ( t ) , m_vxcut , std::less<double>() ) ;
+  //
+  if ( s->end() == r.first ) { return LoKi::Constants::PositiveInfinity ; }
+  //
+  return r.second ;
 }
 // ============================================================================
 // The END 
