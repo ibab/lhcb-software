@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2010-12-06 - Tomasz Szumlak
+ - change that is a part of the VELO tuning for MC 2011 production
+   now the default BiasVoltage is set to 150 V
 
 !===================== VeloSimulation v3r7 2010-03-18 ========================
 ! 2010-03-05 - David Hutchcroft

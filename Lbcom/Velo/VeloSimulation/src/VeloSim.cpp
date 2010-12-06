@@ -67,7 +67,7 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("ThresholdADC", m_thresholdADC = 4.0 );  
   declareProperty("ThresholdADCSingle", m_thresholdADCSingle = 10.0 );  
   declareProperty("kT", m_kT = 0.025 );
-  declareProperty("BiasVoltage", m_biasVoltage = 105. );
+  declareProperty("BiasVoltage", m_biasVoltage = 150. );
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6 );
   declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3 );
   declareProperty("ChargeUniform", m_chargeUniform = 70. );
