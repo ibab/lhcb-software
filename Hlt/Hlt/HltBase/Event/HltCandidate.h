@@ -287,6 +287,22 @@ namespace Hlt
     return _stage->get<LHCb::RecVertex>() ;
   }
   // ==========================================================================
+  /** get the vertex from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the vertex
+   */
+  template <>
+  inline const LHCb::VertexBase* 
+  Hlt::Candidate::get<LHCb::VertexBase>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<LHCb::VertexBase>() ;
+  }
+  // ==========================================================================
   /** get the L0CaloCandidate from the Hlt Candidate
    *  @param slot the slot to be used for data extraction 
    *     - 0 corresponds to the current stage , 

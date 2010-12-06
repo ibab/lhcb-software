@@ -352,6 +352,8 @@ namespace Gaudi
 namespace Hlt 
 {
   // ==========================================================================
+  // Stage
+  // ==========================================================================
   template<>
   inline const Hlt::Stage* 
   Hlt::Stage::get<Hlt::Stage>() const { return m_stage ; }
@@ -371,6 +373,8 @@ namespace Hlt
   template<> 
   inline bool 
   Hlt::Stage::is<Hlt::Stage>() const { return m_stage != 0; }
+  // ==========================================================================
+  // Candidate
   // ==========================================================================
   template<>
   inline const Hlt::Candidate* 
@@ -392,6 +396,8 @@ namespace Hlt
   inline bool 
   Hlt::Stage::is<Hlt::Candidate>() const { return m_candidate != 0; }
   // ==========================================================================
+  // Track
+  // ==========================================================================
   template<>
   inline const LHCb::Track* 
   Hlt::Stage::get<LHCb::Track>() const { return m_track;}
@@ -411,6 +417,8 @@ namespace Hlt
   template<> 
   inline bool 
   Hlt::Stage::is<LHCb::Track>() const { return m_track != 0; }
+  // ==========================================================================
+  // RecVertex
   // ==========================================================================
   template<> 
   inline const LHCb::RecVertex* 
@@ -432,6 +440,25 @@ namespace Hlt
   inline bool 
   Hlt::Stage::is<LHCb::RecVertex>() const 
   { return m_rec_vertex != 0; }
+  // ==========================================================================
+  // Helper trick with VertexBase
+  // ==========================================================================
+  template<> 
+  inline const LHCb::VertexBase* 
+  Hlt::Stage::get<LHCb::VertexBase>() const 
+  { return this->get<LHCb::RecVertex> () ; }
+  // ==========================================================================
+  template<> 
+  inline       LHCb::VertexBase* 
+  Hlt::Stage::get<LHCb::VertexBase>()  
+  { return this->get<LHCb::RecVertex> () ; }
+  // ==========================================================================
+  template<> 
+  inline bool 
+  Hlt::Stage::is<LHCb::VertexBase> () const 
+  { return this->is<LHCb::RecVertex>  () ; }
+  // ==========================================================================
+  // L0CaloCandidate 
   // ==========================================================================
   template<> 
   inline const LHCb::L0CaloCandidate* 
@@ -455,6 +482,8 @@ namespace Hlt
   Hlt::Stage::is<LHCb::L0CaloCandidate>() const 
   { return m_l0_calo_candidate != 0; }
   // ==========================================================================
+  // L0MuonCandidate
+  // ==========================================================================
   template<>  
   inline const LHCb::L0MuonCandidate*
   Hlt::Stage::get<LHCb::L0MuonCandidate>() const { return m_l0_muon_candidate; }
@@ -475,6 +504,8 @@ namespace Hlt
   template<> 
   inline bool Hlt::Stage::is<LHCb::L0MuonCandidate>() const 
   { return m_l0_muon_candidate != 0; }
+  // ==========================================================================
+  // MultiTrack
   // ==========================================================================
   template<> 
   inline const Hlt::MultiTrack* 
@@ -498,6 +529,8 @@ namespace Hlt
   Hlt::Stage::is<Hlt::MultiTrack>() const 
   { return m_multitrack != 0; }
   // ==========================================================================
+  // L0DiMuonCandidate
+  // ==========================================================================
   template<> 
   inline const Hlt::L0DiMuonCandidate*
   Hlt::Stage::get<Hlt::L0DiMuonCandidate>() const { return m_l0_dimuon_candidate; }
@@ -519,6 +552,8 @@ namespace Hlt
   inline bool 
   Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const 
   {return m_l0_dimuon_candidate != 0; }
+  // ==========================================================================
+  // * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO * 
   // ==========================================================================
   template<typename T> 
   inline bool 

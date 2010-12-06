@@ -11,7 +11,8 @@
   <class name = "IConfigTreeEditor" />
 
   
-  <class name   = "Hlt::Cache" />
+  <class name   = "Hlt::Cache"         />
+  <enum  name   = "Hlt::Cache::Values" />
   
   <class name   = "Hlt::Candidate"         
          id     = "00001D89-0000-0000-0000-000000000000" />

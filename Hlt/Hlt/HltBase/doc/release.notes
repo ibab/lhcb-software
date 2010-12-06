@@ -4,6 +4,11 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-12-06 - Vanya Belyaev
+ - improve a little bit the handling of Hlt::Cache
+   add "VertexBase" as vizibel tyep for RecVertex 
+
+
 ! 2010-11-30 - Vanya Belyaev
 
  - add functions to dictionary:

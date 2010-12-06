@@ -30,7 +30,7 @@ namespace Hlt
   using Gaudi::StringKey;
   using GaudiUtils::VectorMap;
   // ==========================================================================
-  /** @clacc Cache 
+  /** @class Cache 
    *  @brief  Cache implementation for stage objects
    *
    *  Cache for stage objects is a string -> value mapping.
@@ -48,10 +48,21 @@ namespace Hlt
     // ========================================================================
   public:
     // ========================================================================
-    typedef VectorMap<StringKey, bool>        BooleanMap ;
-    typedef VectorMap<StringKey, int>         IntegerMap ;
-    typedef VectorMap<StringKey, double>      DoubleMap  ;
-    typedef VectorMap<StringKey, std::string> StringMap  ;
+    /// the actual data types for cache 
+    enum Values {
+      Int         ,  
+      Bool        , 
+      Double      , 
+      String      
+    } ;  
+    // ==========================================================================
+  public:
+    // ========================================================================
+    typedef Gaudi::StringKey                              KeyType    ;
+    typedef GaudiUtils::VectorMap<StringKey, bool>        BooleanMap ;
+    typedef GaudiUtils::VectorMap<StringKey, int>         IntegerMap ;
+    typedef GaudiUtils::VectorMap<StringKey, double>      DoubleMap  ;
+    typedef GaudiUtils::VectorMap<StringKey, std::string> StringMap  ;
     // ========================================================================
     /**
      * @brief Check if cache contains value with the specified key
@@ -244,6 +255,21 @@ namespace Hlt
     fillStream(s) ;
     return s.str();
   }
+  // ==========================================================================
+  template <unsigned int> 
+  struct CacheValues ;
+  // ==========================================================================
+  template <>
+  struct CacheValues<Hlt::Cache::Int>    { typedef int         Type ; } ;   
+  // ==========================================================================
+  template <>
+  struct CacheValues<Hlt::Cache::Bool>   { typedef bool        Type ; } ;
+  // ==========================================================================
+  template <>
+  struct CacheValues<Hlt::Cache::Double> { typedef double      Type ; } ;
+  // ==========================================================================
+  template <>
+  struct CacheValues<Hlt::Cache::String> { typedef std::string Type ; } ;
   // ==========================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
