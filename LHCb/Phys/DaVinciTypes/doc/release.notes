@@ -5,10 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r1 2010-12-06 =========================
 ! 2010-12-03 - Vanya Belyaev
-
  - LHCb::RecVertexHolder
-
     reasonable "return"-value for vertexfitters/refitters    
 
  - cmt/requirements 
