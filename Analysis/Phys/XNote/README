@@ -1,0 +1,28 @@
+The package contains the following:
+
+XComp.C: 
+-------
+  
+   * LEP style compilation of mass measurements
+   * To run .L XComp.C    
+
+
+RooBackPdf.cxx
+--------------
+
+   * RooFit class to parameterize the background in X, psi(2S) events
+   * \left(m - m_r \right) ^{c0}  \cdot \textrm{exp} \left( -c1 \cdot m - c2 \cdot m^2 \right)
+   * To compile (interactively): .L RooBackPdf.cxx+
+
+
+RooPsi2m.cxx
+--------------
+
+   * RooFit class to parameterize the background
+   * Parameterize the pipi mass spectrum in Psi(2S) (work for the Y as well)
+   * constructor is : 
+       RooPsi2m ppModel= RooPsi2m("psi2", "psi2", x, mJpsi, mpsi2, mPi , lambda);
+       // lambda fixed to one (normal) is pure S-Wave
+       // For the other resonances you need to set mJpsi and mpsi2 appropriately 
+   * To compile (interactively): .L RooPsi2m.cxx+
+
