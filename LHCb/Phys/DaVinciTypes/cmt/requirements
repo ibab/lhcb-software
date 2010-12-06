@@ -22,9 +22,14 @@ apply_pattern install_more_includes more =Kernel
 # =============================================================================
 # Linker library building rule
 # =============================================================================
-library          DaVinciTypes    ../src/*.cpp
-apply_pattern    linker_library  library=DaVinciTypes 
+library          DaVinciTypesLib    ../src/*.cpp
+apply_pattern    linker_library  library=DaVinciTypesLib
 
+# Component library for tests
+library          DaVinciTypes    ../tests/src/*.cpp
+apply_pattern component_library library=DaVinciTypes	
+#
+apply_pattern QMTest
 # =============================================================================
 # The END 
 # =============================================================================
