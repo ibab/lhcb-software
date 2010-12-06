@@ -4,6 +4,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+// LHCb
+#include "Event/RecVertex.h"
+
 // local
 #include "TestRecVertexHolder.h"
 
@@ -164,7 +167,7 @@ void TestRecVertexHolder::testRecVertexHolder(const LHCb::RecVertexHolder pvHold
   return;
 }
 //=============================================================================
-bool TestRecVertexHolder::inTES(const RecVertex* PV) const 
+bool TestRecVertexHolder::inTES(const LHCb::RecVertex* PV) const 
 {
   return ( 0!=PV && 0!=PV->parent());
 }

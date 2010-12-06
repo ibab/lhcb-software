@@ -7,6 +7,11 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/RecVertexHolder.h"
 
+namespace LHCb {
+  class RecVertex;
+}
+
+
 /** @class TestRecVertexHolder TestRecVertexHolder.h
  *  
  *  Tests for LHCb::RecVertexHolder class.
@@ -39,7 +44,7 @@ private:
 
   void testRecVertexHolder(const LHCb::RecVertexHolder pv) const;
 
-  bool inTES(const DataObject*) const;
+  bool inTES(const LHCb::RecVertex* PV) const;
 
 private:
 
