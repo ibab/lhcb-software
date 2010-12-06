@@ -2063,20 +2063,22 @@ def decorateFunInfo ( funcs , infos  ) :
     Decorate the functions 'extra-info' using the proper adapters
     """
 
-    _info_ = None 
+    _info_    = None 
+    _logging_ = None
+
     if hasattr ( infos , '__info__' ) :
         def _info_ (s,*a) :
             """
-            Construct ''Smart-extra-info'' functor,
-            which returns the valeu of extraInfo(index), if the information
-            present, otherwise it evaluates the functor and (optionally)
-            updates the extraInfo field
+            Construct ''Smart-extra-info/cache'' functor,
+            which returns the value of extraInfo(index)/cache(key),
+            if the information present, otherwise it evaluates the functor
+            and (optionally) updates the extraInfo/cache field
             
-            >>> functor = ...
-            >>> smart = info ( 15 , functor )
+            >>> functor  = ...
+            >>> smart    = info ( functor , 15 )
             
             >>> particle = ...
-            >>> value = smart ( particle )
+            >>> value    = smart ( particle )
             
             The concept belongs to Jose Angel Hernado Morata and Hugo Ruiz Peres
             
@@ -2085,11 +2087,27 @@ def decorateFunInfo ( funcs , infos  ) :
         # update the documentation 
         _info_ . __doc__ += infos . __info__ . __doc__
 
+    if hasattr ( infos , '__logging__' ) :
+        def _logging_ (s,*a) :
+            """
+            Construct ``logging''-functor, that 
+            
+            >>> functor = ...
+            >>> logged = logging ( functor )
+                        
+            The concept belongs to Gerhard ``The Great'' Raven 
+            
+            """ 
+            return infos . __logging__ ( s , *a )
+        # update the documentation 
+        _logging_ . __doc__ += infos . __logging__ . __doc__
+
     # finally decorate the function 
     for fun in funcs :
-        # operator():
-        
-        if _info_ : fun    . __info__  =         _info_ 
+
+        if _info_    : fun    . __info__     = _info_ 
+        if _logging_ : fun    . __logging__  = _logging_ 
+
 
     return funcs
 
@@ -2108,8 +2126,6 @@ def getAndDecoratePipes  ( name , base , opers ) :
     """ get all maps  and decorate them """
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
-
-
 
 # =============================================================================
 ## Decorate the trees 

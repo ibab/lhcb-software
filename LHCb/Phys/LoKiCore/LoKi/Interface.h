@@ -76,7 +76,7 @@ namespace LoKi
       if ( &right == this ) { return *this ; }
       //
       TYPE* tmp = m_object ;
-      m_object = right.m_object ;
+      m_object  = right.getObject () ;
       //                                              the order *DOES* matter 
       LoKi::addRef  ( m_object ) ;                 // 1) increment the counter 
       LoKi::release ( tmp      ) ;                 // 2) decrement the counter 
@@ -88,7 +88,7 @@ namespace LoKi
     Interface& operator= ( const Interface<OTHER>& right ) 
     {
       TYPE* tmp = m_object ;
-      m_object  = right.m_object ;
+      m_object  = right.getObject () ;
       //                                              the order *DOES* matter! 
       LoKi::addRef  ( m_object ) ;                 // 1) increment the counter 
       LoKi::release ( tmp      ) ;                 // 2) decrement the counter 

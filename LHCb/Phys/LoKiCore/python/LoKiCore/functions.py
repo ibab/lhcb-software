@@ -602,15 +602,15 @@ def yields ( s ) :
 
 # =============================================================================
 ## construct "smart Extra Info" functor
-def info ( index , fun , update = False ) :
+def info ( key , fun , update = False ) :
     """
-    Construct ''Smart-extra-info'' functor,
-    which returns the valeu of extraInfo(index), if the information
+    Construct ''Smart-extra-info''/``cache'' functor,
+    which returns the valeu of extraInfo(index)/cache(key), if the information
     present, otherwise it evaluates the functor and (optionally)
-    updates the extraInfo field
+    updates the extraInfo/cache field
 
     >>> functor = ...
-    >>> smart = infor ( 15 , functor )
+    >>> smart = info ( 15 , functor )
     
     >>> particle = ...
     >>> value = smart ( particle )
@@ -619,6 +619,21 @@ def info ( index , fun , update = False ) :
     
     """
     return fun.__info__ ( index , update ) 
+
+# =============================================================================
+## construct logging-functor
+def logging ( fun , *args ) :
+    """
+    Construct logging functor,
+    that writes into cache the resutl sof own evaluation 
+    
+    >>> functor = ...
+    >>> logged  = logging ( functor )
+    
+    The concept belongs to Gerhard ``The Great'' Raven 
+    
+    """
+    return fun.__logging__ ( *args ) 
 
 
 # =============================================================================

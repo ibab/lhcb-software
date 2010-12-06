@@ -89,7 +89,7 @@ namespace LoKi
       TYPE2  m_default ;                // default value for non-existing index 
       // ======================================================================
     };
-    // ========================================================================
+       // ========================================================================
     /** @class CheckInfo
      *  simple predicate to check the existence of "key" in the "extraInfo"
      *  for classes equipped with "extraInfo" methods 
@@ -237,8 +237,66 @@ namespace LoKi
       /// "update"-flag (indicate the insertion of "extraInfo" for missing data
       bool  m_update ; // "update flag"
       // ======================================================================
-    } ;  
-  } // end of namespace LoKi::ExtraInfo
+    } ;
+    // ========================================================================
+  } // end of namespace LoKi::ExtraInfo 
+  // ==========================================================================
+  namespace ExtraInfo2 
+  {
+    // ========================================================================
+    /** @class LogInfo
+     *  Simple function to "log"-info 
+     *  for classes equipped with "extraInfo" methods 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    template <class TYPE,class TYPE2=double>
+    class LogInfo : public LoKi::Functor<TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the index and default value 
+      LogInfo 
+      ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
+        const int                        index ) 
+        : LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_index   ( index )  
+      {} 
+      /// MANDATORY: virtual destructor 
+      virtual ~LogInfo () {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  LogInfo* clone() const { return new LogInfo (*this); }
+      /// MANDATORY: the only one essential method
+      virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
+        ( typename LoKi::Functor<TYPE,TYPE2>::argument a )  const
+      { 
+        TYPE2 result = m_fun.fun ( a ) ;
+        //
+        LoKi::ExtraInfo::addInfo ( a , m_index , result ) ;
+        //
+        return result ;
+        //
+      }
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "logging (" << m_fun << ","  << m_index << ")" ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default contructor is disabled 
+      LogInfo () ;                        // the default contructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual functor  
+      const LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the functor  
+      /// index to be searched 
+      int    m_index   ;                                 // the index 
+      // ======================================================================
+    };
+    // ========================================================================
+  } //                                        end of namespace LoKi::ExtraInfo2
   // ==========================================================================
   /** simple function for "on-flight" construction of the "smart-extra-info" 
    *  function
@@ -258,9 +316,9 @@ namespace LoKi
     return LoKi::ExtraInfo::GetSmartInfo<TYPE,TYPE2>( index ,functor , update ) ;
   } 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_EXTRAINFO_H
 // ============================================================================

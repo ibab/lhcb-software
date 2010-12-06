@@ -15,6 +15,17 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-12-06 - Vanya Belyaev
+
+ - Info/ExtraInfo/InfoOps 
+   functions.py & decorators.py 
+
+     add "logging"-functors & functions 
+
+ - cmt/requirements 
+
+     version increment to v10r7 
+
 !========================= LoKiCore v10r6 2010-11-27 =========================
 ! 2010-11-23 - Vanya Belyaev
  - add LoKi::transform 

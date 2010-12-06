@@ -1164,7 +1164,8 @@ namespace LoKi
     template <class TYPE>
     class InfoOps
     {
-    public:
+      // ======================================================================
+    public: // info 
       // ======================================================================
       // __info__ 
       static LoKi::FunctorFromFunctor<TYPE,double>
@@ -1177,6 +1178,20 @@ namespace LoKi
       __info__ ( const LoKi::Functor<TYPE,double>& fun , 
                  const int  index                      ) 
       { return LoKi::info ( index , fun          ) ; }
+      // ======================================================================
+    public: // logging 
+      // ======================================================================
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __logging__ ( const LoKi::Functor<TYPE,double>& fun , 
+                    const int  index                      ) 
+      { return LoKi::ExtraInfo2::LogInfo<TYPE,double> ( fun , index ) ; }
+      // ======================================================================
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,bool>
+      __logging__ ( const LoKi::Functor<TYPE,bool>& fun , 
+                    const int  index                      ) 
+      { return LoKi::ExtraInfo2::LogInfo<TYPE,bool>  ( fun , index ) ; }
       // ======================================================================
     } ;
     // ========================================================================
