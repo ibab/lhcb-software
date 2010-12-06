@@ -52,8 +52,8 @@ namespace LoKi
       // ======================================================================
       /// constructor from the function and the key 
       Log_ 
-      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    fun , 
-        const std::string&                                  key )
+      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    fun      , 
+        const std::string&                                  key      )
         : LoKi::Functor<const Hlt::Candidate*,TYPE>()
         , m_fun  ( fun ) 
         , m_key  ( key ) 
@@ -65,7 +65,7 @@ namespace LoKi
       /// constructor from the function and the fictive argument  
       Log_ 
       ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    f     , 
-        const bool                                       /* b */  )
+        const bool                                        /* b */ )
         : LoKi::Functor<const Hlt::Candidate*,TYPE>()
         , m_fun  ( f            ) 
         , m_key  ( f.printOut() ) 
@@ -90,7 +90,9 @@ namespace LoKi
           return result ;
         }
         //
-        this -> updateInfo ( a -> template get<Hlt::Stage>() , result ) ;
+        const Hlt::Stage* s = a -> template get<Hlt::Stage>();
+        //
+        this -> updateInfo ( s , result ) ;
         //
         return result ;
       }  
@@ -99,6 +101,7 @@ namespace LoKi
       { 
         s << "logging(" << m_fun ;
         if  ( !m_trivial ) { s << ",'" << m_key << "'" ;}
+        //
         return s << ")" ;
       }    
       // ======================================================================
@@ -115,7 +118,7 @@ namespace LoKi
         //
         Hlt::Stage::Lock lock ( _stage , m_algorithm ) ;
         //
-        if ( m_name.empty() ) { m_name = this -> printOut() ; }
+        if ( m_name.empty() ) { m_name = this->m_fun.printOut() ; }
         //
         lock.addToHistory ( m_name ) ;
         //
@@ -335,7 +338,7 @@ namespace LoKi
         //
         Hlt::Stage::Lock lock ( _stage , m_algorithm ) ;
         //
-        if ( m_name.empty() ) { m_name = this -> printOut() ; }
+        if ( m_name.empty() ) { m_name = this ->m_fun.printOut() ; }
         //
         lock.addToHistory ( m_name ) ;
         //

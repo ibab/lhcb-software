@@ -256,6 +256,8 @@ LoKi.Hlt1.MatchConf        . __str__  =  LoKi.Hlt1.MatchConf       . toString
 LoKi.Hlt1.MatchConf        . __repr__ =  LoKi.Hlt1.MatchConf       . toString
 LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString
 LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString
+LoKi.Hlt1.VxMakerConf      . __str__  =  LoKi.Hlt1.VxMakerConf     . toString
+LoKi.Hlt1.VxMakerConf      . __repr__ =  LoKi.Hlt1.VxMakerConf     . toString
 
 ##LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString
 ##LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString

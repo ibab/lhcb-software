@@ -20,6 +20,7 @@
 #include "LoKi/VxMakerConf.h"
 #include "LoKi/VxMaker.h"
 #include "LoKi/Hlt1.h"
+#include "LoKi/Constants.h"
 // ============================================================================
 /** @file 
  *
@@ -44,6 +45,14 @@
  *                 by $Author$
  */ 
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  const Gaudi::StringKey s_CHI2 = Gaudi::StringKey ( "Chi2" ) ;
+  const Gaudi::StringKey s_DOCA = Gaudi::StringKey ( "DOCA" ) ;
+  // ==========================================================================
+}
+// ============================================================================
 //  consructor from the verter making parameters 
 // ============================================================================
 LoKi::Hlt1::VxMakerBase::VxMakerBase
@@ -65,7 +74,30 @@ LoKi::Hlt1::VxMakerBase::makeVertex
   const bool         apply  ) const 
 {
   //
-  if ( 0 == track1 || 0 == track2 )             { return 0 ; } // RETURN 
+  double doca = LoKi::Constants::NegativeInfinity ;
+  double chi2 = LoKi::Constants::NegativeInfinity ;
+  //
+  return makeVertex ( track1 , track2 , 
+                      doca   , chi2   , apply ) ;
+}
+// ============================================================================
+// make the vertex from  two tracks 
+// ============================================================================
+const LHCb::RecVertex*
+LoKi::Hlt1::VxMakerBase::makeVertex 
+( const LHCb::Track* track1 , 
+  const LHCb::Track* track2 , 
+  double&            doca   , 
+  double&            chi2   ,
+  const bool         apply  ) const 
+{
+  //
+  doca = LoKi::Constants::NegativeInfinity ;
+  chi2 = LoKi::Constants::NegativeInfinity ;
+  //
+  if ( 0      == track1 || 
+       0      == track2 ||
+       track1 == track2 )                       { return 0 ; } // RETURN 
   //
   // apply cuts for the first track 
   if ( apply && !track1cut ( track1 ) )         { return 0 ;  } // RETURN
@@ -75,7 +107,7 @@ LoKi::Hlt1::VxMakerBase::makeVertex
   // make vertex 
   // 
   const LHCb::RecVertexHolder holder = LoKi::FastVertex::makeVertex
-    ( track1 , track2 , docamax() , chi2max() , true ) ; // FIX ME!!! 
+    ( track1 , track2 , docamax() , chi2max() , doca , chi2 , true ) ;
   //
   if (         !holder    )                     { return 0 ; } // RETURN 
   //
@@ -145,6 +177,7 @@ LoKi::Hlt1::VxMaker::operator()
   //
   // the output selection 
   //
+  //
   CANDIDATES       output ;
   //
   for ( ITERATOR icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
@@ -166,7 +199,10 @@ LoKi::Hlt1::VxMaker::operator()
     //
     // make vertex ? 
     //
-    const LHCb::RecVertex* vertex = makeVertex ( trk1 , trk2 , false ) ;
+    double doca = 0 ;
+    double chi2 = 0 ;
+    const LHCb::RecVertex* vertex = makeVertex 
+      ( trk1 , trk2 , doca , chi2 , false ) ;
     //
     if ( 0 == vertex ) { continue ; }                            // CONTINUE 
     //
@@ -186,6 +222,7 @@ LoKi::Hlt1::VxMaker::operator()
       Hlt::Stage::Lock lock ( stage , alg () ) ;
       //
       lock.addToHistory ( cand1->workers() ) ;
+      // lock.addToHistory ( myName()         ) ;
       stage -> set ( cand1->currentStage() ) ;
     }
     //
@@ -198,7 +235,10 @@ LoKi::Hlt1::VxMaker::operator()
       candidate -> addToStages ( stage ) ;
       /// lock new stage:
       Hlt::Stage::Lock lock ( stage , alg() ) ;
+      // lock.addToHistory ( myName()         ) ;
       stage    -> set ( vertex ) ;
+      stage    -> updateInfo ( s_DOCA , doca ) ;
+      stage    -> updateInfo ( s_CHI2 , chi2 ) ; 
     }
     // add new candidate to the output:
     output.push_back ( candidate ) ;
@@ -300,7 +340,10 @@ LoKi::Hlt1::VxMaker2::operator()
       //
       // make vertex ? 
       //
-      const LHCb::RecVertex* vertex = makeVertex ( trk1 , trk2 , false ) ;
+      double doca = 0 ;
+      double chi2 = 0 ;
+      const LHCb::RecVertex* vertex = 
+        makeVertex ( trk1 , trk2 , doca , chi2 , false ) ;
       //
       if ( 0 == vertex ) { continue ; }                            // CONTINUE 
       //
@@ -319,6 +362,7 @@ LoKi::Hlt1::VxMaker2::operator()
         Hlt::Stage::Lock lock ( stage , alg () ) ;
         //
         lock.addToHistory ( cand1->workers() ) ;
+        // lock.addToHistory ( myName()         ) ;
         stage -> set ( cand1->currentStage() ) ;
       }
       //
@@ -331,7 +375,10 @@ LoKi::Hlt1::VxMaker2::operator()
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
         Hlt::Stage::Lock lock ( stage , alg() ) ;
+        // lock.addToHistory ( myName()         ) ;
         stage    -> set ( vertex ) ;
+        stage    -> updateInfo ( s_DOCA , doca ) ;
+        stage    -> updateInfo ( s_CHI2 , chi2 ) ; 
       }
       // add new candidate to the output:
       output.push_back ( candidate ) ;
@@ -501,6 +548,7 @@ LoKi::Hlt1::DiTrackMaker::operator()
         Hlt::Stage::Lock lock ( stage , alg () ) ;
         //
         lock.addToHistory ( cand1->workers() ) ;
+        // lock.addToHistory ( myName()         ) ;
         stage -> set ( cand1->currentStage() ) ;
       }
       //
@@ -513,6 +561,7 @@ LoKi::Hlt1::DiTrackMaker::operator()
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
         Hlt::Stage::Lock lock ( stage , alg () ) ;
+        // lock.addToHistory ( myName()         ) ;
         //
         Hlt::MultiTrack* mtrack = newMultiTrack() ;
         mtrack -> addToTracks ( trk1 ) ;

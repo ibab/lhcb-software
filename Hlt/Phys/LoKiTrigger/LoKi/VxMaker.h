@@ -75,7 +75,19 @@ namespace LoKi
        */
       const LHCb::RecVertex* makeVertex 
       ( const LHCb::Track* track1 , 
-        const LHCb::Track* track2 , 
+        const LHCb::Track* track2 ,
+        const bool         apply  ) const ;
+      /** make the vertex out of two tracks 
+       *  @param track1 (INPUT) the first  track 
+       *  @param track1 (INPUT) the second track 
+       *  @param apply  (INPUT) apply the track cuts 
+       *  @return the vertex (properly registered) 
+       */
+      const LHCb::RecVertex* makeVertex 
+      ( const LHCb::Track* track1 , 
+        const LHCb::Track* track2 ,
+        double&            doca   , 
+        double&            chi2   , 
         const bool         apply  ) const ;
       /** check the consistency of two tracks with "vertex"  
        *  @param track1 (INPUT) the first  track 

@@ -165,6 +165,15 @@ std::ostream& LoKi::Hlt1::VxMakerConf::fillStream
   return s << ")" ;
 }
 // ============================================================================
+// conversion to the string 
+// ============================================================================
+std::string LoKi::Hlt1::VxMakerConf::toString () const 
+{
+  std::ostringstream s ;
+  fillStream ( s ) ;
+  return s.str() ;
+}
+// ============================================================================
 // output operator to ostream  
 // ============================================================================
 std::ostream& operator<<( std::ostream& s ,const LoKi::Hlt1::VxMakerConf& o ) 

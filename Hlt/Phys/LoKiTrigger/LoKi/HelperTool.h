@@ -116,6 +116,15 @@ namespace LoKi
       // ======================================================================
     protected:
       // ======================================================================      
+      /// get the own name 
+      const std::string myName() const 
+      {
+        if ( m_myname.empty() ){ m_myname = this->printOut() ; }
+        return m_myname ;
+      }
+      // ======================================================================
+    protected:
+      // ======================================================================      
       /// get the algorithm
       const GaudiAlgorithm* alg() const { return m_alg ; } // get the algorithm
       // ======================================================================
@@ -200,6 +209,8 @@ namespace LoKi
       mutable LHCb::Track::Container*     m_hlt_tracks      ;      
       /// container of vertices  
       mutable LHCb::RecVertex::Container* m_hlt_recvertices ;      
+      // ======================================================================
+      mutable std::string                 m_myname          ;
       // ======================================================================
     };
     // ========================================================================

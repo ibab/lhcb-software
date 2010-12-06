@@ -108,6 +108,7 @@ LoKi::Hlt1::Match::operator()
         Hlt::Stage::Lock lock ( stage , match () ) ;
         //
         lock.addToHistory ( cand1->workers() ) ;
+        // lock.addToHistory ( myName ()  ) ;
         stage -> set ( cand1->currentStage() ) ;
       }
       //
@@ -120,6 +121,7 @@ LoKi::Hlt1::Match::operator()
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
         Hlt::Stage::Lock lock ( stage , match () ) ;
+        // lock.addToHistory ( myName () ) ;
         stage    -> set ( track ) ;
       }
       //

@@ -474,6 +474,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
     // no actual upgrade, just update the history 
     Hlt::Stage* s = const_cast<Hlt::Stage*> ( stage ) ;
     Hlt::Stage::Lock lock ( s , upgradeTool() ) ;
+    // lock.addToHistory ( myName() ) ;
     //
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
     _input   -> addToWorkers ( alg() ) ;
@@ -486,6 +487,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
     Hlt::Stage* newstage = newStage() ;
     //
     Hlt::Stage::Lock lock ( newstage , upgradeTool() ) ;
+    // lock.addToHistory ( myName() ) ;
     newstage -> set( out[0] ) ; // add track to the stage
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
     _input   -> addToWorkers ( alg() ) ;
@@ -515,6 +517,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
       //
       Hlt::Stage::Lock lock1 ( stage1, upgradeTool() ) ;
       lock1.addToHistory ( input->workers() ) ;
+      // lock1.addToHistory ( myName() ) ;
       stage1 -> set ( stage ) ; // add stage into stage as initiator 
       
       //
@@ -523,6 +526,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
       candidate -> addToStages ( stage2 ) ;
       // 
       Hlt::Stage::Lock lock2 ( stage2, upgradeTool() ) ;
+      // lock2.addToHistory     ( myName() ) ;
       stage2 -> set ( track ) ; // add track into stage
       //
     } //                                  end of the loop over new candidates
@@ -589,6 +593,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     Hlt::Stage* newstage = newStage() ;
     //
     Hlt::Stage::Lock lock ( newstage , upgradeTool () ) ;
+    // lock.addToHistory ( myName() ) ;
     newstage -> set( mtrack ) ; // add multitrack to the stage
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
     _input -> addToWorkers ( alg()    ) ;
@@ -621,9 +626,11 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
       //
       Hlt::Stage::Lock lock1 ( newstage1 , upgradeTool () ) ;
       lock1.addToHistory ( input->workers() ) ;
+      // lock1.addToHistory ( myName() ) ;
       newstage1 -> set<Hlt::Stage>      ( stage    ) ;
       //
       Hlt::Stage::Lock lock2 ( newstage1 , upgradeTool () ) ;
+      // lock2.addToHistory ( myName() ) ;
       newstage2 -> set<Hlt::MultiTrack> ( newtrack ) ;
       //
       // fill multi-track:
@@ -703,6 +710,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
       //
       Hlt::Stage::Lock lock ( newstage , upgradeTool () ) ;
       lock.addToHistory ( input -> workers() ) ;
+      // lock.addToHistory ( myName() ) ;
       newstage -> set<Hlt::Stage>      ( stage ) ;
       //
     }
@@ -712,6 +720,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
     //
     Hlt::MultiTrack* newmtrack  = newMultiTrack   ()  ;
     Hlt::Stage::Lock lock ( newstage , upgradeTool () ) ;
+    // lock.addToHistory ( myName() ) ;
     newstage -> set<Hlt::MultiTrack>  ( newmtrack ) ;
     //
     // fill multi-track: 

@@ -121,6 +121,8 @@ LoKi::Hlt1::HelperTool::HelperTool ( const int /* dummy */ )
   , m_hlt_tracks      ( 0 ) 
   , m_hlt_recvertices ( 0 ) 
                                    //
+  , m_myname () 
+                                   //
 {
   // get GaudiAlgorithm 
   GaudiAlgorithm*  alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
@@ -151,6 +153,8 @@ LoKi::Hlt1::HelperTool::HelperTool ( const LoKi::Hlt1::HelperTool& right )
   , m_hlt_multitracks ( 0 ) 
   , m_hlt_tracks      ( 0 ) 
   , m_hlt_recvertices ( 0 ) 
+                                   //
+  , m_myname () 
                                    //
 {
   // get GaudiAlgorithm 
