@@ -787,6 +787,7 @@ void register_services(DIS_DNS_CONN *dnsp, int flag, int dns_flag)
 		dis_dns_p->protocol = htovl(Protocol);
 		dis_dns_p->src_type = htovl(SRC_DIS);
 		dis_dns_p->format = htovl(MY_FORMAT);
+	
 	}
 
 	dis_dns_p->port = htovl(Port_number);
@@ -1580,9 +1581,9 @@ int do_update_service(unsigned service_id, int *client_ids)
 if(Debug_on)
 {
 dim_print_date_time_millis();
-printf("Updating %s (id = %ld, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %08lX)\n",
-	   servp->name, (long)service_id, (long)servp, 
-	   Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node, reqp->req_id, (long)reqp);
+printf("Updating %s (id = %d, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %08lX)\n",
+	   servp->name, (int)service_id, (unsigned long)servp, 
+	   Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node, reqp->req_id, (unsigned long)reqp);
 }
 		if(check_client(reqp, client_ids))
 			reqp->delay_delete = 1;
@@ -1600,8 +1601,9 @@ printf("Updating %s (id = %ld, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %0
 		{
 			if( (reqp->type & 0xFFF) != TIMED_ONLY ) 
 			{
-			  /*				DISABLE_AST
-			   */
+/*
+				DISABLE_AST
+*/
 				execute_service(reqp->req_id);
 				found++;
 				ENABLE_AST
@@ -2059,6 +2061,9 @@ int hash_index, old_index;
 	ENABLE_AST
 	}
 	dnsp->dis_first_time = 1;
+	dnsp->dis_n_services = 0;
+	dnsp->dis_dns_packet.size = 0;
+	dnsp->dis_dns_packet.src_type = 0;
 /*
 	if(dnsp != Default_DNS)
 	{

@@ -677,6 +677,7 @@ int dim_set_scheduler_class(int pclass)
 	int ret;
 	DWORD p;
 
+#ifndef PXI
 	hProc = GetCurrentProcess();
 
 	if(pclass == -1)
@@ -701,6 +702,9 @@ int dim_set_scheduler_class(int pclass)
 	ret = GetLastError();
 	printf("ret = %x %d\n",ret, ret);
 	return 0;
+#else
+	return 0;
+#endif
 }
 
 int dim_get_scheduler_class(int *pclass)
@@ -708,6 +712,7 @@ int dim_get_scheduler_class(int *pclass)
 	HANDLE hProc;
 	DWORD ret;
 
+#ifndef PXI
 	hProc = GetCurrentProcess();
 
 	ret = GetPriorityClass(hProc);
@@ -730,6 +735,10 @@ int dim_get_scheduler_class(int *pclass)
 	else if(ret == REALTIME_PRIORITY_CLASS)
 		*pclass = 2;
 	return 1;
+#else
+	*pclass = 0;
+	return 0;
+#endif
 }
 
 int dim_set_priority(int threadId, int prio)
@@ -737,6 +746,7 @@ int dim_set_priority(int threadId, int prio)
 	HANDLE id;
 	int ret, p;
 
+#ifndef PXI
 	if(threadId == 1)
 		id = hMAIN_thread;
 	else if(threadId == 2)
@@ -763,6 +773,9 @@ int dim_set_priority(int threadId, int prio)
 	if(ret)
 	  return 1;
 	return 0;
+#else
+	return 0;
+#endif
 }
 
 int dim_get_priority(int threadId, int *prio)
@@ -770,6 +783,7 @@ int dim_get_priority(int threadId, int *prio)
 	HANDLE id;
 	int ret, p;
 
+#ifndef PXI
 	if(threadId == 1)
 		id = hMAIN_thread;
 	else if(threadId == 2)
@@ -796,6 +810,10 @@ int dim_get_priority(int threadId, int *prio)
 		p = 3;
 	*prio = p;
 	return 1;
+#else
+	*prio = 0;
+	return 0;
+#endif
 }
 
 void dim_init()
