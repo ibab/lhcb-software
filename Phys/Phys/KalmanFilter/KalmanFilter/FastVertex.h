@@ -64,6 +64,27 @@ namespace LoKi
      *  @param track2  (INPUT) the second track
      *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
      *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
+     *  @param doca    (OUTPUT) value of      DOCA   
+     *  @param chi2    (OUTPUT) value of chi2(DOCA) 
+     *  @param iterate (INPUT) iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    GAUDI_API 
+    LHCb::RecVertexHolder makeVertex 
+    ( const LHCb::Track*   track1           , 
+      const LHCb::Track*   track2           ,
+      const double         docamax          ,
+      const double         chi2max          , 
+      double&              doca             ,
+      double&              chi2             , 
+      const bool           iterate  = false ) ;
+    // ========================================================================
+    /** make 2-prong vertex from two tracks 
+     *  @param track1  (INPUT) the first  track
+     *  @param track2  (INPUT) the second track
+     *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
+     *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
      *  @param iterate (INPUT) iterate?
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03

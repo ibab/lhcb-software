@@ -80,13 +80,15 @@ namespace
                              0.5 * ( p1.Z () + p2.Z () ) ) ;
   }                                 
   // ==========================================================================
-}
+} //                                                end of anonymous namesapace 
 // ============================================================================
-/** make 2-prong vertex from two tracks 
+/*  make 2-prong vertex from two tracks 
  *  @param track1  (INPUT) the first  track
  *  @param track2  (INPUT) the second track
  *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
  *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
+ *  @param doca    (OUTPUT) value of      DOCA   
+ *  @param chi2    (OUTPUT) value of chi2(DOCA) 
  *  @param iterate (INPUT) iterate?
  *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
  *  @date   2010-12-03
@@ -96,11 +98,18 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
 ( const LHCb::Track*   track1   , 
   const LHCb::Track*   track2   ,
   const double         docamax  ,
-  const double         chi2max  , 
-  const bool           iterate  ) 
+  const double         chi2max  ,  
+  double&              doca     ,
+  double&              chi2     , 
+  const bool           iterate  )  
 {
   //
-  if ( 0 == track1 || 0 == track2 ) { return LHCb::RecVertexHolder() ; } 
+  doca = -1.e+99 ;
+  chi2 = -1.e+99 ;
+  //
+  if ( 0      == track1 ||
+       0      == track2 || 
+       track1 == track2 ) { return 0 ; } // RETURN 
   //
   double mu1 = 0 ;
   double mu2 = 0 ;
@@ -121,7 +130,7 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   {
     //
     state1 = state ( *track1 , point1.Z() ) ;
-    state2 = state ( *track1 , point1.Z() ) ;
+    state2 = state ( *track2 , point2.Z() ) ;
     //
     line1 = line ( *state1 )  ;
     line2 = line ( *state2 )  ;
@@ -136,8 +145,8 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   //
   // apply DOCA cut (if needed) 
   //
-  if ( 0 < docamax && docamax*docamax < (point1-point2).Mag2() ) 
-  { return LHCb::RecVertexHolder () ; }                           // RETURN 
+  doca = ( point1 - point2 ).R() ;
+  if ( 0 < docamax && docamax < doca ) { return 0 ; } // RETURN 
   //
   if ( chi2max <= 0 ) 
   {
@@ -168,6 +177,7 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   // 
   // apply chi2-cut
   //
+  chi2 = entry2.m_chi2 ;
   if ( chi2max < entry2.m_chi2 ) { return LHCb::RecVertexHolder () ; } // RETURN 
   //
   LHCb::RecVertex*      vertex = new LHCb::RecVertex()  ;
@@ -185,6 +195,33 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   vertex -> addToTracks   ( track2 ) ;
   //
   return holder ;
+}
+// ============================================================================
+/** make 2-prong vertex from two tracks 
+ *  @param track1  (INPUT) the first  track
+ *  @param track2  (INPUT) the second track
+ *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
+ *  @param chi2max (INPUT) maximal value of chi2(DOCA)  (negative: no cut)
+ *  @param iterate (INPUT) iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+LHCb::RecVertexHolder LoKi::FastVertex::makeVertex 
+( const LHCb::Track*   track1   , 
+  const LHCb::Track*   track2   ,
+  const double         docamax  ,
+  const double         chi2max  , 
+  const bool           iterate  ) 
+{
+  //
+  double doca = -1.e+99 ;
+  double chi2 = -1.e+99 ;
+  //
+  return makeVertex 
+    ( track1  , track2  , 
+      docamax , chi2max ,
+      doca    , chi2    , iterate ) ;
 }
 // ============================================================================
 /*  evaluate the distance between track & vertex ("impact-parameter")
