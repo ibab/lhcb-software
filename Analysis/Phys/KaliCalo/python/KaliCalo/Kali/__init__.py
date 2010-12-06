@@ -34,13 +34,6 @@ VE.__str__  = _ve_str_
 VE.__repr__ = _ve_str_
 VE.__abs__  = _ve_abs_
 
-# Histogram classes
-from HistoBase import HistosBase
-from HistoBase import HistoMapBase
-
-# Import lambda map
-from LambdaMap import LambdaMap
-
 # Pi0 mass
 pi0Mass = 134.9766
 

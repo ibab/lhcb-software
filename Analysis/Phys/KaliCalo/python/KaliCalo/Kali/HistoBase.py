@@ -11,6 +11,8 @@ __author__ = "Albert Puig (albert.puig@cern.ch)"
 __date__ = "$Date$"
 __version__ = "$Revision$"
 
+from ROOT import *
+
 # =============================================================================
 ## Helper class to hold the histogams associated with the given CellID
 class HistosBase(object):
@@ -128,7 +130,7 @@ class HistosBase(object):
         id += suffix
         
         ## h = ROOT.TH1D(
-        h = ROOT.TH1F (
+        h = TH1F (
             id                      , ## the name 
             str(cellID)+'__'+suffix , ## the title 
             250                     , ## bins 

@@ -14,10 +14,10 @@ __version__ = "$Revision$"
 
 __all__ = ['Histos', 'HistoMap', 'getHistosFromDB']
 
-from KaliCalo.Kali import HistoBase as _HistoBase
-from KaliCalo.Kali import Histos as _Histos
+from KaliCalo.Kali.HistoBase import HistosBase as _HistosBase
+from KaliCalo.Kali.HistoBase import Histos as _Histos
 
-class Histos( _HistosBase ):
+class Histos( _HistosBase):
     def __init__ ( cellID , background = False ):
         histoList = [ '_LL' , '_LG' , '_GG' ]
         if background:
