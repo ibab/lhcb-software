@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-12-06 - Olivier Callot
+ - New option ZVertexMaxBck=1200 to allow tracks from beam2-gas. No time penalty but a 
+   small increase in ghosts
+
 ! 2010-12-03 - Olivier Callot
  - Define backward tracks has having the z of closest approach to the beam 
    downstream of the measurements, independently of how they were produced.

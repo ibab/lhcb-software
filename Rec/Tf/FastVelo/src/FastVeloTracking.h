@@ -86,7 +86,8 @@ private:
 
   //== Paramaters for RZ search  
   double m_zVertexMin;      ///< Minimal Z of a vertex for forward tracks
-  double m_zVertexMax;      ///< Maximal Z of a vertex for backward tracks
+  double m_zVertexMax;      ///< Maximal Z of a vertex for defining last sensor in backward tracks
+  double m_zVertexMaxBack;  ///< Maximal Z of a vertex for backward tracks
   double m_maxRSlope;       ///< Maximum RZ slope considered
   double m_rMatchTol4;      ///< R match tolerance in a quadruplet, in pitch unit
   double m_rMatchTol3;      ///< R match tolerance in a triplet, in pitch unit

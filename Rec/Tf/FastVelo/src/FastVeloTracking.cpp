@@ -37,6 +37,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "ZVertexMin"      , m_zVertexMin     = -170. *Gaudi::Units::mm );
   declareProperty( "ZVertexMax"      , m_zVertexMax     = +120. *Gaudi::Units::mm );
+  declareProperty( "ZVertexMaxBack"  , m_zVertexMaxBack = +1200. *Gaudi::Units::mm );
   declareProperty( "MaxRSlope"       , m_maxRSlope      = 0.450     );
   declareProperty( "rMatchTol4"      , m_rMatchTol4     = 1.00      );
   declareProperty( "rMatchTol3"      , m_rMatchTol3     = 1.10      );
@@ -171,7 +172,7 @@ StatusCode FastVeloTracking::execute() {
   if ( !m_HLT1Only ) {
     if ( !m_onlyBackward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeFwd3 );
-      for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
+      for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+6 < sensorNb; --sensorNb ) {
         if ( m_hitManager->sensor(sensorNb)->z() < minZ ) break;
         findUnusedTriplets( sensorNb, true );  // forward
       }
@@ -179,7 +180,7 @@ StatusCode FastVeloTracking::execute() {
     }
     if ( !m_onlyForward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeBkwd3 );
-      for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
+      for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+6; ++sensorNb ) {
         if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
         findUnusedTriplets( sensorNb, false );  // backward
       }
@@ -300,7 +301,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
         double rMaxNormal = r0 * ( z3 - m_zVertexMin ) / ( z0 - m_zVertexMin );
         if ( !forward)  { // tracks should have -ve gradient
           rMin = r0 - m_maxRSlope * (z3 - z0);
-          rMax = r0 * ( z3 - m_zVertexMax ) / ( z0 - m_zVertexMax );
+          rMax = r0 * ( z3 - m_zVertexMaxBack ) / ( z0 - m_zVertexMaxBack );
           rMaxNormal = rMax;
         }
 
@@ -507,7 +508,7 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
         double rMax = r0;
         if ( !forward)  { // tracks should have -ve gradient and come from the vertex area
           rMin = r0 - m_maxRSlope * (z2 - z0);
-          rMax = r0 * ( z2 - m_zVertexMax ) / ( z0 - m_zVertexMax );
+          rMax = r0 * ( z2 - m_zVertexMaxBack ) / ( z0 - m_zVertexMaxBack );
         }
 
         if (  0 != m_debugTool && matchKey( *c0 ) ) {
@@ -890,6 +891,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     if ( 0 == temp ) break;
     last = temp;
     rOffset = last->rOffset( input.zone()%4 );
+    if ( last->number() + step > m_hitManager->lastPhiSensor() ) break;
   }
 
   if ( m_debug ) info() << "Space tracking. Zone " << input.zone() << " from " << first->number()
@@ -1055,7 +1057,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         }
       }
       if ( m_debug && best2 != NULL ) {
-        info() << "+++ iCase " << iCase << " Try pair with minDelta2 = " << minDelta2 << endmsg;
+        info() << "+++ iCase " << iCase << " Try pair with minDelta2 = " << minDelta2 << " s3 = " << s3 << endmsg;
         printCoord( *itH1, "s1" );
         printCoord( best2, "s2" );
       }
@@ -1204,7 +1206,6 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     if ( iCase > 0 && 0 != newTracks.size() ) break;
   }
 
-
   //== If no track found AND in overlap: Try all hits first
   if ( inOverlap && 0 == newTracks.size() ) {
     s1 = firstStation;
@@ -1292,7 +1293,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   }
 
   //== Any need for merging tracks ?
-
+  if ( m_debug ) info() <<"Before merge clones, size " << newTracks.size() << endmsg;
   mergeClones( newTracks );
 
   FastVeloTracks::iterator itTr;
@@ -1375,7 +1376,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
 void FastVeloTracking::mergeClones ( FastVeloTracks& tracks ) {
   if ( tracks.size() <= 1 ) return;
   FastVeloTracks::iterator it1, it2;
-  for ( it1 = tracks.begin(); tracks.end() != it1 ; ++it1 ) {
+  for ( it1 = tracks.begin(); tracks.end()-1 > it1 ; ++it1 ) {
     int n1 = (*it1).phiHits().size();
     for ( it2 = it1+1; tracks.end() != it2 ; ++it2 ) {
       if ( !(*it2).isValid() ) continue;
