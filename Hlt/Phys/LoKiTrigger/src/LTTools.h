@@ -24,7 +24,11 @@
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 // ============================================================================
-// forward decalrations 
+// Local
+// ============================================================================
+#include "LoKi/AlgUtils.h"
+// ============================================================================
+// forward declarations 
 // ============================================================================
 class GaudiAlgorithm ;
 namespace LoKi { class AuxFunBase ; }
@@ -39,15 +43,16 @@ namespace LoKi
     {
       // ======================================================================
       /// get gaudi algorithm from the context 
-      GaudiAlgorithm* getGaudiAlg ( const LoKi::AuxFunBase& base ) ;
+      inline GaudiAlgorithm* getGaudiAlg ( const LoKi::AuxFunBase& base ) 
+      { return LoKi::AlgUtils::getGaudiAlg ( base ,true ) ; }
       // ======================================================================
-      /// get the algorithm from context service 
-      IAlgorithm*     getAlg      ( const LoKi::AuxFunBase& base ) ;
+      // get the algorithm from context service 
       // ======================================================================
-      /// get the "unit" from the algorithm 
+      inline IAlgorithm*     getAlg ( const LoKi::AuxFunBase& base ) 
+      { return LoKi::AlgUtils::getAlg ( base , true ) ; }
+      // ======================================================================
       inline SmartIF<Hlt::IUnit> getUnit ( const LoKi::AuxFunBase& base )
       { return SmartIF<Hlt::IUnit>( getAlg ( base )  ) ; }
-      // ======================================================================
       /// get ANN-Service 
       inline SmartIF<IANNSvc> annSvc( const LoKi::AuxFunBase& base ) 
       {
@@ -137,13 +142,13 @@ namespace LoKi
         // ====================================================================
       };
       // ======================================================================
-    } // end of namespace LoKi::Hlt1::Utils
+    } //                                     end of namespace LoKi::Hlt1::Utils
     // ========================================================================
-  } // end of namespace LoKi::Hlt1
+  } //                                              end of namespace LoKi::Hlt1
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The end 
+//                                                                      The end 
 // ============================================================================
 #endif // LTTOOLS_H
 // ============================================================================

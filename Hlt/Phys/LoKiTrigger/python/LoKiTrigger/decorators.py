@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file 
 #  The set of basic decorations for objects from LoKiTrigger library
 #
@@ -21,6 +19,10 @@
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-06-09
+#
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
 The set of basic decorations for objects from LoKiTrigger library
@@ -36,10 +38,14 @@ A.Golutvin, P.Koppenburg have been used in the design.
 By usage of this code one clearly states the disagreement 
 with the campain of Dr.O.Callot et al.: 
  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- 
+
+
+                   $Revision$
+ Last modification $Date$
+                by $Author$
  """
 # =============================================================================
-__date__     = "2007-05-29; last modified $Date$ by $Author$"
+__date__     = "2007-05-29"
 __version__  = "SVN version $Revision$"
 __author__   = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
@@ -141,7 +147,7 @@ def _decorate ( name = _name  ) :
     ## primitive voids 
     _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name )
 
-    
+
     # =========================================================================
     ## LHCb::Track remnants ATTENTION !!! 
     # =========================================================================
@@ -169,6 +175,33 @@ def _decorate ( name = _name  ) :
         LoKi.Functor         ( 'void' , vT )   , ## the base
         LoKi.Dicts.SourceOps ( tT     , tT )   ) ## call-traits
 
+
+    ## various "info" operations
+    
+    ## decorate HltCandidates:
+    _decorated |= _LoKiCore.getAndDecorateInfos (
+        name                                   ,
+        LoKi.Functor        ( tC ,'double'  )  , ## the base
+        LoKi.Dicts.InfoOps  ( tC               ) ## info-opeartion
+        )
+    ## decorate HltCandidates:
+    _decorated |= _LoKiCore.getAndDecorateInfos (
+        name                                   ,
+        LoKi.Functor        ( tC , bool     )  , ## the base
+        LoKi.Dicts.InfoOps  ( tC               ) ## info-opeartion
+        )
+    ## decorate HltStages:
+    _decorated |= _LoKiCore.getAndDecorateInfos (
+        name                                   , 
+        LoKi.Functor        ( tS ,'double'     )  , ## the base
+        LoKi.Dicts.InfoOps  ( tS               ) ## info-opeartion
+        )
+    ## decorate HltStages:
+    _decorated |= _LoKiCore.getAndDecorateInfos (
+        name                                   , 
+        LoKi.Functor        ( tS , bool        )  , ## the base
+        LoKi.Dicts.InfoOps  ( tS               ) ## info-opeartion
+        )
     
     ## 
     return _decorated                            ## RETURN

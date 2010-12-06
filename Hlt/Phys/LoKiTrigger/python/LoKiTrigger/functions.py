@@ -167,6 +167,14 @@ TS_HISTORY_SUB  = LoKi.Stages.HistorySub
 ## @see LoKi::Cuts::TS_HISTORY_RE
 TS_HISTORY_RE   = LoKi.Stages.HistoryRegex
 
+## @see LoKi::Cuts::TS_HASCACHE
+TS_HASCACHE     = LoKi.Stages.HasCache 
+
+## @see LoKi::Cuts::TS_CACHE_DOUBLE
+TS_CACHE_DOUBLE = LoKi.Stages.Cache1
+
+## @see LoKi::Cuts::TS_CACHE_BOOL
+TS_CACHE_BOOL   = LoKi.Stages.Cache2
 
 
 ## @see LoKi::Cuts::TC_SELECTION

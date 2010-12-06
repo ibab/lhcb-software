@@ -20,6 +20,7 @@
 // ============================================================================
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/ILoKiSvc.h"
+#include "LoKi/AlgUtils.h"
 #include "HltBase/IHltUnit.h"
 // ============================================================================
 // local
@@ -31,34 +32,6 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-11-13
  */
-// ==========================================================================
-// get gaudi algorithm from the context 
-// ==========================================================================
-GaudiAlgorithm* LoKi::Hlt1::Utils::getGaudiAlg ( const LoKi::AuxFunBase& base ) 
-{
-  // get LoKi service
-  // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-  LoKi::ILoKiSvc* svc = base.lokiSvc() ;
-  base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
-  SmartIF<IAlgContextSvc> cntx ( svc ) ;
-  base.Assert( !(!cntx) , "IAlgContextSvc* points to NULL!") ;
-  return Gaudi::Utils::getGaudiAlg ( cntx ) ;
-}
-// ==========================================================================
-// get the algorithm from context service 
-// ==========================================================================
-IAlgorithm* LoKi::Hlt1::Utils::getAlg ( const LoKi::AuxFunBase& base ) 
-{
-  // get LoKi service
-  // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-  LoKi::ILoKiSvc* svc = base.lokiSvc() ;
-  base.Assert( !(!svc)   , "LoKi Service is not available!" ) ;
-  SmartIF<IAlgContextSvc> cntx ( svc ) ;
-  base.Assert( !(!cntx)  , "IAlgContextSvc* points to NULL!") ;
-  IAlgorithm* ialg = cntx->currentAlg() ;
-  base.Assert( 0 != ialg , "IAlgorithm* points to NULL!"    ) ;
-  return ialg ;
-}
 // ==========================================================================
 // get the selection by key 
 // ==========================================================================

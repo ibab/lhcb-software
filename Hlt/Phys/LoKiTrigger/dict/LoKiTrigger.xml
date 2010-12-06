@@ -37,6 +37,7 @@
   <class pattern = "LoKi::Dicts::CutValOps<*Hlt::Candidate*>"   />
   <class pattern = "LoKi::Dicts::ElementOps<*Hlt::Candidate*>"  />
   <class pattern = "LoKi::Dicts::SourceOps<*Hlt::Candidate*>"   />
+  <class pattern = "LoKi::Dicts::InfoOps<*Hlt::Candidate*>"     />
 
   <class pattern = "LoKi::Candidates::*" />
 
@@ -61,6 +62,7 @@
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
   <class pattern = "LoKi::Dicts::FuncOps_<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::CutsOps_<*Hlt::Stage*>"    />
+  <class pattern = "LoKi::Dicts::InfoOps<*Hlt::Stage*>"     />
 
   <class pattern = "LoKi::Stages::*" />
 
@@ -123,6 +125,15 @@
     <class name="LoKi::Hlt1::MatchTool" >
       <field  name = "m_match"      />
     </class>
+
+    <class name ="LoKi::Candidates::Log_<bool>"     />
+    <class name ="LoKi::Candidates::Log_<double>"   />
+    <class name ="LoKi::Stages::Log_<bool>"         />
+    <class name ="LoKi::Stages::Log_<double>"       />
+    <class name ="LoKi::Candidates::Cache_<bool>"   />
+    <class name ="LoKi::Candidates::Cache_<double>" />
+    <class name ="LoKi::Stages::Cache_<bool>"       />
+    <class name ="LoKi::Stages::Cache_<double>"     />
 
   </exclusion>
 

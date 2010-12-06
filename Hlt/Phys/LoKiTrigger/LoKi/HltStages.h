@@ -3,8 +3,6 @@
 #ifndef LOKI_HLTSTAGES_H 
 #define LOKI_HLTSTAGES_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files
 // ============================================================================
 // HltBsse 
@@ -15,6 +13,7 @@
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
+#include "LoKi/AlgUtils.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -27,6 +26,11 @@
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
@@ -400,6 +404,114 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class HasCache 
+     *  check the existence of some 'cached'-information 
+     *  @see TS_HASCACHE  
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    class HasCache : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the key and data type
+      HasCache ( const std::string&       key , 
+                 const Hlt::Cache::Values typ ) ;      
+      /// MANDATORY: virtual destructor 
+      virtual ~HasCache () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  HasCache* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HasCache () ;                      // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the key 
+      Gaudi::StringKey   m_key ;                                   // the key 
+      /// data type 
+      Hlt::Cache::Values m_typ ;                                   // data type
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Cache1 
+     *  get some 'cached'-information 
+     *  @see TS_CACHE_DOUBLE 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    class Cache1 : public LoKi::BasicFunctors<const Hlt::Stage*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the key and data type
+      Cache1 ( const std::string&  key , 
+              const double        def ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Cache1 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cache1* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Cache1 () ;                        // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the key 
+      Gaudi::StringKey   m_key ;                               // the key 
+      /// default value 
+      double             m_def ;                               // default value 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Cache2 
+     *  get some 'cached'-information 
+     *  @see TS_CACHE_BOOL  
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    class Cache2 : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the key and data type
+      Cache2 ( const std::string&  key , 
+               const bool          def ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Cache2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cache2* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Cache2 () ;                        // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the key 
+      Gaudi::StringKey   m_key ;                               // the key 
+      /// default value 
+      bool               m_def ;                               // default value 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class HistoryRegex 
      *  simple predicate to check the presence of algorithm in history 
      *  @see LoKi::Cuts::TS_HISTORY_RE
@@ -571,7 +683,7 @@ namespace LoKi
     template <class TYPE>
     inline Fun_<TYPE> fun_ 
     ( const LoKi::Functor<const TYPE*,double>& fun , const double bad )
-    { return Fun_<TYPE> ( fun , bad ) ; }
+    { return LoKi::Stages::Fun_<TYPE> ( fun , bad ) ; }
     // ========================================================================
   } //                                            end of namespace LoKi::Stages 
   // ==========================================================================
@@ -670,6 +782,10 @@ namespace LoKi
      *  
      *   const TS_TrFUN pt ( TrPT ) ;
      *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const double result = pt ( stage ) ;
+     *
      *  @endcode 
      *
      *  @see Hlt::Stage 
@@ -686,10 +802,13 @@ namespace LoKi
      *  
      *   const TS_TrCUT ok ( TrPT > 500 * MeV  ) ;
      *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = has ( stage ) ;
+     *
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @see LHCb::Track
      *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
@@ -711,10 +830,13 @@ namespace LoKi
      *  
      *   const TS_HISTORY ok ( "MyAlgorithm" ) ;
      *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = has ( stage ) ;
+     *
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @see LHCb::Track
      *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
@@ -727,10 +849,13 @@ namespace LoKi
      *  
      *   const TS_HISTORY_SUB ok ( "DiMuon" ) ;
      *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = has ( stage ) ;
+     *
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @see LHCb::Track
      *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
@@ -743,14 +868,95 @@ namespace LoKi
      *  
      *   const TS_HISTORY_RE ok ( "Hlt1.*MuonDecision" ) ;
      *
+     *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = has ( stage ) ;
+     *
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @see LHCb::Track
      *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::HistoryRegex                          TS_HISTORY_RE ;
+    // ========================================================================
+    /** @typedef TS_HASCACHE
+     *  check the existence of certain key in the the cache 
+     *  
+     *  @code
+     *  
+     *   const TS_HASHCACHE has ( "MyPT" , Hlt::Cache::Double ) ;
+     *
+     *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = has ( stage ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see Hlt::Stage 
+     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-12-06
+     */
+    typedef LoKi::Stages::HasCache                                TS_HASCACHE ;
+    // ========================================================================
+    /** @typedef TS_CACHE_DOUBLE 
+     *  get the certain value for the cache :
+     *  
+     *  @code
+     *  
+     *   const TS_CACHE_DOUBLE fun ( "MyPT" , -1 * GeV ) ;
+     *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const double pt = fun ( stage ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see Hlt::Stage 
+     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    typedef LoKi::Stages::HasCache                                TS_HASCACHE ;
+    // ========================================================================
+    /** @typedef TS_CACHE_DOUBLE 
+     *  get the certain value for the cache :
+     *  
+     *  @code
+     *  
+     *   const TS_CACHE_DOUBLE fun ( "MyPT" , -1 * GeV ) ;
+     *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const double pt = fun ( stage ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see Hlt::Stage 
+     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    typedef LoKi::Stages::Cache1                              TS_CACHE_DOUBLE ;
+    // ========================================================================
+    /** @typedef TS_CACHE_BOOL 
+     *  get the certain value for the cache :
+     *  
+     *  @code
+     *  
+     *   const TS_CACHE_BOOL fun ( "MyPT" , -1 * GeV ) ;
+     *
+     *   const Hlt::Stage* stage = ... ;
+     *
+     *   const bool ok = fun ( stage ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see Hlt::Stage 
+     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-06
+     */
+    typedef LoKi::Stages::Cache2                                TS_CACHE_BOOL ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

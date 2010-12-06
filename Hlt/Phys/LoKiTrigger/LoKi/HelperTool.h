@@ -28,6 +28,28 @@
 // ============================================================================
 class GaudiAlgorithm ;
 // ============================================================================
+/** @file 
+ *  
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date   2010-10-30
+ *
+ *                    $Revision: 114376 $
+ *  Last Modification $Date: 2010-12-04 17:49:22 +0100 (Sat, 04 Dec 2010) $ 
+ *                 by $Author: ibelyaev $
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -185,7 +207,7 @@ namespace LoKi
 } // ==========================================================================
 //                                                        end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_HELPERTOOL_H
 // ============================================================================

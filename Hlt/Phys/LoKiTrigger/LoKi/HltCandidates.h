@@ -17,6 +17,7 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TriggerTypes.h"
 #include "LoKi/Streamers.h"
+#include "LoKi/AlgUtils.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -139,14 +140,14 @@ namespace LoKi
     public:
       // ======================================================================
       /** constructor
-       *  @param fun the function
-       *  @param slot the slot:
+       *  @param fun  (INPUT) the function
+       *  @param slot (INPUT) the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initianor stage
-       *     - posiitve valye scorresponds to step-back in history
+       *     - positive value corresponds to step-back in history
        */
-      StageFun ( const LoKi::TriggerTypes::TS_Func& fun       ,
-                 const int                          slot  = 0 ) ;
+      StageFun ( const LoKi::TriggerTypes::TS_Func& fun           ,
+                 const int                          slot  = 0     ) ;
       /// MANDATORY: virtual desctructor
       virtual ~StageFun () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -164,7 +165,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// the actual function
-      LoKi::TriggerTypes::TS_Fun m_cut ;                // the actual function
+      LoKi::TriggerTypes::TS_Fun m_cut  ;               // the actual function
       /// the slot
       int                        m_slot ;               // the slot
       // ======================================================================
@@ -185,10 +186,10 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
+       *     - positive value corresponds to step-back in history
        */
-      StageCut ( const LoKi::TriggerTypes::TS_Cuts& fun       ,
-                 const int                          slot  = 0 ) ;
+      StageCut ( const LoKi::TriggerTypes::TS_Cuts& fun           ,
+                 const int                          slot  = 0     ) ;
       /// MANDATORY: virtual desctructor
       virtual ~StageCut () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -227,10 +228,20 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
+       *  @param bad  the bad value 
        *  @see Hlt::Candidate::get
        */
       SlotFun
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun ,
+        const int     slot = 0     ,
+        const double  bad  = 0     ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+      SlotFun
+      ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun ,
         const int     slot = 0 ,
         const double  bad  = 0 ) ;
       /** constructor
@@ -256,7 +267,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
+       *     - positive value corresponds to step-back in history
        *  @see Hlt::Candidate::get
        */
       SlotFun
@@ -311,7 +322,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
+       *     - positive value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut ,
@@ -321,7 +332,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - posiitve value scorresponds to step-back in history
+       *     - posiitve value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut ,
@@ -331,7 +342,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - posiitve value scorresponds to step-back in history
+       *     - posiitve value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
@@ -341,7 +352,17 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - posiitve value scorresponds to step-back in history
+       *     - posiitve value corresponds to step-back in history
+       */
+      SlotCut
+      ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut ,
+        const int slot  =  0 ) ;
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *     - 0 corresponds to current stage ,
+       *     - negative value corresponds to initiator stage
+       *     - posiitve value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut ,
@@ -351,7 +372,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - posiitve value scorresponds to step-back in history
+       *     - posiitve value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut ,
@@ -395,7 +416,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
+       *     - positive value corresponds to step-back in history
        */
     	SlotFilter
       ( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut,
@@ -415,6 +436,14 @@ namespace LoKi
        */
     	SlotFilter
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut,
+    		const int slot =  0 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
     		const int slot =  0 );
       /** constructor
        *  @param fun the predicate
@@ -480,6 +509,15 @@ namespace LoKi
        *  @see Hlt::Candidate::get
        */
     	SlotMap
+      ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
+    		const int    slot =  0 ,
+        const double bad  =  0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
     		const int    slot = 0 ,
         const double bad  = 0 ) ;
@@ -513,7 +551,7 @@ namespace LoKi
       SlotFun m_fun;
       // ======================================================================
     };
-    // ======================================================================== 
+    // ========================================================================
   } //                                        end of namespace LoKi::Candidates 
   // ==========================================================================
 } //                                                      end of namespace LoKi 

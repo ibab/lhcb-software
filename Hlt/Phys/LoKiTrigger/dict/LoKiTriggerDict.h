@@ -32,6 +32,7 @@
 #include "LoKi/VxMaker.h"
 #include "LoKi/Hlt1Wrappers.h"
 #include "LoKi/Hlt1Functions.h"
+#include "LoKi/CacheFuncs.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"
@@ -386,6 +387,97 @@ namespace LoKi
       { return LoKi::Functors::Includes      <void,TYPE>( fun , fun2 ) ; }
       // ======================================================================
     }; 
+    // ========================================================================
+    template <>
+    class InfoOps<const Hlt::Candidate*>
+    {
+    public:
+      // ======================================================================
+      typedef const Hlt::Candidate* TYPE ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __logging__ ( const LoKi::Functor<TYPE,double>& fun ) 
+      { return LoKi::log_ ( fun , true ) ; }
+      // __logging__
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __logging__ ( const LoKi::Functor<TYPE,double>& fun , 
+                    const std::string&                key ) 
+      { return LoKi::log_ ( fun , key ) ; }
+      // ======================================================================
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,bool>
+      __logging__ ( const LoKi::Functor<TYPE,bool>& fun ) 
+      { return LoKi::log_ ( fun , true ) ; }
+      // __logging__
+      static LoKi::FunctorFromFunctor<TYPE,bool>
+      __logging__ ( const LoKi::Functor<TYPE,bool>& fun ,
+                    const std::string&              key )
+      { return LoKi::log_ ( fun , key ) ; }
+      // ======================================================================
+    public: // info 
+      // ======================================================================      
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun    , 
+                 const std::string&                key    , 
+                 const bool                        update ) 
+      { return LoKi::cache_ ( fun , key , update  ) ; }
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun , 
+                 const std::string&                key )
+      { return LoKi::cache_ ( fun , key , true    ) ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <>
+    class InfoOps<const Hlt::Stage*>
+    {
+    public:
+      // ======================================================================
+      typedef const Hlt::Stage* TYPE ;
+      // ======================================================================
+    public: // logging 
+      // ======================================================================
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __logging__ ( const LoKi::Functor<TYPE,double>& fun ) 
+      { return LoKi::log_ ( fun , true ) ; }
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __logging__ ( const LoKi::Functor<TYPE,double>& fun , 
+                    const std::string&                key ) 
+      { return LoKi::log_ ( fun , key ) ; }
+      // ======================================================================
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,bool>
+      __logging__ ( const LoKi::Functor<TYPE,bool>& fun )
+      { return LoKi::log_ ( fun , true ) ; }
+      // __logging__ 
+      static LoKi::FunctorFromFunctor<TYPE,bool>
+      __logging__ ( const LoKi::Functor<TYPE,bool>& fun , 
+                    const std::string&              key )
+      { return LoKi::log_ ( fun , key ) ; }
+      // ======================================================================
+    public: // info 
+      // ======================================================================      
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun    , 
+                 const std::string&                key    , 
+                 const bool                        update ) 
+      { return LoKi::cache_ ( fun , key , update  ) ; }
+      // __info__ 
+      static LoKi::FunctorFromFunctor<TYPE,double>
+      __info__ ( const LoKi::Functor<TYPE,double>& fun , 
+                 const std::string&                key )
+      { return LoKi::cache_ ( fun , key , true ) ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                             end of namespace LoKi::Dicts 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
@@ -426,6 +518,11 @@ namespace
     LoKi::Dicts::CutCalls   <Hlt::Stage>         m_c2_  ;
     // the basic functions
     LoKi::Dicts::Funcs      <const Hlt::Stage*>  m_f1_  ;
+    // ========================================================================
+    // Logging & Info 
+    // ========================================================================
+    LoKi::Dicts::InfoOps <const Hlt::Candidate*> m_o10 ;
+    LoKi::Dicts::InfoOps <const Hlt::Stage*>     m_o12 ;    
     // ========================================================================
     /// needed for various Hlt interfaces
     LoKi::Interface<Hlt::IRegister>          m_htl1 ;

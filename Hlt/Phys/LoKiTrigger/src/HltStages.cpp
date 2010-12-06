@@ -20,6 +20,11 @@
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
@@ -31,7 +36,8 @@
  *  @see Hlt::Candidate 
  *
  *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -591,6 +597,157 @@ std::ostream& LoKi::Stages::HistoryRegex::fillStream ( std::ostream& s ) const
   Gaudi::Utils::toStream ( m_algorithm , s ) ;
   return s << ") " ;
 }
+
+
+
+// ============================================================================
+// constructor from the key and data type
+// ============================================================================
+LoKi::Stages::HasCache::HasCache
+( const std::string&       key , 
+  const Hlt::Cache::Values typ ) 
+  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
+  , m_key ( key )
+  , m_typ ( typ ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::HasCache::~HasCache(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::HasCache*
+LoKi::Stages::HasCache::clone() const 
+{ return new LoKi::Stages::HasCache ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::HasCache::result_type 
+LoKi::Stages::HasCache::operator() 
+  ( LoKi::Stages::HasCache::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return false " ) ; 
+    return false ;
+  }
+  //
+  if       ( Hlt::Cache::Bool    == m_typ )  
+  { return a -> hasInfo_< Hlt::CacheValues<Hlt::Cache::Bool >::Type > ( m_key ) ; }
+  else if  ( Hlt::Cache::Int     == m_typ )  
+  { return a -> hasInfo_<Hlt::CacheValues<Hlt::Cache::Int   >::Type>( m_key ) ; }
+  else if  ( Hlt::Cache::Double  == m_typ )  
+  { return a -> hasInfo_<Hlt::CacheValues<Hlt::Cache::Double>::Type>( m_key ) ; }
+  else if  ( Hlt::Cache::String  == m_typ )  
+  { return a -> hasInfo_<Hlt::CacheValues<Hlt::Cache::String>::Type>( m_key ) ; }
+  //
+  Error ("The Invalid type has been specified, return 'false'") ;
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Stages::HasCache::fillStream ( std::ostream& s ) const 
+{
+  s << "TS_HASCACHE('" << m_key << "'" ;
+  if      ( Hlt::Cache::Bool   == m_typ ) { return s << ",Hlt.Cache.Bool)"   ; }
+  else if ( Hlt::Cache::Int    == m_typ ) { return s << ",Hlt.Cache.Int)"    ; }
+  else if ( Hlt::Cache::Double == m_typ ) { return s << ",Hlt.Cache.Double)" ; }
+  else if ( Hlt::Cache::String == m_typ ) { return s << ",Hlt.Cache.String)" ; }
+  //
+  return s << ")" ;
+}
+
+
+// ============================================================================
+// constructor from the key and data type
+// ============================================================================
+LoKi::Stages::Cache1::Cache1
+( const std::string&  key , 
+  const double        def ) 
+  : LoKi::BasicFunctors<const Hlt::Stage*>::Function()
+  , m_key ( key ) 
+  , m_def ( def )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::Cache1::~Cache1(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::Cache1*
+LoKi::Stages::Cache1::clone() const 
+{ return new LoKi::Stages::Cache1 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::Cache1::result_type 
+LoKi::Stages::Cache1::operator() 
+  ( LoKi::Stages::Cache1::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return default" ) ; 
+    return m_def ;
+  }
+  //
+  return a -> info ( m_key , m_def ) ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::Cache1::fillStream ( std::ostream& s ) const 
+{ return s << " TS_CACHE_DOUBLE('" << m_key << "," << m_def << ")" ; }
+
+// ============================================================================
+// constructor from the key and data type
+// ============================================================================
+LoKi::Stages::Cache2::Cache2
+( const std::string&  key , 
+  const bool          def ) 
+  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
+  , m_key ( key ) 
+  , m_def ( def )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::Cache2::~Cache2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::Cache2*
+LoKi::Stages::Cache2::clone() const 
+{ return new LoKi::Stages::Cache2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::Cache2::result_type 
+LoKi::Stages::Cache2::operator() 
+  ( LoKi::Stages::Cache2::argument a ) const 
+{
+  if ( 0 == a ) 
+  {
+    Error ("Hlt::Stage* points to NULL, return default" ) ; 
+    return m_def ;
+  }
+  //
+  return a -> info ( m_key , m_def ) ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::Cache2::fillStream ( std::ostream& s ) const 
+{ return s << " TS_CACHE_BOOL('" << m_key << "," << m_def << ")" ; }
+// ============================================================================
+
+
+
+
+
+
 
 // ============================================================================
 // The END 
