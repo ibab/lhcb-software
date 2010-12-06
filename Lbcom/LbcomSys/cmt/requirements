@@ -53,10 +53,10 @@ use STMonitors        v3r3    ST        # Mark Tobin
 use STTools           v4r5    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
-use VeloAlgorithms    v5r2    Velo      # Tomasz Szumlak
+use VeloAlgorithms    v5r3    Velo      # Tomasz Szumlak
 use VeloAssociators   v2r4    Velo      # Tomasz Szumlak
 use VeloDAQ           v6r0p1  Velo      # Kurt Rinnert
-use VeloSimulation    v3r7    Velo      # Tomasz Szumlak
+use VeloSimulation    v3r8    Velo      # Tomasz Szumlak
 use VeloTools         v3r5    Velo      # Tomasz Szumlak
 
 # VeloPix
