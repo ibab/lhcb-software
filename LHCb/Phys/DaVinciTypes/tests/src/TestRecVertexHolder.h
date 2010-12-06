@@ -9,7 +9,10 @@
 
 /** @class TestRecVertexHolder TestRecVertexHolder.h
  *  
- *
+ *  Tests for LHCb::RecVertexHolder class.
+ *  Creates some dummy PVs, puts them on the TES,
+ *  makes LHCb::RecVertexHolders with them, tests them.
+ * 
  *  @author Juan Palacios
  *  @date   2010-12-06
  */
