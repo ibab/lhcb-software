@@ -38,7 +38,8 @@ private:
   const LHCb::RecVertexHolder createPV() const;
 
   void testRecVertexHolder(const LHCb::RecVertexHolder pv) const;
-  
+
+  bool inTES(const DataObject*) const;
 
 private:
 

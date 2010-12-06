@@ -8,7 +8,7 @@
 #include "TestRecVertexHolder.h"
 
 #include "Kernel/RecVertexHolder.h"
-#include "Kernel/DaVinciFun.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TestRecVertexHolder
 //
@@ -88,7 +88,7 @@ StatusCode TestRecVertexHolder::execute() {
 
     //    testRecVertexHolder(pvHolder);
     
-    if (!DaVinci::inTES<const LHCb::RecVertex>(pvHolder)) {
+    if (!inTES(pvHolder)) {
       //      clonePVs->insert(pvHolder);
       clonePVs->insert(const_cast<LHCb::RecVertex*>(pvHolder.vertex()));
     }
@@ -162,6 +162,11 @@ void TestRecVertexHolder::testRecVertexHolder(const LHCb::RecVertexHolder pvHold
   
 
   return;
+}
+//=============================================================================
+bool TestRecVertexHolder::inTES(const RecVertex* PV) const 
+{
+  return ( 0!=PV && 0!=PV->parent());
 }
 //=============================================================================
 //  Finalize
