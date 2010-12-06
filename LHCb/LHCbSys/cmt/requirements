@@ -55,8 +55,8 @@ use LumiEvent             v3r0p2  Event   # Jaap Panman
 use L0Event               v19r0   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r17   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v4r3    Event   # Marco Cattaneo, Olivier Callot
-use PhysEvent            v11r12p1 Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r32   Event   # Marco Cattaneo and sub-det experts
+use PhysEvent            v11r12p2 Event   # Patrick Koppenburg, Juan Palacios
+use RecEvent              v2r33   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r1    Event   # Chris Jones
 use TrackEvent            v5r8    Event   # Wouter Hulsbergen
 use VeloEvent             v16r9   Event   # Tomasz Szumlak, Chris Parkes
@@ -98,7 +98,7 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use OTDAQ                 v7r8    OT      # Wouter Hulsbergen
 
 use DaVinciInterfaces     v2r6    Phys    # Juan Palacios
-use DaVinciTypes          v2r0    Phys    # Juan Palacios
+use DaVinciTypes          v2r1    Phys    # Juan Palacios
 use LoKiCore              v10r6   Phys    # Ivan Belyaev
 use LoKiGen               v9r4    Phys    # Ivan Belyaev
 use LoKiHlt               v3r3    Phys    # Ivan Belyaev
@@ -125,7 +125,6 @@ use XmlTools              v6r3p2  Tools   # Marco Clemencic
 
 use TrackInterfaces       v4r17   Tr      # Matt Needham
 use TrackKernel           v1r5    Tr      # Wouter Hulsbergen
-
 
 # Declare this as a container package
 apply_pattern container_package

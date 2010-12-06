@@ -10,9 +10,10 @@
 This version uses Gaudi v21r11 and LCG_58f
 
 - Packages modified: CaloDet v10r8, DDDB v1r39, RichDet v15r2, VeloPixDet v1r8,
-  L0Event v19r0, RecreatePIDTools v1r1, LHCbKernel v12r6, LHCbMath v3r22,
-  MCInterfaces v1r12, PartProp v1r8, L0MuonKernel v9r5, ProcessorKernel v6r1,
-  DaVinciInterfaces v2r6, LoKiCore v10r6, LoKiGen v9r4, LoKiHlt v3r3,
+  L0Event v19r0, PhysEvent v11r12p2, RecEvent v2r33, RecreatePIDTools v1r1,
+  LHCbKernel v12r6, LHCbMath v3r22, MCInterfaces v1r12, PartProp v1r8,
+  L0MuonKernel v9r5, ProcessorKernel v6r1, DaVinciInterfaces v2r6, 
+  DaVinciTypes v2r1, LoKiCore v10r6, LoKiGen v9r4, LoKiHlt v3r3,
   RichKernel v7r40, RichRecBase v4r2, CondDBUI v3r6
 
 - In Det/CaloDet v10r8
@@ -39,6 +40,13 @@ This version uses Gaudi v21r11 and LCG_58f
   . New method globalDecisionFromChannel(std::string channelName, type=PHYSICS) :
     return the decision from channel when participating to a global L0 decision
     (default PHYSICS) 
+
+- In Event/PhysEvent v11r12p2
+  . Added dictionary for LHCb::Vertex::ConstVector. Fixes bug #75884
+
+- In Event/RecEvent v2r33
+  . Add the enum "ProbNNghost" for the ProtoParticle ExtraInfo.
+  . Fix the GOD descriptions for the ANN PID ProtoParticle enums
 
 - In Event/RecreatePIDTools v1r1
   . ChargedProtoCombinedDLLsAlg : fix bug in masking procedure
@@ -69,6 +77,9 @@ This version uses Gaudi v21r11 and LCG_58f
 
 - In Phys/DaVinciInterfaces v2r6
   . IDistanceCalculator: Add methods to calculate the impact parameter vector
+
+- In Phys/DaVinciTypes v2r1
+  . LHCb::RecVertexHolder: "return"-value for vertexfitters/refitters
 
 - In Phys/LoKiCore v10r6
   . Add LoKi::transform 
