@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-06 - Vanya Belyaev
+ 
+ - add functions to deal with rec-vertices
+
 ! 2010-12-05 - Vanya Belyaev
 
  - add functions to deal with rec-vertices
