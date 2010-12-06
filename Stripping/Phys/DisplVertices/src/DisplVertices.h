@@ -89,6 +89,7 @@ private:
   double GetR( const Gaudi::XYZPoint & );
   double GetRFromBL( const Gaudi::XYZPoint& );  
   void GetUpstreamPV(); ///< Get the Upstream PV
+  void GetPVs(); ///< Get the PV candidates
   void GetPartsFromRecVtx(const LHCb::RecVertex*, 
 			  const LHCb::Particle::ConstVector &, 
 			  LHCb::Particle::ConstVector & );
@@ -96,6 +97,7 @@ private:
   StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode GetCaloClusterInfos( std::string, Tuple &, double &, double & );
   StatusCode SaveTrigInfinTuple( Tuple & );
+  StatusCode SavePVs( Tuple & );
   StatusCode fillHeader( Tuple & );
   StatusCode ReconstructMother( LHCb::Particle::ConstVector & );
 
@@ -153,6 +155,7 @@ private:
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
 
   const LHCb::RecVertex * PV; //The Primary Vertex !
+  std::vector<const LHCb::RecVertex*> PVs; ///< The PV candidates
 
   std::string m_Prey ;        ///< LHCb Name of the prey
   LHCb::ParticleID m_PreyID;  // PDG ID of this particle

@@ -267,15 +267,10 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
   //Check track and Particle content
   //PrintTrackandParticles();
 
-  //Require a upstream PV for both FromBeamLine and FromUpstreamPV methods.
-  const RecVertex * UpPV = NULL;
-  UpPV = GetUpstreamPV();
-  if( (m_FromBL || m_FromUpPV) && UpPV==NULL){
-    if(msgLevel(MSG::DEBUG))
-      debug() <<"No PV match the requirements" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-  //Set the beam line
+  //Clear stuff
+  PVs.clear();
+
+  //Set the beam line first, it may be used by GetUpstreamPV()
   if( m_FromBL ){
     if( exist<Particle::Range>( m_BLLoc ) ){
       const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
@@ -291,6 +286,15 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
       if( !m_FromUpPV ) return StatusCode::SUCCESS;
     }
   } 
+
+  //Require a upstream PV for both FromBeamLine and FromUpstreamPV methods.
+  const RecVertex * UpPV = GetUpstreamPV();
+  if( (m_FromBL || m_FromUpPV) && UpPV==NULL){
+    if(msgLevel(MSG::DEBUG))
+      debug() <<"No PV match the requirements" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   if( m_FromUpPV ){
     m_BeamLine->setReferencePoint( UpPV->position() );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
@@ -323,7 +327,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     const RecVertex* rv = *i;
     const SmartRefVector< Track > & Tracks = rv->tracks();
     size = Tracks.size();
-    double r = RFromBL( rv->position() ); //R to beam line
+    double r = GetRFromBL( rv->position() ); //R to beam line
     
     if( msgLevel(MSG::DEBUG) ){
       const Gaudi::SymMatrix3x3 & err = rv->covMatrix();
@@ -467,38 +471,48 @@ unsigned int RecVertices2Particles::GetNbVeloTracks(){
   return nbv;
 }
 
-//=============================================================================
-// Get the upstream PV
-//=============================================================================
-const RecVertex * RecVertices2Particles::GetUpstreamPV(){
-  const RecVertex::Range & PVs = this->primaryVertices();
-  const RecVertex * upPV = NULL;
-  double tmp = 1000;
-  for ( RecVertex::Range::const_iterator i = PVs.begin(); 
-        i != PVs.end() ; ++i ){
+//============================================================================
+// Get candidate PVs
+//============================================================================
+void RecVertices2Particles::GetPVs(){
+
+  //The PVs container is emptied at the begining of the execution
+  if( !PVs.empty() ) return;
+  const RecVertex::Range & PVCs = this->primaryVertices();
+  if( PVCs.empty() ) return;  
+
+  for ( RecVertex::Range::const_iterator i = PVCs.begin(); 
+        i != PVCs.end() ; ++i ){
     const RecVertex* pv = *i;
-    //Check that the PV is in beamline else check that the PV is in a credible position
-    if( m_FromBL && RFromBL( pv->position() )> m_RMin){
-       continue;
+    //Apply some cuts
+    if( m_FromBL ){
+         double rho = GetRFromBL( pv->position() );        
+         if( context() == "Info" ) plot( rho, "PVr", 0., 1.5*mm, 50 );
+         if( rho > m_RMin ) continue;         
     }
-    else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){ continue;}
+    else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){
+      continue;}
     double z = pv->position().z();
     if( abs(z) > 400*mm ) continue;
     if( !HasBackAndForwardTracks( pv ) ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
-    //double sr = sqrt( mat(0,0) + mat(1,1) );
-    //if( msgLevel( MSG::DEBUG ) )
-    //debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
     //<<" sigmaR "<< sr <<" sigmaZ "<< sqrt(mat(2,2)) << endmsg;
     //if( sr > m_PVsr ) continue;
     //if( sqrt(mat(2,2)) > m_PVsz ) continue;
     if( pv->tracks().size() < m_PVnbtrks ) continue;
-    if( z < tmp ){
-      tmp = z;
-      upPV = pv;
-    } 
+    PVs.push_back(pv);
   }
-  return upPV;
+  sort( PVs.begin(), PVs.end(), RecVertices2Particles::CondRVz() );
+}
+
+//============================================================================
+// Get the upstream Primary vertex
+//============================================================================
+const RecVertex * RecVertices2Particles::GetUpstreamPV(){
+  GetPVs();
+  if( PVs.empty() ){ return NULL; } else { return *(PVs.begin());}
 }
 
 
@@ -1266,8 +1280,31 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
   tuple->column( "BLX", m_BeamLine->referencePoint().x() );
   tuple->column( "BLY", m_BeamLine->referencePoint().y() );
   tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
+  if( !SavePVs( tuple )  ) return StatusCode::FAILURE;
   tuple->column( "NbVelo", GetNbVeloTracks() );
   return tuple->write();
+}
+
+//============================================================================
+// Save in Tuple the PV candidates
+//============================================================================
+StatusCode  RecVertices2Particles::SavePVs( Tuple & tuple ){
+  
+  GetPVs();
+  vector<double> x,y,z;
+  for ( vector<const RecVertex*>::const_iterator i = PVs.begin(); 
+        i != PVs.end() ; ++i ){
+    const RecVertex* pv = *i;
+    x.push_back( pv->position().x() );
+    y.push_back( pv->position().y() );
+    z.push_back( pv->position().z() );
+  }
+  const int NbPVMax = 20;
+  tuple->farray( "PVX", x.begin(), x.end(), "NbPVMax", NbPVMax );
+  tuple->farray( "PVY", y.begin(), y.end(), "NbPVMax", NbPVMax );
+  tuple->farray( "PVZ", z.begin(), z.end(), "NbPVMax", NbPVMax );
+
+  return StatusCode::SUCCESS ;
 }
 
 //============================================================================
@@ -1457,7 +1494,7 @@ bool RecVertices2Particles::IsInRFFoil( const Gaudi::XYZPoint & pos){
 //=============================================================================
 // Get radial distance to Beam Line
 //=============================================================================
-double RecVertices2Particles::RFromBL( const Gaudi::XYZPoint& p ){
+double RecVertices2Particles::GetRFromBL( const Gaudi::XYZPoint& p ){
   
   //intersection of the beam line with the XY plane, 
   //find the lambda parameter of the line.

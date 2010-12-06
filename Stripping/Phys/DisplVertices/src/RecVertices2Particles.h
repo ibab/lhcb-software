@@ -54,6 +54,7 @@ private:
   void GetRecVertices( LHCb::RecVertex::ConstVector & );
   ///Get the upstream PV
   const LHCb::RecVertex * GetUpstreamPV();
+  void GetPVs(); ///< Get the PV candidates
   ///Get Nb of Velo tracks in event
   unsigned int GetNbVeloTracks();
   ///Turn a RecVertex into a Particle
@@ -87,10 +88,11 @@ private:
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
   StatusCode SaveCaloInfos( Tuple & );
   StatusCode GetCaloInfos( std::string, double &, double & );
+  StatusCode SavePVs( Tuple & );
   StatusCode fillHeader( Tuple & );
 
   //Geometric tools
-  double RFromBL( const Gaudi::XYZPoint& );
+  double GetRFromBL( const Gaudi::XYZPoint& );
   double GetSumPt( const LHCb::Particle * );
   double GetSumPt( const LHCb::RecVertex * );
   void   GetSumPtNbGoodTrks( const LHCb::RecVertex *, double &, int & );
@@ -163,7 +165,7 @@ private:
   bool        m_FromUpPV;     ///< Set at initialisation acc. to m_RCut
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
-
+  std::vector<const LHCb::RecVertex*> PVs; ///< The PV candidates
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame

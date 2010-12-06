@@ -240,11 +240,8 @@ StatusCode DisplVertices::execute(){
             << counter("Processed evt nb").flag() << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
-  //------------------Get the (upstream) Primary Vertex------------------
-  if ( m_RCut != "FromPreyInfo")GetUpstreamPV();
-
-  if( msgLevel( MSG::DEBUG ) && PV != NULL )
-    debug() << "Upstream PV Position : " << PV->position() << endmsg ;
+  //Clear stuff
+  PVs.clear();
 
   //---------------------------------------------  
   if( m_SaveTrigInfos && !m_SaveTuple ){
@@ -255,24 +252,34 @@ StatusCode DisplVertices::execute(){
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
-  //------------------Set the beam line------------------
-  if( m_RCut=="FromBeamLine" ){
-    if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
-      const LHCb::Particle* tmp = *(BL.begin());
-      m_BeamLine->setReferencePoint( tmp->referencePoint() );
-      m_BeamLine->setMomentum( tmp->momentum() );
-      if( msgLevel(MSG::DEBUG) )
-        debug()<<"Beam line position "<< m_BeamLine->referencePoint()
-	       <<" direction " << m_BeamLine->momentum() << endmsg;
-    } else {
-      warning()<<"No Beam line found at "<< m_BLLoc << endmsg;
-      return StatusCode::SUCCESS;
-    }
-  } else if( m_RCut=="FromUpstreamPV" ){
-    if(PV == NULL) return StatusCode::SUCCESS;
-    m_BeamLine->setReferencePoint( PV->position() );
-    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
+  if( m_SaveTuple || m_RCut != "FromPreyInfo"){
+
+    //------------------Set the beam line------------------
+    if( m_RCut=="FromBeamLine" || (m_SaveTuple&&m_RCut=="FromPreyInfo") ){
+      if( exist<Particle::Range>( m_BLLoc ) ){
+        const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+        const Particle* tmp = *(BL.begin());
+        m_BeamLine->setReferencePoint( tmp->referencePoint() );
+        m_BeamLine->setMomentum( tmp->momentum() );
+        if( msgLevel(MSG::DEBUG) )
+          debug()<<"Beam line position "<< m_BeamLine->referencePoint()
+                 <<" direction " << m_BeamLine->momentum() << endmsg;
+      } else {
+        debug()<<"No Beam line found at "<< m_BLLoc << endmsg;
+        return StatusCode::SUCCESS;
+      }
+    } else if( m_RCut=="FromUpstreamPV" ){
+      //------------------Get the upstream Primary Vertex-----
+      GetUpstreamPV();      
+      if(PV == NULL) return StatusCode::SUCCESS;
+      m_BeamLine->setReferencePoint( PV->position() );
+      m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
+      if( msgLevel( MSG::DEBUG ) )
+        debug() << "Upstream PV Position : " << PV->position() << endmsg ;
+      //StudyDgtsIP( PV ); //Study the IP to PV of the daughters
+      //Study resolution of the reconstructed PV
+      //if(false) Resolution();
+    }    
   }
 
   //------------------The Code---------------------------
@@ -306,9 +313,7 @@ StatusCode DisplVertices::execute(){
     int nbtrks = p->endVertex()->outgoingParticles().size();
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
-    double rho = -10.;
-    if( m_RCut != "FromPreyInfo" )rho = GetRFromBL( pos );
-    else rho = p->info(52,-1000.);
+    double rho = (m_RCut=="FromPreyInfo")?p->info(52,-1000.):GetRFromBL(pos);
     double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
@@ -363,6 +368,7 @@ StatusCode DisplVertices::execute(){
       if( IsAPointInDet( p, 2 ) ) indet += 1;
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
+      if( p->info(51,-1000.)>-900 ) indet += 1000;
       indets.push_back( indet ); 
     }
     Particle clone = Particle( *p );
@@ -410,6 +416,7 @@ StatusCode DisplVertices::execute(){
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
+    if( !SavePVs( tuple )  ) return StatusCode::FAILURE;
     tuple->column( "NbVelo", GetNbVeloTracks() );
     if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
       return StatusCode::FAILURE;
@@ -905,23 +912,26 @@ double DisplVertices::GetRFromBL( const Gaudi::XYZPoint& p ){
 }
 
 //============================================================================
-// Get the upstream Primary vertex
+// Get candidate PVs
 //============================================================================
-void DisplVertices::GetUpstreamPV(){
+void DisplVertices::GetPVs(){
 
-  const RecVertex::Range & PVs = this->primaryVertices();
-  PV = NULL;
-  if( PVs.empty() ) return;
-  double tmp = 1000;
+  //The PVs container is emptied at the begining of the execution
+  if( !PVs.empty() ) return;
+  const RecVertex::Range & PVCs = this->primaryVertices();
+  if( PVCs.empty() ) return;  
 
-  for ( RecVertex::Range::const_iterator i = PVs.begin(); 
-        i != PVs.end() ; ++i ){
+  for ( RecVertex::Range::const_iterator i = PVCs.begin(); 
+        i != PVCs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Apply some cuts
-    if(m_RCut=="FromBeamLine" && GetRFromBL( pv->position() )> m_RMin){
-       continue;
+    if(m_RCut=="FromBeamLine" || (m_RCut=="FromPreyInfo" && m_SaveTuple)){
+         double rho = GetRFromBL( pv->position() );        
+         if( context() == "Info" ) plot( rho, "PVr", 0., 1.5*mm, 50 );
+         if( rho > m_RMin ) continue;         
     }
-    else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){ continue;}
+    else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){
+      continue;}
     double z = pv->position().z();
     if( abs(z) > 400*mm ) continue;
     if( !HasBackAndForwardTracks( pv ) ) continue;
@@ -932,11 +942,17 @@ void DisplVertices::GetUpstreamPV(){
     //if( sr > m_PVsr ) continue;
     //if( sqrt(mat(2,2)) > m_PVsz ) continue;
     if( pv->tracks().size() < m_PVnbtrks ) continue;
-    if( z < tmp ){
-      tmp = z;
-      PV = pv;
-    } 
+    PVs.push_back(pv);
   }
+  sort( PVs.begin(), PVs.end(), SortPVz );
+}
+
+//============================================================================
+// Get the upstream Primary vertex
+//============================================================================
+void DisplVertices::GetUpstreamPV(){
+  GetPVs();
+  if( PVs.empty() ){ PV = NULL; } else { PV = *(PVs.begin()); }
 }
 
 //=============================================================================
@@ -1194,6 +1210,28 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //debug() << *decReports << endmsg;
   
   return StatusCode::SUCCESS;
+}
+
+//============================================================================
+// Save in Tuple the PV candidates
+//============================================================================
+StatusCode  DisplVertices::SavePVs( Tuple & tuple ){
+  
+  GetPVs();
+  vector<double> x,y,z;
+  for ( vector<const RecVertex*>::const_iterator i = PVs.begin(); 
+        i != PVs.end() ; ++i ){
+    const RecVertex* pv = *i;
+    x.push_back( pv->position().x() );
+    y.push_back( pv->position().y() );
+    z.push_back( pv->position().z() );
+  }
+  const int NbPVMax = 20;
+  tuple->farray( "PVX", x.begin(), x.end(), "NbPVMax", NbPVMax );
+  tuple->farray( "PVY", y.begin(), y.end(), "NbPVMax", NbPVMax );
+  tuple->farray( "PVZ", z.begin(), z.end(), "NbPVMax", NbPVMax );
+
+  return StatusCode::SUCCESS ;
 }
 
 //============================================================================

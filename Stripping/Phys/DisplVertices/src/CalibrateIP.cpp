@@ -358,6 +358,8 @@ StatusCode CalibrateIP::execute() {
  
     //Eventually reset if the beams have moved
     if( m_Beam->HasMoved( IPold, m_beamstab ) ){
+      plot( m_nbpv, "Nb PVs used before beams moved", 0., m_cycle*3, 50 );
+      m_nbpv = 0;
       m_x->reset();
       m_y->reset();
       m_z->reset();

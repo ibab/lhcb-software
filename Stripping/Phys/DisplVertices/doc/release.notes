@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-12-06 - Neal Gauvin
+ - Save the PV candidates in the tuple when SaveTuple is set.
+ - Removed bug : GetUpstreamPV was using beamline info before beamline info is actually retrieved...
+
 !========================== DisplVertices v7r1 2010-11-04 ====================
 
 ! 2010-11-04 - Juan Palacios
