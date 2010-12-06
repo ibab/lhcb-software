@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2010-12-06 - Chris Jones
+ - Retire the RICH Markov ring finder package
+
 ! 2010-11-21 - Chris Jones
  - Pass the DataType option to the RICH Reconstruction Configurable
  - Add timing monitors for the CALO, MUON, PROTO and Vertex sequences.

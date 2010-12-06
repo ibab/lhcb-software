@@ -16,7 +16,7 @@ from CaloReco.Configuration   import OffLineCaloRecoConf
 from CaloPIDs.Configuration   import OffLineCaloPIDsConf
 
 from Configurables import ( ProcessPhase, CaloMoniDstConf, RichRecQCConf,
-                            VeloRecMonitors,
+                            VeloRecMonitors, GlobalRecoChecks,
                             MuonTrackMonitorConf, MuonIDAlg )
 
 ## @class RecSysConf
@@ -198,7 +198,8 @@ class RecMoniConf(LHCbConfigurableUser):
     __used_configurables__ = [ CaloMoniDstConf,
                                (RichRecQCConf,richMoniConfName),
                                VeloRecMonitors,
-                               MuonTrackMonitorConf ]
+                               MuonTrackMonitorConf,
+                               GlobalRecoChecks ]
 
     ## Configurables that must be configured before us
     __queried_configurables__ = [ RecSysConf, TrackSys ]
@@ -347,8 +348,12 @@ class RecMoniConf(LHCbConfigurableUser):
             ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
 
         if "PROTO" in moniSeq :
-            from Configurables import ChargedProtoParticleMoni
+            from Configurables import ChargedProtoParticleMoni, GaudiSequencer
             GaudiSequencer( "MoniPROTOSeq" ).Members += [ChargedProtoParticleMoni("ChargedProtoPMoni")]
+            if self.expertHistos():
+                exSeq = GaudiSequencer("ExpertProtoMoni")
+                GaudiSequencer( "MoniPROTOSeq" ).Members += [exSeq]
+                GlobalRecoChecks().Sequencer = exSeq
 
         # If checking is enabled, all Rich histograms are booked in check sequence
         if "RICH" in moniSeq and not self.getProp("CheckEnabled"):

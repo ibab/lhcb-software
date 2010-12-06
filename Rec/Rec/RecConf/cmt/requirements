@@ -35,7 +35,6 @@ use RecoUpgradeMC        v*    Rec  # Victor Coco
 
 # Rich
 use RichGlobalPID        v*   Rich # Chris Jones
-use RichMarkovRingFinder v*    Rich # Chris Jones
 use RichPIDMerge         v*    Rich # Chris Jones
 use RichRecAlgorithms    v*   Rich # Chris Jones
 use RichRecMCAlgorithms  v*  Rich # Chris Jones
