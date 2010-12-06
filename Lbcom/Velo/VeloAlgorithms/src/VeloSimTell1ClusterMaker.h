@@ -80,8 +80,6 @@ protected:
   void fillAndWriteRawEvent();
   StatusCode storeBank();
   StatusCode createRawEvent();
-  StatusCode validationRun();
-  void prepareEngineForValidation();
   StatusCode createAndConfigureEngines();
   StatusCode i_cacheConditions();
   void addEngineInStaticMode(unsigned int tell1, const DeVeloSensor* sens);
@@ -93,6 +91,8 @@ private:
   std::string m_rawEventLoc;
   int m_hitThresholdValue;
   int m_lowThresholdValue;
+  float m_hitSigmas;
+  float m_incSigmas;
   VeloTELL1::u_int32_t m_sumThresholdValue;
   VeloTELL1::ThresholdsVec m_hitThresholds;
   VeloTELL1::ThresholdsVec m_lowThresholds;
@@ -113,7 +113,6 @@ private:
   int m_bankVersion;
   unsigned int m_bankBodySize;
   bool m_printInfo;
-  bool m_validationRun;
   bool m_isDebug;
   std::map<unsigned int, SimTell1ZSProcessEngine*> m_zsEngines;
   VeloTELL1::TELL1ClusterVec m_clusters;

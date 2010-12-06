@@ -1,6 +1,18 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+! 2010-12-06 - Tomasz Szumlak
+ - substantial code change in VeloSimTell1Algorithm and VeloSimTell1ClusterMaker
+   algorithms to facilitate using SIMCOND data base. All the work has been
+   done in order to make the VELO MC tuning for 2011 production
+ - the method i_cacheConditions() that is responsible for interfacing with
+   the SIMCOND data base and fetching conditions has been completely 
+   re-written
+ - m_dbConfig set by default to VeloTELL1::DYNAMIC
+ - parameters m_hitSigmas and m_incSigmas have been changed accordingly
+   to follow the values used to calculate thresholds in the pit
+ - add ThresholdMaker predicate class used in hit and inclusion thresholds
+   calculation   
 
 !===================== VeloAlgorithms v5r2 2010-03-18 =====================
 ! 2010-03-05 - David Hutchcroft

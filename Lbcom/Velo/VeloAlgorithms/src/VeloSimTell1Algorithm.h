@@ -37,6 +37,20 @@
 class VeloSimTell1Algorithm : public GaudiAlgorithm {
 public: 
 
+  enum VELO{
+    R_SENS_START=0,
+    R_SENS_END=41,
+    PHI_SENS_START=64,
+    PHI_SENS_END=105,
+    PU_SENS_START=128,
+    PU_SENS_END=131
+  };
+
+  // define containers for thresholds (for strips and dummies)
+  typedef std::vector<unsigned int> TH_CONT;
+  typedef std::vector<unsigned int>::const_iterator TH_CONT_IT;
+  typedef std::pair<unsigned int, unsigned int> BOUNDARIES;
+
   /// Standard constructor
   VeloSimTell1Algorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -78,11 +92,13 @@ protected:
                                        LHCb::VeloTELL1Data* outObj);
   virtual VeloTELL1::AListPair getSrcIdList() const;
   virtual void setSrcIdList(std::vector<unsigned int> inVec);
-  virtual StatusCode i_cacheSrcIdList();
   virtual StatusCode i_cacheConditions();
+  virtual void addProcThresholds(const VeloTELL1::sdataVec& inData,
+                                 const bool rtype);
+  virtual BOUNDARIES findBoundary(const unsigned int proc,
+                                  const TH_CONT& cont);
 
   unsigned int m_evtNumber;
-  bool m_validationRun;
   unsigned int m_dbConfig;
   std::string m_inputDataLoc;
   std::string m_outputDataLoc;
@@ -90,7 +106,15 @@ protected:
   std::string m_condPath;
   std::vector<unsigned int> m_srcIdList;  /// list of the TELL1 numbers
   bool m_forceEnable;
+  bool m_isDebug;
   VeloTELL1::sdataVec m_dataBuffer;
+  VeloTELL1::sdataVec m_thresholds;
+  VeloTELL1::sdataVec m_innerTh;     /// mem buffer for inner thresholds
+  VeloTELL1::sdataVec m_outerTh;     /// mem buffer for outer thresholds
+  TH_CONT m_innerStrips;             /// number of inner str per FPGA
+  TH_CONT m_outerStrips;             /// number of outer str per FPGA
+  TH_CONT m_innerDummy;              /// inner dummy per FPGA
+  TH_CONT m_outerDummy;              /// outer dummy per FPGA
   
 private:
 
