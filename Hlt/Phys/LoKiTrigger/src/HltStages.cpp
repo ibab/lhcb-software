@@ -225,37 +225,10 @@ LoKi::Stages::IsStage::operator()
   return 0 != a ? a->is<Hlt::Stage>() : false ;
 }
 // ============================================================================
-// OPTIONAL: the ince printout 
+// OPTIONAL: the nice printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsStage::fillStream ( std::ostream& s ) const 
 { return s << "TS_STRAGE" ; }
-// ============================================================================
-
-// ============================================================================
-// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::Stages::IsCandidate::~IsCandidate (){}
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-LoKi::Stages::IsCandidate*
-LoKi::Stages::IsCandidate::clone() const 
-{ return new LoKi::Stages::IsCandidate(*this) ; }
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Stages::IsCandidate::result_type 
-LoKi::Stages::IsCandidate::operator() 
-  ( LoKi::Stages::IsCandidate::argument a ) const 
-{
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<Hlt::Candidate>() : false ;
-}
-// ============================================================================
-// OPTIONAL: the ince printout 
-// ============================================================================
-std::ostream& LoKi::Stages::IsCandidate::fillStream ( std::ostream& s ) const 
-{ return s << "TS_CANDIDATE" ; }
 // ============================================================================
 
 

@@ -144,8 +144,6 @@ TS_ISVERTEX     = LoKi.Stages.IsVertex      ()
 TS_ISMULTITRACK = LoKi.Stages.IsMultiTrack  ()
 ## @see LoKi::Cuts::TS_ISSTAGE
 TS_ISSTAGE      = LoKi.Stages.IsStage       ()
-## @see LoKi::Cuts::TS_ISCANDIDATE
-TS_ISCANDIDATE  = LoKi.Stages.IsCandidate   ()
 
 ## @see LoKi::Cuts::TS_TYPE
 TS_TYPE         = LoKi.Stages.Type          ()
@@ -236,7 +234,7 @@ TrackFunction       = LoKi.Hlt1.TrackFunction
 TrFUN               = LoKi.Tracks.TrFunction
 
 # ============================================================================
-## Hl1Functions
+## Track functions 
 # ============================================================================
 
 ## @see LoKi::Cuts::TrDPMU_ 
@@ -247,6 +245,17 @@ TrDPMU              = LoKi.Tracks.MuonDeltaP()
 Tr_HLTMIP           = LoKi.Tracks.Hlt1TrackMinIp
 ## @see LoKi::Cuts::Tr_HLTMIPCHI2  
 Tr_HLTMIPCHI2       = LoKi.Tracks.Hlt1TrackMinIpChi2
+
+
+# ============================================================================
+## Vertex functions 
+# ============================================================================
+## @see LoKi::Cuts::RV_MAXDOCA 
+RV_MAXDOCA       = LoKi.RecVertices.MaxDOCA
+## @see LoKi::Cuts::RV_MAXDOCACHI2 
+RV_MAXDOCACHI2   = LoKi.RecVertices.MaxDOCAChi2
+## @see LoKi::Cuts::RV_DOCACUT
+RV_DOCACUT       = LoKi.RecVertices.DOCACut
 
 
 ##

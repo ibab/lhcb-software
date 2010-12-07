@@ -133,7 +133,7 @@ LoKi::Hlt1::Match::operator()
   } //                                end of the loop over the first  container 
   // ==========================================================================
   // register the selection in Hlt Data Service 
-  return m_sink ( output ) ;                                          // RETURN 
+  return !m_sink ? output : m_sink ( output ) ;                       // RETURN 
   // ==========================================================================
 }
 // ============================================================================

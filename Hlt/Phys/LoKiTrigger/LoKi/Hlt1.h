@@ -146,7 +146,9 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from the selection 
+      /** constructor from the selection name 
+       *  @attenttion empty selection name decativates the sink
+       */
       Sink ( const std::string&  selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Sink () {}
@@ -165,6 +167,13 @@ namespace LoKi
       /// get the selection name 
       const std::string&      selName() const { return m_selName.str() ; }
       const Gaudi::StringKey& output () const { return m_selName       ; }
+      // ======================================================================
+    public: // sink ? 
+      // ======================================================================
+      ///   active     sink ? 
+      bool active    () const { return !m_selName.empty() ; }
+      /// deactivated  sink ? 
+      bool operator! () const { return !active() ; }
       // ======================================================================
     private:
       // ======================================================================

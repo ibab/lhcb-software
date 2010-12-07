@@ -176,7 +176,36 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.SourceOps ( tT     , tT )   ) ## call-traits
 
 
+    # =========================================================================
+    ## LHCb::VertexBase specifics 
+    # =========================================================================
+    tV = 'const LHCb::VertexBase*'
+    vV = 'std::vector<const LHCb::VertexBase*>'
+    
+    # function 
+    _decorated |= _LoKiCore.getAndDecorateFunctions (  
+        name                                     , ## module name  
+        LoKi.Functor        ( tV ,'double'    )  , ## the base
+        LoKi.Dicts.FunCalls ( LHCb.VertexBase )  , ## call-traits
+        LoKi.Dicts.FuncOps  ( tV , tV         )  ) ## operators&operations
+    
+    # predicates 
+    _decorated |= _LoKiCore.getAndDecoratePredicates (  
+        name                                     , ## module name  
+        LoKi.Functor        ( tV , bool       )  , ## the base
+        LoKi.Dicts.CutCalls ( LHCb.VertexBase )  , ## call-traits
+        LoKi.Dicts.CutsOps  ( tV , tV         )  ) ## operators&operations
+    
+    # "pipe" : vector<T> -> vector<T>    
+    _decorated |= _LoKiCore.getAndDecoratePipes (
+        name                                   , ## module name  
+        LoKi.Functor       ( vV , vV )         , ## the base
+        LoKi.Dicts.PipeOps ( tV , tV )         ) ## call-traits
+    
+
+    # =========================================================================
     ## various "info" operations
+    # =========================================================================
     
     ## decorate HltCandidates:
     _decorated |= _LoKiCore.getAndDecorateInfos (

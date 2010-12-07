@@ -213,14 +213,17 @@ std::ostream& LoKi::Hlt1::Selection::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::Sink::Sink
 ( const std::string&    selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
 {
-  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
-  // declare the selection  
-  m_selection = unit->declareOutput<Hlt::Candidate> ( selName(), *this ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  if ( active() ) 
+  {
+    SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+    Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
+    // declare the selection  
+    m_selection = unit->declareOutput<Hlt::Candidate> ( selName(), *this ) ;
+    Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  }
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -229,8 +232,11 @@ LoKi::Hlt1::Sink::result_type
 LoKi::Hlt1::Sink::operator() 
   ( LoKi::Hlt1::Sink::argument a ) const 
 {
+  // sink is deactivated? 
+  if ( !active() ) { return a ; } // RETURN 
+  //
   Assert ( 0 != m_selection , 
-           "Hlt::TSelection<Hlt::Candidate>* point to NULL!" ) ;  
+           "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
   //
   for ( Hlt::Candidate::ConstVector::const_iterator ia = a.begin() ; 
         a.end() != ia ; ++ia ) 

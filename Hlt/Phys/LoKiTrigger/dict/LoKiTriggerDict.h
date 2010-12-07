@@ -27,6 +27,8 @@
 #include "LoKi/HltL0.h"
 #include "LoKi/HltCandidates.h"
 // ============================================================================
+#include "LoKi/RecVertices.h"
+// ============================================================================
 #include "LoKi/TrUpgrade.h"
 #include "LoKi/TrMatch.h"
 #include "LoKi/VxMaker.h"
@@ -161,7 +163,13 @@ namespace LoKi
        __rshift__
        ( const Pipe& fun ,
          const LoKi::Functor<const LHCb::Track*,bool>&  fun2 )
-       { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }
+       { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }       
+       // __rshift__
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rshift__
+       ( const Pipe& fun ,
+         const LoKi::Functor<const LHCb::VertexBase*,bool>&  fun2 )
+       { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }       
        // __rshift__
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
        __rshift__
@@ -174,6 +182,12 @@ namespace LoKi
        ( const Pipe& fun ,
          const LoKi::Functor<const LHCb::Track*,double>&  fun2 )
        { return fun >> LoKi::Candidates::SlotMap(fun2) ; }
+       // __rshift__   "sink"
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rshift__
+       ( const Pipe&        fun       ,
+         const std::string& selection )
+       { return fun >> LoKi::Hlt1::Sink ( selection ) ; }
        // ======================================================================       
      public:
        // ======================================================================
@@ -348,20 +362,30 @@ namespace LoKi
       ( const Source&                                          fun , 
         const LoKi::Functor<const LHCb::L0MuonCandidate*,bool>& cut )
       { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
-      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
       ( const Source&                                          fun , 
         const LoKi::Functor<const LHCb::L0CaloCandidate*,bool>& cut )
       { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
-      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
       ( const Source&                                          fun , 
         const LoKi::Functor<const LHCb::Track*,bool>&          cut )
       { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source&                                          fun , 
+        const LoKi::Functor<const LHCb::VertexBase*,bool>&     cut )
+      { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
+      // __rshift__  "sink"
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source&      fun      , 
+        const std::string& selection )
+      { return fun >> LoKi::Hlt1::Sink ( selection ) ; }
       // ======================================================================
     public:
       // ======================================================================

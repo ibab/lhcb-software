@@ -225,7 +225,13 @@ namespace LoKi
     // ========================================================================
   } //                                         end of namespace Hlt::Candidates
   // ==========================================================================
-  /// helper function to create logging function 
+  /** helper function to create logging function 
+   *  @see LoKi::Candidates::Log_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param log    (INPUT) fictive parameter 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Candidate*,TYPE>
   log_  
@@ -236,7 +242,13 @@ namespace LoKi
     return LoKi::Candidates::Log_<TYPE> ( fun , log ) ;
   }
   // ========================================================================
-  /// helper function to create logging function 
+  /** helper function to create logging function 
+   *  @see LoKi::Candidates::Log_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param key    (INPUT) the logging key 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Candidate*,TYPE>
   log_  
@@ -246,7 +258,14 @@ namespace LoKi
     return LoKi::Candidates::Log_<TYPE> ( fun , key ) ;
   }
   // ========================================================================
-  /// helper function to create logging function 
+  /** helper function to create caching-function 
+   *  @see LoKi::Candidates::Cache_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param key    (INPUT) the key for logging 
+   *  @param update (INPUT) update cache? 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Candidate*,TYPE>
   cache_  
@@ -438,7 +457,13 @@ namespace LoKi
     // ========================================================================
   } //                                            end of namespace LoKi::Stages    
   // ==========================================================================  
-  /// helper function to create logging function 
+  /** helper function to create logging function 
+   *  @see LoKi::Stages::Log_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param log    (INPUT) fictive parameter 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Stage*,TYPE>
   log_  
@@ -449,7 +474,13 @@ namespace LoKi
     return LoKi::Stages::Log_<TYPE> ( fun , log ) ;
   }
   // ==========================================================================
-  /// helper function to create logging function 
+  /** helper function to create logging function 
+   *  @see LoKi::Stages::Log_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param key    (INPUT) the key for logging 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Stage*,TYPE>
   log_  
@@ -459,7 +490,14 @@ namespace LoKi
     return LoKi::Stages::Log_<TYPE> ( fun , key ) ;
   }
   // ==========================================================================
-  /// helper function to create logging function 
+  /** helper function to create caching-function 
+   *  @see LoKi::Stages::Cache_ 
+   *  @param fun    (INPUT) the input functor 
+   *  @param key    (INPUT) the key for logging 
+   *  @param update (INPUT) update cache? 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-12-07
+   */
   template <class TYPE>
   LoKi::FunctorFromFunctor<const Hlt::Stage*,TYPE>
   cache_  

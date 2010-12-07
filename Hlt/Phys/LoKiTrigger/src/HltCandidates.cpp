@@ -133,8 +133,7 @@ LoKi::Candidates::Branch::operator()
     return false ;
   }
   //
-  return
-    s->is<Hlt::Candidate>() || s->is<Hlt::Stage>() ;
+  return s->is<Hlt::Stage>() ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
@@ -340,22 +339,6 @@ LoKi::Candidates::SlotCut::SlotCut
   , m_slot ( slot )
 {}
 // ============================================================================
-/*  constructor
- *  @param fun the predicate
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- */
-// ============================================================================
-LoKi::Candidates::SlotCut::SlotCut
-( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut ,
-  const int slot )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-  , m_cut  ( LoKi::Stages::cut_( cut , s_FAKE ) )
-  , m_slot ( slot )
-{}
-// ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
 LoKi::Candidates::SlotCut::~SlotCut() {}
@@ -443,24 +426,6 @@ LoKi::Candidates::SlotFun::SlotFun
 // ============================================================================
 LoKi::Candidates::SlotFun::SlotFun
 ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun ,
-  const int    slot ,
-  const double bad  )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Function ()
-  , m_fun  ( LoKi::Stages::fun_( fun , bad ) )
-  , m_slot ( slot )
-  , m_bad  ( bad  )
-{}
-// ============================================================================
-/*  constructor
- *  @param fun the function
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- */
-// ============================================================================
-LoKi::Candidates::SlotFun::SlotFun
-( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun ,
   const int    slot ,
   const double bad  )
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Function ()
@@ -605,21 +570,6 @@ LoKi::Candidates::SlotFilter::SlotFilter
   , m_cut(SlotCut(cut, slot))
 {}
 // ============================================================================
-/*  constructor
- *  @param fun the predicate
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- */
-// ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter
-( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut ,
-  const int slot )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-  , m_cut(SlotCut(cut, slot))
-{}
-// ============================================================================
 //  constructor
 // ============================================================================
 LoKi::Candidates::SlotFilter::SlotFilter
@@ -691,16 +641,6 @@ LoKi::Candidates::SlotMap::SlotMap
   const double bad  ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
   , m_fun( fun , slot , bad )
-{}
-// ============================================================================
-//  constructor
-// ============================================================================
-LoKi::Candidates::SlotMap::SlotMap
-( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun ,
-  const int    slot ,
-  const double bad  ) 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
-  , m_fun ( fun , slot , bad )
 {}
 // ============================================================================
 // constructor

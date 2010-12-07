@@ -70,12 +70,20 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor 
+      /** constructor 
+       *  @param output (INPUT) name of output selection (can be anonymous) 
+       *  @param track2 (INPUT) the second source tracks/candidates 
+       *  @param config (INPUT) the actual configuration 
+       */
       Match 
       ( const std::string&           output  ,   //   output selection name/key 
         const Source&                tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
-      /// constructor 
+      /** constructor 
+       *  @param output (INPUT) name of output selection (can be anonymous) 
+       *  @param track2 (INPUT) the second source tracks/candidates 
+       *  @param config (INPUT) the actual configuration 
+       */
       Match 
       ( const std::string&           output  ,   //   output selection name/key 
         const std::string&           tracks2 ,   //   selection name  

@@ -5,7 +5,12 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// HltBsse 
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/System.h"
+// ============================================================================
+// HltBase 
 // ============================================================================
 #include "Event/HltStage.h"
 // ============================================================================
@@ -57,7 +62,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsTrack
      *  trivial predicate to check if the stage is a track
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_TRACK 
      *  @date 2010-08-01
      */
@@ -79,7 +84,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsL0Muon
      *  trivial predicate to check if the stage is a L0-muon stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_L0MUON 
      *  @date 2010-08-01
      */
@@ -100,7 +105,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsL0DiMuon
      *  trivial predicate to check if the stage is a L0-dimuon candidate 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_L0DIMUON 
      *  @date 2010-08-01
      */
@@ -121,7 +126,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsL0Calo
      *  trivial predicate to check if the stage is a L0-calo candidate 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_L0CALO
      *  @date 2010-08-01
      */
@@ -142,7 +147,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsVertex
      *  trivial predicate to check if the stage is a RecVertex
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_VERTEX
      *  @date 2010-08-01
      */
@@ -163,7 +168,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsMultiTrack
      *  trivial predicate to check if the stage is a Multitrack
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_MULTITRACK
      *  @date 2010-08-01
      */
@@ -184,7 +189,7 @@ namespace LoKi
     // ========================================================================
     /** @class IsStage
      *  trivial predicate to check if the stage is a Stage
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_STAGE
      *  @date 2010-08-01
      */
@@ -203,30 +208,9 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class IsCandidate
-     *  trivial predicate to check if the stage is a Candidate
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_CANDIDATE
-     *  @date 2010-08-01
-     */
-    class IsCandidate : public IsStage
-    { 
-    public:
-      // ======================================================================
-      /// MANDATORY: virtual destructor 
-      virtual ~IsCandidate () ;
-      /// MANDATORY: clone method ("virtual constructor") 
-      virtual  IsCandidate* clone() const ;
-      /// MANDATORY: the only one essential method 
-      virtual  result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the ince printout 
-      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    };
-    // ========================================================================
     /** @class Type
      *  trivial function to get stage type 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_TYPE 
      *  @date 2010-08-01
      */
@@ -248,7 +232,7 @@ namespace LoKi
     // ========================================================================
     /** @class TrFun
      *  trivial adaptor for track-stage  
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_TrFUN
      *  @date 2010-08-01
      */
@@ -285,7 +269,7 @@ namespace LoKi
     // ========================================================================
     /** @class TrCut
      *  trivial adaptor for track-stage  
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_TrCUT
      *  @date 2010-08-01
      */
@@ -322,7 +306,7 @@ namespace LoKi
     // ========================================================================
     /** @class Locked
      *  trivial predicate to check Hlt::Stage::locked 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @see LoKi::Cuts::TS_LOCKED
      *  @date 2010-08-01
      */
@@ -345,7 +329,7 @@ namespace LoKi
     /** @class History 
      *  simple predicate to check the presence of algorithm in history 
      *  @see LoKi::Cuts::TS_HISTORY 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
     class History 
@@ -379,7 +363,7 @@ namespace LoKi
     /** @class HistorySub 
      *  simple predicate to check the presence of algorithm in history 
      *  @see LoKi::Cuts::TS_HISTORY_SUB 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
     class HistorySub : public History 
@@ -515,7 +499,7 @@ namespace LoKi
     /** @class HistoryRegex 
      *  simple predicate to check the presence of algorithm in history 
      *  @see LoKi::Cuts::TS_HISTORY_RE
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
     class HistoryRegex : public HistorySub
@@ -590,9 +574,13 @@ namespace LoKi
           Error ( "Invalid Stage, return false" ) ;
           return false ;                                         // RETURN 
         }
+        //
         // get the object from the stage 
+        //
         const TYPE* obj = stage->get<TYPE>() ;
+        //
         // use the actual predicate for VALID stage :
+        //
         return ( 0 != obj ) && m_cut.fun ( obj ) ;  
       } 
       // ======================================================================
@@ -695,7 +683,7 @@ namespace LoKi
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::Track>
      *  @see LHCb::Track
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsTrack                                      TS_TRACK ;
@@ -705,7 +693,7 @@ namespace LoKi
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::L0MuonCandidate>
      *  @see LHCb::L0MuonCandidate
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsL0Muon                                    TS_L0MUON ;    
@@ -714,7 +702,7 @@ namespace LoKi
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::L0DiMuonCandidate>
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsL0DiMuon                                TS_L0DIMUON ;    
@@ -724,7 +712,7 @@ namespace LoKi
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::L0CaloCandidate>
      *  @see LHCb::L0CaloCandidate
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsL0Calo                                    TS_L0CALO ;
@@ -734,7 +722,7 @@ namespace LoKi
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::RecVertex>
      *  @see LHCb::RecVertex
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsVertex                                    TS_VERTEX ;
@@ -743,7 +731,7 @@ namespace LoKi
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::MultiTrack>
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsMultiTrack                            TS_MULTITRACK ;
@@ -752,25 +740,16 @@ namespace LoKi
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::Stage>
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::IsStage                                      TS_STAGE ;
-    // ========================================================================
-    /** @var TS_CANDIDATE
-     *  trivial predicate to check the type of Hlt::Stage 
-     *  @see Hlt::Stage 
-     *  @see Hlt::Stage::is<Hlt::Candidate>
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-08-02
-     */
-    const LoKi::Stages::IsCandidate                              TS_CANDIDATE ;
     // ========================================================================
     /** @var TS_TYPE
      *  trivial functor to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::stageType
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::Type                                          TS_TYPE ;
@@ -790,7 +769,7 @@ namespace LoKi
      *
      *  @see Hlt::Stage 
      *  @see LHCb::Track
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::TrFun                                      TS_TrFUN ;
@@ -809,7 +788,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::TrCut                                      TS_TrCUT ;
@@ -818,7 +797,7 @@ namespace LoKi
      *  trivial predicate to check if Hlt::Stage is locked 
      *  @see Hlt::Stage
      *  @see Hlt::Stage::locked 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     const LoKi::Stages::Locked                                      TS_LOCKED ;
@@ -837,7 +816,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::History                                  TS_HISTORY ;
@@ -856,7 +835,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::HistorySub                           TS_HISTORY_SUB ;
@@ -876,7 +855,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
     typedef LoKi::Stages::HistoryRegex                          TS_HISTORY_RE ;
@@ -896,7 +875,7 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-12-06
      */
     typedef LoKi::Stages::HasCache                                TS_HASCACHE ;
@@ -915,7 +894,7 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
     typedef LoKi::Stages::HasCache                                TS_HASCACHE ;
@@ -934,7 +913,7 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
     typedef LoKi::Stages::Cache1                              TS_CACHE_DOUBLE ;
@@ -953,7 +932,7 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see Hlt::Stage 
-     *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
     typedef LoKi::Stages::Cache2                                TS_CACHE_BOOL ;
@@ -962,7 +941,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_HLTSTAGES_H
 // ============================================================================

@@ -256,15 +256,6 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
-       *  @see Hlt::Candidate::get
-       */
-      SlotFun
-      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun ,
-        const int    slot     ,
-        const double bad  = 0 ) ;
-      /** constructor
-       *  @param fun the function
-       *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
        *     - positive value corresponds to step-back in history
@@ -367,16 +358,6 @@ namespace LoKi
       SlotCut
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut ,
         const int slot  = 0 ) ;
-      /** constructor
-       *  @param fun the predicate
-       *  @param slot the slot:
-       *     - 0 corresponds to current stage ,
-       *     - negative value corresponds to initiator stage
-       *     - posiitve value corresponds to step-back in history
-       */
-      SlotCut
-      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut ,
-        const int slot  ) ;
       // =====================================================================
       /// MANDATORY: virtual destructor
       virtual ~SlotCut () ;
@@ -453,14 +434,6 @@ namespace LoKi
     	SlotFilter
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut,
         const int slot =  0 );
-      /** constructor
-       *  @param fun the predicate
-       *  @param slot the slot
-       *  @see Hlt::Candidate::get
-       */
-    	SlotFilter
-      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut,
-        const int slot = 0 );
       /// constructor
       SlotFilter ( const SlotCut& cut ) ;
       /// MANDATORY: virtual destructor
@@ -520,15 +493,6 @@ namespace LoKi
     	SlotMap
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
     		const int    slot = 0 ,
-        const double bad  = 0 ) ;
-      /** constructor
-       *  @param fun the function
-       *  @param slot the slot
-       *  @see Hlt::Candidate::get
-       */
-    	SlotMap
-      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun,
-    		const int    slot = 0 , 
         const double bad  = 0 ) ;
       /// constructor
       SlotMap ( const SlotFun& fun ) ;

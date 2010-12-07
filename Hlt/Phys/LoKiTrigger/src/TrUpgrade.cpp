@@ -33,6 +33,11 @@
  *  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *   ``No Vanya's lines are allowed in LHCb/Gaudi software.'' 
@@ -101,7 +106,7 @@ LoKi::Hlt1::Upgrade::operator()
   StatusCode sc = upgradeAll ( a , output ) ;
   if ( sc.isFailure() ) { Error(" error from upgrade" , sc ) ; }
   // register the selection 
-  return m_sink ( output ) ;
+  return !m_sink ? output : m_sink ( output ) ;
 }
 
 // ============================================================================
@@ -157,7 +162,7 @@ LoKi::Hlt1::UpgradeTracks::operator()
   StatusCode sc = upgradeTracks ( a , output ) ;
   if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
   // register the selection 
-  return m_sink ( output ) ;
+  return !m_sink ? output : m_sink ( output ) ;
 }
 // ============================================================================
 
@@ -222,7 +227,7 @@ LoKi::Hlt1::UpgradeMultiTracks::operator()
     upgradeMultiTracks ( a , m_index , output ) ;
   if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
   // register the selection 
-  return m_sink ( output ) ;
+  return !m_sink ? output : m_sink ( output ) ;
 }
 // ============================================================================
 // The END 

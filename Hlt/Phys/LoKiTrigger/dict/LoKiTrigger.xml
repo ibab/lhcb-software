@@ -69,8 +69,8 @@
   <!-- L0TMP -->
   <class pattern = "LoKi::Functor<*LHCb::L0MuonCandidate*>" />
   <class pattern = "LoKi::Functor<*LHCb::L0CaloCandidate*>" />
-  <class name = "LoKi::L0::L0CaloCut" />
-  <class name = "LoKi::L0::L0MuonCut" />
+  <class name    = "LoKi::L0::L0CaloCut" />
+  <class name    = "LoKi::L0::L0MuonCut" />
 
 
   <class name    = "LoKi::Hlt1::HelperTool"          />
@@ -102,6 +102,11 @@
   </class> 
   <class name = "LoKi::Tracks::Hlt1TrackMinIpChi2" />
 
+  <!-- vertex functions -->
+  <class name = "LoKi::RecVertices::MaxDOCA"     />
+  <class name = "LoKi::RecVertices::MaxDOCAChi2" />
+  <class name = "LoKi::RecVertices::DOCACut"     />
+  
   
   <!-- 
        <class name    = "LoKi::Hlt1::TrackBiFunction"     />

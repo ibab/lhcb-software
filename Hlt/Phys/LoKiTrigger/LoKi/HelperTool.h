@@ -152,7 +152,7 @@ namespace LoKi
         if ( 0 == m_hlt_stages       ) { _createStages      () ; }
         return _create<Hlt::Stage>      ( m_hlt_stages     ) ;
       }
-      /// get new multitarck
+      /// get new multitrack
       inline Hlt::MultiTrack* newMultiTrack    () const 
       {
         if ( 0 == m_hlt_multitracks ) { _createMultiTracks () ; }
@@ -177,7 +177,7 @@ namespace LoKi
         LHCb::RecVertex* _v = const_cast<LHCb::RecVertex*> ( v ) ;
         _add_ ( _v , m_hlt_recvertices ) ;
         //
-        return true ;  
+        return 0 != v->parent() ;  
       } 
       // ======================================================================
     private:
