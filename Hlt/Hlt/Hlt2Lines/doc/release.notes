@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-12-07 - Ulrich Kerzel
+ - update cuts in Express Lines for Lambda and KShort
+
 ! 2010-11-29 - V. Gligorov
  - Add Hlt2SecondLoopExampleLine, an example of how to use the new 2-loop
    forward tracking in HLT2.

@@ -15,6 +15,7 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
+from GaudiKernel.SystemOfUnits        import mm, cm, MeV, GeV
 
 def __monitor__ ( variable ,  label , center , window, id =None, nbins = 100 ) :
       return "process ( monitor( %s,  Gaudi.Histo1DDef( '%s', %s , %s, %s), '%s' ) ) >> ~EMPTY " % (variable, label, center-window,center+window, nbins, id if id else variable )
@@ -52,20 +53,28 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                , 'ExJPsiTPMinEcalE'        :  -10   # MeV
                , 'ExJPsiTPMaxHcalE'        : 4000   # MeV
                , 'ExJPsiTPMinHcalE'        : 1000   # MeV
-               , 'ExLambdaMassWin'         :   20   # MeV
+               , 'ExLambdaVChi2'           :    9
+               , 'ExLambdaVZ'              :  220*cm 
+               , 'ExLambdaLTimeChi2'       :   36
+               , 'ExLambdaCTau'            :    5*mm
+               , 'ExLambdaWSMassKS'        :   20   # MeV 
+               , 'ExLambdaMassWin'         :   25   # MeV
                , 'ExLambdaMassWinWide'     :   30   # MeV
-               , 'ExLambdaMinDz'           :   50   #  mm
-               , 'ExLambdaMaxDz'           :  600   #  mm
-               , 'ExLambdaDira'            : 0.9999995
-               , 'ExLambdaPiP'             : 3000   # MeV
-               , 'ExLambdaPiPt'            :  100   # MeV
-               , 'ExLambdaPiIPChi2'        :    9
-               , 'ExLambdaPP'              : 3000   # MeV
-               , 'ExLambdaPPt'             :  100   # MeV
-               , 'ExLambdaPIPChi2'         :    9
-               , 'ExKSNu1'                 :    2   
-               , 'ExKSMassWinWide'         :  150   # MeV
-               , 'ExKSMassWin'             :  100   # MeV
+               , 'ExLambdaPiP'             : 2000   # MeV
+               , 'ExLambdaPiIPChi2'        :   25
+               , 'ExLambdaPiTrackChi2'     :    5  
+               , 'ExLambdaPP'              : 2000   # MeV
+               , 'ExLambdaPIPChi2'         :   25
+               , 'ExLambdaPTrackChi2'      :    5  
+               , 'ExKSMassWinWide'         :   70   # MeV
+               , 'ExKSMassWin'             :   50   # MeV
+               , 'ExKSMaxZ'                :  220*cm   
+               , 'ExKSLTimeChi2'           :   36
+               , 'ExKSCTau'                :    1*mm
+               , 'ExKSWrongMass'           :    9   # MeV
+               , 'ExKSTrackP'              : 2000   # MeV
+               , 'ExKSTrackChi2'           :    5
+               , 'ExKSTrackMinIPChi2'      :   25
                , 'ExPhiMassWinWide'        :   70 # MeV
                , 'ExPhiMassWin'            :   50 # MeV
                , 'ExPhiDOCAMax'		   :  10. # mm
@@ -219,24 +228,30 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       LambdaCombine = Hlt2Member( CombineParticles
                                   , "LambdaCombine"
                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
+                                  , Preambulo        = [ "from GaudiKernel.PhysicalConstants import c_light "]
                                   , InputLocations = [BiKalmanFittedPions,BiKalmanFittedProtons ]
                                   , CombinationCut = "(ADAMASS('Lambda0')<%(ExLambdaMassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('Lambda0')<%(ExLambdaMassWin)s*MeV)"\
-                                  " & (%(ExLambdaMinDz)s*mm<BPVVDZ)"\
-                                  " & (%(ExLambdaMaxDz)s*mm>BPVVDZ)"\
-                                  " & (BPVDIRA>%(ExLambdaDira)s) "%  self.getProps()
-                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)s*MeV)"\
-                                                      " & (PT>%(ExLambdaPPt)s*MeV)"\
+                                  " & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(ExLambdaVChi2)s   )" \
+                                  " & ( VFASPF ( VZ  ) < %(ExLambdaVZ)s)" \
+                                  " & in_range ( 0 , BPVLTFITCHI2()   ,  %(ExLambdaLTimeChi2)s )" \
+                                  " & ( BPVLTIME()*c_light > %(ExLambdaCTau)s)" \
+                                  " & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') )  > %(ExLambdaWSMassKS)s)"  %  self.getProps()
+                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)s)"\
+                                                      " & (ISLONG) " \
+                                                      " & (TRCHI2DOF < %(ExLambdaPTrackChi2)s) " \
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPIPChi2)s) "%  self.getProps(),
-                                                      "pi-"  :  "(P>%(ExLambdaPiP)s*MeV)"\
-                                                      " & (PT>%(ExLambdaPiPt)s*MeV)"\
+                                                      "pi-"  :  "(P>%(ExLambdaPiP)s)"\
+                                                      " & (ISLONG) " \
+                                                      " & (TRCHI2DOF < %(ExLambdaPiTrackChi2)s) " \
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)s) "%  self.getProps(),
                                                       }
                                   , MotherMonitor  =  Hlt2Monitor("M", "M(p#pi)",1116,self.getProp("ExLambdaMassWin"))
                                   )
       
       line = Hlt2Line('ExpressLambda'
-                      , prescale = self.prescale 
+                      , prescale = self.prescale
+                      , HLT = "HLT_PASS_RE('Hlt1.*Decision')"
                       , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, LambdaCombine ]
                       , postscale = self.postscale
                       )
@@ -244,25 +259,34 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       '''
       Ks no PID
       '''
-      from Configurables import CombineParticles
-      from HltTracking.HltPVs import PV3D
+      from Configurables                 import CombineParticles
+      from HltTracking.HltPVs            import PV3D
+      from GaudiKernel.PhysicalConstants import c_light
 
       KsCombine = Hlt2Member( CombineParticles
                               , "KsCombine"
-                              , DecayDescriptor = "KS0 -> pi+ pi-"
-                              , InputLocations = [BiKalmanFittedPions]
-                              , CombinationCut = "(ADAMASS('KS0') < %(ExKSMassWinWide)s*MeV)"%  self.getProps()
-                              , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s*MeV)"\
-                              " & (log((CHILD(MIPDV(PRIMARY), 1)) * (CHILD(MIPDV(PRIMARY), 2) )"\
-                              " / (MIPDV(PRIMARY) ) )  > %(ExKSNu1)s*mm )"%  self.getProps()
+                              , Preambulo        = [ "from GaudiKernel.PhysicalConstants import c_light "]
+                              , DecayDescriptor  = "KS0 -> pi+ pi-"
+                              , InputLocations   = [BiKalmanFittedPions]
+                              , DaughtersCuts    = {"pi+" : "(P > %(ExKSTrackP)s) & (ISLONG) & (TRCHI2DOF < %(ExKSTrackChi2)s) " \
+                              " & (MIPCHI2DV(PRIMARY) > %(ExKSTrackMinIPChi2)s) "%  self.getProps() }
+                              , CombinationCut   = "(ADAMASS('KS0') < %(ExKSMassWinWide)s )"%  self.getProps()
+                              , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s )" \
+                              "& (VFASPF (VZ) < %(ExKSMaxZ)s) " \
+                              "& in_range(0, BPVLTFITCHI2(), %(ExKSLTimeChi2)s )" \
+                              "& ( BPVLTIME()*c_light > %(ExKSCTau)s)"\
+                              "& (ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) >%(ExKSWrongMass)s)" \
+                              "& (ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > %(ExKSWrongMass)s)" %  self.getProps()
                               , MotherMonitor  =  Hlt2Monitor("M", "M(#pi#pi)",498,self.getProp("ExKSMassWin"))
                               )
       
       line = Hlt2Line('ExpressKS'
-                      , prescale = self.prescale 
+                      , prescale = self.prescale
+                      , HLT = "HLT_PASS_RE('Hlt1.*Decision')"
                       , algos = [ PV3D(), BiKalmanFittedPions, KsCombine]
                       , postscale = self.postscale
                       )
+
       #--------------------------------------------
       '''
       Phi no PID
