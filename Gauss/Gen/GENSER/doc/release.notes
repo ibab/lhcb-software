@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-12-07 - Gloria CORTI
+ - Use latest version of LHAPDF 5.8.4≈ß
+
 ! 2010-12-01 - Gloria CORTI
  - Use latest version of Pythia6 424.2 to check it for possibly adopting it
    for MC10
