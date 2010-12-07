@@ -3,11 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Changes to references to reflect changes in Boole v21r9 output:
-   . #95668 Reduce CaloDet verbosity
+</PRE><H1><A NAME=v21r9>2010-12-08 Boole v21r9</A></H1><PRE>
+This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r7, Lbcom v9r8
+ and SQLDDDB v5r44, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r9, AppConfig v3r*
 
- - New tuning in SIMCOND
+ - Production release for MC 2010 simulation
+
+ - Changes to references to reflect changes in Boole v21r9 output:
+   . #95668 Reduce CaloDet verbosity (CaloDet v10r8)
+   . #114399 New Velo clustering tuning (VeloAlgorithms v5r3)
+   . #114401 New Velo silicon simulation tuning (VeloSimulation v3r8)
+
+ - New tuning in DDDB
+   . rich-20101206: update Aerogel Rayleigh parameters and density
+
+ - New tuning in SIMCOND 
+   . calo-20101202: calorimeter updates for 2010 simulation
    . calo-20101119: updated MC energy scale for Ecal and Hcal
+   . rich-20101206: disable HPDs corresponding to last few weeks of 2010
+   . rich-20101205: update default values of hit smearing
+   . st-20101206: new ST dead strip maps for 2010 simulation   
 
 </PRE><H1><A NAME=v21r8p1>2010-11-08 Boole v21r8p1</A></H1><PRE>
 This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1
