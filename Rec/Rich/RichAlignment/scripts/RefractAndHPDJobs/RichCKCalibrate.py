@@ -193,9 +193,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     dbFiles  = [ ]
                     #dbFiles += ["inactiveHPD20101029"]
                     #dbFiles += ["HPDAlignByFill-FullFitAverage"]
-                    dbFiles += ["TrackingDB-v4.2OnlyITTTOT"]
-                    dbFiles += ["AerogelTileCalib"]
-                    dbFiles += ["FinalMagSwitchAlign"]
+                    #dbFiles += ["TrackingDB-v4.2OnlyITTTOT"]
+                    #dbFiles += ["AerogelTileCalib"]
+                    #dbFiles += ["FinalMagSwitchAlign"]
                     #dbFiles += ["NewMirrorHPDAlignFieldPolarity"]
 
                     # Only for Calibration jobs only

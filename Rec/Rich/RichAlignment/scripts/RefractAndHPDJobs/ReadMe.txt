@@ -3,24 +3,33 @@ This directory contains the following scripts
 
 1. GetLFNsByRun.py
 
-This script is used to get for a given period of time (currently hard-coded at
-the top of the file itself...) a list of offline runs, and for each run an LFN
-list for the raw data in the express stream. It runs under the LHCbDirac
-environment, so 
+This script is used to get for a given period of time a list of offline runs, 
+and for each run an LFN list for the raw data in the express stream. 
+It runs under the LHCbDirac environment, so 
 
  > SetupProject LHCbDirac
  > lhcb-proxy-init
+
+It requires 4 arguments, e.g.
+
  > ./GetLFNsByRun.py
+Usage: GetLFNsByRun.py <year> <month> <firstday> <lastday>
+
+So for example
+
+ > ./GetLFNsByRun.py 2010 5 1 31
+
+This script will produce output bzipped and pickled python files in the RunData 
+sub-directory. Note that files for each full month are stored in SVN, so you
+will not need to run the script in these cases. These files are needed for the
+next steps. 
 
 ( Note, if you have it, use the lhcb_calibration role
 
 > lhcb-proxy-init -g lhcb_calibration
 
 as this give you priority over 'average' grid users. If you are working on a
-calibration task, and don't have this role, drop me an email) 
-
-The ./GetLFNsByRun.py script will spit out a pickled python file (.pck)
-containing the run and LFN information, which is needed for the next step. 
+calibration task, and don't have this role, drop me an email ) 
 
 For testing, I suggest editing the dates to a short period with only a few runs....
 
@@ -38,18 +47,19 @@ the same dir as this file and import it
 The file has a series of methods to submit the calibration jobs, and analyse the
 results. For submission just run at the ganga prompt 
 
- > RichCKCalibrate.submitCalibrationJobs(['XYZ.pck'])
+ > RichCKCalibrate.submitCalibrationJobs(name="MyName",pickledRunsList=['XYZ.pck.bz2'])
 
-where XYZ.pck is a file created in step 1. If you have more than one pickled file you
-wish to submit, just extend the list, e.g.
+where 'name; is just a name you can give the set of jobs, and pickledRunsList is
+a list of pickled python files, containing the run data, produced in step 1.
 
- > RichCKCalibrate.submitCalibrationJobs(['XYZ1.pck','XYZ2.pck'])
+If you don't give the pickledRunsList argument, the method will just use all
+files it finds in the RunData directory.
 
 This will submit a load of jobs, which with the grid gods willing, will eventually run...
 
 Once the jobs are finished (or even if a few aren't) you can analyse the results with
 
- > calibJobs = RichCKCalibrate.getCalibrationJobList()
+ > calibJobs = RichCKCalibrate.getCalibrationJobList(name="MyName")
 
 which returns a list of (completed) calibration jobs and
 
@@ -57,37 +67,58 @@ which returns a list of (completed) calibration jobs and
  > RichCKCalibrate.refractiveIndexCalib(calibJobs,'Rich2Gas')
 
 which runs the calibration on the jobs, for the given radiator. This process
-will spit out another XYZ.pck file, which contains the calibration data for the
-next step, and also a PDF showing the fit results etc. 
+will spit out another XYZ.pck.bz2 file, which contains the calibration data for the
+next step. It also will produce a PDF showing all the fit results, and a plain
+text file which can be imported into any spreadsheet application
 
-3. ./CreateCondDBLayer.py
+3. ./CreateRefScaleFactCondDBLayer.py <name>
 
-This script creates a new DB slice from the XYZ.pck data spat out in the last
+This script creates a new DB slice from the XYZ.pck.bz2 data spat out in the last
 step. It needs to run under a particular environment 
 
  > SetupProject LHCb --runtime LHCbDirac --use LHCbDiracSys
  > lhcb-proxy-init -g lhcb_calibration
  > ./CreateCondDBLayer.py
 
-(you may need to give an explicit LHCb version. I know v31r1 works as it was the
+(you may need to give an explicit LHCb version. I know v31r5 works as it was the
 last one I used, probably later ones are OK as well). 
+
+The above script takes one argument, which is the name of the calibration files
+you want to use. This is a little different frm the name above, in that it alsom
+contains the Brunel version. Just run 'ls *.pck.bz2' to see what pickled outoput
+files have been created, e.g.
+
+pciy ~/cmtuser/Rec_HEAD/Rich/RichAlignment/scripts/RefractAndHPDJobs > ls *.pck.bz2
+Rich1Gas_RefInCalib-Final2010RePro-V2_BR-v37r8.pck.bz2  RunInfoCache.pck.bz2
+Rich2Gas_RefInCalib-Final2010RePro-V2_BR-v37r8.pck.bz2
+
+So for me, I would run
+
+3. ./CreateRefScaleFactCondDBLayer.py "RefInCalib-Final2010RePro-V2_BR-v37r8"
 
 This step finally spits out a new NewRichCKRefIndexCalib.db DB file, which can
 be used in any Gaudi job as a DB slice. 
 
 4. Once you have a new DB, you can if you want go back to ganga to resubmit some
-   verification jobs, to prove it has done the job. From ganga 
+   verification jobs, to prove it has done the job.
 
- > RichCKCalibrate.submitVerificationJobs('XYZ.pck')
+ - First, copy the new NewRichCKRefIndexCalib.db slice into the 'databases'
+   sub-dir
 
-where the pck file is the same one used for the calibration jobs. Once these
-jobs are finished you can run 
+Then
 
- > veriJobs = RichCKCalibrate.getVerificationJobList()
+ > RichCKCalibrate.submitVerificationJobs(name="MyName",pickledRunsList=['XYZ.pck.bz2'])
 
-to get the job list, then rerun the calibration these
+where the pck file is the same one used for the calibration jobs. 
+
+Once these jobs are finished you can run 
+
+ > veriJobs = RichCKCalibrate.getVerificationJobList(name="MyName")
+
+to get the job list, then rerun the calibration on these jobs
 
  > RichCKCalibrate.refractiveIndexCalib(veriJobs,'Rich1Gas')
  > RichCKCalibrate.refractiveIndexCalib(veriJobs,'Rich2Gas')
 
-If it has work, the n-1 corrections should now be 1 ...
+Which will spit out PDFs and text files as before. If it has work, the n-1
+corrections should now be 1 ... 
