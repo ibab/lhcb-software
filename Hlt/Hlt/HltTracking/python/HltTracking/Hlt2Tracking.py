@@ -998,14 +998,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine    import bindMembers 
         
 
-            
+        FastVelo = True
         veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
-
-        recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation ) #"Hlt/Track/Velo" )
-        recoVeloExtra.HLT2Complement = True
-       
-        #recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
-        #                                   , OutputTracksLocation = veloTracksOutputLocation )
 
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
@@ -1014,7 +1008,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        bm_members      = MinimalVelo.members() + [recoVeloExtra]#recoVeloGeneral]
+        if FastVelo:
+            recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation )
+            
+            recoVeloExtra.HLT2Complement = True
+            bm_members      = MinimalVelo.members() + [recoVeloExtra]
+        else:
+            recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
+                                                                  , OutputTracksLocation = veloTracksOutputLocation )
+            
+            bm_members      = MinimalVelo.members() + [recoVeloGeneral]
         bm_output       = veloTracksOutputLocation
     
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
