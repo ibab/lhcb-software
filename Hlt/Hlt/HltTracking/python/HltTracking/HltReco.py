@@ -90,9 +90,6 @@ from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
 
 if useFastVelo :
-    #recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = "Hlt/Track/Velo" )
-    #recoVelo.MinRSensor = 4
-    #recoVelo.BestEfficiency = False
     recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = "Hlt/Track/Velo" )
     recoVelo.HLT1Only = True
    
