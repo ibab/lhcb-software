@@ -2,9 +2,15 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL
+// ============================================================================
+#include <cmath>
+#include <functional>
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/Track.h"
 // ============================================================================
 // LoKiCore
 // ============================================================================
@@ -27,6 +33,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-06 
  */
@@ -46,7 +56,7 @@ double LoKi::PhysKinematics::mass
   if ( 0 == p ) 
   {
     LoKi::Report::Error
-      ("mass(LHCb::Particle*),invaild argument 1,return 'InvalidMass'") ;
+      ("mass(LHCb::Particle*),invalid argument 1,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
@@ -71,14 +81,14 @@ double LoKi::PhysKinematics::mass
   if ( 0 == p1 ) 
   {
     LoKi::Report::Error
-      ("mass(2*LHCb::Particle*),invaild argument 1,return 'InvalidMass'") ;
+      ("mass(2xLHCb::Particle*),invalid argument 1,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
   if ( 0 == p2 ) 
   {
     LoKi::Report::Error
-      ("mass(2*LHCb::Particle*),invaild argument 2,return 'InvalidMass'") ;
+      ("mass(2xLHCb::Particle*),invalid argument 2,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
@@ -106,21 +116,21 @@ double LoKi::PhysKinematics::mass
   if ( 0 == p1 ) 
   {
     LoKi::Report::Error
-      ("mass(3*LHCb::Particle*),invaild argument 1,return 'InvalidMass'") ;
+      ("mass(3xLHCb::Particle*),invalid argument 1,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //  
   if ( 0 == p2 ) 
   {
     LoKi::Report::Error
-      ("mass(3*LHCb::Particle*),invaild argument 2,return 'InvalidMass'") ;
+      ("mass(3xLHCb::Particle*),invalid argument 2,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
   if ( 0 == p3 ) 
   {
     LoKi::Report::Error
-      ("mass(3*LHCb::Particle*),invaild argument 3,return 'InvalidMass'") ;
+      ("mass(3xLHCb::Particle*),invalid argument 3,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
@@ -151,28 +161,28 @@ double LoKi::PhysKinematics::mass
   if ( 0 == p1 ) 
   {
     LoKi::Report::Error
-      ("mass(4*LHCb::Particle*),invaild argument 1,return 'InvalidMass'") ;
+      ("mass(4xLHCb::Particle*),invalid argument 1,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
   if ( 0 == p2 ) 
   {
     LoKi::Report::Error
-      ("mass(4*LHCb::Particle*),invaild argument 2,return 'InvalidMass'") ;
+      ("mass(4xLHCb::Particle*),invalid argument 2,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
   if ( 0 == p3 ) 
   {
     LoKi::Report::Error
-      ("mass(4*LHCb::Particle*),invaild argument 3,return 'InvalidMass'") ;
+      ("mass(4xLHCb::Particle*),invalid argument 3,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }
   //
   if ( 0 == p4 ) 
   {
     LoKi::Report::Error
-      ("mass(4*LHCb::Particle*),invaild argument 4,return 'InvalidMass'") ;
+      ("mass(4xLHCb::Particle*),invalid argument 4,return 'InvalidMass'") ;
     return LoKi::Constants::InvalidMass ;
   }  
   //
@@ -181,6 +191,210 @@ double LoKi::PhysKinematics::mass
       p2->momentum() ,
       p3->momentum() , 
       p4->momentum() ) ;
+}
+// ============================================================================
+namespace 
+{  
+  // ==========================================================================
+  const Gaudi::LorentzVector s_VECTOR ;
+  // ==========================================================================
+  struct _P4 : public std::binary_function<const LHCb::Track*,double, 
+                                           Gaudi::LorentzVector>
+  {
+    // ========================================================================
+    inline Gaudi::LorentzVector operator() 
+      ( const LHCb::Track* t , 
+        const double       m ) const 
+    {
+      //
+      if ( 0 == t ) { return s_VECTOR ; }                            // RETURN 
+      //  
+      const Gaudi::XYZVector p3 = t->momentum () ;
+      const double           E  = ::sqrt ( p3.Mag2() + m * m  ) ;
+      return Gaudi::LorentzVector ( p3.X() , p3.Y() , p3.Z() , E ) ;
+    }
+    // ========================================================================
+  } ;  
+  // ==========================================================================
+  template <class TRACK>
+  inline double _mass
+  ( TRACK                      begin , 
+    TRACK                      end    ,  
+    const std::vector<double>& masses ) 
+  {
+    //
+    const std::size_t size = std::distance ( begin , end ) ;
+    //
+    if ( 0 == size ) { return 0 ; }
+    // adjust list of masses (if needed) 
+    if      ( size > masses.size() ) 
+    {
+      LoKi::Report::Warning ("mass(Tracks): masses to be adjusted") ;
+      std::vector<double> newmasses  ( masses ) ;
+      while ( size > newmasses.size() ) { newmasses.push_back ( 0 ) ; }  
+      return _mass ( begin , end , newmasses ) ;
+    }
+    else if ( size < masses.size() ) 
+    { LoKi::Report::Warning ("mass(Tracks),too many masses, ignore") ; }
+    //
+    _P4 p4 ;
+    //
+    Gaudi::LorentzVector p ;
+    for ( TRACK curr = begin ; curr != end ; ++curr ) 
+    { p += p4 ( *curr, masses [ curr - begin ] ) ; }
+    //
+    return p.M() ;
+  }
+  // ==========================================================================
+} //                                                 end of anonymous namespace 
+// ============================================================================
+/*  trivial function to get the lorentz-vector for the track using
+ *  mass-hypthesis 
+ *  @param track (INPUT) the track 
+ *  @param mass  (INPUT) the mass hypothesis 
+ *  @return 4-vector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-12-07
+ */ 
+// ============================================================================
+Gaudi::LorentzVector
+LoKi::PhysKinematics::momentum 
+( const LHCb::Track* track , 
+  const double       mass  ) 
+{
+  //
+  if ( 0 == track ) 
+  {
+    LoKi::Report::Error
+      ("momentum(LHCb::Track*),invalid argument 1,return null 4-momentum") ;
+    return s_VECTOR ;
+  }
+  //
+  _P4 p4 ;
+  //
+  return p4 ( track , mass ) ;
+  //
+}
+// ===========================================================================
+/*  trivial function to get the mass for the tracks using
+ *  the mass-hypotheses 
+ *  @param track1 (INPUT) the first  track 
+ *  @param mass1  (INPUT) the first  mass hypothesis 
+ *  @param track2 (INPUT) the second track 
+ *  @param mass2  (INPUT) the second mass hypothesis 
+ *  @return mass 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-12-07
+ */ 
+// ===========================================================================
+double LoKi::PhysKinematics::mass
+( const LHCb::Track* track1 , 
+  const double       mass1  ,
+  const LHCb::Track* track2 , 
+  const double       mass2  ) 
+{
+  if ( 0 == track1 ) 
+  {
+    LoKi::Report::Error
+      ("mass(2xLHCb::Track*),invalid argument 1,return 'InvalidMass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  if ( 0 == track2 ) 
+  {
+    LoKi::Report::Error
+      ("mass(2xLHCb::Track*),invalid argument 2,return 'InvalidMass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  //
+  _P4 p4 ;
+  //
+  Gaudi::LorentzVector p  = p4 ( track1 , mass1 ) ;
+  p                      += p4 ( track2 , mass2 ) ;
+  //
+  return p.M() ;
+}
+// ============================================================================
+/*  trivial function to get the mass for the tracks using
+ *  the mass-hypotheses 
+ *  @param track1 (INPUT) the first  track 
+ *  @param mass1  (INPUT) the first  mass hypothesis 
+ *  @param track2 (INPUT) the second track 
+ *  @param mass2  (INPUT) the second mass hypothesis 
+ *  @param track3 (INPUT) the third  track 
+ *  @param mass3  (INPUT) the third  mass hypothesis 
+ *  @return mass 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-12-07
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::mass
+( const LHCb::Track* track1 , 
+  const double       mass1  ,
+  const LHCb::Track* track2 , 
+  const double       mass2  ,
+  const LHCb::Track* track3 , 
+  const double       mass3  ) 
+{
+  if ( 0 == track1 ) 
+  {
+    LoKi::Report::Error
+      ("mass(3xLHCb::Track*),invalid argument 1,return 'InvalidMass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  if ( 0 == track2 ) 
+  {
+    LoKi::Report::Error
+      ("mass(3xLHCb::Track*),invalid argument 2,return 'InvalidMass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  if ( 0 == track3 ) 
+  {
+    LoKi::Report::Error
+      ("mass(3xLHCb::Track*),invalid argument 3,return 'InvalidMass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  //
+  _P4 p4 ;
+  //
+  Gaudi::LorentzVector p  = p4 ( track1 , mass1 ) ;
+  p                      += p4 ( track2 , mass2 ) ;
+  p                      += p4 ( track3 , mass3 ) ;
+  //
+  return p.M() ;
+}
+// ============================================================================
+/*  trivial function to get the mass for the tracks using
+ *  the mass-hypotheses 
+ *  @param tracks (INPUT) the vetcor of tracks
+ *  @param masses (INPUT) the vector of masses 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-12-07
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::mass
+( const LHCb::Track::ConstVector& tracks , 
+  const std::vector<double>&      masses ) 
+{
+  if ( tracks.empty() ) { return 0 ; }
+  // adjust list of masses (if needed) 
+  return _mass ( tracks.begin () , tracks.end() , masses ) ;
+}
+// ============================================================================
+/*  trivial function to get the mass for the tracks using
+ *  the mass-hypotheses 
+ *  @param tracks (INPUT) the vetcor of tracks
+ *  @param masses (INPUT) the vector of masses 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-12-07
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::mass
+( const SmartRefVector<LHCb::Track>& tracks , 
+  const std::vector<double>&         masses ) 
+{
+  if ( tracks.empty() ) { return 0 ; }
+  // adjust list of masses (if needed) 
+  return _mass ( tracks.begin () , tracks.end() , masses ) ;
 }
 // ============================================================================
 // The END 

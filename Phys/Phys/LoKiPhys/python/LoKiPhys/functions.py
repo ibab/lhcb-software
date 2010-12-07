@@ -628,6 +628,9 @@ RV_TrHAS   = LoKi.Vertices.RecVertex2TrackHas
 RV_TrCUT   = LoKi.Vertices.RecVertex2TrackCut
 ## @see LoKi::Cuts::RV_TrNUM
 RV_TrNUM   = LoKi.Vertices.RecVertex2TrackNum
+## @see LoKi::Cuts::RV_MASS
+RV_MASS    = LoKi.Vertices.RecVertexMass 
+
 
 # =============================================================================
 # Aliases from Vava GLIGOROV

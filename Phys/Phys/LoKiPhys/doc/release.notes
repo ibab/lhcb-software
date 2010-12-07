@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-07 - Vanya Belyaev
+ - add "mass of recontructed vertex" functor 
+     RV_MASS 
+
 ! 2010-12-06 - Vanya Belyaev
  
  - add functions to deal with rec-vertices

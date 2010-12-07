@@ -2,11 +2,17 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Vertices3.h"
 #include "LoKi/Constants.h"
 #include "LoKi/Algs.h"
+#include "LoKi/PhysKinematics.h"
+#include "LoKi/ParticleProperties.h"
 // ============================================================================
 /** @file
  *
@@ -502,6 +508,144 @@ std::ostream& LoKi::Vertices::RecVertex2TrackNum::fillStream
   return s << ")" ;
 }  
 // ============================================================================
+
+  
+// ============================================================================
+// constructor from vector of masses 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::RecVertexMass 
+( const std::vector<double>&           masses ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  , m_masses ( masses ) 
+{}
+// ============================================================================
+// constructor from vector of IDS 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::RecVertexMass 
+( const std::vector<LHCb::ParticleID>& ids    ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  , m_masses () 
+{
+  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = ids.begin() ; 
+        ids.end() != ipid ; ++ipid ) 
+  { m_masses.push_back ( LoKi::Particles::massFromPID ( *ipid ) ) ; }
+  //
+}
+// ============================================================================
+// constructor from vector of IDS 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::RecVertexMass 
+( const std::vector<std::string>& ids    ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  , m_masses () 
+{
+  //
+  for ( std::vector<std::string>::const_iterator ipid = ids.begin() ; 
+        ids.end() != ipid ; ++ipid ) 
+  { m_masses.push_back ( LoKi::Particles::massFromName ( *ipid ) ) ; }
+  //
+}
+// ============================================================================
+// constructor from IDS 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::RecVertexMass 
+( const std::string& id1 , 
+  const std::string& id2 ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  , m_masses () 
+{
+  //
+  m_masses.push_back ( LoKi::Particles::massFromName ( id1 ) ) ;
+  m_masses.push_back ( LoKi::Particles::massFromName ( id2 ) ) ;  
+  //
+}
+// ============================================================================
+// constructor from IDS 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::RecVertexMass 
+( const std::string& id1 , 
+  const std::string& id2 ,
+  const std::string& id3 ) 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  , m_masses () 
+{
+  //
+  m_masses.push_back ( LoKi::Particles::massFromName ( id1 ) ) ;
+  m_masses.push_back ( LoKi::Particles::massFromName ( id2 ) ) ;  
+  m_masses.push_back ( LoKi::Particles::massFromName ( id3 ) ) ;  
+  //
+}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Vertices::RecVertexMass::~RecVertexMass () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Vertices::RecVertexMass*
+LoKi::Vertices::RecVertexMass::clone() const 
+{ return new LoKi::Vertices::RecVertexMass ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential mehtod 
+// ============================================================================
+LoKi::Vertices::RecVertexMass::result_type 
+LoKi::Vertices::RecVertexMass::operator() 
+  ( LoKi::Vertices::RecVertexMass::argument v ) const 
+{
+  //
+  if ( 0 == v ) 
+  {
+    Error ("LHCb::VertexBase* points to NULL, return 'InvalidMass'");
+    return LoKi::Constants::InvalidMass ;
+  }
+  //
+  const LHCb::VertexBase* vb = v ;
+  const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  //
+  if ( 0 == rv ) 
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return 'InvalidMass'");
+    return LoKi::Constants::InvalidMass ;
+  }
+  //
+  typedef SmartRefVector<LHCb::Track> TRACKS ;
+  const TRACKS& tracks = rv->tracks() ;
+  //
+  if ( tracks.size() != m_masses.size() )
+  { Warning("size(Tracks)!=size(Masses)") ; }
+  //                                           
+  if      ( 2 == tracks.size() && 2 <= m_masses.size() ) 
+  {
+    return LoKi::PhysKinematics::mass 
+      ( tracks [0] , m_masses [0] ,
+        tracks [1] , m_masses [1] ) ;
+    
+  }
+  else if ( 3 == tracks.size() && 3 <= m_masses.size() ) 
+  {
+    return LoKi::PhysKinematics::mass 
+      ( tracks [0] , m_masses [0] ,
+        tracks [1] , m_masses [1] ,
+        tracks [2] , m_masses [2] ) ;
+    
+  }
+  //
+  return LoKi::PhysKinematics::mass ( tracks , m_masses ) ;
+  //
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Vertices::RecVertexMass::fillStream
+( std::ostream& s ) const
+{ 
+  s << "RV_MASS(" ;
+  Gaudi::Utils::toStream ( m_masses , s ) ;
+  return s << ")" ;
+}  
+// ============================================================================
+
+
 
 
 // ============================================================================

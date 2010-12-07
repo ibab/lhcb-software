@@ -310,6 +310,51 @@ namespace LoKi
       // ======================================================================
     }; //                       end of class LoKi::Vertices::RecVertex2TrackMin
     // ========================================================================
+    /** @class RecVertexMass 
+     *  Evaluate the mass of RecVertex using the certain mass-hypotheses 
+     *  @see LHCb::RecVertex
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-07
+     */
+    class GAUDI_API RecVertexMass 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+    {
+    public:
+      // ======================================================================
+      /// constructor from vector of masses 
+      RecVertexMass ( const std::vector<double>&           masses ) ;
+      /// constructor from vector of IDs  
+      RecVertexMass ( const std::vector<LHCb::ParticleID>& ids    ) ;
+      /// constructor from vector of IDs  
+      RecVertexMass ( const std::vector<std::string>&      ids    ) ;
+      /// constructor from IDS 
+      RecVertexMass ( const std::string& id1 , 
+                      const std::string& id2 ) ;
+      /// constructor from IDS 
+      RecVertexMass ( const std::string& id1 , 
+                      const std::string& id2 ,
+                      const std::string& id3 ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~RecVertexMass () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RecVertexMass* clone() const ;
+      /// MANDATORY: the only one essential mehtod 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// the default constructor is disabled 
+      RecVertexMass () ;                 // the default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual vector of masses 
+      std::vector<double> m_masses ;             // the actual vector of masses 
+      // ======================================================================      
+    };
+    // ========================================================================
   } //                                          end of namespace LoKi::Vertices 
   // ==========================================================================
   namespace Cuts 
@@ -443,7 +488,7 @@ namespace LoKi
     typedef LoKi::Vertices::RecVertex2TrackCut                       RV_TrCUT ;
     // ========================================================================
     /** @typedef RV_TrHAS
-     *  simple meta-functor that delagates the evaluation of "track"-predicate
+     *  simple meta-functor that delegates the evaluation of "track"-predicate
      * 
      *  @code 
      *
@@ -462,6 +507,26 @@ namespace LoKi
      *  @date   2010-12-05
      */
     typedef LoKi::Vertices::RecVertex2TrackHas                       RV_TrHAS ;
+    // ========================================================================
+    /** @typedef RV_MASS
+     *  Simple evaluator of "mass" for RecVertex 
+     *
+     *  @code 
+     *
+     *  const LHCb::VertexBase*  v  = ... ;
+     *
+     *  const RV_MASS mass = RV_MASS ( "pi+" , "pi-" ) ;
+     *  
+     *  const double m = mass ( v )  ;
+     *
+     *  @endcode  
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Vertices::RecVertexMass
+     *  @see LoKi::PhysKinematics::mass
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date   2010-12-07
+     */
+    typedef LoKi::Vertices::RecVertexMass                             RV_MASS ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
