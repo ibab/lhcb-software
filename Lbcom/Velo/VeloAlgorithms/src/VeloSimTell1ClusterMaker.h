@@ -91,8 +91,8 @@ private:
   std::string m_rawEventLoc;
   int m_hitThresholdValue;
   int m_lowThresholdValue;
-  float m_hitSigmas;
-  float m_incSigmas;
+  double m_hitSigmas;
+  double m_incSigmas;
   VeloTELL1::u_int32_t m_sumThresholdValue;
   VeloTELL1::ThresholdsVec m_hitThresholds;
   VeloTELL1::ThresholdsVec m_lowThresholds;
