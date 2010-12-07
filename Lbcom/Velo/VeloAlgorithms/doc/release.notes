@@ -1,11 +1,11 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+
+!========================= VeloAlgorithms v5r3 2010-12-07 =======================
 ! 2010-12-06 - Tomasz Szumlak
  - fixed Win warning - changed type of m_hitSigmas and m_incSigmas
    from float to double
-
-!========================= VeloAlgorithms v5r3 2010-12-06 =========================
 ! 2010-12-06 - Tomasz Szumlak
  - substantial code change in VeloSimTell1Algorithm and VeloSimTell1ClusterMaker
    algorithms to facilitate using SIMCOND data base. All the work has been
