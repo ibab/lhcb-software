@@ -1,0 +1,19 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
+  <argument name="args"><set>
+    <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
+    <text>$BRUNELROOT/tests/options/db-global-2010.py</text>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
+  </set></argument>
+  <argument name="validator"><text>
+#print stdout
+stdout.replace("IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues","")
+stdout.replace("IODataManager       ERROR Referring to existing dataset root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw by its physical name","")
+from Brunel.QMTest.BrunelExclusions import preprocessor
+#validateWithReference(preproc = preprocessor)
+countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
+</text></argument>
+</extension>
