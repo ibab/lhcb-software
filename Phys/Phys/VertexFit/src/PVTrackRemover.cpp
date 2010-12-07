@@ -29,10 +29,14 @@ PVTrackRemover::PVTrackRemover( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_pvToolType(""),
+    m_pvToolType("PVOfflineTool"),
     m_pvTool(0)
 {
+
   declareInterface<IPVReFitter>(this);
+
+  declareProperty("IPVOffline", m_pvToolType);
+  
 }
 //=============================================================================
 StatusCode PVTrackRemover::initialize() 
