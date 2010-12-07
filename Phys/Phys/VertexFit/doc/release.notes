@@ -4,6 +4,14 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2010-10-25 - Juan Palacios
+ - Added PVTrackRemover, an IPVReFitter that uses IPVOfflineTool's
+   removeTracksAndCalculatePV method to remove the weighted contribution
+   of the set of tracks making a particle from the PV.
+   NOTE: This implementation is temporary and for testing. The reFit method
+   has no meaning and isn't implemented. 
+ - Increase to v6r7.
+
 !========================== VertexFit v6r6 2010-11-02 ======================
 
 ! 2010-10-25 - Juan Palacios

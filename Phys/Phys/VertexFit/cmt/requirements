@@ -5,7 +5,7 @@
 #
 #============================================================================
 package           VertexFit
-version           v6r6
+version           v6r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,6 +19,7 @@ use  GaudiAlg           v*
 use  DaVinciInterfaces  v*  Phys
 use  DaVinciKernel      v*  Phys
 use  LHCbMath           v*  Kernel
+use  LoKiPhys           v*  Phys
 
 # Component library building rule
 #============================================================================
@@ -27,4 +28,6 @@ library          VertexFit    ../src/*.cpp
 # standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=VertexFit
-	     
+#============================================================================
+apply_pattern QMTest
+#============================================================================
