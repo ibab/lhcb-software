@@ -282,6 +282,8 @@ namespace RTL  {
     explicit func_cast(void* t) { ptr = t; }
   };
 
+  /// Reset static storage
+  void RTL_reset();
   /// Process name (UTGID)
   const std::string& processName();
   /// Fully qualified node name

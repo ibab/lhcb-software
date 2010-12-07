@@ -529,41 +529,42 @@ extern "C" const char* lib_rtl_gmtimestr(const char* fmt, const time_t* tp)  {
 }
 
 namespace RTL {
+  static string s_processName, s_dataInterfaceName, s_nodeName, s_nodeNameShort;
+
+  void RTL_reset() {
+    s_processName = s_dataInterfaceName = s_nodeName = s_nodeNameShort = "";
+  }
   const string& processName()  {
-    static string s;
-    if ( s.empty() )  {
+    if ( s_processName.empty() )  {
       char txt[64];
       ::lib_rtl_get_process_name(txt, sizeof(txt));
-      s = txt;
+      s_processName = txt;
     }
-    return s;
+    return s_processName;
   }
   const string& dataInterfaceName()  {
-    static string s;
-    if ( s.empty() )  {
+    if ( s_dataInterfaceName.empty() )  {
       char txt[64];
       ::lib_rtl_get_datainterface_name(txt, sizeof(txt));
-      s = txt;
+      s_dataInterfaceName = txt;
     }
-    return s;
+    return s_dataInterfaceName;
   }
   const string& nodeName()  {
-    static string s;
-    if ( s.empty() )  {
+    if ( s_nodeName.empty() )  {
       char txt[64];
       ::lib_rtl_get_node_name(txt,sizeof(txt));
-      s = txt;
+      s_nodeName = txt;
     }
-    return s;
+    return s_nodeName;
   }
   const string& nodeNameShort()  {
-    static string s;
-    if ( s.empty() )  {
-      s = nodeName();
-      if ( s.find(".") != string::npos )  {
-        s = s.substr(0,s.find("."));
+    if ( s_nodeNameShort.empty() )  {
+      s_nodeNameShort = nodeName();
+      if ( s_nodeNameShort.find(".") != string::npos )  {
+        s_nodeNameShort = s_nodeNameShort.substr(0,s_nodeNameShort.find("."));
       }
     }
-    return s;
+    return s_nodeNameShort;
   }
 }
