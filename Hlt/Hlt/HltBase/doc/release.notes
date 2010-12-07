@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-12-07 - Vanya Belyaev
+
+ - remove confusing branches in Hlt::Stage/Candidate  
+
 ! 2010-12-06 - Vanya Belyaev
  - improve a little bit the handling of Hlt::Cache
    add "VertexBase" as vizibel tyep for RecVertex 

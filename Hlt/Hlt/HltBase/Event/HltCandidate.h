@@ -367,22 +367,6 @@ namespace Hlt
     return _stage->get<Hlt::L0DiMuonCandidate>() ;
   }  
   // ==========================================================================
-  /** get the Hlt-Candidate from the Hlt Candidate
-   *  @param slot the slot to be used for data extraction 
-   *     - 0 corresponds to the current stage , 
-   *     - negative value corresponds to initiator stage 
-   *     - positive value corresponds to step-back in history
-   *  @return the candidate 
-   */
-  template <>
-  inline const Hlt::Candidate* 
-  Hlt::Candidate::get<Hlt::Candidate>( const int slot ) const 
-  {
-    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
-    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
-    return _stage->get<Hlt::Candidate> () ;
-  }
-  // ==========================================================================
   // printout 
   inline std::ostream& operator<< (std::ostream& str, const Candidate& obj)
   {
@@ -430,8 +414,6 @@ namespace Hlt
   { enum { value = Hlt::Stage::HltMultiTrack } ; } ;
   template <> struct CandidateType2Id<Hlt::Stage>
   { enum { value = Hlt::Stage::HltStage     } ; } ;
-  template <> struct CandidateType2Id<Hlt::Candidate>
-  { enum { value = Hlt::Stage::HltCandidate } ; } ;
   // ==========================================================================
   /** @struct CandidateId2Type 
    *  Helper structure to map candidate ID to Type 
@@ -452,8 +434,6 @@ namespace Hlt
   { typedef Hlt::MultiTrack          Type ; } ;
   template <> struct CandidateId2Type<Hlt::Stage::HltStage>
   { typedef Hlt::Stage               Type ; } ;
-  template <> struct CandidateId2Type<Hlt::Stage::HltCandidate>
-  { typedef Hlt::Candidate           Type ; } ;
   // ==========================================================================
 } //                                                       end of namespace Hlt 
 // ============================================================================

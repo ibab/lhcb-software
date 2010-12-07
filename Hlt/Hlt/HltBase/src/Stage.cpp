@@ -78,26 +78,26 @@ void Hlt::Stage::_checkLock() const
 void Hlt::Stage::SetAllToNull() 
 {
   _checkLock();
-  m_track = 0;
-  m_rec_vertex = 0;
-  m_l0_calo_candidate = 0;
-  m_l0_muon_candidate = 0;
-  m_multitrack = 0;
-  m_l0_dimuon_candidate = 0;
-  m_candidate = 0;
-  m_stage = 0;
+  m_track               = 0 ;
+  m_rec_vertex          = 0 ;
+  m_l0_calo_candidate   = 0 ; 
+  m_l0_muon_candidate   = 0 ; 
+  m_multitrack          = 0 ;
+  m_l0_dimuon_candidate = 0 ;
+  m_stage               = 0 ;
 }
 // ============================================================================
 const ContainedObject* Hlt::Stage::_get() const 
 {
-  if (is<LHCb::Track> ()) return get<LHCb::Track>();
-  if (is<LHCb::RecVertex> ()) return get<LHCb::RecVertex>();
-  if (is<LHCb::L0CaloCandidate> ()) return get<LHCb::L0CaloCandidate>();
-  if (is<LHCb::L0MuonCandidate> ()) return  get<LHCb::L0MuonCandidate>();
-  if (is<Hlt::MultiTrack> ()) return  get<Hlt::MultiTrack>();
-  if (is<Hlt::L0DiMuonCandidate> ()) return get<Hlt::L0DiMuonCandidate>();
-  if (is<Hlt::Candidate> ()) return get<Hlt::Candidate>();
-  if (is<Hlt::Stage> ()) return get<Hlt::Stage>();
+  //
+  if ( is<LHCb::Track>            () ) return get<LHCb::Track>            () ;
+  if ( is<LHCb::RecVertex>        () ) return get<LHCb::RecVertex>        () ;
+  if ( is<LHCb::L0CaloCandidate>  () ) return get<LHCb::L0CaloCandidate>  () ;
+  if ( is<LHCb::L0MuonCandidate>  () ) return get<LHCb::L0MuonCandidate>  () ;
+  if ( is<Hlt::MultiTrack>        () ) return get<Hlt::MultiTrack>        () ;
+  if ( is<Hlt::L0DiMuonCandidate> () ) return get<Hlt::L0DiMuonCandidate> () ;
+  if ( is<Hlt::Stage>             () ) return get<Hlt::Stage>             () ;
+  //
   return 0;
 }
 // ============================================================================
@@ -127,19 +127,17 @@ void Hlt::Stage::_unlock (const INamedInterface* locker)
 std::ostream& Hlt::Stage::fillStream(std::ostream& s) const 
 {
   if (is<LHCb::Track> ())
-    s << "Track/"             << get<LHCb::Track>            () ;
+    s << "Track/"             << (void*) get<LHCb::Track>            () ;
   else  if (is<LHCb::RecVertex> ())
-    s << "RecVertex/"         << get<LHCb::RecVertex>        () ;
+    s << "RecVertex/"         << (void*) get<LHCb::RecVertex>        () ;
   else if (is<LHCb::L0CaloCandidate> ())
-    s << "L0CaloCandidate/"   << get<LHCb::L0CaloCandidate>  () ;
+    s << "L0CaloCandidate/"   << (void*) get<LHCb::L0CaloCandidate>  () ;
   else if (is<LHCb::L0MuonCandidate> ())
-    s << "L0MuonCandidate/"   << get<LHCb::L0MuonCandidate>  () ;
+    s << "L0MuonCandidate/"   << (void*) get<LHCb::L0MuonCandidate>  () ;
   else if (is<Hlt::MultiTrack> ())
-    s << "MultiTrack/"        << get<Hlt::MultiTrack>        () ;
+    s << "MultiTrack/"        << (void*) get<Hlt::MultiTrack>        () ;
   else if (is<Hlt::L0DiMuonCandidate> ())
-    s << "L0DiMuonCandidate/" << get<Hlt::L0DiMuonCandidate> () ;
-  else if (is<Hlt::Candidate> ())
-    s << "Candidate/"         << (void*) get<Hlt::Candidate> () ;
+    s << "L0DiMuonCandidate/" << (void*) get<Hlt::L0DiMuonCandidate> () ;
   else if (is<Hlt::Stage> ())
     s << "Stage/"             << (void*) get<Hlt::Stage>     () ;
   else s << "NULL?";
@@ -183,7 +181,6 @@ Hlt::Stage::Type Hlt::Stage::stageType() const
   else if ( is<LHCb::RecVertex>        () ) { return Hlt::Stage::HltVertex     ; }
   else if ( is<Hlt::MultiTrack>        () ) { return Hlt::Stage::HltMultiTrack ; }
   else if ( is<Hlt::Stage>             () ) { return Hlt::Stage::HltStage      ; }
-  else if ( is<Hlt::Candidate>         () ) { return Hlt::Stage::HltCandidate  ; }
   //
   return Hlt::Stage::Unknown ;
 }

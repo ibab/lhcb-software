@@ -90,8 +90,7 @@ namespace Hlt
       HltTrack      =   4 , 
       HltVertex     =   5 , 
       HltMultiTrack =   6 , 
-      HltStage      =   7 ,      
-      HltCandidate  =   8       
+      HltStage      =   7       
     } ;  
     // ========================================================================    
   public:
@@ -317,7 +316,6 @@ namespace Hlt
     SmartRef<LHCb::L0MuonCandidate>   m_l0_muon_candidate   ;
     SmartRef<Hlt::MultiTrack>         m_multitrack          ;
     SmartRef<Hlt::L0DiMuonCandidate>  m_l0_dimuon_candidate ;
-    SmartRef<Hlt::Candidate>          m_candidate           ;
     SmartRef<Hlt::Stage>              m_stage               ;
     /// cache 
     Cache                             m_cache               ; // cache 
@@ -374,28 +372,6 @@ namespace Hlt
   inline bool 
   Hlt::Stage::is<Hlt::Stage>() const { return m_stage != 0; }
   // ==========================================================================
-  // Candidate
-  // ==========================================================================
-  template<>
-  inline const Hlt::Candidate* 
-  Hlt::Stage::get<Hlt::Candidate>() const { return m_candidate ; }
-  // ==========================================================================
-  template<>
-  inline       Hlt::Candidate* 
-  Hlt::Stage::get<Hlt::Candidate>()       { _checkLock() ; return m_candidate ; }
-  // ==========================================================================
-  template<> 
-  inline void 
-  Hlt::Stage::set<Hlt::Candidate>(const Hlt::Candidate* value) 
-  {
-    SetAllToNull();
-    m_candidate = value;
-  }
-  // ==========================================================================
-  template<> 
-  inline bool 
-  Hlt::Stage::is<Hlt::Candidate>() const { return m_candidate != 0; }
-  // ==========================================================================
   // Track
   // ==========================================================================
   template<>
@@ -430,7 +406,7 @@ namespace Hlt
   // ==========================================================================
   template<> 
   inline void 
-  Hlt::Stage::set<LHCb::RecVertex>(const LHCb::RecVertex* value) 
+  Hlt::Stage::set<LHCb::RecVertex> ( const LHCb::RecVertex* value ) 
   {
     SetAllToNull();
     m_rec_vertex = value;
@@ -450,12 +426,12 @@ namespace Hlt
   // ==========================================================================
   template<> 
   inline       LHCb::VertexBase* 
-  Hlt::Stage::get<LHCb::VertexBase>()  
+  Hlt::Stage::get<LHCb::VertexBase>() 
   { return this->get<LHCb::RecVertex> () ; }
   // ==========================================================================
   template<> 
   inline bool 
-  Hlt::Stage::is<LHCb::VertexBase> () const 
+  Hlt::Stage::is<LHCb::VertexBase> () const
   { return this->is<LHCb::RecVertex>  () ; }
   // ==========================================================================
   // L0CaloCandidate 
