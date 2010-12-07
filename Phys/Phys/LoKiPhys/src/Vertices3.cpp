@@ -5,6 +5,12 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToStream.h"
+#include "GaudiKernel/System.h"
+// ============================================================================
+// Event/RecEvent 
+// ============================================================================
+#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -153,6 +159,7 @@ LoKi::Vertices::RecVertex2TrackMax::operator()
   }
   //
   const LHCb::VertexBase* vb = v ;
+  //
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
   //
   if ( 0 == rv ) 

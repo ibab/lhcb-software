@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-12-07 - Vanya Belyaev
+ - Vertices3.cpp 
+    remove debug prints 
+
+! 2010-12-07 - Vanya Belyaev
  - add "mass of recontructed vertex" functor 
      RV_MASS 
 
