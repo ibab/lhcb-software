@@ -21,6 +21,11 @@ DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
 
 using namespace LHCb;
 
+static DimTaskFSM* s_dimtask_instance = 0;
+extern "C" void* DimTaskFSM_instance() {
+  return s_dimtask_instance;
+}
+
 template <class T,class Q> static inline StatusCode cast_success(T* p, void** q)  {
   *q = (Q*)p;
   p->addRef();
@@ -88,34 +93,51 @@ namespace  {
 
 DimTaskFSM::DimTaskFSM(IInterface*) 
 : m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
-  m_haveEventLoop(false), m_refCount(1)
+  m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
 {
+  s_dimtask_instance = this;
   m_propertyMgr  = new PropertyMgr(this);
-  m_procName = RTL::processName();
-  std::string svcname= m_procName+"/status";
-  m_command = new Command(m_procName, this);
-  m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
-  svcname= m_procName+"/fsm_status";
   m_monitor.targetState = m_monitor.state = ST_NOT_READY;
   m_monitor.lastCmd     = m_monitor.doneCmd = (int)::time(0);
   m_monitor.metaState   = SUCCESS_ACTION;
   m_monitor.pid         = ::lib_rtl_pid();
   m_monitor.partitionID = -1;
   m_monitor.pad         = 0;
-  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
   ::lib_rtl_install_printer(printout,this);
+  connectDIM().ignore();
 }
 
 DimTaskFSM::~DimTaskFSM()  {
-  delete m_fsmService;
-  delete m_service;
-  delete m_command;
+  s_dimtask_instance = 0;
+  disconnectDIM();
+  ::lib_rtl_install_printer(0,0);
+}
+
+StatusCode DimTaskFSM::connectDIM() {
+  std::string svcname;
+  m_procName = RTL::processName();
+  m_monitor.pid = ::lib_rtl_pid();
+  svcname       = m_procName+"/status";
+  ::dis_start_serving((char*)m_procName.c_str());
+  m_command = new Command(m_procName, this);
+  m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
+  svcname   = m_procName+"/fsm_status";
+  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DimTaskFSM::disconnectDIM() {
+  if ( m_fsmService ) delete m_fsmService;
+  if ( m_service ) delete m_service;
+  if ( m_command ) delete m_command;
   m_fsmService = 0;
   m_service = 0;
   m_command = 0;
-  ::lib_rtl_install_printer(0,0);
+  ::dis_stop_serving();
+  ::dis_stop_serving_dns(0);
+  return StatusCode::SUCCESS;
 }
 
 /// IInterface implementation: DimTaskFSM::addRef()
@@ -275,6 +297,7 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(TERMINATE)    sc=terminate();                           break;
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
         _CASE(STARTUP_DONE) sc = startupDone();                       break;
+        _CASE(CONNECT_DIM)  sc = connectDIM();                        break;
         default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
       }
       sc.isSuccess() ? declareSubState(SUCCESS_ACTION) : declareSubState(FAILED_ACTION);

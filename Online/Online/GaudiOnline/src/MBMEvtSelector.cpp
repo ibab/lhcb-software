@@ -77,6 +77,12 @@ namespace LHCb  {
     /// IService implementation: Db event selector override
     virtual StatusCode initialize();
 
+    /// IService overload: start MEP manager service
+    virtual StatusCode start();
+
+    /// IService overload: stop MEP manager service
+    virtual StatusCode stop();
+
     // IService implementation: Service finalization
     virtual StatusCode finalize();
 
@@ -87,6 +93,21 @@ namespace LHCb  {
       */
     virtual StatusCode createContext(Context*& refpCtxt) const;
 
+    /// Release existing event iteration context
+    /** @param refCtxt   [IN/OUT]  Reference to the context
+      * 
+      * @return StatusCode indicating success or failure
+      */
+    virtual StatusCode releaseContext(Context*& refCtxt) const;
+
+    /** Will set a new criteria for the selection of the next list of events and will change
+      * the state of the context in a way to point to the new list.
+      * 
+      * @param cr The new criteria string.
+      * @param c  Reference pointer to the Context object.
+      */
+    virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
+
     /// Service Constructor
     MBMEvtSelector(const std::string& name, ISvcLocator* svcloc);
 
@@ -96,9 +117,11 @@ namespace LHCb  {
   protected:
     /// Data Members
     /// Reference to MEP manager service
-    LHCb::IMEPManager* m_mepMgr;
+    LHCb::IMEPManager*  m_mepMgr;
     /// Maximum retries for consecutive events before going to error
-    int                m_maxRetry;
+    int                 m_maxRetry;
+    /// Current context
+    mutable MBMContext* m_currContext;
   };
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
@@ -344,7 +367,7 @@ void MBMContext::close()  {
 }
 
 MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
-: OnlineBaseEvtSelector(nam,svc), m_mepMgr(0)
+  : OnlineBaseEvtSelector(nam,svc), m_mepMgr(0), m_currContext(0)
 {
   m_input = "EVENT";
   m_decode = true;
@@ -365,6 +388,27 @@ StatusCode MBMEvtSelector::initialize()    {
   return status;
 }
 
+/// IService overload: start MEP manager service
+StatusCode MBMEvtSelector::start() {
+  StatusCode sc = OnlineService::start();
+  if ( m_currContext ) {
+    StatusCode sc = m_currContext->connect(input());
+    if ( !sc.isSuccess() ) {
+      return sc;
+    }
+  }
+  return sc;
+}
+
+/// IService overload: stop MEP manager service
+StatusCode MBMEvtSelector::stop() {
+  if ( m_currContext ) {
+    m_currContext->close();
+    m_currContext = 0;
+  }
+  return OnlineBaseEvtSelector::stop();
+}
+
 // IService implementation: Service finalization
 StatusCode MBMEvtSelector::finalize()    {
   if ( m_mepMgr )  {
@@ -377,6 +421,42 @@ StatusCode MBMEvtSelector::finalize()    {
 // Create event selector iteration context
 StatusCode MBMEvtSelector::createContext(Context*& refpCtxt) const  {
   MBMContext* ctxt = new MBMContext(const_cast<MBMEvtSelector*>(this));
+  IMEPManager* m = mepMgr();
+  m_currContext = ctxt;
   refpCtxt = ctxt;
-  return ctxt->connect(m_input);
+  if ( m->connectWhen() == "initialize" ) {
+    return ctxt->connect(m_input);
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MBMEvtSelector::releaseContext(Context*& ctxt) const  {
+  MBMContext* pCtxt = dynamic_cast<MBMContext*>(ctxt);
+  if ( pCtxt == m_currContext ) {
+    m_context = 0;
+    pCtxt->close();
+    delete pCtxt;
+    pCtxt = 0;
+    m_currContext = 0;
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode 
+MBMEvtSelector::resetCriteria(const string& crit,Context& ct) const {
+  MBMContext* ctxt = dynamic_cast<MBMContext*>(&ct);
+  if ( ctxt )  {
+    ctxt->close();
+    IMEPManager* m = mepMgr();
+    if ( m->connectWhen() == "initialize" ) {
+      if ( ctxt->connect(m_input).isSuccess() )  {
+	return StatusCode::SUCCESS;
+      }
+      return error("Failed to connect to:"+crit);
+    }
+    m_currContext = ctxt;
+    return StatusCode::SUCCESS;
+  }
+  return error("Invalid iteration context. Cannot connect to:"+crit);
 }

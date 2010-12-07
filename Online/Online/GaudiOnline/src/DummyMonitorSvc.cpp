@@ -1,23 +1,17 @@
 #ifndef GAUDIONLINE_DUMMYMONITORSVC_H
 #define GAUDIONLINE_DUMMYMONITORSVC_H
 
+// Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include <map>
 
 // Forward declarations
-class MsgStream;
 class StatEntity;
 namespace AIDA {
   class IHistogram;
   class IBaseHistogram;
-  class IHistogram1D;
-  class IHistogram2D;
-  class IHistogram3D;
 }
-
-// Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_IMonitoringEngine("IMonitoringEngine", 2, 0);
 
 /*
  *   LHCb namespace declaration
@@ -52,7 +46,7 @@ namespace LHCb  {
 
   public:
     /// Service constructor
-    DummyMonitorSvc(CSTR name, ISvcLocator* sl);
+    DummyMonitorSvc(CSTR name, ISvcLocator* svcLoc) : Service(name, svcLoc) {}
     /// Standard destructor
     virtual ~DummyMonitorSvc() {}
     /// IInterface pure virtual member functions
@@ -109,17 +103,11 @@ namespace LHCb  {
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-using namespace AIDA;
 using namespace LHCb;
 using namespace std;
 
 // Factory for instantiation of service objects
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DummyMonitorSvc)
-
-// Constructor
-DummyMonitorSvc::DummyMonitorSvc(CSTR name, ISvcLocator* sl) : Service(name, sl)
-{
-}
 
 StatusCode DummyMonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   if(IMonitorSvc::interfaceID() == riid) {
@@ -131,18 +119,19 @@ StatusCode DummyMonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF
 }
 
 StatusCode DummyMonitorSvc::initialize() {
-  MsgStream msg(msgSvc(),name());
   StatusCode sc = Service::initialize(); 
+  MsgStream msg(msgSvc(),name());
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize base class." << endmsg;
+    return sc;
   }
-  return sc;
+  undeclareAll(0);
+  msg << MSG::INFO << " MonitorSvc of type DummyMonitorSvc initialized." << endmsg;
+  return sc; 
 }
 
 StatusCode DummyMonitorSvc::finalize() {
-  for(ClientMap::iterator i=m_clients.begin(); i != m_clients.end(); ++i)
-    delete (*i).second;
-  m_clients.clear();
+  undeclareAll(0);
   return Service::finalize();
 }
 
@@ -154,15 +143,7 @@ DummyMonitorSvc::ClientMap::iterator DummyMonitorSvc::regClient(Client c) {
 void DummyMonitorSvc::regItem(CSTR nam, const void*, CSTR dsc, Client c) {
   ClientMap::iterator i = regClient(c);
   if ( i != m_clients.end() )  {
-    MsgStream log(msgSvc(),name());
-    if( (*i).second->insert(make_pair(nam,dsc)).second ) {
-      log << MSG::DEBUG << "Declaring monitor item:" << (*i).second->owner
-          << "/" << nam << endreq;
-      return;
-    }
-    // Insertion failed: Name already exists
-    log << MSG::ERROR << "Already existing monitor item:" << (*i).second->owner
-        << "/" << nam << " not published" << endreq;
+    (*i).second->insert(make_pair(nam,dsc));
   }
 }
 
@@ -172,12 +153,8 @@ void DummyMonitorSvc::undeclareInfo(CSTR nam, Client owner)  {
     Items::iterator j = (*i).second->find(nam);
     if ( j != (*i).second->end() )  {
       (*i).second->erase(j);
-      return;
     }
-    return;
   }
-  MsgStream log(msgSvc(),name());
-  log << MSG::WARNING << "undeclareInfo: Unknown client:" << clientName(owner) << endreq;
 }
 
 void DummyMonitorSvc::undeclareAll(Client c)    {
@@ -205,7 +182,5 @@ set<string>* DummyMonitorSvc::getInfos(Client owner)  {
 
 string DummyMonitorSvc::clientName(Client owner)  {
   const INamedInterface* c = dynamic_cast<const INamedInterface*>(owner);
-  if ( c ) return c->name();
-  // NULL pointer or Unknown interface:
-  return "";
+  return ( c ) ? c->name() : string("");
 }

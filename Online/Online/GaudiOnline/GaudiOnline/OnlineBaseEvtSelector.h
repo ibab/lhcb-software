@@ -208,8 +208,9 @@ namespace LHCb  {
     /// Number of active requests required by the job options
     int numReq() const                       {  return m_nreqs;   }
     /// Access requests given by the job option data
-    const MBM::Requirement& req(int i) const { return m_Reqs[i];  }
-
+    const MBM::Requirement& req(int i) const {  return m_Reqs[i]; }
+    /// Access to input source
+    const std::string& input() const         {  return m_input;   }
   protected:
     /// Lock handle to suspend/resume operations
     lib_rtl_event_t               m_suspendLock;

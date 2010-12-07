@@ -26,7 +26,7 @@ extern "C" int mep_install(int argc , char** argv);
 MEPManager::MEPManager(const string& nam, ISvcLocator* loc)    
 : Service(nam, loc), m_partitionID(0x103), m_mepID(MEP_INV_DESC)
 {
-  m_procName = RTL::processName();
+  //m_procName = RTL::processName();
   declareProperty("Buffers",          m_buffers);
   declareProperty("ProcessName",      m_procName);
   declareProperty("PartitionID",      m_partitionID);
@@ -35,6 +35,7 @@ MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
   declareProperty("PartitionBuffers", m_partitionBuffers=false);
   declareProperty("MapUnusedBuffers", m_mapUnused=true);
   declareProperty("HandleSignals",    m_handleSignals=false);
+  declareProperty("ConnectWhen",      m_connectWhen="initialize");
 }
 
 /// Default destructor
@@ -165,6 +166,25 @@ StatusCode MEPManager::initialize()  {
   if ( !sc.isSuccess() )  {
     return error("Failed to initialize base class Service.");
   }
+  return (m_connectWhen == "initialize") ? i_init() : sc;
+}
+
+StatusCode MEPManager::start()  {
+  StatusCode sc = Service::start();
+  if ( !sc.isSuccess() )  {
+    return error("Failed to initialize base class Service.");
+  }
+  return (m_connectWhen == "start") ? i_init() : sc;
+}
+
+StatusCode MEPManager::i_init()  {
+  error(m_connectWhen+"> Process name:"+m_procName);
+  if ( m_procName.empty() )  {
+    const char* e = ::getenv("UTGID");
+    if ( e ) m_procName = e;
+    else     m_procName = RTL::processName();
+  }
+  error(m_connectWhen+"> Process name:"+m_procName);
   m_bmIDs.clear();
   m_buffMap.clear();
   mep_map_unused_buffers(m_mapUnused);
@@ -178,6 +198,16 @@ StatusCode MEPManager::initialize()  {
 }
 
 StatusCode MEPManager::finalize()  {
+  if (m_connectWhen == "initialize") i_fini();
+  return Service::finalize();
+}
+
+StatusCode MEPManager::stop()  {
+  if (m_connectWhen == "start") i_fini();
+  return Service::finalize();
+}
+
+StatusCode MEPManager::i_fini()  {
   MsgStream log(msgSvc(), "MEPManager");
   log << MSG::INFO << "Excluding from buffers. No more buffer access possible." << endmsg;
   m_buffMap.clear();
@@ -192,7 +222,7 @@ StatusCode MEPManager::finalize()  {
     if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
   }
   m_bmIDs.clear();
-  return Service::finalize();
+  return StatusCode::SUCCESS;
 }
 
 /// Cancel connection to specified buffers

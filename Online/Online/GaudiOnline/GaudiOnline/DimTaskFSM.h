@@ -70,7 +70,8 @@ namespace LHCb  {
       TERMINATE,
       UNLOAD, 
       ERROR,
-      STARTUP_DONE
+      STARTUP_DONE,
+      CONNECT_DIM=1000
     };
     enum State  {
       ST_UNKNOWN   = 'U',
@@ -134,6 +135,11 @@ namespace LHCb  {
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
     /// Translate integer state to string name
     static std::string stateName(int state);
+
+    /// (Re)connect DIM services
+    virtual StatusCode connectDIM();
+    /// Disconnect DIM services
+    virtual StatusCode disconnectDIM();
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)

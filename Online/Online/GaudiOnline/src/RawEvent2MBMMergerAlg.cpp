@@ -96,9 +96,11 @@ namespace LHCb  {
       if ( !status.isSuccess() )   {
 	return error("Failed to access MEPManager service.");
       }
-      m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
-      if ( 0 == m_prod ) {
-	return error("Failed to create event producer for buffer:"+m_bufferName);
+      if ( m_mepMgr->connectWhen() == "initialize" ) {
+	m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
+	if ( 0 == m_prod ) {
+	  return error("Failed to create event producer for buffer:"+m_bufferName);
+	}
       }
       status = service("IncidentSvc",m_incidentSvc,true);
       if ( !status.isSuccess() )  {
@@ -112,11 +114,32 @@ namespace LHCb  {
       declareInfo("EventsOut",  m_writeActions=0,  "Total number of events declared to BM.");
       declareInfo("ErrorsOut",  m_writeErrors=0,   "Total number of declare errors.");
       declareInfo("BytesOut",   m_bytesDeclared=0, "Total number of bytes declared to BM.");
-      declareInfo("BadEvents",  m_badEvents=0, "Total number of bytes declared to BM.");
+      declareInfo("BadEvents",  m_badEvents=0,     "Total number of bytes declared to BM.");
       m_eventTMO = 0;
       return StatusCode::SUCCESS;
     }
 
+    /// Algorithm overload: start
+    virtual StatusCode start()     {    
+      if ( m_mepMgr->connectWhen() == "start" ) {
+	m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
+	if ( 0 == m_prod ) {
+	  return error("Failed to create event producer for buffer:"+m_bufferName);
+	}
+      }
+      return StatusCode::SUCCESS;
+    }
+
+    /// Algorithm overload: stop
+    virtual StatusCode stop()     {    
+      if ( m_mepMgr->connectWhen() == "start" ) {
+	if ( m_prod )  {
+	  delete m_prod;
+	  m_prod = 0;
+	}
+      }
+      return StatusCode::SUCCESS;
+    }
     /// Algorithm overload: finalize
     virtual StatusCode finalize()     {    
       if ( m_incidentSvc )  {
@@ -124,14 +147,16 @@ namespace LHCb  {
         m_incidentSvc->release();
         m_incidentSvc = 0;
       }
-      if ( monitorSvc() ) monitorSvc()->undeclareAll(this);
-      if ( m_mepMgr )  {
-        m_mepMgr->release();
-        m_mepMgr = 0;
+      if ( monitorSvc() )  {
+	monitorSvc()->undeclareAll(this);
       }
       if ( m_prod )  {
         delete m_prod;
         m_prod = 0;
+      }
+      if ( m_mepMgr )  {
+        m_mepMgr->release();
+        m_mepMgr = 0;
       }
       return StatusCode::SUCCESS;
     }

@@ -47,6 +47,8 @@ namespace LHCb    {
     int                        m_partitionID;
     /// Property: partition name used to connect to buffer managers (If set overrides partition identifier)
     std::string                m_partitionName;
+    /// Property: Allows to choose if the buffers should be connected on "initialize" or "start"
+    std::string                m_connectWhen;
     /// Property: Flag to indicate if unused MEP buffers should be mapped
     bool                       m_mapUnused;
     /// Property: Flag to indicate if buffer names should contain partition ID
@@ -59,6 +61,8 @@ namespace LHCb    {
     std::vector<BMID>          m_bmIDs;
     /// Map between buffer identifiers and the corresponding name
     std::map<std::string,BMID> m_buffMap;
+
+    std::string                m_input;
 
   public:
     /// Retrieve interface ID
@@ -89,8 +93,17 @@ namespace LHCb    {
     const std::string& partitionName() const   {   return m_partitionName;  }
     
     /// Access to process name
-    const std::string& processName()  const    {  return m_procName;        }
+    const std::string& processName()  const    {   return m_procName;       }
 
+    /// Connect when ???
+    const std::string& connectWhen()  const    {   return m_connectWhen;    }
+
+    /// Internal initialization
+    virtual StatusCode i_init();
+    
+    /// Internal finalization
+    virtual StatusCode i_fini();
+    
     /** Query interfaces of Interface
         @param riid       ID of Interface to be retrieved
         @param ppvUnknown Pointer to Location for interface pointer
@@ -100,6 +113,12 @@ namespace LHCb    {
 
     /// IService overload: Initialize MEP manager service
     virtual StatusCode initialize();
+
+    /// IService overload: start MEP manager service
+    virtual StatusCode start();
+
+    /// IService overload: stop MEP manager service
+    virtual StatusCode stop();
 
     /// IService overload: Finalize MEP manager service
     virtual StatusCode finalize();
