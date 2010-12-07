@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2010-12-07 - Vanya Belyaev    
+ - fix stupid bug in RecVertexHolder desrcructor 
+
 ! 2010-12-06 - Juan Palacios
  - Add tests for RecVertexHolder.
  - Add QM test davincitypes.test_recvertexholder.

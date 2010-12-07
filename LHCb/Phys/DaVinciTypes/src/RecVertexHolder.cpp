@@ -41,7 +41,8 @@ LHCb::RecVertexHolder::RecVertexHolder
 LHCb::RecVertexHolder::~RecVertexHolder() 
 {
   // do not delete the objects registred in TES 
-  if ( 0 != m_vertex.get() && 0 != m_vertex->parent() ) { m_vertex.reset() ; }
+  if ( 0 != m_vertex.get() && 0 != m_vertex->parent() ) 
+  { m_vertex.release () ; }
 }
 // ============================================================================
 // The END 
