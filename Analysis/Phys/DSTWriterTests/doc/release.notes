@@ -4,6 +4,11 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2010-12-07 - Juan Palacios
+ - scripts/check_relationstable.py
+  . Print value when To not in TES.
+ - Increase to v2r1
+
 ! ========================== DstwriterTests v2r0 2010-11-02 ==================
 
 ! 2010-10-15 - Juan Palacios

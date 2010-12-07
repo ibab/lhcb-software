@@ -74,9 +74,11 @@ if __name__ == '__main__' :
                     for r in rels :
                         pv = r.to()
                         p = r._from()
-                        pvLoc = pv.parent().registry().identifier()
-                        pLoc = p.parent().registry().identifier()
-                        addEntry(p2pvSummaries, (pLoc, pvLoc), 1 )
+                        toLoc = str(pv)
+                        if hasattr(pv, 'parent') :
+                            toLoc = pv.parent().registry().identifier()
+                        fromLoc = p.parent().registry().identifier()
+                        addEntry(p2pvSummaries, (fromLoc, toLoc), 1 )
                 else :
                     if verbose :
                         print 'Particle->PV relations', leaf, 'empty'
