@@ -180,7 +180,7 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   chi2 = entry2.m_chi2 ;
   if ( chi2max < entry2.m_chi2 ) { return LHCb::RecVertexHolder () ; } // RETURN 
   //
-  LHCb::RecVertex*      vertex = new LHCb::RecVertex()  ;
+  LHCb::RecVertex*      vertex  = new LHCb::RecVertex()  ;
   LHCb::RecVertexHolder holder ( vertex ) ;
   //
   vertex -> setCovMatrix  ( entry2.m_c              ) ;
@@ -391,6 +391,7 @@ bool LoKi::FastVertex::checkDistance
 {
   //
   if ( 0 == track1 || 0 == track2 ) { return false ; } 
+  if ( track1 == track2           ) { return true  ; }  
   //
   double mu1 = 0 ;
   double mu2 = 0 ;
@@ -447,6 +448,157 @@ bool LoKi::FastVertex::checkDistance
   //
   return true ;
 }
+// ============================================================================
+/** evaluate the distance between the tracks ("DOCA")
+ *  @param track1  (INPUT)  the first  track 
+ *  @param track2  (INPUT)  the second track 
+ *  @param doca    (OUTPUT) DOCA
+ *  @param iterate (INPUT)  iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+StatusCode LoKi::FastVertex::distance 
+( const LHCb::Track*      track1  , 
+  const LHCb::Track*      track2  , 
+  double&                 doca    , 
+  const bool              iterate ) 
+{
+  //
+  doca = -1.e+99 ;
+  //
+  if ( 0 == track1 || 0 == track2 ) { return StatusCode::FAILURE ; }
+  //
+  if ( track1 == track2 ) 
+  {
+    doca = 0 ;
+    return StatusCode::SUCCESS ;                                  // RETURN 
+  }
+  //
+  double mu1 = 0 ;
+  double mu2 = 0 ;
+  //
+  const LHCb::State* state1 = state ( *track1 ) ;
+  const LHCb::State* state2 = state ( *track2 ) ;
+  //
+  Line_ line1 ( line ( *state1 ) ) ;
+  Line_ line2 ( line ( *state2 ) ) ;
+  //
+  // (re)use the nice functions by Matt&Juan
+  Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+  //
+  Gaudi::XYZPoint point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+  Gaudi::XYZPoint point2 = line2 ( mu2 ) ; // the point on the second trajectory
+  //
+  if ( iterate ) 
+  {
+    //
+    state1 = state ( *track1 , point1.Z() ) ;
+    state2 = state ( *track2 , point2.Z() ) ;
+    //
+    line1 = line ( *state1 )  ;
+    line2 = line ( *state2 )  ;
+    //
+    // (re)use the nice functions by Matt&Juan
+    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+    //
+    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+    point2 = line2 ( mu2 ) ; // the point on the second trajectory
+    //
+  }
+  //
+  // apply DOCA cut (if needed) 
+  //
+  doca = ( point1 - point2 ).R() ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/** evaluate the distance between the tracks ("DOCA")
+ *  @param track1  (INPUT)  the first  track 
+ *  @param track2  (INPUT)  the second track 
+ *  @param doca    (OUTPUT)      DOCA
+ *  @param chi2    (OUTPUT) chi2(DOCA)
+ *  @param iterate (INPUT)  iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+StatusCode LoKi::FastVertex::distance 
+( const LHCb::Track*      track1  , 
+  const LHCb::Track*      track2  , 
+  double&                 doca    , 
+  double&                 chi2    , 
+  const bool              iterate )
+{
+  //
+  doca = -1.e+99 ;
+  chi2 =  1.e+99 ;
+  //
+  if ( 0 == track1 || 0 == track2 ) { return StatusCode::FAILURE ; }
+  //
+  if ( track1 == track2 ) 
+  {
+    doca = 0 ;
+    chi2 = 0 ;
+    return StatusCode::SUCCESS ;                                  // RETURN 
+  }
+  //
+  double mu1 = 0 ;
+  double mu2 = 0 ;
+  //
+  const LHCb::State* state1 = state ( *track1 ) ;
+  const LHCb::State* state2 = state ( *track2 ) ;
+  //
+  Line_ line1 ( line ( *state1 ) ) ;
+  Line_ line2 ( line ( *state2 ) ) ;
+  //
+  // (re)use the nice functions by Matt&Juan
+  Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+  //
+  Gaudi::XYZPoint point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+  Gaudi::XYZPoint point2 = line2 ( mu2 ) ; // the point on the second trajectory
+  //
+  if ( iterate ) 
+  {
+    //
+    state1 = state ( *track1 , point1.Z() ) ;
+    state2 = state ( *track2 , point2.Z() ) ;
+    //
+    line1 = line ( *state1 )  ;
+    line2 = line ( *state2 )  ;
+    //
+    // (re)use the nice functions by Matt&Juan
+    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+    //
+    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+    point2 = line2 ( mu2 ) ; // the point on the second trajectory
+    //
+  }
+  //
+  // get DOCA 
+  //
+  doca = ( point1 - point2 ).R() ;
+  //
+  //
+  // normal vertex fit 
+  //
+  LoKi::KalmanFilter::TrEntry4 entry1 ;
+  LoKi::KalmanFilter::load ( state1 , entry1 );
+  LoKi::KalmanFilter::TrEntry4 entry2 ;
+  LoKi::KalmanFilter::load ( state2 , entry2 );
+  StatusCode sc = LoKi::KalmanFilter::step ( entry1 , entry2 , 0 ) ;
+  //
+  if ( sc.isFailure() ) { return StatusCode::FAILURE ; }          // RETURN 
+  // 
+  // get chi2(DOCA)
+  //
+  chi2 = entry2.m_chi2 ;
+  //
+  return StatusCode::SUCCESS ;
+}
+
+
 // ============================================================================
 // The END 
 // ============================================================================

@@ -129,6 +129,38 @@ namespace LoKi
       double&                 chi2            , 
       const bool              iterate = false ) ;
     // ========================================================================
+    /** evaluate the distance between the tracks ("DOCA")
+     *  @param track1  (INPUT)  the first  track 
+     *  @param track2  (INPUT)  the second track 
+     *  @param doca    (OUTPUT) DOCA
+     *  @param iterate (INPUT)  iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    GAUDI_API 
+    StatusCode distance 
+    ( const LHCb::Track*      track1          , 
+      const LHCb::Track*      track2          , 
+      double&                 doca            , 
+      const bool              iterate = false ) ;
+    // =======================================================================
+    /** evaluate the distance between the tracks ("DOCA")
+     *  @param track1  (INPUT)  the first  track 
+     *  @param track2  (INPUT)  the second track 
+     *  @param doca    (OUTPUT) DOCA
+     *  @param chi2    (OUTPUT) chi2(DOCA)
+     *  @param iterate (INPUT)  iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    GAUDI_API 
+    StatusCode distance 
+    ( const LHCb::Track*      track1          , 
+      const LHCb::Track*      track2          , 
+      double&                 doca            , 
+      double&                 chi2            , 
+      const bool              iterate = false ) ;
+    // =======================================================================
     /** check the distance between the track & the vertex ("impact-parameter")
      *  @param track   (INPUT)  track 
      *  @param vertex  (INPUT)  vertex 
