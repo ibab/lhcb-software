@@ -68,7 +68,7 @@ class Physics_draft2011:
                                             ,   'Photon_IP'     : 0.13
                                             ,   'Photon_IPChi2' : 50
                                             ,   'Photon_TrChi2' : 5
-                                            ,   'Velo_NHits'    : 0 
+                                            ,   'Velo_NHits'    : 9 
                                             ,   'Velo_Qcut'     : 999 
                                                 }
                        }
