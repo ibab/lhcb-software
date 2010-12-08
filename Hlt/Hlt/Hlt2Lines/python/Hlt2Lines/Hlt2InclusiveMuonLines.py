@@ -131,12 +131,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                 , InputPrimaryVertices = "None"
                                                 , UseP2PVRelations = False
                                                 )
-        line = Hlt2Line( 'SingleHighPTMuon'
+        line = Hlt2Line( 'SingleMuonHighPT'
                          , prescale = self.prescale 
                          , algos = [ BiKalmanFittedMuons, Hlt2SelSingleHighPTMuon]
                          , postscale = self.postscale
                          )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleHighPTMuonDecision" : 50192 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonHighPTDecision" : 50192 } )
         
         #####################################################
         #    Selections for inclusive decays with mu + track 
