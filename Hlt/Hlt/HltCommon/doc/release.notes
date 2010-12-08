@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v7r1 2010-12-08 ===================
 ! 2010-11-22 - V. Gligorov
  - Add protection for a pointer dereference. 
 
