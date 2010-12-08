@@ -34,6 +34,7 @@ __date__    = "2009-03-25"
 __all__ = ( 'iHltInspector', )
 # =============================================================================
 import GaudiPython.Bindings
+import GaudiPython.GaudiAlgs
 import os.path,sys
 
 cpp           = GaudiPython.Bindings.gbl
@@ -415,7 +416,7 @@ class iHltInspector(iService) :
         if not self._ihltds : self.retrieveInterface()
         return self._ihltds
 
-    ## get the underlying IRegicter service
+    ## get the underlying IRegister service
     #  @see Hlt::IRegister
     def hltRegister ( self ) :
         """
@@ -432,15 +433,12 @@ class iHltInspector(iService) :
         """
         """
         if not self._ihltis : self.retrieveInterface()
-        
+
         if not self.hasAlgorithm ( alg ) :
             raise AttributeError, "Unknown algorithm, %s" % alg 
 
-        print 'before inps'
         inps = self.inputs  ( alg )
-        print 'before outs'
         outs = self.outputs ( alg ) 
-        print 'before tess'
         tess = self.readTES ( alg )
         
         output  = "The algorithm: %s  \n" % alg
@@ -451,6 +449,18 @@ class iHltInspector(iService) :
         output += "\tREAD   TES-Locations  : %s \n" % len(tess)
         for l in tess : output += "\t\t%s\n" % l
 
+
+        if isinstance ( alg , str ) :alg = iAlgorithm ( alg )
+        if type(alg) == iAlgorithm  :
+            alg.retrieveInterface()
+            
+        cnts = alg.Counters()
+        if '#accept' in cnts :
+            c = cnts['#accept']
+            m = c.mean    () * 100 
+            e = c.meanErr () * 100           
+            output += "\tACCEPT (%5.2f+-%-5.2f)%% " % ( m , e )
+            
         return output 
 
     # =========================================================================

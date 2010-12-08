@@ -100,7 +100,7 @@ const Hlt::Selection* Hlt::Service::selection
   return isel->second ;
 }
 // ============================================================================
-/* retrieve the object from TES 
+/*  retrieve the object from TES 
  *  @param reader the algorithm
  *  @param location TES-location 
  *  @return object for TES 
@@ -111,7 +111,7 @@ const DataObject* Hlt::Service::tes
   const Key&        location ) const                        // TES-location
 {
   // be a little bit paranoic:
-  Assert ( 0 != reader                   , 
+  Assert ( 0 != reader                  , 
            "tes: invalid reader"        , TES_Invalid_Reader   ) ;
   // check in map
   TESMap::const_iterator ifind = m_tesmap.find ( reader  ) ;
@@ -121,11 +121,11 @@ const DataObject* Hlt::Service::tes
   TESLocs::const_iterator iloc = ifind->second.find ( location ) ;
   Assert ( ifind->second.end() != iloc  , 
            "tes: unknown TES-location"  , TES_Unknown_Location ) ; 
-  // check for own readiong abilities 
+  // check for own reading abilities 
   const GaudiAlgorithm* alg = dynamic_cast<const GaudiAlgorithm*> ( reader ) ;
   if ( 0 == alg ) 
   {
-    Error (" Reader is not GaudiAlgorithm :-(, not (ye) implemented)") ;
+    Error (" Reader is not GaudiAlgorithm :-(, not (yet?) implemented)") ;
     return 0 ;
   } 
   const DataObject* obj = alg->get<DataObject>( location ) ;

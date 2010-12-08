@@ -185,7 +185,7 @@ StatusCode Hlt::Service::registerInput
       iin = m_inputs.find ( consumer ) ;
     }
     SelMap::iterator i = iin->second.find ( selection ) ;
-    if ( iin->second.end() != i ) 
+    if ( iin->second.end() != i && m_pedantic ) 
     { Warning ( "registerInput: the input selection '" 
                 + selection.str() + 
                 "' is already input selection " ,

@@ -10,8 +10,10 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/HashMap.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/StatEntity.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -446,6 +448,13 @@ namespace Hlt
     /// the message stream 
     mutable std::auto_ptr<MsgStream>     m_msgStream ; // message stream 
     // ========================================================================
+  protected:
+    // ============================================================================
+    /// Print statistics 
+    std::size_t printStat         ( const MSG::Level level  ) const ;
+    /// handler for 'StatPrint'-proeprty 
+    void        printStatHandler  ( Property& /* theProp */ )       ;
+   // ========================================================================
   private:
     // ========================================================================
     /// frozen: all transactions are frozen
@@ -529,6 +538,17 @@ namespace Hlt
     bool m_anonymous ;              // allow anynymous access to the selections 
     // spy mode? 
     bool m_spy       ;                                             // spy mode?
+    // ========================================================================
+  private: // counters 
+    // ========================================================================
+    typedef std::pair<StatEntity,StatEntity>                CntPair ;
+    typedef GaudiUtils::HashMap<Gaudi::StringKey,CntPair>   CntMap  ;
+    /// the actual map of counters:  
+    CntMap m_cntMap    ;
+    /// the proper treatment of the strange order of incidents in Gaudi 
+    bool   m_cntEvent  ;
+    /// print statistics at the end?
+    bool   m_statPrint ;
     // ========================================================================
   }; //                                                        end of the class 
   // ==========================================================================

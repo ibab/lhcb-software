@@ -51,10 +51,14 @@ Hlt::Service::Service
   //
   , m_incSvc    ( 0 ) 
   , m_annSvc    ( 0 )
-  //  
+//  
   , m_pedantic  ( true  ) 
   , m_anonymous ( false )
   , m_spy       ( false )
+//
+  , m_cntMap    ( ) 
+  , m_cntEvent  ( false ) 
+  , m_statPrint ( false ) 
 {
   // Perform the pedantic checks of everything
   declareProperty 
@@ -68,8 +72,12 @@ Hlt::Service::Service
       "Allow anonymous access to selections" ) ;
   // Spy ? 
   declareProperty 
-    ( "Spy" , m_spy , "Spy mode" ) ;
-  
+    ( "Spy"       , m_spy , "Spy mode" ) ;  
+  // PrintStatistics 
+  declareProperty 
+    ( "StatPrint" , m_statPrint , "Print Statistics" ) 
+    -> declareUpdateHandler
+    ( &Hlt::Service::printStatHandler, this  ) ;
 }
 // ============================================================================
 // produce the error message 
@@ -86,6 +94,8 @@ StatusCode Hlt::Service::Error
   else if ( sc.isRecoverable () )                 { msg << "RECOVERABLE" ; }
   else if ( StatusCode::FAILURE == sc.getCode() ) { msg << "FAILURE"     ; }
   else                         { msg << "FAILUE(" << sc.getCode() << ")" ; }
+  //
+  msg << endmsg ;
   //
   return sc ;  
 }
@@ -104,6 +114,8 @@ StatusCode Hlt::Service::Warning
   else if ( sc.isRecoverable () )                 { msg << "RECOVERABLE" ; }
   else if ( StatusCode::FAILURE == sc.getCode() ) { msg << "FAILURE"     ; }
   else                         { msg << "FAILUE(" << sc.getCode() << ")" ; }
+  //
+  msg << endmsg ;
   //
   return sc ;  
 }
@@ -195,6 +207,7 @@ StatusCode Hlt::Service::initialize ()
   annSvc () ;
   // check Incident Service & subscribe the incident 
   incSvc () -> addListener ( this , IncidentType::BeginEvent ) ;
+  incSvc () -> addListener ( this , IncidentType::EndEvent   ) ;
   incSvc () -> addListener ( this , IncidentType::BeginRun   ) ;
   //
   return StatusCode::SUCCESS ;
@@ -247,6 +260,9 @@ LoKi::ILoKiSvc* Hlt::Service::lokiSvc() const
 StatusCode Hlt::Service::finalize () 
 {
   // @TODO Hlt::Service::finalize: print here some statistics 
+  //
+  if  ( m_statPrint ) { printStat ( MSG::ALWAYS ) ; }
+  //
   // clear everything:
   m_inputs     . clear   () ;
   m_outputs    . clear   () ;
@@ -266,7 +282,7 @@ StatusCode Hlt::Service::finalize ()
 // ============================================================================
 // handle the incidents
 // ============================================================================
-void Hlt::Service::handle ( const Incident& /* inc */ ) 
+void Hlt::Service::handle ( const Incident& inc ) 
 {
   if ( !m_frozen ) 
   {
@@ -276,17 +292,105 @@ void Hlt::Service::handle ( const Incident& /* inc */ )
     //
     m_frozen = true ;
   } 
-  // clear all selections 
-  for ( SelMap::iterator isel = m_selections.begin() ; 
-        m_selections.end() != isel ; ++isel ) 
+  //
+  if      ( IncidentType::BeginEvent == inc.type() ) { m_cntEvent = true ; }
+  else if ( IncidentType::  EndEvent == inc.type() ) 
   {
-    Hlt::Selection* sel = isel->second ;
-    if ( 0 != sel ) { sel -> clean () ; }
-  } 
+    // ======================================================
+    // clear all selections at end of the event 
+    for ( SelMap::iterator isel = m_selections.begin() ; 
+          m_selections.end() != isel ; ++isel ) 
+    {
+      Hlt::Selection* sel = isel->second ;
+      if ( 0 != sel ) 
+      {
+        //
+        if ( m_cntEvent ) 
+        {
+          CntMap::mapped_type& cnts = m_cntMap[ sel->id() ] ;
+          StatEntity&          rate = cnts.first  ;
+          StatEntity&          size = cnts.second ;
+          //
+          rate += sel -> decision() ;
+          if ( 0 < sel->size() ) { size += sel -> size () ; }
+        }
+        //
+        sel -> clean () ; 
+      }
+    }
+    //
+    m_cntEvent = false ;
+  }
+  //
 }
 // ============================================================================
-
-
+// Handler for statistics printout 
+// ============================================================================
+void Hlt::Service::printStatHandler  ( Property& /* theProp */ )
+{
+  // no action if not yet initialized 
+  if ( this -> FSMState() < Gaudi::StateMachine::INITIALIZED ) { return ; }
+  if ( m_statPrint    ) { this -> printStat ( MSG::ALWAYS ) ; }
+}
+// ============================================================================
+// Print statistics 
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  // the header row for counters printout
+  const std::string s_header  = 
+    " |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |" ;
+  // format for regular statistical printout rows
+  const std::string s_format1 = 
+    " | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |" ;
+  // format for "efficiency" statistical printout rows
+  const std::string s_format2 = 
+    " |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |" ;
+  const std::string s_line    = " +" + std::string(128,'-') + '+';
+  // ==========================================================================
+} //                                                 end of anonymous namespace 
+// ============================================================================
+std::size_t Hlt::Service::printStat( const MSG::Level level ) const
+{
+  // print statistics
+  if ( m_cntMap.empty() ) { return 0 ; }
+  MsgStream& msg = msgStream ( level ) ;
+  //
+  msg << "Number of counters : "  << m_cntMap.size() ;
+  //
+  // Size-counter 
+  //
+  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;  
+  for ( CntMap::const_iterator entry = m_cntMap.begin() ;
+        m_cntMap.end() != entry ; ++entry )
+  {
+    msg << std::endl
+        << Gaudi::Utils::formatAsTableRow
+      ( entry -> first                ,
+        entry -> second.second        ,
+        false                         ,
+        s_format1                     , s_format2 ) ;
+  }
+  //
+  // Rate counters 
+  //
+  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;  
+  for ( CntMap::const_iterator entry = m_cntMap.begin() ;
+        m_cntMap.end() != entry ; ++entry )
+  {
+    msg << std::endl
+        << Gaudi::Utils::formatAsTableRow
+      ( "acc: " + entry -> first.str() ,
+        entry -> second.first          ,
+        true                           ,
+        s_format1                      , s_format2 ) ;
+  }
+  //
+  msg << std::endl << s_line << endmsg ;
+  //
+  return m_cntMap.size() ;
+}
 // ============================================================================
 // the factory
 // ============================================================================
