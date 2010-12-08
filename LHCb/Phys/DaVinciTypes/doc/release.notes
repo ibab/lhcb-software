@@ -5,6 +5,7 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r2 2010-12-08 =========================
 ! 2010-12-07 - Vanya Belyaev    
  - fix stupid bug in RecVertexHolder desrcructor 
 
