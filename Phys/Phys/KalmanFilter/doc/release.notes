@@ -5,6 +5,8 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================== HltCommon v1r0 2010-12-08 ===================
+
 ! 2010-12-07 - Vanya Belyaev
 
  - add more functions 
