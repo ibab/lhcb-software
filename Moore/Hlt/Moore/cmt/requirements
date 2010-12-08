@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version v10r2
+version v11r0
 
 branches doc cmt options python
 
@@ -27,9 +27,6 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use HltSettings         v4r1p1  Hlt
-use Hlt2Lines           v6r0p1  Hlt
-use LoKiNumbers         v9r3    Phys
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
