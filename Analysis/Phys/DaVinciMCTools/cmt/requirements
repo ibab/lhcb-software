@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v9r27
+version           v9r27p1
 
 # This template is an example for a standard Algorithm package
 #
@@ -31,6 +31,7 @@ use  RecEvent            v*  Event
 use  CaloUtils           v*  Calo 
 use  CaloInterfaces      v*  Calo
 use  MCInterfaces        v*  Kernel
+
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)

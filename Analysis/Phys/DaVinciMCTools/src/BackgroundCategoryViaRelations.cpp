@@ -57,13 +57,13 @@ IBackgroundCategory::categories BackgroundCategoryViaRelations::category(const L
 
   for (std::vector<std::string>::const_iterator item = m_P2BCLocation.begin(); item!=m_P2BCLocation.end(); ++item) {
     const std::string& address = *item;
-    if (exist<TableP2BC>(address) ) {
-      verbose() << "Adding table " << address << endmsg;
-      TableP2BC* table = get<TableP2BC>(address);
-      m_catRelations.push_back(table);
-    } else {
-      Error ( " There is no valid data at '" + address + "'" ).ignore() ;
-    }
+      if (exist<TableP2BC>(address) ) {
+        verbose() << "Adding table " << address << endmsg;
+        TableP2BC* table = get<TableP2BC>(address);
+        m_catRelations.push_back(table);
+      } else {
+        Error ( " There is no valid data at '" + address + "'" ).ignore() ;
+      }
   }
 
   //If the location provided is rubbish complain

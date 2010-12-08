@@ -5,7 +5,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IBackgroundCategory.h"          // Interface
-#include "Relations/IRelation.h"
+#include "Relations/Relations.h"
+#include "Event/Particle.h"
 
 /** @class BackgroundCategoryViaRelations BackgroundCategoryViaRelations.h
  *
@@ -34,17 +35,20 @@ public:
   StatusCode initialize(); 
   StatusCode finalize();
 
-  const LHCb::MCParticle* origin( const LHCb::Particle* ) {Error ( "The origin method is not applicable to this BackgroundCategory implementation" ).ignore() ; return 0;};
-  const DaughterAndPartnerVector getDaughtersAndPartners( const LHCb::Particle* ) {Error("The getDaughtersAndPartners method is not applicable to this BackgroundCategory implementation" ).ignore() ; return DaughterAndPartnerVector(0);};
-
+  const LHCb::MCParticle* origin( const LHCb::Particle* ) {
+    Error ( "The origin method is not applicable to this BackgroundCategory implementation" ).ignore() ; 
+    return 0;
+  }
+  const DaughterAndPartnerVector getDaughtersAndPartners( const LHCb::Particle* ) {
+    Error("The getDaughtersAndPartners method is not applicable to this BackgroundCategory implementation" ).ignore() ; 
+    return DaughterAndPartnerVector(0);
+  }
+  
   virtual ~BackgroundCategoryViaRelations( ); ///< Destructor
-
-protected:
 
 private:
 
-  //typedef IRelation <const LHCb::Particle*,IBackgroundCategory::categories> TableP2BC;
-  typedef IRelation <const LHCb::Particle*,int> TableP2BC;
+  typedef LHCb::Relation1D<LHCb::Particle,int> TableP2BC;
   typedef std::vector<TableP2BC*> TablesP2BC;
 
   std::vector<std::string> m_P2BCLocation;

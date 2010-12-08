@@ -4,6 +4,11 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2010-12-08 - Juan Palacios
+ - BackgroundCategoryViaRelations
+  . Bug fix: type of table was wrong.
+ - Increase to v9r27p1.
+
 !========================== DaVinciMCTools v9r27 2010-11-02 ==================
 
 ! 2010-10-25 - Jibo He
