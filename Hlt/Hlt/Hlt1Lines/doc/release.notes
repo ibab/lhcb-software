@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r0   2012-12-08 ===================
 ! 2010-11-22 - Vanya Belyaev
 
  - Hlt1Lines/Hl1Units.py
