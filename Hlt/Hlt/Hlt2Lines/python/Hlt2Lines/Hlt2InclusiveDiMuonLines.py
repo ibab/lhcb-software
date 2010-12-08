@@ -91,6 +91,16 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'PromptJPsiVChi2'         :   15
                    ,'PromptJPsiTrChi2'        :    5
 
+                   ,'DetachedDiMuonMinMass'   : 1000 #MeV
+                   ,'DetachedDiMuonPt'        :    0  #MeV
+                   ,'DetachedDiMuonMuPt'      :  500#Mev
+                   ,'DetachedDiMuonVertexChi2':  25
+                   ,'DetachedDiMuonDLS'       :   5
+
+                   ,'DetachedHeavyDiMuonMinMass': 2950 # MeV
+                   ,'DetachedHeavyDiMuonDLS'    : 3
+                   ,'DetachedHavyDiMuonPt'      : 0
+
                    }
     
 
@@ -154,12 +164,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         unbiased heavy dimuon - prescaled
         '''
-        line = Hlt2Line('UnbiasedDiMuon'
+        line = Hlt2Line('DiMuon'
                         , prescale = self.prescale 
                         , algos = [ TrackFittedDiMuon, filter ]
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDecision" : 50200 } )
 
 
         #--------------------------------------------
@@ -203,7 +213,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         unbiased dimuon low mass - prescaled
         '''
-        line.clone( 'UnbiasedDiMuonLowMass'
+        line.clone( 'DiMuonLowMass'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedDiMuonLowMinMass)s*MeV)"\
                                  "& (PT>%(UnbiasedDiMuonLowPt)s*MeV) "\
@@ -212,12 +222,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonLowMassDecision":  50210 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonLowMassDecision":  50210 } )
         #--------------------------------------------
         '''
         unbiased J/psi
         '''
-        line.clone( 'DiMuonUnbiasedJPsi'
+        line.clone( 'DiMuonJPsi'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
@@ -235,14 +245,14 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                   
             
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiDecision":  50201 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )
         
 
         #--------------------------------------------
         '''
         unbiased Psi(2S)
         '''
-        line.clone( 'DiMuonUnbiasedPsi2S'
+        line.clone( 'DiMuonPsi2S'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<%(UnbiasedPsi2SMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedPsi2SPt)s*MeV) "\
@@ -253,13 +263,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedPsi2SDecision": 50202 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonPsi2SDecision": 50202 } )
         
         #--------------------------------------------
         '''
         unbiased Bmm
         '''
-        line.clone( 'DiMuonUnbiasedBmm'
+        line.clone( 'DiMuonB'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedBmmMinMass)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(UnbiasedBmmVertexChi2)s )"  %  self.getProps() 
@@ -268,27 +278,27 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedBmmDecision":   50203 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonBDecision":   50203 } )
         
         #--------------------------------------------
-        '''
-        prescaled unbiased J/psi for low rate scenario
-        '''
-        line.clone( 'DiMuonUnbiasedJPsiLow'
-                    , prescale = self.prescale
-                    , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
-                                 "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
-                                 "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"% self.getProps() }
-                    , postscale = self.postscale
-                    )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiLowDecision":  50204 } )
+      ##   '''
+##         prescaled unbiased J/psi for low rate scenario
+##         '''
+##         line.clone( 'DiMuonJPsiLow'
+##                     , prescale = self.prescale
+##                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
+##                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
+##                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
+##                                  "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"% self.getProps() }
+##                     , postscale = self.postscale
+##                     )
+##         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiLowDecision":  50204 } )
         
         #--------------------------------------------
         '''
         unbiased Zmm
         '''
-        line.clone( 'DiMuonUnbiasedZmm'
+        line.clone( 'DiMuonZ'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedZmmMinMass)s*MeV) "\
                                  "& (PT>%(UnbiasedZmmPt)s*MeV) "% self.getProps() 
@@ -297,7 +307,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedZmmDecision":   50205 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonZDecision":   50205 } )
         #--------------------------------------------
         '''
         unbiased Drell-Yan 1
@@ -305,7 +315,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonDY1'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "  (MM>%(DY1MinMass)s*MeV) "\
-                                         "& (MM<%(DY1MaxMass)s*MeV) "\
                                          "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
@@ -318,7 +327,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonDY2'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "  (MM>%(DY2MinMass)s*MeV) "\
-                                         "& (MM<%(DY2MaxMass)s*MeV) "\
                                          "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
@@ -332,7 +340,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonDY3'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "  (MM>%(DY3MinMass)s*MeV) "\
-                                         "& (MM<%(DY3MaxMass)s*MeV) "\
                                          "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
@@ -345,7 +352,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonDY4'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "  (MM>%(DY4MinMass)s*MeV) "\
-                                         "& (MM<%(DY4MaxMass)s*MeV) "\
                                          "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
@@ -476,12 +482,56 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             This line is uses track fitted dimuons and cuts on a decay length significance of 3.
 
         '''
+
+        filter = Hlt2Member(   FilterDesktop 
+                               , "Filter"
+                               , Code = "(MM>%(DetachedDiMuonMinMass)s*MeV)"\
+                               " & (PT>%(DetachedDiMuonPt)s*MeV)"\
+                               " & (MINTREE('mu-'==ABSID,PT)>%(DetachedDiMuonMuPt)s*MeV) "\
+                               "& (VFASPF(VCHI2PDOF)<%(DetachedDiMuonVertexChi2)s )"\
+                               "& (BPVDLS>%(DetachedDiMuonDLS)s )"%  self.getProps() 
+                               , InputLocations  = [ TrackFittedDiMuon ]
+                               )
+        
+        #--------------------------------------------
+        '''
+        detached heavy dimuon 
+        '''
+        line = Hlt2Line('DiMuonDetached'
+                        , prescale = self.prescale 
+                        , algos = [ PV3D(), TrackFittedDiMuon, filter ]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedDecision" : 50045 } )
+
+
+      
+        #--------------------------------------------
+        '''
+        detached heavy dimuon
+        '''
+        DiMuonBiasedMass = line.clone( 'DiMuonDetachedHeavy'
+                                       , prescale = self.prescale
+                                       , Filter = { 'Code' : "(MM>%(DetachedHeavyDiMuonMinMass)s*MeV)"\
+                                                    " & (PT>%(DetachedHavyDiMuonPt)s*MeV)"\
+                                                    " & (MINTREE('mu-'==ABSID,PT)>%(DetachedDiMuonMuPt)s*MeV) "\
+                                                    "& (VFASPF(VCHI2PDOF)<%(DetachedDiMuonVertexChi2)s )"\
+                                                    "& (BPVDLS>%(DetachedHeavyDiMuonDLS)s )"%  self.getProps() 
+                                                    }
+                    , postscale = self.postscale
+                    )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedHeavyDecision" : 50046 } )
+
+
+
         from Hlt2SharedParticles.TrackFittedDiMuon import DetachedTrackFittedJpsi2MuMu
         
-        DiMuonBiasedJpsi = Hlt2Line ( 'DiMuonBiasedJPsi'
+        DiMuonBiasedJpsi = Hlt2Line ( 'DiMuonDetachedJPsi'
                                       , prescale = self.prescale 
                                       , algos = [ PV3D(), DetachedTrackFittedJpsi2MuMu ]
                                       , postscale = self.postscale
                                       )
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonBiasedJPsiDecision" : 50044 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedJPsiDecision" : 50044 } )
+
