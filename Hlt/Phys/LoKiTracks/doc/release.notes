@@ -5,6 +5,7 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTracks v1r3 2010-12-08 ===================
 ! 2010-10-24 - Vanya Belyaev
 
    - add new symbol TrNUM ( void -> double ) 
