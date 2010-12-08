@@ -1,7 +1,11 @@
+2010-12-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: handling Coverity run - fix
+
 2010-11-26  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: modified to be able to use Coverity in the Nightlies
-	
+
 2010-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker: Python framework for Subversion hooks.
