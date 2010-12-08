@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r8 2010-12-08 =========================
 ! 2010-12-01 - Marco Cattaneo
  - PatSeedFit.cpp: Add missing include following OTDet patch 104306
  - Fix a few remarks from icc compiler
