@@ -4,6 +4,7 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================== FastVelo v1r0 2010-12-08 ===================
 ! 2010-12-06 - Olivier Callot
  - New option ZVertexMaxBck=1200 to allow tracks from beam2-gas. No time penalty but a 
    small increase in ghosts
