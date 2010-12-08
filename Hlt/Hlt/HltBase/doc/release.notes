@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v10r2 2010-12-08 ===================
 ! 2010-12-07 - Vanya Belyaev
 
  - remove confusing branches in Hlt::Stage/Candidate  
