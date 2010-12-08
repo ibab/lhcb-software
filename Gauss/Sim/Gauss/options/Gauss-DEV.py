@@ -13,6 +13,6 @@ importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 # latest database tags 
 ##############################################################################
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "head-20101003"
-LHCbApp().CondDBtag = "sim-20101008-vc-md100"
+LHCbApp().DDDBtag   = "head-20101206"
+LHCbApp().CondDBtag = "sim-20101208-vc-md100"
 

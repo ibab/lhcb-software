@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-12-08 - Gloria CORTI
+ - Use latest DDDB and SIMCOND tags in Gauss-DEV.py (head-20101206 and 
+   sim-20101208-vc-md100 respectively)
+
 ! 2010-10-28 - Patrick Robbe
  - Configuration.py: add beam option handling for Pythia8 generator and
    Special, Inclusive and SignalPlain methods
