@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_CACHEFUNCS_H 
 #define LOKI_CACHEFUNCS_H 1
@@ -30,7 +30,7 @@
  *
  *                    $Revision:$
  *  Last Modification $Date:$ 
- *                 by $Author: ibelyaev $ 
+ *                 by $Author$ 
  */
 // ============================================================================
 namespace LoKi

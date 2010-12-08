@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKITRIGGER_L0MUON2TRACKBASE_H 
 #define LOKITRIGGER_L0MUON2TRACKBASE_H 1
@@ -51,9 +51,9 @@ namespace Hlt
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2010-10-02
    *  
-   *  $Revision: 53561 $
-   *  Last modification $Date: 2010-08-17 10:56:47 +0200 (Tue, 17 Aug 2010) $
-   *                 by $Author: graven $
+   *  $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
   class L0Muon2TrackBase : public Hlt::Base 
   {

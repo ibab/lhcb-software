@@ -8,7 +8,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/System.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -66,7 +65,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_TRACK 
      *  @date 2010-08-01
      */
-    class IsTrack 
+    class GAUDI_API IsTrack 
       : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     { 
     public:
@@ -88,7 +87,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_L0MUON 
      *  @date 2010-08-01
      */
-    class IsL0Muon : public IsTrack
+    class GAUDI_API IsL0Muon : public IsTrack
     { 
     public:
       // ======================================================================
@@ -109,7 +108,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_L0DIMUON 
      *  @date 2010-08-01
      */
-    class IsL0DiMuon : public IsL0Muon
+    class GAUDI_API IsL0DiMuon : public IsL0Muon
     { 
     public:
       // =======================================================================
@@ -130,7 +129,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_L0CALO
      *  @date 2010-08-01
      */
-    class IsL0Calo : public IsL0DiMuon
+    class GAUDI_API IsL0Calo : public IsL0DiMuon
     { 
     public:
       // ======================================================================
@@ -151,7 +150,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_VERTEX
      *  @date 2010-08-01
      */
-    class IsVertex : public IsL0Calo
+    class GAUDI_API IsVertex : public IsL0Calo
     { 
     public:
       // ======================================================================
@@ -172,7 +171,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_MULTITRACK
      *  @date 2010-08-01
      */
-    class IsMultiTrack : public IsVertex
+    class GAUDI_API IsMultiTrack : public IsVertex
     { 
     public:
       // ======================================================================
@@ -193,7 +192,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_STAGE
      *  @date 2010-08-01
      */
-    class IsStage : public IsMultiTrack
+    class GAUDI_API IsStage : public IsMultiTrack
     { 
     public:
       // ======================================================================
@@ -214,7 +213,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_TYPE 
      *  @date 2010-08-01
      */
-    class Type 
+    class GAUDI_API Type 
       : public LoKi::BasicFunctors<const Hlt::Stage*>::Function
     { 
     public:
@@ -273,7 +272,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_TrCUT
      *  @date 2010-08-01
      */
-    class TrCut
+    class GAUDI_API TrCut
       : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     { 
     public:
@@ -310,7 +309,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TS_LOCKED
      *  @date 2010-08-01
      */
-    class Locked
+    class GAUDI_API Locked
       : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     {
     public:
@@ -332,7 +331,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
-    class History 
+    class GAUDI_API History 
       : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     {
     public:
@@ -366,7 +365,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
-    class HistorySub : public History 
+    class GAUDI_API HistorySub : public History 
     {
     public:
       // ======================================================================
@@ -394,7 +393,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
-    class HasCache : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    class GAUDI_API HasCache 
+      : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     {
     public:
       // ======================================================================
@@ -430,7 +430,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
-    class Cache1 : public LoKi::BasicFunctors<const Hlt::Stage*>::Function
+    class GAUDI_API Cache1 
+      : public LoKi::BasicFunctors<const Hlt::Stage*>::Function
     {
     public:
       // ======================================================================
@@ -466,7 +467,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-06
      */
-    class Cache2 : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    class GAUDI_API Cache2
+      : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
     {
     public:
       // ======================================================================
@@ -502,7 +504,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */     
-    class HistoryRegex : public HistorySub
+    class GAUDI_API HistoryRegex : public HistorySub
     {
     public:
       // ======================================================================

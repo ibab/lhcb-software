@@ -7,7 +7,9 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-// TrackEvent/RecEvent
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
+// TrackEvent
 // ============================================================================
 #include "Event/Track.h"
 // ============================================================================
@@ -59,9 +61,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
-    class Match 
-      : public virtual LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
-      , public         LoKi::Hlt1::MatchTool 
+    class GAUDI_API Match 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
+      , public LoKi::Hlt1::MatchTool 
     {
     protected:
       // ======================================================================
@@ -129,7 +131,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
-    class Match2 : public Match  
+    class GAUDI_API Match2 : public Match  
     { 
     protected:
       // ======================================================================

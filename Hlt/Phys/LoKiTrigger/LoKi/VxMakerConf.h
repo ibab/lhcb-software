@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VXMAKERCONF_H 
 #define LOKI_VXMAKERCONF_H 1
@@ -35,7 +35,7 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2008-11-12
  *
- *                    $Revision: 53561 $
+ *                    $Revision$
  *  Last Modification $Date$ 
  *                 by $Author$
  */

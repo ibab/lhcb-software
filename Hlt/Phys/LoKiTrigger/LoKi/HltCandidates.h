@@ -6,8 +6,11 @@
 // Include files
 // ============================================================================
 #include<iostream>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits.hpp>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // HltBase
 // ============================================================================
 #include "Event/HltCandidate.h"
@@ -59,7 +62,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class TotalStages
+    class GAUDI_API TotalStages
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
@@ -80,7 +83,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class NStages : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
+    class GAUDI_API NStages 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
       // ======================================================================
@@ -108,12 +112,12 @@ namespace LoKi
     } ;
     // ========================================================================
     /** trivial functor to check if Candidate is 'branch', e.g. resutl
-     *  of split of another candidate or stage
+     *  of split of another candidate
      *  @see LoKi::Cuts::TC_BRANCH
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class Branch
+    class GAUDI_API Branch
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
     {
     public:
@@ -135,7 +139,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class StageFun : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
+    class GAUDI_API StageFun 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
       // ======================================================================
@@ -177,7 +182,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class StageCut : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
+    class GAUDI_API StageCut 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
     {
     public:
       // ======================================================================
@@ -220,7 +226,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-21
      */
-    class SlotFun : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
+    class GAUDI_API SlotFun 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
       // ======================================================================
     public :
@@ -303,7 +310,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-21
      */
-    class SlotCut : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
+    class GAUDI_API SlotCut 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
     {
       // ======================================================================
     public :
@@ -387,7 +395,8 @@ namespace LoKi
      *  @author Alexander Mazurov alexander.mazurov@gmail.com
      *  @date 2010-10-22
      */
-    class SlotFilter : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
+    class GAUDI_API SlotFilter
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
     {
     public:
       // ======================================================================
@@ -463,7 +472,8 @@ namespace LoKi
      *  @author Alexander MAZUROV alexander.mazurov@gmail.com
      *  @date 2010-11-21
      */
-    class SlotMap : public LoKi::BasicFunctors<const Hlt::Candidate*>::Map
+    class GAUDI_API SlotMap 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Map
     {
     public:
       // ======================================================================

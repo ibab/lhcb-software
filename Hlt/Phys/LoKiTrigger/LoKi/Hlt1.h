@@ -1,13 +1,13 @@
 // $Id$
 // ============================================================================
-// $URL$
-// ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
 // ============================================================================
 // TrackEvent/RecEvent
 // ============================================================================
@@ -61,7 +61,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TC_SELECTION
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      */
-    class Selection 
+    class GAUDI_API Selection 
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Source
     {
     public:
@@ -141,7 +141,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class Sink : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
+    class GAUDI_API Sink 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
     {
       // ======================================================================
     public:

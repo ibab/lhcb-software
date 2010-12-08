@@ -7,6 +7,8 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // TrackEvent/RecEvent
 // ============================================================================
 #include "Event/RecVertex.h"
@@ -56,7 +58,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    class VxMakerBase : public LoKi::Hlt1::HelperTool
+    class GAUDI_API VxMakerBase : public LoKi::Hlt1::HelperTool
     {
     public:      
       // ======================================================================
@@ -143,9 +145,9 @@ namespace LoKi
      *  @see LoKi::Cuts::TC_VXMAKE2
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      */
-    class VxMaker
-      : public virtual LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
-      , public         LoKi::Hlt1::VxMakerBase 
+    class GAUDI_API VxMaker
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
+      , public LoKi::Hlt1::VxMakerBase 
     {
     public:
       // ======================================================================
@@ -184,7 +186,7 @@ namespace LoKi
      *  @see LoKi::Cuts::TC_VXMAKE2
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      */
-    class VxMaker2 : public LoKi::Hlt1::VxMaker 
+    class GAUDI_API VxMaker2 : public LoKi::Hlt1::VxMaker 
     {
     private:
       // ======================================================================
@@ -235,8 +237,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2010-12-04 
      */
-    class VxMaker3
-      : public virtual LoKi::BasicFunctors<const Hlt::Candidate*>::Source 
+    class GAUDI_API VxMaker3
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Source 
     {
     private:
       // ======================================================================
@@ -286,9 +288,9 @@ namespace LoKi
      *  @see LoKi::Cuts::TC_DITRACKS
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      */
-    class DiTrackMaker
-      : public virtual LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
-      , public         LoKi::Hlt1::VxMakerBase 
+    class GAUDI_API DiTrackMaker
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
+      , public LoKi::Hlt1::VxMakerBase 
     {
     private:
       // ======================================================================

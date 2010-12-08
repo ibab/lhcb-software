@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_HELPERTOOL_H 
 #define LOKI_HELPERTOOL_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiKernel/ObjectVector.h"
 // ============================================================================
@@ -45,9 +46,9 @@ class GaudiAlgorithm ;
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date   2010-10-30
  *
- *                    $Revision: 114376 $
- *  Last Modification $Date: 2010-12-04 17:49:22 +0100 (Sat, 04 Dec 2010) $ 
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -61,7 +62,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl 
      *  @date 2010-10-30
      */
-    class HelperTool : public virtual LoKi::Listener
+    class GAUDI_API HelperTool : public virtual LoKi::Listener
     {
     public:
       // ======================================================================

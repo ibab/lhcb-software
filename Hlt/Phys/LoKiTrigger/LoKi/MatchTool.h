@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MATCHTOOL_H 
 #define LOKI_MATCHTOOL_H 1
@@ -6,6 +6,8 @@
 // Include files
 // ============================================================================
 // GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
 // ============================================================================
 // TrackEvent/RecEvent
 // ============================================================================
@@ -39,7 +41,7 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2010-10-28
  *
- *                    $Revision: 53561 $
+ *                    $Revision$
  *  Last Modification $Date$ 
  *                 by $Author$
  */
@@ -57,7 +59,7 @@ namespace LoKi
      *  @author Vanya Belyaev
      *  @date   2010-10-28
      */
-    class MatchTool : public LoKi::Hlt1::HelperTool
+    class GAUDI_API MatchTool : public LoKi::Hlt1::HelperTool
     {
     public:
       // ======================================================================
