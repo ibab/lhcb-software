@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-12-08 - Neal Gauvin
+ - Major update of CalibrationIP to make it more reactable to beam moves.
+
 ! 2010-12-06 - Neal Gauvin
  - Save the PV candidates in the tuple when SaveTuple is set.
  - Removed bug : GetUpstreamPV was using beamline info before beamline info is actually retrieved...

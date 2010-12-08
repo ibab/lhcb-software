@@ -43,14 +43,65 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+  class HistoPVPos {
+  public: 
+    /// Standard constructor
+    HistoPVPos(){};
+    HistoPVPos( CalibrateIP*, std::string );
+    /// Destructor
+    virtual ~HistoPVPos( ){
+      //This should not be needed
+//       delete hx; delete hy; delete hz;
+//       delete hxx; delete hxy; delete hxz;
+//       delete hyy; delete hyz; delete hzz;
+    };
 
+    void Reset(){
+      hx->reset();
+      hy->reset();
+      hz->reset();
+      hxx->reset();
+      hyy->reset();
+      hzz->reset();
+      hxy->reset();
+      hxz->reset();
+      hyz->reset();      
+    };
+    
+    void Fill( double & x, double & y, double & z ){
+      hx->fill( x ); hy->fill( y ); hz->fill( z );
+      hxx->fill( x*x ); hyy->fill( y*y ); hzz->fill( z*z );
+      hxy->fill( x*y ); hyz->fill( y*z ); hxz->fill( x*z );      
+    }
+
+    void Add( HistoPVPos & HA ){
+      hx->add( *(HA.hx) ); hy->add( *(HA.hy) ); hz->add( *(HA.hz) );
+      hxx->add( *(HA.hxx) ); hyy->add( *(HA.hyy) ); hzz->add( *(HA.hzz) );
+      hxy->add( *(HA.hxy) ); hyz->add( *(HA.hyz) ); hxz->add( *(HA.hxz) );
+    }    
+
+    ///AIDA histograms
+    AIDA::IHistogram1D*  hx;
+    AIDA::IHistogram1D*  hy;
+    AIDA::IHistogram1D*  hz;
+    AIDA::IHistogram1D*  hxx;
+    AIDA::IHistogram1D*  hxy;
+    AIDA::IHistogram1D*  hxz;
+    AIDA::IHistogram1D*  hyy;
+    AIDA::IHistogram1D*  hyz;
+    AIDA::IHistogram1D*  hzz;
+  };
+
+
+protected:
+  
 private:
 
+  /// Compute the Beam Line
+  virtual StatusCode ComputeBeamLine( HistoPVPos &  ); 
   void SaveBeamLine(); ///< Save the beam line in TES
   void GetLongs( const LHCb::RecVertex*, std::vector<const LHCb::Track*> & );
   void SmearPV( Gaudi::XYZPoint & );
-  
 
   ToolHandle<ITrackVertexer> m_vertexer ;
 
@@ -65,20 +116,10 @@ private:
   Gaudi::Transform3D m_toVeloFrame; ///< to transform to local velo frame
   Gaudi::Transform3D m_toGlobalFrame; ///< to transform from local velo frame
 
-
-  ///AIDA histograms
-  AIDA::IHistogram1D*  m_x;
-  AIDA::IHistogram1D*  m_y;
-  AIDA::IHistogram1D*  m_z;
-  AIDA::IHistogram1D*  m_xx;
-  AIDA::IHistogram1D*  m_xy;
-  AIDA::IHistogram1D*  m_xz;
-  AIDA::IHistogram1D*  m_yy;
-  AIDA::IHistogram1D*  m_yz;
-  AIDA::IHistogram1D*  m_zz;
+  HistoPVPos H; ///< histogramms of PV positions
+  HistoPVPos HT; ///< temp histogramms of PV positions
 
   int m_nbevent;
-  int m_nbpv; // total number of pv considered
   int m_bin; ///< histo binning
   double m_beamstab; ///< threshold to consider beam stable
 

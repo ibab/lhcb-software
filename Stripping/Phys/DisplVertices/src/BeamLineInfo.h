@@ -30,7 +30,7 @@ public:
 
   virtual ~BeamLineInfo( ); ///< Destructor
 
-  void SetNbEntries( int & ); ///<Set the number of entries
+  void SetNbEntries( int ); ///<Set the number of entries
   void SetIPPosition( Gaudi::XYZPoint & ); ///<Set interaction point position
   ///Set interaction point position
   void SetIPPosition( double, double, double ); 
@@ -58,7 +58,7 @@ public:
   std::string PrintIP();
 
   int & GetNbEntries();///<Get the number of PVs used so far
-  Gaudi::XYZPoint & GetIPPosition();///<Get interaction point position
+  Gaudi::XYZPoint GetIPPosition();     ///<Get interaction point position
   Gaudi::XYZPoint GetIPPositionErrors();///<Get IP position errors
   Gaudi::XYZVector & GetXEigenVector();///<Get X eigenvector
   Gaudi::XYZVector & GetYEigenVector();///<Get Y eigenvector

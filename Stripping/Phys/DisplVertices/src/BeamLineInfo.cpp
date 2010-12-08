@@ -36,7 +36,7 @@ BeamLineInfo::~BeamLineInfo() {}
 //=============================================================================
 // Set parameters
 //=============================================================================
-void BeamLineInfo::SetNbEntries( int & nb ){
+void BeamLineInfo::SetNbEntries( int nb ){
   m_nbentries = nb;
 }
 
@@ -96,7 +96,7 @@ string BeamLineInfo::PrintIP(){
 //  Get parameters
 //=============================================================================
 int & BeamLineInfo::GetNbEntries(){ return m_nbentries; }
-Gaudi::XYZPoint & BeamLineInfo::GetIPPosition(){ return m_ipPosition; }
+Gaudi::XYZPoint BeamLineInfo::GetIPPosition(){ return m_ipPosition; }
 Gaudi::XYZPoint BeamLineInfo::GetIPPositionErrors(){ 
   return Gaudi::XYZPoint( sqrt(m_sigma1/m_nbentries), 
                           sqrt(m_sigma2/m_nbentries), 
