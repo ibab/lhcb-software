@@ -26,8 +26,16 @@ namespace LHCb
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-28 
+ *  
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -1351,7 +1359,193 @@ namespace LoKi
       // ======================================================================
     };    
     // ========================================================================
+    /** @class Cov2 
+     *  trivial accessor to elements of particle covariance 7x7-matrix
+     *  @see LoKi::Cuts::PCOV2
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    class GAUDI_API Cov2 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from indices 
+      Cov2 ( const unsigned short i , 
+             const unsigned short j ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Cov2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cov2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Cov2 () ;                          // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      unsigned short m_i ;
+      unsigned short m_j ;      
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Perr2
+     *  trivial accessor to get estimaet for momentum dispersion 
+     *  \f$ \sigma^2(\left| \vec{p} \right|) \f$ 
+     *  @see LoKi::Cuts::PERR2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    class GAUDI_API Perr2
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Perr2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Perr2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PTerr2
+     *  trivial accessor to get estimate for transverse momentum dispersion 
+     *  \f$ \sigma^2( p_T) \f$ 
+     *  @see LoKi::Cuts::PTERR2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    class GAUDI_API PTerr2
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~PTerr2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PTerr2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class M2err2
+     *  trivial accessor to get estimate for M^2 dispersion 
+     *  \f$ \sigma^2( M^2 ) \f$ 
+     *  @see LoKi::Cuts::M2ERR2
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    class GAUDI_API M2err2
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~M2err2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  M2err2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+  namespace Cuts 
+  {
+    // ========================================================================
+    /** @typedef PCOV2 
+     *  Trivial accessor toe elemenst of particel covarinacte matrix :
+     *  @code 
+     * 
+     *   const PCPOV2 pXpX = PCCOV2 ( 0 , 0 ) ;
+     *   const PCPOV2  xPx = PCCOV2 ( 4 , 0 ) ;
+     *
+     *   const LHCb::Particle* p = ... ;
+     *
+     *
+     *   const double cov2_PxPx = pXpX ( p ) ;
+     *   const double cov2_xPx  =  xPx ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Particles::Cov2 
+     *  @see LHCb::Particle::momCovMatrix 
+     *  @see LHCb::Particle::posCovMatrix 
+     *  @see LHCb::Particle::posMomCovMatrix 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    typedef LoKi::Particles::Cov2                                       PCOV2 ;
+    // ========================================================================
+    /** @var PERR2 
+     *  Simple estimator of 3-momentum dispersion
+     *  \f$ \sigma^2 ( \left| \vec{p} \right| ) \f$
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double sigma2p = PERR2 ( p ) ;
+     *
+     *  @endcode 
+     *  @see Gaudi::Math::sigma2p 
+     *  @see LoKi::Particles::Perr2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::Perr2                                        PERR2 ;
+    // ========================================================================
+    /** @var PTERR2 
+     *  Simple estimator of 3-momentum dispersion
+     *  \f$ \sigma^2 ( p_T ) \f$
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double sigma2pt = PTERR2 ( p ) ;
+     *
+     *  @endcode 
+     *  @see Gaudi::Math::sigma2pt
+     *  @see LoKi::Particles::PTerr2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::PTerr2                                      PTERR2 ;
+    // ========================================================================
+    /** @var M2ERR2 
+     *  Simple estimator of 3-momentum dispersion
+     *  \f$ \sigma^2 ( M^2 ) \f$
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double sigma2m2 = M2ERR2 ( p ) ;
+     *
+     *  @endcode 
+     *  @see Gaudi::Math::sigma2mass2
+     *  @see LoKi::Particles::M2err2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::M2err2                                      M2ERR2 ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts  
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

@@ -955,6 +955,18 @@ BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
 
 
 # =============================================================================
+# Functors related to covariance matrices 
+# =============================================================================
+## @see LoKi::Cuts::PCOV2
+PCOV2    = LOKi.Particles.Cov2 
+## @see LoKi::Cuts::PCOV2
+PERR2    = LoKi.Particles.Perr2  ()
+## @see LoKi::Cuts::PTERR2 
+PTERR2   = LoKi.Particles.PTerr2 ()
+## @see LoKi::Cuts::M2ERR2 
+M2ERR2   = LoKi.Particles.M2err2 ()
+
+# =============================================================================
 ## Collection of functions for 'corrected mass' variable by Mike Williams, 
 #  see <a href="http://indico.cern.ch/conferenceDisplay.py?confId=104542">
 #  Mike's slides at Trigger meeting 28 September 2k+10 </a> and 

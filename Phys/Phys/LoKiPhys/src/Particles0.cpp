@@ -18,6 +18,10 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/Kinematics.h"
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -48,8 +52,17 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10 
+ *  
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ *
  */
 // ============================================================================
 LoKi::Particles::HasKey::result_type 
@@ -1120,6 +1133,174 @@ LoKi::Particles::NominalMass::operator()
   }
   return pp->mass() ;  
 }
+// ============================================================================
+
+
+// ============================================================================
+// constructor from indices 
+// ============================================================================
+LoKi::Particles::Cov2::Cov2
+( const unsigned short i , 
+  const unsigned short j ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  , m_i ( std::min ( i , j ) ) 
+  , m_j ( std::max ( i , j ) ) 
+{
+  Assert ( m_i < 7 && m_j < 7 , "Invalid indices" );
+}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::Cov2::~Cov2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::Cov2*
+LoKi::Particles::Cov2::clone() const 
+{ return new LoKi::Particles::Cov2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::Cov2::result_type 
+LoKi::Particles::Cov2::operator() 
+  ( LoKi::Particles::Cov2::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'NegativeInfinity'") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
+  return 
+    (       m_j < 4 ) ? // both indices are momenta 
+    p -> momCovMatrix    () ( m_i     , m_j     ) :
+    ( 4 <=  m_i     ) ? // both indices are positions 
+    p -> posCovMatrix    () ( m_i - 4 , m_j - 4 ) : 
+    //                     mixed indices 
+    p -> posMomCovMatrix () ( m_i     , m_j - 4 ) ; 
+  //
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Cov2::fillStream( std::ostream& s ) const 
+{ return s << "PCOV2(" << m_i << "," << m_j << ")" ; }
+
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::Perr2::~Perr2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::Perr2*
+LoKi::Particles::Perr2::clone() const 
+{ return new LoKi::Particles::Perr2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::Perr2::result_type 
+LoKi::Particles::Perr2::operator() 
+  ( LoKi::Particles::Perr2::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'NegativeInfinity'") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
+  return Gaudi::Math::sigma2p
+    ( p -> momentum () , p -> momCovMatrix () ) ;
+  //
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Perr2::fillStream( std::ostream& s ) const 
+{ return s << "PERR2" ; }
+// ============================================================================
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::PTerr2::~PTerr2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::PTerr2*
+LoKi::Particles::PTerr2::clone() const 
+{ return new LoKi::Particles::PTerr2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::PTerr2::result_type 
+LoKi::Particles::PTerr2::operator() 
+  ( LoKi::Particles::PTerr2::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'NegativeInfinity'") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
+  return Gaudi::Math::sigma2pt 
+    ( p -> momentum () , p -> momCovMatrix () ) ;
+  //
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::PTerr2::fillStream( std::ostream& s ) const 
+{ return s << "PTERR2" ; }
+// ============================================================================
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::M2err2::~M2err2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::M2err2*
+LoKi::Particles::M2err2::clone() const 
+{ return new LoKi::Particles::M2err2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::M2err2::result_type 
+LoKi::Particles::M2err2::operator() 
+  ( LoKi::Particles::PTerr2::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'NegativeInfinity'") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
+  return Gaudi::Math::sigma2mass2 
+    ( p -> momentum () , p -> momCovMatrix () ) ;
+  //
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::M2err2::fillStream( std::ostream& s ) const 
+{ return s << "M2ERR2" ; }
+
+
+
+
+
+  
 
 
 // ============================================================================

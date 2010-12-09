@@ -5,6 +5,16 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-09 - Vanya Belyaev
+
+ - new symbols 
+
+    - PCOV2   : generic acessor to elements of particle 7x7 covariance matrix 
+    - PERR2   : sigma^2(P)
+    - PTERR2  : sigma^2(PT)
+    - M2ERR2  : sigma^2(M^2) 
+
+
 ! 2010-12-07 - Vanya Belyaev
  - Vertices3.cpp 
     remove debug prints 
