@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-12-09 - Rob Lambert
+ - Add mass-dependence in TupleToolNeutrinoReco
+ - Fix bug in calculation of 'X'
+ - Update documentation to suit
+
 ! 2010-12-01 - Juan Palacios
  - Add property IBackgroundCategoryType to TupleToolMCBackgroundInfo. Controls
    the implementation of IBackgroundCategory to be used. Default is "BackgroundCategory"

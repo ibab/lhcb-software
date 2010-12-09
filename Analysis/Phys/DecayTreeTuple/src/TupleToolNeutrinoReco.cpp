@@ -34,8 +34,9 @@ TupleToolNeutrinoReco::TupleToolNeutrinoReco( const std::string& type,
   , m_dva(NULL)
 {
   declareInterface<IParticleTupleTool>(this);
-
-
+  
+  declareProperty("MotherMass",m_motherMass=0.);
+  
 }
 
 //=============================================================================
@@ -47,6 +48,7 @@ StatusCode TupleToolNeutrinoReco::initialize()
   
   if (NULL==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);  
+  
   
   return StatusCode::SUCCESS;
 
@@ -66,21 +68,51 @@ StatusCode TupleToolNeutrinoReco::fill( const LHCb::Particle*
   if( P )
   {
     const LHCb::VertexBase* aPV = m_dva->bestPV ( P );
-    // Parallel and Perpendicular Momentum of the D_s\mu combination
-    // pa for Parallel and pe for Perpendicular
+    // Parallel and Perpendicular Momentum of the particle
+    // releative to the flight direction
     double Nu_Parl = MomentumParallel(aPV,P,&P->momentum());
     double Nu_Perp = MomentumPerpendicular(aPV,P,&P->momentum());
     
-    double a=4*(Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
-    double X=4*Nu_Parl*Nu_Parl*(2*Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
-    double Y=8*Nu_Perp*Nu_Perp*Nu_Parl*Nu_Parl;
     
-    // momentum components
-    test &= tuple->column( prefix+"_Nu_a", a );
-    test &= tuple->column( prefix+"_Nu_X", X );
-    test &= tuple->column( prefix+"_Nu_Y", Y );
-    test &= tuple->column( prefix+"_Nu_Parl", Nu_Parl );
-    test &= tuple->column( prefix+"_Nu_Perp", Nu_Perp );
+    if(isVerbose() || m_motherMass==0.)
+    {
+      
+      test &= tuple->column( prefix+"_Nu_Parl", Nu_Parl );
+      test &= tuple->column( prefix+"_Nu_Perp", Nu_Perp );
+    }
+    
+    if(isVerbose())
+    {
+      //intermediate steps,
+      //all that do not require the mother mass
+      
+      double a=4.*(Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
+      double X=4.*Nu_Parl*(2*Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
+      double Y=8.*Nu_Perp*Nu_Perp*Nu_Parl*Nu_Parl;
+      test &= tuple->column( prefix+"_Nu_a", a );
+      test &= tuple->column( prefix+"_Nu_X", X );
+      test &= tuple->column( prefix+"_Nu_Y", Y );
+    }
+    
+    if(m_motherMass!=0.)
+    {
+      double pb=MomentumQuadratic(Nu_Parl,Nu_Perp,P->measuredMass());
+      double pd=MomentumSqrt(Nu_Parl,Nu_Perp,P->measuredMass());
+      
+      if(isVerbose())
+      {
+        test &= tuple->column( prefix+"_Nu_pb", pb );
+        test &= tuple->column( prefix+"_Nu_pd", pd );
+      }
+      
+      double P_Hi=Nu_Parl+pb+pd;
+      double P_Lo=Nu_Parl+pb-pd;
+      
+      test &= tuple->column( prefix+"_Nu_Hi", P_Hi );
+      test &= tuple->column( prefix+"_Nu_Lo", P_Lo );
+      
+    }
+    
     
   }
   else 
@@ -135,5 +167,30 @@ double TupleToolNeutrinoReco::MomentumPerpendicular(const LHCb::VertexBase* pv,
    double P_Pe_z = mv->Pz()-P_Pa_z;
 
    return sqrt(P_Pe_x*P_Pe_x + P_Pe_y*P_Pe_y + P_Pe_z*P_Pe_z);
+}
+
+
+double TupleToolNeutrinoReco::MomentumQuadratic(const double Parl,
+                                                const double Perp,
+                                                const double Mass)
+{
+  return -0.5*Parl*(1.-(m_motherMass*m_motherMass-Perp*Perp)/(Perp*Perp+Mass*Mass));
+}
+
+double TupleToolNeutrinoReco::MomentumSqrt(const double Parl,
+                                           const double Perp,
+                                           const double Mass)
+{
+  double a=4.*(Perp*Perp+Mass*Mass);
+  double b=4.*Parl*(2.*Perp*Perp-m_motherMass*m_motherMass+Mass*Mass);
+  double c=
+    4.*Perp*Perp*(2*Parl*Parl+m_motherMass*m_motherMass)
+    -
+    (m_motherMass*m_motherMass-Mass*Mass)*(m_motherMass*m_motherMass-Mass*Mass);
+  
+  double d=b*b-4.*a*c;
+  if (d>0.) return sqrt(d)/(2.*a);
+  else return 0;
+  
 }
 
