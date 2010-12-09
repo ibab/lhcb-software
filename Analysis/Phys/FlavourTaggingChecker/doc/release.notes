@@ -10,6 +10,7 @@
  - Add plots for Propertime
  - Add proper time in NNvtx, change seedlikelihood
  - Change MuonTagger cuts
+ - Raise to v6r2  
 
 ! 2010-12-01 - Marco Musy
  - cleanup, added control on verbosity level
