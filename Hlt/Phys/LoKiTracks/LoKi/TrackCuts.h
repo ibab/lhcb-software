@@ -14,6 +14,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Cuts
   {
     // ======================================================================== 
@@ -1014,6 +1015,39 @@ namespace LoKi
      *  @date 2010-06-02
      */
     const LoKi::Tracks::StateZ TrFIRSTHITZ ( LHCb::State::FirstMeasurement ) ;
+    // ========================================================================
+    /** @typedef TrCOV2 
+     *  Get the element of track covariance matrix 
+     *
+     *  @code 
+     *
+     *    // use th first state 
+     *    const TrCOV2 covXX_1 = TrCOV2( 0 , 0  ) ;
+     *
+     *    // use the specific state:
+     *    const TrCOV2 covXX_2 = TrCOV2(  LHCb::State::AtTT  , 0 , 0  ) ; 
+     *
+     *    // use the state,closest to some z : 
+     *    const double z = ... ;
+     *    const TrCOV2 covXX_3 = TrCOV2(  z  , 0 , 0  ) ; 
+     *
+     *    const LHCb::Track* track  = ... ;
+     * 
+     *    const double c1 = covXX_1 ( track ) ;
+     *    const double c2 = covXX_2 ( track ) ;
+     *    const double c3 = covXX_3 ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::Track
+     *  @see LHCb::State
+     *  @see LHCb::State
+     *  @see Gaudi::TrackSymMatrix
+     *  @see LoKi::Tracks::Cov2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cer.ch
+     *  @date 2010-12-09
+     */
+    typedef LoKi::Tracks::Cov2                                         TrCOV2 ;
     // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================

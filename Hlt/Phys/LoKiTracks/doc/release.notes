@@ -5,6 +5,28 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-09 - Vanya Belyaev
+
+ - add new symbol TrCOV2 to access the elements of covarinace matrix :
+
+   // use the first state :
+
+   const TrCOV2 covXX_1 = TrCOV2(0,0) ;
+
+   // use specific state 
+
+   const TrCOV2 covXX_2 = TrCOV2( LHCb::State::AtTT , 0 , 0 ) ;
+
+   // use satte closest to certain Z 
+
+   const double z       = ...   
+   const TrCOV2 covXX_3  = TrCOV2( z , 0 , 0 ) ;
+
+ - cmt/requirements
+
+     version increment to v1r4 
+
+
 !========================== LoKiTracks v1r3 2010-12-08 ===================
 ! 2010-10-24 - Vanya Belyaev
 

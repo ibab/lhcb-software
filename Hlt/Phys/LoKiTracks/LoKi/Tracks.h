@@ -430,7 +430,7 @@ namespace LoKi
     } ;  
     // ========================================================================
     /** @class IsOnTrack
-     *  Somple predicate whcih evaluates LHCb::Track::isOnTrack
+     *  Simple predicate which evaluates LHCb::Track::isOnTrack
      *  @see LoKi::Cuts::TrISONTRACK
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
@@ -452,8 +452,8 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      // the default constructor is disabled 
-      IsOnTrack() ; ///< no default consructor 
+      /// the default constructor is disabled 
+      IsOnTrack() ;                                    // no default consructor 
       // ======================================================================
     private:
       // ======================================================================
@@ -486,7 +486,7 @@ namespace LoKi
     } ;
     // ========================================================================
     /** @class StateZ 
-     *  check Z-positon for the given state 
+     *  check Z-position for the given state 
      *  @see LoKi::Cuts::TrSTATEZ 
      *  @see LoKi::Cuts::TrFIRSTHITZ
      *  @see LHCb::State::Location
@@ -526,6 +526,61 @@ namespace LoKi
       double       m_bad   ;                                //    the bad value
       /// the state 
       mutable std::string m__state ;                        //        the state 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Cov2 
+     *  Get the element of covarinace element for the track state 
+     *  @see Tr_COV2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-09
+     */
+    class Cov2
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from indices
+      Cov2 ( const unsigned short i , 
+             const unsigned short j ) ;
+      /// constructor from indices & state location 
+      Cov2 ( const LHCb::State::Location location , 
+             const unsigned short        i        , 
+             const unsigned short        j        ) ;
+      /// constructor from the indices and Z-position: 
+      Cov2 ( const double                z        , 
+             const unsigned short        i        , 
+             const unsigned short        j        ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Cov2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cov2* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Cov2 () ;                          // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      enum _Case {
+        _First    , 
+        _Location ,
+        _Z     
+      } ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      _Case                 m_case ;
+      double                m_z    ;
+      LHCb::State::Location m_loc  ;
+      unsigned  short       m_i    ;
+      unsigned  short       m_j    ;      
       // ======================================================================
     } ;
     // ========================================================================

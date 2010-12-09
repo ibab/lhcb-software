@@ -437,8 +437,122 @@ LoKi::Tracks::Type::operator()
   //
   return t->type() ; 
 }
+// ============================================================================
 
 
+// ============================================================================
+// constructor from indices
+// ============================================================================
+LoKi::Tracks::Cov2::Cov2 
+( const unsigned short i , 
+  const unsigned short j ) 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  , m_case ( _First                        ) 
+  , m_z    ( -1 * Gaudi::Units::km         ) 
+  , m_loc  ( LHCb::State::FirstMeasurement ) 
+  , m_i    ( i ) 
+  , m_j    ( j ) 
+{
+  Assert ( m_i < 5 && m_j < 5 , "Invalid indices" ) ;
+}
+// ============================================================================
+// constructor from indices & state location 
+// ============================================================================
+LoKi::Tracks::Cov2::Cov2 
+( const LHCb::State::Location location , 
+  const unsigned short        i        , 
+  const unsigned short        j        ) 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  , m_case ( _Location  ) 
+  , m_z    ( -1 * Gaudi::Units::km         ) 
+  , m_loc  ( location   ) 
+  , m_i    ( i ) 
+  , m_j    ( j ) 
+{
+  Assert ( m_i < 5 && m_j < 5 , "Invalid indices" ) ;
+}
+// ============================================================================
+// constructor from indices and Z-position: 
+// ============================================================================
+LoKi::Tracks::Cov2::Cov2    
+( const double                z , 
+  const unsigned short        i , 
+  const unsigned short        j ) 
+  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  , m_case ( _Z   ) 
+  , m_z    (  z   ) 
+  , m_loc  ( LHCb::State::FirstMeasurement ) 
+  , m_i    ( i ) 
+  , m_j    ( j ) 
+{
+  Assert ( m_i < 5 && m_j < 5 , "Invalid indices" ) ;
+}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::Cov2::~Cov2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::Cov2* LoKi::Tracks::Cov2::clone() const 
+{ return new LoKi::Tracks::Cov2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Cov2::result_type 
+LoKi::Tracks::Cov2::operator()
+  ( LoKi::Tracks::Cov2::argument t ) const
+{
+  if ( 0 == t ) 
+  {
+    Error ( "LHCb::Track* points to NULL, return NegativeInfnity" ) ;
+    return LoKi::Constants::NegativeInfinity ;  
+  }
+  //
+  const LHCb::State* state = 0 ;
+  switch ( m_case ) 
+  {
+  case _Z         : 
+    state = &(t->closestState ( m_z   ) )  ; break ;
+  case _Location  :
+    state =   t->stateAt      ( m_loc )    ; break ;
+  default :
+    state =  &t->firstState () ;
+  }
+  //
+  if ( 0 == state ) 
+  {
+    Warning("LHCb::State* points to NULL, use 'FirstState'")  ;
+    state = &t->firstState() ;    
+  }
+  //
+  if ( 0 == state ) 
+  {
+    Error  ("LHCb::State* points to NULL, return 'NegativeInfinity'")  ;
+    return LoKi::Constants::NegativeInfinity ;  
+  }
+  //
+  return state -> covariance () ( m_i , m_j ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::Cov2::fillStream ( std::ostream& s ) const 
+{
+  s << "TrCOV2(" ;
+  //
+  switch ( m_case ) 
+  {
+  case _Z        : 
+    s << m_z << "," ; break ;
+  case _Location : 
+    s << "LHCb.State." << m_loc << "," ; break ;
+  default : 
+    s << "" ;
+  }
+  //
+  return s << m_i << "," << m_j << ")" ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

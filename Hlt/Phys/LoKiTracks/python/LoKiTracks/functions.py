@@ -144,6 +144,10 @@ TrSTATEZ      = LoKi.Tracks.StateZ
 ## @see LoKi::Cuts::TrFIRTSHITZ
 TrFIRSTHITZ   = LoKi.Tracks.StateZ ( LHCb.State.FirstMeasurement )
 
+## @see LoKi::Cuts::TrCOV2
+TrCOV2        = LoKi.Tracks.Cov2
+
+
 ## functional part
 _vt       = 'std::vector<const LHCb::Track*>'
 _vd       = 'std::vector<double>'
