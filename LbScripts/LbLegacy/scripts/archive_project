@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh -f
 #-----------------------------------------------------------------------
 # Script : archive_project
 # Devel. : J. Closier
@@ -167,9 +167,9 @@ if ($rc_dirac != 0 ) then
    echo problem to generate the Proxy
 endif
 
-`which dirac-lhcb-check-software` $PACKAGE $version
+`which dirac-lhcb-check-software` $package $version
 if ( $status == 0 ) then
-   `which dirac-lhcb-remove-software` $PACKAGE $version
+   `which dirac-lhcb-remove-software` $package $version
 endif
 
 # send a mail
