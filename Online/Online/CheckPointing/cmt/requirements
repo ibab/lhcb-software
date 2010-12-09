@@ -1,0 +1,21 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+package           CheckPointing
+version           v0r1
+#============================================================================
+branches          cmt doc src CheckPointing
+
+# dependency list
+use GaudiPolicy v*
+
+apply_pattern install_more_includes more=CheckPointing
+
+# ==================== component libraries ==================================
+library CheckPointing *.cpp
+apply_pattern linker_library   library=CheckPointing
+
+application chkpt_test ../test/*.cpp
+
+private
+macro_append CheckPointing_shlibflags ' -pthread ' WIN32 ''
