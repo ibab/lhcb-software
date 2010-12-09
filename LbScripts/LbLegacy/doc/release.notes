@@ -1,3 +1,7 @@
+2010-12-09  Joel Closier <joel.closier@cern.ch>
+
+        *   scripts/archive_project : change groupe and case for the grid part
+
 2010-12-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: moved to CMT v1r22
