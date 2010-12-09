@@ -161,7 +161,7 @@ if ! $?LHCBDIRACSYSROOT then
   endif
 endif
 
-`which lhcb-proxy-init` -g diracAdmin
+`which lhcb-proxy-init` -g lhcb_admin
 set rc_dirac = $status
 if ($rc_dirac != 0 ) then
    echo problem to generate the Proxy
