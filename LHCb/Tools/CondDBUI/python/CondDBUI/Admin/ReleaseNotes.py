@@ -270,8 +270,26 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             self.log.info("Hash sum wasn't added to release notes since no entry "
              "was found for tag '%s' and  partition '%s'." %(gtag, partition))
 
+    def getGlobalTagElement(self, partition, GT_name):
+        """Finds and returns the xml element of global tag.
+
+         It looks for a global tag element with the name 'GT_name'
+         in 'partition' partition.
+         """
+        rootelement = self.tree.getroot()
+        for element in rootelement:
+            if element.tag == _xel("global_tag"):
+                for subelement1 in element:
+                    if subelement1.tag == _xel("tag") and subelement1.text == GT_name:
+                        # Before returning the global tag element checking partition to be requested.
+                        for subelement2 in element:
+                            if subelement2.tag == _xel("partition"):
+                                for part_subelement2 in subelement2:
+                                    if part_subelement2.tag == _xel("name") and part_subelement2.text == partition:
+                                        return element
+
     def getGlobalTags(self, partition):
-        """The function finds all global tags for the requested partition."""
+        """The function finds all global tags names for the requested partition."""
 
         # Accessing the root element of release notes DOM
         rootelement = self.tree.getroot()

@@ -5,6 +5,15 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-12-08 - Illya Shapoval
+ - Added two new scripts and TSDB backup table scheme:
+   + scripts/TSDBAdmin_Commit.py:
+   Is meant for insertion of new global tag entry with all its statuses at all
+   Tier 1s.
+   + scripts/TSDBAdmin_Update.py:
+   Performs update of current tag with new status for particular Tier 1.
+ - Other five scripts and modules are tuned up for actual install area env.
+
 !========================= CondDBUI v3r6 2010-11-27 =========================
 ! 2010-11-19 - Illya Shapoval
  - Added 5 new scripts:

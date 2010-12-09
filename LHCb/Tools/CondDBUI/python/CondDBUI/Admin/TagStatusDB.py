@@ -68,49 +68,42 @@ class TagStatus(Storm):
 class TagStatusDB(object):
     """ Class to interact with the TagStatusDB designed to monitor the CondDB global tag availability status."""
 
-    def __init__(self, db_path, create_new_db = False, recheck = timedelta(7), expiration = timedelta(30)):
+    def __init__(self, db_path, recheck = timedelta(7), expiration = timedelta(30),
+                 verification_latency = timedelta(hours = 6)):
         """
-        @param db_path: database path to connect to or create new one
+        @param db_path: database path to connect to
         @param recheck: time interval after which the tag must be re-checked
         @param expiration: time interval after which a tag doesn't need to be checked again
         """
-        if create_new_db and os.path.exists(db_path):
-            raise Exception, "Requested path for the new db at '%s' contains already some db."%db_path
+        if not os.path.exists(db_path.split(":")[-1]):
+            raise Exception, "No TSDB found at '%s'."%db_path
 
-        self.openDatabase(db_path,create_new_db)
-        if create_new_db:
-            self.createTagsTable()
-            self.createTagStatusTable()
+        self.openDatabase(db_path)
 
         self.recheck = recheck
         self.expiration = expiration
         self.start_test_time_boundary = datetime.now()-self.recheck
         self.stop_test_time_boundary = datetime.now()-self.expiration
+        self.verification_latency = verification_latency
+        self.latency_boundary = self.start_test_time_boundary - self.verification_latency
+        self.sites = [
+                      u"LCG.IN2P3.fr",
+                      u"LCG.PIC.es",
+                      u"LCG.CERN.ch",
+                      u"LCG.CNAF.it",
+                      u"LCG.RAL.uk",
+                      u"LCG.GRIDKA.de",
+                      u"LCG.SARA.nl"
+                      ]
 
-    def openDatabase(self, db_path, create_new_db = False):
-        """Connects to the db at db_path (or creates new one if requested) and opens its store."""
+    def openDatabase(self, db_path):
+        """Connects to the TSDB at db_path and opens its store."""
 
-        if os.path.exists(db_path.split(":")[-1]) or create_new_db:
-            self.db = create_database(db_path)
-        else:
-            raise Exception, "No database found at %s" %db_path
+        if not os.path.exists(db_path.split(":")[-1]):
+            raise Exception, "No TSDB found at '%s'." %db_path
 
+        self.db = create_database(db_path)
         self.store = Store(self.db)
-
-    def createTagsTable(self):
-        """Creates empty 'TAGS' table"""
-
-        self.store.execute("CREATE TABLE TAGS (id INTEGER PRIMARY KEY, "
-                           "name VARCHAR UNIQUE, partition VARCHAR UNIQUE, "
-                           "creation_time DATETIME, hash_sum VARCHAR UNIQUE, "
-                           "hash_alg VARCHAR);")
-
-    def createTagStatusTable(self):
-        """Creates empty 'TAGS_BULLETINS' table"""
-
-        self.store.execute("CREATE TABLE TAGS_STATUS (tag_id INTEGER, site VARCHAR,"
-                           "last_ok_time DATETIME, PRIMARY KEY (tag_id,site),"
-                           "FOREIGN KEY(tag_id) REFERENCES tags(id));")
 
     def addRow(self, row):
         """Adds new row to the in-memory-db.
@@ -138,7 +131,7 @@ class TagStatusDB(object):
         status_set = self.getTag(tag,partition).status_set
         for status in status_set:
             if status.site == site: return status
-            else: return None
+        return None
 
     def resolveRow(self, row):
         """Resolves if the row (can be Tag or TagStatus) is in the db or not.
@@ -178,7 +171,7 @@ class TagStatusDB(object):
         else:
             return []
 
-    def getTagsToCheck(self, site, partition):
+    def getTagsToCheck(self, site, partition, withLatency = False):
         """ Get list of tags that requires to be checked:
             now < tag.created + self.expiration &&
             now > tag.last_ok + self.recheck
@@ -190,11 +183,36 @@ class TagStatusDB(object):
                                       Tag.partition == partition,
                                       Tag.creation_time > self.stop_test_time_boundary)
         tag_status_to_check = []
+        if not withLatency:
+            for tag in actual_tags:
+                for status in tag.status_set:
+                    if status.site == site and status.last_ok_time < self.start_test_time_boundary:
+                        tag_status_to_check.append(status)
+        else:
+            for tag in actual_tags:
+                for status in tag.status_set:
+                    if status.site == site and status.last_ok_time < self.latency_boundary:
+                        tag_status_to_check.append(status)
+        return tag_status_to_check
+
+    def getHalfWayTags(self, site, partition):
+        """ Get list of tags that are on the half-way to be checked:
+            now < tag.created + self.expiration &&
+            now > tag.last_ok + self.recheck
+
+        Returns a list of TagStatus objects.
+        """
+
+        actual_tags = self.store.find(Tag,
+                                      Tag.partition == partition,
+                                      Tag.creation_time > self.stop_test_time_boundary)
+        half_way_tags = []
         for tag in actual_tags:
             for status in tag.status_set:
-                if status.site == site and status.last_ok_time < self.start_test_time_boundary:
-                    tag_status_to_check.append(status)
-        return tag_status_to_check
+                if status.site == site and \
+                self.latency_boundary < status.last_ok_time < self.start_test_time_boundary:
+                    half_way_tags.append(status)
+        return half_way_tags
 
     def setAsGood(self, tags_status):
         """ Flag the tags as successfully checked.
