@@ -108,13 +108,13 @@ void EvtBto2piCPiso::decay( EvtParticle *p ){
   double tag = EvtRandom::Flat(0.0,1.0);
   if (tag < 0.5) {
 
-   EvtCPUtil::OtherB(p,t,other_b,1.0);
-   other_b = B0;
+    EvtCPUtil::getInstance()->OtherB(p,t,other_b,1.0);
+    other_b = B0;
   }
   else {
    
-   EvtCPUtil::OtherB(p,t,other_b,0.0);
-   other_b = B0B;
+    EvtCPUtil::getInstance()->OtherB(p,t,other_b,0.0);
+    other_b = B0B;
   }
 
   EvtComplex amp;

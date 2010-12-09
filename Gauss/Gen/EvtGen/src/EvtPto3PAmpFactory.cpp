@@ -84,7 +84,7 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
     pdf = new EvtDalitzFlatPdf(_dp);
     amp = new EvtNonresonantAmp( &_dp, typeNRes, pairRes, alpha);  
   }
-  else if (vv[0]=="LASS") {
+  else if (vv[0]=="LASS" || vv[0]=="LASS_ELASTIC" || vv[0]=="LASS_RESONANT") {
     pairRes = strToPair(vv[1].c_str());
     double m0 = strtod(vv[2].c_str(),0);
     double g0 = strtod(vv[3].c_str(),0);
@@ -92,7 +92,7 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
     double r  = strtod(vv[5].c_str(),0);
     double cutoff  = strtod(vv[6].c_str(),0);
     pdf = new EvtDalitzResPdf(_dp,m0,g0,pairRes);
-    amp = new EvtLASSAmp( &_dp, pairRes, m0, g0, a, r, cutoff);
+    amp = new EvtLASSAmp( &_dp, pairRes, m0, g0, a, r, cutoff, vv[0]);
   }
 
   /*

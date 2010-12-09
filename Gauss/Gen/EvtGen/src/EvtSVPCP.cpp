@@ -78,7 +78,7 @@ void EvtSVPCP::decay( EvtParticle *p ){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b,0.5);
 
   EvtComplex G1P,G1M, G1_T_even, G1_T_odd;
 

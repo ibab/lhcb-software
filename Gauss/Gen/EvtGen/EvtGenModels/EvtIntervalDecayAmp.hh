@@ -128,7 +128,7 @@ public:
       EvtComplex A    = _fact->getAmp()->evaluate(_x);
       EvtComplex Abar = _fact->getAmpConj()->evaluate(_x);
 
-      EvtCPUtil::OtherB(p,t,other_b);
+      EvtCPUtil::getInstance()->OtherB(p,t,other_b);
 
       double dm = _fact->dm();
       double mixAmpli = _fact->mixAmpli();

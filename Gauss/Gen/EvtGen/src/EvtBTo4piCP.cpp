@@ -183,7 +183,7 @@ void EvtBTo4piCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b,0.5);
   
   p->initializePhaseSpace(getNDaug(),getDaugs());
   EvtVector4R mom1 = p->getDaug(0)->getP4();

@@ -30,7 +30,7 @@ public:
   // Numerator type
   enum NumType {NBW=0, RBW_ZEMACH=1, RBW_KUEHN=2, RBW_CLEO=3, FLATTE, GAUSS, DOUBLE_GAUSS,
 		NONRES, NONRES_LIN, NONRES_EXP, NONRES_EXP_ADD, NONRES_CCS, NONRES_LAURA, 
-		LASS, GS};
+		LASS, LASS_ELASTIC, LASS_RESONANT, GS};
 
 
   EvtPto3PAmp(EvtDalitzPlot dp, EvtCyclic3::Pair pairAng, EvtCyclic3::Pair pairRes,  

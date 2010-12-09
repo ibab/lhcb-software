@@ -97,7 +97,7 @@ void EvtSVSNONCPEIGEN::decay( EvtParticle *p){
   daugs[1]=getDaug(1);
   p->initializePhaseSpace(2, daugs);
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b,0.5);
 
   EvtComplex amp;
   double dmt2 = (_dm * t) / (2 * EvtConst::c);

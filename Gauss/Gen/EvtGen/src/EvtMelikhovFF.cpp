@@ -132,3 +132,19 @@ void EvtMelikhovFF::getbaryonff(EvtId, EvtId, double, double, double*,
 
 }
 
+void EvtMelikhovFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+			       double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtMelikhovFF.\n";
+  ::abort();
+
+}
+
+void EvtMelikhovFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+				double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtMelikhovFF.\n";
+  ::abort();
+
+}
+

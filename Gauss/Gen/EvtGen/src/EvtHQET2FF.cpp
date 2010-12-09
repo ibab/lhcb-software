@@ -110,3 +110,19 @@ void EvtHQET2FF::getbaryonff(EvtId, EvtId, double, double, double*,
   ::abort();
 
 }
+
+void EvtHQET2FF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+			    double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtHQET2FF.\n";
+  ::abort();
+
+}
+
+void EvtHQET2FF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+			     double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtHQET2FF.\n";
+  ::abort();
+
+}

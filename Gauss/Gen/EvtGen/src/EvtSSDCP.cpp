@@ -206,7 +206,7 @@ void EvtSSDCP::decay( EvtParticle *p){
   EvtComplex amp;
 
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
 //  EvtIncoherentMixing::OtherB( p , t , other_b , 0.5 ) ;
   
   //if (flip) t=-t;

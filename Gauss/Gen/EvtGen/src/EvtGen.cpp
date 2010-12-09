@@ -39,34 +39,22 @@
 #include "EvtGenBase/EvtRandomEngine.hh"
 #include "EvtGenBase/EvtSimpleRandomEngine.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
-#include "CLHEP/Vector/LorentzVector.h"
 #include "EvtGenModels/EvtModelReg.hh"
 #include "EvtGenBase/EvtStatus.hh"
 #include "EvtGenBase/EvtAbsRadCorr.hh"
 #include "EvtGenBase/EvtRadCorr.hh"
 #include "EvtGenModels/EvtPHOTOS.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 using std::endl;
 using std::fstream;
 using std::ifstream;
-
-
-// extern "C" void begevtgenstore_(int *,int *,int *,int *,
-// 				int *,int *,int *,int *,int *,
-//                                 double *,double *,double *, 
-//                                 double *,double *,double *, 
-//                                 double *,double *,double *);
-
-// extern "C" {
-// extern void evtgen_(float svertex[3],float *e_cms,float *beta_zs,
-//                     int *mode);
-// }
 
 EvtGen::~EvtGen(){
 
   //This is a bit uggly, should not do anything
   //in a destructor. This will fail if EvtGen is made a static
   //because then this destructor might be called _after_
-  //the destructoin of objects that it depends on, e.g., EvtPDL.
+  //the destruction of objects that it depends on, e.g., EvtPDL.
 
   if (getenv("EVTINFO")){
     EvtDecayTable::printSummary();
@@ -78,7 +66,8 @@ EvtGen::EvtGen(const char* const decayName,
 	       const char* const pdtTableName,
 	       EvtRandomEngine* randomEngine,
 	       EvtAbsRadCorr* isrEngine,
-	       const std::list<EvtDecayBase*>* extraModels){
+	       const std::list<EvtDecayBase*>* extraModels,
+	       int mixingType){
 
 
   report(INFO,"EvtGen") << "Initializing EvtGen"<<endl;
@@ -112,6 +101,10 @@ EvtGen::EvtGen(const char* const decayName,
   _pdl.readPDT(pdtTableName);
 
   EvtDecayTable::readDecayFile(decayName,false);
+
+  _mixingType = mixingType;
+  report(INFO,"EvtGen") << "Mixing type integer set to "<<_mixingType<<endl;
+  EvtCPUtil::getInstance()->setMixingType(_mixingType);
 
   report(INFO,"EvtGen") << "Done initializing EvtGen"<<endl;
 
@@ -203,6 +196,3 @@ void EvtGen::generateDecay(EvtParticle *p){
   } while (times);
 
 }
-
-// LHCb: PR, remove generate Event as it is not used in LHCb
-// to prevent playing with STDHEP common block

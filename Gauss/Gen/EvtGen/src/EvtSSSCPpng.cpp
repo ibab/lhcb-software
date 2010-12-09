@@ -120,7 +120,7 @@ void EvtSSSCPpng::decay( EvtParticle *p ){
   //fraction of B0 _tags_
   double fract =(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio))/(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio) + A2*(1+ rf2 + (1 - rf2)*ratio)); 
   
-  EvtCPUtil::OtherB(p,t,other_b,fract);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b,fract);
 
 //this method works just as well -- NK
 //randomly generate the tag (B0 or B0B) 

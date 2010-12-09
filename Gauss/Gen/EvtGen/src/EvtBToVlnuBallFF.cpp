@@ -119,3 +119,19 @@ void EvtBToVlnuBallFF::getbaryonff(EvtId, EvtId, double, double, double*,
 
 }
 
+
+void EvtBToVlnuBallFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+				  double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtBToVlnuBallFF.\n";
+  ::abort();
+
+}
+
+void EvtBToVlnuBallFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+				   double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtBToVlnuBallFF.\n";
+  ::abort();
+
+}

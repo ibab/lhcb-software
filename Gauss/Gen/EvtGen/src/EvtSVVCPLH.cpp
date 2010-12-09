@@ -80,7 +80,7 @@ void EvtSVVCPLH::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b);
 
   EvtComplex G0P,G1P,G1M;
   

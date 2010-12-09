@@ -130,7 +130,7 @@ void EvtHypNonLepton::calcAmp(EvtAmp *amp,EvtParticle *parent){
 
   static long noTries=0;
   int i;
-  EvtComplex Matrix[2][2],B_to_A;
+  EvtComplex Matrix[2][2];
 
   //G_F  = 1.16637e-5;
   //M_pi = 0.13957;

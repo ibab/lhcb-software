@@ -287,7 +287,7 @@ void EvtParticle::initDecay(bool useMinMass) {
   if ( (getNDaug()==0 && !hasBorUps) && (thisId==BS0||thisId==BSB||thisId==BD0||thisId==BDB)){
     double t;
     int mix;
-    EvtCPUtil::incoherentMix(getId(), t, mix);
+    EvtCPUtil::getInstance()->incoherentMix(getId(), t, mix);
     setLifetime(t);
     
     if (mix) {

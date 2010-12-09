@@ -37,15 +37,34 @@
 #include <assert.h>
 using std::endl;
 
-bool EvtCPUtil::_enableFlip = false ;
+EvtCPUtil::EvtCPUtil(int mixingType) {
+  _enableFlip = false;
+  _mixingType = mixingType;
+}
+
+EvtCPUtil::~EvtCPUtil() {
+}
+
+EvtCPUtil* EvtCPUtil::getInstance() {
+
+  static EvtCPUtil* theCPUtil = 0;
+
+  if (theCPUtil == 0) {
+    theCPUtil = new EvtCPUtil(1);
+  }
+
+  return theCPUtil;
+
+}
 
 //added two functions for finding the fraction of B0 tags for decays into 
 //both CP eigenstates and non-CP eigenstates -- NK, Jan. 27th, 1998
 
 void EvtCPUtil::fractB0CP(EvtComplex Af, EvtComplex Abarf, 
 			  double /*deltam*/, double beta, double &fract) {
-//this function returns the number of B0 tags for decays into CP-eigenstates
-//(the "probB0" in the new EvtOtherB)
+
+  //This function returns the number of B0 tags for decays into CP-eigenstates
+  //(the "probB0" in the new EvtOtherB)
 
   //double gamma_B = EvtPDL::getWidth(B0);   
   //double xd = deltam/gamma_B;
@@ -67,6 +86,7 @@ void EvtCPUtil::fractB0CP(EvtComplex Af, EvtComplex Abarf,
   return; 
 
 }
+
 void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf, 
 			     EvtComplex Afbar, EvtComplex Abarfbar, 
 			     double deltam, double beta, 
@@ -123,7 +143,21 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
   return;  
 } 
 
-/*void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
+void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
+
+  if (_mixingType == EvtCPUtil::Coherent) {
+
+    OtherCoherentB(p, t, otherb, probB0);
+
+  } else if (_mixingType == EvtCPUtil::Incoherent) {
+
+    OtherIncoherentB(p, t, otherb, probB0);
+
+  }
+
+}
+
+void EvtCPUtil::OtherCoherentB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
 
   //Can not call this recursively!!!
   static int entryCount=0;
@@ -211,7 +245,7 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
     //kludge!! Lange Mar21, 2003 	 
     // if the other B is an alias... don't change the flavor.. 	 
     if ( other->getId().isAlias() ) { 	 
-      OtherB(p,t,otherb); 	 
+      OtherB(p,t,otherb);
       entryCount--;
       return; 	 
       
@@ -262,7 +296,7 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
   
   entryCount--;
   return ;
-}*/
+}
 
 // ========================================================================
 bool EvtCPUtil::isBsMixed ( EvtParticle * p )
@@ -299,7 +333,7 @@ bool EvtCPUtil::isB0Mixed ( EvtParticle * p )
 // Return the tag of the event (ie the anti-flavour of the produced 
 // B meson). Flip the flavour of the event with probB probability
 //============================================================================
-void EvtCPUtil::OtherB( EvtParticle * p ,
+void EvtCPUtil::OtherIncoherentB( EvtParticle * p ,
                                   double & t ,
                                   EvtId & otherb ,
                                   double probB )
@@ -395,13 +429,7 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
     return;
   }
 
-
-  report( ERROR , "EvtCPUtil" ) 
-    << "OtherB with 3 arguments must not be used in LHCb" << std::endl ;
-  ::abort() ;
-  
   p->setLifetime();
-
 
   // now get the time between the decay of this B and the other B!
   

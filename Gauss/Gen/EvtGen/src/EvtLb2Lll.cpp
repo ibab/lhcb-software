@@ -193,9 +193,9 @@ void EvtLb2Lll::init(){
   report(INFO,"EvtGen") << " EvtLb2Lll maximum probability was set to " << m_maxProbability << std::endl;
   m_poleSize=0;
 
-  // Initialize Wilson coeficients by Buras and Munz
+  // Initialize Wilson coefficients by Buras and Munz
   // TODO: should have common W.C. source for all decays in EvtGen
-  m_WC.CalculateAllCoeficients();
+  m_WC.CalculateAllCoefficients();
 
 }
 

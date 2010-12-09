@@ -1,4 +1,3 @@
-#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory 
  * Package: EvtGenBase 
@@ -23,14 +22,15 @@ using EvtCyclic3::Pair;
 EvtLASSAmp::EvtLASSAmp(EvtDalitzPlot *dp, 
 		       EvtCyclic3::Pair pair,
 		       double m0, double g0,
-		       double a, double r, double cutoff) :
+		       double a, double r, double cutoff, std::string subtype) :
   EvtAmplitude<EvtDalitzPoint>(),
   _pair(pair),
   _m0(m0),
   _g0(g0),
   _r(r),
   _a(a),
-  _cutoff(cutoff)
+  _cutoff(cutoff),
+  _subtype(subtype)
 {
   _dalitzSpace = dp;
   double ma = dp->m( first(pair) );
@@ -51,7 +51,9 @@ EvtLASSAmp::EvtLASSAmp(const EvtLASSAmp& other) :
   _q0(other._q0),
   _r(other._r),
   _a(other._a),
-  _cutoff(other._cutoff)
+  _cutoff(other._cutoff),
+  _subtype(other._subtype)
+
 {  
   _dalitzSpace = other._dalitzSpace;
 }
@@ -108,5 +110,22 @@ EvtLASSAmp::amplitude(const EvtDalitzPoint &dalitzPoint) const {
   double gamma = _g0 * q/m * _m0/_q0;
   EvtComplex lass_Kstar = (_m0*_m0)*(_g0/_q0)/(_m0*_m0-m*m-EvtComplex(0.,_m0*gamma));   
 
-  return lass_elastic + lass_phase * lass_Kstar;
+  EvtComplex theAmplitude(0.0, 0.0);
+
+  if (_subtype == "LASS_ELASTIC") {
+
+    theAmplitude = lass_elastic;
+
+  } else if (_subtype == "LASS_RESONANT") {
+
+    theAmplitude = lass_phase * lass_Kstar;
+
+  } else {
+
+    theAmplitude = lass_phase * lass_Kstar + lass_elastic;
+
+  }
+
+  return theAmplitude;
+ 
 }

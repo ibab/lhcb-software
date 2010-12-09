@@ -124,24 +124,23 @@ void EvtSVVHelCPMix::decay( EvtParticle *p){
   v2 = parent->getDaug(1);
 
   EvtVector4R momv1 = v1->getP4();
-  EvtVector4R momv2 = v2->getP4();
 
   EvtVector3R v1dir(momv1.get(1),momv1.get(2),momv1.get(3));
   v1dir=v1dir/v1dir.d3mag();
 
-// Definition of quantities used in construction of complex amplitudes:
+  // Definition of quantities used in construction of complex amplitudes:
 
-EvtTensor3C M;  // Tensor as defined in EvtGen manual, equ 117
-EvtComplex a,b,c; // Helicity amplitudes; EvtGen manual eqns 126-128, also see Phys Lett B 369 p144-150 eqn 15
-EvtComplex deltamu = EvtComplex(deltaM, -0.5*deltagamma); // See Phys Rev D 34 p1404
+  EvtTensor3C M;  // Tensor as defined in EvtGen manual, equ 117
+  EvtComplex a,b,c; // Helicity amplitudes; EvtGen manual eqns 126-128, also see Phys Lett B 369 p144-150 eqn 15
+  //EvtComplex deltamu = EvtComplex(deltaM, -0.5*deltagamma); // See Phys Rev D 34 p1404
 
-// conversion from times in mm/c to natural units [GeV]^-1
-double t = ((parent->getLifetime())/2.998e11)*6.58e-25; 
+  // conversion from times in mm/c to natural units [GeV]^-1
+  double t = ((parent->getLifetime())/2.998e11)*6.58e-25; 
 
-// The following two quantities defined in Phys Rev D 34 p1404
-EvtComplex fplus =  EvtComplex(cos(averageM*t),-1.*sin(averageM*t))*exp(-(gamma/2.0)*t)*
+  // The following two quantities defined in Phys Rev D 34 p1404
+  EvtComplex fplus =  EvtComplex(cos(averageM*t),-1.*sin(averageM*t))*exp(-(gamma/2.0)*t)*
     (cos(0.5*deltaM*t)*cosh(0.25*deltagamma*t)+EvtComplex(0.0,sin(0.5*deltaM*t)*sinh(0.25*deltagamma*t)));
-EvtComplex fminus = EvtComplex(cos(averageM*t), -1.*sin(averageM*t))*exp(-(gamma/2.0)*t)*EvtComplex(0.0,1.0)*
+  EvtComplex fminus = EvtComplex(cos(averageM*t), -1.*sin(averageM*t))*exp(-(gamma/2.0)*t)*EvtComplex(0.0,1.0)*
     (sin(0.5*deltaM*t)*cosh(0.25*deltagamma*t)-EvtComplex(0.0,1.0)*sinh(0.25*deltagamma*t)*cos(0.5*deltaM*t)); 
 
 // See EvtGen manual pp 106-107

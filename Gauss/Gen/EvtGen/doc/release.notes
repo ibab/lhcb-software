@@ -4,6 +4,31 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= EvtGen v12r0 2010-12-09 ==========================
+! 2010-12-09 - John Back
+ Below is a summary of the merge between the latest BaBar & LHCb EvtGen code.
+ - EvtCPUtil.cpp: Class interface changed to use static instance and not
+   static functions. There are now two OtherB functions for coherent and 
+   incoherent B pairs (set to incoherent by default for LHCb).
+ - EvtGen.cpp: Added extra integer argument in constructor to choose 
+   EvtCPUtil OtherB function type. Default is set to incoherent B pairs.
+   Removed CLHEP includes.
+ - All CP violation model classes: changes for new EvtCPUtil::OtherB()
+   interface.
+ - EvtLASSAmp.cpp: Added two sub-amplitude types LASS_ELASTIC and 
+   LASS_RESONANT. The constructor takes an additional string to specify
+   what amplitude is used (default is set to LASS, the original version).
+ - Added EvtBaryonPCR and EvtBaryonPCRFF models for baryonic semileptonic 
+   decays using more realistic dynamics.
+ - EvtModelReg.cpp: Added EvtBaryonPCR model.
+ - Added EvtSemiLeptonicBaryonAmp.cpp for the above baryon models.
+ - EvtSemiLeptonicFF.hh: Added getdiracff() and getraritaff() methods for 
+   the new baryon models. Since other semileptonic models (ModelNameFF.cpp) 
+   use this class, they also need to implement these new methods (which
+   actually do no extra calculations).
+ - Changed EvtWilsonCoeficients to EvtWilsonCoefficients, used in 
+   EvtGenModels/EvtLb2Lll.hh.
+
 !========================= EvtGen v11r10 2010-10-12 ==========================
 ! 2010-10-12 - Patrick Robbe
  - EvtPythia.cpp: correct destructor to reset vector of Pythia commands

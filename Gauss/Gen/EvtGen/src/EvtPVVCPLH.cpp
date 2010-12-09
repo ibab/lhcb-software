@@ -91,7 +91,7 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 // CP-asymmetry in this channel very small, since:
 // deltaMs large ..and..
 // CPV-phase small
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtCPUtil::getInstance()->OtherB(p,t,other_b);
 
   //Here we're gonna generate and set the "envelope" lifetime
   //So we take the longest living component (for positive deltaGamma: tauH)
@@ -99,7 +99,7 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   //Tristan
   
   static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
-  static double deltaGamma = EvtCPUtil::getDeltaGamma(BS0);
+  static double deltaGamma = EvtCPUtil::getInstance()->getDeltaGamma(BS0);
   static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
   // if dG>0: tauLong=tauH(CP-odd) is then largest
 
@@ -122,7 +122,7 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   //deltaMs is no argument anymore
   //Tristan
   
-  static double deltaMs = EvtCPUtil::getDeltaM(BS0);
+  static double deltaMs = EvtCPUtil::getInstance()->getDeltaM(BS0);
 
   EvtComplex cG0P,cG1P,cG1M;
 

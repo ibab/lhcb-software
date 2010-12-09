@@ -74,3 +74,19 @@ void EvtKKLambdaCFF::gettensorff(EvtId, EvtId, double, double, double*,
   ::abort();
 
 }
+
+void EvtKKLambdaCFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+				double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtKKLambdaCFF.\n";
+  ::abort();
+
+}
+
+void EvtKKLambdaCFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+				 double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtKKLambdaCFF.\n";
+  ::abort();
+
+}

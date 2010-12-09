@@ -2,7 +2,7 @@
 //
 // Wilson coeficients according to A.J.Buras and M.Munz, Phys.Rev. D52, 186. (1995)
 // Thanks to N. Nikitine for example code for Pythia
-// Coeficient C8eff and C2 correction to C7eff taken from:
+// Coefficient C8eff and C2 correction to C7eff taken from:
 //   A.J.Buras, M.Misiak, M.Munz, S.Pokorski, Nucl.Phys. B424, 374 (1994)
 //
 // Used constants come from PDG 2004
@@ -18,12 +18,12 @@
 
 #include "EvtGenBase/EvtComplex.hh"
 
-class EvtWilsonCoeficients {
+class EvtWilsonCoefficients {
 
 public:
 
-  EvtWilsonCoeficients();
-  //~EvtWilsonCoeficients() {};
+  EvtWilsonCoefficients();
+  //~EvtWilsonCoefficients() {};
 
   // calculate strong coupling constant for n_f flavours and scale mu
   double alphaS(double mu,int n_f,double Lambda);
@@ -74,7 +74,7 @@ public:
   EvtComplex Yld(double q2,double ki[],double Gi[],double Mi[],int ni,EvtComplex c1,EvtComplex c2,EvtComplex c3,EvtComplex c4,EvtComplex c5,EvtComplex c6,double ialpha);
 
   // User function
-  void CalculateAllCoeficients();
+  void CalculateAllCoefficients();
   // Set parameters
   void SetLambda(double lambda) { m_Lambda=lambda; }
   void CalculateLambda(double epsilon,int maxstep) { m_Lambda=Lambda(m_alphaMZ,m_n_f,m_mu,epsilon,maxstep); }

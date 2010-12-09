@@ -133,6 +133,8 @@
 #include "EvtGenModels/EvtKKLambdaC.hh"
 #include "EvtGenModels/EvtMultibody.hh"
 
+#include "EvtGenModels/EvtBaryonPCR.hh"
+
 //#include "EvtGenModels/EvtJetSetCDF.hh"
 //#include "EvtGenModels/EvtJscontCDF.hh"
 
@@ -269,6 +271,8 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
 //    modelist.registerModel(new EvtJscontCDF);
 
     modelist.registerModel(new EvtbTosllAli);
+    modelist.registerModel(new EvtBaryonPCR);
+
     modelist.registerModel(new EvtBToDDalitzCPK);
     modelist.registerModel(new EvtLambdaB2LambdaV);
     modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);

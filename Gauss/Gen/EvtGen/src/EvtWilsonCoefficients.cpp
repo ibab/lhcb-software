@@ -2,7 +2,7 @@
 //
 // Wilson coeficients according to A.J.Buras and M.Munz, Phys.Rev. D52, 186. (1995)
 // Thanks to N. Nikitine for example code for Pythia
-// Coeficient C8eff and C2 correction to C7eff taken from:
+// Coefficient C8eff and C2 correction to C7eff taken from:
 //   A.J.Buras, M.Misiak, M.Munz, S.Pokorski, Nucl.Phys. B424, 374 (1994)
 //
 // Used constants come from PDG 2004
@@ -16,7 +16,7 @@
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtReport.hh"
-#include "EvtGenModels/EvtWilsonCoeficients.hh"
+#include "EvtGenModels/EvtWilsonCoefficients.hh"
 #include <stdlib.h>
 
 // including EvtLi2Spence.F
@@ -24,7 +24,7 @@ extern "C" {
   extern double li2spence_(double*);
 }
 
-EvtWilsonCoeficients::EvtWilsonCoeficients(){
+EvtWilsonCoefficients::EvtWilsonCoefficients(){
   int i,j;
   double tmpa[8]={14./23.,16./23.,6./23.,-12./23.,0.4086,-0.4230,-0.8994,0.1456};
   double tmph[8]={2.2996,-1.0880,-3./7.,-1./14.,-0.6494,-0.0380,-0.0186,-0.0057};
@@ -66,16 +66,16 @@ EvtWilsonCoeficients::EvtWilsonCoeficients(){
   m_ksi=0;
 }
 
-void EvtWilsonCoeficients::SetRenormalizationScheme(std::string scheme){
+void EvtWilsonCoefficients::SetRenormalizationScheme(std::string scheme){
   if(scheme=="NDR") m_ksi=0;
   else if(scheme=="HV") m_ksi=1;
   else{
-    report(ERROR,"EvtGen") << "ERROR: EvtWilsonCoeficients knows only NDR and HV schemes !" << std::endl;
+    report(ERROR,"EvtGen") << "ERROR: EvtWilsonCoefficients knows only NDR and HV schemes !" << std::endl;
     ::abort();
   }
 }
 
-double EvtWilsonCoeficients::alphaS(double mu=4.8,int n_f=5,double Lambda=0.2167){
+double EvtWilsonCoefficients::alphaS(double mu=4.8,int n_f=5,double Lambda=0.2167){
 // calculate strong coupling constant for n_f flavours and scale mu
   double beta0=11.-2./3.*n_f;
   double beta1=51.-19./3.*n_f;
@@ -86,7 +86,7 @@ double EvtWilsonCoeficients::alphaS(double mu=4.8,int n_f=5,double Lambda=0.2167
   return aS;
 }
 
-double EvtWilsonCoeficients::Lambda(double alpha=0.1187,int n_f=5,double mu=91.1876,double epsilon=0.00005,int maxstep=1000){
+double EvtWilsonCoefficients::Lambda(double alpha=0.1187,int n_f=5,double mu=91.1876,double epsilon=0.00005,int maxstep=1000){
 // calculate Lambda matching alphaS using simple iterative method
   int i;
   double difference=0;
@@ -115,47 +115,47 @@ double EvtWilsonCoeficients::Lambda(double alpha=0.1187,int n_f=5,double mu=91.1
   }
 }
 
-double EvtWilsonCoeficients::eta(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+double EvtWilsonCoefficients::eta(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   return alphaS(M_W,n_f,Lambda)/alphaS(mu,n_f,Lambda);
 }
 
 
-EvtComplex EvtWilsonCoeficients::C1(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C1(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC1(0,0);
   for(i=0;i<8;i++) myC1+=k[0][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
   return myC1;
 }
 
-EvtComplex EvtWilsonCoeficients::C2(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C2(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC2(0,0);
   for(i=0;i<8;i++) myC2+=k[1][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
   return myC2;
 }
 
-EvtComplex EvtWilsonCoeficients::C3(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C3(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC3(0,0);
   for(i=0;i<8;i++) myC3+=k[2][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
   return myC3;
 }
 
-EvtComplex EvtWilsonCoeficients::C4(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C4(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC4(0,0);
   for(i=0;i<8;i++) myC4+=k[3][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
   return myC4;
 }
 
-EvtComplex EvtWilsonCoeficients::C5(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C5(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC5(0,0);
   for(i=0;i<8;i++) myC5+=k[4][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
   return myC5;
 }
 
-EvtComplex EvtWilsonCoeficients::C6(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C6(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myC6(0,0);
   for(i=0;i<8;i++) myC6+=k[5][i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
@@ -163,15 +163,15 @@ EvtComplex EvtWilsonCoeficients::C6(double mu=4.8,int n_f=5,double Lambda=0.2167
 }
 
 
-EvtComplex EvtWilsonCoeficients::C7(double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C7(double M_t=174.3,double M_W=80.425){
   return EvtComplex(-0.5*A(M_t*M_t/M_W/M_W),0);
 }
 
-EvtComplex EvtWilsonCoeficients::C8(double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C8(double M_t=174.3,double M_W=80.425){
   return EvtComplex(-0.5*F(M_t*M_t/M_W/M_W),0);
 }
 
-EvtComplex EvtWilsonCoeficients::C7eff0(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C7eff0(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_t=174.3,double M_W=80.425){
   int i;
   EvtComplex myC7eff(0,0);
   for(i=0;i<8;i++) myC7eff+=h[i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
@@ -181,7 +181,7 @@ EvtComplex EvtWilsonCoeficients::C7eff0(double mu=4.8,int n_f=5,double Lambda=0.
   return myC7eff;
 }
 
-EvtComplex EvtWilsonCoeficients::C8eff0(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C8eff0(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_t=174.3,double M_W=80.425){
   int i;
   EvtComplex myC8eff(0,0);
   for(i=0;i<8;i++) myC8eff+=g[i]*pow(eta(mu,n_f,Lambda,M_W),a[i]);
@@ -190,57 +190,57 @@ EvtComplex EvtWilsonCoeficients::C8eff0(double mu=4.8,int n_f=5,double Lambda=0.
 }
 
 
-EvtComplex EvtWilsonCoeficients::C10tilda(double sin2W=0.23120,double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C10tilda(double sin2W=0.23120,double M_t=174.3,double M_W=80.425){
   return EvtComplex(-Y(M_t*M_t/M_W/M_W)/sin2W,0);
 }
 
-EvtComplex EvtWilsonCoeficients::C10(double sin2W=0.23120,double M_t=174.3,double M_W=80.425,double ialpha=137.036){
+EvtComplex EvtWilsonCoefficients::C10(double sin2W=0.23120,double M_t=174.3,double M_W=80.425,double ialpha=137.036){
   return ( 1./2/EvtConst::pi/ialpha*C10tilda(sin2W,M_t,M_W) );
 }
 
 
-double EvtWilsonCoeficients::A(double x){
+double EvtWilsonCoefficients::A(double x){
   return ( x*(8*x*x+5*x-7)/12/pow(x-1,3) + x*x*(2-3*x)*log(x)/2/pow(x-1,4) );
 }
 
-double EvtWilsonCoeficients::B(double x){
+double EvtWilsonCoefficients::B(double x){
   return ( x/4/(1-x) + x/4/(x-1)/(x-1)*log(x) );
 }
 
-double EvtWilsonCoeficients::C(double x){
+double EvtWilsonCoefficients::C(double x){
   return ( x*(x-6)/8/(x-1) + x*(3*x+2)/8/(x-1)/(x-1)*log(x) );
 }
 
-double EvtWilsonCoeficients::D(double x){
+double EvtWilsonCoefficients::D(double x){
   return ( (-19*x*x*x+25*x*x)/36/pow(x-1,3) + x*x*(5*x*x-2*x-6)/18/pow(x-1,4)*log(x) - 4./9*log(x) );
 }
 
-double EvtWilsonCoeficients::E(double x){
+double EvtWilsonCoefficients::E(double x){
   return ( x*(18-11*x-x*x)/12/pow(1-x,3) + x*x*(15-16*x+4*x*x)/6/pow(1-x,4)*log(x) - 2./3*log(x) );
 }
 
-double EvtWilsonCoeficients::F(double x){
+double EvtWilsonCoefficients::F(double x){
   return ( x*(x*x-5*x-2)/4/pow(x-1,3) + 3*x*x/2/pow(x-1,4)*log(x) );
 }
 
-double EvtWilsonCoeficients::Y(double x){
+double EvtWilsonCoefficients::Y(double x){
   return (C(x)-B(x));
 }
 
-double EvtWilsonCoeficients::Z(double x){
+double EvtWilsonCoefficients::Z(double x){
   return (C(x)+1./4*D(x));
 }
 
 
-EvtComplex EvtWilsonCoeficients::C9(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double sin2W=0.23120,double M_t=174.3,double M_W=80.425,double ialpha=137.036){
+EvtComplex EvtWilsonCoefficients::C9(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double sin2W=0.23120,double M_t=174.3,double M_W=80.425,double ialpha=137.036){
   return ( 1./2/EvtConst::pi/ialpha*C9tilda(ksi,mu,n_f,Lambda,sin2W,M_t,M_W) );
 }
 
-EvtComplex EvtWilsonCoeficients::C9tilda(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double sin2W=0.23120,double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C9tilda(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double sin2W=0.23120,double M_t=174.3,double M_W=80.425){
   return ( P0(ksi,mu,n_f,Lambda,M_W) + Y(M_t*M_t/M_W/M_W)/sin2W - 4*Z(M_t*M_t/M_W/M_W) + PE(mu,n_f,Lambda,M_W)*E(M_t*M_t/M_W/M_W) );
 }
 
-EvtComplex EvtWilsonCoeficients::P0(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::P0(int ksi=0,double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   EvtComplex myP0(0,0);
   for(i=0;i<8;i++) myP0+=p[i]*pow(eta(mu,n_f,Lambda,M_W),a[i]+1);
@@ -250,7 +250,7 @@ EvtComplex EvtWilsonCoeficients::P0(int ksi=0,double mu=4.8,int n_f=5,double Lam
   return myP0;
 }
 
-double EvtWilsonCoeficients::PE(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
+double EvtWilsonCoefficients::PE(double mu=4.8,int n_f=5,double Lambda=0.2167,double M_W=80.425){
   int i;
   double myPE=0.1405;
   for(i=0;i<8;i++) myPE+=q[i]*pow(eta(mu,n_f,Lambda,M_W),a[i]+1);
@@ -258,7 +258,7 @@ double EvtWilsonCoeficients::PE(double mu=4.8,int n_f=5,double Lambda=0.2167,dou
 }
 
 
-void EvtWilsonCoeficients::CalculateAllCoeficients(){
+void EvtWilsonCoefficients::CalculateAllCoefficients(){
   m_Lambda=Lambda(m_alphaMZ,m_n_f,m_M_Z);
   m_C1=C1(m_mu,m_n_f,m_Lambda,m_M_W);
   m_C2=C2(m_mu,m_n_f,m_Lambda,m_M_W);
@@ -332,7 +332,7 @@ void EvtWilsonCoeficients::CalculateAllCoeficients(){
   report(DEBUG,"EvtGen") << " +--------------------------------------" << std::endl;
 }
 
-EvtComplex EvtWilsonCoeficients::hzs(double z,double shat,double mu=4.8,double M_b=4.8){
+EvtComplex EvtWilsonCoefficients::hzs(double z,double shat,double mu=4.8,double M_b=4.8){
   EvtComplex i1(0,1);
   double x=4.*z*z/shat;
   if(x==0)     return (8./27. - 8./9.*log(M_b/mu) - 4./9.*log(shat) + 4./9.*i1*EvtConst::pi);
@@ -340,19 +340,19 @@ EvtComplex EvtWilsonCoeficients::hzs(double z,double shat,double mu=4.8,double M
   else         return (8./27. - 8./9.*log(M_b/mu) - 8./9.*log(z) + 4./9.*x - 2./9.*(2.+x)*sqrt(1.-x) * (log(fabs(sqrt(1.-x)+1)/fabs(sqrt(1.-x)-1))-i1*EvtConst::pi));
 }
 
-double EvtWilsonCoeficients::fz(double z){
+double EvtWilsonCoefficients::fz(double z){
   return (1. - 8.*z*z + 8.*pow(z,6.) - pow(z,8.) - 24.*pow(z,4.)*log(z));
 }
 
-double EvtWilsonCoeficients::kappa(double z,double alpha_S){
+double EvtWilsonCoefficients::kappa(double z,double alpha_S){
   return (1. - 2.*alpha_S/3./EvtConst::pi*((EvtConst::pi*EvtConst::pi-31./4.)*(1.-z)*(1.-z) + 1.5) );
 }
 
-double EvtWilsonCoeficients::etatilda(double shat,double alpha_S){
+double EvtWilsonCoefficients::etatilda(double shat,double alpha_S){
   return (1. + alpha_S/EvtConst::pi*omega(shat));
 }
 
-double EvtWilsonCoeficients::omega(double shat){
+double EvtWilsonCoefficients::omega(double shat){
   double o=0;
   o -= (2./9.)*EvtConst::pi*EvtConst::pi;
   o -= (4./3.)*li2spence_(&shat);
@@ -363,7 +363,7 @@ double EvtWilsonCoeficients::omega(double shat){
   return o;
 }
 
-EvtComplex EvtWilsonCoeficients::C9efftilda(double z,double shat,double alpha_S,EvtComplex c1,EvtComplex c2,EvtComplex c3,EvtComplex c4,EvtComplex c5,EvtComplex c6,EvtComplex c9tilda,int ksi=0){
+EvtComplex EvtWilsonCoefficients::C9efftilda(double z,double shat,double alpha_S,EvtComplex c1,EvtComplex c2,EvtComplex c3,EvtComplex c4,EvtComplex c5,EvtComplex c6,EvtComplex c9tilda,int ksi=0){
   EvtComplex c(0,0);
   c += (c9tilda+ksi*4./9.*(3.*c1+c2-c3-3.*c4))*etatilda(shat,alpha_S);
   c += hzs(z,shat)*(3.*c1+c2+3.*c3+c4+3.*c5+c6);
@@ -373,12 +373,12 @@ EvtComplex EvtWilsonCoeficients::C9efftilda(double z,double shat,double alpha_S,
   return c;
 }
 
-EvtComplex EvtWilsonCoeficients::C7b2sg(double alpha_S,double et,EvtComplex c2,double M_t=174.3,double M_W=80.425){
+EvtComplex EvtWilsonCoefficients::C7b2sg(double alpha_S,double et,EvtComplex c2,double M_t=174.3,double M_W=80.425){
   EvtComplex i1(0,1);
   return (i1*alpha_S*(2./9.*pow(et,14./23.)*(0.5*F(M_t*M_t/M_W/M_W)-0.1687)-0.03*c2));
 }
 
-EvtComplex EvtWilsonCoeficients::Yld(double q2,double *ki,double *Gi,double *Mi,int ni,EvtComplex c1,EvtComplex c2,EvtComplex c3,EvtComplex c4,EvtComplex c5,EvtComplex c6,double ialpha=137.036){
+EvtComplex EvtWilsonCoefficients::Yld(double q2,double *ki,double *Gi,double *Mi,int ni,EvtComplex c1,EvtComplex c2,EvtComplex c3,EvtComplex c4,EvtComplex c5,EvtComplex c6,double ialpha=137.036){
   EvtComplex i1(0,1);
   EvtComplex y(0,0);
   int i;

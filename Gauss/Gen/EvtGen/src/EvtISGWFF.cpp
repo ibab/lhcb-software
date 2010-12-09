@@ -2298,3 +2298,18 @@ void EvtISGWFF::getbaryonff(EvtId, EvtId, double, double, double*,
 
 }
 
+void EvtISGWFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+			   double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtISGWFF.\n";
+  ::abort();
+
+}
+
+void EvtISGWFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+			    double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtISGWFF.\n";
+  ::abort();
+
+}

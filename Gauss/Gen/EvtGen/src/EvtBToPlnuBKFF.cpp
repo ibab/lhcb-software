@@ -86,3 +86,20 @@ void EvtBToPlnuBKFF::getbaryonff(EvtId, EvtId, double, double, double*,
   ::abort();
 
 }
+
+void EvtBToPlnuBKFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+				double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtBToPlnuBKFF.\n";
+  ::abort();
+
+}
+
+void EvtBToPlnuBKFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+				 double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtBToPlnuBKFF.\n";
+  ::abort();
+
+}
+

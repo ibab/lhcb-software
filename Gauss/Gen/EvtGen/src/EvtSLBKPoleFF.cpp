@@ -114,8 +114,8 @@ void EvtSLBKPoleFF::getvectorff(EvtId parent,EvtId /*daught*/,
   static EvtId DPMS=EvtPDL::getId("D*+");
   static EvtId DSPMS=EvtPDL::getId("D_s*+");
 
-  double mass_star;
-  double mass_star2=0.;
+  double mass_star=0.0;
+  double mass_star2=0.0;
   if(parent==B0||parent==B0B){
      mass_star=EvtPDL::getMeanMass(B0S);
      mass_star2=mass_star*mass_star;
@@ -225,6 +225,22 @@ void EvtSLBKPoleFF::getbaryonff(EvtId, EvtId, double, double, double*,
 				double*, double*, double*){
   
   report(ERROR,"EvtGen") << "Not implemented :getbaryonff in EvtSLBKPoleFF.\n";  
+  ::abort();
+
+}
+
+void EvtSLBKPoleFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+			       double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtSLBKPoleFF.\n";
+  ::abort();
+
+}
+
+void EvtSLBKPoleFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+				double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtSLBKPoleFF.\n";
   ::abort();
 
 }

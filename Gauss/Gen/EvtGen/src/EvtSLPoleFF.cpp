@@ -168,3 +168,19 @@ void EvtSLPoleFF::getbaryonff(EvtId, EvtId, double, double, double*,
 
 }
 
+void EvtSLPoleFF::getdiracff(EvtId, EvtId, double, double, double*, double*,
+			     double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getdiracff in EvtSLPoleFF.\n";
+  ::abort();
+
+}
+
+void EvtSLPoleFF::getraritaff(EvtId, EvtId, double, double, double*, double*, 
+			      double*, double*, double*, double*, double*, double*) {
+  
+  report(ERROR,"EvtGen") << "Not implemented :getraritaff in EvtSLPoleFF.\n";
+  ::abort();
+
+}
+
