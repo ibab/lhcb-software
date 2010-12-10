@@ -67,7 +67,6 @@ def RecoTracking(exclude=[]):
    if "Velo" in trackAlgs :
       if TrackSys().fastVelo():
           GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
-          GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking("HLT2FastVelo") ]
       else:
          if TrackSys().veloOpen():
             if TrackSys().beamGas(): 
