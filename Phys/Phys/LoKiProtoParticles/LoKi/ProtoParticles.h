@@ -559,6 +559,28 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class NShared 
+     *  Get number of shared muon hits 
+     *  @see LoKi::Cuts::PP_NSHAREDMU 
+     *  @see LHCb::MuonPID::nShared 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2010-12-10
+     */
+    class NShared : public LoKi::PPTypes::PPFunc
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~NShared () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  NShared* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printtout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+     };
+    // ========================================================================
     /** @class SourceTES
      *  "source of protoparticles"
      *  @see LoKi::Cuts::PPSOURCE
@@ -1477,6 +1499,24 @@ namespace LoKi
      *  @date 2010-06-02
      */
     const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_P ( Rich::Proton ) ;
+    // ========================================================================
+    /** @var PP_NSHAREDMU 
+     *  Simple evaluator of number of muon shared hits 
+     *
+     *  @code 
+     *
+     *   const LHCb::ProtoParticle* pp = ... ;
+     * 
+     *   if ( 1 < PP_NSHAREDMU( pp ) ) { .... } 
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::MuonPID::nShared 
+     *  @see LoKi::ProtoParticles::NShared 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-10
+     */
+    const LoKi::ProtoParticles::NShared                          PP_NSHAREDMU ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

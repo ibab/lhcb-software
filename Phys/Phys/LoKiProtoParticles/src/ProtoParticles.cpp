@@ -1554,6 +1554,48 @@ LoKi::ProtoParticles::RichAboveThres::fillStream ( std::ostream& s ) const
 
 
 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::ProtoParticles::NShared::~NShared (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::ProtoParticles::NShared*
+LoKi::ProtoParticles::NShared::clone() const 
+{ return new LoKi::ProtoParticles::NShared ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::ProtoParticles::NShared::result_type 
+LoKi::ProtoParticles::NShared::operator() 
+  ( LoKi::ProtoParticles::NShared::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::ProtoParticle* points to NULL, return -1000 " ) ;
+    return -1000 ;                                                   // RETURN    
+  }
+  //
+  const LHCb::MuonPID* muon = p->muonPID() ;
+  //
+  if ( 0 == muon ) 
+  {
+    Error ( "LHCb::MuonPID* points to NULL, return -100 " ) ;
+    return -100 ;                                                   // RETURN    
+  }
+  //
+  return muon->nShared () ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& 
+LoKi::ProtoParticles::NShared::fillStream ( std::ostream& s ) const 
+{ return  s << "PP_NSHAREDMU" ; }
+
+
+
 
 
   

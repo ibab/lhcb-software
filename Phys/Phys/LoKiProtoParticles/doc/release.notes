@@ -6,6 +6,17 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-10 - Vanya Belyaev
+
+ - new symbol 
+
+   PP_NSHAREDMU : number of muon shared hits 
+
+ - cmt/requirements 
+
+    version increment to v1r2
+
+
 !========================== LoKiProtoParticles v1r1 2010-11-02 ================
 
 ! 2010-10-25 - Vanya Belyaev

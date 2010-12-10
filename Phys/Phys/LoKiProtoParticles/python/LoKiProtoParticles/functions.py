@@ -292,8 +292,12 @@ PP_ISMUON          = LoKi.ProtoParticles.IsMuon      ()
 PP_ISLOOSEMUON     = LoKi.ProtoParticles.IsLooseMuon ()
 ## @see LoKi::Cuts::PP_ISMUONLOOSe
 PP_ISMUONLOOSE     = LoKi.ProtoParticles.IsLooseMuon ()
+## @see LoKi::Cuts::PP_NSHAREDMU
+PP_NSHAREDMU       = LoKi.ProtoParticles.NShared     ()
 
+#
 # adaptors:
+#
 
 ## @see LoKi::Cuts::PP_TRCUT 
 PP_TRCUT  = LoKi.ProtoParticles.TrackCut
