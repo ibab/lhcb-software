@@ -12,7 +12,12 @@ importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 ##############################################################################
 # latest database tags 
 ##############################################################################
-from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "head-20101206"
-LHCbApp().CondDBtag = "sim-20101208-vc-md100"
+from Configurables import DDDBConf, CondDB, LHCbApp
+
+#CondDB().Simulation = True             # Already taken care of in Gauss()
+LHCbApp().DDDBtag   = "head-20101206"   # Must be set for selecting VELO
+                                        # geometry list in Gauss()
+
+DDDBConf(DataType = "2010")
+CondDB().UseLatestTags = ["2010"]
 

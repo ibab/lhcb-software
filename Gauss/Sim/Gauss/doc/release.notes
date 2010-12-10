@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-12-10 - Gloria Corti
+ - Modify Gauss-DEV.py so that the latest 2010 tags are taken automatically.
+   Must specifiy the LHCbApp().DDDBTag as it is used inside Gauss() to choose
+   the list of geometry element in the VELO to simulate and prior to 2010 it
+   was different.
+
 ! 2010-12-08 - Gloria CORTI
  - Use latest DDDB and SIMCOND tags in Gauss-DEV.py (head-20101206 and 
    sim-20101208-vc-md100 respectively)

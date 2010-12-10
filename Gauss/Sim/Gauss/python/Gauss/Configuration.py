@@ -75,6 +75,7 @@ class Gauss(LHCbConfigurableUser):
        ,"BeamCrossingAngle" : 0.329*SystemOfUnits.mrad
        ,"BeamEmittance"     : 0.704*(10**(-9))*SystemOfUnits.rad*SystemOfUnits.m
        ,"BeamBetaStar"      : 2.0*SystemOfUnits.m
+       ,"BeamLineAngles"    : [ 0.0*SystemOfUnits.mrad, 0.0*SystemOfUnits.mrad ]
        ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm, 0.0*SystemOfUnits.mm,
                                   0.0*SystemOfUnits.mm ]
        ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,
@@ -991,6 +992,7 @@ class Gauss(LHCbConfigurableUser):
         #
         beamMom   = self.getProp("BeamMomentum")
         angle     = self.getProp("BeamCrossingAngle")
+        xAngleBeamLine, yAngleBeamLine = self.getProp("BeamLineAngles")
         emittance = self.getProp("BeamEmittance")
         betaStar  = self.getProp("BeamBetaStar")
 
@@ -1006,6 +1008,8 @@ class Gauss(LHCbConfigurableUser):
         tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.Emittance = emittance
         tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         
         # for Minimum bias, including those of spill-over events
         for slot in CrossingSlots:
@@ -1018,6 +1022,9 @@ class Gauss(LHCbConfigurableUser):
             gen.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
             gen.MinimumBias.PythiaProduction.CollidingBeams.Emittance = emittance
             gen.MinimumBias.PythiaProduction.CollidingBeams.BetaStar = betaStar
+            gen.MinimumBias.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+            gen.MinimumBias.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
+
 
     
         # for Inclusive events (only primary bunch)
@@ -1030,6 +1037,9 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.Inclusive.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.Inclusive.PythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.Inclusive.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.Inclusive.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.Inclusive.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
+
         # Signal plaine (e.g. J/Psi)
         gen_t0.addTool(SignalPlain,name="SignalPlain")
         gen_t0.SignalPlain.addTool(PythiaProduction,name="PythiaProduction")
@@ -1038,6 +1048,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.SignalPlain.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.SignalPlain.PythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.SignalPlain.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         # Signal repeated hadronization (e.g. Bd, Bu, Bs, Lambda_b)
         gen_t0.addTool(SignalRepeatedHadronization,
                        name="SignalRepeatedHadronization")
@@ -1049,6 +1061,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         # Signal forced fragmentation (e.g. Bc)
         gen_t0.addTool(SignalForcedFragmentation,
                        name="SignalForcedFragmentation")
@@ -1060,6 +1074,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         # Special signal (Higgs, top and W/Z with Pythia)
         gen_t0.addTool(Special,name="Special")
         gen_t0.Special.addTool(PythiaProduction,name="PythiaProduction")
@@ -1076,6 +1092,9 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
+
         # Special signal  (Bc with BcVegPy)
         from Configurables import BcVegPyProduction
         gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
@@ -1085,6 +1104,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.Special.BcVegPyProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.Special.BcVegPyProduction.CollidingBeams.Emittance = emittance
         gen_t0.Special.BcVegPyProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.Special.BcVegPyProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.Special.BcVegPyProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
         ecmInGeV = 2*pInGeV
         txtECM = "upcom ecm "+str(ecmInGeV)
@@ -1103,18 +1124,26 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.Emittance = emittance
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         gen_t0.Inclusive.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
         gen_t0.Inclusive.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.Inclusive.Pythia8Production.CollidingBeams.Emittance = emittance
         gen_t0.Inclusive.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         gen_t0.Special.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
         gen_t0.Special.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.Special.Pythia8Production.CollidingBeams.Emittance = emittance
         gen_t0.Special.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.Special.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.Special.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
         gen_t0.SignalPlain.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.SignalPlain.Pythia8Production.CollidingBeams.Emittance = emittance
         gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         # Only signal events
         gen_t0.addTool(StandAloneDecayTool,name="StandAloneDecayTool")
         gen_t0.StandAloneDecayTool.addTool(PythiaProduction,
@@ -1125,6 +1154,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.Emittance = emittance
         gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
+        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
 
         # For beam gas with Pythia
         gen_t0 = Generation("Generation")
