@@ -194,8 +194,6 @@ void dim_stop()
 		pthread_cancel(IO_thread);
 	if(ALRM_thread)
 		pthread_cancel(ALRM_thread);
-	IO_thread = 0;
-	ALRM_thread = 0;
 #ifndef darwin 		
 	sem_destroy(&DIM_INIT_Sema);
 	/*
@@ -213,6 +211,12 @@ void dim_stop()
 #endif
 	dim_tcpip_stop();
 	dim_dtq_stop();	
+	if(IO_thread) 
+		pthread_join(IO_thread,0);
+	if(ALRM_thread) 
+		pthread_join(ALRM_thread,0);
+	IO_thread = 0;
+	ALRM_thread = 0;
 	DIM_THR_init_done = 0;
 }
 

@@ -2013,6 +2013,7 @@ register SERVICE *servp, *prevp;
 void dim_stop_threads(void);
 int dis_no_dns();
 int hash_index, old_index;
+extern int close_dns(long, int);
 
 	dnsp->serving = 0;
 	dis_init();
@@ -2064,6 +2065,7 @@ int hash_index, old_index;
 	dnsp->dis_n_services = 0;
 	dnsp->dis_dns_packet.size = 0;
 	dnsp->dis_dns_packet.src_type = 0;
+	close_dns(dnsp->dnsid, SRC_DIS);
 /*
 	if(dnsp != Default_DNS)
 	{

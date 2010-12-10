@@ -47,8 +47,7 @@ _DIM_PROTO( void set_dns_pars,    ( DNS_CONN *connp, char *node, int port ) );
 _DIM_PROTO( int get_dns_pars,    ( DNS_CONN *connp, char *node, int *port ) );
 
 
-int dim_set_dns_node(node)
-char *node;
+int dim_set_dns_node(char *node)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIS], node, 0);
@@ -56,24 +55,21 @@ char *node;
 	return(1);
 }
 
-int dic_set_dns_node(node)
-char *node;
+int dic_set_dns_node(char *node)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIC], node, 0);
 	return(1);
 }
 
-int dis_set_dns_node(node)
-char *node;
+int dis_set_dns_node(char *node)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIS], node, 0);
 	return(1);
 }
 
-int dim_get_dns_node(node)
-char *node;
+int dim_get_dns_node(char *node)
 {
 	register int node_exists;
 	int port;
@@ -82,8 +78,7 @@ char *node;
 	return(node_exists);
 }
 
-int dic_get_dns_node(node)
-char *node;
+int dic_get_dns_node(char *node)
 {
 	register int node_exists;
 	int port;
@@ -92,8 +87,7 @@ char *node;
 	return(node_exists);
 }
 
-int dis_get_dns_node(node)
-char *node;
+int dis_get_dns_node(char *node)
 {
 	register int node_exists;
 	int port;
@@ -102,8 +96,7 @@ char *node;
 	return(node_exists);
 }
 
-int dim_set_dns_port(port)
-int port;
+int dim_set_dns_port(int port)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIS], 0, port);
@@ -111,16 +104,14 @@ int port;
 	return(1);
 }
 
-int dic_set_dns_port(port)
-int port;
+int dic_set_dns_port(int port)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIC], 0, port);
 	return(1);
 }
 
-int dis_set_dns_port(port)
-int port;
+int dis_set_dns_port(int port)
 {
 	init_dns_list();
 	set_dns_pars(DNS_ids[SRC_DIS], 0, port);
@@ -154,8 +145,7 @@ char node[MAX_DNS_NODE];
 	return(port);
 }
 
-int rand_tmout( min, max )
-int min, max;
+int rand_tmout( int min, int max )
 {
 	int aux;
 
@@ -291,13 +281,22 @@ DNS_CONN *get_dns(DNS_CONN *connp, SRC_TYPES src_type)
 	return p;
 }
 
+int close_dns(long dnsid, SRC_TYPES src_type)
+{
+	DNS_CONN *connp;
 
-int open_dns( dnsid, recv_rout, error_rout, tmout_min, tmout_max, src_type )
-long dnsid;
-void (*recv_rout)();
-void (*error_rout)();
-int tmout_min, tmout_max;
-SRC_TYPES src_type;
+	connp = get_dns((DNS_CONN *)dnsid, src_type);
+	if( !Timer_q )
+		Timer_q = dtq_create();
+	if( connp->pending ) 
+	{
+		connp->pending = 0;
+		dtq_rem_entry( Timer_q, connp->timr_ent );
+	}
+	return 1;
+}
+
+int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_min, int tmout_max, SRC_TYPES src_type )
 {
 	char nodes[MAX_DNS_NODE];
 	char node_info[MAX_NODE_NAME+4];
