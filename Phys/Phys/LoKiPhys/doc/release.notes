@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-12-10 - Vanya Belyaev
+
+ - add new symbol 
+
+     NSHAREDMU : number of shared hits in muon system 
+
 ! 2010-12-09 - Vanya Belyaev
 
  - new symbols 

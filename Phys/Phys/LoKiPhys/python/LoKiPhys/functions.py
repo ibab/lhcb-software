@@ -16,8 +16,13 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#    
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -32,6 +37,11 @@ Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
 
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+                  $Revision$
 Last modification $Date$
                by $Author$
 
@@ -304,7 +314,9 @@ CLAPPCHI2= LoKi.Particles.ClosestApproachChi2
 ## @see LoKi::Cuts::MINCLAPP
 MINCLAPP = LoKi.Particles.MinClosestApproach 
 ## @see LoKi::Cuts::MINCLAPPCHI2 
-MINCLAPPCHI2 = LoKi.Particles.MinClosestApproachChi2 
+MINCLAPPCHI2 = LoKi.Particles.MinClosestApproachChi2
+## @see LoKi::Cuts::NSHAREDMU
+NSHAREDMU    = LoKi.Particles.NShared () 
 ## @see LoKi::Cuts::IP
 IP       = LoKi.Particles.ImpPar
 ## @see LoKi::Cuts::IPCHI2 
@@ -958,7 +970,7 @@ BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
 # Functors related to covariance matrices 
 # =============================================================================
 ## @see LoKi::Cuts::PCOV2
-PCOV2    = LOKi.Particles.Cov2 
+PCOV2    = LoKi.Particles.Cov2 
 ## @see LoKi::Cuts::PCOV2
 PERR2    = LoKi.Particles.Perr2  ()
 ## @see LoKi::Cuts::PTERR2 

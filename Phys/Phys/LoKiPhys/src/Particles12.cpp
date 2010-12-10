@@ -36,8 +36,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *   By usage of this code one clearly states the disagreement 
+ *   with the campain of Dr.O.Callot et al.: 
+ *    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *     
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-23
+ *
+ *                   $Revision$
+ *  LastModification $Date$
+ *                by $Author$ 
  */
 // ============================================================================
 LoKi::Particles::ProtoHasInfo::ProtoHasInfo( const int info ) 
@@ -444,6 +452,51 @@ std::ostream& LoKi::Particles::TrackInfo::fillStream ( std::ostream& s ) const
   if ( m_bad != m_def ) { s << "," << m_bad ; }
   return s << ")" ;
 }
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::NShared::~NShared (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::NShared*
+LoKi::Particles::NShared::clone() const 
+{ return new LoKi::Particles::NShared ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Particles::NShared::result_type 
+LoKi::Particles::NShared::operator() 
+  ( LoKi::Particles::NShared::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return -10000 " ) ;
+    return -10000 ;                                                   // RETURN    
+  }
+  //
+  const LHCb::ProtoParticle* proto = p->proto () ;
+  if ( 0 == proto ) 
+  {
+    Error ( "LHCb::ProtoParticle* points to NULL, return -1000 " ) ;
+    return -1000 ;                                                   // RETURN    
+  }
+  //
+  const LHCb::MuonPID* muon = proto->muonPID() ;
+  if ( 0 == muon ) 
+  {
+    Error ( "LHCb::MuonPID* points to NULL, return -100 " ) ;
+    return -100 ;                                                   // RETURN    
+  }
+  //
+  return muon->nShared () ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Particles::NShared::fillStream ( std::ostream& s ) const 
+{ return  s << "NSHAREDMU" ; }
 
 
 // ============================================================================

@@ -6558,6 +6558,23 @@ namespace LoKi
      */
     const LoKi::Constant<const LHCb::Particle*,double>             ZERO ( 0 ) ;
     // ========================================================================
+    /** @var NSHAREDMU 
+     *  Get number of muon shared hits 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     * 
+     *   if ( 0 < NSHAREDMU ( p )  ) { ... } 
+     *
+     *  @endcode 
+     *  @see LoKi::Particles::NShared 
+     *  @see LHCb::MuonPID::nShared 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-10
+     */  
+    const LoKi::Particles::NShared                                  NSHAREDMU ;
+    // ========================================================================
     /** @typedef TRGPOINTING
      *  Simple function that evaluates to the custom 'pointing angle'
      *  sometimes used in trigger applications:
@@ -6576,10 +6593,11 @@ namespace LoKi
      */
     typedef LoKi::Particles::TrgPointingScore              TRGPOINTING ;
     // ========================================================================
-  }  // end of namespace LoKi::Cuts  
-}  // end of namespace LoKi
+  } //                                              end of namespace LoKi::Cuts  
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PHYSPARTICLECUTS_H
 // ============================================================================
