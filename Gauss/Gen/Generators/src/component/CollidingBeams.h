@@ -60,6 +60,9 @@ class CollidingBeams : public GaudiTool, virtual public IBeamTool {
 
   double m_betaStar ; ///< Beta star (set by job options)
 
+  double m_hBeamLineAngle ; ///< Beam Line horizontal angle in LHCb coord system 
+  double m_vBeamLineAngle ; ///< Beam Line vertical angle in LHCb coord system
+
   Rndm::Numbers m_gaussianDist ; ///< Gaussian random number generator
 };
 #endif // GENERATORS_COLLIDINGBEAMS_H

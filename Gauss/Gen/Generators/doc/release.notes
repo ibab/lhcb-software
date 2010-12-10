@@ -5,6 +5,15 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v10r9 2010-12-10 ==========================
+! 2010-12-10 - Gloria Corti
+ - Allow for a rotation of the beam line with respect to the nominal one.
+   . CollidingBeams.{h,cpp}: the px and py components will be modified
+     accordingly. Angle controllable via properties, by default set to
+     zero.
+   . Not yet implemented in other tools for FixedTarget and Smearing to be
+     used for beam gas simulation.
+
 ! 2010-09-19 - Patrick Robbe
  - UpsilonInAcceptance.h/.cpp: add and print counter to be able to 
    determine generator level efficiencies for Upsilon productions.
@@ -17,57 +26,11 @@
       It allows fine tuning and configuration of generator 
       level cuts, inclusing 'LHCb-acceptance'-cuts 
 
-   *  @code
-   *                                            
-   *  from Cofigurable import LoKi__GenCutTool as GenCutTool 
-   * 
-   *  myalg.addTool ( GenCutTool , 'MyGenCutTool' ) 
-   * 
-   *  myAlg.MyGenCutTool.Decay = " [B0 => ^pi+ ^pi-]CC "
-   *
-   *  myAlg.MyGenCutTool.Cuts = { 
-   *   '[pi+]cc'  : " in_range( 0.010 , GTHETA , 0.400 ) "
-   *  }
-   *  
-   *  @endcode 
-   *
-   *  One can specify different crietria for different particles,
-   *  ignore certain particles (e.g. neutrinos) etc...
-   *
-   *  @code
-   *                                            
-   *  from Cofigurable import LoKi__GenCutTool as GenCutTool 
-   * 
-   *  myalg.addTool ( GenCutTool , 'MyGenCutTool' ) 
-   * 
-   *  myAlg.MyGenCutTool.Decay = " [B0 -> ( K*(892)0 => ^K- ^pi+) gamma ]CC "
-   *
-   *  ## no cuts for gamma
-   *  myAlg.MyGenCutTool.Cuts = { 
-   *   '[pi+]cc'  : " in_range( 0.010 , GTHETA , 0.400 ) "
-   *   '[K+]cc'   : " in_range( 0.010 , GTHETA , 0.300 ) "
-   *  }
-   *
-   *  @endcode 
-   *
-   *
-   *  The tool also produce the generatorcut efficiencty 2D-histogram.
-   *  The histogram can be cofigured therough property:
-   * 
-   *  @code
-   * 
-   *  ## efficiency 2D-histogram: pt ( in GeV) versus rapidity:
-   *  myAlg.MyGenCutTool.XAxis= ( 0.0 , 10.0 , 20 , 'GPT/GeV') 
-   *  myAlg.MyGenCutTool.YAxis= ( 2.0 ,  5.0 ,  6 , 'GY'     ) 
-   *  
-   *  ## efficiency 2D-histogram: pt ( in GeV) versus pseudo-rapidity:
-   *  myAlg.MyGenCutTool.XAxis= ( 0.0 , 10.0 , 20 , 'GPT/GeV' ) 
-   *  myAlg.MyGenCutTool.YAxis= ( 2.0 ,  5.0 ,  6 , 'GETA'    ) 
-   *  
-   *  @endcode 
-
- In this wa
-
+      One can specify different crietria for different particles,
+      ignore certain particles (e.g. neutrinos) etc...
+    
+      The tool also produce the generatorcut efficiencty 2D-histogram.
+      The histogram can be cofigured therough property
 
 !====================== Generators v10r8 2010-05-09 ==========================
 ! 2010-05-06 - Gloria CORTI
