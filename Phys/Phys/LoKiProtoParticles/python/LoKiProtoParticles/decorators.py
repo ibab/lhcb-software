@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiProtoParticles/decorators.py
 #  The set of basic decorator for objects from Phys/LoKiProtoParticles library
@@ -14,7 +14,16 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#    
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @date  2010-05-26
+#
+#                  $Revision$
+# LastModification $Date$
+#               by $Author$ 
 # =============================================================================
 """
 The set of basic decorators for obejcts from Phys/LoKiProtoParticles library
@@ -26,11 +35,19 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+                 $Revision$
+LastModification $Date$
+              by $Author$ 
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = "2010-05-26"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $"
+__version__ = "Version $Revision$"
 # =============================================================================
 
 from   LoKiProtoParticles.functions import *

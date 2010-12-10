@@ -1,4 +1,4 @@
-// $Id: LoKiProtoParticlesDict.h,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DICT_LOKIPROTOPARTICLESDICT_H 
 #define DICT_LOKIPROTOPARTICLESDICT_H 1

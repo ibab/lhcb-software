@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file  LoKiProtoParticles/__init__.py
 #  Helper file to manage Phys/LoKiProtoParticles package
@@ -28,7 +28,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "2010-05-26"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 import LoKiCore.decorators
 # =============================================================================

@@ -1,4 +1,4 @@
-// $Id: ProtoParticles.cpp,v 1.3 2010-06-02 18:13:11 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,8 +29,25 @@
 // ============================================================================
 /** @file
  *  Imeplementation file for namespace LoKi:ProtoParticles
- *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
- *  @date 2010-05-26
+ *
+ *   This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *   The package has been designed with the kind help from
+ *   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *   contributions and advices from G.Raven, J.van Tilburg, 
+ *   A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *   By usage of this code one clearly states the disagreement 
+ *   with the campain of Dr.O.Callot et al.: 
+ *    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *     
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date  2010-05-26
+ *
+ *                 $Revision$
+ * LastModification $Date$
+ *              by $Author$ 
  */
 // ============================================================================
 namespace 

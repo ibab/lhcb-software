@@ -1,4 +1,4 @@
-// $Id: PPTypes.h,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PPTYPES_H 
 #define LOKI_PPTYPES_H 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.1.1.1 2010-05-27 19:17:38 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file   LoKiProtoParticles/tests.py
 #  The simple test script for Phys/LoKiProtoParticles package
@@ -29,7 +29,7 @@ The simple test script for Phys/LoKiProtoParticles package
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = "2010-05-27"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 
 # temporary:
