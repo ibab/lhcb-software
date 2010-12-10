@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-12-10 - Liming Zhang
+ - enlarged f0 mass window in StrippingBs2Jpsif0.py
+
 ! 2010-12-05 - Anton Poluektov 
  - StrippingB2DX.py
    * Added [B0->D+Rho-]cc mode to the D2hhh StrippingLine

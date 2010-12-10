@@ -1,7 +1,7 @@
 
 __author__ = ['Liming Zhang']
 __date__ = '24/03/2010'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 '''
 Bs0->Jpsif0 + JpsiKstbar lifetime biased stripping selection using LoKi::Hybrid and
@@ -28,16 +28,14 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 		,	"PionTRCHI2"	        : 10.0	# adimensional
                 ,       "PionPIDK"              : 10.0  # adimensional
                 ,       "PionPIDmu"             : 10.0  # adimensional
-		,	"f0MassWin"	        : 500.0	# MeV
+		,	"f0MassWin"	        : 1700.0	# MeV
 		,	"f0SUMPT"       	: 900.0 # MeV
 		,	"f0VCHI2"         	: 10.0	# adimensional
 		,	"BsMassWin"	        : 250.0	# MeV
 		,	"BsVCHI2" 	        : 6.0	# adimensional
                 ,       "BsDIRA"                : 0.999 # adimensional
                 ,       "BsFD"                  : 1.5   # mm
-                ,       "KstMassWin"            : 300.0 # MeV
-                ,       "DocaMax"               : 0.5  #mm
-                        
+                ,       "KstMassWin"            : 300.0 # MeV                        
                  }
 
     _Jpsi2MuMuSelection = None
@@ -80,7 +78,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
         _f0 = CombineParticles("f02PiPi")
         _f0.InputLocations = [ "Phys/StdLoosePions" ]
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
-        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & (ACUTDOCA( %(DocaMax)s *mm, ''))" % self.getProps()
+        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & ((ADOCACHI2CUT(30., ''))" % self.getProps()
         _f0.DaughtersCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)> %(PionMINIPCHI2)s)" 
                                       "& (PIDK < %(PionPIDK)s) & (PIDmu < %(PionPIDmu)s)" \
                                       "& (TRCHI2DOF < %(PionTRCHI2)s)" % self.getProps() }
@@ -98,7 +96,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
         _Bs.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" \
                         "& (BPVDIRA > %(BsDIRA)s)" \
                         "& (BPVVD > %(BsFD)s *mm)" % self.getProps()
-#        _Bs.ReFitPVs = True
+        _Bs.ReFitPVs = True
 	# Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi f0
 	_Bs.addTool( OfflineVertexFitter() )
 	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
