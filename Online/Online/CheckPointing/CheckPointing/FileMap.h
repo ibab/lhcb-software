@@ -11,6 +11,8 @@
  */
 namespace CheckPointing {
 
+  typedef unsigned int Marker;
+
   /** @class FileDesc
    *
    * @author  M.Frank
@@ -20,29 +22,29 @@ namespace CheckPointing {
     struct stat statbuf;
     int    name_len;
     int    fd;
-    long   offset;
-    char   name[PATH_MAX];
     char   istmp;
     char   isdel;
     char   hasData;
     char   _pad;
-    void*  tmpbuf;
+    long   offset;
+    char   name[PATH_MAX];
 
+    /// Length of the data structure
+    long length() const      { return sizeof(FileDesc)-sizeof(name)+name_len+1; }
+    long dataLength() const  { return hasData ? statbuf.st_size : 0;            }
+    /// Address to the data section of thsi file (if any)
+    const char* data() const { return name+name_len+1;                          }
     /// Load the proper data structures and initialize the properties from the fs
     int setup(int fdnum);
-    /// Get the data block behind this file. Assumes proper statbuf and fd!
-    int getData(void* ptr, int len);
-    /// Copy data block to output file descriptor. Assumes proper statbuf and fd!
-    int copyData(int out);
     /// Print the data to standard output
     void print();
 
     /// Reopen file and attach it to the proper file descriptor
     int reopen();
     /// Write descriptor and possibly data to file identified by fileno
-    int write(int out);
+    int write(void* address)  const;
     /// Read descriptor and possibly data from file identified by fileno
-    int read(int in, bool restore);
+    int read(const void* addr, bool restore);
   };
 
   /** @class FileDesc
@@ -53,7 +55,7 @@ namespace CheckPointing {
   class FileHandler   {  
   public: 
     /// Handle single file entry
-    virtual void handle(int fdnum)  const = 0;  
+    virtual int handle(int fdnum)  const = 0;  
   };
 
 
@@ -65,9 +67,44 @@ namespace CheckPointing {
   class FilePrintHandler : public FileHandler {
   public: 
     /// Handle single file entry
-    virtual void handle(int fdnum)  const;   
+    virtual int handle(int fdnum)  const;   
   };
 
+  
+  /** @class FileCountHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class FileCountHandler : public FileHandler {
+  protected:
+    mutable int  m_count;
+  public: 
+    /// Standard constructor
+    FileCountHandler() : m_count(0) {}
+      /// Handle single file entry
+      virtual int handle(int /* fdnum */)  const {  ++m_count; return 1;}
+      /// Access number of files counted
+      int count() const { return m_count; }
+  };
+  
+  /** @class MemCountFileHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class MemCountFileHandler : public FileHandler {
+  protected:
+    mutable long m_count;
+  public: 
+    /// Standard constructor
+    MemCountFileHandler() : m_count(2*sizeof(Marker)) {}
+      /// Handle single file entry
+      virtual int handle(int fdnum)  const;
+      /// Access number of bytes necessary
+      long count() const { return m_count; }
+  };
+  
   
   /** @class FileWriteHandler
    *
@@ -75,23 +112,25 @@ namespace CheckPointing {
    * @version 1.0
    */
   class FileWriteHandler : public FileHandler {
-    int m_fd;
-    mutable int  m_count;
-    mutable long m_bytes;
-    mutable long m_offset;
+  protected:
+    mutable char *m_addr, *m_ptr;
+    mutable long  m_count;
   public:
     /// Standard constructor
-    FileWriteHandler(int fd) : m_fd(fd), m_count(0), m_bytes(0), m_offset(0) {}
+    FileWriteHandler(void* add) 
+      : m_addr((char*)add), m_ptr((char*)add), m_count(0) {}
       /// Default destructor
       ~FileWriteHandler() { }
       /// Access number of bytes written
-      long bytes() const { return m_bytes; }
+      long bytes() const { return m_ptr-m_addr; }
+      /// Access number of bytes necessary
+      long count() const { return m_count; }
       /// Start the write cycle
-      int start();
+      FileWriteHandler& start();
       /// Stop and finish the write cycle
       int stop();
       /// Handle single file entry
-      virtual void handle(int fdnum)  const;
+      virtual int handle(int fdnum)  const;
   };
   
   /** @class FileReadHandler
@@ -100,21 +139,55 @@ namespace CheckPointing {
    * @version 1.0
    */
   class FileReadHandler : public FileHandler {
-    int m_fd;
-    mutable int  m_count;
-    mutable long m_bytes;
-    mutable long m_offset;
+  protected:
+    mutable char *m_addr, *m_ptr;
+    mutable long  m_now;
+    long          m_count;
+    bool          m_restore;
   public: 
     /// Standard constructor
-    FileReadHandler(int fd) : m_fd(fd), m_count(0), m_bytes(0), m_offset(0) {}
+    FileReadHandler(const void* add, bool restore=false) 
+      : m_addr((char*)add), m_ptr((char*)add), m_now(0), m_count(0), m_restore(restore) {}
       /// Default destructor
       ~FileReadHandler() {}
+      /// Access number of bytes necessary
+      long count() const { return m_count; }
+      /// Access number of bytes written
+      long bytes() const { return m_ptr-m_addr; }
       /// Start the read cycle
-      int start();
+      FileReadHandler& start();
       /// Stop and finish the read cycle
       int stop();
       /// Handle single file entry
-      virtual void handle(int fdnum)  const;
+      virtual int handle(int fdnum)  const;
+  };
+
+  /** @class FileMemPrintHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class FileMemPrintHandler : public FileReadHandler {
+  public: 
+    /// Standard constructor
+    FileMemPrintHandler(const void* add) :  FileReadHandler(add) {}
+      /// Handle single file entry
+      virtual int handle(int fdnum)  const;
+  };
+
+  /** @class FileMapper
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class FileMapper : public FileReadHandler {
+    bool m_print;
+  public: 
+    /// Standard constructor
+    FileMapper(const void* add, bool prt, bool restore) 
+      :  FileReadHandler(add, restore), m_print(prt) {}
+      /// Handle single file entry
+      virtual int handle(int fdnum)  const;
   };
 
   /** @class FileMap
@@ -123,20 +196,35 @@ namespace CheckPointing {
    * @version 1.0
    */
   class FileMap {
-    /// The number of open files (only valid AFTER count or scan was called)
-    int m_numFiles;
   public:
+
+    struct MapInfo {
+      void*  addr;
+      size_t len;
+      MapInfo(void* a, size_t s) : addr(a), len(s) {}
+    };
+
     /// Default constructor
-    FileMap();
+    FileMap() {}
     /// Count the number of files in the proc file system known to this process
     int count();
-    /// Scan the files in the proc file system and invoke the handler for each file.
-    int scan(const FileHandler& handler);
-    /// Read the dump file and invoke the handler for each file item read.
-    int restore(int fd_in, const FileHandler& handler);
-  };
+    /// Count the necessary amount of contiguous memory to save all data 
+    long memoryCount();
 
+    /// Map anonymous section to store information of size "len"
+    MapInfo map(size_t len);
+    /// Unmap anonymous global section identified by the MapInfo data
+    int unmap(MapInfo& info);
+
+    /// Scan the files in the proc file system and invoke the handler for each file.
+    int scan(const FileHandler& handler)   const;
+    /// Collect the file information to a contiguous memory block
+
+    /// Read the dump file and invoke the handler for each file item read.
+    int analyze(const FileHandler& handler);
+  };
 }
+
 #undef _ALIGN
 
 #endif  // CHECKPOINTING_FILEDSC_H

@@ -1,5 +1,6 @@
 #include "CheckPointing/FutexState.h"
 #include "CheckPointing/SysCalls.h"
+#include "CheckPointing.h"
 #include "linux/futex.h"
 #include <cerrno>
 #include <cstdio>
@@ -27,7 +28,6 @@ static inline int mtcp_futex (int *uaddr, int op, int val,
 {
 #if defined(__x86_64__)
   int rc;
-
   register long int a1 asm ("rdi") = (long int)uaddr;
   register long int a2 asm ("rsi") = (long int)op;
   register long int a3 asm ("rdx") = (long int)val;
@@ -68,9 +68,9 @@ void FutexState::wait(int func, int val, struct timespec const *timeout) {
     rc = -rc;
     if ((rc == ETIMEDOUT) || (rc == EWOULDBLOCK)) break;
     if (rc != EINTR) {
-      mtcp_printf("FutexState::wait: futex error %d: %s\n", rc, strerror (rc));
-      mtcp_printf("FutexState::wait: (%p, %d, %d, %p, NULL, 0)\n", &m_state.value, func, val, timeout);
-      mtcp_abort();
+      mtcp_output(MTCP_FATAL,"FutexState::wait: futex error %d: %s\n"
+		  "FutexState::wait: (%p, %d, %d, %p, NULL, 0)\n", rc, strerror (rc),
+		  &m_state.value, func, val, timeout);
     }
   }
 }

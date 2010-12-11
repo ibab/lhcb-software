@@ -1,23 +1,88 @@
 #include "CheckPointing/MemMaps.h"
 #include "CheckPointing/SysCalls.h"
+#include "CheckPointing/Static.h"
+#include "CheckPointing/MMap.h"
 #include "CheckPointing.h"
 
 #include <cstdio>
+#include <cerrno>
 #include <cstring>
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 using namespace CheckPointing;
 
-#define MEMMAP_BEGIN  "<MemMap>"
-#define MEMMAP_END    "</MemMap>"
+static const int MEMMAP_BEGIN_MARKER = *(Marker*)"MMAP";
+static const int MEMMAP_END_MARKER   = *(Marker*)"mmap";
 
-void AreaCollector::handle(int which, const Area& a) const {
-  if ( 0 == m_maps->m_areas ) m_maps->m_areas = new Area[m_maps->m_numArea];
-  m_maps->m_areas[which] = a;
+int AreaMapper::handle(int , const Area& )   {
+  return 1;
 }
 
-void AreaMapper::handle(int which, const Area& a)  const {
+AreaBaseHandler::AreaBaseHandler() : m_bytes(0), m_count(0)
+{
+  // Memarea size without individual areas
+  m_space = 2*sizeof(Marker)+sizeof(int);
+}
+
+int AreaBaseHandler::updateCounts(const Area& a)   {
+  AreaBaseHandler* p = const_cast<AreaBaseHandler*>(this);
+  long pg = chkpt_sys.pageSize;
+  long sz = pg - 1;
+  p->m_bytes += size_t((a.size+sz)/pg)*pg;
+  p->m_space += a.length();
+  ++p->m_count;
+  return 1;
+}
+
+int AreaBaseHandler::handle(int, const Area& a)    {
+  return updateCounts(a);
+}
+
+int AreaPrintHandler::handle(int, const Area& a)    {
+  a.print();
+  return updateCounts(a);
+}
+
+AreaInfoHandler::AreaInfoHandler() {
+  stack[0]    = stack[1]    = 0;
+  vdso[0]     = vdso[1]     = 0;
+  vsyscall[0] = vsyscall[1] = 0;
+  highAddr    = 0;
+}
+
+int AreaInfoHandler::handle(int, const Area& a)  {
+  if ( a.name[0]=='[' ) {
+    if ( *(int*)a.name == *(int*)"[stack]" ) {
+      stack[0] = a.low;
+      stack[1] = a.high;
+    }
+    else if ( *(int*)a.name == *(int*)"[vdso]" ) {
+      vdso[0] = a.low;
+      vdso[1] = a.high;
+    }
+    else if ( *(int*)a.name == *(int*)"[vsyscall]" ) {
+      vsyscall[0] = a.low;
+      vsyscall[1] = a.high;
+    }
+  }
+  if ( a.high > highAddr ) highAddr = a.high;
+  return updateCounts(a);
+}
+
+int AreaWriteHandler::handle(int, const Area& a)    {
+  // Skip if the memory region is where we actually write!
+  if ( m_addr >= (void*)a.low && m_addr <= (void*)a.high ) {
+    a.print("SKIP  OUTPUT area:");
+    return 0; // This is the output segment
+  }
+  else   {
+    updateCounts(a);
+    long rc = a.write(m_ptr);
+    if ( rc > 0 ) m_ptr += rc;
+    return addr_diff(m_ptr,m_addr);
+  }
+  return 0;
 }
 
 /// Default constructor
@@ -48,182 +113,140 @@ int MemMaps::numLines()  const {
 }
 
 /// Collect in process information about the memory mappings
-int MemMaps::collect() {
-  if ( m_areas ) delete [] m_areas;
-  m_areas = new Area[m_numArea=numLines()];
+int MemMaps::scan(AreaHandler& handler) {
   int fd = mtcp_sys_open("/proc/self/maps",O_RDONLY,0);
   if ( fd>0 ) {
     int count = 0;
     char text[256+PATH_MAX] = "  ", *p=text, *low, *high, *prot, *inode, *dev, *off, *fn;
-    const char* file;
+    const char *file;
     for(int n=1; n>0 && (p-text)<int(sizeof(text)); ++p)   {
       n = mtcp_sys_read(fd,p,1);
       if ( n == 1 && *p != '\n' ) continue;
       *p = 0;
       if ( n == 1 ) {
-	//mtcp_printf("%s\n",text);
 	low  = text;
-	high = strchr(low,'-');
+	high = m_chrfind(low,'-');
 	*high++  = 0;
-	prot     = strchr(high,' ');
+	prot     = m_chrfind(high,' ');
 	*prot++  = 0;
-	off      = strchr(prot,' ');
+	off      = m_chrfind(prot,' ');
 	*off++   = 0;
-	dev      = strchr(off,' ');
+	dev      = m_chrfind(off,' ');
 	*dev++   = 0;
-	inode    = strchr(dev,' ');
+	inode    = m_chrfind(dev,' ');
 	*inode++ = 0;
-	fn       = strchr(inode,' ');
+	fn       = m_chrfind(inode,' ');
 	*fn++    = 0;
-	file     = strchr(fn,'/');
-	if ( !file ) file = strchr(fn,'[');
+	file     = m_chrfind(fn,'/');
+	if ( !file ) file = m_chrfind(fn,'[');
 	if ( !file ) file = "";
-	//mtcp_printf("%17s-%-16s p:%s o:%-12s d:%5s i:%-12s f:%s\n",low,high,prot,off,dev,inode,file);
-	Area& a = m_areas[count];
+	Area a;
 	::sscanf(low,"%lx",&a.low);
 	::sscanf(high,"%lx",&a.high);
 	::sscanf(off,"%lx",&a.offset);
 	a.size = a.high - a.low;
 	*(int*)a.prot = *(int*)prot;
+	if ( !file[0] ) {
+	  unsigned long brk = (unsigned long)mtcp_sys_brk(NULL);
+	  if ( brk >= a.low && brk <= a.high ) file = "[heap]";
+	}
 	a.name_len = m_strcpy(a.name,file);
-	count++;
+	long sc = handler.handle(count,a);
+	if ( sc > 0 ) count++;
       }
       if ( n == 0 ) break;
       p = text;
       *p = ' ';
     }
     text[sizeof(text)-1]=0;
+    close(fd);
     return 1;
   }
   return 0;
 }
 
-/// Write descriptor information about the memory mappings to file
-int MemMaps::writeDescriptors(int fd) {
-  if ( fd > 0 && m_areas ) {
-    const char* s = "<AreaDescriptors>";
-    int rc = ::write(fd,s,strlen(s));
-    for(int i=0; i<m_numArea; ++i)
-      rc += m_areas[i].write(fd);
-    s = "</AreaDescriptors>";
-    rc += ::write(fd,s,strlen(s));
-    return rc;
-  }
-  return -1;
-}
-
 /// Dump descriptor information about the memory mappings
 void MemMaps::dump() {
-  size_t siz = 0;
-  long pg = sysconf(_SC_PAGESIZE);
-  long sz = pg - 1;
-  if ( !m_areas ) collect();
-  for(int i=0; i<m_numArea; ++i) {
-    const Area& a = m_areas[i];
-    a.print();
-    siz += size_t((a.size+sz)/pg)*pg;
-  }
-  mtcp_printf("--------------- Total memory size:%ld Bytes\n",siz);
+  AreaPrintHandler h;
+  scan(h);
+  mtcp_output(MTCP_INFO,"--------------- Total memory size:%ld Bytes\n",h.bytes());
 }
 
 /// Write descriptor information and data from the memory mappings to file
-long MemMaps::write(int fd) {
-  if ( fd > 0 && m_areas ) {
-    long rc = ::write(fd,&m_numArea,sizeof(m_numArea));
-    const char* s = MEMMAP_BEGIN;
-    rc += ::write(fd,MEMMAP_BEGIN,strlen(MEMMAP_BEGIN));
-    for(int i=0; i<m_numArea; ++i)
-      rc += m_areas[i].write(fd);
-    s = "</MemMap>";
-    rc += ::write(fd,MEMMAP_END,strlen(MEMMAP_END));
-    mtcp_printf("Write %ld bytes of mmap area data\n",rc);
-    return rc;
+long MemMaps::write(void* address) {
+  Pointer num, out = (Pointer)address;
+  if ( out ) {
+    out += saveMarker(out,MEMMAP_BEGIN_MARKER);
+    num = out;
+    out += saveInt(out,0);
+    AreaWriteHandler h(out);
+    if ( 1 == scan(h) ) {
+      out += h.bytesWritten();
+      out += saveMarker(out,MEMMAP_END_MARKER);
+      saveInt(num,h.count()); // Update counter
+      mtcp_output(MTCP_INFO,"Write %ld bytes of mmap area data\n",addr_diff(out,address));
+      long len = addr_diff(out,address);
+      return len;
+    }
+    mtcp_output(MTCP_ERROR,"Failed to scan memory sections!\n");
+    return -1;
   }
   return -1;
 }
 
 /// Read descriptor information and data from the memory mappings from file
-long MemMaps::read(int fd) {
-  return read(fd, AreaCollector(this));
-}
-
-/// Read descriptor information and data from the memory mappings from file
-long MemMaps::read(int fd, const AreaHandler& handler) {
-  if ( fd > 0 ) {
-    char text[256];
-    long rc = ::read(fd,&m_numArea,sizeof(m_numArea));
-    rc += ::read(fd,text,strlen(MEMMAP_BEGIN));
+long MemMaps::read(const void* address, AreaHandler& handler) {
+  const_Pointer in = (const_Pointer)address;
+  if ( in ) {
+    in += checkMarker(in,MEMMAP_BEGIN_MARKER);
+    in += getInt(in,&m_numArea);
     Area a;
     for(int i=0; i<m_numArea; ++i) {
-      rc += a.read(fd);
+      in += a.read(in);
       handler.handle(i,a);
     }
-    rc += ::read(fd,text,strlen(MEMMAP_END));
-    mtcp_printf("Read %ld bytes of mmap area data\n",rc);
-    return rc;
+    in += checkMarker(in,MEMMAP_END_MARKER);
+    mtcp_output(MTCP_INFO,"Read %ld bytes of mmap area data\n",addr_diff(in,address));
+    return addr_diff(in,address);
   }
   return -1;
 }
 
-int test_MemMaps_read() {
-  MemMaps m;
-  int fd = ::open("test.dat",O_RDONLY);
-  int rc = m.read(fd);
-  ::close(fd);
-  return rc;
+
+/// Write descriptor information and data from the memory mappings to file
+long MemMaps::write(const char* file_name) {
+  AreaBaseHandler b;
+  if ( scan(b) > 0 ) {
+    long len = b.space();
+    MMap m;
+    if ( m.create(file_name,len) ) {
+      void* mem = m.address();
+      mtcp_output(MTCP_INFO,"Got memory area:%p -> %p [%d bytes]\n",m.low(),m.high(),len);
+      long true_len = this->write(mem);
+      mtcp_output(MTCP_INFO,"Wrote %ld bytes of %ld space.\n",true_len,len);
+      m.commit(true_len);
+      return true_len;
+    }
+    mtcp_output(MTCP_ERROR,"Failed to open file %s: %s\n",file_name,strerror(errno));
+    return 0;
+  }
+  mtcp_output(MTCP_ERROR,"Failed to estimate mmap size for %s: %s\n",file_name,strerror(errno));
+  return 0;
 }
 
-int test_MemMaps_write() {
-  MemMaps m;
-  m.collect();
-  m.dump();
-  int fd = ::open("test.dat",O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);
-  int rc = m.write(fd);
-  ::close(fd);
-  return rc;
-}
-
-
-#include "CheckPointing/Static.h"
-
-#define PAGE_SIZE 4096
-#include <sys/resource.h>
-
-
-
-int test_MemMaps_sharable() {
-  mtcp_set_debug_level(0);
-  void* curr_break = mtcp_sys_brk(0);
-  void* new_break = mtcp_sys_brk (mtcp_saved_break);
-
-  mtcp_output(MTCP_INFO,"restore: curr break %p, saved break %p, shareable: begin %p, end %p\n", 
-	      curr_break, mtcp_saved_break, mtcp_shareable_begin, mtcp_shareable_end);
-
-  if (((VA)curr_break > (VA)mtcp_shareable_begin) && ((VA)mtcp_saved_break < (VA)mtcp_shareable_end)) {
-    mtcp_output(MTCP_ERROR,"restore: current_brk %p, mtcp_saved_break %p, mtcp_shareable_begin %p, mtcp_shareable_end %p\n", 
-                  curr_break, mtcp_saved_break, mtcp_shareable_begin, mtcp_shareable_end);
-    mtcp_abort ();
+/// Read descriptor information and data from the memory mappings from file
+long MemMaps::read(const char* file_name) {
+  MMap m;
+  if ( m.open(file_name) ) {
+    void* mem = m.address();
+    AreaMapper mapper;
+    if ( this->read(mem,mapper) ) {
+      m.close();
+      return 1;
+    }
+    mtcp_output(MTCP_ERROR,"Failed to read memory maps from file %s.\n",file_name);
+    return 0;
   }
-
-  if (new_break == (void*)-1) {
-    mtcp_output(MTCP_FATAL,"restore: sbrk(%p): errno: %d (bad heap)\n",mtcp_saved_break,mtcp_sys_errno);
-  }
-
-  /// Stack limit
-  struct rlimit stack_rlimit;
-  ::getrlimit(RLIMIT_STACK, &stack_rlimit);
-  mtcp_output(MTCP_INFO,"checkpoint: Stack resource limit: soft:%p, hard:%p\n", 
-	      stack_rlimit.rlim_cur, stack_rlimit.rlim_max);
-
-  /// Sharable image adress space
-  restore_addrspace_begin = (((VA)mtcp_shareable_begin) & -PAGE_SIZE);
-  restore_addrspace_size  = ((VA)mtcp_shareable_end - restore_addrspace_begin + PAGE_SIZE - 1) & -PAGE_SIZE;
-  restore_addrspace_end   = restore_addrspace_begin + restore_addrspace_size;
-  mtcp_output(MTCP_INFO,"checkpoint: image of size %X at %p -> %p\n",
-	      restore_addrspace_size, restore_addrspace_begin, restore_addrspace_end);
-
-  // The finishRestore function pointer:
-  mtcp_output(MTCP_INFO,"checkpoint: finishRestore: %p\n",restore_finish_function_pointer);
-
-  return 1;
+  mtcp_output(MTCP_ERROR,"Failed to access file %s: %s\n",file_name,strerror(errno));
+  return 0;
 }

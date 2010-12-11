@@ -6,6 +6,8 @@
 #include "CheckPointing/Static.h"
 #include "CheckPointing/Thread.h"
 #include "CheckPointing/ThreadsLock.h"
+#include "CheckPointing/FileMap.h"
+#include "CheckPointing.h"
 
 #include <cstdio>
 #include <cerrno>
@@ -19,11 +21,11 @@
 #define MTCP_DEFAULT_SIGNAL SIGUSR2
 static int s_stopSignal = MTCP_DEFAULT_SIGNAL;
 
+using namespace CheckPointing;
+
 int                s_motherPID = 0;
 Thread*            s_motherOfAll = 0;
 libc_clone_entry_t s_cloneCall = 0;
-
-void *const restore_finish_function_pointer = (void*)MainThread::finishRestore;
 
 extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
   static CheckpointRestoreWrapper* p = 0;
@@ -37,6 +39,7 @@ extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
 
 MainThread::MainThread()  {
   LibC::getSymbol("__clone",s_cloneCall);
+  chkpt_sys.finishRestore = MainThread::finishRestore;
   s_motherOfAll = new Thread();
   s_motherPID = mtcp_sys_getpid();
   asm (".global clone ; .type clone,@function ; clone = __clone");
@@ -102,15 +105,6 @@ int MainThread::forkInstance() {
     mtcp_output(MTCP_INFO,"forkInstance: Child process started:%d -- Need to still start threads\n",
 		s_motherPID);
   }
-#if 0
-  else {
-    char text[128];
-    sprintf(text,"gdb --pid %d",pID);
-    printf("\nChild:\n%s\n\n",text);
-    sleep(1);
-    system(text);
-  }
-#endif
   return pID;
 }
 
@@ -240,7 +234,7 @@ again:
 int MainThread::resume()   {
   // Resume all threads.  But if we're doing a checkpoint verify, abort all threads except
   // the main thread, as we don't want them running when we exec the mtcp_restore program.
-  mtcp_printf("mtcp resumeThreads*: resuming everything\n");
+  mtcp_output(MTCP_INFO,"resume: resuming everything\n");
   ThreadsLock lock;
   for (Thread* thread = Thread::threads(); thread != NULL; thread = thread->next) {
     FutexState& st = thread->state();
@@ -293,3 +287,47 @@ int MainThread::restore(int fd) {
 int MainThread::restart() {
   return 1;
 }
+
+int MainThread::getFileDescriptors(void** ptr) {
+  FileMap m;
+  MemCountFileHandler h;
+  m.scan(h);
+  void* mem = ::malloc(h.count());
+
+  FileWriteHandler wr(mem);
+  if ( m.scan(wr.start()) > 0 ) {
+    wr.stop();
+    *ptr = mem;
+    return 1;
+  }
+  ::free(mem);
+  *ptr = 0;
+  return 0;
+}
+
+int MainThread::dumpFileDescriptors(void* ptr) {
+  if ( ptr ) {
+    FileMap m;
+    int lvl = mtcp_get_debug_level();
+    mtcp_set_debug_level(MTCP_INFO);
+    FileMemPrintHandler rd(ptr);
+    m.analyze(rd.start());
+    rd.stop();
+    mtcp_set_debug_level(lvl);
+    return 1;
+  }
+  return 0;
+}
+
+int MainThread::setFileDescriptors(void* ptr) {
+  if ( ptr ) {
+    FileMap m;
+    FileReadHandler rd(ptr, true);
+    if ( m.analyze(rd.start()) > 0 ) {
+      rd.stop();
+      return 1;
+    }
+  }
+  return 0;
+}
+

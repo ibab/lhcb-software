@@ -77,16 +77,6 @@ extern int& __mtcp_sys_errno();
 void mtcp_abort (void);
 
 void mtcp_printf(const char* fmt,...);
-enum MTCP_OUTPUT_LEVEL  { 
-  MTCP_DEBUG   = 1,
-  MTCP_INFO    = 2,
-  MTCP_WARNING = 3,
-  MTCP_ERROR   = 4,
-  MTCP_FATAL   = 5
-};
-void mtcp_output(int lvl, const char* fmt,...);
-void mtcp_set_debug_level(int lvl);
-
 
 /* Offset computed (&x.pid - &x) for
  *   struct pthread x;

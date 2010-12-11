@@ -1,90 +1,90 @@
+#include "CheckPointing/Static.h"
 #include "CheckPointing/MemMaps.h"
 #include "CheckPointing/SysCalls.h"
 #include "CheckPointing.h"
 
 #include <cerrno>
 #include <cstring>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/mman.h>
 
 using namespace CheckPointing;
 
-#define AREA_BEGIN "<Area>"
-#define AREA_END   "</Area>"
+static const Marker MEMAREA_BEGIN_MARKER = *(Marker*)"AREA";
+static const Marker MEMAREA_END_MARKER   = *(Marker*)"area";
 
 /// Read memory area descriptor and data from file given by the file handle
-int Area::read(int fd) {
-  int rc = 0, l = 0;
-  char text[128];
+int Area::read(const void* ptr) {
+  const unsigned char* in = (const unsigned char*)ptr;
+  int l = 0;
   int len = sizeof(Area)-sizeof(name);
-  rc += ::read(fd,text,strlen(AREA_BEGIN));
-  rc += ::read(fd,this,len);
-  rc += ::read(fd,name,name_len);
-  rc += ::read(fd,&l,sizeof(l));
-  if ( l ) {
-    for(;l>0;--l) rc += ::read(fd,text,1);
-  }
-  rc += ::read(fd,text,strlen(AREA_END));
-  checkMarker(fd);
-  mtcp_printf("Read memory area:");
-  print();
-  return rc;
+  in += checkMarker(in,MEMAREA_BEGIN_MARKER);
+  in += m_memcpy(this,in,len);
+  in += m_memcpy(name,in,name_len+1);
+  in += m_memcpy(&l,in,sizeof(l));
+  if ( l ) in += l;
+  in += checkMarker(in,MEMAREA_END_MARKER);
+  print("Read memory area:");
+  return addr_diff(in,ptr);
 }
 
 /// Write memory area descriptor and data to file given by the file handle
-int Area::write(int fd) {
-  int flg = mapFlags();
-  int rc     = ::write(fd,AREA_BEGIN,strlen(AREA_BEGIN));
-  size_t len = sizeof(Area)-sizeof(name)+name_len;
-  rc  += ::write(fd,this,len);
-  // This may be optimized:
-  // We normally only need:
-  // if (flg & MAP_ANONYMOUS || flg & MAP_SHARED)
-
-  if ( name_len == 0 || (name[0]=='[' && prot[0]=='r')) {
-    int   i = (int)size;
-    rc     += ::write(fd,&i,sizeof(int));
-    char* p = (char*)low;
-
-    if ( flg & MAP_SHARED ) {
-      // invalidate shared memory pages so that the next read to it 
-      // (when we are writing them to ckpt file) will cause them 
-      // to be reloaded from the disk 
-      if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
-        mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
-		    mtcp_sys_errno,size,low,name,offset);
-      }
+int Area::write(void* ptr)    const {
+  unsigned char* out = (unsigned char*)ptr;
+  if ( out!=0 && strcmp(name,chkpt_sys.checkpointFile)!=0 ) {
+    int flg = mapFlags();
+    size_t len = sizeof(Area)-sizeof(name)+name_len+1;
+    out += saveMarker(out,MEMAREA_BEGIN_MARKER);
+    out += m_memcpy(out,this,len);
+    // This may be optimized:
+    // We normally only need:
+    // if (flg & MAP_ANONYMOUS || flg & MAP_SHARED)
+    
+    if ( strncmp(name,"[stack]",7)==0 ) {
+      // Only write NULL-size marker
+      out += saveInt(out,0);
     }
-    for(i=(int)size;i>0;) {
-      int n = ::write(fd,p,i);
-      if (n>=0) {
-	i -= n;
-	p += n;
+    //else if ( strcmp(name,chkpt_sys.checkpointFile)==0 ) {
+    //  // Only write NULL-size marker
+    //  out += saveInt(out,0);
+    //}
+    else if ( prot[0]=='r' && (name_len == 0 || name[0]=='[') ) {
+      out += saveInt(out,size);
+      if ( flg & MAP_SHARED ) {
+	// invalidate shared memory pages so that the next read to it 
+	// (when we are writing them to ckpt file) will cause them 
+	// to be reloaded from the disk 
+	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
+	  mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
+		      mtcp_sys_errno,size,low,name,offset);
+	}
       }
-      else {
-	mtcp_printf("ERROR Writing memory area:%s ->",::strerror(errno));
-	this->print();
-	return -1;
-      }
+      out += m_memcpy(out,(void*)low,size);
     }
-    rc += size;
+    else {
+      // Only write NULL-size marker
+      out += saveInt(out,0);
+    }
+    out += saveMarker(out,MEMAREA_END_MARKER);
+    print("Wrote memory area:");
+    return addr_diff(out,ptr);
   }
-  else {
-    // Only write NULL-size marker
-    int l = 0;
-    rc += ::write(fd,&l,sizeof(int));
-  }
-  rc += ::write(fd,AREA_END,strlen(AREA_END));
-  rc += writeMarker(fd);
-  mtcp_printf("Wrote memory area:");
-  print();
-  return rc;
+  return 0;
+}
+
+/// returns the full spze requirement to save this memory area
+int Area::length() const {
+  int len = 2*sizeof(Marker) + sizeof(Area) - (sizeof(name) - name_len - 1) + sizeof(int);
+  if ( prot[0]=='r' && (name_len == 0 || name[0]=='[') )
+    len += size;
+  return len;
 }
 
 /// Print area descriptor to standard output
-void Area::print() const {
-  mtcp_printf("%016x-%016x %8d %c%c%c%c o:%012x %s\n",
-	      low,high,size,prot[0],prot[1],prot[2],prot[3],offset,name);
+void Area::print(const char* opt) const {
+  mtcp_output(MTCP_INFO,"%s%016x-%016x %8d %c%c%c%c o:%012x %s\n",
+	      opt,low,high,size,prot[0],prot[1],prot[2],prot[3],offset,name);
 }
 
 /// Access protection flags for this memory area

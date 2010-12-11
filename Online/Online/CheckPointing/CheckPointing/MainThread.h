@@ -14,6 +14,9 @@ class CheckpointRestoreWrapper  {
   virtual int checkpoint(int fd)= 0;
   virtual int restore(int fd)   = 0;
   virtual int restart()         = 0;
+  virtual int getFileDescriptors(void** ptr) = 0;
+  virtual int setFileDescriptors(void* ptr) = 0;
+  virtual int dumpFileDescriptors(void* ptr) = 0;
 };
 
 class Thread;
@@ -43,6 +46,10 @@ class MainThread : public CheckpointRestoreWrapper {
   virtual int checkpoint(int fd);
   virtual int restore(int fd);
   virtual int restart();
+
+  virtual int getFileDescriptors(void** ptr);
+  virtual int setFileDescriptors(void* ptr);
+  virtual int dumpFileDescriptors(void* ptr);
 
   static int     currentThreadID();
   static void    finishRestore();

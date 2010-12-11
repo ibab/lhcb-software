@@ -5,6 +5,7 @@
 #include "CheckPointing/ThreadsLock.h"
 #include "CheckPointing/Static.h"
 #include "CheckPointing/SysCalls.h"
+#include "CheckPointing.h"
 #include "linux/futex.h"
 #include <cstring>
 #include <cstdio>
@@ -48,17 +49,15 @@ static unsigned long int myinfo_gs;
       mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs) \
     )
 
-
-
-static void       *saved_sysinfo;
 static Thread     *s_threads = 0;
 static Thread     *s_motherofall = 0;
 static FutexState  restoreinprog;
-static sigset_t    sigpending_global;                // pending signals for the process
+static sigset_t    sigpending_global;    // pending signals for the process
 static int         dmtcp_info_pid_virtualization_enabled = 0;
 static struct      termios saved_termios;
 static int         saved_termios_exists = 0;
 
+using namespace CheckPointing;
 
 /**  Set the thread's STOPSIGNAL handler.  Threads are sent STOPSIGNAL when they are to suspend execution the application, save
  *  their state and wait for the checkpointhread to write the checkpoint file.
@@ -282,14 +281,14 @@ Thread *Thread::current()   {
 
 /// Save the system info of the process
 void Thread::saveSysInfo() {
-  mtcp_saved_break = (void*) mtcp_sys_brk(NULL);  // kernel returns mm->brk when passed zero
+  chkpt_sys.saved_break = (void*) mtcp_sys_brk(NULL);  // kernel returns mm->brk when passed zero
   // Do this once, same for all threads.  But restore for each thread.
   if (mtcp_have_thread_sysinfo_offset())
-    saved_sysinfo = mtcp_get_thread_sysinfo();
+    chkpt_sys.sysInfo = mtcp_get_thread_sysinfo();
   // Do this once.  It's the same for all threads.
   saved_termios_exists = ( isatty(STDIN_FILENO)
 			   && tcgetattr(STDIN_FILENO, &saved_termios) >= 0 );
-  mtcp_output(MTCP_INFO,"mtcp stopThreads*: mtcp_saved_break=%p\n", mtcp_saved_break);
+  mtcp_output(MTCP_INFO,"mtcp stopThreads*: saved_break=%p\n", chkpt_sys.saved_break);
 }
 
 /// Thread has exited - unlink it from lists and free struct
@@ -464,7 +463,7 @@ int Thread::stop()  {
       if (is_first_checkpoint) {
 	orig_stack_ptr = (char*)&kbStack;
         is_first_checkpoint = 0;
-        mtcp_printf("mtcp_Thread::stop: temp. grow main stack by %d kilobytes");
+        mtcp_output(MTCP_INFO,"Thread::stop: temp. grow main stack by %d kilobytes");
         growstack(kbStack);
       } else if (orig_stack_ptr - (char *)&kbStack > 3 * kbStack*1024 / 4) {
         mtcp_output(MTCP_WARNING,"WARNING:  Stack within %d bytes of end;\n"
@@ -678,7 +677,7 @@ int Thread::restart()     {
   // All my children have been created, jump to the stopthisthread routine just after getcontext call
   // Note that if this is the restored checkpointhread, it jumps to the checkpointhread routine
   if (mtcp_have_thread_sysinfo_offset())
-    mtcp_set_thread_sysinfo(saved_sysinfo);
+    mtcp_set_thread_sysinfo(chkpt_sys.sysInfo);
   mtcp_output(MTCP_DEBUG,"mtcp restarthread*-> setcontext: m_tid: %d, orgTID:%d this:%p curr:%p\n",
 	      m_tid, m_originalTID, this, Thread::current());
   if (this != s_motherofall)  {
