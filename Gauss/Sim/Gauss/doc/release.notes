@@ -4,11 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v39r0 2010-12-12 ============================
+! 2010-12-12 - Gloria Corti
+ - Increase major version to make it clear this is the first version for MC10
+
 ! 2010-12-10 - Gloria Corti
  - Modify Gauss-DEV.py so that the latest 2010 tags are taken automatically.
    Must specifiy the LHCbApp().DDDBTag as it is used inside Gauss() to choose
    the list of geometry element in the VELO to simulate and prior to 2010 it
    was different.
+ - Introduce new options in Gauss() configurable to allow for beam line to
+   be rotated with respect to nominal in both x and y:
+   Gauss().BeamLineAngles = [ 0.0, 0.0 ] as default
 
 ! 2010-12-08 - Gloria CORTI
  - Use latest DDDB and SIMCOND tags in Gauss-DEV.py (head-20101206 and 
