@@ -4,7 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!========================== GENSER v8r0 2010-12-10 ===========================
+!========================== GENSER v8r0 2010-12-13 ===========================
+! 2010-12-12 - Gloria Corti
+ - Rename back RLU_HIJING to RLU as we kept the older version of Hijing
+
 ! 2010-12-10 - Gloria Corti
  - Put back previous version of LHAPDF 5.7.1 for MC10, as we did not have
    the time to do the necessary tests.
