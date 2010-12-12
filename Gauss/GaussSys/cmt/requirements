@@ -1,5 +1,5 @@
 package GaussSys
-version v38r9
+version v39r0
 
 branches cmt doc
 
@@ -8,14 +8,14 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v38r9 Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v39r0 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
-macro GENSER_use        "GENSER       v7r0    Gen"  WIN32 ""
+macro GENSER_use        "GENSER       v8r0    Gen"  WIN32 ""
 macro EvtGen_use        "EvtGen       v11r10  Gen"  WIN32 ""
 macro EvtGenExtras_use  "EvtGenExtras v2r5p1  Gen"  WIN32 ""
-macro Generators_use    "Generators   v10r8   Gen"  WIN32 ""
+macro Generators_use    "Generators   v10r9   Gen"  WIN32 ""
 macro LbPythia_use      "LbPythia     v9r0    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
@@ -63,7 +63,7 @@ use ClhepTools          v2r1p1    Tools
 use GaussKine           v4r0      Sim
 use GaussAlgs		v3r4      Sim
 use GaussTools          v15r4     Sim
-use GaussRICH		v11r1     Sim
+use GaussRICH		v11r2     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
 use GaussPhysics	v6r5	  Sim

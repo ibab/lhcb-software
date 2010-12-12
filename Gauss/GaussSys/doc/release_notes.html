@@ -2,6 +2,136 @@
 Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
+
+!=============================================================================
+</PRE><H1><A NAME="v39r0">2010-12-12 - GaussSys v39r0</A></H1><PRE>
+<H2><A NAME="Note">Release for MC10 production. 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v31r7 (and Gaudi v21r11)</b>
+   AppConfig v3r*,
+   <b>DecFiles v23r*</b>, 
+   ParamFiles v8r3, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   <b>pythia6 424.2</b>, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r4 (based on geant4.9.2.p04) and Geant4Files v92r0
+   XmlVis v1r12,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 145</b>
+</A></H3>
+
+!========================= Gauss v39r0 2010-12-12 ============================
+! 2010-12-12 - Gloria Corti
+ - Increase major version to make it clear this is the first version for MC10
+
+! 2010-12-10 - Gloria Corti
+ - Modify Gauss-DEV.py so that the latest 2010 tags are taken automatically.
+   Must specifiy the LHCbApp().DDDBTag as it is used inside Gauss() to choose
+   the list of geometry element in the VELO to simulate and prior to 2010 it
+   was different.
+ - Introduce new options in Gauss() configurable to allow for beam line to
+   be rotated with respect to nominal in both x and y:
+   Gauss().BeamLineAngles = [ 0.0, 0.0 ] as default
+
+! 2010-12-08 - Gloria CORTI
+ - Use latest DDDB and SIMCOND tags in Gauss-DEV.py (head-20101206 and 
+   sim-20101208-vc-md100 respectively)
+
+! 2010-10-28 - Patrick Robbe
+ - Configuration.py: add beam option handling for Pythia8 generator and
+   Special, Inclusive and SignalPlain methods
+
+!========================== GENSER v8r0 2010-12-13 ===========================
+! 2010-12-12 - Gloria Corti
+ - Rename back RLU_HIJING to RLU as we kept the older version of Hijing
+
+! 2010-12-10 - Gloria Corti
+ - Put back previous version of LHAPDF 5.7.1 for MC10, as we did not have
+   the time to do the necessary tests.
+ - Set version to v8r0 to indicate series for MC10.
+
+! 2010-12-07 - Gloria CORTI
+ - Use latest version of LHAPDF 5.8.4 
+
+! 2010-12-01 - Gloria CORTI
+ - Use latest version of Pythia6 424.2 to check it for possibly adopting it
+   for MC10
+ - Use latest version of Pythia8: recommendation from P.Skands is to use at
+   least 412 as it has bug fixes and that 415 was only a minor update. 
+   Take 415 as it is the latest.
+ - Go back to use hijing 1.383bs.2 for next release of Gauss as it does not
+   work out of the box. Will need to review the interface algorithm.
+
+! 2010-10-07 - Patrick Robbe
+ - Adapt to Pythia 6.423:
+   * remove src/pythia6/pyevnw.F src/pythia6/pyptfs.F which are not needed
+     anymore
+   * update src/pythia6/pyrand.F src/pythia6/pyscat.F src/pythia6/pysigh.F
+
+! 2010-09-17 - Gloria CORTI
+ - requirements: increase version of pythia6 to 423.2 to allow to check it
+   against 421.2
+ - Noticed that the new version of hijing is calling "rlu_hijing" instead or
+   "rlu". Modified name of function in file in src/hijing/rlu.F. Function 
+   "ran" instead does not seem to be called, so do not touch it.
+
+! 2010-09-14 - Gloria CORTI
+ - requirements: use hijing 1.36.a.2 newly installed in LCG MCGenerators. 
+   This version is orginally from Alice.  
+   Routines and common blocks from pythia and jetset are renamed:
+   "_hijing" added to the names. This way hijing hopefully can be used
+   together with pythia.
+   NMXHEP for HEPEVT is 10000, PHEP and VHEP in double precision.
+
+!====================== Generators v10r9 2010-12-10 ==========================
+! 2010-12-10 - Gloria Corti
+ - Allow for a rotation of the beam line with respect to the nominal one.
+   . CollidingBeams.{h,cpp}: the px and py components will be modified
+     accordingly. Angle controllable via properties, by default set to
+     zero.
+   . Not yet implemented in other tools for FixedTarget and Smearing to be
+     used for beam gas simulation.
+
+! 2010-09-19 - Patrick Robbe
+ - UpsilonInAcceptance.h/.cpp: add and print counter to be able to 
+   determine generator level efficiencies for Upsilon productions.
+
+! 2010-08-01 - Vanya Belyaev
+
+ - GenericGenCutTool.cpp
+
+      New generic generator cut tool.
+      It allows fine tuning and configuration of generator 
+      level cuts, inclusing 'LHCb-acceptance'-cuts 
+
+      One can specify different crietria for different particles,
+      ignore certain particles (e.g. neutrinos) etc...
+    
+      The tool also produce the generatorcut efficiencty 2D-histogram.
+      The histogram can be cofigured therough property
+
+!========================= GaussRICH v11r2 2010-12-12 ========================
+!2010-12-02  - Sajan Easo
+ - Add the capability to smear the hit location smearing to match the real data
+   which has misalignments. This can be activated in Rich.opts. The default in
+   the C++ code is to switch this off, but in Rich.opts it is now switch on.
+   The amount of smearing is set as a tabulated property in DDDB and can be
+   lated changed in SimCond. This is set as a backward compatible addition in
+   the sense that using old data bases would produce no extra smearing as 
+   before.
+ - Added  the capability to increase the amount scintillation photons to match
+   the real data which seems to have more background tracks. Activating this
+   done in Rich.opts. This also contains the amount  which is now set for a 
+   factor of 2 compared to the standard
+   amount of scintillation photons.  
+
+! 2010-11-13 - Chris Jones
+ + Remove usage of G4cout from RichG4GeomProp. Use Gaudi MsgStream instead.
+ + Fix compilation warning in RichG4Hit on SLC5.
+
 !=============================================================================
 </PRE><H1><A NAME="v38r9">2010-10-12 - GaussSys v38r9</A></H1><PRE>
 <H2><A NAME="Note">Development for 2010 data. 
