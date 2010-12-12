@@ -3,8 +3,10 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
-!========================= HltInterfaces v4r1p1 2010-10-25 =========================
+! 2010-12-12 - Marco Cattaneo
+ - Remove ANNSvc again, moved definitively to HltDAQ
 
+!========================= HltInterfaces v4r1p1 2010-10-25 =========================
 ! 2010-10-20 - Marco Cattaneo
  - Put ANNSvc back. Needed in more than one package (e.g. TrackUtils) so 
    cannot sit inside HltDAQ
