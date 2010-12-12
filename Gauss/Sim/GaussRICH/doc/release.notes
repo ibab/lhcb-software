@@ -3,18 +3,22 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+!========================= GaussRICH v11r2 2010-12-12 ========================
 !2010-12-02  - Sajan Easo
  - Add the capability to smear the hit location smearing to match the real data
-   which has misalignments. This can be activated in Rich.opts. The default in the
-   C++ code is to switch this off, but in Rich.opts it is now switch on.
+   which has misalignments. This can be activated in Rich.opts. The default in
+   the C++ code is to switch this off, but in Rich.opts it is now switch on.
    The amount of smearing is set as a tabulated property in DDDB and can be
-   lated changed in SimCond. This is set as a backward compatible addition in the
-   sense that using old data bases would produce no extra smearing as before.
+   lated changed in SimCond. This is set as a backward compatible addition in
+   the sense that using old data bases would produce no extra smearing as 
+   before.
  - Added  the capability to increase the amount scintillation photons to match
    the real data which seems to have more background tracks. Activating this
    done in Rich.opts. This also contains the amount  which is now set for a 
    factor of 2 compared to the standard
    amount of scintillation photons.  
+
 ! 2010-11-13 - Chris Jones
  + Remove usage of G4cout from RichG4GeomProp. Use Gaudi MsgStream instead.
  + Fix compilation warning in RichG4Hit on SLC5.
