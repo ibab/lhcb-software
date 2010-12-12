@@ -1,6 +1,9 @@
  Package: GaudiSerialize
  Package Manager: Albert Puig
 
+! 2010-12-12 - Marco Clemencic
+ - Added explicit import of ROOT to be able to link the library.
+
 ! 2009-01-29 - Marco Cattaneo
  - Backward compatible fix for Gaudi v21
 
