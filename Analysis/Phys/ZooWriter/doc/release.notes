@@ -14,6 +14,7 @@
  - Optionally uses decay tree fitter also for non-mass-constraint lifetime fit
    (instead of offline vertex fitter)
  - Decay tree fit returns ct in ns (same as offline vertex fit) for convenience
+ - Added nDoF() function to ZooTrackInfo for consistency (ndf() still there!)
 
 ! 2010-09-15 - Georg Alexander Krocker
  - Included update from Christoph for Hlt line names

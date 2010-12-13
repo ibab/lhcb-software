@@ -748,7 +748,8 @@ class ZooTrackInfo : public TObject
 	}
 
 	double chi2()       const { return m_chi2; }
-	int ndf()           const { return m_ndf; }
+	int ndf()           const { return m_ndf; }//for compatibility reasons
+	int nDoF()           const { return m_ndf; }
 	int nmeas()         const { return m_nmeas; }
 	int nLHCbIDs()      const { return m_nlhcbids; }
 	int nVeloIDs()      const { return m_nVeloIDs; }
