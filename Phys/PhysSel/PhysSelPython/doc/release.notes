@@ -6,6 +6,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-11-11 - Juan Palacios
+ - pyhton/PhysSelPython/Wrappers.py
+  . Simplify AutomaticData and add temporary Extension constructor argument
+    to append to the Location. Location+Extension should give the path of the
+    container up to the leaf. If extension is already present in Location it 
+    is not appended. Default: 'Particles'. To set non-particle locations set to ''.
+    THIS IS TEMPORARY! In the future, the full path to AutomaticData will be required
+    and the outputLocation will contain the path.
+
+! 2010-11-11 - Juan Palacios
  - python/PhysSelPython/MockStrippingLine.py
   . Module containing class to make a pretend stripping line from any
     kind of Selection-like object.

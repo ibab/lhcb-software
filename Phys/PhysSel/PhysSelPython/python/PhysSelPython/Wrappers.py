@@ -79,23 +79,26 @@ class AutomaticData(autodata) :
     >>> SelStdLoosePions.outputLocation()
     'Phys/StdLoosePions'
     >>> SelStdLoosePions.name()
-    'SelStdLoosePions'
-    >>> SelStdLoosePions.outputLocation()
-    'Phys/StdLoosePions'
+    'Phys_StdLoosePions'
+    >>> pions = AutomaticData(Location='Phys/StdLoosePions/Particles')
+    >>> pions.outputLocation()
+    'Phys/StdLoosePions/Particles'
     """
 
     def __init__(self,
-                 Location = '') :
-        if Location == '' :
-            raise Exception('Empty AutomaticData Location')
+                 Location,
+                 Extension='Particles') :
+        
+        _extension = ('/'+Extension).replace('//', '/')
+        self._location = (Location + _extension).replace(_extension+_extension, _extension)
         autodata.__init__(self,
-                          name='',
                           Location=Location)
-        self._dataType = 'Particles'
+        
         self._algoName = 'SelFilter'+self._name
+
     def algorithm(self) :
         return VoidFilter('SelFilter'+self._name,
-                          Code = "CONTAINS('"+self.outputLocation()+"/"+self._dataType+"')>0")
+                          Code = "CONTAINS('"+self._location+"')>0")
 
     def algName(self) :
         return self.algorithm().name()

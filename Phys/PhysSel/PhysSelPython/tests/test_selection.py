@@ -11,9 +11,13 @@ from Configurables import FilterDesktop
 
 def test_automatic_data() :
     sel00 = AutomaticData(Location = 'Phys/Sel00x')
-    assert sel00.name() == 'Sel00x'
-    assert sel00.algName() == 'SelFilterSel00x'
+    assert sel00.name() == 'Phys_Sel00x'
+    assert sel00.algName() == 'SelFilterPhys_Sel00x'
     assert sel00.outputLocation() == 'Phys/Sel00x'
+    sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles', Extension='Particles')
+    assert sel00.name() == 'Phys_Sel00x_Particles'
+    assert sel00.algName() == 'SelFilterPhys_Sel00x_Particles'
+    assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
 
 def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
     raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
@@ -42,7 +46,7 @@ def test_merged_selection() :
     assert ms.name() == 'Merge00And01'
     assert ms.requiredSelections == [] # should not export its required selections. Algos contained internally.
     assert ms.outputLocation() == 'Phys/Merge00And01'
-    assert [alg.name() for alg in ms.algos] == ['SelFilterSel00', 'SelFilterSel01', 'Merge00And01']
+    assert [alg.name() for alg in ms.algos] == ['SelFilterPhys_Sel00', 'SelFilterPhys_Sel01', 'Merge00And01']
     assert ms.algos == [sel00.algorithm(), sel01.algorithm(), ms._sel.algorithm()]
 
 def test_clone_merged_selection() :
@@ -53,7 +57,7 @@ def test_clone_merged_selection() :
     assert msClone.name() == 'Merge00And01Clone'
     assert msClone.requiredSelections == [] # should not export its required selections. Algos contained internally.
     assert msClone.outputLocation() == 'Phys/Merge00And01Clone'
-    assert [alg.name() for alg in msClone.algos] == ['SelFilterSel00', 'SelFilterSel01', 'Merge00And01Clone']
+    assert [alg.name() for alg in msClone.algos] == ['SelFilterPhys_Sel00', 'SelFilterPhys_Sel01', 'Merge00And01Clone']
     assert msClone.algos == [sel00.algorithm(), sel01.algorithm(), msClone._sel.algorithm()]
 
 def test_merged_selection_with_existing_selection_name_raises() :
