@@ -269,6 +269,11 @@ StatusCode DVAlgorithm::loadTools()
   if (msgLevel(MSG::DEBUG)) {
     debug() << ">>> Preloading PhysDesktop locations " << m_inputLocations << endmsg;
   }
+
+  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+        iloc != m_inputLocations.end(); ++iloc ) {
+    DaVinci::StringUtils::removeEnding(*iloc,"/Particles");
+  }
   
   desktop()->setInputLocations(m_inputLocations);
   std::vector<std::string> p2pvInputLocations;

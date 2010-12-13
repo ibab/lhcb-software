@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2010-08-27 - Juan Palacios
+ - src/Lib/DVAlgorithm.cpp
+  . Allow full InputLocations ending in "/Particles".
+
 ! 2010-11-13 - Vanya Belyaev
 
  - DVAlgorithm:
