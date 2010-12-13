@@ -1,3 +1,11 @@
+2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/Tar.py:
+	* LbUtils/python/LbUtils/Temporary.py:
+	* LbUtils/tests/testemp.py:
+	* LbUtils/tests/testFixCVSRoot.py:
+	* LbUtils/tests/testlinks.py: New unified syntax for the TempDir class.
+
 2010-11-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* data/Makefile: fixed conditional statement on CMT version prior to 2009.

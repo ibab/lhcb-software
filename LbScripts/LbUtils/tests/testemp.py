@@ -7,10 +7,10 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.samplebasename = "toto"
-        self.tmpdir = TempDir(self.samplebasename)
+        self.tmpdir = TempDir(suffix="tempdir", prefix=self.samplebasename)
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-        
+
     def testName(self):
         name1 = str(self.tmpdir)
         name2 = self.tmpdir.getName()
@@ -19,7 +19,7 @@ class TestCase(unittest.TestCase):
         self.assert_(name1 == name2)
 
     def testDestruction(self):
-        mydir = TempDir("mydir")
+        mydir = TempDir(suffix="tempdir", prefix="mydir")
         mydirname = mydir.getName()
         del mydir
         # the temporary directory should have been removed

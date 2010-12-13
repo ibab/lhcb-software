@@ -44,11 +44,11 @@ def _singleTarFilter(namelist, sel=None, binary_set=set()):
                     break
             else :
                 if fnmatch.fnmatch(f, "*%s*" % b) :
-                    tobearched = False 
+                    tobearched = False
                     break
         if tobearched :
             selected.add(f)
-    
+
     return selected
 
 
@@ -64,14 +64,14 @@ def tarFilter(namelist, sel_binary=None, binary_list=None):
         this_sel_set.add(None)
     this_binary_set = set(binary_list[:])
     this_binary_set |= this_sel_set
-    
+
     for s in this_sel_set :
         selected |= _singleTarFilter(namelist, s, this_binary_set)
     return list(selected)
 
 
 
-def createTarBall(dirname, filename, binary=None, binary_list=[], 
+def createTarBall(dirname, filename, binary=None, binary_list=[],
                   symlinks=True, prefix=None):
     log = logging.getLogger()
     this_binary_list = binary_list[:]
@@ -86,7 +86,7 @@ def createTarBall(dirname, filename, binary=None, binary_list=[],
         tarf = tarfile.open(filename, "w")
     else :
         log.error("No such tar format")
-        
+
     if dirname[-1] != os.sep :
         dirname = dirname + os.sep
     for root, dirs, files in os.walk(dirname, topdown=True) :
@@ -98,7 +98,7 @@ def createTarBall(dirname, filename, binary=None, binary_list=[],
                 relf = os.path.join(prefix, relf)
             tarf.add(fullf, relf)
             log.debug("added the file %s to the %s file" % (relf, filename) )
-            
+
         for d in tarFilter(dirs, [binary], this_binary_list) :
             fulld = os.path.join(root, d)
             reld  = os.path.join(relroot, d)
@@ -110,13 +110,13 @@ def createTarBall(dirname, filename, binary=None, binary_list=[],
             else :
                 tarf.add(fulld, reld, recursive=False)
                 log.debug("added the directory %s to the %s file" % (reld, filename) )
-        
+
         dirstoremove = tarFilter(dirs, this_binary_list)
-        
+
         for d in dirstoremove :
             dirs.remove(d)
-    
-    
+
+
     tarf.close()
 
 def openTar(filename, tar_mode="r"):
@@ -132,7 +132,7 @@ def openTar(filename, tar_mode="r"):
     lock = AFSLock(filename)
     lock.lock(force=False)
     tarf = tarfile.open(filename, tar_mode)
-    
+
     return tarf, lock
 
 def closeTar(tarf, lock, _filename=None):
@@ -143,7 +143,7 @@ def closeTar(tarf, lock, _filename=None):
 def listTarBallObjects(dirname, pathfilter=None, prefix=None, top_most=False):
     if dirname[-1] != os.sep :
         dirname += os.sep
-    
+
     for root, dirs, files in os.walk(dirname, topdown=True) :
         relroot = root.replace(dirname,"")
         objs = files + dirs
@@ -175,7 +175,7 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
         srcdict[s] = prefix
     return updateTarBallFromFilterDict(srcdict, filename, pathfilter, dereference)
 
-def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
+def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False, update=False):
     """ Front end to createTarBallFromFilterDict if the src dirs have all the same
     prefix
@@ -194,7 +194,7 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
     @param filename: output file name
     @param pathfilter: filter function that takes as input a path and returns True or False if
                        the path as to be included in the tarball or not.
-    @param dereference: dereference links in the tarball or not 
+    @param dereference: dereference links in the tarball or not
     """
     log = logging.getLogger()
     status = 0
@@ -203,7 +203,7 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
     else :
         log.debug("Updating %s" % filename)
         tarf, lock = openTar(filename, tar_mode="r")
-        tmpdir = TempDir("updateTarballFromFilter")
+        tmpdir = TempDir(suffix="tempdir", prefix="updateTarballFromFilter")
         tarf.extractall(tmpdir.getName())
         extracted_objs = [ x[1] for x in listTarBallObjects(tmpdir.getName()) ]
         closeTar(tarf, lock, filename)
@@ -246,7 +246,7 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
                                     prefix=None, dereference=dereference, update=False)
     return status
 
-def createTarBallFromFilterDict(srcdict, filename, pathfilter=None, 
+def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
                                 dereference=False, update=False,
                                 use_tmp=False):
     """ function to create a tarball. The srcdict parameter is a dictionary
@@ -255,8 +255,8 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
     @param filename: output file name
     @param pathfilter: filter function that takes as input a path and returns True or False if
                        the path as to be included in the tarball or not.
-    @param dereference: dereference links in the tarball or not 
-    @param update: if the tarball has to be either updated or replaced 
+    @param dereference: dereference links in the tarball or not
+    @param update: if the tarball has to be either updated or replaced
     @param use_tmp: if True, creates the file in a temporary directory and move it.
     """
     log = logging.getLogger()
@@ -264,7 +264,7 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
     if not update :
         log.debug("Creating %s" % filename )
         if use_tmp :
-            tmpdir = TempDir("createTarBallFromFilter")
+            tmpdir = TempDir(suffix="tempdir", prefix="createTarBallFromFilter")
             real_name = filename
             filename = os.path.join(tmpdir.getName(), os.path.basename(filename))
             log.debug("Using temporary file %s" % filename)
@@ -285,7 +285,7 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
                     if prefix :
                         log.debug("Adding %s to %s" % (dirname, prefix))
                     else :
-                        log.debug("Adding %s" % dirname)                    
+                        log.debug("Adding %s" % dirname)
                     for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
                         keep_tar = True
                         tarf.add(fullo, relo, recursive=False)
@@ -335,13 +335,13 @@ def copySources(sourcedirs, dest, symlinks=True, exclude=[]):
                 else :
                     copy2(src, dst)
 
-def createTarBalls(sourcedirs, output_dir=os.getcwd(), 
+def createTarBalls(sourcedirs, output_dir=os.getcwd(),
                   tar_name = "package", get_share=True,
                   binary_list=[], tar_type="gz",
                   symlinks=True, prefix=None,
                   exclude=[],
                   top_dir=False, top_exclude=None):
-    tmpdir = TempDir("name")
+    tmpdir = TempDir(suffix="tempdir", prefix="name")
     tmpdirname = tmpdir.getName()
     copySources(sourcedirs, tmpdirname, symlinks, exclude)
     # facility to select this binary from the first level of subdirectories

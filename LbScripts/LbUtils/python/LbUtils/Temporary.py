@@ -14,56 +14,38 @@ if not 'mkdtemp' in dir(tempfile):
         return name
     def mkstemp():
         name = os.tmpnam()
-        return (os.open(name,os.O_CREAT | os.O_RDWR | os.O_EXCL, 0600), 
+        return (os.open(name,os.O_CREAT | os.O_RDWR | os.O_EXCL, 0600),
 name)
 else:
     # use the real mkdtemp
     from tempfile import mkdtemp, mkstemp
 
 
+
 class TempDir(object):
-    """ class to create a temporary directory """
-    def __init__(self, basename=None):
-        """ constructor """
-        if (basename):
-            self._name = mkdtemp("tempdir", basename)
-        else:
-            self._name = mkdtemp("tempdir")
-    def __del__(self):
-        """ destructor """
-        rmtree(self._name)
-    def __str__(self):
-        """ returns string representation """
-        return self.getName()
-    def getName(self):
-        """returns the name of the temporary directory"""
-        return self._name
-
-
-class TempDir2(object):
     """Class to create a temporary directory."""
     def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
         """Constructor.
-        
+
         'keep_var' is used to define which environment variable will prevent the
         deletion of the directory.
-        
+
         The other arguments are the same as tempfile.mkdtemp.
         """
-        self._keep_var = keep_var 
+        self._keep_var = keep_var
         self._name = mkdtemp(suffix, prefix, dir)
 
     def getName(self):
         """Returns the name of the temporary directory"""
         return self._name
-    
+
     def __str__(self):
         """Convert to string."""
         return self.getName()
 
     def __del__(self):
         """Destructor.
-        
+
         Remove the temporary directory.
         """
         if self._name:
@@ -80,11 +62,11 @@ class TempFile:
         """ Constructor """
         self._file = None
         self.name = ''
-        
+
         fd, name = mkstemp()
         self.name = name
         self._file = os.fdopen(fd,"w+")
-                
+
     def __del__(self):
         """ Destructor """
         if self._file:
