@@ -836,6 +836,8 @@ def getProjectList(name, version, binary=None, recursive=True):
 
     if not check_only :
         checkWriteAccess(this_html_dir)
+        if overwrite_mode :
+            os.remove(tar_file_html)
         getFile(url_dist + "html/", tar_file_html)
 
 
