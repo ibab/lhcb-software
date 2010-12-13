@@ -28,6 +28,10 @@
  - 091123 - added support for LHCbDirac
 """
 #------------------------------------------------------------------------------
+from LbUtils.Temporary import TempDir
+
+tmpdir = TempDir(prefix="mkLCGCMTtar")
+
 import sys, os, getopt, time, shutil, commands
 import re
 from LbLegacy.install_project import calculateMD5
@@ -210,10 +214,8 @@ def get_native_versions(native_version, binary):
                 cmtshow = 'cmt -tag=LHCb,LHCbGrid show '
         cmtcmd = cmtshow +'macros native > '
     # run cmtcmd
-    if sys.platform == 'win32':
-        natives = os.path.join(os.environ['TMP'],native_version+'.vers')
-    else:
-        natives = os.path.join('/tmp',native_version+'.vers')
+
+    natives = os.path.join(tmpdir, native_version+'.vers')
     if debug_flag == 1:
         print 'get_native_version - %s '%(cmtcmd+natives)
 
@@ -329,7 +331,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 
     here = os.getcwd()
 
-    os.chdir('/tmp')
+    os.chdir(tmpdir)
 
     main_dir = get_output_filename(native_version, binary_dir, packages_versions)
 
@@ -423,7 +425,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 
 # make the final tar file from /tmp/main_dir/binary_dir
     if len(missing) == 0 and len(tarko) == 0:
-        os.chdir(os.path.join('/tmp', main_dir, binary_dir))
+        os.chdir(os.path.join(tmpdir, main_dir, binary_dir))
         os.system("symlinks -c -r external")
         str = 'tar zcf '
         str += tarfile
@@ -437,7 +439,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         print str
         rc = os.system(str)
         if rc == 0:
-            str = rmcmd+os.path.join('/tmp',main_dir,binary_dir)
+            str = rmcmd+os.path.join(tmpdir ,main_dir, binary_dir)
             os.system(str)
             logfile.write('%s tar file has been built for %s and relevant /tmp directory removed'%(main_dir,binary_dir)+'\n')
             if md5file :
@@ -453,13 +455,13 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     os.chdir(here)
 
 def genHTMLfile(native_version, packages_versions,binary_dir, output_file):
-    
+
     main_dir = get_output_filename(native_version, binary_dir, packages_versions)
 
     name = main_dir.split("_")[0]
     version = main_dir.split("_")[1]
     core_name = main_dir+'_'+binary_dir
-    
+
     htmlfile = None
     if output_file :
         tarfile = output_file

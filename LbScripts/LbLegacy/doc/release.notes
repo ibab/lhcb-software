@@ -1,5 +1,7 @@
 2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkLCGCMTtar:
+	* scripts/mkMCGentar: replaced /tmp directory by a LbUtils.Temporary.TempDir class.
 	* scripts/mkLHCbtar: replace the temporary directory used by a good random-seeded one.
 	* python/LbLegacy/install_project.py: if --overwrite flag is used the .html file containing
 	the dependencies is removed anyway.

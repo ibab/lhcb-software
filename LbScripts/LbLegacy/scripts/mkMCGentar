@@ -12,6 +12,9 @@
 from LbLegacy.install_project import calculateMD5
 
 from LbUtils.CMT.Common import isCMTMessage
+from LbUtils.Temporary import TempDir
+
+tmpdir = TempDir(prefix="mkMCGentar")
 
 import sys, os, getopt, time, shutil, commands
 version = '081013'
@@ -101,7 +104,7 @@ def get_tar_files(packages_versions,binary_dir):
     md5file = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.md5')
     MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
 
-    os.chdir('/tmp')
+    os.chdir(tmpdir)
     if not os.path.exists('MCGenerators'): os.mkdir('MCGenerators')
     os.chdir('MCGenerators')
     print 'get_tar_files -', os.getcwd()
@@ -133,12 +136,12 @@ def get_tar_files(packages_versions,binary_dir):
                         print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
                 os.remove(file)
 
-    os.chdir('/tmp')
+    os.chdir(tmpdir)
     str = 'tar zcf '+tarfile+' MCGenerators'
     rc = os.system(str)
     if rc == 0:
-        os.system('rm -fr /tmp/MCGenerators')
-        logfile.write('%s tar file for %s has been written and relevant /tmp/MCGenerators directory removed '%(GENSER_vers,binary_dir)+'\n')
+        os.system('rm -fr %s' % os.path.join(tmpdir, "MCGenerators"))
+        logfile.write('%s tar file for %s has been written and relevant %s directory removed '%(GENSER_vers, binary_dir, os.path.join(tmpdir, "MCGenerators"))+'\n')
         md5sum = calculateMD5(tarfile)
         mdf = open(md5file,"w")
         mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
