@@ -1036,7 +1036,7 @@ class SubversionCmd(RevisionControlSystem):
         elif self.modules[package] == project :
             log.warning("The package %s is already in the %s project. Nothing to do" % (package, project))
         else :
-            tmpdir = TempDir("movepak_%s_%s" % (package.replace("/", "_"), project))
+            tmpdir = TempDir(suffix="tempdir", prefix="movepak_%s_%s" % (package.replace("/", "_"), project))
             tmpdir_name = tmpdir.getName()
             log.debug("The temporary directory used is %s" % tmpdir_name)
             _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name)

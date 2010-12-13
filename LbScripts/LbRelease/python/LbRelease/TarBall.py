@@ -83,7 +83,7 @@ class TarBall(object):
         self._destLoc = None
         if not self._destLoc:
             self._destLoc = os.path.abspath(os.getcwd())
-        self._tmpdir = TempDir(self._name)
+        self._tmpdir = TempDir(suffix="tempdir", prefix=self._name)
     def setName(self, name):
         self._name = name
     def getName(self):
