@@ -35,18 +35,11 @@ class AutoData(object) :
 
     Example: wrap StdLoosePions
 
-    >>> SelStdLoosePions = AutoData('SelStdLoosePions',
-                                     Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions = AutoData(Location = 'Phys/StdLoosePions/Particles')
     >>> SelStdLoosePions.outputLocation()
-    'Phys/StdLoosePions'
+    'Phys/StdLoosePions/Particles'
     >>> SelStdLoosePions.name()
-    'SelStdLoosePions'
-
-    The first argument is used for the name, but can be omitted:
-
-    >>> SelStdLoosePions = AutoData(Location = 'Phys/StdLoosePions')
-    >>> SelStdLoosePions.name()
-    'StdLoosePions'
+    'Phys_SelStdLoosePions_Particles'
     """
 
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
@@ -54,7 +47,7 @@ class AutoData(object) :
     def __init__ (self,
                   Location) :
 
-        self._name = Location[Location.replace('/', '_')]
+        self._name = Location.replace('/', '_')
         self._location = Location
         self.requiredSelections = []
 
