@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """ Script to make a LHCb tar file
- - 060612 - first version 
+ - 060612 - first version
  - 060829 - fix create_web :
             which should not change $LHCBTAR/distribution.html
  - 060920 - add MCatNLOData
@@ -35,6 +35,7 @@ from LbLegacy.install_project import calculateMD5
 from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
 
 from LbUtils.CMT.Common import isCMTMessage
+from LbUtils.Temporary import TempDir
 
 import sys, os, getopt, time, commands, fnmatch
 import re
@@ -286,7 +287,8 @@ def make_tar(pname, pversion, binary=''):
 # LCG projects (LCGCMT, GENSER) and OpenSCientist tar files are stored on $LHCBTAR/source
 # DBASE and PARAM package dependencies are found using 'cmt show uses'
 
-    dephtml = os.path.join('/tmp', PACK + '_' + pversion + '.html')
+    tmpdir = TempDir(prefix="mkLHCbtar")
+    dephtml = os.path.join(tmpdir, PACK + '_' + pversion + '.html')
     dep = open(dephtml, 'w')
 
     dep.write('<MENU><LI>\n')
@@ -352,7 +354,7 @@ def make_tar(pname, pversion, binary=''):
         if os.environ.has_key('CMTPROJECTPATH'):
             status, value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
             if isCMTMessage(value) :
-                GENSER_version = 'GENSER_' + value.split('\n')[1]                
+                GENSER_version = 'GENSER_' + value.split('\n')[1]
             else:
                 GENSER_version = 'GENSER_' + value
         else:
