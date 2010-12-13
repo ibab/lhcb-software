@@ -3,6 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-12-13 - Tomasz Szumlak
+ - add VeloClusterPosition tool, previously at Velo/VeloTools
+ - add new error parametrisation calculated based on the latest
+   velo simulation tuning (this new parametrisation is set as
+   a default one) 
 
 !========================= TrackTools v3r35p3 2010-11-11 =========================
 ! 2010-11-10 - Manuel Tobias Schiller
