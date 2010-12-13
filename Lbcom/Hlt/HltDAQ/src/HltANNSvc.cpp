@@ -1,4 +1,4 @@
-#include "Kernel/ANNSvc.h"
+#include "ANNSvc.h"
 #include <string>
 #include "boost/assign/list_of.hpp"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ private:
 };
 
 #include "GaudiKernel/SvcFactory.h"
-DECLARE_SERVICE_FACTORY( HltANNSvc );
+DECLARE_SERVICE_FACTORY( HltANNSvc )
 
 boost::optional<IANNSvc::minor_value_type> 
 HltANNSvc::handleUndefined(const major_key_type& major, const std::string& minor) const
