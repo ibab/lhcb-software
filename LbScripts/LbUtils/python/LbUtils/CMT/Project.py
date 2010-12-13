@@ -2,7 +2,7 @@
 # local import
 from Package import Package, getPackagesFromDir
 from Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
-from Common import isCMTWarning, CMTLog
+from Common import CMTLog
 
 # package imports
 from LbUtils import Env
@@ -14,7 +14,6 @@ import logging
 import os
 import re
 from subprocess import Popen, PIPE
-
 
 class ProjectFile(object):
     def __init__(self, filename):
@@ -67,10 +66,10 @@ class Project(object):
         self._afsmount = None
     def __eq__(self, other):
         return self.fullLocation() == other.fullLocation()
-    
+
     def fullLocation(self):
         return self._fulllocation
-    
+
     def name(self):
         log = logging.getLogger()
         if self._name is None:
@@ -96,7 +95,7 @@ class Project(object):
         return self._projectfile
 
     def container(self):
-        if self._container is None : 
+        if self._container is None :
             self._container = self.projectFile().container()
         return self._container
 
@@ -132,7 +131,6 @@ class Project(object):
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         if self._baselist is None :
             self._baselist = Set()
-            log = logging.getLogger()
             wdir = os.path.join(self.fullLocation(),"cmt")
             if not os.path.exists(wdir) :
                 wdir = self.fullLocation()
@@ -150,17 +148,17 @@ class Project(object):
                     for par in parentlist:
                         if re.compile("\s+" + par).match(line):
                             m = re.compile("\(in\s+(.+)\s*\)").search(line)
-                            if m : 
+                            if m :
                                 self._baselist.add(self.__class__(m.group(1)))
             for line in p.stderr:
                 CMTLog(line[:-1])
             os.waitpid(p.pid, 0)[1]
         return self._baselist
-    
+
     def overrideBaseProject(self, other, cmtpath=None, cmtprojectpath=None):
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         self._baselist.override(other)
-    
+
     def clients(self, cmtpath=None, cmtprojectpath=None):
         """ get all the client projects. Pretty slow. Use with care """
         cmtprojectpath = self._setCMTPathEnv(cmtpath, cmtprojectpath)
@@ -211,8 +209,8 @@ class Project(object):
             for p in self.packages() :
                 self._binarylist |= p.binaryList()
         return self._binarylist
-    
-    
+
+
     def binaryUsedPackages(self, cmtpath=None, cmtprojectpath=None, binary="default"):
         env = Env.getDefaultEnv()
         log = logging.getLogger()
@@ -226,7 +224,7 @@ class Project(object):
             self._usedpaklist = dict()
         if self._allusedpaklist is None :
             self._allusedpaklist = Set()
-        indx = cmtpath, cmtprojectpath, binary 
+        indx = cmtpath, cmtprojectpath, binary
         if not self._usedpaklist.has_key(indx):
             self._usedpaklist[indx] = Set()
         if not self._usedpaklist[indx] :
@@ -249,7 +247,7 @@ class Project(object):
                         t.addUsedByBinary(binary)
                     self._allusedpaklist |= tmplist
                     self._usedpaklist[indx] |= tmplist
-            else : 
+            else :
                 log.info("Container package %s found @ %s" % (self.container(), self.fullLocation()))
                 log.info("Extracting used packages for %s binary" % binary)
                 for p in containedpackages :
@@ -267,12 +265,12 @@ class Project(object):
                         for t in tmplist :
                             t.addUsedByBinary(binary)
                         self._allusedpaklist |= tmplist
-                        self._usedpaklist[indx] |= tmplist 
-                        
+                        self._usedpaklist[indx] |= tmplist
+
         return self._usedpaklist[indx]
-    
-    def usedPackages(self, binary_list=None, cmtpath=None, cmtprojectpath=None): 
-        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+
+    def usedPackages(self, binary_list=None, cmtpath=None, cmtprojectpath=None):
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path)
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         if self._usedpaklist is None:
             self._usedpaklist = dict()
@@ -285,7 +283,7 @@ class Project(object):
         if not self._usedpaklist.has_key((cmtpath, cmtprojectpath, "default")) :
             self._usedpaklist[(cmtpath, cmtprojectpath, "default")] = self.binaryUsedPackages(cmtpath, cmtprojectpath)
         return self._usedpaklist
-    
+
     def allUsedPackages(self):
         return self._allusedpaklist
 
@@ -302,7 +300,7 @@ class Project(object):
             self._extpaklist = dict()
         if self._allextpaklist is None :
             self._allextpaklist = Set()
-        indx = cmtpath, cmtprojectpath, binary 
+        indx = cmtpath, cmtprojectpath, binary
         if not self._extpaklist.has_key(indx):
             self._extpaklist[indx] = Set()
         if not self._extpaklist[indx] :
@@ -314,7 +312,7 @@ class Project(object):
 
 
     def externalPackages(self, cmtpath=None, cmtprojectpath=None, binary_list=None):
-        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path)
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         if self._extpaklist is None:
             self._extpaklist = dict()
@@ -331,7 +329,7 @@ class Project(object):
 
     def allExternalPackages(self):
         return self._allextpaklist
-    
+
     def afsMountPoint(self):
         log = logging.getLogger()
         if self._afsmount is None :
@@ -339,12 +337,12 @@ class Project(object):
                 if isMountPoint(self.fullLocation()):
                     self._afsmount = Directory(self.fullLocation())
                 else :
-                    log.info("Directory %s in not a mount point" % self.fullLocation())                        
+                    log.info("Directory %s in not a mount point" % self.fullLocation())
             else :
                 log.info("Directory %s in not on AFS" % self.fullLocation())
-    
+
         return self._afsmount
-        
+
     def summary(self, cmtpath=None, cmtprojectpath=None, dependent=False, showpackages=False, afsinfo=False):
         summary  = "Name                 : %s\n" % self.name()
         summary += "Version              : %s\n" % self.version()
@@ -391,12 +389,12 @@ class Project(object):
             summary += tmpacksum
         if dependent :
             sumlist = summary.split("\n")
-            summary2 = "" 
+            summary2 = ""
             for l in sumlist :
                 summary2 += "     %s\n" % l
             summary = summary2
         return summary
-    
+
 def hasProjectFile(dirpath):
     hasfile = False
     log = logging.getLogger()
@@ -435,7 +433,7 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
         for f in lsdir:
             fullname = os.path.join(path,f)
             if isProject(fullname):
-                
+
                 tobeadded = False
                 tmproj = prjclass(fullname)
                 if name is None :
@@ -448,7 +446,7 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
                 if tobeadded :
                     projlist.add(tmproj)
                     log.debug("Found project at %s" % fullname)
-                                                        
+
             if os.path.isdir(fullname):
                 lsintdir = os.listdir(fullname)
                 for ff in lsintdir:
@@ -469,11 +467,11 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
 
     except OSError, msg:
         log.warning("Cannot open path %s" % msg)
-    
+
     log.info("Found %s projects in %s" % (len(projlist), path))
 
     return projlist
-            
+
 
 def getProjectsFromDir(directory, name=None, version=None, casesense=True, select=None, prjclass=Project):
     projlist = Set()
@@ -545,7 +543,7 @@ def FilterProjects(projlist, name=None, version=None, casesense=False ):
     selected = Set()
     if not name and not version:
         return projlist
-    
+
     # filter according to name and version
     if not casesense:
         name = name.upper()
@@ -561,8 +559,8 @@ def FilterProjects(projlist, name=None, version=None, casesense=False ):
                 if p.version() == version:
                     selected.add(p)
     return selected
-    
-def getProjects(cmtprojectpath, name=None, version=None, 
+
+def getProjects(cmtprojectpath, name=None, version=None,
                     casesense=False, select=None ):
     projlist = getAllProjects(cmtprojectpath, select=select)
     for p in projlist :
@@ -571,8 +569,8 @@ def getProjects(cmtprojectpath, name=None, version=None,
 
 
 
-def walk(top, topdown=True, toclients=False, 
-         onerror=None, alreadyfound=None, 
+def walk(top, topdown=True, toclients=False,
+         onerror=None, alreadyfound=None,
          cmtpath=None, cmtprojectpath=None):
     if not alreadyfound:
         alreadyfound = Set()
