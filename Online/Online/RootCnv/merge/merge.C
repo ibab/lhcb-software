@@ -395,7 +395,18 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
       return MERGE_SUCCESS;
     }
     m_output->GetObject(name.c_str(),out_tree);
-    TTreeCloner cloner(src_tree,out_tree,"fast");
+
+
+    Long64_t nb = out_tree->CopyEntries(src_tree,-1,"fast");
+    Long64_t out_entries = out_tree->GetEntries();
+    out_tree->SetEntries(out_entries+src_entries);
+    out_tree->Write();
+    if ( s_dbg ) ::printf("+++ Merged tree: %s res=%lld\n",out_tree->GetName(),nb);
+    return MERGE_SUCCESS;
+
+#if 0
+
+   TTreeCloner cloner(src_tree,out_tree,"fast");
     if (cloner.IsValid()) {
       Long64_t out_entries = out_tree->GetEntries();
       out_tree->SetEntries(out_entries+src_entries);
@@ -410,6 +421,7 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
       ::printf("+++ Got a tree where fast cloning is not possible -- operation failed.\n");
       return MERGE_ERROR;
     }
+#endif
   }
   return MERGE_ERROR;
 }

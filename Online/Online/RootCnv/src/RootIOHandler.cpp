@@ -203,7 +203,7 @@ namespace GaudiRoot {
     static bool first = true;
     if ( first ) {
       first = false;
-      cout << endl << "Enable CINTEX" << endl << endl;
+      //cout << endl << "Enable CINTEX" << endl << endl;
       gSystem->Load("libCintex");
       gROOT->ProcessLine("Cintex::Cintex::Enable()");
       gROOT->ProcessLine("#include <vector>");
