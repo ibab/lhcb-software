@@ -91,6 +91,7 @@ namespace Gaudi {
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TTreeCloner.h"
+#include "TInterpreter.h"
 
 using namespace Gaudi;
 using namespace std;
@@ -147,7 +148,7 @@ MergeStatus RootDatabaseMerger::attach(const string& file_id) {
   }
   m_output = TFile::Open(fid,"UPDATE");
   if ( m_output && !m_output->IsZombie() ) {
-    if ( s_dbg ) ::printf("+++ Opened new output file %s.\n",fid);
+    if ( s_dbg ) ::printf("+++ Update output file %s.\n",fid);
     return MERGE_SUCCESS;
   }
   ::printf("+++ Failed to open new output file %s.\n",fid);
@@ -399,7 +400,7 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
       Long64_t out_entries = out_tree->GetEntries();
       out_tree->SetEntries(out_entries+src_entries);
       Bool_t res = cloner.Exec();
-      out_tree->Write();
+      //out_tree->Write();
       if ( s_dbg ) ::printf("+++ Merged tree: %s res=%d\n",out_tree->GetName(),res);
       return MERGE_SUCCESS;
     }
@@ -432,9 +433,17 @@ MergeStatus RootDatabaseMerger::copyRefs(TFile* source, const string& name) {
 }
 
 int merge(const char* target, const char* source, bool fixup=false, bool dbg=true) {
+  static bool first = true;
   s_dbg = dbg;
   //s_dbg = true;
-  gSystem->Load("libCintex");
+  if ( first ) {
+    first = false;
+    gSystem->Load("libCintex");
+    gInterpreter->ProcessLine("Cintex::Enable()");
+    gSystem->Load("libGaudiKernelDict");
+    gSystem->Load("libGaudiExamplesDict");
+  }
+
   RootDatabaseMerger m;
   MergeStatus ret = m.exists(target) ? m.attach(target) : m.create(target);
   if ( ret == MERGE_SUCCESS ) {

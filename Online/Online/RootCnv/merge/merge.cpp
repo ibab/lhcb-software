@@ -14,12 +14,15 @@ static int usage() {
 }
 
 int main(int argc, char** argv) {
-  bool dbg = false;
+  bool dbg = false, fixup=true;
   vector<string> input;
   string output;
   for(int i=1; i < argc; ++i) {
     if ( *argv[i] == '-' ) {
       switch(::toupper(*(argv[i]+1))) {
+      case 'N':
+	fixup = false;
+	break;
       case 'D':
 	dbg = true;
 	break;
@@ -47,7 +50,7 @@ int main(int argc, char** argv) {
   gROOT->SetBatch(kTRUE);
   for(size_t i=0; i<input.size();++i)  {
     const string& in = input[i];
-    bool fixup = ((i+1)==input.size());
+    bool fixup = fixup && ((i+1)==input.size());
     int result = merge(output.c_str(),in.c_str(),fixup,dbg);
     if ( result == MERGE_ERROR ) {
       printf("\nERROR: File merge failed after %ld files.\n\n",long(i+1));

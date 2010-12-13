@@ -186,6 +186,8 @@ namespace GaudiRoot {
 
   template <class T> static bool makeStreamer(MsgStream& log)  {
     string cl_name = System::typeinfoName(typeid(T));
+    //gInterpreter->ProcessLine(("gROOT->GetClass("+cl_name+")").c_str());
+    //gInterpreter->AutoLoad(cl_name.c_str());
     TClass* c = gROOT->GetClass(cl_name.c_str());
     if ( c ) {
       TClassStreamer* s = new IOHandler<T>(c);
@@ -201,12 +203,16 @@ namespace GaudiRoot {
     static bool first = true;
     if ( first ) {
       first = false;
+      cout << endl << "Enable CINTEX" << endl << endl;
       gSystem->Load("libCintex");
+      gROOT->ProcessLine("Cintex::Cintex::Enable()");
       gROOT->ProcessLine("#include <vector>");
       gInterpreter->EnableAutoLoading();
       gInterpreter->AutoLoad("DataObject");
       gInterpreter->AutoLoad("PoolDbLinkManager");
-      gROOT->ProcessLine("Cintex::Cintex::Enable()");    
+      gSystem->Load("libGaudiKernelDict");
+      gSystem->Load("libGaudiExamplesDict");
+
 
       bool b1 = makeStreamer<SmartRefBase>(s);
       bool b2 = makeStreamer<ContainedObject>(s);
