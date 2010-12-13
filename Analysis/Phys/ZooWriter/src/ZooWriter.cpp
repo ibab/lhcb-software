@@ -196,6 +196,12 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     declareProperty( "WriteMC",              m_writeMC = false);
     declareProperty( "MCList",               m_MCList);
     declareProperty( "WriteDLL",             m_writeDLL = false);
+    declareProperty( "WriteDLL",             m_writeDLL = false);
+    declareProperty( "IntelligentPV",        m_intelligentPV = false);
+    declareProperty( "SecondIpSig",          m_secondIpSig = false);
+    declareProperty( "OnlyTreefitter",       m_onlyTreefitter = false);
+    declareProperty( "MinTracksPV",          m_minTracksPV = 0);
+
     declareProperty( "TaggingList",          m_taggingList);
     declareProperty( "BackgroundList",       m_backgroundList);
     declareProperty( "TriggerList",          m_triggerList);
@@ -425,6 +431,9 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
   //extract lifetime (without mass constraint)
   ct = params->ctau().value();
   ctErr = params->ctau().error();
+  const double factor = 1.0e+6/299792458.0;//this should give ns, same as bs->ct()
+  ct *= factor;//TODO check!
+  ctErr *= factor;
 
   //extract lifetime (with mass constraint)
   if (node->isBasicParticle() || fabs(massErr) < 1.0e-3)//do we already have a mass constraint?
@@ -442,6 +451,8 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
     Gaudi::Math::ParticleParams params_fixed = Gaudi::Math::FitMass::fit(*params, mass, chi2);
     ctFixed = params_fixed.ctau().value();
     ctErrFixed = params_fixed.ctau().error();
+    ctFixed *= factor;
+    ctErrFixed *= factor;  
   }  
   fD = params->decayLength().value();
   fDErr = params->decayLength().error();
@@ -528,6 +539,80 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
     
     // get PV
     const LHCb::VertexBase *pv = desktop()->relatedVertex(p);
+
+    const LHCb::RecVertex* bestpv = 0;
+    if (m_intelligentPV || m_secondIpSig)
+    {
+	//this method intelligently selects the best PV AFTER PV refit
+	//best PV is currently the PV with the smallest ip sig, provided the lifetime fit works
+	
+	//double best_chi2 = 999.0;
+	double best_ipSig = 999.0;
+	double best_ip = 999.0;
+	double secondbest_ip = 999.0;//this should be saved, too
+	double secondbest_ipSig = 999.0;//this should be saved, too
+
+	double curr_ct, curr_ctErr, curr_chi2;
+	double curr_ip, curr_ipChi2, curr_ipSig;
+	const LHCb::RecVertex::Range vtcs = primaryVertices();
+	BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
+	    if (!vtx->isPrimary()) continue;
+	    //newPV
+	    const LHCb::RecVertex* currpv =
+		dynamic_cast<const LHCb::RecVertex*>(vtx);
+	    LHCb::RecVertex newpv(currpv  ? (*currpv) : LHCb::RecVertex());
+	    if (m_pvReFitter->remove(p, &newpv))
+	    {	    
+		bool treefit_ok = true;
+		if (m_onlyTreefitter)
+		{
+		    DecayTreeFitter::Fitter treefitter( *p, newpv ) ;
+		    treefitter.fit();//no mass constraints here
+		    if (treefitter.status() != 0)
+			treefit_ok = false;
+		}
+
+		//can additionally specify minimum number of tracks
+		if (int(newpv.tracks().size()) > m_minTracksPV 
+			&& m_dist->distance(p, &newpv, curr_ip, curr_ipChi2)
+			&& (m_onlyTreefitter ?
+			    treefit_ok
+			    : (m_lifetimeFitter->fit(newpv, *p, curr_ct, curr_ctErr, curr_chi2) == 1)
+			   )
+		   )
+		{
+		    //selection according to smallest lifetime fit chi2
+		    /*
+		       if (curr_chi2 < chi2)
+		       {
+		       bestpv = currpv;
+		       best_chi2 = curr_chi2;		      
+		       }
+		       */		
+		    curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
+		    //selection according to smallest ipsig (similar to relatedvertex)
+		    if (curr_ipSig < best_ipSig && !isnan(curr_ipSig))
+		    {
+			bestpv = currpv;
+			secondbest_ipSig = best_ipSig;//save second best (old) values
+			secondbest_ip = best_ip;
+			best_ipSig = curr_ipSig;//set new best values
+			best_ip = curr_ip;
+		    }
+		}	    
+	    }
+	}
+	if (m_secondIpSig)
+	{
+	    zp->m_second_ip = secondbest_ip;
+	    zp->m_second_ipSig = secondbest_ipSig;
+	}
+	if (m_intelligentPV)
+	    pv = bestpv;
+    }
+
+
+
     // fall back onto emergency PV if we have nothing better...
     if (0 == pv && pvWouter())
 	pv = pvWouter().get();
@@ -579,7 +664,7 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
       }
       
       double fD = nan, fDErr = nan, fDChi2 = nan;
-      double ct = nan, ctErr = nan, ctChi2;
+      double ct = nan, ctErr = nan, ctChi2 = nan;
       double IP = nan, chi2 = nan, IPSig = nan;
       int isolation = -999;
       
@@ -589,12 +674,32 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
 	      dynamic_cast<const LHCb::RecVertex*>(pv);
 	  LHCb::RecVertex newPV(rpv?(*rpv):LHCb::RecVertex());
 
-	  if (rpv && m_pvReFitter->remove(p, &newPV)) {
+	  if (rpv && (m_intelligentPV || m_pvReFitter->remove(p, &newPV))) {//do not have to refit if we use intelligentPV
 	      // the fitters clobber their output in case of failure
 	      if (!m_dist->pathDistance(p, &newPV, fD, fDErr, fDChi2))
 		  fD = fDErr = fDChi2 = nan;
-	      if (!m_lifetimeFitter->fit(newPV,*p,ct,ctErr,ctChi2))
-		  ct = ctErr = nan;
+	      //Use DTF for the lifetime fit without mass constraint if requested
+	      if (m_onlyTreefitter)
+	      {
+		  DecayTreeFitter::Fitter treefitter( *p, newPV ) ;
+		  treefitter.fit();//no mass constraints here
+		  const Gaudi::Math::ParticleParams* params = treefitter.fitParams(p);
+		  ct = params->ctau().value();//this is probably not in ps TODO
+		  ctErr = params->ctau().error();
+		  //const double factor = 1.0e+12/1000.0/299792458.0;//this would give ps
+		  const double factor = 1.0e+6/299792458.0;//this should give ns, same as bs->ct()
+		  ct *= factor;
+		  ctErr *= factor;
+		  ctChi2 = treefitter.chiSquare();
+		  if (treefitter.status() != 0)
+		      ct = ctErr = ctChi2 = nan;
+	      }
+	      //Else use standard offline Vertex fitter
+	      else
+	      {
+		  if (!m_lifetimeFitter->fit(newPV,*p,ct,ctErr,ctChi2))
+		      ct = ctErr = ctChi2 = nan;
+	      }
 	      if (!m_dist->distance(p, &newPV, IP, chi2))
 		  IP = IPSig = nan;
 	      else
@@ -620,8 +725,8 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
       const LHCb::Vertex *v = p->endVertex();
       zp->AddInfo<ZooDecay>(*objman(),
 			    ZooDecay(p->measuredMass(), p->measuredMassErr(),
-				     fD, fDErr, fDChi2, ct, ctErr, v?v->chi2():-1.,
-				     isolation, v?v->nDoF():-1));
+				     fD, fDErr, fDChi2, ct, ctErr, ctChi2,
+				     v?v->chi2():-1., isolation, v?v->nDoF():-1));
     }
     
     if (std::find(m_triggerList.begin(), m_triggerList.end(), abspid) !=
@@ -665,6 +770,8 @@ void ZooWriter::writeTagging(ZooP* zp, const LHCb::Particle* p)
 
     tag->setTagDecision(theTag.decision(), theTag.omega());
     tag->setTagCategory(theTag.category());
+    tag->setOsTagDecision(theTag.decisionOS(), theTag.omegaOS());
+    tag->setOsTagCategory(theTag.categoryOS());
 
     for(std::vector<LHCb::Tagger>::iterator itag=taggers.begin();
 	    itag!=taggers.end(); ++itag) {
@@ -678,10 +785,16 @@ void ZooWriter::writeTagging(ZooP* zp, const LHCb::Particle* p)
 	    case 4:
 		tag->setOsKaonTagDecision(itag->decision(), itag->omega());
 		break;
+    // Same Side Kaon Tagger
 	    case 5:
 		tag->setSsKaonTagDecision(itag->decision(), itag->omega());
                 if (1 == itag->taggerParts().size())
                    tag->setSsKaon(GetSaved(itag->taggerParts().at(0)));
+    // Same Side Pion Tagger
+	    case 6:
+		tag->setSsKaonTagDecision(itag->decision(), itag->omega());
+		if (1 == itag->taggerParts().size())
+		    tag->setSsKaon(GetSaved(itag->taggerParts().at(0)));
 		break;
 	    case 10:
 		tag->setVtxTagDecision(itag->decision(), itag->omega());
@@ -895,10 +1008,12 @@ void ZooWriter::writePackedStates(ZooTrackInfo* trinfo, const LHCb::Particle* p)
 	    std::numeric_limits<double>::quiet_NaN(), v5, nanm5);
     ZooPackedStates* pstates = objman()->zooObj<ZooPackedStates>();
     trinfo->setStates(pstates);
-    pstates->resize((m_packedStateAtPocaToZAxis?3:2) + m_packedStatesZList.size());
+    pstates->resize((m_packedStateAtPocaToZAxis?4:3) + m_packedStatesZList.size());
     // always put these states on
     const LHCb::State* state_closestToBeam =
 	tr.stateAt(LHCb::State::ClosestToBeam);
+    const LHCb::State* state_firstMeasurement =
+	tr.stateAt(LHCb::State::FirstMeasurement);
     const LHCb::State* state_begRich2 = 
 	tr.stateAt(LHCb::State::BegRich2);
     pstates->push_back(state_closestToBeam?
@@ -906,6 +1021,12 @@ void ZooWriter::writePackedStates(ZooTrackInfo* trinfo, const LHCb::Particle* p)
 		state_closestToBeam->stateVector(),
 		writeCovariance?state_closestToBeam->covariance():nanm5) : 
 	    nanstate);
+    pstates->push_back(state_firstMeasurement?
+	    ZooPackedState(state_firstMeasurement->z(),
+		state_firstMeasurement->stateVector(),
+		writeCovariance?state_firstMeasurement->covariance():nanm5) :
+	    nanstate);
+
     pstates->push_back(state_begRich2?
 	    ZooPackedState(state_begRich2->z(),
 		state_begRich2->stateVector(),

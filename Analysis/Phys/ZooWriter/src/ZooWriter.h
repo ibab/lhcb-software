@@ -202,6 +202,10 @@ class ZooWriter : public DVAlgorithm {
 	bool                     m_writeExpectedHitPattern;
 	bool                     m_writeCollectedHitPattern;
 	bool			 m_writeOccupancies;
+	bool			 m_intelligentPV;
+	bool			 m_secondIpSig;
+	bool			 m_onlyTreefitter;
+    	int		         m_minTracksPV;
 
 	/// pids for which to write a ZooPackedParticle info block, negative values mean all
 	std::vector<int>         m_covarianceList;

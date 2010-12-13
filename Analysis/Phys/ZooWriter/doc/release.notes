@@ -3,6 +3,18 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2010-12-13 - Georg Alexander Krocker
+ - Write out state at first measurement per default
+ - Write out combined OS tagger information
+ - Include Same Side Pion Tagger information
+ - Optional intelligent PV refit which only takes refitted PV if a lifetime fit
+   is still possible after refitting, chooses best PV according to smallest
+   IPSig
+ - Optionally writes out IPSig of second best PV
+ - Optionally uses decay tree fitter also for non-mass-constraint lifetime fit
+   (instead of offline vertex fitter)
+ - Decay tree fit returns ct in ns (same as offline vertex fit) for convenience
+
 ! 2010-09-15 - Georg Alexander Krocker
  - Included update from Christoph for Hlt line names
  - Included new member function for ZooEv from Christoph to get whole trigger

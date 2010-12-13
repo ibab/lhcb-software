@@ -150,15 +150,16 @@ class ZooDecay : public TObject
     m_fDChi2(std::numeric_limits<Float_t>::quiet_NaN()),
     m_ct(std::numeric_limits<Float_t>::quiet_NaN()),
     m_ctErr(std::numeric_limits<Float_t>::quiet_NaN()),
+    m_ctChi2(std::numeric_limits<Float_t>::quiet_NaN()), 
     m_decVtxChi2(std::numeric_limits<Float_t>::quiet_NaN()),
     m_isolation(-999), m_decVtxNDoF(-1){ 
   }
 	
   ZooDecay(double m, double merr, double fd, double fderr, double fdchi2,
-	   double ct, double cterr, double chi2, int iso, int ndof) :
+	   double ct, double cterr, double ctChi2, double chi2, int iso, int ndof) :
     m_measuredMass(m), m_measuredMassErr(merr),
     m_fD(fd), m_fDErr(fderr), m_fDChi2(fdchi2), m_ct(ct), m_ctErr(cterr),
-    m_decVtxChi2(chi2), m_isolation(iso), m_decVtxNDoF(ndof){ 
+    m_ctChi2(ctChi2), m_decVtxChi2(chi2), m_isolation(iso), m_decVtxNDoF(ndof){ 
   }
   
   float measuredMass()    const { return m_measuredMass; }
@@ -169,6 +170,7 @@ class ZooDecay : public TObject
   float fDistanceChi2()    const { return m_fDChi2; }
   float ct()              const { return m_ct; }
   float ctErr()           const { return m_ctErr; }
+  float ctChi2()        const { return m_ctChi2; } 
   int nDoF()            const { return m_decVtxNDoF; }
   int isolation()       const { return m_isolation; }
   
@@ -180,6 +182,7 @@ class ZooDecay : public TObject
   Float_t m_fDChi2;
   Float_t m_ct;
   Float_t m_ctErr;
+  Float_t m_ctChi2; 
   Float_t m_decVtxChi2;
   Short_t m_isolation;
   Short_t m_decVtxNDoF;
@@ -361,17 +364,20 @@ class ZooTagging : public TObject
     public:
 	/// default constructor
 	ZooTagging() :
-	    m_omega(-0.1), m_elecOmega(-0.1), m_muonOmega(-0.1),
+	    m_omega(-0.1),m_osOmega(-0.1), m_elecOmega(-0.1), m_muonOmega(-0.1),
 	    m_osKaonOmega(-0.1), m_ssKaonOmega(-0.1), m_vtxOmega(-0.1),
 	    m_ssKaon(reinterpret_cast<TObject*>(0)),
-	    m_tagDecision(0), m_tagCategory(0), m_elecTagDecision(0),
+            m_tagDecision(0), m_osTagDecision(0), m_tagCategory(0), m_elecTagDecision(0),
 	    m_muonTagDecision(0), m_osKaonTagDecision(0),
 	    m_ssKaonTagDecision(0), m_vtxTagDecision(0)
         { }
 
 	int     tagDecision()       const { return m_tagDecision; };
+	int     osTagDecision()     const { return m_osTagDecision; };
 	float   omega()             const { return m_omega; };
+	float   osOmega()           const { return m_osOmega; };
 	int     tagCategory()       const { return m_tagCategory; };
+	int     osTagCategory()     const { return m_osTagCategory; };
 	int     elecTagDecision()   const { return m_elecTagDecision; };
 	int     muonTagDecision()   const { return m_muonTagDecision; };
 	int     osKaonTagDecision() const { return m_osKaonTagDecision; };
@@ -389,6 +395,9 @@ class ZooTagging : public TObject
 	void setTagDecision(int d, float w)
 	{ m_tagDecision = d; m_omega = w; }
 	void setTagCategory(int c) { m_tagCategory = c; }
+	void setOsTagDecision(int d, float w)
+	{ m_osTagDecision = d; m_osOmega = w; }
+	void setOsTagCategory(int c) { m_osTagCategory = c; }
 	void setElecTagDecision(int d, float w)
 	{ m_elecTagDecision = d; m_elecOmega = w; }
 	void setMuonTagDecision(int d, float w)
@@ -404,6 +413,7 @@ class ZooTagging : public TObject
 
     private:
 	Float_t m_omega;
+	Float_t m_osOmega;
 	Float_t m_elecOmega;
 	Float_t m_muonOmega;
 	Float_t m_osKaonOmega;
@@ -411,7 +421,9 @@ class ZooTagging : public TObject
 	Float_t m_vtxOmega;
         TRef    m_ssKaon;
 	Char_t  m_tagDecision;
+	Char_t  m_osTagDecision;
 	Char_t  m_tagCategory;
+	Char_t  m_osTagCategory;
 	Char_t  m_elecTagDecision;
 	Char_t  m_muonTagDecision;
 	Char_t  m_osKaonTagDecision;
@@ -1044,6 +1056,9 @@ class ZooP : public TObject
   Float_t m_ip;
   Float_t m_ipSig;
   
+  Float_t m_second_ipSig;
+  Float_t m_second_ip;
+  
   ZooPackedParticle m_particle;
   
   ZooPArray m_mother; 
@@ -1071,6 +1086,8 @@ class ZooP : public TObject
   int                       pid()         const { return m_pid; }
   float                     ip()          const { return m_ip; }
   float                     ipSig()       const { return m_ipSig; }
+  float			    second_ip()	  const { return m_second_ip; };
+  float			    second_ipSig()	  const { return m_second_ipSig; };
   const ZooPackedVertex&    pv() const { return *Info<ZooPackedVertex>(); }
   const ZooPackedParticle&  particle() const { return m_particle; }
   const ZooMCP*             assocMCP()    const { return Info<ZooMCP>(); }
