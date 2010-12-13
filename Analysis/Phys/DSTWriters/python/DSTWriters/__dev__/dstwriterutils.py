@@ -51,16 +51,18 @@ def personaliseName(obj, name) :
     return name + "_" + obj.name()
 
 def dataLocations(selSequence, extension) :
-    '''
+    """
     Add an extension to each of the locations in selSequence.oupputLocations().
-    Returns a new list of locations.
-    '''
+    Returns a new list of locations. Removes trailing '/' and '/Particles'
+    """
     loc = []
     for output in selSequence.outputLocations() :
         location = output+"/"+extension
         location = location.replace("//", "/")
         if location.endswith('/') :
-            location = location[:len(location)-1]
+            location = location[ : -1 ]
+        if location.endswith('/Particles') :
+            location = location[ : location.rfind('/Particles') ]
         loc += [location]
     return loc
 

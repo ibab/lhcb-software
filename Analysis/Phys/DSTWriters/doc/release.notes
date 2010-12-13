@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-12-13 - Juan Palacios
+ - python/DSTWriters/__dev__/dstwriterutils.py
+  . Remove trailing "/Particles" from data locations.
+
 ! ======================== DSTWriters v1r13 2010-11-08 =======================
 
 ! 2010-11-08 - Juan Palacios
