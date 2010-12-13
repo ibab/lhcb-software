@@ -61,7 +61,7 @@ def main():
 
     log.info("Connecting to TSDB ...")
     db = TagStatusDB(db_ConnStr)
-    log.info("Modifying TSDB.db ...")
+    log.info("Modifying TSDB ...")
     for partition in tags_to_update.keys():
         for tag in tags_to_update[partition]:
             tag_status = db.getTagStatus(tag["TagName"],unicode(partition),tag["Site"])

@@ -81,6 +81,8 @@ the list of those which become valid.
     tier = unicode(options.tier)
 
     file = options.output
+    if file and not options.recheck:
+        log.info("The mode without tags re-cheking doesn't use output file feature.\n")
 
     ###########################################################################
     # Interact with the server-side script

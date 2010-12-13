@@ -5,6 +5,7 @@ __version__ = "$Id: TSDBAdmin_MasterAgent.py,v 1.0 2010-11-15 00:00:00 ishapova 
 
 import urllib
 import cPickle as pickle
+from datetime import datetime
 
 import cgi
 import cgitb
@@ -18,25 +19,48 @@ def print_html(response):
 def convert_response_2_txt(response):
     lines = []
     for key in response.keys():
+        if key == 'CHECK': color = 'red'
+        elif key == 'GOOD': color = 'green'
+        elif key == 'HalfWay': color = 'yellow'
+        else: color = '-'
+
         for partition in response[key].keys():
             if len(response[key][partition]) != 0:
                 for tag_dict in response[key][partition]:
-                    lines.append("%s %s/%s %s %s\n"
-                                 %(tag_dict['Last_ok_time'],partition, str(tag_dict['TagName']), key, str(tag_dict['Site'])))
+                    lines.append("%s %s/%s %s %s -\n"
+                                 %(str(datetime.now()).split('.')[0].replace(':','-'),
+                                   partition,
+                                   str(tag_dict['TagName']),
+                                   key,
+                                   color))
     return reduce(lambda x,y:x+y, lines)
 
 def main():
     FormData = cgi.FieldStorage()
 
+    try:
+        request = FormData["request"].value
+        tier = unicode(FormData["tier"].value)
+    except KeyError:
+        print_html("What do you want from me?")
+        return 0
+
     db = TagStatusDB("sqlite:../tsdb/db/TAGSTATUS.db")
 
-    request = FormData["request"].value
-    tier = unicode(FormData["tier"].value)
+    # Check arguments
+    if tier not in db.sites:
+        print_html("Sorry, '%s' site is unknown to me." %tier)
+        return 0
+    if request not in ["bad","good-bad-ugly"]:
+        print_html("Sorry, request '%s' is unknown to me." %request)
+        return 0
+
     tags_to_check_info = {}
     tags_being_verified_info = {}
     good_tags_info = {}
     response = {}
 
+    # Process the request
     if request == "bad":
         tags_to_check = {"DDDB":db.getTagsToCheck(tier,u"DDDB"),
                          "LHCBCOND":db.getTagsToCheck(tier,u"LHCBCOND"),

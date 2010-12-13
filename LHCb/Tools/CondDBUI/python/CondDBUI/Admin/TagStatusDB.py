@@ -69,7 +69,7 @@ class TagStatusDB(object):
     """ Class to interact with the TagStatusDB designed to monitor the CondDB global tag availability status."""
 
     def __init__(self, db_path, recheck = timedelta(7), expiration = timedelta(30),
-                 verification_latency = timedelta(hours = 6)):
+                 verification_latency = timedelta(1)):
         """
         @param db_path: database path to connect to
         @param recheck: time interval after which the tag must be re-checked
