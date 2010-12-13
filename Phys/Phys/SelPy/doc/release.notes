@@ -7,6 +7,11 @@
 
 ! 2010-11-16 - Juan Palacios
  - python/SelPy/selection.py
+  . Clean up AutomaticData: Remove algName method, set name from Location,
+    remove name constructor argument.
+
+! 2010-11-16 - Juan Palacios
+ - python/SelPy/selection.py
   . Add InputDataSetter constructor argument to Selection. Defines the method 
     used to set the input data locations of the contained algorithm. Set to
     'InputLocations' by default. 

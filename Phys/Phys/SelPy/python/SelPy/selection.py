@@ -52,12 +52,9 @@ class AutoData(object) :
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
     def __init__ (self,
-                  Location,
-                  name=''  ) :
-        if name == '' :
-            self._name = Location[Location.rfind('/')+1:]
-        else :
-            self._name = name
+                  Location) :
+
+        self._name = Location[Location.replace('/', '_')]
         self._location = Location
         self.requiredSelections = []
 
@@ -70,10 +67,10 @@ class AutoData(object) :
     def outputLocation(self) :
         return self._location
 
-    def algName(self) :
-        loc = self.outputLocation()
-        loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
-        return loc
+#    def algName(self) :
+#        loc = self.outputLocation()
+#        loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
+#        return loc
 
 AutomaticData = AutoData
 
