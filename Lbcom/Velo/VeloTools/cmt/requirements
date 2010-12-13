@@ -12,12 +12,12 @@ include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  TrackInterfaces v*  Tr
-use  DigiEvent       v*  Event
+#use  TrackInterfaces v*  Tr
+#use  DigiEvent       v*  Event
 use  VeloDet         v*  Det
 use  GaudiAlg        v*
 use  GaudiGSL        v* 
-use  TrackEvent      v*  Event
+#use  TrackEvent      v*  Event
 # Component library building rule
 #============================================================================
 library          VeloTools      ../src/*.cpp
