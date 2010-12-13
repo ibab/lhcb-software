@@ -1,3 +1,8 @@
+2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: removed the TempDir class. Replaced by the LbUtils.Temporary.TempDir
+	class.
+
 2010-12-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: moved to CMT v1r22

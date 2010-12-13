@@ -11,6 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.CVS import CVS2Version
+from LbUtils.Temporary import TempDir
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
 try:
@@ -249,43 +250,6 @@ class TemporaryEnvironment:
         Forward the iteration to the internal dictionary.
         """
         return self.env.__iter__()
-
-# FIXME: This class should be moved to LbUtils.Temporary (replacing the one there).
-class TempDir(object):
-    """Class to create a temporary directory."""
-    def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
-        """Constructor.
-
-        'keep_var' is used to define which environment variable will prevent the
-        deletion of the directory.
-
-        The other arguments are the same as tempfile.mkdtemp.
-        """
-        self._keep_var = keep_var
-        self._name = mkdtemp(suffix, prefix, dir)
-
-    def getName(self):
-        """Returns the name of the temporary directory"""
-        return self._name
-
-    def __str__(self):
-        """Convert to string."""
-        return self.getName()
-
-    def __del__(self):
-        """Destructor.
-
-        Remove the temporary directory.
-        """
-        if self._name:
-            import os # needed when calling "python -m LbConfiguration.SetupProject"
-            if self._keep_var in os.environ:
-                import logging # needed when calling "python -m LbConfiguration.SetupProject"
-                logging.info("%s set: I do not remove the temporary directory '%s'",
-                             self._keep_var, self._name)
-                return
-            from shutil import rmtree
-            rmtree(self._name)
 
 def _sync_dicts(src, dest):
     # remove undefined keys
