@@ -97,26 +97,7 @@ using namespace Gaudi;
 using namespace std;
 
 namespace {
-
   static bool s_dbg = true;
-#if 0
-  const char* getLinkContainer(char* txt) {
-    char* p = ::strstr(txt,"[CNT=");
-    if ( p ) {
-      char* q = strchr(p+4,']');
-      *q = 0;
-      return p+5;
-    }
-    return 0;
-  }
-  string getRootContainer(const char* t) {
-    string r;
-    for(const char* p=t; *p; ++p) {
-      r += (*p == '/') ? '_' : *p;
-    }
-    return r;
-  }
-#endif
 }
 
 /// Standard constructor
@@ -131,7 +112,7 @@ RootDatabaseMerger::~RootDatabaseMerger() {
 /// Check if a database exists
 bool RootDatabaseMerger::exists(const std::string& fid) const {
   Bool_t result = gSystem->AccessPathName(fid.c_str(), kFileExists);
-  if ( s_dbg ) ::printf("File %s %s!\n",fid.c_str(),result == kFALSE ? "EXISTS" : "DOES NOT EXIST");
+  // if ( s_dbg ) ::printf("File %s %s!\n",fid.c_str(),result == kFALSE ? "EXISTS" : "DOES NOT EXIST");
   return result == kFALSE;
 }
 
@@ -294,6 +275,7 @@ MergeStatus RootDatabaseMerger::merge(const string& fid) {
   if ( m_output )    {
     TFile* source = TFile::Open(fid.c_str());
     if ( source && !source->IsZombie() )  {
+      ::printf("+++ Start merging input file:%s\n",fid.c_str());
       if ( copyAllTrees(source) == MERGE_SUCCESS )  {
 	if ( copyRefs(source,"Refs") == MERGE_SUCCESS )  {
 	  source->Close();
@@ -441,9 +423,10 @@ MergeStatus RootDatabaseMerger::copyRefs(TFile* source, const string& name) {
 }
 
 int merge(const char* target, const char* source, bool fixup=false, bool dbg=true) {
-  static bool first = true;
   s_dbg = dbg;
   //s_dbg = true;
+#if 0
+  static bool first = true;
   if ( first ) {
     first = false;
     gSystem->Load("libCintex");
@@ -451,7 +434,7 @@ int merge(const char* target, const char* source, bool fixup=false, bool dbg=tru
     //gSystem->Load("libGaudiKernelDict");
     //gSystem->Load("libGaudiExamplesDict");
   }
-
+#endif
   RootDatabaseMerger m;
   MergeStatus ret = m.exists(target) ? m.attach(target) : m.create(target);
   if ( ret == MERGE_SUCCESS ) {
