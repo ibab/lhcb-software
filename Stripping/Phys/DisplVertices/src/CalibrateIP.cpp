@@ -1,6 +1,9 @@
 // $Id: $
 // Include files 
 
+//get the Header of the event
+#include "Event/RecHeader.h"
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/PhysicalConstants.h"
@@ -44,10 +47,11 @@ DECLARE_ALGORITHM_FACTORY( CalibrateIP );
 CalibrateIP::CalibrateIP( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator )
-    , m_vertexer("TrackVertexer")
-    , m_nbevent(0)
-    , m_bin(500)
-    , m_beamstab(0.05)
+  , m_vertexer("TrackVertexer")
+  , m_nbevent(0)
+  , m_bin(500)
+  , m_runNumber(-1)
+  , m_beamstab(0.05)
 {
   declareProperty( "PVContainer", m_PVContainerName = LHCb::RecVertexLocation::Primary ) ;
   declareProperty( "OutputLocation", m_outloc = "/Event/"+name );
@@ -55,6 +59,7 @@ CalibrateIP::CalibrateIP( const std::string& name,
   declareProperty( "LocalVeloFrame", m_local = false );
   declareProperty( "IPbyHistFit", m_histo = false );
   declareProperty( "SmearPV", m_smear = false );
+  declareProperty( "ClearifrunNumberChange", m_runNb = false );
   declareProperty( "MinZ", m_minz = -25*Gaudi::Units::cm );
   declareProperty( "MaxZ", m_maxz = 75*Gaudi::Units::cm );
   declareProperty( "MaxY", m_maxy = 5*Gaudi::Units::mm );
@@ -166,6 +171,23 @@ StatusCode CalibrateIP::execute() {
     debug()<< "Number of Reconstructed Vertices " 
            << pvcontainer->size() << endmsg;
 
+  //Clear statistics if runNumber has changed.
+  if( m_runNb ){
+    //retrieve runNumber    
+    const RecHeader* header = get<RecHeader>(RecHeaderLocation::Default);
+    int runNumber = (int)header->runNumber();
+    if( m_runNumber < 0 ){
+      runNumber = m_runNumber;
+    } else if( runNumber != m_runNumber ){
+      //restart everything from the beginning
+      m_nbevent = 1;
+      runNumber = m_runNumber;
+      H.Reset();
+      HT.Reset();
+      m_Beam->SetIPPosition( 0., 0., -10000. );
+    }
+  }
+  
   
   //Loop on the reconstructed primary vertices
   for( RecVertices::const_iterator ipv = pvcontainer->begin() ;
@@ -229,7 +251,7 @@ StatusCode CalibrateIP::execute() {
     HT.Fill( x, y, z );
     plot( x, "PV x position", -m_maxx, m_maxx, m_bin);
     plot( y, "PV y position", -m_maxx, m_maxx, m_bin);
-    plot( z, "PV z position", -m_maxx, m_maxx, m_bin);
+    plot( z, "PV z position", m_minz, m_maxz, m_bin);
     plot( r, "PV radial distance to z axis", 0., m_maxx, m_bin ); 
     plot( chi, "PV chisquare per dof",0,5) ;
     plot( nbtrks, "PV number of tracks", -0.5, 120.5, 121 );

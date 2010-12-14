@@ -112,6 +112,7 @@ private:
   bool m_local; ///< work in local Velo frame
   bool m_histo; ///< compute IP from fitting histograms
   bool m_smear; ///< smear vertex artificially
+  bool m_runNb; ///< clear stats if runNumber changes
 
   Gaudi::Transform3D m_toVeloFrame; ///< to transform to local velo frame
   Gaudi::Transform3D m_toGlobalFrame; ///< to transform from local velo frame
@@ -120,7 +121,8 @@ private:
   HistoPVPos HT; ///< temp histogramms of PV positions
 
   int m_nbevent;
-  int m_bin; ///< histo binning
+  int m_bin;         ///< histo binning
+  int m_runNumber;   ///< keep the previous runNumber
   double m_beamstab; ///< threshold to consider beam stable
 
   ///cuts on the pv / bounds on histograms
