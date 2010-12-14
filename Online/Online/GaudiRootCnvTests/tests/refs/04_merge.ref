@@ -21,7 +21,7 @@ Warning in <TClass::TClass>: no dictionary for class Gaudi::RootObjectRefs is av
 Warning in <TClass::TClass>: no dictionary for class Gaudi::RootRef is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Counter is available
 +++ Opened new output file ROOTIO.merge.dst.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.1.dst
++++ Start merging input file:ROOTIO.1.dst
 Tree:Event 0
 +++ Created new Tree Event.
 Tree:FileRecords 0
@@ -50,16 +50,16 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 873 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xa840250
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xa840470
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xaa288a0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xab1e800
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xf633250
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xf633470
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf81b8a0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf911840
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
   KEY: TTree	Sections;2	Root Section data
 +++ Update output file ROOTIO.merge.dst.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.2.dst
++++ Start merging input file:ROOTIO.2.dst
 Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
@@ -88,16 +88,16 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 900 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xab63690
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xab61fd0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xab42dd0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xab27030
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf9568d0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf955290
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xf936260
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xf91a040
   KEY: TTree	Event;3	Root data for Gaudi
   KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
   KEY: TTree	Sections;4	Root Section data
 +++ Update output file ROOTIO.merge.dst.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.3.dst
++++ Start merging input file:ROOTIO.3.dst
 Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
@@ -126,10 +126,10 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 914 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xaafe7c0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xaafc740
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xaadbfb0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xab27030
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf8f1510
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf8e9e80
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xf8d2800
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xf91a040
   KEY: TTree	Event;4	Root data for Gaudi
   KEY: TTree	FileRecords;4	Root data for Gaudi
   KEY: TTree	Refs;6	Root Section data
