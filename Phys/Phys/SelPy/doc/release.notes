@@ -8,6 +8,11 @@
 ! 2010-12-14 - Juan Palacios
  - python/SelPy/selection.py
   . Remove algName() method from selections.
+  . Add 'Extension' constructor argument to Selection class. Sets the leaf of
+    the output location. Default 'Particles'. Output location is constructed
+    from <OutputBranch>/<name>/<Extension>, default 'Phys/<name>/Particles'.
+ - cmt/requirements
+  . Increase to v2r0.
 
 ! 2010-11-16 - Juan Palacios
  - python/SelPy/selection.py

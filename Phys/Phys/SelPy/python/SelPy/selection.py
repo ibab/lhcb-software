@@ -64,31 +64,36 @@ AutomaticData = AutoData
 
 class Selection(object) :
     """
-    Wrapper class for offline selection. Takes a top selection DVAlgorithm
+    Wrapper class for offline selection. Takes a top selection GaudiAlgorithm
     configurable plus a list of required selection configurables. It uses
     the required selections to set the list of input data locations of the
     top selection. The method used to set the input data locations is defined
     by the 'InputDataSetter' constructor argument (default 'InputLocations').
     Makes the output location of the data available via outputLocation(),
-    a concatenation of the OutputBranch and Algorithm's name.
+    a concatenation of
+
+       OutputBranch: default = 'Phys'
+       name
+       Extension : default = 'Particles'
 
     Example: selection for A -> B(bb), C(cc)
 
-    # create and configure selection algorithm configurable:
-    A2B2bbC2cc = CombineParticles('A2B2bbC2cc')
-    A2B2bbC2cc.DecayDescriptor = ...
-    A2B2bbC2cc.MotherCut = ...
-    # now assume SelB and SelC have been defined in modules B2bb and C2cc
-    # respectively
-    from B2bb import SelB
-    from C2cc import SelC
-    # now create a Selection instance using the B and C selections.
-    # Output will go to 'Phys' + A2B2bbC2cc.name()
-    from PhysSelPython.Wrappers import Selection
-    SelA2B2bbC2cc = Selection('SelA2B2bbC2cc',
-                              Algorithm = A2B2bbC2cc,
-                              RequiredSelections = [SelB, SelC],
-                              OutputBranch = 'Phys')
+       # create and configure selection algorithm configurable:
+       A2B2bbC2cc = CombineParticles('A2B2bbC2cc')
+       A2B2bbC2cc.DecayDescriptor = ...
+       A2B2bbC2cc.MotherCut = ...
+       # now assume SelB and SelC have been defined in modules B2bb and C2cc
+       # respectively
+       from B2bb import SelB
+       from C2cc import SelC
+       # now create a Selection instance using the B and C selections.
+       # Output will go to 'Phys' + A2B2bbC2cc.name()
+       from PhysSelPython.Wrappers import Selection
+       SelA2B2bbC2cc = Selection('SelA2B2bbC2cc',
+                                 Algorithm = A2B2bbC2cc,
+                                 RequiredSelections = [SelB, SelC])
+       print SelA2BsbbC2cc.outputLocation()
+       'Phys/SelA2B2bbC2cc/Particles'
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
@@ -99,7 +104,8 @@ class Selection(object) :
                  Algorithm,
                  RequiredSelections = [],
                  OutputBranch = "Phys",
-                 InputDataSetter = "InputLocations") :
+                 InputDataSetter = "InputLocations",
+                 Extension='Particles') :
 
         if name in Selection.__used_names :
             raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
@@ -123,6 +129,7 @@ class Selection(object) :
         self.alg = Algorithm.clone(self._name)
         self.alg.__setattr__(InputDataSetter, list(_outputLocations))
         self._outputBranch = OutputBranch
+        self._outputLocation = (self._outputBranch + '/' + self.name() + '/' + Extension).replace('//','/')
 
     def name(self) :
         return self._name
@@ -131,7 +138,7 @@ class Selection(object) :
         return self.alg
 
     def outputLocation(self) :
-        return self._outputBranch + "/" + self.name()
+        return self._outputLocation
 
     def clone(self, name, **args) :
         new_dict = update_overlap(self.__ctor_dict__, args)
