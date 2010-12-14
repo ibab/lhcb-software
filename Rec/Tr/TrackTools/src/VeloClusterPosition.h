@@ -118,7 +118,7 @@ private:
   mutable Gaudi::XYZVector m_trackDir;      /// a track direction in global ref. frame
   mutable Gaudi::XYZPoint m_gloPoint;       /// point on sensor global ref. frame
   double m_fracPos;                         /// fractional position
-  float m_corrFactor;                       /// correct difference between sigma RMS
+  double m_corrFactor;                      /// correct difference between sigma RMS
   std::string m_paraClass;                  /// use it to specify the data that wereused to tune the error parametrisations
     
 };

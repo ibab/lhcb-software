@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 ! 2010-12-13 - Tomasz Szumlak
+ - fix in requirements - add new dependency needed for interpolation
+   in the VeloClusterPosition tool
+ - change type of the m_corrFactor member from float to double 
+
+! 2010-12-13 - Tomasz Szumlak
  - add VeloClusterPosition tool, previously at Velo/VeloTools
  - add new error parametrisation calculated based on the latest
    velo simulation tuning (this new parametrisation is set as
