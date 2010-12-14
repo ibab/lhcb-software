@@ -2,13 +2,17 @@
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
+
    - Selection          Wraps a selection configurable and the selections it
                         requires
    - DataOnDemand       Wraps a string TES location to make it look like a Seleciton
    - AutomaticData      Wraps a string TES location to make it look like a Seleciton
    - SelectionSequence  Creates a sequence from a selection such that all the
                         sub-selections required are executed in the right order
+   - MergedSelection    Merges a set of selections in OR mode, writing all data to a single location.
    - EventSelection     Wraps an algorithm that selects an event and produces no output data.
+   - VoidEventSelection Selects event based on TES container properties, applying a LoKi__VoidFilter compatible cut to the data from a required selection.
+   
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
@@ -153,18 +157,29 @@ class VoidEventSelection(object) :
     help(SelectionSequence)
     selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
     """
+
+    __author__ = "Juan Palacios palacios@physik.uzh.ch"
+
+    __used_names = []
+    
     def __init__(self,
                  name,
                  Code,
                  RequiredSelection ) :
 
+        if name in VoidEventSelection.__used_names :
+            raise NameError('VoidEventSelection name ' + name + ' has already been used. Pick a new one.')
+        VoidEventSelection.__used_names.append(name)
+        
         if configurableExists(name) :
             raise NameError('Target Configurable '+ name + ' already exists. Pick a new one.')
+        
         self._name = name
         self.requiredSelection  = RequiredSelection 
         self.requiredSelections = [ RequiredSelection ]
         _code = Code.replace('<Location>',
-                             requiredSelection.outputLocation())
+                             "'"+self.requiredSelection.outputLocation()+"'")
+        _code = _code.replace('\"\'', '\'').replace('\'\"', '\'').replace('\'\'','\'')
         self._alg = VoidFilter(self._name,
                                Code = _code)
         

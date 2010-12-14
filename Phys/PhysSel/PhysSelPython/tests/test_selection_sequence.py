@@ -54,7 +54,7 @@ def test_instantiate_sequencer() :
 def test_instantiate_dataondemand_sequencer() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     seq = SelectionSequence('Seq00DOD', TopSelection = sel00)
-    assert seq.outputLocation() == 'Phys/Sel00'
+    assert seq.outputLocation() == 'Phys/Sel00/Particles'
     
 def test_sequencer_algos() :
     _sel00 = AutomaticData(Location = 'Phys/Sel00')

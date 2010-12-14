@@ -20,7 +20,7 @@ def test_dummy_automaticdata() :
     data = AutomaticData(Location='Phys/Data0')
     newData = dummy('NewData0', data)
     assert newData.selection().name() == 'NewData0'
-    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewData0'
+    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewData0/Particles'
     assert len(newData.members()) == 1
     print newData.members()[0].Members
     assert len(newData.members()[0].Members) == 2
@@ -31,7 +31,7 @@ def test_dummy_mergedselection() :
     mergedData = MergedSelection('MergedData01', RequiredSelections = [data0, data1])
     newData = dummy('NewMergedData', mergedData)
     assert newData.selection().name() == 'NewMergedData'
-    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewMergedData'
+    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewMergedData/Particles'
     assert len(newData.members()) == 1
     assert len(newData.members()[0].Members) == 3
     
@@ -42,7 +42,7 @@ def test_dummy_selection() :
     sel = Selection('Sel01', Algorithm = algo, RequiredSelections = [data0, data1])
     newData = dummy('NewSel01', sel)
     assert newData.selection().name() == 'NewSel01'
-    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewSel01'
+    assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewSel01/Particles'
     assert len(newData.members()) == 3
 
 def test_eventSelection_with_no_output():
@@ -59,7 +59,7 @@ def test_eventSelection_with_output():
     evtSel = EventSelection(alg, RequiredSelection = data0)
     newSel = dummy('NewEvtSel', evtSel)
     assert newSel.selection().name() == 'NewEvtSel'
-    assert newSel.outputLocation() == 'Phys/NewEvtSel'
+    assert newSel.outputLocation() == 'Phys/NewEvtSel/Particles'
     assert len(newSel.members()) == 1
                             
 

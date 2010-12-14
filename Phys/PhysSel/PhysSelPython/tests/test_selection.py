@@ -5,7 +5,14 @@
 import sys
 from py.test import raises
 sys.path.append('../python')
-from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection, NameError, NonEmptyInputLocations, IncompatibleInputLocations
+from PhysSelPython.Wrappers import ( Selection,
+                                     AutomaticData,
+                                     MergedSelection,
+                                     VoidEventSelection,
+                                     EventSelection,
+                                     NameError,
+                                     NonEmptyInputLocations,
+                                     IncompatibleInputLocations )
 from SelPy.configurabloids import DummyAlgorithm, DummySequencer
 from Configurables import FilterDesktop
 
@@ -22,6 +29,55 @@ def test_automatic_data() :
     assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x_Particles'
     assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
 
+
+def test_void_event_selection() :
+     sel00 = AutomaticData(Location = 'Phys/Sel00x')
+     ves00 = VoidEventSelection('VES00',
+                                Code = 'Test (<Location>) > X',
+                                RequiredSelection = sel00)
+     assert sel00.outputLocation() == ves00.outputLocation()
+     assert ves00.outputLocation() == 'Phys/Sel00x/Particles'
+     assert ves00.algorithm().Code == "Test ('Phys/Sel00x/Particles') > X"
+
+def test_void_event_selection_code_integrity() :
+
+    sel00 = AutomaticData(Location = 'Phys/Sel00x')
+
+    ves01 = VoidEventSelection('VES01',
+                               Code = 'Test (<Location>) > X',
+                               RequiredSelection = sel00)
+    coderef =  "Test ('Phys/Sel00x/Particles') > X"
+
+    assert ves01.algorithm().Code == coderef
+
+    ves02 = VoidEventSelection('VES02',
+                               Code = "Test (<Location>) > X",
+                               RequiredSelection = sel00)
+    assert ves02.algorithm().Code == coderef
+
+    ves03 = VoidEventSelection('VES03',
+                               Code = "Test ('<Location>') > X",
+                               RequiredSelection = sel00)
+    assert ves03.algorithm().Code == coderef
+
+    ves04 = VoidEventSelection('VES04',
+                               Code = 'Test (\'<Location>\') > X',
+                               RequiredSelection = sel00)
+    assert ves04.algorithm().Code == coderef
+
+
+def test_void_event_selection_with_existing_name_raises() :
+    raises(NameError, VoidEventSelection, 'VES00', Code = 'blah', RequiredSelection = AutomaticData(Location='blah/blah'))
+    
+def test_void_event_selection_with_existing_configurable_name_raises() :
+
+    selFilter = FilterDesktop('SelFilter')
+    sel = AutomaticData(Location = 'Phys/Sel')
+
+    raises(NameError, VoidEventSelection, 'SelFilter',
+           Code = '<Location>',
+           RequiredSelection = sel)
+    
 def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
     raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
 

@@ -15,7 +15,7 @@
        <OutputBranch>/<name>/<Extension>, default 'Phys/<name>/Particles'.
     CHANGE IN DEFAULT BEHAVIOUR OF SELECTIONS: outputLocation() NOW INCLUDES
     TRAILING "/Particles".
-  . Added experimental VoidEventFilter class, with no test suite. DO NOT USE!
+  . Added experimental VoidEventFilter class, and test suites.
 
  - cmt/requirements
   . Increase to v6r0

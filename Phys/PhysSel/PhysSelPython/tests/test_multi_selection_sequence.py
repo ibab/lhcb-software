@@ -34,7 +34,8 @@ def test_call_important_methods() :
     seq00 = SelectionSequence('Seq00y', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01y', TopSelection = sel01)
     seq = MultiSelectionSequence('MultiSeq00y', Sequences = [seq00, seq01])
-    assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
+    assert seq.outputLocations() == ['Phys/Sel00/Particles',
+                                     'Phys/Sel01/Particles']
     algs = seq.algos
     seq = seq.sequence()
     
