@@ -20,9 +20,8 @@ Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examp
 Warning in <TClass::TClass>: no dictionary for class Gaudi::RootObjectRefs is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::RootRef is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Counter is available
-File ROOTIO.merge.dst DOES NOT EXIST!
-File ROOTIO.merge.dst DOES NOT EXIST!
 +++ Opened new output file ROOTIO.merge.dst.
++++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.1.dst
 Tree:Event 0
 +++ Created new Tree Event.
 Tree:FileRecords 0
@@ -51,17 +50,16 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 873 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x17963f00
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x17964120
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x17d49920
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x17ebec60
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xa840250
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xa840470
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xaa288a0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xab1e800
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
   KEY: TTree	Sections;2	Root Section data
-File ROOTIO.merge.dst EXISTS!
-File ROOTIO.merge.dst EXISTS!
-+++ Opened new output file ROOTIO.merge.dst.
++++ Update output file ROOTIO.merge.dst.
++++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.2.dst
 Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
@@ -90,17 +88,16 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 900 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x17f34e70
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x17e88880
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x17e96520
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x17e97540
-  KEY: TTree	Event;4	Root data for Gaudi
-  KEY: TTree	FileRecords;4	Root data for Gaudi
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xab63690
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xab61fd0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xab42dd0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xab27030
+  KEY: TTree	Event;3	Root data for Gaudi
+  KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
   KEY: TTree	Sections;4	Root Section data
-File ROOTIO.merge.dst EXISTS!
-File ROOTIO.merge.dst EXISTS!
-+++ Opened new output file ROOTIO.merge.dst.
++++ Update output file ROOTIO.merge.dst.
++++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.3.dst
 Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
@@ -126,17 +123,14 @@ Tree:FileRecords 0
 +++ section ['Containers'][0]                                       Start:      16 ...       24 [8 entries]
 +++ section ['Databases'][0]                                        Start:       2 ...        3 [1 entries]
 +++ section ['Links'][0]                                            Start:      28 ...       42 [14 entries]
-+++ Added new GUID FID=504EE530-B73A-11DF-9797-9E8D8A89BEEF to merge file.
 +++ Added 22 Sections entries with 914 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x17e9a1b0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x17f1b950
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x17fcdfd0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x17fafd50
-  KEY: TTree	Event;6	Root data for Gaudi
-  KEY: TTree	FileRecords;6	Root data for Gaudi
-  KEY: TTree	Refs;7	Root Section data
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xaafe7c0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xaafc740
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xaadbfb0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xab27030
+  KEY: TTree	Event;4	Root data for Gaudi
+  KEY: TTree	FileRecords;4	Root data for Gaudi
+  KEY: TTree	Refs;6	Root Section data
   KEY: TTree	Sections;6	Root Section data
-Number of MyVertex instances:0
-Number of MyTrack instances:0
