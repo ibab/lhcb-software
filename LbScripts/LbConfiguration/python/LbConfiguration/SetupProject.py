@@ -7,11 +7,12 @@ import os, sys, re, time
 from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 from fnmatch import fnmatch
-from tempfile import mkdtemp, mkstemp
+from tempfile import mkstemp
 
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.CVS import CVS2Version
 from LbUtils.Temporary import TempDir
+
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
 try:
