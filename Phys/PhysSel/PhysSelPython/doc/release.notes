@@ -8,6 +8,17 @@
 ! 2010-12-14 - Juan Palacios
  - pyhton/PhysSelPython/Wrappers.py
   . Remove algName() method from selections.
+  . Changes to SelPy.selection.Selection mean Wrappers. Selection now has
+    Extension constructor argument:
+       Sets the leaf of the output location. Default 'Particles'. 
+       Output location is constructed from 
+       <OutputBranch>/<name>/<Extension>, default 'Phys/<name>/Particles'.
+    CHANGE IN DEFAULT BEHAVIOUR OF SELECTIONS: outputLocation() NOW INCLUDES
+    TRAILING "/Particles".
+  . Added experimental VoidEventFilter class, with no test suite. DO NOT USE!
+
+ - cmt/requirements
+  . Increase to v6r0
 
 ! 2010-11-11 - Juan Palacios
  - pyhton/PhysSelPython/Wrappers.py

@@ -88,11 +88,13 @@ class AutomaticData(autodata) :
     def __init__(self,
                  Location,
                  Extension='Particles') :
-        
-        _extension = ('/'+Extension).replace('//', '/')
+
+        _extension = ''
+        if Extension != '' :
+            _extension = ('/'+Extension).replace('//', '/')
         self._location = (Location + _extension).replace(_extension+_extension, _extension)
         autodata.__init__(self,
-                          Location=Location)
+                          Location=self._location)
         
         self._algoName = 'SelFilter'+self._name
 
@@ -135,6 +137,43 @@ class EventSelection(object) :
             return self.requiredSelection.outputLocation()
         return ''
 
+class VoidEventSelection(object) :
+    """
+    Selection class for event selection based on contents of TES location.
+    Can be used just like a Selection object.
+    Constructor argument Code is LoKi__VoidFilter compatible single-location
+    cut, where the location is expressed as '<Location>' and determined
+    from the RequiredSelection's outputLocation(). The outputLocation() of
+    this algorithm is the same as that of the RequiredSelection.
+    Example:
+    from PhysSelPython.Wrappers import VoidEventSelection, SelectionSequence
+    evtSel = VoidEventSelection( name='MyEvtSel',
+                                 Code="CONTAINS('<Location>')>0",
+                                 RequiredSelection = AutomaticData(....) )
+    help(SelectionSequence)
+    selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
+    """
+    def __init__(self,
+                 name,
+                 Code,
+                 RequiredSelection ) :
+
+        if configurableExists(name) :
+            raise NameError('Target Configurable '+ name + ' already exists. Pick a new one.')
+        self._name = name
+        self.requiredSelection  = RequiredSelection 
+        self.requiredSelections = [ RequiredSelection ]
+        _code = Code.replace('<Location>',
+                             requiredSelection.outputLocation())
+        self._alg = VoidFilter(self._name,
+                               Code = _code)
+        
+    def name(self) :
+        return self._name
+    def algorithm(self) :
+        return self._alg
+    def outputLocation(self) :
+        return self.requiredSelection.outputLocation()
     
 class MergedSelection(object) :
     """
