@@ -57,12 +57,12 @@ def dataLocations(selSequence, extension) :
     """
     loc = []
     for output in selSequence.outputLocations() :
-        location = output+"/"+extension
-        location = location.replace("//", "/")
-        if location.endswith('/') :
-            location = location[ : -1 ]
+        location = output
         if location.endswith('/Particles') :
             location = location[ : location.rfind('/Particles') ]
+        location = (location+"/"+extension).replace("//", "/")
+        if location.endswith('/') :
+            location = location[ : -1 ]
         loc += [location]
     return loc
 
