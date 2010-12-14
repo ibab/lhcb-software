@@ -10,7 +10,6 @@
 #include <iterator>
 #include "boost/optional.hpp"
 #include "boost/ptr_container/ptr_vector.hpp"
-#include "boost/regex.hpp"
 
 
 // from Gaudi
@@ -81,17 +80,11 @@ public:
   typedef std::map<std::string, std::map<std::string, std::map< std::string, std::string> > > TransformMap;
 
 protected:
-  // allow customization through inheritance
-  class ITransformer {
-    public :
-        virtual ~ITransformer() {}
-        virtual PropertyConfig::Prop operator()(const PropertyConfig::Prop& in)  = 0;
-  };
 //
 //   component name
 //             property name
 //                       replacement rule
-//   { '.*' : { 'Members' : { "'PatPV3D/HltPVsPV3D'" : "'PatPV3D/HltPVsPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'" } } }
+//   { 'GaudiSequencer/.*' : { 'Members' : { "'PatPV3D/HltPVsPV3D'" : "'PatPV3D/HltPVsPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'" } } }
 //
   class Transformer {
    public:
