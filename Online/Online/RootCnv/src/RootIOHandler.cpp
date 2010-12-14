@@ -13,6 +13,7 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/System.h"
 #include "RootRefs.h"
+#include "PoolClasses.h"
 #include <stdexcept>
 #include <iostream>
 #include "TROOT.h"

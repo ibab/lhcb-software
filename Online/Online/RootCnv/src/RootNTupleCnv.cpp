@@ -704,6 +704,8 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
 }      
 
 #ifdef __POOL_COMPATIBILITY
+#include "PoolClasses.h"
+
 // Compatibility code to access ETCs, which were written using POOL
 
 namespace {

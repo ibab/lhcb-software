@@ -1,3 +1,4 @@
+#include "PoolClasses.h"
 /*
 *  Gaudi namespace declaration
 */
