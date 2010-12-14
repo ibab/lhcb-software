@@ -5,6 +5,10 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-12-14 - Juan Palacios
+ - pyhton/PhysSelPython/Wrappers.py
+  . Remove algName() method from selections.
+
 ! 2010-11-11 - Juan Palacios
  - pyhton/PhysSelPython/Wrappers.py
   . Simplify AutomaticData and add temporary Extension constructor argument

@@ -100,8 +100,8 @@ class AutomaticData(autodata) :
         return VoidFilter('SelFilter'+self._name,
                           Code = "CONTAINS('"+self._location+"')>0")
 
-    def algName(self) :
-        return self.algorithm().name()
+#    def algName(self) :
+#        return self.algorithm().name()
 
 DataOnDemand = AutomaticData
 

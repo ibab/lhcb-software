@@ -12,11 +12,11 @@ from Configurables import FilterDesktop
 def test_automatic_data() :
     sel00 = AutomaticData(Location = 'Phys/Sel00x')
     assert sel00.name() == 'Phys_Sel00x'
-    assert sel00.algName() == 'SelFilterPhys_Sel00x'
+    assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x'
     assert sel00.outputLocation() == 'Phys/Sel00x'
     sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles', Extension='Particles')
     assert sel00.name() == 'Phys_Sel00x_Particles'
-    assert sel00.algName() == 'SelFilterPhys_Sel00x_Particles'
+    assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x_Particles'
     assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
 
 def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
