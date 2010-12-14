@@ -54,10 +54,10 @@ void NNetTool_MLP::normaliseSS(std::vector<double>& par) {
 }
 void NNetTool_MLP::normaliseVtx(std::vector<double>& par) { 
 
-  if(DBGLEVEL>2)debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(DBGLEVEL>2)debug()<<"par = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)<<" "<<par.at(3)
                        <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
                        <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)
-                       <<" "<<par.at(1)<<endreq;
+                       <<" "<<par.at(10)<<endreq;
 
   par.at(0) /= 90.; //vtag size
   par.at(2) /= 25.; //ptB

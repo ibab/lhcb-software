@@ -117,7 +117,8 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   double SVM = SVmomentum.M();
   double SVGP = SVP/(0.16*SVM+0.12);
   double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
-
+  debug()<<"BoppDir.Mag: "<<BoppDir.Mag()<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+ 
   if(!m_UseObsoleteSV) { //needed by NNtuner
     mysecvtx->setVflagged(vflagged);
     mysecvtx->setVptmin(Vptmin);
