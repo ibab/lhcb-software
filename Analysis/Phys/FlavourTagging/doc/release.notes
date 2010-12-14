@@ -5,9 +5,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-12-14 - Marc Grabalosa
+  . fix bug for vtx charge
+  - Increase to v12r1.
+
 ! 2010-12-02 - Marc Grabalosa
   . add strip10_v1 (old muon, new vtx, with tau in NN)
-  - Increase to v12r1.
 
 ! 2010-11-11 - Marc Grabalosa
   . default strip10 tuning

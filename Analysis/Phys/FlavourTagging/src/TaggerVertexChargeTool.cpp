@@ -93,17 +93,22 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
          <<", with "<<Pfit.size()<<"tracks"<<endreq;
   double maxprobf = vvec.at(0).info(1, 0.5 );
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+  Vertex seedvtx;
+  double BoppX =vvec.at(0).info(2, 0. ); //BoppPos.x();
+  double BoppY =vvec.at(0).info(3, 0. ); //BoppPos.y();
+  double BoppZ =vvec.at(0).info(4, 0. );// BoppPos.z();
+  /*
   const Gaudi::XYZPoint BoppPos = vvec.at(0).position();
-  double BoppX = BoppPos.x();
-  double BoppY = BoppPos.y();
-  double BoppZ = BoppPos.z();
-  double RVX = (*RecVert).position().x();
-  double RVY = (*RecVert).position().y();
-  double RVZ = (*RecVert).position().z();
+  info()<<"BoppPos: "<<BoppPos<<endreq;
   Gaudi::XYZPoint BoppDir;
-  BoppDir.SetX(BoppX-RVX);
-  BoppDir.SetY(BoppY-RVY);
-  BoppDir.SetZ(BoppZ-RVZ);
+  BoppDir.SetX(BoppPos.x()-(*RecVert).position().x());
+  BoppDir.SetY(BoppPos.y()-(*RecVert).position().z());
+  BoppDir.SetZ(BoppPos.z()-(*RecVert).position().z());
+  */
+  Gaudi::XYZPoint BoppDir;
+  BoppDir.SetX(BoppX);
+  BoppDir.SetY(BoppY);
+  BoppDir.SetZ(BoppZ);
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
@@ -142,10 +147,11 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if( Vch==0 ) return tVch;
 
   //add tau of Bopp
-  double SVP = SVmomentum.P();
-  double SVM = SVmomentum.M();
+  double SVP = SVmomentum.P()/1000;
+  double SVM = SVmomentum.M()/1000;
   double SVGP = SVP/(0.16*SVM+0.12);
   double SVtau = sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
+  debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
 
   //calculate omega
   debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
@@ -172,7 +178,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     NNinputs.at(7) = maxprobf;
     NNinputs.at(8) = Vflaglong/(vflagged? vflagged:1);
     NNinputs.at(9) = Vch;
-    NNinputs.at(9) = SVtau;
+    NNinputs.at(10) = SVtau;
     pn = m_nnet->MLPvtx( NNinputs );
     omega = 1 - pn;
   }

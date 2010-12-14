@@ -73,6 +73,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   const Particle *p1=0, *p2=0;
   Particle::ConstVector::const_iterator jp, kp;
   double maxprobf = m_maxprobf;
+  double svxpos, svypos, svzpos;
   VertexBase::ExtraInfo likeinfo;
 
   //loop to find seed -----------------------------------
@@ -157,25 +158,15 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
       //evaluate likelihood
       double prob_chi2  = pol(vtx.chi2PerDoF(), 0.615074, -0.081797, 0.00421188);
-      //double prob_chi2  = pol(vtx.chi2PerDoF(), 0.627107, -0.0561232, 0.00255272);
       double prob_ptmin = pol(std::min((*jp)->pt(), (*kp)->pt()) /GeV, 0.0662687, 1.10754, -0.350278);
-      //double prob_ptmin = pol(std::min((*jp)->pt(), (*kp)->pt()) /GeV, -0.058584, 1.52415, -0.795555, 0.138849);
       double prob_ipmax = pol(std::max(ipl, ips), 0.763837, -0.0822829, -0.0154407);
-      //double ipmax = std::max(ipl, ips);
-      //double prob_ipmax = 0;
-      //if (ipmax>0.3)  prob_ipmax = pol(ipmax, 1.08349, -0.405747, 0.054368);
-      //else prob_ipmax = pol(ipmax, 0.551005, 0.587514);
       double prob_ipsmin = 0;
       double ipsmin= std::min(ipl/iperrl, ips/iperrs);
       if (ipsmin<2.5) continue;
       if(ipsmin<6) prob_ipsmin    = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
       else prob_ipsmin = pol(ipsmin, 0.536929, 0.0254873, -0.000439594);
-      //if(ipsmin>9)  prob_ipsmin = pol(ipsmin, 0.63096, 0.00377653);
-      //else prob_ipsmin = pol(ipsmin, -0.155061, 0.185982, -0.0114987);
       double prob_deltaphi = pol(dphi, 0.699251, -0.19263, 0.00319839);
-      //double prob_deltaphi = pol(dphi, 0.588014, 0.122737, -0.179973, 0.036799);
       double prob_rdist;
-      //prob_rdist = pol(rdist, 0.681304, -0.120933, 0.0229825, -0.00147039);
       if(rdist<1) prob_rdist= pol(rdist, 9.61771e-05, 0.936598, -0.433183);
       else        prob_rdist= pol(rdist, 0.44296, 0.0956002, -0.0130237);
       
@@ -191,12 +182,19 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
         p2=(*kp);
         debug() << "       === pt=" << p1->pt() <<endreq;
         debug() << "       === pt=" << p2->pt() <<endreq;
+        svxpos = (vtx.position()-RecVert.position()).x()/mm;
+        svypos = (vtx.position()-RecVert.position()).y()/mm;
+        svzpos = (vtx.position()-RecVert.position()).z()/mm;
+        debug()<<"       svpos (SV-RV): "<<svxpos<<", "<<svypos<<", "<<svzpos<<endreq;
       }
       
     }//kp
   }//jp
   //save likelihood
   likeinfo.insert(1, maxprobf);
+  likeinfo.insert(2, svxpos);
+  likeinfo.insert(3, svypos);
+  likeinfo.insert(4, svzpos);
   Vfit.setExtraInfo(likeinfo);
 
   //add tracks from best seed

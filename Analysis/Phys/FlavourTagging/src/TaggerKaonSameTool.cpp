@@ -129,7 +129,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(ippu < m_ipPU_cut_kS) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
-    info()<<" distPhi="<<distphi<<endreq;
+    debug()<<" distPhi="<<distphi<<endreq;
     if( distphi < m_distPhi_cut_kS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
