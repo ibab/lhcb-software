@@ -1049,7 +1049,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-        recoForward.PatForwardTool.SecondLoop = True
+        recoForward.PatForwardTool.SecondLoop = False
         recoForward.PatForwardTool.MaxChi2 = 40
         recoForward.PatForwardTool.MaxChi2Track = 40
         recoForward.PatForwardTool.MinHits = 12
