@@ -10,6 +10,8 @@
 #include <iterator>
 #include "boost/optional.hpp"
 #include "boost/ptr_container/ptr_vector.hpp"
+#include "boost/regex.hpp"
+
 
 // from Gaudi
 #include "GaudiKernel/Service.h"
@@ -75,8 +77,37 @@ public:
   // reconfigure: first configure, then call sysReinitialize on the top algorithm
   StatusCode reconfigure(const ConfigTreeNode::digest_type& top) const; 
 
+  //               component             property               regex        replacement
+  typedef std::map<std::string, std::map<std::string, std::map< std::string, std::string> > > TransformMap;
 
 protected:
+  // allow customization through inheritance
+  class ITransformer {
+    public :
+        virtual ~ITransformer() {}
+        virtual PropertyConfig::Prop operator()(const PropertyConfig::Prop& in)  = 0;
+  };
+//
+//   component name
+//             property name
+//                       replacement rule
+//   { '.*' : { 'Members' : { "'PatPV3D/HltPVsPV3D'" : "'PatPV3D/HltPVsPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'" } } }
+//
+  class Transformer {
+   public:
+       Transformer(const std::string& component,MsgStream& os): m_os(os), m_c(component) {}
+       void push_back( const std::map<std::string, std::map<std::string,std::string> >* pmap ) { m_list.push_back(pmap); }
+       bool empty() const { return m_list.empty(); }
+       PropertyConfig::Prop operator()(const PropertyConfig::Prop& in);
+   private:
+       typedef std::map<std::string,std::string> ReplMap_t;
+       typedef std::map<std::string, ReplMap_t > PropMap_t;
+       typedef std::vector< const PropMap_t* >  List_t;
+       List_t  m_list;
+       MsgStream&  m_os;
+       std::string m_c;
+  };
+  
   // check validity of given config
   StatusCode validateConfig(const PropertyConfig::digest_type& ref) const;
 
@@ -100,6 +131,9 @@ private:
   typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t;
   
   typedef std::map<std::string, PropertyConfig::digest_type> ConfigPushed_t;
+
+
+  TransformMap                         m_transform;
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          s_accessSvc;

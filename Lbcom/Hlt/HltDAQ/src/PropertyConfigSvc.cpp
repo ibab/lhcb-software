@@ -1,9 +1,17 @@
 // $Id: PropertyConfigSvc.cpp,v 1.1 2010-05-05 13:20:44 graven Exp $
 // Include files 
 
+#include <map>
+#include <string>
+
+class StatusCode;
+namespace Gaudi { namespace Parsers {
+StatusCode parse(std::map<std::string, std::map<std::string, std::map< std::string, std::string> > >& result , const std::string& input ) ;
+} }
 #include <sstream>
 #include <algorithm>
 #include <list>
+#include <iterator>
 
 #include "boost/filesystem/fstream.hpp"
 #include "boost/filesystem/convenience.hpp"
@@ -21,12 +29,15 @@
 #include "GaudiKernel/IAuditor.h"
 #include "GaudiKernel/IAlgTool.h"
 
+
 // local
 #include "PropertyConfigSvc.h"
 
 using namespace std;
 using boost::ptr_vector;
 namespace bl = boost::lambda;
+
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PropertyConfigSvc
@@ -40,11 +51,15 @@ DECLARE_SERVICE_FACTORY( PropertyConfigSvc );
 
 namespace {
 
-    class property2jos  {
+    // model this as output iterator
+    class property2jos  : public std::iterator<std::output_iterator_tag,const PropertyConfig::Prop> {
          public:
+            property2jos& operator++()   { return *this; }
+            property2jos operator++(int) { return *this; }
+            property2jos& operator*()    { return *this; }
             property2jos(IJobOptionsSvc* jos,const string& name, ostream* os=0) :
                 m_jos(jos),m_name(name),m_properties(jos->getProperties(name)),m_out(os) { assert(m_jos!=0); }
-            void operator()(const PropertyConfig::Prop& prop) {
+            property2jos& operator=(const PropertyConfig::Prop& prop) {
                 if (m_out!=0) {
                    *m_out << m_name << '.' <<prop.first<< '=' << prop.second << ";\n";
                 }
@@ -82,7 +97,7 @@ namespace {
                        m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,prop.second));
                    }
                 }
-
+                return *this;
             }
          private:
             const Property* find(const string& name) {
@@ -116,6 +131,7 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
   declareProperty("optionsfile", m_ofname);
   declareProperty("createGraphVizFile", m_createGraphVizFile=false);
   declareProperty("AllowFlowChanges",m_allowFlowChanges = false);
+  declareProperty("ApplyTransformation",m_transform);
 }
 
 //=============================================================================
@@ -472,9 +488,20 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
         debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
 
-        for_each(map.begin(),
-                 map.end(),
-                 property2jos(m_joboptionsSvc,name,m_os.get())) ;
+        //TODO: make sure that online this cannot be done...
+        std::string fqname = (*i)->type() + "/" + (*i)->name();
+        Transformer transformer(fqname,warning());
+        for (TransformMap::const_iterator itrans = m_transform.begin(); itrans!= m_transform.end(); ++itrans) {
+            boost::regex re( itrans->first );
+            if ( boost::regex_match( fqname, re ) ) transformer.push_back( &itrans->second );
+        }
+        if (!transformer.empty()) {
+            std::transform(map.begin(),map.end(),property2jos(m_joboptionsSvc,name,m_os.get()), transformer);
+        } else {
+            std::copy(map.begin(),
+                      map.end(),
+                      property2jos(m_joboptionsSvc,name,m_os.get())) ;
+        }
 
         m_configPushed[name] = (*i)->digest();
     }
@@ -723,3 +750,58 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref)
    pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.insert( make_pair( ref, *node) );
    return &(rv.first->second);
 }
+
+
+PropertyConfig::Prop
+PropertyConfigSvc::Transformer::operator()(const PropertyConfig::Prop& in) {
+   std::string out = in.second;
+   for (List_t::const_iterator i = m_list.begin(); i!=m_list.end(); ++i) { // vector of all component maps to apply
+       for (PropMap_t::const_iterator j = (*i)->begin(); j!=(*i)->end();++j) {  // map to apply
+           if (in.first != j->first) continue;
+           for (ReplMap_t::const_iterator k = j->second.begin(); k!=j->second.end(); ++k) {
+               boost::regex pattern(k->first);
+               out = boost::regex_replace(out, pattern, k->second);
+           }
+       }
+   }
+   if (out == in.second) return in;
+   m_os <<  "Applying substitution " << m_c << "." << in.first << " : " << in.second << " => " << out << endmsg;
+   return PropertyConfig::Prop(in.first,out);
+}
+
+
+
+
+#include <map>
+#include <string>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/Grammars.h"
+// FIXME: Move to the new boost::spirit::classic namespace
+#if !defined(BOOST_SPIRIT_USE_OLD_NAMESPACE)
+#define BOOST_SPIRIT_USE_OLD_NAMESPACE
+#endif
+#include <boost/spirit/include/classic.hpp>
+#include <boost/spirit/include/phoenix1.hpp>
+#include <string>
+
+
+namespace Gaudi { namespace Parsers {
+
+StatusCode parse(std::map<std::string, std::map<std::string, std::map< std::string, std::string> > >& result , const std::string& input ) 
+{
+
+    typedef  MapGrammar<StringGrammar,StringGrammar>  G1 ;
+    typedef  MapGrammar<StringGrammar,G1> G2 ;
+    typedef  MapGrammar<StringGrammar,G2> G3 ;
+    G3 grammar ;
+
+    typedef boost::spirit::position_iterator<std::string::const_iterator> IteratorT;
+
+    return parse
+       ( IteratorT(input.begin(),input.end()),
+         IteratorT(),
+         grammar[var(result)=arg1],
+         SkipperGrammar()).full;
+}
+
+} }

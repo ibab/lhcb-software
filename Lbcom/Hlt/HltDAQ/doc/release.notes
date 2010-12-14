@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-12-14 - Gerhard Raven
+ - PropertyConfigSvc: add possibility to apply transformations on properties just before 
+   pushing them into the JobOptionsSrc
+
 ! 2010-12-12 - Marco Cattaneo
  - Add ANNSvc again, removed from HltInterfaces
 
