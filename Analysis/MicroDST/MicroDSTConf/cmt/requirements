@@ -21,6 +21,5 @@ set MICRODSTOPTS ${MICRODSTCONFROOT}/options
 use EventAssoc        v* Event
 use MicroDSTAlgorithm v* MicroDST
 #============================================================================
-macro MicroDSTConfConfUserModules "MicroDSTConf.PhysMicroDST"
 apply_pattern install_python_modules
 #============================================================================
