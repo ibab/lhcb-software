@@ -22,6 +22,9 @@ def addParticleModule(particleModule) :
         global __all__
         __all__ += [name]
         global selections
+        _loc = (loc+'/Particles').replace('/Particles/Particles',
+                                          '/Particles')
+        _loc = _loc.replace('//', '/')
         sel =  AutomaticData(Location =  loc)
         selections += [sel]
         setattr(_this,  name, sel)

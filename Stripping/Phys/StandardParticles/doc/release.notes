@@ -4,6 +4,9 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+! 2010-12-14 - Juan Palacios
+ - Add "/Particles" to all locations.
+
 ! 2010-11-15 - Juan Palacios
  - First import. Contains Selection-like objects for a variety of Phys/CommonParticles. Currently, grab everything in CommonParticles.StandardBasic:
 
