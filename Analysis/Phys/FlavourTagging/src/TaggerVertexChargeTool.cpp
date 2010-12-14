@@ -94,21 +94,9 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   double maxprobf = vvec.at(0).info(1, 0.5 );
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
   Vertex seedvtx;
-  double BoppX =vvec.at(0).info(2, 0. ); //BoppPos.x();
-  double BoppY =vvec.at(0).info(3, 0. ); //BoppPos.y();
-  double BoppZ =vvec.at(0).info(4, 0. );// BoppPos.z();
-  /*
-  const Gaudi::XYZPoint BoppPos = vvec.at(0).position();
-  info()<<"BoppPos: "<<BoppPos<<endreq;
-  Gaudi::XYZPoint BoppDir;
-  BoppDir.SetX(BoppPos.x()-(*RecVert).position().x());
-  BoppDir.SetY(BoppPos.y()-(*RecVert).position().z());
-  BoppDir.SetZ(BoppPos.z()-(*RecVert).position().z());
-  */
-  Gaudi::XYZPoint BoppDir;
-  BoppDir.SetX(BoppX);
-  BoppDir.SetY(BoppY);
-  BoppDir.SetZ(BoppZ);
+
+  const Gaudi::XYZPoint BoppDir = vvec.at(0).position();
+  debug()<<"BoppDir: "<<BoppDir<<endreq;
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;

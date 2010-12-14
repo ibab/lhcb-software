@@ -73,9 +73,9 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
   const Particle *p1=0, *p2=0;
   Particle::ConstVector::const_iterator jp, kp;
   double maxprobf = m_maxprobf;
-  double svxpos, svypos, svzpos;
   VertexBase::ExtraInfo likeinfo;
-
+  Gaudi::XYZPoint SVpos;
+  
   //loop to find seed -----------------------------------
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
@@ -182,20 +182,19 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
         p2=(*kp);
         debug() << "       === pt=" << p1->pt() <<endreq;
         debug() << "       === pt=" << p2->pt() <<endreq;
-        svxpos = (vtx.position()-RecVert.position()).x()/mm;
-        svypos = (vtx.position()-RecVert.position()).y()/mm;
-        svzpos = (vtx.position()-RecVert.position()).z()/mm;
-        debug()<<"       svpos (SV-RV): "<<svxpos<<", "<<svypos<<", "<<svzpos<<endreq;
+        //set seed position
+	SVpos.SetX((vtx.position()-RecVert.position()).x()/mm);
+        SVpos.SetY((vtx.position()-RecVert.position()).y()/mm);
+        SVpos.SetZ((vtx.position()-RecVert.position()).z()/mm);
+        debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endreq;
       }
       
     }//kp
   }//jp
   //save likelihood
   likeinfo.insert(1, maxprobf);
-  likeinfo.insert(2, svxpos);
-  likeinfo.insert(3, svypos);
-  likeinfo.insert(4, svzpos);
   Vfit.setExtraInfo(likeinfo);
+  Vfit.setPosition(SVpos);
 
   //add tracks from best seed
   Vfit.addToOutgoingParticles(p1);
