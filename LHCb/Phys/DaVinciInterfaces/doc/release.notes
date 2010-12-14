@@ -4,10 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciInterfaces v2r7 2010-12-14 =========================
 ! 2010-12-03 - Vanya Belyaev
-
  - IDistanceCalculator:
-
     add methods to calculate the impact parameter & 
        distance of closest approach for tracks 
 
