@@ -6,6 +6,46 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v31r8>2010-12-14 LHCbSys v31r8</A></H1><PRE>
+This version uses Gaudi v21r11 and LCG_58f
+
+- Packages modified: OTDet v8r5, TrackEvent v5r9, HltInterfaces v4r2,
+    DaVinciInterfaces v2r7, DaVinciTypes v2r2, LoKiCore v10r7, CondDBUI v3r7
+
+- In Det/OTDet v8r5
+  . Remove unneccessary public include of boost/assign/list_of.hpp that was 
+    breaking compilation with icc
+  . Remove a superfluous ; (icc remark)
+
+- In Event/TrackEvent v5r9
+  . Fix for Win vc9 in Track.cpp
+
+- In Kernel/HltInterfaces v4r2
+  . Remove ANNSvc, moved to HltDAQ
+
+- In Phys/DaVinciInterfaces v2r7
+  . IDistanceCalculator: add methods to calculate the impact parameter & 
+                         distance of closest approach for tracks 
+
+- In Phys/DaVinciTypes v2r2
+  . Fix stupid bug in RecVertexHolder destructor 
+  . Add tests for RecVertexHolder.
+  . Add QM test davincitypes.test_recvertexholder.
+
+- In Phys/LoKiCore v10r7
+  . Info/ExtraInfo/InfoOps functions.py & decorators.py
+    add "logging"-functors & functions 
+
+- In Tools/CondDBUI v3r7
+  . Further improvements for TagStatus monitoring system.
+  . Added two new scripts and TSDB backup table scheme:
+    + scripts/TSDBAdmin_Commit.py:
+      Is meant for insertion of new global tag entry with all its statuses at all
+      Tier 1s.
+    + scripts/TSDBAdmin_Update.py:
+      Performs update of current tag with new status for particular Tier 1.
+  . Other five scripts and modules are tuned up for actual install area env.
+
 </PRE><H1><A NAME=v31r7>2010-11-28 LHCbSys v31r7</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
 

@@ -1,5 +1,5 @@
 package LHCbSys
-version v31r7
+version v31r8
 
 branches doc cmt test
 
@@ -34,7 +34,7 @@ use DetDescCnv            v4r11   Det     # Marco Clemencic,Juan Palacios
 use DetDescSvc            v3r0    Det     # Marco Clemencic, Matt Needham
 use Magnet                v7r1    Det     # Marco Cattaneo
 use MuonDet               v9r2    Det     # Alessia Satta, Alessio Sarti
-use OTDet                 v8r4    Det     # Jan Amoraal
+use OTDet                 v8r5    Det     # Jan Amoraal
 use RichDet               v15r2   Det     # Chris Jones
 use STDet                 v4r22   Det     # J. van Tilburg, Matt Needham
 use VeloDet               v13r12  Det     # Mark Tobin, Kurt Rinnert
@@ -58,7 +58,7 @@ use PackedEvent           v4r3    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent            v11r12p2 Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r33   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r1    Event   # Chris Jones
-use TrackEvent            v5r8    Event   # Wouter Hulsbergen
+use TrackEvent            v5r9    Event   # Wouter Hulsbergen
 use VeloEvent             v16r9   Event   # Tomasz Szumlak, Chris Parkes
 
 # LHCb  Examples
@@ -75,7 +75,7 @@ use HepMCBack             v1r1    Gen     # Gloria Corti, Patrick Robbe
 
 # Kernel packages
 use HistoStrings          v1r0    Kernel  # Vanya Belyaev 
-use HltInterfaces         v4r1p1  Kernel  # Patrick Koppenburg
+use HltInterfaces         v4r2    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r35   Kernel  # Marco Cattaneo
 use LHCbKernel            v12r6   Kernel  # Marco Cattaneo
@@ -97,9 +97,9 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
 use OTDAQ                 v7r8    OT      # Wouter Hulsbergen
 
-use DaVinciInterfaces     v2r6    Phys    # Juan Palacios
-use DaVinciTypes          v2r1    Phys    # Juan Palacios
-use LoKiCore              v10r6   Phys    # Ivan Belyaev
+use DaVinciInterfaces     v2r7    Phys    # Juan Palacios
+use DaVinciTypes          v2r2    Phys    # Juan Palacios
+use LoKiCore              v10r7   Phys    # Ivan Belyaev
 use LoKiGen               v9r4    Phys    # Ivan Belyaev
 use LoKiHlt               v3r3    Phys    # Ivan Belyaev
 use LoKiMC                v9r3    Phys    # Ivan Belyaev
@@ -120,7 +120,7 @@ use TfKernel              v2r19   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6    Tf      # Matt Needham
 
 use CondDBEntityResolver  v5r2    Tools   # Marco Clemencic
-use CondDBUI              v3r6    Tools   # Marco Clemencic
+use CondDBUI              v3r7    Tools   # Marco Clemencic
 use XmlTools              v6r3p2  Tools   # Marco Clemencic
 
 use TrackInterfaces       v4r17   Tr      # Matt Needham
