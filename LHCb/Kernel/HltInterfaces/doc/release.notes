@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!========================= HltInterfaces v4r2 2010-12-14 =========================
 ! 2010-12-12 - Marco Cattaneo
  - Remove ANNSvc again, moved definitively to HltDAQ
 
