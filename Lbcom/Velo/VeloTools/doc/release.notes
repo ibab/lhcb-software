@@ -3,7 +3,10 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
-!========================== VeloTools v4r0 2010-12-13 ========================
+
+! 2010-12-14 - Marco Cattaneo
+ - Clean up requirements
+
 ! 2010-12-13 - Tomasz Szumlak
  - the VeloClusterPosition tool moved to Rec project, Tr/TrackTools package
    it is no longer necessary to use it in Boole, all the monitoring related
