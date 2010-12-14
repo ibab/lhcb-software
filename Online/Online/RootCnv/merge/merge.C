@@ -92,6 +92,10 @@ namespace Gaudi {
 #include "TSystem.h"
 #include "TTreeCloner.h"
 #include "TInterpreter.h"
+#ifdef _WIN32
+#else
+#include <libgen.h>
+#endif
 
 using namespace Gaudi;
 using namespace std;
@@ -275,7 +279,9 @@ MergeStatus RootDatabaseMerger::merge(const string& fid) {
   if ( m_output )    {
     TFile* source = TFile::Open(fid.c_str());
     if ( source && !source->IsZombie() )  {
-      ::printf("+++ Start merging input file:%s\n",fid.c_str());
+      size_t idx = fid.rfind('/');
+      ::printf("+++ Start merging input file:%s\n",
+	       idx != string::npos ? fid.substr(idx+1).c_str() : fid.c_str());
       if ( copyAllTrees(source) == MERGE_SUCCESS )  {
 	if ( copyRefs(source,"Refs") == MERGE_SUCCESS )  {
 	  source->Close();
@@ -435,6 +441,7 @@ int merge(const char* target, const char* source, bool fixup=false, bool dbg=tru
     //gSystem->Load("libGaudiExamplesDict");
   }
 #endif
+  //printf("+++ Target:%s\n+++ Source file:%s\n",target,source);
   RootDatabaseMerger m;
   MergeStatus ret = m.exists(target) ? m.attach(target) : m.create(target);
   if ( ret == MERGE_SUCCESS ) {
