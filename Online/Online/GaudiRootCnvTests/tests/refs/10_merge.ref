@@ -8,7 +8,7 @@ Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::E
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyVertex> is available
 Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::MyVertex> is available
 +++ Opened new output file ROOTIO.merge.1.tags.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.1.tags
++++ Start merging input file:ROOTIO.1.tags
 Tree:##Descriptors 0
 +++ Created new Tree ##Descriptors.
 Tree:<local>_Dir1_Dir2_Dir3_Collection 1
@@ -20,16 +20,16 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ Added 5 Sections entries with 167 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1d0cb0b0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1d0cb2d0
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1d2aee50
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1d37aad0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x9b990b0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x9b992d0
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x9d7ce50
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x9e48ad0
   KEY: TTree	##Descriptors;2	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
   KEY: TTree	Sections;2	Root Section data
 +++ Update output file ROOTIO.merge.1.tags.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.2.tags
++++ Start merging input file:ROOTIO.2.tags
 Tree:##Descriptors 0
 +++ Merged tree: ##Descriptors res=1
 Tree:<local>_Dir1_Dir2_Dir3_Collection 1
@@ -41,16 +41,16 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ Added 5 Sections entries with 168 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1d350fd0
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1d0cc390
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1d3b1380
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1d3a4a50
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x9e1efd0
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x9b9a390
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x9e7f380
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x9e72a50
   KEY: TTree	##Descriptors;3	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
   KEY: TTree	Sections;4	Root Section data
 +++ Update output file ROOTIO.merge.1.tags.
-+++ Start merging input file:/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/tests/qmtest/ROOTIO.3.tags
++++ Start merging input file:ROOTIO.3.tags
 Tree:##Descriptors 0
 +++ Merged tree: ##Descriptors res=1
 Tree:<local>_Dir1_Dir2_Dir3_Collection 1
@@ -62,10 +62,10 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ Added 5 Sections entries with 168 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1d388130
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1d382ac0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1d37ee10
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1d209a50
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x9e56130
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x9e50ac0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x9e4ce10
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x9cd7a50
   KEY: TTree	##Descriptors;4	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;4	Root data for Gaudi
   KEY: TTree	Refs;6	Root Section data
