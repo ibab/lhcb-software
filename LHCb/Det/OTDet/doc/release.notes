@@ -3,6 +3,7 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r5 2010-12-14 =========================
 ! 2010-11-30 - Marco Cattaneo
  - Remove unneccessary public include of boost/assign/list_of.hpp that was 
    breaking compilation with icc
@@ -390,3 +391,4 @@
    - XmlOTDetectorCnv: Needed to read in xml.
 ! ====================================================================
  
+!========================= OTDet v8r5 2010-12-14 =========================
