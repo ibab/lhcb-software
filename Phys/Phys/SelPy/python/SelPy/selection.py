@@ -60,11 +60,6 @@ class AutoData(object) :
     def outputLocation(self) :
         return self._location
 
-#    def algName(self) :
-#        loc = self.outputLocation()
-#        loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
-#        return loc
-
 AutomaticData = AutoData
 
 class Selection(object) :
@@ -135,11 +130,8 @@ class Selection(object) :
     def algorithm(self) :
         return self.alg
 
-    def algName(self) :
-        return self.algorithm().name()
-
     def outputLocation(self) :
-        return self._outputBranch + "/" + self.algName()
+        return self._outputBranch + "/" + self.name()
 
     def clone(self, name, **args) :
         new_dict = update_overlap(self.__ctor_dict__, args)
@@ -192,7 +184,6 @@ class SelSequence(object) :
         self.algos = copy(EventPreSelector)
         self._name = name
         self._topSelection = TopSelection
-#        self.algos += FlatSelectionListBuilder(TopSelection).selectionList
         self.algos += flatAlgorithmList(TopSelection)
         self.algos += PostSelectionAlgs
         
@@ -202,9 +193,6 @@ class SelSequence(object) :
     def algorithm(self) :
         return self._topSelection.algorithm()
         
-    def algName(self) :
-        return self.algorithm().name()
-
     def outputLocation(self) :
         return self._topSelection.outputLocation()
 

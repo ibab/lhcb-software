@@ -5,6 +5,10 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-12-14 - Juan Palacios
+ - python/SelPy/selection.py
+  . Remove algName() method from selections.
+
 ! 2010-11-16 - Juan Palacios
  - python/SelPy/selection.py
   . Clean up AutomaticData: Remove algName method, set name from Location,
