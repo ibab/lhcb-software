@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-12-15 - Juan Palacios
+ - Remove dependency of StrippingV0ForPID on Hlt.
+ - Remove unnecessary use of InputLocations in StrippingBs2MuMuLines, StrippingB2MuMuMuMuLines.
+
 ! 2010-12-10 - Liming Zhang
  - enlarged f0 mass window in StrippingBs2Jpsif0.py
 

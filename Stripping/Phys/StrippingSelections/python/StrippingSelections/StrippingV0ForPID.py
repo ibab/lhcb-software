@@ -84,7 +84,7 @@ from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
 # @author Andrew Powell a.powell1@physics.ox.ac.uk
 # @date 2010-09-05
 # =============================================================================
-
+from StrippingConf.Configuration import __enroll__
 from Configurables import CombineParticles, FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand        
 
@@ -1117,54 +1117,6 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         return d
 
 
-
-from HltLine.HltLine import prnt , len1
-
-
-def __enroll__ ( self       ,   ## the object
-                 level = 0  ,   ## the recursion level
-                 lst   = [] ) : ## the major properties  
-    """
-    The helper function for narcissic self-print of sequences  & algorithms 
-    @param self  the object to be inspected
-    @param level the recursion level
-    @param lst   the list of major properties/attributes 
-    @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-    @date 2008-08-06
-    
-    """
-    
-    if type(self) == str :
-        cfg = string2Configurable(self)
-        if cfg : self = cfg
-    if hasattr ( self , 'sequencer' ) :
-        return __enroll__ ( self.sequencer() , level )
-
-    _tab = 50
-    _indent_ = ('%-3d'%level) + level * '   ' 
-    try:     line = _indent_ + self.name ()
-    except:  line = _indent_ + ( self if type(self) == str else '<UNKNOWN>' )
-        
-    if len1(line)>( _tab-1): line +=  '\n'+ _tab*' '
-    else :                   line +=  (_tab-len1(line))*' '
-    if hasattr ( self , 'getType' ) : line +=  '%-25.25s'%self.getType()
-    else                            : line +=  '%-25.25s'%type(self)
-
-    line = prnt ( self , lst , line, l1 = _tab+25 ) + '\n'
-    
-    # use the recursion 
-    if hasattr ( self , 'Members'  ) :
-        for _m in getattr(self,'Members') : line += __enroll__ ( _m , level + 1 , lst ) 
-    if hasattr ( self , '_algos'   ) :
-        for _m in getattr(self,'_algos')  : line += __enroll__ ( _m , level + 1 , lst ) 
-
-    from StrippingConf.StrippingLine import StrippingLine
-    
-    if type(self) is StrippingLine :
-        for i in [ 'Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale' ] :
-            if hasattr(self,i) : line += __enroll__( getattr(self,i), level + 1, lst )
-
-    return line
 
 
 

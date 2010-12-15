@@ -185,7 +185,6 @@ def makeDefault(name) :
     from Configurables import OfflineVertexFitter
     Bs2MuMuNoMuID = CombineParticles("StripBs2MuMuNoMuID")
     Bs2MuMuNoMuID.DecayDescriptor = "B_s0 -> mu+ mu-"
-    Bs2MuMuNoMuID.InputLocations = ["Phys/StdNoPIDsMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuID.addTool( OfflineVertexFitter() )
     Bs2MuMuNoMuID.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -222,7 +221,6 @@ def makeBs2mmWide(name) :
     from Configurables import OfflineVertexFitter
     Bs2MuMuWideMass = CombineParticles("StripBs2MuMuWideMass")
     Bs2MuMuWideMass.DecayDescriptor = "B_s0 -> mu+ mu-"
-    Bs2MuMuWideMass.InputLocations = ["Phys/StdLooseMuons"]
     Bs2MuMuWideMass.addTool( OfflineVertexFitter() )
     Bs2MuMuWideMass.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
@@ -263,7 +261,6 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     from Configurables import OfflineVertexFitter
     Bs2MuMuNoMuIDLoose = CombineParticles("StripBs2MuMuNoMuIDLoose")
     Bs2MuMuNoMuIDLoose.DecayDescriptor = "B_s0 -> mu+ mu-"
-    Bs2MuMuNoMuIDLoose.InputLocations = ["Phys/StdNoPIDsMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuIDLoose.addTool( OfflineVertexFitter() )
     Bs2MuMuNoMuIDLoose.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -303,7 +300,6 @@ def makeDetachedJPsi(name) :
     from Configurables import OfflineVertexFitter
     DetachedJPsi = CombineParticles("StripDetachedJPsi")
     DetachedJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-    DetachedJPsi.InputLocations = ["Phys/StdLooseMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     DetachedJPsi.addTool( OfflineVertexFitter() )
     DetachedJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -340,7 +336,6 @@ def makeDetachedJPsiLoose(name) :
     from Configurables import OfflineVertexFitter
     DetachedJPsiLoose = CombineParticles("StripDetachedJPsiLoose")
     DetachedJPsiLoose.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-    DetachedJPsiLoose.InputLocations = ["Phys/StdLooseMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     DetachedJPsiLoose.addTool( OfflineVertexFitter() )
     DetachedJPsiLoose.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -377,7 +372,6 @@ def makePromptJPsi(name) :
     from Configurables import OfflineVertexFitter
     PromptJPsi = CombineParticles("StripPromptJPsi")
     PromptJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-    PromptJPsi.InputLocations = ["Phys/StdLooseMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     PromptJPsi.addTool( OfflineVertexFitter() )
     PromptJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )

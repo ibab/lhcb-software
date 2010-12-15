@@ -88,7 +88,6 @@ def makeDefault(name) :
     from Configurables import OfflineVertexFitter
     Detached4mu = CombineParticles("StripDetached4mu")
     Detached4mu.DecayDescriptor = "B_s0 -> mu+ mu- mu+ mu-"
-    Detached4mu.InputLocations = ["Phys/StdLooseMuons"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Detached4mu.addTool( OfflineVertexFitter() )
     Detached4mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
