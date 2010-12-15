@@ -6,6 +6,23 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r9>2010-12-16 LbcomSys v9r9</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r8
+
+- Development release for MC 2010 simulation
+
+- Packages updated: HltDAQ v2r5, VeloTools v4r0
+
+- In Hlt/HltDAQ v2r5
+  . PropertyConfigSvc: add possibility to apply transformations on properties
+                       just before pushing them into the JobOptionsSvc
+   . Add ANNSvc, removed from HltInterfaces
+
+- In Velo/VeloTools v4r0
+  . Move VeloClusterPosition tool moved to Rec project, Tr/TrackTools package
+    as it is no longer needed in Boole, all the monitoring related to it has also
+    been moved to the Rec project (VeloRecMonitors package)
+  . Clean up dependencies in requirements as result of above move.
 
 </PRE><H1><A NAME=v9r8>2010-12-06 LbcomSys v9r8</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r7

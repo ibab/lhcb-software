@@ -1,5 +1,5 @@
 package LbcomSys
-version           v9r8
+version           v9r9
 
 branches doc cmt tests
 
@@ -18,7 +18,7 @@ use CaloTools         v6r0    Calo      # Olivier Deschamps
 use DAQMonitors       v1r2    DAQ       # Olivier Deschamps
 
 # HLT
-use HltDAQ            v2r4    Hlt       # Tomasz Skwarnicki
+use HltDAQ            v2r5    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r2p1 L0        # Olivier Deschamps, Patrick Robbe
@@ -57,7 +57,7 @@ use VeloAlgorithms    v5r3    Velo      # Tomasz Szumlak
 use VeloAssociators   v2r4    Velo      # Tomasz Szumlak
 use VeloDAQ           v6r0p1  Velo      # Kurt Rinnert
 use VeloSimulation    v3r8    Velo      # Tomasz Szumlak
-use VeloTools         v3r5    Velo      # Tomasz Szumlak
+use VeloTools         v4r0    Velo      # Tomasz Szumlak
 
 # VeloPix
 use VeloPixDAQ        v1r3    VeloPix   # Marcin Kucharczyk
