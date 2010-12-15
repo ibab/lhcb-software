@@ -23,6 +23,7 @@ The head of this package is now set up to include changes for 2011 production
     has been reconstructed
   . #114361: Remove 2010 MC CK theta smearing
   . #114423: Add ExpertProtoMoni sequence to expert monitoring
+  . #114631: New tuning of VeloCluster error parameterization
 
 - Changes to example options
   . In COLLISION10-Beam3500GeV-VeloClosed-MagDown.py use a more recent raw file,
