@@ -25,7 +25,9 @@ jpsi.Code = "ALL"
 # get DoD muons
 #
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
-from Configurables import SelDSTWriter
+#from Configurables import SelDSTWriter
+from DSTWriters.__dev__.Configuration import SelDSTWriter
+from DSTWriters.__dev__.microdstelements import CloneMCInfo
 
 MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu')
 
@@ -64,9 +66,9 @@ for i in MassRanges :
     selections += [SeqJpsi]
     
 dstWriter = SelDSTWriter("JpsiDSTWriter_"+name,
-                         SelectionSequences = selections,
-                         SaveCandidates = True,
-                         CopyMCTruth = True)
+                         SelectionSequences = selections)
+
+dstWriter.MicroDSTElements['default'] += [CloneMCInfo()]
 
 seq = dstWriter.sequence()
 
