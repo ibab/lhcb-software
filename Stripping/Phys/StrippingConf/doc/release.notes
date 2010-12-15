@@ -6,6 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-11-25 - Juan Palacios
+ - tests/test_strippingline.py
+  . Adapt to new locations from selection objects. Remove outputSelection() 
+    tests.
+
+! 2010-11-25 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
   . Use simpler method for constructing flat list of algorithms from a selection object.
 
