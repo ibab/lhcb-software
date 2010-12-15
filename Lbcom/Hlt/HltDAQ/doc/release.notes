@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r5 2010-12-15 =========================
 ! 2010-12-14 - Gerhard Raven
  - PropertyConfigSvc: add possibility to apply transformations on properties just before 
    pushing them into the JobOptionsSrc
@@ -166,3 +167,4 @@
    They need to be in LBCOM library like this one. Also move all Writers here.
 
  
+!========================= HltDAQ v2r5 2010-12-15 =========================
