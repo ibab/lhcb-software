@@ -37,7 +37,9 @@
 
 // Relations
 #include "Relations/Relation1D.h"
-//#include "Relations/RelationWeighted1D.h"
+
+// RichDet
+#include "RichDet/DeRichSystem.h"
 
 // local
 #include "RichG4HitCollName.h"
@@ -51,7 +53,7 @@
  *  @date   2005-12-06
  */
 
-class GetMCRichInfoBase : public RichAlgBase
+class GetMCRichInfoBase : public Rich::AlgBase
 {
 
 public:
@@ -119,6 +121,16 @@ protected:
     return "/Event/MC/Rich/RichG4HitToMCRichHitRelation";
   }
 
+  /// Get on demand the DeRichSystem detector element
+  inline const DeRichSystem * deRichSystem() const
+  {
+    if ( !m_deRichSys ) 
+    { 
+      m_deRichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem ); 
+    }
+    return m_deRichSys;
+  }
+
 private:
 
   /// Fill collection data
@@ -142,6 +154,7 @@ private:
   std::vector<int> m_colRange;                           ///< Collection data
   std::vector<bool> m_RICHes;                            ///< The RICH detectors to create data objects for
   G4HitTable * m_relationTable;                          ///< G4 hit to MCRichHit relation table
+  mutable DeRichSystem * m_deRichSys;                    ///< Pointer to DeRichSystem object
 
 protected:
 

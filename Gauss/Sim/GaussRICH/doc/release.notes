@@ -4,8 +4,14 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2010-12-15 - Chris Jones
+ - Update GetMCRichHitsAlg to specifically check with DeRichSystem if the HPD
+   associated to each hit is active, and only to make persistent hits for those
+   which are.
+
 !========================= GaussRICH v11r2 2010-12-12 ========================
-!2010-12-02  - Sajan Easo
+
+! 2010-12-02  - Sajan Easo
  - Add the capability to smear the hit location smearing to match the real data
    which has misalignments. This can be activated in Rich.opts. The default in
    the C++ code is to switch this off, but in Rich.opts it is now switch on.
@@ -20,8 +26,8 @@
    amount of scintillation photons.  
 
 ! 2010-11-13 - Chris Jones
- + Remove usage of G4cout from RichG4GeomProp. Use Gaudi MsgStream instead.
- + Fix compilation warning in RichG4Hit on SLC5.
+ - Remove usage of G4cout from RichG4GeomProp. Use Gaudi MsgStream instead.
+ - Fix compilation warning in RichG4Hit on SLC5.
 
 !========================= GaussRICH v11r1 2010-07-09 ========================
 ! 2010-06-11 - Sajan EASO

@@ -130,6 +130,29 @@ StatusCode GetMCRichHitsAlg::execute()
         const Rich::DetectorType rich = g4hit->detectorType();
         if ( !richIsActive(rich) ) { continue; }
 
+        // Hit position
+        const Gaudi::XYZPoint hitPosition(g4hit->GetGlobalPos());
+
+        // get sensitive detector identifier from det elem
+        const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(hitPosition) );
+        if ( !detID.isValid() )
+        {
+          std::ostringstream mess;
+          mess << "Invalid RichSmartID returned for silicon point " << hitPosition;
+          Warning( mess.str() );
+          continue;
+        }
+
+        // Check HPD is active. If not, skip making any MCRichHits for it.
+        const RichSmartID hpdID = detID.hpdID();
+        if ( !deRichSystem()->hpdIsActive(hpdID) )
+        {
+          std::ostringstream mess;
+          mess << "Inactive HPD skipped " << hpdID;
+          Warning( mess.str(), StatusCode::SUCCESS, 1 );
+          continue;
+        }
+
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
         // add to container
@@ -138,8 +161,11 @@ StatusCode GetMCRichHitsAlg::execute()
         // store relation between G4 hit and this MCRichHit
         relationTable->relate( g4hit, mchit );
 
+        // Fill sensitive det ID into hit
+        mchit->setSensDetID( detID );
+
         // hit position
-        mchit->setEntry( Gaudi::XYZPoint(g4hit->GetGlobalPos()) );
+        mchit->setEntry( hitPosition );
 
         // energy deposited
         mchit->setEnergy( g4hit->GetEdep() );
@@ -195,8 +221,7 @@ StatusCode GetMCRichHitsAlg::execute()
         mchit->setHpdSiBackscatter( g4hit->ElectronBackScatterFlag() );
 
         // Photon produced by Scintilation process 
-        mchit->setRadScintillation   ( ( g4hit-> PhotonSourceProcessInfo()) == 2 );
-        
+        mchit->setRadScintillation( g4hit->isScintillation() );        
 
         // HPD reflections
         mchit->setHpdReflQWPC   ( g4hit->isHpdQwPCRefl()     );
@@ -207,21 +232,6 @@ StatusCode GetMCRichHitsAlg::execute()
         mchit->setHpdReflKovar  ( g4hit->isHpdKovarRefl()    );
         mchit->setHpdReflKapton ( g4hit->isHpdKaptonRefl()   );
         mchit->setHpdReflPCQW   ( g4hit->isHpdPCQwRefl()     );
-
-
-        // get sensitive detector identifier from det elem
-        const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
-        if ( !detID.isValid() )
-        {
-          std::ostringstream mess;
-          mess << "Invalid RichSmartID returned for silicon point " << mchit->entry();
-          Warning( mess.str() );
-        }
-        else
-        {
-          // Fill value into hit
-          mchit->setSensDetID( detID );
-        }
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
         RichG4Hit* nonconstg4hit = const_cast<RichG4Hit*>(g4hit);  
@@ -255,7 +265,7 @@ StatusCode GetMCRichHitsAlg::execute()
           if ( mchit->nitrogenCK()       ) ++m_nitroHits[rich];
           if ( mchit->aeroFilterCK()     ) ++m_aeroFilterHits[rich];
           if ( mchit->hpdSiBackscatter() ) ++m_siBackScatt[rich];
-          if ( mchit->radScintillation()    ) ++m_scintillationHits[rich];
+          if ( mchit->radScintillation() ) ++m_scintillationHits[rich];
           if ( mchit->chargedTrack()     ) ++m_ctkHits[rich];
           if ( mchit->hpdReflection()    )  
           {
@@ -295,12 +305,6 @@ StatusCode GetMCRichHitsAlg::execute()
       } // end loop on hits in the collection
 
     } // end loop on collections
-
-    // Verify that all hits are stored for output.
-    if ( hits->size() != totalSize )
-    {
-      return Error("MCRichHits and RichG4HitCollection have different sizes !");
-    }
 
   }
   else

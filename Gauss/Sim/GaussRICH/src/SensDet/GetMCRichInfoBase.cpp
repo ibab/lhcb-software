@@ -15,13 +15,14 @@
 //=============================================================================
 GetMCRichInfoBase::GetMCRichInfoBase( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : RichAlgBase               ( name , pSvcLocator )
+  : Rich::AlgBase             ( name , pSvcLocator )
   , m_gigaSvc                 ( NULL )
   , m_gigaKineCnvSvc          ( NULL )
   , m_RichG4HitCollectionName ( NULL )
   , m_colRange                ( 2 )
   , m_RICHes                  ( Rich::NRiches, true )
   , m_relationTable           ( NULL )
+  , m_deRichSys               ( NULL )
 {
   declareProperty( "GiGaService",    m_gigaSvcName = "GiGa" );
   declareProperty( "KineCnvService", m_kineSvcName = IGiGaCnvSvcLocation::Kine );
@@ -33,7 +34,7 @@ GetMCRichInfoBase::GetMCRichInfoBase( const std::string& name,
 //=============================================================================
 StatusCode GetMCRichInfoBase::initialize()
 {
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
   // initialise
@@ -94,7 +95,7 @@ StatusCode GetMCRichInfoBase::sysExecute()
   // reset pointers
   m_relationTable = NULL;
   // execute
-  return RichAlgBase::sysExecute();
+  return Rich::AlgBase::sysExecute();
 } 
 
 //=============================================================================
@@ -105,7 +106,7 @@ StatusCode GetMCRichInfoBase::finalize()
   // clean up
   delete m_RichG4HitCollectionName;
   // return
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 
 //=============================================================================

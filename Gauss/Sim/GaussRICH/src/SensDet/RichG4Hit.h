@@ -365,37 +365,44 @@ public:
 
   // HPD Reflections
 
-  bool isHpdQwPCRefl() const
+  inline bool isHpdQwPCRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdQwPCRefl()) );
   }
-  bool isHpdChromiumRefl() const
+  inline bool isHpdChromiumRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdChromiumRefl()) );
   }
-  bool isHpdAirQwRefl() const
+  inline bool isHpdAirQwRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdAirQwRefl()) );
   }
-  bool isHpdAirPCRefl() const
+  inline bool isHpdAirPCRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdAirPCRefl()) );
   }
-  bool isHpdSiliconRefl() const
+  inline bool isHpdSiliconRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdSiliconRefl()) );
   }
-  bool isHpdKovarRefl() const
+  inline bool isHpdKovarRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdKovarRefl()) );
   }
-  bool isHpdKaptonRefl() const
+  inline bool isHpdKaptonRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdKaptonRefl()) );
   }
-  bool isHpdPCQwRefl() const
+  inline bool isHpdPCQwRefl() const
   {
     return ( 0 != reflectionBits().test(hpdRefFlags()->HpdPCQwRefl()) );
+  }
+
+  // scintillation
+
+  inline bool isScintillation() const
+  {
+    return this->PhotonSourceProcessInfo() == 2;
   }
 
 private:
