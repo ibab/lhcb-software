@@ -1,3 +1,8 @@
+2010-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* tests/SetupProjectTest.py: fixed usage of the temporary directory in order to match the
+	changes in SetupProject.
+
 2010-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: removed useless import of mkdtemp.

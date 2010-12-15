@@ -3,6 +3,7 @@
 import unittest
 
 from LbConfiguration import SetupProject
+from tempfile import mkdtemp
 #from SetupProject import *
 
 import os, sys, re, datetime
@@ -17,7 +18,7 @@ else:
 def search_regexp(output,regexp):
     #print output
     return re.compile(regexp).search(output) is not None
-        
+
 def search_string(output,s):
     #print output
     return output.find(s) >= 0
@@ -53,20 +54,9 @@ class SetupProjectTestCase(unittest.TestCase):
         if main:
             self.assert_(project_configured(output,project,version))
 
-    def test_010_mkdtemp(self):
-        """mkdtemp
-        """
-        self.assert_('mkdtemp' in dir(SetupProject))
-        tmp_dir = SetupProject.mkdtemp()
-        self.assert_(os.path.exists(tmp_dir))
-        self.assert_(os.path.isdir(tmp_dir))
-        self.assert_(not os.path.islink(tmp_dir))
-        os.rmdir(tmp_dir)
-    
     def test_020_mkstemp(self):
         """mkstemp
         """
-        self.assert_('mkdtemp' in dir(SetupProject))
         fd, name = SetupProject.mkstemp()
         self.assert_(os.path.exists(name))
         self.assert_(os.path.isfile(name))
@@ -77,13 +67,13 @@ class SetupProjectTestCase(unittest.TestCase):
     def test_030_removeall(self):
         """removeall
         """
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         os.mkdir(os.path.join(tmp_dir,"test1"),0700)
         open(os.path.join(tmp_dir,"test2"),"w")
         open(os.path.join(tmp_dir,"test1","test2"),"w")
-        
+
         SetupProject.removeall(tmp_dir)
-        
+
         self.assert_(not os.path.exists(tmp_dir))
 
     def test_040_gen_script(self):
@@ -100,7 +90,7 @@ class SetupProjectTestCase(unittest.TestCase):
         expected = {}
         expected['csh'] = 'setenv A "1"\nsetenv B "2"\nunsetenv C\n'.split('\n')
         expected['csh'].sort()
-        
+
         expected['sh'] = 'export A="1"\nexport B="2"\nunset C\n'.split('\n')
         expected['sh'].sort()
 
@@ -119,7 +109,7 @@ class SetupProjectTestCase(unittest.TestCase):
             res.sort()
             self.assertEquals(expected[sh],res)
             del newenv
-        
+
         self.assertRaises(RuntimeError,
                           SetupProject.TemporaryEnvironment().gen_script,
                               "abc")
@@ -139,19 +129,19 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(parse_opts_stdout(['-h']) == "")
         self.assert_(parse_opts_stdout(['--version']) == "")
         self.assert_(parse_opts_stdout(['--dummy']) == "")
-        
+
         exp = "error: no such option: --dummy"
         x = parse_opts(["--dummy"]).strip()
         self.assert_(x.endswith(exp))
-        
+
         sp = SetupProject.SetupProject()
         sp.parse_args(["--shell=csh"])
         self.assertEquals('csh',sp.shell)
-        
+
         exp = "error: --mktemp cannot be used at the same time as --output or --append"
         x = parse_opts(["--mktemp","--output","xyz"]).strip()
         self.assert_(x.endswith(exp))
-        
+
         ### All Options
         sp = SetupProject.SetupProject()
         # This is needed because the check of LHCBDEV is done during the parsing of the options
@@ -188,7 +178,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assertEquals(sp.use,["abc v1","abc v2"])
         self.assertEquals(sp.tag_add,["A1","A2"])
         self.assert_(sp.keep_CMTPROJECTPATH)
-        
+
         sp = SetupProject.SetupProject()
         sp.parse_args([])
         self.assert_(not sp.disable_CASTOR)
@@ -204,13 +194,13 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assertEquals(sp.use,[])
         self.assertEquals(sp.tag_add,[])
         self.assert_(not sp.keep_CMTPROJECTPATH)
-        
+
         sp = SetupProject.SetupProject()
         sp.parse_args(['--debug',"--mktemp","--site=CERN"])
         self.assertEquals(sp.loglevel, SetupProject.DEBUG)
         self.assert_(sp.mktemp)
         self.assertEquals(sp.site_externals, []) # ["CASTOR"]
-        
+
         ### Ordering
         sp = SetupProject.SetupProject()
         sp.parse_args(['Project',
@@ -219,7 +209,7 @@ class SetupProjectTestCase(unittest.TestCase):
                        'v123r456',
                        'ROOT','-v','1.2.3.4',
                        ])
-        
+
         ### External version
         sp = SetupProject.SetupProject()
         sp.parse_args(['Project','ROOT','-v','1.2.3.4'])
@@ -229,18 +219,18 @@ class SetupProjectTestCase(unittest.TestCase):
         sp = SetupProject.SetupProject()
         sp.parse_args(['--dev-dir=MyDevDir'])
         self.assert_(sp.dev_dirs)
-        
+
         days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
         sp.parse_args(['--nightly', 'lhcb-patches'])
         self.assert_(len(sp.dev_dirs) >= 1 and ("lhcb-patches/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
-        
+
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
         sp.parse_args(['--nightly', 'lhcb-patches', 'tUe'])
         self.assert_(len(sp.dev_dirs) >= 1 and "lhcb-patches/Tue" in  sp.dev_dirs[0])
-        
+
         # runtime dependencies on projects
         sp = SetupProject.SetupProject()
         sp.parse_args(['--runtime-project', 'Test', 'v1r1',
@@ -254,13 +244,13 @@ class SetupProjectTestCase(unittest.TestCase):
     def test_060_main(self):
         """main (wrong options)
         """
-        
+
         x = os.popen4(launcher + " LbConfiguration.SetupProject")
         self.assert_(x[1].read().startswith("You have to specify a project"))
-        
+
         x = os.popen4(launcher + " LbConfiguration.SetupProject Brunel")
         self.assert_(x[1].read().startswith("Internal error: shell type not specified"))
-        
+
         x = os.popen4(launcher + " LbConfiguration.SetupProject Brunel --shell=xyz")
         self.assert_(x[1].readlines()[-1].startswith("SetupProject.py: error: option --shell: invalid choice:"))
 
@@ -274,7 +264,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(proj_not_found(s))
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         try:
             if "CMTPROJECTPATH" not in env:
                 env['CMTPROJECTPATH'] = env['LHCBPROJECTPATH']
@@ -285,7 +275,7 @@ class SetupProjectTestCase(unittest.TestCase):
             self.assert_(proj_not_found(s))
         finally:
             SetupProject.removeall(tmp_dir)
-            
+
     def test_067_main(self):
         """main (wrong case in project name)
         """
@@ -300,12 +290,12 @@ class SetupProjectTestCase(unittest.TestCase):
     def test_070_main(self):
         """main (Brunel w/o ext)
         """
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
-        
+
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
         s = x[1].read()
-        
+
         self._check_env(s, "Brunel", v)
 
     def test_075_main(self):
@@ -315,12 +305,12 @@ class SetupProjectTestCase(unittest.TestCase):
         env = SetupProject.TemporaryEnvironment()
         if 'User_release_area' in env:
             del env['User_release_area']
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
 
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
         s = x[1].read()
-        
+
         self._check_env(s, "Brunel", v)
 
     def test_077_main(self):
@@ -331,73 +321,73 @@ class SetupProjectTestCase(unittest.TestCase):
         for n in [ 'CMTPATH', 'CMTPROJECTPATH' ]:
             if n in env:
                 del env[n]
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
 
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
         s = x[1].read()
 
         self._check_env(s, "Brunel", v)
-        
+
     def test_080_main(self):
         """main (Brunel with ext)
         """
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
-        
+
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel mysql") % _shell)
         s = x[1].read()
-        
+
         self._check_env(s, "Brunel", v)
-        
+
         self.assert_(s.find('MYSQLROOT') >=0)
 
     def test_085_main(self):
         """main (Brunel with runtime project, Online)
         """
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
         vo = SetupProject.makeProjectInfo("Online").version
-        
+
         # --ignore-missing is needed to avoid problems with incompatible versions of Online ad Brunel
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --ignore-missing --runtime-project Online") % _shell)
         s = x[1].read()
-        
+
         self._check_env(s, "Brunel", v)
         self._check_env(s, "Online", vo, withsys = False, main = False)
 
     def test_090_main(self):
         """main (Brunel with wrong ext)
         """
-        
+
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel NoPack") % _shell)
         s = x[1].read()
         self.assert_(s.find("Warning: package NoPack v* LCG_Interfaces not found")>=0)
         self.assert_(s.endswith("Could not produce the environment, check the arguments\n"))
-        
+
 
     def test_100_main(self):
         """main (Brunel with wrong ext ignored)
         """
-        
+
         v = SetupProject.makeProjectInfo("Brunel").version
-        
+
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing Brunel NoPack") % _shell)
         s = x[1].read()
         self.assert_(s.find("Warning: package NoPack v* LCG_Interfaces not found")>=0)
         self.assert_(project_configured(s,"Brunel",v))
-        
+
     def test_110_main(self):
         """main (Brunel list versions)
         """
-        
+
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --list-versions Brunel") % _shell)
         l = x[1].read().split('\n')
         l = [ x for x in l if x != '' ]
         self.assert_( len(l) > 0 )
         for v in l:
             self.assert_(re.match('echo v([0-9]+)r([0-9]+)(p([0-9]+))?',v) is not None)
-        
+
     def test_120_main(self):
         """main (Brunel explicit version)
         """
@@ -408,9 +398,9 @@ class SetupProjectTestCase(unittest.TestCase):
             v = l[0]
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel %s")%(_shell,v))
         s = x[1].read()
-        
+
         self._check_env(s,"Brunel",v)
-        
+
     def test_122_main(self):
         """main (Brunel explicit version wildcard)
         """
@@ -419,32 +409,32 @@ class SetupProjectTestCase(unittest.TestCase):
         pattern = v[:v.find('r')+1] + '*'
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel %s")%(_shell,pattern))
         s = x[1].read()
-        
+
         self._check_env(s,"Brunel",v)
-        
+
     def test_125_main(self):
         """main (Brunel with runtime project Online, explicit versions)
         """
-        
+
         l = get_all_versions("Brunel")
         if len(l) > 1:
             v = l[-2]
         else:
             v = l[0]
-        
+
         l = get_all_versions("Online")
         if len(l) > 1:
             vo = l[-2]
         else:
             vo = l[0]
-            
+
         # --ignore-missing is needed to avoid problems with incompatible versions of Online ad Brunel
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing Brunel %s --runtime-project Online %s")%(_shell,v,vo))
         s = x[1].read()
-        
+
         self._check_env(s,"Brunel",v)
         self._check_env(s, "Online", vo, withsys = False, main = False)
-        
+
     def test_130_main(self):
         """main (Brunel explicit bad version)
         """
@@ -452,7 +442,7 @@ class SetupProjectTestCase(unittest.TestCase):
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel v999r999p999") % _shell)
         s = x[1].read()
         self.assert_(s.endswith("Try with --list-versions.\n"))
-        
+
     def test_135_main(self):
         """main (Brunel + runtime project Online, explicit bad version)
         """
@@ -460,7 +450,7 @@ class SetupProjectTestCase(unittest.TestCase):
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --runtime-project Online v999r999p999") % _shell)
         s = x[1].read()
         self.assert_(s.endswith("Try with --list-versions.\n"))
-        
+
     def test_140_main(self):
         """main (Brunel update $LHCBHOME/project/logfiles)
         """
@@ -468,13 +458,13 @@ class SetupProjectTestCase(unittest.TestCase):
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
             s = x[1].read()
             self.assert_(s.find('touch %s/BRUNEL'%os.path.join(os.environ['LHCBHOME'],'project','logfiles'))>=0)
-        
+
     def test_150_main(self):
         """main (Brunel ask version bad)
         """
 
         l = get_all_versions("Brunel")
-        
+
         x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --ask") % _shell)
 
         self.assertEquals("Please enter",x[2].read(12))
@@ -487,16 +477,16 @@ class SetupProjectTestCase(unittest.TestCase):
         # bad answer
         x[0].write("v999r999p999\n")
         x[0].flush()
-        
+
         s = "Version 'v999r999p999' not valid!\nPlease enter"
         self.assertEquals(s,x[2].read(len(s)))
-        
+
     def test_160_main(self):
         """main (Brunel ask version quit)
         """
 
         l = get_all_versions("Brunel")
-        
+
         x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --ask") % _shell)
 
         self.assertEquals("Please enter",x[2].read(12))
@@ -510,13 +500,13 @@ class SetupProjectTestCase(unittest.TestCase):
         x[0].write("q\n")
         x[0].flush()
         self.assertEquals('Quit\n',x[2].read())
-        
+
     def test_170_main(self):
         """main (Brunel ask default)
         """
 
         l = get_all_versions("Brunel")
-        
+
         x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --ask") % _shell)
 
         self.assertEquals("Please enter",x[2].read(12))
@@ -529,7 +519,7 @@ class SetupProjectTestCase(unittest.TestCase):
         # quit
         x[0].write("\n")
         x[0].flush()
-        
+
         self.assert_(project_configured(x[1].read(),"Brunel",l[-1]))
 
     def test_180_main(self):
@@ -537,12 +527,12 @@ class SetupProjectTestCase(unittest.TestCase):
         """
 
         l = get_all_versions("Brunel")
-        
+
         if len(l) > 1:
             v = l[-2]
         else:
             v = l[0]
-        
+
         x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s Brunel --ask") % _shell)
 
         self.assertEquals("Please enter",x[2].read(12))
@@ -555,7 +545,7 @@ class SetupProjectTestCase(unittest.TestCase):
         # quit
         x[0].write(v+"\n")
         x[0].flush()
-        
+
         self.assert_(project_configured(x[1].read(),"Brunel",v))
 
     # disabled because of change in behavior of SetupProject.py
@@ -567,7 +557,7 @@ class SetupProjectTestCase(unittest.TestCase):
         env['LHCBPROJECTPATH'] = os.pathsep.join([env['Gaudi_release_area'],env['LCG_release_area']])
         if 'CMTPROJECTPATH' in env:
             del env['CMTPROJECTPATH']
-        
+
         l = get_all_versions("Brunel")
         if len(l) > 1:
             v = l[-2]
@@ -575,9 +565,9 @@ class SetupProjectTestCase(unittest.TestCase):
             v = l[0]
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel %s")%(_shell,v))
         s = x[1].read()
-        
+
         self._check_env(s,"Brunel",v)
-        
+
     def test_200_main(self):
         """main (Brunel in user release area)
         """
@@ -585,7 +575,7 @@ class SetupProjectTestCase(unittest.TestCase):
         v = l[-1]
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         try:
             # prepare fake user release area
             os.makedirs(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt"))
@@ -599,7 +589,7 @@ class SetupProjectTestCase(unittest.TestCase):
             s = x[1].read().strip()
 
             self._check_env(s,"Brunel",v)
-            
+
             if "win" in os.environ["CMTCONFIG"]:
                 pat = re.compile('set PATH=(.*)')
             elif "osx" in os.environ["CMTCONFIG"]:
@@ -614,7 +604,7 @@ class SetupProjectTestCase(unittest.TestCase):
             #self.assert_(proj_not_found(s))
         finally:
             SetupProject.removeall(tmp_dir)
-    
+
     def test_205_main(self):
         """main (Brunel in user release area, ignored)
         """
@@ -622,20 +612,20 @@ class SetupProjectTestCase(unittest.TestCase):
         v = l[-1]
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         try:
             # prepare fake user release area
             os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v))
             os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt"))
             open(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt","project.cmt"),"w").\
                 write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
-            
+
             env['User_release_area'] = tmp_dir
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --no-auto-override --no-user-area Brunel %s")%(_shell,v))
             s = x[1].read().strip()
-            
+
             self._check_env(s,"Brunel",v)
-            
+
             if os.environ["CMTCONFIG"][0:3] != "win":
                 m = re.compile('LIBRARY_PATH=(.*)').search(s)
             else:
@@ -646,7 +636,7 @@ class SetupProjectTestCase(unittest.TestCase):
                             os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea")) < 0)
         finally:
             SetupProject.removeall(tmp_dir)
-    
+
     def test_210_main(self):
         """main (Brunel in LHCBDEV)
         """
@@ -654,7 +644,7 @@ class SetupProjectTestCase(unittest.TestCase):
         v = l[-1]
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         try:
             # prepare fake dev area
             dsys = os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','BrunelSys','v999r999','cmt')
@@ -668,21 +658,21 @@ version v999r999
 """)
             os.mkdir(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt'))
             open(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt','project.cmt'),"w").write("project Brunel\n")
-            
+
             env['LHCBDEV'] = tmp_dir
             # get it from LHCBDEV
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing --dev Brunel") % _shell)
             s = x[1].read()
             self.assert_(project_configured(s,"Brunel","v999r999"))
-            
+
             # get it from offical releases
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
             s = x[1].read()
             self.assert_(project_configured(s,"Brunel",v))
-            
+
         finally:
             SetupProject.removeall(tmp_dir)
-    
+
     def test_300_main(self):
         """main (Build-time environment expl. version)
         """
@@ -690,7 +680,7 @@ version v999r999
         v = l[-1]
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
             x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel %s")%(_shell,v))
@@ -700,7 +690,7 @@ version v999r999
             self.assert_(re.search(r"use\s+BRUNEL\s+BRUNEL_%s" % v,open(proj_cmt).read()) is not None)
         finally:
             SetupProject.removeall(tmp_dir)
-            
+
     def test_310_main(self):
         """main (Build-time environment, no version/ask)
         """
@@ -708,33 +698,33 @@ version v999r999
         v = l[-1]
 
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
             x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel") % _shell)
             self.assertEquals("Please enter",x[2].read(12))
-        
+
             # read up to the prompt
             while x[2].read(1) != ':':
                 pass
             x[2].read(1)
-            
+
             x[0].write("\n")
             x[0].flush()
-        
+
             s = x[1].read()
             proj_cmt = os.path.join(tmp_dir,"Brunel_%s" % v, "cmt", "project.cmt")
             self.assert_(os.path.isfile(proj_cmt))
             self.assert_(re.search(r"use\s+BRUNEL\s+BRUNEL_%s" % v,open(proj_cmt).read()) is not None)
         finally:
             SetupProject.removeall(tmp_dir)
-            
+
     def test_320_main(self):
         """main (Build-time environment, bad version)
         """
-        
+
         env = SetupProject.TemporaryEnvironment()
-        tmp_dir = SetupProject.mkdtemp()
+        tmp_dir = mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel v999r999") % _shell)
@@ -746,7 +736,7 @@ version v999r999
 
     def _createFakeProject(self, name = "TestProject", version = None, tmp_dir = None):
         if not tmp_dir:
-            tmp_dir = SetupProject.mkdtemp()
+            tmp_dir = mkdtemp()
         old = os.getcwd()
         os.chdir(tmp_dir)
         if version is None:
@@ -762,11 +752,11 @@ version v999r999
         x[1].read()
         os.chdir(old)
         return tmp_dir
-        
+
     def test_400_main(self):
         """main (no-version project, no explicit version)
         """
-        
+
         env = SetupProject.TemporaryEnvironment()
         tmp_dir = self._createFakeProject()
         self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
@@ -777,26 +767,26 @@ version v999r999
             self.assert_(project_configured(s, "TestProject", None))
         finally:
             SetupProject.removeall(tmp_dir)
-        
+
     def test_410_main(self):
         """main (no-version project, ask version)
         """
-        
+
         env = SetupProject.TemporaryEnvironment()
         tmp_dir = self._createFakeProject()
         self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
         env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
-        
+
         try:
             x = os.popen3((launcher + " LbConfiguration.SetupProject --shell=%s --no-auto-override --disable-CASTOR TestProject --ask") % _shell)
-    
+
             self.assertEquals("Please enter",x[2].read(12))
-    
+
             # read up to the prompt
             while x[2].read(1) != ':':
                 pass
             x[2].read(1) # eat the space char
-    
+
             # quit
             x[0].write("None\n")
             x[0].flush()
