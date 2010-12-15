@@ -78,8 +78,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
         _f0 = CombineParticles("f02PiPi")
         _f0.InputLocations = [ "Phys/StdLoosePions" ]
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
-#        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & ((ADOCACHI2CUT(30., ''))" % self.getProps()
-        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV)" % self.getProps()
+        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & (ADOCACHI2CUT(30., ''))" % self.getProps()
         _f0.DaughtersCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)> %(PionMINIPCHI2)s)" 
                                       "& (PIDK < %(PionPIDK)s) & (PIDmu < %(PionPIDmu)s)" \
                                       "& (TRCHI2DOF < %(PionTRCHI2)s)" % self.getProps() }
