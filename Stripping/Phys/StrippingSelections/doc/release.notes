@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-12-15 - Juan Palacios
+ - Disable broken cut in StrippingBs2Jpsif0.
  - Remove dependency of StrippingV0ForPID on Hlt.
  - Remove unnecessary use of InputLocations in StrippingBs2MuMuLines, StrippingB2MuMuMuMuLines.
 
