@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-12-15 - Chris Jones
+ - Add new methods to DeRichSystem to provide lists of all HPDs, either active
+   or inactive, in both RichSmartID and HardwareID formats.
+
 !========================= RichDet v15r2 2010-11-27 =========================
 ! 2010-11-12 - Chris Jones
  - Add new methods to DeRichSystem to :-

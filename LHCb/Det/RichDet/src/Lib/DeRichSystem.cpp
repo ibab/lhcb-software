@@ -102,8 +102,8 @@ StatusCode DeRichSystem::buildHPDMappings()
   // clear maps and containers
   m_soft2hard.clear();
   m_hard2soft.clear();
-  m_smartIDs.clear();
-  m_hardIDs.clear();
+  m_activeHPDSmartIDs.clear();
+  m_activeHPDHardIDs.clear();
   m_l1IDs.clear();
   m_smartid2L1.clear();
   m_hardid2L1.clear();
@@ -117,8 +117,10 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_l0hard2soft.clear();
   m_smartid2copyNumber.clear();
   m_copyNumber2smartid.clear();
-  m_inactiveSmartIDs.clear();
-  m_inactiveHardIDs.clear();
+  m_inactiveHPDSmartIDs.clear();
+  m_inactiveHPDHardIDs.clear();
+  m_allHPDSmartIDs.clear();
+  m_allHPDHardIDs.clear();
   m_L1HardIDAndInputToHPDHardID.clear();
   m_firstL1CopyN = 0;
 
@@ -246,16 +248,32 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
     if ( std::find( inacts.begin(), inacts.end(), *iHard ) == inacts.end() )
     {
-      m_smartIDs.push_back(hpdID);
-      m_hardIDs.push_back(hardID);
+      m_activeHPDSmartIDs.push_back ( hpdID  );
+      m_activeHPDHardIDs.push_back  ( hardID );
     }
-    m_soft2hard[hpdID]  = hardID;
-    m_hard2soft[hardID] = hpdID;
-    m_l0hard2soft[L0ID] = hpdID;
-    m_smartid2L0[hpdID] = L0ID;
-    m_hardid2L0[hardID] = L0ID;
-    m_smartid2L1[hpdID] = L1ID;
-    m_hardid2L1[hardID] = L1ID;
+    else
+    {
+      if ( !hpdIsActive(hardID) )
+      {
+        error() << "HPD " << hpdID << " hardID " << hardID
+                << " listed twice in INACTIVE HPD list !" << endmsg;
+      }
+      else
+      {
+        m_inactiveHPDHardIDs.push_back  ( hardID );
+        m_inactiveHPDSmartIDs.push_back ( hpdID  );
+        debug() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
+      }
+    }
+    m_allHPDHardIDs.push_back(hardID);
+    m_allHPDSmartIDs.push_back(hpdID);
+    m_soft2hard[hpdID]    = hardID;
+    m_hard2soft[hardID]   = hpdID;
+    m_l0hard2soft[L0ID]   = hpdID;
+    m_smartid2L0[hpdID]   = L0ID;
+    m_hardid2L0[hardID]   = L0ID;
+    m_smartid2L1[hpdID]   = L1ID;
+    m_hardid2L1[hardID]   = L1ID;
     m_smartid2L1In[hpdID] = L1IN;
     m_hardid2L1In[hardID] = L1IN;
     m_smartid2copyNumber[hpdID] = copyN;
@@ -268,6 +286,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       m_l1ToRich[L1ID] = rich;
       m_l1IDs.push_back( L1ID );
     }
+
     // debug printout
     verbose() << "HPD RichSmartID " << (int)hpdID << " " << hpdID
               << " HPDhardID " << hardID << " L0 " << L0ID << " L1 board " << L1ID
@@ -275,26 +294,13 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
   } // end loop over conditions data
 
-  // build inative lists
-  for ( CondData::const_iterator iInAct = inacts.begin(); iInAct != inacts.end(); ++iInAct )
-  {
-    const Rich::DAQ::HPDHardwareID hardID ( *iInAct );
-    const LHCb::RichSmartID        hpdID  ( richSmartID(hardID) );
-    if ( !hpdIsActive(hardID) )
-    {
-      error() << "HPD " << hpdID << " hardID " << hardID
-              << " listed twice in INACTIVE HPD list !" << endmsg;
-    }
-    else
-    {
-      m_inactiveHardIDs.push_back  ( hardID );
-      m_inactiveSmartIDs.push_back ( hpdID  );
-      debug() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
-    }
-  }
-  // Sort, to help speed up std::find later on
-  std::stable_sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
-  std::stable_sort( m_inactiveSmartIDs.begin(), m_inactiveSmartIDs.end() );
+  // Sort HPD lists
+  std::stable_sort( m_activeHPDHardIDs.begin(),    m_activeHPDHardIDs.end()  );
+  std::stable_sort( m_activeHPDSmartIDs.begin(),   m_activeHPDSmartIDs.end() );
+  std::stable_sort( m_inactiveHPDHardIDs.begin(),  m_inactiveHPDHardIDs.end()  );
+  std::stable_sort( m_inactiveHPDSmartIDs.begin(), m_inactiveHPDSmartIDs.end() );
+  std::stable_sort( m_allHPDHardIDs.begin(),       m_allHPDHardIDs.end()  );
+  std::stable_sort( m_allHPDSmartIDs.begin(),      m_allHPDSmartIDs.end() );
 
   // L1 mapping
   if ( numbers->exists("Level1LogicalToHardwareIDMap") )

@@ -105,8 +105,17 @@ public:
   /// Returns a list of all inactive HPDs identified by their RichSmartID
   const LHCb::RichSmartID::Vector & inactiveHPDRichSmartIDs() const;
 
+  /// Returns a list of all (active and inactive) HPDs identified by their RichSmartID
+  const LHCb::RichSmartID::Vector & allHPDRichSmartIDs() const;
+
   /// Returns a list of all active HPDs identified by their hardware IDs
   const Rich::DAQ::HPDHardwareIDs & activeHPDHardwareIDs() const;
+
+  /// Returns a list of all inactive HPDs identified by their hardware IDs
+  const Rich::DAQ::HPDHardwareIDs & inactiveHPDHardwareIDs() const;
+
+  /// Returns a list of all (active and inactive) HPDs identified by their hardware IDs
+  const Rich::DAQ::HPDHardwareIDs & allHPDHardwareIDs() const;
 
   /** Ask whether a given HPD is currently active or dead
    *  @param id The RichSmartID for the HPD
@@ -225,7 +234,6 @@ public:
    */
   std::string getDeHPDLocation(const LHCb::RichSmartID smartID) const;
 
-
 private: // methods
 
   /// Update methods for HPD mappings
@@ -249,16 +257,22 @@ private: // data
   L0HardToSoft m_l0hard2soft; ///< Level0 Hardware ID to software ID map
 
   /// List of all active HPD RichSmartIDs
-  LHCb::RichSmartID::Vector m_smartIDs;
+  LHCb::RichSmartID::Vector m_activeHPDSmartIDs;
 
   /// List of all inactive HPD RichSmartIDs
-  LHCb::RichSmartID::Vector m_inactiveSmartIDs;
+  LHCb::RichSmartID::Vector m_inactiveHPDSmartIDs;
+
+  /// List of all HPD RichSmartIDs
+  LHCb::RichSmartID::Vector m_allHPDSmartIDs;
 
   /// List of all active HPD hardware IDs
-  Rich::DAQ::HPDHardwareIDs m_hardIDs;
+  Rich::DAQ::HPDHardwareIDs m_activeHPDHardIDs;
 
   /// List of all inactive HPD hardware IDs
-  Rich::DAQ::HPDHardwareIDs m_inactiveHardIDs;
+  Rich::DAQ::HPDHardwareIDs m_inactiveHPDHardIDs;
+
+  /// List of all inactive HPD hardware IDs
+  Rich::DAQ::HPDHardwareIDs m_allHPDHardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level0ID > SmartIDToL0;
@@ -342,7 +356,7 @@ private: // data
 //=========================================================================
 inline const LHCb::RichSmartID::Vector& DeRichSystem::activeHPDRichSmartIDs() const
 {
-  return m_smartIDs;
+  return m_activeHPDSmartIDs;
 }
 
 //=========================================================================
@@ -350,7 +364,15 @@ inline const LHCb::RichSmartID::Vector& DeRichSystem::activeHPDRichSmartIDs() co
 //=========================================================================
 inline const LHCb::RichSmartID::Vector& DeRichSystem::inactiveHPDRichSmartIDs() const
 {
-  return m_inactiveSmartIDs;
+  return m_inactiveHPDSmartIDs;
+}
+
+//=========================================================================
+// allHPDRichSmartIDs
+//=========================================================================
+inline const LHCb::RichSmartID::Vector& DeRichSystem::allHPDRichSmartIDs() const
+{
+  return m_allHPDSmartIDs;
 }
 
 //=========================================================================
@@ -358,7 +380,23 @@ inline const LHCb::RichSmartID::Vector& DeRichSystem::inactiveHPDRichSmartIDs() 
 //=========================================================================
 inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::activeHPDHardwareIDs() const
 {
-  return m_hardIDs;
+  return m_activeHPDHardIDs;
+}
+
+//=========================================================================
+// activeHPDHardwareIDs
+//=========================================================================
+inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::inactiveHPDHardwareIDs() const
+{
+  return m_inactiveHPDHardIDs;
+}
+
+//=========================================================================
+// allHPDHardwareIDs
+//=========================================================================
+inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allHPDHardwareIDs() const
+{
+  return m_allHPDHardIDs; 
 }
 
 //=========================================================================
@@ -367,10 +405,10 @@ inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::activeHPDHardwareIDs() con
 inline bool DeRichSystem::hpdIsActive( const LHCb::RichSmartID id ) const
 {
   // is this id in the inactive list
-  return ( m_inactiveSmartIDs.empty() ||
-           std::find( m_inactiveSmartIDs.begin(),
-                      m_inactiveSmartIDs.end(),
-                      id.hpdID() ) == m_inactiveSmartIDs.end() );
+  return ( m_inactiveHPDSmartIDs.empty() ||
+           std::find( m_inactiveHPDSmartIDs.begin(),
+                      m_inactiveHPDSmartIDs.end(),
+                      id.hpdID() ) == m_inactiveHPDSmartIDs.end() );
 }
 
 //=========================================================================
@@ -379,10 +417,10 @@ inline bool DeRichSystem::hpdIsActive( const LHCb::RichSmartID id ) const
 inline bool DeRichSystem::hpdIsActive( const Rich::DAQ::HPDHardwareID id ) const
 {
   // is this id in the inactive list
-  return ( m_inactiveHardIDs.empty() ||
-           std::find( m_inactiveHardIDs.begin(),
-                      m_inactiveHardIDs.end(),
-                      id ) == m_inactiveHardIDs.end() );
+  return ( m_inactiveHPDHardIDs.empty() ||
+           std::find( m_inactiveHPDHardIDs.begin(),
+                      m_inactiveHPDHardIDs.end(),
+                      id ) == m_inactiveHPDHardIDs.end() );
 }
 
 //=========================================================================
