@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-12-15 - Juan Palacios
+ - python/DSTWriters/MicroDSTWriter.py
+  . Remove trailing "/Particles" from data locations.
+
 ! 2010-12-14 - Juan Palacios
  - python/DSTWriters/__dev__/dstwriterutils.py
   . Buf fix: trailing "/Particles" wasn't being removed properly.

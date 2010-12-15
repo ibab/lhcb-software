@@ -58,11 +58,14 @@ class MicroDSTWriter(BaseDSTWriter) :
     def dataLocations(self, sel, extension) :
         loc = []
         for output in sel.outputLocations() :
-            location = output+"/"+extension
-            location = location.replace("//", "/")
+
+            location = output
+            if location.endswith('/Particles') :
+                location = location[ : location.rfind('/Particles') ]
+            location = (location+"/"+extension).replace("//", "/")
             if location.endswith('/') :
-                 location = location[:len(location)-1]
-            loc += [location]
+                location = location[ : -1 ]
+            loc += [location]            
         return loc
 
     def outputPrefix(self, seq) :
