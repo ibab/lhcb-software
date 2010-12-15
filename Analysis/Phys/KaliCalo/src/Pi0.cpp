@@ -122,7 +122,7 @@ namespace Kali
       ToolMap _combiners ;
       _combiners[""] = "MomentumCombiner" ;
       StatusCode sc = setProperty ( "ParticleCombiners" , _combiners ) ;
-      Assert ( sc.isSuccess() , "Unable to set the proper ParticleComber" );
+      Assert ( sc.isSuccess() , "Unable to set the proper ParticleCombiner" );
       //
     }
     /// virtual & protected destructor
@@ -472,6 +472,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     _p1.SetPx ( -_p1.Px () ) ;
     _p1.SetPy ( -_p1.Py () ) ;
     const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
+    LHCb::Particle * fakePi0 = pi0.particle()->clone() ;
+    fakePi0->setMomentum(fake) ;
     
     const bool good    =             ( m12      < 335 * MeV ) ;
     bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
@@ -505,8 +507,10 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     if ( 0 == cluster2 ) { continue ; }                    // CONTINUE
     
     /// apply pi0-cut:
-    if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
-    
+    //if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
+    good    = good    && m_pi0Cut ( pi0 )     ;
+    goodBkg = goodBkg && m_pi0Cut ( fakePi0 ) ;
+    if ( (!good) && (!goodBkg) ) { continue ; }            // CONTINUE
     
     const Gaudi::LorentzVector mom1 = g1->momentum() ;
     const Gaudi::LorentzVector mom2 = g2->momentum() ;
@@ -515,7 +519,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
 
     // apply cut on 3x3 SPD
-    if ( spdCut < spd1e3x3 ) { continue ; }                 // CONITUNE 
+    if ( spdCut < spd1e3x3 ) { continue ; }                 // CONTINUE 
     if ( spdCut < spd2e3x3 ) { continue ; }                 // CONTINUE 
     
     // pi0-veto ?

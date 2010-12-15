@@ -7,6 +7,10 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-12-15 - Albert Puig
+  - Bugfixed application of pi0 LoKi cut (it must be applied both on
+    signal and background)
+
 ! 2010-12-02 - Daria Savrina
   - Added /Event/Rec/Header to the fmDST item list for the correct work of time
     decoder during the second pass. Replaced the test fmDSTs with the new ones
