@@ -13,27 +13,30 @@ cgitb.enable()
 from CondDBUI.Admin.TagStatusDB import *
 
 def print_html(response):
-    print "Content-Type: text/html\n"
+    print "Content-Type: text/plain\n"
     print response
 
-def convert_response_2_txt(response):
-    lines = []
+def convert_response_2_txt(response, tier):
+    lines = ["CondDB tags status at %s" % tier]
+    url = "http://" + os.environ["SERVER_NAME"] + os.environ["SCRIPT_NAME"] \
+        + "?request=good-bad-ugly&tier=" + tier
     for key in response.keys():
-        if key == 'CHECK': color = 'red'
-        elif key == 'GOOD': color = 'green'
-        elif key == 'HalfWay': color = 'yellow'
-        else: color = '-'
+        color = {"GOOD": 'green',
+                 "BAD": 'red',
+                 "Checking...": 'yellow'}.get(key, "white")
 
         for partition in response[key].keys():
             if len(response[key][partition]) != 0:
                 for tag_dict in response[key][partition]:
-                    lines.append("%s %s/%s %s %s -\n"
-                                 %(str(datetime.now()).split('.')[0].replace(':','-'),
+                    lines.append("%s %s/%s %s %s %s"
+                                 %(datetime.utcnow().strftime("%Y-%m-%d %H-%M-%S"),
                                    partition,
                                    str(tag_dict['TagName']),
                                    key,
-                                   color))
-    return reduce(lambda x,y:x+y, lines)
+                                   color,
+                                   url
+                                   ))
+    return "\n".join(lines)
 
 def main():
     FormData = cgi.FieldStorage()
@@ -60,7 +63,7 @@ def main():
     good_tags_info = {}
     response = {}
 
-    # Process the request
+    # Process a request
     if request == "bad":
         tags_to_check = {"DDDB":db.getTagsToCheck(tier,u"DDDB"),
                          "LHCBCOND":db.getTagsToCheck(tier,u"LHCBCOND"),
@@ -68,26 +71,26 @@ def main():
 
         for key in tags_to_check.keys():
             tags_to_check_info[key] = [i.dumpInfo() for i in tags_to_check[key]]
-        response["CHECK"] = tags_to_check_info
+        response["BAD"] = tags_to_check_info
 
         print_html(pickle.dumps(response))
 
     elif request == "good-bad-ugly":
-        # Tags which must be checked
-        tags_to_check = {"DDDB":db.getTagsToCheck(tier,u"DDDB",withLatency=True),
-                         "LHCBCOND":db.getTagsToCheck(tier,u"LHCBCOND",withLatency=True),
-                         "SIMCOND":db.getTagsToCheck(tier,u"SIMCOND",withLatency=True)}
+        # Tags which must be re-checked
+        tags_to_check = {"DDDB":db.getTagsToCheck(tier,u"DDDB",includeTagsBeingChecked = False),
+                         "LHCBCOND":db.getTagsToCheck(tier,u"LHCBCOND",includeTagsBeingChecked = False),
+                         "SIMCOND":db.getTagsToCheck(tier,u"SIMCOND",includeTagsBeingChecked = False)}
         for key in tags_to_check.keys():
             tags_to_check_info[key] = [i.dumpInfo() for i in tags_to_check[key]]
-        response["CHECK"] = tags_to_check_info
+        response["BAD"] = tags_to_check_info
 
-        # Tags which are probably under verification now
-        tags_being_verified = {"DDDB":db.getHalfWayTags(tier,u"DDDB"),
-                               "LHCBCOND":db.getHalfWayTags(tier,u"LHCBCOND"),
-                               "SIMCOND":db.getHalfWayTags(tier,u"SIMCOND")}
+        # Tags which are probably under verification right now
+        tags_being_verified = {"DDDB":db.getTagsBeingChecked(tier,u"DDDB"),
+                               "LHCBCOND":db.getTagsBeingChecked(tier,u"LHCBCOND"),
+                               "SIMCOND":db.getTagsBeingChecked(tier,u"SIMCOND")}
         for key in tags_being_verified.keys():
             tags_being_verified_info[key] = [i.dumpInfo() for i in tags_being_verified[key]]
-        response["HalfWay"] = tags_being_verified_info
+        response["Checking..."] = tags_being_verified_info
 
         # Good tags
         good_tags = {"DDDB":db.getGoodTags(tier,u"DDDB"),
@@ -97,7 +100,7 @@ def main():
             good_tags_info[key] = [i.dumpInfo() for i in good_tags[key]]
         response["GOOD"] = good_tags_info
 
-        print_html(convert_response_2_txt(response))
+        print_html(convert_response_2_txt(response, tier))
     else:
         print_html(pickle.dumps(None))
 

@@ -1,2 +1,2 @@
 CREATE TABLE TAGS (id INTEGER PRIMARY KEY, name VARCHAR, partition VARCHAR, creation_time DATETIME, hash_sum VARCHAR, hash_alg VARCHAR, UNIQUE (name, partition));
-CREATE TABLE TAGS_STATUS (tag_id INTEGER, site VARCHAR, last_ok_time DATETIME, PRIMARY KEY (tag_id, site), FOREIGN KEY(tag_id) REFERENCES tags(id));
+CREATE TABLE TAGS_STATUS (tag_id INTEGER, site VARCHAR, time DATETIME, status VARCHAR, PRIMARY KEY (tag_id, site), FOREIGN KEY(tag_id) REFERENCES tags(id));

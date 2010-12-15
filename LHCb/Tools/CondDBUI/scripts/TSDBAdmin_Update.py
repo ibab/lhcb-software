@@ -55,6 +55,10 @@ def main():
     ###########################################################################
     # Update TSDB
     ###########################################################################
+    # Open TSDB.db and commit new tag there
+    from storm.tracer import debug
+    debug(True, stream=sys.stdout)
+
     # Load tag entries to be updated
     f = open(file)
     tags_to_update = pickle.load(f)
@@ -65,7 +69,8 @@ def main():
     for partition in tags_to_update.keys():
         for tag in tags_to_update[partition]:
             tag_status = db.getTagStatus(tag["TagName"],unicode(partition),tag["Site"])
-            tag_status.last_ok_time = tag["Last_ok_time"]
+            tag_status.time = tag["Time"]
+            tag_status.status = tag["Status"]
 
     db.write()
     log.info("Done!")

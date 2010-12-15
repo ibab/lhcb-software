@@ -5,7 +5,12 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!========================= CondDBUI v3r7 2010-12-14 =========================
+!========================= CondDBUI v3r7 2010-12-15 =========================
+! 2010-12-15 - Illya Shapoval
+ - TSDB scheme is extended to be more generic (all classes machninery is
+   modified accordingly). A lot of tune up to start automatization of the TSDB
+   monitoring system.
+
 ! 2010-12-13 - Illya Shapoval
  - Further improvements for TagStatus monitoring system.
 
