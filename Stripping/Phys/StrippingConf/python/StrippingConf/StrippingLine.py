@@ -96,14 +96,10 @@ class bindMembers (object) :
     """
     Simple class to represent a set of StrippingMembers which are bound to a line
     """
-    __slots__ = ('_members','_outputsel', '_outputloc')
-
-    def outputSelection( self ) : 
-        return self._outputsel
+    __slots__ = ('_members', '_outputloc')
 
     def outputLocation( self ) : 
         return self._outputloc
-
 
     def members( self ) :         
         # remove (downstream) duplicates
@@ -118,7 +114,6 @@ class bindMembers (object) :
     		self._getOutputLocation( i )
         elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
-                self._outputsel = alg.OutputSelection
                 self._outputloc = "Phys/"+alg.OutputSelection
         elif hasattr ( type(alg) , 'OutputLocation' ) :
             if hasattr ( alg , 'OutputLocation' ) :
@@ -126,7 +121,6 @@ class bindMembers (object) :
         else :
 #            self._outputsel = None
 #            self._outputloc = None
-            self._outputsel = alg.name()
             self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
@@ -145,14 +139,12 @@ class bindMembers (object) :
         members = gaudiSeq.Members
         self._members += members
         loc = seq.outputLocations()[0]
-        self._outputsel = loc
         self._outputloc = loc
 
     def _handleSelectionType(self, line, sel) :
         members = flatAlgorithmList(sel)
         self._members += members
         loc = sel.outputLocation()
-        self._outputsel = loc
         self._outputloc = loc
 
     def _handle_Selection(self, line, alg) :
@@ -169,7 +161,6 @@ class bindMembers (object) :
         sel = alg.clone(line)
         self._members += [sel.algorithm()]
         loc = sel.outputLocation()
-        self._outputsel = loc
         self._outputloc = loc
 
     def _handle_AutomaticData(self, line, alg) :
@@ -182,7 +173,6 @@ class bindMembers (object) :
         self._members  += alg.members()
         # sometimes, we want to ignore this... 
         # add a flag to allow to skip this (when set to None?)
-        if alg.outputSelection() : self._outputsel = alg.outputSelection()
         if alg.outputLocation() : self._outputloc = alg.outputLocation()
 
     def _handle_StrippingMember( self, line, alg ) :
@@ -192,7 +182,6 @@ class bindMembers (object) :
 
     def __init__( self, line, algos ) :
         self._members = []
-        self._outputsel = None
         self._outputloc = None
         for alg in algos:
             # dispatch according to the type of alg...
@@ -390,7 +379,6 @@ class StrippingLine(object):
         # bind members to line
         _boundMembers    = bindMembers( line, algos )
         self._members   += _boundMembers.members()
-        self._outputsel  = _boundMembers.outputSelection()
         self._outputloc  = _boundMembers.outputLocation()
 
         # register into the local storage of all created Lines
@@ -510,18 +498,6 @@ class StrippingLine(object):
     #  @endcode    
     def configurable ( self ) :
         return self._configurable
-
-    def outputSelection ( self ) :
-        """
-        Get the name of last outputSelection of the line
-
-        >>> line = ...
-        >>> selection = line.outputSelection()
-        
-        """
-#        if not self._outputsel :
-#            raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
-        return self._outputsel
 
     def outputLocation ( self ) :
         """

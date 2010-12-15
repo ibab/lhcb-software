@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-12-15 - Anton Poluektov 
+ - python/StrippingConf/StrippingLine.py
+  . Remove outputSelection()
+
 ! 2010-11-25 - Juan Palacios
  - tests/test_strippingline.py
   . Adapt to new locations from selection objects. Remove outputSelection() 
