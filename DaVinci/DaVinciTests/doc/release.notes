@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-12-15 Juan Palacios
+ - Update davinci.tagging.test_tag reference table.
  - tests/options/DVTestWriteDst.py
   . Use DSTWriters.__dev__.Configurables.SelDSTWriter, since old one doesn't
     know about changes to selection's outputLocations().
