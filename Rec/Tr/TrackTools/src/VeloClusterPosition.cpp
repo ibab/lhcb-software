@@ -97,7 +97,7 @@ StatusCode VeloClusterPosition::initialize()
 
   if("DC06"==m_paraClass){
 
-    info()<< " --> Using error parametrisation class DC06 " <<endmsg;
+    info()<< " --> Using DC06 tuning of the error parametrisation " <<endmsg;
     //parameters for calculation error determined in projected angle bins
     m_p0Values+=-2.5, -3.591, -3.430, -4.112, -4.964, -5.705, -6.301, -7.065,
       -7.353, -7.055, -6.168, -4.814, -3.075, -1.067, 0.798, 2.753,
@@ -108,7 +108,7 @@ StatusCode VeloClusterPosition::initialize()
 
   }else if("MC10"==m_paraClass){
 
-    info()<< " --> Using error parametrisation class MC10 " <<endmsg;    
+    info()<< " --> Using 2010 tuning of the error parametrisation " <<endmsg;    
     //parameters determined for different pitch bins error type 3
     m_p0Values+=-1.81, -0.478, -1.68, -2.35, -3.85, -4.65, -5.09, -5.81, -6.18,
                 -5.29, -4.01, -2.91, -1.09, 1.17, 2.98, 4.61, 6.16 , 8.57, 9.91,
@@ -119,7 +119,7 @@ StatusCode VeloClusterPosition::initialize()
 
   }else{
 
-     return ( Error(" --> Unknows para class! ", StatusCode::FAILURE) );
+     return ( Error(" --> Unknows parametrisation! ", StatusCode::FAILURE) );
 
   }
 
@@ -131,8 +131,8 @@ StatusCode VeloClusterPosition::initialize()
     ++it;
     ++value;
   }
-  info()<< " proj angles size: " << m_projAngles.size() << " para size: " << m_p0Values.size() <<endmsg;
-  
+  debug()<< " Parametrisation proj angles bins: " << m_projAngles.size() <<endmsg;
+
   assert(m_projAngles.size()==m_p0Values.size());
   assert(m_projAngles.size()==m_p1Values.size());
 

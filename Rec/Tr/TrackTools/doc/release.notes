@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-12-14 - Tomasz Szumlak
+ - rewording of the printouts in initialize (still VeloClusterPosition tool) 
+
 ! 2010-12-13 - Tomasz Szumlak
  - fix in requirements - add new dependency needed for interpolation
    in the VeloClusterPosition tool
