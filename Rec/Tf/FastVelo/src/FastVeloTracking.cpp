@@ -306,7 +306,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
         }
 
         if ( 0 != m_debugTool && matchKey( *c0 ) ) {
-          info() << format( "4:   rMin %8.3f rMax %8.3f ", rMin, rMax );
+          info() << format( "4.%d: rMin %8.3f rMax %8.3f ", iCase, rMin, rMax );
           printCoord ( *c0,   "St0 " );
         }
         // loop over clusters in fourth station finding a possible match
@@ -324,19 +324,20 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           double rPitch = sensor1->rPitch( rPred );
           double tol    = m_rMatchTol4 * rPitch;
           if ( 0 != m_debugTool && matchKey( *c0 ) && matchKey( *c3) ) {
-            info() << format( "4:    rPred %8.3f (tol %6.3f)", rPred, tol );
+            info() << format( "4.%d:  rPred %8.3f (tol %6.3f)", iCase, rPred, tol );
             printCoord ( *c3,   "St3 " );
           }
 
           FastVeloHit* ok1 = closestHit( sensor1->hits(zone) , rPred, tol );
           if ( NULL == ok1 ) continue;
 
+
           //== Sensor 2
           rPred  = r0 + zFrac2 * (r3-r0);
           rPitch = sensor2->rPitch( rPred );
           tol    = m_rMatchTol4 * rPitch;
           if (  0 != m_debugTool && matchKey( *c0 ) && matchKey( *c3) ) {
-            info() << format( "4:    rPred %8.3f  (tol %6.3f)", rPred, tol );
+            info() << format( "4.%d:  rPred %8.3f (tol %6.3f)", iCase, rPred, tol );
             printCoord ( ok1,   "St1 " );
           }
           FastVeloHit* ok2 = closestHit( sensor2->hits(zone), rPred, tol );

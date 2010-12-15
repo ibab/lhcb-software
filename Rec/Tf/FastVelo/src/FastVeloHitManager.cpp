@@ -50,7 +50,6 @@ StatusCode FastVeloHitManager::initialize() {
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
   
   // make sure we are up-to-date on populated VELO stations
-  registerCondition( m_velo->geometry(), &FastVeloHitManager::rebuildGeometry );
   registerCondition( (*(m_velo->leftSensorsBegin()))->geometry(), &FastVeloHitManager::rebuildGeometry );
   registerCondition( (*(m_velo->rightSensorsBegin()))->geometry(), &FastVeloHitManager::rebuildGeometry );
   
@@ -83,7 +82,7 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
   double xBeam = .5 * ( m_velo->halfBoxOffset(0).x() + m_velo->halfBoxOffset(1).x() );
   double yBeam = .5 * ( m_velo->halfBoxOffset(0).y() + m_velo->halfBoxOffset(1).y() );
   
-  info() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam 
+  debug() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam 
          << " opening " << m_velo->halfBoxOffset(1).x()  - m_velo->halfBoxOffset(0).x() << endmsg;
 
   for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
@@ -197,7 +196,7 @@ void FastVeloHitManager::buildFastHits ( ) {
   if ( m_eventReady ) return;
   m_eventReady = true;
 
-  //== As the updateManagerSvc seems to not obey, force an update when opening has changed
+  //== Force an update when opening has changed if not automatically done
   if ( m_lastXOffsetRight != m_velo->halfBoxOffset(0).x() ||
        m_lastXOffsetLeft  != m_velo->halfBoxOffset(1).x()    ) {
     info() << "Velo has moved, rebuild geometry" << endmsg;
@@ -277,7 +276,7 @@ FastVeloHit* FastVeloHitManager::hitByLHCbID ( LHCb::LHCbID id) {
 }
 
 //=========================================================================
-//  Clear teh used flags so that a second instance of Fast Velo will start properly
+//  Clear the used flags so that a second instance of Fast Velo will start properly
 //=========================================================================
 void FastVeloHitManager::resetUsedFlags ( ) {
   for ( std::vector<FastVeloHit>::iterator itH = m_pool.begin(); m_nextInPool != itH; ++itH ) {

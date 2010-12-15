@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-12-15 - Olivier Callot
+ - Remove the info message when updating the geometry in FastVeloHitManager
+ - Minor changes in the debug message of FastVeloTracking
+
 !========================== FastVelo v1r0 2010-12-08 ===================
 ! 2010-12-06 - Olivier Callot
  - New option ZVertexMaxBck=1200 to allow tracks from beam2-gas. No time penalty but a 
