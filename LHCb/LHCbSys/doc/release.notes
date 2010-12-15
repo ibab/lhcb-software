@@ -37,6 +37,9 @@ This version uses Gaudi v21r11 and LCG_58f
     add "logging"-functors & functions 
 
 - In Tools/CondDBUI v3r7
+  . TSDB scheme is extended to be more generic (all classes machninery is
+    modified accordingly). A lot of tune up to start automatization of the TSDB
+    monitoring system.
   . Further improvements for TagStatus monitoring system.
   . Added two new scripts and TSDB backup table scheme:
     + scripts/TSDBAdmin_Commit.py:
