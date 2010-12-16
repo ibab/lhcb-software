@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v3r35 2010-12-16 =========================
 ! 2010-12-03 - Chris Jones
  - Retire the package Rich/RichMarkovRingFinder.
  - Remove the 2010 MC smearing options. Will be done by Gauss instead.
