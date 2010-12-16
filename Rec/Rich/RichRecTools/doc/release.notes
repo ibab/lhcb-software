@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r14 2010-12-16 =========================
 ! 2010-11-21 - Chris Jones
  - Extend PIDPlotsTool to use new extraPlots Configuration option
 
