@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v4r1p2 2010-12-16 =========================
 ! 2010-12-16 - Marco Cattaneo
  - Fix dependencies to avoid LumiAlgsGenConfUser being executed before
    LumiAlgsConf (fixes WARNING: Configurable class LumiMergeFSR not in database)
