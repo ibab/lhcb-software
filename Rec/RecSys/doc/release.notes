@@ -5,11 +5,19 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-! 2010-12-03 - Chris Jones
- - Retire the package Rich/RichMarkovRingFinder
 
-! 2010-11-08 - Rob Lambert
- - Add back in Tf/FastVelo to Rec
+</PRE><H1><A NAME=v10r6>2010-12-16 RecSys v10r6</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r8
+
+- Development releases for 2011. 
+
+- Many changes in underlying packages, new LHCb version
+- Retire the package Rich/RichMarkovRingFinder
+- Added Tf/FastVelo, a faster/better Velo reconstruction sequence for 2011
+
+For details on the individual packages, you can now see:
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v10r6
 
 </PRE><H1><A NAME=v10r5p3>2010-11-23 RecSys v10r5p3</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6p1
