@@ -495,8 +495,6 @@ unsigned int DisplVertices::GetNbVeloTracks(){
 //=============================================================================
 bool DisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
 
-  cout<<"Entering IsAPoint"<<endl;
-
   IGeometryInfo* start = 0;
   ILVolume::PVolumePath path ;
   
@@ -514,8 +512,6 @@ bool DisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
     debug()<<"Found "<< size <<" physical volumes related to point "
            << pos <<endmsg;
 
-  cout<<"Still here !"<<endl;
-  
   const IPVolume* pvlast = 0;
   if ( !path.empty() ) { pvlast = path.back(); }
   
