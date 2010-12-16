@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           PatChecker
-version           v3r8
+version           v3r9
 
 #============================================================================
 # Structure, i.e. directories to process. 

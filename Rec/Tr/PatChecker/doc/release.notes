@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r9 2010-12-16 =========================
 ! 2010-11-25 - Olivier Callot
  - In PrimaryVertexChecker, allow missing containers of tracks or vertices
 
