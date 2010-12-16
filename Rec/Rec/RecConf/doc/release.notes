@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v1r4 2010-12-16 =========================
 ! 2010-12-06 - Chris Jones
  - Retire the RICH Markov ring finder package
 
