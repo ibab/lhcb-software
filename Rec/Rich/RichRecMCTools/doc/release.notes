@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecMCTools v2r28 2010-12-16 =========================
 ! 2010-11-22 - Chris Jones
  - Remove temporary hack in last commit, neccessary for use in a minimal patch
    release.
