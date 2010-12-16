@@ -475,8 +475,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     LHCb::Particle * fakePi0 = pi0.particle()->clone() ;
     fakePi0->setMomentum(fake) ;
     
-    const bool good    =             ( m12      < 335 * MeV ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
+    bool good    =             ( m12      < 335 * MeV ) ;
+    bool goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
     
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
