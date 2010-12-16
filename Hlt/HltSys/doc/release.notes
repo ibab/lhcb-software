@@ -6,6 +6,10 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+</PRE><H1><A NAME=v12r1>2010-12-16 HltSys v12r1/A></H1><PRE>
+! 2010-12-16 - Gerhard Raven
+ - Move forward to latest LHCb development software stack
+
 </PRE><H1><A NAME=v12r0>2010-12-08 HltSys v12r0/A></H1><PRE>
 ! 2010-12-08 - Gerhard Raven
  - Hlt development release intended for  preparation of 2011 running
