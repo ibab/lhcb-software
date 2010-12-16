@@ -119,6 +119,7 @@ class Selection(object) :
             self.requiredSelections.append(sel)
         self._name = name
         _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
+        _outputLocations = filter(lambda s : s != '', _outputLocations)
         _inputLocations = getattr(Algorithm, InputDataSetter)
         if len(_inputLocations) != 0 :
             if not compatibleSequences(_outputLocations,
