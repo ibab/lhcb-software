@@ -169,6 +169,9 @@ private:
 
   unsigned int GetNbVeloTracks();
   double GetSumPt( const LHCb::Particle * );
+  void   GetQPt( const LHCb::Vertex * v, double & sumpt, double & sumq, 
+                 bool weight = false );
+  double GetCharge( const LHCb::Vertex * v, bool weight = false );
   double GetRecMass( const LHCb::Particle::ConstVector & );
   double GetRecMass( const LHCb::Particle::ConstVector &, double & );
   double GetPt( const LHCb::RecVertex* RV );
