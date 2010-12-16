@@ -9,6 +9,8 @@
  - python/SelPy/selection.py
   . Remove empty strings from input location list. Selections can now accept
     data-less selection types (e.g. EventSelections) as required selections.
+  . Register Selection's name at end of __init__ method to avoid registering
+    a name before Selection is succesfully constructed.
 
 ! 2010-12-14 - Juan Palacios
  - python/SelPy/selection.py

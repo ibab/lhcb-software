@@ -109,7 +109,7 @@ class Selection(object) :
 
         if name in Selection.__used_names :
             raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
-        Selection.__used_names.append(name)
+
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
@@ -132,6 +132,8 @@ class Selection(object) :
         self._outputBranch = OutputBranch
         self._outputLocation = (self._outputBranch + '/' + self.name() + '/' + Extension).replace('//','/')
 
+        Selection.__used_names.append(name)
+        
     def name(self) :
         return self._name
 
