@@ -4,6 +4,7 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================= FastVelo v1r1 2010-12-16 =========================
 ! 2010-12-15 - Olivier Callot
  - Remove the info message when updating the geometry in FastVeloHitManager
  - Minor changes in the debug message of FastVeloTracking
