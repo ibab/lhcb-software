@@ -1,5 +1,5 @@
 package MooreSys
-version v11r0
+version v10r2p1
 branches doc cmt
 
 #=======================================================
@@ -7,6 +7,11 @@ branches doc cmt
 #=======================================================
 
 use  Moore              v11r0   Hlt
+
+use HltSettings         v4r1p1  Hlt
+use Hlt2Lines           v6r0p1  Hlt
+use LoKiNumbers         v9r3    Phys
+use HltDAQ              v2r5    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
