@@ -56,7 +56,7 @@ class MockStrippingLine(object) :
         self._sel = self._getSelection(selection, name)
         self._members = self._getMembers(self._sel)
         self._outputLocation = self._sel.outputLocation()
-        self._name = 'Stripping' + self._name
+        self._name = 'Stripping' + name
         
     def _getMembers(self, selection) :
         selTypeName = type(selection).__name__
