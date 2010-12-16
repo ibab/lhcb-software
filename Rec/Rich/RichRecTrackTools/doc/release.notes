@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r26 2010-12-16 =========================
 ! 2010-11-21 - Chris Jones
  - Update the track selector base to not print the full list of track cuts if
    the selection is NULL.
