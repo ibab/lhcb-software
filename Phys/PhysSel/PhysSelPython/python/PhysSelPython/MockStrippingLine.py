@@ -56,7 +56,8 @@ class MockStrippingLine(object) :
         self._sel = self._getSelection(selection, name)
         self._members = self._getMembers(self._sel)
         self._outputLocation = self._sel.outputLocation()
-
+        self._name = 'Stripping' + self._name
+        
     def _getMembers(self, selection) :
         selTypeName = type(selection).__name__
         return MockStrippingLine._getMemberAlgs.get(selTypeName, _getAlgoList)(selection)
@@ -64,6 +65,9 @@ class MockStrippingLine(object) :
     def _getSelection(self, selection, name) :
         selTypeName = type(selection).__name__
         return MockStrippingLine._getSelectionAlgs.get(selTypeName, lambda x : x)(selection, name)
+
+    def name(self) :
+        return self._name
     
     def outputLocation(self) :
         return self._outputLocation
@@ -74,3 +78,8 @@ class MockStrippingLine(object) :
     def selection(self) :
         return self._sel
 
+    def clone ( self , name , selection) :
+        return MockStrippingLine(name, selection)
+
+    def configurable(self) :
+        return GaudiSequencer(self._name, Members = self.members())

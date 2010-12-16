@@ -169,7 +169,7 @@ class VoidEventSelection(object) :
 
         if name in VoidEventSelection.__used_names :
             raise NameError('VoidEventSelection name ' + name + ' has already been used. Pick a new one.')
-        VoidEventSelection.__used_names.append(name)
+
         
         if configurableExists(name) :
             raise NameError('Target Configurable '+ name + ' already exists. Pick a new one.')
@@ -182,6 +182,8 @@ class VoidEventSelection(object) :
         _code = _code.replace('\"\'', '\'').replace('\'\"', '\'').replace('\'\'','\'')
         self._alg = VoidFilter(self._name,
                                Code = _code)
+
+        VoidEventSelection.__used_names.append(name)
         
     def name(self) :
         return self._name
