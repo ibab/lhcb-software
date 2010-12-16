@@ -14,7 +14,6 @@ def test_instantiate_empty_line() :
     line = StrippingLine('EmptyLine')
     assert line.name() == 'StrippingEmptyLine'
     assert line.subname() == 'EmptyLine'
-    assert line.outputSelection() == None
     assert line.isAppended() == False
     assert line.outputLocation() == None
     
@@ -23,7 +22,6 @@ def test_instantiate_from_Selection_object() :
     line = StrippingLine('SelectionLine', algos = [selection])
     assert line.name() == 'StrippingSelectionLine'
     assert line.subname() == 'SelectionLine'
-#    assert line.outputSelection() == 'Phys/SelectionLine'
     assert line.isAppended() == False
     assert line.outputLocation() == 'Phys/SelectionLine/Particles'
     
@@ -42,7 +40,6 @@ def test_filterMembers() :
     line = StrippingLine('FilterMembersTest', algos = [selection])
     assert line.name() == 'Stripping' + name
     assert line.subname() == name
-#    assert line.outputSelection() == 'Phys/FilterMembersTest'
     assert line.isAppended() == False
     assert line.outputLocation() == 'Phys/FilterMembersTest/Particles'
     stream = StrippingStream('stream', Lines = [line])
