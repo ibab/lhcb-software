@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackTools
-version           v3r35p3
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
