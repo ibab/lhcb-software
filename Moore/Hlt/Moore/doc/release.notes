@@ -2,12 +2,17 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-12-15 - Rob Lambert
+ - New compatibility tests, that Moore can run against the latest DB.
+ - Merged from the v10r2 branch
+
 !========================== Moore v11r0 2010-09-30 ===================
 ! 2010-12-08 - Gerhard Raven
  - Moore on top of Hlt v12r0
 
 ! 2010-10-10 - Gerhard Raven
  - renice Moore task when running online
+
 
 !========================== Moore v10r2 2010-09-30 ===================
 ! 2010-09-27 - Gerhard Raven
