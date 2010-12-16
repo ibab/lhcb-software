@@ -5,6 +5,7 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTracks v1r4 2010-12-16 ===================
 ! 2010-12-09 - Vanya Belyaev
 
  - add new symbol TrCOV2 to access the elements of covarinace matrix :
@@ -48,7 +49,7 @@
 ! 2010-08-31 - Vanya Belyaev
 
  - LoKiTracks/decorators.py
-    fix a bug with proer decorations of 'CutVal's
+    fix a bug with proir decorations of 'CutVal's
 
  - cmt/requirements 
     version increment to v1r1 
