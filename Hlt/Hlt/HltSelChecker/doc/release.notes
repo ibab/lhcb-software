@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v11r1p1 2010-12-16 ===================
+! 2010-??-?? - ??.?????
+ - remove Makefile from SVN
+
 !========================== HltSelChecker v11r1 2010-07-08 ===================
 ! 2010-06-15 - V. Gligorov
  - Begin update of scripts by allowing real data to be used for selections

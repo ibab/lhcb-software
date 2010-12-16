@@ -3,7 +3,7 @@
 # Maintainer : P. Koppenburg
 
 package           HltSelChecker
-version           v11r1
+version           v11r1p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
