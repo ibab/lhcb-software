@@ -46,7 +46,7 @@ if len(sys.argv)>2:
     print 'generating ' + setup
     #ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
     from LbConfiguration.SetupProject import SetupProject
-    SetupProject().main(['--dev-dir=/home/online/ONLINE','--use','OnlineSys','--runtime-project','Online','--shell=sh','--output='+setup,'Moore',version])
+    SetupProject().main(['--dev-dir=/home/online/ONLINE','--use','OnlineSys','--runtime-project','Online'] + sys.argv[3:] + [ '--shell=sh','--output='+setup,'Moore',version])
 
     print 'removing use of StripPath.sh'
     # remove call to StripPath.sh from generated SetupProject.sh
