@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackMCTools
-version           v2r29
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
