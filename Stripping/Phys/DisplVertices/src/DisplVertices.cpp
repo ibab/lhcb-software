@@ -296,7 +296,7 @@ StatusCode DisplVertices::execute(){
   }
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets, recqs;
 
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
@@ -319,10 +319,12 @@ StatusCode DisplVertices::execute(){
     double rho = (m_RCut=="FromPreyInfo")?p->info(52,-1000.):GetRFromBL(pos);
     double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
-    double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
     const Gaudi::SymMatrix3x3 & err = p->endVertex()->covMatrix();
     double errr = sqrt( err(0,0) + err(1,1) );
+    double sumpt = 0.;
+    double recq = 0.;
+    GetQPt( p->endVertex(), sumpt, recq );
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
@@ -330,7 +332,7 @@ StatusCode DisplVertices::execute(){
              <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
              << chi <<", R "<< rho <<", pos of end vtx "<< pos <<", sigmaX "
              << sqrt(err(0,0))<<", sigmaY "<< sqrt(err(1,1)) <<", sigmaZ "
-             << sqrt(err(2,2)) <<", sigmaR "<< errr ;
+             << sqrt(err(2,2)) <<", sigmaR "<< errr <<", rec charge "<< recq ;
       if(muon){
         debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
       } else { debug()<< endmsg; }
@@ -367,6 +369,7 @@ StatusCode DisplVertices::execute(){
       errx.push_back(sqrt(err(0,0))); erry.push_back(sqrt(err(1,1)));
       errz.push_back(sqrt(err(2,2)));
       sumpts.push_back(sumpt); muons.push_back(muon);
+      recqs.push_back(recq);
       double indet = 0;
       if( IsAPointInDet( p, 2 ) ) indet += 1;
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
@@ -410,6 +413,7 @@ StatusCode DisplVertices::execute(){
     tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		   "NbPrey", NbPreyMax );
+    tuple->farray( "PreyQ", recqs.begin(), recqs.end(), "NbPrey", NbPreyMax );
     tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
     tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
@@ -831,6 +835,57 @@ double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts,
   recpt = mom.Pt();
   return mom.M();
 }
+
+//=============================================================================
+// Compute charge of a vertex, possibly weighted by the momentum, and sum pt.
+//=============================================================================
+void DisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
+                              bool weight ){
+  
+  double sumqpt = 0.;
+  SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
+  for( ; ip < v->outgoingParticles().end(); ++ip ){
+    const Particle * d = ip->target() ;
+    if( d->proto() == NULL ) continue;
+    if( d->proto()->track() == NULL ) continue;
+    const Track * t = d->proto()->track();
+    sumq += t->charge();
+    sumpt += t->pt();
+    sumqpt += t->pt()*t->charge();
+  }
+  
+  if( weight ){
+    if( sumpt == 0. ) ++sumpt;
+    sumq = sumqpt/sumpt;
+  }  
+}
+
+
+//=============================================================================
+// Compute charge of a vertex, possibly weighted by the momentum
+//=============================================================================
+double DisplVertices::GetCharge( const Vertex * v, bool weight ){
+  
+  double sumqpt = 0.;
+  double sumq = 0.;
+  double sumpt = 0.;
+  SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
+  for( ; ip < v->outgoingParticles().end(); ++ip ){
+    const Particle * d = ip->target() ;
+    if( d->proto() == NULL ) continue;
+    if( d->proto()->track() == NULL ) continue;
+    const Track * t = d->proto()->track();
+    sumq += t->charge();
+    sumpt += t->pt();
+    sumqpt += t->pt()*t->charge();
+  }
+  if( weight ){
+    return (sumpt!=0. ? sumqpt/sumpt:0. );
+  } else {
+    return sumq;
+  }
+}
+
 //=============================================================================
 // Compute the sum pT of a bunch of track (daughters of a Particle)
 //=============================================================================
@@ -1166,8 +1221,10 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   if(exist<LHCb::RawEvent>(RawEventLocation::Default)){
     RawEvent* rawEvent = get<RawEvent>(RawEventLocation::Default);
     vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
-    if( find( yes.begin(), yes.end(), 46 ) != yes.end() )  Hlt1Globdec = true;
-    if( find( yes.begin(), yes.end(), 77 ) != yes.end() )  Hlt2Globdec = true;
+    unsigned int d1 = 46;
+    unsigned int d2 = 77;
+    if( find( yes.begin(), yes.end(), d1 ) != yes.end() ) Hlt1Globdec = true;
+    if( find( yes.begin(), yes.end(), d2 ) != yes.end() )  Hlt2Globdec = true;
     if( msgLevel(MSG::DEBUG) ){
       debug()<<"Firing routing bits : "<< yes << endmsg;
       debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;

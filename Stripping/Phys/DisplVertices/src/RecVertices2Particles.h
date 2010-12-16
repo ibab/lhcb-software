@@ -93,6 +93,9 @@ private:
 
   //Geometric tools
   double GetRFromBL( const Gaudi::XYZPoint& );
+  void   GetQPt( const LHCb::Vertex * v, double & sumpt, double & sumq, 
+                 bool weight = false );
+  double GetCharge( const LHCb::Vertex * v, bool weight = false );
   double GetSumPt( const LHCb::Particle * );
   double GetSumPt( const LHCb::RecVertex * );
   void   GetSumPtNbGoodTrks( const LHCb::RecVertex *, double &, int & );

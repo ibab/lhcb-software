@@ -1226,7 +1226,7 @@ bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
 StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::ConstVector & RecParts ){
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, indets, muons;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, indets, muons, recqs;
   
   Particle::ConstVector::const_iterator iend = RecParts.end();
   for( Particle::ConstVector::const_iterator is = RecParts.begin();
@@ -1237,9 +1237,11 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     Gaudi::LorentzVector mom = p->momentum();
-    double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
     const Gaudi::SymMatrix3x3 & err = p->endVertex()->covMatrix();
+    double sumpt = 0.;
+    double recq = 0.;
+    GetQPt( p->endVertex(), sumpt, recq );
 
     nboftracks.push_back( nbtrks ); chindof.push_back( chi );
     e.push_back(mom.e()); muons.push_back(muon);
@@ -1247,6 +1249,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
     errx.push_back(sqrt(err(0,0))); erry.push_back(sqrt(err(1,1)));
     errz.push_back(sqrt(err(2,2)));
+    recqs.push_back(recq);
 
     double indet = 0;
     if( IsAPointInDet( *p, 2 ) ) indet += 1;
@@ -1271,6 +1274,7 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
   tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		 "NbPrey", NbPreyMax );
+  tuple->farray( "PreyQ", recqs.begin(), recqs.end(), "NbPrey", NbPreyMax );
   tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
   tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
   tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
@@ -1510,6 +1514,56 @@ double RecVertices2Particles::GetRFromBL( const Gaudi::XYZPoint& p ){
   //return distance to the intersection point 
   x -= p.x(); y -= p.y();
   return sqrt( x*x + y*y );
+}
+
+//=============================================================================
+// Compute charge of a vertex, possibly weighted by the momentum, and sum pt.
+//=============================================================================
+void RecVertices2Particles::GetQPt( const Vertex * v, double & sumpt, 
+                                    double & sumq, bool weight ){
+  
+  double sumqpt = 0.;
+  SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
+  for( ; ip < v->outgoingParticles().end(); ++ip ){
+    const Particle * d = ip->target() ;
+    if( d->proto() == NULL ) continue;
+    if( d->proto()->track() == NULL ) continue;
+    const Track * t = d->proto()->track();
+    sumq += t->charge();
+    sumpt += t->pt();
+    sumqpt += t->pt()*t->charge();
+  }
+  
+  if( weight ){
+    if( sumpt == 0. ) ++sumpt;
+    sumq = sumqpt/sumpt;
+  }  
+}
+
+
+//=============================================================================
+// Compute charge of a vertex, possibly weighted by the momentum
+//=============================================================================
+double RecVertices2Particles::GetCharge( const Vertex * v, bool weight ){
+  
+  double sumqpt = 0.;
+  double sumq = 0.;
+  double sumpt = 0.;
+  SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
+  for( ; ip < v->outgoingParticles().end(); ++ip ){
+    const Particle * d = ip->target() ;
+    if( d->proto() == NULL ) continue;
+    if( d->proto()->track() == NULL ) continue;
+    const Track * t = d->proto()->track();
+    sumq += t->charge();
+    sumpt += t->pt();
+    sumqpt += t->pt()*t->charge();
+  }
+  if( weight ){
+    return (sumpt!=0. ? sumqpt/sumpt:0. );
+  } else {
+    return sumq;
+  }
 }
 
 //=============================================================================

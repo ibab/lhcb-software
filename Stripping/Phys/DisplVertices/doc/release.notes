@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-12-16 - Neal Gauvin
+	SaveTuple : save also the reconstructed charge.
+
+! 2010-12-16 - Neal Gauvin
 	Retrieve Hlt global decision from routing bits instead of HltDecReport.
 
 ! 2010-12-13 - Neal Gauvin
