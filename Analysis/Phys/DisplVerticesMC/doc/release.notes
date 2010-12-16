@@ -5,19 +5,25 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2010-12-16 - Neal Gauvin
+	MCDisplVertices : retrieve Hlt global decision from routing bits instead of HltDecReport.
+
 ! 2010-12-03 - Neal Gauvin
  - Propagate modifications done in DisplVertices
  - Save the PV candidates in the tuple when SaveTuple is set.
- - Removed bug : GetUpstreamPV was using beamline info before beamline info is actually retrieved...
+ - Removed bug : GetUpstreamPV was using beamline info before beamline info 
+	 is actually retrieved...
 
 ! ======================= DisplVerticesMC v1r1 2010-11-02 ====================
 
 ! 2010-10-25 - Neal Gauvin
- - Propagate modifications done in DisplVertices
- - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
+ - Propagate modifications done in MCDisplVertices
+ - Modification of the upstream PV selection (in +/- 400mm), 
+	 and keep selecting it when cutting on 
    beamline distance (avoid DV backward PV)
    New cut on material, moving with the halfbox frame introduced
-   R wrt beam line stored in extra info 52 and is in material stored in extra info 51
+   R wrt beam line stored in extra info 52 and is in material stored in 
+	 extra info 51
 
 ! ======================= DisplVerticesMC v1r0 2010-10-04 ====================
 

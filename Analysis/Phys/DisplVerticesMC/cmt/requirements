@@ -25,6 +25,8 @@ use TrackInterfaces v* Tr
 
 use CaloDet             v* Det
 
+use HltInterfaces      v*    Kernel
+
 # ============================================================================
 # Eventually set new environnment values
 # ============================================================================
