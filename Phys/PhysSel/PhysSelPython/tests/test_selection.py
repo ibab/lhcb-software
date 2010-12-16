@@ -71,10 +71,10 @@ def test_void_event_selection_with_existing_name_raises() :
     
 def test_void_event_selection_with_existing_configurable_name_raises() :
 
-    selFilter = FilterDesktop('SelFilter')
+    selFilter = FilterDesktop('SelFilter0')
     sel = AutomaticData(Location = 'Phys/Sel')
 
-    raises(NameError, VoidEventSelection, 'SelFilter',
+    raises(NameError, VoidEventSelection, 'SelFilter0',
            Code = '<Location>',
            RequiredSelection = sel)
     
@@ -83,8 +83,8 @@ def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
 
 def test_selection_with_existing_configurable_name_raises() :
     _fd0 = FilterDesktop('_fd0')
-    selFilter = FilterDesktop('SelFilter')
-    raises(NameError, Selection, 'SelFilter', Algorithm=_fd0)
+    selFilter = FilterDesktop('SelFilter1')
+    raises(NameError, Selection, 'SelFilter1', Algorithm=_fd0)
 
 def test_mergedselection_with_existing_configurable_name_raises() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
