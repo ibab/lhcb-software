@@ -18,6 +18,8 @@ use DaVinciKernel       v* Phys
 use CaloDet             v* Det
 use VeloDet             v* Det
 
+use HltInterfaces      v*    Kernel
+
 # ============================================================================
 # Eventually set new environnment values
 # ============================================================================

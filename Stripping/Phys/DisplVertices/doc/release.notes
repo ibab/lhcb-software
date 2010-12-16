@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-12-16 - Neal Gauvin
+	Retrieve Hlt global decision from routing bits instead of HltDecReport.
+
 ! 2010-12-13 - Neal Gauvin
  - Added ClearifrunNumberChange parameter in CalibrateIP : reset all statistics if runNumber has changed.
 

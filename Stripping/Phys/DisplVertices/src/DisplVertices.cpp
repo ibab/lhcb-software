@@ -18,8 +18,11 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloDigit.h"
 
-//Maths
+//to retrieve routing bits
+#include "Kernel/ReadRoutingBits.h"
+
 #include <functional>
+#include <vector>
 
 // local
 #include "DisplVertices.h"
@@ -1141,14 +1144,6 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
 
   if( m_tisTos == NULL ) return Error("m_tisTos not initialized");
 
-  //Was a prey reconstructed ? Look in the preselection container !
-  const Particle::ConstVector cands = desktop()->particles();
-  bool cand = false;
-  if( cands.size() > 0 ) cand = true;
-  tuple->column( "Reco", cand );
-  if( msgLevel(MSG::DEBUG) && cand ) 
-    debug()<<"Event has a reconstructed prey !"<< endmsg;
- 
   //Get L0 info and save decision in tuple
   if( !exist<L0DUReport>( L0DUReportLocation::Default )){
     err()<<"You requested the trigger, make sure you run it."<<endmsg;
@@ -1161,6 +1156,27 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
     debug()<<"L0 decision                  : " << L0dec << endreq;
   tuple->column( "L0", L0dec );
 
+  //fill the HLT global : Hlt2 : 77,Hlt1 :  46
+  vector<unsigned int> m_routingBits;   
+  m_routingBits.push_back( 46 );
+  m_routingBits.push_back( 77 );  
+  //   for ( unsigned int i = 32 ; i < 96 ; i++){m_routingBits.push_back(i);}
+  bool Hlt1Globdec = false;
+  bool Hlt2Globdec = false;
+  if(exist<LHCb::RawEvent>(RawEventLocation::Default)){
+    RawEvent* rawEvent = get<RawEvent>(RawEventLocation::Default);
+    vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
+    if( find( yes.begin(), yes.end(), 46 ) != yes.end() )  Hlt1Globdec = true;
+    if( find( yes.begin(), yes.end(), 77 ) != yes.end() )  Hlt2Globdec = true;
+    if( msgLevel(MSG::DEBUG) ){
+      debug()<<"Firing routing bits : "<< yes << endmsg;
+      debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
+      debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
+    }
+  } 
+  tuple->column( "Hlt1", Hlt1Globdec );
+  tuple->column( "Hlt2", Hlt2Globdec);
+
   /***************************
    * Beware : it seems that HltDecReport writes only on TES algos that fired
    *****************************/
@@ -1172,15 +1188,9 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   const HltDecReports* decReports = get<HltDecReports>
     ( HltDecReportsLocation::Default );
 
-  bool Hlt1Globdec = false;
-  const LHCb::HltDecReport * decrep = decReports->decReport("Hlt1Global");
-  if( decrep != NULL ) Hlt1Globdec = decrep->decision();
-  if( msgLevel(MSG::DEBUG) )
-    debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
-  tuple->column( "Hlt1", Hlt1Globdec );
-
   int DVdec = 0; 
-  decrep = decReports->decReport("Hlt2DisplVerticesSingleDecision");
+  const LHCb::HltDecReport * decrep = 
+    decReports->decReport("Hlt2DisplVerticesSingleDecision");
   if( decrep != NULL && decrep->decision() ) DVdec += 1;
   decrep = decReports->decReport("Hlt2DisplVerticesDoubleDecision");
   if( decrep != NULL && decrep->decision() ) DVdec += 10;
@@ -1197,14 +1207,25 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
     debug()<<"Hlt2Topo{2,3,4}Decision      : "<< TopoDec << endmsg;
   tuple->column( "Hlt2Topo", TopoDec );
 
-
-  decrep = decReports->decReport("Hlt2Global");
-  bool Hlt2Globdec = false;
-  if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
-  if( msgLevel(MSG::DEBUG) )
-    debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
-  tuple->column( "Hlt2", Hlt2Globdec);
-
+  //////////////////////////////////////////////////////////////////
+  //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
+  // Offline, all the rate limited stuff, including the Lumi/MinBias, 
+  // doesn't work properly as you don't have the "counter" to limit it,
+  // so the Global always goes to 1...
+  //   bool Hlt1Globdec = false;
+  //   const LHCb::HltDecReport * decrep = decReports->decReport("Hlt1Global");
+  //   if( decrep != NULL ) Hlt1Globdec = decrep->decision();
+  //   if( msgLevel(MSG::DEBUG) )
+  //     debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
+  //   tuple->column( "Hlt1", Hlt1Globdec );
+  
+  //   decrep = decReports->decReport("Hlt2Global");
+  //   bool Hlt2Globdec = false;
+  //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
+  //   if( msgLevel(MSG::DEBUG) )
+  //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
+  //   tuple->column( "Hlt2", Hlt2Globdec);
+  
   //To print entire report container :
   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
   //debug() << *decReports << endmsg;
