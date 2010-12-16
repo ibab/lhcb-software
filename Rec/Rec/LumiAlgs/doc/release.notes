@@ -4,8 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-12-16 - Marco Cattaneo
+ - Fix dependencies to avoid LumiAlgsGenConfUser being executed before
+   LumiAlgsConf (fixes WARNING: Configurable class LumiMergeFSR not in database)
 
-!========================= LumiAlgs v4r1p1 2010-11-05 =========================! 2010-11-05 - Jaap Panman
+!========================= LumiAlgs v4r1p1 2010-11-05 =========================
+! 2010-11-05 - Jaap Panman
  - always create one FSR of each type in LumiAccounting even if no lumi-event 
  seen
 

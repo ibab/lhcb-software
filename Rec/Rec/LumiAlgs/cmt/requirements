@@ -36,5 +36,6 @@ apply_pattern    component_library library=LumiAlgs
 #============================================================================
 # Setup Python Configurables
 #============================================================================
+macro_append LumiAlgsGenConfUser_dependencies LumiAlgsConfDbMerge
 apply_pattern install_python_modules
 apply_pattern QMTest
