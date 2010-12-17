@@ -5,6 +5,12 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!==================== PhysSel/PhysSelPython v6r0 2010-12-17 ================
+
+! 2010-12-17 - Juan Palacios
+ - python/PhysSelPython/MockStrippingLine.py
+  . Handle VoidEventSelection
+
 ! 2010-12-16 - Juan Palacios
  - pyhton/PhysSelPython/Wrappers.py
   . Register VoidEventSelection's name at end of __init__ method to avoid 
