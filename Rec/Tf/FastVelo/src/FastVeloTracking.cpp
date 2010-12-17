@@ -51,7 +51,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "PhiCentralZone"  , m_phiCentralZone = 0.040  );   // in overlap...
   declareProperty( "MaxDelta2"       , m_maxDelta2      = 0.05   );
   declareProperty( "FractionFound"   , m_fractionFound  = 0.70   );
-  declareProperty( "MaxChi2PerHit"   , m_maxChi2PerHit  = 16.    );
+  declareProperty( "MaxChi2PerHit"   , m_maxChi2PerHit  = 12.    );
   declareProperty( "MaxChi2ToAdd"    , m_maxChi2ToAdd   = 40.    );
   declareProperty( "MaxQFactor"      , m_maxQFactor     = 6.     );
   declareProperty( "MaxQFactor3"     , m_maxQFactor3    = 3.     );
@@ -433,11 +433,13 @@ void FastVeloTracking::mergeSpaceClones( ) {
       bool badSecond = false;
       if ( minWanted * m_fractionForMerge <= nCommon ) {
         unsigned int nRCommon = 0;
+        unsigned int rWanted =  (*itT1).rHits().size();
+        if ( (*itT2).rHits().size() <  rWanted ) rWanted = (*itT2).rHits().size();
         for ( FastVeloHits::const_iterator itH = (*itT2).rHits().begin();
               (*itT2).rHits().end() != itH; ++itH ) {
           if ( std::find( (*itT1).rHits().begin(), (*itT1).rHits().end(), *itH ) !=  (*itT1).rHits().end() ) nRCommon++;
         }
-        if ( 2 > nRCommon ) continue;
+        if ( rWanted * m_fractionForMerge > nRCommon ) continue;
 
         if (  (*itT1).phiHits().size() > minWanted ) {
           badSecond = true;
@@ -513,7 +515,7 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
         }
 
         if (  0 != m_debugTool && matchKey( *c0 ) ) {
-          info() << format( "3:   rMin %8.3f rMax %8.3f ", rMin, rMax );
+          info() << format( "3.%d: rMin %8.3f rMax %8.3f ", iCase, rMin, rMax );
           printCoord ( *c0,   "St0 " );
         }
         // loop over clusters in third station finding a possible match
@@ -531,7 +533,7 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           double rPitch = sensor1->rPitch( rPred );
           double tol    = m_rMatchTol3 * rPitch;
           if (  0 != m_debugTool && matchKey( *c0 ) && matchKey( *c2) ) {
-            info() << format( "3:   rPred %8.3f (tol %6.3f) ", rPred, tol );
+            info() << format( "3.%d: rPred %8.3f (tol %6.3f) ", iCase, rPred, tol );
             printCoord ( *c2,   "St2 " );
           }
           FastVeloHit* ok1 = closestUnusedHit( sensor1->hits(zone), rPred, tol );
@@ -1001,8 +1003,18 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     stationStep = -1;
   }
 
+  unsigned int nbStations =  abs( int(lastStation) - int(firstStation) ) + 1;
+  if ( nbStations > input.rHits().size() ) nbStations = input.rHits().size();
+  if ( inOverlap ) {
+    nbStations = nbRight;
+    if ( nbLeft > nbRight ) nbStations = nbLeft;
+  }
+  unsigned int minNbPhi = int( m_fractionFound * nbStations );
+  if ( 3 > minNbPhi ) minNbPhi = 3;
+
   if ( m_debug ) {
-    info() << "Space search from station " <<  firstStation << " to " << lastStation << endmsg;
+    info() << "Space search from station " <<  firstStation << " to " << lastStation 
+           << " minNbPhi " << minNbPhi << endmsg;
     printCoords( input.rHits(), "R  " );
     sensor = first;
     while ( sensor != last ) {
@@ -1023,11 +1035,6 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     }
   }
 
-  unsigned int nbStations =  abs( int(lastStation) - int(firstStation) ) + 1;
-  if ( nbStations > input.rHits().size() ) nbStations = input.rHits().size();
-  unsigned int minNbPhi = int( m_fractionFound * nbStations );
-  if ( 3 > minNbPhi ) minNbPhi = 3;
-
   FastVeloTracks newTracks;
   //== Search sensors for 'lists' with low angle, i.e. d(global)/dz
   FastVeloHits::iterator itH1, itH2, itH3;
@@ -1038,6 +1045,8 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   s2 = s1 + stationStep;
   s3 = s2 + stationStep;
 
+  bool hasFullLength = false;
+  
   for ( int iCase = 0; 5 > iCase; ++iCase ) {
     if ( 2 == iCase ) s3 += stationStep;
     if ( 3 == iCase ) s2 += stationStep;
@@ -1146,7 +1155,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
             }
           }
           double addChi2 = m_maxChi2ToAdd;
-          if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 150. ) addChi2 = 4 * addChi2;
+          if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 140. ) addChi2 = 4 * addChi2;
           bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
           if ( !ok ) {
             nbMissed++;
@@ -1195,6 +1204,23 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         }
         continue;
       }
+      //== Check that there are phi hits on the same side as the R hits...
+      int nbPhiLeft = 0;
+      int nbPhiRight = 0;
+      for ( itH = temp.phiHits().begin(); temp.phiHits().end() != itH ; ++itH ) {
+        if (  m_hitManager->sensor( (*itH)->sensor() )->isRight() ) {
+          nbPhiRight++;
+        } else {
+          nbPhiLeft++;
+        }
+      }
+      if ( nbLeft * nbPhiLeft + nbRight * nbPhiRight == 0 ) {
+        if ( m_debug ) {
+          info() << "Phi and R are all on opposite sides: Left R " << nbLeft << " Phi " << nbPhiLeft 
+                 << "  Right R " << nbRight << " phi " << nbPhiRight << ". Reject" << endmsg;
+        }
+        continue;
+      }
       
       if ( ok ) {  //== Store it.
         if ( m_debug ) {
@@ -1202,9 +1228,10 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           printTrack( temp );
         }
         newTracks.push_back( temp );
+        if ( temp.phiHits().size() >= temp.rHits().size() ) hasFullLength = true;
       }
     }
-    if ( iCase > 0 && 0 != newTracks.size() ) break;
+    if ( iCase > 0 && hasFullLength ) break;
   }
 
   //== If no track found AND in overlap: Try all hits first
@@ -1213,55 +1240,34 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     s2 = s1 + stationStep;
     s3 = s2 + stationStep;
     if ( s1 < 21 && s2 < 21 && s3 < 21 ) {  // protect agains access to no existent modules
-      if ( goodPhiHits[s1].size() +  goodPhiHits[s2].size() +  goodPhiHits[s3].size() < 7 ) { // was 5
-        FastVeloHits all(goodPhiHits[s1]);
-        for ( itH = goodPhiHits[s2].begin(); goodPhiHits[s2].end() != itH; ++itH ) all.push_back( *itH );
-        for ( itH = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH; ++itH ) all.push_back( *itH );
-        FastVeloTrack temp;
-        temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
-        if ( m_debug ) {
-          info() << "+++ Try with all hits on stations " << s1 << " " << s2 << " and " << s3
-                 << ", minNbPhi " << minNbPhi << endmsg;
+      FastVeloHits all(goodPhiHits[s1]);
+      station = s2;
+      while ( lastStation+stationStep != station ) {
+        for ( itH = goodPhiHits[station].begin(); goodPhiHits[station].end() != itH; ++itH ) all.push_back( *itH );
+        station += stationStep;
+        if ( station > 20 ) break;
+      }
+      FastVeloTrack temp;
+      temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
+      if ( m_debug ) {
+        info() << "+++ Try with all hits on stations " << s1 << " to " << station
+               << ", minNbPhi " << minNbPhi << endmsg;
+        printTrack( temp );
+      }
+      bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+      if ( ok ) {
+        //== Overall quality should be good enough...
+        if ( m_maxQFactor < temp.qFactor() ) {
+          if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+          ok = false;
         }
-        bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
-        if ( ok ) {
-          temp.updateRParameters();
-          double lastZ = temp.phiHits().back()->z();
-          if ( ( stationStep < 0 && lastStation < s3 ) ||
-               ( stationStep > 0 && lastStation > s3 )  ) {
-            for ( unsigned int s = s3 + stationStep; lastStation+stationStep != s; s += stationStep ){
-              if ( goodPhiHits[s].size() != 0 ) {
-                if ( m_debug ) {
-                  info() << "Try to add more on station " << s << endmsg;
-                  for ( itH = goodPhiHits[s].begin(); goodPhiHits[s].end() != itH; ++itH ) {
-                    info() << format( "Dist%8.3f Chi2%8.2f", temp.distance( *itH ), temp.chi2( *itH ) );
-                    printCoord( *itH, "Selected " );
-                  }
-                }
-                double addChi2 = m_maxChi2ToAdd;
-                if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 150. ) addChi2 = 4 * addChi2;
-                bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
-                if ( ok ) {
-                  temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2PerHit );
-                  if ( m_debug ) printTrack( temp, "After adding" );
-                }
-              }
-            }
+        
+        if ( ok ) {  //== Store it.
+          if ( m_debug ) {
+            info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
+            printTrack( temp );
           }
-          ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
-          //== Overall quality should be good enough...
-          if ( m_maxQFactor < temp.qFactor() ) {
-            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-            ok = false;
-          }
-
-          if ( ok ) {  //== Store it.
-            if ( m_debug ) {
-              info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
-              printTrack( temp );
-            }
-            newTracks.push_back( temp );
-          }
+          newTracks.push_back( temp );
         }
       }
     }
@@ -1279,7 +1285,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     }
     bool localDebug = m_debug;
     if ( localDebug ) {
-      info() <<"=== Try with hits from the zone itself ===" << endmsg;
+      info() <<"=== Try with hits from the Main zone itself ===" << endmsg;
       printCoords( input.rHits(), "Main " );
     }
     makeSpaceTracks( input );

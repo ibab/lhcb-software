@@ -4,6 +4,11 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-12-17 - Olivier Callot
+ - Several improvements for higher efficiency at high nu. Mainly a change
+   in deciding to stop searching for space tracks: Only when a tracks of same
+   Phi length as R is found.
+
 !========================= FastVelo v1r1 2010-12-16 =========================
 ! 2010-12-15 - Olivier Callot
  - Remove the info message when updating the geometry in FastVeloHitManager
