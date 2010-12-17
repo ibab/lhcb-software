@@ -40,6 +40,7 @@ class IOTRawBankDecoder;
     std::string      m_outputTracksName;
     std::string      m_trackSelectorName;  
     std::string      m_veloVetoTracksName;
+    std::string      m_forwardToolName;
     
     int m_deltaNumberInTT;
     int m_deltaNumberInT;

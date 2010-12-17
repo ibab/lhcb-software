@@ -30,6 +30,7 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);
   declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = LHCb::TrackLocation::Forward);
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
+  declareProperty( "ForwardToolName",    m_forwardToolName    = "PatForwardTool" );
 
   if ( "Hlt" == context() ) {
     m_inputTracksName  =  "";
@@ -60,13 +61,12 @@ StatusCode PatForward::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-
   m_trackSelector = NULL;
   if (m_trackSelectorName != "None") {
     m_trackSelector = tool<ITrackSelector>(m_trackSelectorName, this);
   }
 
-  m_forwardTool = tool<IPatForwardTool>( "PatForwardTool", this );
+  m_forwardTool = tool<IPatForwardTool>( m_forwardToolName, this );
   m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
 
   if ( msgLevel( MSG::DEBUG ) || m_doTiming) {
