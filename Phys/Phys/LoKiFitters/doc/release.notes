@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiFitters v4r0 2010-12-17 =====================
+
 ! 2010-12-03 - Vanya Belyaev
 
  - move all Kalman-Filter utilities into the separate package 
