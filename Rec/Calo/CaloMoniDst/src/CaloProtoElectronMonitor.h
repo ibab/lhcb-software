@@ -41,5 +41,6 @@ private:
   double m_prsCut;
   bool m_pairing;
   std::string m_extrapolatorType;
+  std::vector<int> m_tracks;
 };
 #endif // CALOPROTOELECTRONMONITOR_H

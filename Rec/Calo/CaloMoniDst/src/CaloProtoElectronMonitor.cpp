@@ -32,6 +32,9 @@ CaloProtoElectronMonitor::CaloProtoElectronMonitor( const std::string& name,
   declareProperty("PrsCut"      , m_prsCut = 50.* Gaudi::Units::MeV);  
   declareProperty("ElectronPairing", m_pairing = false );
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
+  declareProperty( "TrackTypes", m_tracks);
+  m_tracks.push_back(LHCb::Track::Long);
+  m_tracks.push_back(LHCb::Track::Downstream);
   
 
   setInputData( LHCb::ProtoParticleLocation::Charged ); 
@@ -57,6 +60,9 @@ StatusCode CaloProtoElectronMonitor::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  if( !m_tracks.empty() )info() << "Will only look at track type(s) = " << m_tracks << endmsg;
+  else 
+    info() << "Will look at any track type" << endmsg;
 
   // get tools
   m_caloElectron = tool<ICaloElectron>("CaloElectron", this); 
@@ -102,8 +108,18 @@ StatusCode CaloProtoElectronMonitor::execute() {
   initCounters();
   for( LHCb::ProtoParticles::const_iterator p = protos->begin(); protos->end () != p ; ++p ){ 
     const LHCb::ProtoParticle* proto = *p;
+
     if( !m_caloElectron->set(proto))continue;;
     LHCb::CaloHypo* hypo = m_caloElectron->electron();
+
+    // track type selection
+    bool accept = m_tracks.empty() ? true : false;
+    for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
+      if( (int)proto->track()->type() == *itr)accept=true;
+    }
+    if( !accept )continue;
+    //
+
     if ( NULL == hypo ) continue;
     LHCb::CaloMomentum momentum( hypo );
     const double e = momentum.e();
@@ -134,6 +150,7 @@ StatusCode CaloProtoElectronMonitor::execute() {
     // perform electron pairing
     if( !m_pairing)continue;
     for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
+
       const LHCb::ProtoParticle* proto2 = *pp;
       if( !m_caloElectron->set(proto2))continue;;
       LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
@@ -156,6 +173,14 @@ StatusCode CaloProtoElectronMonitor::execute() {
       double caloM = momentumSum.mass();      
       const LHCb::Track*  t1 = proto->track();
       const LHCb::Track*  t2 = proto2->track();
+
+
+      bool accept2 = m_tracks.empty() ? true : false;
+      for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
+        if( (int)t2->type() == *itr)accept2=true;
+      }
+      if( !accept2 )continue;
+
 
       if( NULL == t1 || NULL == t2)continue;
       if( -1 != t1->charge()*t2->charge())continue;

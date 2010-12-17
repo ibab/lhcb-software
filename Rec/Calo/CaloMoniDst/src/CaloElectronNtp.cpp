@@ -40,6 +40,10 @@ CaloElectronNtp::CaloElectronNtp( const std::string& name,
   declareProperty( "Trend"    , m_trend = false);  
   declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Primary);
   declareProperty( "UsePV3D", m_usePV3D = false);
+  declareProperty( "TrackTypes", m_tracks);
+  m_tracks.push_back(LHCb::Track::Long);
+  m_tracks.push_back(LHCb::Track::Downstream);
+  
 }
 //=============================================================================
 // Destructor
@@ -54,6 +58,11 @@ StatusCode CaloElectronNtp::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if( !m_tracks.empty() )info() << "Will only look at track type(s) = " << m_tracks << endmsg;
+  else 
+    info() << "Will look at any track type" << endmsg;
+
 
   m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
 
@@ -142,6 +151,18 @@ StatusCode CaloElectronNtp::execute() {
                             m_caloElectron->caloState().momentum().z(),
                             m_caloElectron->caloState().p());
     double theta = m_caloElectron->caloState().momentum().Theta();
+    double tX =   m_caloElectron->caloState().momentum().X();
+    double tY =   m_caloElectron->caloState().momentum().Y();
+    double tZ =   m_caloElectron->caloState().momentum().Z();
+    double thetaX= atan2(tX,tZ);
+    double thetaY= atan2(tY,tZ);
+    
+    // track type selection
+    bool accept = m_tracks.empty() ? true : false;
+    for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
+      if( (int)proto->track()->type() == *itr)accept=true;
+    }
+    if( !accept )continue;
 
     Gaudi::LorentzVector t(proto->track()->momentum().x(),
                            proto->track()->momentum().y(),
@@ -178,11 +199,16 @@ StatusCode CaloElectronNtp::execute() {
       sc=ntp->column("EoP" , eOp );
       sc=ntp->column("HypoE", e  );
       sc=ntp->column("HypoR", hR  );
-      // track info
+      sc=ntp->column("HypoTheta",atan2(sqrt(hR.X()*hR.X()+hR.Y()*hR.Y()),hR.Z()));
+     // track info
       sc=ntp->column("TrackP", t  );
       sc=ntp->column("TrackR", tR  );
       sc=ntp->column("caloState",cs);
       sc=ntp->column("incidence",theta);
+      sc=ntp->column("incidenceX",thetaX);
+      sc=ntp->column("incidenceY",thetaY);
+      sc=ntp->column("trackType",proto->track()->type());
+      sc=ntp->column("trackProb",proto->track()->probChi2());
       // cluster info
       sc=ntp->column("id", id.index());
       sc=ntp->column("ClusterE",cluster->e());
@@ -198,8 +224,7 @@ StatusCode CaloElectronNtp::execute() {
     }
     
       
-    // histogramming / channel
-    
+    // histogramming / channel    
     if(m_histo){
       std::ostringstream sid;
       int feb = m_calo->cardNumber( id );
@@ -240,8 +265,8 @@ StatusCode CaloElectronNtp::execute() {
     if(m_tuple){
       // perform electron pairing
       double mas = 999999.;
-      if( !m_pairing)continue;
       for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
+        if( !m_pairing)continue;
         const LHCb::ProtoParticle* proto2 = *pp;
         if( !m_caloElectron->set(proto2))continue;;
         LHCb::CaloHypo* hypo2 = m_caloElectron->electron();

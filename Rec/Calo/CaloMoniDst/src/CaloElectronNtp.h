@@ -58,5 +58,6 @@ private:
   bool m_trend;
   std::string m_vertLoc;
   bool m_usePV3D;
+  std::vector<int> m_tracks;
 };
 #endif // CALOELECTRONNTP_H

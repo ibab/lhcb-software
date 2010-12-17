@@ -8,7 +8,6 @@
 #include "Event/L0DUReport.h"
 #include "CaloUtils/CaloAlgUtils.h"
 #include "CaloUtils/Calo2Track.h"
-#include "CaloUtils/CaloAlgUtils.h"
 #include "CaloHypoNtp.h"
 #include "Event/MCParticle.h"
 

@@ -18,8 +18,9 @@ use CaloUtils       v*    Calo
 use CaloKernel      v*    Calo 
 use Relations       v*    Kernel 
 use TrackEvent      v*    Event 
-use PhysEvent v* Event
+use PhysEvent       v*    Event
 use TrackInterfaces v*    Tr
+use DAQEvent        v*    Event
 #
 use MCAssociators   v*    Associators
 

@@ -106,6 +106,26 @@ StatusCode CaloPi0Ntp::execute(){
   }
 
 
+
+  // vertices
+  int nVert = 0;
+  if( m_usePV3D){
+    if( exist<LHCb::VertexBases>( m_vertLoc ) ){
+      LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
+      if( NULL != verts)nVert = verts->size();
+    }
+  }
+  else{
+    if( exist<LHCb::RecVertices>(m_vertLoc) ){
+      LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
+      if( NULL != verts)nVert = verts->size();
+    }
+  }
+  counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
+
+
+
+
   bool ok = false;
   StatusCode sc;
   for( Hypos::iterator g1 = hypos->begin(); hypos->end() != g1; ++g1 ){
@@ -250,23 +270,9 @@ StatusCode CaloPi0Ntp::execute(){
         Gaudi::LorentzVector ccc(ccc1 + ccc2);
         double ccmas = (isPi0) ? cc.mass() : 0;
         double cccmas = (isPi0) ? ccc.mass() : 0;
-        // vertices
-        int nVert = 0;
-        if( m_usePV3D){
-          if( exist<LHCb::VertexBases>( m_vertLoc ) ){
-            LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
-            if( NULL != verts)nVert = verts->size();
-          }
-        }
-        else{
-          if( exist<LHCb::RecVertices>(m_vertLoc) ){
-            LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
-            if( NULL != verts)nVert = verts->size();
-          }
-        }
-        counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
         
 
+        counter("candidates for #PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
 
 
         if( m_tuple){
@@ -371,8 +377,8 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
   int bet1 = int( c1.Pt() / m_etBin );
   int bet2 = int( c2.Pt() / m_etBin );
   // theta bins
-  int bth1 = int( c1.Theta() / m_thBin/pow(2,2-id1.area() ));
-  int bth2 = int( c2.Theta() / m_thBin/pow(2,2-id2.area() ));
+  int bth1 = int( c1.Theta() / m_thBin/pow(2.,(double)2-id1.area() ));
+  int bth2 = int( c2.Theta() / m_thBin/pow(2.,(double)2-id2.area() ));
 
   // spd bins
   int spdslot = int( m_spdMult / m_spdBin);
@@ -392,25 +398,32 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
   Gaudi::LorentzVector di( c1+c2);
 
   // pi0->gg versus nPV
-  if( spd == 0 ){
-    std::string sVert = "PV" + Gaudi::Utils::toString( nVert );
-    plot1D(di.mass(), base+"/"+sVert+"/all" , base+"/all  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
-    double Y1 = m_calo->cellCenter( id1 ).Y();
-    double Y2 = m_calo->cellCenter( id2 ).Y();
-    if( fabs(Y1)<300 && fabs(Y2)<300)
-      plot1D(di.mass(), base+"/"+sVert+"/band" , base+"/band  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+  std::string sVert = "PV" + Gaudi::Utils::toString( nVert );
+  plot1D(di.mass(), base+"/"+sVert+"/all" , base+"/all  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+  plot1D(di.mass(), base+"/"+sVert+"/"+sspd+"/all" , 
+         base+"/"+sspd+"/all  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+  double Y1 = m_calo->cellCenter( id1 ).Y();
+  double Y2 = m_calo->cellCenter( id2 ).Y();
+  if( fabs(Y1)<300 && fabs(Y2)<300){
+    plot1D(di.mass(), base+"/"+sVert+"/band" , base+"/band  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+    plot1D(di.mass(), base+"/"+sVert+"/"+sspd+"/band" , 
+           base+"/"+sspd+"/band  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
   }
+  
 
 
   // pi0->gg versus spdMult
-  if( spd == 0 ){
-    std::string sSpd = "Spd" + Gaudi::Utils::toString( spdslot*m_spdBin ); 
-    plot1D(di.mass(), base+"/"+sSpd+"/all" , base+"/all  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
-    double Y1 = m_calo->cellCenter( id1 ).Y();
-    double Y2 = m_calo->cellCenter( id2 ).Y();
-    if( fabs(Y1)<300 && fabs(Y2)<300)
-      plot1D(di.mass(),base+"/"+sSpd+"/band",base+"/band  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
-  }
+  std::string nSpd = "Spd" + Gaudi::Utils::toString( spdslot*m_spdBin ); 
+  plot1D(di.mass(), base+"/"+nSpd+"/all" , base+"/all  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+  plot1D(di.mass(), base+"/"+nSpd+"/"+sspd+"/all" , 
+         base+"/"+sspd+"/all  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+    
+  if( fabs(Y1)<300 && fabs(Y2)<300){
+    plot1D(di.mass(),base+"/"+nSpd+"/band",base+"/band  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+    plot1D(di.mass(),base+"/"+nSpd+"/"+sspd+"/band",
+           base+"/"+sspd+"/band  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+  }  
+
 
 
   
@@ -463,16 +476,18 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
 
   
   std::string uuu = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/all";
-  std::string uuu1 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2,2-id1.area()));
-  std::string uuu2 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()));
+  std::string uuu1 = base +"/" + sarea +"/"+ sspd +"/" + sprs+
+    "/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2.,(double)2-id1.area()));
+  std::string uuu2 = base +"/" + sarea +"/"+ sspd +"/" + sprs +
+    "/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2.,(double)2-id2.area()));
   plot1D( di.mass(), uuu1 , uuu1 , m_hMin, m_hMax, m_hBin);
   if( uu2 != uu1) plot1D( di.mass(), uuu2,uuu2,m_hMin, m_hMax, m_hBin);
   plot1D( di.mass(), uuu , uuu , m_hMin, m_hMax, m_hBin);
   if( (prs1 < 5 && spd == 0) || (prs2<5 && spd == 0  ) ){
     std::string tu = base +"/" + sarea +"/EcalTuning/Theta/";
     std::string bin;
-    if( prs1 < 5  )bin = Gaudi::Utils::toString( (double)  bth1 * m_thBin*pow(2,2-id1.area()) );
-    else if( prs2<5 )bin = Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()) );
+    if( prs1 < 5  )bin = Gaudi::Utils::toString( (double)  bth1 * m_thBin*pow(2.,(double) 2-id1.area()) );
+    else if( prs2<5 )bin = Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2.,(double) 2-id2.area()) );
     plot1D( di.mass(), tu+bin , tu+bin , m_hMin, m_hMax, m_hBin);
     plot1D( di.mass(), tu+"all" , tu+"all" , m_hMin, m_hMax, m_hBin);
   }

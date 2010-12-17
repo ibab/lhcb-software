@@ -36,9 +36,6 @@ private:
   void hTuning(std::string base, int spd,double prs1, double prs2,
                const Gaudi::LorentzVector c1 , const LHCb::CaloCellID id1, 
                const Gaudi::LorentzVector c2 , const LHCb::CaloCellID id2,int nVert);
-  
-
-  
 
   std::pair<double,double> m_ppt;
   std::pair<double,double> m_isol;
@@ -49,9 +46,6 @@ private:
   std::pair<double,double> m_mass;
   bool m_bkg;
 
-  DeCalorimeter* m_calo;
-  ICaloHypo2Calo* m_toSpd ;   
-  ICaloHypo2Calo* m_toPrs ;   
   double m_leBin;
   double m_etBin;
   double m_thBin;
@@ -67,4 +61,10 @@ private:
   int m_spdBin;
   int m_spdMult;
   bool m_usePV3D;
+
+
+  DeCalorimeter* m_calo;
+  ICaloHypo2Calo* m_toSpd ;   
+  ICaloHypo2Calo* m_toPrs ;   
+
 };
