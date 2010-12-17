@@ -8,6 +8,8 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeFitter v1r11 2010-12-17 ====================
+
 ! 2010-11-22 - Wouter Hulsbergen
  - revive functionality to reuse existing vertices (forceFitAll=False)
  - add functionality to get chi2 of part of the tree
