@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v8r9 2010-12-17 =====================
+
 ! 2010-08-27 - Juan Palacios
  - src/Lib/DVAlgorithm.cpp
   . Allow full InputLocations ending in "/Particles".
