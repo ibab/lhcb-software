@@ -48,7 +48,11 @@ Purpose             : LHCb physics packages
    . Important bug fixes for L0 reports makers letting intermediate channels 
      act as decisions
    . Important bug fix for reading TisTos information from stripping MicorDSTs
-
+ * Vertex re-fitting
+   . Added experimental PVTrackRemover, an IPVReFitter that uses 
+     IPVOfflineTool's method to remove the weighted contribution of the set 
+     of tracks making a particle from the PV. TEMPORARY AND ONLY FOR TESTING!
+     
 
 </PRE><H1><A NAME=v9r12>2010-11-02 Phys v9r12 </A></H1><PRE>
 
