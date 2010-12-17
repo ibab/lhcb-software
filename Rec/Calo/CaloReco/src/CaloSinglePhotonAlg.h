@@ -19,21 +19,11 @@
 #ifndef CALOALGS_CALOSINGLEPHOTONALG_H 
 #define CALOALGS_CALOSINGLEPHOTONALG_H 1
 // ============================================================================
-// Include files
-// ============================================================================
-// from STL
-// ============================================================================
 #include <string>
-// ============================================================================
-// from CaloKernel
-// ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
-// ============================================================================
-// forward delcarations 
-// ============================================================================
+#include "CaloDet/DeCalorimeter.h"
 class ICaloClusterSelector ;
 class ICaloHypoTool        ;
-// ============================================================================
 
 /** @class CaloSinglePhotonAlg CaloSinglePhotonAlg.h
  *  
@@ -127,6 +117,8 @@ private:
   std::string m_inputData ;
   std::string m_outputData;
   std::string m_detData   ;
+  const DeCalorimeter*  m_det;
+  
 
 };
 // ============================================================================

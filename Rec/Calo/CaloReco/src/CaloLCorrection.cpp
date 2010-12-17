@@ -33,9 +33,9 @@ CaloLCorrection::CaloLCorrection
 
   // define conditionName
   const std::string uName ( LHCb::CaloAlgUtils::toUpper( name ) ) ;
-  if( uName.find( "ELECTRON" ) != std::string::npos  ) 
+  if( uName.find( "ELECTRON" ) != std::string::npos  ){
     m_conditionName = "Conditions/Reco/Calo/ElectronLCorrection";
-  else if ( uName.find( "MERGED" )  != std::string::npos   ||  uName.find( "SPLITPHOTON" )  != std::string::npos ){
+  }else if ( uName.find( "MERGED" )  != std::string::npos   ||  uName.find( "SPLITPHOTON" )  != std::string::npos ){
     m_conditionName = "Conditions/Reco/Calo/SplitPhotonLCorrection";
   }  
   else if (  uName.find( "PHOTON" ) ){
@@ -153,8 +153,6 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double delta0 = getCorrection(CaloCorrection::delta0, cellID);
   double gammaP = getCorrection(CaloCorrection::gammaP, cellID, ePrs);
   double deltaP = getCorrection(CaloCorrection::deltaP, cellID, ePrs);
-
-
   double g = gamma0 - gammaP;
   double d = delta0 + deltaP;
 

@@ -34,9 +34,9 @@ CaloECorrection::CaloECorrection( const std::string& type   ,
 
   // define conditionName
   const std::string uName ( LHCb::CaloAlgUtils::toUpper( name ) ) ;
-  if( uName.find( "ELECTRON" ) != std::string::npos  ) 
+  if( uName.find( "ELECTRON" ) != std::string::npos  ){
     m_conditionName = "Conditions/Reco/Calo/ElectronECorrection";
-  else if ( uName.find( "MERGED" )  != std::string::npos   ||  uName.find( "SPLITPHOTON" )  != std::string::npos ){
+  }else if ( uName.find( "MERGED" )  != std::string::npos   ||  uName.find( "SPLITPHOTON" )  != std::string::npos ){
     m_conditionName = "Conditions/Reco/Calo/SplitPhotonECorrection";
   }  
   else if (  uName.find( "PHOTON" ) ){
@@ -57,7 +57,7 @@ StatusCode CaloECorrection::finalize   (){
 StatusCode CaloECorrection::initialize (){
   /// first initialize the base class 
   StatusCode sc = CaloCorrectionBase::initialize();
-  if( sc.isFailure() )return Error ( "Unable initialize the base class CaloCorrectionBase!" , sc ) ;  
+  if( sc.isFailure() )return Error ( "Unable initialize the base class CaloCorrectionBase!" , sc ) ;
   return StatusCode::SUCCESS ;
 }
 
@@ -75,8 +75,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   // check the Hypo
   Hypotheses::const_iterator h = std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
   if( m_hypos.end() == h )
-    return Error ( "Invalid hypothesis -> no correction applied" ,StatusCode::FAILURE) ; 
-
+    return Error ( "Invalid hypothesis -> no correction applied" ,StatusCode::FAILURE) ;
 
   // get Prs/Spd
   double ePrs = 0 ;
@@ -90,7 +89,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   if ( msgLevel( MSG::DEBUG) )
     debug() << " Accepted  spd/prs : " << (int) (eSpd > 0 )<< " / " << (int) (ePrs > 0) << endmsg;
   
-  // get cluster energy (special case for SplitPhotons)
+  // get cluster  (special case for SplitPhotons)
   const LHCb::CaloCluster* GlobalCluster = LHCb::CaloAlgUtils::ClusterFromHypo(hypo, false);
   const LHCb::CaloCluster* MainCluster = LHCb::CaloAlgUtils::ClusterFromHypo(hypo,true) ;
   
@@ -125,7 +124,11 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   const LHCb::CaloCellID cellID = seed->cellID() ;
   const Gaudi::XYZPoint  seedPos = m_det->cellCenter( cellID  );
 
-  
+  //  incidence angle
+  double dtheta = incidence( hypo ) - incidence(hypo, true);
+  //  info() << "------> " << incidence( hypo ) << " " <<  incidence(hypo, true) << "  " << dtheta << endmsg;
+
+
   /** here all information is available 
    *     
    *  (1) Ecal energy in 3x3     :    eEcal 
@@ -171,17 +174,25 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double aX  = getCorrection(CaloCorrection::alphaX    , cellID , Asx   );  // module frame dead material X-direction
   double aY  = getCorrection(CaloCorrection::alphaY    , cellID , Asy   );  // module frame dead material Y-direction
   double beta= getCorrection(CaloCorrection::beta      , cellID , eEcal , 0 );  
+  double betaC= getCorrection(CaloCorrection::betaC      , cellID , eEcal , 0. );
+
+  double gT  = getCorrection(CaloCorrection::globalT   , cellID , dtheta );  // incidence angle (delta)
+  double dT  = getCorrection(CaloCorrection::offsetT   , cellID , dtheta );  // incidence angle (delta)
+
 
   double gC = 1.;
   if( eSpd > 0){
     gC = getCorrection(CaloCorrection::globalC , cellID ); // global correction factor for converted photons
+    if( betaC != 0.)beta = betaC;
   }
   
 
   
+
+  
   // Apply Ecal leakage corrections
-  double alpha = aG * aE * aB * aX * aY ;
-  double eCor  = ( alpha * eEcal + beta *ePrs ) * gC;
+  double alpha = aG * aE * aB * aX * aY  ;
+  double eCor  = ( alpha * eEcal + beta *ePrs ) * gC * gT + dT;
 
   // revoir le debug
   if ( msgLevel( MSG::DEBUG) ){
@@ -192,6 +203,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
     debug() << "alpha " << alpha << " = " << aG << " x " << aE << " x " << aB << " x " << aX << " x " << aY <<  endmsg;
     debug() << "beta"   << beta << endmsg;
     debug() << "Global Factor " << gC << endmsg;
+    debug() << "Global theta correction " << gT << endmsg;
     debug() << "eEcal " << eEcal <<  " --> "    << "eCor "  <<  eCor    << endmsg;
   }
   

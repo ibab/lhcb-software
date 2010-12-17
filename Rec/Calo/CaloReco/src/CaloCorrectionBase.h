@@ -14,7 +14,11 @@
 #include "Event/CaloDigit.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "CaloUtils/CaloAlgUtils.h"
-
+#include "CaloUtils/CaloMomentum.h"
+#include "CaloUtils/ICaloElectron.h"
+#include "CaloUtils/Calo2Track.h"
+#include "Relations/IRelationWeighted2D.h"
+#include "Event/Track.h"
 static const InterfaceID IID_CaloCorrectionBase ( "CaloCorrectionBase", 1, 0 );
 
 /** @class CaloCorrectionBase CaloCorrectionBase.h
@@ -47,31 +51,50 @@ namespace CaloCorrection {
     Polynomial,
     ExpPolynomial,
     ReciprocalPolynomial,
+    Sigmoid,
+    Sshape,
+    ShowerProfile,
     Unknown  // MUST be the last item 
   };
   typedef std::pair<CaloCorrection::Function , std::vector<double> > Parameters;
   enum Type{
     // E-Correction parameters
-    alphaG,
-    alphaE,
-    alphaB,
-    alphaX,
-    alphaY,
-    beta,
-    globalC,
+    alphaG, // global alpha factor
+    alphaE, // alpha(E)
+    alphaB, // alpha(Bary)
+    alphaX, // alpha(Dx)
+    alphaY, // alpha(Dy) 
+    beta,   // Prs correction
+    betaC,   // Prs correction for converted photons (use beta if not defined)
+    globalC,   // global factor for converted photons
+    globalT,   // global(Theta) function of incidence angle
+    offsetT,   // offset(Theta) function of incidence angle
     // L-Correction parameters
     gamma0,
     delta0,
     gammaP,
     deltaP,
+    // S-correction parameters
+    shapeX,
+    shapeY,
+    residual,
+    asymP,
+    asymM,
+    // ShowerShape profile
+    profile,
+    profileC, // for converted photons
     lastType  // MUST BE THE LAST LINE
   };
   static const int nT = lastType+1;
   static const int nF = Unknown+1;
-  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","beta","globalC"
+  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","beta","betaC","globalC","globalT"
+                                            ,"offsetT"
                                             ,"gamma0","delta0","gammaP","deltaP"
+                                            ,"shapeX","shapeY","residual","asymP","asymM"
+                                            ,"profile","profileC"
                                             ,"Unknown"};    
-  static const std::string funcName[nF] = { "InversPolynomial", "Polynomial","ExpPolynomial","ReciprocalPolynomial","Unknown"};  
+  static const std::string funcName[nF] = { "InversPolynomial", "Polynomial","ExpPolynomial","ReciprocalPolynomial","Sigmoid"
+                                            ,"Sshape","ShowerProfile","Unknown"};  
 }
 
 
@@ -93,8 +116,33 @@ public:
 
   void setOrigin(Gaudi::XYZPoint origin){m_origin = origin;}
   StatusCode updParams();
-protected:
+  StatusCode setConditionParams(std::string cond,bool force=false){
+    if(cond != m_conditionName)m_conditionName = cond;
+    if(force)m_useCondDB = true;
+    // get parameters from DB or options
+    if ( !existDet<DataObject>( m_conditionName)  ){
+      debug() << "Initialize :  Condition '" << m_conditionName
+              << "' not found -- apply options parameters !" << endmsg; 
+      m_useCondDB = false;
+    }
+    return m_useCondDB ? setDBParams() : setOptParams();
+  }
+
+
+
   double getCorrection(CaloCorrection::Type type, const LHCb::CaloCellID id , double var = 0.,double def = 1.) const;
+  double incidence(const LHCb::CaloHypo* hypo,bool straight=false) const;
+  void getPrsSpd(const LHCb::CaloHypo* hypo,double& ePrs,double& eSpd) const{
+    typedef const LHCb::CaloHypo::Digits   Digits   ;
+    const Digits& digits = hypo->digits();
+    for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
+      if     ( *d == 0     ) { continue           ; }
+      else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
+      else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; }
+    }
+  }
+  
+protected:
   std::string m_conditionName;
   std::vector<std::string> m_corrections;
   //
@@ -108,19 +156,11 @@ protected:
   CaloCorrectionUtils::DigitFromCalo    m_prs;
   std::string m_detData;
   const DeCalorimeter* m_det;
-  void getPrsSpd(const LHCb::CaloHypo* hypo,double& ePrs,double& eSpd) const{
-    typedef const LHCb::CaloHypo::Digits   Digits   ;
-    const Digits& digits = hypo->digits();
-    for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
-      if     ( *d == 0     ) { continue           ; }
-      else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
-      else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; }
-    }
-  }
   Gaudi::XYZPoint  m_origin;
 
 private:
 
+  ICaloElectron* m_caloElectron;
   bool accept(std::string name){
     for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
       if( name == *it || *it == "All")return true;
@@ -140,6 +180,7 @@ private:
   bool m_useCondDB;
   std::map<std::string, std::vector<double> > m_optParams;
   Condition* m_cond;
+  std::string m_cmLoc;
 };
 
 

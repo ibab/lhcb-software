@@ -119,7 +119,8 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     from Configurables import ( CaloExtraDigits ,
                                 CaloECorrection , 
                                 CaloSCorrection , 
-                                CaloLCorrection ) 
+                                CaloLCorrection ,
+                                CaloCorrectionBase) 
     
     
     ## build the context-dependent sequence (  TrackMatch + SinglePhotonRec )
@@ -325,7 +326,8 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     from Configurables import ( CaloExtraDigits ,
                                 CaloECorrection , 
                                 CaloSCorrection , 
-                                CaloLCorrection ) 
+                                CaloLCorrection ,
+                                CaloCorrectionBase) 
 
 
     # build the sequences
@@ -341,30 +343,20 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
 
 
-    # temporary : will be from condDB
     pi0.PropertiesPrint = False
-    pi0.TrShOut_nospd = [ -0.0060,  2.4956,115.0827,  9.8842,  0.0320,  2.0982,  1.0302,  0.0409,  0.0030, -9.6135 ]
-    pi0.TrShMid_nospd = [  0.0464,  2.0384, 36.5885,  8.0260,  0.0460,  2.3936,  1.0703,  0.1611,  0.0238, -5.8899 ]
-    pi0.TrShInn_nospd = [  0.0981,  2.2529, 33.8837,  8.0532,  0.0654,  2.2046,  1.1092,  0.1645,  0.0248, -5.7248 ]
     
-    pi0.TrShOut_spd   = [  0.0486,  2.7847, 68.4815,  9.0870,  0.0116,  1.2591,  1.0464, -0.0900,  0.0005,-12.9098 ]
-    pi0.TrShMid_spd   = [  0.0882,  1.7910, 24.4324,  7.4802,  0.0258,  2.7719,  1.1294, -0.0802,  0.0024, -9.7273 ]
-    pi0.TrShInn_spd   = [  0.1111,  1.7909, 18.0852,  7.1122,  0.0261,  1.3889,  1.1846, -0.0934,  0.0029, -8.9966 ]
-    
-    pi0.SPar     = [ 0.102 , 0.129 , 0.144  ]
-    pi0.LPar_Al1 = [ 17.936       ,  19.053       , 22.305 ] 
-    pi0.LPar_Al2 = [   1.15  ,  1.53  ,  2.04  ]
-    pi0.LPar_Al3 = [ 0.0392 , 0.455  , 0.0281  ]
-    pi0.LPar_Be1 = [ 54.54  , 60.87  , 58.04   ]
-    pi0.LPar_Be2 = [ 4.02  ,  4.15  ,  4.38    ]
-    pi0.LPar_Be3 = [  0.0308 , 0.0597 , 0.0247 ]
-    pi0.LPar_Be0 = [   0.,0.,0. ] ## //unused
-    pi0.LPar_z0  = [ 12566. ]
-    
-    # temporary : will be from condDB
     pi0.EtCut    = 2. * GeV;
-
-
+    # default setting (possibly updated from condDB)
+    pi0.addTool( CaloCorrectionBase, 'ShowerProfile')
+    pi0.addTool( CaloCorrectionBase, 'Pi0SCorrection')
+    pi0.addTool( CaloCorrectionBase, 'Pi0LCorrection')
+    shower = pi0.ShowerProfile
+    pSCorr = pi0.Pi0SCorrection
+    pLCorr = pi0.Pi0LCorrection
+    from Corrections import eCorrection, sCorrection, lCorrection,showerProfile
+    shower  = showerProfile( shower )
+    pSCorr  = sCorrection( pSCorr  )
+    pLCorr  = lCorrection( pLCorr  )    
 
     if clusterOnly :
         setTheProperty ( sseq , 'Context' , context )
@@ -389,7 +381,6 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     lcorr = pi0.LCorrection
     
     ## temporary : will be from condDB
-    from Corrections import eCorrection, sCorrection, lCorrection
     ecorr = eCorrection ( ecorr )
     scorr = sCorrection ( scorr )
     lcorr = lCorrection ( lcorr )

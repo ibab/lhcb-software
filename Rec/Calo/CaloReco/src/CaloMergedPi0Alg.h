@@ -31,6 +31,8 @@
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/NTuple.h"
+#include "CaloCorrectionBase.h"
+
 // ============================================================================
 // forward declarations
 // ============================================================================
@@ -139,29 +141,16 @@ private:
   Tools        m_pi0tools                       ;
   
   // Input Parameters
-  typedef std::vector<double>    Parameters  ;
-  Parameters TrShOut_nospd;
-  Parameters TrShMid_nospd;
-  Parameters TrShInn_nospd;
-  Parameters TrShOut_spd;
-  Parameters TrShMid_spd;
-  Parameters TrShInn_spd;
-  Parameters SPar;
-  Parameters LPar_Al1;
-  Parameters LPar_Al2;
-  Parameters LPar_Al3;
-  Parameters LPar_Be0;
-  Parameters LPar_Be1;
-  Parameters LPar_Be2;
-  Parameters LPar_Be3;
-  Parameters LPar_z0;
   bool m_createClusterOnly;
   unsigned long m_pi0s;
   
 private:
-  
+  CaloCorrectionBase* m_trSh;
+  CaloCorrectionBase* m_sCor;
+  CaloCorrectionBase* m_lCor;
   double m_eT_Cut  ;
   int    m_mX_Iter ;
+  DeCalorimeter* m_det;
 };
 // ============================================================================
 #endif // CaloMergedPi0Alg_H

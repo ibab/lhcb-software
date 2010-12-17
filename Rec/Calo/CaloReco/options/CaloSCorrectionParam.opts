@@ -1,30 +1,61 @@
+ElectronRec.SCorrection.Parameters = {
+  //                    function   #param     params :    outer | middle | inner
+        "shapeX"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "shapeY"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "residual"  : { 1        ,   8     ,             -0.47496E-03, -0.97712E-05, -0.14401E-03,
+                                                          0.44911    ,  0.33898    ,  0.29037,
+                                                         -0.34187E-01,  0.14566E-01,  0.28848E-01,
+                                                         -9.0335     , -5.9958     , -5.1697,
+                                                          0.46190    , -0.13533    , -0.34664,
+                                                         53.041      , 32.711      , 26.885,
+                                                         -1.2801     ,  0.33460E-01,  0.99928,  
+                                                        -97.865      ,-58.743      ,-45.032},
+        "asymP"     : { 1       ,    3     ,              0.24742E-01, 0.28587E-01, 0.19870E-01,
+                                                          0.11487E-01, 0.11557E-01, 0.38043E-02,
+                                                         -0.32640    ,-0.31548    ,-0.21436},
+        "asymM"     : { 1       ,    3     ,             -0.29386E-01,-0.28587E-01,-0.19870E-01,
+                                                          0.11472E-01, 0.11557E-01, 0.38043E-02,
+                                                          0.35928    , 0.31548    , 0.21436}
+};
+
+SinglePhotonRec.SCorrection.Parameters = {
+  //                    function   #param     params :    outer | middle | inner
+        "shapeX"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "shapeY"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "residual"  : { 1        ,   8     ,             -0.47496E-03, -0.97712E-05, -0.14401E-03,
+                                                          0.44911    ,  0.33898    ,  0.29037,
+                                                         -0.34187E-01,  0.14566E-01,  0.28848E-01,
+                                                         -9.0335     , -5.9958     , -5.1697,
+                                                          0.46190    , -0.13533    , -0.34664,
+                                                         53.041      , 32.711      , 26.885,
+                                                         -1.2801     ,  0.33460E-01,  0.99928, 
+                                                        -97.865      ,-58.743      ,-45.032},
+        "asymP"     : { 1       ,    3     ,              0.24742E-01, 0.28587E-01, 0.19870E-01,
+                                                          0.11487E-01, 0.11557E-01, 0.38043E-02,
+                                                         -0.32640    ,-0.31548    ,-0.21436},
+        "asymM"     : { 1       ,    3     ,             -0.29386E-01,-0.28587E-01,-0.19870E-01,
+                                                          0.11472E-01, 0.11557E-01, 0.38043E-02,
+                                                          0.35928    , 0.31548    , 0.21436}
+};
 
 
-
-// ==== Electrons
-ElectronRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
-ElectronRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
-ElectronRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
-ElectronRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
-ElectronRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
-ElectronRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
-ElectronRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
-
-// ==== SinglePhotons
-SinglePhotonRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
-SinglePhotonRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
-SinglePhotonRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
-SinglePhotonRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
-SinglePhotonRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
-SinglePhotonRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
-SinglePhotonRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
-
-// ==== PhotonFromMerged
-PhotonFromMergedRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
-PhotonFromMergedRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
-PhotonFromMergedRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
-PhotonFromMergedRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
-PhotonFromMergedRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
-PhotonFromMergedRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
-PhotonFromMergedRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
+PhotonFromMergedRec.SCorrection.Parameters = {
+  //                    function   #param     params :    outer | middle | inner
+        "shapeX"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "shapeY"    : { 5        ,   1     ,              0.102      , 0.129       , 0.144 },
+        "residual"  : { 1        ,   8     ,             -0.47496E-03, -0.97712E-05, -0.14401E-03,
+                                                          0.44911    ,  0.33898    ,  0.29037,
+                                                         -0.34187E-01,  0.14566E-01,  0.28848E-01,
+                                                         -9.0335     , -5.9958     , -5.1697,
+                                                          0.46190    , -0.13533    , -0.34664,
+                                                         53.041      , 32.711      , 26.885,
+                                                         -1.2801     ,  0.33460E-01,  0.99928, 
+                                                        -97.865      ,-58.743      ,-45.032},
+        "asymP"     : { 1       ,    3     ,              0.24742E-01, 0.28587E-01, 0.19870E-01,
+                                                          0.11487E-01, 0.11557E-01, 0.38043E-02,
+                                                         -0.32640    ,-0.31548    ,-0.21436},
+        "asymM"     : { 1       ,    3     ,             -0.29386E-01,-0.28587E-01,-0.19870E-01,
+                                                          0.11472E-01, 0.11557E-01, 0.38043E-02,
+                                                          0.35928    , 0.31548    , 0.21436}
+};
 

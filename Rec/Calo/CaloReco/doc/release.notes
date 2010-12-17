@@ -6,6 +6,12 @@
 
 ! -----------------------------------------------------------------------------
 
+
+- 2010-12-16 - Olivier Deschamps :
+ - Update CaloCorrectionBase to handle S/L-corrections + ShowerProfile parametrisation from condDB
+ - Update CaloSCorrection, CaloLCorrection and CaloMergedPi0Alg to get parameters from DB.
+ - updates options/python accordingly
+
 !========================= CaloReco v5r7p1 2010-10-28 =========================
 - 2010-10-15 - Olivier Deschamps :
  - Clean obsolete options file

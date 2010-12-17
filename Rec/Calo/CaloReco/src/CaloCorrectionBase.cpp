@@ -1,9 +1,8 @@
 // $Id: CaloCorrectionBase.cpp,v 1.2 2010-05-27 07:36:46 odescham Exp $
 // Include files 
 
-// from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-// local
+#include "Event/ProtoParticle.h"
 #include "CaloCorrectionBase.h"
 
 //-----------------------------------------------------------------------------
@@ -44,6 +43,9 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   declareProperty ( "Parameters"   , m_optParams);
   declareProperty ( "Corrections"  , m_corrections); // expect usage
   declareProperty ( "Hypotheses"   , m_hypos_   ) ;
+  declareProperty ( "ClusterMatchLocation"   , m_cmLoc );
+
+  m_cmLoc= LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context());
   m_corrections.push_back("All");
 
   /// acceptable hypotheses 
@@ -90,18 +92,15 @@ StatusCode CaloCorrectionBase::initialize() {
     debug ()  <<  " -->" << *it  << endmsg ; 
   };
 
-  // get parameters from DB or options
-  if ( !existDet<DataObject>( m_conditionName)  ){
-    debug() << "Initialize :  Condition '" << m_conditionName
-              << "' not found -- apply options parameters !" << endmsg; 
-    m_useCondDB = false;
-  }
 
   for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
     debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
   }
-  sc = m_useCondDB ? setDBParams() : setOptParams();
-  return sc;
+
+  // get external tools
+  m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
+
+  return setConditionParams(m_conditionName);
 }
 
 
@@ -139,6 +138,7 @@ StatusCode CaloCorrectionBase::finalize() {
 //=============================================================================©©ﬁ
 StatusCode CaloCorrectionBase::setDBParams(){
   debug() << "Get params from CondDB condition = " << m_conditionName << endmsg;
+  m_params.clear();
   registerCondition(m_conditionName, m_cond, &CaloCorrectionBase::updParams);
   return runUpdate();  
 }
@@ -146,7 +146,7 @@ StatusCode CaloCorrectionBase::setDBParams(){
 StatusCode CaloCorrectionBase::setOptParams(){
   debug() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
   if( m_optParams.empty() )return Warning("No parameters - no correction to be applied",StatusCode::SUCCESS);
-
+  m_params.clear();
   for(std::map<std::string, std::vector<double> >::iterator p = m_optParams.begin() ; m_optParams.end() != p ; ++p){
     std::string name = (*p).first;
     std::vector<double> vec = (*p).second;
@@ -221,6 +221,8 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
 
   // polynomial correction 
   std::vector<double> temp = pars.second;
+
+  // polynomial functions
   if (pars.first == CaloCorrection::Polynomial || 
       pars.first == CaloCorrection::InversPolynomial || 
       CaloCorrection::ExpPolynomial ||
@@ -238,9 +240,57 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
     if( pars.first == CaloCorrection::ExpPolynomial) cor = ( cor == 0 ) ? def : exp(cor);
   }
 
-  counter(name + " correction processing") += cor;
+  // sigmoid function
+  if( pars.first == CaloCorrection::Sigmoid ){
+    if( temp.size() == 4){
+      double a = temp[0];
+      double b = temp[1];
+      double c = temp[2];
+      double d = temp[3];
+      cor = a + b*tanh(c*(var+d));
+    }
+    else{
+      Warning("The power sigmoid function must have 4 parameters").ignore();
+    }
+  }
+
+  // Sshape function
+  if( pars.first == CaloCorrection::Sshape ){
+    if( temp.size() == 1){
+      double b = temp[0];
+      double delta = 0.5;
+      if( b > 0 ) {
+        double arg = var/delta * cosh( delta/b );
+        cor = b * log (arg + sqrt( arg*arg + 1. ));
+      }
+    }
+    else{
+      Warning("The Sshape function must have 1 parameter").ignore();
+    }  
+  }
+
+  // Shower profile function
+  if( pars.first == CaloCorrection::ShowerProfile ){
+    if( temp.size() == 10){
+      if( var > 0.5 ) {
+        cor = temp[0] * exp( -temp[1]*var);
+        cor += temp[2] * exp( -temp[3]*var);
+        cor += temp[4] * exp( -temp[5]*var);
+      }else{
+        cor  = 2.;
+        cor -= temp[6] * exp( -temp[7]*var);
+        cor -= temp[8] * exp( -temp[9]*var);
+      }
+    }else{
+      Warning("The ShowerProfile function must have 10 parameters").ignore();
+    }  
+  }
+
+  
+  counter(name + " correction processing (" + id.areaName() + ")") += cor;
   return cor;
 }
+      
 
 
 void CaloCorrectionBase::checkParams(){
@@ -277,3 +327,32 @@ void CaloCorrectionBase::checkParams(){
   }
 }
 
+
+
+double CaloCorrectionBase::incidence(const LHCb::CaloHypo* hypo, bool straight)const {
+
+  const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo(hypo,true) ;
+
+  double incidence = 0;
+  if(  LHCb::CaloHypo::EmCharged == hypo->hypothesis() && !straight ){
+    // for electron hypothesis : get the matching track
+    if (exist<LHCb::Calo2Track::IClusTrTable> (m_cmLoc)) {
+      LHCb::Calo2Track::IClusTrTable* ctable = get<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+      const LHCb::Calo2Track::IClusTrTable::Range range = ctable -> relations(cluster);
+      if ( !range.empty() ){
+        const LHCb::Track* ctrack = range.front();
+        // temporary protoParticle
+        LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
+        proto->setTrack( ctrack );
+        proto->addToCalo( hypo );
+        if( m_caloElectron->set(proto))incidence = m_caloElectron->caloState().momentum().Theta();
+        delete proto;
+      }
+    } 
+  }else{
+    // for neutrals :
+    LHCb::CaloMomentum cMomentum = LHCb::CaloMomentum( hypo );
+    incidence = cMomentum.momentum().Theta();    
+  }
+  return incidence;
+}

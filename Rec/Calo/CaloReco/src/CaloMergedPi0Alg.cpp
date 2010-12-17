@@ -69,14 +69,6 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , m_toolTypeNames       ()
   , m_tools               ()
   , m_pi0tools               ()
-  , TrShOut_nospd ()
-  , TrShMid_nospd ()
-  , TrShInn_nospd ()
-  , TrShOut_spd ()
-  , TrShMid_spd ()
-  , TrShInn_spd ()
-  , SPar ()
-  //
   , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
   , m_mX_Iter ( 16         )
 {
@@ -89,22 +81,6 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   // tool to be apllyed to all hypos 
   declareProperty ( "Tools"                 , m_toolTypeNames       ) ;
   declareProperty ( "Pi0Tools"              , m_pi0toolTypeNames       ) ;
-  // Transv. shape parametrization
-  declareProperty ( "TrShOut_nospd"         , TrShOut_nospd ) ;
-  declareProperty ( "TrShMid_nospd"         , TrShMid_nospd ) ;
-  declareProperty ( "TrShInn_nospd"         , TrShInn_nospd ) ;
-  declareProperty ( "TrShOut_spd"           , TrShOut_spd ) ;
-  declareProperty ( "TrShMid_spd"           , TrShMid_spd ) ;
-  declareProperty ( "TrShInn_spd"           , TrShInn_spd ) ;
-  declareProperty ( "SPar"                  , SPar ) ;
-  declareProperty ( "LPar_Al1"              , LPar_Al1 ) ;
-  declareProperty ( "LPar_Al2"              , LPar_Al2 ) ;
-  declareProperty ( "LPar_Al3"              , LPar_Al3 ) ;
-  declareProperty ( "LPar_Be0"              , LPar_Be0 ) ;
-  declareProperty ( "LPar_Be1"              , LPar_Be1 ) ;
-  declareProperty ( "LPar_Be2"              , LPar_Be2 ) ;
-  declareProperty ( "LPar_Be3"              , LPar_Be3 ) ;
-  declareProperty ( "LPar_z0"               , LPar_z0  ) ;
 
   // added by V.B. 2004-10-27
   declareProperty ( "EtCut"                 , m_eT_Cut  ) ;
@@ -114,7 +90,6 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "OutputData"        , m_outputData   ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
-
 
   // default context-dependent locations
   m_inputData  = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , context()  );
@@ -160,22 +135,12 @@ StatusCode CaloMergedPi0Alg::initialize()
     if( 0 == t ) { return StatusCode::FAILURE ; }
     m_pi0tools.push_back( t ) ;
   }
-  
-  // check vectors of parameters 
-  if( 10 != TrShOut_nospd.size() ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 10 != TrShMid_nospd.size() ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 10 != TrShInn_nospd.size() ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 10 != TrShOut_spd.size()   ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 10 != TrShMid_spd.size()   ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 10 != TrShInn_spd.size()   ) 
-  { return Error ( "Invalid number of parameters" ) ; }
-  if( 3  != SPar.size()          )
-  { return Error ( "Invalid number of parameters" ) ; }
+  m_trSh = tool<CaloCorrectionBase>("CaloCorrectionBase","ShowerProfile",this);
+  m_trSh->setConditionParams("Conditions/Reco/Calo/PhotonShowerProfile",true);
+  m_sCor = tool<CaloCorrectionBase>("CaloCorrectionBase","Pi0SCorrection",this);
+  m_sCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonSCorrection",true);
+  m_lCor = tool<CaloCorrectionBase>("CaloCorrectionBase","Pi0LCorrection",this);
+  m_lCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonLCorrection",true);  
   
   return StatusCode::SUCCESS;
 };
@@ -234,39 +199,20 @@ double CaloMergedPi0Alg::TrShape
 ( const int          /* Neig */ ,
   const unsigned int    area    ,
   const double          SpdHit  ,
-  const double          D3D     )
-{
-  
-  Parameters TrShPar;
-  
-  if ( 0 == area && 0 == SpdHit ) { TrShPar = TrShOut_nospd; }
-  if ( 1 == area && 0 == SpdHit ) { TrShPar = TrShMid_nospd; }
-  if ( 2 == area && 0 == SpdHit ) { TrShPar = TrShInn_nospd; }
-  if ( 0 == area && 0 != SpdHit ) { TrShPar = TrShOut_spd; }
-  if ( 1 == area && 0 != SpdHit ) { TrShPar = TrShMid_spd; }
-  if ( 2 == area && 0 != SpdHit ) { TrShPar = TrShInn_spd; }
-  
-  
-
-  double x = D3D;
+  const double          D3D     ){
   double Frac = 0;
-  if( 0.5 < D3D ){
-    Frac =  TrShPar[0]*exp(-TrShPar[1]*x) ;
-    Frac += TrShPar[2]*exp(-TrShPar[3]*x) ;
-    Frac += TrShPar[4]*exp(-TrShPar[5]*x) ;
-  }
-  if( 0.5 >= D3D ){
-    Frac  = 2. ;
-    Frac -=  TrShPar[6]*exp(-TrShPar[7]*x) ;
-    Frac -=  TrShPar[8]*exp(-TrShPar[9]*x) ;
-  }
-
-
-
+  LHCb::CaloCellID cellID(2,area,0,0); //fake cell 
+  //info() << area << " " << SpdHit << " " << D3D << endmsg;
+  Frac = (SpdHit == 0) ?
+    m_trSh->getCorrection( CaloCorrection::profile      , cellID , D3D ) :
+    m_trSh->getCorrection( CaloCorrection::profileC     , cellID , D3D ) ;
+  //info() << " D3D " << D3D << " Frac " << Frac << endmsg;
   if( 0. > Frac ) { Frac=0.; }
   if( 1. < Frac ) { Frac=1.; }
+  //counter("Shower fraction") += Frac;
   return Frac ;
-};
+} 
+  
 // ============================================================================
 /*  O. Deschamps 10 Mai 2002
  *
@@ -277,32 +223,41 @@ double CaloMergedPi0Alg::TrShape
  *  L-Correction for Photon Shower *
  */
 // ============================================================================
-double CaloMergedPi0Alg::BarZ
-( const double       e    ,
+double CaloMergedPi0Alg::BarZ( const double       e    ,
   const double       eprs ,
   const unsigned int area ,
   const double       x    ,
   const double       y    ,
-  const double    /* z */ )
-{
-  
-  double z0 = LPar_z0[0] ;// Parameter tuned wrt to z0=12566 mm !!
-  // Uncorrected angle
-  double tth   = sqrt ( pow(x,2) + pow(y,2) ) / z0 ;
-  double cth   = cos  ( atan( tth ) ) ;
-  // Corrected angle
-  double alpha = 
-    LPar_Al1[area] -exp(LPar_Al2[area] -  LPar_Al3[area] * eprs/Gaudi::Units::MeV);
-  double beta  = 
-    LPar_Be1[area] +exp(LPar_Be2[area] -  LPar_Be3[area] * eprs/Gaudi::Units::MeV);
+  const double    /* z */ ){ 
+  // Account for the tilt
+  ROOT::Math::Plane3D plane = m_det->plane(CaloPlane::Front); // Ecal Front-Plane
+  double  xg = x;
+  double  yg = y;
+  Gaudi::XYZVector normal=plane.Normal();
+  double Hesse = plane.HesseDistance();
+  double z0 = (-Hesse-normal.X()*x-normal.Y()*y)/normal.Z();
+  LHCb::CaloCellID cellID(2,area,0,0); //fake cell 
+  double zg = (cellID.area() == 2) ? z0+7.5 : z0;
 
-  //  if(0 >= eprs ){beta = LPar_Be0[area]; }
-  double tgfps = alpha * log(e/Gaudi::Units::GeV) + beta ;
-  tth = tth / ( 1. + tgfps * cth / z0 ) ;
+  //
+  double gamma0 = m_lCor->getCorrection(CaloCorrection::gamma0, cellID);
+  double delta0 = m_lCor->getCorrection(CaloCorrection::delta0, cellID);
+  double gammaP = m_lCor->getCorrection(CaloCorrection::gammaP, cellID, eprs);
+  double deltaP = m_lCor->getCorrection(CaloCorrection::deltaP, cellID, eprs);
+  double g = gamma0 - gammaP;
+  double d = delta0 + deltaP;
+
+  // Uncorrected angle
+  double tth   = sqrt ( pow(xg,2) + pow(yg,2) ) / zg ;
+  double cth   = cos  ( atan( tth ) ) ;
+  double tgfps = g * log(e/Gaudi::Units::GeV) + d ;
+  tth = tth / ( 1. + tgfps * cth / zg ) ;
   cth= cos( atan( tth ) ) ;
   double dzfps = cth * tgfps ;
+
 // Recompute Z position 
   double DeltaZ = z0+dzfps;
+  //counter("DeltaZ")+=DeltaZ;
   return DeltaZ ;
 };
 // ============================================================================
@@ -318,10 +273,9 @@ double CaloMergedPi0Alg::BarZ
 // ============================================================================
 double CaloMergedPi0Alg::BarXY(const int axis,
                          const unsigned int area,
-                         const double e[3][3])
-{
+                         const double e[3][3]){
+  LHCb::CaloCellID cellID(2,area,0,0); //fake cell 
   // Barycenter from 3x3 Energy Matrix
-
   const double dpx=-1.;
   const double dpy=+1.;
   const double dzx=0.;
@@ -342,26 +296,13 @@ double CaloMergedPi0Alg::BarXY(const int axis,
         + dmy*e[2][0] + dmy*e[2][1] + dmy*e[2][2];
   if(0 != Esum){AsymX = AsymX/Esum;}
   if(0 != Esum){AsymY = AsymY/Esum;}
-  
           
   // S-correction of Energy-weighted Barycenter
-
-  double Bparx=SPar[area];
-  double Bpary=SPar[area];
-  
-  double ArgX,ArgY;
-  double DeltaX=0;
-  double DeltaY=0;
-  double DeltaXY=0;
-  ArgX=2.*AsymX*sinh(0.5/Bparx);
-  DeltaX=Bparx*log(ArgX+sqrt(ArgX*ArgX+1.));
-  ArgY=2.*AsymY*sinh(0.5/Bpary);
-  DeltaY=Bpary*log(ArgY+sqrt(ArgY*ArgY+1.));
-  
-  if(1 == axis){DeltaXY = DeltaX;} 
-  if(2 == axis){DeltaXY = DeltaY;} 
-  
-  return DeltaXY ;
+  double deltaX = m_sCor->getCorrection(CaloCorrection::shapeX , cellID , AsymX , AsymX );
+  double deltaY = m_sCor->getCorrection(CaloCorrection::shapeY , cellID , AsymY , AsymY );
+  //counter("deltaX") += deltaX;
+  //counter("deltaY") += deltaY;
+  return (1==axis) ?  deltaX : deltaY ;
 };
 
 // ============================================================================
@@ -380,8 +321,9 @@ StatusCode CaloMergedPi0Alg::execute()
   typedef Clusters::iterator        Iterator;
 
   /// load data
-  SmartDataPtr<DeCalorimeter> detector( detSvc() , m_detData );
-  if( !detector ){ return Error("could not locate calorimeter '"+m_detData+"'");}
+
+  m_det = getDet<DeCalorimeter>( m_detData ) ;
+  if( !m_det ){ return Error("could not locate calorimeter '"+m_detData+"'");}
   SmartDataPtr<Clusters>  clusters( eventSvc() , m_inputData );
   if( 0 == clusters ){ return Error("Could not load input data ='"+m_inputData+"'");}
 
@@ -432,7 +374,7 @@ StatusCode CaloMergedPi0Alg::execute()
   LHCb::CaloDigits* prss = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Prs );
   
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
-  LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
+  LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( m_det ) ;
   
   int ik = 0;
   /// loop over all clusters 
@@ -673,10 +615,10 @@ StatusCode CaloMergedPi0Alg::execute()
         const LHCb::CaloDigit* digit   = SubClus[is][1][1];
         if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
         const LHCb::CaloCellID  idigit = digit->cellID() ;
-        SubSize[is] = detector->cellSize( idigit ) ;
-        SubX[is]    = detector->cellX   ( idigit ) ;
-        SubY[is]    = detector->cellY   ( idigit ) ;
-        SubZ[is]    = detector->cellZ   ( idigit ) ;
+        SubSize[is] = m_det->cellSize( idigit ) ;
+        SubX[is]    = m_det->cellX   ( idigit ) ;
+        SubY[is]    = m_det->cellY   ( idigit ) ;
+        SubZ[is]    = m_det->cellZ   ( idigit ) ;
         unsigned int area = idigit.area();
         Ene3x3[is]=0;
         for(int ir=0;ir<3;++ir){
@@ -714,9 +656,9 @@ StatusCode CaloMergedPi0Alg::execute()
               int colc = idcel.col();
               int rows = idseed.row();
               int cols = idseed.col();
-              double CelSize = detector->cellSize( idcel);
-              double CelX    = detector->cellX   ( idcel);
-              double CelY    = detector->cellY   ( idcel);
+              double CelSize = m_det->cellSize( idcel);
+              double CelX    = m_det->cellX   ( idcel);
+              double CelY    = m_det->cellY   ( idcel);
               // 3D  distance from the current cell to 
               // the other SubCluster barycenter
               double CelZ=(  SubX[is]*SubX[is]+
@@ -770,10 +712,10 @@ StatusCode CaloMergedPi0Alg::execute()
       if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
       const LHCb::CaloCellID  idigit = digit->cellID() ;
       unsigned int area = idigit.area();
-      SubSize[is] = detector->cellSize( idigit ) ;
-      SubX[is]    = detector->cellX   ( idigit ) ;
-      SubY[is]    = detector->cellY   ( idigit ) ;
-      SubZ[is]    = detector->cellZ   ( idigit ) ;
+      SubSize[is] = m_det->cellSize( idigit ) ;
+      SubX[is]    = m_det->cellX   ( idigit ) ;
+      SubY[is]    = m_det->cellY   ( idigit ) ;
+      SubZ[is]    = m_det->cellZ   ( idigit ) ;
       double Etemp[3][3];
       Ene3x3[is]=0;
       for(int ir=0;ir<3;++ir){
@@ -785,10 +727,10 @@ StatusCode CaloMergedPi0Alg::execute()
       SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
       SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
       SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-      PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
+      PosX[is]=m_det->cellX( SubClus[is][1][1]->cellID() )
         -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
                       - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
-      PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
+      PosY[is]=m_det->cellY( SubClus[is][1][1]->cellID() )
         -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
                       - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
     }
@@ -840,8 +782,8 @@ StatusCode CaloMergedPi0Alg::execute()
     const LHCb::CaloDigit*  seedig   = SubClus[0][1][1];;
     const LHCb::CaloCellID  idig     = seedig->cellID() ;
     // commented by I.B. 2004-08-20
-    // double zpos                = detector->cellZ   ( idig ) ;
-    // double csiz                = detector->cellSize( idig ) ;
+    // double zpos                = m_det->cellZ   ( idig ) ;
+    // double csiz                = m_det->cellSize( idig ) ;
     // double mpi0=0.1349;
     // double epi0=(ep1+ep2)/GeV;
     // double dmin=zpos*2*mpi0/epi0/csiz; 

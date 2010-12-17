@@ -131,11 +131,7 @@ StatusCode CaloElectronAlg::initialize()
 {
   // initialize  the base class 
   StatusCode sc = GaudiAlgorithm::initialize();
-  if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class GaudiAlgorithm!",sc);}
-  // check the geometry information 
-  const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData ) ;
-  if( 0 == det ) { return Error("Detector information is not available!");}
+  if( sc.isFailure() ){ return Error("Could not initialize the base class GaudiAlgorithm!",sc);}
   { // locate selector tools
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
          m_selectorsTypeNames.end() != item ; ++item )
@@ -272,8 +268,7 @@ CaloElectronAlg::execute()
   put ( hypos , m_outputData );
   
   // loop over clusters 
-  for ( iterator cluster = clusters->begin() ; clusters->end() != cluster ; ++cluster )
-  {
+  for ( iterator cluster = clusters->begin() ; clusters->end() != cluster ; ++cluster ){
     bool select = true ;
     
     // loop over all selectors 
@@ -287,9 +282,7 @@ CaloElectronAlg::execute()
     // create "Hypo"/"Photon" object
     std::auto_ptr<LHCb::CaloHypo> hypo ( new LHCb::CaloHypo() ) ;
     //
-    // set parameters of newly created hypo 
-    //    hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
-    hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); /// final!
+    hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); 
     hypo->addToClusters( *cluster );
     hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); 
     

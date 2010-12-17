@@ -1,4 +1,3 @@
-//PhotonFromMergedRec.InputData =   "Rec/Calo/SplitPhotons"        ;
 PhotonFromMergedRec.HypoType = "SplitPhotons";
 PhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrection
 PhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
