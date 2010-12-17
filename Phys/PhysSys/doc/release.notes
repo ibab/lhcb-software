@@ -3,6 +3,53 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r13>2010-12-17 Phys v9r12 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r12                                  #
+###############################################################################
+
+- Based on LHCb v31r8 and Gaudi v21r11. Post-stripping12 development version.
+
+ * DVAlgorithm:
+   . Now understands full InputLocations, i.e. ending with "/Particles".
+   . No more BlindVertexFitter.
+ * DaVinciTools:
+     CheckSelResult has Notmode.
+ * DecayTreeFitter:
+   . Revive functionality to reuse existing vertices (forceFitAll=False)
+   . Add functionality to get chi2 of part of the tree
+   . Reduce verbosity for failed fits
+ * New package Phys/KalmanFilter
+   . Kalman filter based vertex fitting.
+ * LoKiFitters
+   . DistanceCalculators: add methods for IP-vector
+   . Kalman filters moved to Phys/KalmanFilter
+   . Add branches for 3 and 4 body decays
+   . Untested proper treatment of di-gamma-like particles
+   . BlindVertexFitter removed.
+ * Many new LoKi functor symbols.
+   . See Phys/LoKiPhys, Phys/LoKiProtoParticles release notes.
+ * Selection toolkit
+   . Selection output locations now include "/Particles" by default, i.e. 
+     set for use with DVAlgorithms.
+   . Extension constructor argument in Selection, AutomaticData allows
+     to change it from "/Particles" to something else.
+   . Selection class has InputDataSetter constructor argument to specify
+     method used to set input data of underlying algorithm. Default is 
+     'IputLocations', i.e. for use with DVAlgorithms.
+   . New selection type VoidEventSelection, makes a LoKi__VoidFilter and
+     replaces "<Location>" in Code argument by location of the required
+     selection. Allows to set up event selections based on contents of
+     output location of any selection type. Exports input location as
+     outputLocation, so it looks like a plain selection and can be chained 
+     together.
+ * TisTosTobbing
+   . Important bug fixes for L0 reports makers letting intermediate channels 
+     act as decisions
+   . Important bug fix for reading TisTos information from stripping MicorDSTs
+
+
 </PRE><H1><A NAME=v9r12>2010-11-02 Phys v9r12 </A></H1><PRE>
 
 ###############################################################################
