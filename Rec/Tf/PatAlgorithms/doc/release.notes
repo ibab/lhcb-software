@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-12-17 - Olivier Callot
- - Add an option to define teh Forward tool name in PatForward
+ - Add an option to define the Forward tool name in PatForward
  - New implementation of the forward tracking, called FastForwardTool.
    To use it, set the option PatForward().ForwardToolName = "FastForwardTool"
    This gives efficiency increase with lower ghost rate, and is faster.
