@@ -117,6 +117,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     m_trackPool = trackpool;
     m_objectCount = 0;
     m_dirty = false;
+    m_evts = 0;
 }
 
 ZooWriter::ZooWriterContext::~ZooWriterContext()
@@ -181,6 +182,9 @@ void ZooWriter::ZooWriterContext::endEvent()
     }
     TProcessID::SetObjectCount(m_objectCount);
     m_dirty = false;
+    // optimize buffer sizes after first 250 events
+    ++m_evts;
+    if (250 == m_evts) m_T->OptimizeBaskets();
 }
 
 ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
@@ -188,6 +192,10 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     m_context(0),
     m_dist(0),
     m_bkg(0),
+    m_TriggerTisTos(0),
+#if DV_VER >= 256 // DaVinci >= v25r6
+    m_L0TriggerTisTos(0),
+#endif
     m_extrapolator (0),
     m_linkerTool_Links (0)
 {
@@ -254,6 +262,9 @@ StatusCode ZooWriter::initialize  ()
     m_pvReFitter = tool<IPVReFitter>(m_PVReFitterName, this );
     m_lifetimeFitter = tool<ILifetimeFitter>( "LoKi::LifetimeFitter", this);
     m_TriggerTisTos = tool<ITriggerTisTos>( "TriggerTisTos",this);
+#if DV_VER >= 256
+    m_L0TriggerTisTos = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+#endif
     m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
     m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
     m_odinDecoder = tool<IEventTimeDecoder>("OdinTimeDecoder");
@@ -956,16 +967,24 @@ void ZooWriter::writeTrigger(ZooP* zp, const LHCb::Particle* p)
 {
     ZooTrigger* trigger = zp->AddInfo<ZooTrigger>(*objman());
 
+    ITriggerTisTos *l0tistos = m_TriggerTisTos;
     m_TriggerTisTos->setOfflineInput(*p);
+#if DV_VER >= 256
+    // for details on new L0 TISTOS tools, see
+    // http://indico.cern.ch/getFile.py/access?contribId=4&resId=0&materialId=slides&confId=82230
+    l0tistos = m_L0TriggerTisTos;
+    l0tistos->setOfflineInput(*p);
+#endif
 
+    // start by filling the legacy fields
     for (unsigned idx = 0; idx < m_L0Name.value().size(); ++idx) {
 	bool decisionL0 = false;
 	bool tisL0 = false;
 	bool tosL0 = false;
-	m_TriggerTisTos->setTriggerInput(m_L0Name.value()[idx]);
-	std::vector<std::string> vs(m_TriggerTisTos->triggerSelectionNames());
-	m_TriggerTisTos->selectionTisTos(vs, decisionL0, tisL0, tosL0);
-	decisionL0 = 0 != m_TriggerTisTos->hltObjectSummaries().size();
+	l0tistos->setTriggerInput(m_L0Name.value()[idx]);
+	std::vector<std::string> vs(l0tistos->triggerSelectionNames());
+	l0tistos->selectionTisTos(vs, decisionL0, tisL0, tosL0);
+	decisionL0 = 0 != l0tistos->hltObjectSummaries().size();
 	trigger->SetBitsL0(idx, decisionL0, tisL0, tosL0);
     }
 
@@ -983,6 +1002,75 @@ void ZooWriter::writeTrigger(ZooP* zp, const LHCb::Particle* p)
 	bool tosHLT2 = false;
 	m_TriggerTisTos->triggerTisTos(*p, m_Hlt2Name.value()[idx], decisionHLT2, tisHLT2, tosHLT2);
 	trigger->SetBitsHLT2(idx, decisionHLT2, tisHLT2, tosHLT2);
+    }
+
+    // ok, now fill the new-style TIS/TOS fields
+    const TriggerDecisions::AllTriggerDecisions::DecisionList& declist =
+	TriggerDecisions::AllTriggerDecisions::alldecisions;
+    boost::shared_ptr<ZooEv> zev = zooev();
+    for (unsigned i = 0; i < declist.size(); ++i) {
+	bool decision = false, tis = false, tos = false, tps = false;
+	unsigned word = declist[i].second.first;
+	UInt_t mask = declist[i].second.second;
+	// don't ask for triggers which are not event present on event level
+	// the string-based LHCb tools are SLOOOOOOOOOOOOOOOW!
+	if (!(zev->getTriggerWord(word) & mask)) continue;
+	if (0 == word) {
+	    // word 0 is reserved to L0 stuff - since we cannot access L0
+	    // directly, we have to take the L0XXXXXXDecision ones
+	    // these are postscaled, however, so you need the check against
+	    // the hltObject summary below to check the decision itself 
+	    std::string decname =
+		std::string("L0") + declist[i].first + "Decision";
+#if DV_VER < 256
+	    // fix for older DaVinci versions by prepending Hlt1 and hoping
+	    // for the best
+	    decname = std::string("Hlt1") + decname;
+#endif
+#if DV_VER >= 256
+	    l0tistos->setOfflineInput(*p);
+	    l0tistos->setTriggerInput(decname);
+	    ITriggerTisTos::TisTosTob classifiedL0Dec =
+		l0tistos->tisTosTobTrigger();
+#else
+	    ITriggerTisTos::TisTosDecision classifiedL0Dec =
+		l0tistos->selectionTisTos(decname);
+#endif
+	    decision = 0 != l0tistos->hltObjectSummaries(decname).size();
+	    // according to the talk mentioned above, tis/tos does not
+	    // neccessarily work for L0 triggers (some L0 decisions are not
+	    // based on candidates)
+	    tis = classifiedL0Dec.tis();
+	    tos = classifiedL0Dec.tos();
+#if DV_VER >= 256
+	    tps = classifiedL0Dec.tps();
+#endif
+	} else {
+#if DV_VER >= 256
+	    m_TriggerTisTos->setOfflineInput(*p);
+	    m_TriggerTisTos->setTriggerInput(declist[i].first);
+	    ITriggerTisTos::TisTosTob classifiedDec =
+		m_TriggerTisTos->tisTosTobTrigger();
+#else
+	    ITriggerTisTos::TisTosDecision classifiedDec =
+		m_TriggerTisTos->triggerTisTos(*p, declist[i].first);
+#endif
+	    decision = classifiedDec.decision();
+	    tis = classifiedDec.tis();
+	    tos = classifiedDec.tos();
+#if DV_VER >= 256
+	    tps = classifiedDec.tps();
+#endif
+	}
+	// set decision/tis/tos words
+	if (decision)
+	    trigger->setTriggerDecWord(word, trigger->getTriggerDecWord(word) | mask);
+	if (tis)
+	    trigger->setTriggerTISWord(word, trigger->getTriggerTISWord(word) | mask);
+	if (tos)
+	    trigger->setTriggerTOSWord(word, trigger->getTriggerTOSWord(word) | mask);
+	if (tps)
+	    trigger->setTriggerTPSWord(word, trigger->getTriggerTPSWord(word) | mask);
     }
 }
 

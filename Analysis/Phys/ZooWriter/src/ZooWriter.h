@@ -127,6 +127,7 @@ class ZooWriter : public DVAlgorithm {
 		FittedTrackMap m_fittedTracks;
 		int m_objectCount;
 		bool m_dirty;
+		unsigned long m_evts;
 
 	    public:
 		/// constructor
@@ -234,6 +235,9 @@ class ZooWriter : public DVAlgorithm {
 	const IDistanceCalculator*    m_dist;
 	IBackgroundCategory*          m_bkg; 
 	ITriggerTisTos*               m_TriggerTisTos;
+#if DV_VER >= 256
+	ITriggerTisTos*               m_L0TriggerTisTos;
+#endif
 	ITrackFitter*		      m_trackFitter;
 	ILifetimeFitter*              m_lifetimeFitter;
 	IPVReFitter*                  m_pvReFitter;

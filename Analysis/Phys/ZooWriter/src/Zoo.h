@@ -463,7 +463,12 @@ class ZooTrigger : public TObject
 	    m_L0Dec(0), m_L0TIS(0), m_L0TOS(0),
 	    m_HLT1Dec(0), m_HLT1TIS(0), m_HLT1TOS(0),
 	    m_HLT2Dec(0), m_HLT2TIS(0), m_HLT2TOS(0)
-        { }
+        {
+	    std::fill(m_dec, m_dec + TriggerDecisions::NTriggerDecisionWords, 0);
+	    std::fill(m_tis, m_tis + TriggerDecisions::NTriggerDecisionWords, 0);
+	    std::fill(m_tos, m_tos + TriggerDecisions::NTriggerDecisionWords, 0);
+	    std::fill(m_tps, m_tps + TriggerDecisions::NTriggerDecisionWords, 0);
+	}
 
 	// backward compatible or of all bits
 	bool L0Dec(void)   const { return m_L0Dec; }; 
@@ -521,6 +526,108 @@ class ZooTrigger : public TObject
 	    if (HLT2TOS) m_HLT2TOS |= 1ULL << idx;
 	}
 
+	/// get trigger decision bit
+	/** usage example:
+	 * @code
+	 * using namespace TriggerDecisions;
+	 * ZooTrigger* tr = ... ;
+	 * [...]
+	 * if (tr->getDec<Hlt1Global>()) {
+	 *   // do something
+	 * }
+	 * @endcode
+	 * See ZooTriggerDecisions.h for a list of available decisions
+	 */
+	template<typename DEC> bool getDec(void) const
+	{ return m_dec[DEC::word] & DEC::mask; }
+	/// set/clear trigger decision bit
+	template<typename DEC> void setDec(bool status)
+	{ m_dec[DEC::word] = (m_dec[DEC::word] & ~DEC::mask) | (status ? DEC::mask : 0); }
+	/// get trigger TIS bit
+	template<typename DEC> bool getTIS(void) const
+	{ return m_tis[DEC::word] & DEC::mask; }
+	/// set/clear TIS decision bit
+	template<typename DEC> void setTIS(bool status)
+	{ m_tis[DEC::word] = (m_tis[DEC::word] & ~DEC::mask) | (status ? DEC::mask : 0); }
+	/// get trigger TOS bit
+	template<typename DEC> bool getTOS(void) const
+	{ return m_tos[DEC::word] & DEC::mask; }
+	/// set/clear trigger TOS bit
+	template<typename DEC> void setTOS(bool status)
+	{ m_tos[DEC::word] = (m_tos[DEC::word] & ~DEC::mask) | (status ? DEC::mask : 0); }
+	/// get trigger TPS bit (trigger partially signal)
+	template<typename DEC> bool getTPS(void) const
+	{ return m_tps[DEC::word] & DEC::mask; }
+	/// set/clear trigger TPS bit (trigger partially signal)
+	template<typename DEC> void setTPS(bool status)
+	{ m_tps[DEC::word] = (m_tps[DEC::word] & ~DEC::mask) | (status ? DEC::mask : 0); }
+	/// get trigger TUS bit (trigger used signal: TOS | TPS)
+	template<typename DEC> bool getTUS(void) const
+	{ return (m_tos[DEC::word] | m_tps[DEC::word]) & DEC::mask; }
+
+	/// get specified trigger decision word
+	UInt_t getTriggerDecWord(unsigned int i) const
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    return m_dec[i]; 
+	}
+
+	/// get specified trigger TIS word
+	UInt_t getTriggerTISWord(unsigned int i) const
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    return m_tis[i]; 
+	}
+
+	/// get specified trigger TOS word
+	UInt_t getTriggerTOSWord(unsigned int i) const
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    return m_tos[i]; 
+	}
+
+	/// get specified trigger TPS word (trigger partially signal)
+	UInt_t getTriggerTPSWord(unsigned int i) const
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    return m_tps[i]; 
+	}
+
+	/// get specified trigger TUS word (trigger used signal : TOS | TPS)
+	UInt_t getTriggerTUSWord(unsigned int i) const
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    return m_tos[i] | m_tps[i]; 
+	}
+
+	/// set specified trigger decision word
+	void setTriggerDecWord(unsigned int i, UInt_t val)
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    m_dec[i] = val;
+	}
+
+	/// set specified trigger TIS word
+	void setTriggerTISWord(unsigned int i, UInt_t val)
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    m_tis[i] = val;
+	}
+
+	/// set specified trigger TOS word
+	void setTriggerTOSWord(unsigned int i, UInt_t val)
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    m_tos[i] = val;
+	}
+
+	/// set specified trigger TPS word (trigger partially signal)
+	void setTriggerTPSWord(unsigned int i, UInt_t val)
+	{ 
+	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    m_tps[i] = val;
+	}
+
     private:
 	ULong64_t m_L0Dec;
 	ULong64_t m_L0TIS;
@@ -532,7 +639,12 @@ class ZooTrigger : public TObject
 	ULong64_t m_HLT2TIS;
 	ULong64_t m_HLT2TOS;
 
-	ClassDef(ZooTrigger,2)
+	UInt_t m_dec[TriggerDecisions::NTriggerDecisionWords];
+	UInt_t m_tis[TriggerDecisions::NTriggerDecisionWords];
+	UInt_t m_tos[TriggerDecisions::NTriggerDecisionWords];
+	UInt_t m_tps[TriggerDecisions::NTriggerDecisionWords];
+
+	ClassDef(ZooTrigger,3)
 };
 
 class ZooGhostCategory : public TObject
@@ -957,7 +1069,7 @@ class ZooEv : public TObject
 	template<typename DEC> bool getTriggerDec() const
 	{ return m_triggerDecisions[DEC::word] & DEC::mask; }
 
-	const UInt_t getTriggerWord(unsigned int i) const
+	UInt_t getTriggerWord(unsigned int i) const
 	{ 
 		assert(i < TriggerDecisions::NTriggerDecisionWords); 
 		return m_triggerDecisions[i]; 
