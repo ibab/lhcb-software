@@ -3,14 +3,76 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-11-15 - Marco Cattaneo
- - Start preparing v38r0. Removed v37r8 patches from cmt/requirements and updated
-   test reference to current lhcb-head. Any new patches of v37r8p* should be 
-   done on a branch. 
+</PRE><H1><A NAME=v38r0>2010-12-21 BrunelSys v38r0</A></H1><PRE>
+This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
+ Rec v10r6 and SQLDDDB v5r44, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+- Development version, in preparation for 2011 data taking
+
+- New tuning:
+  . #101117: New default tags for 2010,2009,2008 data. Changes include:
+    . ecal-20101106-qual: Ecal channel quality update for 2010 reprocessing
+    . ecal-20101106-calib: Ecal calibration update for 2010 reprocessing
+    . ecal-20101106-led: LED measured gain shift correction for Ecal
+    . rich-20101106-corr: Final 2010 RICH run by run gas refractive index corrs.
+    . rich-20101106-hpd: Added list of inactivwe HPDs
+    . rich1-20101106: New aerogel refractive index calibrations
+    . tt-20101106: updated TT dead strip maps
+  . #114631: New tuning of VeloCluster error parameterization (TrackTools v4r0)
+
+- New functionality
+  . Add support for inactive HPDs (RichDet v15r2)
+  . #87476: add options to switch on FastVelo instead of PatVelo (TrackSys v5r1)
+
+- Monitoring changes
+  . #95658: reduce verbosity of CaloDet initialisation (CaloDet v10r8)
+  . #101202: add profile plots of Rich data size vs. HPD and L1 ID
+  . #103054: Add processing time monitor for Vertex, Calo, Muon, Proto sequences
+    (RecConf v1r4)
+  . #103050: Various new Rich monitoring plots, reduce verbosity
+    (RichRecQC v2r48)
+  . #103947: Various improvements to trck resolution monitor
+    (RichRecMonitors v2r30)
+  . #114423: Add ExpertProtoMoni sequence to expert monitoring (RecConf v1r4)
+  . #103287, 103294: Execute track associators only if corresponding track type
+    has been reconstructed (TrackSys v5r1, TrackAssociators v2r9)
+
+- Changes to example options
+  . In COLLISION10-Beam3500GeV-VeloClosed-MagDown.py use a more recent raw file,
+    from run 81694
+
+- Changes to QMTests
+  . Added fixed-file sim2010 tests, to check for processing sim2010 files
+  . Started compatibility.qms suite, for future-proofing DB changes
+  . Modified the other fixedfile tests so that they only care about the
+    number of errors/warnings in the results
+  . fixedfile-boole-v19r8-2009-digi-extended test now only runs if 
+    fixedfile-boole-v19r8-2009-digi was successful
+  . fixedfile-boole-v19r8-2009-digi-extended-spillover test now only runs if 
+    fixedfile-boole-v19r8-2009-digi-extended was successful
+  . Update brunel.brunel2010magdown for changed input file
+  . New test brunel-mc10-withtruth.qmt to test MC10 simulation settings.
+    Currently uses a private file from Chris Jones.
+  . Ignore NeuroBayes initialization messages in QMTest references
+
+
+</PRE><H1><A NAME=v37r8p5>2010-11-23 BrunelSys v37r8p5</A></H1><PRE>
+This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
+ Rec v10r5p3 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+- This is a production version, for MC10 reconstruction
+
+- This is a minimal patch and clean-up to include the latest fixes which were
+  also done for the reprocessing release of Brunel v37r8p3.
+
+- There are also the RICH specific changes for smearing Cherencov angles from
+  the MC See the Rec release notes for more details.
 
 </PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
  Rec v10r5p2 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+- This is a production version, for 2010 end of run reprocessing
 
 - This version picks up the Tf/PatVelo fix for DB caching problems,
   and the Tr/TrackTools fix of an uninitialized pointer
