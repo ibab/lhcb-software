@@ -3,6 +3,8 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+</PRE><H1><A NAME=v1r2>2010-12-20 StrippingSys v1r2 </A></H1><PRE>
+
 ! 2010-11-15 - Juan Palacios
  - Add Phys/StandardParticles, module with Selection-type objects for
    following basic CommonParticles:

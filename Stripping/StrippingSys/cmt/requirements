@@ -1,20 +1,20 @@
 package StrippingSys
-version v1r1
+version v1r2
 
 branches doc cmt tests
 
 
 ####################################################################
 # Framework
-use  CommonParticles             v7r6     Phys   # Patrick Koppenburg, WGs
+use  CommonParticles             v7r6p1   Phys   # Patrick Koppenburg, WGs
 use  StandardParticles           v1r0     Phys   # Juan Palacios
 ####################################################################
 use  StrippingAlgs               v1r5     Phys   # Anton Poluektov
 use  StrippingUtils              v1r0     Phys   # Juan Palacios
-use  StrippingConf               v3r9     Phys   # Anton Poluektov
-use  StrippingSelections         v2r2     Phys   # Anton Poluektov
-use  StrippingSettings           v1r3     Phys   # Anton Poluektov
-use  DisplVertices 		 v7r1	  Phys	 # Neal Gauvin
+use  StrippingConf               v3r10    Phys   # Anton Poluektov
+use  StrippingSelections         v2r3     Phys   # Anton Poluektov
+use  StrippingSettings           v1r4     Phys   # Anton Poluektov
+use  DisplVertices 		 v7r2	  Phys	 # Neal Gauvin
 use  HighPtJets			 v1r2     Phys   # Marcin Kucharczyk
 use  StrippingNeuroBayes         v1r0     Phys   # Ulrich Kerzel
 use  MvaPreSelB2DH               v1r1     Phys   # Sajan Easo
