@@ -618,6 +618,9 @@ class DaVinci(LHCbConfigurableUser) :
             self._hlt()
             self._decReports()
             self._hltCondDBHack()
+        else :
+            L0Conf()
+            
         self._defineMonitors()
         self._defineEvents()
         self._defineInput()
@@ -627,4 +630,3 @@ class DaVinci(LHCbConfigurableUser) :
         self._mainSequence()
         # monitoring
         self._moniSequence()
-        
