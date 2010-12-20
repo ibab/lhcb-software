@@ -20,7 +20,7 @@ use GaudiObjDesc      v11r10p1
 
 use Camera            v1r19    Online
 use CondDBServer      v1r4     Online
-use DIM               v19r8p4  Online
+use DIM               v19r15   Online
 use ExampleGaucho     v3r4     Online
 use FarmMonitor       v2r2     Online
 use Gaucho            v6r30    Online

@@ -76,6 +76,7 @@ then
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*ConfDbMerge" \
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*RootMap" \
 	    | grep -v -x "Document[[:space:]]\+[a-zA-Z]*MergeMap" \
+	    | grep -v "/Boost/" \
 	    > build_${CMTCONFIG}.log;
     done;
 else
