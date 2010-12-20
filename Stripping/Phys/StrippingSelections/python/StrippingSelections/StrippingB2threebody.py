@@ -388,7 +388,7 @@ def B2threebodyLine(
     
     Bpresel= EventSelection(
         LoKi__VoidFilter("BpreselFor"+moduleName,
-                         Code=" (CONTAINS('%s') > 2.5) " %  ( InputRSel.outputLocation() + "/Particles" ) ),
+                         Code=" (CONTAINS('%s') > 2.5) " %  ( InputRSel.outputLocation() ) ),
         RequiredSelection=InputSel
     )
     BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [Bpresel] )

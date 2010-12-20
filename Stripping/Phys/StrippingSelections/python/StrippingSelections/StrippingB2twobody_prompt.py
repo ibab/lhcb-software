@@ -410,7 +410,7 @@ def B2twobody_promptLine(
    
     Bpresel= EventSelection(
         LoKi__VoidFilter("BpreselFor"+moduleName,
-                         Code=" (CONTAINS('%s') > 1.5) " %  ( InputSel_prompt.outputLocation() + "/Particles" ) ),
+                         Code=" (CONTAINS('%s') > 1.5) " %  ( InputSel_prompt.outputLocation() ) ),
         RequiredSelection=InputSel_prompt
     )
 

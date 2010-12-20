@@ -353,7 +353,7 @@ class StrippingTriMuonsConf(object) :
             ##
             LoKi__VoidFilter (
             "ThreeGoodMuons"  ,
-            Code = " CONTAINS('%s') > 2.5 " %  ( _goodmu.outputLocation() + "/Particles" ) 
+            Code = " CONTAINS('%s') > 2.5 " %  ( _goodmu.outputLocation() ) 
             ) ,
             ##
             RequiredSelection  = _goodmu
@@ -410,7 +410,7 @@ class StrippingTriMuonsConf(object) :
                 ##
                 LoKi__VoidFilter (
                 "ThreeTightMuons"  ,
-                Code = " CONTAINS( '%s' ) > 2.5 " %  ( _tightmu.outputLocation() + "/Particles" ) 
+                Code = " CONTAINS( '%s' ) > 2.5 " %  ( _tightmu.outputLocation() ) 
                 ) ,
                 ##
                 RequiredSelection  = _tightmu

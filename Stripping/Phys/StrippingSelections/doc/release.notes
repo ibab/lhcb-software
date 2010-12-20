@@ -5,6 +5,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v2r3 2010-12-20 ===============
+
+! 2010-12-20 - Juan Palacios
+ - StrippingTriMuons.py
+ - StrippingB2twobody_prompt.py
+ - StrippingB2threebody.py
+  . <selection type> .outputLocation() now includes "/Particles", so modify 
+    some bare LoKi__VoidFilters' Code accordingly.
+
 ! 2010-12-15 - Liming Zhang
  - correct broken cut in StrippingBs2Jpsif0.
 
