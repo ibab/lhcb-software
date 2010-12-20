@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
- * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.13 2009-12-08 19:28:27 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */
@@ -76,67 +73,78 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
   if ( exist<RichPIDs>( m_richPIDloc ) )
   {
     debug() << "Data already exists at '" << m_richPIDloc
-            << "' -> Will NOT replace" << endmsg; 
+            << "' -> Will NOT replace" << endmsg;
     return StatusCode::SUCCESS;
   }
-
-  // load ProtoParticles
-  const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
 
   // new RichPID container
   RichPIDs * rpids = new RichPIDs();
   put( rpids, m_richPIDloc );
 
-  // loop over protos and re-create RichPIDs
-  for ( ProtoParticles::const_iterator iP = protos->begin();
-        iP != protos->end(); ++iP )
+  // Do ProtoParticles exist ?
+  if ( exist<ProtoParticles>(m_protoPloc) )
   {
 
-    verbose() << "consider new proto-particle " << endmsg;
+    // load ProtoParticles
+    const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
 
-    // get Track pointer
-    const Track * track = (*iP)->track();
-    if ( !track )
+    // loop over protos and re-create RichPIDs
+    for ( ProtoParticles::const_iterator iP = protos->begin();
+          iP != protos->end(); ++iP )
     {
-      Warning( "Charged ProtoParticle has NULL Track pointer" );
-      continue;
+
+      verbose() << "consider new proto-particle " << endmsg;
+
+      // get Track pointer
+      const Track * track = (*iP)->track();
+      if ( !track )
+      {
+        Warning( "Charged ProtoParticle has NULL Track pointer" );
+        continue;
+      }
+
+      // does this proto have any Rich info in it ?
+      if ( (*iP)->hasInfo(ProtoParticle::RichPIDStatus) )
+      {
+
+        // new RichPID
+        RichPID * pid = new RichPID();
+
+        // Add to container with same key as Track
+        rpids->insert( pid, track->key() );
+
+        // make sure proto points to this RichPID
+        (*iP)->setRichPID( pid );
+
+        // copy info
+
+        // history word
+        pid->setPidResultCode( static_cast<unsigned int>((*iP)->info(ProtoParticle::RichPIDStatus,0)) );
+
+        // Track Pointer
+        pid->setTrack( track );
+
+        // DLLs
+        pid->setParticleDeltaLL(Rich::Electron,(float)(*iP)->info(ProtoParticle::RichDLLe, -999));
+        pid->setParticleDeltaLL(Rich::Muon,    (float)(*iP)->info(ProtoParticle::RichDLLmu,-999));
+        pid->setParticleDeltaLL(Rich::Pion,    (float)(*iP)->info(ProtoParticle::RichDLLpi,-999));
+        pid->setParticleDeltaLL(Rich::Kaon,    (float)(*iP)->info(ProtoParticle::RichDLLk, -999));
+        pid->setParticleDeltaLL(Rich::Proton,  (float)(*iP)->info(ProtoParticle::RichDLLp, -999));
+
+      } // has rich info
+
     }
 
-    // does this proto have any Rich info in it ?
-    if ( (*iP)->hasInfo(ProtoParticle::RichPIDStatus) )
+    if ( msgLevel(MSG::DEBUG) )
     {
-
-      // new RichPID
-      RichPID * pid = new RichPID();
-
-      // Add to container with same key as Track
-      rpids->insert( pid, track->key() );
-
-      // make sure proto points to this RichPID
-      (*iP)->setRichPID( pid );
-
-      // copy info
-
-      // history word
-      pid->setPidResultCode( static_cast<unsigned int>((*iP)->info(ProtoParticle::RichPIDStatus,0)) );
-
-      // Track Pointer
-      pid->setTrack( track );
-
-      // DLLs
-      pid->setParticleDeltaLL(Rich::Electron,(float)(*iP)->info(ProtoParticle::RichDLLe, -999));
-      pid->setParticleDeltaLL(Rich::Muon,    (float)(*iP)->info(ProtoParticle::RichDLLmu,-999));
-      pid->setParticleDeltaLL(Rich::Pion,    (float)(*iP)->info(ProtoParticle::RichDLLpi,-999));
-      pid->setParticleDeltaLL(Rich::Kaon,    (float)(*iP)->info(ProtoParticle::RichDLLk, -999));
-      pid->setParticleDeltaLL(Rich::Proton,  (float)(*iP)->info(ProtoParticle::RichDLLp, -999));
-
-    } // has rich info
+      debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endmsg;
+    }
 
   }
-
-  if ( msgLevel(MSG::DEBUG) )
+  else
   {
-    debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endmsg;
+    Warning( "No ProtoParticles at '" + m_protoPloc + 
+             "' -> Empty RichPIDs created at '" + m_richPIDloc + "'" ).ignore();
   }
 
   return StatusCode::SUCCESS;

@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
- * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.15 2009-12-08 19:28:27 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */
@@ -44,7 +41,7 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
     m_protoPloc    = ProtoParticleLocation::Charged;
     m_muonPIDloc   = MuonPIDLocation::Default;
     m_muonTrackLoc = TrackLocation::Muon;
-  } 
+  }
   declareProperty( "InputProtoParticles", m_protoPloc    );
   declareProperty( "OutputMuonPIDs",      m_muonPIDloc   );
   declareProperty( "InputMuonTracks",     m_muonTrackLoc );
@@ -83,98 +80,109 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
     return StatusCode::SUCCESS;
   }
 
-  // load ProtoParticles
-  const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Found " << protos->size() << " ProtoParticles at " << m_protoPloc << endmsg;
-  }
-
-  // Are Muon Tracks available ?
-  const Tracks * muonTracks = ( !exist<Tracks>(m_muonTrackLoc) ? NULL :
-                                get<Tracks>(m_muonTrackLoc) );
-  if ( !muonTracks )
-  {
-    Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS ).ignore();
-  }
-  else if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Found " << muonTracks->size() << " Muon Tracks at " << m_muonTrackLoc << endmsg;
-  }
-
   // new MuonPID container
   MuonPIDs * mpids = new MuonPIDs();
   put( mpids, m_muonPIDloc );
 
-  // loop over protos and re-create RichPIDs
-  for ( ProtoParticles::const_iterator iP = protos->begin();
-        iP != protos->end(); ++iP )
+  // Do ProtoParticles exist ?
+  if ( exist<ProtoParticles>(m_protoPloc) )
   {
 
-    if ( msgLevel(MSG::VERBOSE) )
+    // load ProtoParticles
+    const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
+    if ( msgLevel(MSG::DEBUG) )
     {
-      verbose() << "Trying ProtoParticle " << (*iP)->key() << endmsg;
+      debug() << "Found " << protos->size() << " ProtoParticles at " << m_protoPloc << endmsg;
     }
 
-    // get Track pointer
-    const Track * track = (*iP)->track();
-    if ( !track )
+    // Are Muon Tracks available ?
+    const Tracks * muonTracks = ( !exist<Tracks>(m_muonTrackLoc) ? NULL :
+                                  get<Tracks>(m_muonTrackLoc) );
+    if ( !muonTracks )
     {
-      Warning( "Charged ProtoParticle has NULL Track pointer" ).ignore();
-      continue;
+      Warning( "Muon Tracks unavailable at " + m_muonTrackLoc, StatusCode::SUCCESS ).ignore();
+    }
+    else if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Found " << muonTracks->size() << " Muon Tracks at " << m_muonTrackLoc << endmsg;
     }
 
-    // does this proto have any Muon info in it ?
-    if ( (*iP)->hasInfo(ProtoParticle::MuonPIDStatus) )
+    // loop over protos and re-create RichPIDs
+    for ( ProtoParticles::const_iterator iP = protos->begin();
+          iP != protos->end(); ++iP )
     {
+
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> Has MuonPID information" << endmsg;
+        verbose() << "Trying ProtoParticle " << (*iP)->key() << endmsg;
       }
 
-      // new MuonPID
-      MuonPID * pid = new MuonPID();
-
-      // Add to container with same key as Track
-      mpids->insert( pid, track->key() );
-
-      // make sure proto points to this MuonPID
-      (*iP)->setMuonPID( pid );
-
-      // copy info
-
-      // history word
-      pid->setStatus( static_cast<unsigned int>((*iP)->info(ProtoParticle::MuonPIDStatus,0)) );
-
-      // Track Pointer
-      pid->setIDTrack( track );
-
-      // PID info
-      pid->setMuonLLMu( (*iP)->info(ProtoParticle::MuonMuLL,    0) );
-      pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
-      pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
-
-      // Work around for old MuonPID data objects without IsMuonLoose
-      if ( !pid->IsMuonLoose()  && pid->IsMuon() ) { pid->setIsMuonLoose(true); }
-      // Work around for old MuonPID data objects without InAcceptance
-      if ( !pid->InAcceptance() && pid->IsMuon() ) { pid->setInAcceptance(true); }
-
-      // Muon Track (if it exists, it will have same key as primary track)
-      Track * muonTrack = ( NULL != muonTracks ? muonTracks->object(track->key()) : NULL );
-      if ( muonTrack )
+      // get Track pointer
+      const Track * track = (*iP)->track();
+      if ( !track )
       {
-        if ( msgLevel(MSG::DEBUG) )
-        { debug() << " -> Adding MuonTrack " << muonTrack->key() << endmsg; }
-        pid->setMuonTrack( muonTrack );
+        Warning( "Charged ProtoParticle has NULL Track pointer" ).ignore();
+        continue;
       }
 
-    } // has muon info
+      // does this proto have any Muon info in it ?
+      if ( (*iP)->hasInfo(ProtoParticle::MuonPIDStatus) )
+      {
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << " -> Has MuonPID information" << endmsg;
+        }
+
+        // new MuonPID
+        MuonPID * pid = new MuonPID();
+
+        // Add to container with same key as Track
+        mpids->insert( pid, track->key() );
+
+        // make sure proto points to this MuonPID
+        (*iP)->setMuonPID( pid );
+
+        // copy info
+
+        // history word
+        pid->setStatus( static_cast<unsigned int>((*iP)->info(ProtoParticle::MuonPIDStatus,0)) );
+
+        // Track Pointer
+        pid->setIDTrack( track );
+
+        // PID info
+        pid->setMuonLLMu( (*iP)->info(ProtoParticle::MuonMuLL,    0) );
+        pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
+        pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
+
+        // Work around for old MuonPID data objects without IsMuonLoose
+        if ( !pid->IsMuonLoose()  && pid->IsMuon() ) { pid->setIsMuonLoose(true); }
+        // Work around for old MuonPID data objects without InAcceptance
+        if ( !pid->InAcceptance() && pid->IsMuon() ) { pid->setInAcceptance(true); }
+
+        // Muon Track (if it exists, it will have same key as primary track)
+        Track * muonTrack = ( NULL != muonTracks ? muonTracks->object(track->key()) : NULL );
+        if ( muonTrack )
+        {
+          if ( msgLevel(MSG::DEBUG) )
+          { debug() << " -> Adding MuonTrack " << muonTrack->key() << endmsg; }
+          pid->setMuonTrack( muonTrack );
+        }
+
+      } // has muon info
+
+    }
+
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endmsg;
+    }
 
   }
-
-  if ( msgLevel(MSG::DEBUG) )
+  else
   {
-    debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endmsg;
+    Warning( "No ProtoParticles at '" + m_protoPloc + 
+             "' -> Empty MuonPIDs created at '" + m_muonPIDloc + "'" ).ignore();
   }
 
   return StatusCode::SUCCESS;

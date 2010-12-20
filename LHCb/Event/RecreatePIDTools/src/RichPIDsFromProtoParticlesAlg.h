@@ -4,9 +4,6 @@
  *
  * Header file for algorithm RichPIDsFromProtoParticlesAlg
  *
- * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.h,v 1.2 2007-02-19 11:38:06 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */

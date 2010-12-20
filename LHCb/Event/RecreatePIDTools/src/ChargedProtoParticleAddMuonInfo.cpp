@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleAddMuonInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.7 2010-03-08 21:51:08 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */

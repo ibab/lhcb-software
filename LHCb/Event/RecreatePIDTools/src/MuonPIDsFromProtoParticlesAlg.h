@@ -4,9 +4,6 @@
  *
  * Header file for algorithm MuonPIDsFromProtoParticlesAlg
  *
- * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.4 2009-08-29 20:37:19 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */
