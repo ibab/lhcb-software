@@ -1,31 +1,31 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v4r12
+version v4r13
 
 branches doc cmt
 
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r13    Phys   # Juan Palacios
-use  DSTWriterTests             v2r0     Phys   # Juan Palacios
+use  DSTWriters                 v1r14    Phys   # Juan Palacios
+use  DSTWriterTests             v2r1     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  FlavourTagging             v12r0    Phys   # Marco Musy
+use  FlavourTagging             v12r1    Phys   # Marco Musy
 
-use  DaVinciMonitors            v1r12p2  Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r13    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5     Rich   # Chris Jones
-use  KaliCalo                   v4r6     Phys   # Vanya Belyaev
+use  KaliCalo                   v4r7     Phys   # Vanya Belyaev
 ####################################################################
-use  DaVinciMCTools     	v9r27    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r27p1  Phys   # Juan Palacios
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r6     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r1     Phys   # Marco Musy
+use  FlavourTaggingChecker      v6r2     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DisplVerticesMC            v1r1     Phys   # Neal Gueissaz
-use  DecayTreeTuple             v3r9     Phys   # Rob Lambert
+use  DisplVerticesMC            v1r2     Phys   # Neal Gueissaz
+use  DecayTreeTuple             v3r10    Phys   # Rob Lambert
 use  LoKiJets                   v5r2p2   Phys   # Victor Coco
 ####################################################################
 #
@@ -37,10 +37,10 @@ use  MicroDSTBase        	v3r0    MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r6    MicroDST # Juan Palacios
 use  MicroDSTTools      	v2r1    MicroDST # Juan Palacios
 use  MicroDSTAlgorithm   	v5r0    MicroDST # Juan Palacios
-use  MicroDSTConf               v2r9    MicroDST # Juan Palacios
+use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r7    Tutorial          # P. Koppenburg
+use Analysis            	v8r8    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r6    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r13p2 Ex                # Juan Palacios
 
