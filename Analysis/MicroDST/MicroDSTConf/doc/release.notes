@@ -5,6 +5,8 @@
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
 
+!========================== MicroDSTConf v2r10 2010-12-20 =================
+
 ! 2010-12-13 - Juan PALACIOS
  - Added MicroDSTConf.TriggerConfUtils
   . Package with helper functionsto set up decoding of various trigger
