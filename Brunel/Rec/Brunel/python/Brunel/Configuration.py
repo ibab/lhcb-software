@@ -44,7 +44,7 @@ class Brunel(LHCbConfigurableUser):
         "EvtMax"          : -1
        ,"SkipEvents"      : 0
        ,"PrintFreq"       : 1
-       ,"DataType"        : "2010"
+       ,"DataType"        : "2011"
        ,"WithMC"          : False
        ,"Simulation"      : False
        ,"RecL0Only"       : False
