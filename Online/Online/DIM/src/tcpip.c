@@ -84,7 +84,7 @@ static int	queue_id = 0;
 static struct sockaddr_in DIM_sockname;
 #endif
 
-static int DIM_IO_path[2] = {0,0};
+static int DIM_IO_path[2] = {-1,-1};
 static int DIM_IO_Done = 0;
 static int DIM_IO_valid = 1;
 
@@ -243,7 +243,7 @@ int dim_tcpip_init(int thr_flag)
 	if(Threads_on)
 	{
 #ifdef WIN32
-		if(!DIM_IO_path[0])
+		if(DIM_IO_path[0] == -1)
 		{
 			if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 			{
@@ -258,7 +258,7 @@ int dim_tcpip_init(int thr_flag)
 			ioctl(DIM_IO_path[0], FIONBIO, &flags);
 		}
 #else
-		if(!DIM_IO_path[0])
+		if(DIM_IO_path[0] == -1)
 		{
 			pipe(DIM_IO_path);
 		}
@@ -290,8 +290,9 @@ void dim_tcpip_stop()
 	close(DIM_IO_path[0]);
 	close(DIM_IO_path[1]);
 #endif
-	DIM_IO_path[0] = 0;
-	DIM_IO_path[1] = 0;
+	DIM_IO_path[0] = -1;
+	DIM_IO_path[1] = -1;
+	DIM_IO_Done = 0;
 	init_done = 0;
 }
 
@@ -322,7 +323,7 @@ static int enable_sig(int conn_id)
 		ret = connect(DIM_IO_path[0], (struct sockaddr*)&DIM_sockname, sizeof(DIM_sockname));
 */
 		closesock(DIM_IO_path[0]);
-		DIM_IO_path[0] = 0;
+		DIM_IO_path[0] = -1;
 		if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 		{
 			perror("socket");
@@ -335,7 +336,7 @@ static int enable_sig(int conn_id)
 		}
 		DIM_IO_valid = 1;
 #else
-		if(DIM_IO_path[1])
+		if(DIM_IO_path[1] != -1)
 		{
 			if(!DIM_IO_Done)
 			{

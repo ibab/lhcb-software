@@ -194,11 +194,32 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 #endif
 	int update_did = 0;
 	int name_too_long = 0;
+	int rem_only = 0;
 
 	Dns_conns[conn_id].validity = time(NULL);
 	if( !Dns_conns[conn_id].service_head ) 
 	{
-        Dns_conns[conn_id].already = 0;
+
+		if(vtohl(packet->n_services) > 0)
+		{
+			service_id = vtohl(packet->services[0].service_id);
+			if(service_id & 0x80000000)
+				rem_only = 1;
+		}
+    if( Debug )
+	{
+			dim_print_date_time();
+			printf( " !!!! New Conn %3d : Server %s@%s (PID %d) registering %d services, to delete %d\n",
+				conn_id, packet->task_name,
+				packet->node_name, 
+				vtohl(packet->pid),
+				vtohl(packet->n_services), rem_only );
+			fflush(stdout);
+	}
+		if(rem_only)
+			return 0;
+
+		Dns_conns[conn_id].already = 0;
 		Dns_conns[conn_id].service_head =
 			(char *) malloc(sizeof(DNS_SERVICE));
 		dll_init( (DLL *) Dns_conns[conn_id].service_head );
@@ -217,6 +238,19 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 			Dns_conns[conn_id].node_addr[i] =  packet->node_addr[i];
 		Dns_conns[conn_id].pid = vtohl(packet->pid);
 		Dns_conns[conn_id].port = vtohl(packet->port);
+/*
+    if( Debug )
+	{
+			dim_print_date_time();
+			printf( " !!!! New Conn %3d : Server %s@%s (PID %d) registered %d services\n",
+				conn_id, Dns_conns[conn_id].task_name,
+				Dns_conns[conn_id].node_name, 
+				Dns_conns[conn_id].pid,
+				vtohl(packet->n_services) );
+			fflush(stdout);
+	}
+*/
+
 
 		if(strcmp(Dns_conns[conn_id].task_name,"DIS_DNS"))
 		if(DNS_accepted_domains[0] == 0)
@@ -305,6 +339,18 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 		name_too_long = 1;
 	for( i = 0; i < n_services; i++ ) 
 	{
+/*
+    if( Debug )
+	{
+			dim_print_date_time();
+			printf( " Conn %3d : Server %s@%s (PID %d) registered %s\n",
+				conn_id, Dns_conns[conn_id].task_name,
+				Dns_conns[conn_id].node_name, 
+				Dns_conns[conn_id].pid,
+				packet->services[i].service_name );
+			fflush(stdout);
+	}
+*/
 		if(n_services == 1)
 		{
 			if(!strcmp(packet->services[i].service_name, "DUMMY_UPDATE_PACKET"))

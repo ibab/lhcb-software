@@ -447,6 +447,9 @@ void dim_lock()
 	/*printf("Locking %d ", pthread_self());*/
     if(Dim_thr_locker != pthread_self())
     {
+#ifdef __linux__
+		pthread_testcancel();
+#endif
 		pthread_mutex_lock(&Global_DIM_mutex);
 		Dim_thr_locker=pthread_self();
 		/*printf(": Locked ");*/
