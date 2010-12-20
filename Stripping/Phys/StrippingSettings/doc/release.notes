@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v1r4 2010-12-20 ==================
+
 ! 2010-11-29 - Juan Palacios
  - Add tests/test_stripping12_instantiation.py
   . Tests that Stripping12 lines can be instantiated and passed on to 
