@@ -136,13 +136,12 @@ StatusCode CaloMergedPi0Alg::initialize()
     m_pi0tools.push_back( t ) ;
   }
   m_trSh = tool<CaloCorrectionBase>("CaloCorrectionBase","ShowerProfile",this);
-  m_trSh->setConditionParams("Conditions/Reco/Calo/PhotonShowerProfile",true);
+  sc=m_trSh->setConditionParams("Conditions/Reco/Calo/PhotonShowerProfile",true);
   m_sCor = tool<CaloCorrectionBase>("CaloCorrectionBase","Pi0SCorrection",this);
-  m_sCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonSCorrection",true);
+  sc=m_sCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonSCorrection",true);
   m_lCor = tool<CaloCorrectionBase>("CaloCorrectionBase","Pi0LCorrection",this);
-  m_lCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonLCorrection",true);  
-  
-  return StatusCode::SUCCESS;
+  sc=m_lCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonLCorrection",true);  
+  return sc;
 };
 
 // ============================================================================

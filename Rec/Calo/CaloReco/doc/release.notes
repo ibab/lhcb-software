@@ -6,6 +6,8 @@
 
 ! -----------------------------------------------------------------------------
 
+- 2010-12-20 - Olivier Deschamps
+ - reduce verbosity and fix untested StatusCode 
 
 - 2010-12-16 - Olivier Deschamps :
  - Update CaloCorrectionBase to handle S/L-corrections + ShowerProfile parametrisation from condDB

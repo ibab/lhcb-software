@@ -111,21 +111,24 @@ StatusCode CaloCorrectionBase::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
-    info() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+  if( m_corrections.size() > 1 || *(m_corrections.begin()) != "All" ){
+    for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
+      info() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+    }
   }
+  if( m_corrections.size() == 0)warning() << "All corrections have been disabled for " <<  name() << endmsg;
 
   if( m_cond == NULL )
-    info() << " Applied corrections configured via options for : " << endmsg;
+    info() << " Applied corrections configured via options for  " << name() <<endmsg;
   else
-    info() << " Applied corrections configured via condDB  ('" << m_conditionName << "') for : " << endmsg;
+    info() << " Applied corrections configured via condDB  ('" << m_conditionName << "') for " << name() << endmsg;
   for(  std::map<std::string, std::vector<double> >::iterator it = m_params.begin() ; m_params.end() != it ; ++it ){    
     std::string type = (*it).first;
     std::vector<double> vec = (*it).second;
     if( !vec.empty() ){
       int func = (int) vec[0];
       int dim  = (int) vec[1];
-      info() << " o  '" << type <<"'  correction as a '" << CaloCorrection::funcName[ func ] 
+      debug() << " o  '" << type <<"'  correction as a '" << CaloCorrection::funcName[ func ] 
              << "' function of " << dim << " parameters" << endmsg;
     }else
       warning() << " o '" << type << "' correction HAS NOT BEEN APPLIED  (badly configured)" << endmsg;
