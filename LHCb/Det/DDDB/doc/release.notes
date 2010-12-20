@@ -4,6 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2010-12-20 - Marco Cattaneo
+ - Update database tags for SQLDDDB v5r44:
+   . DDDB, 2009, 2010: head-20101206
+ - Add 2011 data type and make it the new default, default tags currently the
+   same as for 2010
+
 !========================= DDDB v1r39 2010-11-27 =========================
 ! 2010-11-15 - Marco Cattaneo
  - Update database tags for SQLDDDB v5r43:

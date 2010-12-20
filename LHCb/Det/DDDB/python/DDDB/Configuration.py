@@ -16,12 +16,12 @@ class DDDBConf(ConfigurableUser):
     ConfigurableUser for the configuration of the detector description.
     """
     __slots__ = { "DbRoot"    : "conddb:/lhcb.xml",
-                  "DataType"  : "2010",
+                  "DataType"  : "2011",
                   "Simulation": False,
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2010", "2009","2008","MC09","DC06","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2011", "2010", "2009","2008","MC09","DC06","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
     
@@ -112,12 +112,20 @@ class DDDBConf(ConfigurableUser):
                 cdb.Tags[p] = tag
                 log.warning("Default tag requested for partition %s (using %s)", p, tag )
 
+    def __2011_conf__(self):
+        """
+        Default configuration for 2011 data (and MonteCarlo for DDDB)
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "head-20101206")
+        self.__set_tag__(["LHCBCOND"], "head-20101112")
+    
     def __2010_conf__(self):
         """
         Default configuration for 2010 data (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20101026")
+        self.__set_tag__(["DDDB"], "head-20101206")
         self.__set_tag__(["LHCBCOND"], "head-20101112")
     
     def __2009_conf__(self):
@@ -125,7 +133,7 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2009 data and corresponding MonteCarlo
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20101026")
+        self.__set_tag__(["DDDB"], "head-20101206")
         self.__set_tag__(["LHCBCOND"], "head-20101112")
         self.__set_tag__(["SIMCOND"], "MC-20101026-vc15mm-md100")
     
