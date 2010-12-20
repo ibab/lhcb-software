@@ -3,7 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-The head of this package is now set up to include changes for 2011 production
+
+</PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>
+This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
+ Rec v10r6 and SQLDDDB v5r44, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+Development release in preparation for 2011 production
 
 - Changes to references to reflect changes in Brunel v38r0 output
   . #95658: reduce verbosity of CaloDet initialisation
@@ -42,6 +47,18 @@ The head of this package is now set up to include changes for 2011 production
   . New test brunel-mc10-withtruth.qmt to test MC10 simulation settings.
     Currently uses a private file from Chris Jones.
   . Ignore NeuroBayes initialization messages in QMTest references
+
+</PRE><H1><A NAME=v37r8p5>2010-11-23 Brunel v37r8p5</A></H1><PRE>
+This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
+ Rec v10r5p3 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+- This is a minimal patch and clean-up to include the latest fixes which were
+  also done for the reprocessing release of Brunel v37r8p3.
+
+- There are also the RICH specific changes for smearing Cherencov angles from the
+  MC. See the Rec release notes for more details.
+
+- There is a test of the new RICH functionality
 
 </PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
