@@ -189,9 +189,10 @@ int dim_dtq_init(int thr_flag)
 
 void dim_dtq_stop()
 {
-/*
+
 	int i;
 
+	scan_it();
 	for(i = 0; i < MAX_TIMER_QUEUES + 2; i++)
 	{
 		if( timer_queues[i].queue_head != NULL)
@@ -201,7 +202,6 @@ void dim_dtq_stop()
 			timer_queues[i].queue_head = 0;
 		}
 	}
-*/
 	sigvec_done = 0;
 }
 
@@ -652,6 +652,11 @@ static int scan_it()
 
 	DISABLE_AST
 	queue_head = timer_queues[WRITE_QUEUE].queue_head;
+	if(!queue_head)
+	{
+		ENABLE_AST
+		return(0);
+	}
 	auxp = queue_head;
 	while( (auxp = (TIMR_ENT *)dll_get_next((DLL *)queue_head,(DLL *)auxp)) )
 	{	

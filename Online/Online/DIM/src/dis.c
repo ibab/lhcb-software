@@ -1478,6 +1478,8 @@ void remove_service( int req_id )
 	int service_id;
 
 	reqp = (REQUEST *)id_get_ptr(req_id, SRC_DIS);
+	if(!reqp)
+		return;
 	servp = reqp->service_ptr;
 	if( !packet_size ) {
 		dis_packet = (DIS_PACKET *)malloc(DIS_HEADER);
@@ -1957,6 +1959,11 @@ void dis_send_service(unsigned service_id, int *buffer, int size)
 		return;
 	}
 	servp = (SERVICE *)id_get_ptr(service_id, SRC_DIS);
+	if(!servp)
+	{
+		ENABLE_AST
+		return;
+	}
 	if(!packet_size)
 	{
 		dis_packet = (DIS_PACKET *)malloc(DIS_HEADER+size);

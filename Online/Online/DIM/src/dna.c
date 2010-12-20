@@ -372,6 +372,8 @@ static int do_dna_write(int id)
 	void *buffer;
 
 	ptr = (WRITE_ITEM *)id_get_ptr(id, SRC_DNA);
+	if(!ptr)
+		return(2);
 	conn_id = ptr->conn_id;
 	buffer = ptr->buffer;
 	size = ptr->size;
