@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!=========================== DaVinciTests v1r8 2010-12-20 ====================
+
 ! 2010-12-15 Juan Palacios
  - Update davinci.tagging.test_tag reference table.
  - tests/options/DVTestWriteDst.py
