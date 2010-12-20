@@ -4,6 +4,8 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+!====================== StandardParticles v1r0 2010-12-20 ====================
+
 ! 2010-12-14 - Juan Palacios
  - Add "/Particles" to all locations.
 
