@@ -1,5 +1,5 @@
 package BooleSys
-version v21r9
+version v22r0
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v21r9   Digi     # Marco Cattaneo
+use Boole               v22r0   Digi     # Marco Cattaneo
 use BooleUMC            v1r2    Digi     # Tomasz Skwarnicki
 use DigiAlg             v4r20   Digi     # Marco Cattaneo
 
