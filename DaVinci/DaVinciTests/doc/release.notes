@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-12-21 - Rob Lambert
+ - fixedfile tests with 2010 simulation and reprocessing
+ - test suite compatibility.qms merged from v1r7b branch 
+
 !=========================== DaVinciTests v1r8 2010-12-20 ====================
 
 ! 2010-12-15 Juan Palacios

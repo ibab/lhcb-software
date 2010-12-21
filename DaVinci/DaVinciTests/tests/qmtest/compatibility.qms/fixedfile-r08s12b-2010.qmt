@@ -1,0 +1,15 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
+  <argument name="args"><set>
+    <text>$DAVINCITESTSROOT/tests/options/SimpleMuSelection.py</text>
+    <text>--option</text>
+    <text>from DaVinci.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101026"; LHCbApp().CondDBtag="head-20101112"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/r/rlambert/testfiles/R08S12b-SL-Merged.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; DaVinci().DataType="2010"; DaVinci().EvtMax=100;</text>
+  </set></argument>
+  <argument name="validator"><text>
+#print stdout
+#validateWithReference(preproc = preprocessor)
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":0})
+</text></argument>
+</extension>
