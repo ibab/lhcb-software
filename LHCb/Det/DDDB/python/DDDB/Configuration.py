@@ -187,7 +187,8 @@ class DDDBConf(ConfigurableUser):
         # Backward compatibility Dll to read HepMC 1 record
         ApplicationMgr().Dlls += [ "HepMCBack" ]
     
-    __data_types_handlers__ =  { "2010": __2010_conf__,
+    __data_types_handlers__ =  { "2011": __2011_conf__,
+                                 "2010": __2010_conf__,
                                  "2009": __2009_conf__,
                                  "2008": __2008_conf__,
                                  "MC09": __MC09_conf__,
