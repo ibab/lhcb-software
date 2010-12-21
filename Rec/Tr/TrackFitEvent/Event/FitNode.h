@@ -6,6 +6,8 @@
 #include "Event/Node.h"
 #include "Event/Measurement.h"
 #include "GaudiKernel/boost_allocator.h"
+// From LHCbMath
+#include "LHCbMath/MatrixManip.h"
 
 namespace LHCb
 {
@@ -53,6 +55,10 @@ namespace LHCb
     const Gaudi::TrackMatrix& transportMatrix() const
     { return m_transportMatrix; }
 
+    /// retrieve invert transport matrix
+    const Gaudi::TrackMatrix& invertTransportMatrix() const
+    { return m_invertTransportMatrix; }
+
     /// retrieve transport vector
     const Gaudi::TrackVector& transportVector() const
     { return m_transportVector; }
@@ -64,9 +70,7 @@ namespace LHCb
     Gaudi::TrackSymMatrix& noiseMatrix() { return m_noiseMatrix; }
 
     /// set transport matrix
-    void setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix ) {
-      m_transportMatrix = transportMatrix;
-    }
+    void setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix ); 
 
     /// set transport vector
     void setTransportVector( const Gaudi::TrackVector& transportVector ) {
@@ -83,10 +87,21 @@ namespace LHCb
       m_transportIsSet = transportIsSet;
     }
 
+    /// set the inversion flag
+    void setTransportIsInverted(bool isInverted){
+      m_transportIsInverted = isInverted;
+    }
+
     /// Check if the transport information is set correctly
     bool transportIsSet() const
     {
       return m_transportIsSet;
+    }
+
+    /// Check if the invert transport matrix have been computed correctly  
+    bool transportIsInverted() const
+    {
+      return m_transportIsInverted;
     }
     
     /// Retrieve the projection term (obsolete)
@@ -125,7 +140,7 @@ namespace LHCb
     
     /// set filtered state from backward filter
     void setFilteredStateBackward( const State& s ) { m_filteredStateBackward = s ; }
-    
+
     /// retrieve unbiased residual
     double unbiasedResidual() const 
     { return residual() * errMeasure2() / errResidual2() ; }
@@ -213,11 +228,13 @@ namespace LHCb
 #endif
   private:
 
-    Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
+    Gaudi::TrackMatrix    m_transportMatrix;       ///< transport matrix for propagation from previous node to this one
+    Gaudi::TrackMatrix    m_invertTransportMatrix; ///< transport matrix for propagation from this node to the previous one
     Gaudi::TrackVector    m_transportVector;    ///< transport vector for propagation from previous node to this one
     Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise in propagation from previous node to this one
     double                m_deltaEnergy;        ///< change in energy in propagation from previous node to this one
     bool                  m_transportIsSet;     ///< Flag for transport params
+    bool                  m_transportIsInverted;///< Flag for transport matrix inverted
     double                m_refResidual;        ///< residual of the reference    
     State                 m_predictedStateForward;  ///< predicted state of forward filter
     State                 m_predictedStateBackward; ///< predicted state of backward filter (bi-directional fit only)

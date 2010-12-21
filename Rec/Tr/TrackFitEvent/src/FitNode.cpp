@@ -5,6 +5,7 @@
 #include "Event/FitNode.h"
 
 using namespace Gaudi;
+using namespace Gaudi::Math;
 using namespace LHCb;
 
 /** @file FitNode.cpp
@@ -31,6 +32,7 @@ FitNode::FitNode():
   Node(),
   m_deltaEnergy(0),
   m_transportIsSet(false),
+  m_transportIsInverted(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
   m_deltaChi2Backward(0),
@@ -44,6 +46,7 @@ FitNode::FitNode( double zPos, LHCb::State::Location location ):
   Node(zPos,location),
   m_deltaEnergy(0),
   m_transportIsSet(false),
+  m_transportIsInverted(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
   m_deltaChi2Backward(0),
@@ -56,6 +59,7 @@ FitNode::FitNode(Measurement& aMeas):
   Node(&aMeas),
   m_deltaEnergy(0),
   m_transportIsSet(false),
+  m_transportIsInverted(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
   m_deltaChi2Backward(0),
@@ -105,3 +109,12 @@ LHCb::State FitNode::unbiasedState() const
   ROOT::Math::AssignSym::Evaluate(unbiasedC, (unit + K*H)*biasedC) ;
   return State( unbiasedX, unbiasedC, z(), state().location()) ;
 }
+
+void FitNode::setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix )  {
+  m_transportMatrix = transportMatrix;
+  // compute and cache the inverse transport matrix and store the status of inversion
+  m_invertTransportMatrix = transportMatrix;
+  m_transportIsInverted = true;
+  if (!m_invertTransportMatrix.Invert()) m_transportIsInverted = false;
+}
+

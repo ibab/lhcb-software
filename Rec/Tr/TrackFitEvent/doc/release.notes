@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2010-12-21 - Victor Coco
+ - FitNode: cache the inverse transport matrix when transport matrix is created
+
 =========================== TrackFitEvent v5r3 2010-08-25 ==================
 ! 2010-08-17 - Wouter Hulsbergen
  - fixed bug in KalmanFitResult cache introduced in v5r2
