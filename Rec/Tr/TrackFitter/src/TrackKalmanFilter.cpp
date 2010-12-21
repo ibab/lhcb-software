@@ -356,8 +356,8 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
   double z = aNode.z() ;
   //assert(fabs( prevNode.z() - aState.z()) < TrackParameters::propagationTolerance) ;
   if( fabs(z - aState.z()) > TrackParameters::propagationTolerance ) {
-    TrackMatrix invF = prevNode.transportMatrix();
-    if ( !(invF.Invert()) )
+    TrackMatrix invF = prevNode.invertTransportMatrix();
+    if ( ! prevNode.transportIsInverted())
       return failure( "unable to invert matrix in predictReverseFit" );
     
     // Get state vector

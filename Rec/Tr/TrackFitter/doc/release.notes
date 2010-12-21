@@ -3,6 +3,12 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2010-12-21 - Victor Coco
+- Change in predictReverse function of TrackKalmanFilter to get the cached 
+  inverse transport matrix store in FitNode  instead of recomputing it 
+  (comuptation done when transport  matrix is set)
+  Gain 7% of cycles spent in the fitter in HLT.
+
 !========================= TrackFitter v3r0p1 2010-12-16 =========================
 ! 2010-12-02 - Marco Cattaneo
  - Fix compilation problem with icc and Boost 1.44
