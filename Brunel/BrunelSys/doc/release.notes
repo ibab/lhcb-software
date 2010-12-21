@@ -3,6 +3,11 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2010-12-21 - Marco Cattaneo
+ - QMTest Reference updated for:
+  . #115007: reduce CaloReco verbosity
+  . #115040: New default DDDB tag for real data: head-20101206
+
 </PRE><H1><A NAME=v38r0>2010-12-21 BrunelSys v38r0</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
  Rec v10r6 and SQLDDDB v5r44, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
