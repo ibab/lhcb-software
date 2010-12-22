@@ -100,7 +100,9 @@ def test_multi_sequencer_sequences() :
                              EventPreSelector = preselsB,
                              PostSelectionAlgs =postselsB)
 
-    multiSeq = MultiSelectionSequence('MultiSeqAB', Sequences = [seqA, seqB])
+    multiSeq = MultiSelectionSequence('MultiSeqAB',
+                                      Sequences = [seqA, seqB],
+                                      sequencerType=DummySequencer)
 
     assert multiSeq.outputLocations() == [selA.outputLocation(),
                                           selB.outputLocation()]
@@ -108,7 +110,7 @@ def test_multi_sequencer_sequences() :
     print 'algos in seqA', len(seqA.algos)
     print 'algos in seqB', len(seqB.algos)
     
-    seqAlgos = multiSeq.sequence(sequencerType=DummySequencer).Members
+    seqAlgos = multiSeq.sequence().Members
     seqAlgosA = seqAlgos[0].Members
     seqAlgosB = seqAlgos[1].Members
     assert len(seqAlgos) == len(multiSeq.sequences)

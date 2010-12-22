@@ -5,6 +5,15 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-12-22 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Sequencer type set in constructors, not sequence() method. 
+    Sequencers built at construction given sequencer type. 
+    Default: GaudiSequencer.
+  . Use list and dict instead of copy.copy.
+ - tests/*.py
+  . Adapt to sequencer changes.
+
 !==================== PhysSel/PhysSelPython v6r0 2010-12-17 ================
 
 ! 2010-12-17 - Juan Palacios

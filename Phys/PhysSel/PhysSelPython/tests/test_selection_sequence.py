@@ -100,9 +100,10 @@ def test_sequencer_sequence() :
     seq = SelectionSequence('Seq0002',
                             TopSelection = sel03,
                             EventPreSelector = presels,
-                            PostSelectionAlgs = postsels)
+                            PostSelectionAlgs = postsels,
+                            sequencerType=DummySequencer)
 
-    seqAlgos = seq.sequence(sequencerType=DummySequencer).Members
+    seqAlgos = seq.sequence().Members
 
     ref_algos = [presel0,
                  presel1,
@@ -149,11 +150,12 @@ def test_clone_sequence() :
     seq = SelectionSequence('Seq03',
                             TopSelection = sel03,
                             EventPreSelector = presels,
-                            PostSelectionAlgs = postsels)
+                            PostSelectionAlgs = postsels,
+                            sequencerType=DummySequencer)
     
     clone = seq.clone('clone')
 
-    seqAlgos = clone.sequence(sequencerType=DummySequencer).Members
+    seqAlgos = clone.sequence().Members
 
     ref_algos = [presel0,
                  presel1,

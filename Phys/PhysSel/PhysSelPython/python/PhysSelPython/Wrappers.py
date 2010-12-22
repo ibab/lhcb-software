@@ -31,16 +31,8 @@ __all__ = ('DataOnDemand',
 
 from copy import copy
 
-_sequencerType = None
 
-try :
-    from Gaudi.Configuration import *
-    from Configurables import GaudiSequencer
-    _sequencerType = GaudiSequencer
-except :
-    print 'WARNING: Gaudi Configurables not found. No default sequencer type defined.'
-
-
+from Configurables import GaudiSequencer
 
 from SelPy.selection import ( flatAlgorithmList,
                               AutomaticData,
@@ -211,9 +203,10 @@ class MergedSelection(object) :
     def __init__(self,
                  name,
                  RequiredSelections = [],
-                 OutputBranch = "Phys") :
+                 OutputBranch = "Phys",
+                 sequencerType=GaudiSequencer) :
 
-        self.__ctor_dict__ = copy(locals())
+        self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
@@ -227,15 +220,15 @@ class MergedSelection(object) :
                               RequiredSelections = RequiredSelections,
                               OutputBranch = OutputBranch)
         
-#        self.algos = FlatSelectionListBuilder(self._sel).selectionList
         self.algos = flatAlgorithmList(self._sel)
 
         self.requiredSelections = []
         self._name = name
-        self._alg = _sequencerType('Seq'+self.name(),
-                                   Members = self.algos,
-                                   ModeOR = True,
-                                   ShortCircuit = False)
+        self._alg = sequencerType('Seq'+self.name(),
+                                  Members = self.algos,
+                                  ModeOR = True,
+                                  ShortCircuit = False)
+
     def algorithm(self) :
         return self._alg
     def name(self) :
@@ -284,21 +277,20 @@ class SelectionSequence(SelSequence) :
                  name,
                  TopSelection,
                  EventPreSelector = [],
-                 PostSelectionAlgs = []) :
+                 PostSelectionAlgs = [],
+                 sequencerType = GaudiSequencer) :
         SelSequence.__init__(self,
                              name,
                              TopSelection,
                              EventPreSelector,
                              PostSelectionAlgs)
 
-        self.gaudiseq = None
-
         if configurableExists(self.name()) :
             raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
 
-    def sequence(self, sequencerType = _sequencerType) :
-        if self.gaudiseq == None :
-            self.gaudiseq = sequencerType(self.name(), Members = self.algos)
+        self.gaudiseq = sequencerType(self.name(), Members = self.algos)
+
+    def sequence(self) :
         return self.gaudiseq
 
     def clone(self, name, **args) :
@@ -317,16 +309,25 @@ class MultiSelectionSequence(object) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    def __init__(self, name, Sequences = []) :
+    def __init__(self,
+                 name,
+                 Sequences = [],
+                 sequencerType = GaudiSequencer) :
 
         self._name = name
-        if configurableExists(self.name()) :
-            raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
-        self.sequences = copy(Sequences)
+        self.sequences = list(Sequences)
         self.gaudiseq = None
         self.algos = []
         for seq in self.sequences :
             self.algos += seq.algos
+
+        if configurableExists(self.name()) :
+            raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
+
+        self.gaudiseq = sequencerType(self.name(),
+                                      ModeOR = True,
+                                      ShortCircuit = False,
+                                      Members = [seq.sequence() for seq in self.sequences])
         
     def name(self) :
         return self._name
@@ -334,10 +335,5 @@ class MultiSelectionSequence(object) :
     def outputLocations(self) :
         return [seq.outputLocation() for seq in self.sequences]
 
-    def sequence(self, sequencerType = _sequencerType) :
-        if self.gaudiseq == None :
-            self.gaudiseq = sequencerType(self.name(),
-                                          ModeOR = True,
-                                          ShortCircuit = False,
-                                          Members = [seq.sequence() for seq in self.sequences])
+    def sequence(self) :
         return self.gaudiseq
