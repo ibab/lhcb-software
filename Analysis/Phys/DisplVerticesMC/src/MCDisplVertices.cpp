@@ -3650,7 +3650,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
 }
 
 //============================================================================
-//  Event number 
+//  Save the SPD multiplicity applied in the hadron and electron triggers.
 //============================================================================
 StatusCode MCDisplVertices::SaveL0RawInfos( Tuple& tuple ){
   //TupleToolRecoStats.cpp
