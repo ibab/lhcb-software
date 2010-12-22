@@ -27,7 +27,7 @@ public:
                   ISvcLocator* pSvcLocator )
     : 
     PBASE(name, pSvcLocator),
-    m_outputPrefix("microDST"),
+    m_outputPrefix("MicroDST"),
     m_rootInTES("/Event/")
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
@@ -40,7 +40,8 @@ public:
                   const IInterface* parent )
     : 
     PBASE(type, name, parent),
-    m_outputPrefix("microDST")
+    m_outputPrefix("MicroDST"),
+    m_rootInTES("/Event/")
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }

@@ -6,6 +6,13 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2010-12-22 - Juan Palacios
+ - MicroDST/MicroDSTCommon.h
+  . Bug fix: set default m_rootInTES for tool constructor. Was causing strange
+    behaviour when RootInTES not set explicitly. Only an issue for standalone
+    use of MicroDST algorithms, no problem when used within DSTWriters.
+ - Increase to v3r1p1.
+
 !====================== MicroDSTBase v3r1 2010-12-20 =========================
 
 ! 2010-11-17 - Juan Palacios
