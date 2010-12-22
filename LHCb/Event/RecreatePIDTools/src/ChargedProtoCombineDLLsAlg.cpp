@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
- * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.23 2010-03-08 01:46:40 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
  */
@@ -77,36 +74,51 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
   StatusCode scc = GaudiAlgorithm::initialize();
   if ( scc.isFailure() ) return scc;
 
-  for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
-    if(0 == m_maskTechnique[to_upper(*itech)]){
+  for ( std::vector<std::string>::iterator itech = m_elDisable.begin(); 
+        itech != m_elDisable.end(); ++itech )
+  {
+    if ( 0 == m_maskTechnique[to_upper(*itech)] ) 
+    {
       error() << "Electron PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_elCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for(std::vector<std::string>::iterator itech = m_muDisable.begin(); itech != m_muDisable.end(); ++itech){
-    if(0 == m_maskTechnique[to_upper(*itech)]){
+  for ( std::vector<std::string>::iterator itech = m_muDisable.begin(); 
+        itech != m_muDisable.end(); ++itech )
+  {
+    if ( 0 == m_maskTechnique[to_upper(*itech)] ) 
+    {
       error() << "Muon PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_muCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for(std::vector<std::string>::iterator itech = m_prDisable.begin(); itech != m_prDisable.end(); ++itech){
-    if(0 == m_maskTechnique[to_upper(*itech)]){
+  for ( std::vector<std::string>::iterator itech = m_prDisable.begin(); 
+        itech != m_prDisable.end(); ++itech )
+  {
+    if ( 0 == m_maskTechnique[to_upper(*itech)] )
+    {
       error() << "Proton PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_prCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for(std::vector<std::string>::iterator itech = m_piDisable.begin(); itech != m_piDisable.end(); ++itech){
-    if(0 == m_maskTechnique[to_upper(*itech)]){
+  for ( std::vector<std::string>::iterator itech = m_piDisable.begin(); 
+        itech != m_piDisable.end(); ++itech )
+  {
+    if ( 0 == m_maskTechnique[to_upper(*itech)] )
+    {
       error() << "Pion PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_piCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for(std::vector<std::string>::iterator itech = m_kaDisable.begin(); itech != m_kaDisable.end(); ++itech){
-    if(0 == m_maskTechnique[to_upper(*itech)]){
+  for ( std::vector<std::string>::iterator itech = m_kaDisable.begin(); 
+        itech != m_kaDisable.end(); ++itech )
+  {
+    if ( 0 == m_maskTechnique[to_upper(*itech)] )
+    {
       error() << "Kaon PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
@@ -114,11 +126,16 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
   }
 
   info() << "Using retuned RICH el and mu DLL values in combined DLLs" << endmsg;
-  if ( 0 == m_elCombDll ) Warning( "Not creating Combined DLL for electron hypothesis", StatusCode::SUCCESS );
-  if ( 0 == m_muCombDll ) Warning( "Not creating Combined DLL for muon hypothesis", StatusCode::SUCCESS );
-  if ( 0 == m_piCombDll ) Warning( "Not creating Combined DLL for pion hypothesis", StatusCode::SUCCESS );
-  if ( 0 == m_kaCombDll ) Warning( "Not creating Combined DLL for kaon hypothesis", StatusCode::SUCCESS );
-  if ( 0 == m_prCombDll ) Warning( "Not creating Combined DLL for proton hypothesis", StatusCode::SUCCESS );
+  if ( 0 == m_elCombDll ) 
+    Warning( "Not creating Combined DLL for electron hypothesis", StatusCode::SUCCESS ).ignore();
+  if ( 0 == m_muCombDll ) 
+    Warning( "Not creating Combined DLL for muon hypothesis", StatusCode::SUCCESS ).ignore();
+  if ( 0 == m_piCombDll ) 
+    Warning( "Not creating Combined DLL for pion hypothesis", StatusCode::SUCCESS ).ignore();
+  if ( 0 == m_kaCombDll ) 
+    Warning( "Not creating Combined DLL for kaon hypothesis", StatusCode::SUCCESS ).ignore();
+  if ( 0 == m_prCombDll ) 
+    Warning( "Not creating Combined DLL for proton hypothesis", StatusCode::SUCCESS ).ignore();
 
   return scc;
 }
@@ -126,7 +143,15 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ChargedProtoCombineDLLsAlg::execute(){
+StatusCode ChargedProtoCombineDLLsAlg::execute()
+{
+  // If Proto do not exist, exit cleaning with a warning
+  if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
+  {
+    return Warning( "ProtoParticles do not exist at '" + m_protoPath + "'",
+                    StatusCode::SUCCESS );
+  }
+
   // Load the charged ProtoParticles
   LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
 

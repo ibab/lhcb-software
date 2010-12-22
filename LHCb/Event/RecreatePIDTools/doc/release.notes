@@ -4,6 +4,10 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2010-12-22 - Chris Jones
+ - Fix ChargedProtoCombineDLLsAlg to not throw an exception when the input
+   ProtoParticles do not exist. Issues a warning and exits cleaning instead.
+
 ! 2010-12-20 - Chris Jones
  - Update RichPIDsFromProtoParticlesAlg and MuonPIDsFromProtoParticlesAlg to
    not throw an exception when the input ProtoParticles are missing, but to

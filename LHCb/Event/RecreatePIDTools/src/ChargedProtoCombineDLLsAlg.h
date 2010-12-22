@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
- * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.7 2009-08-29 20:37:18 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
  */
@@ -46,6 +43,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 protected:
+
   /// Converts a string to entirely upper case
   inline std::string to_upper( const std::string & in )
   {
@@ -53,7 +51,6 @@ protected:
     std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
     return out ;
   }
-
 
 private: // utility classes
 
