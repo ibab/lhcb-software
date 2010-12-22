@@ -417,9 +417,21 @@ StatusCode LumiIntegrateFSR::add_file() {
       } else {
         LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress);
         if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << " found" << endmsg ;
+        long fkey_ts = 0;
+        LHCb::LumiFSRs::iterator checkfsr = lumiFSRs->begin();
 	for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
+
 	  // trigger database update using the timeSpan FSR
-	  StatusCode sc = trigger_event(primaryFileRecordAddress, fkey);
+          // if no run number defined, there is no timespan FSR, so skip it
+          // todo: might want to check if lengths of containers are different
+          //       or always search for the GUID correspondence
+          if ( checkfsr[fkey]->runNumbers().size() ) {
+            StatusCode sc = trigger_event(primaryFileRecordAddress, fkey_ts);
+            fkey_ts++;
+          } else {
+            warning() << "missing run number at keycount: " << fkey << " " << fkey_ts << " skip db update for this FSR" << endmsg;
+          }
+
       	  // initialize integral with the primary BX
       	  LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
       	  add_fsr(result, primaryFileRecordAddress, 0, fkey);
@@ -525,6 +537,12 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
 
     // pick the TimeSpanFSR
     LHCb::TimeSpanFSRs::iterator tsfsr = timeSpanFSRs->begin();
+    // check index bounds
+    long tsfsr_len = timeSpanFSRs->size();
+    if ( fkey > tsfsr_len-1 ) {
+      warning() << "missing timeSpanFSR - use previous DB conditions" << endmsg;
+      return StatusCode::SUCCESS;
+    } 
     LHCb::TimeSpanFSR* timeSpanFSR = tsfsr[fkey];
     ulonglong t0 = timeSpanFSR->earliest();
     ulonglong t1 = timeSpanFSR->latest();

@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-12-22 - Jaap Panman
+ - add further protection for missing data in LumiIntegrateFSR
+   There can be completely empty raw data files, then no run number is stored 
+   and no TimeSpan FSR created.  The missing run-number is used to detect this
+   and to skip checking the time which would otherwise crash the job.
+
 !========================= LumiAlgs v4r1p2 2010-12-16 =========================
 ! 2010-12-16 - Marco Cattaneo
  - Fix dependencies to avoid LumiAlgsGenConfUser being executed before
