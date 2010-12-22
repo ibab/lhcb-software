@@ -74,7 +74,7 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
   StatusCode scc = GaudiAlgorithm::initialize();
   if ( scc.isFailure() ) return scc;
 
-  for ( std::vector<std::string>::iterator itech = m_elDisable.begin(); 
+  for ( std::vector<std::string>::const_iterator itech = m_elDisable.begin(); 
         itech != m_elDisable.end(); ++itech )
   {
     if ( 0 == m_maskTechnique[to_upper(*itech)] ) 
@@ -84,7 +84,7 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
     }
     m_elCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for ( std::vector<std::string>::iterator itech = m_muDisable.begin(); 
+  for ( std::vector<std::string>::const_iterator itech = m_muDisable.begin(); 
         itech != m_muDisable.end(); ++itech )
   {
     if ( 0 == m_maskTechnique[to_upper(*itech)] ) 
@@ -94,7 +94,7 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
     }
     m_muCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for ( std::vector<std::string>::iterator itech = m_prDisable.begin(); 
+  for ( std::vector<std::string>::const_iterator itech = m_prDisable.begin(); 
         itech != m_prDisable.end(); ++itech )
   {
     if ( 0 == m_maskTechnique[to_upper(*itech)] )
@@ -104,7 +104,7 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
     }
     m_prCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for ( std::vector<std::string>::iterator itech = m_piDisable.begin(); 
+  for ( std::vector<std::string>::const_iterator itech = m_piDisable.begin(); 
         itech != m_piDisable.end(); ++itech )
   {
     if ( 0 == m_maskTechnique[to_upper(*itech)] )
@@ -114,7 +114,7 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
     }
     m_piCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  for ( std::vector<std::string>::iterator itech = m_kaDisable.begin(); 
+  for ( std::vector<std::string>::const_iterator itech = m_kaDisable.begin(); 
         itech != m_kaDisable.end(); ++itech )
   {
     if ( 0 == m_maskTechnique[to_upper(*itech)] )
