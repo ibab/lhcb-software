@@ -24,6 +24,9 @@
 #include "Kernel/IParticle2State.h"
 #include "TrackInterfaces/ITrackFitter.h"
 
+//To decode L0DU raw infos
+#include "L0Interfaces/IL0DUFromRawTool.h"
+
 //Hlt tools
 #include "Kernel/ITriggerTisTos.h"
 
@@ -71,6 +74,7 @@ private:
   ITrackFitter* m_trackFit;     //refit particle
   ITrackFitter* m_trackPreFit;  //refit particle
   ITriggerTisTos* m_tisTos;
+  IL0DUFromRawTool* m_l0BankDecoder;
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
@@ -189,6 +193,7 @@ private:
   StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode GetCaloClusterInfos( std::string, Tuple &, double &, double & );
   StatusCode SaveTrigInfinTuple( Tuple & );
+  StatusCode SaveL0RawInfos( Tuple & );
   StatusCode fillHeader( Tuple & );
   StatusCode ReconstructMother( LHCb::Particle::ConstVector & );
 

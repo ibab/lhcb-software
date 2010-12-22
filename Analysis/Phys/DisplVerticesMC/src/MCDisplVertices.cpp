@@ -122,9 +122,11 @@ StatusCode MCDisplVertices::initialize() {
     debug() << "==> Initialize the MCDisplVertices algorithm" << endmsg;
 
 
-  if( m_SaveTrigInfos )
+  if( m_SaveTrigInfos ){
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
-
+    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");    
+  }
+  
 
   //Initialize Vertex Fitter
   //NOTE : BlindVertex fitter is temp. not available in v19r11 !
@@ -3644,8 +3646,33 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
   //debug() << *decReports << endmsg;
   
-  return StatusCode::SUCCESS;
+  return SaveL0RawInfos(tuple);
 }
+
+//============================================================================
+//  Event number 
+//============================================================================
+StatusCode MCDisplVertices::SaveL0RawInfos( Tuple& tuple ){
+  //TupleToolRecoStats.cpp
+
+  int nSpd = -1;
+  if(!m_l0BankDecoder){
+    Error("unable to get the L0DUFromRawTool");
+  } else {
+    m_l0BankDecoder->fillDataMap();
+    bool l0BankDecoderOK = m_l0BankDecoder->decodeBank();
+    if(!l0BankDecoderOK ){
+      Error("Readout error : unable to monitor the L0DU rawBank", 
+            StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
+    } else {
+      nSpd = m_l0BankDecoder->data("Spd(Mult)");
+    }
+  }
+  tuple->column( "SPDMult", nSpd );
+
+  return StatusCode::SUCCESS ;
+}
+
 
 //============================================================================
 //  Event number 
