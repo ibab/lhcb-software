@@ -100,10 +100,10 @@ StatusCode DisplVertices::initialize() {
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Initialize the DisplVertices algorithm" << endmsg;
 
-
-  if( m_SaveTrigInfos )
+  if( m_SaveTrigInfos ){
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
-
+    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");    
+  }
 
   if( m_RemVtxFromDet != 0 || m_SaveTuple ){
     //Get detector elements
@@ -1283,7 +1283,31 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
   //debug() << *decReports << endmsg;
   
-  return StatusCode::SUCCESS;
+  return SaveL0RawInfos(tuple);
+}
+
+//============================================================================
+//  Save the SPD multiplicity applied in the hadron and electron triggers.
+//============================================================================
+StatusCode DisplVertices::SaveL0RawInfos( Tuple& tuple ){
+  //TupleToolRecoStats.cpp
+
+  int nSpd = -1;
+  if(!m_l0BankDecoder){
+    Error("unable to get the L0DUFromRawTool");
+  } else {
+    m_l0BankDecoder->fillDataMap();
+    bool l0BankDecoderOK = m_l0BankDecoder->decodeBank();
+    if(!l0BankDecoderOK ){
+      Error("Readout error : unable to monitor the L0DU rawBank", 
+            StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
+    } else {
+      nSpd = m_l0BankDecoder->data("Spd(Mult)");
+    }
+  }
+  tuple->column( "SPDMult", nSpd );
+
+  return StatusCode::SUCCESS ;
 }
 
 //============================================================================

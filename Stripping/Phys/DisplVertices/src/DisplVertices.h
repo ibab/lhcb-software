@@ -6,6 +6,9 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 
+//To decode L0DU raw infos
+#include "L0Interfaces/IL0DUFromRawTool.h"
+
 //Hlt tools
 #include "Kernel/ITriggerTisTos.h"
 
@@ -45,6 +48,7 @@ protected:
 private:
 
   ITriggerTisTos* m_tisTos;
+  IL0DUFromRawTool* m_l0BankDecoder;
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
@@ -100,6 +104,7 @@ private:
   StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode GetCaloClusterInfos( std::string, Tuple &, double &, double & );
   StatusCode SaveTrigInfinTuple( Tuple & );
+  StatusCode SaveL0RawInfos( Tuple & );
   StatusCode SavePVs( Tuple & );
   StatusCode fillHeader( Tuple & );
   StatusCode ReconstructMother( LHCb::Particle::ConstVector & );

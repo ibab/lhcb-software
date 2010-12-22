@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+SaveTuple : save the SPD multiplicity applied in the hadron and electron triggers.
+
 !========================== DisplVertices v7r2 2010-12-20 ====================
 
 ! 2010-12-16 - Neal Gauvin
