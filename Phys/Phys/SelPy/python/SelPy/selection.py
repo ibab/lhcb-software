@@ -20,8 +20,6 @@ __all__ = ('AutomaticData',
            'IncompatibleInputLocations',
            'update_overlap')
 
-from copy import copy
-
 from SelPy.utils import flatSelectionList, removeDuplicates
 
 class AutoData(object) :
@@ -110,7 +108,7 @@ class Selection(object) :
         if name in Selection.__used_names :
             raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
 
-        self.__ctor_dict__ = copy(locals())
+        self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
         
@@ -187,11 +185,11 @@ class SelSequence(object) :
         if name in SelSequence.__used_names :
             raise NameError('SelSequence name ' + name + ' has already been used. Pick a new one.')
         SelSequence.__used_names.append(name)
-        self.__ctor_dict__ = copy(locals())
+        self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
-        self.algos = copy(EventPreSelector)
+        self.algos = list(EventPreSelector)
         self._name = name
         self._topSelection = TopSelection
         self.algos += flatAlgorithmList(TopSelection)
@@ -270,7 +268,7 @@ def update_overlap(dict0, dict1) :
     keys present in dict0.
     """
     overlap_keys = filter(dict1.has_key, dict0.keys())
-    result = copy(dict0)
+    result = dict(dict0)
     for key in overlap_keys : result[key] = dict1[key]
     return result
 

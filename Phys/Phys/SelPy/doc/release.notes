@@ -5,6 +5,11 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-12-22 - Juan Palacios
+ - python/SelPy/selection.py
+  . Use list and dict instead of copy.copy.
+ - Increase to v2r1.
+
 !======================== SelPy v2r0 2010-11-02 ==============================
 
 ! 2010-12-16 - Juan Palacios
