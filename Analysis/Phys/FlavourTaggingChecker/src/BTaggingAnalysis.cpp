@@ -344,33 +344,16 @@ StatusCode BTaggingAnalysis::execute() {
     double ippubs, ippuchi2bs;
     m_util->calcIPPU( axp, AXBS, PileUpVtx, 0, nippu, nippuerr, ipmean, xpos, ypos, zpos, 
                       xerrpos, yerrpos, zerrpos, ntracks, ippubs, ippuchi2bs );
-    /*
-      debug()<<" Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
-      debug()<<" tracks "<<ntracks<<endreq;
-      debug()<<" nippu "<<nippu<<",  ippuerr "<<nippuerr<<",  ipmean "<<ipmean<<endreq;
-      debug()<<" ippubs "<<ippubs<<",  ippuchi2 "<<ippuchi2bs<<endreq;
-      debug()<<" ,  x "<<xpos<<",  y "<<ypos<<",  z "<<zpos<<endreq;
-      debug()<<" ,  dx "<<xerrpos<<",  dy "<<yerrpos<<",  dz "<<zerrpos<<endreq;    
-    */
     double nippu2, nippuerr2, xpos2, ypos2, zpos2, xerrpos2, yerrpos2, zerrpos2;
     int ntracks2;
     double ippubs2, ippuchi2bs2;
     m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu, nippu2, nippuerr2, ipmean, xpos2, ypos2, zpos2, 
                       xerrpos2, yerrpos2, zerrpos2, ntracks2, ippubs2, ippuchi2bs2 );
-    /*
-      debug()<<" 2n Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
-      debug()<<" tracks "<<ntracks2<<endreq;
-      debug()<<" nippu "<<nippu2<<",  ippuerr "<<nippuerr2<<",  ipmean "<<ipmean<<endreq;
-      debug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
-      debug()<<" ,  x "<<xpos2<<",  y "<<ypos2<<",  z "<<zpos2<<endreq;
-      debug()<<" ,  dx "<<xerrpos2<<",  dy "<<yerrpos2<<",  dz "<<zerrpos2<<endreq;
-    */
     double nippu3, nippuerr3, xpos3, ypos3, zpos3, xerrpos3, yerrpos3, zerrpos3;
     int ntracks3;
     double ippubs3, ippuchi2bs3;
     m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu2, nippu3, nippuerr3, ipmean, xpos3, ypos3, zpos3, 
                       xerrpos3, yerrpos3, zerrpos3, ntracks3, ippubs3, ippuchi2bs3  );
-    //debug()<<" 3n Min IP: ippu3 "<<nippu3<<endreq;
 
     //calculate min IP wrt SV
     double ipSV=0, iperrSV=0, docaSV=0, docaErrSV=0;

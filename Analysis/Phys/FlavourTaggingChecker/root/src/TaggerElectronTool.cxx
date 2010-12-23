@@ -14,6 +14,9 @@ TaggerElectronTool::TaggerElectronTool() {
   declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
   declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
   declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
+  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.294 ); 
+  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.53 ); 
+  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.336 ); 
 
   NNetTool_MLP nnet;
   tele = new Tagger();
@@ -118,6 +121,10 @@ Tagger* TaggerElectronTool::tag(Event& event) {
 
   double pn = nnet.MLPe( NNinputs );
   if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;
+
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+  pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);
+  debug() << " Elec pn=" << pn <<" w="<<1-pn<< endreq;
 
   if( pn < m_ProbMin_ele ) return tele;
 

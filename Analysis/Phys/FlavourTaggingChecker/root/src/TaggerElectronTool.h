@@ -43,8 +43,10 @@ private:
   double m_ipPU_cut_ele;
   double m_distPhi_cut_ele;
   double m_ProbMin_ele ;
+  double m_P0_Cal_ele ;
+  double m_P1_Cal_ele ;
+  double m_Eta_Cal_ele ;
   
-
   NNetTool_MLP nnet;
   Tagger* tele;
 
@@ -59,7 +61,6 @@ private:
   TH1F* hcut_ele_distphi;
   TH1F* hcut_ele_N;
   TH1F* hcut_ele_ips ;
-
 
 };
 

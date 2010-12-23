@@ -36,6 +36,10 @@ class TaggerPionSameTool  : public GenericTool {
   double  m_PionProbMin, m_Pt_cut_pionS, m_P_cut_pionS, m_IPs_cut_pionS, 
     m_lcs_cut,m_dQcut_pionS,  m_dQcut_extra_pionS, m_ghost_cut_pS;
   double m_ipPU_cut_pS, m_distPhi_cut_pS;
+  double m_P0_Cal_pionS ;
+  double m_P1_Cal_pionS ;
+  double m_Eta_Cal_pionS ;
+
   NNetTool_MLP nnet;
   Tagger* tpionS;
 
@@ -48,6 +52,7 @@ class TaggerPionSameTool  : public GenericTool {
   TH1F* hcut_pS_dqe ;
   TH1F* hcut_pS_ippu ;
   TH1F* hcut_pS_distphi ;
+
 };
 
 #endif 

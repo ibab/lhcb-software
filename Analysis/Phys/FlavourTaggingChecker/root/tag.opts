@@ -42,8 +42,9 @@ EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 ##################################################################
 
 # Will first search in current dir and then in $FLAVOURTAGGINGOPTS:
-#IncludeFile cuts_mc2010.py
+#IncludeFile cuts_strip12.py
 #IncludeFile cuts_strip10_v1.py
 #IncludeFile cuts_strip10.py
 #IncludeFile cuts_strip9.py
+#IncludeFile cuts_mc2010.py
 

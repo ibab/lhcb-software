@@ -41,9 +41,12 @@ class Particle {
     m_docaSV=0;
     m_IPSV=0;
     m_IPPU=0;
-    m_ipmean=0; m_nippu=0; m_nippuerr=0; m_tracks=0; m_ippubs=0; m_ippuchi2bs=0;
+    m_ipmean=0; m_nippu=0; m_nippuerr=0; m_ippubs=0; m_ippuchi2bs=0;
+    m_tracks=0; m_tracks2=0; m_tracks3=0;
     m_trackp=0; m_trackzfirst=0;
     m_zpos=0; m_zerrpos=0;
+    m_zpos2=0; m_zpos3=0;
+    m_xpos=0; m_ypos=0;
     m_distPhi=0;
     m_endVertexPosition=TVector3(0,0,0);
     m_osc=0;
@@ -115,11 +118,17 @@ class Particle {
   double nippu() { return m_nippu; }
   double nippuerr() { return m_nippuerr; }
   int tracks() { return m_tracks; }
+  int tracks2() { return m_tracks2; }
+  int tracks3() { return m_tracks3; }
   double trackzfirst() { return m_trackzfirst; }
   double trackp() { return m_trackp; }
   double ippubs() { return m_ippubs; }
   double ippuchi2bs() { return m_ippuchi2bs; }
   double zpos() { return m_zpos; }
+  double ypos() { return m_ypos; }
+  double xpos() { return m_xpos; }
+  double zpos2() { return m_zpos2; }
+  double zpos3() { return m_zpos3; }
   double zerrpos() { return m_zerrpos; }
   /// Last Chi Square from tracking fit
   double LCS()  { return m_LCS; }
@@ -214,11 +223,17 @@ class Particle {
   void setnippu(double a)    { m_nippu = a; }
   void setnippuerr(double a)    { m_nippuerr = a; }
   void settracks(int a)    { m_tracks = a; }
+  void settracks2(int a)    { m_tracks2 = a; }
+  void settracks3(int a)    { m_tracks3 = a; }
   void settrackzfirst(double a)    { m_trackzfirst = a; }
   void settrackp(double a)    { m_trackp = a; }
   void setippubs(double a)    { m_ippubs = a; }
   void setippuchi2bs(double a)    { m_ippuchi2bs = a; }
   void setzpos(double a)    { m_zpos = a; }
+  void setypos(double a)    { m_ypos = a; }
+  void setxpos(double a)    { m_xpos = a; }
+  void setzpos2(double a)    { m_zpos2 = a; }
+  void setzpos3(double a)    { m_zpos3 = a; }
   void setzerrpos(double a)    { m_zerrpos = a; }
 
   void setDOCA( double a )   {  m_DOCA = a; }
@@ -260,11 +275,11 @@ class Particle {
   TVector3 m_endVertexPosition;
   /// extra info for PV tuning
   double m_ipmean, m_nippu, m_nippuerr, m_ippubs, m_ippuchi2bs;
-  int m_tracks;
+  int m_tracks, m_tracks2, m_tracks3;
   double m_trackzfirst, m_trackp;
   double m_zpos, m_zerrpos;
-
-
+  double m_zpos2, m_zpos3;
+  double m_xpos, m_ypos;
 };
 
 #endif 

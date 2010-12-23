@@ -33,6 +33,9 @@ class TaggerVertexChargeTool  : public GenericTool {
 
   double  m_PowerK,  m_MinimumVCharge, m_ProbMin_vtx,m_P0 , m_AverageOmega,
     m_P1, m_Gt075 ,  m_wSameSign2,  m_wSameSignMoreThan2 ;
+  double m_P0_Cal_vtx ;
+  double m_P1_Cal_vtx ;
+  double m_Eta_Cal_vtx ;
 
   TString m_CombinationTechnique, m_SecondaryVertexToolName;
 

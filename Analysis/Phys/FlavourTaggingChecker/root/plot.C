@@ -6,7 +6,6 @@
   gROOT->ProcessLine(".L plot.h+"); //load some functions defined there
   TFile fhisto("output/tag.root");
 
-
   TCanvas* c = new TCanvas("c","Tagging", 0, 0, 600, 600);
   c->SetBorderMode(0);
   c->SetFrameBorderMode(0);
@@ -27,15 +26,16 @@
   //  goto vtxcharge;
   //  goto pid;
   //  goto effeff_cut;
-  goto primaryvertex;
+  //  goto secondaryvertex;
+  //  goto multipleinteraction;
 
 taggercandidates:////////////////////////////////////////////////////
 
   cout<<"plotting at taggercandidates"<<endl;
 
   //compare same plots on two different root files
-  TString f1 = "output/tag_s9.root";  //
-  TString f2 = "output/tag_s10.root"; //in red
+  TString f1 = "output/tag_s10.root";  //
+  TString f2 = "output/tag_s12.root"; //in red
 
   c->Divide(2,2);
   c->cd(1); plot_taggercut(f1,f2,"h1");
@@ -225,7 +225,6 @@ taggercandidates:////////////////////////////////////////////////////
   cout<<"plotting at effeff_cut"<<endl;
   h1->Draw(); //changes dir (stupid root feature)
   plotEffectiveEff(hright, hwrong); if(wait())return;
-goto tag;
 
   plotEffectiveEff(hr_mu_p, hw_mu_p);                if(wait())return;
   plotEffectiveEff(hr_mu_pt, hw_mu_pt);              if(wait())return;
@@ -236,8 +235,6 @@ goto tag;
   plotEffectiveEff(hr_mu_pid, hw_mu_pid);            if(wait())return;
   plotEffectiveEff(hr_mu_tsal, hw_mu_tsal);          if(wait())return;
   plotEffectiveEff(hr_mu_mult, hw_mu_mult, "right2left");if(wait())return;
-
-tag:
 
   plotEffectiveEff(hr_ele_p, hw_ele_p);              if(wait())return;
   plotEffectiveEff(hr_ele_pt, hw_ele_pt);            if(wait())return;
@@ -268,9 +265,10 @@ tag:
   plotEffectiveEff(hr_kS_lcs, hw_kS_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_pid, hw_kS_pid, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_tsal, hw_kS_tsal);            if(wait())return;
-//  plotEffectiveEff(hr_kS_dq, hw_kS_dq);                if(wait())return;
-//  plotEffectiveEff(hr_kS_dqe, hw_kS_dqe);              if(wait())return;
   plotEffectiveEff(hr_kS_mult, hw_kS_mult, "right2left");if(wait())return;
+  //  plotEffectiveEff(hr_kS_dq, hw_kS_dq);                if(wait())return;
+  //  plotEffectiveEff(hr_kS_dqe, hw_kS_dqe);              if(wait())return;
+
   if(endblock) goto end;
 
  asymm: /////////////////////////////////////////////////////////////
@@ -408,54 +406,100 @@ tag:
   plotPID("kaon-proton",h1015, h1005, h1025); if(wait())return;
   plotPID("kaonsame",   h1013, h1003, h1023); if(wait())return;
   plotPID("pion",       h1014, h1004, h1024); 
-
-primaryvertex: /////////////////////////////////////////////////////////////
-
-  cout<<"plotting primary vertex"<<endl;
-    
-  hv170->Draw(); if(wait())return;
-  c->Clear(); c->Divide(2,2);
-  c->cd(1); hv174->Draw(); hv174_true->SetLineColor(2); hv174_true->Draw("same");
-  c->cd(2); hv175->Draw(); hv175_true->SetLineColor(2); hv175_true->Draw("same");
-  c->cd(3); hv176->Draw(); hv176_true->SetLineColor(2); hv176_true->Draw("same");
-  if(wait())return;
-  c->Clear(); c->Divide(2,3);
-  c->cd(1); hv184->Draw(); hv184->Fit("gaus","same"); 
-  c->cd(2); hv184_true->SetLineColor(kRed); hv184_true->Draw(); hv184_true->Fit("gaus","same");
-  c->cd(3); hv185->Draw(); hv185->Fit("gaus","same"); 
-  c->cd(4); hv185_true->SetLineColor(kRed); hv185_true->Draw(); hv185_true->Fit("gaus","same");
-  c->cd(5); hv186->Draw(); hv186->Fit("gaus","same"); 
-  c->cd(6); hv185_true->SetLineColor(kRed); hv186_true->Draw(); hv186_true->Fit("gaus","same");
-  if(wait())return;
-  c->Clear(); c->Divide(2,2);
-  c->cd(1); hv177->Draw(); hv177_true->SetMarkerColor(2); hv177_true->Draw("same");
-  c->cd(2); hv178->Draw(); hv178_true->SetLineColor(2); hv178_true->Draw("same");
-  c->cd(3); hv179->Draw(); hv179_true->SetMarkerColor(2); hv179_true->Draw("same");
-  c->cd(4); hv180->Draw(); hv180_true->SetLineColor(2); hv180_true->Draw("same");
-  if(wait())return;
-    
-  c->Clear(); c->Divide(2,2);
-  c->cd(1); hv179->Draw(); hv179_true->SetMarkerColor(2); hv179_true->Draw("same"); hv179_true->Fit("pol2");
-  TH1D* tprofx = new TH1D("tprofx","tprofx", 50, 0.8, 5);
-  TH1D* tprofy = new TH1D("tprofy","tprofy", 50, 0, 2);
-  TH1D *tprofx = hv179->ProjectionX(); 
-  TH1D *tprofy = hv179->ProjectionY(); 
-  c->cd(2); tprofx->Draw(); 
-  c->cd(3); tprofy->Draw(); 
-  if(wait())return;
   
-  c->Clear(); c->Divide(2,2);
-  c->cd(1); hv181->Draw();
-  c->cd(2); hv182->Draw();
-  c->cd(3); hv183->Draw();
+ secondaryvertex: /////////////////////////////////////////////////////////////
+  
+  cout<<"SV studies"<<endl;
+  cout<<" "<<endl;
+  cout<<"kaons/leptons"<<endl;
+  c->Clear(); c->Divide(1,3);
+  c->cd(1); hsv100->Draw();//kaons
+  c->cd(2); hsv101->Draw();//leptons
+  c->cd(3); hsv102->Draw();//leptons or kaons
   if(wait())return;
-  plotEffectiveEff(hv181_r, hv181_w, "right2left");   if(wait())return;
-  plotEffectiveEff(hv182_r, hv182_w, "right2left");   if(wait())return;
-  //tau vs Bid
-  plot_Eff_Omega(hv183_r, hv183_w, "right2left");   if(wait())return;
-  plot_Eff_Omega(hvtaus_r, hvtaus_w, "right2left");   if(wait())return;
-  plot_Eff_Omega(hvtau0_r, hvtau0_w, "right2left");   if(wait())return;
-  plot_Eff_Omega(hvtau_r, hvtau_w, "right2left");   if(wait())return;
+  plot_Eff_Omega(hsv100_r, hsv100_w); if(wait())return;
+  plot_Eff_Omega(hsv101_r, hsv101_w); if(wait())return;
+  plot_Eff_Omega(hsv102_r, hsv102_w); if(wait())return;
+
+  cout<<"PU, tracks in PU, z pos of PU, activity of PU"<<endl;
+  c->Clear(); c->Divide(2,2);
+  c->cd(1);hsv500->Draw();//PU
+  c->cd(2);hsv501->Draw();//tracks in PU
+  c->cd(3);hsv502->Draw();//z pos of PU
+  c->cd(4);hsv503->Draw();//activity
+  if(wait())return;
+  hsv500_r->DrawNormalized(); hsv500_w->SetLineColor(2); hsv500_w->DrawNormalized("same"); if(wait())return;
+  plot_Eff_Omega(hsv500_r, hsv500_w);   if(wait())return;
+  hsv501_r->DrawNormalized(); hsv501_w->SetLineColor(2); hsv501_w->DrawNormalized("same"); if(wait())return;
+  plot_Eff_Omega(hsv501_r, hsv501_w);   if(wait())return;
+  hsv503_r->DrawNormalized(); hsv503_w->SetLineColor(2); hsv503_w->DrawNormalized("same"); if(wait())return;
+  plot_Eff_Omega(hsv503_r, hsv503_w);   if(wait())return;
+  
+  cout<<"DeltaPhi/DeltaTheta"<<endl;
+  c->Clear(); c->Divide(1,2);
+  c->cd(1); hsv200->Draw();//DeltaPhi
+  c->cd(2); hsv201->Draw();//DeltaTheta
+  if(wait())return;
+  hsv200->Draw(); hsv200_g->SetLineColor(3); hsv200_g->Draw("same"); if(wait())return;
+  hsv201->Draw(); hsv201_g->SetLineColor(3); hsv201_g->Draw("same"); if(wait())return;
+  plotEffectiveEff(hsv200_r, hsv200_w, "right2left");   if(wait())return;
+  plotEffectiveEff(hsv201_r, hsv201_w, "right2left");   if(wait())return;
+  plotEffectiveEff(hsv201_r, hsv201_w);   if(wait())return;
+  
+  cout<<"resolution all/good P tau DeltaZ"<<endl;
+  c->Clear(); c->Divide(2,3);//resolution for P, tau, DeltaZ
+  c->cd(1); hsv301->Draw(); hsv301->Fit("gaus","same"); 
+  c->cd(2); hsv301_g->SetLineColor(3); hsv301_g->Draw(); hsv301_g->Fit("gaus","same");
+  c->cd(3); hsv302->Draw(); hsv302->Fit("gaus","same"); 
+  c->cd(4); hsv302_g->SetLineColor(3); hsv302_g->Draw(); hsv302_g->Fit("gaus","same");
+  c->cd(5); hsv303->Draw(); hsv303->Fit("gaus","same"); 
+  c->cd(6); hsv303_g->SetLineColor(3); hsv303_g->Draw(); hsv303_g->Fit("gaus","same");
+  if(wait())return;
+
+  cout<<"reco of momentum of BO for tau"<<endl;
+  c->Clear(); c->Divide(2,2);//For the reconstruction of tau
+  c->cd(1); hsv310_b->Draw(); hsv310_g->SetMarkerColor(3); hsv310_g->Draw("same");
+  c->cd(2); hsv311_b->Draw(); hsv311_g->SetLineColor(3); hsv311_g->Draw("same");
+  c->cd(3); hsv312_b->Draw(); hsv312_g->SetMarkerColor(3); hsv312_g->Draw("same");
+  c->cd(4); hsv313_b->Draw(); hsv313_g->SetLineColor(3); hsv313_g->Draw("same");
+  if(wait())return;
+  hsv312_g->Draw(); hsv312_g->Fit("pol1"); if(wait())return; //pol for reconstruct BO momentum
+
+  //tau
+  cout<<"tau"<<endl;
+  plot_Eff_Omega(hsv320_r, hsv320_w, "right2left");   if(wait())return;//no kaons
+  plot_Eff_Omega(hsv321_r, hsv321_w, "right2left");   if(wait())return;//Bs
+  plot_Eff_Omega(hsv322_r, hsv322_w, "right2left");   if(wait())return;//B0
+  plot_Eff_Omega(hsv323_r, hsv323_w, "right2left");   if(wait())return;//B+-
+  plot_Eff_Omega(hsv300_r, hsv300_w, "right2left");   if(wait())return;//tau
+
+  cout<<"SV with PU studies"<<endl;
+
+  cout<<"z pos, mag, zdif SV-PV, mag dif SV-PV"<<endl;
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hsv401->Draw();
+  c->cd(2); hsv421->Draw();
+  c->cd(3); hsv402->Draw();
+  c->cd(4); hsv422->Draw();
+  if(wait())return;
+  cout<<"sv closer to PU or to PV (z pos, mag)"<<endl;
+  cout<<"xy pos"<<endl;
+  cout<<"ip wrt PU"<<endl;
+  c->Clear(); c->Divide(2,2);
+  c->cd(1); hsv403->Draw();
+  c->cd(2); hsv423->Draw();
+  c->cd(3); hsv404_w->Draw(); hsv404_r->SetMarkerColor(3); hsv404_r->Draw("same");
+  c->cd(4); hsv405->Draw();
+  if(wait())return;
+
+  cout<<"zdif SV-PV, SV closer to PU or to PV, ip PU"<<endl;
+  plot_Eff_Omega(hsv402_r, hsv402_w);   if(wait())return;
+  plot_Eff_Omega(hsv403_r, hsv403_w);   if(wait())return;
+  plot_Eff_Omega(hsv405_r, hsv405_w);   if(wait())return;
+
+  if(endblock) goto end;
+
+ multipleinteraction: /////////////////////////////////////////////////////////////
 
   cout<<"plotting pointing to right primary vertex"<<endl;
   plotEffectiveEff(hpv_gippu_r, hpv_gippu_w           ); if(wait())return;  
@@ -463,6 +507,8 @@ primaryvertex: /////////////////////////////////////////////////////////////
   plotEffectiveEff(hpv_ipmeandif_r, hpv_ipmeandif_w, "right2left" ); if(wait())return;
   plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w, "right2left"); if(wait())return;
   plotEffectiveEff(hpv_zposabsdif_r, hpv_zposabsdif_w       ); if(wait())return;
+
+  if(endblock) goto end;
 
  end:
 

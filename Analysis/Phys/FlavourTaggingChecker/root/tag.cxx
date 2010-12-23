@@ -115,7 +115,7 @@ int main () {
         double ChiP = DstarMu.P();
         double ChiM = DstarMu.M();
         double newChiP = 0;
-	//Marc
+        //Marc
         if (UseModBtime==1) newChiP = ChiP/(0.283+ChiM*0.1283);
         //Stefania
         if (UseModBtime==2){
@@ -144,92 +144,186 @@ int main () {
       h4->Fill(event.multiplicity());
 
       //**********************//
-      //******PV studies******//
+      //******SV studies******//
       //**********************//
-      if (krec>=1){
-	Vertices secvtx = event.getSecondaryVertices();
-	Double_t   sz=0;
-	bool containskaon=false; 
-	if( !secvtx.empty()) {
-	  int nsecpart = secvtx.at(0)->outgoingParticles().size();
-	  sz = secvtx.at(0)->position().z();
-	  TVector3 BoppDir = secvtx.at(0)->position();
-	  Particles secparts = secvtx.at(0)->outgoingParticles();
-	  TVector3 BoppMom;
-	  TLorentzVector SVmomentum;
-	  for (int ip=0; ip<nsecpart; ip++) {
-	    BoppMom += secparts.at(ip)->momentum().Vect();
-	    SVmomentum += secparts.at(ip)->momentum();
-	    if (secparts.at(ip)->absID()==321) containskaon = true;
-	  }
-	  double SVP = SVmomentum.P();
-	  double SVM = SVmomentum.M();
-	  double SVGP = SVP/(0.16*SVM+0.12);
-	  double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
-	  double BDphiDir = BoppDir.DeltaPhi(SVmomentum.Vect());
-	  double BDTheDir = BoppDir.Theta()-SVmomentum.Vect().Theta();
-	  hv181->Fill(BDphiDir);
-	  hv182->Fill(BDTheDir);
-	  hv183->Fill(SVtau);
-	  //MC
-	  double BMCP = BOpart->p();
-	  double BMCM = BOpart->M();
-	  TVector3 truePV = event.MCVertex();
-	  double BMCsz = BOpart->endVertexPosition().z()-event.MCVertex().z();
-	  double BMCtau = (BOpart->endVertexPosition()-truePV).Mag()*5.28/BMCP/0.299792458;
-	  double BMCDphiDir = BoppDir.DeltaPhi(BOpart->momentum().Vect());
-	  double BMCDTheDir = BoppDir.Theta()-BOpart->momentum().Vect().Theta();
-	  double BMCDphiVec = BoppMom.DeltaPhi(BOpart->momentum().Vect());
-	  double distfromtrue = ((BOpart->endVertexPosition() - truePV)
-				 - secvtx.at(0)->position() ).Mag();
-	  hv170->Fill(distfromtrue);
-	  hv184->Fill(BMCP-SVGP);
-	  hv185->Fill(BMCtau-SVtau);
-	  hv186->Fill(BMCsz-sz);
-	  if(distfromtrue<1.0) { //un millimetro di distanza
-	    hv174_true->Fill(BMCDphiDir);
-	    hv175_true->Fill(BMCDTheDir);
-	    hv176_true->Fill(BMCDphiVec);
-	    hv177_true->Fill(SVP, BMCP);
-	    hv178_true->Fill(SVP/BMCP);
-	    hv179_true->Fill(SVM, SVP/BMCP);
-	    hv180_true->Fill(SVM/BMCM);
-	    hv184_true->Fill(BMCP-SVGP);
-	    hv185_true->Fill(BMCtau-SVtau);
-	    hv186_true->Fill(BMCsz-sz);
-	  } else {
-	    hv174->Fill(BMCDphiDir);
-	    hv175->Fill(BMCDTheDir);
-	    hv176->Fill(BMCDphiVec);
-	    hv177->Fill(SVP, BMCP);
-	    hv178->Fill(SVP/BMCP);
-	    hv179->Fill(SVM, SVP/BMCP);
-	    hv180->Fill(SVM/BMCM);
-	  }
-	  //study vtx properties
-	  if(tvtx->decision()){
-	    if(tvtx->decision()==TrueTag) {
-	      hv181_r->Fill(BDphiDir);
-	      hv182_r->Fill(BDTheDir);
-	      hv183_r->Fill(SVtau);
-	      //if (!containskaon) hv183_r->Fill(SVtau);
-	      if (fabs(BOpart->ID())==531) hvtaus_r->Fill(SVtau);
-	      if (fabs(BOpart->ID())==511) hvtau0_r->Fill(SVtau);
-	      if (fabs(BOpart->ID())==521) hvtau_r->Fill(SVtau);
-	    } else {
-	      hv181_w->Fill(BDphiDir);
-	      hv182_w->Fill(BDTheDir);
-	      hv183_w->Fill(SVtau);
-	      //if (!containskaon) hv183_w->Fill(SVtau);
-	      if (fabs(BOpart->ID())==531) hvtaus_w->Fill(SVtau);
-	      if (fabs(BOpart->ID())==511) hvtau0_w->Fill(SVtau);
-	      if (fabs(BOpart->ID())==521) hvtau_w->Fill(SVtau);
-	    }
-	  }   
-	}//sec not empty
-      }//krec
-      
-      //for primary vertex study
+      Vertices secvtx = event.getSecondaryVertices();
+      Double_t   sz=0;
+      bool containskaon=false; 
+      if( !secvtx.empty()) {
+        int nsecpart = secvtx.at(0)->outgoingParticles().size();
+        sz = secvtx.at(0)->position().z();
+        TVector3 BoppDir = secvtx.at(0)->position();
+        Particles secparts = secvtx.at(0)->outgoingParticles();
+        TVector3 BoppMom;
+        TLorentzVector SVmomentum;
+        //look for kaons or leptons in SV
+        int kaoncounter = 0;
+        int leptoncounter = 0;
+        int tagpartcounter = 0;
+        for (int ip=0; ip<nsecpart; ip++) {
+          BoppMom += secparts.at(ip)->momentum().Vect();
+          SVmomentum += secparts.at(ip)->momentum();
+          if (secparts.at(ip)->absID()==321) { containskaon = true; kaoncounter+=1; }
+          if (secparts.at(ip)->absID()==13 || secparts.at(ip)->absID()==11) leptoncounter+=1;
+          if (secparts.at(ip)->absID()==321 || secparts.at(ip)->absID()==13 || secparts.at(ip)->absID()==11) tagpartcounter+=1;
+        }
+        hsv100->Fill(kaoncounter);
+        hsv101->Fill(leptoncounter);
+        hsv102->Fill(tagpartcounter);
+        //pointing variables
+        double BDphiDir = BoppDir.DeltaPhi(SVmomentum.Vect());
+        double BDTheDir = BoppDir.Theta()-SVmomentum.Vect().Theta();	
+        hsv200->Fill(BDphiDir);
+        hsv201->Fill(BDTheDir);
+        //reconstruction of BO tau
+        double SVP = SVmomentum.P();
+        double SVM = SVmomentum.M();
+        double SVGP = SVP/(0.16*SVM+0.12);
+        double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
+        hsv300->Fill(SVtau);
+        //Check MC SV
+        double BMCP = BOpart->p();
+        double BMCM = BOpart->M();
+        TVector3 truePV = event.MCVertex();
+        double BMCsz = BOpart->endVertexPosition().z()-event.MCVertex().z();
+        double BMCtau = (BOpart->endVertexPosition()-truePV).Mag()*5.28/BMCP/0.299792458;
+        double BMCDphiDir = BoppDir.DeltaPhi(BOpart->momentum().Vect());
+        double BMCDTheDir = BoppDir.Theta()-BOpart->momentum().Vect().Theta();
+        double BMCDphiVec = BoppMom.DeltaPhi(BOpart->momentum().Vect());
+        double distfromtrue = ((BOpart->endVertexPosition() - truePV)- secvtx.at(0)->position() ).Mag();
+        hsv9->Fill(distfromtrue);
+        //resolution
+        hsv301->Fill(BMCP-SVGP);
+        hsv302->Fill(BMCtau-SVtau);
+        hsv303->Fill(BMCsz-sz);
+        if(distfromtrue<1.0) { //consider a good SV if SV closer to BO in less than 1 mm
+          //pointing
+          hsv200_g->Fill(BMCDphiDir);
+          hsv201_g->Fill(BMCDTheDir);
+          hsv202_g->Fill(BMCDphiVec);
+          //for tau
+          hsv301_g->Fill(BMCP-SVGP);
+          hsv302_g->Fill(BMCtau-SVtau);
+          hsv303_g->Fill(BMCsz-sz);
+          hsv310_g->Fill(SVP, BMCP);
+          hsv311_g->Fill(SVP/BMCP);
+          hsv312_g->Fill(SVM, SVP/BMCP);
+          hsv313_g->Fill(SVM/BMCM);
+        } else {
+          //pointing
+          hsv200_b->Fill(BMCDphiDir);
+          hsv201_b->Fill(BMCDTheDir);
+          hsv202_b->Fill(BMCDphiVec);
+          //for tau
+          hsv310_b->Fill(SVP, BMCP);
+          hsv311_b->Fill(SVP/BMCP);
+          hsv312_b->Fill(SVM, SVP/BMCP);
+          hsv313_b->Fill(SVM/BMCM);
+        }//distfromtrue
+        if (tvtx->decision()){
+          if(tvtx->decision()==TrueTag) {
+            hsv100_r->Fill(kaoncounter);
+            hsv101_r->Fill(leptoncounter);
+            hsv102_r->Fill(tagpartcounter);
+            hsv200_r->Fill(BDphiDir);
+            hsv201_r->Fill(BDTheDir);
+            hsv300_r->Fill(SVtau);
+            if (!containskaon) hsv320_r->Fill(SVtau);
+            if (fabs(BOpart->ID())==531) hsv321_r->Fill(SVtau);
+            if (fabs(BOpart->ID())==511) hsv322_r->Fill(SVtau);
+            if (fabs(BOpart->ID())==521) hsv323_r->Fill(SVtau);
+          } else {
+            hsv100_w->Fill(kaoncounter);
+            hsv101_w->Fill(leptoncounter);
+            hsv102_w->Fill(tagpartcounter);
+            hsv200_w->Fill(BDphiDir);
+            hsv201_w->Fill(BDTheDir);
+            hsv300_w->Fill(SVtau);
+            if (!containskaon) hsv320_w->Fill(SVtau);
+            if (fabs(BOpart->ID())==531) hsv321_w->Fill(SVtau);
+            if (fabs(BOpart->ID())==511) hsv322_w->Fill(SVtau);
+            if (fabs(BOpart->ID())==521) hsv323_w->Fill(SVtau);
+          }//truetag
+        }
+        //** SV vs PU **//
+        if (krec>=1 && tvtx->decision()){
+          //PileUp
+          double zposPU1 = secparts.at(0)->zpos();
+          double zposPU2 = secparts.at(0)->zpos2();
+          double zposPU3 = secparts.at(0)->zpos3();
+          int PUcounter=0;
+          if (zposPU1!=100000) PUcounter+=1;
+          if (zposPU2!=100000) PUcounter+=1;
+          if (zposPU3!=100000) PUcounter+=1;
+          hsv500->Fill(PUcounter);
+          double tracksPU1 = secparts.at(0)->tracks();
+          double tracksPU2 = secparts.at(0)->tracks2();
+          double tracksPU3 = secparts.at(0)->tracks3();
+          double totaltracks = tracksPU1+tracksPU2+tracksPU3;
+          if (totaltracks == 0) totaltracks = -1;
+          hsv501->Fill(tracksPU1); hsv501->Fill(tracksPU2); hsv501->Fill(tracksPU2);
+          hsv502->Fill(zposPU1); hsv502->Fill(zposPU2); hsv502->Fill(zposPU3);
+          double PUMag = sqrt(zposPU1*zposPU1+secparts.at(0)->xpos()*secparts.at(0)->xpos()+secparts.at(0)->ypos()*secparts.at(0)->ypos());
+          hsv522->Fill(PUMag);
+          if (zposPU1!=100000) hsv503->Fill(tracksPU1/totaltracks);//PU according to activity
+          if (zposPU2!=100000) hsv503->Fill(tracksPU2/totaltracks);
+          if (zposPU3!=100000) hsv503->Fill(tracksPU3/totaltracks);
+          //distance SV versus PV and PU
+          TVector3 BoppDirnocor = BoppDir+event.RecVertex();//SV z pos wrt (0,0)
+          hsv401->Fill(BoppDir.z());//SV z pos wrt PV
+          hsv421->Fill(BoppDir.Mag());//SV mag wrt PV
+          TVector3 SVUnit = SVmomentum.Vect().Unit();
+          TVector3 PUpos;
+          PUpos.SetX(secparts.at(0)->xpos());
+          PUpos.SetY(secparts.at(0)->ypos());
+          PUpos.SetZ(secparts.at(0)->zpos());
+          TVector3 k;//distance SV - PU
+          k.SetX(BoppDirnocor.x()-PUpos.x());
+          k.SetY(BoppDirnocor.y()-PUpos.y());
+          k.SetZ(BoppDirnocor.z()-PUpos.z());
+          double cte = SVUnit.Dot(k)/k.Mag();
+          double distance = k.Mag() * sqrt(1-cte*cte);//calculate distance SVmomentum and PU
+          hsv405->Fill(distance);
+          double difzposSVPU = BoppDirnocor.z()-zposPU1;//only first PU
+          double difSVPU = (BoppDirnocor-PUpos).Mag();
+          hsv402->Fill(difzposSVPU);
+          hsv422->Fill(difSVPU);
+          double PUPV = fabs(difzposSVPU)-fabs(BoppDir.z());//SV closer to PV or to PU
+          double PUPVmag = fabs(difSVPU)-fabs(BoppDir.Mag());
+          hsv403->Fill(PUPV);
+          hsv423->Fill(PUPVmag);
+          if(tvtx->decision()==TrueTag) {
+            hsv401_r->Fill(BoppDir.z());
+            hsv402_r->Fill(difzposSVPU);
+            hsv403_r->Fill(PUPV);
+            hsv404_r->Fill(BoppDir.x(),BoppDir.y());//xy plane for SV
+            hsv405_r->Fill(distance);
+            hsv500_r->Fill(PUcounter);
+            hsv501_r->Fill(tracksPU1); hsv501_r->Fill(tracksPU2); hsv501_r->Fill(tracksPU3);
+            hsv502_r->Fill(zposPU1); hsv502_r->Fill(zposPU2); hsv502_r->Fill(zposPU3);
+            if (zposPU1!=100000) hsv503_r->Fill(tracksPU1/totaltracks);
+            if (zposPU2!=100000) hsv503_r->Fill(tracksPU2/totaltracks);
+            if (zposPU3!=100000) hsv503_r->Fill(tracksPU3/totaltracks);
+          } else {
+            hsv401_w->Fill(BoppDir.z());
+            hsv402_w->Fill(difzposSVPU);
+            hsv403_w->Fill(PUPV);
+            hsv404_w->Fill(BoppDir.x(),BoppDir.y());//xy plane for SV
+            hsv405_w->Fill(distance);
+            hsv500_w->Fill(PUcounter);
+            hsv501_w->Fill(tracksPU1); hsv501_w->Fill(tracksPU2); hsv501_w->Fill(tracksPU3);
+            hsv502_w->Fill(zposPU1); hsv502_w->Fill(zposPU2); hsv502_w->Fill(zposPU3);
+            if (zposPU1!=100000) hsv503_w->Fill(tracksPU1/totaltracks);
+            if (zposPU2!=100000) hsv503_w->Fill(tracksPU2/totaltracks);
+            if (zposPU3!=100000) hsv503_w->Fill(tracksPU3/totaltracks);
+          }//truetag
+        }//krec>=1
+      }//sec not empty
+      //**********************//
+      //**********************//
+
+      //***********************//
+      //**Multiple PU studies**//
       Particle*  iparticle = ikaon;
       Tagger* tparticle = tkaon;
       if ((iparticle) and (krec>1)) {
@@ -238,9 +332,8 @@ int main () {
         double ipdif=(iparticle->IP()-iparticle->nippu());
         double zposdif=(iparticle->trackzfirst()-iparticle->zpos());
         double zposabsdif=fabs(iparticle->trackzfirst()-iparticle->zpos());
-        
-        //if (tparticle->decision()==TrueTag) {
-	if (iparticle->fromB()==1) {
+        if (tparticle->decision()==TrueTag) {
+          //if (iparticle->fromB()==1) {
           hpv_gippu_r->Fill(gippu);
           hpv_difip_r->Fill(ipdif);
           hpv_ipmeandif_r->Fill(ipmeandif);

@@ -14,6 +14,9 @@ TaggerPionSameTool::TaggerPionSameTool() {
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
   declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.428 ); 
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.79 ); 
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.411 ); 
 
   NNetTool_MLP nnet;
   tpionS = new Tagger();
@@ -124,6 +127,10 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
 
   double pn = nnet.MLPpS( NNinputs );
   verbose() << " Pion pn="<< pn <<endmsg;
+
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+  pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
+  debug() << " Pion pn="<< pn <<" w="<<1-pn<<endmsg;
 
   if( pn < m_PionProbMin ) return tpionS;
 

@@ -32,6 +32,7 @@ class TaggerMuonTool : public GenericTool {
   Tagger* tag( Event& );
 
  private:
+
   double m_P_cut_muon;
   double m_Pt_cut_muon;
   double m_IPs_cut_muon ;
@@ -39,7 +40,10 @@ class TaggerMuonTool : public GenericTool {
   double m_ipPU_cut_muon;
   double m_distPhi_cut_muon;
   double m_ProbMin_muon;
- 
+  double m_P0_Cal_muon ;
+  double m_P1_Cal_muon ;
+  double m_Eta_Cal_muon ;
+
   NNetTool_MLP nnet;
   Tagger* tmu;
 
@@ -50,7 +54,6 @@ class TaggerMuonTool : public GenericTool {
   TH1F* hcut_mu_ippu;
   TH1F* hcut_mu_distphi;
   TH1F* hcut_mu_N ;
-  
  
 };
 

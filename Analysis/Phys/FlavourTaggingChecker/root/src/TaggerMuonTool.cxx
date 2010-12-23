@@ -10,6 +10,9 @@ TaggerMuonTool::TaggerMuonTool( ) {
   declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
   declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
+  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.319 ); 
+  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.21 ); 
+  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.321 ); 
 
   NNetTool_MLP nnet;
   tmu = new Tagger();
@@ -94,6 +97,10 @@ Tagger* TaggerMuonTool::tag(Event& event) {
 
   double pn = nnet.MLPm( NNinputs );
   if(msgLevel(MSG::VERBOSE)) verbose() << " Muon pn="<< pn <<endreq;
+
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+  pn = 1 - m_P0_Cal_muon - m_P1_Cal_muon * ( (1-pn)-m_Eta_Cal_muon);
+  debug() << " Muon pn="<< pn <<" w="<<1-pn<<endreq;
 
   if( pn < m_ProbMin_muon ) return tmu;
 

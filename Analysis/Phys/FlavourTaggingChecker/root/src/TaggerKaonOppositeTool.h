@@ -11,7 +11,6 @@
 
 #include "TH1F.h"
 
-
 using namespace std;
 
 /** @class TaggerKaonOppositeTool
@@ -32,6 +31,7 @@ class TaggerKaonOppositeTool : public GenericTool {
   Tagger* tag(Event& );
 
  private:
+
   double m_Pt_cut_kaon;
   double m_P_cut_kaon ; 
   double m_IPs_cut_kaon;
@@ -41,6 +41,9 @@ class TaggerKaonOppositeTool : public GenericTool {
   double m_ipPU_cut_kaon;
   double m_distPhi_cut_kaon;
   double m_ProbMin_kaon;
+  double m_P0_Cal_kaon ;
+  double m_P1_Cal_kaon ;
+  double m_Eta_Cal_kaon ;
 
   NNetTool_MLP nnet;
 

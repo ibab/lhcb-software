@@ -365,9 +365,13 @@ TGraphErrors* asymmetry(TH1F* rh, TH1F* wh, TString name="asymplot" ){
   }
 
   //rh and wh should have large nr of bins
-  int bins=12;
-  double tbin[13] =
-    { 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.2, 4.9, 6.0, 7.5, 10.0 };
+  //  int bins=12;
+  //  double tbin[13] =
+  //    { 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.2, 4.9, 6.0, 7.5, 10.0 };
+  //---------
+  int bins=8;
+  double tbin[9] =
+    { 0.0, 1.25, 2.5, 3.75, 5.0, 6.25, 7.5, 8.75, 10.0 };
   //---------
 
   double rhnew[100], whnew[100], total=0;

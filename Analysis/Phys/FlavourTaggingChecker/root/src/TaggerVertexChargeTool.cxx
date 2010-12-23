@@ -14,6 +14,10 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
   declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.17 );
   declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
 
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.458 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.32 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.392 ); 
+
   //For CombinationTechnique "Probability":
   declareProperty( "P0",           m_P0                   =  5.255669e-01 );
   declareProperty( "P1",           m_P1                   = -3.251661e-01 );
@@ -69,7 +73,6 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
 				  <<" with "<<Pfit.size()<<"tracks"<<endreq;
   if(msgLevel(MSG::DEBUG)) debug()<<" -- likelihood seed "<<maxprobf<<endreq;
 
-
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
   double Vptmin = 0, Vipsmin = 0, Vflaglong = 0, Vdocamax = 0;
@@ -98,26 +101,15 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   }
   if(msgLevel(MSG::DEBUG)) debug()<<"Vch: "<<Vch<<endreq;
 
-  //add pointing
+  //****TestNewVariables****//
   double BDphiDir = BoppDir.DeltaPhi(SVmomentum.Vect());
-  double BDTheDir = BoppDir.Theta()-SVmomentum.Vect().Theta();
-  //if (BDphiDir>1) return tVch; 
-  //if (BDphiDir>0.8) return tVch; 
-
-  //contain kaons
-  int nsecpart = Pfit.size();
-  bool containskaon=false;
-  for (int ip=0; ip<nsecpart; ip++) {
-    if (Pfit.at(ip)->absID()==321) containskaon = true;
-  }
-  //if(containskaon) return tVch;
+  //if (BDphiDir>1.2) return tVch; 
 
   //add tau of Bopp
   double SVP = SVmomentum.P();
   double SVM = SVmomentum.M();
   double SVGP = SVP/(0.16*SVM+0.12);
   double SVtau = BoppDir.Mag()*5.28/SVGP/0.299792458;
-  debug()<<"BoppDir.Mag: "<<BoppDir.Mag()<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
  
   if(!m_UseObsoleteSV) { //needed by NNtuner
     mysecvtx->setVflagged(vflagged);
@@ -130,7 +122,6 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   }
   
   if( Vch==0 ) return tVch;
-
 
   //calculate omega
   if(msgLevel(MSG::DEBUG)) debug()<<"calculate omega, use obsolete (0=no): "<<m_UseObsoleteSV<<endreq;
@@ -163,6 +154,10 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
             <<", omega= "<< omega <<endmsg;
 
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+  omega = m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
+  debug()<<" Vtx pn="<<1-omega<<" w="<<omega<<endmsg;
+  
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 

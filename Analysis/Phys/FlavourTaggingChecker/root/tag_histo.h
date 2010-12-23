@@ -20,6 +20,7 @@ TH1F* h2    = new TH1F("h2","nr of primary vtx" ,10, 0., 10);
 TH1F* h3    = new TH1F("h3","Pt B Opposite",50, 0, 100.);
 TH1F* h4    = new TH1F("h4","track multiplicity",50, 0, 100.);
 
+//B pt
 TH1F* h6    = new TH1F("h6","B pT ",100, 0.0, 30.);
 TH1F* h6rSS = new TH1F("h6rSS","B pT ",100, 0.0, 30.);
 TH1F* h6wSS = new TH1F("h6wSS","B pT ",100, 0.0, 30.);
@@ -32,6 +33,7 @@ TH1F* h6wtos= new TH1F("h6wtos","B pT tos",100, 0.0, 30.);
 TH1F* h6rtistos = new TH1F("h6rtistos","B pT tistos",100, 0.0, 30.);
 TH1F* h6wtistos = new TH1F("h6wtistos","B pT tistos",100, 0.0, 30.);
 
+//NN
 TH1F* h513  = new TH1F("h513","NNmu ", 50, 0.2, 1.);
 TH1F* h613  = new TH1F("h613","NNmu ", 50, 0.2, 1.);
 TH1F* h513p = new TH1F("h513p","NNmu ", 50, 0, .7);
@@ -56,6 +58,8 @@ TH1F* h100  = new TH1F("h100","PNetSum ", 60, 0.4, 1.);
 TH1F* h102  = new TH1F("h102","PNetSum ", 60, 0.4, 1.);
 TH1F* h103  = new TH1F("h103","1-PNetSum",60, 0.0, 0.6);
 TH1F* h104  = new TH1F("h104","1-PNetSum",60, 0.0, 0.6);
+
+//DLL - PID
 TH1F* h1000 = new TH1F("h1000","de  ", 50, -25.0, 25.);
 TH1F* h1001 = new TH1F("h1001","dmu ", 50, -30.0, 30.);
 TH1F* h1002 = new TH1F("h1002","dk  ", 50, -20.0, 80.);
@@ -75,6 +79,7 @@ TH1F* h1023 = new TH1F("h1023","dkS ", 50, -20.0, 80.);
 TH1F* h1024 = new TH1F("h1024","dkS-dp",50,-20.0, 80.);
 TH1F* h1025 = new TH1F("h1025","dk-dp", 50,-20.0, 80.);
 
+//Osc vs noOsc
 TH1F* h2011   = new TH1F("h2011","Mu tag B time (ps) no osc.", 1000,0,10);
 TH1F* h2012   = new TH1F("h2012","Mu tag B time (ps) osc.",    1000,0,10);
 TH1F* h2021   = new TH1F("h2021","Ele tag B time (ps) no osc.",1000,0,10);
@@ -100,7 +105,7 @@ TH1F* h3062   = new TH1F("h3062","ALL tag B time (ps) osc.",     1000,0,10);
 TH1F* h4061   = new TH1F("h4061","IDEAL tag B time (ps) no osc.",1000,0,10);
 TH1F* h4062   = new TH1F("h4062","IDEAL tag B time (ps) osc.",   1000,0,10);
 
-//for pv studies
+//Multiple PileUp vertices studies
 TH1F* hpv_gippu_r = new TH1F("hpv_gippu_r","gippu tags", 50, 0.0, 50);
 TH1F* hpv_gippu_w = new TH1F("hpv_gippu_w","gippu tags", 50, 0.0, 50);
 TH1F* hpv_difip_r = new TH1F("hpv_difip_r","IP-min(IPPU) tags", 50, -15.0, 5);
@@ -111,42 +116,89 @@ TH1F* hpv_zposdif_r = new TH1F("hpv_zposdif_r","Z pos dif",50, -25., 25.);
 TH1F* hpv_zposdif_w = new TH1F("hpv_zposdif_w","Z pos dif",50, -25., 25.);
 TH1F* hpv_zposabsdif_r = new TH1F("hpv_zposabsdif_r","abs(Z(PU) - Z(tagtrack)) tags",50, 0., 25.);
 TH1F* hpv_zposabsdif_w = new TH1F("hpv_zposabsdif_w","abs(Z(PU) - Z(tagtrack)) tags",50, 0., 25.);
-TH1F* hv170 = new TH1F("hv170","hv170", 50, 0, 20);
-TH1F* hv174_true = new TH1F("hv174_true","hv174_true", 50, 0, 3);
-TH1F* hv175_true = new TH1F("hv175_true","hv175_true", 50, 0, .1);
-TH1F* hv176_true = new TH1F("hv176_true","hv176_true", 50, 0, 3);
-TH2F* hv177_true = new TH2F("hv177_true","hv177_true", 50, 0., 200, 50, 0, 300);
-TH1F* hv178_true = new TH1F("hv178_true","hv178_true", 50, 0, 2);
-TH2F* hv179_true = new TH2F("hv179_true","hv179_true", 50, 0., 5, 50, 0, 2);
-TH1F* hv180_true = new TH1F("hv180_true","hv180_true", 50, 0, 2);
-TH1F* hv174 = new TH1F("hv174","hv174", 50, 0, 3);
-TH1F* hv175 = new TH1F("hv175","hv175", 50, 0, .1);
-TH1F* hv176 = new TH1F("hv176","hv176", 50, 0, 3);
-TH2F* hv177 = new TH2F("hv177","hv177", 50, 0., 100, 50, 0, 200);
-TH1F* hv178 = new TH1F("hv178","hv178", 50, 0, 2);
-TH2F* hv179 = new TH2F("hv179","hv179", 50, 0., 5, 50, 0, 2);
-TH1F* hv180 = new TH1F("hv180","hv180", 50, 0, 2);
-TH1F* hv181 = new TH1F("hv181","hv181", 50, 0, 3);
-TH1F* hv182 = new TH1F("hv182","hv182", 50, 0, 0.3);
-TH1F* hv183 = new TH1F("hv183","hv183", 50, 0, 10);
-TH1F* hv181_r = new TH1F("hv181_r","hv181_r", 50, 0, 3);
-TH1F* hv182_r = new TH1F("hv182_r","hv182_r", 50, 0, 0.3);
-TH1F* hv183_r = new TH1F("hv183_r","hv183_r", 50, 0, 10);
-TH1F* hv181_w = new TH1F("hv181_w","hv18_w1", 50, 0, 3);
-TH1F* hv182_w = new TH1F("hv182_w","hv182_w", 50, 0, 0.3);
-TH1F* hv183_w = new TH1F("hv183_w","hv183_w", 50, 0, 10);
-TH1F* hv184 = new TH1F("hv184","hv184", 50, -300, 300);
-TH1F* hv185 = new TH1F("hv185","hv185", 50, -10, 10);
-TH1F* hv186 = new TH1F("hv186","hv186", 50, -50, 50);
-TH1F* hv184_true = new TH1F("hv184_true","hv184_true", 50, -300, 300);
-TH1F* hv185_true = new TH1F("hv185_true","hv185_true", 50, -10, 10);
-TH1F* hv186_true = new TH1F("hv186_true","hv186_true", 50, -50, 50);
-TH1F* hvtaus_r = new TH1F("hvtaus_r","hvtaus_r", 50, 0, 7);
-TH1F* hvtaus_w = new TH1F("hvtaus_w","hvtaus_w", 50, 0, 7);
-TH1F* hvtau0_r = new TH1F("hvtau0_r","hvtau0_r", 50, 0, 7);
-TH1F* hvtau0_w = new TH1F("hvtau0_w","hvtau0_w", 50, 0, 7);
-TH1F* hvtau_r = new TH1F("hvtau_r","hvtau_r", 50, 0, 7);
-TH1F* hvtau_w = new TH1F("hvtau_w","hvtau_w", 50, 0, 7);
+
+//Secondary Vertices study (g/b refers to mc) (r/w refers to right/wrong tags)
+TH1F* hsv100 = new TH1F("hsv100","hsv100", 5, 0, 5);//kaons
+TH1F* hsv100_r = new TH1F("hsv100_r","hsv100_r", 5, 0, 5);
+TH1F* hsv100_w = new TH1F("hsv100_w","hsv100_w", 5, 0, 5);
+TH1F* hsv101 = new TH1F("hsv101","hsv101", 5, 0, 5);//leptons
+TH1F* hsv101_r = new TH1F("hsv101_r","hsv101_r", 5, 0, 5);
+TH1F* hsv101_w = new TH1F("hsv101_w","hsv101_w", 5, 0, 5);
+TH1F* hsv102 = new TH1F("hsv102","hsv102", 5, 0, 5);//leptons or kaons
+TH1F* hsv102_r = new TH1F("hsv102_r","hsv102_r", 5, 0, 5);
+TH1F* hsv102_w = new TH1F("hsv102_w","hsv102_w", 5, 0, 5);
+TH1F* hsv9 = new TH1F("hsv9","hsv9", 50, 0, 20);//distance SV-BO
+TH1F* hsv200 = new TH1F("hsv200","hsv200", 50, 0, 3);//deltaPhi
+TH1F* hsv200_g = new TH1F("hsv200_g","hsv200_g", 50, 0, 3);
+TH1F* hsv200_b = new TH1F("hsv200_b","hsv200_b", 50, 0, 3);
+TH1F* hsv200_r = new TH1F("hsv200_r","hsv200_r", 50, 0, 3);
+TH1F* hsv200_w = new TH1F("hsv200_w","hsv200_w", 50, 0, 3);
+TH1F* hsv201 = new TH1F("hsv201","hsv201", 50, -0.3, 0.3);//deltaTheta
+TH1F* hsv201_g = new TH1F("hsv201_g","hsv201_g", 50, -0.3, .3);
+TH1F* hsv201_b = new TH1F("hsv201_b","hsv201_b", 50, -0.3, .3);
+TH1F* hsv201_r = new TH1F("hsv201_r","hsv201_r", 50, -0.3, 0.3);
+TH1F* hsv201_w = new TH1F("hsv201_w","hsv201_w", 50, -0.3, 0.3);
+TH1F* hsv202_g = new TH1F("hsv202_g","hsv202_g", 50, 0, 3);//delatPhiVect
+TH1F* hsv202_b = new TH1F("hsv202_b","hsv202_b", 50, 0, 3);
+TH1F* hsv300 = new TH1F("hsv300","hsv300", 50, 0, 10);//tau
+TH1F* hsv300_r = new TH1F("hsv300_r","hsv300_r", 50, 0, 10);
+TH1F* hsv300_w = new TH1F("hsv300_w","hsv300_w", 50, 0, 10);
+TH1F* hsv301 = new TH1F("hsv301","hsv301", 50, -300, 300);//BMCP-SVGP
+TH1F* hsv301_g = new TH1F("hsv301_g","hsv301_g", 50, -300, 300);
+TH1F* hsv302 = new TH1F("hsv302","hsv302", 50, -10, 10);//BMCtau-SVtau
+TH1F* hsv302_g = new TH1F("hsv302_g","hsv302_g", 50, -10, 10);
+TH1F* hsv303 = new TH1F("hsv303","hsv303", 50, -50, 50);//BMCsz-sz
+TH1F* hsv303_g = new TH1F("hsv303_g","hsv303_g", 50, -50, 50);
+TH2F* hsv310_b = new TH2F("hsv310_b","hsv310_b", 50, 0., 100, 50, 0, 200);//(SVP,BMCP)
+TH2F* hsv310_g = new TH2F("hsv310_g","hsv310_g", 50, 0., 100, 50, 0, 200);
+TH1F* hsv311_b = new TH1F("hsv311_b","hsv311_b", 50, 0, 2);//SVP/BMCP
+TH1F* hsv311_g = new TH1F("hsv311_g","hsv311_g", 50, 0, 2);
+TH2F* hsv312_b = new TH2F("hsv312_b","hsv312_b", 50, 0., 5, 50, 0, 2);//(SVM, SVP/BMCP)
+TH2F* hsv312_g = new TH2F("hsv312_g","hsv312_g", 50, 0., 5, 50, 0, 2);
+TH1F* hsv313_b = new TH1F("hsv313_b","hsv313_b", 50, 0, 2);//SVM/BMCM
+TH1F* hsv313_g = new TH1F("hsv313_g","hsv313_g", 50, 0, 2);
+TH1F* hsv320_r = new TH1F("hsv320_r","hsv320_r", 50, 0, 7);
+TH1F* hsv320_w = new TH1F("hsv320_w","hsv320_w", 50, 0, 7);
+TH1F* hsv321_r = new TH1F("hsv321_r","hsv321_r", 50, 0, 7);//tau for Bs(531)
+TH1F* hsv321_w = new TH1F("hsv321_w","hsv321_w", 50, 0, 7);
+TH1F* hsv322_r = new TH1F("hsv322_r","hsv322_r", 50, 0, 7);//tau for B0(511)
+TH1F* hsv322_w = new TH1F("hsv322_w","hsv322_w", 50, 0, 7);
+TH1F* hsv323_r = new TH1F("hsv323_r","hsv323_r", 50, 0, 7);//tau for B+-(521)
+TH1F* hsv323_w = new TH1F("hsv323_w","hsv323_w", 50, 0, 7);
+//SV vs PU
+TH1F* hsv401 = new TH1F("hsv401","hsv401", 50, -5, 75);//BoppDir.z
+TH1F* hsv401_r = new TH1F("hsv401_r","hsv401_r", 50, -5, 75);
+TH1F* hsv401_w = new TH1F("hsv401_w","hsv401_w", 50, -5, 75);
+TH1F* hsv421 = new TH1F("hsv421","hsv421", 50, -5, 75);//BoppDir.Mag
+TH1F* hsv402 = new TH1F("hsv402","hsv402", 50, -75, 75);//z dif SV-PU
+TH1F* hsv402_r = new TH1F("hsv402_r","hsv402_r", 50, -75, 75);
+TH1F* hsv402_w = new TH1F("hsv402_w","hsv402_w", 50, -75, 75);
+TH1F* hsv422 = new TH1F("hsv422","hsv422", 50, -1, 150);//mag dif SV-PU
+TH1F* hsv403 = new TH1F("hsv403","hsv403", 50, -75, 75);//SV zpos closer to PU or to PV (PU-PV)
+TH1F* hsv403_r = new TH1F("hsv403_r","hsv403_r", 50, -75, 75);
+TH1F* hsv403_w = new TH1F("hsv403_w","hsv403_w", 50, -75, 75);
+TH1F* hsv423 = new TH1F("hsv423","hsv423", 50, -75, 75);//SV mag closer to PU or to PV (PU-PV)
+TH2F* hsv404_r = new TH2F("hsv404_r","hsv404_r", 50, -2.5, 2.5, 50, -2.5, 2.5);//x,y pos of SV
+TH2F* hsv404_w = new TH2F("hsv404_w","hsv404_w", 50, -2.5, 2.5, 50, -2.5, 2.5);
+TH1F* hsv405 = new TH1F("hsv405","hsv405", 100, 0, 5);
+TH1F* hsv405_r = new TH1F("hsv405_r","hsv405_r", 100, 0, 5);
+TH1F* hsv405_w = new TH1F("hsv405_w","hsv405_w", 100, 0, 5);
+TH1F* hsv500 = new TH1F("hsv500","hsv500", 4, 0, 4);//PU counter
+TH1F* hsv500_r = new TH1F("hsv500_r","hsv500_r", 4, 0, 4);
+TH1F* hsv500_w = new TH1F("hsv500_w","hsv500_w", 4, 0, 4);
+TH1F* hsv501 = new TH1F("hsv501","hsv501", 49, 1, 50);//tracsk in PU
+TH1F* hsv501_r = new TH1F("hsv501_r","hsv501_r", 49, 1, 50);
+TH1F* hsv501_w = new TH1F("hsv501_w","hsv501_w", 49, 1, 50);
+TH1F* hsv502 = new TH1F("hsv502","hsv502", 50, -100, 100);//PU z position
+TH1F* hsv502_r = new TH1F("hsv502_r","hsv502_r", 50, -100, 100);
+TH1F* hsv502_w = new TH1F("hsv502_w","hsv502_w", 50, -100, 100);
+TH1F* hsv522 = new TH1F("hsv522","hsv522", 50, -1, 25);//PU mag
+TH1F* hsv503 = new TH1F("hsv503","hsv503", 50, 0, 1);//activity PU (%tracks in PU)
+TH1F* hsv503_r = new TH1F("hsv503_r","hsv503_r", 50, 0, 1);
+TH1F* hsv503_w = new TH1F("hsv503_w","hsv503_w", 50, 0, 1);
+
+
+//Taggers
 
 TH1F* h70 = new TH1F("h70","ko pt",50, 0., 10.); //ALL
 TH1F* h71 = new TH1F("h71","ko p" ,50, 0., 100.);
@@ -279,6 +331,7 @@ x1=0; x2=100;//N mult
 TH1F* hr_kS_mult = new TH1F("hr_kS_mult","mult right tags", 50, x1, x2);
 TH1F* hw_kS_mult = new TH1F("hw_kS_mult","mult wrong tags", 50, x1, x2);
 
+//deltaphi with signal part
 x1=0; x2=1;
 TH1F* homphi_mu_r = new TH1F("homphi_mu_r","w(dphi)", 50, x1, x2);
 TH1F* homphi_mu_w = new TH1F("homphi_mu_w","w(dphi)", 50, x1, x2);
