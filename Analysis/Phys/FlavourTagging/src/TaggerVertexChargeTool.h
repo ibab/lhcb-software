@@ -56,6 +56,9 @@ private:
   std::string m_NeuralNetName;
   double m_AverageOmega, m_PowerK, m_MinimumVCharge;
   double m_ProbMin_vtx;
+  double m_P0_Cal_vtx ;
+  double m_P1_Cal_vtx ;
+  double m_Eta_Cal_vtx ;
   double m_wSameSign2, m_wSameSignMoreThan2, m_P0, m_P1, m_Gt075;
 
 };

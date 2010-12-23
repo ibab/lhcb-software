@@ -61,6 +61,9 @@ private:
   double m_distPhi_cut_muon;
   double m_ProbMin_muon;
   double m_AverageOmega;
+  double m_P0_Cal_muon ;
+  double m_P1_Cal_muon ;
+  double m_Eta_Cal_muon ;
 };
 
 //===============================================================//

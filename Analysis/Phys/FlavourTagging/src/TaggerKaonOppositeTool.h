@@ -62,6 +62,9 @@ private:
   double m_ipPU_cut_kaon;
   double m_distPhi_cut_kaon;
   double m_ProbMin_kaon;
+  double m_P0_Cal_kaon ;
+  double m_P1_Cal_kaon ;
+  double m_Eta_Cal_kaon ;
 
 
 };

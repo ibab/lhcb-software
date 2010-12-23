@@ -24,7 +24,6 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_MLP" );
   declareProperty( "AverageOmega",   m_AverageOmega   = 0.40 );
 
-  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
@@ -34,9 +33,13 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
   declareProperty( "PionSame_ipPU_cut", m_ipPU_cut_pS      = 3.0 );
   declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
-
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.428 ); 
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.79 ); 
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.411 ); 
+
+  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
 
   m_nnet = 0;
   m_util = 0;
@@ -184,6 +187,10 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     pn = m_nnet->MLPpS( NNinputs );
     verbose() << " Pion pn="<< pn <<endmsg;
+
+    //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+    pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
+    debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
 
     if( pn < m_PionProbMin ) return tpionS;
   }

@@ -32,6 +32,10 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "PowerK",       m_PowerK               = 0.4 );
   declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.17 );
   declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.53);
+  
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.458 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.32 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.392 ); 
 
   //For CombinationTechnique: "Probability"
   declareProperty( "P0",           m_P0                   = 5.255669e-01 );
@@ -173,6 +177,10 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
 
   verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
             <<", omega= "<< omega <<endreq;
+
+  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+  omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
+  debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
 
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;

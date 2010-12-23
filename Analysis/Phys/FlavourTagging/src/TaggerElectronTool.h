@@ -62,7 +62,9 @@ private:
   double m_ipPU_cut_ele;
   double m_distPhi_cut_ele;
   double m_ProbMin_ele;
-
+  double m_P0_Cal_ele ;
+  double m_P1_Cal_ele ;
+  double m_Eta_Cal_ele ;
 
 };
 

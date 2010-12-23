@@ -5,7 +5,7 @@
 # @author Marc Grabalosa
 # @date 2010-09-26
 # the standard tagging package has the cuts optimized
-# for real data (stripping 9)
+# for real data 
 # mc data has low track multiplicity, some differences in PID,
 # chi2 and ghost probability, so different cuts were applyed
 ########################################################################
