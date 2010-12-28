@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-12-28 - Antonis Papanestis
+ - Modified DeRichSystem to accept the list of inactive HPDs as a list of
+   human readable smartIDs. Fully backwards compatible (new parameter
+   in the condition)
+
 ! 2010-12-15 - Chris Jones
  - Add new methods to DeRichSystem to provide lists of all HPDs, either active
    or inactive, in both RichSmartID and HardwareID formats.

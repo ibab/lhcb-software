@@ -174,7 +174,30 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
                                 numbers->paramVect<int>("HPDCopyNumbers") :
                                 defaultCopyN );
   // inactive HPDs
-  const CondData & inacts = numbers->paramVect<int>("InactiveHPDs");
+  CondData inacts;
+  bool inactiveHPDListInSmartIDs( false );
+
+  if ( numbers->exists("InactiveHPDListInSmartIDs") )
+  {
+    // smartIDs
+    debug() << "Inactive HPDs are taken from the smartID list" << endmsg;
+    const CondData& inactsHuman = numbers->paramVect<int>("InactiveHPDListInSmartIDs");
+    inactiveHPDListInSmartIDs = true;
+    for (unsigned int inHpd=0; inHpd<inactsHuman.size(); ++inHpd)
+    {
+      LHCb::RichSmartID myID( Rich::DAQ::HPDIdentifier(inactsHuman[inHpd]).smartID() );
+      if ( myID.isValid() ) inacts.push_back( myID );
+      else
+        error() << "Invalid smartID in the list of inactive HPDs "
+                << inactsHuman[inHpd] << endmsg;
+    }
+  }
+  else
+  {
+    // hardware IDs
+    debug() << "Inactive HPDs are taken from the hardware list" << endmsg;
+    inacts = numbers->paramVect<int>("InactiveHPDs");
+  }
 
   // check consistency
   if ( nHPDs != softIDs.size() ||
@@ -246,7 +269,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
     // set up mappings etc.
 
-    if ( std::find( inacts.begin(), inacts.end(), *iHard ) == inacts.end() )
+    CondData::const_iterator& myID = ( inactiveHPDListInSmartIDs ? iSoft : iHard );
+    if ( std::find( inacts.begin(), inacts.end(), *myID ) == inacts.end() )
     {
       m_activeHPDSmartIDs.push_back ( hpdID  );
       m_activeHPDHardIDs.push_back  ( hardID );
@@ -265,6 +289,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
         debug() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
       }
     }
+
     m_allHPDHardIDs.push_back(hardID);
     m_allHPDSmartIDs.push_back(hpdID);
     m_soft2hard[hpdID]    = hardID;
@@ -701,13 +726,13 @@ DeRichSystem::hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
 //=========================================================================
 // L1 Logical ID to Copy Number
 //=========================================================================
-const Rich::DAQ::Level1CopyNumber 
+const Rich::DAQ::Level1CopyNumber
 DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
 {
   L1HIDToCopyN::const_iterator iCN = m_l1H2CopyN.find(hardID);
   if ( m_l1H2CopyN.end() == iCN )
   {
-    throw GaudiException( "Unknown L1 Hardware ID " + (std::string)hardID,  
+    throw GaudiException( "Unknown L1 Hardware ID " + (std::string)hardID,
                           "DeRichSystem::copyNumber",
                           StatusCode::FAILURE );
   }
