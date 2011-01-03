@@ -310,6 +310,8 @@ class Moore(LHCbConfigurableUser):
         x.Enable = True
 
     def _outputLevel(self) :
+        from Configurables import Hlt__Service
+        if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
         # output levels...
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
