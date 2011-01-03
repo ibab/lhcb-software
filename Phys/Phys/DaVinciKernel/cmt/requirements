@@ -1,10 +1,10 @@
 # $Id: requirements,v 1.82 2010-08-27 13:48:58 jpalac Exp $
 # Created    : 05/02/2002
-# Maintainer : P. Koppenburg, J. Palcios
+# Maintainer : P. Koppenburg, J. Palacios
 #============================================================================
 
 package           DaVinciKernel
-version           v8r9
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,6 +17,8 @@ use PartProp          v* Kernel
 use GaudiAlg          v* 
 use Relations         v* Kernel
 use DaVinciInterfaces v* Phys
+use DaVinciUtils      v* Phys
+
 # Exported header files
 #============================================================================
 apply_pattern install_more_includes more=Kernel

@@ -33,6 +33,7 @@
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
+#include "Kernel/DaVinciFun.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
 #include "Kernel/ILifetimeFitter.h"
@@ -127,8 +128,8 @@ public: // IDVAlgorithm
   /// get all loaded particles 
   virtual const LHCb::Particle::Range particles() const 
   {
-    return LHCb::Particle::Range ( desktop()->particles().begin() ,
-                                   desktop()->particles().end()   ) ;
+    return LHCb::Particle::Range ( m_parts.begin() ,
+                                   m_parts.end()   ) ;
     
   }
   /** direct const access to container of input primary vertices.
@@ -287,19 +288,19 @@ public:
   virtual StatusCode finalize ();  
 
   // Get decay descriptor
-  std::string getDecayDescriptor(){return m_decayDescriptor;};  
+  const std::string& getDecayDescriptor()const {
+    return m_decayDescriptor;
+  }  
 
   // Set decay descriptor
-  void setDecayDescriptor(std::string dd){m_decayDescriptor = dd;};  
-
-  /// Imposes an output location for desktop different from algo name
-  /// Should be avoided!
-  void imposeOutputLocation (const std::string& outputLocationString);  
+  void setDecayDescriptor(const std::string& dd) {
+    m_decayDescriptor = dd;
+  }  
 
   /// Accessor for PhysDesktop Tool
   inline IPhysDesktop* desktop()const
   {
-    return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
+    return getTool<IPhysDesktop>(m_desktopName, m_desktop, this) ;
   }
 
   /// accessor for IOnOffline tool
@@ -371,8 +372,8 @@ public:
    **/
   inline void storeRelationWithOverwrite(const Particle2Vertex::LightTable& table) 
   {
-    desktop()->overWriteRelations(table.i_relations().begin(), 
-                                  table.i_relations().end());
+    overWriteRelations(table.i_relations().begin(), 
+		       table.i_relations().end());
   }
   
   /**
@@ -382,8 +383,8 @@ public:
                                   const LHCb::VertexBase* vert) const
   {
     if (0==part || 0== vert ) return;
-    (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
-    this->desktop()->relate(part, vert);
+    (m_p2PVTable.i_removeFrom(part)).ignore();
+     m_p2PVTable.i_relate(part, vert );
   }
 
 public:
@@ -402,14 +403,14 @@ public:
   */
 
   /// Tagging Tool
-  inline IBTaggingTool* flavourTagging()const{
+  inline IBTaggingTool* flavourTagging() const {
     return getTool<IBTaggingTool>(m_taggingToolName, 
                                   m_taggingTool, 
                                   this );
   }
   
   /// Descnedants
-  inline IParticleDescendants* descendants()const{
+  inline IParticleDescendants* descendants() const {
     return getTool<IParticleDescendants>(m_descendantsName,
                                          m_descendants);
   }
@@ -419,6 +420,7 @@ public:
    *  @return pointer to Particle Property Service 
    */
   inline const LHCb::IParticlePropertySvc* ppSvc() const ;
+
   /** helper method to get a proper ParticleProperty for the given name  
    *
    *  @code 
@@ -449,8 +451,11 @@ public:
    *  @param  p the particle pid 
    *  @return pointer to particle property 
    */
-  inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& p ) const ;
-  // ==========================================================================  
+
+  inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& p ) const;
+
+  //===========================================================================
+
 protected:
   
   
@@ -547,6 +552,50 @@ protected:
 
   virtual StatusCode writeEmptyContainerIfNeeded() ;
   
+  /// Mark a particle for saving. Marks all elements of the 
+  /// Particle's decay tree unless these are already in the TES.
+  const LHCb::Particle* mark(const LHCb::Particle* particle);
+
+  /// Save all marked local particles not already in the TES.
+  /// Saves decay tree elements not already in TES, plus related
+  /// PV and relation table entry when applicable.
+  void saveParticles();
+
+ private:
+
+  /// 
+  StatusCode loadEventInput();
+
+  /// Load particles from InputLocations
+  StatusCode loadParticles();
+
+  /// Load Particle->PV relations for loades particles.
+  StatusCode loadParticle2PVRelations();
+
+  /// Take a range of Particle -> PV relations and store them locally,
+  /// overwriting existing relations with the same From.
+  void overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
+			  Particle2Vertex::Table::Range::const_iterator end);
+
+  /// Mark a local PV for saving.
+  const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
+
+  inline bool saveP2PV() {
+    return m_writeP2PV && !m_noPVs ;
+  }
+
+  /// Save the local Particle->Vertex relations table to the TES
+  void saveP2PVRelations() const;
+
+  /// Save local re-fitted PVs related to saved particles.
+  /// Only saves PVs that are not already in the TES.
+  void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
+
+  inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
+    {
+      return DaVinci::bestVertexBase(m_p2PVTable.i_relations(part));
+    }
+
 private:
 
   /// Method to load all tools. 
@@ -557,6 +606,18 @@ private:
   mutable IPhysDesktop* m_desktop;
   /// Concrete type desktop
   std::string m_desktopName;
+
+  std::string m_outputLocation; ///< Output location TES folder.
+
+  LHCb::Particle::ConstVector m_parts;      ///< Local Container of particles
+
+  LHCb::Vertex::ConstVector m_secVerts;     ///< Local Container of secondary vertices
+
+  mutable LHCb::RecVertex::ConstVector m_refittedPVs;  ///< Local Container of re-fitted primary vertices
+
+  mutable Particle2Vertex::LightTable m_p2PVTable; ///< Table of Particle to PV relations
+
+  Particle2Vertex::Map m_p2PVMap;
 
 protected:
   

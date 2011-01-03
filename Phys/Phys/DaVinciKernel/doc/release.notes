@@ -4,6 +4,16 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-03 - Juan Palacios
+ - DVAlgorithm
+  . New methods to replace IPhysDesktop. To save particles, use 
+    DVAlgorithm::mark(const LHCb::Particle*) instead of 
+    DVAlgorithm::desktop()->keep(const LHCb::Particle*). To save all
+    local candidates and their PV relations use DVAlgorithm::saveParticles().
+    Remove all internal calls to IPhysDesktop methods.
+
+ - Increase to v9r0.
+
 !======================== DaVinciKernel v8r9 2010-12-17 =====================
 
 ! 2010-08-27 - Juan Palacios

@@ -12,8 +12,9 @@
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/DaVinciFun.h"
-#include "Kernel/DaVinciGuards.h"
+#include "DaVinciUtils/Guards.h"
 #include "Kernel/DaVinciStringUtils.h"
+#include "Kernel/TreeCloners.h"
 // ============================================================================
 /** @file
  *  The implementation for class DVAlgorithm
@@ -79,6 +80,9 @@ DVAlgorithm::DVAlgorithm
   , m_PVLocation            ("")
   , m_noPVs                 ( false )
 {
+
+  m_outputLocation = this->name();
+
   m_inputLocations.clear() ;
   declareProperty( "InputLocations", 
                    m_inputLocations, 
@@ -256,9 +260,7 @@ StatusCode DVAlgorithm::initialize ()
 // ============================================================================
 // Load standard tools
 // ============================================================================
-StatusCode DVAlgorithm::loadTools() 
-{
-  
+StatusCode DVAlgorithm::loadTools() {
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
  
@@ -267,7 +269,8 @@ StatusCode DVAlgorithm::loadTools()
                                          onOffline()->trunkOnTES() );
  
   if (msgLevel(MSG::DEBUG)) {
-    debug() << ">>> Preloading PhysDesktop locations " << m_inputLocations << endmsg;
+    debug() << ">>> Preloading locations " << m_inputLocations 
+	    << endmsg;
   }
 
   for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
@@ -275,49 +278,37 @@ StatusCode DVAlgorithm::loadTools()
     DaVinci::StringUtils::removeEnding(*iloc,"/Particles");
   }
   
-  desktop()->setInputLocations(m_inputLocations);
-  std::vector<std::string> p2pvInputLocations;
-  
+  //desktop()->setInputLocations(m_inputLocations);
 
   if (!m_ignoreP2PVFromInputLocations) {
     // load default P->PV locations.
     for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
           iloc != m_inputLocations.end(); ++iloc ) {
-      p2pvInputLocations.push_back((*iloc)+"/Particle2VertexRelations");
+      m_p2PVInputLocations.push_back((*iloc)+"/Particle2VertexRelations");
     }
-    
   }
 
-  if (!m_p2PVInputLocations.empty() ) 
-  {
-    // load user-defined P->PV locations.
-    DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
-                                           m_p2PVInputLocations.end(),
-                                           onOffline()->trunkOnTES()     );
-
-    for ( std::vector<std::string>::iterator iloc = m_p2PVInputLocations.begin();
-          iloc != m_p2PVInputLocations.end(); ++iloc ) {
-      p2pvInputLocations.push_back((*iloc));
-    }
-
-  }
+  // load user-defined P->PV locations.
+  DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
+					 m_p2PVInputLocations.end(),
+					 onOffline()->trunkOnTES()     );
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << ">>> Preloading PhysDesktop with P->PV locations " 
-            << p2pvInputLocations << endmsg;
+            << m_p2PVInputLocations << endmsg;
   }
   
 
-  desktop()->setP2PVInputLocations(p2pvInputLocations);   
+  //  desktop()->setP2PVInputLocations(m_p2PVInputLocations);   
 
-  desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
+  //  desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
  
-  std::string outputLocation = this->name();
+
   
-  DaVinci::StringUtils::expandLocation(outputLocation,
+  DaVinci::StringUtils::expandLocation(m_outputLocation,
                                        onOffline()->trunkOnTES());
   
-  desktop()->setOutputLocation(outputLocation);
+  //  desktop()->setOutputLocation(m_outputLocation);
   
  
   if ( !m_preloadTools ) 
@@ -374,11 +365,16 @@ StatusCode DVAlgorithm::sysExecute ()
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
-  DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
+  //  DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
 
-  StatusCode sc = desktop()->getEventInput();
+  // clear local containers when leaving this scope.
+  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> g0(m_parts);
+  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> g1(m_secVerts);
+  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> g2(m_refittedPVs);
+
+  StatusCode sc = loadEventInput();
   if ( sc.isFailure()) 
-  { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
+  { return Error (  "Not able to load event input" , sc ) ; }
   
   // execute the algorithm 
   sc = this->Algorithm::sysExecute();
@@ -412,7 +408,334 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 // ============================================================================
 StatusCode DVAlgorithm::writeEmptyContainerIfNeeded() 
 {
-  return desktop()->writeEmptyContainerIfNeeded();
+  const std::string particleLocation( m_outputLocation+"/Particles");
+  if (! exist<LHCb::Particle::Range>(particleLocation) ) {  
+    if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
+                                      << particleLocation << endmsg ;
+    
+    LHCb::Particle::Container* dummy = new LHCb::Particle::Container();
+    put(dummy, particleLocation);
+  }
+  
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+StatusCode DVAlgorithm::loadEventInput(){
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << ">>> loadEventInput " << endmsg;
+  }
+
+  // Retrieve Particles & Vertices from all previous processing
+  // as specified in jobOptions
+  
+  if (!m_inputLocations.empty()) {
+    StatusCode sc = loadParticles();
+    if (!sc) return sc;
+    sc = loadParticle2PVRelations();
+    if (!sc) return sc;
+  }
+
+  return StatusCode::SUCCESS;
+
+}
+//=============================================================================
+StatusCode DVAlgorithm::loadParticle2PVRelations() {
+
+  std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
+  std::vector<std::string>::const_iterator iLocEnd = m_p2PVInputLocations.end();
+  for( ; iLoc != iLocEnd; iLoc++ ) {
+    if (exist<Particle2Vertex::Table>( *iLoc )) {
+      if (msgLevel(MSG::DEBUG)) { 
+	debug() << "Reading table from " << (*iLoc) << endmsg ; 
+      }
+      
+      const Particle2Vertex::Table* table = get<Particle2Vertex::Table>( *iLoc );
+      const Particle2Vertex::Table::Range all = table->relations();
+
+      //      if (msgLevel(MSG::DEBUG)) checkRelations(all.begin(), all.end());
+
+      overWriteRelations(all.begin(), all.end());
+    } else {
+      Info ( "No P->PV table at " + (*iLoc)  + 
+             ( rootInTES().empty() ? "" :  (" under "+rootInTES() ) ),
+             StatusCode::SUCCESS, 0).ignore() ;
+    }
+    
+  }
+
+  return StatusCode::SUCCESS ; // could be sc
+}
+//=============================================================================
+void DVAlgorithm::overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
+                                     Particle2Vertex::Table::Range::const_iterator end)
+{
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "overWriteRelations: Storing " << end-begin 
+	      << " P->PV relations" << endmsg;
+  }
+
+  Particle2Vertex::Table::Range::const_iterator i = begin ;
+
+  for (  ; i!= end ; ++i){
+    ( m_p2PVTable.i_removeFrom(i->from()) ).ignore();
+    (m_p2PVTable.i_relate(i->from(),i->to())).ignore() ;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Reading a " << i->from()->particleID().pid() 
+                << " related to " <<  i->to()->position() << endmsg ;
+    }
+  }
+}
+//=============================================================================
+StatusCode DVAlgorithm::loadParticles(){
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Looking for particles in " 
+	    << m_inputLocations.size() 
+	    << " places" << endmsg ;
+  }
+
+  for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+       iloc != m_inputLocations.end(); iloc++ ) {
+    // Retrieve the particles:
+    const std::string location = (*iloc)+"/Particles";
+    if ( ! exist<LHCb::Particle::Range>( location ) ) 
+    { 
+      Info ( "Non-existing location "+(*iloc) + 
+             ( rootInTES().empty() ?  "" : (" under " + rootInTES() ) ),
+             StatusCode::SUCCESS, 0).ignore() ;
+      continue ;
+    }
+    LHCb::Particle::Range parts = get<LHCb::Particle::Range>( location );
+    
+    // statistics: 
+    counter ( "# " + (*iloc) ) += parts.size() ;
+    
+    // Msg number of Particles retrieved
+    if (msgLevel(MSG::VERBOSE)) { 
+      verbose() << "    Number of Particles retrieved from "
+                << location << " = " << parts.size() << endmsg;
+    }
+    
+    m_parts    .reserve ( m_parts    .size () + parts.size() ) ;
+    m_secVerts .reserve ( m_secVerts .size () + parts.size() ) ;
+
+    for( LHCb::Particle::Range::const_iterator icand = parts.begin(); 
+         icand != parts.end(); icand++ ) {
+      m_parts.push_back(*icand);
+      const LHCb::Vertex* endVtx = (*icand)->endVertex();
+      if (endVtx) m_secVerts.push_back(endVtx);
+    }
+    
+    if (msgLevel(MSG::VERBOSE)) { 
+      verbose() << "Number of Particles, Vertices after adding "
+                << *iloc << " = " << m_parts.size() 
+                << ", " << m_secVerts.size() << endmsg;
+    }
+
+  }
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+    verbose() << "    Total number of secondary vertices " << m_secVerts.size()
+	      << endmsg;
+  }
+  
+  // statistics: 
+  counter ("# input particles" ) += m_parts.size() ; 
+  
+  return StatusCode::SUCCESS;
+}
+// ============================================================================
+const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle)
+{
+  //
+  Assert ( 0 != particle , 
+	   "DVAlgorithm::mark: Attempt to mark invalid particle for saving" );
+
+  if ( DaVinci::inTES ( particle ) ) { return particle ; }
+  
+  DaVinci::CloneMap clonemap ;
+  //
+  const LHCb::Particle* newp = 
+    DaVinci::cloneTree ( particle , clonemap , m_parts , m_secVerts ) ;
+  
+  // copy relations directly from table to avoid triggering any new P->PV 
+  // relations calculation
+  Particle2Vertex::Table::Range range = m_p2PVTable.i_relations(particle);
+  
+  if ( msgLevel(MSG::VERBOSE))
+  {
+    verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
+  }
+  //
+  for ( Particle2Vertex::Table::Range::const_iterator i = range.begin();
+        i != range.end(); ++i ) 
+  { m_p2PVTable.i_relate ( newp , i->to() ); }
+  //
+  return newp ;
+}
+//=============================================================================
+const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
+
+  if ( 0==keptV ){
+    Exception("DVAlgorithm::mark: Attempt to mark NULL Vertex for saving") ;
+    return 0; 
+  }
+
+  // Input vertex is given check if it already exist in the TES
+  if( DaVinci::inTES( keptV ) ) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
+    return keptV;
+  }
+  
+  // Create new vertex on the heap
+  LHCb::RecVertex* newV = new LHCb::RecVertex(*keptV);
+  // Put in the desktop container
+  m_refittedPVs.push_back(newV);
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
+
+  return newV;
+
+}
+//=============================================================================
+void DVAlgorithm::saveP2PVRelations() const 
+{
+  
+  if ( primaryVertices().empty() )
+  {
+    if ( msgLevel ( MSG::DEBUG ) )
+    { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
+    return ;
+  }
+
+  LHCb::RecVertex::ConstVector verticesToSave;
+  
+  Particle2Vertex::Table* table = new Particle2Vertex::Table( m_parts.size() );
+
+  const std::string location(m_outputLocation+"/Particle2VertexRelations");
+
+  put(table, location);
+
+  LHCb::Particle::ConstVector::const_iterator iParticle = m_parts.begin();
+  LHCb::Particle::ConstVector::const_iterator iParticleEnd = m_parts.end();
+  
+  for ( ; iParticle != iParticleEnd ; ++iParticle) {
+
+    const LHCb::VertexBase* vb = ( useP2PV() ) ? 
+      i_relatedVertexFromTable(*iParticle)
+      : _getRelatedPV(*iParticle);
+      
+    if (0!=vb) {
+      const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
+      if (0!=pv) {
+        verticesToSave.push_back(pv);
+        table->relate( *iParticle, pv );
+      } else {
+        Error("VertexBase to RecVertex dynamic cast FAILED").ignore();
+      }
+    }
+  }
+
+  // now save re-fitted vertices
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
+                                        << " to saveReFittedPVs" << endmsg;
+
+  saveRefittedPVs(verticesToSave);
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Saving table to " 
+	    << m_outputLocation+"/Particle2VertexRelations" 
+            << endmsg ;
+  }
+
+  return ;
+}
+//=============================================================================
+void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
+{
+  if ( vToSave.empty() ) return;
+
+  LHCb::RecVertices* verticesToSave = new LHCb::RecVertex::Container();
+
+  const std::string location(m_outputLocation+"/_RefitPVs");
+
+  put(verticesToSave,location);
+
+  LHCb::RecVertex::ConstVector::const_iterator iPV = vToSave.begin();
+  LHCb::RecVertex::ConstVector::const_iterator iPVEnd = vToSave.end();
+
+  for( ; iPV != iPVEnd; ++iPV ) {
+    // Check if this was already in a Gaudi container (hence in TES)
+    if( !DaVinci::inTES(*iPV) ) {
+      verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iPV));
+    }
+  }
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saved " << verticesToSave->size()
+	      << " new re-fitted PVs in " << location 
+	      << " from " << vToSave.size()
+	      << " vertices in desktop " << endmsg;
+  }
+
+}
+// ============================================================================
+void DVAlgorithm::saveParticles() 
+{
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saving "<< m_parts.size() << " Particles to TES " << endmsg;
+  }
+  
+  LHCb::Particles* particlesToSave = new LHCb::Particle::Container();
+  const std::string pLocation( m_outputLocation+"/Particles");
+  put(particlesToSave,pLocation);
+
+  LHCb::Vertices* verticesToSave = new LHCb::Vertices();
+  const std::string vLocation(m_outputLocation+"/decayVertices");
+  put(verticesToSave,vLocation);
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Going to save " 
+              << m_parts.size() << " particles" << endmsg;
+  }
+  
+  LHCb::Particle::ConstVector::const_iterator iParticle = m_parts.begin();
+  LHCb::Particle::ConstVector::const_iterator iParticleEnd = m_parts.end();
+  
+  for ( ; iParticle != iParticleEnd ; ++iParticle) {
+    // Check if this was already in a Gaudi container (hence in TES)
+    if (  !DaVinci::inTES(*iParticle) ) {
+      if (msgLevel(MSG::VERBOSE)) {
+	verbose() << "  Saving " <<  *iParticle << endmsg;
+      }
+      if (0!=*iParticle) {
+	particlesToSave->insert(const_cast<LHCb::Particle*>(*iParticle));
+	const LHCb::Vertex* endVtx = (*iParticle)->endVertex();
+	if (0!=endVtx && !DaVinci::inTES(endVtx)) {
+	  verticesToSave->insert(const_cast<LHCb::Vertex*>(endVtx));
+	}
+      }
+    } else {
+      if (msgLevel(MSG::VERBOSE)) {
+	verbose() << "Skipping " << *iParticle << endmsg;
+      }
+    }
+  }
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saved " << particlesToSave->size()
+	      << " new particles in " << pLocation 
+	      << " from " << m_parts.size()
+	      << " total particles in local storage" << endmsg;
+  }
+
+  // now save relations table
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
+
+  if ( saveP2PV() ) saveP2PVRelations();
+ 
 }
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
@@ -435,7 +758,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
       return 0;
     }
     LHCb::RecVertex::ConstVector reFittedPVs;
-    DaVinci::Guards::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
+    DaVinci::Utils::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
     for (LHCb::RecVertex::Range::const_iterator iPV = PVs.begin();
          iPV != PVs.end(); ++iPV) {
       LHCb::RecVertex* reFittedPV = new LHCb::RecVertex(**iPV);
@@ -444,7 +767,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
       } else {
         delete  reFittedPV;
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
-      } 
+      }
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "have " << reFittedPVs.size()
                                           << " re-fitted PVs" 
@@ -465,7 +788,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
               StatusCode::FAILURE, 0).ignore();
       return 0;
     } else {
-      const LHCb::RecVertex* returnPV = desktop()->keep(pv);
+      const LHCb::RecVertex* returnPV = mark(pv);
       return returnPV;
     }
   } else { // no PV re-fit
@@ -485,7 +808,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) const
 {
-  //  always() << "ATTENTION! called getRelatedPV!" << endmsg;
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "_getRelatedPV! Getting range" << endmsg;
   if (0==part) {
     error() << "input particle is NULL" << endmsg;
@@ -509,7 +832,7 @@ const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) c
       return 0;
     }
   } else {
-    const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(part);
+    const Particle2Vertex::Table::Range range = m_p2PVTable.i_relations(part);
     return DaVinci::bestVertexBase(range);
   }
   
@@ -518,19 +841,16 @@ const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) c
 const LHCb::VertexBase* DVAlgorithm::getStoredBestPV(const LHCb::Particle* particle) const
 {
   if ( hasStoredRelatedPV(particle) ) {
-    const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(particle);
-    return DaVinci::bestVertexBase(range);
+    return DaVinci::bestVertexBase(m_p2PVTable.i_relations(particle));
   } else {
     return 0;
-  }
-  
+  }  
   
 }
 // ============================================================================
 bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
 {
-  const Particle2Vertex::Table::Range p2pvRange = desktop()->particle2Vertices(particle);
-  return !p2pvRange.empty();
+  return ! m_p2PVTable.i_relations(particle).empty();
 }
 // ============================================================================
 // Finalize the algorithm + post-actions
@@ -548,15 +868,6 @@ StatusCode DVAlgorithm::finalize ()
   return GaudiTupleAlg::finalize();
 
 } 
-// ============================================================================
-void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString)
-{
-  if ( 0==desktop() ) {
-    fatal() << "Desktop has not been created yet" << endmsg;
-  }
-  desktop()->setOutputLocation(outputLocationString);  
-  return;  
-}
 // ============================================================================
 // The END 
 // ============================================================================
