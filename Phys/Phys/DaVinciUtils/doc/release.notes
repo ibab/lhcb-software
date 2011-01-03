@@ -4,6 +4,12 @@
 ! Purpose     : DaVinci independent functions and classes to help DaVinci life.
 !-----------------------------------------------------------------------------
 
+! 2011-01-03 Juan Palacios
+ - DaVinciUtils/Guards.h
+  . Clear containers.
+ - cmt/requirements
+  . Increase to v1r1.
+
 ! =============================== DaVinciUtils v1r0 2010-09-29 ===============
 
 ! 2010-09-21 - Juan Palacios

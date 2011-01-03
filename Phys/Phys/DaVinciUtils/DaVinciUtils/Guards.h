@@ -47,6 +47,9 @@ namespace Utils
     {
       for (typename T::const_iterator iObj = m_container.begin();
            iObj != m_container.end(); ++iObj) delete *iObj;
+
+      m_container.clear();
+
     }
 
   private:
@@ -88,6 +91,7 @@ namespace Utils
            iObj != m_container.end(); ++iObj) {
         if( !DaVinci::Utils::inTES(*iObj) ) delete *iObj;
       }
+      m_container.clear();
 
     }
   private:
