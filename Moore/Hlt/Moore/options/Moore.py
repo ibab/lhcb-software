@@ -15,7 +15,7 @@ from Moore.Configuration import Moore
 #Moore().ThresholdSettings = 'Commissioning_PassThrough'
 #Moore().configLabel = 'ODINRandom acc=0, TELL1Error acc=1'
 
-Moore().ThresholdSettings = 'Physics_HighNu_3000Vis_200L0_20Hlt1_CoreHlt2_Sep10'
+Moore().ThresholdSettings = 'Physics_draft2011'
 
 Moore().Verbose = True
 Moore().EvtMax = 10000
@@ -26,7 +26,13 @@ Moore().CondDBtag  = 'hlt-20100906'
 Moore().Simulation = False
 Moore().DataType   = '2010'
 Moore().inputFiles  = [ 'castor:/castor/cern.ch/user/g/graven/raw/74733_0x0025_MB1.raw' ]
+#Moore().inputFiles  = [ '/data/bfys/graven/74733_0x001a002b_MB1.raw' ]
+from Configurables import HltRoutingBitsWriter
+HltRoutingBitsWriter().GetStartOfRunFromCondDB = True
+Moore().ForceSingleL0Configuration = False
 
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 
+#from Configurables import Hlt__Service
+#Hlt__Service().Pedantic = False
