@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2011-01-03 - Chris Jones
+ - Remove the check in RichRecSysConf for the DataType, which is no longer used
+
 !========================= RichRecSys v3r35 2010-12-16 =========================
 ! 2010-12-03 - Chris Jones
  - Retire the package Rich/RichMarkovRingFinder.

@@ -113,11 +113,6 @@ class RichRecSysConf(RichConfigurableUser):
         if not self.isPropertySet("RecoSequencer") :
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
-
-        # Data Type tunings
-        dataType = self.getProp("DataType")
-        if dataType == "" :
-            raise RuntimeError("ERROR : DataType is not correctly set")
         
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])
