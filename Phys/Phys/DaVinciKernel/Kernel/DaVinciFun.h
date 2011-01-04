@@ -9,6 +9,7 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
+#include "DaVinciUtils/Functions.h"
 /** @namespace DaVinci Kernel/DaVinciFun.h
  *  
  * Collection of free functions used widely in DVAlgorithm 
@@ -42,7 +43,7 @@ namespace DaVinci {
     int iCount(0);
     for (typename T::const_iterator iObj = container.begin();
          iObj != container.end(); ++iObj) {
-      if( DaVinci::inTES(*iObj) ) {
+      if( DaVinci::Utils::inTES(*iObj) ) {
         ++iCount;
       } else {
         delete *iObj;
@@ -84,13 +85,13 @@ namespace DaVinci {
     /// Add Particles and Vertices in the decay of a particle to vectors.
     /// Entries are only added uniquely.
     ///
-    /// @param head  (INPUT)  The head of the decay.
-    /// @param pTree (UPDATE) The vector of particles in the decay. Must be empty on first call.
-    /// @param vTree (UPDATE) The vector of Vertices in the decay. Must be empty on first call.
+    /// @param head      (INPUT)  The head of the decay.
+    /// @param particles (UPDATE) Add particles in the decay.
+    /// @param vertices  (UPDATE) Add Vertices in the decay.
     /// 
-    void findDecayTree(const LHCb::Particle* head,
-		       LHCb::Particle::ConstVector& pTree,
-		       LHCb::Particle::ConstVector& vTree );
+    void findDecayTree(const LHCb::Particle*        head,
+		       LHCb::Particle::ConstVector& particles,
+		       LHCb::Vertex::ConstVector&   vertices );
 
     // ========================================================================
 

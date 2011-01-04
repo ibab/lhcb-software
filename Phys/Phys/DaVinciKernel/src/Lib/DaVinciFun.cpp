@@ -53,21 +53,21 @@ namespace DaVinci
 
     // ========================================================================
 
-    void findDecayTree(const LHCb::Particle* head,
+    void findDecayTree(const LHCb::Particle*        head,
 		       LHCb::Particle::ConstVector& particles,
-		       LHCb::Particle::ConstVector& vertices ) {
+		       LHCb::Vertex::ConstVector&   vertices ) {
 
       if ( particles.end() == std::find ( particles.begin() , 
-					  particless.end() , 
+					  particles.end() , 
 					  head ) ) {
-	parts.push_back ( head ) ; 
+	particles.push_back ( head ) ; 
       }
       //
       if ( 0 != head->endVertex() 
 	   && vertices.end() == std::find ( vertices.end() , 
 					    vertices.end() , 
 					    head->endVertex() ) ) {
-	verts.push_back( head->endVertex() ); // save Vertex
+	vertices.push_back( head->endVertex() ); // save Vertex
       }
   
       // Loop on daughters

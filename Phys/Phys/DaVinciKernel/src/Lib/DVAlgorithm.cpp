@@ -588,10 +588,10 @@ void DVAlgorithm::markTrees(const LHCb::Particle::ConstVector& heads) {
 
   for( ; iHead != iHeadEnd; ++iHead ) {
     if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Getting\n" << *icand << endmsg;
+      verbose() << "Getting\n" << *iHead << endmsg;
     }
     // Find all descendendant from this particle
-    DaVinci::Utils::findDecayTree( *icand, m_parts, m_secVerts);
+    DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
   }
 
   return ;
