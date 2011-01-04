@@ -48,8 +48,6 @@
  *  The specific configuration properties of the base class: 
  *
  *  - <b>InputLocations</b> : from where to take the particles? 
- *    Forwarded to PhysDesktop.
- *    @see IPhysDesktop
  *
  *  - <b>VertexFitters</b> : the map for possible vertex fitters.
  *      @see IVertexFit 
@@ -345,11 +343,11 @@ public:
    * after removing tracks coming from the particle in question. If not, then 
    * it uses the container of PVs obtained from method primaryVertices().
    * Returns a newed pointer to a vertex either from the TES or stored in the
-   * PhysDesktop local array.
+   * local storage.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @param p LHCb::Particle to be related
-   * @return newed pointer to related vertex. TES or PhysDesktop in charge of
+   * @return newed pointer to related vertex. TES or DVALgorithm in charge of
    * memory management.
    *
    **/
@@ -582,6 +580,14 @@ protected:
 
   inline LHCb::Particle::ConstVector& i_particles() {
     return m_parts;
+  }
+
+  inline Particle2Vertex::LightTable& i_p2PVTable() {
+    return m_p2PVTable;
+  }
+
+  inline Particle2Vertex::LightTable& i_p2PVTable() const {
+    return m_p2PVTable;
   }
 
  private:
