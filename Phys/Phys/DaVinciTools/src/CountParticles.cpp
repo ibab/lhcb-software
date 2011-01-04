@@ -27,7 +27,7 @@ public:
   virtual StatusCode execute() 
   {
     // get the particles 
-    LHCb::Particle::ConstVector parts = desktop()->particles();
+    const LHCb::Particle::ConstVector& parts = this->i_particles();
     //
     setFilterPassed ( !parts.empty() ) ;
     //

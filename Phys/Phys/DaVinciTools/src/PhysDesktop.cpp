@@ -229,7 +229,7 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* kept )
 {
   //
   Assert ( 0 != kept , "keep: Attempt to keep invaild particle" ) ;
-  if ( DaVinci::inTES ( kept ) ) { return kept ; }
+  if ( DaVinci::Utils::inTES ( kept ) ) { return kept ; }
   
   DaVinci::CloneMap clonemap ;
   //
@@ -272,7 +272,7 @@ const LHCb::RecVertex* PhysDesktop::keep( const LHCb::RecVertex* keptV ){
   //  if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
 
   // Input vertex is given check if it already exist in the stack
-  if( DaVinci::inTES( keptV ) ) {
+  if( DaVinci::Utils::inTES( keptV ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
@@ -308,7 +308,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if (  !DaVinci::inTES(*icand) ) {
+    if (  !DaVinci::Utils::inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
       if (0!=*icand) particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
     } else {
@@ -345,7 +345,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !DaVinci::inTES(*iver) ) {
+    if( !DaVinci::Utils::inTES(*iver) ) {
       if (0!=(*iver)) verticesToSave->insert((LHCb::Vertex*)*iver); // insert non-const
     }
   }
@@ -375,7 +375,7 @@ void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
   for(rv_iter iver = vToSave.begin(); 
       iver != vToSave.end(); ++iver ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !DaVinci::inTES(*iver) ) {
+    if( !DaVinci::Utils::inTES(*iver) ) {
       verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iver)); // insert non-const
     }
   }

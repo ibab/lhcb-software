@@ -34,7 +34,7 @@ public:
     if ( 0 == m_printDecay ) 
     { m_printDecay = tool<IPrintDecay>( m_printDecayName , this ) ; }
     // get the particles 
-    LHCb::Particle::ConstVector parts = desktop()->particles();
+    const LHCb::Particle::ConstVector& parts = this->i_particles();
     //
     m_printDecay->printTree ( parts.begin() , parts.end () , m_maxDepth ) ;
     //

@@ -80,7 +80,7 @@ StatusCode RemoveClones::execute() {
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
   //define vectors of particles
-  LHCb::Particle::ConstVector particles=desktop()->particles();
+  const LHCb::Particle::ConstVector& particles=this->i_particles();
   std::vector< LHCb::Particle::ConstVector > particlesbyPID;
   LHCb::Particle::ConstVector accepted;
 
@@ -107,18 +107,22 @@ StatusCode RemoveClones::execute() {
 
     NpartOut+=i->size();
 
-    //add these unique particles back to a vector for cloning to the desktop
+    //add these unique particles back to a vector for cloning to local storage
     for(LHCb::Particle::ConstVector::const_iterator j=i->begin(); j!=i->end();j++)
     { 
-      accepted.push_back(*j);
+      // Mark clones of unique particles for saving
+      this->cloneAndMark(*j);
     }
     
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Particles sent in: " << NpartIn << " | Particles sent out:" << NpartOut << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Particles sent in: " << NpartIn 
+	      << " | Particles sent out:" << NpartOut << endmsg ;
+  }
+  // Save all marked particles in local storage.
+  this->saveParticles();
 
-  //write unique particles to the desktop
-  sc = desktop()->cloneTrees(accepted);
   if(!sc) return sc;
 
   m_NpartIn+=NpartIn;
@@ -142,8 +146,8 @@ StatusCode RemoveClones::finalize() {
 //#############################################################################
 /// FilterById
 //#############################################################################
-StatusCode RemoveClones::FilterById(LHCb::Particle::ConstVector & parts,
-                                    std::vector< LHCb::Particle::ConstVector > & particlesbyPID)
+StatusCode RemoveClones::FilterById(const LHCb::Particle::ConstVector & parts,
+                                    std::vector< LHCb::Particle::ConstVector > & particlesbyPID) const
 {
   if(parts.size()==0) return StatusCode::SUCCESS;
 

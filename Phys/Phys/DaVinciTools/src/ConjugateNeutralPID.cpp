@@ -62,17 +62,17 @@ StatusCode ConjugateNeutralPID::execute()
 
   setFilterPassed( false );
   
-  LHCb::Particle::ConstVector inparts = desktop()->particles();
-  verbose() << "Retrieved " << inparts.size() << " particles from desktop" << endmsg;
+  const LHCb::Particle::ConstVector& inparts = this->i_particles();
+  verbose() << "Retrieved " << inparts.size() << " particles from local storage" << endmsg;
 
   // Apply the ChangePIDTool to the particles.
   std::vector<LHCb::Particle> outparts = m_changePIDTool->changePID( inparts );
 
-  // Save each of the modified Particles to the Desktop
+  // Save each of the modified Particles to the local storage.
   std::vector<LHCb::Particle>::iterator i;
   for( i = outparts.begin(); i != outparts.end(); i++ )
   {
-    const LHCb::Particle *deskPart = desktop()->keep( &(*i) );
+    const LHCb::Particle *deskPart = this->mark( &(*i) );
     if( !deskPart )
     {
       err() << " Unable to save particle" << endmsg;
@@ -80,13 +80,8 @@ StatusCode ConjugateNeutralPID::execute()
     }
   }
 
-  // Save the desktop to the TES
-  StatusCode sc = desktop()->saveDesktop();
-  if( !sc )
-  {
-    err() << " Unable to save desktop" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  // Save the marked particles to the TES
+  this->saveParticles();
 
   if( !outparts.empty() )
   {

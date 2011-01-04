@@ -10,7 +10,7 @@
 
 /** @class ConjugateNeutralPID ConjugateNeutralPID.h
  * 
- * Very simple algorithm that takes all particles on the desktop
+ * Very simple algorithm that takes all particles on the local storage
  * and *CLONES* them with the conjugate PID.
  *
  * This algorithm should only be applied to Particles with PIDs that are

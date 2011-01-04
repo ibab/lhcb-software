@@ -8,7 +8,7 @@
 
 /** @class RemoveClones RemoveClones.h
  *  
- *  Filter the desktop to remove all clones of particles
+ *  Filter the local storage to remove all clones of particles
  *
  *  @author Rob lambert
  *  @date   2008-06-05
@@ -18,9 +18,10 @@
 class ICheckOverlap;
 
 //===========================================================================
-///A public DVAlgorithm using the FindCloneTool. Removes clones from the desktop.
+///A public DVAlgorithm using the FindCloneTool. Removes particle clones from the local storage.
 /** RemoveClones is a useful tool to be called after FilterDesktop
- * It filters the desktop into just those particles which are unique.
+ * It filters the local particle storage into just those particles 
+ * which are unique.
  * This alg uses the FindCloneTool by default, which
  * takes a vector of particles and returns a vector of all unique particles
  * So-called clones are removed.
@@ -54,8 +55,8 @@ private:
   int m_NpartOut; ///<number of unique particles so far written out by the alg
   
   ///filter a vector of particles into vectors with the same PID, or abs(ID).
-  StatusCode FilterById(LHCb::Particle::ConstVector & parts,
-                        std::vector< LHCb::Particle::ConstVector > & particlesbyPID);
+  StatusCode FilterById(const LHCb::Particle::ConstVector& parts,
+                        std::vector< LHCb::Particle::ConstVector > & particlesbyPID) const;
 
 };
 #endif // REMOVECLONES_H

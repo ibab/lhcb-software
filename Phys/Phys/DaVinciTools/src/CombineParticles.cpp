@@ -156,8 +156,8 @@ namespace
  *
  *   # 2) give it some input particles ( leading "Phys/" no longer needed)
  *   #    Assuming selections "Jpsi2MuMuSel" and "Phi2KKSel" have been run.
- *   bs2jpsiphiPhysDesktop.InputLocations  = [ 'Jpsi2MuMuSel' ,
- *                                             'Phi2KKSel'    ]
+ *   bs2jpsiphiPhys.InputLocations  = [ 'Jpsi2MuMuSel' ,
+ *                                      'Phi2KKSel'    ]
  *   # 3) Give it a (mandatory) decay descriptor
  *   bs2jpsiphi.DecayDescriptor = 'B_s0 -> phi(1020) J/psi(1S)'
  *
@@ -830,15 +830,15 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the looping/combiner engine
   typedef LoKi::Combiner_<LHCb::Particle::ConstVector>  Combiner ;
   
-  // get the particles from the Desktop
+  // get the particles from the local storage
   const LHCb::Particle::ConstVector& particles 
-    = m_useInputParticles ? m_inputParticles : desktop()->particles () ;
+    = m_useInputParticles ? m_inputParticles : i_particles () ;
   
   if ( m_useInputParticles && msgLevel ( MSG::INFO ) )
   {
     info () 
       << " The external set of " << particles.size() 
-      << " particles is used instead of PhysDesktop " 
+      << " particles is used instead of InputLocations " 
       << endreq ; 
   }
   
@@ -894,7 +894,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   // the actual type of relation table 
   typedef Particle2Vertex::LightTable Table ;
-  Table& p2pv_table = desktop() ->Particle2VertexRelations() ;
+  Table& p2pv_table = this->i_p2PVTable() ;
   
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 1000 ) ;
@@ -1002,7 +1002,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
       
       // keep the good candidate:
-      const LHCb::Particle* particle = desktop()->keep ( &mother ) ;
+      const LHCb::Particle* particle = this->mark( &mother ) ;
       if ( monitorMother ) { saved.push_back  ( particle ) ; }
       
       if ( 0 != m_motherPlots ) 
@@ -1031,8 +1031,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // reset the "use external input" flag
   m_useInputParticles = false ;
   
-  StatusCode sc =  desktop()->saveDesktop() ;
-  if (!sc) { return sc ; }
+  this->saveParticles() ;
   
   // the final decision 
   setFilterPassed ( 0 != nTotal ) ;
@@ -1070,7 +1069,7 @@ StatusCode CombineParticles::setInput
   m_useInputParticles = true  ;
   info () 
     << "The external set of " << input.size() 
-    << " particles will be used as input instead of PhysDesktop " 
+    << " particles will be used as input instead of InputLocations " 
     << endreq ;
   return StatusCode ( StatusCode::SUCCESS , true ) ;
 }

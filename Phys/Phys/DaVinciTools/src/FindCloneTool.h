@@ -28,8 +28,8 @@ class IParticlePropertySvc ;
  * So-called clones are removed.
  * A clone is defined as a particle for which *all* protos are duplicates of another
  * in the same vector.
- * the RemoveClones algorithm uses this tool by default to filter the desktop
- * into just those particles which are unique
+ * the RemoveClones algorithm uses this tool by default to filter the local
+ * storage into just those particles which are unique
  *
  *  @author Rob Lambert
  *  @date   05/06/2008

@@ -4,6 +4,11 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-04 - Juan Palacios
+ - Remove all calls to DVAlgorithm::desktop().
+ - Use DaVinci::Utils::inTES.
+ - Increase to v22r0.
+
 !========================== DaVinciTools v21r7 2010-12-17 ===================
 
 ! 2010-12-03 - Patrick Koppenburg

@@ -237,7 +237,7 @@ void FilterDesktop::updateHandler2 ( Property& p )
 // ============================================================================
 StatusCode FilterDesktop::writeEmptyContainerIfNeeded() 
 {
-  const std::string& loc = desktop()->getOutputLocation();
+  const std::string& loc = this->outputLocation();
   if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " 
                                     << loc << endmsg ;
   
@@ -345,7 +345,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   }
     
   // get the input particles 
-  const LHCb::Particle::ConstVector particles = desktop() -> particles () ;
+  const LHCb::Particle::ConstVector& particles = i_particles () ;
 
   // monitor input (if required) 
   if ( monitor() && !m_preMonitorCode.empty() ) { m_preMonitor ( particles ) ; }
@@ -421,7 +421,7 @@ LHCb::Particle::Range FilterDesktop::_save
 ( const LHCb::Particle::Range& p_in ) const 
 {
   //
-  const std::string& outputLocation = desktop()->getOutputLocation();  
+  const std::string& outputLocation = this->outputLocation();  
   //
   PARTICLES*              p_tes = new PARTICLES () ;
   VERTICES*               v_tes = new VERTICES  () ;
@@ -515,8 +515,7 @@ void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) c
   if (relations.empty()) return;
 
   LHCb::RecVertices* orphanPVs = new LHCb::RecVertex::Container();
-  put (orphanPVs, 
-       desktop()->getOutputLocation() + "/_RelatedPVs") ;
+  put (orphanPVs, this->outputLocation() + "/_RelatedPVs") ;
   
   Particle2Vertex::Table::Range::const_iterator beginRel = relations.begin () ;
   Particle2Vertex::Table::Range::const_iterator endRel   = relations.end   () ;
@@ -525,7 +524,7 @@ void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) c
        irel != endRel;
        ++irel) {
     const LHCb::RecVertex* relPV = dynamic_cast<const LHCb::RecVertex*>(irel->to());
-    if (relPV && !DaVinci::inTES(relPV) ) {
+    if (relPV && !DaVinci::Utils::inTES(relPV) ) {
       orphanPVs->insert(const_cast<LHCb::RecVertex*>(relPV));
     }
   }
