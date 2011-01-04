@@ -67,25 +67,34 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
   StatusCode sc = StatusCode::SUCCESS ;
 
   // code goes here  
-  const LHCb::RecVertex::Container* pvs = desktop()->primaryVertices(); // get PVs
-  counter("# PV")+= pvs->size();
+  //const LHCb::RecVertex::Container* pvs = desktop()->primaryVertices(); // get PVs
+  const LHCb::RecVertex::Range pvs = this->primaryVertices();
+
+  counter("# PV")+= pvs.size();
   counter("# muons")+= muons.size();
 
-  for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
-        im != muons.end() ; ++im ){
+  for(LHCb::Particle::ConstVector::const_iterator im = muons.begin(); im != muons.end(); ++im)
+  {
     plot((*im)->p(),  "P", "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
     plot((*im)->pt(), "Pt", "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
-    if (msgLevel(MSG::DEBUG)) debug() << "Mu Momentum: " << (*im)->momentum() << endmsg ;
-    for ( LHCb::RecVertex::Container::const_iterator ipv = pvs->begin() ;
-          ipv != pvs->end() ; ++ipv ){
+
+    if(msgLevel(MSG::DEBUG)) { debug() << "Mu Momentum: " << (*im)->momentum() << endmsg; }
+
+    for(LHCb::RecVertex::Range::const_iterator ipv = pvs.begin(); ipv != pvs.end(); ++ipv)
+    {
       double IP, IPchi2;
-      if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
+
+      if(msgLevel(MSG::DEBUG)) { debug() << (*ipv)->position() << endmsg; }
+
       sc = distanceCalculator()->distance((*im), (*ipv), IP, IPchi2);
-      if (sc){
+      if(sc)
+      {
         plot(IP, "IP", "Muon IP", 0., 10.*Gaudi::Units::mm);
         plot(IP/IPchi2, "IPchi2", "Muon chi2 IP", 0., 10.);
-        if ( (*im)->pt()>2*Gaudi::Units::GeV) 
+        if( (*im)->pt()>2*Gaudi::Units::GeV )
+        {
           plot(IP, "IP_2", "Muon IP for PT>2GeV", 0., 10.*Gaudi::Units::mm);
+        }
       } 
     }
   }

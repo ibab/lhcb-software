@@ -32,7 +32,7 @@ FilterMuonsName = "FilterMuons"
 FilterMuons = FilterDesktop(FilterMuonsName)
 FilterMuons.OutputLevel = 4
 
-FilterMuons.InputLocations = [ "Phys/StdLooseMuons" ]
+FilterMuons.InputLocations = [ "StdLooseMuons" ]
 FilterMuons.Code = "ALL"
 #FilterMuons.Code = "(MIPCHI2DV(PRIMARY) > 4)"
 
@@ -45,8 +45,8 @@ FilterMuonsOutput += FilterMuonsName
 
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool
 
-MuonPlots = PlotTool("MuonPlots")
-FilterMuons.addTool(MuonPlots) # make it privately owned by FilterMuons
+#MuonPlots = PlotTool("MuonPlots")
+FilterMuons.addTool(PlotTool, name = "MuonPlots") # make it privately owned by FilterMuons
 
 # configure
 FilterMuons.MuonPlots.OutputLevel = 4
@@ -57,7 +57,7 @@ FilterMuons.MuonPlots.Histos = { "P/GeV"  : ('Muon_P_GeV', 0, 50),
                                  }
 
 FilterMuons.HistoProduce = True
-FilterMuons.OutputPlotsTool = MuonPlots # plot output particles
+FilterMuons.OutputPlotsTool = FilterMuons.MuonPlots # plot output particles
 FilterMuons.OutputPlotsPath = "FilterMuons" # set directory name
 
 TutorialSeq.Members += [FilterMuons]

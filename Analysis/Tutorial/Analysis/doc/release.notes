@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-04 - Jeremy Dickens
+ - Updated solutions to DVtutorial1 for v26r3p2
+
 !========================== Analysis v8r8 2010-12-02 =================
 ! 2010-12-02 - Patrick Koppenburg
  - Change line to NeuroBayes to be wused with Stripping12

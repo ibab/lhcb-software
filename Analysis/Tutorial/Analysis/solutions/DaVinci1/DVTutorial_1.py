@@ -29,7 +29,7 @@ tutalg.InputLocations = [ "StdLooseMuons" ]
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "MC09"                    # Default is "DC06"
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
