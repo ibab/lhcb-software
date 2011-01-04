@@ -5,6 +5,12 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-04 - Juan Palacios
+ - LoKi::Algo
+  . Replace calls to desktop() with new DVAlgorithm equivalents.
+ - Increase to v9r3
+ - NEEDS Phys/DaVinciKernel v9r0 or higher.
+
 !========================== LoKiAlgo v9r2 2010-06-24 ==========================
 
 ! 2010-06-19 - Vanya Belyaev

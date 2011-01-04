@@ -72,7 +72,7 @@ namespace LoKi
     // ========================================================================
     /** 'Select' the particles to be used in local storage
      *  
-     *  - The Particles are selected from the desktop
+     *  - The Particles are selected from the local storage
      *
      *  @code
      *
@@ -80,8 +80,8 @@ namespace LoKi
      *
      *  @endcode
      *
-     *  - The example illustrate the 'selection'/'filtering from
-     *  desktop the particles, which are @c K+ or @c K- and have a
+     *  - The example illustrates a 'selection'/'filtering from
+     *   the local particles, which are @c K+ or @c K- and have a
      *  momentum in excess of 5GeV/c
      *  - The selected particles
      *  are stored inside local LoKi storage under the tag @c "Kaons"

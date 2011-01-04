@@ -119,7 +119,7 @@ LoKi::Algo::~Algo(){}
 // ============================================================================
 /* 'Select' the particles to be used in local storage
  *  
- *  - The Particles are selected from the desktop
+ *  - The Particles are selected from the local storage
  *
  *  @code
  *
@@ -128,7 +128,7 @@ LoKi::Algo::~Algo(){}
  *  @endcode
  *
  *  - The example illustrate the 'selection'/'filtering from
- *  desktop the particles, which are @c K+ or @c K- and have a
+ *  local storage the particles, which are @c K+ or @c K- and have a
  *  momentum in excess of 5GeV/c
  *  - The selected particles
  *  are stored inside local LoKi storage under the tag @c "Kaons"
@@ -148,15 +148,14 @@ LoKi::Algo::select
 ( const std::string&        name ,
   const LoKi::Types::Cuts&  cut  ) 
 {
-  // get all particles from desktop
-  const LHCb::Particle::ConstVector& particles = 
-    desktop()->particles();
+  // get all particles
+  LHCb::Particle::Range particles = this->particles();
   // add the particles to the local storage 
   return select ( name , particles.begin() , particles.end() , cut ) ;
 } 
 // ============================================================================
 /* 'Select' the vertices to be used in local storage
- *  - Vertices are selected from desktop
+ *  - Vertices are selected from DVAlgorithm local storage.
  *  @param name name/tag assigned to the selected vertices
  *  @param cut  cut to be applied
  *  @return selected range of vertices
@@ -202,9 +201,6 @@ LoKi::Algo::vselect
   Warning ( "vselect: The extraction of secondary vertices is disabled" , 
             StatusCode::SUCCESS , 1 ).ignore() ;
   
-  // get all SECONDARY  particles from desktop
-  // const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
-  // return vselect ( name , secs.begin() , secs.end() , cut ) ;
   return vselected ( name ) ;
 } 
 // ============================================================================
@@ -372,7 +368,7 @@ StatusCode LoKi::Algo::save
   if( 0 == particle ) 
   { return Error("save('"+tag+"'): invalid particle could not be saved!") ; }
   
-  const LHCb::Particle* saved = desktop()->keep( particle );
+  const LHCb::Particle* saved = this->cloneAndMark( particle );
   
   if( 0 == saved ) { return Error("Particle '"+tag+"' is not kept! " ) ; }
   
@@ -738,9 +734,9 @@ StatusCode LoKi::Algo::execute ()
   if ( sc.isFailure() ) 
   { return Error ( "Error from 'analyse()' method" , sc ) ; }
   /// save everything 
-  sc = desktop()->saveDesktop();
-  if ( sc.isFailure() ) 
-  { return Error ( "DeskTop is not saved"          , sc ) ;}
+  this->saveParticles();
+  //  if ( sc.isFailure() ) 
+  //  { return Error ( "DeskTop is not saved"          , sc ) ;}
   // clear all LoKi storages at the end 
   clear().ignore () ;
   return StatusCode::SUCCESS ;
