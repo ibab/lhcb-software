@@ -572,6 +572,18 @@ protected:
   /// PV and relation table entry when applicable.
   void saveParticles();
 
+  inline const std::string& outputLocation() const {
+    return m_outputLocation;
+  }
+
+  inline const LHCb::Particle::ConstVector& i_particles() const {
+    return m_parts;
+  }
+
+  inline LHCb::Particle::ConstVector& i_particles() {
+    return m_parts;
+  }
+
  private:
 
   /// 

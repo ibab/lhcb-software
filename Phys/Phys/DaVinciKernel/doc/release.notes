@@ -5,6 +5,8 @@
 !============================================================================
 
 ! 2011-01-04 - Juan Palacios
+ - DVAlgorithm
+  . Add protected methou outputLocation(), returns output location of algo.
  - Kernel/DaVinciFun.h, src/Lib/DaVinciFun.h
   . Added DaVinci::Utils::findDecayTree to get all elements of a decay tree.
   . Removed DaVinci::inTES, superceded by DaVinci::Utils::inTES from
