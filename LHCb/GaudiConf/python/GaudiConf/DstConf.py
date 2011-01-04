@@ -467,6 +467,13 @@ class DstConf(LHCbConfigurableUser):
         inputtype = self.getProp('DstType').upper()
         if inputtype != 'MDST'  :
 
+            # For backwards compat, also run algs that if need be recreates Muon and Rich PIDs
+            # from ProtoParticles. Can eventually be removed.
+            from Configurables import ( RichPIDsFromProtoParticlesAlg,
+                                        MuonPIDsFromProtoParticlesAlg )
+            chargedSeq.Members += [ RichPIDsFromProtoParticlesAlg("PPCheckRichPIDs") ]
+            chargedSeq.Members += [ MuonPIDsFromProtoParticlesAlg("PPCheckMuonPIDs") ]
+
             # PID calibration
             from Configurables import ( ChargedProtoParticleAddRichInfo,
                                         ChargedProtoParticleAddMuonInfo,
