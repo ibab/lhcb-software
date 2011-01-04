@@ -67,22 +67,21 @@ StatusCode ParticleMakerBase::execute()
     addBrem( *i );
   }
 
-  sc = desktop()->saveTrees(constParts);
-  if ( sc.isFailure() ){ return Error( "Not able to save desktop" );}
+  this->markTrees(constParts);
+  this->saveParticles();
+
+  if ( sc.isFailure() ){ return Error( "Not able to save particles" );}
 
   if ( msgLevel(MSG::DEBUG) ){
     // Log number of vertices and particles
-    debug() << "Number of particles in desktop = " 
-            << desktop()->particles().size() << endmsg;
+    debug() << "Number of particles = " 
+            << this->particles().size() << endmsg;
     if ( ! this->primaryVertices().empty() ) 
     {
-      debug() << "Number of primary vertices in desktop = " 
+      debug() << "Number of primary vertices = " 
               << this->primaryVertices().size() << endmsg;
     }
-    else { debug() << "No primary vertices in desktop " << endmsg; }
-    
-    debug() << "Number of secondary vertices in desktop = " 
-            <<desktop()->secondaryVertices().size() << endmsg;
+    else { debug() << "No primary vertices" << endmsg; }
   }
 
   setFilterPassed((!newParts.empty()));

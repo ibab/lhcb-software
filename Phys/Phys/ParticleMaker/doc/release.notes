@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2011-01-04 - Juan Palacios
+
+ - ParticleMakerBase:
+  . Remove or replace all calls to desktop().
+
+ - REQUIRES Phys/DaVinciKernel v9r0 or higher.
 
 ! 2010-10-22 - Olivier Deschamps
  - PhotonMaker : convert new photonID into confLevel
