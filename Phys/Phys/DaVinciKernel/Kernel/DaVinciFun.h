@@ -6,6 +6,8 @@
 // from ROOT
 #include "Math/Boost.h"
 #include "Kernel/Particle2Vertex.h"
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 /** @namespace DaVinci Kernel/DaVinciFun.h
  *  
@@ -18,11 +20,6 @@
  */
 namespace DaVinci {
 
-  ///  Is in TES
-  template <class T>
-  inline bool inTES(const T* P) {
-    return ( 0!=P && 0!=P->parent()) ;
-  }
 
   /**
    *
@@ -56,8 +53,10 @@ namespace DaVinci {
     return iCount;
   }
 
+  /// Return the best VertexBase given a Particle->VertexBase relations range.
   const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Table::Range& range);
 
+  /// Return the best RecVertex given a Particle->VertexBase relations range.
   const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Table::Range& range);
 
   // ==========================================================================
@@ -78,9 +77,24 @@ namespace DaVinci {
     StatusCode setInput 
     ( IInterface*                        component , 
       const LHCb::Particle::ConstVector& input     ) ;
+
     // ========================================================================
-  } // end of namespace Utils 
-  // ==========================================================================
+
+    // ========================================================================
+    /// Add Particles and Vertices in the decay of a particle to vectors.
+    /// Entries are only added uniquely.
+    ///
+    /// @param head  (INPUT)  The head of the decay.
+    /// @param pTree (UPDATE) The vector of particles in the decay. Must be empty on first call.
+    /// @param vTree (UPDATE) The vector of Vertices in the decay. Must be empty on first call.
+    /// 
+    void findDecayTree(const LHCb::Particle* head,
+		       LHCb::Particle::ConstVector& pTree,
+		       LHCb::Particle::ConstVector& vTree );
+
+    // ========================================================================
+
+  } // namespace Utils 
 
 } // namespace DaVinci
 

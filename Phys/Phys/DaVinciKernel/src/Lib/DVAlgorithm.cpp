@@ -13,6 +13,7 @@
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/DaVinciFun.h"
 #include "DaVinciUtils/Guards.h"
+#include "DaVinciUtils/Functions.h"
 #include "Kernel/DaVinciStringUtils.h"
 #include "Kernel/TreeCloners.h"
 // ============================================================================
@@ -547,13 +548,13 @@ StatusCode DVAlgorithm::loadParticles(){
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle)
+const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle)
 {
   //
   Assert ( 0 != particle , 
 	   "DVAlgorithm::mark: Attempt to mark invalid particle for saving" );
 
-  if ( DaVinci::inTES ( particle ) ) { return particle ; }
+  if ( DaVinci::Utils::inTES ( particle ) ) { return particle ; }
   
   DaVinci::CloneMap clonemap ;
   //
@@ -576,6 +577,27 @@ const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle)
   return newp ;
 }
 //=============================================================================
+void DVAlgorithm::markTrees(const LHCb::Particle::ConstVector& heads) {
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "markTrees(LHCb::Particle::ConstVector)" << endmsg;
+  }
+
+  LHCb::Particle::ConstVector::const_iterator iHead = heads.begin();
+  LHCb::Particle::ConstVector::const_iterator iHeadEnd = heads.end();
+
+  for( ; iHead != iHeadEnd; ++iHead ) {
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Getting\n" << *icand << endmsg;
+    }
+    // Find all descendendant from this particle
+    DaVinci::Utils::findDecayTree( *icand, m_parts, m_secVerts);
+  }
+
+  return ;
+
+}
+//=============================================================================
 const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
 
   if ( 0==keptV ){
@@ -584,7 +606,7 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
   }
 
   // Input vertex is given check if it already exist in the TES
-  if( DaVinci::inTES( keptV ) ) {
+  if( DaVinci::Utils::inTES( keptV ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
@@ -668,7 +690,7 @@ void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
 
   for( ; iPV != iPVEnd; ++iPV ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !DaVinci::inTES(*iPV) ) {
+    if( !DaVinci::Utils::inTES(*iPV) ) {
       verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iPV));
     }
   }
@@ -706,14 +728,14 @@ void DVAlgorithm::saveParticles()
   
   for ( ; iParticle != iParticleEnd ; ++iParticle) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if (  !DaVinci::inTES(*iParticle) ) {
+    if (  !DaVinci::Utils::inTES(*iParticle) ) {
       if (msgLevel(MSG::VERBOSE)) {
 	verbose() << "  Saving " <<  *iParticle << endmsg;
       }
       if (0!=*iParticle) {
 	particlesToSave->insert(const_cast<LHCb::Particle*>(*iParticle));
 	const LHCb::Vertex* endVtx = (*iParticle)->endVertex();
-	if (0!=endVtx && !DaVinci::inTES(endVtx)) {
+	if (0!=endVtx && !DaVinci::Utils::inTES(endVtx)) {
 	  verticesToSave->insert(const_cast<LHCb::Vertex*>(endVtx));
 	}
       }

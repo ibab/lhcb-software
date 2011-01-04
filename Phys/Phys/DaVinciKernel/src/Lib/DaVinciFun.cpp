@@ -50,6 +50,51 @@ namespace DaVinci
       // use the valid inyterface 
       return alg->setInput ( input ) ;                             // RETURN 
     }
+
+    // ========================================================================
+
+    void findDecayTree(const LHCb::Particle* head,
+		       LHCb::Particle::ConstVector& particles,
+		       LHCb::Particle::ConstVector& vertices ) {
+
+      if ( particles.end() == std::find ( particles.begin() , 
+					  particless.end() , 
+					  head ) ) {
+	parts.push_back ( head ) ; 
+      }
+      //
+      if ( 0 != head->endVertex() 
+	   && vertices.end() == std::find ( vertices.end() , 
+					    vertices.end() , 
+					    head->endVertex() ) ) {
+	verts.push_back( head->endVertex() ); // save Vertex
+      }
+  
+      // Loop on daughters
+      SmartRefVector<LHCb::Particle>::const_iterator iDaughter = 
+	head->daughters().begin(); 
+      SmartRefVector<LHCb::Particle>::const_iterator iDaughterEnd = 
+	head->daughters().end(); 
+      for ( ; iDaughter!=iDaughterEnd; ++iDaughter){
+	findDecayTree( *iDaughter, particles, vertices );
+      }
+  
+      // loop over outgoing particles
+      if ( 0 != head->endVertex() ) {
+	SmartRefVector<LHCb::Particle>::const_iterator iPart = 
+	  head->endVertex()->outgoingParticles().begin();
+	SmartRefVector<LHCb::Particle>::const_iterator iPartEnd = 
+	  head->endVertex()->outgoingParticles().end();
+	for ( ; iPart!= iPartEnd; ++iPart){
+	  findDecayTree( *iPart, particles, vertices );
+	}
+      }
+  
+      return;
+
+    }
+
+
   } // namespace Utils
   
 } // namespace DaVinci 

@@ -552,9 +552,20 @@ protected:
 
   virtual StatusCode writeEmptyContainerIfNeeded() ;
   
-  /// Mark a particle for saving. Marks all elements of the 
-  /// Particle's decay tree unless these are already in the TES.
-  const LHCb::Particle* mark(const LHCb::Particle* particle);
+  /// Clone and mark a particle for saving. Scans decay tree cloning
+  /// and marking elements for saving. Each branch is followed until
+  /// a vertex is found which is in the TES.
+  ///
+  /// @attention Cloning stops at vertices that are in the TES.
+  /// @param particle (INPUT) The head of the decay to be cloned and marked. Ownership remains unchanged (either client's or TES).
+  /// @return the cloned head of the decay or the input if in TES.
+  ///
+  const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
+
+  ///
+  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  ///
+  void markTrees(const LHCb::Particle::ConstVector& heads);
 
   /// Save all marked local particles not already in the TES.
   /// Saves decay tree elements not already in TES, plus related
