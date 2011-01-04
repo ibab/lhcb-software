@@ -61,7 +61,7 @@ StatusCode DecayTreeTuple::initialize() {
 StatusCode DecayTreeTuple::execute(){
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   counter("Event")++;
-  const LHCb::Particle::ConstVector& mothers = desktop()->particles();
+  const LHCb::Particle::ConstVector& mothers = this->i_particles();
   if( mothers.empty() ){
     setFilterPassed(false);
     return StatusCode::SUCCESS;

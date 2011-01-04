@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-04 - Juan Palacios
+ - Replace all calls to desktop() by new DVAlgorithm equivalents.
+ - Increase to v3r11.
+ - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
+
 !========================== DecayTreeTuple v3r10 2010-12-20 =================
 
 ! 2010-12-09 - Rob Lambert

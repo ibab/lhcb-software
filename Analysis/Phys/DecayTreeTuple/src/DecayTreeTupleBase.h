@@ -38,10 +38,10 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   //! Call the fill methode which does not take a particle as argument
   StatusCode fillEventRelatedVariables( Tuples::Tuple& );
 
-  //! Retrieve from the desktop all the top level particles that match 
+  //! Retrieve from the local storage all the top level particles that match 
   //! the decay descriptor
   bool getDecayMatches( const LHCb::Particle::ConstVector& src, LHCb::Particle::ConstVector& target );
-  //! Retrieve from the desktop all the top level particles that match 
+  //! Retrieve from the local storage all the top level particles that match 
   //! the decay descriptor
   bool getDecayMatches( const LHCb::MCParticle::ConstVector& src, LHCb::MCParticle::ConstVector& target );
   //! Check if ready to fill or trigger the initialization
