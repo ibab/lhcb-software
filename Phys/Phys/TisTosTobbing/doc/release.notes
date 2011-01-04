@@ -4,6 +4,12 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-01-04 - Juan Palacios
+ - TisTosParticleTagger.cpp
+  . Remove calls to DVAlgorithm::desktop().
+ - Increase to v6r4.
+ - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
+
 !========================== TisTosTobbing v6r3 2010-11-21 ===================
 
 ! 2010-11-21 - Juan Palacios

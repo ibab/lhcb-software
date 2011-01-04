@@ -219,8 +219,8 @@ StatusCode TisTosParticleTagger::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  //Get the particles from the desktop
-  const LHCb::Particle::ConstVector& particles = desktop()->particles();
+  //Get the particles from the local storage
+  const LHCb::Particle::ConstVector& particles = this->i_particles();
 
 
   // Useful for MC: check if necessary reports exists
@@ -318,13 +318,12 @@ StatusCode TisTosParticleTagger::execute() {
     }     
   }
 
-  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ )desktop()->keep( &(*i) );
+  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ ) this->mark( &(*i) );
 
    
   setFilterPassed(passed);  // Mandatory. Set to true if event is accepted. 
 
-  StatusCode sc =  desktop()->saveDesktop() ;
-  if (!sc) { return sc ; }
+  this->saveParticles() ;
 
   return StatusCode::SUCCESS;
 }
