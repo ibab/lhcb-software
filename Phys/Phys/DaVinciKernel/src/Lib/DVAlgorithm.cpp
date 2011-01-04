@@ -548,7 +548,7 @@ StatusCode DVAlgorithm::loadParticles(){
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle)
+const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle)
 {
   //
   Assert ( 0 != particle , 
@@ -575,6 +575,11 @@ const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle)
   { m_p2PVTable.i_relate ( newp , i->to() ); }
   //
   return newp ;
+}
+//=============================================================================
+const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle){
+  return mark(particle->clone());
+
 }
 //=============================================================================
 void DVAlgorithm::markTrees(const LHCb::Particle::ConstVector& heads) {
