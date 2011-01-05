@@ -118,10 +118,10 @@ namespace LoKi
 StatusCode LoKi::TestFunctor::execute()
 {
   // I hate long names...
-  typedef  LHCb::Particle::ConstVector PARTICLES ;
+  typedef  LHCb::Particle::Range PARTICLES ;
   
   // get the particles from desktop 
-  const PARTICLES & particles = desktop()->particles() ;
+  const PARTICLES particles = desktop()->particles() ;
   
   // do something with functors, e.g. print them:
   for ( PARTICLES::const_iterator iparticle = particles.begin() ; 
