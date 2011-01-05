@@ -5,6 +5,10 @@
 !============================================================================
 
 ! 2011-01-05 - Juan Palacios
+ - PhysDesktop: adapt to removal of some DVAlgorithm public methods.
+   This is now partially broken.
+ - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
+
  - Added MockPhysDesktop, an IPhysDesktop that prints or returns useful
    errors when its methods are invoked. 
 

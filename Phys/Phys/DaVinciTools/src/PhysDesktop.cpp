@@ -412,7 +412,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
 
     const LHCb::VertexBase* vb = ( usingP2PV() ) ? i_relatedVertexFromTable(*p)
-      : m_dva->_getRelatedPV(*p);
+      : m_dva->getRelatedPV(*p);
       
     if (0!=vb) {
       const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);

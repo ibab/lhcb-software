@@ -233,8 +233,8 @@ private:
   inline bool usingP2PV() const 
   {
     // pick up parent's useP2PV() property...
-    return m_dva->useP2PV();
-    //return m_usingP2PV;
+    //return m_dva->useP2PV();
+    return m_usingP2PV;
   }
 
 public:
