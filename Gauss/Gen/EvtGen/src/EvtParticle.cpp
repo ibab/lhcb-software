@@ -45,6 +45,7 @@
 #include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
 #include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtStatus.hh"
 
 using std::endl;
 
@@ -477,7 +478,7 @@ void EvtParticle::generateMassTree() {
 	}
 	else {
 	  report(INFO,"EvtGen") << "Sorry, no luck finding a valid set of masses.  This may be a pathological combo\n";
-	  assert(0);
+	  break;
 	}
       }
     }

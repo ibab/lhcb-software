@@ -316,7 +316,11 @@ EvtComplex cont(const EvtTensor4C& t1,const EvtTensor4C& t2){
 
   for (i=0;i<4;i++) {
     for (j=0;j<4;j++) {
-      sum+=t1.t[i][j]*t2.t[i][j]; 
+      if ((i==0&&j!=0) || (j==0&&i!=0)) {
+	sum -= t1.t[i][j]*t2.t[i][j];
+      } else {
+	sum += t1.t[i][j]*t2.t[i][j]; 
+      }
     }
   }
 

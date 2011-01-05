@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-01-05 - John Back
+ - EvtPythia.cpp: Use mkstemp instead of tmpnam for temp Pythia data file
+ - EvtTensor4C.cpp: Correction to EvtTensor4C::cont() from Anders Ryd
+ - EvtParticle.cpp: Removed assert from generateMassTree()
+
 !========================= EvtGen v12r0 2010-12-09 ==========================
 ! 2010-12-09 - John Back
  Below is a summary of the merge between the latest BaBar & LHCb EvtGen code.

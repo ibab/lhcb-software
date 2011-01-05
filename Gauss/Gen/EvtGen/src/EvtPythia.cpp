@@ -1330,8 +1330,10 @@ void EvtPythia::pythiaInit(int /*dummy*/){
     }
     
     char fname[200];
-    
-    strcpy( fname , std::tmpnam( NULL ) ) ;
+    int fd(0);
+    char tempName[200] = "evtpythiaXXXXXX";
+    fd = mkstemp(tempName);
+    strcpy(fname, tempName);
     
     MakePythiaFile(fname);
 #ifdef WIN32
