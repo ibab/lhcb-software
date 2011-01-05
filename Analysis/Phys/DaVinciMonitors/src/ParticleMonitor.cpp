@@ -99,9 +99,11 @@ StatusCode ParticleMonitor::execute()
 {
 
   // code goes here
-  for ( LHCb::Particle::ConstVector::const_iterator m = desktop()->particles().begin();
-        m != desktop()->particles().end(); ++m)
-  {
+  const LHCb::Particle::Range parts = particles();
+  LHCb::Particle::Range::const_iterator m = parts.begin();
+  LHCb::Particle::Range::const_iterator mEnd = parts.end();
+
+  for ( ; m != mEnd; ++m) {
     counter("# Mothers")++ ;
     if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cut
 

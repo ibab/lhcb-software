@@ -55,7 +55,7 @@ StatusCode SimplePlots::execute() {
   debug() << "==> Execute" << endmsg;
 
   // code goes here  
-  const LHCb::Particle::ConstVector PP = desktop()->particles() ;
+  const LHCb::Particle::ConstVector PP = this->i_particles() ;
   StatusCode sc = m_plots->fillPlots(PP);
   if (!sc) {
     err() << "Error from PlotTool" << endmsg;

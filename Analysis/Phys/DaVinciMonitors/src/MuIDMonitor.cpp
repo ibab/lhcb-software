@@ -257,7 +257,7 @@ StatusCode MuIDMonitor::execute() {
   bool plotFlag(kFALSE);
 
   //Loop on matched tracks
-  const Particle::ConstVector& selParts = desktop()->particles();
+  const Particle::Range selParts = this->particles();
 
   int trIsPion = -1; double cosTr(0),plTr(0);
   int id_jp(0); 
@@ -267,7 +267,7 @@ StatusCode MuIDMonitor::execute() {
   std::string name, nameD, tit; bool profFl;
 
   double eEcal(0), eHcal(0);
-  for (Particle::ConstVector::const_iterator iP = selParts.begin(); iP != selParts.end(); ++iP) {
+  for (Particle::Range::const_iterator iP = selParts.begin(); iP != selParts.end(); ++iP) {
     //Main particle daughters
     Particle::ConstVector dau = (*iP)->daughtersVector();
 
