@@ -89,9 +89,9 @@ StatusCode HighPtJetSelection::execute() {
     }
     // Only events with 1 PV
     if(nrPVs == 1) { 
-      Particle::ConstVector inputParts = desktop()->particles();
+      const Particle::Range inputParts = this->particles();
       Particle::ConstVector jetParts;
-      for(Particle::ConstVector::const_iterator ip = inputParts.begin();
+      for(Particle::Range::const_iterator ip = inputParts.begin();
           ip != inputParts.end(); ip++) {
         bool takePart = false;
         if((*ip)->proto()) {
