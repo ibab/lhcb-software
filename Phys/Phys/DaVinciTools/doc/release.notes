@@ -4,6 +4,10 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-05 - Juan Palacios
+ - Added MockPhysDesktop, an IPhysDesktop that prints or returns useful
+   errors when its methods are invoked. 
+
 ! 2011-01-04 - Juan Palacios
  - Remove all calls to DVAlgorithm::desktop().
  - Use DaVinci::Utils::inTES.
