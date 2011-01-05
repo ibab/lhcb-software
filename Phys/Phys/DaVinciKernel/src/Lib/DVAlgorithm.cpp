@@ -14,6 +14,7 @@
 #include "Kernel/DaVinciFun.h"
 #include "DaVinciUtils/Guards.h"
 #include "DaVinciUtils/Functions.h"
+#include "Kernel/DaVinciGuards.h"
 #include "Kernel/DaVinciStringUtils.h"
 #include "Kernel/TreeCloners.h"
 // ============================================================================
@@ -366,12 +367,12 @@ StatusCode DVAlgorithm::sysExecute ()
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
-  //  DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
-
-  // clear local containers when leaving this scope.
-  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> g0(m_parts);
-  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> g1(m_secVerts);
-  DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> g2(m_refittedPVs);
+  // Make sure particles, secondary vertices, primary vertices and relations
+  // tables are cleared each event.
+  DVAlgorithmGuard guard(m_parts,
+                         m_secVerts,
+                         m_refittedPVs,
+                         m_p2PVTable);
 
   StatusCode sc = loadEventInput();
   if ( sc.isFailure()) 

@@ -5,6 +5,13 @@
 !============================================================================
 
 ! 2011-01-04 - Juan Palacios
+ - DVALgorithm
+  . Local class DVAlgorithmGuard takes care of clearing local particle, 
+    secondary vertex, PV containers and Particle->PV relations table.
+ - Kernel/DaVinciGuards.h
+  . Remove guards now existing in DaVinciUtils/Guards.h
+
+! 2011-01-04 - Juan Palacios
  - DVAlgorithm
   . Add protected methou outputLocation(), returns output location of algo.
  - Kernel/DaVinciFun.h, src/Lib/DaVinciFun.h

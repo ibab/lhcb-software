@@ -34,6 +34,7 @@
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/DaVinciFun.h"
+#include "DaVinciUtils/Guards.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
 #include "Kernel/ILifetimeFitter.h"
@@ -818,6 +819,43 @@ private:
   std::string m_PVLocation;
   /// Don't use PVs
   bool m_noPVs;
+
+  ///
+  /// Guard class to clear containers and Particle->PV relations table.
+  ///
+  class DVAlgorithmGuard 
+  {
+
+  public:
+
+    DVAlgorithmGuard(LHCb::Particle::ConstVector& particles,
+                     LHCb::Vertex::ConstVector& secondaryVertices,
+                     LHCb::RecVertex::ConstVector& primaryVertices,
+                     Particle2Vertex::LightTable& tableP2PV)
+      :
+      m_guardP(particles),
+      m_guardSV(secondaryVertices),
+      m_guardPV(primaryVertices),
+      m_table(tableP2PV)
+    {}
+    
+    ~DVAlgorithmGuard() { 
+      m_table.clear();
+    }
+    
+  private:
+
+    DVAlgorithmGuard();
+
+  private:
+
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardP;
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> m_guardSV;
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> m_guardPV;
+    Particle2Vertex::LightTable& m_table;
+    
+  };  
+
 };
 // ==========================================================================
 /*  Accessor for ParticlePropertySvc
