@@ -6,6 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-01-05 - Juan Palacios
+ - src/BTaggingAnalysis.cpp
+  . Replace calls of obsolete desktop()->particles() by this->particles().
+
 ! 2010-12-23 - Marc Grabalosa
  - Small clean-up
  - More plots and study for vtx

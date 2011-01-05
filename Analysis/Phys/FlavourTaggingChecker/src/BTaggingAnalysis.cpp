@@ -175,7 +175,7 @@ StatusCode BTaggingAnalysis::execute() {
   
   //----------------------------------------------------------
   //PhysDeskTop
-  const Particle::ConstVector& parts = desktop()->particles();
+  const Particle::Range& parts = this->particles();
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
   debug()<<"  Nr of rec. Vertices: " << verts.size() 
          <<"  Nr of rec. Particles: "<< parts.size() <<endreq;
@@ -646,13 +646,13 @@ StatusCode BTaggingAnalysis::execute() {
 
 
 //=============================================================================
-const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector& parts) {
+const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::Range& parts) {
 
   const Particle* AXBS=0;
 
   if( m_BHypoCriterium == "MaximumPt" ){
     double maxptB=0;
-    Particle::ConstVector::const_iterator ip;
+    Particle::Range::const_iterator ip;
     for ( ip = parts.begin(); ip != parts.end(); ip++){
       if(!(*ip)->particleID().hasBottom()) continue;
       if(maxptB > (*ip)->pt()) continue; else maxptB=(*ip)->pt();
@@ -660,7 +660,7 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
     }
   } else if( m_BHypoCriterium == "MinChi2" ){
     double minchi2B=99999;
-    Particle::ConstVector::const_iterator jp;
+    Particle::Range::const_iterator jp;
     for ( jp = parts.begin(); jp != parts.end(); jp++){
       if(!(*jp)->particleID().hasBottom()) continue;
       double chi2 = (*jp)->endVertex()->chi2PerDoF();
@@ -742,14 +742,14 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
 
 //=============================================================================
 const Particle::ConstVector 
-BTaggingAnalysis::chooseCandidates(const Particle::ConstVector& parts,
+BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
                                    Particle::ConstVector axdaugh,
                                    const RecVertex::ConstVector PileUpVtx) {
 
   //loop over Particles, preselect tags 
   double distphi;
   Particle::ConstVector vtags(0);
-  Particle::ConstVector::const_iterator ip, jp;
+  Particle::Range::const_iterator ip, jp;
   for ( ip = parts.begin(); ip != parts.end(); ip++){
     
     const ProtoParticle* proto = (*ip)->proto();
@@ -773,7 +773,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::ConstVector& parts,
     
     bool dup=false;
     double partp= (*ip)->p();
-    Particle::ConstVector::const_iterator ik;
+    Particle::Range::const_iterator ik;
     for ( ik = ip+1; ik != parts.end(); ik++) {
       if((*ik)->proto() == proto ) { 
         dup=true; 

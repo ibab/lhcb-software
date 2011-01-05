@@ -57,11 +57,11 @@ public:
 
 private:
 
-  const Particle*  chooseBHypothesis(const Particle::ConstVector&);
+  const Particle*  chooseBHypothesis(const Particle::Range&);
   const Particle::ConstVector 
-  chooseCandidates(const Particle::ConstVector& ,
-		   Particle::ConstVector,
-		   const RecVertex::ConstVector);
+  chooseCandidates(const Particle::Range& ,
+                   Particle::ConstVector,
+                   const RecVertex::ConstVector);
   const RecVertex::ConstVector 
   choosePrimary(const Particle* AXB,
 		//const RecVertex::Container* verts,
