@@ -93,7 +93,7 @@ StatusCode DoubleTagging::initialize() {
 //=============================================================================
 StatusCode DoubleTagging::execute() {
 
-  const Particle::ConstVector& parts = desktop()->particles();
+  const Particle::Range parts = this->particles();
   if(parts.empty()){ 
     debug() << "No B candidates" << endmsg;
     setFilterPassed(false);
@@ -105,7 +105,7 @@ StatusCode DoubleTagging::execute() {
   put(tags,m_TagLocation);
   put(OStags,m_TagLocationOS);
   
-  for(Particle::ConstVector::const_iterator icandB = parts.begin(); 
+  for(Particle::Range::const_iterator icandB = parts.begin(); 
       icandB != parts.end(); ++icandB) {
 
     if((*icandB)->particleID().hasBottom()){
