@@ -30,6 +30,6 @@ public:
 protected:
 
 private:
-  StatusCode loopOnMuons(const LHCb::Particle::ConstVector&)const ;
+  StatusCode loopOnMuons(const LHCb::Particle::Range&)const ;
 };
 #endif // TUTORIALALGORITHM_H

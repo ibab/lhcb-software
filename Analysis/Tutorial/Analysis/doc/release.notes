@@ -9,6 +9,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-05 - Juan Palacios
+ - solutions/DaVinci1, solutions/DaVinci2
+  . Replace calls of obsolete desktop()->particles() by this->particles().
+
 ! 2011-01-04 - Jeremy Dickens
  - Updated solutions to DVtutorial1 for v26r3p2
 

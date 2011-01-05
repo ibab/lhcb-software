@@ -76,7 +76,7 @@ StatusCode TutorialAlgorithm::execute() {
   counter("Events")++;
 
   // code goes here  
-  LHCb::Particle::Range muons = this->particles(); // get particles
+  const LHCb::Particle::Range muons = this->particles(); // get particles
   
   if (msgLevel(MSG::DEBUG)) debug() << "muon size:" <<  muons.size() << endmsg;
 

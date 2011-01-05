@@ -51,7 +51,7 @@ StatusCode TutorialAlgorithm::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // code goes here  
-  LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
+  const LHCb::Particle::Range muons = this->particles(); // get particles
   sc = loopOnMuons(muons);
   if (!sc) return sc;
 
@@ -62,18 +62,18 @@ StatusCode TutorialAlgorithm::execute() {
 //=============================================================================
 // loop on muons
 //=============================================================================
-StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muons)const {
+StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::Range& muons)const {
 
   StatusCode sc = StatusCode::SUCCESS ;
 
   // code goes here  
-  //const LHCb::RecVertex::Container* pvs = desktop()->primaryVertices(); // get PVs
+
   const LHCb::RecVertex::Range pvs = this->primaryVertices();
 
   counter("# PV")+= pvs.size();
   counter("# muons")+= muons.size();
 
-  for(LHCb::Particle::ConstVector::const_iterator im = muons.begin(); im != muons.end(); ++im)
+  for(LHCb::Particle::Range::const_iterator im = muons.begin(); im != muons.end(); ++im)
   {
     plot((*im)->p(),  "P", "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
     plot((*im)->pt(), "Pt", "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
