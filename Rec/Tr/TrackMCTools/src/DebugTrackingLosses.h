@@ -36,9 +36,11 @@ private:
   bool m_clone;
   bool m_ghost;
   bool m_fromStrange;
+  bool m_fromBeauty;
   double m_minMomentum;
   bool m_saveList;
   std::vector<std::vector<int> > m_badGuys;
   int  m_eventNumber;
+
 };
 #endif // DEBUGTRACKINGLOSSES_H

@@ -1,14 +1,15 @@
 // $Id: DebugTrackingLosses.cpp,v 1.1 2009-04-01 09:03:56 ocallot Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTrackInfo.h"
 #include "Event/VeloCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
+#include "Event/CaloDigit.h"
 #include "Linker/LinkedFrom.h"
 #include "Linker/LinkedTo.h"
 #include "Event/ProcStatus.h"
@@ -38,13 +39,14 @@ DebugTrackingLosses::DebugTrackingLosses( const std::string& name,
   declareProperty( "Ghost",       m_ghost       = false );
   declareProperty( "Clone",       m_clone       = false );
   declareProperty( "FromStrange", m_fromStrange = false );
+  declareProperty( "FromBeauty",  m_fromBeauty  = false );
   declareProperty( "MinMomentum", m_minMomentum = 5000. );
   declareProperty( "SaveList",    m_saveList    = false );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-DebugTrackingLosses::~DebugTrackingLosses() {} 
+DebugTrackingLosses::~DebugTrackingLosses() {}
 
 //=============================================================================
 // Initialization
@@ -70,10 +72,10 @@ StatusCode DebugTrackingLosses::execute() {
 
   ++m_eventNumber;
 
-  const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default); 
-  
+  const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
+
   LHCb::ProcStatus* procStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default);
-  
+
   if ( procStat->aborted() ) {
     debug() << "** Processing aborted. Don't analyse losses! " << endmsg;
     return StatusCode::SUCCESS;
@@ -89,9 +91,10 @@ StatusCode DebugTrackingLosses::execute() {
     LHCb::MCParticle* part = *itP;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
     if ( ! trackInfo.hasVeloAndT( part ) ) continue;
-    if ( abs( part->particleID().pid() ) == 11 ) continue; // reject electron    
-    if ( m_fromStrange ) {
+    if ( abs( part->particleID().pid() ) == 11 ) continue; // reject electron
+    if ( m_fromStrange || m_fromBeauty ) {
       bool isStrange = false;
+      bool isBeauty  = false;
       const LHCb::MCParticle* mother = part;
       while( 0 != mother->originVertex() ) {
         mother = mother->originVertex()->mother();
@@ -99,22 +102,21 @@ StatusCode DebugTrackingLosses::execute() {
         if ( mother->particleID().pid() ==   310 ) isStrange = true;
         if ( mother->particleID().pid() ==  3122 ) isStrange = true;
         if ( mother->particleID().pid() == -3122 ) isStrange = true;
+        if ( mother->particleID().hasBottom()    ) isBeauty  = true;
       }
-      if ( !isStrange ) continue;
-    } else {
-      if ( m_minMomentum > fabs( part->p() ) ) continue;
-    }
-    
-    
-    bool hasVelo = veloLinker.first( part ) != NULL;
+      if ( m_fromStrange && !isStrange ) continue;
+      if ( m_fromBeauty  && !isBeauty  ) continue;
+    } 
+    if ( m_minMomentum > fabs( part->p() ) ) continue;
+
+    LHCb::Track* veloTr = veloLinker.first(part);
+    bool hasVelo = veloTr != NULL;
 
     if ( m_velo && !hasVelo ) {
       info() << "Missed Velo for MCParticle " << part->key() << " ";
       printMCParticle( part );
-    } 
-    if ( m_forward ) {
-      LHCb::Track* veloTr = veloLinker.first(part);
-      if ( veloTr == NULL ) continue;
+    }
+    if ( m_forward && hasVelo ) {
       if ( forwardLinker.first(part) == NULL && !m_clone && !m_ghost ) {
         info() << "Missed Forward (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
         printMCParticle( part );
@@ -128,7 +130,7 @@ StatusCode DebugTrackingLosses::execute() {
       } else if ( m_clone && forwardLinker.next( ) != NULL ) {
         info() << "Forward clone (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
         printMCParticle( part );
-      } 
+      }
     }
   }
 
@@ -140,7 +142,7 @@ StatusCode DebugTrackingLosses::execute() {
     std::string   location = LHCb::TrackLocation::Forward;
     if ( m_velo ) location = LHCb::TrackLocation::Velo;
     LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), location );
-    
+
     LHCb::Tracks* tracks = get<LHCb::Tracks>( location );
     for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
       if ( trackLinker.first( *itT ) == NULL ) {
@@ -150,10 +152,10 @@ StatusCode DebugTrackingLosses::execute() {
           info() << " from Velo " << (*itA)->key();
         }
         info() << endmsg;
-        for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin(); 
+        for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin();
               (*itT)->lhcbIDs().end() != itId; ++itId ) {
           if ( (*itId).isVelo() ) {
-            LHCb::VeloChannelID idV = (*itId).veloID();          
+            LHCb::VeloChannelID idV = (*itId).veloID();
             info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
             LHCb::MCParticle* part = vLink.first( idV );
             while ( 0 != part ) {
@@ -173,7 +175,7 @@ StatusCode DebugTrackingLosses::execute() {
             info() << endmsg;
           } else if ( (*itId).isOT() ) {
             LHCb::OTChannelID otID = (*itId).otID();
-            info() << format( "    OT St%2d La%2d mo%2d Str%4d    ", 
+            info() << format( "    OT St%2d La%2d mo%2d Str%4d    ",
                               otID.station(), otID.layer(), otID.module(), otID.straw() );
             LHCb::MCParticle* part = otLink.first( otID );
             while ( 0 != part ) {
@@ -186,12 +188,12 @@ StatusCode DebugTrackingLosses::execute() {
       }
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void DebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
   const LHCb::MCParticle* mother = part;
