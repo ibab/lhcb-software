@@ -819,7 +819,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # note, the context MUST contain the string HLT
         # in whatever case
         richConf            = RichRecSysConf(richSeqName)
-        #richConf.DataType   = self.getProp( "DataType" )
+        richConf.DataType   = self.getProp( "DataType" )
         richConf.Context    = richSeqName
         richConf.RichPIDLocation    = self.__richIDLocation()
         richConf.PidConfig          = "FastGlobal"
