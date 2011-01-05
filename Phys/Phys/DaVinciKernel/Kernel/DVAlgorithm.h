@@ -122,7 +122,7 @@ public: // IDVAlgorithm
   /// get the best related primary vertex 
   virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
   {
-    return this->bestPV(particle);
+    return useP2PV() ? getRelatedPV(particle) : calculateRelatedPV(particle);
   }
   /// get all loaded particles 
   virtual const LHCb::Particle::Range particles() const 
@@ -297,7 +297,7 @@ public:
   }  
 
   /// Accessor for PhysDesktop Tool
-  inline IPhysDesktop* desktop()const
+  inline IPhysDesktop* desktop() const
   {
     return getTool<IPhysDesktop>(m_desktopName, m_desktop, this) ;
   }
@@ -328,14 +328,8 @@ public:
    **/
   inline const LHCb::VertexBase* bestPV(const LHCb::Particle* p) const 
   {
-    return useP2PV() ? _getRelatedPV(p) : calculateRelatedPV(p);
+    return useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p);
   }
-
-  inline const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const 
-  {
-    return useP2PV() ? _getRelatedPV(p) : calculateRelatedPV(p);
-  }
-  
 
   /**
    *
@@ -348,7 +342,7 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @param p LHCb::Particle to be related
-   * @return newed pointer to related vertex. TES or DVALgorithm in charge of
+   * @return newed pointer to related vertex. TES or DVAlgorithm in charge of
    * memory management.
    *
    **/
@@ -364,7 +358,7 @@ public:
    * @date 10/02/2009
    * 
    **/
-  const LHCb::VertexBase* _getRelatedPV(const LHCb::Particle* p) const;
+  const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const;
 
   /**
    *
@@ -495,8 +489,6 @@ protected:
   {
     return m_inputLocations;
   }
-
-protected:
   
   /// the actual tyep for mapping "tool nickname -> the actual type/name"
   typedef std::map<std::string,std::string> ToolMap     ;
@@ -571,8 +563,6 @@ protected:
   ///
   const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
 
-
-
   ///
   /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
   ///
@@ -586,6 +576,10 @@ protected:
   inline const std::string& outputLocation() const {
     return m_outputLocation;
   }
+
+  /// Get the best related PV from the local relations table. Return 0 if 
+  /// nothing is there. Does not invoke any calculations.
+  const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const;
 
   inline const LHCb::Particle::ConstVector& i_particles() const {
     return m_parts;
@@ -747,12 +741,6 @@ protected:
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
 
-protected:
-
-  /// Get the best related PV from the local relations table. Return 0 if 
-  /// nothing is there. Does not invoke any calculations.
-  const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const;
-
 private:
 
   bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
@@ -767,7 +755,7 @@ private:
     return m_refitPVs;
   }
 
-public:
+private:
   inline bool useP2PV() const 
   {
     return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );

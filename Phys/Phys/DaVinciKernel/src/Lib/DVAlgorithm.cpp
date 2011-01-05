@@ -639,7 +639,7 @@ void DVAlgorithm::saveP2PVRelations() const {
 
     const LHCb::VertexBase* vb = ( useP2PV() ) ? 
       i_relatedVertexFromTable(*iParticle)
-      : _getRelatedPV(*iParticle);
+      : getRelatedPV(*iParticle);
       
     if (0!=vb) {
       const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
@@ -823,10 +823,10 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
   
 }
 // ============================================================================
-const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) const
+const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
 {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "_getRelatedPV! Getting range" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "getRelatedPV! Getting range" << endmsg;
   if (0==part) {
     error() << "input particle is NULL" << endmsg;
     return 0;
