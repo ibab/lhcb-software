@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v11r1 2011-01-05 ===================
+! 2011-01-05 - Gerhard Raven
+ - Moore on top of Hlt v12r1
+
 !========================== Moore v10r2p1 2010-12-16 ===================
 ! 2010-12-16 - Gerhard Raven
  - Tweak online installation procedure
