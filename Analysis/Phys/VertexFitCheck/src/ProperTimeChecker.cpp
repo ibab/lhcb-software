@@ -82,17 +82,17 @@ StatusCode ProperTimeChecker::execute() {
 
   StatusCode sc = StatusCode::SUCCESS ;
 
-  // Retrieve the particles and vertices from PhysDesktop
-  Particle::ConstVector parts = desktop()->particles();
+  // Retrieve the particles and vertices from local storage
+  const Particle::Range parts = this->particles();
 
   LHCb::RecVertices* PVs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
   long nPV = PVs->size();
 
-  verbose() << "Found " << parts.size() << " particles in desktop" << endmsg;
+  verbose() << "Found " << parts.size() << " particles in local storage" << endmsg;
 
   Tuples::Tuple ntuple = GaudiTupleAlg::nTuple( 200, "ProperTimeChecker");
 
-  for ( LHCb::Particle::ConstVector::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
+  for ( LHCb::Particle::Range::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
     
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV

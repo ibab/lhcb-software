@@ -68,13 +68,13 @@ StatusCode VtxChecker::execute() {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // Retrieve the particles and vertices from PhysDesktop
-  Particle::ConstVector parts = desktop()->particles();
+  const Particle::Range parts = this->particles();
 
-  verbose() << "Found " << parts.size() << " particles in desktop" << endmsg;
+  verbose() << "Found " << parts.size() << " particles in local storage" << endmsg;
 
   Tuples::Tuple ntuple = GaudiTupleAlg::nTuple( 100, "VtxChecker");
 
-  for ( LHCb::Particle::ConstVector::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
+  for ( LHCb::Particle::Range::const_iterator it = parts.begin() ; it!=parts.end() ; ++it){
     
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV

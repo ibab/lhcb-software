@@ -5,6 +5,10 @@
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
 
+! 2011-01-05 - Juan Palacios
+ - Remove all calls to DVAlgorithm::desktop().
+ - Increase to v1r7.
+
 !===================== VertexFitCheck v1r6 2010-06-24 ====================
 
 ! 2010-06-03 - Juan Palacios
