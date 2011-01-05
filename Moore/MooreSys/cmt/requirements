@@ -1,12 +1,14 @@
 package MooreSys
-version v11r0
+version v11r1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v11r0   Hlt
+use  Moore              v11r1   Hlt
+
+use HltTracking         v8r0p2  Hlt
 
 # Declare this as a container package
 apply_pattern container_package
