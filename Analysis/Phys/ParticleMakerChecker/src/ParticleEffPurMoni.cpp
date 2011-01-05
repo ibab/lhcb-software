@@ -82,8 +82,8 @@ StatusCode ParticleEffPurMoni::execute()
   // Never abort a sequence
   setFilterPassed(true);
 
-  // get the desktop particles
-  const LHCb::Particle::ConstVector & particles = desktop()->particles();
+  // get the local particles
+  const LHCb::Particle::Range particles = this->particles();
   if ( particles.empty() ) return StatusCode::SUCCESS;
 
   // count events
@@ -95,7 +95,7 @@ StatusCode ParticleEffPurMoni::execute()
   m_cp2mcp.clear();
 
   // Loop over particles to fill the map
-  for ( LHCb::Particle::ConstVector::const_iterator iP = particles.begin();
+  for ( LHCb::Particle::Range::const_iterator iP = particles.begin();
         iP != particles.end(); ++iP )
   {
     if ( msgLevel(MSG::DEBUG) )

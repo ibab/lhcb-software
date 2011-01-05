@@ -5,6 +5,10 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2011-01-05 - Juan Palacios
+ - Remove all calls to DVAlgorithm::desktop().
+ - Increase to v1r4.
+
 !========================== ParticleMakerChecker v1r3p2 2009-10-01 ========
 
 ! 2009-08-03 - Chris Jones
