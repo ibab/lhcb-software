@@ -202,7 +202,7 @@ DVAlgorithm::DVAlgorithm
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
   declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "", "Describes the decay" ) ;
-  declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false , "If true TES location is written" ) ;
+  declareProperty ( "ForceOutput" , m_forceOutput  = true , "If true TES location is written" ) ;
   declareProperty ( "PreloadTools"      , m_preloadTools      = true, "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
@@ -380,7 +380,7 @@ StatusCode DVAlgorithm::sysExecute ()
   m_setFilterCalled = false;
   
   // Make sure each DVAlgorithm has written out something
-  if ( !m_avoidEmptyOutput ) { 
+  if ( m_forceOutput ) { 
     sc = this->writeEmptyContainerIfNeeded(); }
   else { 
     verbose() << "Avoiding mandatory output" << endmsg ; 

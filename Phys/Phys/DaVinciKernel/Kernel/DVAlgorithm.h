@@ -104,8 +104,8 @@
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
  *   
  *
- *  - <b>AvoidForcedOutput</b> : the boolean flag (default value is <c>false</c>)
- *    to avoid the wrinting of empty containers if no output data are required.
+ *  - <b>ForceOutput</b> : boolean flag (default value is <c>true</c>)
+ *    forcing the wrinting of empty containers if no output data are required.
  *  
  *  - <b>PreloadTools</b> : the boolean flag (default valeu is <c>true</c>) 
  *    to force the preloading of all nesessary tools at the initialization time
@@ -606,6 +606,16 @@ protected:
     return m_parts;
   }
 
+  /// inline access to Particle->PV relations table
+  inline Particle2Vertex::LightTable& i_p2PVTable() {
+    return m_p2PVTable;
+  }
+
+  /// inline access to Particle->PV relations table
+  inline Particle2Vertex::LightTable& i_p2PVTable() const {
+    return m_p2PVTable;
+  }
+
 private:
 
   /// Initialise relative InputLocations to account for RootInTES
@@ -632,16 +642,6 @@ private:
   /// Does the particle have a relation to a PV stored in the local
   /// relations table?
   bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
-
-  /// inline access to Particle->PV relations table
-  inline Particle2Vertex::LightTable& i_p2PVTable() {
-    return m_p2PVTable;
-  }
-
-  /// inline access to Particle->PV relations table
-  inline Particle2Vertex::LightTable& i_p2PVTable() const {
-    return m_p2PVTable;
-  }
 
   /// Does the event have more than 1 primary vertex?
   inline bool multiPV() const 
@@ -811,7 +811,7 @@ private:
   /// Decay description (Property)
   std::string m_decayDescriptor;
   /// avoid the writeup of empty containers 
-  bool m_avoidEmptyOutput ;
+  bool m_forceOutput ;
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;

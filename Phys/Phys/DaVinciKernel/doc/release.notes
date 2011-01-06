@@ -10,6 +10,7 @@
     now accepts LHCb::Particle::ConstVector and LHCb::Particle::Range.
   . More cleanups.
   . Remove some unnecessary includes.
+  . AvoidEmptyInput -> ForceInput.
 
 ! 2011-01-04 - Juan Palacios
  - DVAlgorithm
