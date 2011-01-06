@@ -564,9 +564,27 @@ protected:
   const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
 
   ///
-  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  /// @param heads (INPUT) sequence of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
   ///
-  void markTrees(const LHCb::Particle::ConstVector& heads);
+  template<class PARTICLES>
+  void markTrees(const PARTICLES& heads) {
+
+    if (msgLevel(MSG::VERBOSE)) verbose() << "markTrees" << endmsg;
+
+    typename PARTICLES::const_iterator iHead = heads.begin();
+    typename PARTICLES::const_iterator iHeadEnd = heads.end();
+
+    for( ; iHead != iHeadEnd; ++iHead ) {
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "Getting\n" << *iHead << endmsg;
+      }
+      // Find all descendendant from this particle
+      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
+    }
+
+    return ;
+
+  }
 
   /// Save all marked local particles not already in the TES.
   /// Saves decay tree elements not already in TES, plus related

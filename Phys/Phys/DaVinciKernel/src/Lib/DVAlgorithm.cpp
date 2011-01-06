@@ -570,27 +570,6 @@ const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle){
 
 }
 //=============================================================================
-void DVAlgorithm::markTrees(const LHCb::Particle::ConstVector& heads) {
-
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "markTrees(LHCb::Particle::ConstVector)" << endmsg;
-  }
-
-  LHCb::Particle::ConstVector::const_iterator iHead = heads.begin();
-  LHCb::Particle::ConstVector::const_iterator iHeadEnd = heads.end();
-
-  for( ; iHead != iHeadEnd; ++iHead ) {
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Getting\n" << *iHead << endmsg;
-    }
-    // Find all descendendant from this particle
-    DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
-  }
-
-  return ;
-
-}
-//=============================================================================
 const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
 
   if ( 0==keptV ){

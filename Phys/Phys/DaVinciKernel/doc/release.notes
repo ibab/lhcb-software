@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-06 - Juan Palacios
+ - Template DVAlgorithm::markTrees. Accepts sequence of LHCb::Particle*.
+
 ! 2011-01-04 - Juan Palacios
  - DVAlgorithm
   . Use new MockPhysDesktop to print useful error messages for inadvertent
