@@ -105,7 +105,12 @@ class Physics_draft2011:
         """
         Returns a list of active lines
         """
-        lines = [ 'Hlt1TrackAllL0',
+        lines = [ #'Hlt1ODINTechnical',
+		  #'Hlt1Tell1Error' ,
+		  #'Hlt1Incident' ,
+		  #'Hlt1ErrorEvent',
+		  'Hlt1NoPVPassThrough',
+		  'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton' ]
 
