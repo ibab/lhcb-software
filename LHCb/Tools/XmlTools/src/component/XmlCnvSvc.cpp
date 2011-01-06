@@ -132,12 +132,12 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
                                     IOpaqueAddress*& refpAddress) 
 {
   // First check that requested address is of type XML_StorageType
-  verbose() << "Create an XML address" << endreq;
+  verbose() << "Create an XML address" << endmsg;
   if( XML_StorageType != svc_type ) {
     error() 
 	<< "Cannot create addresses of type " << (int)svc_type 
 	<< " which is different from " << (int)XML_StorageType 
-	<< endreq;
+	<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -159,17 +159,17 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
     isString = 1;
     verbose() 
 	<< "XML source beginning by \"<?xml\" is interpreted"
-	<< " as an XML string" << endreq;
+	<< " as an XML string" << endmsg;
   } else {
     isString = ipar[0];
     if( isString == 0 ) {
-      verbose() << "XML source is an XML file name" << endreq;
+      verbose() << "XML source is an XML file name" << endmsg;
     } else if( isString == 1 ) { 
-      verbose() << "XML source is an XML string" << endreq;
+      verbose() << "XML source is an XML string" << endmsg;
     } else {
       error() 
 	  << "Cannot create address: invalid ipar[0] value = "
-	  << ipar[0] << endreq;
+	  << ipar[0] << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -198,7 +198,7 @@ IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
-  debug() << "null result returned in parse" << endreq;
+  debug() << "null result returned in parse" << endmsg;
   return 0;
 }
 
@@ -214,24 +214,24 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
     std::string::size_type dtdPos = source.find( ".dtd" );
     if( dtdPos < source.length() ) {
       verbose() 
-          << "Set correct DTD location in the string to be parsed" << endreq;
+          << "Set correct DTD location in the string to be parsed" << endmsg;
       std::string::size_type quotePos;
       if( source[dtdPos+4] == '\'' ) {
         quotePos = source.substr(0,dtdPos).rfind("\'");
         source.insert( quotePos+1, m_dtdLocation+"/" );
         verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
-            << endreq;
+            << endmsg;
       } else if ( source[dtdPos+4] == '\"' ) {
         quotePos = source.substr(0,dtdPos).rfind("\"");
         source.insert( quotePos+1, m_dtdLocation+"/" );
         verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
-            << endreq;
+            << endmsg;
       } else {
         verbose()
             << "Bad DTD literal in the string to be parsed: do nothing" 
-            << endreq;
+            << endmsg;
       }
     }
   }
@@ -240,7 +240,7 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parseString (source);
   }
-  debug() << "null result returned in parseString" << endreq;
+  debug() << "null result returned in parseString" << endmsg;
   return 0;
 
 }
@@ -287,7 +287,7 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
       // remove leading blanks
       if (!sumHasUnit(e, e.find_first_not_of(' '), e.length())) {
         warning() << "Expression requires correct units ["
-            << e << "]" << endreq;
+            << e << "]" << endmsg;
       }
     }
   }
@@ -326,11 +326,11 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
     errtxt = "UNKNOWN_ERROR";
     break;
   }
-  error() << "Expresion evaluation error: " << errtxt << endreq;
-  error() << "[" << expr << "]" << endreq;
+  error() << "Expresion evaluation error: " << errtxt << endmsg;
+  error() << "[" << expr << "]" << endmsg;
   error() << " ";
   for (int i = 0; i < m_xp.error_position(); i++) error() << " ";
-  error() << "^" << endreq;
+  error() << "^" << endmsg;
   return 0;
 }
 
@@ -453,7 +453,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
     error()
         << "Invalid expression (It's empty !) : \""
         << s.substr (realStart, end - realStart) << "\""
-        << endreq;
+        << endmsg;
     return end;
   }
   std::string::size_type index = s.find_first_of("+-/*()", realStart);
@@ -471,7 +471,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
       error()
           << "Invalid expression (no ')' at end of string) : \""
           << s.substr (realStart, end - realStart) << "\""
-          << endreq;
+          << endmsg;
       return end;
     }
     // else test the closing parenthesis
@@ -480,7 +480,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
           << "Invalid expression (missing ')' at column "
           << endIndex - realStart << ") : \""
           << s.substr (realStart, end - realStart) << "\""
-          << endreq;
+          << endmsg;
       return end;
     }
     // else everything is ok
@@ -516,14 +516,11 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
       error()
           << "Invalid expression (Alphanumeric character expected) : \""
           << s.substr (realStart, end - realStart) << "\""
-          << endreq;
+          << endmsg;
       return end;
     }
   }
   // We should never reach this point
-  error()
-      << "This should never appear, please report" << endreq;
-  return end;
 }
 
 

@@ -69,6 +69,7 @@ public:
    * @return a StatusCode giving the status of the address creation
    * @note unsigned long fourth argument can be ignored for XML addresses
    */
+  using ConversionSvc::createAddress;
   virtual StatusCode createAddress(long  svc_type,
                                    const CLID& clid,
                                    const std::string* par, 

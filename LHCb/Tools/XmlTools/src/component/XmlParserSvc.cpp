@@ -283,7 +283,10 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
       // return empty document
       return NULL;
     } catch (xercesc::XMLPlatformUtilsException e) {
-      error() << "Unable to find file " << fileName << " !" << endmsg;
+      char *message = xercesc::XMLString::transcode(e.getMessage());
+      error() << "Unable to find file " << fileName
+              << ",  Exception message:" << message << endmsg;
+      xercesc::XMLString::release(&message);
     }
   }
   // no way to parse the file, returns an empty document
