@@ -33,6 +33,9 @@
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
+#include "Kernel/IMassFit.h"
+#include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IDirectionFit.h"
 // ============================================================================
 // from DaVinciKernel
 // ============================================================================
@@ -42,11 +45,7 @@
 // ============================================================================
 #include "DaVinciUtils/Guards.h"
 // ============================================================================
-#include "Kernel/IMassFit.h"
-#include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IDirectionFit.h"
-//
- #include  <boost/type_traits/remove_pointer.hpp> 
+// #include  <boost/type_traits/remove_pointer.hpp> 
 // ============================================================================
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:

@@ -9,6 +9,7 @@
   . Private templated implementation of DVAlgorithm::markTrees. Public methods 
     now accepts LHCb::Particle::ConstVector and LHCb::Particle::Range.
   . More cleanups.
+  . Remove some unnecessary includes.
 
 ! 2011-01-04 - Juan Palacios
  - DVAlgorithm
