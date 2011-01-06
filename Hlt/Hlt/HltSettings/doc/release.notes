@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r0p1 2011-01-06 ===================
 ! 2011-01-06 - Johannes Albrecht
  - add low mult pass through line to Physics_draft2011
 
