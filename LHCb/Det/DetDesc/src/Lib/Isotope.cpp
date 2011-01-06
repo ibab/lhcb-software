@@ -18,6 +18,6 @@ Isotope::Isotope( const std::string name    ,
     , m_A( A ) 
     , m_Z( z )
     , m_I( i )
-{};
+{}
 ////////////////////////////////////////////////////////////////////////////////////
-Isotope::~Isotope(){};
+Isotope::~Isotope(){}

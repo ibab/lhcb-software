@@ -28,7 +28,7 @@ LogVolumeException::LogVolumeException
   const StatusCode&     sc     )
   : GaudiException( name , "*LogVolumeException*" , sc )
   , m_logvol ( logvol )
-{};
+{}
 
 // ============================================================================
 /** standard constructor 
@@ -45,14 +45,14 @@ LogVolumeException::LogVolumeException
   const StatusCode&     sc     )
   : GaudiException( name , "*LogVolumeException*" , sc , excp )
   , m_logvol ( logvol )
-{};
+{}
 
 // ============================================================================
 /** destructor 
  */
 // ============================================================================
 LogVolumeException::~LogVolumeException() throw()
-{ m_logvol = 0 ; };
+{ m_logvol = 0 ; }
 
 // ============================================================================
 /** printout to standard STD/STL stream 
@@ -78,7 +78,7 @@ std::ostream& LogVolumeException::printOut
      << std::endl  ; 
   /// print all previous (linked) exceptions     
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ;
-};
+}
 
 // ============================================================================
 /** printout to standard Message stream 
@@ -104,7 +104,7 @@ MsgStream&    LogVolumeException::printOut
      << endmsg  ; 
   /// print all previous (linked) exceptions     
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ;
-};
+}
 
 // ============================================================================
 /** clone method ("virtual constructor")

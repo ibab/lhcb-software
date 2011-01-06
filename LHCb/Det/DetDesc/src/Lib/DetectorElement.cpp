@@ -43,7 +43,7 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
   , m_services           (    0    )
 {
   m_services = DetDesc::services();
-};
+}
 
 DetectorElement::~DetectorElement()
 {
@@ -68,7 +68,7 @@ DetectorElement::~DetectorElement()
 
   // release services
   m_services->release();
-};
+}
 
 IDataProviderSvc* DetectorElement::dataSvc() const {
   return m_services->detSvc();
@@ -92,7 +92,7 @@ IDetectorElement*  DetectorElement::parentIDetectorElement() const {
     }
   }
   return 0;
-};
+}
 
 unsigned long DetectorElement::addRef  () {
   return ParamValidDataObject::addRef();
@@ -120,19 +120,19 @@ DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
   addRef();
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 std::ostream& DetectorElement::printOut( std::ostream& os ) const
 {
   os << "DetectorElement::"  << name();
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry()) );
-};
+}
 
 MsgStream& DetectorElement::printOut( MsgStream& os ) const
 {
   os << "DetectorElement::"  << name();
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry() ) );
-};
+}
 /// reset to the initial state/////
 IDetectorElement* DetectorElement::reset()
 {
@@ -144,7 +144,7 @@ IDetectorElement* DetectorElement::reset()
   m_de_childrensLoaded = false ;
   m_de_childrens.clear()       ;
   return this;
-};
+}
 
 // ----------------------------------------------------------------------
 bool DetectorElement::hasCondition(const std::string &name) const {
@@ -191,7 +191,7 @@ DetectorElement::createGeometryInfo()
           "Could not create GHOST: Geometry already exist!" );
   m_de_iGeometry = GeoInfo::createGeometryInfo( this );
   return geometry();
-};
+}
 /////
 const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string& LogVol )
@@ -200,7 +200,7 @@ DetectorElement::createGeometryInfo( const std::string& LogVol )
           "Could not create ORPHAN: Geometry already exist!" );
   m_de_iGeometry = GeoInfo::createGeometryInfo( this , LogVol );
   return geometry();
-};
+}
 /////
 const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string& LogVol   ,
@@ -214,7 +214,7 @@ DetectorElement::createGeometryInfo( const std::string& LogVol   ,
                                                 Support  ,
                                                 NamePath );
   return geometry();
-};
+}
 /////
 const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string& LogVol   ,
@@ -230,7 +230,7 @@ DetectorElement::createGeometryInfo( const std::string& LogVol   ,
                                                 NamePath ,
                                                 alignmentPath);
   return geometry();
-};
+}
 //
 const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
@@ -244,7 +244,7 @@ DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                                 Support ,
                                                 rPath   );
   return geometry();
-};
+}
 //=============================================================================
 const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
@@ -260,7 +260,7 @@ DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                                 rPath   ,
                                                 alignmentPath);
   return geometry();
-};
+}
 //=============================================================================
 const IAlignment*
 DetectorElement::createAlignment (const std::string& condition) {
@@ -340,7 +340,7 @@ DetectorElement::childIDetectorElements() const {
     }
   }
   return m_de_childrens;
-};
+}
 
 const ParamValidDataObject *DetectorElement::params() const {
   return this;
@@ -351,13 +351,13 @@ int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
   if (!isInside(globalPoint)) return -1;
   const IDetectorElement* child = childDEWithPoint(globalPoint);
   return (child) ? child->sensitiveVolumeID(globalPoint) : -1;
-};
+}
 
 bool DetectorElement::isInside(const Gaudi::XYZPoint& globalPoint) const {
   const IGeometryInfo* gi = geometry();
   return (0!=gi) ? gi->isInside(globalPoint) : false;
   //  return (geometry()) ? geometry()->isInside(globalPoint) : false;
-};
+}
 
 const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const
 {
@@ -367,13 +367,13 @@ const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint&
     if ( pDE && pDE->isInside(globalPoint)) return *iDE;
   }
   return 0;
-};
+}
 // ============================================================================
 const std::string& DetectorElement::name () const {
   static std::string s_empty = "";
   IRegistry* pReg = registry();
   return (0!=pReg) ? pReg->identifier() : s_empty;
-};
+}
 // ============================================================================
 // End
 // ============================================================================

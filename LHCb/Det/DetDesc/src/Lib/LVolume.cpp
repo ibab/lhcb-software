@@ -82,7 +82,7 @@ LVolume::~LVolume()
 // ============================================================================
 const CLID& LVolume::clID   () const { return classID()    ; } 
 // ============================================================================
-const CLID& LVolume::classID()       { return CLID_LVolume ; };
+const CLID& LVolume::classID()       { return CLID_LVolume ; }
 // ============================================================================
 /*  calculate the daughter path containing the Point in Local frame , 
  *  can be VERY slow for complex geometry, 

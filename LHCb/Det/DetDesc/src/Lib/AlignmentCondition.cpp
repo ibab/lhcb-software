@@ -50,7 +50,7 @@ AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,
 //=============================================================================
 // Destructor
 //=============================================================================
-AlignmentCondition::~AlignmentCondition() {}; 
+AlignmentCondition::~AlignmentCondition() {}
 
 //=============================================================================
 /// initialize

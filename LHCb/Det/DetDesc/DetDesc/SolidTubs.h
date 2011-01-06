@@ -294,7 +294,7 @@ inline bool SolidTubs::insideRho ( const aPoint& point ) const
       rho2 < innerRadius() * innerRadius() ) { return false ; }
   // inside! 
   return true ;
-};
+}
 // ===========================================================================
 
 
@@ -312,7 +312,7 @@ inline bool SolidTubs::insidePhi ( const double phi /* [-pi,pi] */ ) const
       startPhiAngle () + deltaPhiAngle() >= phi     ) ||
     ( startPhiAngle ()                   <= phi + 2*M_PI &&
       startPhiAngle () + deltaPhiAngle() >= phi + 2*M_PI ) ;
-};
+}
 
 // ===========================================================================
 /** check for phi 
@@ -324,7 +324,7 @@ template< class aPoint>
 inline bool SolidTubs::insidePhi ( const aPoint& point ) const 
 {
   return noPhiGap() || insidePhi( point.phi() ) ;
-};
+}
 // ===========================================================================
 // The END 
 // ===========================================================================

@@ -9,13 +9,13 @@ CalibrationInfo::CalibrationInfo( IDetectorElement* de,
 				  const std::string& condition ) 
   : ConditionInfo( de, condition )
 {
-}; 
+}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
 CalibrationInfo::~CalibrationInfo() 
 {
-};
+}
 
 //----------------------------------------------------------------------------

@@ -32,6 +32,7 @@ class Condition : public ParamValidDataObject {
   
   /// Update using another ValidDataObject: deep copy all contents, 
   /// except for the properties of a generic DataObject
+  using ParamValidDataObject::update;
   virtual void update ( ValidDataObject& obj);
 
   /// Prepare an XML string representing the condition.

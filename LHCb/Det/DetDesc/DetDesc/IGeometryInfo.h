@@ -616,7 +616,7 @@ public:
 // ============================================================================
 inline std::ostream& operator<<( std::ostream&        os ,
                                  const IGeometryInfo& gi )
-{ return gi.printOut( os ); };
+{ return gi.printOut( os ); }
 
 // ============================================================================
 /** output operator to STD/STL stream
@@ -627,7 +627,7 @@ inline std::ostream& operator<<( std::ostream&        os ,
 // ============================================================================
 inline std::ostream& operator<<( std::ostream& os        ,
                                  const IGeometryInfo* gi )
-{ return ( 0 == gi ? (os<<"IGeometryInfo* points to NULL") : os<<*gi ); };
+{ return ( 0 == gi ? (os<<"IGeometryInfo* points to NULL") : os<<*gi ); }
 
 // ============================================================================
 /** output operator to Message stream
@@ -638,7 +638,7 @@ inline std::ostream& operator<<( std::ostream& os        ,
 // ============================================================================
 inline MsgStream&    operator<<( MsgStream&           os ,
                                  const IGeometryInfo& gi )
-{ return gi.printOut(os); };
+{ return gi.printOut(os); }
 
 // ============================================================================
 /** output operator to Message stream
@@ -649,7 +649,7 @@ inline MsgStream&    operator<<( MsgStream&           os ,
 // ============================================================================
 inline MsgStream&    operator<<( MsgStream&    os        ,
                                  const IGeometryInfo* gi )
-{ return ( 0 == gi ? (os<<"IGeometryInfo* points to NULL") : os<<*gi ); };
+{ return ( 0 == gi ? (os<<"IGeometryInfo* points to NULL") : os<<*gi ); }
 
 // ============================================================================
 /** @} */ // end of group IGeometryInfoOperators

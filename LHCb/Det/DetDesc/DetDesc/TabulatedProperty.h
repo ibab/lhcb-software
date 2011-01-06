@@ -77,6 +77,7 @@ public:
 
   /// Perform a deep copy (needed for usage in CondDB). A GaudiException is
   /// thrown if the object is not a TabulatedProperty.
+  using ValidDataObject::update;
   virtual void update ( ValidDataObject& obj );
   
 private:

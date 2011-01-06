@@ -64,12 +64,12 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
   setBP();
   ///
   checkTickContainerCapacity() ;
-};
+}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidPolycone::~SolidPolycone() {};
+SolidPolycone::~SolidPolycone() {}
 
 // ============================================================================
 /// set parameters for bounding solids (box, sphere and cylinder)
@@ -186,7 +186,7 @@ void SolidPolycone::setBP()
 
   ///
   checkBP();
-};
+}
 // ============================================================================
 
 
@@ -201,7 +201,7 @@ SolidPolycone::SolidPolycone( const std::string& Name )
   , m_triplets      ()
   , m_startPhiAngle ( 0            ) 
   , m_deltaPhiAngle ( 360 * Gaudi::Units::degree )
-{};
+{}
 
 // ============================================================================
 /** check for the given point (local frame)
@@ -250,7 +250,7 @@ bool SolidPolycone::isInsideImpl (  const aPoint& point ) const
   if( rho > rmax || rho < rmin ) return false ;
   
   return true;
-};
+}
 
 // ============================================================================/
 /** -# retrieve the pointer to "simplified" solid - "cover"
@@ -287,7 +287,7 @@ const ISolid* SolidPolycone::cover () const
   m_cover = cov ;
   ///
   return m_cover;
-};
+}
 
 // ============================================================================
 /** - printout to STD/STL stream    
@@ -323,7 +323,7 @@ std::ostream&  SolidPolycone::printOut ( std::ostream& os ) const
   ///
   return os ;
   ///
-};
+}
 
 // ============================================================================
 /** printout to Gaudi  stream
@@ -355,7 +355,7 @@ MsgStream&  SolidPolycone::printOut ( MsgStream& os ) const
   ///
   return os ;
   ///
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -382,7 +382,7 @@ unsigned int SolidPolycone::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                                ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int 
 SolidPolycone::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
@@ -390,7 +390,7 @@ SolidPolycone::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                   ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int 
 SolidPolycone::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
@@ -398,7 +398,7 @@ SolidPolycone::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                   ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template <class aPoint, class aVector>
 unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
@@ -510,7 +510,7 @@ unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
   // sort the ticks and solve eventual problems
   std::sort(ticks.begin(),ticks.end()) ;
   return SolidTicks::RemoveAdjacentTicksFast(ticks , Point, Vector, *this );
-};
+}
 
 //=============================================================================
 /** static function to generate triplets for a cone */

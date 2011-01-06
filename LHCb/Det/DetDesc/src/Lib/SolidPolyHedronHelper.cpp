@@ -21,7 +21,7 @@ SolidPolyHedronHelper::SolidPolyHedronHelper ( const std::string& Name )
   : SolidBase ( Name ) 
   , m_ph_planes  () 
   , m_ph_vertices() 
-{};
+{}
 
 // ============================================================================
 /// destructor 
@@ -30,7 +30,7 @@ SolidPolyHedronHelper::~SolidPolyHedronHelper()
 { 
   m_ph_planes.clear(); 
   m_ph_vertices.clear(); 
-};
+}
 
 // ============================================================================
 /// set parameters for bounding solids (box, sphere and cylinder)
@@ -66,7 +66,7 @@ void SolidPolyHedronHelper::setBP()
     }
   ///
   checkBP();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -83,17 +83,17 @@ void SolidPolyHedronHelper::setBP()
 bool SolidPolyHedronHelper::isInside (  const Gaudi::XYZPoint& point ) const
 {  
   return isInsideImpl(point) ;
-};
+}
 // ============================================================================
 bool SolidPolyHedronHelper::isInside ( const Gaudi::Polar3DPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 bool SolidPolyHedronHelper::isInside ( const Gaudi::RhoZPhiPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 template <class aPoint>
 bool SolidPolyHedronHelper::isInsideImpl( const aPoint& point ) const 
@@ -107,7 +107,7 @@ bool SolidPolyHedronHelper::isInsideImpl( const aPoint& point ) const
     { if( !inside( point , *Plane ) ) { return false; } } 
   ///
   return true ;  
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -135,7 +135,7 @@ SolidPolyHedronHelper::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                           ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int 
 SolidPolyHedronHelper::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
@@ -143,7 +143,7 @@ SolidPolyHedronHelper::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                           ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int 
 SolidPolyHedronHelper::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
@@ -151,7 +151,7 @@ SolidPolyHedronHelper::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                           ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template <class aPoint, class aVector>
 unsigned int 
@@ -180,7 +180,7 @@ SolidPolyHedronHelper::intersectionTicksImpl(const aPoint&  Point,
                                            Point  , 
                                            Vector , 
                                            *this  );
-};
+}
 // ============================================================================
 // ============================================================================
 /** Calculate the maximum number of ticks that a straight line could make with this solid
@@ -224,7 +224,7 @@ bool SolidPolyHedronHelper::addFace
   ///
   return true;
   ///
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -286,7 +286,7 @@ bool SolidPolyHedronHelper::addFace
   ///
   return true;
   ///
-};
+}
 // ============================================================================
 
 // ============================================================================

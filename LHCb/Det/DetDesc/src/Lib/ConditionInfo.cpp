@@ -18,7 +18,7 @@ ConditionInfo::ConditionInfo( IDetectorElement* de,
   m_conditionName = condition;
   m_condition = 0;
   m_services = DetDesc::services();
-}; 
+}
 
 //---------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ ConditionInfo::ConditionInfo( IDetectorElement* de,
 ConditionInfo::~ConditionInfo() 
 {
   m_services->release();
-};
+}
 
 //----------------------------------------------------------------------------
 
@@ -40,14 +40,14 @@ IDataProviderSvc* ConditionInfo::dataSvc() const {
 /// Get a pointer to the detector element to which the ConditionInfo belongs
 IDetectorElement* ConditionInfo::detElem() const {
   return m_detElem;
-};
+}
 
 //----------------------------------------------------------------------------
 
 /// Get the name of the associated condition
 const std::string& ConditionInfo::conditionName() const {
   return m_conditionName;
-};
+}
 
 //----------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ Condition* ConditionInfo::condition() {
     if( 0 != pCond ) m_condition = pCond;
   }
   return m_condition;
-};
+}
 
 //----------------------------------------------------------------------------
 
@@ -76,11 +76,9 @@ StatusCode ConditionInfo::queryInterface( const InterfaceID& ID , void** ppI )
   addRef();
   ///
   return StatusCode::SUCCESS; 
-};
+}
 
 /// add reference
 unsigned long ConditionInfo::addRef () { return ++m_count ; }
 /// release 
 unsigned long ConditionInfo::release() { return  0 < m_count ? --m_count : 0 ;}
-
-

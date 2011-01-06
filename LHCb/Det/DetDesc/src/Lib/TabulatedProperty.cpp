@@ -18,7 +18,7 @@ TabulatedProperty::TabulatedProperty( const std::string& /*Name*/ )
   , m_xAxis   ( "(empty)"   ) 
   , m_yAxis   ( "(empty)"   ) 
   , m_table   (             ) 
-{};
+{}
 ////////////////////////////////////////////////////////////////////////////////
 TabulatedProperty::~TabulatedProperty(){ table().clear(); }
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ std::ostream& TabulatedProperty::fillStream ( std::ostream& s ) const
         << std::setw(12) << it->second << " ) " << std::endl;
     }
   return s ;
-};
+}
 ////////////////////////////////////////////////////////////////////////////////
 MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const 
 {
@@ -58,7 +58,7 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
         << std::setw(12) << it->second << " )" << endmsg ;
     }
   return s ;
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

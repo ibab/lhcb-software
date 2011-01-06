@@ -85,7 +85,7 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
    setBP();
    ///
    checkTickContainerCapacity() ;
-}; 
+}
 
 // ============================================================================
 /** constructor 
@@ -106,7 +106,7 @@ SolidTrap::SolidTrap( const std::string& Name )
   , m_trap_dxAtPlusZMinusY  ( 100  ) 
   , m_trap_dxAtPlusZPlusY   ( 100  ) 
   , m_trap_alphaAtPlusZ     ( 0    ) 
-{};
+{}
 
 // ============================================================================
 /// destructror 
@@ -180,7 +180,7 @@ void SolidTrap::makeAll()
   if( 6 != planes().size() ) 
     { throw SolidException("SolidTrap::wrong face # "); } 
   ///
-};
+}
 
 // ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
@@ -217,7 +217,7 @@ const ISolid*           SolidTrap::cover         () const
                               xmx2         , ymx2     );
   m_cover = cov; 
   return m_cover;
-};
+}
 
 // ============================================================================
 /** - printout to STD/STL stream    
@@ -245,7 +245,7 @@ std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
        << " sizeX3[mm]="  << dxAtPlusZMinusY  () / Gaudi::Units::millimeter 
        << " sizeX4[mm]="  << dxAtPlusZPlusY   () / Gaudi::Units::millimeter 
        << " alp2[deg]="   << alphaAtPlusZ     () / Gaudi::Units::degree  << "]";
-};
+}
 
 // ============================================================================
 /** - printout to Gaudi MsgStream stream    
@@ -273,5 +273,5 @@ MsgStream&     SolidTrap::printOut      ( MsgStream&     os ) const
        << " sizeX3[mm]="  << dxAtPlusZMinusY  () / Gaudi::Units::millimeter 
        << " sizeX4[mm]="  << dxAtPlusZPlusY   () / Gaudi::Units::millimeter 
        << " alp2[deg]="   << alphaAtPlusZ     () / Gaudi::Units::degree  << "]";
-};
+}
 // ============================================================================

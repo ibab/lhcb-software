@@ -129,6 +129,7 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
+  using SolidBase::intersectionTicks;
   virtual unsigned int 
   intersectionTicks ( const Gaudi::XYZPoint&  Point  ,
                       const Gaudi::XYZVector& Vector ,

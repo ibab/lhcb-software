@@ -13,16 +13,16 @@ PVolumeException::PVolumeException( const std::string& name    ,
                                     const PVolume*     pvolume ) 
   : GaudiException( name , "*PVolumeException*" , StatusCode::FAILURE ) 
   , m_pve_pvolume    ( pvolume    ) 
-{} ;
+{}
 /////////////////////////////////////////////////////////////////////////////////////////
 PVolumeException::PVolumeException( const std::string&     name      ,
                                     const GaudiException&  Exception ,  
                                     const PVolume*         pvolume     ) 
   : GaudiException( name , "*PVolumeException*" , StatusCode::FAILURE , Exception ) 
   , m_pve_pvolume    ( pvolume    ) 
-{} ;
+{}
 /////////////////////////////////////////////////////////////////////////////////////////
-PVolumeException::~PVolumeException() throw() {};
+PVolumeException::~PVolumeException() throw() {}
 /////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& PVolumeException::printOut( std::ostream& os             ) const 
 {
@@ -40,7 +40,7 @@ std::ostream& PVolumeException::printOut( std::ostream& os             ) const
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ; 
   ///
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    PVolumeException::printOut( MsgStream&    os             ) const 
 {
@@ -58,7 +58,7 @@ MsgStream&    PVolumeException::printOut( MsgStream&    os             ) const
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ; 
   ///
-};
+}
 //////////////////////////////////////////////////////////////////////////////////////////
-GaudiException* PVolumeException::clone() const  { return  new PVolumeException(*this); };
+GaudiException* PVolumeException::clone() const  { return  new PVolumeException(*this); }
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -70,7 +70,7 @@ ValidDataObject::~ValidDataObject()
 /// Check if the data object has a well defined validity range
 bool ValidDataObject::isValid ( ) const {
   return  validSince() <= validTill();
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ bool ValidDataObject::isValid ( const Gaudi::Time& t ) const {
   }
   // just to make the compiler happy
   return true;
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ const Gaudi::Time& ValidDataObject::validSince() const {
   if (m_updateMode == ALWAYS_VALID)
     return local_time_epoch;
   return m_validSince; 
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ const Gaudi::Time& ValidDataObject::validTill() const {
   if (m_updateMode == ALWAYS_VALID)
     return local_time_max;
   return m_validUntil;
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ void ValidDataObject::setValidity( const Gaudi::Time& since, const Gaudi::Time& 
 {
   setValiditySince( since );
   setValidityTill ( till  );
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ void ValidDataObject::setValidity( const Gaudi::Time& since, const Gaudi::Time& 
 void ValidDataObject::setValiditySince( const Gaudi::Time& since ) 
 {
   m_validSince = since;
-};
+}
 
 //---------------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ void ValidDataObject::setValiditySince( const Gaudi::Time& since )
 void ValidDataObject::setValidityTill( const Gaudi::Time& till ) 
 {
   m_validUntil = till;
-};
+}
 
 //---------------------------------------------------------------------------
 

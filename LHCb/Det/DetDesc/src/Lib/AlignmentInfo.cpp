@@ -9,13 +9,13 @@ AlignmentInfo::AlignmentInfo( IDetectorElement* de,
 			      const std::string& condition ) 
   : ConditionInfo( de, condition )
 {
-}; 
+}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
 AlignmentInfo::~AlignmentInfo() 
 {
-};
+}
 
 //----------------------------------------------------------------------------

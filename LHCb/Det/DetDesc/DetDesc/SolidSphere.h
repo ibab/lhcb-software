@@ -132,6 +132,7 @@ public:
    *  @return the number of intersection points
    */
 
+  using SolidBase::intersectionTicks;
   virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
                                           const Gaudi::XYZVector& Vector,
                                           ISolid::Ticks& ticks  ) const ;
@@ -316,7 +317,7 @@ inline bool SolidSphere::insideR( const aPoint& point ) const
   if(  r2 < insideR2 () ) { return false ; }
   // inside! 
   return true ;
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -337,7 +338,7 @@ inline bool SolidSphere::insidePhi( const aPoint& point ) const
       startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
   // 
   return false ;
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -355,7 +356,7 @@ inline bool SolidSphere::insideTheta( const aPoint& point ) const
       startThetaAngle () + deltaThetaAngle() >= theta     ) { return true ; }
   // 
   return false ;
-};
+}
 // ===========================================================================
 
 // ===========================================================================

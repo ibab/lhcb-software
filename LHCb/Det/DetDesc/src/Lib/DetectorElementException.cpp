@@ -1,22 +1,20 @@
 // $Id: DetectorElementException.cpp,v 1.6 2009-04-17 08:54:24 cattanem Exp $
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/DetectorElementException.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/DetectorElement.icpp"
-///
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 DetectorElementException::DetectorElementException
 ( const std::string     & name  , 
   const DetectorElement * DE    , 
   const StatusCode      & sc    ) 
   : GaudiException( name , "*DetElemException*" , sc )
   , m_dee_DetectorElement( DE ) 
-{} ;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+{}
+//////////////////////////////////////////////////////////////////////////////
 DetectorElementException::DetectorElementException
 ( const std::string     & name      , 
   const GaudiException  & Exception , 
@@ -24,14 +22,14 @@ DetectorElementException::DetectorElementException
   const StatusCode      & sc        ) 
   : GaudiException( name , "*DetElemException*" , sc , Exception )
   , m_dee_DetectorElement   ( DE ) 
-{} ;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-DetectorElementException::~DetectorElementException() throw() {};  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+{}
+//////////////////////////////////////////////////////////////////////////////
+DetectorElementException::~DetectorElementException() throw() {}
+//////////////////////////////////////////////////////////////////////////////
 GaudiException* 
 DetectorElementException::clone() const 
-{ return  new DetectorElementException(*this); };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+{ return  new DetectorElementException(*this); }
+//////////////////////////////////////////////////////////////////////////////
 std::ostream& DetectorElementException::printOut( std::ostream& os ) const 
 {
   os << " \t" << tag() << " \t " << message() ; 
@@ -50,8 +48,8 @@ std::ostream& DetectorElementException::printOut( std::ostream& os ) const
   { os << "\t for UKNNOWN DetectorElement"           ; }
   ///
   return  previous() ? ( previous()->printOut(os) ) : ( os << std::endl ) ;
-}; 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
+//////////////////////////////////////////////////////////////////////////////
 MsgStream&    DetectorElementException::printOut( MsgStream& os  ) const 
 {
   os << " \t" << tag() << " \t " << message() ; 
@@ -70,5 +68,5 @@ MsgStream&    DetectorElementException::printOut( MsgStream& os  ) const
   { os << "\t for UKNNOWN DetectorElement"           ; }
   ///
   return  previous() ? ( previous()->printOut(os) ) : ( os << endmsg ) ;
-}; 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+} 
+//////////////////////////////////////////////////////////////////////////////

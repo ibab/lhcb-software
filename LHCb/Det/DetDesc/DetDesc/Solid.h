@@ -1,7 +1,5 @@
 // $Id: Solid.h,v 1.7 2007-02-26 12:07:11 cattanem Exp $
 /// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
 #ifndef DETDESC_SOLID_H 
 #define DETDESC_SOLID_H 1
 /// STD & STL 
@@ -56,7 +54,7 @@ namespace Solid
   };
 
   
-}; ///< end of namespace Solid 
+} ///< end of namespace Solid 
 
 /// ===========================================================================
 #endif ///< DETDESC_SOLID_H

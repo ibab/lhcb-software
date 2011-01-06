@@ -96,7 +96,7 @@ namespace DetDescPython
     std::pair<double,SmartRef<Isotope> > sref_inst3;
   };
   
-};
+}
 
 #define ParamValidDataObject_template_instantiation_base(Type) \
   template void ParamValidDataObject::addParam(const std::string &, const Type &, const std::string &); \
@@ -119,6 +119,12 @@ namespace DetDescPython
 ParamValidDataObject_template_instantiation(int);
 ParamValidDataObject_template_instantiation(double);
 ParamValidDataObject_template_instantiation(std::string);
+
+#ifdef __INTEL_COMPILER
+// Disable some ICC warnings in the automatically generated code
+#pragma warning(disable:177) // variable declared but never used
+#pragma warning(disable:654) // overloaded virtual function only partially overridden
+#endif
 
 // ============================================================================
 #endif // DETSYS_DETDICT_H

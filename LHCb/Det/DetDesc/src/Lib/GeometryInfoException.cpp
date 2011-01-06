@@ -12,7 +12,7 @@ GeometryInfoException::GeometryInfoException( const std::string  & name ,
                                               const StatusCode   & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc )
   , m_gie_geometryInfo  ( gi   )         
-{};
+{}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::GeometryInfoException( const std::string    & name , 
                                               const GaudiException & ge   , 
@@ -20,11 +20,11 @@ GeometryInfoException::GeometryInfoException( const std::string    & name ,
                                               const StatusCode     & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc , ge )
   , m_gie_geometryInfo  ( gi   )         
-{};        
+{}        
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-GeometryInfoException::~GeometryInfoException() throw() {};
+GeometryInfoException::~GeometryInfoException() throw() {}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-GaudiException* GeometryInfoException::clone() const  { return  new GeometryInfoException(*this); };  
+GaudiException* GeometryInfoException::clone() const  { return  new GeometryInfoException(*this); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& GeometryInfoException::printOut( std::ostream& os ) const 
 {
@@ -42,7 +42,7 @@ std::ostream& GeometryInfoException::printOut( std::ostream& os ) const
   ///
   return previous() ? ( os << previous()->printOut( os ) ) :  os  ; 
   ///
-};
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    GeometryInfoException::printOut( MsgStream&  os     ) const 
 {
@@ -60,5 +60,5 @@ MsgStream&    GeometryInfoException::printOut( MsgStream&  os     ) const
   ///
   return previous() ? ( previous()->printOut( os ) ) :  os  ; 
   ///
-};
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////

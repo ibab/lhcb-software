@@ -9,13 +9,13 @@ ReadOutInfo::ReadOutInfo( IDetectorElement* de,
 			  const std::string& condition ) 
   : ConditionInfo( de, condition )
 {
-}; 
+}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
 ReadOutInfo::~ReadOutInfo() 
 {
-};
+}
 
 //----------------------------------------------------------------------------

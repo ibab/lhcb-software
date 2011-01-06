@@ -92,12 +92,12 @@ SolidSphere::SolidSphere
   /// set bounding parameters 
   setBP();
   
-};  
+}
 
 // ===========================================================================
 /// destructor 
 // ===========================================================================
-SolidSphere::~SolidSphere() {};
+SolidSphere::~SolidSphere() {}
 
 // ============================================================================
 /// set parameters for bounding solids (box, sphere and cylinder)
@@ -221,7 +221,7 @@ void SolidSphere::setBP()
 
   ///
   checkBP();
-};
+}
 // ===========================================================================
 
 
@@ -241,7 +241,7 @@ SolidSphere::SolidSphere( const std::string& name )
   , m_sphere_coverModel      (       0          ) 
   , m_noPhiGap               ( true )
   , m_noThetaGap             ( true )
-{};
+{}
 
 // ===========================================================================
 /** - check for the given 3D-point. 
@@ -281,7 +281,7 @@ bool  SolidSphere::isInsideImpl( const aPoint & point) const
   if( !insidePhi    ( point )  ) { return false ; }
   //
   return true ;
-};
+}
 
 // ===========================================================================
 /** -# retrieve the pointer to "simplified" solid - "cover"
@@ -412,7 +412,7 @@ const ISolid* SolidSphere::cover () const
   //
   return m_cover;
   //
-};
+}
 
 // ============================================================================
 /** -# calculate the intersection points("ticks") of the solid objects 
@@ -439,21 +439,21 @@ unsigned int SolidSphere::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                              ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidSphere::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                              const Gaudi::Polar3DVector& Vector,
                                              ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidSphere::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                              const Gaudi::RhoZPhiVector& Vector, 
                                              ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template<class aPoint, class aVector>
 unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  Point,
@@ -507,7 +507,7 @@ unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  Point,
                                            Point , 
                                            Vector, 
                                            *this );    
-};
+}
 
 // ============================================================================
 /** - printout to STD/STL stream
@@ -544,7 +544,7 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
     }
   ///
   return os << std::endl ;
-};
+}
 
 // ============================================================================
 /** - printout to Gaudi  stream
@@ -581,7 +581,7 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
     }
   ///
   return os << endmsg ;
-};
+}
 // ============================================================================ 
 
 // ============================================================================ 

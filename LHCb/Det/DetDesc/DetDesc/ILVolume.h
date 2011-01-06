@@ -328,7 +328,7 @@ protected:
  */
 // ============================================================================
 inline std::ostream& operator<<( std::ostream& os , const ILVolume& lv ) 
-{ return lv.printOut( os ); };
+{ return lv.printOut( os ); }
 
 // ============================================================================
 /** output operator to STD/STL stream
@@ -338,7 +338,7 @@ inline std::ostream& operator<<( std::ostream& os , const ILVolume& lv )
  */
 // ============================================================================
 inline std::ostream& operator<<( std::ostream& os , const ILVolume*  lv )
-{ return ((0==lv)?( os<<" ILVolume* points to NULL "):(os<<(*lv)));};
+{ return ((0==lv)?( os<<" ILVolume* points to NULL "):(os<<(*lv)));}
 
 // ============================================================================
 /** output operator to Gaudi MsgStream stream
@@ -348,7 +348,7 @@ inline std::ostream& operator<<( std::ostream& os , const ILVolume*  lv )
  */
 // ============================================================================
 inline MsgStream& operator<<( MsgStream& os , const ILVolume& lv ) 
-{ return lv.printOut( os ); };
+{ return lv.printOut( os ); }
 
 // ============================================================================
 /** output operator to Gaudi MsgStream stream
@@ -358,7 +358,7 @@ inline MsgStream& operator<<( MsgStream& os , const ILVolume& lv )
  */
 // ============================================================================
 inline MsgStream& operator<<( MsgStream& os , const ILVolume*  lv )
-{ return ((0==lv)?( os<<" ILVolume* points to NULL "):(os<<(*lv)));};
+{ return ((0==lv)?( os<<" ILVolume* points to NULL "):(os<<(*lv)));}
 
 // ============================================================================
 // The End 

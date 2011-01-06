@@ -72,7 +72,7 @@ SolidTubs::SolidTubs( const std::string& name          ,
   // set bounding parameters 
   setBP();
   //
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -167,7 +167,7 @@ void SolidTubs::setBP()
 
   //
   checkBP();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -184,12 +184,12 @@ SolidTubs::SolidTubs( const std::string& name )
   , m_tubs_deltaPhiAngle  ( 360*Gaudi::Units::degree )
   , m_tubs_coverModel     (        0      )
   , m_noPhiGap            ( true          )
-{};
+{}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidTubs::~SolidTubs() {};
+SolidTubs::~SolidTubs() {}
 
 // ============================================================================
 /** - check for the given 3D-point. 
@@ -227,7 +227,7 @@ bool  SolidTubs::isInsideImpl( const aPoint & point ) const
   if( !insidePhi ( point )  ) { return false ; }
   //
   return true ;
-};
+}
 
 // ============================================================================
 /** retrieve the pointer to "the most simplified cover" 
@@ -302,7 +302,7 @@ const ISolid* SolidTubs::cover () const
   if( 0 == cov ) { return this; } 
   m_cover = cov ; 
   return m_cover;
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -329,21 +329,21 @@ unsigned int SolidTubs::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                            ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidTubs::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                            const Gaudi::Polar3DVector& Vector,
                                            ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidTubs::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                            const Gaudi::RhoZPhiVector& Vector, 
                                            ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template <class aPoint, class aVector>
 unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  Point,
@@ -412,7 +412,7 @@ unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  Point,
 
   std::sort(ticks.begin(),ticks.end()) ;
   return SolidTicks::RemoveAdjacentTicksFast(ticks , Point , Vector , *this );
-};
+}
 
 // ============================================================================
 /** - printout to STD/STL stream    
@@ -440,7 +440,7 @@ std::ostream&  SolidTubs::printOut      ( std::ostream&  os ) const
          << " deltaPhiAngle[deg]=" << DetDesc::print( deltaPhiAngle()/Gaudi::Units::degree) ;
     };
   return os << "]" << std::endl ;
-};
+}
 
 // ============================================================================
 /** - printout to Gaudi MsgStream stream    
@@ -468,7 +468,7 @@ MsgStream&     SolidTubs::printOut      ( MsgStream&     os ) const
          << " deltaPhiAngle[deg]=" << DetDesc::print( deltaPhiAngle()/Gaudi::Units::degree) ;
     };
   return os << "]" << endmsg ;
-};
+}
 
 // ============================================================================
 /** calculate the intersection points("ticks") of the solid objects 

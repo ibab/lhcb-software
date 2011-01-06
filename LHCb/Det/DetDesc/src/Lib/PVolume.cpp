@@ -26,14 +26,14 @@
 
 unsigned long PVolume::s_volumeCounter = 0;
 
-namespace
-{
-  std::string ITOA( const int value )
-  {
-    char buffer[64];
-    return std::string( buffer , buffer + sprintf( buffer , "%d" , value ) );
-  };
-};
+//namespace
+//{
+//  std::string ITOA( const int value )
+//  {
+//    char buffer[64];
+//    return std::string( buffer , buffer + sprintf( buffer , "%d" , value ) );
+//  };
+//};
 
 
 // ============================================================================
@@ -78,7 +78,7 @@ PVolume::PVolume
   ///
   m_services = DetDesc::services();
   ++s_volumeCounter ;
-};
+}
 
 // ============================================================================
 /** constructor    
@@ -110,7 +110,7 @@ PVolume::PVolume
   ///
   m_services = DetDesc::services();
   ++s_volumeCounter ;
-};
+}
 
 // ============================================================================
 // destructor 
@@ -120,7 +120,7 @@ PVolume::~PVolume()
   if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
   m_services->release();
   --s_volumeCounter;
-};
+}
 
 // ============================================================================
 /** find logical volume by name 
@@ -155,7 +155,7 @@ ILVolume* PVolume::findLogical() const
   m_lvolume = lv ;
   ///
   return m_lvolume;
-};
+}
 
 // ============================================================================
 /** inverse the matrix
@@ -166,7 +166,7 @@ Gaudi::Transform3D* PVolume::findMatrix() const
 {
   if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
   return m_imatrix = new Gaudi::Transform3D( matrix().Inverse() ) ;
-};
+}
 
 // ============================================================================
 /** the static accessor to the data service
@@ -197,7 +197,7 @@ PVolume::queryInterface( const InterfaceID& ID , void** ppI )
   addRef();
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** add the reference
@@ -226,7 +226,7 @@ std::ostream& PVolume::printOut( std::ostream& os ) const
        << " [" 
        << " name='"          << name()          << "'" 
        << " logvol='"        << lvolumeName()   << "'" << "]";
-};
+}
 
 // ============================================================================
 /** printout to Gaudi MsgStream stream 
@@ -241,7 +241,7 @@ MsgStream& PVolume::printOut( MsgStream& os ) const
        << " [" 
        << " name='"          << name()          << "'" 
        << " logvol='"        << lvolumeName()   << "'" << "]";
-};
+}
 
 // ============================================================================
 /** Assertion 
@@ -255,7 +255,7 @@ void PVolume::Assert( bool               assertion ,
 { 
   if( !assertion ) 
     { throw PVolumeException( name, this ); } 
-};
+}
 
 // ============================================================================
 /** Assertion 
@@ -271,7 +271,7 @@ void PVolume::Assert( bool                  assertion ,
 { 
   if( !assertion ) 
     { throw PVolumeException( name, Exception , this ); } 
-};
+}
 
 // ============================================================================
 /**  retrieve  the C++ pointer to Logical Volume 
@@ -279,7 +279,7 @@ void PVolume::Assert( bool                  assertion ,
  */
 // ============================================================================
 const ILVolume* PVolume::lvolume () const
-{ return 0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ; };
+{ return 0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ; }
 // ============================================================================
 
 // ============================================================================
@@ -291,7 +291,7 @@ const Gaudi::Transform3D&  PVolume::matrixInv  () const
 {
   if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }
   return *m_imatrix ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -315,7 +315,7 @@ Gaudi::XYZPoint PVolume::toMother ( const Gaudi::XYZPoint& PointInLocal  ) const
 {
   if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }  
   return (*m_imatrix) * PointInLocal ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -329,7 +329,7 @@ bool PVolume::isInside
 {
   if( 0 == m_lvolume ) { m_lvolume = findLogical() ; }
   return m_lvolume->isInside( toLocal( PointInMother ) ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -342,7 +342,7 @@ IPVolume* PVolume::reset ()
   if( 0 != m_lvolume ) { m_lvolume->reset() ; m_lvolume = 0 ; }
   if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
   return this;
-};
+}
 // ============================================================================
 
 
@@ -381,7 +381,7 @@ unsigned int PVolume::intersectLine
                              m_matrix * Vector , 
                              intersections     , 
                              threshold         ); 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -423,7 +423,7 @@ unsigned int PVolume::intersectLine
                             tickMin             , 
                             tickMax             ,
                             threshold           );
-};
+}
 // ============================================================================
 
 
@@ -442,7 +442,7 @@ PVolume::applyMisAlignment ( const Gaudi::Transform3D& ma )
   reset() ;
   // return the resulting matrix  
   return matrix();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -459,7 +459,7 @@ PVolume::resetMisAlignment (                          )
   reset         () ;
   // return the resulting matrix  
   return matrix () ;
-};
+}
 // ============================================================================
 
 // ============================================================================

@@ -200,7 +200,7 @@ public:
 // ============================================================================
 inline std::ostream& operator<<
 ( std::ostream& os , const IPVolume& pv ) 
-{ return pv.printOut( os ); };
+{ return pv.printOut( os ); }
 
 // ============================================================================
 /** output operator to STD/STL stream
@@ -211,7 +211,7 @@ inline std::ostream& operator<<
 // ============================================================================
 inline std::ostream& operator<<
 ( std::ostream& os , const IPVolume*  pv )
-{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));};
+{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));}
 
 // ============================================================================
 /** output operator to Gaudi MsgStream stream
@@ -222,7 +222,7 @@ inline std::ostream& operator<<
 // ============================================================================
 inline MsgStream& operator<<
 ( MsgStream& os , const IPVolume& pv ) 
-{ return pv.printOut( os ); };
+{ return pv.printOut( os ); }
 
 // ============================================================================
 /** output operator to Gaudi MsgStream stream
@@ -233,7 +233,7 @@ inline MsgStream& operator<<
 // ============================================================================
 inline MsgStream& operator<<
 ( MsgStream& os , const IPVolume*  pv )
-{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));};
+{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));}
 
 // ============================================================================
 // The End 

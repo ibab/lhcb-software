@@ -1,46 +1,5 @@
 // $Id: SolidMath.h,v 1.8 2007-09-20 15:13:21 wouter Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2005/12/08 19:20:01  jpalac
-//
-// ! 2005-12-08 - Juan Palacios
-//  - Provide inInside and intersectionTicks methods to solids that accept
-//    points and vectors in coordinates other than cartesian. New methods pass
-//    call to templated implementations.
-//
-// Revision 1.6  2005/12/05 16:18:43  jpalac
-//
-// ! 2005-12-05 - Juan Palacios
-//  - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
-//    Supports only double precision cartesian representation.
-//  - Fix remaining MathCore-related compilation problems.
-//
-// Revision 1.5  2005/12/02 18:36:55  jpalac
-//
-// ! 2005-02-12 - Juan Palacios
-//  - Add Kernel/LHCbDefinitions to requirements
-//  - Change CLHEP geometry classes to LHCbDefinitions typedefs:
-//             * These typedefs point to MathCore classes with the
-//               exception of Gaudi::Plane3D, which pointe to HepPoint3D.
-//               Awaiting implementation of MathCore Plane3D class.
-//  - Make changes to all code to adapt to MathCore syntax
-//  - TO-DO: Not compiling due to Plane3D operaitons with MathCore classes
-//
-// Revision 1.4  2003/11/24 14:43:44  cattanem
-// fix doxygen comments
-//
-// Revision 1.3  2002/10/30 15:02:44  ibelyaev
-//  fix a bug in DetDesc/SolidMath.h
-//
-// Revision 1.2  2002/05/13 18:29:53  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 13 May 2002
-//
-// Revision 1.1  2002/05/11 18:25:46  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-// 
-// ============================================================================
 #ifndef DETDESC_SOLIDMATH_H 
 #define DETDESC_SOLIDMATH_H 1
 // Include files
@@ -91,7 +50,7 @@ namespace SolidTicks
     *out++ = 0.5 * ( -b + d ) / a  ; 
     // return number of solutions;
     return 0 == d ? 1 : 2 ;           // RETURN !!! 
-  };
+  }
 
   /** find intersection ticks for the line parametrized as 
    *  Point + Vector * Tick  with sphere of radius Radius
@@ -127,7 +86,7 @@ namespace SolidTicks
     const double c = p2 - radius * radius ;
     // solve the equation! 
     return SolidTicks::SolveQuadraticEquation( a , b , c , out );
-  };
+  }
   
   /** find intersection ticks for the line parametrized as 
    *  Point + Vector * Tick  with sphere of radius Radius
@@ -163,7 +122,7 @@ namespace SolidTicks
     const double c = p2 - r2 ;
     // solve the equation! 
     return SolidTicks::SolveQuadraticEquation( a , b , c , out );
-  };
+  }
   
   /** find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick with cylinder of radius Radius
@@ -201,7 +160,7 @@ namespace SolidTicks
     const double c = p2 - radius * radius ;
     // solve the equation! 
     return SolidTicks::SolveQuadraticEquation( a , b , c , out );  
-  };
+  }
   
   /** find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick with x-plane x=X
@@ -228,7 +187,7 @@ namespace SolidTicks
     if( 0 == vect.x() ) { return 0; } 
     *out++ = ( X - point.x() ) / vect.x() ; 
     return 1;      
-  };
+  }
 
   /** find intersection ticks for the line 
    *  parametrized as Point + Vector * Tick with y-plane y=Y 
@@ -255,7 +214,7 @@ namespace SolidTicks
     if( 0 == vect.y() ) { return 0; } 
     *out++ = ( Y - point.y() ) / vect.y() ; 
     return 1;      
-  };
+  }
 
   /** find intersection ticks for the line 
    *  parametrized as Point + Vector * Tick with z-plane z=Z 
@@ -282,7 +241,7 @@ namespace SolidTicks
     if( 0 == vect.z() ) { return 0; } 
     *out++ = ( Z - point.z() ) / vect.z() ; 
     return 1;      
-  };
+  }
   
   /** find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick  with half-plane phi=Phi
@@ -312,7 +271,7 @@ namespace SolidTicks
     if( e * d > 0 ) { return 0 ; }
     *out++ = ( point.y() * cosphi - point.x() * sinphi ) / d ; 
     return 1; 
-  };
+  }
   
   /** find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick  with cone theta=Theta 
@@ -359,7 +318,7 @@ namespace SolidTicks
 
     // return the result
     return SolidTicks::SolveQuadraticEquation( a , b, c, out );
-  };
+  }
 
   
   /** find intersection ticks for the line parametrized 
@@ -412,9 +371,9 @@ namespace SolidTicks
     
     // return result
     return SolidTicks::SolveQuadraticEquation( a , b, c, out );
-  };
+  }
 
-}; // end of namespace 
+} // end of namespace 
 
 // ============================================================================
 // The END

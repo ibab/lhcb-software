@@ -1,6 +1,5 @@
 #include "DetDesc/HistoParam.h"
 #include "DetDesc/Condition.h"
-// #include "DetDesc/ParamValidDataObject.h"
 
 namespace DetDesc {
   namespace Params {
@@ -25,7 +24,7 @@ namespace DetDesc {
    *  @author Dmitry Golubkov
    *  @date   2009-12-01
    */
-  const Histo2D *paramAsHisto2D(const Condition *const, const std::string &name);
+  const Histo2D *paramAsHisto2D(const Condition *cond, const std::string &name);
 
   }
 }

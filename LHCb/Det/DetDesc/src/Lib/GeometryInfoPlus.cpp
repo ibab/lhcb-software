@@ -791,7 +791,7 @@ std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint 
   return
     ( childEnd() == it ) ? std::string("") :
     *(m_gi_childrensNames.begin()+(it-childBegin()));
-};
+}
 //=============================================================================
 std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint,
                                              const int         level       )
@@ -814,7 +814,7 @@ IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint )
                   IGeometryInfo_isInside(globalPoint) ) ;
   //
   return ( childEnd() == it ? 0 : *it );
-};
+}
 //=============================================================================
 IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint ,
                                             const int         level       )
@@ -1034,7 +1034,7 @@ const ILVolume* GeometryInfoPlus::lvolume( const std::string& start,
   IGeometryInfo* gi = geoByName( start );
   //
   return 0 == gi ? 0 : lvolume( gi , replicaPath );
-};
+}
 //=============================================================================
 std::string GeometryInfoPlus::lvolumePath( const std::string& start,
                                            const ILVolume::ReplicaPath&
@@ -1147,7 +1147,7 @@ StatusCode GeometryInfoPlus::queryInterface( const InterfaceID& ID,
   addRef();
   ///
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================
 // Destructor
 //=============================================================================

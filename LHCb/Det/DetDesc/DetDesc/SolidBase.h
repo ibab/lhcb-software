@@ -198,7 +198,7 @@ protected:
       point.x () > xMax () + tolerance ||
       point.y () < yMin () - tolerance ||
       point.y () > yMax () + tolerance ;
-  };
+  }
   /** Fast check if the point is outside the bounding box of the solid
    *  @param point     point to be checked 
    *  @return true of point is outside the bounding box 
@@ -214,7 +214,7 @@ protected:
       point.x () > xMax () ||
       point.y () < yMin () ||
       point.y () > yMax () ;
-  };
+  }
   
   /** Fast check if the point is outside the bounding sphere of the solid
    *  @param point point to be checked  
@@ -228,7 +228,7 @@ protected:
   {
     const  double rmax = rMax()  + tolerance ;
     return rmax <= 0 || point.mag2() > rmax * rmax ;
-  };
+  }
   
   /** Fast check if the point is outside the bounding sphere of the solid
    *  @param point point to be checked  
@@ -238,7 +238,7 @@ protected:
   inline bool isOutBSphere ( const aPoint& point  ) const 
   {
     return  point.mag2 () > rMax () * rMax () ;
-  };
+  }
   
   /** Fast check if the point is outside the bounding cylinder 
    *  of the solid
@@ -256,7 +256,7 @@ protected:
       point.z     () < zMin   () - tolerance ? true :
       point.z     () > zMax   () + tolerance ? true :
       point.perp2 () > rhomax * rhomax       ? true : false ;
-  };
+  }
   
   /** Fast check if the point is outside the bounding cylinder 
    *  of the solid
@@ -270,7 +270,7 @@ protected:
       point.z     () < zMin   () ||
       point.z     () > zMax   () ||
       point.perp2 () > rhoMax () * rhoMax () ;
-  };
+  }
   
   /** Fast check if the segment of the line between two points 
    *  is outside the bounding box 
@@ -292,7 +292,7 @@ protected:
         (p1.x() > xMax()+tolerance && p2.x() > xMax()+tolerance) ||
         (p1.y() < yMin()-tolerance && p2.y() < yMin()-tolerance) ||
         (p1.y() > yMax()+tolerance && p2.y() > yMax()+tolerance) );
-  };
+  }
 
   /** Fast check if the segment of the line between two points 
    *  is outside the bounding box 
@@ -312,7 +312,7 @@ protected:
       ( p1.x() > xMax() && p2.x() > xMax() ) ||
       ( p1.y() < yMin() && p2.y() < yMin() ) ||
       ( p1.y() > yMax() && p2.y() > yMax() ) ;
-  };
+  }
 
   /** Fast check if the segment of the line between two points 
    *  is outside the bounding box 
@@ -332,7 +332,7 @@ protected:
     const double        tolerance ) const 
   {
     return isOutBBox( p + tmin * v , p + tmax * v , tolerance );
-  };  
+  }
   
   /** Fast check if the segment of the line between two points 
    *  is outside the bounding box 
@@ -350,7 +350,7 @@ protected:
     const ISolid::Tick& tmax ) const 
   {
     return isOutBBox( p + tmin * v , p + tmax * v );
-  };  
+  }
   
   /** Fast check if the line cross the bounding sphere  
    *  @param p     first  point on the line  
@@ -372,7 +372,7 @@ protected:
     return ( rmax > 0                       && 
              !(0 == vv && pp > dd)          &&
              !( (vv*pp) - (pv*pv) > vv*dd ) );
-  };
+  }
   
   /** Fast check if the line cross the surface of bounding cylinder 
    *  @param p     first  point on the line  
@@ -394,7 +394,7 @@ protected:
     return ( rhomax > 0                     &&
              !( 0 == vv && pp > dd )        &&
              !( (vv*pp) - (pv*pv) > vv*dd ) );
-  };
+  }
 
 protected:
 

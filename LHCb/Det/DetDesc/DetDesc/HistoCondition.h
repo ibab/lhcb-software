@@ -31,7 +31,8 @@ namespace DetDesc
     // ========================================================================
     /// perform the specific initialization (==creation of the histogram)
     virtual StatusCode initialize () ;
-    /// update from other data object: 
+    /// update from other data object:
+    using Condition::update;
     virtual void update ( ValidDataObject&  right ) ;
     /// update from other data object: 
     virtual void update ( Histo1DCond&      right ) ;
@@ -74,6 +75,7 @@ namespace DetDesc
     /// perform the specific initialization (==creation of the histogram)
     virtual StatusCode initialize () ;
     /// update from other data object: 
+    using Condition::update;
     virtual void update ( ValidDataObject&  right ) ;
     /// update from other data object: 
     virtual void update ( Histo2DCond&      right ) ;

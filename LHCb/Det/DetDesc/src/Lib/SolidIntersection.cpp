@@ -26,7 +26,7 @@ SolidIntersection::SolidIntersection( const std::string& name  ,
                                       ISolid*            first )
   : SolidBase    ( name         )
   , SolidBoolean ( name , first )
-{};
+{}
 // ============================================================================
 
 // ============================================================================
@@ -37,7 +37,7 @@ SolidIntersection::SolidIntersection( const std::string& name  ,
 SolidIntersection::SolidIntersection( const std::string& name )
   : SolidBase    ( name )
   , SolidBoolean ( name )
-{};
+{}
 // ============================================================================
 
 // ============================================================================
@@ -72,7 +72,7 @@ bool SolidIntersection::isInsideImpl( const aPoint   & point ) const
                   std::not1(Solid::IsInside<aPoint>( point ) ) );
   /// 
   return ( childEnd() == ci ? true : false );   
-};
+}
 
 // ============================================================================
 /** add intersections 
@@ -83,7 +83,7 @@ bool SolidIntersection::isInsideImpl( const aPoint   & point ) const
 // ============================================================================
 StatusCode  SolidIntersection::intersect( ISolid*               solid     , 
                                           const Gaudi::Transform3D* mtrx      )
-{  return addChild( solid , mtrx ); };
+{  return addChild( solid , mtrx ); }
 
 // ============================================================================
 /** add intersections 
@@ -97,6 +97,6 @@ StatusCode  SolidIntersection::intersect
 ( ISolid*               solid    , 
   const Gaudi::XYZPoint&     position , 
   const Gaudi::Rotation3D&    rotation )
-{ return addChild( solid , position , rotation ) ; }; 
+{ return addChild( solid , position , rotation ) ; }
 
 // ============================================================================

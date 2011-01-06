@@ -36,7 +36,7 @@ SolidBase::SolidBase( const std::string& Name )
 {
   // get message service
   m_services = DetDesc::services();
-};
+}
 
 // ============================================================================
 /// destructor 
@@ -47,7 +47,7 @@ SolidBase::~SolidBase()
   m_cover = 0 ;
   // release message service
   m_services->release();
-};
+}
 
 // ============================================================================
 /** - reset solid to its inititial state, remove 
@@ -64,7 +64,7 @@ ISolid* SolidBase::reset ()
   if(    0 != m_cover ) { delete m_cover ; m_cover = 0 ; }
   ///
   return this;
-};
+}
 
 // ============================================================================
 /** query the interface 
@@ -87,7 +87,7 @@ StatusCode SolidBase::queryInterface( const InterfaceID& ID , void** ppI )
   addRef();
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /// Increment the reference count of Interface instance
@@ -111,7 +111,7 @@ const ISolid* SolidBase::coverTop () const
   while( 0 != cov && cov != cov->cover() ){ cov = cov->cover(); }
   if( 0 == cov ) { cov = this ; }
   return cov ; 
-};
+}
 
 // ============================================================================
 /** printout to STD/STL stream
@@ -134,7 +134,7 @@ std::ostream& SolidBase::printOut ( std::ostream& st ) const
        << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
        << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
        << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << std::endl ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -158,7 +158,7 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
        << DetDesc::print(   zMax () / Gaudi::Units::mm )  << "," 
        << DetDesc::print(   rMax () / Gaudi::Units::mm )  << "," 
        << DetDesc::print( rhoMax () / Gaudi::Units::mm )  << ") " << endmsg ;
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -224,7 +224,7 @@ unsigned int SolidBase::intersectionTicksImpl( const aPoint  & Point,
   intersectionTicks( Point , Vector , ticks ); 
   // just adjust the out-of-range intervals
   return SolidTicks::adjustToTickRange( ticks, tickMin, tickMax ) ;
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -251,21 +251,21 @@ unsigned int SolidBase::intersectionTicks( const Gaudi::XYZPoint&  ,
                                            ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBase::intersectionTicks( const Gaudi::Polar3DPoint&,
                                            const Gaudi::Polar3DVector&,
                                            ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBase::intersectionTicks( const Gaudi::RhoZPhiPoint&,
                                            const Gaudi::RhoZPhiVector&, 
                                            ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(ticks);
-};
+}
 // ============================================================================
 
 unsigned int SolidBase::intersectionTicksImpl( ISolid::Ticks&    ticks ) const 
@@ -274,7 +274,7 @@ unsigned int SolidBase::intersectionTicksImpl( ISolid::Ticks&    ticks ) const
   ticks.clear();
   ///  return container size 
   return ticks.size();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -392,7 +392,7 @@ void SolidBase::checkBP() const
     }
   //
   return;
-};
+}
 // ============================================================================
   
 /** 

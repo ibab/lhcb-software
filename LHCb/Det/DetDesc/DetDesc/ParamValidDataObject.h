@@ -39,6 +39,7 @@ class ParamValidDataObject : public ValidDataObject {
  public:
 
   // Re-implemented from ValidDataObject
+  using ValidDataObject::update; // due to partial override
   /// Do the deep copy
   virtual void update ( ValidDataObject& obj );
   

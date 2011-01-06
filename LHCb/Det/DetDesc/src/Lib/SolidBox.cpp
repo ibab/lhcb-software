@@ -45,7 +45,7 @@ SolidBox::SolidBox
     { throw SolidException("SolidBox(): ZHalfLength is non positive! "); }
   /// set bounding paramters od SolidBase class
   setBP () ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -64,7 +64,7 @@ void SolidBox::setBP()
   setRhoMax ( sqrt( xMax() * xMax() + yMax() * yMax()                   ) );
   //
   checkBP () ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -76,13 +76,13 @@ SolidBox::SolidBox()
   , m_box_xHalfLength( 100000.0 ) 
   , m_box_yHalfLength( 100000.0 ) 
   , m_box_zHalfLength( 100000.0 ) 
-{};
+{}
 // ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidBox::~SolidBox(){ if ( this == m_cover ) { m_cover = 0 ; } ; };
+SolidBox::~SolidBox(){ if ( this == m_cover ) { m_cover = 0 ; } ; }
 // ============================================================================
 
 // ============================================================================
@@ -100,21 +100,21 @@ unsigned int SolidBox::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                           ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBox::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                           const Gaudi::Polar3DVector& Vector,
                                           ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                           const Gaudi::RhoZPhiVector& Vector, 
                                           ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 
 // ============================================================================
 inline bool inrange( const double x, const double xmin, const double xmax) {
@@ -220,7 +220,7 @@ bool SolidBox::isInsideImpl( const aPoint& point ) const
   return (fabs(point.z()) < zHalfLength() &&
           fabs(point.y()) < yHalfLength() && 
           fabs(point.x()) < xHalfLength()); 
-};
+}
 // ============================================================================
  /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
@@ -314,7 +314,7 @@ std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
        << " ysize[mm]=" << DetDesc::print( ysize() / Gaudi::Units::mm ) 
        << " zsize[mm]=" << DetDesc::print( zsize() / Gaudi::Units::mm )  
        << "]" << std::endl ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -333,7 +333,7 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
        << " ysize[mm]=" << DetDesc::print( ysize() / Gaudi::Units::mm ) 
        << " zsize[mm]=" << DetDesc::print( zsize() / Gaudi::Units::mm )  
        << "]" << endmsg ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -344,7 +344,7 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
  *  @return pointer to "simplified" solid - "cover"
  */
 // ============================================================================
-const ISolid* SolidBox::cover() const { return this; };
+const ISolid* SolidBox::cover() const { return this; }
 
 // ============================================================================
 /** - retrieve the pointer to "the most simplified cover" 
@@ -356,8 +356,7 @@ const ISolid* SolidBox::cover() const { return this; };
  *  @return pointer to the most simplified cover 
  */
 // ============================================================================
-const ISolid* SolidBox::coverTop () const { return this; };
-
+const ISolid* SolidBox::coverTop () const { return this; }
 
 // ============================================================================
 // The END 

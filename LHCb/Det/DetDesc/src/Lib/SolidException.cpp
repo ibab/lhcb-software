@@ -11,16 +11,16 @@ SolidException::SolidException( const std::string& message  ,
                                 const ISolid*      solid    ) 
   : GaudiException( message , "*SolidException*" , StatusCode::FAILURE ) 
   , m_se_solid    ( solid      ) 
-{ } ;
+{ }
 ///////////////////////////////////////////////////////////////////////////////////////
 SolidException::SolidException( const std::string   &  message   ,
                                 const GaudiException&  Exception ,  
                                 const ISolid*          solid     ) 
   : GaudiException( message , "*SolidException*" , StatusCode::FAILURE , Exception ) 
   , m_se_solid    ( solid      ) 
-{ } ;
+{ }
 ///////////////////////////////////////////////////////////////////////////////////////
-SolidException::~SolidException() throw(){};
+SolidException::~SolidException() throw(){}
 ///////////////////////////////////////////////////////////////////////////////////////
 std::ostream& SolidException::printOut( std::ostream& os             ) const 
 {
@@ -38,7 +38,7 @@ std::ostream& SolidException::printOut( std::ostream& os             ) const
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ;  
   ///
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    SolidException::printOut( MsgStream&    os             ) const 
 {
@@ -56,7 +56,7 @@ MsgStream&    SolidException::printOut( MsgStream&    os             ) const
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) :  os ;  
   ///
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 GaudiException* SolidException::clone () const { return new SolidException(*this); }
 ///////////////////////////////////////////////////////////////////////////////////////

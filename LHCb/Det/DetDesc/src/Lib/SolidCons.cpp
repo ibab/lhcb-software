@@ -86,12 +86,12 @@ SolidCons::SolidCons( const std::string & name  ,
   // set bounding parameters
   setBP();
   //
-};
+}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidCons::~SolidCons() {};
+SolidCons::~SolidCons() {}
 
 // ============================================================================
 /// set parameters for bounding solids (box, sphere and cylinder)
@@ -187,7 +187,7 @@ void SolidCons::setBP()
 
   // check bounding parameters 
   checkBP() ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -207,7 +207,7 @@ SolidCons::SolidCons( const std::string& Name )
   , m_cons_deltaPhiAngle     ( 360 * Gaudi::Units::degree )
   , m_cons_coverModel        ( 0                   )
   , m_noPhiGap               ( true                )
-{};
+{}
 // ============================================================================
 
 // ============================================================================
@@ -219,17 +219,17 @@ SolidCons::SolidCons( const std::string& Name )
 bool SolidCons::isInside (  const Gaudi::XYZPoint& point ) const
 {  
   return isInsideImpl(point) ;
-};
+}
 // ============================================================================
 bool SolidCons::isInside ( const Gaudi::Polar3DPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 bool SolidCons::isInside ( const Gaudi::RhoZPhiPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 template<class aPoint>
 bool SolidCons::isInsideImpl(  const aPoint& point ) const
@@ -245,7 +245,7 @@ bool SolidCons::isInsideImpl(  const aPoint& point ) const
   if( rho2 < iR * iR        ) { return false ; }
   //
   return true ;
-};
+}
 // ============================================================================
 
 // ============================================================================/
@@ -342,7 +342,7 @@ const ISolid* SolidCons::cover () const
   if( 0 == cov ) { return this; } 
   m_cover = cov ; 
   return m_cover ;
-};
+}
 
 // ============================================================================
 /** calculate the intersection points("ticks") with a given line.
@@ -359,21 +359,21 @@ unsigned int SolidCons::intersectionTicks( const Gaudi::XYZPoint&  Point,
                                            ISolid::Ticks&          ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidCons::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
                                            const Gaudi::Polar3DVector& Vector,
                                            ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidCons::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
                                            const Gaudi::RhoZPhiVector& Vector, 
                                            ISolid::Ticks&              ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template<class aPoint, class aVector>
 unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
@@ -452,7 +452,7 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
 
   std::sort(ticks.begin(),ticks.end()) ;
   return SolidTicks::RemoveAdjacentTicksFast(ticks , Point , Vector , *this );
-};
+}
 
 // ============================================================================
 /** printout to STD/STL stream
@@ -484,7 +484,7 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
          << DetDesc::print( deltaPhiAngle() / Gaudi::Units::degree ) ;
     }
   return os << "]" << std::endl;
-};
+}
 
 // ============================================================================
 /** printout to Gaudi  stream
@@ -516,7 +516,7 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
          << DetDesc::print( deltaPhiAngle() / Gaudi::Units::degree ) ;
     }
   return os << "]" << endmsg ;
-};
+}
 
 // ============================================================================
 
@@ -581,7 +581,7 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
                                         tickMin , 
                                         tickMax ,
                                         ticks   );
-};
+}
 // ============================================================================
 
 // ============================================================================

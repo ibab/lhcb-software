@@ -27,7 +27,7 @@ SolidChild::SolidChild( const std::string& Name )
   , m_sc_solid     (  0    )
   , m_sc_matrix    (  0    )
   , m_sc_simple    ( true  )
-{};
+{}
 
 // ============================================================================
 /** constructor    
@@ -55,7 +55,7 @@ SolidChild::SolidChild( ISolid*               solid ,
   /// set bounding parameters 
   setBP();  
   ///
-};
+}
 // ============================================================================
 
 
@@ -107,7 +107,7 @@ void SolidChild::setBP()
     }
   //
   checkBP();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -146,7 +146,7 @@ SolidChild::SolidChild
   /// set bounding parameters 
   setBP();  
   ///
-};
+}
 
 // ============================================================================
 /// destructor 
@@ -155,7 +155,7 @@ SolidChild::~SolidChild()
 { 
   if( 0 != m_sc_solid  ){ delete m_sc_solid ; m_sc_solid  = 0; } 
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
-};
+}
 
 // ============================================================================
 /** printout to STD/STL stream
@@ -167,7 +167,7 @@ std::ostream& SolidChild::printOut     ( std::ostream& os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
-};
+}
 
 // ============================================================================
 /** printout to Gaudi  stream
@@ -179,7 +179,7 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
-};
+}
 
 // ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
@@ -206,7 +206,7 @@ unsigned int SolidChild::intersectionTicks( const Gaudi::XYZPoint&  Point  ,
                                             ISolid::Ticks&     ticks  ) const
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidChild::intersectionTicks( const Gaudi::Polar3DPoint& Point,
                                             const Gaudi::Polar3DVector& Vector,
@@ -214,7 +214,7 @@ unsigned int SolidChild::intersectionTicks( const Gaudi::Polar3DPoint& Point,
                                             ) const
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidChild::intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
                                             const Gaudi::RhoZPhiVector& Vector,
@@ -222,7 +222,7 @@ unsigned int SolidChild::intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
                                             ) const
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template<class aPoint, class aVector>
 unsigned int SolidChild::intersectionTicksImpl ( const aPoint&  Point  ,
@@ -233,7 +233,7 @@ unsigned int SolidChild::intersectionTicksImpl ( const aPoint&  Point  ,
     intersectionTicks(  simple() ? Point  : matrix() * Point  , 
                         simple() ? Vector : matrix() * Vector , 
                         ticks                                 ) ;
-};
+}
 // ============================================================================
 /** reset to the initial ("after constructor") state
  */
@@ -243,7 +243,7 @@ ISolid*  SolidChild::reset()
   SolidBase::reset();
   if( 0 != solid() ){ m_sc_solid->reset() ; } ; 
   return this ; 
-};
+}
 
 // ============================================================================
 /** - check for the given 3D-point. 
@@ -258,17 +258,17 @@ ISolid*  SolidChild::reset()
 bool SolidChild::isInside ( const Gaudi::XYZPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 bool SolidChild::isInside ( const Gaudi::Polar3DPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 bool SolidChild::isInside ( const Gaudi::RhoZPhiPoint& point) const 
 { 
   return isInsideImpl(point);
-};
+}
 // ============================================================================
 template<class aPoint>
 bool SolidChild::isInsideImpl ( const aPoint& point) const 
@@ -278,7 +278,7 @@ bool SolidChild::isInsideImpl ( const aPoint& point) const
     isOutBBox( point ) ? false : 
     simple() ? 
     solid()->isInside(point)   : solid()->isInside( matrix() * point ) ;
-}; 
+} 
 // ============================================================================
 
 // ============================================================================

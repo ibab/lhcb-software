@@ -17,7 +17,7 @@ Surface::Surface ( const std::string& /*name*/ )
   , m_firstVol   () 
   , m_secondVol  ()
   , m_props      ()
-{}; 
+{}
 ////////////////////////////////////////////////////////////////////////////////
 Surface::~Surface() { m_props.clear() ;}
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ std::ostream&     Surface::fillStream ( std::ostream& s ) const
   for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
-};    
+}
 ////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Surface::fillStream ( MsgStream&    s ) const 
 {
@@ -51,12 +51,8 @@ MsgStream&        Surface::fillStream ( MsgStream&    s ) const
   for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
-};    
+}    
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 
 

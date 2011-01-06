@@ -40,7 +40,7 @@ SolidBoolean::SolidBoolean( const std::string& name  ,
     { throw SolidException("SolidBoolean:: ISolid* points to NULL!"); }
   /// set bounding parameters 
   setBP();
-};
+}
 
 // ============================================================================
 /** constructor - "main"("first") solid is mandatory! 
@@ -51,7 +51,7 @@ SolidBoolean::SolidBoolean( const std::string& name  )
   : SolidBase     ( name  )
   , m_sb_first    (  0    )
   , m_sb_childrens(       )
-{};
+{}
 
 // ============================================================================
 /// destructor 
@@ -65,7 +65,7 @@ SolidBoolean::~SolidBoolean()
   m_sb_childrens.clear(); 
   // remove first 
   if ( 0 != m_sb_first  ) { delete m_sb_first ; m_sb_first = 0; }
-};
+}
 
 // ============================================================================
 /// set bounding parameters 
@@ -86,7 +86,7 @@ void SolidBoolean::setBP()
   setRhoMax ( base->rhoMax () );
   
   checkBP();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -100,7 +100,7 @@ ISolid* SolidBoolean::reset()
   std::for_each( childBegin() , childEnd() ,
                  std::mem_fun(&ISolid::reset) );
   return this;
-};  
+}
 
 // ============================================================================
 /** add child to daughter container 
@@ -119,7 +119,7 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
   m_sb_childrens.push_back(pChild);
   checkTickContainerCapacity() ;
   return StatusCode::SUCCESS; 
-};
+}
 
 // ============================================================================
 /** add child to daughter container 
@@ -139,7 +139,7 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
   m_sb_childrens.push_back(pChild);  
   checkTickContainerCapacity() ;
   return StatusCode::SUCCESS; 
-};
+}
 
 // ============================================================================
 /** calculate the intersection points("ticks") with a given line.
@@ -156,21 +156,21 @@ unsigned int SolidBoolean::intersectionTicks( const Gaudi::XYZPoint& Point,
                                               ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBoolean::intersectionTicks( const Gaudi::Polar3DPoint& Point,
                                               const Gaudi::Polar3DVector& Vector,
                                               ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 unsigned int SolidBoolean::intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
                                               const Gaudi::RhoZPhiVector& Vector, 
                                               ISolid::Ticks&    ticks ) const 
 {
   return intersectionTicksImpl(Point, Vector, ticks);
-};
+}
 // ============================================================================
 template<class aPoint, class aVector>
 unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & Point,
@@ -197,7 +197,7 @@ unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & Point,
     } 
   /// sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , Point , Vector , *this );  
-};
+}
 // ============================================================================
 /** Calculate the maximum number of ticks that a straight line could make with this solid
   *  @return maximum number of ticks
@@ -265,7 +265,7 @@ unsigned int SolidBoolean::intersectionTicksImpl( const aPoint  & point,
   return 
     SolidTicks::RemoveAdjancentTicks( ticks , point , vect , 
                                       tickMin , tickMax , *this );  
-};
+}
 
 // ============================================================================
 /** printout to STD/STL stream
@@ -286,7 +286,7 @@ std::ostream& SolidBoolean::printOut( std::ostream& os ) const
       (*child)->printOut( os ); 
     }
   return os << std::endl ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -308,7 +308,7 @@ MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const
       (*child)->printOut( os ); 
     }
   return os << endmsg ;
-};
+}
 // ============================================================================
 
 // ============================================================================

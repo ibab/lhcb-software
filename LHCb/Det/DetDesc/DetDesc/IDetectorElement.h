@@ -1,5 +1,4 @@
 // $Id: IDetectorElement.h,v 1.22 2008-10-28 12:04:36 cattanem Exp $
-// $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H
 #define  DETDESC_IDETECTORELEMENT_H 1
 
@@ -190,14 +189,14 @@ inline std::ostream& operator<<( std::ostream&           os ,
                                  const IDetectorElement& de )
 {
   return de.printOut(os);
-};
+}
 ///
 inline std::ostream& operator<<( std::ostream&           os ,
 				 const IDetectorElement* de )
 {
   return
     ( (0 == de) ? (os << "IDetectorElement* points to NULL") : (os << *de) ) ;
-};
+}
 
 /// ===========================================================================
 #endif  ///<   DETDESC_IDETECTORELEMENT_H

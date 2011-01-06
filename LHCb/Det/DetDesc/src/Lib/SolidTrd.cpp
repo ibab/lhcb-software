@@ -68,7 +68,7 @@ SolidTrd::SolidTrd
   setBP();
   ///
   checkTickContainerCapacity() ;
-};
+}
 
 // ============================================================================
 /** constructor
@@ -87,12 +87,12 @@ SolidTrd::SolidTrd( const std::string& name )
   ///
   makeAll();
   ///
-};
+}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidTrd::~SolidTrd() {};
+SolidTrd::~SolidTrd() {}
 
 // ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
@@ -136,7 +136,7 @@ const ISolid* SolidTrd::cover () const
   m_cover = cov; 
   ///
   return m_cover;
-};
+}
 
 // ============================================================================
 /** initialize the polihedron base 
@@ -207,7 +207,7 @@ void SolidTrd::makeAll()
   if( 6 != planes().size() ) 
     { throw SolidException("SolidTrd::makeALL: wrong # faces"); } 
   ///
-};
+}
 
 // ============================================================================
 /** - printout to STD/STL stream    
@@ -231,7 +231,7 @@ std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
        << " sizeX2[mm]=" << DetDesc::print( xLength2 () / Gaudi::Units::mm ) 
        << " sizeY2[mm]=" << DetDesc::print( yLength2 () / Gaudi::Units::mm )
        << "]" << std::endl ;
-};
+}
 
 // ============================================================================
 /** - printout to Gaudi MsgStream stream    
@@ -255,7 +255,7 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
        << " sizeX2[mm]=" << DetDesc::print( xLength2 () / Gaudi::Units::mm ) 
        << " sizeY2[mm]=" << DetDesc::print( yLength2 () / Gaudi::Units::mm )
        << "]" << endmsg ;
-};
+}
 // ============================================================================
 
 // ============================================================================

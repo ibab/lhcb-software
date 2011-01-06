@@ -13,21 +13,21 @@ MaterialException::MaterialException( const std::string& message      ,
                                       const Material*    mat          ) 
   : GaudiException( message , "*MaterialException*" , StatusCode::FAILURE ) 
   , m_me_mat      ( mat      ) 
-{ };
+{ }
 ////////////////////////////////////////////////////////////////////////////////////////
 MaterialException::MaterialException( const std::string   &  message      ,
                                       const GaudiException&  Exception    ,  
                                       const Material*        mat          ) 
   : GaudiException( message , "*MaterialException*" , StatusCode::FAILURE , Exception ) 
   , m_me_mat      ( mat     ) 
-{};
+{}
 ////////////////////////////////////////////////////////////////////////////////////////
 MaterialException::MaterialException( const MaterialException& right )
   : std::exception(), GaudiException( right          )
   , m_me_mat      ( right.m_me_mat )
-{};
+{}
 ////////////////////////////////////////////////////////////////////////////////////////
-MaterialException::~MaterialException() throw() { m_me_mat = 0 ; };
+MaterialException::~MaterialException() throw() { m_me_mat = 0 ; }
 ////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& MaterialException::printOut( std::ostream& os ) const 
 {
@@ -45,7 +45,7 @@ std::ostream& MaterialException::printOut( std::ostream& os ) const
   ///
   return previous() ? ( os << previous()->printOut( os ) ) :  os  ; 
   ///
-};
+}
 /////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    MaterialException::printOut( MsgStream&    os ) const 
 {
@@ -63,7 +63,7 @@ MsgStream&    MaterialException::printOut( MsgStream&    os ) const
   ///
   return previous() ? ( previous()->printOut( os ) ) : os   ; 
   ///
-};
+}
 /////////////////////////////////////////////////////////////////////////////////////////
 
 

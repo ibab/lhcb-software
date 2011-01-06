@@ -63,6 +63,7 @@ public:
    *  @return the number of intersection points
    */
 
+  using SolidBase::intersectionTicks;
   virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
                                           const Gaudi::XYZVector& Vector,
                                           ISolid::Ticks& ticks  ) const ;
@@ -132,7 +133,7 @@ protected:
   inline bool inside 
   (  const aPoint& Point , 
      const Gaudi::Plane3D& Plane ) const 
-  { return 0 >= Plane.Distance( Point ) ; };
+  { return 0 >= Plane.Distance( Point ) ; }
 
   /** set bounding parameters 
    */

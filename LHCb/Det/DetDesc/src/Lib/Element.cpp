@@ -36,7 +36,7 @@ Element::Element( const std::string& name    ,
   if( 0 < Z() ) { ComputeLradTsaiFactor (); }
   if( 0 < Z() && fabs(I()) < 1e-20) { ComputeMeanExcitationEnergy (); }
   if( 0 < Z() && fabs(I()) > 1e-20 ) { ComputeDensityEffect (); }
-};
+}
 /////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
 /////////////////////////////////////////////////////////////////////////////////
@@ -47,35 +47,35 @@ void  Element::addIsotope ( const Entry&             iPtr                     , 
 { 
   m_isotopes.push_back( iPtr ) ; 
   if( comp ) { compute(); } 
-}; 
+} 
 /////////////////////////////////////////////////////////////////////////////////
 void  Element::removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp )
 {
   for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
     { if( it->second == iPtr ) { m_isotopes.erase(it); break; }  } 
   if( comp ) { compute(); } 
-};
+}
 /////////////////////////////////////////////////////////////////////////////////
 const SmartRef<Isotope>&  Element::isotope( const unsigned int i ) const 
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index!", this );}
   return isotopes()[i].second;  
-};
+}
 /////////////////////////////////////////////////////////////////////////////////
       SmartRef<Isotope>&  Element::isotope( const unsigned int i )       
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index! ", this );}
   return isotopes()[i].second;  
-};
+}
 /////////////////////////////////////////////////////////////////////////////////
 double Element::isotopeFraction( const unsigned int i ) const 
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index! " , this );}
   return isotopes()[i].first;  
-};
+}
 /////////////////////////////////////////////////////////////////////////////////
 void Element::compute()
 {
@@ -167,7 +167,7 @@ MsgStream&        Element::fillStream ( MsgStream&   s ) const
         << "\t"           << it->second; 
     }
   return s;
-};    
+}
 /////////////////////////////////////////////////////////////////////////////////
 std::ostream&     Element::fillStream ( std::ostream& s ) const 
 {
@@ -185,7 +185,7 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
         << "\t"           << it->second; 
     }
   return s;
-};    
+}
 
 void Element::ComputeInteractionLength(){
   double intLen = 35.0 * cbrt(N()) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
@@ -199,7 +199,7 @@ void  Element::ComputeRadiationLength(){
  double radleninv = Gaudi::Units::Avogadro * tsaiFactor() / A();
  setRadiationLength(1.0 / radleninv / density());
 
-};
+}
 
 
 void Element::ComputeMeanExcitationEnergy(){
@@ -212,7 +212,7 @@ void Element::ComputeMeanExcitationEnergy(){
       m_Ieff = (9.76*Z()+58.8*pow(Z(),-0.19))*Gaudi::Units::eV;
     }
   }
-};
+}
 
 void Element::ComputeDensityEffect(){
     

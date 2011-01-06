@@ -9,13 +9,13 @@ FastControlInfo::FastControlInfo( IDetectorElement* de,
 				  const std::string& condition ) 
   : ConditionInfo( de, condition )
 {
-}; 
+}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
 FastControlInfo::~FastControlInfo() 
 {
-};
+}
 
 //----------------------------------------------------------------------------

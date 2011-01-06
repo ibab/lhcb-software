@@ -21,7 +21,7 @@ ParamValidDataObject::ParamValidDataObject (const ParamValidDataObject& obj)
 //---------------------------------------------------------------------------
 
 /// Destructor
-ParamValidDataObject::~ParamValidDataObject() {};
+ParamValidDataObject::~ParamValidDataObject() {}
 
 //----------------------------------------------------------------------------
 

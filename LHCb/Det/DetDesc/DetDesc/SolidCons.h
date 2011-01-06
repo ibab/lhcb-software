@@ -359,7 +359,7 @@ inline double SolidCons::iR_z( const double z ) const
   const double b = 
     ( innerRadiusAtPlusZ () + innerRadiusAtMinusZ () )  ; 
   return 0.5 * ( a * z  + b );
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -375,7 +375,7 @@ inline double SolidCons::oR_z( const double z ) const
   const double b = 
     ( outerRadiusAtPlusZ () + outerRadiusAtMinusZ () )  ; 
   return 0.5*(a*z+b);
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -392,7 +392,7 @@ inline bool SolidCons::insidePhi ( const double phi /* [-pi,pi] */ ) const
       startPhiAngle () + deltaPhiAngle() >= phi     ) ||
     ( startPhiAngle ()                   <= phi + 2*M_PI &&
       startPhiAngle () + deltaPhiAngle() >= phi + 2*M_PI ) ;
-};
+}
 
 // ===========================================================================
 /** check for phi 
@@ -404,7 +404,7 @@ template< class aPoint>
 inline bool SolidCons::insidePhi ( const aPoint& point ) const 
 {
   return noPhiGap() || insidePhi( point.phi() ) ;
-};
+}
 // ===========================================================================
 #endif ///<  DETDESC_SOLIDCONS_H
 // ===========================================================================

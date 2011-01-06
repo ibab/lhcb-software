@@ -25,7 +25,7 @@ Material::Material( const std::string& name        ,
   , m_pressure          ( press      )
   , m_state             ( s          ) 
   , m_props             (            )
-{};
+{}
 //////////////////////
 Material::~Material() { m_props.clear() ;}
 
@@ -62,7 +62,7 @@ MsgStream&        Material::fillStream ( MsgStream&   s ) const
     { s << "\t property#" << std::setw(2) 
         << it-m_props.begin() << "   " << *it; }
   return s;
-};    
+}
 //////////////////////
 std::ostream&     Material::fillStream ( std::ostream& s ) const 
 {
@@ -96,7 +96,7 @@ std::ostream&     Material::fillStream ( std::ostream& s ) const
     { s << "\t property#" << std::setw(2) 
         << it-m_props.begin() << "   " << *it; }
   return s;
-};    
+}
 //////////////////////
 
 // ============================================================================
