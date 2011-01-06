@@ -62,6 +62,8 @@ StatusCode ParticleMakerBase::execute()
   if (!sc) return sc;
 
   LHCb::Particle::ConstVector constParts ; /// @todo this is a hack due to CaloParticle...
+  constParts.reserve(newParts.size());
+  
   for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; i!= newParts.end() ; ++i) {
     constParts.push_back(*i);
     addBrem( *i );
