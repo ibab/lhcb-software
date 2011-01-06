@@ -21,7 +21,7 @@ static const InterfaceID IID_IMCVeloFEType ( "IMCVeloFEType", 1, 0 );
 namespace LHCb
 {
   class MCVeloFE;
-};
+}
 
 class IMCVeloFEType : virtual public IAlgTool {
 public:

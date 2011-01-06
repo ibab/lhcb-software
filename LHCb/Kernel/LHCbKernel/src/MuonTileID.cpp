@@ -134,7 +134,7 @@ std::string LHCb::MuonTileID::toString() const {
 
   char bufnm[64];
  
-  sprintf(bufnm,"S%d(%d,%d)Q%d,R%d,%d,%d",
+  sprintf(bufnm,"S%u(%u,%u)Q%u,R%u,%u,%u",
         	station(),
 		layout().xGrid(),
 		layout().yGrid(),

@@ -1,4 +1,4 @@
-// $Id:  Exp $
+// $Id: $
 #ifndef SiLandauFun_H 
 #define SiLandauFun_H 1
 
@@ -44,7 +44,7 @@ namespace SiLandauFun {
   double MPVFromScale( const double beta, const double betaGamma, 
                     const double scale);
 
-};
+}
 
 inline double SiLandauFun::scale(const double beta, 
                                              const double pathLength)

@@ -104,13 +104,14 @@ namespace LHCb
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). Trivial because AlignTraj is parameterized in
     /// arclength.
+    using DifTraj<6>::arclength;
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
   private:
     template <typename T> T rotate(const T& t) const 
-    { return m_rx(m_ry(m_rz(t))); };
+    { return m_rx(m_ry(m_rz(t))); }
     template <typename T> T invRotate(const T& t) const 
-    { return m_rz.Inverse()(m_ry.Inverse()(m_rx.Inverse()(t))); };
+    { return m_rz.Inverse()(m_ry.Inverse()(m_rx.Inverse()(t))); }
 
     ROOT::Math::RotationX   m_rx;
     ROOT::Math::RotationY   m_ry;

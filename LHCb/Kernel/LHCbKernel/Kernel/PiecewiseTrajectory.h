@@ -69,6 +69,7 @@ namespace LHCb
     
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). .
+    using Trajectory::arclength;
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
     // functions specific to a PieceWiseTrajectory
@@ -91,7 +92,7 @@ namespace LHCb
      template <typename RET, typename FUN> RET local(double mu, FUN fun) const {
         std::pair<const LHCb::Trajectory*, double> j = loc(mu);
         return fun(j.first,j.second);
-     };
+     }
 
      typedef double (LHCb::Trajectory::*distFun)(double,double,int) const;
 

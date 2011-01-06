@@ -23,6 +23,6 @@ namespace LHCb
     double fractionalError;
     unsigned int clusterSize;
   };
-};
+}
 
 #endif // KERNEL_SIPOSITIONINFO_H

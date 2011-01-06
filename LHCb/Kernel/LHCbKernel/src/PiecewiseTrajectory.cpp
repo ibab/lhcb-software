@@ -39,7 +39,7 @@ namespace {
         template <typename T> bool operator()(const T& t, double s)  
         { return t.second < s; }
     };
-};
+}
 
 std::auto_ptr<LHCb::Trajectory> LHCb::PiecewiseTrajectory::clone() const
 {

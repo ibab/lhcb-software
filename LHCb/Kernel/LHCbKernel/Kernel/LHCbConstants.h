@@ -2,7 +2,6 @@
  *
  *  Constants of LHCb general interest 
  *
- *  CVS Log :-
  *  $Id: LHCbConstants.h,v 1.6 2007-02-20 16:42:02 cattanem Exp $
  *
  *  @author Marco Cattaneo
@@ -31,6 +30,6 @@ namespace LHCbConstants
   static const unsigned int nStripsInPort = 32;     ///< nStripsInPort
   static const unsigned int nStripsInBeetle = 128;  ///< nStripsInBeetle
 
-};
+}
 
 #endif // KERNEL_LHCBCONSTANTS_H

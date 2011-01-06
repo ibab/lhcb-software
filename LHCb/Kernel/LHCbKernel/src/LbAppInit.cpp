@@ -46,7 +46,7 @@ LbAppInit::LbAppInit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-LbAppInit::~LbAppInit() {};
+LbAppInit::~LbAppInit() {}
 
 //=============================================================================
 // Initialization
@@ -100,7 +100,7 @@ StatusCode LbAppInit::initialize() {
   m_condDBInfo = svc<ICondDBInfo>("CondDBCnvSvc", true );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -111,7 +111,7 @@ StatusCode LbAppInit::execute() {
   ++m_eventCounter;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -235,7 +235,7 @@ std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
   seeds.push_back( 0 );
 
   return seeds;
-};
+}
 
 //=============================================================================
 // Return vector of condDB tags used by CondDBSvc
@@ -244,4 +244,4 @@ const std::vector<LHCb::CondDBNameTagPair> LbAppInit::condDBTags() {
   std::vector<LHCb::CondDBNameTagPair> tmp;
   m_condDBInfo->defaultTags(tmp);
   return tmp;
-};
+}

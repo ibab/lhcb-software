@@ -75,6 +75,7 @@ namespace LHCb
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). Trivial because ParabolaTraj is parameterized in
     /// arclength.
+    using Trajectory::arclength;
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
 

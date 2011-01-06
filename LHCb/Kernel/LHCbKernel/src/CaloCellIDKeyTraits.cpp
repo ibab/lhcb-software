@@ -35,7 +35,7 @@ void Containers::errorMakeCaloCellIDKey()
   throw 
     GaudiException("No automatic key creation for KEY=LHCb::CaloCellID !", 
                    "KeyedObject<LHCb::CaloCellID>" , StatusCode::FAILURE );
-};
+}
 
 // ============================================================================
 // The End 

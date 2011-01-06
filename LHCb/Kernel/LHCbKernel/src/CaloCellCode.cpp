@@ -7,7 +7,7 @@
 #include "Kernel/CaloCellCode.h"
 #include "Kernel/CaloCellID.h"
 // ============================================================================
-// Boots 
+// Boost
 // ============================================================================
 #include "boost/static_assert.hpp"
 #include "boost/integer_traits.hpp"
@@ -124,7 +124,6 @@ const std::string& CaloCellCode::caloArea ( const int calo , const int area )
     case 2 : return s_AreaName[ Inner  ] ; // Inner 
     default: return s_BadName          ;
     }    
-    return s_BadName ; 
   case EcalCalo : 
     switch ( area ) 
     {
@@ -134,7 +133,6 @@ const std::string& CaloCellCode::caloArea ( const int calo , const int area )
     case 3 : return s_AreaName[ PinArea ] ; // Pin-Area
     default: return s_BadName             ;
     }
-    return s_BadName ;    
   case HcalCalo : 
     switch ( area ) 
     {
@@ -143,11 +141,9 @@ const std::string& CaloCellCode::caloArea ( const int calo , const int area )
     case 3 : return s_AreaName[ PinArea ] ; // Pin-Area
     default: return s_BadName             ;
     }
-    return s_BadName ; 
   default:
     return s_BadName ; 
   }
-  return s_BadName ; 
 }
 // ============================================================================
 /*  get the area index from calorimeter index and name 
@@ -177,7 +173,6 @@ int CaloCellCode::caloArea ( const int calo , const std::string& area )
     case 3 : return  PinArea  ; // 3 
       default: return -1        ;
     }
-    return -1 ;
   case EcalCalo :
     return _area ( area ) ;
   case SpdCalo :
@@ -189,11 +184,9 @@ int CaloCellCode::caloArea ( const int calo , const std::string& area )
     case 2 : return  Inner    ; // 2 
     default: return -1        ;
     }
-    return -1 ;    
   default: 
     return -1 ;
   }
-  return -1 ;
 }
 // ============================================================================
 /*  Is the given area is Pin-diod area ?

@@ -45,6 +45,12 @@
 #include "Kernel/IAccept.h"
 #include "Kernel/Counters.h"
 
+#ifdef __INTEL_COMPILER
+// Disable some ICC warnings in the automatically generated code
+#pragma warning(disable:177) // variable declared but never used
+#pragma warning(disable:654) // overloaded virtual function only partially overridden
+#endif
+
 // end include files
 
 namespace {

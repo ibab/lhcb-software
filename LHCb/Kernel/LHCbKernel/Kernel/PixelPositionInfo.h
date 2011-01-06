@@ -22,6 +22,6 @@ namespace LHCb
     std::pair<double,double> fractionalError;
     unsigned int clustToT;
   };
-};
+}
 
 #endif // KERNEL_PIXELPOSITIONINFO_H

@@ -75,6 +75,6 @@ namespace MuonBase {
   static const int RIGHT       = 1;
   static const int LEFT        = -1;    
   
-};
+}
 
 #endif  // KERNEL_MUONBASE

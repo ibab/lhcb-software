@@ -12,5 +12,5 @@ namespace STDetSwitch{
 
 void flip(std::string aType, std::string& aString);
 
-};
+}
 #endif

@@ -103,7 +103,7 @@ namespace Containers
     /// Release reference to object
     static long release ( obj_type* v ) { return ( v ) ? v->release () : 0 ; }
   };
-};
+}
  
 // ============================================================================
 // The End 
