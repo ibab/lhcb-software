@@ -11,9 +11,16 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-CountParticles                                              SUCCESS Number of counters : 14
+DaVinciInitAlg                                              SUCCESS ==================================================================
+DaVinciInitAlg                                              SUCCESS 500 events processed
+DaVinciInitAlg                                              SUCCESS ==================================================================
+DaVinciInitAlg                                              SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       500 |        500 |(  100.000 +- 0.200000 )%|   -------   |   -------   |
+ | "Events"                                        |       500 |        500 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+MuonIDAlg                                                      INFO ==> Total number of tracks with IsMuon=1 failing likelihood (p<0): 0
+CountParticles                                              SUCCESS Number of counters : 41
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/StdLooseAllPhotons"                     |       500 |      23663 |     47.326 |     15.822 |      6.0000 |      88.000 |
 """, stdout, result, causes, signature_offset = 0)
 countErrorLines({"FATAL":0})
 </text></argument>

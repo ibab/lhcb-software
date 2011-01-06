@@ -8,18 +8,24 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Print_2600_3200                                             SUCCESS Number of counters : 1
+Print_2600_3200                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/SelJpsi_2600_3200"                      |         7 |          7 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |         7 |          7 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#accept"                                       |         7 |          7 |(  100.000 +- 14.2857  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream1")
 findReferenceBlock("""
-Print_3050_3150                                             SUCCESS Number of counters : 1
+Print_3050_3150                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/SelJpsi_3050_3150"                      |        52 |         52 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        52 |         52 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#accept"                                       |        52 |         52 |(  100.000 +- 1.92308  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream2")
 findReferenceBlock("""
-Print_3000_3500                                             SUCCESS Number of counters : 1
+Print_3000_3500                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/SelJpsi_3000_3500"                      |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#accept"                                       |        10 |         10 |(  100.000 +- 10.0000  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream3")
 </text></argument>

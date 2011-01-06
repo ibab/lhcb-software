@@ -9,8 +9,10 @@
   </set></argument>
   <argument name="validator"><text>
 findReferenceBlock("""
-BachelorMuForTestsSUCCESS Number of counters : 4
+BachelorMuForTestsSUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/StdLooseMuons"                          |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#accept"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
  | "#input"                                        |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#passed"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |

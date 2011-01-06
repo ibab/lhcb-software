@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-06 - Juan Palacios
+ - DVAlgorithm now prints counters for all the input particle locations so
+   many test reference blocks changed. Relevant numbers are the same as for
+   previous release.
+ - Stripping tests broken because some stripping lines use recently obsoleted
+   calls to DVAlgorithm::desktop().
+
 ! 2010-12-21 - Rob Lambert
  - fixedfile tests with 2010 simulation and reprocessing
  - test suite compatibility.qms merged from v1r7b branch 
