@@ -564,26 +564,21 @@ protected:
   const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
 
   ///
-  /// @param heads (INPUT) sequence of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  /// Mark the particles in heads and their decay products for saving.
+  /// Elements already on the TES or their descendants will not be marked. 
+  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
   ///
-  template<class PARTICLES>
-  void markTrees(const PARTICLES& heads) {
-
-    if (msgLevel(MSG::VERBOSE)) verbose() << "markTrees" << endmsg;
-
-    typename PARTICLES::const_iterator iHead = heads.begin();
-    typename PARTICLES::const_iterator iHeadEnd = heads.end();
-
-    for( ; iHead != iHeadEnd; ++iHead ) {
-      if (msgLevel(MSG::VERBOSE)) {
-        verbose() << "Getting\n" << *iHead << endmsg;
-      }
-      // Find all descendendant from this particle
-      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
-    }
-
-    return ;
-
+  inline void markTrees(const LHCb::Particle::ConstVector& heads) {
+    return i_markTrees<LHCb::Particle::ConstVector>(heads);
+  }
+  
+  ///
+  /// Mark the particles in heads and their decay products for saving.
+  /// Elements already on the TES or their descendants will not be marked. 
+  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  ///
+  inline void markTrees(const LHCb::Particle::Range heads) {
+    return i_markTrees<LHCb::Particle::Range>(heads);
   }
 
   /// Save all marked local particles not already in the TES.
@@ -634,6 +629,27 @@ protected:
   /// Mark a local PV for saving.
   const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
 
+  template<class PARTICLES>
+  void i_markTrees(const PARTICLES& heads) {
+
+    if (msgLevel(MSG::VERBOSE)) verbose() << "markTrees" << endmsg;
+
+    typename PARTICLES::const_iterator iHead = heads.begin();
+    typename PARTICLES::const_iterator iHeadEnd = heads.end();
+
+    for( ; iHead != iHeadEnd; ++iHead ) {
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "Getting\n" << *iHead << endmsg;
+      }
+      // Find all descendendant from this particle
+      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
+    }
+
+    return ;
+
+  }
+
+
   inline bool saveP2PV() {
     return m_writeP2PV && !m_noPVs ;
   }
@@ -650,11 +666,11 @@ protected:
       return DaVinci::bestVertexBase(m_p2PVTable.i_relations(part));
     }
 
-private:
-
   /// Method to load all tools. 
   /// The base class provides an instance of all type of tools
   StatusCode loadTools() ;
+
+private:
 
   /// Reference to desktop tool
   mutable IPhysDesktop* m_desktop;
