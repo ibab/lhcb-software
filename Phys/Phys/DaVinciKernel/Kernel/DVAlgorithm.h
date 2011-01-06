@@ -14,12 +14,12 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 // ============================================================================
-// from EventSys
+// from LHCb
 // ============================================================================
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 // ============================================================================
-// from DaVinciKernel
+// from DaVinciInterfaces
 // ============================================================================
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IPhysDesktop.h"
@@ -33,7 +33,13 @@
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
+// ============================================================================
+// from DaVinciKernel
+// ============================================================================
 #include "Kernel/DaVinciFun.h"
+// ============================================================================
+// from DaVinciUtils
+// ============================================================================
 #include "DaVinciUtils/Guards.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
@@ -80,11 +86,20 @@
  *
  *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for best PV. Default: false.
  *
- *  - <b>UseP2PVRelations</b> : bool. Use P2PV relations internally or calculate best PV on the fly. Forced to false for events with one PV. Forced to true if <b>ReFitPVs</b> is true, for all events. Default: true.
+ *  - <b>UseP2PVRelations</b> : bool. Use P2PV relations internally 
+ * or calculate best PV on the fly. Forced to false for events with one PV. 
+ * Forced to true if <b>ReFitPVs</b> is true, for all events. Default: true.
  *
- *  - <b>WriteP2PVRelations</b> : bool. Write P2PV relations to output TES location "<algorithm output location>/Particle2VertexRelations". Default: true.
+ *  - <b>WriteP2PVRelations</b> : bool. Write P2PV relations to 
+ * output TES location "<algorithm output location>/Particle2VertexRelations". 
+ * Default: true.
  * 
- *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <InputLocations>"/Particle2VertexRelations". Forces to calculate best PV on the fly. To be used specially if you want to use ReFitPVs when the input algorithms didn't or vice versa. Or to be sure that you are re-calculating the best PV in your own algorithm. Bear in mind this involves potentially CPU expensive calculations. Default: false.
+ *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <InputLocations>"/Particle2VertexRelations". 
+ * Forces to calculate best PV on the fly. To be used specially if you want 
+ * to use ReFitPVs when the input algorithms didn't or vice versa. 
+ * Or to be sure that you are re-calculating the best PV in your own algorithm.
+ * Bear in mind this involves potentially CPU expensive calculations. 
+ * Default: false.
  *
  *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
@@ -128,8 +143,7 @@ public: // IDVAlgorithm
   virtual const LHCb::Particle::Range particles() const 
   {
     return LHCb::Particle::Range ( m_parts.begin() ,
-                                   m_parts.end()   ) ;
-    
+                                   m_parts.end()   ) ; 
   }
   /** direct const access to container of input primary vertices.
    *  @author Juan Palacios juan.palacios@nikhef.nl
@@ -353,7 +367,6 @@ public:
    * Get the related PV from the relations table, or call calculateRelatedPV
    * if it isn't already there.
    *
-   *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date 10/02/2009
    * 
@@ -361,19 +374,17 @@ public:
   const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const;
 
   /**
+   * Relate a VertexBase to a Particle. 
+   * Overwrites existing relation to that particle.
+   *
+   * @param part (INPUT) LHCb::Particle to which an LHCb::VertexBase will be related
+   * @param vert (INPUT) LHCb::VertexBase that will be related to part.
+   *
+   * @author Juan Palacios palacios@physik.uzh.ch
    *
    **/
-  inline void storeRelationWithOverwrite(const Particle2Vertex::LightTable& table) 
-  {
-    overWriteRelations(table.i_relations().begin(), 
-		       table.i_relations().end());
-  }
-  
-  /**
-   *
-   **/
-  inline void relateWithOverwrite(const LHCb::Particle*   part, 
-                                  const LHCb::VertexBase* vert) const
+  inline void relate(const LHCb::Particle*   part, 
+                     const LHCb::VertexBase* vert) const
   {
     if (0==part || 0== vert ) return;
     (m_p2PVTable.i_removeFrom(part)).ignore();
@@ -451,18 +462,6 @@ public:
 
 protected:
   
-  
-  template<class T> 
-  bool container_exist(const std::string& location) 
-  {
-    typedef typename boost::remove_pointer<typename T::value_type>::type ContainedType;
-    return exist<T>(location) ||
-      exist<typename ContainedType::Container>(location) || 
-      exist<typename ContainedType::Range>(location);
-    
-  }
-  
-  
   /** helper protected function to load the tool on-demand  
    *  @param name name of tool
    *  @param t    tool 
@@ -485,8 +484,7 @@ protected:
    *
    * @return vector or strings with TES input locations
    */
-  inline const std::vector<std::string>& inputLocations() 
-  {
+  inline const std::vector<std::string>& inputLocations() {
     return m_inputLocations;
   }
   
@@ -548,7 +546,8 @@ protected:
   /// is cloned until a vertex is found which is in the TES.
   ///
   /// @attention Cloning stops at vertices that are in the TES.
-  /// @param particle (INPUT) The head of the decay to be cloned and marked. Ownership remains unchanged (either client's or TES).
+  /// @param particle (INPUT) The head of the decay to be cloned and marked. 
+  /// Ownership remains unchanged (either client's or TES).
   /// @return the cloned head of the decay or the input if in TES.
   ///
   const LHCb::Particle* mark(const LHCb::Particle* particle);
@@ -557,8 +556,10 @@ protected:
   /// and marking elements for saving. Each branch is followed until
   /// a vertex is found which is in the TES.
   ///
-  /// @attention particle is always clones, but cloning of decays stops at vertices that are in the TES.
-  /// @param particle (INPUT) The head of the decay to be cloned and marked. Ownership remains unchanged (either client's or TES).
+  /// @attention particle is always clones, but cloning of decays 
+  /// stops at vertices that are in the TES.
+  /// @param particle (INPUT) The head of the decay to be cloned and marked. 
+  /// Ownership remains unchanged (either client's or TES).
   /// @return the cloned head of the decay or the input if in TES.
   ///
   const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
@@ -566,7 +567,8 @@ protected:
   ///
   /// Mark the particles in heads and their decay products for saving.
   /// Elements already on the TES or their descendants will not be marked. 
-  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  /// @param heads (INPUT) vector of heads of decays to be stored. 
+  ///      Algorithm takes over ownership. Elements must be on the heap.
   ///
   inline void markTrees(const LHCb::Particle::ConstVector& heads) {
     return i_markTrees<LHCb::Particle::ConstVector>(heads);
@@ -575,7 +577,8 @@ protected:
   ///
   /// Mark the particles in heads and their decay products for saving.
   /// Elements already on the TES or their descendants will not be marked. 
-  /// @param heads (INPUT) vector of heads of decays to be stored. Algorithm takes over ownership. Elements must be on the heap.
+  /// @param heads (INPUT) vector of heads of decays to be stored. 
+  /// Algorithm takes over ownership. Elements must be on the heap.
   ///
   inline void markTrees(const LHCb::Particle::Range heads) {
     return i_markTrees<LHCb::Particle::Range>(heads);
@@ -586,6 +589,7 @@ protected:
   /// PV and relation table entry when applicable.
   void saveParticles();
 
+  /// Return the output location where data will be written to the TES 
   inline const std::string& outputLocation() const {
     return m_outputLocation;
   }
@@ -593,38 +597,85 @@ protected:
   /// Get the best related PV from the local relations table. Return 0 if 
   /// nothing is there. Does not invoke any calculations.
   const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const;
-
+  /// Inline access to local Particle storage.
   inline const LHCb::Particle::ConstVector& i_particles() const {
     return m_parts;
   }
 
+  /// Inline access to local Particle storage.
   inline LHCb::Particle::ConstVector& i_particles() {
     return m_parts;
   }
 
-  inline Particle2Vertex::LightTable& i_p2PVTable() {
-    return m_p2PVTable;
-  }
+private:
 
-  inline Particle2Vertex::LightTable& i_p2PVTable() const {
-    return m_p2PVTable;
-  }
+  /// Initialise relative InputLocations to account for RootInTES
+  /// and context. Initialise Particle->PV relations input locations.
+  void initializeLocations();
 
- private:
+  /// Load all tools. 
+  /// The base class provides an instance of all type of tools
+  StatusCode loadTools() ;
 
-  /// 
+  /// Load particles, primary vertices, relations tables. 
   StatusCode loadEventInput();
 
   /// Load particles from InputLocations
   StatusCode loadParticles();
 
-  /// Load Particle->PV relations for loades particles.
+  /// Load Particle->PV relations for loaded particles.
   StatusCode loadParticle2PVRelations();
 
   /// Take a range of Particle -> PV relations and store them locally,
   /// overwriting existing relations with the same From.
-  void overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
-			  Particle2Vertex::Table::Range::const_iterator end);
+  void loadRelations(const Particle2Vertex::Table::Range relations);
+
+  /// Does the particle have a relation to a PV stored in the local
+  /// relations table?
+  bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
+
+  /// inline access to Particle->PV relations table
+  inline Particle2Vertex::LightTable& i_p2PVTable() {
+    return m_p2PVTable;
+  }
+
+  /// inline access to Particle->PV relations table
+  inline Particle2Vertex::LightTable& i_p2PVTable() const {
+    return m_p2PVTable;
+  }
+
+  /// Does the event have more than 1 primary vertex?
+  inline bool multiPV() const 
+  {
+    return this->primaryVertices().size() > 1;
+  }
+
+  /// Should PVs be re-fitted when bestVertex is asked for?  
+  inline bool refitPVs() const 
+  {
+    return m_refitPVs;
+  }
+
+  /// Should Particle->PV relations table be used?
+  inline bool useP2PV() const 
+  {
+    return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );
+  }
+
+  /// Should Particle->PV relations be stored in the TES? 
+  inline bool saveP2PV() {
+    return m_writeP2PV && !m_noPVs ;
+  }
+
+  /// Save the local Particle->Vertex relations table to the TES
+  void saveP2PVRelations() const;
+
+  /// Get the PV related to Particle part directly from the local
+  /// relations table. Return 0 is no relation.
+  inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
+    {
+      return DaVinci::bestVertexBase(m_p2PVTable.i_relations(part));
+    }
 
   /// Mark a local PV for saving.
   const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
@@ -649,26 +700,11 @@ protected:
 
   }
 
-
-  inline bool saveP2PV() {
-    return m_writeP2PV && !m_noPVs ;
-  }
-
-  /// Save the local Particle->Vertex relations table to the TES
-  void saveP2PVRelations() const;
-
   /// Save local re-fitted PVs related to saved particles.
   /// Only saves PVs that are not already in the TES.
   void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
 
-  inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
-    {
-      return DaVinci::bestVertexBase(m_p2PVTable.i_relations(part));
-    }
 
-  /// Method to load all tools. 
-  /// The base class provides an instance of all type of tools
-  StatusCode loadTools() ;
 
 private:
 
@@ -695,8 +731,6 @@ protected:
   ToolMap                                                    m_vertexFitNames ;
   /// The actual map of "nickname -> tool" for Vertex Fitters 
   mutable GaudiUtils::VectorMap<std::string,IVertexFit*>         m_vertexFits ;
-  
-protected: 
 
   /// Mapping of "nickname ->type/name" for Geometry Tools
   ToolMap                                                     m_geomToolNames ;
@@ -725,9 +759,6 @@ protected:
   ToolMap                                                   m_decayTreeFitterNames  ;
   /// The actual map of "nickname -> tool" for Decay Tree fitters 
   mutable GaudiUtils::VectorMap<std::string,IDecayTreeFit*> m_decayTreeFitters ;
-
-protected:
-  
   /// Mapping of "nickname ->type/name" for mass-constrained fitters 
   ToolMap                                              m_massFitterNames ;
   /// The actual map of "nickname -> tool" for mass-constrained fitters 
@@ -775,25 +806,6 @@ protected:
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
 
-private:
-
-  bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
-
-  inline bool multiPV() const 
-  {
-    return this->primaryVertices().size() > 1;
-  }
-  
-  inline bool refitPVs() const 
-  {
-    return m_refitPVs;
-  }
-
-private:
-  inline bool useP2PV() const 
-  {
-    return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );
-  }
 
   
 private:
@@ -822,7 +834,6 @@ private:
   /// Do we want to write the Particle -> PV relations table to the TES?
   /// Default: true
   bool m_writeP2PV;
-
 
   /// Ignore Particle->PV relations from InputLocations?
   /// User-defined ones are kept.

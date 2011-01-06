@@ -216,8 +216,7 @@ DVAlgorithm::DVAlgorithm
 // ============================================================================
 // Initialize the thing
 // ============================================================================
-StatusCode DVAlgorithm::initialize () 
-{
+StatusCode DVAlgorithm::initialize () {
   
   // register for the algorithm context service 
   IAlgContextSvc* ctx = 0 ;
@@ -252,26 +251,24 @@ StatusCode DVAlgorithm::initialize ()
   }
 
   m_noPVs = (m_PVLocation=="None"||m_PVLocation=="") ? true : false;
-  
 
+  initializeLocations();
 
-  if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
+  }
   
   return sc;
 }
 // ============================================================================
-// Load standard tools
-// ============================================================================
-StatusCode DVAlgorithm::loadTools() {
-  
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
- 
+void DVAlgorithm::initializeLocations() {
+
   DaVinci::StringUtils::expandLocations( m_inputLocations.begin(),
                                          m_inputLocations.end(),
                                          onOffline()->trunkOnTES() );
  
   if (msgLevel(MSG::DEBUG)) {
-    debug() << ">>> Preloading locations " << m_inputLocations 
+    debug() << ">>> Initialised locations " << m_inputLocations 
 	    << endmsg;
   }
 
@@ -290,22 +287,29 @@ StatusCode DVAlgorithm::loadTools() {
 
   // load user-defined P->PV locations.
   DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
-					 m_p2PVInputLocations.end(),
-					 onOffline()->trunkOnTES()     );
+                                         m_p2PVInputLocations.end(),
+                                         onOffline()->trunkOnTES()     );
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << ">>> Preloading PhysDesktop with P->PV locations " 
+    debug() << ">>> Initialised P->PV locations " 
             << m_p2PVInputLocations << endmsg;
   }
   
   DaVinci::StringUtils::expandLocation(m_outputLocation,
                                        onOffline()->trunkOnTES());
   
+}
+
+// ============================================================================
+// Load standard tools
+// ============================================================================
+StatusCode DVAlgorithm::loadTools() {
  
   if ( !m_preloadTools ){ 
     return Warning( "Not preloading tools", StatusCode::SUCCESS ) ; 
   }
 
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
   // vertex fitter
   
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") ) {
@@ -443,8 +447,8 @@ StatusCode DVAlgorithm::loadParticle2PVRelations() {
       }
       
       const Particle2Vertex::Table* table = get<Particle2Vertex::Table>(*iLoc);
-      const Particle2Vertex::Table::Range all = table->relations();
-      overWriteRelations(all.begin(), all.end());
+      const Particle2Vertex::Table::Range relations = table->relations();
+      loadRelations( relations );
 
     } else {
       Info ( "No P->PV table at " + (*iLoc)  + 
@@ -457,17 +461,19 @@ StatusCode DVAlgorithm::loadParticle2PVRelations() {
   return StatusCode::SUCCESS ; // could be sc
 }
 //=============================================================================
-void DVAlgorithm::overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
-                                     Particle2Vertex::Table::Range::const_iterator end)
+void DVAlgorithm::loadRelations(const Particle2Vertex::Table::Range relations)
 {
+  if (relations.empty()) return;
+
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "overWriteRelations: Storing " << end-begin 
-	      << " P->PV relations" << endmsg;
+    verbose() << "loadRelations reading " << relations.size()
+              << " P->PV relations" << endmsg;
   }
 
-  Particle2Vertex::Table::Range::const_iterator i = begin ;
+  Particle2Vertex::Table::Range::const_iterator i = relations.begin() ;
+  Particle2Vertex::Table::Range::const_iterator iEnd = relations.end() ;
 
-  for (  ; i!= end ; ++i){
+  for (  ; i!= iEnd ; ++i) {
     ( m_p2PVTable.i_removeFrom(i->from()) ).ignore();
     (m_p2PVTable.i_relate(i->from(),i->to())).ignore() ;
     if (msgLevel(MSG::VERBOSE)) {
@@ -477,11 +483,10 @@ void DVAlgorithm::overWriteRelations(Particle2Vertex::Table::Range::const_iterat
   }
 }
 //=============================================================================
-StatusCode DVAlgorithm::loadParticles(){
+StatusCode DVAlgorithm::loadParticles() {
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << "Looking for particles in " 
-            << m_inputLocations.size() 
+    debug() << "Looking for particles in " << m_inputLocations.size() 
             << " places" << endmsg ;
   }
 
@@ -701,7 +706,7 @@ void DVAlgorithm::saveParticles()
     // Check if this was already in a Gaudi container (hence in TES)
     if (  !DaVinci::Utils::inTES(*iParticle) ) {
       if (msgLevel(MSG::VERBOSE)) {
-	verbose() << "  Saving " <<  *iParticle << endmsg;
+        verbose() << "  Saving " <<  *iParticle << endmsg;
       }
       if (0!=*iParticle) {
         particlesToSave->insert(const_cast<LHCb::Particle*>(*iParticle));
@@ -821,7 +826,7 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << "Found related vertex. Relating it" << endmsg;
       }
-      relateWithOverwrite(part, pv);
+      relate(part, pv);
       return pv;
     } else {
       Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
