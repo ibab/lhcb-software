@@ -323,8 +323,6 @@ StatusCode TisTosParticleTagger::execute() {
    
   setFilterPassed(passed);  // Mandatory. Set to true if event is accepted. 
 
-  this->saveParticles() ;
-
   return StatusCode::SUCCESS;
 }
 

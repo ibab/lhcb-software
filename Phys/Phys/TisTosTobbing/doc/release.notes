@@ -4,6 +4,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-01-07 - Juan Palacios
+ - TisTosParticleTagger.cpp
+  . Remove call to saveParticles(), now handled by DVAlgorithm.
+
 ! 2010-01-04 - Juan Palacios
  - TisTosParticleTagger.cpp
   . Remove calls to DVAlgorithm::desktop().
