@@ -4,6 +4,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-07 - Juan Palacios
+ - DVAlgorithm
+  . Particles saved to TES with virtual private methof saveInTES. This is
+    done automatically when filterPassed() is true. Users should not call
+    saveInTES(). They can't, because it it private, but it can be over-written
+    for specialist actions since it is virtual. Twin private virtual method
+    writeEmptyContainer() should write an empty Particles container of the same
+    type that is written in saveInTES(). This can also be overwritten.
+
 ! 2011-01-06 - Juan Palacios
  - DVALgorithm
   . Private templated implementation of DVAlgorithm::markTrees. Public methods 

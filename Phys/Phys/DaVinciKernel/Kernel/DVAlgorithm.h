@@ -538,7 +538,7 @@ protected:
     return t ;                                               // RETURN 
   } ;
 
-  virtual StatusCode writeEmptyContainerIfNeeded() ;
+
   
   /// Mark a particle for saving. Scans decay tree marking
   /// elements for saving. Each branch is followed and each vertex
@@ -583,14 +583,25 @@ protected:
     return i_markTrees<LHCb::Particle::Range>(heads);
   }
 
-  /// Save all marked local particles not already in the TES.
-  /// Saves decay tree elements not already in TES, plus related
-  /// PV and relation table entry when applicable.
-  void saveParticles();
+
 
   /// Return the output location where data will be written to the TES 
   inline const std::string& outputLocation() const {
     return m_outputLocation;
+  }  
+  /// Return the output location where Particles will be written to the TES 
+  inline const std::string& particleOutputLocation() const {
+    return m_particleOutputLocation;
+  }
+  /// Return the output location where decay vertices will be written 
+  /// to the TES 
+  inline const std::string& decayVertexOutputLocation() const {
+    return m_decayVertexOutputLocation;
+  }
+
+  /// Return the output location where data will be written to the TES 
+  inline const std::string& tableOutputLocation() const {
+    return m_tableOutputLocation;
   }
 
   /// Get the best related PV from the local relations table. Return 0 if 
@@ -662,12 +673,12 @@ private:
   }
 
   /// Should Particle->PV relations be stored in the TES? 
-  inline bool saveP2PV() {
+  inline bool saveP2PV() const {
     return m_writeP2PV && !m_noPVs ;
   }
 
   /// Save the local Particle->Vertex relations table to the TES
-  void saveP2PVRelations() const;
+  StatusCode saveP2PVRelations() const;
 
   /// Get the PV related to Particle part directly from the local
   /// relations table. Return 0 is no relation.
@@ -703,7 +714,16 @@ private:
   /// Only saves PVs that are not already in the TES.
   void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
 
+  /// Save all marked local particles not already in the TES.
+  /// Saves decay tree elements not already in TES, plus related
+  /// PV and relation table entry when applicable.
+  /// This method can be overwritten if special TES saving actions are 
+  /// required. Avoid if possible!
+  virtual StatusCode saveInTES();
 
+  /// Write an empty Particles container of the same type as that in
+  /// saveInTES(). Can be overwritten for specialist actions.
+  virtual void writeEmptyTESContainers() ;
 
 private:
 
@@ -713,6 +733,12 @@ private:
   std::string m_desktopName;
 
   std::string m_outputLocation; ///< Output location TES folder.
+
+  std::string m_particleOutputLocation; ///< Output location TES folder.
+
+  std::string m_decayVertexOutputLocation; ///< Output location TES folder.
+
+  std::string m_tableOutputLocation; ///< Output location TES folder.
 
   LHCb::Particle::ConstVector m_parts;      ///< Local Container of particles
 
