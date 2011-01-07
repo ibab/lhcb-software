@@ -172,18 +172,13 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
   if (0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
     log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
-    const std::string address =
-      dom2Std (childElement->getAttribute (addressString));
-    long linkID = dataObj->linkMgr()->addLink(address, 0);
+    const std::string addr = dom2Std (childElement->getAttribute (addressString));
+    long linkID = dataObj->linkMgr()->addLink(addr, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if (0 == xercesc::XMLString::compareString(componentString, tagName)) {
     StatusCode stcod;
         
-    // We need to get directory where the XML files are located
-    unsigned int slashPosition = address->par()[0].find_last_of('/');
-    std::string locDir = address->par()[0].substr( 0, slashPosition + 1 );
-    
     // builds the entry name
     std::string nameAttribute =
       dom2Std (childElement->getAttribute (nameString));
@@ -261,11 +256,11 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
             << endmsg;
         // This should not happen
         itemObj->release();
-        StatusCode stcod;
-        stcod.setCode( INVALID_CLASS_ID );
+        StatusCode sc;
+        sc.setCode( INVALID_CLASS_ID );
         std::string msg = 
           "Wrong element or mixture composite, invalid combination";
-        throw XmlCnvException(msg.c_str(),stcod);      
+        throw XmlCnvException(msg.c_str(),sc);      
       }
     } catch (const GaudiException& ge) {
       throw XmlCnvException("XmlMixtureCnv::endElement: Gaudi exception ",ge);

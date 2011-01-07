@@ -3,6 +3,10 @@
 #ifndef XMLALIGNMENTCONDITION_H 
 #define XMLALIGNMENTCONDITION_H 1
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math headers
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 // Include files
 #include "DetDesc/AlignmentCondition.h"
 #include "DetDescCnv/XmlUserConditionCnv.h"

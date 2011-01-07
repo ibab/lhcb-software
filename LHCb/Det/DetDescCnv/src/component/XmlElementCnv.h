@@ -57,6 +57,7 @@ protected:
   ( xercesc::DOMElement*  element    ,
     DataObject*& refpObject );
   
+  using XmlGenericCnv::i_fillObj;
   /** Fills the current object for its child element childElement.
    *  Overrides the default method in XmlGenericCnv
    *  @param childElement the child processed here

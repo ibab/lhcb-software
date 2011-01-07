@@ -77,6 +77,7 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
+  using XmlGenericCnv::i_processObj;
   /** This processes the current object.
    * Overrides the default method in XmlGenericCnv
    * @param refpObject the object to be processed

@@ -8,19 +8,19 @@
 inline XmlCnvException::XmlCnvException( const std::string& message , 
                                          const StatusCode & sc      )
   : GaudiException( message , "*XmlCnvException*" , sc )
-{};
+{}
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const std::string    & message ,
                                          const GaudiException & ge      ,
                                          const StatusCode     & sc      )
   : GaudiException( message , "*XmlCnvException*" , sc , ge      )
-{};
+{}
 ////////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const XmlCnvException& right )
   : std::exception(), GaudiException( right )
-{};
+{}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-inline XmlCnvException::~XmlCnvException() throw() {}; 
+inline XmlCnvException::~XmlCnvException() throw() {}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 inline const char*       XmlCnvException::getMessage() const { return message().c_str() ; }
 ///////////////////////////////////////////////////////////////////////////////////////////////////

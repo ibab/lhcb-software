@@ -54,6 +54,7 @@ protected:
   virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
   
+  using XmlGenericCnv::i_fillObj;
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
    * @param childElement the child processed here
@@ -61,9 +62,9 @@ protected:
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-    virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
-                                  DataObject* refpObject,
-                                  IOpaqueAddress* address);
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
   
 private:
 

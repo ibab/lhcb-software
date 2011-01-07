@@ -22,7 +22,6 @@
 
 #include "XmlSurfaceCnv.h"
 
-
 // -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -43,7 +42,7 @@ XmlSurfaceCnv::XmlSurfaceCnv (ISvcLocator* svc) :
   volsecondString = xercesc::XMLString::transcode("volsecond");
   tabpropsString = xercesc::XMLString::transcode("tabprops");
   addressString = xercesc::XMLString::transcode("address");
-};
+}
 
 
 // -----------------------------------------------------------------------
@@ -72,6 +71,10 @@ StatusCode XmlSurfaceCnv::i_createObj (xercesc::DOMElement* element,
   std::string elementName = dom2Std (element->getAttribute (nameString));
   Surface* dataObj= new Surface (elementName);
   refpObject = dataObj;
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
   
   // model 
   {

@@ -764,11 +764,11 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
 
     // frees the memory allocated for the transformations
     {
-      unsigned int i = 0;
-      for (i = 0; i < nD; i++) {
-        if (transformations[i] != 0) {
-          delete (transformations[i]);
-          transformations[i] = 0;
+      unsigned int ii = 0;
+      for (ii = 0; ii < nD; ii++) {
+        if (transformations[ii] != 0) {
+          delete (transformations[ii]);
+          transformations[ii] = 0;
         }
       }
     }
@@ -1442,7 +1442,6 @@ SolidCons* XmlLVolumeCnv::dealWithCons (xercesc::DOMElement* element) {
 // Deal with polycone
 // -----------------------------------------------------------------------
 SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
-  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
   // gets attributes
   std::string startPhiAngleAttribute =
     dom2Std (element->getAttribute (startPhiAngleString));
@@ -1672,6 +1671,10 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
 
   // the result
   Gaudi::Transform3D* result = 0;
+
+#ifdef __INTEL_COMPILER        // Disable ICC remark
+  #pragma warning(disable:177) // handler parameter was declared but never referenced
+#endif
 
   // gets the tag name for childElement
   const XMLCh* tagName = childElement->getNodeName();

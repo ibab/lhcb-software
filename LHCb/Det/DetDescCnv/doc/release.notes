@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2011-01-07 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !================ DetDescCnv v4r11 2009-12-11 =================================
 ! 2009-12-05 - Dmitry GOLUBKOV
  - src/Lib/XmlBaseConditionCnv.cpp: add converter for Histo1D and Histo2D parameters

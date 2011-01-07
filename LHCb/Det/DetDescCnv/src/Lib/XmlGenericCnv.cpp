@@ -680,8 +680,6 @@ XmlGenericCnv::createAddressForHref (std::string href,
     // Then build a new Address
     return createXmlAddress (location, entryName, clid);  
   }
-  // we never come here
-  return 0;
 }
 
 // -----------------------------------------------------------------------

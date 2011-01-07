@@ -241,11 +241,11 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
       dataObj->addIsotope(is, m_itemFraction, false);
     } else {
       itemObj->release();
-      StatusCode stcod;
-      stcod.setCode (INVALID_CLASS_ID);
+      StatusCode sc;
+      sc.setCode (INVALID_CLASS_ID);
       std::string msg =
         "Wrong element or mixture composite, invalid combination";
-      throw XmlCnvException(msg.c_str(),stcod);
+      throw XmlCnvException(msg.c_str(),sc);
     }
   } else {
     // Something goes wrong, does it?

@@ -45,7 +45,7 @@ XmlTabulatedPropertyCnv::XmlTabulatedPropertyCnv (ISvcLocator* svcs) :
   entryString = xercesc::XMLString::transcode("entry");
   xString = xercesc::XMLString::transcode("x");
   yString = xercesc::XMLString::transcode("y");
-};
+}
 
 
 // -----------------------------------------------------------------------

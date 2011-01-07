@@ -190,7 +190,6 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
   char* tagNameString = xercesc::XMLString::transcode(tagName);
   if (CLID (-1) == clsID) {
     // bad CLID
-    MsgStream log (msgSvc(), "XmlCatalogCnv");
     log << MSG::ERROR << tagNameString
         << " : unable to find a CLID for this tag."
         << " This tag may be forbiden as child of catalog."
