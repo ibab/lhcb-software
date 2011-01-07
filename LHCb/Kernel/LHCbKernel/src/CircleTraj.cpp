@@ -2,6 +2,10 @@
 // Include files
 
 // local
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 #include "Kernel/CircleTraj.h"
 
 #include "Math/GenVector/AxisAngle.h"

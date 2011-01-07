@@ -1,8 +1,13 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/ITNames.h"
-#include "boost/lexical_cast.hpp"
-#include <iostream>
 
+// BOOST
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
+  #pragma warning(disable:2259) // non-pointer conversion from "int" to "char" may lose significant bits
+#endif
+#include "boost/lexical_cast.hpp"
+
+#include <iostream>
 
 std::string LHCb::ITNames::UniqueSectorToString(const LHCb::STChannelID& chan) {
   std::string theString = UniqueLayerToString(chan) + SectorToString(chan);

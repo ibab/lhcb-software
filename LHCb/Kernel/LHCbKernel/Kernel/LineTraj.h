@@ -141,6 +141,10 @@ namespace LHCb
 
 } // namespace LHCb
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 /// Constructor from the middle point and a direction vector
 inline LHCb::LineTraj::LineTraj( const Point& middle,
                                  const Vector& dir,

@@ -12,6 +12,10 @@ std::auto_ptr<Trajectory> ParabolaTraj::clone() const
         return std::auto_ptr<Trajectory>(new ParabolaTraj(*this));
 }
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 /// Constructor from a (middle) point, a (unit) direction vector and a curvature
 ParabolaTraj::ParabolaTraj( const Point& point,
                             const Vector& dir,

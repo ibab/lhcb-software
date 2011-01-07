@@ -3,6 +3,9 @@
 #define KERNEL_ALIGNTRAJ_H 1
 
 // Include files
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
 #include "Math/RotationX.h"
 #include "Math/RotationY.h"
 #include "Math/RotationZ.h"

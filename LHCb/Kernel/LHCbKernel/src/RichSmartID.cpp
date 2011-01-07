@@ -16,6 +16,9 @@
 #include "GaudiKernel/GaudiException.h"
 
 // boost
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
+  #pragma warning(disable:2259) // non-pointer conversion from "int" to "char" may lose significant bits
+#endif
 #include "boost/lexical_cast.hpp"
 
 // local
