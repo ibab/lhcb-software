@@ -733,10 +733,7 @@ StatusCode LoKi::Algo::execute ()
   StatusCode sc = analyse() ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from 'analyse()' method" , sc ) ; }
-  /// save everything 
-  this->saveParticles();
-  //  if ( sc.isFailure() ) 
-  //  { return Error ( "DeskTop is not saved"          , sc ) ;}
+
   // clear all LoKi storages at the end 
   clear().ignore () ;
   return StatusCode::SUCCESS ;
