@@ -235,17 +235,13 @@ void FilterDesktop::updateHandler2 ( Property& p )
   debug () << "The histogramming property is updated: " << p << endreq ;
 }  
 // ============================================================================
-StatusCode FilterDesktop::writeEmptyContainerIfNeeded() 
+void FilterDesktop::writeEmptyTESContainers() 
 {
-  const std::string& loc = this->outputLocation();
-  if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " 
-                                    << loc << endmsg ;
   
-  m_cloneFilteredParticles ? 
-    writeEmptyKeyedContainers(loc)  : 
-    writeEmptySharedContainers(loc) ;
-  
-  return StatusCode::SUCCESS;    
+  return m_cloneFilteredParticles ? 
+    writeEmptyKeyedContainers()  : 
+    writeEmptySharedContainers() ;
+
 }
 // ============================================================================
 // construct the preambulo string 
@@ -330,6 +326,11 @@ StatusCode FilterDesktop::updateHistos ()
 // ============================================================================
 StatusCode FilterDesktop::execute ()       // the most interesting method 
 {
+
+  // make sure local storage is cleared whenever we go out of scope.
+  //  DaVinci::Utils::ClearContainerGuard<LHCb::Particle::ConstVector> guard(m_accepted);
+  m_accepted.clear();
+  
   //
   if  ( m_to_be_updated1 ) 
   {
@@ -359,32 +360,29 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   }
   
   // 
-  LHCb::Particle::ConstVector accepted ;
-  accepted.reserve ( particles.size() );
+  m_accepted.reserve ( particles.size() );
   // 
   // Filter particles!!  - the most important line :-) 
-  StatusCode sc = filter ( particles , accepted ) ;
+  StatusCode sc = filter ( particles , m_accepted ) ;
   
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
   {
-    StatusCode sc = m_outputPlots -> fillPlots ( accepted  ) ;
+    StatusCode sc = m_outputPlots -> fillPlots ( m_accepted  ) ;
     if ( sc.isFailure () ) 
     { return Error ( "Error from Output Plots tool", sc ) ; }
   }
   
   // monitor output (if required) 
-  if ( monitor() && !m_postMonitorCode.empty() ) { m_postMonitor ( accepted  ) ; }
+  if ( monitor() && !m_postMonitorCode.empty() ) { m_postMonitor ( m_accepted  ) ; }
   
   // save (clone if needed) accepted particles in TES 
-  LHCb::Particle::Range saved = saveInTES ( accepted ) ;
+  //  LHCb::Particle::Range saved = saveInTES ( accepted ) ;
   
   // make the filter decision
-  setFilterPassed ( !saved.empty() );
+  setFilterPassed ( !m_accepted.empty() );
 
-  // some statistics 
-  counter ( "#input"  ) += particles . size () ;
-  counter ( "#passed" ) += saved     . size () ;
+
   //
   return StatusCode::SUCCESS;
 }
@@ -417,23 +415,24 @@ StatusCode FilterDesktop::filter
 }
 // ============================================================================
 template <class PARTICLES, class VERTICES, class CLONER>
-LHCb::Particle::Range FilterDesktop::_save
-( const LHCb::Particle::Range& p_in ) const 
+StatusCode FilterDesktop::_save ( ) const 
 {
-  //
-  const std::string& outputLocation = this->outputLocation();  
+
   //
   PARTICLES*              p_tes = new PARTICLES () ;
   VERTICES*               v_tes = new VERTICES  () ;
-  Particle2Vertex::Table* table = new Particle2Vertex::Table    ( p_in.size() ) ;
-  //
-  put ( p_tes , outputLocation + "/Particles"                ) ;
-  put ( v_tes , outputLocation + "/decayVertices"                 ) ;
-  put ( table , outputLocation + "/Particle2VertexRelations" ) ;
+  Particle2Vertex::Table* table = new Particle2Vertex::Table    ( m_accepted.size() ) ;
+//   //
+  put ( p_tes , particleOutputLocation()        ) ;
+  put ( v_tes , decayVertexOutputLocation() ) ;
+  put ( table , tableOutputLocation()           ) ;
   //
   CLONER cloner ;
   //
-  for ( LHCb::Particle::Range::iterator ip = p_in.begin () ; p_in.end() != ip ; ++ip ) 
+  LHCb::Particle::Range::iterator ip = m_accepted.begin ();
+  LHCb::Particle::Range::iterator ipEnd = m_accepted.end ();
+
+  for (  ; ip != ipEnd ; ++ip ) 
   {
     //
     const LHCb::Particle* p = *ip ;
@@ -458,9 +457,16 @@ LHCb::Particle::Range FilterDesktop::_save
 
   // commented out due to bug in Gaudi..
   // Gaudi::Utils::GetData<LHCb::Particle::Range> helper ;
-  Gaudi::Utils::GetData<Gaudi::Range_<LHCb::Particle::ConstVector> > helper ;
+  //  Gaudi::Utils::GetData<Gaudi::Range_<LHCb::Particle::ConstVector> > helper ;
   //
-  return LHCb::Particle::Range ( helper.make_range ( p_tes ) ) ;
+
+  // some statistics 
+  counter ( "#input"  ) += i_particles().size () ;
+  counter ( "#passed" ) += p_tes->size () ;
+
+  return (m_accepted.size() != p_tes->size() ) ? StatusCode::FAILURE 
+    : StatusCode::SUCCESS;
+
 }
 // ============================================================================
 namespace 
@@ -481,12 +487,15 @@ namespace
   // ==========================================================================
 }
 // ===========================================================================
-LHCb::Particle::Range FilterDesktop::saveInTES 
-( const LHCb::Particle::Range& particles ) const
+StatusCode FilterDesktop::saveInTES 
+( )
 {
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "FilterDesktop::SaveInTES " << m_accepted.size() << " Particles" << endmsg;
+  }
   return m_cloneFilteredParticles ? 
-    this->_save <LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner> ( particles ) : 
-    this->_save <LHCb::Particle::Selection,LHCb::Vertex::Selection,_Caster> ( particles ) ;
+    this->_save<LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner>( ): 
+    this->_save<LHCb::Particle::Selection,LHCb::Vertex::Selection,_Caster>( );
 }
 // ============================================================================
 void FilterDesktop::cloneP2PVRelation 
@@ -499,13 +508,17 @@ void FilterDesktop::cloneP2PVRelation
     
 }
 // ============================================================================
-void FilterDesktop::writeEmptyKeyedContainers(const std::string& ) const
+void FilterDesktop::writeEmptyKeyedContainers() const
 {
+  LHCb::Particle::Container* container = new LHCb::Particle::Container();
+  put(container, particleOutputLocation());
   return;
 }
 // ============================================================================
-void FilterDesktop::writeEmptySharedContainers(const std::string& ) const
+void FilterDesktop::writeEmptySharedContainers() const
 {
+  LHCb::Particle::Selection* container = new LHCb::Particle::Selection();
+  put(container, particleOutputLocation());
   return;
 }
 // ============================================================================

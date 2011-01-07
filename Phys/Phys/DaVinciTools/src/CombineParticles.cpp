@@ -1031,8 +1031,6 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // reset the "use external input" flag
   m_useInputParticles = false ;
   
-  this->saveParticles() ;
-  
   // the final decision 
   setFilterPassed ( 0 != nTotal ) ;
   

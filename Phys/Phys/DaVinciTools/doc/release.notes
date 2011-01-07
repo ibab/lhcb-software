@@ -4,6 +4,14 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-07 - Juan Palacios
+ - FilterDesktop
+  . Extensive changes to adapt to new DVAlgorithm way of saving data to TES
+    automatically when filterPassed() is true. Use overwritten virtual
+    private methods saveInTES() and writeEmptyContainer().
+ - src/*.cpp
+  . Remove all saveParticles() calls.
+
 ! 2011-01-05 - Juan Palacios
  - PhysDesktop: adapt to removal of some DVAlgorithm public methods.
    This is now partially broken.

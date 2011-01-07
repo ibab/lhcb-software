@@ -80,9 +80,6 @@ StatusCode ConjugateNeutralPID::execute()
     }
   }
 
-  // Save the marked particles to the TES
-  this->saveParticles();
-
   if( !outparts.empty() )
   {
     setFilterPassed( true );

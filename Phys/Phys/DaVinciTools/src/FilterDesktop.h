@@ -174,16 +174,16 @@ protected:
   // ==========================================================================
 protected:
   // ==========================================================================
-  StatusCode writeEmptyContainerIfNeeded() ;
+
   /// Get the related PV of particle and relate it to clone.
   void cloneP2PVRelation
   ( const LHCb::Particle*   particle ,
     const LHCb::Particle*   clone    ,
     Particle2Vertex::Table* table    ) const;
   /// Write empty container if selection fails.
-  void writeEmptyKeyedContainers  ( const std::string& loc ) const;
+  void writeEmptyKeyedContainers  ( ) const;
   /// Write empty container if selection fails.
-  void writeEmptySharedContainers ( const std::string& loc ) const;
+  void writeEmptySharedContainers ( ) const;
   /// Save related PVs that aren't in the TES.
   void saveOrphanRelatedPVs(const Particle2Vertex::Table* table) const;
   // ============================================================================
@@ -191,14 +191,11 @@ private:
   // ============================================================================
   /// save (clone if needed) selected particles in TES 
   template <class PARTICLES, class VERTICES, class CLONER>
-  LHCb::Particle::Range _save
-  ( const LHCb::Particle::Range& particles ) const ;
+  StatusCode _save
+  () const ;
   // ============================================================================
 protected :
-  // ============================================================================
-  /// save (clone if needed) selected particles in TES 
-  LHCb::Particle::Range saveInTES 
-  ( const LHCb::Particle::Range& particles ) const;
+
   // ==========================================================================
   /// get the actual predicate: 
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& predicate() const 
@@ -212,6 +209,16 @@ protected :
   /// CloneFilteredParticles ? 
   void setCloneFilteredParticles ( const bool value ) 
   { m_cloneFilteredParticles = value ; }
+  // ==========================================================================
+private:
+  // ==========================================================================
+  /// save (clone if needed) selected particles in TES 
+  /// Success if number of saved particles == number saved
+  /// to TES.
+  /// Overwritten from DVAlgorithm. Is called automatically.
+  virtual StatusCode saveInTES () ;
+  /// Write empty containers if selection fails.
+  virtual void writeEmptyTESContainers() ;
   // ==========================================================================
 private:
   // ==========================================================================
@@ -234,6 +241,9 @@ private:
   std::string         m_postMonitorCode ;         // (post-monitoring)     code
   /// (post-monitoring) functor 
   LoKi::Types::CutVal m_postMonitor     ;         // (post-monitoring)  functor 
+  // local storage
+  LHCb::Particle::ConstVector m_accepted;
+
   //
   // input plots
   //

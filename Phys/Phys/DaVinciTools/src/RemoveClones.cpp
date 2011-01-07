@@ -120,8 +120,6 @@ StatusCode RemoveClones::execute() {
     verbose() << "Particles sent in: " << NpartIn 
 	      << " | Particles sent out:" << NpartOut << endmsg ;
   }
-  // Save all marked particles in local storage.
-  this->saveParticles();
 
   if(!sc) return sc;
 
