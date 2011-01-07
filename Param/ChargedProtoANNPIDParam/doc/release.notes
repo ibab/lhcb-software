@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-01-07 - Chris Jones
+ - New networks trained on 'official' MC10 data
+
+!------------------------------- v1r0 ----------------------------------------
+
 ! 2010-09-28 - Chris Jones
  - First version. Includes preliminary tuning based on MC2010 data
 
