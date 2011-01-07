@@ -104,6 +104,39 @@ namespace Utils
     T& m_container;
   };
 
+  /**
+   * Call the container's clear() method when going out of scope.
+   *
+   * @author Juan Palacios palacios@physik.uzh.ch
+   * @date 2011-01-07
+   *
+   **/
+  template <class T>
+  class ClearContainerGuard
+  {
+  public:
+    explicit ClearContainerGuard(T& container)
+      :
+      m_container(container)
+    {
+    }
+    
+    ~ClearContainerGuard()
+    {
+      m_container.clear();
+    }
+    
+  private:
+    ClearContainerGuard()
+    {
+    }
+    
+    
+  private:
+    T& m_container;
+    
+  };
+    
 
   class DataObjectGuard
   {

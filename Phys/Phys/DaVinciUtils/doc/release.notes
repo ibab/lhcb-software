@@ -6,6 +6,10 @@
 
 ! 2011-01-03 Juan Palacios
  - DaVinciUtils/Guards.h
+  . Add guard that clears container.
+
+! 2011-01-03 Juan Palacios
+ - DaVinciUtils/Guards.h
   . Clear containers.
  - cmt/requirements
   . Increase to v1r1.
