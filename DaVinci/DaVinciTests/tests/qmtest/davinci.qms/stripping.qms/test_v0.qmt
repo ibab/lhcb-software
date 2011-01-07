@@ -8,7 +8,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-ountParticles                                              SUCCESS Number of counters : 15
+CountParticles                                              SUCCESS Number of counters : 15
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# /Event/Strip/Phys/StrippingK0S"              |      7612 |       1499 |    0.19693 |    0.50455 |      0.0000 |      5.0000 |
  | "# /Event/Strip/Phys/StrippingK0S_noPV"         |      2388 |       3067 |     1.2843 |     1.8188 |      0.0000 |      18.000 |
