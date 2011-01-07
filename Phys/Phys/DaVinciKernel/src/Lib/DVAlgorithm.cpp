@@ -381,22 +381,16 @@ StatusCode DVAlgorithm::sysExecute ()
   counter("#accept") += filterPassed() ;
 
   if (filterPassed()) {
-    always() << "Filter passed: Saving particles "<< endmsg;
     sc = saveInTES();
-  } else {
-    always() << "Filter failed: Not saving particles "<< endmsg;
-  // Make sure each DVAlgorithm has written out something
-    if ( m_forceOutput ) { 
-      this->writeEmptyTESContainers(); }
-    else { 
-      verbose() << "Avoiding mandatory output" << endmsg ; 
-    }
+  } else if ( m_forceOutput ) { 
+    this->writeEmptyTESContainers(); 
   }
   
   // Reset for next event
   m_setFilterCalled = false;
 
   return sc ;
+
 }
 // ============================================================================
 void DVAlgorithm::setFilterPassed  (  bool    state  ) 
