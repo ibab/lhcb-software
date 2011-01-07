@@ -5,6 +5,10 @@
 
 ! 2011-01-06 - Juan Palacios
  - ParticleMakerBase
+  . Call to saveParticles() no longer needed. DVAlgorithm takes care of that.
+
+! 2011-01-06 - Juan Palacios
+ - ParticleMakerBase
   . Small optimisation: reserve size of known-length vector.
 
 ! 2011-01-04 - Juan Palacios

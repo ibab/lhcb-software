@@ -70,7 +70,6 @@ StatusCode ParticleMakerBase::execute()
   }
 
   this->markTrees(constParts);
-  this->saveParticles();
 
   if ( sc.isFailure() ){ return Error( "Not able to save particles" );}
 
