@@ -34,6 +34,9 @@
  *  @author Sebastien Ponce
  */
 // ==============================================================================
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
 /// boolean operation for intervals  
 inline bool operator< ( const ILVolume::Interval& Int , double Length ) 
 { return ( Int.second - Int.first ) <  Length ; }  

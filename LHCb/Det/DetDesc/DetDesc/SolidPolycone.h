@@ -276,8 +276,10 @@ private:
   }
 
   /// gap in phi ?
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
   bool noPhiGap() const { return m_deltaPhiAngle == 360 * Gaudi::Units::degree ; }
-
 private:
   
   Triplets       m_triplets      ; ///< vector of parameters 

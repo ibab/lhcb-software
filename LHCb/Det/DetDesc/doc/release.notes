@@ -5,8 +5,8 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-! 2011-01-06 - Marco Cattaneo
- - Fix icc warnings and many icc remarks
+! 2011-01-07 - Marco Cattaneo
+ - Fix icc warnings and remarks
 
 !====================== DetDesc v18r21 2010-07-19 =============================
 ! 2010-07-13 - Marco Cattaneo

@@ -1,11 +1,14 @@
 // $Id: SolidChild.cpp,v 1.21 2007-12-04 11:43:48 jpalac Exp $ 
 // ===========================================================================
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
 /// Geometry definitions
 #include "GaudiKernel/Transform3DTypes.h" 
 #include "GaudiKernel/Point3DTypes.h" 
 /// DetDesc 
-#include "DetDesc/SolidChild.h" 
 #include "DetDesc/Solid.h"
+#include "DetDesc/SolidChild.h" 
 
 // ============================================================================
 /** @file 

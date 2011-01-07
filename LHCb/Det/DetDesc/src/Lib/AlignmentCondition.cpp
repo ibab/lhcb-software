@@ -9,6 +9,9 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Vector3DTypes.h"
 ///@todo put RotationXYZ.h in GaudiKernel when it is released in MathCore.
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math headers
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
 #include "Math/RotationZYX.h"
 #include "DetDesc/3DTransformationFunctions.h"
 //-----------------------------------------------------------------------------

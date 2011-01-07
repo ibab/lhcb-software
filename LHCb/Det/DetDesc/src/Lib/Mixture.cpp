@@ -230,6 +230,10 @@ StatusCode Mixture::computeByFraction()
   // only update the radiation and interaction length if the attribute is
   // is not provided in the input file
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math headers
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
   if( radiationLength() == 0.0 ) {
     if( radleninv > 0 ) { setRadiationLength( 1.0 / radleninv / density() ); }
   }

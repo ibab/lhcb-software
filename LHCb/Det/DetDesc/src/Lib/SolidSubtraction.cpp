@@ -4,9 +4,12 @@
 #include <iostream> 
 #include <string>
 /** DetDesc */
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+#include "DetDesc/Solid.h"
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidException.h"
-#include "DetDesc/Solid.h"
 
 // ============================================================================
 /** @file 

@@ -8,6 +8,11 @@
 #include <vector> 
 /// GaudiKernel includes 
 #include "GaudiKernel/MsgStream.h"
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math headers
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 /// DetDesc includes

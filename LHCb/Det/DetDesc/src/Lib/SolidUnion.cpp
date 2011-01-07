@@ -3,10 +3,13 @@
 /** STD & STL  */
 #include <iostream> 
 #include <string>
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
 /** DetDesc */ 
+#include "DetDesc/Solid.h"
 #include "DetDesc/SolidUnion.h"
 #include "DetDesc/SolidException.h"
-#include "DetDesc/Solid.h"
 #include "DetDesc/SolidBox.h"
 
 // ============================================================================

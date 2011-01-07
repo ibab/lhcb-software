@@ -9,8 +9,15 @@
 // ============================================================================
 // ROOT 
 // ============================================================================
+#ifdef __INTEL_COMPILER        // Disable ICC remark from Root headers
+  #pragma warning(push)
+  #pragma warning(disable:2259) // non-pointer conversion may lose significant bits
+#endif
 #include "TH1D.h"
 #include "TH2D.h"
+#ifdef __INTEL_COMPILER        // Disable ICC remark from Root headers
+  #pragma warning(pop)
+#endif
 
 namespace DetDesc
 {

@@ -6,6 +6,11 @@
 #include <cmath>
 #include <functional>
 #include <algorithm>
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math headers
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 // Geometry includes 
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
