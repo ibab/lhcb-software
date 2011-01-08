@@ -382,7 +382,9 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // make the filter decision
   setFilterPassed ( !m_accepted.empty() );
 
-
+  // some statistics 
+  counter ( "#passed" ) += m_accepted.size ();
+  
   //
   return StatusCode::SUCCESS;
 }
@@ -460,9 +462,7 @@ StatusCode FilterDesktop::_save ( ) const
   //  Gaudi::Utils::GetData<Gaudi::Range_<LHCb::Particle::ConstVector> > helper ;
   //
 
-  // some statistics 
-  counter ( "#input"  ) += i_particles().size () ;
-  counter ( "#passed" ) += p_tes->size () ;
+
 
   return (m_accepted.size() != p_tes->size() ) ? StatusCode::FAILURE 
     : StatusCode::SUCCESS;
