@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-07 - Juan Palacios
+ - davinci.fixedfile tests fixed for new FilterDesktop counters output.
+
+! 2011-01-07 - Juan Palacios
  - Fix davinci.commonparticles tests. Some "(", "<", ")" doesn't seem to be
    liked in reference blocks.
  - Fix typo in davinci.stripping.test_v0 reference block.
