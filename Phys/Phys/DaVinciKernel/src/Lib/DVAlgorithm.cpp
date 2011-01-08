@@ -403,7 +403,6 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 // ============================================================================
 void DVAlgorithm::writeEmptyTESContainers() 
 {
-  always() << "Writing empty containers" << endmsg;
   LHCb::Particle::Container* container = new LHCb::Particle::Container();
   put(container, particleOutputLocation());
 
@@ -595,13 +594,8 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
 StatusCode DVAlgorithm::saveP2PVRelations() const {
   
   if (!saveP2PV()) {
-  always() << "NOT saving P2PV relations to " 
-           << tableOutputLocation() << endmsg;
     return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
-
-  always() << "Writing P2PV relations to " << tableOutputLocation() << endmsg;
-  
 
   if ( primaryVertices().empty() ) {
     if ( msgLevel ( MSG::DEBUG ) ) { 
