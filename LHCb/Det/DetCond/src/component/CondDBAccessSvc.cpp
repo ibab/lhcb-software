@@ -1020,7 +1020,6 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
             } catch (coral::AttributeException) { // FIXME: COOL bug #38422. To be ignored:
               //it means that the tag exists, but it is not in the node '/'.
             } catch (coral::Exception &e) {
-              MsgStream log(msgSvc(),name());
               report_exception(log,"got CORAL exception",e);
               folders.push_back(f->substr(f->rfind('/')+1));
             }

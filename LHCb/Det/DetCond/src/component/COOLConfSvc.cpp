@@ -1,5 +1,9 @@
 // $Id: COOLConfSvc.cpp,v 1.5 2008-07-10 16:53:26 marcocle Exp $
 
+#ifdef __INTEL_COMPILER // Disable ICC remark from CORAL MessageStream and Boost
+  #pragma warning(disable:2259)
+#endif
+
 // Include files
 #include "RelationalAccess/ConnectionService.h"
 #include "RelationalAccess/IConnectionServiceConfiguration.h"

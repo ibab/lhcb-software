@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LoadDDDB );
+DECLARE_ALGORITHM_FACTORY( LoadDDDB )
 
 
 //=============================================================================
@@ -36,7 +36,7 @@ LoadDDDB::LoadDDDB( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-LoadDDDB::~LoadDDDB() {}; 
+LoadDDDB::~LoadDDDB() {}
 
 //=============================================================================
 // Initialization
@@ -56,7 +56,7 @@ StatusCode LoadDDDB::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -90,7 +90,7 @@ StatusCode LoadDDDB::execute() {
   info() << "done." << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

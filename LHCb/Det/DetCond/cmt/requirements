@@ -33,6 +33,9 @@ apply_pattern     reflex_dictionary                                     \
                   headerfiles=$(DETCONDROOT)/src/dict/DetCondDict.h     \
                   selectionfile=$(DETCONDROOT)/src/dict/DetCondDict.xml \
                   options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append DetCondDict_cppflags "" \
+                       target-icc " -wd2259"
 
 # =========== constituents =====================================================
 library       DetCondLib        Lib/*.cpp

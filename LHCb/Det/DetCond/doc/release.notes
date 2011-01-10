@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !========================= DetCond v12r16 2010-10-28 =========================
 
 ! 2010-10-28 - Marco Clemencic

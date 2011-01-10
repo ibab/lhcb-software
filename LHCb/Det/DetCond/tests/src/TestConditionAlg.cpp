@@ -124,7 +124,7 @@ StatusCode TestConditionAlg::initialize() {
   }
 
   if (m_loadAtInit) {
-    StatusCode sc = updMgrSvc()->update(this);
+    sc = updMgrSvc()->update(this);
     info() << "Conditions loaded at initialize" << endmsg;
     if (sc.isSuccess()){
       i_dump();
@@ -262,5 +262,5 @@ private:
 }
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, TestConditionAlg );
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, FinalizationEvtLoop );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, TestConditionAlg )
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, FinalizationEvtLoop )

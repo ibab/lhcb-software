@@ -47,6 +47,7 @@ public:
   /// Finalize the service
   virtual StatusCode finalize();
 
+  using ConversionSvc::createAddress;
   /// Create an address using explicit arguments to identify a single object.
   virtual StatusCode createAddress (long svc_type,
 				     const CLID& clid,
