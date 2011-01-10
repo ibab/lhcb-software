@@ -245,7 +245,7 @@
        if(m_isReordered&amp;&amp;strip&lt;SENSOR_STRIPS&amp;&amp;m_dataType!=Headers){
          if(m_sensorType==R_SENSOR||m_sensorType==PILE_UP){
            unsigned int processor=strip/PPFPGA_CHANNELS;
-           unsigned int index=strip+DUMMY_CHANNELS*processor;
+           index=strip+DUMMY_CHANNELS*processor;
            adc=m_decodedData[index];
          }else if(m_sensorType==PHI_SENSOR){
            if(strip&lt;INNER_STRIPS){

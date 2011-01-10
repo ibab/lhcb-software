@@ -159,7 +159,14 @@
    >
     <arg type="double" name="value"/>
      <code>
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
+    #pragma warning(push)
+  #endif
       m_processingList=m_processingList^mRAW;
+  #ifdef __INTEL_COMPILER         // End disable ICC remark
+    #pragma warning(pop)
+  #endif
       m_flag=RAW;
       m_rawADCValue=value;
      </code>
@@ -172,7 +179,14 @@
    >
     <arg type="double" name="value"/>
      <code>
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
+    #pragma warning(push)
+  #endif
       m_processingList=m_processingList^mFIR;
+  #ifdef __INTEL_COMPILER         // End disable ICC remark
+    #pragma warning(pop)
+  #endif
       m_flag=FIR;
       m_ADCFIRcorrection=value;
      </code>
@@ -185,7 +199,14 @@
    >
     <arg type="double" name="value"/>
      <code>
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
+    #pragma warning(push)
+  #endif
       m_processingList=m_processingList^mPedestalSubtracted;
+  #ifdef __INTEL_COMPILER         // End disable ICC remark
+    #pragma warning(pop)
+  #endif
       m_flag=PedestalSubtracted;
       m_subtractedPedestal=value;
      </code>
@@ -198,7 +219,14 @@
    >
     <arg type="double" name="value"/>
      <code>
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
+    #pragma warning(push)
+  #endif
       m_processingList=m_processingList^mCMSubtracted;
+  #ifdef __INTEL_COMPILER         // End disable ICC remark
+    #pragma warning(pop)
+  #endif
       m_flag=CMSubtracted;
       m_subtractedCM=value;
      </code>

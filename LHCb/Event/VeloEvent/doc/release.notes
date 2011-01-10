@@ -3,6 +3,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix ICC compiler warnings and remarks
+
 !====================== VeloEvent v16r9 2010-08-25=======================
 ! 2010-08-18 - Tomasz Szumlak
  - add new data object that is a part of the new Velo NZS info service.

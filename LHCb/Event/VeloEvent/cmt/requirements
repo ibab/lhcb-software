@@ -26,6 +26,9 @@ apply_pattern install_more_includes more=VeloEvent
 macro VeloEventObj2Dict_GODflags " -s ../VeloEvent/ " \
       WIN32                       " -s ..\VeloEvent\ "
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append VeloEventDict_cppflags "" \
+                         target-icc " -wd191 -wd654"
 
 end_private
 
