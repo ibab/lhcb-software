@@ -6,6 +6,7 @@ __version__ = "$Id: BaseDSTWriter.py,v 1.12 2010-08-12 11:15:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from GaudiConf.Configuration import *
+from Configurables import FixInputCopyStream
 
 class BaseDSTWriter(ConfigurableUser) :
     """
@@ -123,5 +124,6 @@ class BaseDSTWriter(ConfigurableUser) :
                                  MeasureTime=True)
             self._initOutputStreams(seq)
             seq.Members += self.extendSequence(sel)
+            seq.Members += [FixInputCopyStream()]
             self.addOutputStream(seq)
             self.sequence().Members += [ seq ]

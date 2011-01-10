@@ -9,6 +9,7 @@
    interference problems between OutputStream and InputCopyStream. 
    To guarantee correct InputCopyStream behaviour, place an instance of 
    this algorithm in a sequence such that it runs before each OutputStream.
+ - DSTWriters, DSTWriters.__dev__ modules use FixInputCopyStream.
  - Increase to v1r15.
 
 ! ======================== DSTWriters v1r14 2010-12-20 =======================

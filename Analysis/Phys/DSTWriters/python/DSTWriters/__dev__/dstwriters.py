@@ -5,7 +5,7 @@ __all__ = ('DSTWriterSelectionSequence',
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-from Configurables import GaudiSequencer, RecordStream
+from Configurables import GaudiSequencer, RecordStream, FixInputCopyStream
 
 from copy import copy
 
@@ -25,7 +25,6 @@ class DSTWriterSelectionSequence(object) :
 
         outputStreamConfiguration.name=selSequence.name()
         self.stream = outputStream(outputStreamConfiguration)
-#        self.stream.OutputLevel=3
         self.fsrStream = fsrStream(outputStreamConfiguration)
         self.algos = [selSequence.sequence()]
         if writeFSR :
@@ -36,6 +35,7 @@ class DSTWriterSelectionSequence(object) :
             for _algs in [x(selSequence) for x in extras] :
                 self.algos += _algs
             self.stream.OptItemList += [extras.output]
+        self.algos.append( FixInputCopyStream() )
         self.algos.append(self.stream)
 
     def sequence(self, sequencerType = GaudiSequencer) :
