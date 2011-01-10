@@ -63,9 +63,9 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
         
         def trackprepare(ip,pt,p):
             from HltLine.HltDecodeRaw import DecodeIT
-            from Hlt1Lines.Hlt1GECs import Hlt1GEC
+            from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
             from HltTracking.Hlt1TrackUpgradeConf import Forward
-            return [ Hlt1GEC(),
+            return [ Hlt1GECLoose(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
