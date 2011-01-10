@@ -1,3 +1,7 @@
+2011-01-10  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: "disabled" parameter for projects
+
 2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbRelease/python/LbRelease/rcs.py:

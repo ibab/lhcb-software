@@ -48,6 +48,7 @@ class LHCbProjectBuilder(object):
         self.cmtCommand = 'cmt -disable_warnings'
         self.getpackCommand = 'getpack --no-config --batch -p anonymous'
         self.pythonCommand = 'python '
+        self.coverityPath = '/build/axel/Coverity/cov-sa/bin/'
         self.status = 0
 
         from LbConfiguration.Project import project_names as listOfProjectNames
@@ -62,6 +63,7 @@ class LHCbProjectBuilder(object):
         self.project = slot.getProject(proj)
         self.projName = self.projectNamesDict[proj.upper()]
         self.tagName = tag
+        self.disabled = self.project.getDisabledFlag()
         self.config = conf
         self.plat = platIn
         if self.plat.find('win') != -1:
@@ -94,6 +96,9 @@ class LHCbProjectBuilder(object):
             shutil.rmtree(os.sep.join([self.slot.buildDir(), projectName]), ignore_errors=True)
 
     def buildProject(self):
+        if self.disabled:
+            print "[LHCb] project skipped (disabled=True)"
+            return
         print "[LHCb] buildProject: start"
         self.cleanBuildDir(self.project.getName())
         cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
@@ -111,7 +116,7 @@ class LHCbProjectBuilder(object):
     # --------------------------------------------------------------------------------
 
     def setupProj(self):
-        """ call this again if any of the (input) paramaters change """
+        """ call this again if any of the (input) parameters change """
 
         print "[LHCb] setupProj"
         pass
@@ -259,7 +264,7 @@ class LHCbProjectBuilder(object):
         # apply changes to current project's 'project.cmt' file according to previous project in the slot and <dependence> entities
         deps = self.project.getDependences()
         projs = {}
-        for p in self.slot.getProjects():
+        for p in self.slot.getProjects(hideDisabled=True):
             if p.getName().upper() == self.project.getName().upper(): break
             projs[p.getName().upper()] = p.getTag()
         for line in reader:
@@ -273,7 +278,7 @@ class LHCbProjectBuilder(object):
 
         # apply changes of previous projects AND the CURRENT PROJECT in the slot to current project's 'requirements' file
         previousChangesMade = {}
-        for p in self.slot.getProjects():
+        for p in self.slot.getProjects(hideDisabled=True):
             if p.getName().upper() == 'LCGCMT': continue
             if p.getName().upper() == self.project.getName().upper(): break
             pklFile = file(os.path.join(self.generatePath(self.slot, p, 'TAG', self.projName), 'changesMade-' + os.environ['CMTCONFIG'] + '.pkl'), 'rb')
@@ -317,7 +322,7 @@ class LHCbProjectBuilder(object):
 
     def build(self):
         print "[LHCb] build"
-        
+
         if 'COVERITY' in os.environ.get('CMTEXTRATAGS',''):
             self.coverityBuild = True
             newExtraTags = os.environ.get('CMTEXTRATAGS','').replace('COVERITY','').replace(',,', ',')
@@ -327,7 +332,7 @@ class LHCbProjectBuilder(object):
             derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS'])
         else:
             self.coverityBuild = False
-        
+
         os.environ['CMTCONFIG'] = self.plat
         logdir = os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'logs'])
         if not os.path.exists(logdir):
@@ -336,7 +341,7 @@ class LHCbProjectBuilder(object):
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
-        
+
         if '-icc' in os.environ['CMTCONFIG']:
             self.iccSetup()
             os.environ['CMTEXTRATAGS'] = os.environ['CMTEXTRATAGS'].replace('use-distcc,','').replace('use-distcc','')
@@ -387,7 +392,7 @@ class LHCbProjectBuilder(object):
             os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
         else:
             os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            
+
         if self.coverityBuild is True:
             #make list of derived model files in 'derivedModelsDir':
             if os.path.exists(derivedModelsDir):
@@ -402,7 +407,7 @@ class LHCbProjectBuilder(object):
 
             self.system('echo "(1) ***************************************************"')
             self.system('echo "(1) cov-build --dir %s/INT make -j 20 -l 16"' % (coverityDir))
-            returnCode = self.system('cov-build --dir %s/INT make -j 20 -l 16' % (coverityDir))
+            returnCode = self.system('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir))
             self.system('echo "(1) RETURN CODE: %s"' % str(returnCode))
             if returnCode == 0:
                 if os.path.exists('../../strip-path.list'):
@@ -412,10 +417,10 @@ class LHCbProjectBuilder(object):
                 file('../../strip-path.list','w').write('%s --strip-path %s/ --strip-path %s/' % (prev, self.generatePath(self.slot, self.project, 'TAG', self.projName),self.generatePath(self.slot, self.project, 'TAG', self.projName.upper()) ) )
                 self.system('echo "(2) ***************************************************"')
                 self.system('echo "(2) cov-analyze --dir %s/INT -j 4 --enable-callgraph-metrics --enable-parse-warnings --all %s"' % (coverityDir, derivedModelsList))
-                self.system('cov-analyze --dir %s/INT -j 4 --enable-callgraph-metrics --enable-parse-warnings --all %s' % (coverityDir, derivedModelsList))
+                self.system('%scov-analyze --dir %s/INT -j 4 --enable-callgraph-metrics --enable-parse-warnings --all %s' % (self.coverityPath, coverityDir, derivedModelsList))
                 self.system('echo "(3) ***************************************************"')
                 self.system('echo "(3) cov-collect-models --dir %s/INT -of %s/%s.xmldb"' % (coverityDir, derivedModelsDir, covName))
-                self.system('cov-collect-models --dir %s/INT -of %s/%s.xmldb' % (coverityDir, derivedModelsDir, covName))
+                self.system('%scov-collect-models --dir %s/INT -of %s/%s.xmldb' % (self.coverityPath ,coverityDir, derivedModelsDir, covName))
                 self.system('echo "(4) ***************************************************"')
                 pp = file('/afs/cern.ch/user/l/lhcbsoft/private/init').readlines()[0].replace('\n','')
                 #self.system('echo "(4) export COVERITY_PASSPHRASE=...%s... ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s `cat ../../strip-path.list` `cat %s/INT/c/output/commit-args.txt`"' % (str(len(pp)), covName, coverityDir))
@@ -500,6 +505,12 @@ class LHCbProjectBuilder(object):
     def install(self):
         print "[LHCb] install"
         import checkLogFiles
+        ### temporary fix ###
+        from LbConfiguration.Platform import binary_list
+        binary_list = binary_list + ["x86_64-slc5-icc11-dbg"]
+        import LbConfiguration
+        LbConfiguration.Platform.binary_list = binary_list
+        #####################
         from LbConfiguration.Platform import pathBinaryMatch
         from LbConfiguration.Platform import pathSharedMatch
 
@@ -909,10 +920,12 @@ class LHCbServer(BaseServer.Server):
                 return 0
     def getWorkUnit(self,configuration):
         import LbConfiguration.Platform
+        today = datetime.date.today().strftime('%a')
         self.readConfigurationFile(self.cfgFile, self.cfgContents)
         jobs = []
         for slotObj in self.conf._slotList:
             if slotObj.getDisabled() is True: continue
+            if today not in slotObj.getDays(): continue
             for plObj in slotObj.getPlatforms():
                 #check "waitfor" flag, if False, skip this (slot, platform)
                 plName = plObj.getName()
