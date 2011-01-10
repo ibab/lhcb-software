@@ -205,5 +205,5 @@ namespace VeloTELL1{
   typedef std::map<unsigned int, SumThresholdsVec> SumThresholdsMap;
   typedef std::map<unsigned int, BoundaryStripVec> BoundaryStripMap;
 
-};
+}
 #endif // VELOTELL1CORE_H

@@ -2,6 +2,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix trivial ICC remark
+
 !====================== Tell1Kernel v1r11 2010-05-21 ======================
 ! 2010-05-19 - Mark Tobin
  - modified STTell1Core.h to compile on windows
