@@ -280,9 +280,8 @@ bool DeVeloRType::isCutOff(double x, double y) const
   double epsilon=1.E-9;
   if(m_cornerX1 - epsilon > x) return true;
   if(m_cornerX1 - epsilon <= x && x <= m_cornerX2 + epsilon) {
-    y = fabs(y);
     double yMax=m_gradCutOff*x+m_intCutOff;
-    if(yMax > y) {
+    if(yMax > fabs(y)) {
       return true;
     }
   }
