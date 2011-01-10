@@ -5,6 +5,10 @@
 !============================================================================
 
 ! 2011-01-10 - Juan Palacios
+ - DVAlgorithm
+  . Check that full particle tree is in TES after saving. If it isn't, return
+    StatusCode::FAILURE, since this shouldn't happen and could mean a 
+    memory leak.
  - Kernel/ParticlePredicates
   . Simple LHCb::Particle unary predicates. The interface class should be moved
     elsewhere.
