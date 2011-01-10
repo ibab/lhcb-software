@@ -81,13 +81,14 @@ double Gaudi::Math::blind
   const double       maxv ) 
 {
   //
-  if      ( minv == maxv ) { return minv ; }
-  else if ( minv  > maxv ) { return blind ( name , maxv , minv ) ; }
-  //
-  return 0.5 * ( minv + maxv ) + 0.5 * ( maxv - minv ) *  _blind_ ( name ) ;
+  if      ( minv  > maxv ) {
+    return blind ( name , maxv , minv ) ;
+  }
+  else if ( minv < maxv ) {
+    return 0.5 * ( minv + maxv ) + 0.5 * ( maxv - minv ) *  _blind_ ( name ) ;
+  }
+  else { return minv ; }
 }
-
-
 
 // ============================================================================
 // The END 

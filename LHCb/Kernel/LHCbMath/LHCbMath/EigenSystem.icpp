@@ -56,9 +56,9 @@ inline void Gaudi::Math::GSL::_copy
     gsl_matrix_set ( output , i , i , _val ) ;
     for ( unsigned int j = i + 1 ; j < D ; ++j ) 
     { 
-      const double _val = input(i,j) ;
-      gsl_matrix_set ( output , i , j , _val ) ; 
-      gsl_matrix_set ( output , j , i , _val ) ; 
+      const double _val2 = input(i,j) ;
+      gsl_matrix_set ( output , i , j , _val2 ) ; 
+      gsl_matrix_set ( output , j , i , _val2 ) ; 
     } 
   }
 } 
@@ -75,7 +75,7 @@ Gaudi::Math::GSL::EigenSystem::eigenValues
   StatusCode sc = eigenValues ( mtrx , result , sorted ) ;
   if ( sc.isFailure() ) { Exception ( sc ) ; }
   return result ;
-} ;
+}
 // ============================================================================
 // evaluate the eigenvalues of symmetrical matrix 
 // ============================================================================
@@ -94,7 +94,7 @@ Gaudi::Math::GSL::EigenSystem::eigenValues
   // copy the vector 
   _copy ( m_vector , vals ) ;
   return StatusCode::SUCCESS ;                               // RETURN 
-} ;
+}
 // ============================================================================
 // evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
 // ============================================================================
@@ -143,7 +143,7 @@ Gaudi::Math::GSL::EigenSystem::eigenVectors
     { (vecs[i])[j] = gsl_matrix_get ( m_evec , j , i ) ; } 
   } 
   return StatusCode::SUCCESS ;  
-} ;
+}
 // ============================================================================
 // fill the internal structures with the input data 
 // ============================================================================
@@ -159,7 +159,7 @@ Gaudi::Math::GSL::EigenSystem::_fill
   _copy ( mtrx , m_matrix ) ;
   //
   return StatusCode::SUCCESS ;                               // RETURN 
-} ;
+}
 // ============================================================================
 
 // ============================================================================

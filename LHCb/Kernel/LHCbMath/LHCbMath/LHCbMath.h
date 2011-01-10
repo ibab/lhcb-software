@@ -230,8 +230,16 @@ namespace LHCb
       ( const long double v1 ,
         const long double v2 ) const
       { 
+using namespace std;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) //  non-pointer conversion may lose significant bits
+  #pragma warning(push)
+#endif
         return  m_cmp ( static_cast<double> ( v1 ) , 
                         static_cast<double> ( v2 ) ) ; 
+#ifdef __INTEL_COMPILER         // End disable ICC remark
+  #pragma warning(pop)
+#endif
       }
       // ======================================================================
     private :

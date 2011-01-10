@@ -245,9 +245,16 @@ namespace Gaudi
         // ====================================================================        
       public:
         // ====================================================================
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) //  non-pointer conversion may lose significant bits
+  #pragma warning(push)
+#endif
         /// the only on eessential method 
         inline TYPE operator() ( const TYPE v ) const 
         { return static_cast<TYPE> ( (v/val1) % val2 ) ; }
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(pop)
+#endif
         // ====================================================================
       private:
         // ====================================================================
@@ -439,6 +446,10 @@ namespace Gaudi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-09
      */
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) //  non-pointer conversion may lose significant bits
+  #pragma warning(push)
+#endif
     template <class TYPE>
     inline TYPE digits ( const TYPE         value , 
                          const unsigned int N1    ,
@@ -474,6 +485,9 @@ namespace Gaudi
       return static_cast<TYPE>( (val/aux1)%aux2 ) ;                   // RETURN
       // ======================================================================
     }
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(pop)
+#endif
     // ========================================================================
   } // end of namespace Gaudi::Math
 } // end of namespace Gaudi

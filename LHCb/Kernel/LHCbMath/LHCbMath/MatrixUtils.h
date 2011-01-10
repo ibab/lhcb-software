@@ -357,7 +357,7 @@ namespace Gaudi
     inline std::pair<unsigned int,unsigned int> 
     ind_max_element 
     ( const ROOT::Math::SMatrix<T,D1,D2,R>& m ) 
-    { return ind_max_element ( m , std::less<T>() ) ; } ;
+    { return ind_max_element ( m , std::less<T>() ) ; }
     // ========================================================================
     /** find an index of the minimal element in matrix 
      *  @param m (input) matrix to be studied
@@ -694,7 +694,7 @@ namespace Gaudi
     inline T 
     max_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
-    { return max_diagonal( m , std::less<T>() ) ; } ;    
+    { return max_diagonal( m , std::less<T>() ) ; }
     // ========================================================================
     /** find the maximal diagonal element of the square matrix 
      *
@@ -724,7 +724,7 @@ namespace Gaudi
     inline T 
     min_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
-    { return min_diagonal( m , std::less<T>() ) ; } ;    
+    { return min_diagonal( m , std::less<T>() ) ; }
     // ========================================================================
     /** find the diagonal element of square matrix with maximal absolute value 
      *
@@ -750,7 +750,7 @@ namespace Gaudi
     inline T 
     maxabs_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
-    { return max_diagonal( m , _AbsCompare<T>() ) ; } ;
+    { return max_diagonal( m , _AbsCompare<T>() ) ; }
     // ========================================================================
     /** find the diagonal element of the square matrix with 
      *  the minimal absolute value 
@@ -780,7 +780,7 @@ namespace Gaudi
     inline T 
     minabs_diagonal 
     ( const ROOT::Math::SMatrix<T,D,D,R>& m ) 
-    { return min_diagonal( m , _AbsCompare<T>() ) ; } ;
+    { return min_diagonal( m , _AbsCompare<T>() ) ; }
     // ========================================================================
     /** count the number of elements in matrix, which satisfy the certain criteria
      * 

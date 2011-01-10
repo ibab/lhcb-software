@@ -37,6 +37,9 @@ int main()
   Gaudi::Matrix3x3 eigvects;
   StatusCode sc = eval.eigenVectors( cov , 
                                      eigval, eigvects , true );
+  if( sc.isFailure() ) {
+    std::cout << "Bad StatusCode from eval.eigenVectors = " << sc << std::endl;
+  }
   
   std::cout 
     << " eigenvalues : " << eigval   << std::endl 

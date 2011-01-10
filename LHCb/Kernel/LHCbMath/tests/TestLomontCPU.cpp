@@ -25,6 +25,10 @@
 // =========================================================================
 // Boost 
 // ============================================================================
+using namespace std;
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
+  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+#endif
 #include "boost/progress.hpp"
 // ============================================================================
 /** @file 

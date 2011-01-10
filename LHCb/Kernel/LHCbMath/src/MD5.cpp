@@ -29,6 +29,9 @@
 
 
 using namespace std;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) //  non-pointer conversion may lose significant bits
+#endif
 
 /*
     "The [MD5] algorithm takes as input a message of arbitrary length and
@@ -86,8 +89,8 @@ namespace {
                                                       : 255 ) );
             if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
             return x;
-    };
-};
+    }
+}
 
 Gaudi::Math::MD5
 Gaudi::Math::MD5::createFromStringRep(const std::string& val) { 
@@ -96,7 +99,7 @@ Gaudi::Math::MD5::createFromStringRep(const std::string& val) {
     Gaudi::Math::MD5::value_type d;
     for (size_t i=0;i<sizeof(d);++i) d[i]=(unhex(val[2*i])<<4|unhex(val[2*i+1]));
     return MD5(d);
-};
+}
 
 
 ostream& operator<<(ostream& os, const Gaudi::Math::MD5& x) {

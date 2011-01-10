@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !========================= LHCbMath v3r22 2010-11-27 =========================
 ! 2010-11-14 - Vanya Belyaev
  - add (python) accessor to correlation matrix

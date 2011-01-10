@@ -56,6 +56,7 @@ namespace
   }
   // ==========================================================================
   // fill 4x4 covariance matrix (p3,length)
+  /* (function commented because never referenced, ICC remark #177)
   void fillCov4
   ( Gaudi::SymMatrix4x4&       result          , 
     const Gaudi::SymMatrix4x4& momCovMatrix    ,
@@ -71,6 +72,7 @@ namespace
     { result ( 3, imom ) = lenMomCovMatrix ( imom ) ; }
     //
   }
+  */
   // ==========================================================================
   /// fill 5x5 covariance matrix (p4,length):
   void fillCov5 

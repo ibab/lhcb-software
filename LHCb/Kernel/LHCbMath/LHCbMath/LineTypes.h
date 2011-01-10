@@ -3,8 +3,6 @@
 #define LHCBMATH_LINETYPES_H 1
 
 // Include files
-#include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/Line.h"
 
 /** @file

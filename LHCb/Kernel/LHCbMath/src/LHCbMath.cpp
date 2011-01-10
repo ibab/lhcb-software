@@ -28,6 +28,10 @@
  *  @date 2007-11-27
  */
 // ============================================================================
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+#endif
+
 bool LHCb::Math::knuth_equal_to_double
 ( const double value1  , 
   const double value2  , 

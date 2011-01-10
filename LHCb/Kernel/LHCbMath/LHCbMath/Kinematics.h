@@ -104,7 +104,14 @@ namespace Gaudi
     {
       const double s2m2 = sigma2mass2 ( momentum , covariance ) ;
       const double m2   = momentum.M2 () ;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
       if ( 0 != m2 ) { return 0.25 * s2m2 / m2 ; }                    // RETURN
+#ifdef __INTEL_COMPILER        // End disable ICC remark
+  #pragma warning(pop)
+#endif
       return -1.E+24;                                                 // RETURN 
     }
     // ========================================================================

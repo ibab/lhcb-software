@@ -63,6 +63,9 @@ apply_pattern reflex_dictionary                               \
 #============================================================================
 
 macro_append LHCbMathDict_dependencies   " LHCbMathLib "
+# Disable some compiler remarks in the automatically generated dict code
+macro_append LHCbMathDict_cppflags "" \
+                        target-icc " -wd177 -wd1572 -wd2259"
 
 macro        LHCbMath_use_linkopts $(use_linkopts)
 
