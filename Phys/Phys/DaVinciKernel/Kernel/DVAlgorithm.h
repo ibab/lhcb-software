@@ -703,7 +703,7 @@ private:
         verbose() << "Getting\n" << *iHead << endmsg;
       }
       // Find all descendendant from this particle
-      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts);
+      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts, m_inTES);
     }
 
     return ;
@@ -877,6 +877,9 @@ private:
   std::string m_PVLocation;
   /// Don't use PVs
   bool m_noPVs;
+
+  /// Functor determining if LHCb::Particle is in TES.
+  DaVinci::Utils::ContainedObjectPredicate m_inTES;
 
   ///
   /// Guard class to clear containers and Particle->PV relations table.

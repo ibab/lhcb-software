@@ -4,6 +4,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-10 - Juan Palacios
+ - DaVinciFun
+  . DaVinci::Utils::findDecayTree accepts a unary predicate argument that 
+    decides when to stop navigating down a decay tree branch. The funciton 
+    is now templated on the predicate type. The default is FALSE, meaning the
+    tree traversal is not truncated.
+ - DVAlgorithm
+  . markTrees method truncates tree saving when node is in the TES.
+
 ! 2011-01-07 - Juan Palacios
  - DVAlgorithm
   . Particles saved to TES with virtual private methof saveInTES. This is

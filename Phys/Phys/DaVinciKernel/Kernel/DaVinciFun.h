@@ -10,6 +10,7 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "DaVinciUtils/Functions.h"
+#include "DaVinciUtils/Functors.h"
 /** @namespace DaVinci Kernel/DaVinciFun.h
  *  
  * Collection of free functions used widely in DVAlgorithm 
@@ -88,10 +89,12 @@ namespace DaVinci {
     /// @param head      (INPUT)  The head of the decay.
     /// @param particles (UPDATE) Add particles in the decay.
     /// @param vertices  (UPDATE) Add Vertices in the decay.
-    /// 
+    /// @param truncate           Predicate that decides where to stop recursion. If true, do not follow decay branch.
+    template <class PREDICATE>
     void findDecayTree(const LHCb::Particle*        head,
-		       LHCb::Particle::ConstVector& particles,
-		       LHCb::Vertex::ConstVector&   vertices );
+                       LHCb::Particle::ConstVector& particles,
+                       LHCb::Vertex::ConstVector&   vertices,
+                       PREDICATE& truncate = DaVinci::Utils::FALSE<LHCb::Particle>() );
 
     // ========================================================================
 

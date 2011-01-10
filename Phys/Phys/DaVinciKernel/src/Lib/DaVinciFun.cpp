@@ -52,42 +52,46 @@ namespace DaVinci
     }
 
     // ========================================================================
-
+    template <class PREDICATE> 
     void findDecayTree(const LHCb::Particle*        head,
-		       LHCb::Particle::ConstVector& particles,
-		       LHCb::Vertex::ConstVector&   vertices ) {
+                       LHCb::Particle::ConstVector& particles,
+                       LHCb::Vertex::ConstVector&   vertices,
+                       PREDICATE& truncate)
+    {
 
+      if (truncate(head)) return;
+      
       if ( particles.end() == std::find ( particles.begin() , 
-					  particles.end() , 
-					  head ) ) {
-	particles.push_back ( head ) ; 
+                                          particles.end() , 
+                                          head ) ) {
+        particles.push_back ( head ) ; 
       }
       //
       if ( 0 != head->endVertex() 
-	   && vertices.end() == std::find ( vertices.end() , 
-					    vertices.end() , 
-					    head->endVertex() ) ) {
-	vertices.push_back( head->endVertex() ); // save Vertex
+           && vertices.end() == std::find ( vertices.end() , 
+                                            vertices.end() , 
+                                            head->endVertex() ) ) {
+        vertices.push_back( head->endVertex() ); // save Vertex
       }
   
       // Loop on daughters
       SmartRefVector<LHCb::Particle>::const_iterator iDaughter = 
-	head->daughters().begin(); 
+        head->daughters().begin(); 
       SmartRefVector<LHCb::Particle>::const_iterator iDaughterEnd = 
-	head->daughters().end(); 
+        head->daughters().end(); 
       for ( ; iDaughter!=iDaughterEnd; ++iDaughter){
-	findDecayTree( *iDaughter, particles, vertices );
+        findDecayTree( *iDaughter, particles, vertices, truncate );
       }
   
       // loop over outgoing particles
       if ( 0 != head->endVertex() ) {
-	SmartRefVector<LHCb::Particle>::const_iterator iPart = 
-	  head->endVertex()->outgoingParticles().begin();
-	SmartRefVector<LHCb::Particle>::const_iterator iPartEnd = 
-	  head->endVertex()->outgoingParticles().end();
-	for ( ; iPart!= iPartEnd; ++iPart){
-	  findDecayTree( *iPart, particles, vertices );
-	}
+        SmartRefVector<LHCb::Particle>::const_iterator iPart = 
+          head->endVertex()->outgoingParticles().begin();
+        SmartRefVector<LHCb::Particle>::const_iterator iPartEnd = 
+          head->endVertex()->outgoingParticles().end();
+        for ( ; iPart!= iPartEnd; ++iPart){
+          findDecayTree( *iPart, particles, vertices, truncate );
+        }
       }
   
       return;
