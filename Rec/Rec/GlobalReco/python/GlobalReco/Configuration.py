@@ -8,6 +8,7 @@ __version__ = "$Id: Configuration.py,v 1.12 2010-03-15 16:47:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
+from Configurables import ChargedProtoANNPIDConf
 
 # ----------------------------------------------------------------------------------
 
@@ -16,11 +17,14 @@ from LHCbKernel.Configuration import *
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class GlobalRecoConf(LHCbConfigurableUser):
+
+    ## Possible used Configurables
+    __used_configurables__ = [ ChargedProtoANNPIDConf ]
     
     ## Options
     __slots__ = { "SpecialData"  : []
                   ,"Context":    "Offline"   # The context within which to run
-                  ,"RecoSequencer" : None    # The sequencer to add the ProtoParticle reconstruction algorithms to
+                  ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"TrackTypes"  : [ "Long", "Upstream", "Downstream" ]
                   ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,10] }
@@ -113,18 +117,11 @@ class GlobalRecoConf(LHCbConfigurableUser):
 
         # ANN PID
         if self.getProp("AddANNPIDInfo") :
-            from Configurables import ANNGlobalPID__ChargedProtoANNPIDAlg
-            trackTypes = ["Long","Downstream","Upstream"]
-            pidTypes   = ["Electron","Muon","Pion","Kaon","Proton"]
             nnpidseq = GaudiSequencer("ANNGPIDSeq")
             cseq.Members += [nnpidseq]
-            for track in trackTypes :
-                for pid in pidTypes :
-                    nn = ANNGlobalPID__ChargedProtoANNPIDAlg("ANNGPID"+track+pid)
-                    nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"
-                    if self.isPropertySet("OutputLevel") :
-                        nn.OutputLevel = self.getProp("OutputLevel")
-                    nnpidseq.Members += [nn]
+            annconf = ChargedProtoANNPIDConf()
+            self.setOtherProps(annconf,["OutputLevel","Context"])
+            annconf.RecoSequencer = nnpidseq
 
 ## @class GlobalRecoChecks
 #  Configurable for the Global PID reconstruction MC based checking
@@ -136,7 +133,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
     __slots__ = { "Sequencer"   : None    # The sequencer to add monitors to
                  ,"OutputLevel" : INFO    # The printout level to use
                  ,"Context":    "Offline" # The context within which to run
-                 ,"AddANNPIDInfo" : False
+                 ,"AddANNPIDInfo" : True
                   }
 
     ## Apply the configuration to the given sequence
@@ -153,17 +150,11 @@ class GlobalRecoChecks(LHCbConfigurableUser):
                                     ChargedProtoParticleAddMuonInfo,
                                     ChargedProtoCombineDLLsAlg )
 
-        # Runs these to make sure ProtoParticles have full information available
-        #addrich = ChargedProtoParticleAddRichInfo("CheckChargedProtoPAddRich")
-        #addmuon = ChargedProtoParticleAddMuonInfo("CheckChargedProtoPAddMuon")
-        #combine = ChargedProtoCombineDLLsAlg("CheckChargedProtoPCombDLLs")
-
         # The ntuple maker
         protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
         protoChecker.NTupleLUN = "PROTOTUPLE"
 
         # Fill sequence
-        #protoSeq.Members += [addrich,addmuon,combine]
         protoSeq.Members += [protoChecker]
 
         # The output ntuple ROOT file
@@ -176,12 +167,11 @@ class GlobalRecoChecks(LHCbConfigurableUser):
             annTuple.NTupleLUN = "ANNPIDTUPLE"
             protoSeq.Members += [annTuple]
             NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
+            if self.isPropertySet("OutputLevel"):
+                annTuple.OutputLevel = self.getProp("OutputLevel")
 
         # Set output levels
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
-            #addrich.OutputLevel = level
-            #addmuon.OutputLevel = level
-            #combine.OutputLevel = level
             protoChecker.OutputLevel = level
             

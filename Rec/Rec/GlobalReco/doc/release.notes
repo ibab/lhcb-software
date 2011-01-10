@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 - Chris Jones
+ - Update python Configurable to use the new ANN Configurable from
+   Rec/ChargedProtoANNPID
+
 !========================== GlobalReco v6r33 2010-09-30 =====================
 ! 2010-09-28 - Chris Jones
  - Enable by default the running of the new ANN PID algorithms
