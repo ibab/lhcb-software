@@ -505,12 +505,6 @@ class LHCbProjectBuilder(object):
     def install(self):
         print "[LHCb] install"
         import checkLogFiles
-        ### temporary fix ###
-        from LbConfiguration.Platform import binary_list
-        binary_list = binary_list + ["x86_64-slc5-icc11-dbg"]
-        import LbConfiguration
-        LbConfiguration.Platform.binary_list = binary_list
-        #####################
         from LbConfiguration.Platform import pathBinaryMatch
         from LbConfiguration.Platform import pathSharedMatch
 
@@ -871,7 +865,7 @@ class LHCbProjectBuilder(object):
                 os.environ[x] = envChange[x]
             else:
                 os.environ[x] = "%s%s%s" % (envChange[x], os.pathsep, os.environ[x])
-            
+
 
 import BaseServer
 
