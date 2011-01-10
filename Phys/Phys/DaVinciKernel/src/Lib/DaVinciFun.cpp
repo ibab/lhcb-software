@@ -52,14 +52,13 @@ namespace DaVinci
     }
 
     // ========================================================================
-    template <class PREDICATE> 
     void findDecayTree(const LHCb::Particle*        head,
                        LHCb::Particle::ConstVector& particles,
                        LHCb::Vertex::ConstVector&   vertices,
-                       PREDICATE& truncate)
+                       DaVinci::Utils::IParticlePredicate* truncate)
     {
 
-      if (truncate(head)) return;
+      if (truncate !=0 && (*truncate)(head)) return;
       
       if ( particles.end() == std::find ( particles.begin() , 
                                           particles.end() , 
@@ -98,7 +97,35 @@ namespace DaVinci
 
     }
 
+    bool decayTreeInTES(const LHCb::Particle* head) 
+    {
+      if (!DaVinci::Utils::inTES(head)) return false;
+      // Loop on daughters
+      SmartRefVector<LHCb::Particle>::const_iterator iDaughter = 
+        head->daughters().begin(); 
+      SmartRefVector<LHCb::Particle>::const_iterator iDaughterEnd = 
+        head->daughters().end(); 
+      for ( ; iDaughter!=iDaughterEnd; ++iDaughter){
+        if (!decayTreeInTES( *iDaughter) ) return false;
+      }
+  
+      // loop over outgoing particles
+      if ( 0 != head->endVertex() ) {
+        if (!DaVinci::Utils::inTES(head->endVertex())) return false;
+        SmartRefVector<LHCb::Particle>::const_iterator iPart = 
+          head->endVertex()->outgoingParticles().begin();
+        SmartRefVector<LHCb::Particle>::const_iterator iPartEnd = 
+          head->endVertex()->outgoingParticles().end();
+        for ( ; iPart!= iPartEnd; ++iPart){
+          if (!decayTreeInTES( *iPart)) return false;
+        }
+      }
 
+      return true;
+    }
+    
+
+  
   } // namespace Utils
   
 } // namespace DaVinci 

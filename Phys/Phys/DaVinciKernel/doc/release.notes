@@ -5,11 +5,16 @@
 !============================================================================
 
 ! 2011-01-10 - Juan Palacios
+ - Kernel/ParticlePredicates
+  . Simple LHCb::Particle unary predicates. The interface class should be moved
+    elsewhere.
  - DaVinciFun
+  . DaVinci::Utils::decayTreeInTES checks whether a particle decay tree if
+    fully in the TES. This means checking secondary vertices and decay
+    products.
   . DaVinci::Utils::findDecayTree accepts a unary predicate argument that 
-    decides when to stop navigating down a decay tree branch. The funciton 
-    is now templated on the predicate type. The default is FALSE, meaning the
-    tree traversal is not truncated.
+    decides when to stop navigating down a decay tree branch. The default is 
+    FALSE, meaning the tree traversal is not truncated.
  - DVAlgorithm
   . markTrees method truncates tree saving when node is in the TES.
 
