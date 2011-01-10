@@ -13,7 +13,7 @@ apply_pattern install_more_includes more=DaVinciUtils
 #============================================================================
 # Component library building rule
 #============================================================================
-#library          DaVinciUtils    ../src/*.cpp 
+#library          DaVinciUtilsLib    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
