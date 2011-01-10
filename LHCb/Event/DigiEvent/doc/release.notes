@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 Marco Cattaneo
+ - Fix ICC warnings and remarks
+
 !========================== DigiEvent v2r16 2010-03-17 =======================
 | 2010-02-25 Marcin Kucharczyk
   - Update container location for VeloPixCluster 

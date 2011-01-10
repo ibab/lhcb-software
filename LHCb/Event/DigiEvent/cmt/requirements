@@ -24,3 +24,6 @@ macro_append DigiEventObj2Dict_dependencies DigiEventCustomDict
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append DigiEventDict_cppflags "" \
+                         target-icc " -wd191 -wd1572"
