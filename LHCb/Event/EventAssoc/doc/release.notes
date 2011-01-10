@@ -4,6 +4,9 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix icc warnings
+
 !======================= EventAssoc v5r0 2009-11-13 ========================
 ! 2009-11-13 - Juan Palacios
  - Add dictionaries for 1D tables for LHCb::Particle->int, LHCb::Particle->int

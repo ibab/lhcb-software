@@ -32,3 +32,9 @@ apply_pattern     reflex_dictionary                                  \
                   headerfiles=$(EVENTASSOCROOT)/dict/selMC.h \
                   selectionfile=../dict/selMC.xml            \
                   options="-U__MINGW32__"
+
+# Disable some compiler warnings in the automatically generated dict code
+macro_append EventAssocPhysDict_cppflags "" \
+                              target-icc " -wd191"
+macro_append EventAssocMCDict_cppflags "" \
+                            target-icc " -wd191"
