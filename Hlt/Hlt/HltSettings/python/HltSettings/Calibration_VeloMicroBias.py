@@ -28,7 +28,7 @@ class Calibration_VeloMicroBias :
         """
         Returns a list of active Hlt1 lines
         """
-        return [ 'Hlt1MBMicroBiasRZVelo' ]
+        return [ 'Hlt1MBMicroBiasVelo' ]
 
     def Thresholds(self) :
         """
