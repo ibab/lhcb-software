@@ -4,8 +4,11 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-!========================= GaudiObjDesc v11r10p2 2010-10-25 =========================
+! 2011-01-11 - Marco Cattaneo
+ - In genClasses.py, add generation of #pragma directive to suppress ICC remark 177
+   (variable declared but never referenced) in 'Location' namespace
 
+!========================= GaudiObjDesc v11r10p2 2010-10-25 =========================
 ! 2010-08-24 - Pere Mato
  - Fixed a bug that was visible when several xml files were provided in a single 
    command invocation. Class instantiations and exclusions sections were accumulating.

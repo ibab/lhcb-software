@@ -76,6 +76,9 @@ class genClasses(genSrcUtils.genSrcUtils):
         s2 += '  static const std::string& %s = %s;\n' % ( locAtt['name'], place )
     if len(s2):                                                                  # if found something put namespace around it
       s =  '// Namespace for locations in TDS\n'
+      s += '#ifdef __INTEL_COMPILER        // Disable ICC remark\n'
+      s += '  #pragma warning(disable:177) // variable was declared but never referenced\n'
+      s += '#endif\n'
       s += 'namespace %sLocation {\n%s}\n' % ( classAtt['name'], s2 )
     return s
 #--------------------------------------------------------------------------------
