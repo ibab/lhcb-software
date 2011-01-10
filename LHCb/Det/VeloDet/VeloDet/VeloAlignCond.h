@@ -2,6 +2,7 @@
 #ifndef VELODET_VELOALIGNCOND_H
 #define VELODET_VELOALIGNCOND_H 1
 
+
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -14,6 +15,11 @@
  */
 
 class IMessageSvc;
+
+#ifdef __INTEL_COMPILER        // Disable ICC remark from ROOT GenVector classes
+  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+#pragma warning(push)
+#endif
 
 class VeloAlignCond : public AlignmentCondition {
 
@@ -46,6 +52,7 @@ public:
   /// Initialize the internal structures (transformation matrices)
   virtual StatusCode initialize();
 
+  using AlignmentCondition::update;
   /// Update internal data from another condition.
   virtual void update(ValidDataObject& obj);
 
@@ -93,4 +100,8 @@ private:
   }
 
 };
+#ifdef __INTEL_COMPILER // End disable ICC remark from ROOT GenVector classes
+  #pragma warning(pop)
+#endif
+
 #endif // VELODET_VELOALIGNCOND_H

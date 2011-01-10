@@ -30,6 +30,9 @@
 
 static const CLID CLID_DeVelo = 8100; 
 
+#ifdef __INTEL_COMPILER        // Disable ICC remark
+  #pragma warning(disable:177) // variable was declared but never referenced
+#endif
 namespace DeVeloLocation{
   static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 }

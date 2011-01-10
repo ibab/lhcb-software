@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDetChecker );
+DECLARE_ALGORITHM_FACTORY( VeloDetChecker )
 
 
 //=============================================================================
@@ -160,7 +160,7 @@ void VeloDetChecker::TestAllSensorForwardIterators() {
     debug() << "===> Testing Right Pile Up DeVeloRType container" << endmsg;
     TestRSensorForwardIterators(m_velo->rightPileUpRSensorsBegin(),m_velo->rightPileUpRSensorsEnd());
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of sensor containers
 //==============================================================================
@@ -174,7 +174,7 @@ void VeloDetChecker::TestSensorForwardIterators(std::vector<DeVeloSensor*>::cons
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of R sensor containers
 //==============================================================================
@@ -188,7 +188,7 @@ void VeloDetChecker::TestRSensorForwardIterators(std::vector<DeVeloRType*>::cons
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of Phi sensor containers
 //==============================================================================
@@ -202,7 +202,7 @@ void VeloDetChecker::TestPhiSensorForwardIterators(std::vector<DeVeloPhiType*>::
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Test contents of all sensor containers using reverse iterators
 //==============================================================================
@@ -269,7 +269,7 @@ void VeloDetChecker::TestAllSensorReverseIterators() {
     debug() << "===> Testing Right Pile Up DeVeloRType container" << endmsg;
     TestRSensorReverseIterators(m_velo->rightPileUpRSensorsReverseBegin(),m_velo->rightPileUpRSensorsReverseEnd());
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of sensor containers
 //==============================================================================
@@ -283,7 +283,7 @@ void VeloDetChecker::TestSensorReverseIterators(std::vector<DeVeloSensor*>::cons
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of R sensor containers
 //==============================================================================
@@ -297,7 +297,7 @@ void VeloDetChecker::TestRSensorReverseIterators(std::vector<DeVeloRType*>::cons
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Generic method to test contents of Phi sensor containers
 //==============================================================================
@@ -311,7 +311,7 @@ void VeloDetChecker::TestPhiSensorReverseIterators(std::vector<DeVeloPhiType*>::
                       (*iSens)->z()) 
             << endmsg;
   }
-};
+}
 //==============================================================================
 // Print out a table with numbers of sensors of each type
 //==============================================================================
@@ -337,7 +337,7 @@ void VeloDetChecker::PrintNumberOfSensors() {
   debug() << format("Number of R sensors is:             %d",(m_velo->numberRightRSensors())) << endmsg;
   debug() << format("Number of Phi sensors is:           %d",(m_velo->numberRightPhiSensors())) << endmsg;
   debug() << format("Number of Pile Up sensors is:       %d",(m_velo->numberRightPileUpSensors())) << endmsg;
-};
+}
 //==============================================================================
 // Look at trajectory of first and last strips in each zone of the sensors
 //==============================================================================

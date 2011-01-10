@@ -3,6 +3,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2011-01-10 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !======================== VeloDet v13r12 2010-08-25 ==========================
 
 ! 2010-08-07 - Marco Clemencic

@@ -297,10 +297,10 @@ double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
     phiMin = -acos(m_overlapInX/radius);
     double y=radius*sin(phiMin);
     if(isCutOff(m_overlapInX,y)) {
-      double x,y;
-      intersectCutOff(radius,x,y);
-      y = -y;
-      phiMin=atan2(y,x);
+      double x,yy;
+      intersectCutOff(radius,x,yy);
+      yy = -yy;
+      phiMin=atan2(yy,x);
     }
   } else if(2 == zone){
     phiMin = asin(m_phiGap/radius);
@@ -320,9 +320,9 @@ double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
     phiMax = acos(m_overlapInX/radius);
     double y=radius*sin(phiMax);
     if(isCutOff(m_overlapInX,y)) {
-      double x,y;
-      intersectCutOff(radius,x,y);
-      phiMax=atan2(y,x);
+      double x,yy;
+      intersectCutOff(radius,x,yy);
+      phiMax=atan2(yy,x);
     }
   } else {
     phiMax = phiMaxZone(zone);
