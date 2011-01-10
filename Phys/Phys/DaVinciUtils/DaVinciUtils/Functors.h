@@ -24,14 +24,13 @@ namespace Utils
   typedef std::unary_function<const ContainedObject*, bool> ContainedObjectPredicate;
   
 
-  ///  Functor to check if a DataObject is in the TES.
-  //  template <class T> 
+
+  //template <class T> 
   struct InTES : public std::unary_function<const ContainedObject*, bool> 
   {
 
     inline bool operator() (const ContainedObject* obj) const    
     {
-      std::cout << "DaVinci::Utils::InTES!!!!" << std::endl;
       return ( 0!=obj && 0!=obj->parent()) ;
     }
     
