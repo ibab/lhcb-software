@@ -4,6 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-12-03 - Chris Jones
+ - Add python Configurable specifically for the ANN PID
+ - Add support for Ghost ID networks
+ - Add support for various new ANN input variables
+ - Remove support for 'spike' variables. Usaing them added nothing to 
+   performance and they are ugly in terms of their implementation.
+
 !========================== ChargedProtoANNPID v1r0 2010-09-30 ================
 ! 2010-09-30 - Chris Jones
  - Fix silly bug in environment variable name used to find parameter files.

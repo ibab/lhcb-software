@@ -25,14 +25,17 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDTrainingTuple );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoANNPIDTrainingTuple::ChargedProtoANNPIDTrainingTuple( const std::string& name,
-                                                                  ISvcLocator* pSvcLocator )
+ChargedProtoANNPIDTrainingTuple::
+ChargedProtoANNPIDTrainingTuple( const std::string& name,
+                                 ISvcLocator* pSvcLocator )
   : ChargedProtoANNPIDBase ( name , pSvcLocator ),
     m_truth                ( NULL )
 {
   using namespace boost::assign;
   declareProperty( "Variables",
                    m_variablesS = list_of
+                   // General event variables
+                   ("NumProtoParticles")("NumCaloHypos")
                    // Tracking
                    ("TrackP")("TrackPt")("TrackChi2PerDof")("TrackType")("TrackHistory")
                    ("TrackNumDof")("TrackLikelihood")("TrackGhostProbability")
@@ -44,6 +47,7 @@ ChargedProtoANNPIDTrainingTuple::ChargedProtoANNPIDTrainingTuple( const std::str
                    ("RichAboveKaThres")("RichAbovePrThres")
                    ("RichDLLe")("RichDLLmu")("RichDLLpi")("RichDLLk")("RichDLLp")("RichDLLbt")
                    // MUON
+                   ("InAccMuon")
                    ("MuonMuLL")("MuonBkgLL")("MuonIsMuon")("MuonIsLooseMuon")("MuonNShared")
                    // ECAL
                    ("InAccEcal")("CaloChargedSpd")("CaloChargedPrs")("CaloChargedEcal")
@@ -60,19 +64,6 @@ ChargedProtoANNPIDTrainingTuple::ChargedProtoANNPIDTrainingTuple( const std::str
                    ("CaloBremMatch")("CaloBremChi2")("BremPIDe")
                    // VELO
                    ("VeloCharge")
-                   // 'Spike' variables
-                   ("CombDlleSpike")
-                   ("CombDllmuSpike")                  
-                   ("CaloElectronMatchSpike")
-                   ("CaloBremMatchSpike")
-                   ("BremPIDeSpike")
-                   ("PrsPIDeSpike")
-                   ("HcalPIDeSpike")
-                   ("EcalPIDeSpike")
-                   ("CaloEcalChi2Spike")
-                   ("CaloClusChi2Spike")
-                   ("CaloPrsESpike")
-                   ("CaloBremChi2Spike")
                    );
 }
 

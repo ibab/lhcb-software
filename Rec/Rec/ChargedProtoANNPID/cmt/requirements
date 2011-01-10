@@ -8,7 +8,7 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src python
 
 #============================================================================
 # Used packages.
@@ -25,3 +25,7 @@ use $(use_NB_expert)
 #============================================================================
 library          ChargedProtoANNPID    ../src/*.cpp 
 apply_pattern    component_library library=ChargedProtoANNPID
+
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules

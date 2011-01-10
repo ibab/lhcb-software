@@ -31,7 +31,7 @@ ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
   // JOs
   declareProperty( "Configuration",     m_configFile );
   declareProperty( "TrackSelectorType", m_trSelType = "TrackSelector" );
-  declareProperty( "NetworkVersion",    m_netVersion = "MC2010Tune" );
+  declareProperty( "NetworkVersion",    m_netVersion = "MC10TuneV1" );
   // turn off histos and ntuples
   setProperty( "HistoProduce",   false );
   setProperty( "NTupleProduce",  false );
@@ -92,6 +92,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     else if ( "pion"     == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNpi; }
     else if ( "kaon"     == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNk; }
     else if ( "proton"   == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNp; }
+    else if ( "ghost"    == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNghost; }
     else    { return Error( "Unknown particle type " + particleType ); }
 
     // Read the network type
@@ -149,6 +150,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ghostProp );
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp    );
     sc = sc && release(joSvc);
+    if ( sc.isFailure() ) 
+    { return Error( "Problems setting TrackSelector Properties" ); }
 
     // get an instance of the track selector
     m_trSel = tool<ITrackSelector>( m_trSelType, trSelName, this );
@@ -200,11 +203,22 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     if ( !m_trSel->accept(*(proto->track())) ) continue;
 
     // Track Pre-selection
-    if      ( "TrackPreSelIsLooseMuon" == m_trackPreSel && 
-              getInput(proto,"MuonIsLooseMuon") < 0.5   ) { continue; }
-    else if ( "TrackPreSelIsMuon"      == m_trackPreSel && 
-              getInput(proto,"MuonIsMuon")      < 0.5   ) { continue; }
-    
+    if ( !m_trackPreSel.empty() && "TrackPreSelNone" != m_trackPreSel )
+    {
+      if      ( "TrackPreSelIsLooseMuon" == m_trackPreSel )
+      {
+        if ( getInput(proto,"MuonIsLooseMuon") < 0.5 ) { continue; }
+      }
+      else if ( "TrackPreSelIsMuon"      == m_trackPreSel )
+      {
+        if ( getInput(proto,"MuonIsMuon")      < 0.5 ) { continue; }
+      }
+      else
+      {
+        return Error( "Unknown Track pre-selection '" + m_trackPreSel + "'" );
+      }
+    }
+
     // get the ANN output for this proto
     const double nnOut = m_netHelper->getOutput( proto );
     if ( msgLevel(MSG::VERBOSE) )
@@ -218,7 +232,8 @@ StatusCode ChargedProtoANNPIDAlg::execute()
       Warning( mess.str() ).ignore();
     }
     proto->addInfo( m_protoInfo, nnOut );
-  }
+
+  } // loop over protos
 
 #endif
 
