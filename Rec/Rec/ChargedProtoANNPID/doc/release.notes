@@ -4,11 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Chris Jones
+ - Switch the default ANN configuration version from MC2010Tune to MC10TuneV1
+ - Activate the new Ghost ID network for each track type
+
 ! 2010-12-03 - Chris Jones
  - Add python Configurable specifically for the ANN PID
  - Add support for Ghost ID networks
  - Add support for various new ANN input variables
- - Remove support for 'spike' variables. Usaing them added nothing to 
+ - Remove support for 'spike' variables. Using them added nothing to 
    performance and they are ugly in terms of their implementation.
 
 !========================== ChargedProtoANNPID v1r0 2010-09-30 ================

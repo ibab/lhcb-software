@@ -21,11 +21,9 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  #,"NetworkVersion" : "MC10TuneV1"
-                  ,"NetworkVersion" : "MC2010Tune"
+                  ,"NetworkVersion" : "MC10TuneV1" # Old "MC2010Tune"
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
-                  #,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
-                  ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton"]
+                  ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
                   }
 
     ## Apply the configuration to the given sequence
