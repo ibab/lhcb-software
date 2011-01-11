@@ -15,6 +15,7 @@ Purpose: LHCb reconstruction program
   . #114925: all Calo corrections now taken from CondDB
   . #115007: reduce CaloReco verbosity
   . #115040: New default DDDB tag for real data: head-20101206
+  . #115196: New expert monitoring for ProtoPIDANN
 
 </PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
