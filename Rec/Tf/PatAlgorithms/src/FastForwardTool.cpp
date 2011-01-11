@@ -66,6 +66,8 @@ FastForwardTool::FastForwardTool( const std::string& type,
   declareProperty( "RangePerMeV"           , m_rangePerMeV           =  5250. * Gaudi::Units::GeV );
   declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
   declareProperty( "RangeErrorFraction"    , m_rangeErrorFraction    =  0.60        );
+
+  declareProperty( "WithTTEstimate"        , m_withTTEstimate        = true  );
   declareProperty( "ZTTProj"               , m_zTTProj               =  2500. * Gaudi::Units::mm );
   declareProperty( "ZTTField"              , m_zTTField              =  1750. * Gaudi::Units::mm );
   declareProperty( "MaxTTProj"             , m_maxTTProj             =    10. * Gaudi::Units::mm );
@@ -116,6 +118,17 @@ StatusCode FastForwardTool::initialize ( ) {
     m_debugTool = tool<IPatDebugTool>( m_debugToolName );
   }
 
+  for (unsigned int sta = 0; sta < m_nSta; sta ++){
+    int nb = 0;
+    double avZ = 0.;    
+    for (unsigned int lay = 0; lay< m_nLay; lay += 3){
+      const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,0);
+      nb += 1;
+      avZ += regionB->z();
+    }
+    m_zStation.push_back( avZ/nb );
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -159,7 +172,11 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
                       track.slX(), track.slY(), 1000. * track.qOverP(), m_errY ) << endmsg;
   }
 
-  m_ttOffset = getTTOffset( track, isDebug );
+  if ( m_withTTEstimate ) {
+    m_ttOffset = getTTOffset( track, isDebug );
+  } else {
+    m_ttOffset = 10000.;
+  }
 
   //== Build the initial list of X candidates
 
@@ -584,6 +601,13 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     }
   }
 
+  //== Compute the scale factor for the drift distance
+  double zMag = m_fwdTool->zMagnet( track );
+  double dzRef = m_fwdTool->zReference() - zMag;
+  double scaleT1  = dzRef / (m_zStation[0] - zMag);
+  double scaleT2  = dzRef / (m_zStation[1] - zMag);
+  double scaleT3  = dzRef / (m_zStation[2] - zMag);
+
   PatFwdHits lastGood;
 
   itPrev2 = m_xHitsPerStation[2].begin();
@@ -600,24 +624,36 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     last[0] = itH0;
     last[1] = itH0;
 
-    //== Get a cluster of measurements, taking into account the drift distance.
+    //== cosInv is the correction factor for the drift distance in the projection plane (constant z)
+    double zProj2 = dzRef * dzRef;
+    double dx = (*itH0)->projection() - track.xStraight( zMag );
+    double cosInv = sqrt( (dx*dx + zProj2 ) / zProj2 );
+
+    //== Get a cluster of measurements, taking into account the drift distance. Try right and left solutions form first hit.
     PatFwdHits seeds[2];
+    double matchTol = 0.5;
+    double maxima   = matchTol;
     int iCase = 1;
-    if (  (*itH0)->hit()->type() == Tf::RegionID::OT ) iCase = 2;
-    double startValue = (*itH0)->projection() - (*itH0)->driftDistance();
+    if (  (*itH0)->hit()->type() == Tf::RegionID::OT ) {
+      iCase = 2;
+      matchTol = m_xMatchTol;
+      maxima   = matchTol + m_maxOTDrift;
+    }
+    double startValue = (*itH0)->projection() - (*itH0)->driftDistance() * cosInv * scaleT1;
     double chi2[2];
     while ( 0 < iCase ) {
       --iCase;
-      if ( 0 == iCase ) startValue = (*itH0)->projection() + (*itH0)->driftDistance();
+      if ( 0 == iCase ) startValue = (*itH0)->projection() + (*itH0)->driftDistance() * cosInv * scaleT1;
       seeds[iCase].push_back( *itH0 );
       chi2[iCase] = 0.;
       for ( itH = itH0+1; itH < m_xHitsPerStation[0].end(); ++itH ) {
-        if ( (*itH)->projection() - (*itH)->driftDistance() > startValue + m_xMatchTol + m_maxOTDrift  ) break;
-        double current =  (*itH)->projection() - (*itH)->driftDistance();
-        if ( fabs( (*itH)->projection() + (*itH)->driftDistance() -startValue ) <  fabs( current-startValue ) ) {
-          current = (*itH)->projection() + (*itH)->driftDistance();
+        double drift = (*itH)->driftDistance() * cosInv * scaleT1;
+        if ( (*itH)->projection() - drift > startValue + maxima  ) break;
+        double current =  (*itH)->projection() - drift;
+        if ( fabs( (*itH)->projection() + drift -startValue ) <  fabs( current-startValue ) ) {
+          current = (*itH)->projection() + drift;
         }
-        if ( fabs( current- startValue ) < m_xMatchTol ) {
+        if ( fabs( current- startValue ) < matchTol ) {
           seeds[iCase].push_back( *itH );
           chi2[iCase] += (current-startValue)*(current-startValue);
           if ( isDebug && matchKey( *itH ) ) printDetails = true;
@@ -636,7 +672,7 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     if ( seeds[0].size() == seeds[1].size() && chi2[1] < chi2[0] ) bestCase = 1;
 
     hitsIn0 = seeds[bestCase];
-    startValue = (*itH0)->projection() + (1-2*bestCase) *  (*itH0)->driftDistance();
+    startValue = (*itH0)->projection() + (1-2*bestCase) *  (*itH0)->driftDistance() * cosInv * scaleT1;
 
     if ( printDetails ) info() << "0: size " << seeds[0].size() << " chi2 " << chi2[0]
                                << " 1: size " << seeds[1].size() << " chi2 " << chi2[1]
@@ -647,10 +683,11 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     double projF = 0.;
     double zF    = 0.;
     for ( itH = hitsIn0.begin(); hitsIn0.end() != itH; ++itH ) {
-      double dist = (*itH)->projection() + (*itH)->driftDistance() - startValue;
+      double drift = (*itH)->driftDistance() * cosInv * scaleT1;
+      double dist = (*itH)->projection() + drift - startValue;
       (*itH)->setRlAmb( +1 );
-      if ( dist > (*itH)->driftDistance() ) {
-        dist = dist - 2*(*itH)->driftDistance();
+      if ( dist > drift ) {
+        dist = dist - 2*drift;
         (*itH)->setRlAmb( -1 );
       }
       projF += dist;
@@ -669,12 +706,13 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     if ( printDetails ) info() << "For station 2, between " << projF-spread << " and " << projF + spread << endmsg;
 
     for ( itH2 = itPrev2;  m_xHitsPerStation[2].end() != itH2; ++itH2 ) {
-      if ( (*itH2)->projection()+(*itH2)->driftDistance() < minProj ) {
+      double drift2 = (*itH2)->driftDistance() * cosInv * scaleT3;
+      if ( (*itH2)->projection()+drift2 < minProj ) {
         itPrev2 = itH2;
         continue;
       }
-      if ( (*itH2)->projection() < projF - spread ) continue;
-      if ( (*itH2)->projection() > projF + spread ) break;
+      if ( (*itH2)->projection()+drift2 < projF - spread ) continue;
+      if ( (*itH2)->projection()-drift2 > projF + spread ) break;
       if ( printDetails ) {
         info() << "  end2        ";
         printCoord( *itH2 );
@@ -693,27 +731,28 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
         maxima   = matchTol + m_maxOTDrift;
       }
 
-      double startValue = (*itH2)->projection() - (*itH2)->driftDistance();
+      double startValue = (*itH2)->projection() - drift2;
       while ( 0 < iCase ) {
         --iCase;
-        if ( 0 == iCase ) startValue = (*itH2)->projection() + (*itH2)->driftDistance();
+        if ( 0 == iCase ) startValue = (*itH2)->projection() + drift2;
         seeds[iCase].push_back( *itH2 );
         chi2[iCase] = 0.;
         for ( itH = itH2+1; itH < m_xHitsPerStation[2].end(); ++itH ) {
-          if ( (*itH)->projection() - (*itH)->driftDistance() > startValue + maxima  ) break;
-          double current =  (*itH)->projection() - (*itH)->driftDistance();
-          if ( fabs( (*itH)->projection() + (*itH)->driftDistance() - startValue ) <  fabs( current-startValue ) ) {
-            current = (*itH)->projection() + (*itH)->driftDistance();
+          double drift = (*itH)->driftDistance() * cosInv * scaleT3;
+          if ( (*itH)->projection() - drift > startValue + maxima  ) break;
+          double current =  (*itH)->projection() - drift;
+          if ( fabs( (*itH)->projection() + drift - startValue ) <  fabs( current-startValue ) ) {
+            current = (*itH)->projection() + drift;
           }
           if ( fabs( current- startValue ) < matchTol ) {
             seeds[iCase].push_back( *itH );
             chi2[iCase] += (current-startValue)*(current-startValue);
+            last[iCase] = itH;
             if ( isDebug && matchKey( *itH ) ) printDetails = true;
             if ( printDetails ) {
-              info() << "Added2 iCase " << iCase ;
+              info() << "Added2 iCase " << iCase << format( " dist %7.3f ", current-startValue );
               printCoord( *itH );
             }
-            last[iCase] = itH;
           }
         }
       }
@@ -722,12 +761,14 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       bestCase = 0;
       if ( seeds[0].size() < seeds[1].size() ) bestCase = 1;
       if ( seeds[0].size() == seeds[1].size() && chi2[1] < chi2[0] ) bestCase = 1;
-      startValue = (*itH2)->projection() + (1-2*bestCase) *  (*itH2)->driftDistance();
+      startValue = (*itH2)->projection() + (1-2*bestCase) * drift2;
       hitsIn2 = seeds[bestCase];
       itH2    = last[bestCase];
 
       int nHits = hitsIn0.size() + hitsIn2.size();
       if ( nHits < 3 ) continue;
+
+      //== In full OT acceptance, ask for at least 4 hits in T1 + T3.
       if ( inFullOT && nHits < 4 ) continue;
       if ( fabs(track.slY() ) > 0.010 && fabs( projF ) > 1000. && nHits < 4 ) continue;
 
@@ -737,11 +778,12 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       double projL = 0.;
       double zL    = 0.;
       for ( itH = hitsIn2.begin(); hitsIn2.end() != itH; ++itH ) {
-        double dist = (*itH)->projection() + (*itH)->driftDistance() - startValue;
+        double drift = (*itH)->driftDistance() * cosInv * scaleT3;
+        double dist = (*itH)->projection() + drift - startValue;
         (*itH)->setSelected( true );
         (*itH)->setRlAmb( +1 );
-        if ( dist > (*itH)->driftDistance() ) {
-          dist = dist - 2*(*itH)->driftDistance();
+        if ( dist > drift ) {
+          dist = dist - 2*drift;
           (*itH)->setRlAmb( -1 );
         }
         projL += dist;
@@ -772,14 +814,12 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       
       for ( itH1 = itPrev1; m_xHitsPerStation[1].end() != itH1; ++itH1 ) {
         double pred = projF + projSlope * ( (*itH1)->z() - zF );
-        if ( fabs( (*itH1)->projection() - pred ) - (*itH1)->driftDistance() > xCompat1  ) {
+        if ( fabs( (*itH1)->projection() - pred ) - (*itH1)->driftDistance()*cosInv*scaleT2 > xCompat1  ) {
           if ( (*itH1)->projection() > pred + xCompat1 + m_maxOTDrift ) break;
           if ( (*itH1)->projection() < minProj ) itPrev1 = itH1;
           continue;
         }
-        int amb = +1;
-        if ( (*itH1)->projection() > pred ) amb = -1;
-        (*itH1)->setRlAmb( amb );
+        (*itH1)->setRlAmb( 0 );   // Do not preset it.
         (*itH1)->setSelected( true );
         temp.push_back( *itH1 );
         cntr.addHit( *itH1 );
@@ -820,7 +860,7 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       if ( store ) {
         m_candidates.push_back( aCandidate );
         if ( isDebug ) {
-          info() << "=== Store candidate :" << endmsg;
+          info() << "=== Store candidate : chi2 " << aCandidate.chi2PerDoF() << endmsg;
           printTrack( aCandidate );
         }
       }
@@ -876,7 +916,6 @@ void FastForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doub
 
           PatFwdHit* hit = *itH;
           if ( maxY < hit->hit()->yMin() || minY > hit->hit()->yMax() ) continue;
-
           updateHitForTrack( hit, y0, ty );
 
           double xRef = m_fwdTool->fastXAtReference( track, hit );
@@ -982,22 +1021,21 @@ double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug 
 
   double offset = 10000.;
   LHCb::State state = track.track()->closestState( m_zTTProj );
-  Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
   PatTTHits ttHits;
   double yTol   = 5. * sqrt( state.errY2() + m_zTTProj * m_zTTProj * state.errTy2() );
+  Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
 
   // -- Loop over all the TT hits, get all TT hits whose projection is compatible with the track
   for ( PatTTHits::const_iterator itTT = hits.begin(); hits.end() != itTT; ++itTT ) {
     PatTTHit* tt = *itTT;
-
     double z = tt->z();
     double yPred = state.y() + ( z - state.z() ) * state.ty();
 
     // -- Check if hit is compatible in y with the track
     if( !tt->hit()->isYCompatible( yPred, yTol) ) continue ;
-
     double tyTr = state.ty();
     updateTTHitForTrack( tt, state.y()-state.z()*state.ty(), tyTr );
+ 
     // -- Calculate the projection, which takes possible multiple scattering into account
     double xPred    = state.x() + ( z-state.z() ) * state.tx();
     double projDist = ( tt->x() - xPred ) * ( m_zTTProj - m_zTTField ) / ( z - m_zTTField );
@@ -1179,8 +1217,6 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
       }
     }
     meanProj += sum / sw;
-    if ( isDebug ) info() << "maxDist " << maxDist << endmsg;
-
     if ( maxDist > 1.5 ) {
       if ( isDebug ) {
         info() << format( "MaxD = %7.2f ", maxDist );
@@ -1210,18 +1246,18 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
 
   return true;
 }
-
 //=========================================================================
 //  Debug one TT hit, with MC truth if the tool is defined
 //=========================================================================
 void FastForwardTool::printTTHit( const PatTTHit* hit ) {
-  info() << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d reg%2d typ%2d   ",
+  info() << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d reg%2d planeCode%2d typ%2d   ",
                     hit->z(),
                     hit->projection(),
                     hit->x(),
                     hit->hit()->station(),
                     hit->hit()->layer(),
                     hit->hit()->region(),
+                    hit->planeCode(),
                     hit->hit()->type() );
   if ( 0 != m_debugTool ) {
     LHCb::LHCbID myId =  hit->hit()->lhcbID();

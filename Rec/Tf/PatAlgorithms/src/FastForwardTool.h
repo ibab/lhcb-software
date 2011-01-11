@@ -150,6 +150,7 @@ private:
   double m_rangePerMeV;
   double m_minRange;
   double m_rangeErrorFraction;
+  bool   m_withTTEstimate;
   double m_zTTProj;
   double m_zTTField;
   double m_maxTTProj;
@@ -166,9 +167,7 @@ private:
   double m_stateErrorP;
 
   std::vector<PatFwdHits>  m_xHitsPerStation;
-  PatFwdHits  m_liste;
-  PatFwdHits  m_liste1;
-  PatFwdHits  m_liste2;
+  std::vector<double> m_zStation;
 
   std::vector<PatFwdTrackCandidate> m_candidates;
   double m_ttOffset;

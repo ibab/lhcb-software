@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Olivier Callot
+ - Minor changes to improve efficiency: USe proper scaling for drift distance in X projection
+
 ! 2010-12-17 - Olivier Callot
  - Add an option to define the Forward tool name in PatForward
  - New implementation of the forward tracking, called FastForwardTool.

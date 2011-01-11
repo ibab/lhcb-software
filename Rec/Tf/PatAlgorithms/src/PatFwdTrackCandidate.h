@@ -6,7 +6,6 @@
 #include "Event/Track.h"
 #include "PatKernel/PatForwardHit.h"
 
-
   /** @class PatFwdTrackCandidate PatFwdTrackCandidate.h
    *  Local track candidate. Basically, the Velo track, list of PatTCoord
    *  and T-station track parameters
@@ -206,6 +205,5 @@
 
     double m_chi2PerDoF;
     int    m_nDoF;
-
   };
 #endif // PATFWDTRACKCANDIDATE_H

@@ -66,6 +66,12 @@ public:
 
   double zReference() const { return m_zReference; }
 
+  double zMagnet( PatFwdTrackCandidate& track )  {
+    return  ( m_zMagnetParams[0] +
+              m_zMagnetParams[2] * track.slX2() +
+              m_zMagnetParams[4] * track.slY2() );
+  }
+
   const std::vector<double>& zOutputs() const { return m_zOutputs; }
 
   bool fitXCandidate( PatFwdTrackCandidate& track,
