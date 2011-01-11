@@ -1199,12 +1199,12 @@ StatusCode DeCalorimeter::getNumericGains( )  {
   MsgStream msg( msgSvc(), m_caloDet + ".NumericGains" );
   
   // check conditions
-  if ( !hasCondition("NumericGains") )return StatusCode::SUCCESS; // numericGains not mandatory (assume deltaGain = 1.)
+  if ( !hasCondition("NumericGains") )return StatusCode::SUCCESS; // numericGains not mandatory
 
   
   // check array
   if ( !m_numericGains->exists( "data" ) || !m_numericGains->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume cte = 0" << endmsg;
+    msg << MSG::DEBUG << "No 'data' in 'NumericGains' condition : will assume cte = 0" << endmsg;
     return StatusCode::SUCCESS;
   }
   int size = m_numericGains->paramAsInt( "size" );
@@ -1217,6 +1217,7 @@ StatusCode DeCalorimeter::getNumericGains( )  {
     int ng     = data[ll+1];
 
     LHCb::CaloCellID id = LHCb::CaloCellID( cell );
+    id.setCalo( m_caloIndex );
     //get cell
     if( m_cells[id].valid() ){
       m_cells[id].setNumericGain( ng );
