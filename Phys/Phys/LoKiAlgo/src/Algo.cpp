@@ -368,7 +368,7 @@ StatusCode LoKi::Algo::save
   if( 0 == particle ) 
   { return Error("save('"+tag+"'): invalid particle could not be saved!") ; }
   
-  const LHCb::Particle* saved = this->cloneAndMark( particle );
+  const LHCb::Particle* saved = this->cloneAndMarkTree( particle );
   
   if( 0 == saved ) { return Error("Particle '"+tag+"' is not kept! " ) ; }
   

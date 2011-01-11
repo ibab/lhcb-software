@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-11 - Juan Palacios
+ - Adapt to changes in DVAlgorithm protected methods.
+
 ! 2011-01-04 - Juan Palacios
  - LoKi::Algo
   . Remove call to saveParticles(). DVAlgorithm takes care of that now.
