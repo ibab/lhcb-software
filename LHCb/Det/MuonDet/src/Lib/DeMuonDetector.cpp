@@ -720,7 +720,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   double xcenter_gap=xcenter_norma*2*dx-dx;
   double ycenter_gap=ycenter_norma*2*dy-dy;
 
-  Gaudi::XYZPoint globChCenter= myChPtr->geometry()->toGlobal( Gaudi::XYZPoint(0,0,0));
+  //  Gaudi::XYZPoint globChCenter= myChPtr->geometry()->toGlobal( Gaudi::XYZPoint(0,0,0));
 
 
   Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);   
@@ -744,7 +744,7 @@ StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
   //Convert chamber number into a tile
   tile = m_chamberLayout->tileChamberNumber(station,region,chaNum);
   return sc;
-};
+}
 
 
 void DeMuonDetector::fillGeoInfo()
@@ -801,12 +801,12 @@ void DeMuonDetector::fillGeoInfo()
                   //Retrieve the chamber box dimensions  
                   const SolidBox *box = dynamic_cast<const SolidBox *>
                     (geoGap->solid());
-                  double dx = box->xHalfLength();
-                  double dy = box->yHalfLength();
-                  double dz = box->zHalfLength();
-                  m_sensitiveAreaX[station*4+region]=2*static_cast<float>(dx);
-                  m_sensitiveAreaY[station*4+region]=2*static_cast<float>(dy);
-                  m_sensitiveAreaZ[station*4+region]=2*static_cast<float>(dz);
+                  float dx = static_cast<float>(box->xHalfLength());
+                  float dy = static_cast<float>(box->yHalfLength());
+                  float dz = static_cast<float>(box->zHalfLength());
+                  m_sensitiveAreaX[station*4+region]=2*dx;
+                  m_sensitiveAreaY[station*4+region]=2*dy;
+                  m_sensitiveAreaZ[station*4+region]=2*dz;
                   area=4*dx*dy;
                   m_areaChamber[station*4+region]=area;
                   gaps++;  
@@ -1044,7 +1044,7 @@ void DeMuonDetector::fillGeoInfo()
   m_phCardiacORNY[0][19]=1;
 
   return;
-};
+}
 
 void DeMuonDetector::fillGeoArray()
 {
@@ -1250,7 +1250,7 @@ DetectorElement* DeMuonDetector::Tile2Station(LHCb::MuonTileID aTile)
   char stationName[10];
 
   unsigned int istat = aTile.station();
-  sprintf(stationName,"/M%d",istat+1);
+  sprintf(stationName,"/M%u",istat+1);
   std::string stationPath = DeMuonLocation::Default+stationName;
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
@@ -1285,7 +1285,7 @@ DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
   char stationName[10];
 
   unsigned int istat = getStation(myPoint.z());
-  sprintf(stationName,"/M%d",istat+1);
+  sprintf(stationName,"/M%u",istat+1);
   std::string stationPath = DeMuonLocation::Default+stationName;
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);

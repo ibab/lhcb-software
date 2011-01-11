@@ -38,6 +38,7 @@ public:
 
 protected:
 
+  using XmlUserConditionCnv<MuonL1Board>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -122,7 +123,7 @@ XmlMuonL1BoardCnv::~XmlMuonL1BoardCnv() {
   xercesc::XMLString::release((XMLCh**)&TSLayoutXString);
   xercesc::XMLString::release((XMLCh**)&TSLayoutYString);  
 
-}; 
+}
 
 
 StatusCode 
@@ -135,9 +136,9 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
   
   
   if (0 == xercesc::XMLString::compareString(L1String, tagName)) {
-    const std::string  L1Name =
-      dom2Std(childElement->getAttributes()->getNamedItem(L1NameString)
-              ->getNodeValue());
+    //const std::string  L1Name =
+    //  dom2Std(childElement->getAttributes()->getNamedItem(L1NameString)
+    //          ->getNodeValue());
     const std::string  L1Number = dom2Std(childElement->
                                           getAttributes()->
                                           getNamedItem(L1NumberString)

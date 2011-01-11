@@ -19,7 +19,7 @@ MuonTSMap::MuonTSMap(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonTSMap::~MuonTSMap() {}; 
+MuonTSMap::~MuonTSMap() {}
 
 //=============================================================================
 StatusCode MuonTSMap::initialize(long num, long gridx[2],long gridy[2]) {
@@ -38,7 +38,7 @@ StatusCode MuonTSMap::initialize(long num, long gridx[2],long gridy[2]) {
   }
   
   return StatusCode::SUCCESS;  
-};
+}
 
 
 StatusCode MuonTSMap::update(long output,std::vector<long> lay,
@@ -51,7 +51,4 @@ StatusCode MuonTSMap::update(long output,std::vector<long> lay,
   m_OutputGridYSequence=gridy; 
   m_OutputSynchSequence=synch; 
   return StatusCode::SUCCESS;  
-};
-
-
-
+}

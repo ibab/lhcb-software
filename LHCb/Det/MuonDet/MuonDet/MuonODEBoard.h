@@ -26,7 +26,9 @@ public:
   inline static  const CLID& classID() {
     return CLID_MuonODEBoard;
   }
+  using Condition::initialize;
   void initialize(long number,long region);  
+  using Condition::update;
   StatusCode update(long tslayx,long tslayy, long tsnumb, 
                     std::vector<long> gridx, std::vector<long> gridy,
                     std::vector<long> quadrant);  

@@ -23,13 +23,13 @@ MuonStationCabling::MuonStationCabling(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonStationCabling::~MuonStationCabling() {}; 
+MuonStationCabling::~MuonStationCabling() {}
 
 //=============================================================================
  StatusCode MuonStationCabling::update(long l1numb){
   m_numberOfL1Board=l1numb;
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode MuonStationCabling::addL1Name(std::string name)
 {
@@ -41,7 +41,7 @@ StatusCode MuonStationCabling::addL1Name(std::string name)
     return StatusCode::FAILURE;
 
   }
-};
+}
 
 /// update constructor, do a deep copy of all
 /// except for the properties of a generic DataObject

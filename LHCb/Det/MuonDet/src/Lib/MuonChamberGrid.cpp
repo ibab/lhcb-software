@@ -31,7 +31,7 @@ MuonChamberGrid::MuonChamberGrid() {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonChamberGrid::~MuonChamberGrid() {}; 
+MuonChamberGrid::~MuonChamberGrid() {}
 
 //=============================================================================
 StatusCode MuonChamberGrid::initialize(){

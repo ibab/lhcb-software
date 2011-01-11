@@ -24,8 +24,9 @@ public:
   inline static  const CLID& classID() {
     return CLID_MuonTSMap;
   }
+  using Condition::initialize;
   StatusCode initialize(long num, long gridx[2],long gridy[2]);
-  
+  using Condition::update;  
   StatusCode update(long output,std::vector<long> lay,
                     std::vector<long> gridx,std::vector<long> gridy,
                     std::vector<long> synch);

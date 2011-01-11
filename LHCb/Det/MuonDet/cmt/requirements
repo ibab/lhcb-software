@@ -33,3 +33,6 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(MUONDETROOT)/dict/MuonDetDict.h     \
                   selectionfile=$(MUONDETROOT)/dict/MuonDetDict.xml \
                   options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append MuonDetDict_cppflags "" \
+                       target-icc " -wd654"

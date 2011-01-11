@@ -17,6 +17,10 @@
 #include <iostream>
 #include <vector>
 
+#ifdef __INTEL_COMPILER       // Disable ICC remark from ROOT
+  #pragma warning(disable:68) // Integer conversion resulted in a change of sign 
+#endif
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonChamberLayout
 //
@@ -605,8 +609,8 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
           itRg++){
 
         //Are there any void Regions?
-        std::string name=((*itRg)->name()).c_str();
-        int start=(DeMuonLocation::Default).size();
+        name=((*itRg)->name()).c_str();
+        start=(DeMuonLocation::Default).size();
         std::string substringSta;
         substringSta.assign(name,start,3);
         std::string substringReg;

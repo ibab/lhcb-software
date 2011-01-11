@@ -24,7 +24,7 @@ MuonODEBoard::MuonODEBoard(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonODEBoard::~MuonODEBoard() {}; 
+MuonODEBoard::~MuonODEBoard() {}
 
 //=============================================================================
 StatusCode MuonODEBoard::update(long tslayx,long tslayy, long tsnumb, 
@@ -40,7 +40,7 @@ StatusCode MuonODEBoard::update(long tslayx,long tslayy, long tsnumb,
   return StatusCode::SUCCESS;
   
 
-}; 
+}
 
 StatusCode MuonODEBoard::addTSName(std::string name)
 {
@@ -51,12 +51,12 @@ StatusCode MuonODEBoard::addTSName(std::string name)
     return StatusCode::FAILURE;
     
   }  
-};
+}
 
- void MuonODEBoard::initialize(long number,long region){
-m_region=region;
-m_ODENumber=number;
-};  
+void MuonODEBoard::initialize(long number,long region){
+  m_region=region;
+  m_ODENumber=number;
+}
 
 
 void MuonODEBoard::setQuadrants(){
@@ -65,7 +65,7 @@ void MuonODEBoard::setQuadrants(){
 //std::cout<<" ODE set "<<a<<" "<<i<<std::endl;	
     m_quadrant[a]=1;    
   } 
-};
+}
                    
 bool MuonODEBoard::isQuadrantContained(long quadrant){
   if(m_quadrant[quadrant]>0){
@@ -73,8 +73,7 @@ bool MuonODEBoard::isQuadrantContained(long quadrant){
   }else {
     return false;
   }  
-};
-
+}
 
 bool MuonODEBoard::isTSContained(LHCb::MuonTileID TSTile){
   long quadrant=(long)TSTile.quarter();

@@ -45,5 +45,5 @@ inline void  setBit(unsigned int &origValue,
   origValue=result;
 } 
 
-};
+}
 #endif 

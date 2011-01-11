@@ -32,6 +32,7 @@ public:
 
 protected:
 
+  using XmlUserConditionCnv<MuonReadoutCond>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here

@@ -42,6 +42,7 @@ public:
 
 protected:
 
+  using XmlUserConditionCnv<MuonTSMap>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -112,7 +113,7 @@ XmlMuonTSMapCnv::~XmlMuonTSMapCnv() {
   xercesc::XMLString::release((XMLCh**)&OutputGridXSeqString);    
   xercesc::XMLString::release((XMLCh**)&OutputGridYSeqString);  
   xercesc::XMLString::release((XMLCh**)&OutputSynchSeqString);
-}; 
+}
 
 
 StatusCode 

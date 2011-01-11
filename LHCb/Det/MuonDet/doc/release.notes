@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2011-01-11 - Marco Cattaneo
+ - Fix ICC warnings and remarks
+
 !========================= MuonDet v9r2 2010-03-17 ==========================
 ! 2010-03-17 - Marco Cattaneo
  - Fix Windows compilation warning

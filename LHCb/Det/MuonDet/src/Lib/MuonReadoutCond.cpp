@@ -199,14 +199,14 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
   }
 
   std::vector<double> *cumProb;
-  std::vector<_clus> *cluster;
+  //  std::vector<_clus> *cluster;
 	std::vector<_clus> local_cluster;
 	std::vector<double> local_cumProb;
   double *padEdgeSize;
   double *padEdgeSigma;
   if(0 == xy){
     cumProb = &(m_RList[i].CumProbX);
-    cluster = &(m_RList[i].ClusterX);
+    // cluster = &(m_RList[i].ClusterX);
     padEdgeSize = &(m_RList[i].PadEdgeSizeX);
     padEdgeSigma = &(m_RList[i].PadEdgeSigmaX);
 		for(int size=0;size<(int)m_RList[i].CumProbX.size();size++){
@@ -215,7 +215,7 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
 		}
   }else{
     cumProb = &(m_RList[i].CumProbY);
-    cluster = &(m_RList[i].ClusterY);
+    // cluster = &(m_RList[i].ClusterY);
     padEdgeSize = &(m_RList[i].PadEdgeSizeY);
     padEdgeSigma = &(m_RList[i].PadEdgeSigmaY);
 		for(int size=0;size<(int)m_RList[i].CumProbY.size();size++){

@@ -41,6 +41,7 @@ public:
 
 protected:
 
+  using XmlUserConditionCnv<MuonODEBoard>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -122,7 +123,7 @@ XmlMuonODECnv::~XmlMuonODECnv() {
   xercesc::XMLString::release((XMLCh**)&TSQuadrantListString);
   xercesc::XMLString::release((XMLCh**)&TSMapString);         
   xercesc::XMLString::release((XMLCh**)&TSMapRefString);
-}; 
+}
 
 
 StatusCode 
@@ -191,7 +192,7 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
           getNamedItem(TSMapRefString);
         std::string  TSReference = dom2Std (TSNode->getNodeValue());  
         unsigned int poundPosition = TSReference.find_last_of('#');
-        std::string entryName = "/" + TSReference.substr(poundPosition + 1);
+        // std::string entryName = "/" + TSReference.substr(poundPosition + 1);
         sc=dataObj->addTSName(TSReference.substr(poundPosition + 1));    
         if(sc.isFailure())return sc;
 

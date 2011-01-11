@@ -371,7 +371,7 @@ inline int DeMuonDetector::regions()
 
 inline double DeMuonDetector::getStationZ(const int station){
     return m_stationZ[station];
-  };
+}
 
 
 inline int DeMuonDetector::regions(int stations)

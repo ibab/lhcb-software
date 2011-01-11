@@ -582,8 +582,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
 std::string MuonDAQHelper::getBasePath(int station)
 {
   return basePath[station];
-
-};
+}
 
 
 StatusCode MuonDAQHelper::initializeLUTCrossing()
@@ -780,9 +779,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
     }
   }
   return list_of_pads;
-
-
-};
+}
 
 
 std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
@@ -858,14 +855,9 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
       list_of_pads.push_back(tilePair.second);
 
     }
-
   }
-
-
   return list_of_pads;
-
-
-};
+}
 
 
 
@@ -888,8 +880,8 @@ LHCb::MuonTileID MuonDAQHelper::getADDInLink(unsigned int Tell1_num,
     }
   }
   return emptyTile;
+}
 
-};
 LHCb::MuonTileID MuonDAQHelper::getADDInODE(long ODE_num, long ch){
   MuonTileID emptyTile;
   if(ODE_num<static_cast<int>(MuonDAQHelper_maxODENumber)){
@@ -897,7 +889,8 @@ LHCb::MuonTileID MuonDAQHelper::getADDInODE(long ODE_num, long ch){
        (m_mapTileInODE[ODE_num]).size())return (m_mapTileInODE[ODE_num])[ch];
   }
   return emptyTile;
-};
+}
+
 LHCb::MuonTileID MuonDAQHelper::getADDInODENoHole(long ODE_num, long ch){
   MuonTileID emptyTile;
   if(ODE_num<static_cast<int>(MuonDAQHelper_maxODENumber)){
@@ -905,7 +898,7 @@ LHCb::MuonTileID MuonDAQHelper::getADDInODENoHole(long ODE_num, long ch){
       return (m_mapTileInODEDC06[ODE_num])[ch];
   }
   return emptyTile;
-};
+}
 
 LHCb::MuonTileID MuonDAQHelper::getADDInTell1(unsigned int Tell1_num, long ch){
   MuonTileID emptyTile;
@@ -915,7 +908,7 @@ LHCb::MuonTileID MuonDAQHelper::getADDInTell1(unsigned int Tell1_num, long ch){
     }
   }
   return emptyTile;
-};
+}
 
 
 LHCb::MuonTileID MuonDAQHelper::getPadInTell1DC06(unsigned int Tell1_num,
@@ -928,7 +921,8 @@ LHCb::MuonTileID MuonDAQHelper::getPadInTell1DC06(unsigned int Tell1_num,
   }
   return emptyTile;
 
-};
+}
+
 LHCb::MuonTileID MuonDAQHelper::getPadInTell1V1(unsigned int Tell1_num,
                                                 long pad){
   MuonTileID emptyTile;
@@ -939,7 +933,7 @@ LHCb::MuonTileID MuonDAQHelper::getPadInTell1V1(unsigned int Tell1_num,
   }
   return emptyTile;
 
-};
+}
 
 
 LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
@@ -963,7 +957,7 @@ LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
   //msgStream()<<MSG::INFO<<"TS Layout "<<TSLayoutX<<" "<<TSLayoutY<<endmsg;
   LHCb::MuonTileID TSTile=TSLayout.contains(digit);
   return TSTile;
-};
+}
 
 
 unsigned int MuonDAQHelper::findDigitInTS(std::string TSPath,
@@ -1045,7 +1039,7 @@ unsigned int MuonDAQHelper::findDigitInTS(std::string TSPath,
 
   return 100000;
 
-};
+}
 
 
 
@@ -1092,7 +1086,7 @@ std::string MuonDAQHelper::findODEPath(LHCb::MuonTileID TS)
   }
   return NULL;
 
-};
+}
 
 
 std::string MuonDAQHelper::findL1(LHCb::MuonTileID TS)
@@ -1103,7 +1097,7 @@ std::string MuonDAQHelper::findL1(LHCb::MuonTileID TS)
   unsigned int index=station*16+region*4+quadrant;
   std::string L1Path=m_L1Name[index];
   return L1Path;
-};
+}
 
 unsigned int MuonDAQHelper::findTSPosition(std::string ODEPath,
                                            LHCb::MuonTileID TSTile)
@@ -1131,7 +1125,7 @@ unsigned int MuonDAQHelper::findTSPosition(std::string ODEPath,
   msgStream()<<MSG::ERROR<<"error in finding TS postion "<<endmsg;
 
   return 100000;
-};
+}
 
 
 std::string MuonDAQHelper::findTSPath(std::string ODEPath,
@@ -1148,7 +1142,7 @@ std::string MuonDAQHelper::findTSPath(std::string ODEPath,
   //info()<<base<<" "<<TSPosition<<TSPath<<endmsg;
   std::string out=base+TSPath;
   return out;
-};
+}
 
 long MuonDAQHelper::channelsInL1BeforeODE(std::string L1Path,
                                           long ODENumber,bool hole)
@@ -1162,7 +1156,7 @@ long MuonDAQHelper::channelsInL1BeforeODE(std::string L1Path,
   return  192*(findODEPosition(L1Path, ODENumber,hole));
 
 
-};
+}
 
 unsigned int MuonDAQHelper::DAQaddressInL1(LHCb::MuonTileID digitTile,
                                            long& L1Number,
@@ -1232,7 +1226,7 @@ unsigned int MuonDAQHelper::DAQaddressInODE(LHCb::MuonTileID digitTile,
     msgStream()<<MSG::INFO<<" the output position in L1 of the digit is "<<
       DigitOutputPosition<<endmsg;
   return DigitOutputPosition;
-};
+}
 
 
 
@@ -1370,7 +1364,8 @@ unsigned int MuonDAQHelper::getPPNumber(unsigned int Tell1_num,
     }
   }
   return pp_num;
-};
+}
+
 StatusCode MuonDAQHelper::checkMapConsistency()
 {
 
@@ -1511,7 +1506,7 @@ unsigned int MuonDAQHelper::findODENumber(LHCb::MuonTileID digit)
 {
   //pad or logical channel?
   unsigned int ODE_value=999;
-  bool strip=false;
+  //  bool strip=false;
   bool pad=true;
 
   if(!digit.isValid())return ODE_value;
@@ -1528,7 +1523,7 @@ unsigned int MuonDAQHelper::findODENumber(LHCb::MuonTileID digit)
     if(digit.layout()==lay)
     {
       lay_num=ilay;
-      strip=true;
+      //      strip=true;
       break;
     }
   }
@@ -1607,7 +1602,7 @@ MuonL1Board* MuonDAQHelper::getL1Board(unsigned int board_num){
     }
   }
   return empty;
-};
+}
 
 
 MuonODEBoard* MuonDAQHelper::getODEBoard(MuonL1Board* l1,
@@ -1632,7 +1627,7 @@ MuonODEBoard* MuonDAQHelper::getODEBoard(MuonL1Board* l1,
   return empty;
 
 
-};
+}
 
 MuonTSMap* MuonDAQHelper::getTSMap(MuonL1Board* l1, MuonODEBoard* ode,
                                    unsigned int ts){
@@ -1655,7 +1650,7 @@ MuonTSMap* MuonDAQHelper::getTSMap(MuonL1Board* l1, MuonODEBoard* ode,
   //return empty;
 
 
-};
+}
 
 
 
@@ -1828,11 +1823,5 @@ MuonTileID secondTile;
  if(secondChannel>=0)secondTile= m_mapTileInODE[odeNumber-1][secondChannel];
  if(!secondTile.isValid())return firstTile;
  return firstTile.intercept(secondTile);
- 
-
-
 }
-
-
-;
  

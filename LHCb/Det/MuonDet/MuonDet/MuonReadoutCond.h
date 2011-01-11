@@ -1,28 +1,5 @@
 // $Id: MuonReadoutCond.h,v 1.8 2008-07-15 11:43:09 asatta Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2008/07/12 06:15:40  asatta
-// Add FPE Guard
-//
-// Revision 1.6  2006/02/01 19:45:58  marcocle
-// Removed constructor using ITime
-//
-// Revision 1.5  2005/10/25 06:55:46  asarti
-// New .h classes
-//
-// Revision 1.4  2002/08/05 18:14:07  asatta
-// few bug fixes for pad edge effect x-talk calculation
-//
-// Revision 1.3  2002/06/04 16:08:33  dhcroft
-// Added time jitter pdfs to the readouts
-//
-// Revision 1.2  2002/01/31 10:00:09  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-//
-// ============================================================================
 #ifndef MUONDET_MUONREADOUTCOND_H
 #define MUONDET_MUONREADOUTCOND_H 1
 
@@ -56,6 +33,7 @@ public:
   /// Copy constructor
   MuonReadoutCond( MuonReadoutCond& obj );
 
+  using Condition::update;
   /// Update using another MuonReadoutCond: deep copy all contents,
   /// except for the properties of a generic DataObject
   virtual void update ( MuonReadoutCond& obj );

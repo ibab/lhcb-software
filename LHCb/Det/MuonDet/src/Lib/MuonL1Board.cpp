@@ -21,7 +21,7 @@ MuonL1Board::MuonL1Board(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonL1Board::~MuonL1Board() {}; 
+MuonL1Board::~MuonL1Board() {}
 
 //=============================================================================
 
@@ -31,14 +31,14 @@ void MuonL1Board::addODE(long number, std::string name)
 {
   m_ODENumberList.push_back(number);
   m_ODEName.push_back(name); 
-}; 
+}
 
 
 void MuonL1Board::addLayout(long region,long X,long Y)
 {
   m_regionLayout[region][0]=X;
   m_regionLayout[region][1]=Y;  
-};
+}
 
 long MuonL1Board::getODEPosition(long number,bool hole)
 {
@@ -63,5 +63,5 @@ std::cout<<" not found "<<number<<std::endl;
 }
   return -1;
   
-};
+}
 

@@ -21,6 +21,7 @@ public:
 
   virtual ~MuonStationCabling( ); ///< Destructor
 
+  using Condition::update;
   virtual void update ( Condition& obj );
   virtual void update ( ValidDataObject& obj );
 

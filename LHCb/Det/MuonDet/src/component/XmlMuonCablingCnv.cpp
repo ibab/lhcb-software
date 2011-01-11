@@ -46,6 +46,7 @@ public:
 
 protected:
 
+  using XmlUserConditionCnv<MuonStationCabling>::i_fillSpecificObj;
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
@@ -106,7 +107,7 @@ XmlMuonCablingCnv::~XmlMuonCablingCnv() {
   xercesc::XMLString::release((XMLCh**)&L1ListRefString);
   xercesc::XMLString::release((XMLCh**)&L1NumberString);
 
-}; 
+}
 
 //=============================================================================
 
@@ -116,7 +117,7 @@ StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress* /* pAddress */,
  MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
  msg<<MSG::INFO<<" number of L1 "<<endmsg;
  return StatusCode::SUCCESS;
-};
+}
 
 
 // -----------------------------------------------------------------------
@@ -130,8 +131,8 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
   const XMLCh* tagName = childElement->getNodeName();
 
   if (0 == xercesc::XMLString::compareString(CablingString, tagName)) {
-    const std::string  support =
-      dom2Std (childElement->getAttribute (SupportString));
+    // const std::string  support =
+    //   dom2Std (childElement->getAttribute (SupportString));
     const std::string l1NumberString =
       dom2Std (childElement->getAttribute (L1NumberString));
     long l1NumberValue=atol(l1NumberString.c_str());
@@ -149,7 +150,7 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
           getNamedItem(L1ListRefString);
         std::string  L1Reference = dom2Std (L1Node->getNodeValue());
         unsigned int poundPosition = L1Reference.find_last_of('#');
-        std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
+        // std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
         sc=dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
         if(sc.isFailure())return sc;	
         msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endmsg;        

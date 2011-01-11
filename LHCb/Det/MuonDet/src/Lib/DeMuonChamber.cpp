@@ -167,7 +167,10 @@ IPVolume* DeMuonChamber::getGasGapLayer(int number){
 }
 	
 
-StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi::XYZPoint& pointInGap,int& number,IPVolume* gasVolume){
+StatusCode  DeMuonChamber::isPointInGasGap( Gaudi::XYZPoint pointInChamber,
+                                            Gaudi::XYZPoint& pointInGap,
+                                            int& number,
+                                            IPVolume* gasVolume){
 
  // StatusCode sc;
   int loopnumber=0;
