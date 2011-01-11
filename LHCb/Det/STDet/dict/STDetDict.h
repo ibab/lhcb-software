@@ -37,7 +37,7 @@ namespace {
     std::map<unsigned int,DeSTSector::Status> m_unsigned_int_Status_map; 
     std::pair<unsigned int,DeSTSector::Status> m_unsigned_int_Status_pair;
   } ;
-};  
+}
 
 // ============================================================================
 #endif // STDET_STDETDICT_H

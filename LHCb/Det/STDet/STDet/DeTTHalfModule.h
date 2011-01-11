@@ -70,6 +70,7 @@ public:
   /** indicate the module type (KLM, LM)
   * @return m_type
   */
+  using DeSTBaseElement::type;
   std::string type() const;
 
   /** indicate the module position (T, B) 

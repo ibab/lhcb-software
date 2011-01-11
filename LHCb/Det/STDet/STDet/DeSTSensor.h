@@ -271,15 +271,14 @@ inline bool DeSTSensor::globalInActive( const Gaudi::XYZPoint& gpoint,
 {
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInActive(lPoint,tol);
-};
-
+}
 
 inline bool DeSTSensor::globalInBondGap(const Gaudi::XYZPoint& gpoint, 
                                         double tol) const
 { 
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInBondGap(lPoint.Y(),tol);
-};
+}
 
 inline bool DeSTSensor::localInBondGap( const double v, double tol) const{
 

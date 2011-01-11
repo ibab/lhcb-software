@@ -282,6 +282,7 @@ public:
   /**
    * @return std::string type
    */
+  using DeSTBaseElement::type;
   std::string type() const;
 
   /** @return double stereo angle */

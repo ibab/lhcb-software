@@ -116,8 +116,8 @@ StatusCode DeSTSector::initialize() {
 
     if (m_versionString != "DC06")
     {
-      StatusCode sc = registerCondition(this,m_statusString,
-                                        &DeSTSector::updateStatusCondition,true);
+      sc = registerCondition(this,m_statusString,
+                             &DeSTSector::updateStatusCondition,true);
       if (sc.isFailure() ){
         MsgStream msg(msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register status conditions" << endmsg;
@@ -822,7 +822,7 @@ bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point,
 { 
   const DeSTSensor* aSensor =  findSensor(point);
   return (aSensor ?  aSensor->globalInBondGap(point, tol) : false ); 
-};
+}
 
 double DeSTSector::fractionActive() const {
 

@@ -49,7 +49,7 @@ namespace DeSTDetLocation {
   /// type if you know the location
   unsigned int detType(const std::string& type);
 
-};
+}
 
 class DeSTDetector : public DetectorElement  {
 
@@ -120,6 +120,7 @@ public:
   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
+  using DetectorElement::isValid;
   /** check channel number is valid */
   bool isValid(const LHCb::STChannelID aChannel);
 

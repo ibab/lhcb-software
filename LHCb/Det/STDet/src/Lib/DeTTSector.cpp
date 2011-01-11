@@ -5,6 +5,10 @@
 #include "STDet/STDetFun.h"
 
 #include "Kernel/TTNames.h"
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
+  #pragma warning(disable:2259) // non-pointer conversion may lose significant bits
+#endif
 #include "boost/lexical_cast.hpp"
 
 /** @file DeTTSector.cpp
