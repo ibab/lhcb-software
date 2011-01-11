@@ -533,7 +533,7 @@ StatusCode DVAlgorithm::loadParticles() {
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle) {
+const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle) {
   
   Assert ( 0 != particle , 
            "mark: Attempt to mark invalid particle for saving" );
@@ -562,8 +562,8 @@ const LHCb::Particle* DVAlgorithm::mark(const LHCb::Particle* particle) {
   return newp ;
 }
 //=============================================================================
-const LHCb::Particle* DVAlgorithm::cloneAndMark(const LHCb::Particle* particle){
-  return mark(particle->clone());
+const LHCb::Particle* DVAlgorithm::cloneAndMarkTree(const LHCb::Particle* particle){
+  return markTree(particle->clone());
 
 }
 //=============================================================================

@@ -7,6 +7,8 @@
 ! 2011-01-11 Juan Palacios
  - DVAlgorithm
   . Bug fix: move TES check out of particle saving loops.
+  . Add and rename some particle saving methods. All methods now have single
+    and multi-particle versions.
 
 ! 2011-01-10 - Juan Palacios
  - DVAlgorithm

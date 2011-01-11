@@ -549,41 +549,76 @@ protected:
   /// Ownership remains unchanged (either client's or TES).
   /// @return the cloned head of the decay or the input if in TES.
   ///
-  const LHCb::Particle* mark(const LHCb::Particle* particle);
+  const LHCb::Particle* markTree(const LHCb::Particle* particle);
+
+  /// Mark particles for saving. Scans decay trees marking
+  /// elements for saving. Each branch is followed and each vertex
+  /// is cloned until a vertex is found which is in the TES.
+  ///
+  /// @attention Cloning stops at vertices that are in the TES.
+  /// @param heads (INPUT) The heads of the decays to be cloned and marked. 
+  /// Ownership remains unchanged (either client's or TES).
+  ///
+  template <class PARTICLES>
+  inline void markTrees(const PARTICLES heads) {
+    typename PARTICLES::const_iterator iHead = heads.begin();
+    typename PARTICLES::const_iterator iHeadEnd = heads.end();
+    for ( ; iHead!=iHeadEnd; ++iHead) markTree(*iHead);
+  }
 
   /// Clone a particle and mark for saving. Scans descendants cloning
   /// and marking elements for saving. Each branch is followed until
   /// a vertex is found which is in the TES.
   ///
-  /// @attention particle is always clones, but cloning of decays 
+  /// @attention particle is always cloned, but cloning of decays 
   /// stops at vertices that are in the TES.
   /// @param particle (INPUT) The head of the decay to be cloned and marked. 
   /// Ownership remains unchanged (either client's or TES).
   /// @return the cloned head of the decay or the input if in TES.
   ///
-  const LHCb::Particle* cloneAndMark(const LHCb::Particle* particle);
+  const LHCb::Particle* cloneAndMarkTree(const LHCb::Particle* particle);
+
+  /// Clone particles and mark for saving. Scans descendants cloning
+  /// and marking elements for saving. Each branch is followed until
+  /// a vertex is found which is in the TES.
+  ///
+  /// @attention head is always cloned, but cloning of decays 
+  /// stops at vertices that are in the TES.
+  /// @param heads (INPUT) The heads of the decays to be cloned and marked. 
+  /// Ownership remains unchanged (either client's or TES).
+  /// @return the cloned head of the decay or the input if in TES.
+  ///
+  template <class PARTICLES>
+  void cloneAndMarkTrees(const PARTICLES& heads)
+  {
+    typename PARTICLES::const_iterator iHead = heads.begin();
+    typename PARTICLES::const_iterator iHeadEnd = heads.end();
+    for ( ; iHead!=iHeadEnd; ++iHead) cloneAndMarkTree(*iHead);    
+  }
+
+  ///
+  /// Mark Particles head and its decay products for saving.
+  /// Elements already on the TES or their descendants will not be marked. 
+  /// @param head (INPUT) Particle, head of decays to be stored. 
+  ///      Algorithm takes over ownership. Element <b>must be on the heap</b>.
+  ///
+  inline void markNewTree(const LHCb::Particle* head) {
+    DaVinci::Utils::findDecayTree( head, m_parts, m_secVerts, &m_inTES);
+  }
 
   ///
   /// Mark the particles in heads and their decay products for saving.
   /// Elements already on the TES or their descendants will not be marked. 
   /// @param heads (INPUT) vector of heads of decays to be stored. 
-  ///      Algorithm takes over ownership. Elements must be on the heap.
+  ///      Algorithm takes over ownership. Elements <b>must be on the heap</b>.
   ///
-  inline void markTrees(const LHCb::Particle::ConstVector& heads) {
-    return i_markTrees<LHCb::Particle::ConstVector>(heads);
-  }
-  
-  ///
-  /// Mark the particles in heads and their decay products for saving.
-  /// Elements already on the TES or their descendants will not be marked. 
-  /// @param heads (INPUT) vector of heads of decays to be stored. 
-  /// Algorithm takes over ownership. Elements must be on the heap.
-  ///
-  inline void markTrees(const LHCb::Particle::Range heads) {
-    return i_markTrees<LHCb::Particle::Range>(heads);
-  }
+  template<class PARTICLES>
+  inline void markNewTrees(const PARTICLES& heads) {
+    typename PARTICLES::const_iterator iHead = heads.begin();
+    typename PARTICLES::const_iterator iHeadEnd = heads.end();
+    for( ; iHead != iHeadEnd; ++iHead ) markNewTree(*iHead);
 
-
+  }
 
   /// Return the output location where data will be written to the TES 
   inline const std::string& outputLocation() const {
