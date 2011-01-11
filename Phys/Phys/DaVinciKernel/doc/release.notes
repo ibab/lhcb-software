@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-11 Juan Palacios
+ - DVAlgorithm
+  . Bug fix: move TES check out of particle saving loops.
+
 ! 2011-01-10 - Juan Palacios
  - DVAlgorithm
   . Check that full particle tree is in TES after saving. If it isn't, return

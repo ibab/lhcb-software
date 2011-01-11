@@ -713,9 +713,6 @@ StatusCode DVAlgorithm::saveInTES()
           v_tes->insert(const_cast<LHCb::Vertex*>(endVtx));
         }
       }
-       if (! DaVinci::Utils::decayTreeInTES(*iParticle) ) {
-         return Error("Element of saved decay tree not in TES. Likely memory leak!");
-       }
     } else {
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << "Skipping " << *iParticle << endmsg;
@@ -723,6 +720,14 @@ StatusCode DVAlgorithm::saveInTES()
     }
   }
 
+  // check that the decay trees are fully in the TES
+  iParticle = m_parts.begin();
+  for ( ; iParticle != iParticleEnd ; ++iParticle) {
+    if (! DaVinci::Utils::decayTreeInTES(*iParticle) ) {
+      return Error("Element of saved decay tree not in TES. Likely memory leak!");
+    }    
+  }
+  
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "Saved " << p_tes->size()
               << " new particles in " << particleOutputLocation() 
