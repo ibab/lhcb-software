@@ -116,10 +116,10 @@ StatusCode DeVeloPix::initialize() {
           << " SNO " <<  (*iDESensor)->sensorNumber()
           << endmsg;
     
-      bool isLeftSensor=false;
+      //      bool isLeftSensor=false;
       // Check if sensor is on Left/Right side of LHCb
       if((*iDESensor)->isLeft()){
-        isLeftSensor=true;
+        //        isLeftSensor=true;
         m_vpLeftSensors.push_back(m_vpSensors.back());
         m_nLeftSensors++;
       } else {

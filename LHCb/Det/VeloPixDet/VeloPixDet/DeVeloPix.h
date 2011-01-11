@@ -26,6 +26,9 @@
 
 static const CLID CLID_DeVeloPix = 8200; 
 
+#ifdef __INTEL_COMPILER        // Disable ICC remark
+  #pragma warning(disable:177) // variable was declared but never referenced
+#endif
 namespace DeVeloPixLocation{
   static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/VeloPix";
 }

@@ -11,4 +11,4 @@
 /// instances of this service
 /// =======================================================================
 typedef XmlUserDetElemCnv<DeVeloPixSquareType>         XmlDeVeloPixSquareTypeCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeVeloPixSquareTypeCnv );
+DECLARE_CONVERTER_FACTORY( XmlDeVeloPixSquareTypeCnv )

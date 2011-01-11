@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Marco Cattaneo
+ - Fix ICC warnings and errors
+
 !========================= VeloPixDet v1r8 2010-11-27 =========================
 ! 2010-11-04 - Victor Coco
  - Bug fix in the finding neighbourg function of DeVeloPixSquareType.

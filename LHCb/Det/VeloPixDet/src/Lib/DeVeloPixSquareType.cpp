@@ -464,7 +464,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
 	Gaudi::XYZPoint tmpPoint(point.x()+x*hpSize(),point.y()+y*hpSize(),point.z());
 	LHCb::VeloPixChannelID  channeltmp;
 	std::pair <double, double> fractiontmp;
-	StatusCode sc = pointToChannel( tmpPoint, channeltmp, fractiontmp);
+	sc = pointToChannel( tmpPoint, channeltmp, fractiontmp);
 	if (sc.isSuccess()){
 	  bool used = false;
 	  // prevent reuse of long pixel (since here the space is checked in small pixel size)
