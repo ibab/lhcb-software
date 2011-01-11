@@ -79,6 +79,7 @@ namespace LHCb
                            double tolerance, 
                            int pathDirection = +1 ) const;
     
+    using ZTrajectory::arclength;
     /// arclength between 2 coordinates on the track
     double arclength( double z1, double z2 ) const ;
 
@@ -98,8 +99,15 @@ namespace LHCb
     /// return the set of reference states
     StateContainer& refStates() { return m_states ; }
 
+#ifdef __INTEL_COMPILER       // Disable ICC warning
+  #pragma warning(disable:68) // integer conversion resulted in a change of sign
+  #pragma warning(push)
+#endif
     /// invalidate the cache
     void invalidateCache() { m_cachedindex = InvalidCacheIndex ; }
+#ifdef __INTEL_COMPILER       // End disable ICC warning
+  #pragma warning(pop)
+#endif
 
   private:
     void updatecache(double z) const ;

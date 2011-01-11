@@ -6,6 +6,10 @@
 #include <algorithm>
 #include "gsl/gsl_integration.h"
 
+#ifdef __INTEL_COMPILER       // Disable ICC warning
+  #pragma warning(disable:68) // integer conversion resulted in a change of sign
+#endif
+
 namespace LHCb
 {
   

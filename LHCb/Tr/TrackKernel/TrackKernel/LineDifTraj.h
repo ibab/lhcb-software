@@ -61,6 +61,7 @@ namespace LHCb
                                      double tolerance, 
                                      int pathDirection = +1 ) const;
 
+      using LHCb::DifTraj<4>::arclength;
       /// Distance, along the Trajectory, between position(mu1) and
       /// position(mu2). Trivial because LineDifTraj is parameterized in
       /// arclength.

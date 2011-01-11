@@ -9,6 +9,10 @@ using namespace std;
 using namespace LHCb;
 using namespace ROOT::Math;
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT GenVector classes
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 std::auto_ptr<Trajectory> LineDifTraj::clone() const
 {
   return std::auto_ptr<Trajectory>(new LineDifTraj(*this));
@@ -23,7 +27,7 @@ LineDifTraj::LineDifTraj( const Point& middle,
     m_dir(dir.Unit()),
     m_pos(middle)
 {
-};
+}
 
 
 /// Constructor from a begin and an end point
@@ -33,25 +37,25 @@ LineDifTraj::LineDifTraj( const Point& begPoint,
     m_dir( (endPoint-begPoint).Unit() ),
     m_pos(begPoint+0.5*m_dir)
 {
-};
+}
 
 /// Point on the trajectory at arclength from the starting point    
 Trajectory::Point LineDifTraj::position( double arclength ) const
 {
   return m_pos + arclength * m_dir;
-};
+}
 
 /// First derivative of the trajectory at arclength from the starting point
 Trajectory::Vector LineDifTraj::direction( double /* arclength*/ ) const
 {
   return m_dir;
-};
+}
 
 /// Second derivative of the trajectory at arclength from the starting point
 Trajectory::Vector LineDifTraj::curvature( double /* arclength */ ) const 
 {
   return Vector(0,0,0);
-};
+}
 
 /// Create a parabolic approximation to the trajectory
 /// at arclength from the starting point
@@ -63,26 +67,26 @@ void LineDifTraj::expansion( double arclength,
   ddp = Vector(0,0,0);
   dp  = m_dir;
   p   = m_pos + arclength * m_dir;
-};
+}
 
 /// Determine the distance in arclenghts to the
 /// closest point on the trajectory to a given point
 double LineDifTraj::muEstimate( const Point& point ) const
 {
   return m_dir.Dot(point-m_pos);
-};
+}
 
 // 1st order approx OK everywhere
 double LineDifTraj::distTo1stError( double , double , int ) const 
 {
   return 10*Gaudi::Units::km;
-};
+}
 
 // 2nd order approx OK everywhere
 double LineDifTraj::distTo2ndError( double , double , int ) const
 {
   return 10*Gaudi::Units::km;
-};
+}
 
 
 

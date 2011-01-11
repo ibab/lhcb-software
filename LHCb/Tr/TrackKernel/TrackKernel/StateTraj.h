@@ -104,6 +104,7 @@ namespace LHCb
                                    int pathDirection = +1 ) const;
 
 
+    using LHCb::DifTraj<5>::arclength;
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). Trivial because StateTraj is parameterized in
     /// arclength.

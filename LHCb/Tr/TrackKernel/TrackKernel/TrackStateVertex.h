@@ -12,7 +12,7 @@ namespace LHCb
   class TwoProngVertex ;
   namespace TrackVertexHelpers {
     class VertexTrack ;
-  } ;
+  }
 
   /** @class TrackStateVertex TrackStateVertex.h
    *

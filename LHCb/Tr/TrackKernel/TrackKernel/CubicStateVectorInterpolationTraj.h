@@ -66,6 +66,7 @@ namespace LHCb
     double distTo2ndError( double z, double tolerance, int pathDirection = +1 ) const ;
     /// Create a parabolic approximation to the trajectory
     void expansion(  double z, Gaudi::XYZPoint& p, Gaudi::XYZVector& dp, Gaudi::XYZVector& ddp  ) const ;
+    using ZTrajectory::arclength;
     /// Arclength between 2 z -locations (not yet imlpemented)
     double arclength(double z1, double z2) const ;
     /// Estimate for expansion parameter 'z' closest to point
@@ -144,6 +145,11 @@ namespace LHCb
     m_cy[2] = n * Gaudi::Units::c_light * m_qopbegin * (  bfield.x() - state.tx()* bfield.z() ) ;
     m_cy[3] = 0 ;
   }
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
   
   inline double CubicStateVectorInterpolationTraj::distTo1stError( double z, double tolerance, int pathDirection ) const 
   {
@@ -158,6 +164,9 @@ namespace LHCb
     // need to replace this with a sensible check on size of c3
     return m_cx[3]!=0 ? std::pow(std::abs(tolerance/m_cx[3]), 1.0/3.0) : 10*Gaudi::Units::km ;
   }
+#ifdef __INTEL_COMPILER         // End disable ICC remark
+  #pragma warning(pop)
+#endif
   
   inline double CubicStateVectorInterpolationTraj::qop(double z) const 
   { 

@@ -28,6 +28,9 @@ apply_pattern reflex_dictionary                                        \
               headerfiles=$(TRACKKERNELROOT)/src/TrackKernelDict.h     \
               selectionfile=$(TRACKKERNELROOT)/src/TrackKernelDict.xml \
               options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append TrackKernelDict_cppflags "" \
+                           target-icc " -wd654"
 
 # Build linker library
 #============================================================================

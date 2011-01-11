@@ -88,6 +88,7 @@ namespace LHCb
                                    int pathDirection = +1 ) const; 
 
 
+    using ZTrajectory::arclength;
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). Trivial because StateZTraj is parameterized in
     /// arclength.
@@ -139,7 +140,14 @@ namespace LHCb
   {
     // look only at x (because it curves most)
     double deriv = poly2ndderiveval(z-m_z,m_cx) ;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
     return deriv!=0 ? std::sqrt(std::abs(2*tolerance/deriv)) :10*Gaudi::Units::km;
+#ifdef __INTEL_COMPILER         // End disable ICC remark
+  #pragma warning(pop)
+#endif
   }
   
   inline double StateZTraj::distTo2ndError( double /*z*/, double /*tolerance*/, int /*pathDirection*/ ) const 

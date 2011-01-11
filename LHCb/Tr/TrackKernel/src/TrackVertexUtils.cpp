@@ -1,4 +1,9 @@
 #include "TrackKernel/TrackVertexUtils.h"
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT GenVector classes
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
+
 #include <GaudiKernel/GenericVectorTypes.h>
 
 namespace LHCb
