@@ -84,7 +84,14 @@ namespace Rich
         // Create the Masks
         static const LongType MaskEventID         = ((1 << BitsEventID)-1)   << ShiftEventID;
         static const LongType MaskBxID            = ((1 << BitsBxID)-1)      << ShiftBxID;
+  #ifdef __INTEL_COMPILER       // Disable ICC remark
+    #pragma warning(disable:68) // Integer conversion resulted in a change of sign
+    #pragma warning(push)
+  #endif
         static const LongType MaskParityBit       = ((1 << BitsParityBit)-1) << ShiftParityBit;
+  #ifdef __INTEL_COMPILER       // End disable ICC remark
+    #pragma warning(pop)
+  #endif
 
         //-----------------------------------------------------------------------------------------
 
@@ -174,7 +181,14 @@ namespace Rich
 
         // Create the Masks
         static const LongType MaskL0ID             = ((1 << BitsL0ID)-1)           << ShiftL0ID;
+  #ifdef __INTEL_COMPILER       // Disable ICC remark
+    #pragma warning(disable:68) // Integer conversion resulted in a change of sign
+    #pragma warning(push)
+  #endif
         static const LongType MaskNWordsBIDFIF     = ((1 << BitsNWordsBIDFIF)-1)   << ShiftNWordsBIDFIF;
+  #ifdef __INTEL_COMPILER       // End disable ICC remark
+    #pragma warning(pop)
+  #endif
         static const LongType MaskBIDFIFEmpty      = ((1 << BitsBIDFIFEmpty)-1)    << ShiftBIDFIFEmpty;
         static const LongType MaskBIDFIFFull       = ((1 << BitsBIDFIFFull)-1)     << ShiftBIDFIFFull;
         static const LongType MaskTestPat          = ((1 << BitsTestPat)-1)        << ShiftTestPat;

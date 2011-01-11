@@ -107,8 +107,8 @@ namespace Rich
       inline operator std::string() const
       { return boost::lexical_cast<std::string>(data()); }
       /// Overload output to ostream
-      friend inline std::ostream& operator << ( std::ostream& os, const NumericType<TYPE> & id )
-      { return os << id.data() ; }
+      friend inline std::ostream& operator << ( std::ostream& os1, const NumericType<TYPE> & id )
+      { return os1 << id.data() ; }
       /// Operator ++   (prefix)
       inline NumericType<TYPE>& operator++()    { ++m_id; return *this; }
       /// Operator ++(int)  (postfix)

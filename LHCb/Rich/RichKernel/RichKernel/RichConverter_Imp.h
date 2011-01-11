@@ -127,6 +127,7 @@ namespace Rich
       return s;
     }
 
+    using Converter::release;
     /// Release tools and services
     StatusCode release ( const IInterface* interface ) const;
 
