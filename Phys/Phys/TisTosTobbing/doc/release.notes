@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2011-01-11 - Juan Palacios
+ - Adapt to changes in DVAlgorithm protected methods.
+
 ! 2010-01-07 - Juan Palacios
  - TisTosParticleTagger.cpp
   . Remove call to saveParticles(), now handled by DVAlgorithm.

@@ -318,7 +318,7 @@ StatusCode TisTosParticleTagger::execute() {
     }     
   }
 
-  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ ) this->mark( &(*i) );
+  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ ) this->markTree( &(*i) );
 
    
   setFilterPassed(passed);  // Mandatory. Set to true if event is accepted. 
