@@ -26,3 +26,9 @@ RooPsi2m.cxx
        // For the other resonances you need to set mJpsi and mpsi2 appropriately 
    * To compile (interactively): .L RooPsi2m.cxx+
 
+* xtoy.C
+--------
+
+   * Toy MC for sensitivity to X Mass.
+   * Signal model: Voightian, Background Model: RooBackPdf (parameters from same sign data)
+   * To run at command line: .L xtoy.C; xtoy("output.root", nSignal, nBack) 
