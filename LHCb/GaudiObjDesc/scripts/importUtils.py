@@ -65,8 +65,18 @@ class importUtils:
         s += '// Disable warning C4800 forcing value to bool true or false (performance warning), caused by HepMC/Flow.h\n'
         s += '  #pragma warning ( disable : 4800 )\n'
         s += '#endif\n'
+        # Suppress INTEL compiler remark from HepMC/SimpleVector.icc, HeavyIon.h, PdfInfo.h
+        s += '#ifdef __INTEL_COMPILER\n'
+        s += '  #pragma warning (disable:1572) // floating-point equality and inequality comparisons are unreliable\n'
+        s += '  #pragma warning(push)\n'
+        s += '#endif\n'
       if imp.find('.') != -1 : s += '#include "%s"\n' % imp
       else                   : s += '#include "%s.h"\n' % imp
+      if imp.find('HepMC/GenEvent') != -1 : 
+        # End suppress INTEL compiler remark
+        s += '#ifdef __INTEL_COMPILER\n'
+        s += '  #pragma warning(pop)\n'
+        s += '#endif\n'
     s += self.genStdIncludes()
     return s
 #--------------------------------------------------------------------------------
