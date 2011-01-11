@@ -20,7 +20,8 @@ namespace TrackParameters
   static const double looseTolerance  = 1e-5;           ///< Loose tolerance
   static const double propagationTolerance = 1e-6*Gaudi::Units::mm ; ///< Tolerance for extrapolators
   static const double moliereFactor   = 13.6*Gaudi::Units::MeV; ///< Moliere factor
-};
+}
+
 
 // -----------------------------------------------------------------------------
 //   end of namespace

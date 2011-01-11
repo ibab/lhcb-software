@@ -39,7 +39,7 @@ State::State():
 double State::qOverP() const
 {
   return m_stateVector[4];
-};
+}
 
 //=============================================================================
 // Retrieve the momentum of the state
@@ -47,7 +47,7 @@ double State::qOverP() const
 double State::p() const
 {
   return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? fabs( 1./m_stateVector[4]) : HUGE_VAL );
-};
+}
 
 //=============================================================================
 // Retrieve the transverse momentum of the state
@@ -60,7 +60,7 @@ double State::pt() const
     return sqrt( txy2/(1.+txy2) ) / fabs( m_stateVector[4] );
   }
   return HUGE_VAL;
-};
+}
 
 //=============================================================================
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state
@@ -96,7 +96,7 @@ SymMatrix6x6 State::posMomCovariance() const
   jmat(5,4) = -q * invNorm * mom * mom; // -q == -1/q
   
   return ROOT::Math::Similarity( jmat, covariance() );
-};
+}
 
 //=============================================================================
 // Retrieve the squared error on the charge-over-momentum Q/P of the state
@@ -104,7 +104,7 @@ SymMatrix6x6 State::posMomCovariance() const
 double State::errQOverP2() const
 {
   return m_covariance(4,4);
-};
+}
 
 //=============================================================================
 // Update the Q/P value of the state
@@ -112,7 +112,7 @@ double State::errQOverP2() const
 void State::setQOverP( double value )
 {
   m_stateVector[4] = value;
-};
+}
 
 //=============================================================================
 // Update the squared error on the Q/P of the state
@@ -120,7 +120,7 @@ void State::setQOverP( double value )
 void State::setErrQOverP2( double value )
 {
   m_covariance(4,4) = value;
-};
+}
 
 //=============================================================================
 // Clone the state
@@ -128,7 +128,7 @@ void State::setErrQOverP2( double value )
 State* State::clone() const
 {
   return new State(*this);
-};
+}
 
 //=============================================================================
 // Retrieve the errors on the 3D-position vector of the state
@@ -137,7 +137,7 @@ Gaudi::SymMatrix3x3 State::errPosition() const
 {
   const Gaudi::SymMatrix6x6 temp = posMomCovariance();
   return temp.Sub<SymMatrix3x3>(0,0);
-};
+}
 
 //=============================================================================
 // Retrieve the errors on the slopes of the state
@@ -147,7 +147,7 @@ Gaudi::SymMatrix3x3 State::errSlopes() const
   Gaudi::SymMatrix3x3 err = Gaudi::SymMatrix3x3();
   err.Place_at( m_covariance.Sub<SymMatrix2x2>(2,2), 0, 0 );
   return err;
-};
+}
 
 //=============================================================================
 // Retrieve the squared error on the momentum of the state
@@ -156,7 +156,7 @@ double State::errP2() const
 {
   return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ?
            errQOverP2() * gsl_pow_4( p() ): 0. );
-};
+}
 
 //=============================================================================
 // Retrieve the errors on the momentum vector of the state
@@ -165,7 +165,7 @@ SymMatrix3x3 State::errMomentum() const
 {
   const SymMatrix6x6 temp = posMomCovariance();
   return temp.Sub<SymMatrix3x3>(3,3);
-};
+}
 
 //=============================================================================
 // Retrieve the squared error on the Q/Pperp of the state
@@ -194,7 +194,7 @@ double State::errQOverPperp2() const
              / ( norm* transSlope*transSlope ) );
 
   return QOverPperpError;
-};
+}
 
 //=============================================================================
 // Update the state vector (presumably of type State::HasMomentum)
@@ -209,7 +209,7 @@ void State::setState( double x, double y, double z,
   m_stateVector[3] = ty;
   m_stateVector[4] = qOverP;
   m_z              = z;
-};
+}
 
 //=============================================================================
 // fillstream

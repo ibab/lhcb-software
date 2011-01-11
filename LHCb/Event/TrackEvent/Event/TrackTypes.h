@@ -29,6 +29,6 @@ namespace Gaudi
   typedef Matrix5x5 TrackMatrix;            ///< Matrix type for Track
   typedef Matrix1x5 TrackProjectionMatrix;  ///< Projection matrix type for Track
 
-};
+}
  
 #endif //  EVENT_TRACKTYPES_H

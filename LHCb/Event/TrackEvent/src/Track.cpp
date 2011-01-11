@@ -121,7 +121,7 @@ double Track::probChi2() const
     val = chi2() < chi2max ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0; 
   } 
   return val ;
-};
+}
 
 //=============================================================================
 // Retrieve the reference to the state closest to the given z-position
@@ -145,7 +145,7 @@ State & Track::closestState( double z )
                             StatusCode::FAILURE );
     return *(*iter);
   }
-};
+}
 
 //=============================================================================
 // Retrieve the (const) reference to the state closest to the given z-position
@@ -169,7 +169,7 @@ const State & Track::closestState( double z ) const
                             StatusCode::FAILURE );
     return *(*iter);
   }
-};
+}
 
 //=============================================================================
 // Retrieve the (const) reference to the state closest to the given plane
@@ -193,7 +193,7 @@ const State & Track::closestState( const Gaudi::Plane3D& plane ) const
                             StatusCode::FAILURE );
     return *(*iter);
   }
-};
+}
 
 //=============================================================================
 // check the existence of a state at a certain predefined location
@@ -201,7 +201,7 @@ const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 bool Track::hasStateAt( const LHCb::State::Location& location ) const
 {
   return stateAt(location)!=0 ;
-};
+}
 
 //=============================================================================
 // Retrieve the pointer to the state closest to the given plane
@@ -240,7 +240,7 @@ void Track::addToStates( const State& state )
                      local,
                      TrackFunctor::orderByZ<State>(order));
   m_states.insert(ipos,local);
-};
+}
 
 //=============================================================================
 // Add a list of states to the list associated to the Track. This takes ownership.
@@ -257,7 +257,7 @@ void Track::addToStates( StateContainer& states )
   m_states.insert(middle, states.begin(), states.end()) ;
   if(backward) std::inplace_merge(m_states.begin(),middle,m_states.end(),TrackFunctor::decreasingByZ<State>());
   else         std::inplace_merge(m_states.begin(),middle,m_states.end(),TrackFunctor::increasingByZ<State>());
-};
+}
 
 //=============================================================================
 // Remove an LHCbID from the list of LHCbIDs associated to the Track
@@ -267,7 +267,7 @@ void Track::removeFromLhcbIDs( const LHCbID& value )
   LHCbIDContainer::iterator pos =
     std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
   m_lhcbIDs.erase( pos ) ;
-};
+}
 
 //=============================================================================
 // Remove a State from the list of States associated to the Track
@@ -275,7 +275,7 @@ void Track::removeFromLhcbIDs( const LHCbID& value )
 void Track::removeFromStates( State* state )
 {
   TrackFunctor::deleteFromList<State>(m_states,state);
-};
+}
 
 //=============================================================================
 // Add LHCbIDs to track
@@ -338,7 +338,7 @@ bool Track::isOnTrack( const LHCb::LHCbID& value ) const
   LHCbIDContainer::const_iterator pos =
     std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
   return pos != m_lhcbIDs.end() && *pos == value ;
-} ;
+}
 
 //=============================================================================
 // Return the Measurement on the Track corresponding to the input LHCbID
@@ -365,7 +365,7 @@ void Track::reset()
     delete m_fitResult ;
     m_fitResult = 0 ;
   }
-};
+}
 
 //=============================================================================
 // Clone the track keeping the key
@@ -376,7 +376,7 @@ Track* Track::cloneWithKey( ) const
   Track* tr = new Track( theKey );
   tr -> copy( *this );
   return tr;
-};
+}
 
 //=============================================================================
 // Clone the track
@@ -386,7 +386,7 @@ Track* Track::clone() const
   Track* tr = new Track();
   tr -> copy( *this );
   return tr;
-};
+}
 
 //=============================================================================
 // Copy the info from the argument track into this track
@@ -421,7 +421,7 @@ void Track::copy( const Track& track )
 void Track::clearStates() { 
   std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
   m_states.clear();
-};
+}
 
 //=============================================================================
 /** Check the presence of the information associated with

@@ -39,7 +39,7 @@ TrackFitResult* TrackFitResult::clone() const
   TrackFitResult* tr = new TrackFitResult();
   tr -> copy( *this );
   return tr;
-};
+}
 
 //=============================================================================
 // Add a Measurement to the list associated to the Track
@@ -47,7 +47,7 @@ TrackFitResult* TrackFitResult::clone() const
 void TrackFitResult::addToMeasurements( const LHCb::Measurement& meas )
 {
   m_measurements.push_back( meas.clone() ) ;
-};
+}
 
 //=============================================================================
 // Add a list of measurement to the list associated to the Track. This takes ownership.
@@ -55,7 +55,7 @@ void TrackFitResult::addToMeasurements( const LHCb::Measurement& meas )
 void TrackFitResult::addToMeasurements( MeasurementContainer& measurements )
 {
   m_measurements.insert( m_measurements.end(), measurements.begin(), measurements.end() ) ;
-};
+}
 
 //=============================================================================
 // Remove a Measurement from the list of Measurements associated to the Track
@@ -63,7 +63,7 @@ void TrackFitResult::addToMeasurements( MeasurementContainer& measurements )
 void TrackFitResult::removeFromMeasurements( const Measurement* meas )
 {
   TrackFunctor::deleteFromList<Measurement>( m_measurements, meas );
-};
+}
 
 //=============================================================================
 // Remove a Node from the list of Nodes associated to the Track
@@ -80,7 +80,7 @@ void TrackFitResult::removeFromNodes( Node* node )
   else {
     TrackFunctor::deleteFromList<Node>(m_nodes,node);
   }
-};
+}
 
 // //=============================================================================
 // // Check whether the given Measurement is on the Track
@@ -143,7 +143,7 @@ void TrackFitResult::reset()
   std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
   m_measurements.clear();
   m_nodes.clear();
-};
+}
 
 //=============================================================================
 // Copy the info from the argument track into this track

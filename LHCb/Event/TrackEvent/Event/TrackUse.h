@@ -166,7 +166,7 @@ inline bool TrackUse::acceptedFitStatus ( const LHCb::Track::FitStatus v ) const
 {
   return 
     m_fitstatus.end() != std::find( m_fitstatus.begin() , m_fitstatus.end() , v ) ;  
-} ;
+}
 // ============================================================================
 /// type to be accepted
 // ============================================================================
@@ -174,7 +174,7 @@ inline bool TrackUse::acceptedType    ( const LHCb::Track::Types  v ) const
 {
   return 
     m_type.end() != std::find( m_type.begin() , m_type.end() , v ) ;  
-} ;
+}
 // ============================================================================
 /// history to be rejected 
 // ============================================================================
@@ -182,7 +182,7 @@ inline bool TrackUse::rejectedHistory ( const LHCb::Track::History v ) const
 {
   return 
     m_history.end() != std::find( m_history.begin() , m_history.end() , v ) ;  
-} ;
+}
 // ============================================================================
 /** the basic method which defines if track selected for further processing
  *  @param track pointer to Track object 
@@ -211,7 +211,7 @@ TrackUse::use  ( const LHCb::Track* track ) const
   if (  rejectedHistory ( track -> history () )   )   { return false ; }
   // end! 
   return true ;
-} ;
+}
 // ============================================================================
 inline MsgStream&    
 operator<<( MsgStream&      stream , 

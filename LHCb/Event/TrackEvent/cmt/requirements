@@ -31,6 +31,9 @@ macro_append TrackEventObj2Dict_dependencies TrackEventCustomDict
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append TrackEventDict_cppflags "" \
+                          target-icc " -wd191"
 
 # Make the linker library
 #============================================================================

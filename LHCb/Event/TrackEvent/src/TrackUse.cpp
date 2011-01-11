@@ -43,7 +43,7 @@ TrackUse::TrackUse()
   m_type.push_back   (  LHCb::Track::Downstream ) ;
   m_type.push_back   (  LHCb::Track::Ttrack     ) ;
   //
-} ;
+}
 // ============================================================================
 /// destructor
 // ============================================================================
@@ -68,22 +68,22 @@ TrackUse::i_declareProperties ( TYPE* object )
   object -> declareProperty ( "RejectedHistory"  , m_history     ) ;
   //
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 /// declare 'own' properties for the algorithm 
 // ============================================================================
 StatusCode TrackUse::declareProperties ( Algorithm* alg )
-{ return i_declareProperties ( alg ) ; };
+{ return i_declareProperties ( alg ) ; }
 // ============================================================================
 /// declare 'own' properties for the service 
 // ============================================================================
 StatusCode TrackUse::declareProperties ( Service*  svc ) 
-{ return i_declareProperties ( svc ) ; };
+{ return i_declareProperties ( svc ) ; }
 // ============================================================================
 /// declare 'own' properties for the tool 
 // ============================================================================
 StatusCode TrackUse::declareProperties ( AlgTool*  tool ) 
-{ return i_declareProperties ( tool ) ; };
+{ return i_declareProperties ( tool ) ; }
 // ============================================================================
 /// get the list of accepted status
 // ============================================================================
@@ -93,7 +93,7 @@ size_t TrackUse::acceptedFitStatus  ( std::vector<LHCb::Track::FitStatus>& s ) c
         m_fitstatus.end() != iv ; ++iv ) 
   { s.push_back( (LHCb::Track::FitStatus) (*iv) ) ; }
   return m_fitstatus.size() ;
-} ;  
+}
 // ============================================================================
 /// get the list of accepted types  
 // ============================================================================
@@ -103,7 +103,7 @@ size_t TrackUse::acceptedType    ( std::vector<LHCb::Track::Types>&   t ) const
         m_type.end() != iv ; ++iv ) 
   { t.push_back( (LHCb::Track::Types) (*iv) ) ; }
   return m_type.size() ;
-} ;  
+}
 // ============================================================================
 /// get the list of rejected history
 // ============================================================================
@@ -113,7 +113,7 @@ size_t TrackUse::rejectedHistory ( std::vector<LHCb::Track::History>& h ) const
         m_history.end() != iv ; ++iv ) 
   { h.push_back( (LHCb::Track::History) (*iv) ) ; }
   return m_history.size() ;
-} ;  
+}
 // ============================================================================
 /// printout of the track into the stream 
 // ============================================================================
@@ -186,7 +186,7 @@ MsgStream& TrackUse::fillStream ( MsgStream& s ) const
     s << "];" ;
   }  
   return s ;
-} ;
+}
 // ============================================================================
 /// The END 
 // ============================================================================

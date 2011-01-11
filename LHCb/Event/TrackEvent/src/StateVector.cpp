@@ -37,7 +37,7 @@ StateVector::StateVector(const Gaudi::XYZPoint& pos,
 double StateVector::p() const
 {
   return ( fabs(qOverP()) > TrackParameters::lowTolerance ? fabs( 1./qOverP()) : HUGE_VAL );
-};
+}
 
 //=============================================================================
 // Retrieve the transverse momentum of the state
@@ -51,6 +51,6 @@ double StateVector::pt() const
     rc = sqrt( txy2/(1.+txy2) ) / fabs( m_parameters[4] );
   }
   return rc ;
-};
+}
 
 //=============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Marco Cattaneo
+ - Fix ICC warnings and remarks
+
 !========================= TrackEvent v5r9 2010-12-14 =========================
 ! 2010-12-02 - Vanya Belyaev
  - Track.cpp:

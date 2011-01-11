@@ -172,10 +172,10 @@ namespace TrackFunctor
     it = std::find( List.begin(), List.end(), value );
     delete *it;
     List.erase( it );
-  };
+  }
 
 //=============================================================================
-// Funtor to delete an object
+// Functor to delete an object
 //=============================================================================
   struct deleteObject
   { 
@@ -198,7 +198,7 @@ namespace TrackFunctor
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
     return *(*iter);
-  };
+  }
 
 //=============================================================================
 // Retrieve the const reference to the state closest to the given object
@@ -213,7 +213,7 @@ namespace TrackFunctor
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
     return *(*iter);
-  };
+  }
 
 //=============================================================================
 // Retrieve the number of LHCbIDs that fulfill a predicate
@@ -224,7 +224,7 @@ namespace TrackFunctor
   {
     const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
     return std::count_if( ids.begin(), ids.end(), pred );
-  };
+  }
 
 //=============================================================================
 // Retrieve the number of Measurements that fulfill a predicate
@@ -234,7 +234,7 @@ namespace TrackFunctor
   unsigned int nMeasurements( const Container& meas, const T& pred )
   {
     return std::count_if( meas.begin(), meas.end(), pred );
-  };
+  }
 
 //=============================================================================
 // Retrieve the number of Measurements that fulfill a predicate
@@ -247,6 +247,6 @@ namespace TrackFunctor
     return fit ? nMeasurements( fit->measurements(), pred ) : 0 ;
   }
 
-};
+}
 
 #endif   /// TrackEvent_TrackFunctor_H
