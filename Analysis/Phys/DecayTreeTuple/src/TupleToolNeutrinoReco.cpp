@@ -127,6 +127,8 @@ double TupleToolNeutrinoReco::MomentumParallel(const LHCb::VertexBase* pv,
 {
   
   // fd means flight distance
+  if (b->endVertex()==NULL || pv==NULL) return 0.;
+  
   double fd_x = b->endVertex()->position().X()-pv->position().X();
   double fd_y = b->endVertex()->position().Y()-pv->position().Y();
   double fd_z = b->endVertex()->position().Z()-pv->position().Z();
@@ -146,6 +148,7 @@ double TupleToolNeutrinoReco::MomentumPerpendicular(const LHCb::VertexBase* pv,
                                                     const LHCb::Particle* b, 
                                                     const ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >* mv) 
 {
+   if (b->endVertex()==NULL || pv==NULL) return 0.;
    double fd_x = b->endVertex()->position().X()-pv->position().X();
    double fd_y = b->endVertex()->position().Y()-pv->position().Y();
    double fd_z = b->endVertex()->position().Z()-pv->position().Z();

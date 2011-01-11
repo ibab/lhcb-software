@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Rob Lambert
+ - Protect against null pointer resolution in TupleToolNeutrinoReco
+
 ! 2011-01-04 - Juan Palacios
  - Replace all calls to desktop() by new DVAlgorithm equivalents.
  - Increase to v3r11.
