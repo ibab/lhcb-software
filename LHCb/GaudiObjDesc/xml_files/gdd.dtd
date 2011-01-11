@@ -110,6 +110,7 @@
         friend           (TRUE | FALSE)                    "FALSE"
         type             CDATA                             "void"
         argList          CDATA                             #IMPLIED
+        useBase          CDATA                             #IMPLIED
 >
 <!ELEMENT arg EMPTY>
 <!ATTLIST arg

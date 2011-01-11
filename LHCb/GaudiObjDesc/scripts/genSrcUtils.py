@@ -296,6 +296,9 @@ class genSrcUtils(importUtils.importUtils):
           else:
              self.namespace='LHCb::'
 
+          # useBase directive only in class declaration, not in definition
+          if met['attrs'].has_key('useBase') and clname == '':
+            s+= "  using " + met['attrs']['useBase'] + "::" + met['attrs']['name'] + ";\n"
           s += self.genMethod(met,clname)
 
     self.namespace='unknown::'

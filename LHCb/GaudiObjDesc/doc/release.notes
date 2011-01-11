@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-11 - Marco Cattaneo
+ - Add in gdd.dtd "useBase" attribute to method element. genSrcUtils.py uses
+   this to add a "using _base_::_method_" directive to the header file, to fix
+   warnings about hidden methods
+
+! 2011-01-11 - Marco Cattaneo
  - In genClasses.py, add generation of #pragma directive to suppress ICC remark 177
    (variable declared but never referenced) in 'Location' namespace
 
