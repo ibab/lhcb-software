@@ -32,7 +32,8 @@
         desc="BCID if in error"/>
 
       <method name="index" type="void" const="TRUE" inline="FALSE"
-              desc="update input argument with quarter, board and pu index">
+              desc="update input argument with quarter, board and pu index"
+              useBase="KeyedObject&lt;LHCb::MuonTileID&gt;">
 	<arg type="int" name="quarter" inout="BOTH"/>
 	<arg type="int" name="board" inout="BOTH"/>
 	<arg type="int" name="pu" inout="BOTH"/>

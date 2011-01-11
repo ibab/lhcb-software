@@ -4,6 +4,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-11 - Marco Cattaneo
+ - One more icc fix, needs GaudiObjDesc SVN revision 115234
+
+! 2011-01-11 - Marco Cattaneo
  - Fix icc warnings and remarks
 
 !========================= L0Event v19r0 2010-11-27 =========================
