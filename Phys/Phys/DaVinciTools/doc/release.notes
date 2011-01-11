@@ -4,6 +4,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-11 - Juan Palacios
+ - Adapt to changes in DVAlgorithm protected methods.
+
 ! 2011-01-07 - Juan Palacios
  - FilterDesktop
   . Fix counters.

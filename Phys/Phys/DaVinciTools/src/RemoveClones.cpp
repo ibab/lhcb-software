@@ -111,7 +111,7 @@ StatusCode RemoveClones::execute() {
     for(LHCb::Particle::ConstVector::const_iterator j=i->begin(); j!=i->end();j++)
     { 
       // Mark clones of unique particles for saving
-      this->cloneAndMark(*j);
+      this->cloneAndMarkTree(*j);
     }
     
   }

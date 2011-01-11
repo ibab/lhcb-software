@@ -1002,7 +1002,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
       
       // keep the good candidate:
-      const LHCb::Particle* particle = this->mark( &mother ) ;
+      const LHCb::Particle* particle = this->markTree( &mother ) ;
       if ( monitorMother ) { saved.push_back  ( particle ) ; }
       
       if ( 0 != m_motherPlots ) 

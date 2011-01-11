@@ -119,7 +119,7 @@ const LHCb::Particle* MockPhysDesktop::keep( const LHCb::Particle* )
 {
 
   error() << "IPhysDesktop::keep(Particle) obsolete."\
-    " Use this->mark(Particle) instead." << endmsg;
+    " Use this->markTree(Particle) instead." << endmsg;
   return 0;
   
 
@@ -146,7 +146,7 @@ const LHCb::RecVertex* MockPhysDesktop::keep( const LHCb::RecVertex* )
 
 StatusCode MockPhysDesktop::saveDesktop() const{
 
-  return Error("IPhysDesktop::saveDesktop() obsolete. Use this->saveParticles().");  
+  return Error("IPhysDesktop::saveDesktop() obsolete. DVAlgorithm automatically saves particles.");  
 
 }
   
@@ -154,7 +154,7 @@ StatusCode MockPhysDesktop::saveTrees( const LHCb::Particle::ConstVector& ) cons
 {
 
   return Error("IPhysDesktop::saveTrees(const Particle::ConstVector&) obsolere."\
-               " Use this->markTrees(Particle::ConstVector&)");
+               " Use this->markNewTrees(Particle::ConstVector&)");
   
 }
 
@@ -163,7 +163,7 @@ StatusCode MockPhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& )
 {
 
   return Error("IPhysDesktop::cloneTrees(const Particle::ConstVector&) obsolete."\
-               " Call this->cloneAndMark(const Particle*) for each entry in Particle::ConstVector");
+               " Call this->cloneAndMarkTrees(const Particle::ConstVector&) instead");
   
   
 }

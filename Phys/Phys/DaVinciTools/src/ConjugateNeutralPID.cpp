@@ -72,7 +72,7 @@ StatusCode ConjugateNeutralPID::execute()
   std::vector<LHCb::Particle>::iterator i;
   for( i = outparts.begin(); i != outparts.end(); i++ )
   {
-    const LHCb::Particle *deskPart = this->mark( &(*i) );
+    const LHCb::Particle *deskPart = this->markTree( &(*i) );
     if( !deskPart )
     {
       err() << " Unable to save particle" << endmsg;
