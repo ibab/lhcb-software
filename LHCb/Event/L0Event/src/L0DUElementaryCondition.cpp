@@ -25,6 +25,9 @@ std::string LHCb::L0DUElementaryCondition::summary(){
 
   std::ostringstream s(" ");
   std::ostringstream ss(" ");
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #endif
   if(m_data->scale() != 1.)ss<< " ( => " << m_data->scale() * (double) m_threshold << " MeV )" ;
   
   s << "Condition [ " << m_name << " : "

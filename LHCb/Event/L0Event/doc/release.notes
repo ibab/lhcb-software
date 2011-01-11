@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-01-11 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !========================= L0Event v19r0 2010-11-27 =========================
 ! 2010-11-18 - Olivier Deschamps
  - L0DUReport.xml : - change data member m_configuration from pointer to SmartRef<LHCb::L0DUConfig> 

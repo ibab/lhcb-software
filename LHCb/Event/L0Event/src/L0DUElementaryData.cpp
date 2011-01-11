@@ -42,7 +42,10 @@ std::string LHCb::L0DUElementaryData::summary(){
   if(m_operator != "Id")
     ss << " = op[" << m_operator << "](" << operandsName() << ")";
   std::ostringstream sss(" ");
-  if( scale() != 1.)sss<< "  ( => " << value() << " MeV) " ;
+  #ifdef __INTEL_COMPILER         // Disable ICC remark
+    #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #endif
+  if(scale() != 1.)sss<< "  ( => " << value() << " MeV) " ;
   s << " [ " << m_name << ss.str() << "  : " <<  digit() << sss.str() << " ] ";
   return s.str();
 }
