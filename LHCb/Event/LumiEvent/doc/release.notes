@@ -4,8 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
-!========================= LumiEvent v3r0p2 2010-10-25 =========================
+! 2011-01-11 - Marco Cattaneo
+ - Fix ICC warnings and remarks
 
+!========================= LumiEvent v3r0p2 2010-10-25 =========================
 ! 2010-10-19 - Jaap Panman
  - LumiMethods: add CorrectionFlag
 

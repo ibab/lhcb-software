@@ -335,6 +335,10 @@
 	<arg name="rhs" type="ExtraInfo" const="TRUE"/>
 	<arg name="factor" type="double" const="TRUE"/>
         <code> 
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
    // sum info or add new key
    ExtraInfo::iterator iterB;
    for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
@@ -503,6 +507,10 @@
       addInfo( key, ++value.first, value.second+count );
    }
    return m_extraInfo;
+#ifdef __INTEL_COMPILER         // End disable ICC remark from ROOT
+  #pragma warning(pop)
+#endif
+
         </code>
       </method>
 
@@ -747,7 +755,8 @@
         type='std::ostream&amp;'
         argList='std::ostream&amp; s'
         desc='intelligent printout'
-        const='TRUE' >
+        const='TRUE'
+        useBase='KeyedObject&lt;int&gt;'>
         <code>
 
     std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);

@@ -67,7 +67,8 @@
         type='std::ostream&amp;'
         argList='std::ostream&amp; s'
         desc='intelligent printout'
-        const='TRUE' >
+        const='TRUE'
+        useBase='DataObject'>
         <code>
 
     std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);

@@ -15,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( HltLumiSummaryDecoder );
+DECLARE_ALGORITHM_FACTORY( HltLumiSummaryDecoder )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -48,7 +48,7 @@ StatusCode HltLumiSummaryDecoder::initialize()
   m_bankType  = LHCb::RawBank::HltLumiSummary;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -117,7 +117,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
   }
 
   return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
-};
+}
 
 //=============================================================================
 // Finalize
@@ -130,4 +130,4 @@ StatusCode HltLumiSummaryDecoder::finalize()
 	   << endmsg;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}

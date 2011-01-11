@@ -41,3 +41,6 @@ macro_append LumiEventObj2Dict_dependencies LumiEventCustomDict
 #---- Produce dictionary selection files from XML description
 #---- and build the LCG dictionary using gccxml
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append LumiEventDict_cppflags "" \
+                         target-icc " -wd191"
