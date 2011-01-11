@@ -69,7 +69,7 @@ StatusCode ParticleMakerBase::execute()
     addBrem( *i );
   }
 
-  this->markTrees(constParts);
+  this->markNewTrees(constParts);
 
   if ( sc.isFailure() ){ return Error( "Not able to save particles" );}
 

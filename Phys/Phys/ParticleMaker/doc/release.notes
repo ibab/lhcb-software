@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2011-01-11 - Juan Palacios
+ - Adapt to changes in DVAlgorithm protected methods.
+
 ! 2011-01-06 - Juan Palacios
  - ParticleMakerBase
   . Call to saveParticles() no longer needed. DVAlgorithm takes care of that.
