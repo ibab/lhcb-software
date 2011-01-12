@@ -7,7 +7,7 @@
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-/** @class TupleToolPid TupleToolPid.h jborel/TupleToolPid.h
+/** @class TupleToolPid TupleToolPid.h
  *
  * \brief DLL and PID information to be stored in a Tuple
  *
@@ -25,28 +25,28 @@
  *  @author Jeremie Borel
  *  @date   2007-11-07
  *
- * Add more info: 
+ * Add more info:
  * -hasRich:  proto->richPID()!=0
  * -hasCalo:  proto->calo().size()>0
  * -hasMuon:  proto->muonPID()!=0
  * -isMuon:   proto->muonPID->IsMuon()
- *  
+ *
  *  @data   2010-03-04
  */
 class TupleToolPid : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolPid( const std::string& type,
-		     const std::string& name,
-		     const IInterface* parent);
+                const std::string& name,
+                const IInterface* parent);
 
   virtual ~TupleToolPid(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
-			   , const std::string&, Tuples::Tuple& );
+                           , const std::string&, Tuples::Tuple& );
 
-private: 
-int m_photonID; 
-int m_pi0ID; 
+private:
+  int m_photonID;
+  int m_pi0ID;
 };
 #endif // JBOREL_TUPLETOOLPID_H

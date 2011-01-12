@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-12 - Chris Jones
+ - Add LHCb::ProtoParticle::ProbNNghost to variables stored by TupleToolPid
+
 ! 2011-01-11 - Rob Lambert
  - Protect against null pointer resolution in TupleToolNeutrinoReco
 
