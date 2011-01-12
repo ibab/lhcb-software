@@ -1049,7 +1049,52 @@ namespace LoKi
      */
     typedef LoKi::Tracks::Cov2                                         TrCOV2 ;
     // ========================================================================
-  } //                                            end of namespace LoKi::Tracks
+    /** @var TrPATQUALITY 
+     *  Accessor to LHCb::Track::PatQuality
+     */
+    const LoKi::Tracks::Info TrPATQUALITY ( LHCb::Track::PatQuality , -1000 ) ;
+    // ========================================================================
+    /** @var TrMATCHCHI2
+     *  Accessor to LHCb::Track::MatchChi2
+     */
+    const LoKi::Tracks::Info TrMATCHCHI2 ( LHCb::Track::MatchChi2 , -1000 ) ;
+    // ========================================================================
+    /** @var TrFITVELOCHI2
+     *  Accessor to LHCb::Track::FitVeloChi2
+     */
+    const LoKi::Tracks::Info TrFITVELOCHI2 ( LHCb::Track::FitVeloChi2 , -1000 ) ;
+    // ========================================================================
+    /** @var TrFITVELONDOF
+     *  Accessor to LHCb::Track::FitVeloNDof
+     */
+    const LoKi::Tracks::Info TrFITVELONDOF ( LHCb::Track::FitVeloNDoF , -1000 ) ;
+    // ========================================================================
+    /** @var TrFITTCHI2
+     *  Accessor to LHCb::Track::FitTChi2
+     */
+    const LoKi::Tracks::Info TrFITTCHI2 ( LHCb::Track::FitTChi2 , -1000 ) ;
+    // ========================================================================
+    /** @var TrFITTNDOF
+     *  Accessor to LHCb::Track::FitTNDof
+     */
+    const LoKi::Tracks::Info TrFITTNDOF ( LHCb::Track::FitTNDoF , -1000 ) ;
+    // ========================================================================
+    /** @var TrFITMATCHCHI2
+     *  Accessor to LHCb::Track::FitMatchChi2
+     */
+    const LoKi::Tracks::Info TrFITMATCHCHI2 ( LHCb::Track::FitMatchChi2 , -1000 ) ;
+    // ========================================================================
+    /** @var TrTSALIKELIHOOD
+     *  Accessor to LHCb::Track::TsaLikelihood
+     */
+    const LoKi::Tracks::Info TrTSALIKELIHOOD ( LHCb::Track::TsaLikelihood , -1000 ) ;
+    // ========================================================================
+    /** @var TrCLONEDIST
+     *  Accessor to LHCb::Track::CloneDist
+     */
+    const LoKi::Tracks::Info TrCLONEDIST ( LHCb::Track::CloneDist , 1 * Gaudi::Units::km ) ;
+    // ========================================================================
+ } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================

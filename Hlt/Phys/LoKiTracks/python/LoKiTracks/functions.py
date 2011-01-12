@@ -48,11 +48,12 @@ import sys,PyCintex
 
 if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
 else                       : PyCintex.loadDict ( "libTrackEventDict" )  
-    
+
 
 # Namespaces:
 from LoKiCore.basic import cpp, std, LoKi
 LHCb     = cpp.LHCb
+
 
 _T = 'const LHCb::Track*'
 
@@ -146,6 +147,28 @@ TrFIRSTHITZ   = LoKi.Tracks.StateZ ( LHCb.State.FirstMeasurement )
 
 ## @see LoKi::Cuts::TrCOV2
 TrCOV2        = LoKi.Tracks.Cov2
+
+
+## @see LoKi::Cuts::TrPATQUALITY 
+TrPATQUALITY    = LoKi.Tracks.Info  ( LHCb.Track.PatQuality       , -1000 ) 
+## @see LoKi::Cuts::TrMATCHCHI2
+TrMATCHCHI2     = LoKi.Tracks.Info  ( LHCb.Track.MatchChi2        , -1000 ) 
+## @see LoKi::Cuts::TrFITVELOCHI2
+TrFITVELOCHI2   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloChi2      , -1000 )
+## @see LoKi::Cuts::TrFITVELONDOF
+TrFITVELONDOF   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloNDoF      , -1000 )
+## @see LoKi::Cuts::TrFITTCHI2
+TrFITTCHI2      = LoKi.Tracks.Info  ( LHCb.Track.FitTChi2         , -1000 )
+## @see LoKi::Cuts::TrFITTNDOF
+TrFITTNDOF      = LoKi.Tracks.Info  ( LHCb.Track.FitTNDoF         , -1000 )
+## @see LoKi::Cuts::TrFITMATCHCHI2
+TrFITMATCHCHI2  = LoKi.Tracks.Info  ( LHCb.Track.FitMatchChi2     , -1000 )
+## @see LoKi::Cuts::TrTSALIKELIHOOD
+TrTSALIKELIHOOD = LoKi.Tracks.Info  ( LHCb.Track.TsaLikelihood    , -1000 )
+## @see LoKi::Cuts::TrCLONEDIST
+TrCLONEDIST     = LoKi.Tracks.Info  ( LHCb.Track.CloneDist        , 1.e+9 ) 
+
+# =============================================================================
 
 
 ## functional part

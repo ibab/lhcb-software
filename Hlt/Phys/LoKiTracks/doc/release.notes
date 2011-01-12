@@ -5,6 +5,33 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-12 - Vanya Belyaev
+
+ - add more symbols to access extra-info:
+
+   ## @see LoKi::Cuts::TrPATQUALITY 
+   TrPATQUALITY    = LoKi.Tracks.Info  ( LHCb.Track.PatQuality       , -1000 ) 
+   ## @see LoKi::Cuts::TrMATCHCHI2
+   TrMATCHCHI2     = LoKi.Tracks.Info  ( LHCb.Track.MatchChi2        , -1000 ) 
+   ## @see LoKi::Cuts::TrFITVELOCHI2
+   TrFITVELOCHI2   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloChi2      , -1000 )
+   ## @see LoKi::Cuts::TrFITVELONDOF
+   TrFITVELONDOF   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloNDoF      , -1000 )
+   ## @see LoKi::Cuts::TrFITTCHI2
+   TrFITTCHI2      = LoKi.Tracks.Info  ( LHCb.Track.FitTChi2         , -1000 )
+   ## @see LoKi::Cuts::TrFITTNDOF
+   TrFITTNDOF      = LoKi.Tracks.Info  ( LHCb.Track.FitTNDoF         , -1000 )
+   ## @see LoKi::Cuts::TrFITMATCHCHI2
+   TrFITMATCHCHI2  = LoKi.Tracks.Info  ( LHCb.Track.FitMatchChi2     , -1000 )
+   ## @see LoKi::Cuts::TrTSALIKELIHOOD
+   TrTSALIKELIHOOD = LoKi.Tracks.Info  ( LHCb.Track.TsaLikelihood    , -1000 )
+   ## @see LoKi::Cuts::TrCLONEDIST
+   TrCLONEDIST     = LoKi.Tracks.Info  ( LHCb.Track.CloneDist        , 1.e+9 ) 
+  
+ - cmt/requirements 
+
+    version increment to v1r5 
+
 !========================== LoKiTracks v1r4 2010-12-16 ===================
 ! 2010-12-09 - Vanya Belyaev
 
