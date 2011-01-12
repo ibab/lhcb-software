@@ -24,12 +24,21 @@ public:
   inline static  const CLID& classID() {
     return CLID_MuonTSMap;
   }
-  using Condition::initialize;
+  /// Workaround to prevent hidden base class function
+  inline StatusCode initialize() { return Condition::initialize(); }
+
   StatusCode initialize(long num, long gridx[2],long gridy[2]);
-  using Condition::update;  
+
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // virtual function is hidden, override intended?
+  #pragma warning(push)
+#endif
   StatusCode update(long output,std::vector<long> lay,
                     std::vector<long> gridx,std::vector<long> gridy,
                     std::vector<long> synch);
+#ifdef __INTEL_COMPILER // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
   inline long numberOfLayout(){return m_NumberLogLayout;};
   inline long gridXLayout(int i){return m_GridXLayout[i];};
   inline long gridYLayout(int i){return m_GridYLayout[i];};

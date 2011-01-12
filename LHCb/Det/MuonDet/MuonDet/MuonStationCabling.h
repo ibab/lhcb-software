@@ -21,9 +21,15 @@ public:
 
   virtual ~MuonStationCabling( ); ///< Destructor
 
-  using Condition::update;
+#ifdef __INTEL_COMPILER        // Disable ICC warning
+  #pragma warning(disable:654) // virtual function is hidden, override intended?
+  #pragma warning(push)
+#endif
   virtual void update ( Condition& obj );
   virtual void update ( ValidDataObject& obj );
+#ifdef __INTEL_COMPILER // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
 
  /// Class ID of this class
   inline static  const CLID& classID() {

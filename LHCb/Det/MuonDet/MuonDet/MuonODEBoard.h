@@ -26,12 +26,21 @@ public:
   inline static  const CLID& classID() {
     return CLID_MuonODEBoard;
   }
-  using Condition::initialize;
+  /// Workaround to prevent hidden base class function
+  inline StatusCode initialize() { return Condition::initialize(); }
+
   void initialize(long number,long region);  
-  using Condition::update;
+
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // virtual function is hidden, override intended?
+  #pragma warning(push)
+#endif
   StatusCode update(long tslayx,long tslayy, long tsnumb, 
                     std::vector<long> gridx, std::vector<long> gridy,
                     std::vector<long> quadrant);  
+#ifdef __INTEL_COMPILER // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
   StatusCode addTSName(std::string name);
   inline long getODESerialNumber(){return m_ODENumber;};
   inline long getTSLayoutX(){return m_TSLayoutX;};
