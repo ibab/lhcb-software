@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2011-01-12 - Marco Cattaneo
+ - Fix again ICC warning 1125, previous fix was wrong
+
 ! 2011-01-11 - Marco Cattaneo
  - Fix ICC warnings and errors
 
