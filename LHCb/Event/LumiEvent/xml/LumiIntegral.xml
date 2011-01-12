@@ -753,10 +753,9 @@
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout'
-        const='TRUE'
-        useBase='KeyedObject&lt;int&gt;'>
+        const='TRUE'>
+	<arg name="s" type="std::ostream" const="FALSE"/>   
         <code>
 
     std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
