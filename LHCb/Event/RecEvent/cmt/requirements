@@ -33,6 +33,9 @@ macro_append RecEventObj2Dict_dependencies RecEventCustomDict
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append RecEventDict_cppflags "" \
+                        target-icc " -wd191"
 
 # Make the linker library
 #============================================================================
