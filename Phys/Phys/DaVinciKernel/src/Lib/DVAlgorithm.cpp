@@ -590,39 +590,41 @@ StatusCode DVAlgorithm::saveP2PVRelations() const {
     return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
 
-  if ( primaryVertices().empty() ) {
+  if ( primaryVertices().empty() || m_p2PVMap.empty() ) {
     if ( msgLevel ( MSG::DEBUG ) ) { 
-      debug() <<"Skip saveP2PVRelations: No Primary Vertices" << endmsg;
+      debug() <<"Skip saveP2PVRelations: No Primary Vertices or relations" 
+              << endmsg;
     }
     return StatusCode::SUCCESS;
   }
 
   LHCb::RecVertex::ConstVector verticesToSave;
+  verticesToSave.reserve(m_p2PVMap.size());
   
-  Particle2Vertex::Table* table = new Particle2Vertex::Table( m_parts.size() );
+  Particle2Vertex::Table* table = new Particle2Vertex::Table(m_p2PVMap.size());
 
   put(table, tableOutputLocation() );
 
-  LHCb::Particle::ConstVector::const_iterator iParticle = m_parts.begin();
-  LHCb::Particle::ConstVector::const_iterator iParticleEnd = m_parts.end();
+  P2PVMap::const_iterator iRelation = m_p2PVMap.begin();
+  P2PVMap::const_iterator iRelationEnd = m_p2PVMap.end();
   
-  for ( ; iParticle != iParticleEnd ; ++iParticle) {
-
-    const LHCb::VertexBase* vb = ( useP2PV() ) ? 
-      getStoredBestPV(*iParticle)
-      : getRelatedPV(*iParticle);
-      
-    if (0!=vb) {
-      const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
-      if (0!=pv) {
-        verticesToSave.push_back(pv);
-        table->relate( *iParticle, pv );
-      } else {
-        return Error("VertexBase to RecVertex dynamic cast FAILED");
+  for ( ; iRelation != iRelationEnd ; ++iRelation) {
+    
+    const LHCb::Particle* particle = (*iRelation).first;
+    if (DaVinci::Utils::inTES(particle)) {
+      const LHCb::VertexBase* vb = (*iRelation).second;
+      if (0!=vb) {
+        const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
+        if (0!=pv) {
+          verticesToSave.push_back(pv);
+          table->relate( particle, pv );
+        } else {
+          return Error("VertexBase to RecVertex dynamic cast FAILED");
+        }
       }
     }
   }
-
+  
   // now save re-fitted vertices
   if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
                                         << " to saveReFittedPVs" << endmsg;
@@ -743,17 +745,44 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   }
-  
-  const IRelatedPVFinder* finder = this->relatedPVFinder();
+
   const LHCb::RecVertex::Range PVs = this->primaryVertices();
-  if ( 0==finder || PVs.empty() ) {
-    Error("NULL IRelatedPVFinder or primary vertex container", StatusCode::FAILURE, 1 ).ignore() ;
+
+  if (PVs.empty()) {
+    Error("calculateRelatedPV: Empty primary vertex container", 
+          StatusCode::FAILURE, 0 ).ignore();
     return 0;
   }
+  
+  const IRelatedPVFinder* finder = this->relatedPVFinder();
+
+  if ( 0==finder ) {
+    Error("NULL IRelatedPVFinder", StatusCode::FAILURE, 1 ).ignore() ;
+    return 0;
+  }
+
+  if (!refitPVs()) { // no PV re-fit
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Getting related PV from finder" << endmsg;
+    }
+    
+    const LHCb::VertexBase* pv = finder->relatedPV(p, PVs);
+
+    if (msgLevel(MSG::VERBOSE)) {
+      if (0!=pv) {
+        verbose() << "Returning related vertex\n" 
+                  << pv << endmsg;
+      } else {
+        verbose() << "no related PV found" << endmsg;
+      }
+    }
+     return pv;
+  } else {
   // re-fit vertices, then look for the best one.
-  if ( refitPVs() ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting " 
-                                          << PVs.size() << " PVs"<< endmsg;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Re-fitting " << PVs.size() << " PVs"<< endmsg;
+    }
+    
     const IPVReFitter* fitter = primaryVertexReFitter();
     if (0==fitter) {
       Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
@@ -771,10 +800,11 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       }
     }
-    if (msgLevel(MSG::VERBOSE)) verbose() << "have " << reFittedPVs.size()
-                                          << " re-fitted PVs" 
-                                          << endmsg;
-
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "have " << reFittedPVs.size()
+                << " re-fitted PVs" << endmsg;
+    }
+    
     const LHCb::VertexBase* vb = finder->relatedPV(p, reFittedPVs);
 
     if (0==vb) {
@@ -790,20 +820,8 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
               StatusCode::FAILURE, 0).ignore();
       return 0;
     } else {
-      const LHCb::RecVertex* returnPV = mark(pv);
-      return returnPV;
+      return mark(pv);
     }
-  } else { // no PV re-fit
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    const LHCb::VertexBase* pv  = finder->relatedPV(p, LHCb::RecVertex::ConstVector(PVs.begin(), PVs.end()));
-
-    if (0!=pv) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" 
-                                            << pv << endmsg;
-    } else {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "no related PV found" << endmsg;
-    }
-     return pv;
   }
   
 }

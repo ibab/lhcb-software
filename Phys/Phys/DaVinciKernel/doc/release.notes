@@ -5,6 +5,10 @@
 !============================================================================
 
 ! 2011-01-12 - Juan Palacios
+ - DVAlgorithm
+  . Use relations always when UseP2PVRelations = true.
+  . Save only relations available at the end of execute(), i.e. do not
+    force calculation of relations that weren't used for anything.
  - DVAlgorithm: Separate input particles from marked particles. Marked 
    particles available via i_markedParticles() method.
  - Remove non-const DVAlgorithm::i_particles() method.

@@ -88,14 +88,17 @@
  *  - <b>PVReFitters</b> : the map for possible primary vertex re-fitters 
  *     @see IPVReFitter
  *
- *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for best PV. Default: false.
+ *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for 
+ * best PV. Default: false.
  *
  *  - <b>UseP2PVRelations</b> : bool. Use P2PV relations internally 
- * or calculate best PV on the fly. Forced to false for events with one PV. 
- * Forced to true if <b>ReFitPVs</b> is true, for all events. Default: true.
+ * or calculate best PV on the fly. Forced to true if <b>ReFitPVs</b> is true. 
+ * Default: true.
  *
  *  - <b>WriteP2PVRelations</b> : bool. Write P2PV relations to 
- * output TES location "<algorithm output location>/Particle2VertexRelations". 
+ * output TES location "<algorithm output location>/Particle2VertexRelations".
+ * Writes the relations for all particles in the TES after saving local 
+ * particles, including relations for input particles. Does not write anything
  * Default: true.
  * 
  *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <InputLocations>"/Particle2VertexRelations". 
@@ -720,7 +723,7 @@ private:
   /// Should Particle->PV relations table be used?
   inline bool useP2PV() const 
   {
-    return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );
+    return m_refitPVs ? true : m_useP2PV;
   }
 
   /// Should Particle->PV relations be stored in the TES? 
@@ -792,7 +795,9 @@ private:
 
   mutable LHCb::RecVertex::ConstVector m_refittedPVs;  ///< Local Container of re-fitted primary vertices
 
-  mutable GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> m_p2PVMap; ///< Local store of Particle->PV relations.
+  typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
+
+  mutable P2PVMap m_p2PVMap; ///< Local store of Particle->PV relations.
 
 protected:
   
@@ -937,7 +942,7 @@ private:
                      LHCb::Particle::ConstVector& localParticles,
                      LHCb::Vertex::ConstVector& localSecondaryVertices,
                      LHCb::RecVertex::ConstVector& primaryVertices,
-                     GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& tableP2PV)
+                     P2PVMap& tableP2PV)
       :
       m_guardInputP(inputParticles),
       m_guardLocalP(localParticles),
@@ -960,7 +965,7 @@ private:
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardLocalP;
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> m_guardLocalSV;
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> m_guardPV;
-    GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& m_table;
+    P2PVMap& m_table;
     
   };  
 
