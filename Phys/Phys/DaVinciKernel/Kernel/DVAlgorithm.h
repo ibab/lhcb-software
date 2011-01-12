@@ -696,7 +696,7 @@ private:
   /// Does the particle have a relation to a PV stored in the local
   /// relations table?
   inline bool hasStoredRelatedPV(const LHCb::Particle* particle) const {
-    m_p2PVMap.find(particle) != m_p2PVMap.end();
+    return m_p2PVMap.find(particle) != m_p2PVMap.end();
   }
   
 
