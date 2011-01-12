@@ -143,11 +143,11 @@ public: // IDVAlgorithm
   {
     return useP2PV() ? getRelatedPV(particle) : calculateRelatedPV(particle);
   }
-  /// get all loaded particles 
+  /// get all loaded input particles 
   virtual const LHCb::Particle::Range particles() const 
   {
-    return LHCb::Particle::Range ( m_parts.begin() ,
-                                   m_parts.end()   ) ; 
+    return LHCb::Particle::Range ( m_inputParts.begin() ,
+                                   m_inputParts.end()   ) ; 
   }
   /** direct const access to container of input primary vertices.
    *  @author Juan Palacios juan.palacios@nikhef.nl
@@ -665,8 +665,13 @@ protected:
     return ( hasStoredRelatedPV(particle) ) ? m_p2PVMap[particle] : 0 ;  
   }
   
-  /// Inline access to local Particle storage.
+  /// Inline access to local input Particle storage.
   inline const LHCb::Particle::ConstVector& i_particles() const {
+    return m_inputParts;
+  }
+
+  /// Inline access to local marked Particle storage.
+  inline const LHCb::Particle::ConstVector& i_markedParticles() const {
     return m_parts;
   }
 
@@ -779,7 +784,9 @@ private:
 
   std::string m_tableOutputLocation; ///< Output location TES folder.
 
-  LHCb::Particle::ConstVector m_parts;      ///< Local Container of particles
+  LHCb::Particle::ConstVector m_parts;      ///< Local Container of local particles
+
+  LHCb::Particle::ConstVector m_inputParts; ///< Local container of input particles.
 
   LHCb::Vertex::ConstVector m_secVerts;     ///< Local Container of secondary vertices
 
@@ -926,13 +933,15 @@ private:
 
   public:
 
-    DVAlgorithmGuard(LHCb::Particle::ConstVector& particles,
-                     LHCb::Vertex::ConstVector& secondaryVertices,
+    DVAlgorithmGuard(LHCb::Particle::ConstVector& inputParticles,
+                     LHCb::Particle::ConstVector& localParticles,
+                     LHCb::Vertex::ConstVector& localSecondaryVertices,
                      LHCb::RecVertex::ConstVector& primaryVertices,
                      GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& tableP2PV)
       :
-      m_guardP(particles),
-      m_guardSV(secondaryVertices),
+      m_guardInputP(inputParticles),
+      m_guardLocalP(localParticles),
+      m_guardLocalSV(localSecondaryVertices),
       m_guardPV(primaryVertices),
       m_table(tableP2PV)
     {}
@@ -947,8 +956,9 @@ private:
 
   private:
 
-    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardP;
-    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> m_guardSV;
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardInputP;
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardLocalP;
+    DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> m_guardLocalSV;
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> m_guardPV;
     GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& m_table;
     

@@ -5,6 +5,8 @@
 !============================================================================
 
 ! 2011-01-12 - Juan Palacios
+ - DVAlgorithm: Separate input particles from marked particles. Marked 
+   particles available via i_markedParticles() method.
  - Remove non-const DVAlgorithm::i_particles() method.
  - Add DVAlgorithm::unRelatePV(const LHCb::Particle) method.
  - Use GaudiUtils::HashMap<Particle*, VertexBase*> internally for Particle->

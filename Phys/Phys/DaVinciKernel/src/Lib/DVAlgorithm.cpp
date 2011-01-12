@@ -360,7 +360,8 @@ StatusCode DVAlgorithm::sysExecute ()
 
   // Make sure particles, secondary vertices, primary vertices and relations
   // tables are cleared each event.
-  DVAlgorithmGuard guard(m_parts,
+  DVAlgorithmGuard guard(m_inputParts,
+                         m_parts,
                          m_secVerts,
                          m_refittedPVs,
                          m_p2PVMap);
@@ -502,28 +503,25 @@ StatusCode DVAlgorithm::loadParticles() {
                 << location << " = " << parts.size() << endmsg;
     }
     
-    m_parts    .reserve ( m_parts    .size () + parts.size() ) ;
-    m_secVerts .reserve ( m_secVerts .size () + parts.size() ) ;
+    m_inputParts    .reserve ( m_inputParts    .size () + parts.size() ) ;
+    //    m_secVerts .reserve ( m_secVerts .size () + parts.size() ) ;
 
     for( LHCb::Particle::Range::const_iterator icand = parts.begin(); 
          icand != parts.end(); icand++ ) {
-      m_parts.push_back(*icand);
-      const LHCb::Vertex* endVtx = (*icand)->endVertex();
-      if (endVtx) m_secVerts.push_back(endVtx);
+      m_inputParts.push_back(*icand);
+//       const LHCb::Vertex* endVtx = (*icand)->endVertex();
+//       if (endVtx) m_secVerts.push_back(endVtx);
     }
     
     if (msgLevel(MSG::VERBOSE)) { 
-      verbose() << "Number of Particles, Vertices after adding "
-                << *iloc << " = " << m_parts.size() 
-                << ", " << m_secVerts.size() << endmsg;
+      verbose() << "Number of Particles after adding "
+                << *iloc << " = " << m_parts.size() << endmsg; 
     }
 
   }
 
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "    Total number of particles " << m_parts.size() << endmsg;
-    verbose() << "    Total number of secondary vertices " << m_secVerts.size()
-              << endmsg;
   }
   
   // statistics: 
@@ -584,6 +582,10 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
 //=============================================================================
 StatusCode DVAlgorithm::saveP2PVRelations() const {
   
+  //@todo this needs to scan the P->PV map, saving relations for all particles
+  // that are in the TES. This way it saves relations actually used in
+  // the algorithm.
+
   if (!saveP2PV()) {
     return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
