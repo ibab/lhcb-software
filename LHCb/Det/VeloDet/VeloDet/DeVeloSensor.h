@@ -271,7 +271,9 @@ public:
   /// Returns the hardware module number
   inline unsigned int moduleId() const {return m_moduleId;}
 
-  using DetectorElement::type;
+  /// Workaround to prevent hidden base class function
+  inline const std::type_info& type(const std::string &name) const
+                      {return ParamValidDataObject::type(name);}
   /// Returns the sensor type
   inline std::string type() const {return m_type;}
   inline std::string fullType() const {return m_fullType;}

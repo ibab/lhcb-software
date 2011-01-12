@@ -3,6 +3,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2011-01-12 - Marco Cattaneo
+ - Fix again ICC warning 1125, previous fix was wrong
+
 ! 2011-01-10 - Marco Cattaneo
  - Fix icc warnings and remarks
 
