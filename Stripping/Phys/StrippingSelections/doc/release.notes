@@ -5,6 +5,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-01-12 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+     Fix a stupid typo in proton cuts for Lambda_c+ :-( 
+
+     Many thanks to Grant McGregor! 
+
+
 !========================== StrippingSelections v2r3 2010-12-20 ===============
 
 ! 2010-12-20 - Juan Palacios
