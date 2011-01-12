@@ -452,11 +452,19 @@ StatusCode DeRichHPD::updateDemagProperties()
 //=========================================================================
 StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
 {
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) // Conversion from may lose significant bits
+  #pragma warning(push)
+#endif
   const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_sim";
   const std::vector<double> & coeff_sim = m_demagConds[field]->paramVect<double>(paraLoc);
 
   SmartDataPtr<TabulatedProperty> dem(dataSvc(), XmlHpdDemagPath+"Sim_"+
                                       boost::lexical_cast<std::string>(m_number));
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
+
   if (!dem) {
     error() << "Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
     return StatusCode::FAILURE;
@@ -539,7 +547,14 @@ StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
 //=========================================================================
 StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
 {
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) // Conversion from may lose significant bits
+  #pragma warning(push)
+#endif
   const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_rec";
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
   const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc);
   m_MDMS_version = 0;
   if ( m_demagConds[field]->exists("version") )

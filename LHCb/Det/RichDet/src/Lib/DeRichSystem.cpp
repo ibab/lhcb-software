@@ -58,8 +58,15 @@ StatusCode DeRichSystem::initialize ( )
 
   debug() << "Initialize " << name() << endmsg;
 
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+  #pragma warning(disable:279) // Controlling expression is constant
+  #pragma warning(push)
+#endif
   m_condBDLocs[Rich::Rich1] = "Rich1DetectorNumbers";
   m_condBDLocs[Rich::Rich2] = "Rich2DetectorNumbers";
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+  #pragma warning(pop)
+#endif
   SmartRef<Condition> rich1numbers = condition( m_condBDLocs[Rich::Rich1] );
   SmartRef<Condition> rich2numbers = condition( m_condBDLocs[Rich::Rich2] );
 
@@ -341,10 +348,17 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       if ( data[data.size()-1] == '"' ) data = data.substr(0,data.size()-1);
       // Format of string is 'LogicalID/HardwareID'
       const int slash = data.find_first_of( "/" );
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) // Conversion from may lose significant bits
+  #pragma warning(push)
+#endif
       const Rich::DAQ::Level1LogicalID  logID  ( boost::lexical_cast<int>(data.substr(0,slash)) );
       const Rich::DAQ::Level1HardwareID hardID ( boost::lexical_cast<int>(data.substr(slash+1)) );
-      const Rich::DetectorType rich = this->richDetector(hardID);
-      debug() << rich << " L1 ID mapping : Logical=" << logID
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
+      const Rich::DetectorType richTmp = this->richDetector(hardID);
+      debug() << richTmp << " L1 ID mapping : Logical=" << logID
               << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;
@@ -358,8 +372,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       // Just make up a one to one mapping
       const Rich::DAQ::Level1LogicalID  logID  ( *iM );
       const Rich::DAQ::Level1HardwareID hardID ( *iM );
-      const Rich::DetectorType rich = this->richDetector(hardID);
-      debug() << rich << " DC06 L1 ID mapping : Logical=" << logID
+      const Rich::DetectorType richTmp = this->richDetector(hardID);
+      debug() << richTmp << " DC06 L1 ID mapping : Logical=" << logID
               << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;

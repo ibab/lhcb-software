@@ -175,8 +175,15 @@ StatusCode DeRich2::initialize()
     fatal() << "Cannot load " << panel1Location << endmsg;
     return StatusCode::FAILURE;
   }
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+  #pragma warning(disable:279) // Controlling expression is constant
+  #pragma warning(push)
+#endif
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+  #pragma warning(pop)
+#endif
 
   // initialize Rich2Gas
   SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(), DeRichLocations::Rich2Gas);

@@ -8,6 +8,6 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichHPDPanel>  XmlDeRichHPDPanelCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeRichHPDPanelCnv );
+DECLARE_CONVERTER_FACTORY( XmlDeRichHPDPanelCnv )
 
 #endif // XMLDERICHHPDPANELCNV_CPP

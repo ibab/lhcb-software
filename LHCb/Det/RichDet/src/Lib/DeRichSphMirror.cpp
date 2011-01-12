@@ -101,15 +101,15 @@ StatusCode DeRichSphMirror::initialize()
   const std::string mirNumString = name().substr(pos2+1);
 
   // get DeRich2
-  SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocations::Rich2);
-  if (!deRich2) {
-    msg << MSG::FATAL << "Cannot locate " << DeRichLocations::Rich2 << endmsg;
-    return StatusCode::FAILURE;
-  }
+  //  SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocations::Rich2);
+  //  if (!deRich2) {
+  //    msg << MSG::FATAL << "Cannot locate " << DeRichLocations::Rich2 << endmsg;
+  //    return StatusCode::FAILURE;
+  //  }
 
-  double hexRadius = 510.0*Gaudi::Units::mm;
-  if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
-    hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
+  //  double hexRadius = 510.0*Gaudi::Units::mm;
+  //  if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
+  //    hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
 
   m_solid = geometry()->lvolume()->solid();
   const std::string type = m_solid->typeName();

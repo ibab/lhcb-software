@@ -10,6 +10,6 @@
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichHPD>  XmlDeRichHPDCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeRichHPDCnv );
+DECLARE_CONVERTER_FACTORY( XmlDeRichHPDCnv )
 
 #endif // XMLDERICHHPDCNV_H

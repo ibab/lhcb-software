@@ -230,7 +230,14 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 //=========================================================================
 int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+  #pragma warning(disable:279) // Controlling expression is constant
+  #pragma warning(push)
+#endif
   return ( m_HPDPanels[side(globalPoint)]->sensitiveVolumeID( globalPoint ) );
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+  #pragma warning(pop)
+#endif
 }
 
 //=============================================================================

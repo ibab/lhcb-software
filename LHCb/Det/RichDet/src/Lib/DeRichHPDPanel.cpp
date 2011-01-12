@@ -338,6 +338,10 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
     return StatusCode::FAILURE;
   }
 
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) // non-pointer conversion from "double" to "unsigned int" may lose significant bits
+  #pragma warning(push)
+#endif
   // pixel 0,0 is at min x and max y (top left corner)
   const unsigned int pixelColumn = static_cast<unsigned int>
     ((m_siliconHalfLengthX + inSiliconX) / m_pixelSize);
@@ -351,6 +355,10 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   const unsigned int subPixel = static_cast<unsigned int>
     ((m_siliconHalfLengthY-inSiliconY-pixelRow*m_pixelSize) / m_subPixelSize);
   id.setPixelSubRow( subPixel );
+
+#ifdef __INTEL_COMPILER // Re-enable ICC remarks
+  #pragma warning(pop)
+#endif
 
   return StatusCode::SUCCESS;
 }

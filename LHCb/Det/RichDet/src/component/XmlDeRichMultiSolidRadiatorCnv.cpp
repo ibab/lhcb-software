@@ -9,6 +9,6 @@
 
 typedef  XmlUserDetElemCnv<DeRichMultiSolidRadiator>  
 XmlDeRichMultiSolidRadiatorCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeRichMultiSolidRadiatorCnv );
+DECLARE_CONVERTER_FACTORY( XmlDeRichMultiSolidRadiatorCnv )
 
 #endif // XMLDERICHMULTISOLIDRADIATORCNV_CPP

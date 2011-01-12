@@ -32,7 +32,7 @@
 #include "RichDet/DeRichLocations.h"
 
 // Boost
-#include "boost/array.hpp"
+//#include "boost/array.hpp"
 
 class DeRichSystem;
 

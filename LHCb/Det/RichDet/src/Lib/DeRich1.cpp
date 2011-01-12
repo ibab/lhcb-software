@@ -184,8 +184,15 @@ StatusCode DeRich1::initialize()
     fatal() << "Cannot load " << panel1Location << endmsg;
     return StatusCode::FAILURE;
   }
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+  #pragma warning(disable:279) // Controlling expression is constant
+  #pragma warning(push)
+#endif
   m_HPDPanels[panel0->side()] = panel0;
   m_HPDPanels[panel1->side()] = panel1;
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+  #pragma warning(pop)
+#endif
 
   // DC06 compatible mirror (mis)alignment
   bool alignMirros( false );

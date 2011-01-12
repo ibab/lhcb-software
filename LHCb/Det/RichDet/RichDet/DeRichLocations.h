@@ -34,6 +34,9 @@ namespace DeRichLocations
   // ----------------------------------------------------------------------------------------
   // Location Strings
   // ----------------------------------------------------------------------------------------
+#ifdef __INTEL_COMPILER        // Disable ICC remark
+  #pragma warning(disable:177) // variable was declared but never referenced
+#endif
 
   /// Rich1 location in transient detector store
   static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
