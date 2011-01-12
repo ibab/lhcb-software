@@ -16,6 +16,8 @@ Purpose: LHCb reconstruction program
   . #115007: reduce CaloReco verbosity
   . #115040: New default DDDB tag for real data: head-20101206
   . #115196: New expert monitoring for ProtoPIDANN
+  . #115240: Switch default ANN configuration from MC2010Tune to MC10TuneV1,
+             activate the new Ghost ID network for each track type.
 
 </PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
