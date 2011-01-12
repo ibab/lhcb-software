@@ -57,6 +57,10 @@ namespace LHCb
 
     /// If GOD_NOALLOC flag set, do nothing
 #ifndef GOD_NOALLOC
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1720) // Operator new has no corresponding member operator delete (to be called if an exception is thrown during initialization of an allocated object)
+  #pragma warning(push)
+#endif
 
     /// operator new
     inline static void* operator new ( size_t size )
@@ -91,6 +95,9 @@ namespace LHCb
     {
       ::operator delete ( p, pObj );
     }
+#ifdef __INTEL_COMPILER // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
 
 #endif
 
