@@ -7,6 +7,8 @@
 ! 2011-01-12 - Juan Palacios
  - Remove non-const DVAlgorithm::i_particles() method.
  - Add DVAlgorithm::unRelatePV(const LHCb::Particle) method.
+ - Use GaudiUtils::HashMap<Particle*, VertexBase*> internally for Particle->
+   PV relations. Greatly simplifies a lot of code.
 
 ! 2011-01-11 Juan Palacios
  - DVAlgorithm

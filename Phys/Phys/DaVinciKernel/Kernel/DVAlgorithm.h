@@ -8,6 +8,7 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/HashMap.h"
 // ============================================================================
 // PartProp
 // ============================================================================
@@ -36,6 +37,10 @@
 #include "Kernel/IMassFit.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDirectionFit.h"
+// ============================================================================
+// from DaVinciTypes
+// ============================================================================
+#include "Kernel/Particle2Vertex.h"
 // ============================================================================
 // from DaVinciKernel
 // ============================================================================
@@ -386,8 +391,7 @@ public:
                      const LHCb::VertexBase* vertex) const
   {
     if (0==particle || 0== vertex ) return;
-    m_p2PVTable.i_removeFrom(particle).ignore();
-    m_p2PVTable.i_relate(particle, vertex ).ignore();
+    m_p2PVMap[particle]=vertex;
   }
 
   /**
@@ -400,7 +404,7 @@ public:
    **/
   inline void unRelatePV(const LHCb::Particle* particle) const
   {
-    m_p2PVTable.i_removeFrom(particle).ignore();
+    m_p2PVMap.erase(particle);
   }
   
   
@@ -656,20 +660,14 @@ protected:
 
   /// Get the best related PV from the local relations table. Return 0 if 
   /// nothing is there. Does not invoke any calculations.
-  const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const;
+  inline const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const 
+  {
+    return ( hasStoredRelatedPV(particle) ) ? m_p2PVMap[particle] : 0 ;  
+  }
+  
   /// Inline access to local Particle storage.
   inline const LHCb::Particle::ConstVector& i_particles() const {
     return m_parts;
-  }
-
-  /// inline access to Particle->PV relations table
-  inline Particle2Vertex::LightTable& i_p2PVTable() {
-    return m_p2PVTable;
-  }
-
-  /// inline access to Particle->PV relations table
-  inline Particle2Vertex::LightTable& i_p2PVTable() const {
-    return m_p2PVTable;
   }
 
 private:
@@ -697,7 +695,10 @@ private:
 
   /// Does the particle have a relation to a PV stored in the local
   /// relations table?
-  bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
+  inline bool hasStoredRelatedPV(const LHCb::Particle* particle) const {
+    m_p2PVMap.find(particle) != m_p2PVMap.end();
+  }
+  
 
   /// Does the event have more than 1 primary vertex?
   inline bool multiPV() const 
@@ -724,13 +725,6 @@ private:
 
   /// Save the local Particle->Vertex relations table to the TES
   StatusCode saveP2PVRelations() const;
-
-  /// Get the PV related to Particle part directly from the local
-  /// relations table. Return 0 is no relation.
-  inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
-    {
-      return DaVinci::bestVertexBase(m_p2PVTable.i_relations(part));
-    }
 
   /// Mark a local PV for saving.
   const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
@@ -791,9 +785,7 @@ private:
 
   mutable LHCb::RecVertex::ConstVector m_refittedPVs;  ///< Local Container of re-fitted primary vertices
 
-  mutable Particle2Vertex::LightTable m_p2PVTable; ///< Table of Particle to PV relations
-
-  Particle2Vertex::Map m_p2PVMap;
+  mutable GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> m_p2PVMap; ///< Local store of Particle->PV relations.
 
 protected:
   
@@ -937,7 +929,7 @@ private:
     DVAlgorithmGuard(LHCb::Particle::ConstVector& particles,
                      LHCb::Vertex::ConstVector& secondaryVertices,
                      LHCb::RecVertex::ConstVector& primaryVertices,
-                     Particle2Vertex::LightTable& tableP2PV)
+                     GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& tableP2PV)
       :
       m_guardP(particles),
       m_guardSV(secondaryVertices),
@@ -958,7 +950,7 @@ private:
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Particle::ConstVector> m_guardP;
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::Vertex::ConstVector> m_guardSV;
     DaVinci::Utils::OrphanPointerContainerGuard<LHCb::RecVertex::ConstVector> m_guardPV;
-    Particle2Vertex::LightTable& m_table;
+    GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*>& m_table;
     
   };  
 

@@ -363,7 +363,7 @@ StatusCode DVAlgorithm::sysExecute ()
   DVAlgorithmGuard guard(m_parts,
                          m_secVerts,
                          m_refittedPVs,
-                         m_p2PVTable);
+                         m_p2PVMap);
 
   StatusCode sc = loadEventInput();
 
@@ -467,8 +467,6 @@ void DVAlgorithm::loadRelations(const Particle2Vertex::Table::Range relations)
 
   for (  ; i!= iEnd ; ++i) {
     relate(i->from(), i->to());
-//     ( m_p2PVTable.i_removeFrom(i->from()) ).ignore();
-//     (m_p2PVTable.i_relate(i->from(),i->to())).ignore() ;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "Reading a " << i->from()->particleID().pid() 
                 << " related to " <<  i->to()->position() << endmsg ;
@@ -547,19 +545,11 @@ const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle) {
     DaVinci::cloneTree ( particle , clonemap , m_parts , m_secVerts ) ;
   
   // copy relations directly from table to avoid triggering any new P->PV 
-  // relations calculation
-  Particle2Vertex::Table::Range range = m_p2PVTable.i_relations(particle);
-  
-  if ( msgLevel(MSG::VERBOSE))
-  {
-    verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
-  }
-  //
-  for ( Particle2Vertex::Table::Range::const_iterator i = range.begin();
-        i != range.end(); ++i ) { 
-    m_p2PVTable.i_relate ( newp , i->to() ); 
-  }
-  //
+
+  const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
+
+  if (0!=bestPV) relate(newp, bestPV);
+
   return newp ;
 }
 //=============================================================================
@@ -617,7 +607,7 @@ StatusCode DVAlgorithm::saveP2PVRelations() const {
   for ( ; iParticle != iParticleEnd ; ++iParticle) {
 
     const LHCb::VertexBase* vb = ( useP2PV() ) ? 
-      i_relatedVertexFromTable(*iParticle)
+      getStoredBestPV(*iParticle)
       : getRelatedPV(*iParticle);
       
     if (0!=vb) {
@@ -842,25 +832,9 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
       return 0;
     }
   } else {
-    const Particle2Vertex::Table::Range range = m_p2PVTable.i_relations(part);
-    return DaVinci::bestVertexBase(range);
+    return getStoredBestPV(part);    
   }
   
-}
-// ============================================================================
-const LHCb::VertexBase* DVAlgorithm::getStoredBestPV(const LHCb::Particle* particle) const
-{
-  if ( hasStoredRelatedPV(particle) ) {
-    return DaVinci::bestVertexBase(m_p2PVTable.i_relations(particle));
-  } else {
-    return 0;
-  }  
-  
-}
-// ============================================================================
-bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
-{
-  return ! m_p2PVTable.i_relations(particle).empty();
 }
 // ============================================================================
 // Finalize the algorithm + post-actions
