@@ -225,81 +225,141 @@ PP_ONLYBREMINFO = PP_ONLYDETECTOR ( LoKi.ProtoParticles.HasDetector.CALO_BREMINF
 PP_ONLYCALOINFO = PP_ONLYDETECTOR ( LoKi.ProtoParticles.HasDetector.CALO_CALOINFO ) 
 
 
-
+## @see LoKi::Cuts::PP_RichDLLe
 PP_RichDLLe        = PP_INFO ( LHCb.ProtoParticle.RichDLLe        , -1000 )
+## @see LoKi::Cuts::PP_RichDLLmu
 PP_RichDLLmu       = PP_INFO ( LHCb.ProtoParticle.RichDLLmu       , -1000 )
+## @see LoKi::Cuts::PP_RichDLLpi
 PP_RichDLLpi       = PP_INFO ( LHCb.ProtoParticle.RichDLLpi       , -1000 )
+## @see LoKi::Cuts::PP_RichDLLk
 PP_RichDLLk        = PP_INFO ( LHCb.ProtoParticle.RichDLLk        , -1000 )
+## @see LoKi::Cuts::PP_RichDLLp
 PP_RichDLLp        = PP_INFO ( LHCb.ProtoParticle.RichDLLp        , -1000 )
+## @see LoKi::Cuts::PP_RichDLLbt
 PP_RichDLLbt       = PP_INFO ( LHCb.ProtoParticle.RichDLLbt       , -1000 )
+## @see LoKi::Cuts::PP_RichPIDStatus
 PP_RichPIDStatus   = PP_INFO ( LHCb.ProtoParticle.RichPIDStatus   , 0 , 0 ) 
   
+## @see LoKi::Cuts::PP_MuonMuLL
 PP_MuonMuLL        = PP_INFO ( LHCb.ProtoParticle.MuonMuLL        , -1000 )
+## @see LoKi::Cuts::PP_MuonBkgLL
 PP_MuonBkgLL       = PP_INFO ( LHCb.ProtoParticle.MuonBkgLL       , -1000 )
+## @see LoKi::Cuts::PP_MuonNshared
 PP_MuonNShared     = PP_INFO ( LHCb.ProtoParticle.MuonNShared     ,    -1 )
+## @see LoKi::Cuts::PP_MuonPIDStatus
 PP_MuonPIDStatus   = PP_INFO ( LHCb.ProtoParticle.MuonPIDStatus   , 0 , 0 ) 
 
+## @see LoKi::Cuts::PP_InAccMuon
 PP_InAccMuon       = PP_INFO ( LHCb.ProtoParticle.InAccMuon       , False , False )
+## @see LoKi::Cuts::PP_InAccSpd
 PP_InAccSpd        = PP_INFO ( LHCb.ProtoParticle.InAccSpd        , False , False )
+## @see LoKi::Cuts::PP_InAccPrs
 PP_InAccPrs        = PP_INFO ( LHCb.ProtoParticle.InAccPrs        , False , False )
+## @see LoKi::Cuts::PP_InAccEcal
 PP_InAccEcal       = PP_INFO ( LHCb.ProtoParticle.InAccEcal       , False , False )
+## @see LoKi::Cuts::PP_InAccHcal
 PP_InAccHcal       = PP_INFO ( LHCb.ProtoParticle.InAccHcal       , False , False )
+## @see LoKi::Cuts::PP_InAccBrem
 PP_InAccBrem       = PP_INFO ( LHCb.ProtoParticle.InAccBrem       , False , False )
 
+## @see LoKi::Cuts::PP_CaloTrMatch
 PP_CaloTrMatch     = PP_INFO ( LHCb.ProtoParticle.CaloTrMatch     , -1000   )
+## @see LoKi::Cuts::PP_CaloElectronMatch
 PP_CaloElectronMatch   = PP_INFO ( LHCb.ProtoParticle.CaloElectronMatch   , -1000 )
+## @see LoKi::Cuts::PP_CaloBremMatch
 PP_CaloBremMatch   = PP_INFO ( LHCb.ProtoParticle.CaloBremMatch   , -1000   )
+
+## @see LoKi::Cuts::PP_CaloChargedSpd
 PP_CaloChargedSpd  = PP_INFO ( LHCb.ProtoParticle.CaloChargedSpd  ,    -1   )
+## @see LoKi::Cuts::PP_CaloChargedPrs
 PP_CaloChargedPrs  = PP_INFO ( LHCb.ProtoParticle.CaloChargedPrs  , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloChargedEcal
 PP_CaloChargedEcal = PP_INFO ( LHCb.ProtoParticle.CaloChargedEcal , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CaloDepositID
 PP_CaloDepositID   = PP_INFO ( LHCb.ProtoParticle.CaloDepositID   , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloShowerShape
 PP_ShowerShape     = PP_INFO ( LHCb.ProtoParticle.ShowerShape     , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloClusterMass
 PP_ClusterMass     = PP_INFO ( LHCb.ProtoParticle.ClusterMass     , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CaloNeutralSpd
 PP_CaloNeutralSpd  = PP_INFO ( LHCb.ProtoParticle.CaloNeutralSpd  ,    -1   )
+## @see LoKi::Cuts::PP_CaloNeutralPrs
 PP_CaloNeutralPrs  = PP_INFO ( LHCb.ProtoParticle.CaloNeutralPrs  , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloNeutralEcal
 PP_CaloNeutralEcal = PP_INFO ( LHCb.ProtoParticle.CaloNeutralEcal , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CaloSpdE
 PP_CaloSpdE        = PP_INFO ( LHCb.ProtoParticle.CaloSpdE        , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloPesE
 PP_CaloPrsE        = PP_INFO ( LHCb.ProtoParticle.CaloPrsE        , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloEcalE
 PP_CaloEcalE       = PP_INFO ( LHCb.ProtoParticle.CaloEcalE       , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloHcalE
 PP_CaloHcalE       = PP_INFO ( LHCb.ProtoParticle.CaloHcalE       , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CaloEcalChi2
 PP_CaloEcalChi2    = PP_INFO ( LHCb.ProtoParticle.CaloEcalChi2    , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloBremChi2
 PP_CaloBremChi2    = PP_INFO ( LHCb.ProtoParticle.CaloBremChi2    , -1.e+10 )
+## @see LoKi::Cuts::PP_CaloClusChi2
 PP_CaloClusChi2    = PP_INFO ( LHCb.ProtoParticle.CaloClusChi2    , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CaloTrajectoryL
 PP_CaloTrajectoryL = PP_INFO ( LHCb.ProtoParticle.CaloTrajectoryL , -1.e+10 )
 
+## @see LoKi::Cuts::PP_EcalPIDe
 PP_EcalPIDe        = PP_INFO ( LHCb.ProtoParticle.EcalPIDe        , -1.e+10 )
+## @see LoKi::Cuts::PP_PrsPIDe
 PP_PrsPIDe         = PP_INFO ( LHCb.ProtoParticle.PrsPIDe         , -1.e+10 )
+## @see LoKi::Cuts::PP_BremPIDe
 PP_BremPIDe        = PP_INFO ( LHCb.ProtoParticle.BremPIDe        , -1.e+10 )
+## @see LoKi::Cuts::PP_HcalPIDe
 PP_HcalPIDe        = PP_INFO ( LHCb.ProtoParticle.HcalPIDe        , -1.e+10 )
 
+## @see LoKi::Cuts::PP_HcalPIDmu
 PP_HcalPIDmu       = PP_INFO ( LHCb.ProtoParticle.HcalPIDmu       , -1.e+10 )
+## @see LoKi::Cuts::PP_EcalPIDmu
 PP_EcalPIDmu       = PP_INFO ( LHCb.ProtoParticle.EcalPIDmu       , -1.e+10 )
 
+## @see LoKi::Cuts::PP_PhotonID
 PP_PhotonID        = PP_INFO ( LHCb.ProtoParticle.PhotonID        , -1.e+10 )
 
+## @see LoKi::Cuts::PP_VeloCharge
 PP_VeloCharge      = PP_INFO ( LHCb.ProtoParticle.VeloCharge      , -1.e+10 )
 
+## @see LoKi::Cuts::PP_TrackChi2PerDof
 PP_TrackChi2PerDof = PP_INFO ( LHCb.ProtoParticle.TrackChi2PerDof , -1.e+10 )
+## @see LoKi::Cuts::PP_TrackNumDof
 PP_TrackNumDof     = PP_INFO ( LHCb.ProtoParticle.TrackNumDof     ,      -1 )
 
+## @see LoKi::Cuts::PP_TrackType
 PP_TrackType       = PP_INFO ( LHCb.ProtoParticle.TrackType       , LHCb.Track.TypeUnknown    )
+## @see LoKi::Cuts::PP_TrackHistory
 PP_TrackHistory    = PP_INFO ( LHCb.ProtoParticle.TrackHistory    , LHCb.Track.HistoryUnknown )
+## @see LoKi::Cuts::PP_TrackP
 PP_TrackP          = PP_INFO ( LHCb.ProtoParticle.TrackP          , -1.e+10 )
+## @see LoKi::Cuts::PP_TrackPt
 PP_TrackPt         = PP_INFO ( LHCb.ProtoParticle.TrackPt         , -1.e+10 )
 
+## @see LoKi::Cuts::PP_CombDLLe
 PP_CombDLLe        = PP_INFO ( LHCb.ProtoParticle.CombDLLe        , -1000  )
+## @see LoKi::Cuts::PP_CombDLLmu
 PP_CombDLLmu       = PP_INFO ( LHCb.ProtoParticle.CombDLLmu       , -1000  )
+## @see LoKi::Cuts::PP_CombDLLpi
 PP_CombDLLpi       = PP_INFO ( LHCb.ProtoParticle.CombDLLpi       , -1000  )
+## @see LoKi::Cuts::PP_CombDLLk
 PP_CombDLLk        = PP_INFO ( LHCb.ProtoParticle.CombDLLk        , -1000  )
+## @see LoKi::Cuts::PP_CombDLLp
 PP_CombDLLp        = PP_INFO ( LHCb.ProtoParticle.CombDLLp        , -1000  )
 
+## @see LoKi::Cuts::PP_ProbNNe
 PP_ProbNNe         = PP_INFO ( LHCb.ProtoParticle.ProbNNe         , -1000  )
+## @see LoKi::Cuts::PP_ProbNNmu
 PP_ProbNNmu        = PP_INFO ( LHCb.ProtoParticle.ProbNNmu        , -1000  )
+## @see LoKi::Cuts::PP_ProbNNghost
+PP_ProbNNghost     = PP_INFO ( LHCb.ProtoParticle.ProbNNghost     , -1000  )
 
 
 ## @see LoKi::Cuts::PP_ISMUON 

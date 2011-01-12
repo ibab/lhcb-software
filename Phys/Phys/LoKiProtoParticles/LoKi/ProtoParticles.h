@@ -1315,37 +1315,62 @@ namespace LoKi
                                                       LHCb::Track::TypeUnknown           , 
                                                       LHCb::Track::TypeUnknown           ) ;
     // ========================================================================
-    /// @var PP_TrackHistory
+    /** @var PP_TrackHistory
+     *  Simple accessor to LHCb::ProtoParticle::TrackHistory 
+     */
     const LoKi::ProtoParticles::Info PP_TrackHistory ( LHCb::ProtoParticle::TrackHistory , 
                                                        LHCb::Track::HistoryUnknown       , 
                                                        LHCb::Track::HistoryUnknown       ) ;
     // ========================================================================
-    /// @var PP_TrackP
+    /** @var PP_TrackP
+     *  Simple accessor to LHCb::ProtoParticle::TrackP
+     */
     const LoKi::ProtoParticles::Info PP_TrackP  ( LHCb::ProtoParticle::TrackP  , -1.e+10 ) ;
     // ========================================================================
-    /// @var PP_TrackPt
+    /** @var PP_TrackPt
+     *  Simple accessor to LHCb::ProtoParticle::TrackP
+     */
     const LoKi::ProtoParticles::Info PP_TrackPt ( LHCb::ProtoParticle::TrackPt , -1.e+10 ) ;
     // ========================================================================
-    /// @var PP_CombDLLe 
+    /** @var PP_CombDLLe 
+     *  Simple accessor to LHCb::ProtoParticle::CombDLLe
+     */
     const LoKi::ProtoParticles::Info PP_CombDLLe  ( LHCb::ProtoParticle::CombDLLe  , -1000 ) ;
     // ========================================================================
-    /// @var PP_CombDLLmu
+    /** @var PP_CombDLLmu
+     *  Simple accessor to LHCb::ProtoParticle::CombDLLmu
+     */
     const LoKi::ProtoParticles::Info PP_CombDLLmu ( LHCb::ProtoParticle::CombDLLmu , -1000 ) ;
     // ========================================================================
-    /// @var PP_CombDLLpi
+    /** @var PP_CombDLLpi
+     *  Simple accessor to LHCb::ProtoParticle::CombDLLpi
+     */
     const LoKi::ProtoParticles::Info PP_CombDLLpi ( LHCb::ProtoParticle::CombDLLpi , -1000 ) ;
     // ========================================================================
-    /// @var PP_CombDLLk
+    /** @var PP_CombDLLk
+     *  Simple accessor to LHCb::ProtoParticle::CombDLLk
+     */
     const LoKi::ProtoParticles::Info PP_CombDLLk  ( LHCb::ProtoParticle::CombDLLk  , -1000 ) ;
     // ========================================================================
-    /// @var PP_CombDLLp
+    /** @var PP_CombDLLp
+     *  Simple accessor to LHCb::ProtoParticle::CombDLLp
+     */
     const LoKi::ProtoParticles::Info PP_CombDLLp  ( LHCb::ProtoParticle::CombDLLp  , -1000 ) ;
     // ========================================================================
-    /// @var PP_ProbNNe
-    const LoKi::ProtoParticles::Info PP_ProbNNe   ( LHCb::ProtoParticle::ProbNNe   , -1000 ) ;
+    /** @var PP_ProbNNe
+     *  Simple accessor to LHCb::ProtoParticle::ProbNNe
+     */
+    const LoKi::ProtoParticles::Info PP_ProbNNe   ( LHCb::ProtoParticle::ProbNNe        , -1000 ) ;
     // ========================================================================
-    /// @var PP_ProbNNmu
-    const LoKi::ProtoParticles::Info PP_ProbNNmu  ( LHCb::ProtoParticle::ProbNNmu  , -1000 ) ;
+    /** @var PP_ProbNNmu
+     *  Simple accessor to LHCb::ProtoParticle::ProbNNmu
+     */
+    const LoKi::ProtoParticles::Info PP_ProbNNmu    ( LHCb::ProtoParticle::ProbNNmu     , -1000 ) ;
+    // ========================================================================
+    /** @var PP_ProbNNghost
+     *  Simple accessor to LHCb::ProtoParticle::ProbNNghost
+     */
+    const LoKi::ProtoParticles::Info PP_ProbNNghost ( LHCb::ProtoParticle::ProbNNghost  , -1000 ) ;
     // ========================================================================
     /** @var PP_ISMUON
      *  check 'is-muon'

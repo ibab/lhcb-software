@@ -1568,9 +1568,6 @@ LoKi::ProtoParticles::RichAboveThres::fillStream ( std::ostream& s ) const
   return s << " PP_RICHTHRES( " << m_particle << " ) " ;
   //
 }
-
-
-
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
@@ -1590,19 +1587,21 @@ LoKi::ProtoParticles::NShared::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::ProtoParticle* points to NULL, return -1000 " ) ;
-    return -1000 ;                                                   // RETURN    
+    Error ( "LHCb::ProtoParticle* points to NULL, return -10000 " ) ;
+    return -10000 ;                                                  // RETURN    
   }
   //
-  const LHCb::MuonPID* muon = p->muonPID() ;
+  if ( p -> hasInfo ( LHCb::ProtoParticle::MuonNShared  ) ) 
+  { return p -> info ( LHCb::ProtoParticle::MuonNShared , -1000 ) ; }
   //
+  const LHCb::MuonPID* muon = p->muonPID() ;
   if ( 0 == muon ) 
   {
     Error ( "LHCb::MuonPID* points to NULL, return -100 " ) ;
     return -100 ;                                                   // RETURN    
   }
   //
-  return muon->nShared () ;
+  return muon -> nShared () ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
