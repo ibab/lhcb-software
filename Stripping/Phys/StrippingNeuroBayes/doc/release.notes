@@ -4,6 +4,10 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-01-12 - Juan Palacios
+ - Replace calls to IPhysDesktop methods with DVAlgorithm replacements.
+ - Increase to v1r1.
+
 !======================= StrippingNeuroBayes v1r0 2010-11-02 =================
 
 ! 2010-11-04 Ulrich Kerzel

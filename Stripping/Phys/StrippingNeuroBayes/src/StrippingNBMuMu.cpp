@@ -129,7 +129,6 @@ StatusCode StrippingNBMuMu::execute() {
 
 
   StatusCode sc = StatusCode::SUCCESS;
-  LHCb::Particle::ConstVector acceptedParticles;
 
 #ifdef __GNUC__
 
@@ -137,23 +136,19 @@ StatusCode StrippingNBMuMu::execute() {
   setFilterPassed(false);
 
   // get particles - DiMu candidate  
-  LHCb::Particle::ConstVector cands = desktop()->particles();
+  const LHCb::Particle::ConstVector& cands = this->i_particles();
   const int nCand = cands.size();
 
-  if ( msgLevel(MSG::VERBOSE) ) 
-    verbose() << "got # particles from desktop " << nCand << endmsg;
-  
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "got # particles from local storage " << nCand << endmsg;
+  }
 
-  LHCb::Particle::ConstVector::const_iterator iCand;
-  LHCb::Particle::ConstVector::const_iterator iCandBegin = cands.begin();
+  LHCb::Particle::ConstVector::const_iterator iCand = cands.begin();
   LHCb::Particle::ConstVector::const_iterator iCandEnd   = cands.end();
-  
-  
 
-  for (iCand = iCandBegin; iCand != iCandEnd; iCand++) {
-    LHCb::Particle* particle = const_cast<LHCb::Particle*>(*iCand);
-    
-    sc = StrippingNBMuMu::getInputVar(*particle);
+  for ( ; iCand != iCandEnd; iCand++) {
+
+    sc = StrippingNBMuMu::getInputVar(*(*iCand));
 
     if (sc == StatusCode::SUCCESS) {
 
@@ -163,22 +158,21 @@ StatusCode StrippingNBMuMu::execute() {
         } //for i
       } // if msg
     
+      const double netOut = m_NBExpert->nb_expert(m_inArray);
+      const double prob   = (1.0 + netOut)*0.5;
 
-      double netOut = m_NBExpert->nb_expert(m_inArray);
-      double prob   = (1.0 + netOut)*0.5;
-
-      if ( msgLevel(MSG::DEBUG) ) 
-        debug() << "MuMu cand: Network output " << netOut << " probability " << prob << endmsg;
-
-      double mass = (*iCand)->measuredMass()/Gaudi::Units::GeV;
+      if ( msgLevel(MSG::DEBUG) ) {
+        debug() << "MuMu cand: Network output " << netOut 
+                << " probability " << prob << endmsg;
+      }
+      
+      const double mass = (*iCand)->measuredMass()/Gaudi::Units::GeV;
       
       if (m_PlotHisto) {
         plot1D(netOut, "MuMuNet" , "NeuroBayes MuMu network output ", -1.0          , 1.0          ,         120);
         plot1D(prob  , "MuMuProb", "NeuroBayes MuMu network prob "  ,  0.0          , 1.0          ,         120);
         plot1D(mass  , "mAll"    , "mass, all cand"                 ,  m_PlotMassMin, m_PlotMassMax, m_PlotNBins);
       } //if
-      
-      
 
       // accept candidate?
       if (prob > m_NetworkCut) {
@@ -188,18 +182,15 @@ StatusCode StrippingNBMuMu::execute() {
           plot1D(mass  , "mAcc"        , "mass, acc cand"                         ,   m_PlotMassMin, m_PlotMassMax, m_PlotNBins); 
           plot1D(prob  , "MuMuProbAcc" , "NeuroBayes MuMu network prob acc cand"  ,  0.0           , 1.0          ,         120);
         } //if
-
+        LHCb::Particle* particle = (*iCand)->clone();
         setFilterPassed(true);
         particle->addInfo(LHCb::Particle::LastGlobal +  1, netOut);   
         particle->addInfo(LHCb::Particle::LastGlobal +  2, prob);   
-        desktop()->keep ( particle ) ;
-        acceptedParticles.push_back(particle);
+        this->markNewTree(particle);
       } // if prob
     } // if sc
   } // for iCand
   
-
-  sc = desktop()->cloneTrees(acceptedParticles);
   return sc;
   
 #endif 
@@ -239,8 +230,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
     return StatusCode::FAILURE;
   }//if #Kaons
 
-  LHCb::Particle* muPlus  = NULL;
-  LHCb::Particle* muMinus = NULL;
+  const LHCb::Particle* muPlus  = NULL;
+  const LHCb::Particle* muMinus = NULL;
   SmartRefVector< LHCb::Particle >::const_iterator iMu;
   SmartRefVector< LHCb::Particle >::const_iterator iMuBegin = muons.begin();
   SmartRefVector< LHCb::Particle >::const_iterator iMuEnd   = muons.end();
@@ -252,9 +243,9 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 
   for (iMu = iMuBegin; iMu != iMuEnd; iMu++){
         if ( (*iMu)->charge() > 0) {
-          muPlus  = const_cast<LHCb::Particle*>((const LHCb::Particle*)(*iMu));
+          muPlus  = *iMu;
         } else {
-          muMinus = const_cast<LHCb::Particle*>((const LHCb::Particle*)(*iMu));
+          muMinus = *iMu;
         }// if
       }//for iKaon
 
