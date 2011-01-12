@@ -28,6 +28,9 @@ macro_append MCEventObj2Dict_dependencies MCEventCustomDict
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+# Disable some compiler warnings in the automatically generated dict code
+macro_append MCEventDict_cppflags "" \
+                       target-icc " -wd191"
 
 # Build linker library
 #============================================================================

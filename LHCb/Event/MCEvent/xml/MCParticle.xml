@@ -147,7 +147,14 @@
         type="double"
        >
          <code>
-  return  m_momentum.eta() ;
+  #ifdef __INTEL_COMPILER         // Disable ICC remark from GenVector/eta.h
+    #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+    #pragma warning(push)
+  #endif
+   return  m_momentum.eta() ;
+  #ifdef __INTEL_COMPILER         // Re-enable ICC remark 1572
+    #pragma warning(pop)
+  #endif
          </code>
        </method>
        <relation
