@@ -1,3 +1,7 @@
+2011-01-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/eclipse/cdt_cproject_template.xml: exclude _dict.cpp files from indexing
+
 2010-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* tests/SetupProjectTest.py: fixed usage of the temporary directory in order to match the
