@@ -1,4 +1,7 @@
 // local
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // virtual function is hidden, override intended?
+#endif
 #include "Event/L0MuonError.h"
 
 //-----------------------------------------------------------------------------

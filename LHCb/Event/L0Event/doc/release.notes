@@ -3,8 +3,8 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
-! 2011-01-11 - Marco Cattaneo
- - One more icc fix, needs GaudiObjDesc SVN revision 115234
+! 2011-01-12 - Marco Cattaneo
+ - Fix again ICC warning 1125, previous fix was wrong
 
 ! 2011-01-11 - Marco Cattaneo
  - Fix icc warnings and remarks
