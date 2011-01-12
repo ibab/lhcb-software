@@ -4,6 +4,10 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-12 - Juan Palacios
+ - CombineParticles
+  . Decouple from DVAlgorithm Particle->PV relations implementation.
+
 ! 2011-01-11 - Juan Palacios
  - Adapt to changes in DVAlgorithm protected methods.
 

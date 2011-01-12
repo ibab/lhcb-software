@@ -71,9 +71,6 @@ namespace
   class PV_Sentry 
   {
     // ========================================================================
-    /// the actual type of relation table 
-    typedef Particle2Vertex::LightTable Table ;
-    // ========================================================================
   public:
     // ========================================================================
     /** constructor 
@@ -81,15 +78,15 @@ namespace
      *  @param particle the particle 
      */
     PV_Sentry 
-    ( Table&                table    , 
+    ( DVAlgorithm*          parent, 
       const LHCb::Particle* particle )
-      : m_table    ( table    ) 
+      : m_parent   ( parent   ) 
       , m_particle ( particle ) 
     {}
     /// destructor 
     ~PV_Sentry() 
     {
-      m_table.i_removeFrom ( m_particle ).ignore() ;
+      m_parent->unRelatePV(m_particle);
     }
     // ========================================================================
   private:
@@ -100,7 +97,7 @@ namespace
   private:
     // ========================================================================
     /// the relation table (REFERENCE!)
-    Table& m_table ;                         // the relation table (REFERENCE!)
+    DVAlgorithm* m_parent ;                         // the relation table (REFERENCE!)
     /// the temporary particle 
     const LHCb::Particle* m_particle ;                // the temporary particle 
     // ========================================================================
@@ -892,10 +889,6 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   bool problem = false ;
   
-  // the actual type of relation table 
-  typedef Particle2Vertex::LightTable Table ;
-  Table& p2pv_table = this->i_p2PVTable() ;
-  
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 1000 ) ;
   
@@ -975,7 +968,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       LHCb::Particle mother ( idecay->mother().pid() ) ;
       
       // lock the relation table Particle -> Primary Vertex:
-      PV_Sentry lock ( p2pv_table , &mother ) ;
+      PV_Sentry lock ( this , &mother ) ;
       
       // use default particle combiner to create the composed particle
       /** use default particle combiner to create the composed particle
