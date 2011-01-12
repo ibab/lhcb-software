@@ -648,9 +648,9 @@ protected:
   }
 
   /// Inline access to local Particle storage.
-  inline LHCb::Particle::ConstVector& i_particles() {
-    return m_parts;
-  }
+//   inline LHCb::Particle::ConstVector& i_particles() {
+//     return m_parts;
+//   }
 
   /// inline access to Particle->PV relations table
   inline Particle2Vertex::LightTable& i_p2PVTable() {

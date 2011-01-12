@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-12 - Juan Palacios
+ - Remove non-const DVAlgorithm::i_particles() method.
+
 ! 2011-01-11 Juan Palacios
  - DVAlgorithm
   . Bug fix: move TES check out of particle saving loops.
