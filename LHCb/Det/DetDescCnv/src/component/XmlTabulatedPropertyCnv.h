@@ -77,13 +77,19 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
-  using XmlGenericCnv::i_processObj;
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // virtual function is hidde, override intended?
+  #pragma warning(push)
+#endif
   /** This processes the current object.
    * Overrides the default method in XmlGenericCnv
    * @param refpObject the object to be processed
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_processObj (DataObject* refpObject);
+#ifdef __INTEL_COMPILER // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
   
 
  private:
