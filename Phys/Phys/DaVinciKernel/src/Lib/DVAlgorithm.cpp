@@ -466,8 +466,9 @@ void DVAlgorithm::loadRelations(const Particle2Vertex::Table::Range relations)
   Particle2Vertex::Table::Range::const_iterator iEnd = relations.end() ;
 
   for (  ; i!= iEnd ; ++i) {
-    ( m_p2PVTable.i_removeFrom(i->from()) ).ignore();
-    (m_p2PVTable.i_relate(i->from(),i->to())).ignore() ;
+    relate(i->from(), i->to());
+//     ( m_p2PVTable.i_removeFrom(i->from()) ).ignore();
+//     (m_p2PVTable.i_relate(i->from(),i->to())).ignore() ;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "Reading a " << i->from()->particleID().pid() 
                 << " related to " <<  i->to()->position() << endmsg ;

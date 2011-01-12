@@ -382,13 +382,28 @@ public:
    * @author Juan Palacios palacios@physik.uzh.ch
    *
    **/
-  inline void relate(const LHCb::Particle*   part, 
-                     const LHCb::VertexBase* vert) const
+  inline void relate(const LHCb::Particle*   particle, 
+                     const LHCb::VertexBase* vertex) const
   {
-    if (0==part || 0== vert ) return;
-    (m_p2PVTable.i_removeFrom(part)).ignore();
-     m_p2PVTable.i_relate(part, vert );
+    if (0==particle || 0== vertex ) return;
+    m_p2PVTable.i_removeFrom(particle).ignore();
+    m_p2PVTable.i_relate(particle, vertex ).ignore();
   }
+
+  /**
+   * 
+   * Remove the PV relation of a particle if there is one.
+   *
+   * @param particle
+   * @author Juan Palacios palacios@physik.uzh.ch
+   *
+   **/
+  inline void unRelatePV(const LHCb::Particle* particle) const
+  {
+    m_p2PVTable.i_removeFrom(particle).ignore();
+  }
+  
+  
 
 public:
   

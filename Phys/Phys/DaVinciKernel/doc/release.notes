@@ -6,6 +6,7 @@
 
 ! 2011-01-12 - Juan Palacios
  - Remove non-const DVAlgorithm::i_particles() method.
+ - Add DVAlgorithm::unRelatePV(const LHCb::Particle) method.
 
 ! 2011-01-11 Juan Palacios
  - DVAlgorithm
