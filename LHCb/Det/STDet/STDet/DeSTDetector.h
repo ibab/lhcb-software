@@ -120,7 +120,11 @@ public:
   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
-  using DetectorElement::isValid;
+  /// Workaround to prevent hidden base class function
+  inline bool isValid() const { return ValidDataObject::isValid(); }
+  /// Workaround to prevent hidden base class function
+  inline bool isValid(const Gaudi::Time& t) const
+                              { return ValidDataObject::isValid(t); }
   /** check channel number is valid */
   bool isValid(const LHCb::STChannelID aChannel);
 

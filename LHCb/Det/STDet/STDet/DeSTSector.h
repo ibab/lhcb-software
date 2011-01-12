@@ -279,10 +279,12 @@ public:
   */
   LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
+  /// Workaround to prevent hidden base class function
+  inline const std::type_info& type(const std::string &name) const
+                      {return ParamValidDataObject::type(name);}
   /**
    * @return std::string type
    */
-  using DeSTBaseElement::type;
   std::string type() const;
 
   /** @return double stereo angle */
