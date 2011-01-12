@@ -472,16 +472,19 @@ LoKi::Particles::NShared::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return -10000 " ) ;
-    return -10000 ;                                                   // RETURN    
+    Error ( "LHCb::Particle* points to NULL, return -100000 " ) ;
+    return -100000 ;                                                   // RETURN    
   }
   //
   const LHCb::ProtoParticle* proto = p->proto () ;
   if ( 0 == proto ) 
   {
-    Error ( "LHCb::ProtoParticle* points to NULL, return -1000 " ) ;
-    return -1000 ;                                                   // RETURN    
+    Error ( "LHCb::ProtoParticle* points to NULL, return -10000 " ) ;
+    return -10000 ;                                                   // RETURN    
   }
+  //
+  if ( proto->hasInfo ( LHCb::ProtoParticle::MuonNShared ) ) 
+  { return proto->info ( LHCb::ProtoParticle::MuonNShared , -1000 ) ; }
   //
   const LHCb::MuonPID* muon = proto->muonPID() ;
   if ( 0 == muon ) 

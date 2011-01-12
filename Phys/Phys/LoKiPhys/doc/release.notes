@@ -5,6 +5,16 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-12 - Vanya Belyaev
+
+ - add new symbol:
+
+    CLONEDIST - accessor to LHcb::Track::CloneDist 
+
+ - cmt/requirements 
+
+    version increment to v9r7 
+
 ! ========================== LoKiPhys v9r6 2010-12-17 =========================
 
 ! 2010-12-10 - Vanya Belyaev

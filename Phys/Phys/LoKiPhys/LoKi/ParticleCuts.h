@@ -930,6 +930,16 @@ namespace LoKi
      */
     typedef LoKi::Particles::ClosestApproachChi2                    CLAPPCHI2 ;
     // ========================================================================
+    /** @var CLONEDIST 
+     *  Accessor to LHCb::Track::CloneDist
+     *  @see LoKi::Particles::TrackInfo 
+     *  @see LHCb::Track
+     *  @see LHCb::Track::CloneDist
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-01-12
+     */
+    const LoKi::Particles::TrackInfo CLONEDIST ( LHCb::Track::CloneDist , 1.e+9 ) ;
+    // ========================================================================
     /** @typedef CLOSESTAPPROACH
      *  Evaluator of the closest approach 
      *  distance between 2 particles 
@@ -4333,7 +4343,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNNe  ( LHCb::ProtoParticle::ProbNNe  , 0 , -1000 ) ;
+    const PPINFO      PROBNNe  ( LHCb::ProtoParticle::ProbNNe  , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNmu
      *  New NN-based variable for PID by Chris Jones
@@ -4351,7 +4361,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNNmu ( LHCb::ProtoParticle::ProbNNmu , 0 , -1000 ) ;
+    const PPINFO      PROBNNmu ( LHCb::ProtoParticle::ProbNNmu , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNpi
      *  New NN-based variable for PID by Chris Jones
@@ -4369,7 +4379,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNNpi ( LHCb::ProtoParticle::ProbNNpi , 0 , -1000 ) ;
+    const PPINFO      PROBNNpi ( LHCb::ProtoParticle::ProbNNpi , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNk
      *  New NN-based variable for PID by Chris Jones
@@ -4387,7 +4397,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNk   ( LHCb::ProtoParticle::ProbNNk  , 0 , -1000 ) ;
+    const PPINFO      PROBNNk  ( LHCb::ProtoParticle::ProbNNk  , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNK
      *  New NN-based variable for PID by Chris Jones
@@ -4405,7 +4415,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNK   ( LHCb::ProtoParticle::ProbNNk  , 0 , -1000 ) ;
+    const PPINFO      PROBNNK  ( LHCb::ProtoParticle::ProbNNk  , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNp
      *  New NN-based variable for PID by Chris Jones
@@ -4423,7 +4433,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO      PROBNp   ( LHCb::ProtoParticle::ProbNNp  , 0 , -1000 ) ;
+    const PPINFO      PROBNNp  ( LHCb::ProtoParticle::ProbNNp  , -1 , -1000 ) ;
     // ========================================================================
     /** @var PROBNNghost
      *  New NN-based variable for PID by Chris Jones
@@ -4441,7 +4451,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-04
      */
-    const PPINFO PROBNghost ( LHCb::ProtoParticle::ProbNNghost  , 0 , -1000 ) ;
+    const PPINFO PROBNNghost ( LHCb::ProtoParticle::ProbNNghost  , -1 , -1000 ) ;
     // ========================================================================
     /** @typedef PINFO 
      *  Trivial function which evaluates LHCb::Particle::info
@@ -5576,6 +5586,29 @@ namespace LoKi
      *  @date 2009-02-11
      */
     typedef LoKi::Particles::TrackInfo                                  TINFO ;
+    // ========================================================================
+    /** @typedef TRINFO
+     *  Primitive functor to get 'extra-info' form the underlying track
+     *
+     *  @code
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // prepare the funtor:
+     *  const TRINFO info = TRINFO ( 1234 , -1000 , -2000 ) ;
+     *
+     *  // use it!
+     *  const double value = info ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::TrackInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    typedef LoKi::Particles::TrackInfo                                  TRINFO ;
     // ========================================================================
     /** @typedef TRACKFROMPV 
      *  The simple predicate which evaluates to 'true' for 

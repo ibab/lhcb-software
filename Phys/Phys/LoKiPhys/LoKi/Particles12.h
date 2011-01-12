@@ -375,6 +375,7 @@ namespace LoKi
      *  @see LHCb::Track
      *  @see LHCb::Track::info
      *  @see LoKi::Cuts::TINFO 
+     *  @see LoKi::Cuts::TRINFO 
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-02-11

@@ -311,6 +311,8 @@ CTAUDOT  = TDOT
 CLAPP    = LoKi.Particles.ClosestApproach 
 ## @see LoKi::Cuts::CLAPPCHI2
 CLAPPCHI2= LoKi.Particles.ClosestApproachChi2
+## @see LoKi::Cuts::CLONEDIST
+CLONEDIST = LoKi.Particles.TrackInfo ( LHCb.Track.CloneDist , 1.e+9 ) 
 ## @see LoKi::Cuts::MINCLAPP
 MINCLAPP = LoKi.Particles.MinClosestApproach 
 ## @see LoKi::Cuts::MINCLAPPCHI2 
@@ -429,6 +431,8 @@ HASCALOS = PPHASCALOS
 THASINFO = LoKi.Particles.TrackHasInfo
 ## @see LoKi::Cuts::TINFO
 TINFO    = LoKi.Particles.TrackInfo 
+## @see LoKi::Cuts::TRINFO
+TRINFO   = LoKi.Particles.TrackInfo 
 ## @see LoKi::Cuts::TRACKINFO
 TRACKINFO= LoKi.Particles.TrackInfo 
 ## @see LoKi::Cuts::TRCHI2 
