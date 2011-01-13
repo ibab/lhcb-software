@@ -99,6 +99,10 @@ def _useDev_cb(option, opt_str, value, parser):
     parser.values.usedevarea = True
     parser.values.use_cache = False
 
+def _pythonVer_cb(option, opt_str, value, parser):
+    parser.values.pythonvers = value
+    parser.values.use_cache = False
+
 
 class LbLoginScript(SourceScript):
     _version = __version__
@@ -168,6 +172,8 @@ class LbLoginScript(SourceScript):
         parser.set_defaults(pythonvers=None)
         parser.add_option("--python-version",
                           dest="pythonvers",
+                          action="callback",
+                          callback=_pythonVer_cb,
                           help="version of python to be setup [default: %default]")
         parser.set_defaults(get_python=True)
         parser.add_option("--no-python",

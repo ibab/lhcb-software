@@ -1,3 +1,7 @@
+2011-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: Disabled the cache if an explicit version of python is requested.
+
 2011-01-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/eclipse/cdt_cproject_template.xml: exclude _dict.cpp files from indexing
