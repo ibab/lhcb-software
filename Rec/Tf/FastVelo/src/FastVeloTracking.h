@@ -94,7 +94,6 @@ private:
   double m_rExtraTol;       ///< R match tol. extrapolating, in pitch unit
   double m_rOverlapTol;     ///< R match in overlap, in pitch unit
   int    m_maxMissed;       ///< Maximum number of consecutive missed sensors
-  int    m_maxMissedOpp;    ///< Maximum number of consecutive missed sensors in opposite side
   unsigned int m_minToTag;  ///< Minimum number of hit on track to tag as used
 
   double m_phiMatchZone;

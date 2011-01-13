@@ -44,7 +44,6 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "rExtraTol"       , m_rExtraTol      = 4.0       );
   declareProperty( "rOverlapTol"     , m_rOverlapTol    = 1.0       );
   declareProperty( "MaxMissed"       , m_maxMissed      = 1         );
-  declareProperty( "MaxMissedOpp"    , m_maxMissedOpp   = 6         );
   declareProperty( "MinToTag"        , m_minToTag       = 4         );
 
   declareProperty( "PhiMatchZone"    , m_phiMatchZone   = 0.410  );   // sin(22.5 degrees) = 0.38, some tolerance
