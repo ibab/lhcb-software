@@ -1,30 +1,5 @@
 // $Id: ICaloTrackMatch.h,v 1.12 2008-09-22 00:50:30 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $  
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.11  2007/03/29 16:55:34  odescham
-// change in ICaloMomentum + standardization of the package
-//
-// Revision 1.10  2006/03/22 18:21:51  odescham
-// Migration to new Event Model
-//
-// Revision 1.9  2005/11/07 12:08:25  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.8  2004/09/02 18:52:52  ibelyaev
-//  make preparation for HLT/Trigger
-//
-// Revision 1.7  2004/02/17 11:51:55  ibelyaev
-//  move IID* from CaloInterfaces to src directory
-//
-// Revision 1.6  2004/02/17 11:42:29  ibelyaev
-//  fix in Likel(i,y)hoods
-//
-// Revision 1.5  2002/05/23 09:41:37  ibelyaev
-//  add 'state' method to ICaloTrackMatch interface
-//
-// ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKMATCH_H 
 #define CALOINTERFACES_ICALOTRACKMATCH_H 1
 // Include files
@@ -37,7 +12,7 @@ namespace LHCb{
   class CaloPosition  ; // from CaloEvent package 
   class Track         ; // from TrackEvent   package
   class State         ; // from TrackEvent   package
-};
+}
 static const InterfaceID IID_ICaloTrackMatch( "ICaloTrackMatch" , 4 , 0 );
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  

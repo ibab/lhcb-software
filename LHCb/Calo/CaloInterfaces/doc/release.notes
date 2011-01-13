@@ -4,6 +4,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2011-01-13 - Marco Cattaneo
+ - Fix icc warnings and remarks
+
 !========================= CaloInterfaces v8r0 2010-10-25 =========================
 ! 2010-10-07 - Dmitry Golubkov
  - ICaloHypo2Calo : on request of Vanya change from passing values

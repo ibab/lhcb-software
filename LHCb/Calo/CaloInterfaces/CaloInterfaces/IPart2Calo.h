@@ -31,6 +31,10 @@ public:
   static const InterfaceID& interfaceID() { return IID_IPart2Calo; }
 
   virtual StatusCode         initialize() = 0;
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // ITrack2Calo::match hidden
+  #pragma warning(push)
+#endif
   virtual bool  match(const  LHCb::Particle* part,
                       std::string det = DeCalorimeterLocation::Ecal,
                       CaloPlane::Plane plane = CaloPlane::ShowerMax, 
@@ -41,6 +45,9 @@ public:
                       CaloPlane::Plane plane = CaloPlane::ShowerMax, 
                       double delta = 0.
                       )= 0;
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
   virtual bool inAcceptance()=0;
   
 
