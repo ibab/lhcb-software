@@ -16,6 +16,7 @@
 // ============================================================================
 #include "Kernel/TransporterFunctions.h"
 #include "Kernel/DecayTree.h"
+#include "Kernel/RecVertexHolder.h"
 #include "Kernel/ParticleFilters.h"
 #include "Kernel/HashIDs.h"
 //#include "Kernel/DaVinciStringUtils.h"

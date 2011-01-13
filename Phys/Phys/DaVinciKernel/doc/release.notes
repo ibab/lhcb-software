@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-13 - Vanya Belyaev
+
+ - add LHCb::RecVertexHolder into dictionary 
+
 ! 2011-01-12 - Juan Palacios
  - DVAlgorithm: fix input particles counter.
 

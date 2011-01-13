@@ -17,6 +17,10 @@
 
 <class name = "LHCb::HashIDs" />
 
+<class name = "LHCb::RecVertexHolder">
+  <field name="m_vertex" transient="true" />
+</class> 
+
 <exclusion>
   <class name = "LHCb::DecayTree">
     <method name="cloneMap"/>
