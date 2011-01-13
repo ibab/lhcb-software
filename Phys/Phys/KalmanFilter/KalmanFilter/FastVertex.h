@@ -56,8 +56,10 @@ namespace LHCb
 namespace LoKi 
 {
   // ==========================================================================
-  namespace FastVertex 
+  class GAUDI_API FastVertex 
   {
+    // ========================================================================
+  public:
     // ========================================================================
     /** make 2-prong vertex from two tracks 
      *  @param track1  (INPUT) the first  track
@@ -70,7 +72,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     LHCb::RecVertexHolder makeVertex 
     ( const LHCb::Track*   track1           , 
       const LHCb::Track*   track2           ,
@@ -89,7 +91,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     LHCb::RecVertexHolder makeVertex 
     ( const LHCb::Track*   track1           , 
       const LHCb::Track*   track2           ,
@@ -105,7 +107,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     StatusCode distance 
     ( const LHCb::Track*      track           , 
       const LHCb::VertexBase* vertex          , 
@@ -121,7 +123,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     StatusCode distance 
     ( const LHCb::Track*      track           , 
       const LHCb::VertexBase* vertex          , 
@@ -137,7 +139,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     StatusCode distance 
     ( const LHCb::Track*      track1          , 
       const LHCb::Track*      track2          , 
@@ -153,7 +155,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     StatusCode distance 
     ( const LHCb::Track*      track1          , 
       const LHCb::Track*      track2          , 
@@ -170,7 +172,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     bool checkDistance 
     ( const LHCb::Track*      track           , 
       const LHCb::VertexBase* vertex          ,
@@ -187,7 +189,7 @@ namespace LoKi
      *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
      *  @date   2010-12-03
      */
-    GAUDI_API 
+    static 
     bool checkDistance 
     ( const LHCb::Track*      track1          , 
       const LHCb::Track*      track2          ,
@@ -195,7 +197,7 @@ namespace LoKi
       const double            chi2max         ,
       const bool              iterate = false ) ;
     // ========================================================================
-  } //                                        end of namespace LoKi::FastVertex 
+  } ; //                                          end of class LoKi::FastVertex 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================

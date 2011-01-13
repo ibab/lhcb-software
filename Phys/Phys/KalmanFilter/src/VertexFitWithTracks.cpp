@@ -125,14 +125,13 @@ StatusCode LoKi::KalmanFilter::step
   /// \f$\vec{x}_k\f$
   entry1.m_x = entry1.m_c * ( entry1.m_vxi * entry1.m_parx + 
                               entry2.m_vxi * entry2.m_parx ) ;
-  
   entry2.m_x = entry1.m_x ;
   // OK ! 
-  const Gaudi::Vector3 dx1 =   entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_qvsx * entry1.m_vxi * dx1 ; 
+  const Gaudi::Vector3 dx1 =   entry1.m_parx -   entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_qvsx * ( entry1.m_vxi * dx1 ) ; 
   // OK !
-  const Gaudi::Vector3 dx2 =   entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_qvsx * entry2.m_vxi * dx2 ; 
+  const Gaudi::Vector3 dx2 =   entry2.m_parx -   entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_qvsx * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
   const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
   //
@@ -185,14 +184,14 @@ StatusCode LoKi::KalmanFilter::step
   entry2.m_x = entry1.m_x ;
   entry3.m_x = entry1.m_x ;
   // OK ! 
-  const Gaudi::Vector3 dx1 =   entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_qvsx * entry1.m_vxi * dx1 ; 
+  const Gaudi::Vector3 dx1 =   entry1.m_parx -   entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_qvsx * ( entry1.m_vxi * dx1 ) ; 
   // OK !
-  const Gaudi::Vector3 dx2 =   entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_qvsx * entry2.m_vxi * dx2 ; 
+  const Gaudi::Vector3 dx2 =   entry2.m_parx -   entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_qvsx * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
-  const Gaudi::Vector3 dx3 = entry3.m_parx - entry3.m_x ;  
-  entry3.m_q = entry3.m_parq - entry3.m_qvsx * entry3.m_vxi * dx3 ; 
+  const Gaudi::Vector3 dx3 =   entry3.m_parx -   entry3.m_x ;  
+  entry3.m_q = entry3.m_parq - entry3.m_qvsx * ( entry3.m_vxi * dx3 ) ; 
   
   //
   // update chi2 
@@ -255,17 +254,17 @@ StatusCode LoKi::KalmanFilter::step
   entry3.m_x = entry1.m_x ;
   entry4.m_x = entry1.m_x ;
   // OK ! 
-  const Gaudi::Vector3 dx1 =   entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_qvsx * entry1.m_vxi * dx1 ; 
+  const Gaudi::Vector3 dx1 =   entry1.m_parx -   entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_qvsx * ( entry1.m_vxi * dx1 ) ; 
   // OK !
-  const Gaudi::Vector3 dx2 =   entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_qvsx * entry2.m_vxi * dx2 ; 
+  const Gaudi::Vector3 dx2 =   entry2.m_parx -   entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_qvsx * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
-  const Gaudi::Vector3 dx3 =   entry3.m_parx - entry3.m_x ;  
-  entry3.m_q = entry3.m_parq - entry3.m_qvsx * entry3.m_vxi * dx3 ; 
+  const Gaudi::Vector3 dx3 =   entry3.m_parx -   entry3.m_x ;  
+  entry3.m_q = entry3.m_parq - entry3.m_qvsx * ( entry3.m_vxi * dx3 ) ; 
   // OK ! 
-  const Gaudi::Vector3 dx4 =   entry4.m_parx - entry4.m_x ;  
-  entry4.m_q = entry4.m_parq - entry4.m_qvsx * entry4.m_vxi * dx4 ; 
+  const Gaudi::Vector3 dx4 =   entry4.m_parx -   entry4.m_x ;  
+  entry4.m_q = entry4.m_parq - entry4.m_qvsx * ( entry4.m_vxi * dx4 )  ; 
   
   //
   // update chi2 
@@ -333,10 +332,10 @@ StatusCode LoKi::KalmanFilter::load
   { 
     for ( int j = 0 ; j < 2 ; ++j ) 
     { 
-      /// cov ( q , x ) 
-      entry.m_qvsx ( i , j ) = cov ( i , j + 2 ) ; // cov ( q , x ) 
-    } 
-  }
+      /// cov ( q , x )      
+      entry.m_qvsx ( j , i ) = cov ( i , j + 2 ) ; // cov ( q , x ) 
+    }
+  }  
   //
   // Try to invert non-invertible matrix :-) 
   //
@@ -362,7 +361,7 @@ StatusCode LoKi::KalmanFilter::load
   entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , cixy ) ;
   //
   // 
-  entry.m_state = state ;
+  entry.m_state = state ;  
   //
   return StatusCode::SUCCESS ;
 }

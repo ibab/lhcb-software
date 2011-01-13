@@ -151,7 +151,7 @@ namespace
   {
     //
     // make the proper projection (if required) 
-    if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
+     if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
     { _project_Z_ ( entry ) ; }
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
@@ -438,11 +438,11 @@ StatusCode LoKi::KalmanFilter::step
   
   entry2.m_x = entry1.m_x ;
   // OK ! 
-  const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  const Gaudi::Vector3 dx1 =   entry1.m_parx                -   entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * ( entry1.m_vxi * dx1 ) ; 
   // OK !
-  const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  const Gaudi::Vector3 dx2 =   entry2.m_parx                -   entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
   const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
   //
@@ -508,14 +508,14 @@ StatusCode LoKi::KalmanFilter::step
   entry3.m_x = entry1.m_x ;
   // OK ! 
   const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * ( entry1.m_vxi * dx1 ) ; 
   // OK !
   const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
   const Gaudi::Vector3 dx3 = entry3.m_parx - entry3.m_x ;  
-  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * entry3.m_vxi * dx3 ; 
-
+  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * ( entry3.m_vxi * dx3 ) ; 
+  
   //
   // update chi2 
   //
@@ -594,16 +594,16 @@ StatusCode LoKi::KalmanFilter::step
   entry4.m_x = entry1.m_x ;
   // OK ! 
   const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * ( entry1.m_vxi * dx1 ) ; 
   // OK !
   const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
   const Gaudi::Vector3 dx3 = entry3.m_parx - entry3.m_x ;  
-  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * entry3.m_vxi * dx3 ; 
+  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * ( entry3.m_vxi * dx3 ) ; 
   // OK ! 
   const Gaudi::Vector3 dx4 = entry4.m_parx - entry4.m_x ;  
-  entry4.m_q = entry4.m_parq - entry4.m_p.posMomCovMatrix() * entry4.m_vxi * dx4 ; 
+  entry4.m_q = entry4.m_parq - entry4.m_p.posMomCovMatrix() * ( entry4.m_vxi * dx4 ) ; 
   
   //
   // update chi2 

@@ -129,18 +129,21 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   if ( iterate ) 
   {
     //
-    state1 = state ( *track1 , point1.Z() ) ;
-    state2 = state ( *track2 , point2.Z() ) ;
+    const LHCb::State* state1_ = state ( *track1 , point1.Z () ) ;
+    const LHCb::State* state2_ = state ( *track2 , point2.Z () ) ;
     //
-    line1 = line ( *state1 )  ;
-    line2 = line ( *state2 )  ;
-    //
-    // (re)use the nice functions by Matt&Juan
-    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
-    //
-    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
-    point2 = line2 ( mu2 ) ; // the point on the second trajectory
-    //
+    if ( state1_ != state1 || state2_ != state2 ) 
+    {
+      if ( state1_ != state1 ) { line1 = line ( *state1_ ) ; }
+      if ( state2_ != state2 ) { line2 = line ( *state2_ ) ; }
+      //
+      // (re)use the nice functions by Matt&Juan
+      Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+      //
+      point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+      point2 = line2 ( mu2 ) ; // the point on the second trajectory
+      //
+    } 
   }
   //
   // apply DOCA cut (if needed) 

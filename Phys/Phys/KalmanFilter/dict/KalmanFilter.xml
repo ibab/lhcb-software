@@ -1,0 +1,40 @@
+<!-- 
+     * $Id$ 
+     * ========================================================================
+     * Version $Revision: 53291 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for KalmanFilter 
+     * @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     * @date 2011-01-13
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class    name = "LoKi::FastVertex"/>
+  
+  <enum     name = "LoKi::KalmanFilter::ErrorCodes"    />
+  <enum     name = "LoKi::KalmanFilter::ParticleTypes" />
+  
+  <class    name = "LoKi::KalmanFilter::Entry"                />
+  <class    name = "std::vector<LoKi::KalmanFilter::Entry>"   />
+  <function name = "LoKi::KalmanFilter::load"                 />
+  <function name = "LoKi::KalmanFilter::loadAsFlying"         />
+  <function name = "LoKi::KalmanFilter::loadAsGamma"          />
+  <function name = "LoKi::KalmanFilter::loadAsDiGamma"        />
+  <function name = "LoKi::KalmanFilter::loadAsShortLived"     />
+  <function name = "LoKi::KalmanFilter::transport"            />
+  <function name = "LoKi::KalmanFilter::transportGamma"       />
+  <function name = "LoKi::KalmanFilter::step"                 />
+  <function name = "LoKi::KalmanFilter::smooth"               />
+  <function name = "LoKi::KalmanFilter::evalCov"              />
+  <function name = "LoKi::KalmanFilter::seed"                 />
+  <function name = "LoKi::KalmanFilter::nGood"                />
+  <function name = "LoKi::KalmanFilter::okForVertex"          />
+  <function name = "LoKi::KalmanFilter::nDof"                 />
+  
+  <class    name = "LoKi::KalmanFilter::TrEntry4"                />
+  <class    name = "std::vector<LoKi::KalmanFilter::TrEntry4>"   />
+  
+</lcgdict>

@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@cern.ch
 # =============================================================================
 package            KalmanFilter 	
-version            v1r0	
+version            v1r1	
 
 # ================ structure ==================================================
 branches           cmt doc src KalmanFilter
@@ -16,10 +16,19 @@ use                CaloUtils    v* Calo
 use                DaVinciTypes v* Phys 
 
 # ================ own includes ===============================================
-apply_pattern install_more_includes more=KalmanFilter
+apply_pattern      install_more_includes more=KalmanFilter
 
 # ================ constituents ===============================================
 library            KalmanFilter  ../src/*.cpp
+
+# ================ LCG Dictionaries ===========================================
+apply_pattern      reflex_dictionary                                           \
+                   dictionary=KalmanFilter                                     \
+                   headerfiles=$(KALMANFILTERROOT)/dict/KalmanFilterDict.h     \
+                   selectionfile=$(KALMANFILTERROOT)/dict/KalmanFilter.xml     \
+                   options="-U__MINGW32__"
+
+macro_append       KalmanFilterDict_dependencies    " KalmanFilter " 
 
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=KalmanFilter

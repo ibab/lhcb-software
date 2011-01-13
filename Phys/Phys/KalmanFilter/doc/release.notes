@@ -5,6 +5,17 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-13 - Vanya Belyaev
+
+ - add Reflex dictionary 
+
+ - few minor fixes 
+
+ - cmt/requirement 
+
+    version increment to v1r1 
+
+
 !========================== KalmanFilter v1r0 2010-12-17 ===================
 
 ! 2010-12-07 - Vanya Belyaev
