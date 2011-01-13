@@ -5,6 +5,9 @@
 !============================================================================
 
 ! 2011-01-12 - Juan Palacios
+ - DVAlgorithm: fix input particles counter.
+
+! 2011-01-12 - Juan Palacios
  - DVAlgorithm
   . Use relations always when UseP2PVRelations = true.
   . Save only relations available at the end of execute(), i.e. do not
