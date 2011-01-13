@@ -2,6 +2,8 @@
 // ============================================================================
 // Include 
 // ============================================================================
+#include <boost/lexical_cast.hpp>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IAlgContextSvc.h"
@@ -41,6 +43,7 @@ DVAlgorithm::DVAlgorithm
   //
   , m_pvReFitterNames       ()
   , m_pvReFitters           ()
+  , m_defaultPVReFitter     (0)
   //
   , m_decayTreeFitterNames  ()
   , m_decayTreeFitters      ()
@@ -73,6 +76,7 @@ DVAlgorithm::DVAlgorithm
   , m_multiPV               ( false )
   , m_useP2PV               ( true  )
   , m_writeP2PV             ( true  )
+  , m_forceP2PVBuild        ( true  )
   , m_ignoreP2PVFromInputLocations (false)
   , m_PVLocation            ("")
   , m_noPVs                 ( false )
@@ -97,6 +101,10 @@ DVAlgorithm::DVAlgorithm
 
   declareProperty("WriteP2PVRelations", m_writeP2PV, 
                   "Write out P->PV relations table to TES. Default: true");
+
+  declareProperty("ForceP2PVBuild", m_forceP2PVBuild, 
+                  "Force construction of P->PV relations table. Default: false");
+
 
   declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
   
@@ -249,6 +257,20 @@ StatusCode DVAlgorithm::initialize () {
 
   initializeLocations();
 
+  // load PV processing tools.
+
+  if (!m_noPVs) {
+    if (refitPVs()) {
+      if (0==defaultPVReFitter()) {
+        return Error("Default IPVReFitter could not be loaded");
+      } 
+    }
+  
+    if (0==relatedPVFinder()) {
+      return Error("IRelatedPVFinder could not be loaded");
+    }
+  }
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   }
@@ -343,7 +365,7 @@ StatusCode DVAlgorithm::loadTools() {
     debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg; 
   }
   ppSvc() ;
-  
+
   return StatusCode::SUCCESS;
 }
 // ============================================================================
@@ -582,21 +604,26 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
 //=============================================================================
 StatusCode DVAlgorithm::saveP2PVRelations() const {
   
-  //@todo this needs to scan the P->PV map, saving relations for all particles
-  // that are in the TES. This way it saves relations actually used in
-  // the algorithm.
-
   if (!saveP2PV()) {
     return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
 
-  if ( primaryVertices().empty() || m_p2PVMap.empty() ) {
+  if ( primaryVertices().empty()) {
     if ( msgLevel ( MSG::DEBUG ) ) { 
-      debug() <<"Skip saveP2PVRelations: No Primary Vertices or relations" 
-              << endmsg;
+      debug() <<"Skip saveP2PVRelations: No Primary Vertices" << endmsg;
     }
     return StatusCode::SUCCESS;
   }
+
+  if (m_forceP2PVBuild) buildP2PVMap();
+
+  if (m_p2PVMap.empty() ) {
+    if ( msgLevel ( MSG::DEBUG ) ) { 
+      debug() <<"Skip saveP2PVRelations: No relations" << endmsg;
+    }
+    return StatusCode::SUCCESS;    
+  }
+  
 
   LHCb::RecVertex::ConstVector verticesToSave;
   verticesToSave.reserve(m_p2PVMap.size());
@@ -617,7 +644,8 @@ StatusCode DVAlgorithm::saveP2PVRelations() const {
         const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
         if (0!=pv) {
           verticesToSave.push_back(pv);
-          table->relate( particle, pv );
+          table->i_removeFrom( particle ).ignore();
+          table->i_relate( particle, pv ).ignore();
         } else {
           return Error("VertexBase to RecVertex dynamic cast FAILED");
         }
@@ -638,6 +666,32 @@ StatusCode DVAlgorithm::saveP2PVRelations() const {
   }
 
   return StatusCode::SUCCESS;
+}
+//=============================================================================
+void DVAlgorithm::buildP2PVMap() const{
+
+  if (m_parts.empty()) return;
+  
+  LHCb::Particle::ConstVector particles;
+  LHCb::Vertex::ConstVector vertices;
+
+  LHCb::Particle::ConstVector::const_iterator iPart = m_parts.begin();
+  LHCb::Particle::ConstVector::const_iterator iPartEnd = m_parts.end();
+
+  for ( ; iPart != iPartEnd ; ++iPart ) {
+    DaVinci::Utils::findDecayTree( *iPart, particles, vertices);
+  }
+
+  if (particles.empty()) return;
+
+  iPart = particles.begin();
+  iPartEnd = particles.end();
+
+  for ( ; iPart != iPartEnd ; ++iPart ) {
+    if (DaVinci::Utils::inTES(*iPart) ) bestPV(*iPart);
+  }
+
+  return;
 }
 //=============================================================================
   void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
@@ -669,10 +723,10 @@ StatusCode DVAlgorithm::saveP2PVRelations() const {
 
 }
 // ============================================================================
-StatusCode DVAlgorithm::saveInTES() 
+StatusCode DVAlgorithm::_saveInTES() 
 {
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "SaveInTES "<< m_parts.size() << " Particles" << endmsg;
+    verbose() << "DVAlgorithm::_saveInTES "<< m_parts.size() << " Particles" << endmsg;
   }
  
   StatusCode sc = StatusCode::SUCCESS;
@@ -729,6 +783,23 @@ StatusCode DVAlgorithm::saveInTES()
               << " from " << m_parts.size()
               << " total particles in local storage" << endmsg;
   }
+ 
+  return StatusCode::SUCCESS;
+ 
+}
+
+// ============================================================================
+StatusCode DVAlgorithm::saveInTES() 
+{
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "saveInTES "<< m_parts.size() << " Particles" << endmsg;
+  }
+  
+
+  
+  StatusCode sc = _saveInTES();
+  if (sc.isFailure()) return sc;
 
   // now save relations table
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
@@ -753,13 +824,21 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
           StatusCode::FAILURE, 0 ).ignore();
     return 0;
   }
+
+  // 1 PV
+
+  const IPVReFitter* fitter = defaultPVReFitter();
+
+  if (PVs.size()==1) {
+    if (!refitPVs()) return *(PVs.begin());
+    LHCb::RecVertex reFittedPV = LHCb::RecVertex(**(PVs.begin()));
+    return ( (fitter->remove(p, &reFittedPV)).isSuccess() ) ?
+      mark(&reFittedPV) : 0;
+  }
+
+  // more than one PV
   
   const IRelatedPVFinder* finder = this->relatedPVFinder();
-
-  if ( 0==finder ) {
-    Error("NULL IRelatedPVFinder", StatusCode::FAILURE, 1 ).ignore() ;
-    return 0;
-  }
 
   if (!refitPVs()) { // no PV re-fit
     if (msgLevel(MSG::VERBOSE)) {
@@ -782,12 +861,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "Re-fitting " << PVs.size() << " PVs"<< endmsg;
     }
-    
-    const IPVReFitter* fitter = primaryVertexReFitter();
-    if (0==fitter) {
-      Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
-      return 0;
-    }
+
     LHCb::RecVertex::ConstVector reFittedPVs;
     DaVinci::Utils::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
     for (LHCb::RecVertex::Range::const_iterator iPV = PVs.begin();
@@ -796,10 +870,17 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
       if ( (fitter->remove(p, reFittedPV)).isSuccess() ) {
         reFittedPVs.push_back(reFittedPV); 
       } else {
-        delete  reFittedPV;
+        delete reFittedPV;
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       }
     }
+    if (reFittedPVs.empty()) {
+
+      Warning("Failed to create refitted PV list for event with "+boost::lexical_cast<std::string>(PVs.size())+ " PVs", 
+            StatusCode::FAILURE, 0).ignore();
+      return 0;
+    }
+    
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "have " << reFittedPVs.size()
                 << " re-fitted PVs" << endmsg;

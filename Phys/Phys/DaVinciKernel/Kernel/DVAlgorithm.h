@@ -343,7 +343,20 @@ public:
   }
 
   /**
+   * Cahced access to defauld IPVReFitter tool.
    *
+   * @author Juan Palacios palacios@physik.uzh.ch
+   **/
+  inline const IPVReFitter* defaultPVReFitter() const
+  {
+    if (0!=m_defaultPVReFitter) return m_defaultPVReFitter;
+    return getTool<IPVReFitter>( "", 
+                                 m_pvReFitterNames ,
+                                 m_pvReFitters     , this ) ; 
+  }
+  
+  /**
+   * Inline access to best PV for a given particle.
    *
    *
    **/
@@ -561,8 +574,49 @@ protected:
   } ;
 
 
+  /// Marks a single particle for saving, ignoring it's decay tree.
+  /// Particle must be on the heap, either already in the TES or 
+  /// newed by the client. Particle's decay products must be in the TES.
+  /// If these conditions are not met, saving to the TES via saveInTES will
+  /// fail.
+  ///
+  /// @attention use markTree, markNewTree, cloneAndMarkTree methods
+  /// unless you are really sure all the decay products are in the TES.
+  ///
+  /// @attention if <b>particle</b> is on the TES they will not be saved 
+  /// by default, special action is required via over-writing of _saveInTES.
+  ///
+  inline void markParticle(const LHCb::Particle* particle) {
+    if ( m_parts.end() == std::find ( m_parts.begin() , 
+                                      m_parts.end()   ,  
+                                      particle )        ) {
+      m_parts.push_back(particle);
+    }
+    
+  }
   
-  /// Mark a particle for saving. Scans decay tree marking
+  /// Mark particles for saving, ignoring it's decay tree.
+  /// Particles must be on the heap, either already in the TES or 
+  /// newed by the client. Particle's decay products must be in the TES.
+  /// If these conditions are not met, savinf to the TES via saveInTES will
+  /// fail.
+  ///
+  /// @attention use markTrees, markNewTrees, cloneAndMarkTrees methods
+  /// unless you are really sure all the decay products are in the TES.
+  ///
+  /// @attention if <b>particles</b> are on the TES they will not be saved 
+  /// by default, special action is required via over-writing of _saveInTES.
+  ///
+  template<class PARTICLES>
+  inline void markParticles(const PARTICLES& particles) {
+
+    typename PARTICLES::const_iterator iPart = particles.begin();
+    typename PARTICLES::const_iterator iPartEnd = particles.end();
+    for ( ; iPart!=iPartEnd; ++iPart) markParticle(*iPart);
+    
+  }
+
+  /// Mark a decay tree for saving. Scans decay tree marking
   /// elements for saving. Each branch is followed and each vertex
   /// is cloned until a vertex is found which is in the TES.
   ///
@@ -734,6 +788,11 @@ private:
   /// Save the local Particle->Vertex relations table to the TES
   StatusCode saveP2PVRelations() const;
 
+  /// Scan the marked particles' decay trees and get or calculate
+  /// best PV relations and store them on the local map.
+  void buildP2PVMap() const;
+  
+
   /// Mark a local PV for saving.
   const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
 
@@ -766,7 +825,11 @@ private:
   /// PV and relation table entry when applicable.
   /// This method can be overwritten if special TES saving actions are 
   /// required. Avoid if possible!
-  virtual StatusCode saveInTES();
+  StatusCode saveInTES();
+
+
+  virtual StatusCode _saveInTES();
+  
 
   /// Write an empty Particles container of the same type as that in
   /// saveInTES(). Can be overwritten for specialist actions.
@@ -828,6 +891,9 @@ protected:
   ToolMap                                             m_pvReFitterNames ;
   /// The actual map of "nickname -> tool" for Particle Refitters 
   mutable GaudiUtils::VectorMap<std::string,IPVReFitter*> m_pvReFitters ;
+
+  /// keep the default PV re-fitter.
+  mutable IPVReFitter* m_defaultPVReFitter;
 
   /// Mapping of "nickname ->type/name" for Decay Tree Fitters 
   ToolMap                                                   m_decayTreeFitterNames  ;
@@ -908,6 +974,13 @@ private:
   /// Do we want to write the Particle -> PV relations table to the TES?
   /// Default: true
   bool m_writeP2PV;
+
+  /// Force building of Particle-> best PV relations for selected
+  /// particles and their decay products where applicable. Only has effect
+  /// if <b>WriteP2PVRelations</b> is true. This is a post-execute action
+  /// and has no effect over the user's execute actions. <b>Default</b> false.
+  /// Takes existing relations and adds missing ones.
+  bool m_forceP2PVBuild;
 
   /// Ignore Particle->PV relations from InputLocations?
   /// User-defined ones are kept.
