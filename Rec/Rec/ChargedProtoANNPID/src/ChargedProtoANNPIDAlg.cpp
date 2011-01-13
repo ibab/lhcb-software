@@ -228,8 +228,8 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     if ( proto->hasInfo(m_protoInfo) )
     {
       std::ostringstream mess;
-      mess << "ProtoParticle already has '" << m_protoInfo << "' info -> Replacing.";
-      Warning( mess.str() ).ignore();
+      mess << "ProtoParticle already has '" << m_protoInfo << "' information -> Replacing.";
+      Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
     }
     proto->addInfo( m_protoInfo, nnOut );
 
