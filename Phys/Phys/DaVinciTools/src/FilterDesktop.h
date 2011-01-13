@@ -178,14 +178,11 @@ protected:
   /// Get the related PV of particle and relate it to clone.
   void cloneP2PVRelation
   ( const LHCb::Particle*   particle ,
-    const LHCb::Particle*   clone    ,
-    Particle2Vertex::Table* table    ) const;
+    const LHCb::Particle*   clone      ) const;
   /// Write empty container if selection fails.
   void writeEmptyKeyedContainers  ( ) const;
   /// Write empty container if selection fails.
   void writeEmptySharedContainers ( ) const;
-  /// Save related PVs that aren't in the TES.
-  void saveOrphanRelatedPVs(const Particle2Vertex::Table* table) const;
   // ============================================================================
 private:
   // ============================================================================
@@ -216,7 +213,7 @@ private:
   /// Success if number of saved particles == number saved
   /// to TES.
   /// Overwritten from DVAlgorithm. Is called automatically.
-  virtual StatusCode saveInTES () ;
+  virtual StatusCode _saveInTES () ;
   /// Write empty containers if selection fails.
   virtual void writeEmptyTESContainers() ;
   // ==========================================================================

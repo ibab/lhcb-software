@@ -327,10 +327,7 @@ StatusCode FilterDesktop::updateHistos ()
 StatusCode FilterDesktop::execute ()       // the most interesting method 
 {
 
-  // make sure local storage is cleared whenever we go out of scope.
-  //  DaVinci::Utils::ClearContainerGuard<LHCb::Particle::ConstVector> guard(m_accepted);
   m_accepted.clear();
-  
   //
   if  ( m_to_be_updated1 ) 
   {
@@ -364,26 +361,30 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // 
   // Filter particles!!  - the most important line :-) 
   StatusCode sc = filter ( particles , m_accepted ) ;
+
+  // store particles in DVAlgorithm local container
+  this->markParticles(m_accepted);
   
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
   {
-    StatusCode sc = m_outputPlots -> fillPlots ( m_accepted  ) ;
+    StatusCode sc = m_outputPlots -> fillPlots ( i_markedParticles()  ) ;
     if ( sc.isFailure () ) 
     { return Error ( "Error from Output Plots tool", sc ) ; }
   }
   
   // monitor output (if required) 
-  if ( monitor() && !m_postMonitorCode.empty() ) { m_postMonitor ( m_accepted  ) ; }
+  if ( monitor() && !m_postMonitorCode.empty() ) { m_postMonitor ( i_markedParticles() ) ; }
   
   // save (clone if needed) accepted particles in TES 
   //  LHCb::Particle::Range saved = saveInTES ( accepted ) ;
   
   // make the filter decision
-  setFilterPassed ( !m_accepted.empty() );
+  setFilterPassed ( (!i_markedParticles().empty()) && 
+                    (i_markedParticles().size()==m_accepted.size()) );
 
   // some statistics 
-  counter ( "#passed" ) += m_accepted.size ();
+  counter ( "#passed" ) += i_markedParticles().size();
   
   //
   return StatusCode::SUCCESS;
@@ -423,16 +424,14 @@ StatusCode FilterDesktop::_save ( ) const
   //
   PARTICLES*              p_tes = new PARTICLES () ;
   VERTICES*               v_tes = new VERTICES  () ;
-  Particle2Vertex::Table* table = new Particle2Vertex::Table    ( m_accepted.size() ) ;
-//   //
+  //
   put ( p_tes , particleOutputLocation()        ) ;
   put ( v_tes , decayVertexOutputLocation() ) ;
-  put ( table , tableOutputLocation()           ) ;
   //
   CLONER cloner ;
   //
-  LHCb::Particle::Range::iterator ip = m_accepted.begin ();
-  LHCb::Particle::Range::iterator ipEnd = m_accepted.end ();
+  LHCb::Particle::Range::iterator ip = i_markedParticles().begin ();
+  LHCb::Particle::Range::iterator ipEnd = i_markedParticles().end ();
 
   for (  ; ip != ipEnd ; ++ip ) 
   {
@@ -444,7 +443,7 @@ StatusCode FilterDesktop::_save ( ) const
     LHCb::Particle* p_cloned = cloner ( p ) ;
     p_tes ->insert ( p_cloned ) ;
     //
-    this->cloneP2PVRelation ( p , p_cloned , table ) ;
+    this->cloneP2PVRelation ( p , p_cloned ) ;
     //
     const LHCb::Vertex* v = p->endVertex() ;
     if ( 0 != v ) 
@@ -454,17 +453,10 @@ StatusCode FilterDesktop::_save ( ) const
       v_tes->insert( v_cloned ) ;
     }
   }
-  
-  this->saveOrphanRelatedPVs(table);
 
-  // commented out due to bug in Gaudi..
-  // Gaudi::Utils::GetData<LHCb::Particle::Range> helper ;
-  //  Gaudi::Utils::GetData<Gaudi::Range_<LHCb::Particle::ConstVector> > helper ;
   //
 
-
-
-  return (m_accepted.size() != p_tes->size() ) ? StatusCode::FAILURE 
+  return (i_markedParticles().size() != p_tes->size() ) ? StatusCode::FAILURE 
     : StatusCode::SUCCESS;
 
 }
@@ -487,11 +479,11 @@ namespace
   // ==========================================================================
 }
 // ===========================================================================
-StatusCode FilterDesktop::saveInTES 
+StatusCode FilterDesktop::_saveInTES 
 ( )
 {
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "FilterDesktop::SaveInTES " << m_accepted.size() << " Particles" << endmsg;
+    verbose() << "FilterDesktop::_saveInTES " << i_markedParticles().size() << " Particles" << endmsg;
   }
   return m_cloneFilteredParticles ? 
     this->_save<LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner>( ): 
@@ -500,11 +492,10 @@ StatusCode FilterDesktop::saveInTES
 // ============================================================================
 void FilterDesktop::cloneP2PVRelation 
 ( const LHCb::Particle*   particle ,
-  const LHCb::Particle*   clone    ,
-  Particle2Vertex::Table* table    ) const 
+  const LHCb::Particle*   clone       ) const 
 {
   const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
-  if ( 0!= bestPV ) { table->relate ( clone , bestPV ) ; }
+  if ( 0!= bestPV ) { this->relate ( clone , bestPV ) ; }
     
 }
 // ============================================================================
@@ -520,28 +511,6 @@ void FilterDesktop::writeEmptySharedContainers() const
   LHCb::Particle::Selection* container = new LHCb::Particle::Selection();
   put(container, particleOutputLocation());
   return;
-}
-// ============================================================================
-void  FilterDesktop::saveOrphanRelatedPVs(const Particle2Vertex::Table* table) const 
-{
-  Particle2Vertex::Table::Range relations = table->relations();
-  if (relations.empty()) return;
-
-  LHCb::RecVertices* orphanPVs = new LHCb::RecVertex::Container();
-  put (orphanPVs, this->outputLocation() + "/_RelatedPVs") ;
-  
-  Particle2Vertex::Table::Range::const_iterator beginRel = relations.begin () ;
-  Particle2Vertex::Table::Range::const_iterator endRel   = relations.end   () ;
-  
-  for (Particle2Vertex::Table::Range::const_iterator irel = beginRel;
-       irel != endRel;
-       ++irel) {
-    const LHCb::RecVertex* relPV = dynamic_cast<const LHCb::RecVertex*>(irel->to());
-    if (relPV && !DaVinci::Utils::inTES(relPV) ) {
-      orphanPVs->insert(const_cast<LHCb::RecVertex*>(relPV));
-    }
-  }
-  
 }
 // ============================================================================
 // decode the code 

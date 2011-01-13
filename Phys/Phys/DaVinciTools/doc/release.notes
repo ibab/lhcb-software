@@ -4,6 +4,13 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-01-13 - Juan Palacios
+ - FilterDesktop
+  . Now use DVAlgorithm::markParticles to pass on filtered particles to
+    DVAlgorithm base class. DVAlgorithm handles the Particle->PV relations, 
+    filterDesktop handles saging via overwritten _saveinTES virtual method.
+  . Remove all direct dealings with relaitons tables.
+
 ! 2011-01-12 - Juan Palacios
  - CombineParticles
   . Decouple from DVAlgorithm Particle->PV relations implementation.
