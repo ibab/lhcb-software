@@ -51,11 +51,11 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
   m_leds.clear();
   m_neighbors.clear();
   m_zsupNeighbors.clear();
-};
+}
 
 //=============================================================================
 // destructor 
 //=============================================================================
-CellParam::~CellParam() {};
+CellParam::~CellParam() {}
 
 //=============================================================================

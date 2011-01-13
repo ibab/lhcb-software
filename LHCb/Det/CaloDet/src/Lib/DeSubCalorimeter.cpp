@@ -20,12 +20,12 @@ DeSubCalorimeter::DeSubCalorimeter( const std::string& name )
   : DetectorElement     ( name )
   , m_side(0)
   , m_subSubCalos          () 
-{};
+{}
 
 // ============================================================================
 // Destructor
 // ============================================================================
-DeSubCalorimeter::~DeSubCalorimeter(){};
+DeSubCalorimeter::~DeSubCalorimeter(){}
 
 
 // ============================================================================
@@ -81,7 +81,7 @@ StatusCode DeSubCalorimeter::initialize()
 ///
 return StatusCode::SUCCESS;
 ///
-};
+}
 
 // ============================================================================
 // standard printout to STL standard stream
@@ -91,7 +91,7 @@ std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const
   os << "\tDeSubCalorimeter" << " fullname ='"    << name () << std::endl;
   os << "\t\t\tSide=" << sideName() << " #areas " << subSubCalos().size() << std::endl   ;
   return os;
-};
+}
 
 // ============================================================================
 // standard printout to Gaudi standard stream
@@ -101,6 +101,6 @@ MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const
   os << "\tDeSubCalorimeter"<< " fullname ='"    << name () << endmsg;
   os << "\t\t\tSide=" << sideName() << " #areas " << subSubCalos().size() << endmsg   ;
   return os;
-};
+}
 
 // ============================================================================

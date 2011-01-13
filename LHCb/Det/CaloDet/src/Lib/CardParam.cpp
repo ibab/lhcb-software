@@ -1,31 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2008/09/26 15:45:39  odescham
-// implement updMgrSvc
-//
-// Revision 1.7  2008/05/29 21:42:41  odescham
-// Readout channel re-mapping from condDB
-//
-// Revision 1.6  2007/08/22 19:05:13  odescham
-// implement time misalignment
-//
-// Revision 1.5  2007/07/19 20:37:01  odescham
-// fix CardParam initialisation for PIN FEB
-//
-// Revision 1.4  2007/06/14 16:10:16  odescham
-// fix FEBoard connections
-//
-// Revision 1.3  2007/02/22 23:17:18  odescham
-// Define the monitoring system in DeCalorimeter
-//
-// Revision 1.2  2001/07/17 17:26:52  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.1  2001/07/02 17:17:59  ibelyaev
-// improvements in readability of DeCalorimeter.h
-//
+// $Id: $ 
 // ============================================================================
 #define  CALODET_CARDPARAM_CPP 1 
 // ============================================================================
@@ -72,14 +46,11 @@ CardParam::CardParam( int iArea ,
 {
   m_ids.reserve( 64 );
   m_ids.clear();
-} ;
+}
 
 // ============================================================================
 // Destructor
 // ============================================================================
-CardParam::~CardParam(){};
+CardParam::~CardParam(){}
 
 // ============================================================================
-
-
-  

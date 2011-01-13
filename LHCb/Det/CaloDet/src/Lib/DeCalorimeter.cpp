@@ -253,7 +253,7 @@ StatusCode DeCalorimeter::initialize()
 
 
   return sc; 
-};
+}
 // ============================================================================
 /// Return a reference (tilted) plane
 // ============================================================================
@@ -273,7 +273,7 @@ Gaudi::Plane3D DeCalorimeter::plane( const double dz) const{
   Gaudi::XYZPoint  point = geometry->toGlobal(local);
   Gaudi::XYZPoint  goff = geometry->toGlobal(loff);
   return Gaudi::Plane3D ( point - goff , point );
-};
+}
 //----------------------------------------------------------------------------
 // ** Builds the cells from the geometry of the Detector Element
 //----------------------------------------------------------------------------
@@ -441,7 +441,7 @@ StatusCode DeCalorimeter::buildCells( ) {
       << nbCells    << " channels" << endmsg;
   
   return StatusCode::SUCCESS;
-}; 
+}
 
 //----------------------------------------------------------------------------
 // ** Return the cell at the specified position
@@ -452,7 +452,7 @@ DeCalorimeter::Cell ( const Gaudi::XYZPoint& globalPoint ) const
   const  CellParam* pars = Cell_( globalPoint ) ;
   if ( 0 == pars ) { return LHCb::CaloCellID() ; }              
   return pars->cellID() ;
-} ;
+}
 
 //----------------------------------------------------------------------------
 // ** Construct the Front End card information for each cell
@@ -571,9 +571,9 @@ StatusCode DeCalorimeter::buildCards( )  {
       std::vector<int> map = (*it).second;
       unsigned int count = 0;
       for( std::vector<int>::iterator i = map.begin() ; i != map.end() ; ++i){
-        LHCb::CaloCellID dummy( 0, 0, 0, 0 );
+        LHCb::CaloCellID dummy2( 0, 0, 0, 0 );
         if( *i < 0 ){
-          myCard.addID( dummy );
+          myCard.addID( dummy2 );
         }else if( *i < (int) cellids.size() ){
           count++;
           myCard.addID( cellids [ *i ] );
@@ -676,9 +676,9 @@ StatusCode DeCalorimeter::buildCards( )  {
             leftCard = cardNumber(testID);
           }
           if ( (row == fRow) && (0 < row) ) {
-            LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
-            if ( cardNumber(testID) >= 0 ) {
-              cornerCard = cardNumber(testID);
+            LHCb::CaloCellID testID2( m_caloIndex, area , row-1 , col-1 );
+            if ( cardNumber(testID2) >= 0 ) {
+              cornerCard = cardNumber(testID2);
             }
           } 
         }
@@ -719,7 +719,7 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   msg << MSG::DEBUG << "Initialized, " << numberOfCards() << " front-end cards." << endmsg;  
   return StatusCode::SUCCESS;
-};
+}
 
 
 //--------------------------------
@@ -989,7 +989,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   msg << MSG::DEBUG << "Initialized, " << m_pins.size() << " PIN-diodes." << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 // absolute calibration -------------- //
@@ -1284,7 +1284,7 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const {
     }
 
   return os ;
-};
+}
 
 // ============================================================================
 /// print to MsgStream
@@ -1338,7 +1338,7 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
     os.report( lev );
 
   return os ;
-};
+}
 
 
 

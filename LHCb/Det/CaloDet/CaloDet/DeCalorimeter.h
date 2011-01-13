@@ -501,9 +501,7 @@ DeCalorimeter::cellIdByIndex( const unsigned int num )    const
 {
   return 
     ( (num < m_cells.size() ) ? (m_cells.begin()+num)->cellID() : LHCb::CaloCellID() );
-};
-
-
+}
 
 inline bool 
 DeCalorimeter::isReadout( const LHCb::CaloCellID& ID )const{
@@ -539,7 +537,7 @@ DeCalorimeter::cardAddress ( const LHCb::CaloCellID& ID     ,
   card   = m_cells[ID].cardNumber ();
   row    = m_cells[ID].cardRow() ;
   column = m_cells[ID].cardColumn() ;
-};
+}
 
 // ============================================================================
 //  down card number 
@@ -588,37 +586,37 @@ inline void DeCalorimeter::cardNeighbors ( const int card,
   down   = m_feCards[card].downNumber();
   left   = m_feCards[card].leftNumber();
   corner = m_feCards[card].cornerNumber();
-};
+}
 
 // ============================================================================
 //  card area 
 // ============================================================================
 inline int DeCalorimeter::cardArea       ( const int card ) const 
-{ return m_feCards[card].area(); };
+{ return m_feCards[card].area(); }
 
 // ============================================================================
 //  card first row 
 // ============================================================================
 inline int DeCalorimeter::cardFirstRow   ( const int card ) const 
-{ return m_feCards[card].firstRow();};
+{ return m_feCards[card].firstRow();}
 
 // ============================================================================
 //  card first column 
 // ============================================================================
 inline int DeCalorimeter::cardFirstColumn( const int card ) const 
-{ return m_feCards[card].firstColumn(); };
+{ return m_feCards[card].firstColumn(); }
 
 // ============================================================================
 //  card last row 
 // ============================================================================
 inline int DeCalorimeter::cardLastRow   ( const int card ) const 
-{ return m_feCards[card].lastRow();};
+{ return m_feCards[card].lastRow();}
 
 // ============================================================================
 //  card last column 
 // ============================================================================
 inline int DeCalorimeter::cardLastColumn( const int card ) const 
-{ return m_feCards[card].lastColumn(); };
+{ return m_feCards[card].lastColumn(); }
 
 // ============================================================================
 //  valid boundaries :  first/last col/row with a valid cell
@@ -683,7 +681,7 @@ inline LHCb::CaloCellID DeCalorimeter::firstCellID ( const int card ) const
                      m_feCards[card].area       () , 
                      m_feCards[card].firstRow   () ,
                      m_feCards[card].firstColumn() ); 
-};
+}
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
@@ -694,7 +692,7 @@ inline LHCb::CaloCellID DeCalorimeter::lastCellID ( const int card ) const
                      m_feCards[card].area       ()                   , 
                      m_feCards[card].firstRow   () + nRowCaloCard -1 ,
                      m_feCards[card].firstColumn() + nColCaloCard -1 ); 
-};
+}
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
@@ -707,7 +705,7 @@ inline LHCb::CaloCellID DeCalorimeter::cardCellID ( const int card ,
                      m_feCards[card].area       ()       , 
                      m_feCards[card].firstRow   () + row ,
                      m_feCards[card].firstColumn() + col ); 
-};
+}
 
 // ============================================================================
 //  FEcard -> Tell1 
@@ -738,21 +736,21 @@ inline std::vector<int> DeCalorimeter::tell1ToCards( const int tell1 ) const
 //  card Id & content
 // ============================================================================
 inline int DeCalorimeter::cardCrate( const int card ) const 
-{ return m_feCards[card].crate(); };
+{ return m_feCards[card].crate(); }
 inline int DeCalorimeter::cardSlot( const int card ) const 
-{ return m_feCards[card].slot(); };
+{ return m_feCards[card].slot(); }
 inline int DeCalorimeter::cardCode( const int card ) const 
-{ return m_feCards[card].code(); };
+{ return m_feCards[card].code(); }
 inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::cardChannels( const int card ) 
-{ return m_feCards[card].ids(); };
+{ return m_feCards[card].ids(); }
 inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::pinChannels( const LHCb::CaloCellID id) 
-{ return m_pins[id].cells(); };
+{ return m_pins[id].cells(); }
 inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::ledChannels( const int led) 
-{ return m_leds[led].cells(); };
+{ return m_leds[led].cells(); }
 inline const std::vector<int>&  DeCalorimeter::pinLeds( const LHCb::CaloCellID id )
-{ return m_pins[id].leds(); };
+{ return m_pins[id].leds(); }
 inline const std::vector<int>&  DeCalorimeter::cellLeds( const LHCb::CaloCellID id )
-{ return m_cells[id].leds(); };
+{ return m_cells[id].leds(); }
 
 inline int DeCalorimeter::cardIndexByCode( const int crate, const int slot ) 
 { 
@@ -761,9 +759,7 @@ inline int DeCalorimeter::cardIndexByCode( const int crate, const int slot )
        m_feCards[icard].slot() == slot )return icard;
   }
   return -1;
-};
-
-
+}
 
 // ============================================================================
 #endif  //    CALODET_DECALORIMETER_H

@@ -36,7 +36,7 @@ inline Gaudi::Plane3D DeCalorimeter::plane
   case CaloPlane::Back      : return plane(m_zOffset+m_zSize/2.);
   default : return plane(m_zOffset); 
   }
-};
+}
 // ============================================================================
 /// return a 3D-plane, which contain the given 3D-point in the global system
 // ============================================================================
@@ -80,7 +80,7 @@ DeCalorimeter::Cell_
     }
   }  
   return 0 ;
-} ;
+}
 // ============================================================================
 #endif  // CALODET_DECALORIMETER_ICPP
 // ============================================================================

@@ -50,13 +50,13 @@ CaloDetTestAlgorithm::CaloDetTestAlgorithm( const std::string& name   ,
     m_DetData = DeCalorimeterLocation::Spd; 
   }
   
-};
+}
 
 // ============================================================================
 /** destructor
  */
 // ============================================================================
-CaloDetTestAlgorithm::~CaloDetTestAlgorithm() {};
+CaloDetTestAlgorithm::~CaloDetTestAlgorithm() {}
 
 // ============================================================================
 /** standard algorithm initialization 
@@ -86,9 +86,9 @@ StatusCode CaloDetTestAlgorithm::initialize()
     int card = (*icel).cardNumber();
 
     info()    << " | " 
-              << (*icel).cellID() << " | "
-              << (*icel).cellID().all() << " | "
-              << format("0x%04X",(*icel).cellID().all()) << " | "
+              << id << " | "
+              << id.all() << " | "
+              << format("0x%04X",id.all()) << " | "
               << (*icel).cardColumn() <<"/"<< (*icel).cardRow() << " | "
               << (*icel).cardNumber() << " ( " << calo->cardCode(card)      << ") | "
               << calo->cardCrate(card)     << " | "
@@ -101,7 +101,7 @@ StatusCode CaloDetTestAlgorithm::initialize()
 
   
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** standard algorithm finalization 
@@ -116,7 +116,7 @@ StatusCode CaloDetTestAlgorithm::finalize()
   
   /// finalize the base class 
   return GaudiAlgorithm::finalize();
-};
+}
 
 // ============================================================================
 /** standard algorithm execution 
@@ -128,7 +128,7 @@ StatusCode CaloDetTestAlgorithm::execute()
 
   return StatusCode::SUCCESS;
 
-};
+}
 
 // ============================================================================
 // The End 

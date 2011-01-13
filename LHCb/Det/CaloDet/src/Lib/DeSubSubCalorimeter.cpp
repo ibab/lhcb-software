@@ -25,12 +25,12 @@ DeSubSubCalorimeter::DeSubSubCalorimeter( const std::string& name )
     , m_xSize(0.0)
     , m_ySize(0.0)
     , m_area( -1  )
-{};
+{}
 
 // ============================================================================
 // Destructor
 // ============================================================================
-DeSubSubCalorimeter::~DeSubSubCalorimeter(){};
+DeSubSubCalorimeter::~DeSubSubCalorimeter(){}
 
 
 // ============================================================================
@@ -88,7 +88,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
   }
   Assert ( 0 != geometry() , "DeSubSubcalorimeter: Invalid GeometryInfo" ) ;
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // standard printout to STL standard stream
@@ -98,7 +98,7 @@ std::ostream& DeSubSubCalorimeter::printOut( std::ostream& os ) const{
   os << "\t\t\tCellSize=" << std::setw(12) << m_cellSize << " Area-ID = " << m_area  
      << " X-center offset : " << xSize()/2. << std::endl;
   return os;
-};
+}
 
 // ============================================================================
 // standard printout to Gaudi standard stream
@@ -108,5 +108,5 @@ MsgStream&    DeSubSubCalorimeter::printOut( MsgStream&    os ) const{
   os << "\t\t\tCellSize=" << std::setw(12) << m_cellSize << " Area-ID = " << m_area  
      << " X-center offset : " << xSize()/2 << endmsg;
   return os;
-};
+}
 
