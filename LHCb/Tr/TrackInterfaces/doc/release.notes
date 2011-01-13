@@ -4,6 +4,12 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2011-01-13 - Vanya Belyaev
+
+ - add ITrackStateProvider into Reflex dictionary
+ - cmt/requirements 
+    version increment to v4r18 
+
 !========================= TrackInterfaces v4r17 2010-10-25 =========================
 
 ! 2010-10-24 - Mariusz Witek

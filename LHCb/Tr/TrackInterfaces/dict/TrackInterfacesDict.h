@@ -42,6 +42,7 @@
 #include "TrackInterfaces/IVeloClusterPosition.h"
 #include "TrackInterfaces/IVeloPixClusterPosition.h"
 #include "TrackInterfaces/IPitchResTool.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
 

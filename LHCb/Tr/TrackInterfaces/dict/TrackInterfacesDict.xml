@@ -42,4 +42,6 @@
   <class name    = "IVeloClusterPosition"    />
   <class name    = "IVeloPixClusterPosition" />
   <class name    = "IPitchResTool"           />
+  <class name    = "ITrackStateProvider"     />
+
 </lcgdict>
