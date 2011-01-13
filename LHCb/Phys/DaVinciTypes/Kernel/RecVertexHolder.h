@@ -78,7 +78,7 @@ namespace LHCb
   public:
     // ========================================================================
     /// take ownership of the vertex 
-    const LHCb::RecVertex* release () ;
+    const LHCb::RecVertex* release () { return m_vertex.release() ; }
     // ========================================================================
   private:
     // ========================================================================

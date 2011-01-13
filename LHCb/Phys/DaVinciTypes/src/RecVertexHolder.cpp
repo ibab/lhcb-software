@@ -34,7 +34,7 @@ LHCb::RecVertexHolder::RecVertexHolder
   : m_vertex ( right.m_vertex ) 
 {}
 // =============================================================================
-/*  desctructor 
+/*  destructor 
  *  @attention object, not registered in TES will be  deleted!
  */
 // =============================================================================

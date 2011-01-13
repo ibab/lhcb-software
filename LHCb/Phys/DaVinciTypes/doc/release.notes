@@ -5,6 +5,12 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2011-01-13 - Vanya Belyaev
+
+ - LHCb::RecVertexHolder 
+      add missing method 
+ - Increase version to v2r3.
+ 
 !========================= DaVinciTypes v2r2 2010-12-08 =========================
 ! 2010-12-07 - Vanya Belyaev    
  - fix stupid bug in RecVertexHolder desrcructor 
