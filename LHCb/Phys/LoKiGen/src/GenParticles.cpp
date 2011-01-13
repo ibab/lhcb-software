@@ -708,7 +708,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenVertex* v ) 
   : LoKi::GenTypes::GCuts ()
-  , m_vertices() { _add ( v ) ; } ;
+  , m_vertices() { _add ( v ) ; }
 // ============================================================================
 /*  copy constructor 
  *  @param right object to be copied 
@@ -907,8 +907,6 @@ LoKi::GenParticles::HasQuark::fillStream
     return s << "GQUARK(" << quark() << ")" ;
     break                  ;
   }
-  //
-  return s ; 
 }
 // ============================================================================
 // the only one essential method 
@@ -1084,7 +1082,7 @@ LoKi::GenParticles::ProperLifeTime::ProperLifeTime
   , LoKi::GenTypes::GFunc( right )
   , m_bad ( right.m_bad ) {}
 // ============================================================================
-LoKi::GenParticles::ProperLifeTime::~ProperLifeTime(){} ;
+LoKi::GenParticles::ProperLifeTime::~ProperLifeTime(){}
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime*
 LoKi::GenParticles::ProperLifeTime::clone() const 

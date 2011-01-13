@@ -407,7 +407,7 @@ inline StatusCode LoKi::Hybrid::GenTool::_get
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,GenTool);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,GenTool)
 // ============================================================================
 // Standard constructor
 // ============================================================================

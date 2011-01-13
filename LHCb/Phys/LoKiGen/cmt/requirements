@@ -29,6 +29,9 @@ apply_pattern      reflex_dictionary                                   \
                    headerfiles=$(LOKIGENROOT)/dict/LoKiGenDict.h       \
                    selectionfile=$(LOKIGENROOT)/dict/LoKiGen.xml       \  
                    options=" -U__MINGW32__ "
+# Disable some compiler warnings in the automatically generated dict code
+macro_append LoKiGenDict_cppflags "" \
+                       target-icc " -wd191"
         
 macro_append       LoKiGen_dependencies             " LoKiGenLib " 
 macro_append       LoKiGenDict_dependencies         " LoKiGenLib " 

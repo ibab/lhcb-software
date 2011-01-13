@@ -383,7 +383,6 @@ Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
     default :
       return p ;
     }
-    return p ;
 }
 // ============================================================================
 // GENINCLUSIVE 
@@ -500,14 +499,14 @@ bool Decays::Trees::GenInclusive::operator()
     // it terribly slow... O(N!)
     
     // (4) sort the section 
-    std::stable_sort ( isect->begin() , isect->end() ) ;
-    do  // loop over all permutations  
-    {
-      // (5) match all fields:
-      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
-      { return true ; }                                            // RETURN 
-    } // make all possible permutations of the section  
-    while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
+    //    std::stable_sort ( isect->begin() , isect->end() ) ;
+    //    do  // loop over all permutations  
+    //    {
+    //      // (5) match all fields:
+    //      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
+    //      { return true ; }                                            // RETURN 
+    //    } // make all possible permutations of the section  
+    //    while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
   } // next section
   // no match 
   return false ;                                                   // RETURN 

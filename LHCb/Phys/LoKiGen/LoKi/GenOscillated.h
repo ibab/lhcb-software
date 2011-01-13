@@ -29,7 +29,7 @@ namespace LoKi
       if ( p->pdg_id() != -m->pdg_id() ) { return 0 ; }
       //
       return m ;
-    } ;
+    }
     // ========================================================================
     /** check the oscillation for the particle 
      *  @param p the particle 
@@ -50,7 +50,7 @@ namespace LoKi
       if ( p->pdg_id() != -d->pdg_id() ) { return 0 ; }
       //
       return d ;
-    } ;
+    }
     // ==========================================================================
   } // end of namespace LoKi::GenParticles 
 } // end of namespace LoKi

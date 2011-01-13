@@ -38,7 +38,7 @@ namespace
   {
     LoKi::Hybrid::GenEngineActor& actor = LoKi::Hybrid::GenEngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  }
 }
 // ============================================================================
 // predicates 

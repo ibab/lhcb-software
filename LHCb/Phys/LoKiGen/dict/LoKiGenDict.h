@@ -7,8 +7,15 @@
 // ============================================================================
 // HepMC 
 // ============================================================================
+#ifdef __INTEL_COMPILER
+  #pragma warning (disable:1572) // floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
+#ifdef __INTEL_COMPILER
+  #pragma warning(pop)
+#endif
 // ============================================================================
 // LoKi
 // ============================================================================
