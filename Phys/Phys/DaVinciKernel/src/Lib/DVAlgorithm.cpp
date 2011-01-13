@@ -525,7 +525,7 @@ StatusCode DVAlgorithm::loadParticles() {
   }
   
   // statistics: 
-  counter ("# input particles" ) += m_parts.size() ; 
+  counter ("# input particles" ) += m_inputParts.size() ; 
   
   return StatusCode::SUCCESS;
 }
