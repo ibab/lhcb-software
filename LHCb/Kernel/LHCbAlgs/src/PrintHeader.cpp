@@ -18,7 +18,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( PrintHeader );
+DECLARE_ALGORITHM_FACTORY( PrintHeader )
 
 
 //=============================================================================
@@ -35,7 +35,7 @@ PrintHeader::PrintHeader( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrintHeader::~PrintHeader() {}; 
+PrintHeader::~PrintHeader() {}
 
 
 //=============================================================================
@@ -55,7 +55,7 @@ StatusCode PrintHeader::execute() {
   setFilterPassed(true);
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -69,7 +69,7 @@ inline uint32_t mixString(uint32_t state, const std::string& extra)
 }
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DeterministicPrescaler );
+DECLARE_ALGORITHM_FACTORY( DeterministicPrescaler )
 
 DeterministicPrescaler::DeterministicPrescaler(const std::string& name, ISvcLocator* pSvcLocator) :
     GaudiAlgorithm(name, pSvcLocator) 

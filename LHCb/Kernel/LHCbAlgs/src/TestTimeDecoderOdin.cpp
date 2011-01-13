@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( LHCbAlgsTests, TestTimeDecoderOdin );
+DECLARE_NAMESPACE_TOOL_FACTORY( LHCbAlgsTests, TestTimeDecoderOdin )
 
 using namespace LHCbAlgsTests;
 //=============================================================================

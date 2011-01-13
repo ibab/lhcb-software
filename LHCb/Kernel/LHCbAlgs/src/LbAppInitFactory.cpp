@@ -7,5 +7,5 @@
 // Put LbAppInit base class factory in this library, to avoid having it in
 // LHCbKernel component library. 
 // It must be present otherwise the class cannot be instanciated
-DECLARE_ALGORITHM_FACTORY( LbAppInit );
+DECLARE_ALGORITHM_FACTORY( LbAppInit )
 

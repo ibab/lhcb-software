@@ -12,7 +12,7 @@
 // local
 #include "TrajPoca.h"
 
-DECLARE_TOOL_FACTORY( TrajPoca );
+DECLARE_TOOL_FACTORY( TrajPoca )
 
 //=============================================================================
 /// Standard constructor, initializes variables
@@ -30,12 +30,12 @@ TrajPoca::TrajPoca( const std::string& type,
   declareProperty( "MaxnTry",           m_maxnTry = 100         );
   declareProperty( "MaxDist",           m_maxDist = 100000000   );
   declareProperty( "MaxExtrapTolerance", m_maxExtrapTolerance = 1*Gaudi::Units::cm) ;
-};
+}
 
 //=============================================================================
 // Default destructor
 //=============================================================================
-TrajPoca::~TrajPoca() {};
+TrajPoca::~TrajPoca() {}
 
 
 //=============================================================================
@@ -148,7 +148,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
   }
   
   return status;
-};
+}
 
 //=============================================================================
 // 
@@ -165,7 +165,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj,
   if(restrictRange) restrictToRange( mu, traj ) ;
   distance = traj.position( mu ) - pt;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // 
@@ -260,7 +260,7 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
   }
     
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // 
@@ -278,6 +278,6 @@ bool TrajPoca::restrictToRange( double& l, const LHCb::Trajectory& t ) const
     l = lmin ;
   }
   return rc ;
-};
+}
 
 //=============================================================================

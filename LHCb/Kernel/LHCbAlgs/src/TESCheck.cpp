@@ -129,7 +129,7 @@ private:
 // ============================================================================
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TESCheck );
+DECLARE_ALGORITHM_FACTORY( TESCheck )
 
 // ============================================================================
 /// execute the algorithm itself
@@ -177,7 +177,7 @@ StatusCode TESCheck::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
 
 // ============================================================================

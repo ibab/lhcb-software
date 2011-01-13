@@ -16,7 +16,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( PostScaler );
+DECLARE_ALGORITHM_FACTORY( PostScaler )
 
 
 //=============================================================================
@@ -38,7 +38,7 @@ PostScaler::PostScaler( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PostScaler::~PostScaler() {}; 
+PostScaler::~PostScaler() {}
 
 //=============================================================================
 // Main execution
@@ -83,7 +83,7 @@ StatusCode PostScaler::execute() {
   
   setFilterPassed( accepted ) ;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

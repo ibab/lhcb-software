@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( createODIN );
+DECLARE_ALGORITHM_FACTORY( createODIN )
 
 
 //=============================================================================

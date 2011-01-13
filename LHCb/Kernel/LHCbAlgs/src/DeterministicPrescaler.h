@@ -2,7 +2,7 @@
 #include "boost/cstdint.hpp"
 #include <string>
 
-namespace LHCb { class ODIN; };
+namespace LHCb { class ODIN; }
 class StatEntity;
 
 class DeterministicPrescaler : public GaudiAlgorithm 
@@ -26,3 +26,4 @@ private:
   void update(Property&) ;
 
 };
+

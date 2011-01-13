@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TimingTool );
+DECLARE_TOOL_FACTORY( TimingTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

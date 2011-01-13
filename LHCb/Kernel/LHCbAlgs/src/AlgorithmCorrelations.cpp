@@ -17,7 +17,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( AlgorithmCorrelations );
+DECLARE_TOOL_FACTORY( AlgorithmCorrelations )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,7 +46,7 @@ AlgorithmCorrelations::AlgorithmCorrelations( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-AlgorithmCorrelations::~AlgorithmCorrelations() {}; 
+AlgorithmCorrelations::~AlgorithmCorrelations() {}
 
 //=============================================================================
 // Initialization
@@ -383,14 +383,14 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   }
   always() << "\n" << equalline << "\n" ;
   if ( (!m_square) && (m_useNumbers)){
-    unsigned int i = 0 ;
+    unsigned int j = 0 ;
     always() << "Column labels are : \n" ;
     for( strings::const_iterator ia = m_conditionAlgorithms.begin();
          ia!= m_conditionAlgorithms.end() ; ++ia  ){
       if (*ia == "ALWAYS" ) continue ;
       if ((m_minimize) && !(isEffective( *ia ))) continue;
-      i++ ;
-      always() << smallnumber % i << algo % *ia << "\n" ;
+      j++ ;
+      always() << smallnumber % j << algo % *ia << "\n" ;
     }
   }
 

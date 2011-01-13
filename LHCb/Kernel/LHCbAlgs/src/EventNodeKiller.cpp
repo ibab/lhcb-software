@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EventNodeKiller );
+DECLARE_ALGORITHM_FACTORY( EventNodeKiller )
 
 
 //=============================================================================
@@ -29,7 +29,7 @@ EventNodeKiller::EventNodeKiller( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-EventNodeKiller::~EventNodeKiller() {}; 
+EventNodeKiller::~EventNodeKiller() {}
 
 //=============================================================================
 // Main execution
@@ -45,5 +45,5 @@ StatusCode EventNodeKiller::execute() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================

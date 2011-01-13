@@ -117,12 +117,19 @@ public:
   void beforeEndRun(INamedInterface *i) { return before(IAuditor::EndRun,i); }
   void beforeFinalize(INamedInterface *i) { return before(IAuditor::Finalize,i); }
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // IAuditor::* function is hidden, virtual function override intended?
+  #pragma warning(push)
+#endif
   void afterInitialize(INamedInterface *i, const StatusCode& s) { return after(IAuditor::Initialize,i,s); }
-  void afterReInitialize(INamedInterface *i, const StatusCode& s) { return after(IAuditor::ReInitialize,i,s); }
-  void afterExecute(INamedInterface *i, const StatusCode& s) { return after(IAuditor::Execute,i,s); }
   void afterBeginRun(INamedInterface *i, const StatusCode& s) { return after(IAuditor::BeginRun,i,s); }
   void afterEndRun(INamedInterface *i, const StatusCode& s) { return after(IAuditor::EndRun,i,s); }
   void afterFinalize(INamedInterface *i, const StatusCode& s) { return after(IAuditor::Finalize,i,s); }
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 1125
+  #pragma warning(push)
+#endif
+  void afterReInitialize(INamedInterface *i, const StatusCode& s) { return after(IAuditor::ReInitialize,i,s); }
+  void afterExecute(INamedInterface *i, const StatusCode& s) { return after(IAuditor::Execute,i,s); }
 
 private:
   bool activeAt(const std::string s) { return ( std::find(m_when.begin(),m_when.end(),s)!=m_when.end() ); }
@@ -144,7 +151,7 @@ private:
   bool                                             m_activateSuperGuard;
 };
 
-DECLARE_AUDITOR_FACTORY( FPEAuditor );
+DECLARE_AUDITOR_FACTORY( FPEAuditor )
 
 FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   : Auditor ( name , pSvcLocator )

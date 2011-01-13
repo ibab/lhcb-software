@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MemoryTool );
+DECLARE_TOOL_FACTORY( MemoryTool )
 
 // ============================================================================
 // Standard constructor, initializes variables
