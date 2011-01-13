@@ -15,6 +15,9 @@ namespace LHCb
   static const CLID CLID_RawEvent = 1002;
 
   // Namespace for locations in TDS
+  #ifdef __INTEL_COMPILER        // Disable ICC remark
+    #pragma warning(disable:177) // variable was declared but never referenced
+  #endif
   namespace RawEventLocation {
     static const std::string& Default  = "DAQ/RawEvent";
     static const std::string& Emulated = "Emu/RawEvent";
