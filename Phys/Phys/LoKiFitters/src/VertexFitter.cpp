@@ -618,12 +618,12 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmin            ( -1.5 * Gaudi::Units::meter      ) 
   , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
-/// Use the special branch for   two-body decays 
-  , m_use_twobody_branch   ( false   ) // Use the sepcial branch for   two-body decays?
-/// Use the special branch for three-body decays 
-  , m_use_threebody_branch ( false   ) // Use the sepcial branch for three-body decays?
-/// Use the special branch for  four-body decays 
-  , m_use_fourbody_branch  ( false   ) // Use the sepcial branch for  four-body decays?
+/// Use the special branch for   two-body decays ?
+  , m_use_twobody_branch   ( false   ) // Use the special branch for   two-body decays?
+/// Use the special branch for three-body decays ?
+  , m_use_threebody_branch ( false   ) // Use the special branch for three-body decays?
+/// Use the special branch for  four-body decays ?
+  , m_use_fourbody_branch  ( false   ) // Use the special branch for  four-body decays?
 /// The transport tolerance  
   , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
 /// number of prints 

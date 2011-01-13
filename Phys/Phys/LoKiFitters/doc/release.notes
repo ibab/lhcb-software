@@ -5,6 +5,22 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-13 - Vanya Belyaev
+
+ - Patch for "Track-related" part of DistanceCalculator:
+
+    due to some problmes in TrackStateProvider, the 
+    state is not extracted/propagated properly.
+
+    Put a in place: 
+
+      in case of failure with the state provider, 
+      get the state from TrackExtrapolator.  
+
+ - cmt/requirments 
+    version increment to v4r1 
+
+
 !========================== LoKiFitters v4r0 2010-12-17 =====================
 
 ! 2010-12-03 - Vanya Belyaev

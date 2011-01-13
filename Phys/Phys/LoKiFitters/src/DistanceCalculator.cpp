@@ -609,10 +609,18 @@ namespace LoKi
       const LHCb::Track& t , 
       const double       z ) const 
     {
-      StatusCode sc = stateProvider() -> state ( s , t, z , 0.25 * m_deltaZ ) ;
-      if ( sc.isSuccess() ) { return sc ; } // RETURN
       //
-      _Warning( "State: unable to get the proper state" , sc ) ;
+      const double tolerance = 0.35 * m_deltaZ ;
+      //
+      StatusCode sc = stateProvider() -> state ( s , t , z , 0.9 * tolerance ) ;
+      if ( sc.isSuccess() && std::fabs ( s.z() - z ) < tolerance ) { return sc ; }
+      //
+      _Warning ( "stateAtZ: unable to get the proper state with provider"     , sc ) ;
+      //
+      sc = extrapolator()->propagate ( t , z , s ) ;
+      if ( sc.isSuccess() && std::fabs ( s.z() - z ) < tolerance ) { return sc ; }
+      //
+      _Warning ( "stateAtZ: unable to get the proper state with extrapolator" , sc ) ;
       //
       s = t.closestState ( z ) ;
       return StatusCode::SUCCESS ;
@@ -1254,13 +1262,14 @@ StatusCode LoKi::DistanceCalculator::_distance
   double*                 chi2   ) const 
 {
   //
-  const LHCb::State& s = state ( track ) ;
+  const double vZ = vertex.position().Z() ;
+  //
+  const LHCb::State& s = state ( track , vZ ) ;
   //
   // get the distance 
   // 
   i_distance ( s , vertex , impact ) ;
   //
-  const double vZ = vertex.position().Z() ;
   double dz = ::fabs ( vZ + impact.Z() - s.z() ) ;
   //
   // make iterations (if needed) 
@@ -1271,7 +1280,8 @@ StatusCode LoKi::DistanceCalculator::_distance
     // transport the state 
     StatusCode sc = stateAtZ ( m_state1 , track , vZ + impact.Z() ) ;    
     if ( sc.isFailure() )
-    { _Warning ("distance(IV): can;t get the proper state(1)" , sc ) ; }
+    { _Warning ("distance(VI): can't get the proper state(1)" , sc ) ; }
+    //
     // get the distance 
     i_distance ( m_state1 , vertex , impact ) ;
     //
@@ -1281,7 +1291,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   }
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { _Warning ( "There is no convergency-IV", NoConvergency ) ; }
+  { _Warning ( "There is no convergency-VI", NoConvergency ) ; }
   //
   //
   // evaluate chi2 (if needed) 
@@ -1294,15 +1304,15 @@ StatusCode LoKi::DistanceCalculator::_distance
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( &m_state1 , m_entry4 ) ;
     if ( sc.isFailure() ) 
-    { return _Error("_distance(IV): error from KalmanFilter::load", sc ) ; }
+    { return _Error("_distance(VI): error from KalmanFilter::load", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 
-    { return _Error ( "_distance(IV): unable to calculate the gain matrix" ) ; }
+    { return _Error ( "_distance(VI): unable to calculate the gain matrix" ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry4 , vertex.position() , ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return _Error ( "_distance(IV): error from Kalman Filter step" , sc ) ; }
+    { return _Error ( "_distance(VI): error from Kalman Filter step" , sc ) ; }
     // get the chi2 
     *chi2 = m_entry4.m_chi2 ;
     // ========================================================================

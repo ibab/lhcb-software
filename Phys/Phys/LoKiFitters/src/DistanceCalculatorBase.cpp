@@ -45,16 +45,20 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
   : GaudiTool ( type , name , parent ) 
-/// number of prints 
+// number of prints 
   , m_prints              ( 10 )
-/// The name of particle transporter tool 
-  , m_transporterName   ( "ParticleTransporter:PUBLIC" ) // The name of particle transpoter tool
-/// The transporter tool itself 
-  , m_transporter       ( 0 ) // The transporter tool itself 
-/// The name of track state provider 
+// The name of particle transporter tool 
+  , m_transporterName   ( "ParticleTransporter:PUBLIC" ) /// The name of particle transpoter tool
+// The transporter tool itself 
+  , m_transporter       ( 0 ) /// The transporter tool itself 
+// The name of track state provider 
   , m_stateProviderName ( "TrackStateProvider:PUBLIC" )
-/// The state provider  tool itself 
-  , m_stateProvider     ( 0 ) // The state provider 
+// The state provider  tool itself 
+  , m_stateProvider     ( 0 ) /// The state provider 
+// The name of track extrapolator
+  , m_extrapolatorName ( "TrackMasterExtrapolator:PUBLIC" )
+// The state provider  tool itself 
+  , m_extrapolator     ( 0 ) /// The extrapolator
 {
   // ==========================================================================
   declareProperty 
@@ -62,11 +66,14 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
       m_prints           , 
       "Maximal number of prints "        ) ;
   declareProperty 
-    ( "Transporter"      , m_transporterName      , 
-      "The Particle Transporter tool to be used"  ) ;
+    ( "Transporter"        , m_transporterName      , 
+      "The Particle Transporter  tool to be used"  ) ;
   declareProperty 
     ( "StateProvider"      , m_stateProviderName  , 
       "The Track State Provider  tool to be used" );
+  declareProperty 
+    ( "TrackExtrapolator"  , m_extrapolatorName   , 
+      "The Track Extrapolator    tool to be used" );
   // ==========================================================================
 }
 // ============================================================================

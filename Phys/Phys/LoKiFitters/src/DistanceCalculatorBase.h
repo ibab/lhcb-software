@@ -24,6 +24,7 @@
 // TrackInterfaces
 // ============================================================================
 #include "TrackInterfaces/ITrackStateProvider.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -398,6 +399,14 @@ namespace LoKi
       return m_stateProvider ;
     }
     // ========================================================================
+    /// get track extrapolator 
+    inline ITrackExtrapolator* extrapolator() const 
+    {
+      if ( 0 == m_extrapolator ) 
+      { m_extrapolator = tool<ITrackExtrapolator> ( m_extrapolatorName , this ) ; }
+      return m_extrapolator ;
+    }
+    // ========================================================================
   protected: 
     // ========================================================================
     /// get the state from the track 
@@ -407,6 +416,11 @@ namespace LoKi
       if ( 0 != s ) { return *s ; }
       return t.firstState();
     }
+    // ========================================================================
+    /// get the state from the track 
+    inline const LHCb::State& state ( const LHCb::Track& t , 
+                                      const double       z ) const 
+    { return t.closestState ( z ) ; }
     // ========================================================================
   protected: 
     // ========================================================================
@@ -442,9 +456,14 @@ namespace LoKi
     mutable IParticleTransporter* m_transporter ; // The transporter itself
     // =======================================================================
     /// The name of track state provider tool 
-    std::string  m_stateProviderName ; // The name of particle transpoter tool    
+    std::string  m_stateProviderName ; // The name od state provider 
     /// The state provider itself  
     mutable ITrackStateProvider* m_stateProvider ; // The state provider itself  
+    // =======================================================================
+    /// The name of track extrapolator tool  
+    std::string  m_extrapolatorName ; // The name of track extrapolator
+    /// The state provider itself  
+    mutable ITrackExtrapolator* m_extrapolator ; // The extrapolator itself 
     // =======================================================================
   }; 
   // ==========================================================================

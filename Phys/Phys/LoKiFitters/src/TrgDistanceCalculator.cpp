@@ -1024,7 +1024,10 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   Gaudi::XYZVector&       imppar , 
   double*                 chi2   ) const 
 {
-  const LHCb::State& s = state ( track ) ;
+  //
+  // get the closest state 
+  // 
+  const LHCb::State& s = state ( track , vertex.position().Z() ) ;
   //
   // get the distance 
   // 
