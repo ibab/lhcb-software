@@ -118,8 +118,15 @@ namespace LHCb
     double lifeTime () const { return m_tlife   ; }      // life-time 
     /// Get the particle proper lifetime in c*tau units
     double ctau     () const { return Gaudi::Units::c_light * lifeTime() ; }
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
     /// Get the particle natural width
     double width    () const { return 0 == ctau () ?  0.0  : Gaudi::Units::hbarc / ctau () ; }
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
     /// Get the max width deviation
     double maxWidth () const { return m_maxWidth ; }     // max-width 
     /// get the pointer to the anti-particle

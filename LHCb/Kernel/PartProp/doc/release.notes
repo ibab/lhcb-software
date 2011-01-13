@@ -5,6 +5,9 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-13 - Marco Cattaneo
+ - Fix some ICC compiler remarks
+
 !========================= PartProp v1r8 2010-11-27 =========================
 ! 2010-11-12 - Vanya Belyaev
  - add printout for  set<LHCb::ParticleID>

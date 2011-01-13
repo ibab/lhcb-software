@@ -116,6 +116,10 @@ std::ostream& LHCb::ParticleProperty::fillStream ( std::ostream& s ) const
   //
   // name & code
   s <<  BF ( "%1$-14s %|16t| PDG:%2$9d,") % name() % particleID().pid() ;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
   // charge
   if       (  0   == charge () ){ s << " Q:   0" ; }
   else if  (  1.0 == charge () ){ s << " Q:  +1" ; }
@@ -127,6 +131,9 @@ std::ostream& LHCb::ParticleProperty::fillStream ( std::ostream& s ) const
   else if  (  0.7 == charge () ){ s << " Q:+2/3" ; }
   else if  ( -0.7 == charge () ){ s << " Q:-2/3" ; }
   else  {s <<  BF ( " Q:%|+3.1f|," ) % float( charge() ) ; }
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
   // mass
   if ( mass () < 1 * Gaudi::Units::GeV )
   { s << BF (", mass:%|8.5g| MeV") % ( mass () / Gaudi::Units::MeV  ) ; }
@@ -271,12 +278,19 @@ std::ostream& LHCb::ParticleProperties::printAsTable_
       % pp -> name   ()              // name
       % pp -> particleID().pid() ;   // PDG-ID
     //
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
     if      (  0   == pp -> charge () ) { line % "0"    ; }
     else if (  0.3 == pp -> charge () ) { line % "+1/3" ; }
     else if ( -0.3 == pp -> charge () ) { line % "-1/3" ; }
     else if (  0.7 == pp -> charge () ) { line % "+2/3" ; }
     else if ( -0.7 == pp -> charge () ) { line % "-2/3" ; }
     else                                { line %  pp->charge() ; }
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
     //
     // mass
     if (       pp -> mass () < 1 * Gaudi::Units::keV )

@@ -264,7 +264,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
 }
 // ============================================================================
 /// Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb::Example,PartPropAlg);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb::Example,PartPropAlg)
 // ============================================================================
 // The END 
 // ============================================================================

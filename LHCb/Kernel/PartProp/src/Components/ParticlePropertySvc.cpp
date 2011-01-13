@@ -673,7 +673,7 @@ StatusCode LHCb::ParticlePropertySvc::parse( const std::string& file )
     //
     if ( !active ) { continue ; } // skip the lines if not active
     // parse the line
-    StatusCode sc = parseLine ( line ) ;
+    sc = parseLine ( line ) ;
     if ( sc.isFailure() ) 
     {
       log << MSG::ERROR << "Unable to parse the file '" << file << "'" << endmsg ;
@@ -694,7 +694,6 @@ StatusCode LHCb::ParticlePropertySvc::parse( const std::string& file )
 // ============================================================================
 StatusCode LHCb::ParticlePropertySvc::parseLine ( const std::string& line ) 
 {
-  MsgStream log ( msgSvc() , name() ) ;
   // get the input stream  from the line :
   std::istringstream input ( line ) ;
   // get the name
@@ -827,6 +826,10 @@ bool LHCb::ParticlePropertySvc::diff
   const LHCb::ParticleProperty& o ) 
 {
   bool d = false ;
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
   if ( n.charge   () != o.charge   () ) { m_by_charge.insert ( n.name () ) ; d = true ; }
   if ( n.mass     () != o.mass     () ) { m_by_mass.insert   ( n.name () ) ; d = true ; }
   if ( n.lifetime () != o.lifetime () ) { m_by_tlife.insert  ( n.name () ) ; d = true ; }
@@ -834,6 +837,9 @@ bool LHCb::ParticlePropertySvc::diff
   if ( n.evtGen   () != o.evtGen   () ) { m_by_evtgen.insert ( n.name () ) ; d = true ; }
   if ( n.pythia   () != o.pythia   () ) { m_by_pythia.insert ( n.name () ) ; d = true ; }
   //
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark
+  #pragma warning(pop)
+#endif
   if ( d ) 
   {
     MsgStream log ( msgSvc () , name () ) ;
