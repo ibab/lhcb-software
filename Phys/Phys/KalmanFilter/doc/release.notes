@@ -5,6 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-14 - Vanya Belyaev
+
+ - improve a little bit CPU effiicency of FastVertex 
+ - improve Doxygen comments 
+
 ! 2011-01-13 - Vanya Belyaev
 
  - add Reflex dictionary 

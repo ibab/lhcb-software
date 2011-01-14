@@ -56,12 +56,66 @@ namespace LHCb
 namespace LoKi 
 {
   // ==========================================================================
+  /** @class FastVertex
+   *  Collection of utilities for "Fast"-verticing from track 
+   *  @see LHCb::Track
+   *  @see LHCb::RecVertex
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-01-14
+   */
   class GAUDI_API FastVertex 
   {
     // ========================================================================
   public:
     // ========================================================================
     /** make 2-prong vertex from two tracks 
+     *
+     *  @code 
+     * 
+     *  const LHCb::Track* track1 = ... ;
+     *  const LHCb::Track* track2 = ... ;
+     *
+     *  double doca      ;
+     *  double docachi2  ;
+     *
+     *  // fast vertex creation, no actual vertex fit, 
+     *  LHCb::RecVertexHolder vx1 = LoKi::FastVertex::makeVertex (
+     *                 track1 ,     // the first track
+     *                 track2 ,     // the second tarck 
+     *                 -1     ,     // no doca cut
+     *                 -1     ,     // no chi2 cut - NO FIT!!!
+     *                 doca   ,     // retrieve doca 
+     *                 docachi2 ) ; // retrieve chi2(doca) 
+     * 
+     *  const LHCb::RecVertex* vertex1 = 0 ;
+     *  if ( doca < 50 * Gaudi::Units::micrometer ) {  vertex1 = vx1.release() ; }
+     *
+     *  // fast vertex creation with vertex fit!
+     *  LHCb::RecVertexHolder vx2 = LoKi::FastVertex::makeVertex (
+     *                 track1 ,     // the first track
+     *                 track2 ,     // the second tarck 
+     *                 100 * Gaudi::Units::micrometer , // doca cut
+     *                 16     ,     // chi2 cut : perform vertex FIT!!!
+     *                 doca   ,     // retrieve doca 
+     *                 docachi2 ) ; // retrieve chi2(doca) 
+     * 
+     *  const LHCb::RecVertex* vertex2 = vx2.release() ;
+     *
+     *  @endcode 
+     *
+     *  @attention LHCb::RecVertexHoder has destructive copy semantics! 
+     *             It deletes the vertex! To keep the vertex form deletion, 
+     *             one needs either register it in Transient Store, or
+     *             release it explicitly 
+     *
+     *  @see LHCb::RecVertexHolder 
+     *  @see std::auto_ptr 
+     * 
+     *  @attention For "no-fit" case, the vertex is defined as 
+     *                  middle point of DOCA-vector, 
+     *                  chi2(vertex) is set to -1000, and 
+     *                  covarinance matrix is not defined 
+     * 
      *  @param track1  (INPUT) the first  track
      *  @param track2  (INPUT) the second track
      *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
@@ -83,6 +137,43 @@ namespace LoKi
       const bool           iterate  = false ) ;
     // ========================================================================
     /** make 2-prong vertex from two tracks 
+     *  @code 
+     * 
+     *  const LHCb::Track* track1 = ... ;
+     *  const LHCb::Track* track2 = ... ;
+     *
+     *  double doca      ;
+     *  double docachi2  ;
+     *
+     *  // fast vertex creation, no actual vertex fit, 
+     *  LHCb::RecVertexHolder vx1 = LoKi::FastVertex::makeVertex (
+     *                 track1 ,     // the first track
+     *                 track2 ,     // the second tarck 
+     *                 100 * Gaudi::Units::micrometer , // doca cut
+     *                 -1     )   ; // no chi2 cut - NO FIT!!!
+     * 
+     *  // fast vertex creation with vertex fit!
+     *  LHCb::RecVertexHolder vx2 = LoKi::FastVertex::makeVertex (
+     *                 track1 ,     // the first track
+     *                 track2 ,     // the second tarck 
+     *                 100 * Gaudi::Units::micrometer , // doca cut
+     *                 16     ) ;   // chi2 cut : perform vertex FIT!!!
+     * 
+     *  @endcode 
+     *
+     *  @attention LHCb::RecVertexHoder has destructive copy semantics! 
+     *             It deletes the vertex! To keep the vertex form deletion, 
+     *             one needs either register it in Transient Store, or
+     *             release it explicitly 
+     *
+     *  @see LHCb::RecVertexHolder 
+     *  @see std::auto_ptr 
+     * 
+     *  @attention For "no-fit" case, the vertex is defined as 
+     *                  middle point of DOCA-vector, 
+     *                  chi2(vertex) is set to -1000, and 
+     *                  covarinance matrix is not defined 
+     * 
      *  @param track1  (INPUT) the first  track
      *  @param track2  (INPUT) the second track
      *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)
@@ -99,7 +190,23 @@ namespace LoKi
       const double         chi2max          , 
       const bool           iterate  = false ) ;
     // ========================================================================
-    /** evaluate the distance between the track & the vertex ("impact-parameter")
+    /** evaluate the vector distance between the track & the vertex 
+     *  ("vector impact-parameter")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track   = ... ;
+     *   const LHcb::VertexBase* vertex  = ... ;
+     *
+     *   Gaudi::XYZVector        impact ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( track  ,   // the track 
+     *                       vertex ,   // the vertex 
+     *                       impact ) ; // the impact parameter  
+     * 
+     *  @endcode 
+     *
      *  @param track   (INPUT)  track 
      *  @param vertex  (INPUT)  vertex 
      *  @param impact  (OUTPUT) impact parameter  
@@ -115,6 +222,26 @@ namespace LoKi
       const bool              iterate = false ) ;
     // ========================================================================
     /** evaluate the distance between the track & the vertex ("impact-parameter")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track   = ... ;
+     *   const LHcb::VertexBase* vertex  = ... ;
+     *
+     *   double ip     ;
+     *   double chi2   ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( track  ,   // the track 
+     *                       vertex ,   // the vertex 
+     *                       ip     ,   // the impact parameter  
+     *                       chi2   ) ; // chi2(ip)
+     * 
+     *  @endcode 
+     *
+     *  @attention For evaluation of chi2(ip) it is required to have valid 
+     *             covariance marix for the vertex (and track)
+     * 
      *  @param track   (INPUT)  track 
      *  @param vertex  (INPUT)  vertex 
      *  @param impact  (OUTPUT) impact parameter  
@@ -132,6 +259,21 @@ namespace LoKi
       const bool              iterate = false ) ;
     // ========================================================================
     /** evaluate the distance between the tracks ("DOCA")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track1  = ... ;
+     *   const LHCb::Track*      track2  = ... ;
+     *
+     *   double doca   ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( track1 ,   // the first track 
+     *                       track2 ,   // the second track 
+     *                       doca   ) ; // the distance 
+     * 
+     *  @endcode 
+     *
      *  @param track1  (INPUT)  the first  track 
      *  @param track2  (INPUT)  the second track 
      *  @param doca    (OUTPUT) DOCA
@@ -147,6 +289,23 @@ namespace LoKi
       const bool              iterate = false ) ;
     // =======================================================================
     /** evaluate the distance between the tracks ("DOCA")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track1  = ... ;
+     *   const LHCb::Track*      track2  = ... ;
+     *
+     *   double doca  ;
+     *   double chi2  ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( track1 ,   // the first track 
+     *                       track2 ,   // the second track 
+     *                       doca   ,   // the distance 
+     *                       chi2   ) ; // chi2(doca) 
+     * 
+     *  @endcode 
+     *
      *  @param track1  (INPUT)  the first  track 
      *  @param track2  (INPUT)  the second track 
      *  @param doca    (OUTPUT) DOCA
@@ -164,6 +323,23 @@ namespace LoKi
       const bool              iterate = false ) ;
     // =======================================================================
     /** check the distance between the track & the vertex ("impact-parameter")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track   = ... ;
+     *   const LHCb::VertexBase* vertex  = ... ;
+     *
+     *   const bool ok = LoKi::FastVertex::Checkdistance 
+     *        ( track  ,   // the track 
+     *          vertex ,   // the vertex 
+     *          100 * Gaudi::Units::micrometer ,  // the impact parameter  
+     *          100    ) ; // chi2(ip)
+     * 
+     *  @endcode 
+     *
+     *  @attention For evaluation of chi2(ip) it is required to have valid 
+     *             covariance marix for the vertex (and track)
+     * 
      *  @param track   (INPUT)  track 
      *  @param vertex  (INPUT)  vertex 
      *  @param ipmax   (INPUT) maximal value of      DOCA   (negative: no cut)
@@ -181,6 +357,20 @@ namespace LoKi
       const bool              iterate = false ) ;
     // ========================================================================
     /** check the distance between the track & the track ("doca")
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track1  = ... ;
+     *   const LHCb::Track*      track2  = ... ;
+     *
+     *   const double ok  = LoKi::FastVertex::distance 
+     *        ( track1 ,   // the first track 
+     *          track2 ,   // the second track 
+     *          100 * Gaudi::Units::micrometer ,  // the impact parameter  
+     *          100    ) ; // chi2(ip)
+     * 
+     *  @endcode 
+     *
      *  @param track1  (INPUT) the first track  
      *  @param track2  (INPUT) the second track  
      *  @param docamax (INPUT) maximal value of      DOCA   (negative: no cut)

@@ -66,9 +66,8 @@ namespace
   }
   /// get the state from the track.closest to certain Z  
   inline 
-  const LHCb::State* state
-  ( const LHCb::Track& t , 
-    const double       z ) 
+  const LHCb::State* state ( const LHCb::Track& t , 
+                             const double       z ) 
   { return &t.closestState ( z ) ; }
   /// get the central point 
   inline Gaudi::XYZPoint center 
@@ -134,8 +133,16 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
     //
     if ( state1_ != state1 || state2_ != state2 ) 
     {
-      if ( state1_ != state1 ) { line1 = line ( *state1_ ) ; }
-      if ( state2_ != state2 ) { line2 = line ( *state2_ ) ; }
+      if ( state1_ != state1 ) 
+      { 
+        state1 = state1_ ;
+        line1  = line ( *state1 ) ;
+      }
+      if ( state2_ != state2 ) 
+      { 
+        state2 = state2_ ;
+        line2  = line ( *state2_ ) ; 
+      }
       //
       // (re)use the nice functions by Matt&Juan
       Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -244,18 +251,22 @@ StatusCode LoKi::FastVertex::distance
   //
   if ( 0 == track || 0 == vertex ) { return StatusCode::FAILURE ; }
   //
-  const LHCb::State* s = state ( *track ) ;
+  const Gaudi::XYZPoint& point = vertex -> position() ;
   //
-  Gaudi::XYZPoint point = vertex -> position() ;
+  const LHCb::State* s = state ( *track , point.Z() ) ;
   //
   // (re)use the nice functions by Matt&Juan
   impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
   //
   if ( iterate ) 
   {
-    s = state ( *track , point.Z() + impact.Z() ) ;
-    // (re)use the nice functions by Matt&Juan
-    impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    const LHCb::State* s1 = state ( *track , point.Z() + impact.Z() ) ;
+    if ( s1 != s ) 
+    {
+      s = s1 ;
+      // (re)use the nice functions by Matt&Juan
+      impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    }
   }
   //
   return StatusCode::SUCCESS ;
@@ -281,9 +292,9 @@ StatusCode LoKi::FastVertex::distance
   //
   if ( 0 == track || 0 == vertex ) { return StatusCode::FAILURE ; }
   //
-  const LHCb::State* s = state ( *track ) ;
+  const Gaudi::XYZPoint& point = vertex -> position() ;
   //
-  Gaudi::XYZPoint    point = vertex -> position() ;
+  const LHCb::State* s = state ( *track , point.Z() ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::XYZVector impact = 
@@ -291,9 +302,13 @@ StatusCode LoKi::FastVertex::distance
   //
   if ( iterate ) 
   {
-    s = state ( *track , point.Z() + impact.Z() ) ;
-    // (re)use the nice functions by Matt&Juan
-    impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    const LHCb::State* s1 = state ( *track , point.Z() + impact.Z() ) ;
+    if ( s1 != s ) 
+    {  
+      s = s1 ;
+      // (re)use the nice functions by Matt&Juan
+      impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    }
   }
   //
   imppar = impact.R() ;
@@ -306,7 +321,7 @@ StatusCode LoKi::FastVertex::distance
   if ( sc.isFailure() ) { return sc ; }                // RETURN 
   // get the "the previus" Kalman Filter estimate == vertex
   Gaudi::SymMatrix3x3 ci = vertex->covMatrix() ; // the gain matrix 
-  if ( !ci.Invert() ) { return StatusCode::FAILURE ; } // RETURN 
+  if ( !ci.Invert()   ) { return StatusCode::FAILURE ; } // RETURN 
   // make one step of Kalman filter 
   sc = LoKi::KalmanFilter::step ( entry , vertex->position() , ci , 0 ) ;
   if ( sc.isFailure() ) { return sc ; }                // RETURN 
@@ -338,9 +353,9 @@ bool LoKi::FastVertex::checkDistance
   //
   if ( ipmax < 0 && chi2max < 0  ) { return true  ; } // RETURN 
   //
-  const LHCb::State* s = state ( *track ) ;
+  const Gaudi::XYZPoint& point = vertex -> position() ;
   //
-  Gaudi::XYZPoint    point = vertex -> position() ;
+  const LHCb::State* s = state ( *track , point.Z() ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::XYZVector impact = 
@@ -348,9 +363,13 @@ bool LoKi::FastVertex::checkDistance
   //
   if ( iterate ) 
   {
-    s = state ( *track , point.Z() + impact.Z() ) ;
-    // (re)use the nice functions by Matt&Juan
-    impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    const LHCb::State* s1 = state ( *track , point.Z() + impact.Z() ) ;
+    if ( s1 != s ) 
+    {
+      // (re)use the nice functions by Matt&Juan
+      s = s1 ;
+      impact = Gaudi::Math::closestPoint ( point , line ( *s ) ) - point ;
+    }
   }
   //
   // check IP 
@@ -414,18 +433,29 @@ bool LoKi::FastVertex::checkDistance
   if ( iterate ) 
   {
     //
-    state1 = state ( *track1 , point1.Z() ) ;
-    state2 = state ( *track1 , point1.Z() ) ;
+    const LHCb::State* state1_ = state ( *track1 , point1.Z() ) ;
+    const LHCb::State* state2_ = state ( *track2 , point2.Z() ) ;
     //
-    line1 = line ( *state1 )  ;
-    line2 = line ( *state2 )  ;
-    //
-    // (re)use the nice functions by Matt&Juan
-    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
-    //
-    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
-    point2 = line2 ( mu2 ) ; // the point on the second trajectory
-    //
+    if ( state1 != state1_ || state2 != state2_ ) 
+    {
+      if ( state1 != state1_ ) 
+      {
+        state1 = state1_ ;  
+        line1  = line ( *state1 )  ;
+      }
+      if ( state2 != state2_ ) 
+      {
+        state2 = state2_ ;  
+        line2  = line ( *state2 )  ;
+      }
+      //
+      // (re)use the nice functions by Matt&Juan
+      Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+      //
+      point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+      point2 = line2 ( mu2 ) ; // the point on the second trajectory
+      //
+    }    
   }
   //
   // apply DOCA cut (if needed) 
@@ -484,8 +514,8 @@ StatusCode LoKi::FastVertex::distance
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 ( line ( *state1 ) ) ;
-  Line_ line2 ( line ( *state2 ) ) ;
+  Line_ line1 = line ( *state1 )  ;
+  Line_ line2 = line ( *state2 )  ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -496,18 +526,29 @@ StatusCode LoKi::FastVertex::distance
   if ( iterate ) 
   {
     //
-    state1 = state ( *track1 , point1.Z() ) ;
-    state2 = state ( *track2 , point2.Z() ) ;
+    const LHCb::State* state1_ = state ( *track1 , point1.Z() ) ;
+    const LHCb::State* state2_ = state ( *track2 , point2.Z() ) ;
     //
-    line1 = line ( *state1 )  ;
-    line2 = line ( *state2 )  ;
-    //
-    // (re)use the nice functions by Matt&Juan
-    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
-    //
-    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
-    point2 = line2 ( mu2 ) ; // the point on the second trajectory
-    //
+    if ( state1 != state1_ || state2 != state2_ ) 
+    {
+      if ( state1 != state1_ ) 
+      {
+        state1 = state1_ ;
+        line1  = line ( *state1 )  ;
+      }
+      if ( state2 != state2_ ) 
+      {
+        state2 = state2_ ;
+        line2  = line ( *state2 )  ;
+      }
+      //
+      // (re)use the nice functions by Matt&Juan
+      Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+      //
+      point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+      point2 = line2 ( mu2 ) ; // the point on the second trajectory
+      //
+    }
   }
   //
   // apply DOCA cut (if needed) 
@@ -553,8 +594,8 @@ StatusCode LoKi::FastVertex::distance
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 ( line ( *state1 ) ) ;
-  Line_ line2 ( line ( *state2 ) ) ;
+  Line_ line1 = line ( *state1 )  ;
+  Line_ line2 = line ( *state2 ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -565,18 +606,29 @@ StatusCode LoKi::FastVertex::distance
   if ( iterate ) 
   {
     //
-    state1 = state ( *track1 , point1.Z() ) ;
-    state2 = state ( *track2 , point2.Z() ) ;
+    const LHCb::State* state1_ = state ( *track1 , point1.Z() ) ;
+    const LHCb::State* state2_ = state ( *track2 , point2.Z() ) ;
     //
-    line1 = line ( *state1 )  ;
-    line2 = line ( *state2 )  ;
-    //
-    // (re)use the nice functions by Matt&Juan
-    Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
-    //
-    point1 = line1 ( mu1 ) ; // the point on the first  trajectory
-    point2 = line2 ( mu2 ) ; // the point on the second trajectory
-    //
+    if ( state1 != state1_ || state2 != state2_ ) 
+    {
+      if ( state1 != state1_ ) 
+      {
+        state1 = state1_ ;
+        line1  = line ( *state1 )  ;
+      }
+      if ( state2 != state2_ ) 
+      {
+        state2 = state2_ ;
+        line2  = line ( *state2 )  ;
+      }
+      //
+      // (re)use the nice functions by Matt&Juan
+      Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+      //
+      point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+      point2 = line2 ( mu2 ) ; // the point on the second trajectory
+      //
+    } 
   }
   //
   // get DOCA 
@@ -600,8 +652,6 @@ StatusCode LoKi::FastVertex::distance
   //
   return StatusCode::SUCCESS ;
 }
-
-
 // ============================================================================
 // The END 
 // ============================================================================
