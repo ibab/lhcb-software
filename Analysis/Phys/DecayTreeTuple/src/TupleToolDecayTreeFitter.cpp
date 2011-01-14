@@ -48,8 +48,6 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
                                                     const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
-  
-  
   ,m_pidJpsi(443)
   ,m_pidLambda(3122)
   ,m_pidKS0(310)
@@ -162,7 +160,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
 	if (mother != P){
 	  originVtx = originVertex( mother, P ); // the origin vertex is somewhere in the decay
 	} else { // the origin vertex is the primary.
-	  originVtx = m_dva->bestPV( mother );
+    originVtx = m_dva->i_bestVertex( mother );
 	}
 	
 	if( originVtx ){} // I'm happy

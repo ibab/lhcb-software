@@ -92,7 +92,7 @@ StatusCode TupleToolParticleReFit::fill( const Particle* mother
   if( P != mother ) return StatusCode::SUCCESS;
 
 
-  const VertexBase* originVtx = m_dva->bestPV( mother );
+  const VertexBase* originVtx = m_dva->i_bestVertex( mother );
 
   if( originVtx ){} // I'm happy
   else {

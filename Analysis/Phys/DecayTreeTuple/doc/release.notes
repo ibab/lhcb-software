@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Juan Palacios
+ - DVAlgorithm::bestPV -> DVAlgorithm::i_bestVertex.
+
 ! 2011-01-12 - Chris Jones
  - Add LHCb::ProtoParticle::ProbNNghost to variables stored by TupleToolPid
 

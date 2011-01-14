@@ -82,7 +82,7 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
     originVtx = originVertex( mother, P ); // the origin vertex is 
                                            // somewhere in the decay
   } else { // the origin vertex is the primary.
-    originVtx = m_dva->bestPV( mother );
+    originVtx = m_dva->i_bestVertex( mother );
   }
 
   if( originVtx ){} // I'm happy

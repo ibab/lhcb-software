@@ -10,7 +10,6 @@
 #include "Kernel/IOnOffline.h"
 #include "DecayTreeFitter/Fitter.h"
 
-
 // STL
 #include <vector>
 #include <string>
@@ -69,7 +68,6 @@ public:
   const LHCb::Vertex* originVertex( const  LHCb::Particle*
 				   ,const LHCb::Particle* ) const;
   
-
   std::vector<unsigned int> m_constrainedPids;
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
