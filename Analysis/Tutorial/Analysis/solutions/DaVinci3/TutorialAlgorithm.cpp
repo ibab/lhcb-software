@@ -141,16 +141,21 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::Range& daughters)
       plot(twoDa.M(),"SelChi2", "Selected TwoP mass",m_motherMass-m_motherMassWin,
            m_motherMass+m_motherMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
-      desktop()->keep(&Mother);
-      if (msgLevel(MSG::DEBUG)) debug() << "Saved mother " << Mother.particleID().pid() << " to desktop" << endmsg ;
+      this->markTree(&Mother);
+      if (msgLevel(MSG::DEBUG)) debug() << "Saved mother " << Mother.particleID().pid() << " to local storage" << endmsg ;
       sc = plotDaughter(*imp,"Selected");
       if (sc) sc = plotDaughter(*imm,"Selected");
       if (!sc) return sc;
       counter("Mothers")++ ;
     }
   }
-  if (!sc) return sc ;
-  return desktop()->saveDesktop() ; // save them all
+  if (!sc) {
+    setFilterPassed(false);
+    return sc ;
+  }
+  
+  return StatusCode::SUCCESS;
+
 }
 //=============================================================================
 // loop on daughters

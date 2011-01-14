@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Juan Palacios
+ - Remove all calls to DVAlgorithm::desktop()
+ - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
+ - Increase to v9r0.
+
 ! 2011-01-05 - Juan Palacios
  - solutions/DaVinci1, solutions/DaVinci2
   . Replace calls of obsolete desktop()->particles() by this->particles().

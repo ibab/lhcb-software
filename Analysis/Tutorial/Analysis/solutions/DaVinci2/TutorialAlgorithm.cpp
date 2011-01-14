@@ -130,13 +130,14 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
       // happy -> keep
       plot(twoMu.M(),"SelDiMuChi2", "Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
-      desktop()->keep(&Jpsi);
+      this->markTree(&Jpsi);
       plotMuon(*imp,"Selected").ignore();
       plotMuon(*imm,"Selected").ignore();
       counter("J/psi's")++ ;
     }
   }
-  return desktop()->saveDesktop() ;
+  return StatusCode::SUCCESS;
+  
 }
 //=============================================================================
 // loop on muons
