@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file ChargedProtoParticleDLLFilter.cpp
+/** @file ProtoParticleANNPIDFilter.cpp
  *
- * Implementation file for algorithm ChargedProtoParticleDLLFilter
+ * Implementation file for algorithm ProtoParticleANNPIDFilter
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 2006-05-03
+ * @date 2011-01-12
  */
 //-----------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "ChargedProtoParticleDLLFilter.h"
+#include "ProtoParticleANNPIDFilter.h"
 
 // namespaces
 using namespace LHCb;
@@ -21,71 +21,47 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ChargedProtoParticleDLLFilter );
+DECLARE_TOOL_FACTORY( ProtoParticleANNPIDFilter );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoParticleDLLFilter::
-ChargedProtoParticleDLLFilter( const std::string& type,
-                               const std::string& name,
-                               const IInterface* parent )
-  : ProtoParticleANNPIDFilter ( type, name , parent ),
-    m_trSel                   ( NULL )
+ProtoParticleANNPIDFilter::
+ProtoParticleANNPIDFilter( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
+  : ProtoParticleDLLFilter ( type, name , parent )
 { }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ChargedProtoParticleDLLFilter::~ChargedProtoParticleDLLFilter() { }
+ProtoParticleANNPIDFilter::~ProtoParticleANNPIDFilter() { }
 
 //=============================================================================
 // Initialise
 //=============================================================================
-StatusCode ChargedProtoParticleDLLFilter::initialize()
+StatusCode ProtoParticleANNPIDFilter::initialize()
 {
-  const StatusCode sc = ProtoParticleANNPIDFilter::initialize();
+  const StatusCode sc = ProtoParticleDLLFilter::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
+  // setup any options ....
 
   return sc;
-}
-
-bool
-ChargedProtoParticleDLLFilter::isSatisfied( const ProtoParticle* const & proto ) const
-{
-  // First apply track selection
-  const Track * track = proto->track();
-  if ( !track )
-  {
-    Warning( "ProtoParticle has null Track reference -> Cannot used charged track selector" );
-    return false;
-  }
-  if ( !m_trSel->accept(*track) )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> ProtoParticle fails Track selection" << endreq;
-    return false;
-  }
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> ProtoParticle passes Track selection" << endreq;
-  // if that is OK, apply cuts
-  return ProtoParticleANNPIDFilter::isSatisfied( proto );
 }
 
 //=============================================================================
 // Create a cut object from decoded cut options
 //=============================================================================
 const ProtoParticleSelection::Cut *
-ChargedProtoParticleDLLFilter::createCut( const std::string & tag,
-                                          const std::string & delim,
-                                          const std::string & value ) const
+ProtoParticleANNPIDFilter::createCut( const std::string & tag,
+                                      const std::string & delim,
+                                      const std::string & value ) const
 {
   // Attempt to create a cut object using base class method first
   const ProtoParticleSelection::Cut * basecut =
-    ProtoParticleANNPIDFilter::createCut(tag,delim,value);
+    ProtoParticleDLLFilter::createCut(tag,delim,value);
 
   // If a non-null pointer is returned, base class was able to decode the data, so return
   if ( basecut ) return basecut;
@@ -105,12 +81,32 @@ ChargedProtoParticleDLLFilter::createCut( const std::string & tag,
   // cut value
   cut->setCutValue    ( cut_value                                      );
   // cut description
-  cut->setDescription ( "Charged Track Cut : "+tag+" "+delim+" "+value );
+  cut->setDescription ( "ANN PID Cut : "+tag+" "+delim+" "+value       );
 
   // Try and decode the tag
-  if      ( "VELOCHARGE" == tag )
+  if      ( "PROBNNE" == tag )
   {
-    cut->setVariable( LHCb::ProtoParticle::VeloCharge );
+    cut->setVariable( LHCb::ProtoParticle::ProbNNe );
+  }
+  else if ( "PROBNNMU" == tag )
+  {
+    cut->setVariable( LHCb::ProtoParticle::ProbNNmu );
+  }
+  else if ( "PROBNNPI" == tag )
+  {
+    cut->setVariable( LHCb::ProtoParticle::ProbNNpi );
+  }
+  else if ( "PROBNNK" == tag )
+  {
+    cut->setVariable( LHCb::ProtoParticle::ProbNNk );
+  }
+  else if ( "PROBNNP" == tag )
+  {
+    cut->setVariable( LHCb::ProtoParticle::ProbNNp );
+  }
+  else if ( "PROBNNGHOST" == tag )
+  {
+    cut->setVariable( LHCb::ProtoParticle::ProbNNghost );
   }
   else
   {

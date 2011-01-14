@@ -1,10 +1,8 @@
+
 //-----------------------------------------------------------------------------
 /** @file ProtoParticleFilterBase.cpp
  *
  * Implementation file for tool ProtoParticleFilterBase
- *
- * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.1 2009-07-22 11:36:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -47,7 +45,6 @@ ProtoParticleFilterBase::ProtoParticleFilterBase( const std::string& type,
     {
       m_selectionOpts.push_back("");
     }
-
     else if ( NAME == "MUON" )
     {
       m_selectionOpts.push_back("RequiresDet='MUON' IsMuon=True CombDLL(mu-pi)>'-8.0'");

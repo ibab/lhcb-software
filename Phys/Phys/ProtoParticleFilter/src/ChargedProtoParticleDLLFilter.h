@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ChargedProtoParticleDLLFilter
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.h,v 1.5 2010-09-02 16:53:25 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -16,7 +13,7 @@
 #define PROTOPARTICLEFILTER_ChargedProtoParticleDLLFilter_H 1
 
 // base class
-#include "ProtoParticleDLLFilter.h"
+#include "ProtoParticleANNPIDFilter.h"
 
 // Interfaces
 #include "Kernel/IProtoParticleFilter.h"
@@ -25,7 +22,7 @@
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoParticleDLLFilter ChargedProtoParticleDLLFilter.h
  *
- *  Tool which extends ProtoParticleDLLFilter to add charged track selection
+ *  Tool which extends ProtoParticleFilters to add charged track selection
  *  criteria
  *
  *  @author Chris Jones   Christoper.Rob.Jones@cern.ch
@@ -33,7 +30,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class ChargedProtoParticleDLLFilter : public ProtoParticleDLLFilter,
+class ChargedProtoParticleDLLFilter : public ProtoParticleANNPIDFilter,
                                       virtual public IProtoParticleFilter
 {
 
@@ -66,6 +63,7 @@ private:
 
   /// Track selector tool
   ITrackSelector * m_trSel;
+
 };
 
 #endif // PROTOPARTICLEFILTER_ChargedProtoParticleDLLFilter_H

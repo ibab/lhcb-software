@@ -4,10 +4,14 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Chris Jones
+ - Add support for new ANN probability PID variables
+
 !===================== ProtoParticleFilter v1r5 2010-09-29 =================
 
 ! 2010-08-27 - Olivier Deschamps
-  - ProtoParticleCALOFilter : extend filtering to any existing calo-related additionalInfo (automatic scan)
+  - ProtoParticleCALOFilter : extend filtering to any existing calo-related 
+    additionalInfo (automatic scan)
 
 !===================== ProtoParticleFilter v1r4 2009-09-11 =================
 

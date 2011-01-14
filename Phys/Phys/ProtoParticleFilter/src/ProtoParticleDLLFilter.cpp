@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
- * CVS Log :-
- * $Id: ProtoParticleDLLFilter.cpp,v 1.4 2009-07-20 16:43:18 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */

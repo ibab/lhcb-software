@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ProtoParticleDLLFilter
  *
- * CVS Log :-
- * $Id: ProtoParticleDLLFilter.h,v 1.4 2009-07-22 11:36:23 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -28,7 +25,7 @@
 /** @class ProtoParticleDLLFilter ProtoParticleDLLFilter.h
  *
  *  Filter tool to provide a simple ProtoParticle selection based
- *  exclusively on the ProtoParticle delta Log-Likelihood information
+ *  exclusively on the ProtoParticle combined DLL PID information
  *
  *  @author Chris Jones   Christoper.Rob.Jones@cern.ch
  *  @date   2006-05-03
