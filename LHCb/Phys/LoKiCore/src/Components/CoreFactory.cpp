@@ -270,7 +270,7 @@ inline StatusCode LoKi::Hybrid::CoreFactory::_get
   return StatusCode::SUCCESS ;
 }    
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,CoreFactory);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,CoreFactory)
 // ============================================================================
 // Standard constructor
 // ============================================================================

@@ -169,7 +169,7 @@ namespace LoKi
 } // end of namespace LoKi 
 // ============================================================================
 /// the factory for instantiation 
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,Reporter);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,Reporter)
 // ============================================================================
 // The END 
 // ============================================================================

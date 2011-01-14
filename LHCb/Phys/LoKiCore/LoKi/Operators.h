@@ -157,7 +157,7 @@ template <class TYPE, class TYPE2>
 inline   LoKi::Less<TYPE,TYPE2> 
 operator<  ( const  LoKi::Functor<TYPE,TYPE2>&  fun1 , 
              const  LoKi::Functor<TYPE,TYPE2>&  fun2 ) 
-{ return LoKi::Less<TYPE,TYPE2> ( fun1   , fun2   ) ; } ;
+{ return LoKi::Less<TYPE,TYPE2> ( fun1   , fun2   ) ; }
 // ============================================================================
 /** inline construction of operator "<" 
  *

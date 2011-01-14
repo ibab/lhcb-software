@@ -33,7 +33,7 @@
 namespace 
 {
   // ==========================================================================
-  const IAlgManager* const s_ALGMANAGER = 0 ;
+  //  const IAlgManager* const s_ALGMANAGER = 0 ;
   const IAlgorithm*  const s_ALGORITHM  = 0 ;
   // ==========================================================================
   /// get the algorithm manager

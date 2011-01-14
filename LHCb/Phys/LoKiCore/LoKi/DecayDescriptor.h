@@ -31,7 +31,7 @@ namespace Decays
      */       
     enum Alg {
       Daughters         = 0 , // match only for the direct daughters 
-      Sections              , // match in all graph sections 
+      Sections                // match in all graph sections 
     } ;
     // ======================================================================
     /** @enum Oscillation 
@@ -79,7 +79,7 @@ namespace Decays
       SingleX      ,   // single arrow       "-x>" 
       LongSingleX  ,   // long single arrow "--x>" 
       DoubleX      ,   // dobule arrow       "=x>" 
-      LongDoubleX  ,   // long double arrow "==x>"
+      LongDoubleX      // long double arrow "==x>"
       // =====================================================================
     } ;
     // ======================================================================

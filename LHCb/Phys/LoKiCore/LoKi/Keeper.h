@@ -84,7 +84,7 @@ namespace LoKi
     Keeper ( OTHER     first , 
              OTHER     last  , 
              PREDICATE cut   ) 
-      : m_objects () { addObjects ( first , last , cut ) ; } ;
+      : m_objects () { addObjects ( first , last , cut ) ; }
     /// protected destructor 
     ~Keeper() { m_objects.clear() ; }
     // ========================================================================
@@ -347,7 +347,7 @@ LoKi::Keeper<OBJECT>::operator+=
 {
   addObjects ( o.begin() , o.end() ) ;
   return *this ;
-} ;
+}
 // ============================================================================
 template <class OBJECT,class OTHER>
 inline 
@@ -357,7 +357,7 @@ LoKi::Keeper<OBJECT> operator+
 {
   LoKi::Keeper<OBJECT> result( first ) ;
   return result += second ;
-} ;
+}
 // ============================================================================
 template <class OBJECT, class OTHER>
 inline 
@@ -368,7 +368,7 @@ LoKi::Keeper<OBJECT> operator+
   LoKi::Keeper<OBJECT> result( first ) ;
   result.addObjects ( second.begin() , second.end() ) ;  
   return result ;
-} ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

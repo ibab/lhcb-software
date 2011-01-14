@@ -128,7 +128,7 @@ namespace LoKi
       cont.push_back( object );
       // return valid range 
       return Range( cont.begin() , cont.end() , name );      
-    };
+    }
     /// sequential access though iterators 
     map_iterator begin () const { return m_map.begin () ; }
     /// sequential access though iterators 

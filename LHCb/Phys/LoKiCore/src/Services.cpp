@@ -124,7 +124,7 @@ StatusCode LoKi::Services::Warning
 // ===========================================================================
 // accessor to main LoKi algorithm 
 // ===========================================================================
-LoKi::ILoKiSvc* LoKi::Services::lokiSvc () const { return m_lokiSvc ; };
+LoKi::ILoKiSvc* LoKi::Services::lokiSvc () const { return m_lokiSvc ; }
 // ===========================================================================
 // set new main LoKi algorithms 
 // ===========================================================================

@@ -28,8 +28,6 @@ double LoKi::Tensors::Epsilon::epsilon
   case E  : return e_1<E> ( v1 , v2 , v3 ) ;   // RETURN  
   default : return                     0   ;
   }
-  //
-  return 0 ;
 }
 // ============================================================================
 /*  evaluate the tensor e*v1*v2 product
@@ -103,8 +101,6 @@ double LoKi::Tensors::Epsilon::epsilon
   default:
     return 0 ;
   }
-  //
-  return 0 ;
 }
 // ============================================================================
 /*  evaluate the e*v1*v2*v3 product

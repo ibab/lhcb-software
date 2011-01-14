@@ -256,10 +256,6 @@ StatEntity* LoKi::Monitoring::getCounter
       getCounter ( stat    ,               name  ) :
       getCounter ( stat    , name + "::" + group ) ;    
   }
-  //
-  return group.empty() ? 
-    getCounter   ( stat    ,               name  ) :
-    getCounter   ( stat    , name + "::" + group ) ;
 }
 // ============================================================================
 // The END 

@@ -4,9 +4,16 @@
 // ============================================================================
 // Math Definitions
 // ============================================================================
+#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT Math
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable 
+  #pragma warning(push)
+#endif
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark 1572
+  #pragma warning(pop)
+#endif
 // ============================================================================
 // LoKiCore 
 // ============================================================================

@@ -100,7 +100,7 @@ namespace LoKi
   template <class TYPE>
   ConstReference<TYPE>& 
   ConstReference<TYPE>::operator=( const Reference<TYPE>& value ) 
-  { m_data =  value.i_data() ; return *this ; } ;
+  { m_data =  value.i_data() ; return *this ; }
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================

@@ -58,10 +58,10 @@ namespace LoKi
     ConstView () : _Base(){} ; 
     /// constructor form iterators 
     template <class IT>
-    ConstView ( IT first , IT last ) : _Base( first , last ) {} ;
+    ConstView ( IT first , IT last ) : _Base( first , last ) {}
     /// constructor from the "base"
     template <class IT>
-    ConstView ( const std::pair<IT,IT>& base ) : _Base  ( base ) {} ;
+    ConstView ( const std::pair<IT,IT>& base ) : _Base  ( base ) {}
     /// constructor form the container 
     ConstView ( const CONTAINER& c ) : _Base( c.begin() , c.end() ) {}
     /// compiler generated copy , assigmenet and destructor are OK

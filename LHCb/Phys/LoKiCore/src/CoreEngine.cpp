@@ -39,7 +39,7 @@ namespace
     LoKi::Hybrid::CoreEngineActor& actor = 
       LoKi::Hybrid::CoreEngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  }
 }
 // ============================================================================
 // propagate the cut to the tool 

@@ -87,7 +87,7 @@ namespace LoKi
                    OTHER     last  , 
                    PREDICATE cut   ) 
       : m_objects () 
-    { addObjects ( first , last , cut ) ; } ;
+    { addObjects ( first , last , cut ) ; }
     /// protected destructor 
     ~UniqueKeeper() { m_objects.clear() ; }    
     // ========================================================================
@@ -321,7 +321,7 @@ LoKi::UniqueKeeper<OBJECT>::operator+=
 {
   addObjects ( o.begin() , o.end() ) ;
   return *this ;
-} ;
+}
 // ============================================================================
 template <class OBJECT,class OTHER>
 inline 
@@ -331,7 +331,7 @@ LoKi::UniqueKeeper<OBJECT> operator+
 {
   LoKi::UniqueKeeper<OBJECT> result( first ) ;
   return result += second ;
-} ;
+}
 // ============================================================================
 template <class OBJECT,class OTHER>
 inline 
@@ -342,7 +342,7 @@ LoKi::UniqueKeeper<OBJECT> operator+
   LoKi::UniqueKeeper<OBJECT> result( first ) ;
   result.addObjects ( second.begin() , second.end() ) ;
   return result ;
-} ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
