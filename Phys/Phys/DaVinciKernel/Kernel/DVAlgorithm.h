@@ -144,7 +144,7 @@ public: // IDVAlgorithm
   /// get the best related primary vertex 
   virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
   {
-    return useP2PV() ? getRelatedPV(particle) : calculateRelatedPV(particle);
+    return i_bestVertex(oarticle);
   }
   /// get all loaded input particles 
   virtual const LHCb::Particle::Range particles() const 
@@ -354,15 +354,23 @@ public:
                                  m_pvReFitterNames ,
                                  m_pvReFitters     , this ) ; 
   }
-  
+
   /**
    * Inline access to best PV for a given particle.
    *
+   **/
+  inline const LHCb::VertexBase* i_bestVertex(const LHCb::Particle* p) const 
+  {
+    return useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p);
+  }
+  /**
+   * Inline access to best PV for a given particle.
+   * Backwards compatibility signature.
    *
    **/
   inline const LHCb::VertexBase* bestPV(const LHCb::Particle* p) const 
   {
-    return useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p);
+    return i_bestVertex;
   }
 
   /**
@@ -404,10 +412,8 @@ public:
    *
    **/
   inline void relate(const LHCb::Particle*   particle, 
-                     const LHCb::VertexBase* vertex) const
-  {
-    if (0==particle || 0== vertex ) return;
-    m_p2PVMap[particle]=vertex;
+                     const LHCb::VertexBase* vertex) const {
+    if (0!=particle && 0!= vertex ) m_p2PVMap[particle]=vertex;
   }
 
   /**
@@ -418,13 +424,10 @@ public:
    * @author Juan Palacios palacios@physik.uzh.ch
    *
    **/
-  inline void unRelatePV(const LHCb::Particle* particle) const
-  {
+  inline void unRelatePV(const LHCb::Particle* particle) const {
     m_p2PVMap.erase(particle);
   }
   
-  
-
 public:
   
   /// Accessor for CheckOverlap Tool
@@ -763,20 +766,17 @@ private:
   
 
   /// Does the event have more than 1 primary vertex?
-  inline bool multiPV() const 
-  {
+  inline bool multiPV() const {
     return this->primaryVertices().size() > 1;
   }
 
   /// Should PVs be re-fitted when bestVertex is asked for?  
-  inline bool refitPVs() const 
-  {
+  inline bool refitPVs() const {
     return m_refitPVs;
   }
 
   /// Should Particle->PV relations table be used?
-  inline bool useP2PV() const 
-  {
+  inline bool useP2PV() const {
     return m_refitPVs ? true : m_useP2PV;
   }
 
@@ -823,11 +823,12 @@ private:
   /// Save all marked local particles not already in the TES.
   /// Saves decay tree elements not already in TES, plus related
   /// PV and relation table entry when applicable.
-  /// This method can be overwritten if special TES saving actions are 
-  /// required. Avoid if possible!
   StatusCode saveInTES();
 
-
+  /// Save all marked local particles not already in the TES.
+  /// Saves decay tree elements not already in TES
+  /// This method can be overwritten if special TES saving actions are 
+  /// required. Avoid if possible!
   virtual StatusCode _saveInTES();
   
 
@@ -942,12 +943,9 @@ protected:
   ///
   mutable IRelatedPVFinder* m_pvRelator;
   
-  
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
 
-
-  
 private:
   /// Decay description (Property)
   std::string m_decayDescriptor;

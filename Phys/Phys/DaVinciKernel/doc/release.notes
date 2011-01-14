@@ -4,6 +4,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-14 - Juan Palacios
+ - DVAlgorithm
+  . Inline i_bestVertex(particle).
+  . Clean-up.
+
 ! 2011-01-13 - Juan Palacios
  - DVAlgorithm: 
   . Add ForceP2PVBuild property, calculates and stores Particle->PV relations

@@ -526,13 +526,10 @@ StatusCode DVAlgorithm::loadParticles() {
     }
     
     m_inputParts    .reserve ( m_inputParts    .size () + parts.size() ) ;
-    //    m_secVerts .reserve ( m_secVerts .size () + parts.size() ) ;
 
     for( LHCb::Particle::Range::const_iterator icand = parts.begin(); 
          icand != parts.end(); icand++ ) {
       m_inputParts.push_back(*icand);
-//       const LHCb::Vertex* endVtx = (*icand)->endVertex();
-//       if (endVtx) m_secVerts.push_back(endVtx);
     }
     
     if (msgLevel(MSG::VERBOSE)) { 
@@ -564,8 +561,7 @@ const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle) {
   const LHCb::Particle* newp = 
     DaVinci::cloneTree ( particle , clonemap , m_parts , m_secVerts ) ;
   
-  // copy relations directly from table to avoid triggering any new P->PV 
-
+  // copy relations directly from table to avoid triggering any new P->PV
   const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
 
   if (0!=bestPV) relate(newp, bestPV);
@@ -575,7 +571,6 @@ const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle) {
 //=============================================================================
 const LHCb::Particle* DVAlgorithm::cloneAndMarkTree(const LHCb::Particle* particle){
   return markTree(particle->clone());
-
 }
 //=============================================================================
 const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const {
@@ -795,8 +790,6 @@ StatusCode DVAlgorithm::saveInTES()
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "saveInTES "<< m_parts.size() << " Particles" << endmsg;
   }
-  
-
   
   StatusCode sc = _saveInTES();
   if (sc.isFailure()) return sc;
