@@ -15,9 +15,8 @@
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IDirectionFit.h"
-#include "Kernel/IPhysDesktop.h"
-#include "Kernel/DVAlgorithm.h"
-#include "Kernel/GetDVAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/GetIDVAlgorithm.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -159,19 +158,6 @@ namespace LoKi
     /// virtual & protected destructor
     virtual ~DirectionFitter() {}  ;
     // ========================================================================
-  protected:
-    // ========================================================================
-    /// get desktop from the parents
-    inline IPhysDesktop* getDesktop ( const IInterface* p ) const 
-    {
-      if ( 0 == p  ) { return 0 ; }                               // RETURN 
-      const DVAlgorithm* dv = dynamic_cast<const DVAlgorithm*> ( p ) ;
-      if ( 0 != dv ) { return dv -> desktop() ; }                 // RETURN 
-      SmartIF<IAlgTool> t ( const_cast<IInterface*> ( p ) )  ;
-      if ( !t      ) { return 0 ; }                               // RETURN               
-      return getDesktop ( t -> parent() ) ;
-    }
-    // ========================================================================
   };
   // ==========================================================================
 } //                                                      end of namespace LoKi
@@ -180,37 +166,25 @@ namespace LoKi
 // ============================================================================
 StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const 
 {
-  
   // play a bit with extra-info
   if ( particle.hasInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ) 
   { particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter )  ; }
   
   // try to get the associated primary vertex
-    const DVAlgorithm* dv = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ; 
-  // 1) get the desktop from the parent
-  IPhysDesktop* desktop = getDesktop ( parent() ) ;
-
-  // 1') or get of from the context:
-  if ( 0 == desktop ) 
-  {
-    if ( 0 != dv ) { desktop = dv -> desktop() ;  }
-  }
-  if ( 0 == desktop ) 
-  { return Error ( "No IPhysDesktop is available!"          , NoDesktop ) ; }
-
+  const IDVAlgorithm* dv = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if ( 0 == dv ) 
-  { return Error ( "No parent DVAlgorithm is available!"    , NoDesktop ) ; }
-  // 2 ) get the related primary vertex from the desktop
-  const LHCb::VertexBase* primary =  dv-> calculateRelatedPV ( &particle );
-  //  const LHCb::VertexBase* primary =  dv-> getRelatedPV ( &particle ) ;
-  //const LHCb::VertexBase* primary =  desktop -> relatedVertex( &particle ) ;
+  { return Error ( "No parent IDVAlgorithm is available!" , NoIDVAlgorithm ) ; }
+  //
+  // 1 ) get the related primary vertex from the DValgorithm
+  const LHCb::VertexBase* primary =  dv -> bestVertex ( &particle );
   if ( 0 == primary ) 
   { return Error ( "No associated primary vertex is found!" , NoPrimaryVertex ) ; }
-  // 3) use the regular "fit" method 
+  //
+  // 2) use the regular "fit" method 
   StatusCode sc = fit ( *primary , particle ) ;
   if ( sc.isFailure () ) 
   { return Error ( "reFit(): The errot from fit()" , sc ) ; }
-  
+  //
   // in the case of success update the extra-info:
   if ( particle.hasInfo ( LHCb::Particle::Chi2OfDirectionConstrainedFit ) ) 
   { 
@@ -218,7 +192,7 @@ StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const
       (  LHCb::Particle::Chi2OfParticleReFitter ,
          particle.info ( LHCb::Particle::Chi2OfDirectionConstrainedFit , -1000 ) ) ;
   }    
-  
+  //
   return StatusCode::SUCCESS ;
 }
 // ========================================================================

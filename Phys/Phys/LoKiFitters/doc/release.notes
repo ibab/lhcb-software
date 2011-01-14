@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-14 - Vanya Belyaev
+
+ - remove IPhysDesktop 
+ - substitute DVAlgorithm with IDVAlgorithm 
+
 ! 2011-01-13 - Vanya Belyaev
 
  - Patch for "Track-related" part of DistanceCalculator:
@@ -36,7 +41,7 @@
 
  - DistanceCalculators 
    
-      add methdos for calculate IP-vector 
+      add methods for calculate IP-vector 
 
 ! 2010-11-15 - Vanya Belyaev
 

@@ -230,8 +230,8 @@ namespace LoKi
     enum {
       /// no valid end-vertex is found for the particle 
       NoEndVertex            = 500  , // no valid end-vertex is found for the particle 4
-      /// no IPhysDesktop is available  (for IParticleReFitter interface)
-      NoDesktop              = 501  , // no IPhysDesktop is available  
+      /// no IDVAlgorithm is available  (for IParticleReFitter interface)
+      NoIDVAlgorithm         = 501  , // no IDVAlgorihtm is available  
       /// no valid primary vertex is found 
       NoPrimaryVertex        = 502  , // no valid primary vertex is found
       /// matrix inversion failure 
