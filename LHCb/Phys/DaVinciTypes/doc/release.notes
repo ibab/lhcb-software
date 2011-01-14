@@ -5,6 +5,10 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Vanya Belyaev
+
+ - add Reflex dictionary
+
 ! 2011-01-13 - Vanya Belyaev
 
  - LHCb::RecVertexHolder 
