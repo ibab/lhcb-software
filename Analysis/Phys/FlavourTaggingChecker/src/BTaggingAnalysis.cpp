@@ -273,7 +273,7 @@ StatusCode BTaggingAnalysis::execute() {
 
 
   ///------------------------------------------------------- Fill Tagger info
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), 
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0),
     piperr(0), pipPU(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), 
     pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
@@ -326,9 +326,10 @@ StatusCode BTaggingAnalysis::execute() {
     ptsal.push_back(track->likelihood());
 
     //calculate signed IP wrt RecVert
-    double IP, IPerr;
+    double IP, IPerr, IPsign;
     if(!(axp->particleID().hasBottom())) {
-      m_util->calcIP(axp, RecVert, IP, IPerr);
+      m_util->calcIP(axp, RecVert, IPsign, IPerr);
+      IP=fabs(IPsign); 
     }
 
     //calculate min IP wrt all pileup vtxs 
@@ -363,7 +364,8 @@ StatusCode BTaggingAnalysis::execute() {
       verbose()<< " svpart1 "<<SVpart1->pt()/GeV<<endreq;
       if( proto != SVpart1->proto() && proto != SVpart2->proto()){ 
         m_util->calcIP( axp, &mySV, ipSV, iperrSV );
-        verbose()<<" ipSV: "<<ipSV<<endreq;
+	ipSV=fabs(ipSV);
+	verbose()<<" ipSV: "<<ipSV<<endreq;
         verbose()<<" svpart for doca! svpart1 pt: "<<SVpart1->pt()/GeV<<endreq;
         m_util->calcDOCAmin( axp, SVpart1, SVpart2, docaSV, docaErrSV);
         debug()<<" doca: "<<docaSV<<endreq;
@@ -378,8 +380,9 @@ StatusCode BTaggingAnalysis::execute() {
     pphi  .push_back(axp->momentum().phi());
     pch   .push_back((int) axp->charge());
     pip   .push_back(IP);
-    piperr.push_back(IPerr);
-    pipPU .push_back(IPPU);
+    pipsign.push_back(IPsign);
+    piperr .push_back(IPerr);
+    pipPU  .push_back(IPPU);
     pipmean    .push_back(ipmean);
     pnippu     .push_back(nippu);
     pnippuerr  .push_back(nippuerr);
@@ -557,6 +560,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("phi",     pphi, "N", 200);
   tuple -> farray ("ch",      pch, "N", 200);
   tuple -> farray ("ip",      pip, "N", 200);
+  tuple -> farray ("ipsign",      pipsign, "N", 200);
   tuple -> farray ("iperr",   piperr, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("ipmean",  pipmean, "N", 200);

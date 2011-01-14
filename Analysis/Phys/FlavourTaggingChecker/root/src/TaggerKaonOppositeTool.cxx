@@ -71,12 +71,12 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     double IP    = axp->IP();
     double ipPU  = axp->IPPU();
     if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" ipPU="<<ipPU<<endmsg;
-
     if(IPsig < m_IPs_cut_kaon ) continue;
- 
     if(fabs(IP) > m_IP_cut_kaon ) continue;
-
     if(ipPU < m_ipPU_cut_kaon ) continue;
+
+    double distPhi = axp->distPhi();
+    if (distPhi < m_distPhi_cut_kaon) continue;
 
     ncand++;
     
@@ -90,6 +90,7 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     hcut_ko_gho ->Fill(tsa);
     hcut_ko_IPs ->Fill(IPsig);
     hcut_ko_IP  ->Fill(IP);
+    hcut_ko_distphi->Fill(distPhi);
 
     if( Pt > ptmaxk ) { 
       ikaon = (*ipart);

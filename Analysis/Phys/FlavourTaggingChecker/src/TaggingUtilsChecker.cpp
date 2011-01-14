@@ -63,6 +63,7 @@ StatusCode TaggingUtilsChecker::calcDOCAmin( const Particle* axp,
   return (sc1 && sc2);
 }
 //==========================================================================
+/*
 StatusCode TaggingUtilsChecker::calcIP( const Particle* axp, 
                                         const VertexBase* v, 
                                         double& ip, double& iperr) {
@@ -76,6 +77,29 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
      iperr=ipC/sqrt(ipChi2);
   }
 
+  return sc2;
+}
+*/
+//==========================================================================                          
+StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
+                                        const VertexBase* v,
+                                        double& ip, double& iperr) {
+  ip   =-100.0;
+  iperr= 0.0;
+  int zsign = 0;
+  
+  double ipC=0, ipChi2=0;
+  StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
+  Gaudi::XYZVector ipV;
+  StatusCode sc = m_Dist->distance (axp, v, ipV);
+  debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
+  if(sc2 && ipChi2!=0) {
+    if (sc) zsign = ipV.z()>0? 1:-1;
+    //ip=ipC;
+    ip=ipC*zsign;
+    iperr=ipC/sqrt(ipChi2);
+  }
+  info()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
   return sc2;
 }
 
