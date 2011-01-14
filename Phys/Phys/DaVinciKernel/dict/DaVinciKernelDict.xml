@@ -10,21 +10,6 @@
 <function pattern = "DaVinci::Transporter::*" />
 <!--<function pattern = "DaVinci::StringUtils::*" />-->
 
-<class name = "LHCb::DecayTree">
-  <field name="m_head"     transient="true" />
-  <field name="m_clonemap" transient="true" />
-</class>
-
 <class name = "LHCb::HashIDs" />
-
-<class name = "LHCb::RecVertexHolder">
-  <field name="m_vertex" transient="true" />
-</class> 
-
-<exclusion>
-  <class name = "LHCb::DecayTree">
-    <method name="cloneMap"/>
-  </class>
-</exclusion>
 
 </lcgdict>
