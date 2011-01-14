@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v4r13
+version v5r0
 
 branches doc cmt
 
@@ -36,7 +36,7 @@ use PyAna                       v1r3     Analysis
 use  MicroDSTBase        	v3r1    MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r6    MicroDST # Juan Palacios
 use  MicroDSTTools      	v2r1    MicroDST # Juan Palacios
-use  MicroDSTAlgorithm   	v5r0    MicroDST # Juan Palacios
+use  MicroDSTAlgorithm   	v5r1    MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
