@@ -6,6 +6,11 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Juan Palacios
+ - src/RecVertexClonerWithTracks.cpp
+  . Clear tracks SmartRefVector before adding cloned tracks.
+ - Increase to v2r1p1.
+
 !======================= MicroDSTTools v2r1 2010-10-06 =======================
 
 ! 2010-10-06 - Juan Palacios

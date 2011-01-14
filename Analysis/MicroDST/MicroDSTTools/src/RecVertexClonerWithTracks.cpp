@@ -59,17 +59,22 @@ LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::RecVertex* v
 LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
 {
   
+  if (!vertex) return 0;
+  
   LHCb::RecVertex* vertexClone = 
     cloneKeyedContainerItem<MicroDST::BasicRecVertexCloner>(vertex);
 
+  if (!vertexClone) return 0;
+
   const SmartRefVector< LHCb::Track >& tracks = vertex->tracks();
 
+  vertexClone->clearTracks();
+  
   if (!tracks.empty()) {
     typedef SmartRefVector<LHCb::Track>::const_iterator tk_iterator;
     tk_iterator iTrack = tracks.begin(); 
     tk_iterator iTrackEnd = tracks.end();
-    for (; iTrack != iTrackEnd;
-         iTrack++) {
+    for (; iTrack != iTrackEnd; iTrack++) {
       vertexClone->addToTracks( (*m_trackCloner)( iTrack->target() ) );
     }
   }
