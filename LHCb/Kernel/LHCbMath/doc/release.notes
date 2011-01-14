@@ -6,6 +6,28 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Vanya Belyaev
+ - add one more test TestAbs, that shows the difference between 
+     std::fabs, std::abs , ::fabs and ::abs 
+
+   It prints:
+  
+  Value:  -4115           std::fabs - std::abs : 0  fabs - abs :    0
+  Value:  1371.6667       std::fabs - std::abs : 0  fabs - abs :    0.66666667
+  Value:  -457.22222      std::fabs - std::abs : 0  fabs - abs :    0.22222222
+  Value:  152.40741       std::fabs - std::abs : 0  fabs - abs :    0.40740741
+  Value:  -50.802469      std::fabs - std::abs : 0  fabs - abs :    0.80246914
+  Value:  16.934156       std::fabs - std::abs : 0  fabs - abs :    0.93415638
+  Value:  -5.6447188      std::fabs - std::abs : 0  fabs - abs :    0.64471879
+  Value:  1.8815729       std::fabs - std::abs : 0  fabs - abs :    0.88157293
+  Value:  -0.62719098     std::fabs - std::abs : 0  fabs - abs :    0.62719098
+  Value:  0.20906366      std::fabs - std::abs : 0  fabs - abs :    0.20906366
+  Value:  -0.069687886    std::fabs - std::abs : 0  fabs - abs :    0.069687886
+  Value:  0.023229295     std::fabs - std::abs : 0  fabs - abs :    0.023229295
+
+  One clearly sees that ::abs truncates double values 
+
+
 ! 2011-01-10 - Marco Cattaneo
  - Fix icc warnings and remarks
 
