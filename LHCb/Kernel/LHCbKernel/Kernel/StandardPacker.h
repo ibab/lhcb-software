@@ -135,8 +135,15 @@ protected:
   short int shortPackDouble ( double val ) const {
     if (  3.e4 < val ) return  30000;  // saturate 15 bits
     if ( -3.e4 > val ) return -30000;  // idem
+#ifdef __INTEL_COMPILER         // Disable ICC remark
+  #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
+  #pragma warning(push)
+#endif
     if ( 0 < val ) return int( val + 0.5 ); // proper rounding
     return int( val - 0.5 );
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark 2259
+  #pragma warning(pop)
+#endif
   }
 
 };
