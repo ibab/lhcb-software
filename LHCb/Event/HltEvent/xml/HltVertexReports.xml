@@ -158,10 +158,10 @@
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
-        <code>
+        <arg name="s" type="std::ostream" const="FALSE"/>
+         <code>
           std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
           ss &lt;&lt; " HltVertexReports : { "  &lt;&lt; std::endl;
           for(Container::const_iterator i=m_vertexReports.begin();

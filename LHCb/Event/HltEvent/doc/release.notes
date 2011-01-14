@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Marco Cattaneo
+ - Fix ICC warnings
+
 !======================== HltEvent v9r0 2010-01-20 ===========================
 ! 2009-12-21 - Tomasz Skwarnicki
  - new access methods in HltSelReports to deal with PV info
