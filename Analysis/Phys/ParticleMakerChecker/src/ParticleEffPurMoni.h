@@ -3,9 +3,6 @@
  *
  *  Header file for class : ParticleEffPurMoni
  *
- *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.30 2009-08-03 09:09:29 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
  */

@@ -3,9 +3,6 @@
  *
  *  Implementation file for class : ParticleEffPurMoni
  *
- *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.42 2009-05-03 18:25:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
  */
@@ -380,7 +377,7 @@ StatusCode ParticleEffPurMoni::execute()
             {
               const LHCb::Particle * firstpart2 = *iPset2;
               // Location in TES for part2
-              const std::string& partloc2  = objectLocation(firstpart2);
+              const std::string& partloc2 = objectLocation(firstpart2);
               if ( msgLevel(MSG::DEBUG) )
                 debug() << "     -> First Part2 " << firstpart2->key() << " " << partloc2 << endreq;
               if ( partloc1 != partloc2 && proto1Type == proto2Type )
