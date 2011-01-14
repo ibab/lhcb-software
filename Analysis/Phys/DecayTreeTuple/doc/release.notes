@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Rob Lambert
+ - Add python directory and a Configuration.py to dress-up the configurables
+   Functions: addTupleTool and addBranches defined to simplify life a lot.
+   Currently one must replace "from Configurables import DecayTreeTuple"
+    with "from DecayTreeTuple.Configuration import *"
+
 ! 2011-01-14 - Juan Palacios
  - DVAlgorithm::bestPV -> DVAlgorithm::i_bestVertex.
 

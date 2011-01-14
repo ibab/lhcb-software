@@ -8,7 +8,7 @@ version           v3r11
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src python
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -32,4 +32,6 @@ library          DecayTreeTuple    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
+macro_append DecayTreeTupleGenConfUser_dependencies DecayTreeTupleConfDbMerge
 apply_pattern    component_library library=DecayTreeTuple
+apply_pattern    install_python_modules
