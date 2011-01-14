@@ -390,12 +390,19 @@ using namespace std;
      */
     inline long round ( const double x ) 
     {
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
+  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable 
+  #pragma warning(push)
+#endif
       typedef boost::numeric::RoundEven<double> Rounder ;
       typedef boost::numeric::make_converter_from 
         <double,
         boost::numeric::silent_overflow_handler,
         Rounder>::to<long>::type Converter ;
       return Converter::convert ( x ) ; 
+#ifdef __INTEL_COMPILER         // Re-enable ICC remark 1572
+  #pragma warning(pop)
+#endif
     }
     // ========================================================================
     /** round to nearest integer, rounds half integers to nearest even integer 
