@@ -160,6 +160,14 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "CombDLLk",   proto->info ( LHCb::ProtoParticle::CombDLLk,  0 ) );
     sc = sc && tuple->column( "CombDLLp",   proto->info ( LHCb::ProtoParticle::CombDLLp,  0 ) );
 
+    // ANN PID Probabilities
+    sc = sc && tuple->column( "ProbNNe",     proto->info ( LHCb::ProtoParticle::ProbNNe,  -1 ) );
+    sc = sc && tuple->column( "ProbNNmu",    proto->info ( LHCb::ProtoParticle::ProbNNmu, -1 ) );
+    sc = sc && tuple->column( "ProbNNpi",    proto->info ( LHCb::ProtoParticle::ProbNNpi, -1 ) );
+    sc = sc && tuple->column( "ProbNNk",     proto->info ( LHCb::ProtoParticle::ProbNNk,  -1 ) );
+    sc = sc && tuple->column( "ProbNNp",     proto->info ( LHCb::ProtoParticle::ProbNNp,  -1 ) );
+    sc = sc && tuple->column( "ProbNNghost", proto->info ( LHCb::ProtoParticle::ProbNNghost, -1 ) );
+
     // VeloCharge
     sc = sc && tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge, 0 ) );
 

@@ -104,14 +104,14 @@ class GlobalRecoConf(LHCbConfigurableUser):
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
             charged.OutputLevel = level
-            rich.OutputLevel = level
-            muon.OutputLevel = level
-            ecal.OutputLevel = level
-            brem.OutputLevel = level
-            hcal.OutputLevel = level
-            prs.OutputLevel  = level
-            spd.OutputLevel  = level
-            velo.OutputLevel = level
+            rich.OutputLevel    = level
+            muon.OutputLevel    = level
+            ecal.OutputLevel    = level
+            brem.OutputLevel    = level
+            hcal.OutputLevel    = level
+            prs.OutputLevel     = level
+            spd.OutputLevel     = level
+            velo.OutputLevel    = level
             combine.OutputLevel = level
             neutral.OutputLevel = level
 

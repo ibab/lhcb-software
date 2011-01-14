@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Chris Jones
+ - Add new ANN PID Probabilities to the ProtoParticle Tuple
+
 ! 2011-01-10 - Chris Jones
  - Update python Configurable to use the new ANN Configurable from
    Rec/ChargedProtoANNPID
