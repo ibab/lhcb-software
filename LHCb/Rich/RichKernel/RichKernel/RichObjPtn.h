@@ -98,10 +98,10 @@ namespace Rich
     }
 
     /// Overload output to ostream
-    friend inline std::ostream& operator << ( std::ostream& s,
+    friend inline std::ostream& operator << ( std::ostream& os,
                                               const Rich::ObjPtn<TYPE>& ptn )
     {
-      return s << *(ptn.object());
+      return os << *(ptn.object());
     }
 
   private:

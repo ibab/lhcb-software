@@ -131,13 +131,13 @@ namespace Rich
     bool dataIsValid( const Rich::ParticleIDType type ) const;
 
     /// Implement textual ostream << method
-    friend inline std::ostream& operator << ( std::ostream& s, const HypoData<TYPE>& data )
+    friend inline std::ostream& operator << ( std::ostream& ost, const HypoData<TYPE>& data )
     {
       for ( int i = 0; i < Rich::NParticleTypes; ++i )
       {
-        s << data[static_cast<Rich::ParticleIDType>(i)] << " ";
+        ost << data[static_cast<Rich::ParticleIDType>(i)] << " ";
       }
-      return s;
+      return ost;
     }
 
   private: // data
