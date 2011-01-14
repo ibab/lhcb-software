@@ -319,7 +319,8 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
 
 
   //Print out displaced vertices and change them into Particles
-  Particle::ConstVector RecParts;
+  //Particle::ConstVector RecParts;
+  int nbRecParts(0);
   RecVertex::ConstVector::const_iterator i = RV.begin();
   RecVertex::ConstVector::const_iterator iend = RV.end();
   m_GeoInit = false; //be sure the goe is initialised if needed.
@@ -396,28 +397,29 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     }    
     //Turn it into a Particle !
     //Will put in info 51: if the particle is in detector 52: the distance to beamline
-    if( !RecVertex2Particle( rv, RecParts , r ) ) continue;
+    if( !RecVertex2Particle( rv, nbRecParts , r ) ) continue;
 
     //Study Prey Composition
     // ***Don't forget to turn on the IMeasurementProvider tool***
-    if( false && r > m_RMin && r < m_RMax ) 
-      StudyPreyComposition( RecParts.back() );
+    //if( false && r > m_RMin && r < m_RMax ) 
+    //  StudyPreyComposition( RecParts.back() );
 
   }
-  size = RecParts.size();
+  size = nbRecParts;
   if( msgLevel(MSG::DEBUG) )
     debug()<<"# of Preys " << size << endmsg;
   if( context() == "Info" ) plot( size, "NbofPreys", 0, 20 );
 
   //Save Preys infos in tuple
-  if( m_SaveTuple ){
-    Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
-    if( SavePreysTuple( tuple, RecParts ).isFailure() )
-      warning()<<"Impossible to fill tuple with candidate infos"<<endmsg;
-  }
+  //if( m_SaveTuple ){
+  // Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
+  //  if( SavePreysTuple( tuple, RecParts ).isFailure() )
+  //    warning()<<"Impossible to fill tuple with candidate infos"<<endmsg;
+  //}
 
   //Save Preys from Desktop to the TES.
-  return desktop()->cloneTrees( RecParts );
+  //this->markNewTree
+  return StatusCode::SUCCESS;//desktop()->cloneTrees( RecParts );
   //return desktop()->saveDesktop();
 }
 
@@ -520,11 +522,11 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
 // Turn RecVertices into Particles (from Parts) saved in RecParts
 //=============================================================================
 bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
-						Particle::ConstVector & RecParts , double r){  
+						int& nbRecParts , double r){  
 
   //Retrieve data Particles from Desktop.
   Particle::ConstVector Parts;
-  if( m_UsePartFromTES ) Parts = desktop()->particles();
+  Parts = this->i_particles();
 
   Gaudi::LorentzVector mom;
   SmartRefVector< Track >::const_iterator iVtx = rv->tracks().begin();
@@ -542,45 +544,34 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpVtx.setNDoF( rv->nDoF());
     tmpVtx.setChi2( rv->chi2());
     tmpVtx.setCovMatrix( rv->covMatrix() );
-
+    
     //Create a particle
     Particle tmpPart = Particle( m_PreyID );
-    //Fix end vertex
-    tmpPart.setEndVertex( &tmpVtx );
-    tmpPart.setReferencePoint( point );
-    tmpPart.addInfo(52,r ); 
-    //Store 51 info if found to be in detector material
-    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
-      tmpPart.addInfo(51,1.);
- 
+    
     if( m_UseMap ){
       //Loop on RecVertex daughter tracks and save corresponding Particles
       for( ; iVtx != iVtxend; ++iVtx ){
-        //debug()<<"Key "<< (*iVtx)->key() <<" type "
-        //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
         if( !TestTrack( *iVtx ) ) continue;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
-
         it = m_map.find( key );
         const Particle * part = NULL; 
-
         //Give a default pion with pT of 400 MeV
         if( it != m_map.end() ){ 
           part = it->second; 
-          //debug()<<"got Particle from map with slope "
-          //     << part->slopes() <<endmsg;
         }
         
-        if( it == m_map.end() ) part = DefaultParticle(*iVtx);
+        if( it == m_map.end() ) {
+	  part = DefaultParticle(*iVtx);
+	}
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
           tmpPart.addToDaughters( part );
           mom += part->momentum();
         }      
       }
-    } else if( !m_UsePartFromTES ){
-
+    } 
+    else if( !m_UsePartFromTES ){
       // Load the ProtoParticles
       const ProtoParticles * pps = 
         get<ProtoParticles>(ProtoParticleLocation::Charged);
@@ -592,8 +583,6 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           ++iVtx;
         }
         if( (*iVtx)->key() == pp->key() ){ 
-          //debug()<<"Mom should be the same "<< (*iVtx)->momentum() <<" "
-          //       << pp->track()->momentum() << endmsg;
           //Make a Particle with best PID 
           if( !TestTrack( *iVtx ) ) continue;
           const Particle * part = MakeParticle( pp );
@@ -603,8 +592,8 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           continue;
         }
       }      
-    } else {
-      
+    }
+    else {  
       //Find all particles that have tracks in RecVertex
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
@@ -619,27 +608,16 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         }
 
         if( (*iVtx)->key() == tk->key() ){ 
-          //debug()<<"Track should be the same "<< (*iVtx)->momentum() <<" "
-          //       << tk->momentum() << endmsg;
-          //debug() <<"Track type "<< tk->type() << endmsg;
           if( (*iVtx)->key() != endkey ) ++iVtx; 
-          //if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
-          tmpVtx.addToOutgoingParticles ( *j );
-          tmpPart.addToDaughters( *j );
-          mom += (*j)->momentum();
+	  // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+	  const LHCb::Particle* clonedPart =  (*j )->clone();
+          tmpVtx.addToOutgoingParticles ( clonedPart );
+          tmpPart.addToDaughters( clonedPart );
+          mom += clonedPart->momentum();
           continue;
         }
       }
     }
-    //Should //always be 100%
-    //double eff = 100.*(double)tmpPart.daughters().size()/
-      //(double)rv->tracks().size();
-//     plot( eff, "Trk2PartEff", 0., 101.);
-    //debug()<<"Track to Particle matching efficiency "<< eff << endmsg;
-    //debug()<<"Found "<< Daughters.size() <<" related particles."<< endmsg;
-    //Do I really care about the number of tracks found ?
-    //if( Daughters.size() < m_nTracks ) return;
-    
 
     //Fill momentum and mass estimate
     tmpPart.setMomentum( mom );
@@ -659,11 +637,15 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpPart.setPosCovMatrix( rv->covMatrix() );
     Gaudi::Matrix4x3 PosMomCovMatrix;
     tmpPart.setPosMomCovMatrix( PosMomCovMatrix );
-    
-
-    //Save Rec Particle in the Desktop
-    RecParts.push_back( desktop()->keep( &tmpPart ) );
-    
+    //Fix end vertex
+    tmpPart.setEndVertex( tmpVtx.clone() );
+    tmpPart.setReferencePoint( point );
+    tmpPart.addInfo(52,r ); 
+    //Store 51 info if found to be in detector material
+    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
+      tmpPart.addInfo(51,1.);
+    this->markNewTree(tmpPart.clone());
+    nbRecParts++;
   } else {
 
     Particle::ConstVector Daughters;
@@ -677,38 +659,34 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         ++iVtx;
       }
       if( (*iVtx)->key() == tk->key() ){ 
-        //debug()<<"Track should be the same "<< (*iVtx)->momentum() <<" "
-        //     << tk->momentum() << endmsg;
-        //debug() <<"Track type "<< tk->type() << endmsg;
         if( (*iVtx)->key() != endkey ) ++iVtx; 
-        //if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
-        Daughters.push_back( *j );
+	// make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+        Daughters.push_back( (*j)->clone() );
         continue;
       }
     }
     
     //Make particle !
-    Vertex tmpVtx; 
+    Vertex* tmpVtx = new Vertex(); 
     Particle tmpPart;
-    if( !( m_vFit->fit( Daughters, tmpVtx, tmpPart ) ) ){
+    if( !( m_vFit->fit( Daughters, *tmpVtx, tmpPart ) ) ){
       Warning("Fit error."+ m_Fitter +" not able to create Particle !"); 
       return false;
     }
-
     if( !TestMass( tmpPart ) ){
       if( msgLevel(MSG::DEBUG) )
         debug() <<"Particle did not passed the mass cut --> disguarded !"
                 << endmsg;
       return false;   
     }
-
     //Store 51 info if found to be in detector material
     if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
       tmpPart.addInfo(51,1.);
     tmpPart.addInfo(52,r );
     
     //Save Rec Particle in the Desktop
-    RecParts.push_back( desktop()->keep( &tmpPart ) );
+    nbRecParts++;
+    this->markNewTree(tmpPart.clone());
      
   }
   setFilterPassed(true);
@@ -716,7 +694,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   if ( true ){
     if( msgLevel(MSG::DEBUG) ){
       debug() << "------------- Reconstructed Particle -----------" << endmsg;
-      debug() << "Mass " << RecParts.back()->measuredMass()/GeV << "+/-" 
+      /*debug() << "Mass " << RecParts.back()->measuredMass()/GeV << "+/-" 
               << RecParts.back()->measuredMassErr() <<" GeV" << endmsg;
       debug() << "Chi2 " << RecParts.back()->endVertex()->chi2() 
 	      << " Chi2/NDoF " << RecParts.back()->endVertex()->chi2PerDoF()
@@ -728,8 +706,8 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
       double isindet = RecParts.back()->info(51,0.);
       if( isindet > 0. )
         debug() <<"Decay vertex found to be in detector material."<< endmsg;
-      debug() << "----------------------------" << endmsg;
-    }
+      debug() << "----------------------------" << endmsg;*/
+      }
   }
   return true;
 }
@@ -769,7 +747,7 @@ void RecVertices2Particles::CreateMap( const Particle::ConstVector & Parts ){
   //double eff = 100.*( (double)nb )/( (double)Parts.size() );
   //a few particles may originate from the same Velo ancestor !
   //int clone = nb - m_map.size();
-  //plot( eff, "MapEff", 0., 105. ); ////always 100%
+  //plot( eff, "MapEff", 0., 105. ); //////always 100%
   //plot( clone, "NbClonePart", 0., 10. );
   //debug() <<"eff "<< eff <<" nb of clone "<< clone <<" Nb of Part "
   //        << Parts.size() <<" Map size "<< m_map.size() << endmsg;
@@ -791,11 +769,7 @@ const Particle * RecVertices2Particles::DefaultParticle( const Track * p ){
   Particle pion;
   const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
   pion.setMomentum(mom);
-
-  //debug()<<"Creating default pion for key "<< p->key() <<" and slopes "
-  //     <<sx<<" "<<sy<<" yielding momentum "<< mom << endmsg;
-
-  return desktop()->keep(&pion);
+  return pion.clone();
 }
 
 //=============================================================================
@@ -896,7 +870,7 @@ const Particle * RecVertices2Particles::MakeParticle( const ProtoParticle * pp )
     }
   }
 
-  return desktop()->keep(&p);
+  return p.clone();
 }
 
 
@@ -1702,7 +1676,7 @@ void RecVertices2Particles::PrintTrackandParticles(){
   }
 
   debug()<<"---------------------------------------------------------"<<endmsg;
-  const Particle::ConstVector inputParts = desktop()->particles();
+  const Particle::ConstVector inputParts = this->i_particles();
   debug()<<"Dumping Particle content, size "
 	 << inputParts.size() <<endmsg;
   for ( Particle::ConstVector::const_iterator j = inputParts.begin();

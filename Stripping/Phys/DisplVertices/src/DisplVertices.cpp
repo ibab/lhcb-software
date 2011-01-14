@@ -51,7 +51,7 @@ DisplVertices::DisplVertices( const std::string& name,
     , PV(0)
     , m_PreyID(0)
     , m_MotherPreyID(0){
-  declareProperty("SaveOnTES", m_SaveonTES = true );
+  //declareProperty("SaveOnTES", m_SaveonTES = true );
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
@@ -245,7 +245,7 @@ StatusCode DisplVertices::execute(){
 
   //Clear stuff
   PVs.clear();
-
+  //always()<<"Entering"<<endreq;
   //---------------------------------------------  
   if( m_SaveTrigInfos && !m_SaveTuple ){
     Tuple tuple = nTuple("Trigger");
@@ -255,6 +255,7 @@ StatusCode DisplVertices::execute(){
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
+  //always()<<"tag1"<<endreq;
   if( m_SaveTuple || m_RCut != "FromPreyInfo"){
 
     //------------------Set the beam line------------------
@@ -286,7 +287,7 @@ StatusCode DisplVertices::execute(){
   }
 
   //------------------The Code---------------------------
-  const Particle::ConstVector preys = desktop()->particles();
+  const Particle::ConstVector preys = this->i_particles();
   if( msgLevel( MSG::DEBUG ) )
     debug() << "There are " << preys.size() <<" particles in TES !" << endmsg;
   if( preys.size() < m_NbCands ){
@@ -295,17 +296,19 @@ StatusCode DisplVertices::execute(){
     return StatusCode::SUCCESS;
   }
 
+  //always()<<"tag2"<<endreq;
   vector<int>  nboftracks;
   vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets, recqs;
-
+  int nbCands(0);
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
-  Particle::ConstVector Cands;
+  //Particle::ConstVector Cands;
   Particle::ConstVector::const_iterator iend = preys.end();
   for( Particle::ConstVector::const_iterator is = preys.begin(); 
        is < iend; ++is ){
     const Particle * p = (*is);
 
+    //always()<<"tag3 "<<p->isBasicParticle()<<endreq;
     //Get rid of non-reconstructed particles, i.e. with no daughters.
     if( p->isBasicParticle() ){ 
       debug()<<"Basic particle !" << endmsg; 
@@ -326,6 +329,7 @@ StatusCode DisplVertices::execute(){
     double recq = 0.;
     GetQPt( p->endVertex(), sumpt, recq );
 
+    //always()<<"tag4 "<<p->info(51,-1000.)<<" "<<p->info(52,-1000.)<<endreq;
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
       debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
@@ -342,6 +346,7 @@ StatusCode DisplVertices::execute(){
     if( m_RemVtxFromDet!= 5 && IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) ) continue;
     if( m_RemVtxFromDet== 5 && p->info(51,-1000.)>-900) continue;
       
+  //always()<<"tag5"<<endreq;
     //Is the particle decay vertex in the RF-foil ?
     if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
       if( msgLevel( MSG::DEBUG ) )
@@ -349,6 +354,7 @@ StatusCode DisplVertices::execute(){
       continue; 
     }
 
+    //always()<<"tag5a "<<mass<< " "<<nbtrks<<" "<<endreq;
     if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
@@ -360,6 +366,7 @@ StatusCode DisplVertices::execute(){
       continue; 
     }
 
+  //always()<<"tag6"<<endreq;
     //Save infos in tuple !
     if( m_SaveTuple ){
       nboftracks.push_back( nbtrks ); chindof.push_back( chi );
@@ -377,22 +384,27 @@ StatusCode DisplVertices::execute(){
       if( p->info(51,-1000.)>-900 ) indet += 1000;
       indets.push_back( indet ); 
     }
-    Particle clone = Particle( *p );
-    clone.setParticleID( m_PreyID );
-    Cands.push_back( desktop()->keep( &clone ) );
-
+  //always()<<"tag7"<<endreq;
+    Particle* clone = new Particle( *p );
+    clone->setParticleID( m_PreyID );
+    this->markNewTree(clone);
+  //always()<<"tag8"<<endreq;
+    nbCands++;
   }//  <--- end of Prey loop
 
-  if( Cands.size() < m_NbCands ){
+  //always()<<"tag9 "<<nbCands<<endreq;
+  
+  if((unsigned int) nbCands < m_NbCands ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;
   }
+  //always()<<"There should be candidate"<<endreq;
   setFilterPassed(true); 
-  counter("Nb of candidates") += Cands.size();
+  counter("Nb of candidates") += nbCands;
 
   if( msgLevel( MSG::DEBUG ) )
-    debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
+    debug() << "Nb of " << m_Prey <<" candidates "<< nbCands << endmsg;
 
   
   //Save nTuples
@@ -431,14 +443,14 @@ StatusCode DisplVertices::execute(){
   }
 
   //Save Preys from Desktop to the TES.
-  if( m_SaveonTES ) desktop()->saveDesktop();
+  //if( m_SaveonTES ) desktop()->saveDesktop();
 
 
   //--------------Mother Reconstruction------------------  
-  if( false && Cands.size() >= 2 ){
-    if( ReconstructMother( Cands ).isFailure() )
-      Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
-  }
+  //if( false && Cands.size() >= 2 ){
+  //  if( ReconstructMother( Cands ).isFailure() )
+  //     Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
+  // }
 
   return StatusCode::SUCCESS;
 }
@@ -747,7 +759,7 @@ double DisplVertices::Mult(  const Gaudi::LorentzVector & p1,
 }
 
 Gaudi::XYZPoint DisplVertices::Plus( const Gaudi::XYZPoint & p1, 
-				  const Gaudi::XYZPoint & p2 ){
+				     const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
 }
 
@@ -1264,7 +1276,7 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
   // Offline, all the rate limited stuff, including the Lumi/MinBias, 
   // doesn't work properly as you don't have the "counter" to limit it,
-  // so the Global always goes to 1...
+  // so the Global //always goes to 1...
   //   bool Hlt1Globdec = false;
   //   const LHCb::HltDecReport * decrep = decReports->decReport("Hlt1Global");
   //   if( decrep != NULL ) Hlt1Globdec = decrep->decision();

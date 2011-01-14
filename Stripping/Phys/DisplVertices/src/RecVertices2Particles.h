@@ -59,7 +59,7 @@ private:
   unsigned int GetNbVeloTracks();
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
-			   LHCb::Particle::ConstVector & ,
+			   int & ,
 			   double r );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
