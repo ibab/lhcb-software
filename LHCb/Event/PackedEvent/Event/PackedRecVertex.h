@@ -75,6 +75,8 @@ namespace LHCb {
     const std::vector<PackedRecVertex>& vertices() const       { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
+    /// Avoid hidden method
+    virtual unsigned long addRef() { return DataObject::addRef(); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRefs()                     const { return m_refs.size(); }
     std::vector<int>& refs()                           { return m_refs; }
@@ -91,5 +93,5 @@ namespace LHCb {
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
   };
-};
+}
 #endif // EVENT_PACKEDRECVERTEX_H

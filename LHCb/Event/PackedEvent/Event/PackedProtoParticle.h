@@ -79,5 +79,5 @@ namespace LHCb {
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
   };
-};
+}
 #endif // EVENT_PACKEDPROTOPARTICLE_H

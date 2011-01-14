@@ -87,6 +87,8 @@ namespace LHCb {
     const std::vector<PackedTwoProngVertex>& vertices() const       { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
+    /// Avoid hidden method
+    virtual unsigned long addRef() { return DataObject::addRef(); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRefs()                     const { return m_refs.size(); }
     std::vector<int>& refs()                           { return m_refs; }
