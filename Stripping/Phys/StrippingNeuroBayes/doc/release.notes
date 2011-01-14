@@ -4,6 +4,9 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-01-14 - Juan Palacios
+ - DVAlgorithm::bestPV -> DVAlgorithm::i_bestVertex.
+
 ! 2011-01-12 - Juan Palacios
  - Replace calls to IPhysDesktop methods with DVAlgorithm replacements.
  - Increase to v1r1.
