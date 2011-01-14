@@ -41,7 +41,13 @@
 #include "RichDet/DeRichSystem.h"
 
 // Boost
+#ifdef __INTEL_COMPILER                     // Disable ICC remark from Boost
+  #define BOOST_MULTI_ARRAY_NO_GENERATORS 0 // zero used for undefined preprocessing identifier "BOOST_MULTI_ARRAY_NO_GENERATORS"
+#endif
 #include "boost/multi_array.hpp"
+#ifdef __INTEL_COMPILER
+  #undef BOOST_MULTI_ARRAY_NO_GENERATORS
+#endif
 
 
 namespace Rich

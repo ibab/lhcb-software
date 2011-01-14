@@ -180,20 +180,20 @@ namespace Rich
   public:
 
     /// Implement ostream << method for PhotonSpectra<TYPE>
-    friend inline std::ostream& operator << ( std::ostream& s,
+    friend inline std::ostream& operator << ( std::ostream& os,
                                               const PhotonSpectra<TYPE>& spectra )
     {
-      s << "{ " << std::endl
-        << " energy bins:\t" << spectra.energyBins() << std::endl
-        << " minimum energy:\t" << spectra.minEnergy() << std::endl
-        << " maximum energy:\t" << spectra.maxEnergy() << std::endl
+      os << "{ " << std::endl
+         << " energy bins:\t" << spectra.energyBins() << std::endl
+         << " minimum energy:\t" << spectra.minEnergy() << std::endl
+         << " maximum energy:\t" << spectra.maxEnergy() << std::endl
         //<< " electron data:\t" << spectra.energyDist(Rich::Electron) << std::endl
         //<< " muon data:\t" << spectra.energyDist(Rich::Muon) << std::endl
         //<< " pion data:\t" << spectra.energyDist(Rich::Pion) << std::endl
         //<< " kaon data:\t" << spectra.energyDist(Rich::Kaon) << std::endl
         //<< " proton data:\t" << spectra.energyDist(Rich::Proton) << std::endl
-        << " } " << std::endl;
-      return s;
+         << " } " << std::endl;
+      return os;
     }
 
   private: // data
