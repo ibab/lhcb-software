@@ -370,7 +370,7 @@ public:
    **/
   inline const LHCb::VertexBase* bestPV(const LHCb::Particle* p) const 
   {
-    return i_bestVertex;
+    return i_bestVertex(p);
   }
 
   /**
