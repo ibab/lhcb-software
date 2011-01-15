@@ -144,7 +144,7 @@ public: // IDVAlgorithm
   /// get the best related primary vertex 
   virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
   {
-    return i_bestVertex(oarticle);
+    return i_bestVertex(particle);
   }
   /// get all loaded input particles 
   virtual const LHCb::Particle::Range particles() const 
