@@ -248,7 +248,8 @@ StatusCode Hlt2SelDV::execute() {
 
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
-  Particle::ConstVector Cands;
+  //Particle::ConstVector Cands;
+  int nbCands(0);
   Particle::ConstVector::const_iterator iend = preys.end();
   for( Particle::ConstVector::const_iterator is = preys.begin(); 
        is < iend; ++is ){
@@ -329,11 +330,13 @@ StatusCode Hlt2SelDV::execute() {
     Particle clone = Particle( *p );
     //clone->setParticleID( m_PreyID );
     clone.setParticleID( m_PreyID );
+    this->markTree( &clone );
+    nbCands++;
     //Cands.push_back( desktop()->keep( clone ) );
-    Cands.push_back( desktop()->keep( &clone ) );
+    //Cands.push_back( desktop()->keep( &clone ) );
 
   }//  <--- end of Prey loop
-  if( Cands.size() < m_NbCands ){
+  if( (unsigned int)nbCands < m_NbCands ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;
@@ -342,7 +345,7 @@ StatusCode Hlt2SelDV::execute() {
   ++m_nbpassed;
 
   if( msgLevel( MSG::DEBUG ) )
-    debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
+    debug() << "Nb of " << m_Prey <<" candidates "<< nbCands << endmsg;
 
   //Save nTuples
   if( m_SaveTuple ){
@@ -350,7 +353,7 @@ StatusCode Hlt2SelDV::execute() {
     const int NbPreyMax = 20;
     if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
     if( !fillHeader(tuple) ) return StatusCode::FAILURE;
-    if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
+    //if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
     tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyPZ", pz.begin(), pz.end(), "NbPrey", NbPreyMax );
@@ -379,7 +382,7 @@ StatusCode Hlt2SelDV::execute() {
   }
 
   //Save Preys from Desktop to the TES.
-  if( m_SaveonTES ) desktop()->saveDesktop();
+  //if( m_SaveonTES ) desktop()->saveDesktop();
 
   return StatusCode::SUCCESS;
 }

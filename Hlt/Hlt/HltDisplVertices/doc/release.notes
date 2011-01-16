@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2011-01-16 - Victor Coco
+ - Modify the saving of candidates to match the new requirements
+
 !========================== HltDisplVertices v2r5 2010-08-26 ===================
 ! 2010-08-21 - Neal Gauvin
  - Add requirement on upPV candidate : > 1 backward and forward track.

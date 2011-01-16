@@ -48,7 +48,7 @@ private:
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   const LHCb::Particle::ConstVector &, 
-			   LHCb::Particle::ConstVector & );
+			   int & );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
   /// Creates a pion with 400 MeV pt from track slopes.
