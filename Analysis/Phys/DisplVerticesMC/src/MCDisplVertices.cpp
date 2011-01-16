@@ -376,7 +376,7 @@ StatusCode MCDisplVertices::execute(){
   }
 
   //------------------The Code---------------------------
-  const Particle::ConstVector preys = desktop()->particles();
+  const Particle::ConstVector preys = this->i_particles();
   if( msgLevel( MSG::DEBUG ) )
     debug() << "There are " << preys.size() <<" particles in TES !" << endmsg;
   if( preys.size() < m_NbCands ){
@@ -478,7 +478,8 @@ StatusCode MCDisplVertices::execute(){
 
     Particle clone = Particle( *p );
     clone.setParticleID( m_PreyID );
-    Cands.push_back( desktop()->keep( &clone ) );
+    this->markTree( &clone );
+    Cands.push_back( clone.clone() );
 
   }//  <--- end of Prey loop
 
@@ -534,7 +535,7 @@ StatusCode MCDisplVertices::execute(){
   }
 
   //Save Preys from Desktop to the TES.
-  if( m_SaveonTES ) desktop()->saveDesktop();
+  //if( m_SaveonTES ) desktop()->saveDesktop();
   //The following just saves the Particles in the desktop !!
   //if( m_SaveonTES ) desktop()->saveTrees( m_outputParticles ) ;
 
@@ -884,7 +885,7 @@ void MCDisplVertices::StudyPV(){
 
   //Get all reconstructed 3D vertices
   //RecVertices* DV = get<RecVertices>( "Rec/Vertices/RV" );
-  const Particle::ConstVector DV = desktop()->particles();
+  const Particle::ConstVector DV = this->i_particles();
   unsigned int size = DV.size() ;
   debug()<< "Number of Displaced Vertices " << size << endmsg;
   plot( size,"NbofDisplVtx", 0,12 );
@@ -1974,7 +1975,7 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V ){
 //*********Study of data linked daughters*******
 //Loop on stable daughter particles
   MCTrackInfo info = MCTrackInfo( evtSvc(), msgSvc() );
-  const Particle::ConstVector preys = desktop()->particles();
+  const Particle::ConstVector preys = this->i_particles();
 
   //Create direct linking
   Particle::ConstVector::const_iterator pend = preys.end();
@@ -3551,7 +3552,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   }      
 
   //Was a prey reconstructed ? Look in the preselection container !
-  const Particle::ConstVector cands = desktop()->particles();
+  const Particle::ConstVector cands = this->i_particles();
   bool cand = false;
   if( cands.size() > 0 ) cand = true;
   tuple->column( "Reco", cand );

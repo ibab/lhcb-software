@@ -112,7 +112,7 @@ StatusCode SaveParticlesFrom::execute() {
   debug() << "There are " <<  mcparts->size() << " MC particles" << endmsg;
 
   //Get Particles from TES
-  Particle::ConstVector preys = desktop()->particles();
+  Particle::ConstVector preys = this->i_particles();
   debug() << "There are " << preys.size() <<" parts in TES !" << endmsg;
   
   //Loop over all particles
@@ -130,8 +130,8 @@ StatusCode SaveParticlesFrom::execute() {
       continue;
     }
     if( IsaPrey( mcp ) ){
+      this->markTree( p );
       setFilterPassed(true); 
-      desktop()->keep( p );
       debug()<<"Particle will be saved !"<<endmsg;
     }
 
@@ -147,14 +147,14 @@ StatusCode SaveParticlesFrom::execute() {
       continue;
 
     //Save it !
+    this->markTree( p );
     setFilterPassed(true); 
-    desktop()->keep( p );
     debug()<<"Particle will be saved !"<<endmsg;
   }
 
   //Save all particles in the Desktop to the TES
-  if( !(desktop()->saveDesktop()) ) 
-    return Error("Unable to save Particles to the TES !");
+  // if( !(desktop()->saveDesktop()) ) 
+  //  return Error("Unable to save Particles to the TES !");
 
   return StatusCode::SUCCESS;
 }

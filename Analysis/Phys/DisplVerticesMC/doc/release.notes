@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2011-01-16 - Victor Coco
+ - Modify the saving of candidates to match the new requirements
+
 ! 2010-12-22 - Neal Gauvin
 	SaveTuple : save the SPD multiplicity applied in the hadron and electron triggers.
 
