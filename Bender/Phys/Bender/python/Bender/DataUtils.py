@@ -42,7 +42,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-02-12"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,

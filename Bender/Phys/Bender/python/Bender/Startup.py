@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py,v 1.7 2010-09-10 14:04:49 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## The trivial startup sctript for python Bender session
 #
@@ -42,7 +42,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV belyaev@physics.syr.edu'
 __date__    = "2006-10-08"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 __all__     = () 
 # =============================================================================
 

@@ -40,7 +40,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 
 from Bender.Main import *

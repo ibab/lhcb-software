@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: DstExplorer.py,v 1.3 2010-10-03 16:20:51 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -59,8 +59,8 @@
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-10-03 16:20:51 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
@@ -110,14 +110,14 @@ Usage:
  
 
                   $Revision$
-Last modification $Date: 2010-10-03 16:20:51 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================

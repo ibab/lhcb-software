@@ -1,13 +1,34 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.69 2010-10-11 14:11:33 ibelyaev Exp $
-! -----------------------------------------------------------------------------
-! Version $Revision: 1.69 $
+! $Id$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+!                   $Revision$
+! Last modification $Date$
+!                by $Author$
+! -----------------------------------------------------------------------------
+!
+! This file is a part of  Bender project:
+! ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+!
+! The package has been designed with the kind help from
+! Pere MATO and Andrey TSAREGORODTSEV. It is based on the 
+! LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+!
+! By usage of this code one clearly states the disagreement 
+! with the campain of Dr.O.Callot et al.: 
+! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+! -----------------------------------------------------------------------------
+
+
+! ==================== Phys/Bender v15r4 2011-01-16 ===========================
+
+! 2011-01-16 - Vanya Belyaev
+
+ - prepare new version Bender v15r4 
 
 ! ==================== Phys/Bender v15r3 2010-11-23 ===========================
 

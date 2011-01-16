@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: __init__.py,v 1.3 2010-09-10 14:04:49 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file
 #
@@ -44,7 +44,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "2007-08-15"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 
 # =============================================================================
 if __name__ == '__main__' :

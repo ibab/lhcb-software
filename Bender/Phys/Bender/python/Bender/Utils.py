@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Utils.py,v 1.4 2010-10-11 11:00:28 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -27,8 +27,8 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
 #                    $Revision$
-#  Last modification $Date: 2010-10-11 11:00:28 $
-#                 by $Author: ibelyaev $ 
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 Set of helper functions  for Bender 
@@ -46,13 +46,13 @@ with the campain of Dr.O.Callot et al.:
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
                     $Revision$
-  Last modification $Date: 2010-10-11 11:00:28 $
-                 by $Author: ibelyaev $  
+  Last modification $Date$
+                 by $Author$  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-00-12"
-__version__ = 'Version $Revision: 1.4 $'
+__version__ = 'Version $Revision$'
 __all__     = (
     ##
     'run'               , 

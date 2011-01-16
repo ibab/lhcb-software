@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Main.py,v 1.14 2010-09-13 13:30:28 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -25,8 +25,8 @@
 #  @date   2004-07-11
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
-#  Last modification $Date: 2010-09-13 13:30:28 $
-#                 by $Author: ibelyaev $ 
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 This is a major Python Module for Bender application
@@ -43,13 +43,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-  Last modification $Date: 2010-09-13 13:30:28 $
-                 by $Author: ibelyaev $ 
+  Last modification $Date$
+                 by $Author$ 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision$' 
 # =============================================================================
 
 import os 
