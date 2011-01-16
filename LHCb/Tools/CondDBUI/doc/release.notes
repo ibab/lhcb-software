@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-01-16 - Illya Shapoval
+ - TagStatusDB.getGoodTags method is modified to take into account tag
+   visibility time boundary.
+
 ! 2011-01-10 - Illya Shapoval
  - 'CondDB_UpdateOnlineSnapshots.py' script added, which updates SQLDDDB ONLINE
    snapshots. It detects used time scheme (per-year or per-month) of ONLINE

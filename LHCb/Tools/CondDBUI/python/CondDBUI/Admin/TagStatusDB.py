@@ -161,7 +161,9 @@ class TagStatusDB(object):
                                            TagStatus.time > self.start_test_time_boundary,
                                            TagStatus.status == u'GOOD')
 
-        return [status for status in valid_status_set if status.tag.partition == partition]
+        return [status for status in valid_status_set
+                if status.tag.partition == partition and
+                status.tag.creation_time > self.stop_test_time_boundary]
 
     def getGoodSites(self, tag, partition):
         """ Get the list of sites that are believed to contain valid tag:
