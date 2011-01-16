@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: sDstar.py,v 1.1 2010-08-28 13:43:12 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## The simple Bender-script to read Strippied DSTs
 #
@@ -52,7 +52,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-05-18 "
-__version__ = " Version $Revision: 1.1 $ "
+__version__ = " Version $Revision$ "
 # =============================================================================
 ## import everything from bender
 import ROOT 

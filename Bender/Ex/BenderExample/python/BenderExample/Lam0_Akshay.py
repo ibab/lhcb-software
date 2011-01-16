@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # =============================================================================
-# $Id: Lam0_Akshay.py,v 1.3 2010-08-28 13:43:12 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -29,8 +29,8 @@
 #  @author Vanya     BELYAEV    vanya@nikhef.nl
 #  @date   2010-06-21
 #
-#  Last modification $Date: 2010-08-28 13:43:12 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # ===========================================================================================
 """
 
@@ -50,8 +50,8 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-28 13:43:12 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # ===========================================================================================
 __author__   = " Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: muDst.py,v 1.3 2010-03-14 17:05:03 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision$
 # =============================================================================
 ## The simple Bender-script to read Micro DST
 #
@@ -44,7 +44,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-05-18 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 ## import everything from bender
 import ROOT 

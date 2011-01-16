@@ -26,7 +26,7 @@ Simple PyROOT script to visualize the histograms from 'Bs2PsiPhi' example
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 

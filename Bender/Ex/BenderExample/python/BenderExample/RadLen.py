@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RadLen.py,v 1.5 2010-08-26 13:34:18 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -26,8 +26,8 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
-#  Last modification $Date: 2010-08-26 13:34:18 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The simple Bender-based example for radiation length studies
@@ -45,13 +45,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:18 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.All                  import *

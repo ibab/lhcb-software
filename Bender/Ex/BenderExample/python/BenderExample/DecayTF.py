@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: DecayTF.py,v 1.2 2010-08-26 13:34:17 ibelyaev Exp $
+# $Id$
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -26,8 +26,8 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2010-05-31
 #
-#  Last modification $Date: 2010-08-26 13:34:17 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The simple Bender-based example to illustrate the usage of decay tree fitter 
@@ -45,13 +45,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:17 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2010-06-08 " 
-__version__ = " Version $Revision: 1.2 $ "
+__version__ = " Version $Revision$ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.Awesome import *

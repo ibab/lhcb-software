@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealDstar_CHARM.py,v 1.3 2010-08-28 13:43:12 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file BenderExample/RealDstar_V0.py
 #
@@ -25,8 +25,8 @@
 #  @date   2010-06-18
 #
 #                    $Revision:$ 
-#  Last modification $Date: 2010-08-28 13:43:12 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 
@@ -46,13 +46,13 @@ with the campain of Dr.O.Callot et al.:
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
                   $Revision:$ 
-Last modification $Date: 2010-08-28 13:43:12 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__   = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__     = " 2010-06-18 "
-__version__  = " Version $Revision: 1.3 $ "
+__version__  = " Version $Revision$ "
 # =============================================================================
 import ROOT                           ## needed to produce/visualize the histograms
 import LHCbMath.Types                 ## easy access to various geometry routines 

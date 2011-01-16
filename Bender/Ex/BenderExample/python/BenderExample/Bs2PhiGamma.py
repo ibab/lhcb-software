@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.10 2010-08-26 13:34:17 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -27,8 +27,8 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-12-19
 #
-#  Last modification $Date: 2010-08-26 13:34:17 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 #
 # =============================================================================
 """
@@ -49,13 +49,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:17 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = '2008-12-19'
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units

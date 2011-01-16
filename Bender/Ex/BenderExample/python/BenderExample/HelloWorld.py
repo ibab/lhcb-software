@@ -23,8 +23,8 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-10-04 08:46:58 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The most trivial Bender-based  ``Hello,World'' example
@@ -42,13 +42,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-10-04 08:46:58 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " Version $Revision: 1.12 $ "
+__version__ = " Version $Revision$ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 

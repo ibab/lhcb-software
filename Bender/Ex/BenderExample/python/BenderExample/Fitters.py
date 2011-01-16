@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Fitters.py,v 1.2 2010-08-26 13:34:17 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -26,8 +26,8 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
-#  Last modification $Date: 2010-08-26 13:34:17 $
-#                 by $Author: ibelyaev $
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 
@@ -49,13 +49,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:17 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2010-07-10 "
-__version__ = " Version $Revision: 1.2 $ "
+__version__ = " Version $Revision$ "
 # =============================================================================
 import LHCbMath.Types 
 ## import everything from bender 

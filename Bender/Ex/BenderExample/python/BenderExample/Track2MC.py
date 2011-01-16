@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Track2MC.py,v 1.2 2010-05-04 18:06:48 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file BenderExample/TrackMC.py
 # The simple Bender-based example to illustaret MC-truth access to tracks
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-04-30 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *

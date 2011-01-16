@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealMip.py,v 1.4 2010-03-14 17:05:03 ibelyaev Exp $
+# $Id$
 # =============================================================================
 # @file BenderExample/RealMip.py
 #
@@ -45,7 +45,7 @@ with the campain of Dr.O.Callot et al.:
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = " 2009-11-25 "
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
