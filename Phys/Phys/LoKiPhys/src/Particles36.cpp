@@ -53,6 +53,8 @@ LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun
   , LoKi::AuxDTFBase ( fitter ) 
   , m_fun   ( fun   )
   , m_usePV ( usePV ) 
+  , m_chi2  ( -1    ) 
+  , m_bad   ( LoKi::Constants::NegativeInfinity ) 
 {}
 // ============================================================================
 // constructor with the functor
@@ -64,8 +66,10 @@ LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun
   const IDecayTreeFit*                 fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::AuxDTFBase ( constraints , fitter ) 
-  , m_fun         ( fun    ) 
-  , m_usePV       ( usePV  ) 
+  , m_fun   ( fun    ) 
+  , m_usePV ( usePV  ) 
+  , m_chi2  ( -1     ) 
+  , m_bad   ( LoKi::Constants::NegativeInfinity ) 
 {}
 // ======================================================================
 // constructor with the functor
@@ -79,6 +83,8 @@ LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun
   , LoKi::AuxDTFBase ( std::vector<std::string>(1,constraint) , fitter ) 
   , m_fun         ( fun    ) 
   , m_usePV       ( usePV  ) 
+  , m_chi2        ( -1     ) 
+  , m_bad         ( LoKi::Constants::NegativeInfinity ) 
 {}
 // ======================================================================
 // constructor with the functor
@@ -91,6 +97,74 @@ LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun
   , LoKi::AuxDTFBase ( base   ) 
   , m_fun            ( fun    ) 
   , m_usePV          ( usePV  ) 
+  , m_chi2           ( -1     ) 
+  , m_bad            ( LoKi::Constants::NegativeInfinity ) 
+{}
+// ============================================================================
+// constructor with the functor & chi2-cut 
+// ============================================================================
+LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun 
+( const LoKi::PhysTypes::Func&         fun        , 
+  const bool                           usePV      , 
+  const double                         maxChi2DoF , 
+  const double                         bad        ,
+  const IDecayTreeFit*                 fitter     ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::AuxDTFBase ( fitter ) 
+  , m_fun   ( fun        )
+  , m_usePV ( usePV      ) 
+  , m_chi2  ( maxChi2DoF ) 
+  , m_bad   ( bad        ) 
+{}
+// ============================================================================
+// constructor with the functor & chi2-cut
+// ============================================================================
+LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun 
+( const LoKi::PhysTypes::Func&         fun         , 
+  const bool                           usePV       ,
+  const std::vector<std::string>&      constraints ,
+  const double                         maxChi2DoF , 
+  const double                         bad        ,
+  const IDecayTreeFit*                 fitter      ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
+  , m_fun   ( fun    ) 
+  , m_usePV ( usePV  ) 
+  , m_chi2  ( maxChi2DoF ) 
+  , m_bad   ( bad        )
+{}
+// ======================================================================
+// constructor with the functor & chi2-cut 
+// ============================================================================
+LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun 
+( const LoKi::PhysTypes::Func&         fun         , 
+  const bool                           usePV       ,
+  const std::string&                   constraint  ,
+  const double                         maxChi2DoF , 
+  const double                         bad        ,
+  const IDecayTreeFit*                 fitter      )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::AuxDTFBase ( std::vector<std::string>(1,constraint) , fitter ) 
+  , m_fun   ( fun        ) 
+  , m_usePV ( usePV      ) 
+  , m_chi2  ( maxChi2DoF ) 
+  , m_bad   ( bad        )
+{}
+// ======================================================================
+// constructor with the functor & chi2-cut 
+// ============================================================================
+LoKi::Particles::DecayTreeFitterFun::DecayTreeFitterFun 
+( const LoKi::PhysTypes::Func&         fun         , 
+  const bool                           usePV       ,
+  const double                         maxChi2DoF  , 
+  const double                         bad         ,
+  const LoKi::AuxDTFBase&              base        )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::AuxDTFBase ( base   ) 
+  , m_fun   ( fun        ) 
+  , m_usePV ( usePV      ) 
+  , m_chi2  ( maxChi2DoF ) 
+  , m_bad   ( bad        )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -112,8 +186,8 @@ LoKi::Particles::DecayTreeFitterFun::operator()
   //
   if ( 0 == p ) 
   {
-    Warning ( "LHCb::Particle* points to NULL, return NegativeInfinity" ) ;
-    return LoKi::Constants::NegativeInfinity ;
+    Warning ( "LHCb::Particle* points to NULL, return 'bad'" ) ;
+    return m_bad ;
   }
   //
   const LHCb::VertexBase* vertex = 0 ;
@@ -133,8 +207,14 @@ LoKi::Particles::DecayTreeFitterFun::operator()
   if ( sc.isFailure() ) 
   {
     Error ( "Error from IDecayTreeFit" , sc ) ;
-    return LoKi::Constants::NegativeInfinity ;
+    return m_bad ;
   }
+  //
+  // check fit chi2/nDoF if needed 
+  //
+  if ( 0 < m_chi2  && ( m_chi2 * _fitter->nDoF() <= _fitter->chi2() ) )
+  { return m_bad ; }                                                 // RETURN 
+  //
   // get the tree and evaluate the functor 
   return m_fun ( _fitter -> fittedTree () ) ;
 }
@@ -151,9 +231,14 @@ LoKi::Particles::DecayTreeFitterFun::fillStream ( std::ostream& s ) const
   //
   printConstraints ( s ) ;
   //
+  if ( 0 < m_chi2 || LoKi::Constants::NegativeInfinity != m_bad ) 
+  { s << "," << m_chi2 << "," << m_bad ; }
+  //
   return s << " ) " ;
 }
 // ============================================================================
+
+
 
 // ============================================================================
 // constructor with the functor
@@ -166,6 +251,7 @@ LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
   , LoKi::AuxDTFBase ( fitter ) 
   , m_fun         ( fun    ) 
   , m_usePV       ( usePV  ) 
+  , m_chi2        ( -1     ) 
 {}
 // ============================================================================
 // constructor with the functor
@@ -179,6 +265,7 @@ LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
   , LoKi::AuxDTFBase ( constraints , fitter ) 
   , m_fun         ( fun    ) 
   , m_usePV       ( usePV  ) 
+  , m_chi2        ( -1     ) 
 {}
 // ======================================================================
 // constructor with the functor
@@ -192,6 +279,7 @@ LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
   , LoKi::AuxDTFBase ( std::vector<std::string>(1,constraint) , fitter ) 
   , m_fun         ( fun    ) 
   , m_usePV       ( usePV  ) 
+  , m_chi2        ( -1     ) 
 {}
 // ======================================================================
 // constructor with the functor
@@ -204,6 +292,68 @@ LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
   , LoKi::AuxDTFBase ( base   ) 
   , m_fun            ( fun    ) 
   , m_usePV          ( usePV  ) 
+  , m_chi2           ( -1     ) 
+{}
+
+
+
+// ============================================================================
+// constructor with the functor & chi2-cut
+// ============================================================================
+LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
+( const LoKi::PhysTypes::Cuts&         fun         , 
+  const bool                           usePV       ,
+  const double                         maxChi2DoF  , 
+  const IDecayTreeFit*                 fitter      ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , LoKi::AuxDTFBase ( fitter ) 
+  , m_fun         ( fun        ) 
+  , m_usePV       ( usePV      ) 
+  , m_chi2        ( maxChi2DoF )
+{}
+// ============================================================================
+// constructor with the functor & chi2-cut
+// ============================================================================
+LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
+( const LoKi::PhysTypes::Cuts&         fun         , 
+  const bool                           usePV       ,
+  const std::vector<std::string>&      constraints ,
+  const double                         maxChi2DoF  , 
+  const IDecayTreeFit*                 fitter      ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
+  , m_fun         ( fun        ) 
+  , m_usePV       ( usePV      ) 
+  , m_chi2        ( maxChi2DoF )
+{}
+// ======================================================================
+// constructor with the functor
+// ============================================================================
+LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
+( const LoKi::PhysTypes::Cuts&         fun         , 
+  const bool                           usePV       ,
+  const std::string&                   constraint  ,
+  const double                         maxChi2DoF  , 
+  const IDecayTreeFit*                 fitter      )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , LoKi::AuxDTFBase ( std::vector<std::string>(1,constraint) , fitter ) 
+  , m_fun         ( fun        ) 
+  , m_usePV       ( usePV      ) 
+  , m_chi2        ( maxChi2DoF )
+{}
+// ======================================================================
+// constructor with the functor
+// ============================================================================
+LoKi::Particles::DecayTreeFitterCut::DecayTreeFitterCut
+( const LoKi::PhysTypes::Cuts&         fun         , 
+  const bool                           usePV       ,
+  const double                         maxChi2DoF  , 
+  const LoKi::AuxDTFBase&              base        )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , LoKi::AuxDTFBase ( base       ) 
+  , m_fun            ( fun        ) 
+  , m_usePV          ( usePV      ) 
+  , m_chi2           ( maxChi2DoF )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -225,8 +375,8 @@ LoKi::Particles::DecayTreeFitterCut::operator()
   //
   if ( 0 == p ) 
   {
-    Warning ( "LHCb::Particle* points to NULL, return NegativeInfinity" ) ;
-    return LoKi::Constants::NegativeInfinity ;
+    Warning ( "LHCb::Particle* points to NULL, return false" ) ;
+    return false ;
   }
   //
   const LHCb::VertexBase* vertex = 0 ;
@@ -246,8 +396,14 @@ LoKi::Particles::DecayTreeFitterCut::operator()
   if ( sc.isFailure() ) 
   {
     Error ( "Error from IDecayTreeFit" , sc ) ;
-    return LoKi::Constants::NegativeInfinity ;
+    return false ;
   }
+  //
+  // check fit chi2/nDoF if needed 
+  //
+  if ( 0 < m_chi2  && ( m_chi2 * _fitter->nDoF() <= _fitter->chi2() ) ) 
+  { return false ; }                                                 // RETURN 
+  //
   // get the tree and evaluate the functor 
   return m_fun ( _fitter -> fittedTree () ) ;
 }
@@ -263,6 +419,8 @@ LoKi::Particles::DecayTreeFitterCut::fillStream ( std::ostream& s ) const
   s << " " << m_fun << " ," << ( usePV() ? " True " : " False " ) ; 
   //
   printConstraints ( s ) ;
+  // 
+  if ( 0 < m_chi2 ) {  s << "," << m_chi2 ; }
   //
   return s << " ) " ;
 }
@@ -276,11 +434,14 @@ LoKi::Particles::DecayTreeFitterCut::fillStream ( std::ostream& s ) const
 LoKi::Particles::ChildCTau::ChildCTau
 ( const LoKi::Child::Selector&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints , 
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
-  , m_child ( child ) 
-  , m_usePV ( usePV ) 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
+  , m_child ( child      ) 
+  , m_usePV ( usePV      ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -288,11 +449,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const std::vector<unsigned int>& child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -300,11 +464,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const unsigned int               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -312,11 +479,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const std::string&               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -324,11 +494,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const Decays::iNode&             child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter ) 
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -336,11 +509,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const Decays::IDecay::iTree&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter )
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -348,11 +524,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const Decays::IDecay::Finder&    child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter )
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -360,11 +539,14 @@ LoKi::Particles::ChildCTau::ChildCTau
 LoKi::Particles::ChildCTau::ChildCTau
 ( const LoKi::PhysTypes::Cuts&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , LoKi::AuxDTFBase ( constraints ) 
+  , LoKi::AuxDTFBase ( constraints , fitter )  
   , m_child ( child ) 
   , m_usePV ( usePV ) 
+  , m_chi2  ( chi2MaxDoF )
 {}
 // ============================================================================
 // MANDATORY: virtual descructor 
@@ -390,11 +572,7 @@ LoKi::Particles::ChildCTau::operator()
   }
   //
   const IDecayTreeFit::Fitted* fitted  = params ( p ) ;
-  if ( 0 == fitted ) 
-  {
-    Error ( "Gaudi::Math::ParticleParams points to NULL, return InvalidDistance" );
-    return LoKi::Constants::InvalidDistance ; 
-  }
+  if ( 0 == fitted ) { return LoKi::Constants::InvalidDistance ; }
   //
   return fitted->ctau().value() ;
 } 
@@ -433,7 +611,15 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
     return 0 ;                                                       // RETURN
   }
   //
-  return _fitter->fitted ( c ) ;
+  // apply chi2/nDoF cut if needed
+  //
+  if ( 0 < m_chi2 && ( m_chi2 * _fitter->nDoF() <= _fitter -> chi2() ) ) 
+  { return 0 ; }                                                 // RETURN 
+  //
+  const IDecayTreeFit::Fitted* f = _fitter->fitted ( c ) ; 
+  if ( 0 == f ) { Warning ( "Gaudi::Math::ParticleParams points to NULL" ); }
+  //
+  return f ;
 }
 // =============================================================================
 // OPTIONAL: nice printout
@@ -447,6 +633,8 @@ LoKi::Particles::ChildCTau::fillStream ( std::ostream& s ) const
   //
   printConstraints ( s ) ;
   //
+  if ( 0 < maxChi2() ) { s << "," << maxChi2() ; }
+  //
   return s << " ) " ;
 }
 
@@ -459,8 +647,14 @@ LoKi::Particles::ChildCTau::fillStream ( std::ostream& s ) const
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const LoKi::Child::Selector&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -468,8 +662,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const std::vector<unsigned int>& child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -477,8 +677,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const unsigned int               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -486,8 +692,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const std::string&               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -495,8 +707,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const Decays::iNode&             child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -504,8 +722,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const Decays::IDecay::iTree&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -513,8 +737,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const Decays::IDecay::Finder&    child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -522,8 +752,14 @@ LoKi::Particles::ChildCTauErr::ChildCTauErr
 LoKi::Particles::ChildCTauErr::ChildCTauErr
 ( const LoKi::PhysTypes::Cuts&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTau ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTau ( child       , 
+                                 usePV       , 
+                                 constraints , 
+                                 chi2MaxDoF  , 
+                                 fitter      ) 
 {}
 // ============================================================================
 // MANDATORY: virtual descructor 
@@ -549,11 +785,7 @@ LoKi::Particles::ChildCTauErr::operator()
   }
   //
   const IDecayTreeFit::Fitted* fitted  = params ( p ) ;
-  if ( 0 == fitted ) 
-  {
-    Error ( "Gaudi::Math::ParticleParams points to NULL, return InvalidDistance" );
-    return LoKi::Constants::InvalidDistance ; 
-  }
+  if ( 0 == fitted ) { return LoKi::Constants::InvalidDistance ; }
   //
   return fitted->ctau().error() ;
 } 
@@ -569,6 +801,8 @@ LoKi::Particles::ChildCTauErr::fillStream ( std::ostream& s ) const
   //
   printConstraints ( s ) ;
   //
+  if ( 0 < maxChi2() ) { s << "," << maxChi2() ; }
+  //
   return s << " ) " ;
 }
 // =============================================================================
@@ -580,8 +814,14 @@ LoKi::Particles::ChildCTauErr::fillStream ( std::ostream& s ) const
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const LoKi::Child::Selector&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -589,8 +829,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const std::vector<unsigned int>& child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -598,8 +844,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const unsigned int               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -607,8 +859,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const std::string&               child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -616,8 +874,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const Decays::iNode&             child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -625,8 +889,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const Decays::IDecay::iTree&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -634,8 +904,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const Decays::IDecay::Finder&    child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // constructor from child selector & PV-flag & constraints 
@@ -643,8 +919,14 @@ LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 LoKi::Particles::ChildCTauSignificance::ChildCTauSignificance
 ( const LoKi::PhysTypes::Cuts&     child       , 
   const bool                       usePV       , 
-  const std::vector<std::string>&  constraints ) 
-  : LoKi::Particles::ChildCTauErr ( child , usePV , constraints ) 
+  const std::vector<std::string>&  constraints ,
+  const double                     chi2MaxDoF  , 
+  const IDecayTreeFit*             fitter      ) 
+  : LoKi::Particles::ChildCTauErr ( child       , 
+                                    usePV       , 
+                                    constraints , 
+                                    chi2MaxDoF  , 
+                                    fitter      ) 
 {}
 // ============================================================================
 // MANDATORY: virtual descructor 
@@ -670,17 +952,12 @@ LoKi::Particles::ChildCTauSignificance::operator()
   }
   //
   const IDecayTreeFit::Fitted* fitted  = params ( p ) ;
-  if ( 0 == fitted ) 
-  {
-    Error ( "Gaudi::Math::ParticleParams points to NULL, return NegativeInfinity" );
-    return LoKi::Constants::NegativeInfinity ;                     // RETURN 
-  }
+  if ( 0 == fitted ) { return LoKi::Constants::NegativeInfinity ; } // RETURN 
   //
   const Gaudi::Math::ValueWithError ctau = fitted->ctau () ;
-  //
   if ( 0 >= ctau.error() ) 
   {
-    Error ( "Non-positive error in ctau, return NegativeInfinity" );
+    Warning ( "Non-positive error in ctau, return NegativeInfinity" );
     return LoKi::Constants::NegativeInfinity ;                     // RETURN 
   }
   //
@@ -697,6 +974,8 @@ LoKi::Particles::ChildCTauSignificance::fillStream ( std::ostream& s ) const
     << " , " <<  ( usePV() ? " True " : " False " ) ;
   //
   printConstraints ( s ) ;
+  //
+  if ( 0 < maxChi2() ) { s << "," << maxChi2() ; }
   //
   return s << " ) " ;
 }

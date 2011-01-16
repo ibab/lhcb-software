@@ -5,6 +5,25 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-16 - Vanya Belyaev
+
+ - add for all DTF_* functors the optional embedded cut on chi2(DTF)/nDoF
+   it allows to avoid the double fit, and thus one can 
+   be more efficient, e.g. 
+         
+    
+       DTF_FUN ( M , True , 5 , -1 * TeV ) 
+
+   it will perform the refit of decay tree, and in case of chi2(DTF)/nDoF<5, 
+  return -5 TeV, otherwie it will evaluate the functor M 
+  
+   it is formally equivalent to :
+
+     switch ( DTF_CHI2NDOF( True ) < 5 , DTF_FUN( M , True ) , -1 * TeV )
+ 
+   howeever it is twice more efficient 
+     
+
 ! 2011-01-12 - Vanya Belyaev
 
  - add new symbol:

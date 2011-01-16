@@ -51,30 +51,108 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the functor
+       *  @param fun    the functor to be evaluated 
+       *  @param usePV  flag to use Primary Vertex in ReFit 
+       *  @param fitter the fitter itself 
+       */
       DecayTreeFitterFun
       ( const LoKi::PhysTypes::Func&         fun           ,
         const bool                           usePV         ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the functor
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param constraints mass-constraints to be applied 
+       *  @param fitter the fitter itself 
+       */
       DecayTreeFitterFun
       ( const LoKi::PhysTypes::Func&         fun           ,
         const bool                           usePV         ,
         const std::vector<std::string>&      constraints   ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the functor
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param constraint  mass-constraint to be applied 
+       *  @param fitter the fitter itself 
+       */
       DecayTreeFitterFun
       ( const LoKi::PhysTypes::Func&         fun           ,
         const bool                           usePV         ,
         const std::string&                   constraint    ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the functor
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param base        the fitter 
+       */
       DecayTreeFitterFun
       ( const LoKi::PhysTypes::Func&         fun           ,
         const bool                           usePV         ,
+        const LoKi::AuxDTFBase&              base          ) ;
+      // ======================================================================
+      /** constructor with the functor & chi2-cut 
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param bad         bad-value to be returned in case of large chi2/nDoF
+       *  @param fitter the fitter itself 
+       */
+      DecayTreeFitterFun
+      ( const LoKi::PhysTypes::Func&         fun           ,
+        const bool                           usePV         ,
+        const double                         maxChi2DoF    , 
+        const double                         bad           , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the functor & chi2-cut 
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param constraints mass-constraints to be applied        
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param bad         bad-value to be returned in case of large chi2/nDoF
+       *  @param fitter the fitter itself 
+       */
+      DecayTreeFitterFun
+      ( const LoKi::PhysTypes::Func&         fun           ,
+        const bool                           usePV         ,
+        const std::vector<std::string>&      constraints   ,
+        const double                         maxChi2DoF    , 
+        const double                         bad           , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the functor & chi2-cut 
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param constraint  mass-constraint to be applied        
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param bad         bad-value to be returned in case of large chi2/nDoF
+       *  @param fitter the fitter itself 
+       */
+      DecayTreeFitterFun
+      ( const LoKi::PhysTypes::Func&         fun           ,
+        const bool                           usePV         ,
+        const std::string&                   constraint    ,
+        const double                         maxChi2DoF    , 
+        const double                         bad           , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the functor & chi2-cut 
+       *  @param fun         the functor to be evaluated 
+       *  @param usePV       flag to use Primary Vertex in ReFit 
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param bad         bad-value to be returned in case of large chi2/nDoF
+       *  @param base       the fitter itself 
+       */
+      DecayTreeFitterFun
+      ( const LoKi::PhysTypes::Func&         fun           ,
+        const bool                           usePV         ,
+        const double                         maxChi2DoF    , 
+        const double                         bad           , 
         const LoKi::AuxDTFBase&              base          ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor
@@ -102,6 +180,10 @@ namespace LoKi
       LoKi::PhysTypes::Fun m_fun        ;       //       the functor to be used
       /// use related primary vertex in the fit ?
       bool                 m_usePV      ;       // use related primary vertex ?
+      /// embedded cut on chi2 
+      double               m_chi2       ;       // embedded cut on chi2 
+      // bad value to be returned in case of large chi2
+      double               m_bad        ;       // "bad"-value
       // ======================================================================
     } ;
     // ========================================================================
@@ -119,30 +201,101 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the predicate 
+       *  @param fun    the predicate to be evaluated 
+       *  @param usePV  flag to use primary vertex in refit 
+       *  @param fitter the fitter 
+       */
       DecayTreeFitterCut
       ( const LoKi::PhysTypes::Cuts&         fun           ,
         const bool                           usePV         ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param constraints the mass-constraints to be applied
+       *  @param fitter      the fitter 
+       */
       DecayTreeFitterCut
       ( const LoKi::PhysTypes::Cuts&         fun           ,
         const bool                           usePV         ,
         const std::vector<std::string>&      constraints   ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param constraint  the mass-constraint to be applied
+       *  @param fitter      the fitter 
+       */
       DecayTreeFitterCut
       ( const LoKi::PhysTypes::Cuts&         fun           ,
         const bool                           usePV         ,
         const std::string&                   constraint    ,
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
-      /// constructor with the functor
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param constraint  the mass-constraint to be applied
+       *  @param base        the fitter 
+       */
       DecayTreeFitterCut
       ( const LoKi::PhysTypes::Cuts&         fun           ,
         const bool                           usePV         ,
+        const LoKi::AuxDTFBase&              base          ) ;
+      // ======================================================================
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param fitter      the fitter 
+       */
+      DecayTreeFitterCut
+      ( const LoKi::PhysTypes::Cuts&         fun           ,
+        const bool                           usePV         ,
+        const double                         maxChi2DoF    , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param constraints the mass-constraints to be applied
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param fitter      the fitter 
+       */
+      DecayTreeFitterCut
+      ( const LoKi::PhysTypes::Cuts&         fun           ,
+        const bool                           usePV         ,
+        const std::vector<std::string>&      constraints   ,
+        const double                         maxChi2DoF    , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param constraint  the mass-constraint to be applied
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param fitter      the fitter 
+       */
+      DecayTreeFitterCut
+      ( const LoKi::PhysTypes::Cuts&         fun           ,
+        const bool                           usePV         ,
+        const std::string&                   constraint    ,
+        const double                         maxChi2DoF    , 
+        const IDecayTreeFit*                 fitter = 0    ) ;
+      // ======================================================================
+      /** constructor with the predicate 
+       *  @param fun         the predicate to be evaluated 
+       *  @param usePV       flag to use primary vertex in refit 
+       *  @param maxChi2DoF  the maximal value of chi2/nDoF  (negative: no cut)
+       *  @param base        the fitter 
+       */
+      DecayTreeFitterCut
+      ( const LoKi::PhysTypes::Cuts&         fun           ,
+        const bool                           usePV         ,
+        const double                         maxChi2DoF    , 
         const LoKi::AuxDTFBase&              base          ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor
@@ -170,6 +323,8 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_fun        ;       //       the functor to be used
       /// use related primary vertex in the fit ?
       bool                 m_usePV      ;       // use related primary vertex ?
+      /// embedded chi2/nDoF cut 
+      double               m_chi2       ;       // embedded chi2/nDoF cut 
       // ======================================================================
     } ;
     // ========================================================================
@@ -193,52 +348,60 @@ namespace LoKi
     public:
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const LoKi::Child::Selector&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const LoKi::Child::Selector&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const std::vector<unsigned int>& child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const std::vector<unsigned int>& child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const unsigned int               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const unsigned int               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const std::string&               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const std::string&               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const Decays::iNode&             child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const Decays::iNode&             child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const Decays::IDecay::iTree&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::iTree&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const Decays::IDecay::Finder&    child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::Finder&    child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
-      ( const LoKi::PhysTypes::Cuts&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints =
-        std::vector<std::string>() ) ;
+      ( const LoKi::PhysTypes::Cuts&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// MANDATORY: virtual descructor 
       virtual ~ChildCTau() ;
       /// MANDATORY: clone method ("virtual cosntructor")
@@ -267,12 +430,16 @@ namespace LoKi
       /// get the fittes parameters
       const IDecayTreeFit::Fitted* params ( const LHCb::Particle* p ) const ;
       // ======================================================================
+      double maxChi2() const { return m_chi2 ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// child selector 
       LoKi::Child::Selector m_child      ;       //              child selector 
       /// use related primary vertex in the fit ?
       bool                  m_usePV      ;       // use related primary vertex ?
+      /// embedded chi2/nDoF cut 
+      double                m_chi2       ;       // embedded chi2/nDoF cut 
       // ======================================================================
     } ;
     // ========================================================================
@@ -296,53 +463,61 @@ namespace LoKi
       // ======================================================================
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const LoKi::Child::Selector&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const LoKi::Child::Selector&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const std::vector<unsigned int>& child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const std::vector<unsigned int>& child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const unsigned int               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const unsigned int               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const std::string&               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const std::string&               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const Decays::iNode&             child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::iNode&             child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const Decays::IDecay::iTree&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::iTree&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const Decays::IDecay::Finder&    child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::Finder&    child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauErr
-      ( const LoKi::PhysTypes::Cuts&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
-      /// MANDATORY: virtual descructor 
+      ( const LoKi::PhysTypes::Cuts&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
+      /// MANDATORY: virtual destructor 
       virtual ~ChildCTauErr() ;
       /// MANDATORY: clone method ("virtual cosntructor")
       virtual  ChildCTauErr* clone() const ;
@@ -377,52 +552,60 @@ namespace LoKi
       // ======================================================================
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const LoKi::Child::Selector&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const LoKi::Child::Selector&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const std::vector<unsigned int>& child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const std::vector<unsigned int>& child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const unsigned int               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const unsigned int               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const std::string&               child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const std::string&               child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const Decays::iNode&             child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::iNode&             child            , 
+        const bool                       usePV            ,
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const Decays::IDecay::iTree&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::iTree&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const Decays::IDecay::Finder&    child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const Decays::IDecay::Finder&    child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
       ChildCTauSignificance
-      ( const LoKi::PhysTypes::Cuts&     child       , 
-        const bool                       usePV       , 
-        const std::vector<std::string>&  constraints = 
-        std::vector<std::string>() ) ;
+      ( const LoKi::PhysTypes::Cuts&     child            , 
+        const bool                       usePV            , 
+        const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const double                     chi2MaxDoF  = -1 , 
+        const IDecayTreeFit*             fitter      =  0 ) ;        
       /// MANDATORY: virtual descructor 
       virtual ~ChildCTauSignificance () ;
       /// MANDATORY: clone method ("virtual cosntructor")
