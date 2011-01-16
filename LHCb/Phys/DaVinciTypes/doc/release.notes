@@ -5,6 +5,13 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2011-01-16 - Vanya Belyaev
+
+ - TreeCloners.cpp 
+
+    fix a bug, that under certains condition could result 
+    in double deletion
+
 ! 2011-01-14 - Vanya Belyaev
 
  - add Reflex dictionary

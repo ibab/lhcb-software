@@ -248,8 +248,8 @@ namespace
 {
   // ==========================================================================
   unsigned int _deleteTree 
-  ( LHCb::Particle*                  tree   , 
-    std::set<const LHCb::Particle*>& killed )  
+  ( LHCb::Particle*                   tree   , 
+    std::set<const ContainedObject*>& killed )  
   {
     //
     if ( 0 == tree                            ) { return  0 ; }  // RETURN 
@@ -261,6 +261,7 @@ namespace
     unsigned int result = 0 ;
     //
     // delete daughters
+    //
     const SRVP& daughters = tree->daughters() ;
     for ( SRVP::const_iterator idau = daughters.begin() ; 
           daughters.end() != idau ; ++idau ) 
@@ -271,9 +272,11 @@ namespace
       result += _deleteTree ( const_cast<LHCb::Particle*>( dau ) , killed ) ;
     } 
     tree->clearDaughters() ;
+    //
     // delete end-vertex 
+    //
     LHCb::Vertex* ev = tree->endVertex() ;
-    if ( 0 != ev ) 
+    if ( 0 != ev && killed.end() == killed.find ( ev ) )
     {
       const SRVP& outgoing = ev->outgoingParticles() ;
       for ( SRVP::const_iterator io = outgoing.begin() ; 
@@ -285,13 +288,21 @@ namespace
         result += _deleteTree ( const_cast<LHCb::Particle*>( out ) , killed ) ;
       }
       ev->clearOutgoingParticles() ;
-      // delete vertex! 
+      //
+      // delete vertex!
+      //
+      killed.insert ( ev ) ;
       delete ev ;
+      //
       s_COUNTER.decVertices () ;
       ++result  ;
     }
+    //
     // delete particle 
+    //
+    killed.insert ( tree ) ;
     delete tree ;
+    //
     s_COUNTER.decParticles () ;
     //
     return ++result ;                                                // RETURN
@@ -312,7 +323,7 @@ unsigned int DaVinci::deleteTree ( LHCb::Particle* tree )
   if ( 0 == tree      ) { return 0 ; }                          // RETURN 
   if ( inTES ( tree ) ) { return 0 ; }                          // RETURN 
   //
-  std::set<const LHCb::Particle*> killed ;
+  std::set<const ContainedObject*> killed ;
   return _deleteTree ( tree , killed ) ;                        // RETURN 
 }
 // ============================================================================
