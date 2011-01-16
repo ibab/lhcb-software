@@ -1,24 +1,36 @@
-# $Id: requirements,v 1.134 2010-10-10 12:48:29 ibelyaev Exp $ 
+# $Id$ 
+# ============================================================================
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 #
 # The management of the content of BENDER project:
 #
-#                 LHCb Physics Analysis with Python  
+# This file is a part of  Bender project:
+# ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+#
+# The package has been designed with the kind help from
+# Pere MATO and Andrey TSAREGORODTSEV. It is based on the 
+# LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+# By usage of this code one clearly states the disagreement 
+# with the campain of Dr.O.Callot et al.: 
+# ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #                   $Revision$
-# Last modification $Date: 2010-10-10 12:48:29 $
-#                by $Author: ibelyaev $
+# Last modification $Date$
+#                by $Author$
+#
 # =============================================================================
 package       BenderSys
-version       v15r3
+version       v15r4
 
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v15r3   Phys 
+use           Bender         v15r4   Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v15r1   Ex
+use           BenderExample  v15r4   Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v15r0   Tutorial
