@@ -385,9 +385,9 @@ StatusCode DisplVertices::execute(){
       indets.push_back( indet ); 
     }
   //always()<<"tag7"<<endreq;
-    Particle* clone = new Particle( *p );
-    clone->setParticleID( m_PreyID );
-    this->markNewTree(clone);
+    Particle clone = Particle( *p );
+    clone.setParticleID( m_PreyID );
+    this->markTree(&clone);
   //always()<<"tag8"<<endreq;
     nbCands++;
   }//  <--- end of Prey loop
