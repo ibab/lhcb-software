@@ -5,6 +5,13 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-01-10 - Illya Shapoval
+ - 'CondDB_UpdateOnlineSnapshots.py' script added, which updates SQLDDDB ONLINE
+   snapshots. It detects used time scheme (per-year or per-month) of ONLINE
+   snapshots and updates them to extend their coverage up to current time.
+   If no ONLINE snapshots are found it will generate them from scratch.
+   It updates also user's SQLDDDB release notes accordingly.
+
 !========================= CondDBUI v3r7 2010-12-15 =========================
 ! 2010-12-15 - Illya Shapoval
  - TSDB scheme is extended to be more generic (all classes machninery is

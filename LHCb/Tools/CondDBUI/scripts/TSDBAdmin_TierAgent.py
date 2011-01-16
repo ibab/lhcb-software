@@ -98,6 +98,7 @@ the list of those which become valid.
             import hashlib, datetime
             for partition in tags_to_check.keys():
                 tags_to_update[partition]=[]
+                #tier_db_conn_str = str(tier).split(".")[1].lower() + "/%s"%partition
                 tier_db_conn_str = "CondDB/%s"%partition
                 db = CondDBUI.CondDB(tier_db_conn_str)
                 for tag_dict in tags_to_check[partition]:
