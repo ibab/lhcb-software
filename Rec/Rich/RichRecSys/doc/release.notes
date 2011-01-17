@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v3r35p1 2011-01-17 =========================
 ! 2011-01-03 - Chris Jones
  - Remove the check in RichRecSysConf for the DataType, which is no longer used
 
