@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Olivier Callot
+ - In fact the code for PatTSTationDebufTool wasn't committed. Now this is done.
+ - Minor changes in the printout of DebugTrackingLosses, printing the MC Particles
+   that are part of ghost tracks.
+
 !========================= TrackMCTools v3r0 2010-12-16 =========================
 ! 2010-11-25 - Olivier Callot
  - New tool PatTStationDebugTool to debug IT/OT MC truth.
