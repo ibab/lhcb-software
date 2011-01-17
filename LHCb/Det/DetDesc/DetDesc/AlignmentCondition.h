@@ -6,6 +6,12 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/CLIDAlignmentCondition.h"
+
+#ifdef __INTEL_COMPILER         // Disable ICC remark from Math/GenVector
+  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+  #pragma warning(push)
+#endif
+
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
@@ -107,4 +113,7 @@ protected:
   const std::string m_pivotString;
 
 };
+#ifdef __INTEL_COMPILER // Re-enable ICC remark 1572
+  #pragma warning(pop)
+#endif
 #endif // DETDESC_ALIGNMENTCONDITION_H
