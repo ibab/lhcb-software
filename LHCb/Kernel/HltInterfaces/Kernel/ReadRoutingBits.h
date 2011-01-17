@@ -25,5 +25,5 @@ namespace Hlt {
   std::vector<unsigned int> firedRoutingBits(LHCb::RawEvent* rawEvent, 
                                              const unsigned int relevantMin=0, 
                                              const unsigned int relevantMax=95);
-};
+}
 #endif // KERNEL_READROUTINGBITS_H

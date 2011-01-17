@@ -14,7 +14,7 @@ unsigned char unhex(unsigned char C) {
                        ( c >= 'a' && c <='f'  ? 10+(c-'a') : 255 ) );
     if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
     return x;
-};
+}
 
 unsigned int unhex(const std::string& val) {
     assert( val.substr(0,2)=="0x" );
