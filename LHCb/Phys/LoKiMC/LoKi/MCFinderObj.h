@@ -199,7 +199,7 @@ namespace LoKi
       /// the most trivial case 
       if ( first == last ) { return LoKi::Types::MCRange() ; }
       return _findDecays ( decay , LoKi::MCTypes::MCContainer ( first , last ) ) ; 
-    } ;    
+    }
     /// clear the internal storage of decays
     void clear() ;
   private:

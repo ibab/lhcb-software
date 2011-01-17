@@ -212,7 +212,7 @@ namespace LoKi
     ( const LHCb::MCParticle* particle          , 
       OUTPUT                  output            ,
       const bool              decayOnly = false )
-    { return getMCParticles ( particle , output , decayOnly ) ; } ;
+    { return getMCParticles ( particle , output , decayOnly ) ; }
     // ========================================================================    
     template <class MCPARTICLE , class OUTPUT>
     inline OUTPUT mcParticles 
@@ -220,7 +220,7 @@ namespace LoKi
       MCPARTICLE        end               , 
       OUTPUT            output            ,
       const bool        decayOnly = false )
-    { return getMCparticles ( begin , end , output , decayOnly ) ; } ;
+    { return getMCparticles ( begin , end , output , decayOnly ) ; }
     // ========================================================================    
     /** Extract all children particle form the given MC-particle 
      *  in a form of the flat list 

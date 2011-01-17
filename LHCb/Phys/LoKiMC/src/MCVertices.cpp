@@ -111,11 +111,11 @@ LoKi::MCVertices::VertexPositionY::operator()
     return LoKi::Constants::InvalidDistance ;
   }
   return v->position().y() ;
-};
+}
 // ============================================================================
 std::ostream& LoKi::MCVertices::VertexPositionY::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVY" ; } ;
+{ return s << "MCVY" ; }
 // ============================================================================
 
 // ============================================================================

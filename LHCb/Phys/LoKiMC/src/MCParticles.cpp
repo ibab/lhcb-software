@@ -131,7 +131,7 @@ LoKi::MCParticles::MomentumY::operator()
   if( 0 != p ) { return p -> momentum () . py () ; }    // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'") ;
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
-};
+}
 // ============================================================================
 LoKi::MCParticles::MomentumY*
 LoKi::MCParticles::MomentumY::clone() const 
@@ -240,7 +240,7 @@ LoKi::MCParticles::Theta::operator()
   if( 0 != p ) { return p -> momentum () . theta () ; }    // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
-};
+}
 // ============================================================================
 LoKi::MCParticles::Theta*
 LoKi::MCParticles::Theta::clone() const 
@@ -457,8 +457,6 @@ LoKi::MCParticles::HasQuark::fillStream
     return s << "MCQUARK(" << quark() << ")" ;
     break                 ;
   }
-  //
-  return s ; 
 }
 // ============================================================================
 // the only one essential method 
@@ -588,7 +586,7 @@ LoKi::MCParticles::IsHadron::operator()
     return false ;
   }
   return p->particleID().isHadron() ;
-};
+}
 // ============================================================================
 LoKi::MCParticles::IsHadron*
 LoKi::MCParticles::IsHadron::clone() const 
@@ -719,11 +717,11 @@ LoKi::MCParticles::NinMCdownTree::NinMCdownTree
   , m_cut ( cut )
 {}
 // ============================================================================
-LoKi::MCParticles::NinMCdownTree::~NinMCdownTree(){};
+LoKi::MCParticles::NinMCdownTree::~NinMCdownTree(){}
 // ============================================================================
 LoKi::MCParticles::NinMCdownTree*
 LoKi::MCParticles::NinMCdownTree::clone() const
-{ return new LoKi::MCParticles::NinMCdownTree(*this); };
+{ return new LoKi::MCParticles::NinMCdownTree(*this); }
 // ============================================================================
 LoKi::MCParticles::NinMCdownTree::result_type
 LoKi::MCParticles::NinMCdownTree::operator() 
@@ -783,7 +781,7 @@ LoKi::MCParticles::MCMotherFunction::MCMotherFunction
   , m_fun ( fun ) 
 {}
 // ============================================================================
-LoKi::MCParticles::MCMotherFunction::~MCMotherFunction(){};
+LoKi::MCParticles::MCMotherFunction::~MCMotherFunction(){}
 // ============================================================================
 LoKi::MCParticles::MCMotherFunction*
 LoKi::MCParticles::MCMotherFunction::clone() const 
@@ -973,17 +971,17 @@ LoKi::MCParticles::MomentumDistance::MomentumDistance
   : LoKi::AuxFunBase                       ( right )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function( right ) 
   , m_vct ( right.m_vct ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY::virtual destructor
 // ============================================================================  
-LoKi::MCParticles::MomentumDistance::~MomentumDistance(){};
+LoKi::MCParticles::MomentumDistance::~MomentumDistance(){}
 // ============================================================================
 //  MANDATORY: clone function ("virtual constructor")
 // ============================================================================
 LoKi::MCParticles::MomentumDistance*
 LoKi::MCParticles::MomentumDistance::clone() const 
-{ return new LoKi::MCParticles::MomentumDistance(*this) ; };
+{ return new LoKi::MCParticles::MomentumDistance(*this) ; }
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -1008,7 +1006,7 @@ LoKi::MCParticles::MomentumDistance::fillStream
            << m_vct.Px () << ","
            << m_vct.Py () << ","
            << m_vct.Pz () << ","
-           << m_vct.E  () << ")" ; } ;
+           << m_vct.E  () << ")" ; }
 // ============================================================================
 // constructor from theta & phi 
 // ============================================================================
@@ -1045,7 +1043,7 @@ LoKi::MCParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 //  MANDATORY: virtual destructor
 // ============================================================================
-LoKi::MCParticles::TransverseMomentumRel::~TransverseMomentumRel(){};
+LoKi::MCParticles::TransverseMomentumRel::~TransverseMomentumRel(){}
 // ============================================================================
 //  MANDATORY: clone function ("virtual constructor")
 // ============================================================================

@@ -427,8 +427,6 @@ unsigned int LoKi::MCChild::Selector::children
     LHCb::MCParticle::ConstVector input ( 1 , head ) ;
     return m_finder.findDecay ( input , daughters ) ;            // RETURN 
   }
-  //
-  return 0 ;                                                     // RETURN 
 }
 // ============================================================================
 /*  get the child according to the selector 

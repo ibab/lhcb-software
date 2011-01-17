@@ -37,6 +37,9 @@ apply_pattern     reflex_dictionary                                   \
                   headerfiles=$(LOKIMCROOT)/dict/LoKiMCDict.h         \
                   selectionfile=$(LOKIMCROOT)/dict/LoKiMC.xml         \  
                   options=" -U__MINGW32__ "
+# Disable some compiler warnings in the automatically generated dict code
+macro_append LoKiMCDict_cppflags "" \
+                      target-icc " -wd191"
 
 macro_append      LoKiMC_dependencies             " LoKiMCLib " 
 macro_append      LoKiMCDict_dependencies         " LoKiMCLib " 

@@ -38,7 +38,7 @@ LoKi::IMCHybridFactory::interfaceID() { return  IID_IMCHybridFactory ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::IMCHybridFactory::~IMCHybridFactory () {}; 
+LoKi::IMCHybridFactory::~IMCHybridFactory () {}
 // ============================================================================
 
 // ============================================================================

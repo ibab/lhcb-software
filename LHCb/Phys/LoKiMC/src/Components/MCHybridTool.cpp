@@ -421,7 +421,7 @@ LoKi::Hybrid::MCTool::_get
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCTool);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCTool)
 // ============================================================================
 // Standard constructor
 // ============================================================================

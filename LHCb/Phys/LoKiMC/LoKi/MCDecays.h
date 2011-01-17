@@ -207,8 +207,6 @@ namespace Decays
         default:
           return true ;                                               // RETURN
         }
-        //
-        return true ;
       }
       // ======================================================================
       /// get the algorithm

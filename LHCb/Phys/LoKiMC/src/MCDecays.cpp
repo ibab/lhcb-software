@@ -462,15 +462,15 @@ bool Decays::Trees::MCInclusive::operator()
     // never go further, unfortunately the most generic algorithm
     // it terribly slow... O(N!)
     
-    // (4) sort the section 
-    std::sort ( isect->begin() , isect->end() ) ;
-    // make all possible permutations of the section  
-    while ( std::next_permutation ( isect->begin() , isect->end() ) ) 
-    {
-      // (5) match all fields:
-      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
-      { return true ; }                                            // RETURN 
-    } // next permutation
+    //    // (4) sort the section 
+    //    std::sort ( isect->begin() , isect->end() ) ;
+    //    // make all possible permutations of the section  
+    //    while ( std::next_permutation ( isect->begin() , isect->end() ) ) 
+    //    {
+    //      // (5) match all fields:
+    //      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
+    //      { return true ; }                                            // RETURN 
+    //    } // next permutation
   } // next section
   // no match 
   return false ;                                                   // RETURN 

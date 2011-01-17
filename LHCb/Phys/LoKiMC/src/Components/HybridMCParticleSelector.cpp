@@ -100,7 +100,7 @@ namespace LoKi
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCParticleSelector);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCParticleSelector)
 // ============================================================================
 // initialization of the tool 
 // ============================================================================
