@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-01-17
+  - New optimization and calibration for strip12_v1.
+
 ! 2011-01-05
  . Remove calls to DVALgorithm::desktop().
 

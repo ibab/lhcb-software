@@ -25,18 +25,18 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "AverageOmega",  m_AverageOmega     = 0.33 );
 
   declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.8 *GeV );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 4.0 *GeV );
-  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4. );
-  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.5 );
-  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 2.7 );
-  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  5.0);
-  declareProperty( "Kaon_PIDkp",    m_PIDkp_cut     = -4.0 );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 5.875 *GeV );
+  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4.05 );
+  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.25 );
+  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 2.125 );
+  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  6.5);
+  declareProperty( "Kaon_PIDkp",    m_PIDkp_cut     = -3.5 );
   declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
-  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 6.0 );
-  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= 0.005 );
-  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.421 ); 
+  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 4.72 );
+  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= -0.005 );
+  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.359 ); 
   declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.89 ); 
-  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.364 ); 
+  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.359 ); 
 
   declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0.51 ); //no cut
 

@@ -35,9 +35,9 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.428 ); 
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.79 ); 
-  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.411 ); 
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.425 ); 
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.89 ); 
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.415 ); 
 
   declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
 

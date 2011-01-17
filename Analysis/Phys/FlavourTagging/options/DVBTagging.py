@@ -51,6 +51,7 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 tag.BTaggingTool.OutputLevel  = 4
 
 #Import cuts for strip12/strip10/strip9/mc2010
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v1.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10_v1.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10.py')

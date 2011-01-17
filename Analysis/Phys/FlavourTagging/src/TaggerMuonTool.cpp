@@ -32,9 +32,9 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
   declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
   declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
-  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.319 ); 
-  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.21 ); 
-  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.321 ); 
+  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.311 ); 
+  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.36 ); 
+  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.316 ); 
 
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
 

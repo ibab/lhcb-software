@@ -17,6 +17,7 @@ tag = BTagging ('BTagging')
 tag.addTool ( BTaggingTool )
 
 tag.BTaggingTool.IPPU_cut = 3.0
+tag.BTaggingTool.distphi_cut = 0.005
 
 tag.BTaggingTool.addTool ( TaggerMuonTool )
 tag.BTaggingTool.TaggerMuonTool.Muon_Pt_cut   = 1.1
@@ -28,6 +29,9 @@ tag.BTaggingTool.TaggerMuonTool.Muon_ipPU_cut = 3.0
 tag.BTaggingTool.TaggerMuonTool.Muon_distPhi_cut = 0.02
 tag.BTaggingTool.TaggerMuonTool.ProbMin_muon  = 0.0
 tag.BTaggingTool.TaggerMuonTool.AverageOmega  = 0.33
+tag.BTaggingTool.TaggerMuonTool.Muon_P0_Cal   = 0.
+tag.BTaggingTool.TaggerMuonTool.Muon_P1_Cal   = 1.
+tag.BTaggingTool.TaggerMuonTool.Muon_Eta_Cal  = 0.
 
 tag.BTaggingTool.addTool ( TaggerElectronTool )
 tag.BTaggingTool.TaggerElectronTool.Ele_Pt_cut    = 1.1
@@ -43,6 +47,9 @@ tag.BTaggingTool.TaggerElectronTool.Ele_ipPU_cut  = 3.
 tag.BTaggingTool.TaggerElectronTool.Ele_distPhi_cut  = 0.005
 tag.BTaggingTool.TaggerElectronTool.ProbMin_ele   = 0.0
 tag.BTaggingTool.TaggerElectronTool.AverageOmega  = 0.33
+tag.BTaggingTool.TaggerElectronTool.Ele_P0_Cal    = 0.
+tag.BTaggingTool.TaggerElectronTool.Ele_P1_Cal    = 1.
+tag.BTaggingTool.TaggerElectronTool.Ele_Eta_Cal   = 0.
 
 tag.BTaggingTool.addTool ( TaggerKaonOppositeTool )
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut   = 0.4
@@ -57,6 +64,9 @@ tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_ipPU_cut = 3.0
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_distPhi_cut = 0.005
 tag.BTaggingTool.TaggerKaonOppositeTool.ProbMin_kaon  = 0.0
 tag.BTaggingTool.TaggerKaonOppositeTool.AverageOmega  = 0.33
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P0_Cal   = 0.
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P1_Cal   = 1.
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Eta_Cal  = 0.
 
 tag.BTaggingTool.addTool ( TaggerKaonSameTool )
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 0.45
@@ -87,6 +97,9 @@ tag.BTaggingTool.TaggerPionSameTool.PionSame_PIDNoK_cut   = 3.0
 tag.BTaggingTool.TaggerPionSameTool.PionSame_PIDNoP_cut   = 10.0
 tag.BTaggingTool.TaggerPionSameTool.PionProbMin           = 0.55
 tag.BTaggingTool.TaggerPionSameTool.AverageOmega          = 0.41
+tag.BTaggingTool.TaggerPionSameTool.PionSame_P0_Cal       = 0.
+tag.BTaggingTool.TaggerPionSameTool.PionSame_P1_Cal       = 1.
+tag.BTaggingTool.TaggerPionSameTool.PionSame_Eta_Cal      = 0.
 
 tag.BTaggingTool.addTool ( TaggerVertexChargeTool )
 tag.BTaggingTool.TaggerVertexChargeTool.AverageOmega  = 0.41
@@ -98,4 +111,7 @@ tag.BTaggingTool.TaggerVertexChargeTool.P1            =-3.251661e-01
 tag.BTaggingTool.TaggerVertexChargeTool.Gt075         = 0.35
 tag.BTaggingTool.TaggerVertexChargeTool.TracksEq2     = 0.4141
 tag.BTaggingTool.TaggerVertexChargeTool.TracksGt2     = 0.3250
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P0_Cal    = 0.
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P1_Cal    = 1.
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_Eta_Cal   = 0.
 
