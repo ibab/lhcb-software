@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v4r1p3 2011-01-17 =========================
 ! 2011-01-17 - Rob Lambert
  - Fix one small warning on slc4, LumiIntegrateFSR.cpp line 542,
    comparison between signed and unsigned ints
