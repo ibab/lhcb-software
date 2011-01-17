@@ -133,8 +133,6 @@ unsigned int LHCb::STTELL1Error::findPCN(const unsigned int beetle) const{
       case 5: return pcnBeetle5();
       default : return 200u; // 
     }
-
-    return 200u;
 }
 
 

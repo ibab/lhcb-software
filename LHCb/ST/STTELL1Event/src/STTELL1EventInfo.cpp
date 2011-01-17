@@ -20,8 +20,6 @@ unsigned int LHCb::STTELL1EventInfo::findPCN(const unsigned int beetle) const{
       case 5: return pcnBeetle5();
       default : return 200u; // 
     }
-
-    return 200u;
 }
 
 unsigned int LHCb::STTELL1EventInfo::findIHeader(const unsigned int beetle) const{  // get the pcn for a given beetle
@@ -34,8 +32,6 @@ unsigned int LHCb::STTELL1EventInfo::findIHeader(const unsigned int beetle) cons
       case 5: return iHeaderBeetle5();
       default : return 200u; // 
     }
-
-    return 200u;
 }
 
 
