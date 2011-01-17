@@ -214,7 +214,7 @@ void MockPhysDesktop::relate(const LHCb::Particle*,
 }
 
 
-Particle2Vertex::Table::Range MockPhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
+Particle2Vertex::Table::Range MockPhysDesktop::particle2Vertices(const LHCb::Particle* ) const
 {
   error() << "IPhysDesktop::particle2Vertices obsolete." << endmsg;
   return m_table.relations(0);
