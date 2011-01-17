@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r1 2011-01-17 =========================
 ! 2011-01-17 - Chris Jones
  - Add a static cast for an unsigned int to double conversion, to fix warnings
    on slc4 platforms.
