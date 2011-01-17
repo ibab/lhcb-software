@@ -6,6 +6,24 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications.
 
 
+</PRE><H1><A NAME=v11r0>2011-01-17 RecSys v11r0</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r8
+
+- Development release, likely to be the last slc4 release of Rec.
+
+- First 2011 release, to be used in preparation of 2011 Moore series
+  and Phys/DaVinci stack for 2011 development
+
+- Highlights:
+  - Support for 2011 DataType, now the default, currently the same as 2010
+  - FastVelo and FastForward tracking updates, ready to be tested for production
+    FastVelo not yet the default sequence, requires thought about 2010/2011 behaviour
+  - Bugfix in Rec/LumiAlgs which caused segfaults during finalize on S12b files
+
+- For more details and minor bugfixes, patches, see:
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v11r0
+
 </PRE><H1><A NAME=v10r6>2010-12-16 RecSys v10r6</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r8
 
