@@ -538,8 +538,8 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
     // pick the TimeSpanFSR
     LHCb::TimeSpanFSRs::iterator tsfsr = timeSpanFSRs->begin();
     // check index bounds
-    long tsfsr_len = timeSpanFSRs->size();
-    if ( fkey > tsfsr_len-1 ) {
+    unsigned long tsfsr_len = timeSpanFSRs->size();
+    if ( (unsigned long)fkey > tsfsr_len-1 ) { 
       warning() << "missing timeSpanFSR - use previous DB conditions" << endmsg;
       return StatusCode::SUCCESS;
     } 

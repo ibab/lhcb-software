@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Rob Lambert
+ - Fix one small warning on slc4, LumiIntegrateFSR.cpp line 542,
+   comparison between signed and unsigned ints
+
 ! 2010-12-22 - Jaap Panman
  - add further protection for missing data in LumiIntegrateFSR
    There can be completely empty raw data files, then no run number is stored 
