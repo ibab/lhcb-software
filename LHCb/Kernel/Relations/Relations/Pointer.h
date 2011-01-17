@@ -1,12 +1,5 @@
 // $Id: Pointer.h,v 1.3 2006-06-11 17:46:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
-//
-// ============================================================================
 #ifndef RELATIONS_POINTER_H 
 #define RELATIONS_POINTER_H 1
 // ============================================================================
@@ -55,7 +48,7 @@ namespace Relations
     ~Pointer() {}
   } ;
 
-}; // end of namespace Relations 
+} // end of namespace Relations 
 
 
 // ============================================================================

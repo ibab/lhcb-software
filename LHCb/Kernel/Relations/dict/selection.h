@@ -37,7 +37,7 @@ namespace RelationsDict
     GaudiDict::Relation1DDict<int,int>           _1 ;
     GaudiDict::Relation2DDict<std::string,int>   _2 ;
   };
-};
+}
 
 // ====================================================================
 // The END 

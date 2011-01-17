@@ -210,7 +210,7 @@ namespace GaudiDict
   };
   
 
-} ; //end of namespace RelDict
+} //end of namespace RelDict
 
 // ============================================================================
 // The END 

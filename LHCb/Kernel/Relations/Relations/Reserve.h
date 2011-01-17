@@ -27,14 +27,14 @@ namespace Relations
   template<class TYPE> 
   inline void reserve( TYPE &            /* object */ ,
                        const size_t      /* size   */ ) 
-  {};
+  {}
   
   template<class TYPE>
   inline void reserve( std::vector<TYPE>&   object    , 
                        const size_t         size      )   
-  { object.reserve( size ); };
+  { object.reserve( size ); }
   
-}; ///< end of namespace Relations 
+} ///< end of namespace Relations 
 
 // ============================================================================
 // The End 
