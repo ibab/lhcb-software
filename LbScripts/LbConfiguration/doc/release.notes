@@ -1,3 +1,14 @@
+2011-01-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* data/configuration.bat: New file. configuration fragment for bat
+	* data/configuration.csh: New file. configuration fragment for csh
+	* data/configuration.sh: New file. configuration fragment for sh
+	* data/postscript.bat: New file. post script fragment for bat
+	* data/postscript.csh: New file. post script fragment for csh
+	* data/postscript.sh: New file. post script fragment for sh
+	* scripts/generateLogin: added LHCb pre-configuration and post setup script treatment to group_login
+	and group_shell.
+
 2011-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: Disabled the cache if an explicit version of python is requested.

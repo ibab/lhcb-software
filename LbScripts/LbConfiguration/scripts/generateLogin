@@ -559,6 +559,15 @@ def getProdLink(targetlocation):
         prodlink = proddir
     return prodlink
 
+def getConfigurationFragment(shell, type="configuration"):
+    content = ""
+    if "LBCONFIGURATIONROOT" in os.environ.keys() :
+        fragf = os.path.join(os.environ["LBCONFIGURATIONROOT"], "data", "%s.%s" % (type, shell))
+        if os.path.exists(fragf) :
+            content = open(fragf).read()
+    return content
+
+
 def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir, "group_login.%s" % shell)
     prodlink = getProdLink(targetlocation)
@@ -566,7 +575,7 @@ def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, build
     if prodlink :
         prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers2}", "InstallArea")
     f = open(script, "w")
-    content = ""
+    content = getConfigurationFragment(shell, "configuration")
     if shell == "sh" :
         content += """
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
@@ -640,6 +649,7 @@ IF DEFINED HOME (
 )
 """
 
+    content += getConfigurationFragment(shell, "postscript")
     f.write(content)
     f.close()
 #    fixNative(script)
@@ -651,7 +661,7 @@ def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, build
     if prodlink :
         prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers3}", "InstallArea")
     f = open(script, "w")
-    content = ""
+    content = getConfigurationFragment(shell, "configuration")
     if shell == "sh" :
         content += """
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
@@ -738,6 +748,7 @@ IF DEFINED HOME (
   set lbvers3=
 )
 """
+    content += getConfigurationFragment(shell, "postscript")
     f.write(content)
     f.close()
 #    fixNative(script)
