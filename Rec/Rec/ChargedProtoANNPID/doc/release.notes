@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Chris Jones
+ - Add a static cast for an unsigned int to double conversion, to fix warnings
+   on slc4 platforms.
+
 ! 2011-01-11 - Chris Jones
  - Switch the default ANN configuration version from MC2010Tune to MC10TuneV1
  - Activate the new Ghost ID network for each track type
