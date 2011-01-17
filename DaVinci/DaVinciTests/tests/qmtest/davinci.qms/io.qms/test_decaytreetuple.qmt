@@ -9,9 +9,9 @@
 findReferenceBlock("""
 Tuple                                                       SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/Bd2JpsiKS_KSLL_Line"                    |       177 |        190 |     1.0734 |     1.5183 |      0.0000 |      8.0000 |
- | "# input particles"                             |      1000 |        190 |    0.19000 |    0.75888 |      0.0000 |      8.0000 |
- |*"#accept"                                       |      1000 |         74 |(  7.40000 +- 0.827792 )%|   -------   |   -------   |
+ | "# Phys/Bd2JpsiKS_KSLL_Line"                    |       244 |        258 |     1.0574 |     1.7405 |      0.0000 |      10.000 |
+ | "# input particles"                             |      1000 |        258 |    0.25800 |    0.97234 |      0.0000 |      10.000 |
+ |*"#accept"                                       |      1000 |         92 |(  9.20000 +- 0.913980 )%|   -------   |   -------   |
  | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="Tuple")
 findReferenceBlock("""
@@ -22,7 +22,7 @@ EventTuple                                                  SUCCESS Number of co
 findReferenceBlock("""
 MCTuple                                                     SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |      1000 |        921 |(  92.1000 +- 0.852989 )%|   -------   |   -------   |
+ |*"#accept"                                       |      1000 |        933 |(  93.3000 +- 0.790639 )%|   -------   |   -------   |
  | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="MCTuple")
 countErrorLines({"FATAL":0})

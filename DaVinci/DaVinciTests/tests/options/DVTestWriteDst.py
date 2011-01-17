@@ -78,11 +78,21 @@ DaVinci().UserAlgorithms = [ seq ]
 DaVinci().EvtMax = 100
 DaVinci().PrintFreq = 10 
 # DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09" 
-# DaVinci().Simulation   = False
+DaVinci().DataType = "2010" 
+DaVinci().Simulation   = True
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ##############################################################################
 # Bs->J/psi Phi MC09
+#EventSelector().Input   = [
+#    "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ] 
+
+#-- GAUDI jobOptions generated on Mon Jan 17 17:13:58 2011
+#-- Contains event types : 
+#--   13144006 - 1 files - 10000 events - 4.13 GBytes
+# MC 2010 Beam3500GeV-VeloClosed-MagDown-Nu3
+# bs->Jpsi, Phi
+from Gaudi.Configuration import * 
+
 EventSelector().Input   = [
-    "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ] 
+    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
