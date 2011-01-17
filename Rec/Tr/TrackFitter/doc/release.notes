@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v3r2 2011-01-17 =========================
 ! 2011-01-11 - Victor Coco
 - get the inverse matrix as reference in predictReverseFit in TrackKalmanFilter
 
