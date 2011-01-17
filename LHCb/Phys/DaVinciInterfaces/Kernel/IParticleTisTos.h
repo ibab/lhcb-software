@@ -23,7 +23,7 @@ namespace LHCb {
   class RecVertex;
   class Vertex;
   class HltObjectSummary;  
-};
+}
 
 /** @class IParticleTisTos IParticleTisTos.h
  *  

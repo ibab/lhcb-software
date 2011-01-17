@@ -11,10 +11,10 @@
 
 namespace Tuples{
   class Tuple;
-};
+}
 namespace LHCb {
   class Particle;
-};
+}
 
 /** @class IParticleTupleTool
  * 

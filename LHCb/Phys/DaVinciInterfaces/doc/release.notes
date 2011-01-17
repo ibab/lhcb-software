@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Marco Cattaneo
+ - Fix ICC remarks
+
 !========================= DaVinciInterfaces v2r7 2010-12-14 =========================
 ! 2010-12-03 - Vanya Belyaev
  - IDistanceCalculator:

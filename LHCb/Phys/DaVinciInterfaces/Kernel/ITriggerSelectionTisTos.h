@@ -22,7 +22,7 @@ namespace LHCb {
   class Track;
   class RecVertex;
   class HltObjectSummary;  
-};
+}
 
 /** @class ITriggerSelectionTisTos ITriggerSelectionTisTos.h
  *  

@@ -20,7 +20,7 @@ namespace LHCb {
   class Track;
   class RecVertex;
   class HltObjectSummary;  
-};
+}
 
 /** @class ITriggerTisTos ITriggerTisTos.h
  *  
