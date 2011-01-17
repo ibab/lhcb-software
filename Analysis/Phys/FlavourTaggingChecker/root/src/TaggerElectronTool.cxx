@@ -14,9 +14,9 @@ TaggerElectronTool::TaggerElectronTool() {
   declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
   declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
   declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
-  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.294 ); 
-  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.53 ); 
-  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.336 ); 
+  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.291 ); 
+  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.47 ); 
+  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.341 ); 
 
   NNetTool_MLP nnet;
   tele = new Tagger();

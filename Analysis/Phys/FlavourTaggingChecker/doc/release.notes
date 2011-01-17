@@ -6,10 +6,12 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Marc Grabalosa
+ - Optimization strip12_v1
+
 ! 2011-01-14 - Marc Grabalosa
  - Introduccion IPsigned variable in the ntuple
  - bug fix in root/src/KOS
- - Raise to v6r3  
 
 ! 2011-01-05 - Juan Palacios
  - src/BTaggingAnalysis.cpp

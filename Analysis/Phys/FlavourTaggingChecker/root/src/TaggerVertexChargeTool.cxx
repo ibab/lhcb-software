@@ -14,9 +14,9 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
   declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.17 );
   declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
 
-  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.458 ); 
-  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.32 ); 
-  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.392 ); 
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.45 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.38 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.394 ); 
 
   //For CombinationTechnique "Probability":
   declareProperty( "P0",           m_P0                   =  5.255669e-01 );
