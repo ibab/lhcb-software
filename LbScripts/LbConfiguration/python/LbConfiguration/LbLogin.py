@@ -35,6 +35,8 @@ if os.path.basename(_base_dir) != "InstallArea" :
     if os.path.isdir(_iapy_dir) :
         sys.path.insert(0, _iapy_dir)
 
+_lbs_home_dir = os.path.dirname(_ia_dir)
+
 # updating the sys.path for the bare minimum of the available scripts
 sys.path.insert(0, _pyconf_dir)
 sys.path.insert(0, _py_dir)
@@ -573,10 +575,7 @@ class LbLoginScript(SourceScript):
         # to work with rootd the .rootauthrc file is required
         rootrcfile = os.path.join(homedir, ".rootauthrc")
         if not os.path.exists(rootrcfile) and opts.cmtsite != "standalone" :
-            if opts.cmtsite == "CERN" :
-                srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
-            elif opts.cmtsite == "LOCAL" :
-                srcrootrcfile = os.path.join(opts.mysiteroot.split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
+            srcrootrcfile = os.path.join(_lbs_home_dir, "LbConfiguration", "data", ".rootauthrc")
             if os.path.exists(srcrootrcfile) :
                 shutil.copy(srcrootrcfile, rootrcfile)
                 log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))

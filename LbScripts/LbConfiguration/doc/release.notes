@@ -1,5 +1,7 @@
 2011-01-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* data/.rootauthrc: New file. Template for .rootrc file
+	* python/LbConfiguration/LbLogin.py: takes the .rootauthrc file from the LbConfiguration/data folder
 	* data/configuration.bat: New file. configuration fragment for bat
 	* data/configuration.csh: New file. configuration fragment for csh
 	* data/configuration.sh: New file. configuration fragment for sh
