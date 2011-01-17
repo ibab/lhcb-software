@@ -5,6 +5,7 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloMoniDst v5r6 2011-01-17 =========================
 ! 2010-10-07 - Olivier Deschamps
  - New base class : CaloNtpBase for tupling algorithms
  - CaloAlignmentNtp now inherits from CaloNtpBase
