@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r10 2011-01-17 =========================
 ! 2011-01-17 - Rob Lambert
  - Fix slc4 warning, FastForwardTool.cpp line 951, 
    where a double was used to + an iterator, now an int is used.
