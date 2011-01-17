@@ -118,8 +118,9 @@ std::ostream& LoKi::HLT::HasDecision::print
     return s << name << "(" 
              << Gaudi::Utils::toString ( names() ) << "') " ;  // RETURN
   }
-  return s << name << "(" 
-           << Gaudi::Utils::toString ( names() ) << "') " ;  // RETURN
+  // This is unreachable
+  //  return s << name << "(" 
+  //           << Gaudi::Utils::toString ( names() ) << "') " ;  // RETURN
 }
 
 // ============================================================================

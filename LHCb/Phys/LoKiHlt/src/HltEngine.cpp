@@ -38,7 +38,7 @@ namespace
   {
     LoKi::Hybrid::HltEngineActor& actor = LoKi::Hybrid::HltEngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  }
 }
 // ============================================================================
 // add the cut 

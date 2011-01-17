@@ -158,7 +158,8 @@ std::ostream& LoKi::L0::Decision::fillStream ( std::ostream& s ) const
   default:
     return s << " L0_DECISION( " << m_mask << ") " ; 
   }
-  return s << " L0_DECISION( " << m_mask << ") " ; 
+  // This is unreachable
+  //  return s << " L0_DECISION( " << m_mask << ") " ; 
 }
 // ============================================================================
 

@@ -692,7 +692,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::fill( Tuples::Tuple& t )
 
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,EvtTupleTool);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,EvtTupleTool)
 // ============================================================================
 
 

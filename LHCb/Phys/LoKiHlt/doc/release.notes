@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-17 - Marco Cattaneo
+ - Fix ICC remarks and warnings
+
 !========================= LoKiHlt v3r3 2010-11-27 =========================
 ! 2010-11-22 - Vanya Belyaev
  - LoKiHlt/algorithms.py

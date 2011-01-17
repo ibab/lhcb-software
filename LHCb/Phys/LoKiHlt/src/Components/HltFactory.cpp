@@ -248,7 +248,7 @@ inline StatusCode LoKi::Hybrid::HltFactory::_get
   return StatusCode::SUCCESS ;
 }    
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,HltFactory);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,HltFactory)
 // ============================================================================
 // Standard constructor
 // ============================================================================
