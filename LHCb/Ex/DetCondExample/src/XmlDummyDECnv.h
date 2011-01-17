@@ -19,9 +19,16 @@ public:
 
   virtual ~XmlDummyDECnv(); ///< Destructor
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:1125) // virtual function is hidden, override intended?
+  #pragma warning(push)
+#endif
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         DummyDetectorElement* dataObj,
                                         IOpaqueAddress* address);
+#ifdef __INTEL_COMPILER // Re-enable ICC warning
+  #pragma warning(pop)
+#endif
 
 protected:
 

@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "DetDesc/Condition.h"
 #include "DetCond/ICondDBAccessSvc.h"
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestUMSError );
+DECLARE_ALGORITHM_FACTORY( TestUMSError )
 
 
 //=============================================================================
@@ -33,7 +32,7 @@ TestUMSError::TestUMSError( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TestUMSError::~TestUMSError() {}; 
+TestUMSError::~TestUMSError() {}
 
 //=============================================================================
 // Initialization
@@ -63,7 +62,7 @@ StatusCode TestUMSError::initialize() {
   }
     
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -75,7 +74,7 @@ StatusCode TestUMSError::execute() {
   info() << "Event " << ++m_evtCount << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

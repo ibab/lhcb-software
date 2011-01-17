@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MultiDBTest );
+DECLARE_ALGORITHM_FACTORY( MultiDBTest )
 
 
 //=============================================================================
@@ -32,7 +31,7 @@ MultiDBTest::MultiDBTest( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MultiDBTest::~MultiDBTest() {}; 
+MultiDBTest::~MultiDBTest() {}
 
 //=============================================================================
 // Initialization
@@ -55,7 +54,7 @@ StatusCode MultiDBTest::initialize() {
     return StatusCode::FAILURE;
   }
   return runUpdate();
-};
+}
 
 //=============================================================================
 // Main execution
@@ -74,7 +73,7 @@ StatusCode MultiDBTest::execute() {
   info() << m_align1->offNominalMatrix() << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

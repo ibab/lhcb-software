@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
 #include "DetCond/ICondDBAccessSvc.h"
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestCacheInjection );
+DECLARE_ALGORITHM_FACTORY( TestCacheInjection )
 
 
 //=============================================================================
@@ -33,7 +32,7 @@ TestCacheInjection::TestCacheInjection( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TestCacheInjection::~TestCacheInjection() {};
+TestCacheInjection::~TestCacheInjection() {}
 
 //=============================================================================
 // Initialization
@@ -64,7 +63,7 @@ StatusCode TestCacheInjection::initialize() {
   }
 
   return runUpdate();
-};
+}
 
 //=============================================================================
 // Main execution
@@ -121,7 +120,7 @@ StatusCode TestCacheInjection::execute() {
   info() << "         data = " << m_cond4->paramAsString("data") << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

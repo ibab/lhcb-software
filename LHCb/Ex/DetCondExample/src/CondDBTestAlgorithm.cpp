@@ -4,7 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IDetDataSvc.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/TabulatedProperty.h"
@@ -22,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CondDBTestAlgorithm );
+DECLARE_ALGORITHM_FACTORY( CondDBTestAlgorithm )
 
 
 //=============================================================================

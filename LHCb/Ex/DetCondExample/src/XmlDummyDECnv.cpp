@@ -14,7 +14,7 @@
 // 2005-04-11 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
 
-DECLARE_CONVERTER_FACTORY( XmlDummyDECnv );
+DECLARE_CONVERTER_FACTORY( XmlDummyDECnv )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -28,7 +28,7 @@ XmlDummyDECnv::XmlDummyDECnv(ISvcLocator* svc):
 //=============================================================================
 // Destructor
 //=============================================================================
-XmlDummyDECnv::~XmlDummyDECnv() {}; 
+XmlDummyDECnv::~XmlDummyDECnv() {}
 
 //=============================================================================
 // Specific Fill

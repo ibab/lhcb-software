@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-01-17 - Marco Cattaneo
+ - Fix ICC compiler remarks and warnings
+ - Remove includes of obsolete DeclareFactoryEntries.h
+
 !============ Ex/DetCondExample v11r9 2010-05-21 ==============================
 ! 2010-05-18 - Marco Clemencic
  - Fixed few Windows warnings.

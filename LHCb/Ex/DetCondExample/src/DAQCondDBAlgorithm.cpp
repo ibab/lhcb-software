@@ -8,7 +8,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Timing.h"
 #include "GaudiKernel/Time.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "CoolKernel/Exception.h"
 #include "CoolKernel/IDatabase.h"
@@ -19,7 +18,7 @@
 #include "CoolKernel/ValidityKey.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
-DECLARE_ALGORITHM_FACTORY( DAQCondDBAlgorithm );
+DECLARE_ALGORITHM_FACTORY( DAQCondDBAlgorithm )
 
 // Define the attributes for all folders created in this example
 const std::string folderAttributes = "";

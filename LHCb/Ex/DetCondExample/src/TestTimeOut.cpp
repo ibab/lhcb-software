@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
 
@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestTimeOut );
+DECLARE_ALGORITHM_FACTORY( TestTimeOut )
 
 
 //=============================================================================

@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ExampleAlg );
+DECLARE_ALGORITHM_FACTORY( ExampleAlg )
 
 
 //=============================================================================

@@ -4,7 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DataObject.h" 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestUpdateMgr );
+DECLARE_ALGORITHM_FACTORY( TestUpdateMgr )
 
 
 
@@ -42,7 +41,7 @@ TestUpdateMgr::TestUpdateMgr( const std::string& name,
 //=============================================================================
 TestUpdateMgr::~TestUpdateMgr() {
   delete m_dummyUMSentry;
-}; 
+}
 
 //=============================================================================
 // Initialization
@@ -75,7 +74,7 @@ StatusCode TestUpdateMgr::initialize() {
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -102,7 +101,7 @@ StatusCode TestUpdateMgr::execute() {
   */
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

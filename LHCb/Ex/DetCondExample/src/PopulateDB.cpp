@@ -10,7 +10,6 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Time.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -41,7 +40,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PopulateDB );
+DECLARE_ALGORITHM_FACTORY( PopulateDB )
 
 static std::string fix_dtd(std::string orig)
 {
@@ -66,7 +65,7 @@ PopulateDB::PopulateDB( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PopulateDB::~PopulateDB() {};
+PopulateDB::~PopulateDB() {}
 
 //=============================================================================
 // Initialization
