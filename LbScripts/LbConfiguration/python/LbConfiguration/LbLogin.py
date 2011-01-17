@@ -580,6 +580,24 @@ class LbLoginScript(SourceScript):
                 shutil.copy(srcrootrcfile, rootrcfile)
                 log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))
 
+        if sys.platform != "win32" and self.targetShell() == "sh" and ev.has_key("HOME"):
+            hprof = os.path.join(ev["HOME"], ".bash_profile")
+            sprof = os.path.join("/etc","skel",".bash_profile")
+            hlist = []
+            hlist.append(hprof)
+            hlist.append(os.path.join(ev["HOME"], ".bash_login"))
+            hlist.append(os.path.join(ev["HOME"], ".profile"))
+            if not [ x for x in hlist if os.path.exists(x) ] :
+                if os.path.exists(sprof) :
+                    shutil.copy(sprof, hprof)
+                    log.warning("Copying %s to %s" % (sprof, hprof))
+            hbrc = os.path.join(ev["HOME"], ".bashrc")
+            sbrc = os.path.join("/etc","skel",".bashrc")
+            if not os.path.exists(hbrc) :
+                if os.path.exists(sbrc) :
+                    shutil.copy(sbrc, hbrc)
+                    log.warning("Copying %s to %s" % (sbrc, hbrc))
+
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
             log.debug("Setting a default LD_LIBRARY_PATH")
