@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Marc Grabalosa
+ - Add OS combination tagcat, omega and decision in TupleToolTagging.cpp
+
 ! 2011-01-14 - Rob Lambert
  - Add python directory and a Configuration.py to dress-up the configurables
    Functions: addTupleTool and addBranches defined to simplify life a lot.

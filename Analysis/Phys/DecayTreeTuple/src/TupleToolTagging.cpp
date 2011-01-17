@@ -133,11 +133,17 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   int dec = -1000; 
   int cat = -1;
   double omega = -2;
+  int decOS = -1000; 
+  int catOS = -1;
+  double omegaOS = -2;
 
   if( sc ){
     dec = theTag.decision(); 
     cat = theTag.category();
     omega = theTag.omega(); // predicted wrong tag fraction.
+    decOS = theTag.decisionOS(); 
+    catOS = theTag.categoryOS();
+    omegaOS = theTag.omegaOS(); // predicted wrong tag fraction.
   }
   else {
     Warning("The tagging algorithm failed");
@@ -147,6 +153,9 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   test &= tuple->column( prefix+"_TAGDECISION" , dec );
   test &= tuple->column( prefix+"_TAGCAT" , cat );
   test &= tuple->column( prefix+"_TAGOMEGA" , omega );
+  test &= tuple->column( prefix+"_TAGDECISION_OS" , decOS );
+  test &= tuple->column( prefix+"_TAGCAT_OS" , catOS );
+  test &= tuple->column( prefix+"_TAGOMEGA_OS" , omegaOS );
   
   int taggers_code = 0;
   // intialize tagger by tagger W :
