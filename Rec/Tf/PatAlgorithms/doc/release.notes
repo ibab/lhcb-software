@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-01-17 - Rob Lambert
+ - Fix slc4 warning, FastForwardTool.cpp line 951, 
+   where a double was used to + an iterator, now an int is used.
+
 ! 2011-01-11 - Olivier Callot
  - Minor changes to improve efficiency: USe proper scaling for drift distance in X projection
 

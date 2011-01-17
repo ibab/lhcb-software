@@ -948,7 +948,7 @@ bool FastForwardTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   double highestChi2 = 1.e10;
   PatFwdHits::iterator itH;
-  PatFwdHit* centre = *(track.coordBegin() + .5 * track.coords().size() );
+  PatFwdHit* centre = *(track.coordBegin() + track.coords().size()/2 );
   for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
     (*itH)->setSelected( true );
     //(*itH)->setRlAmb( 0 );
