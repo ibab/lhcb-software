@@ -327,6 +327,7 @@ StatusCode BTaggingAnalysis::execute() {
 
     //calculate signed IP wrt RecVert
     double IP, IPerr, IPsign;
+    IP=-1;
     if(!(axp->particleID().hasBottom())) {
       m_util->calcIP(axp, RecVert, IPsign, IPerr);
       IP=fabs(IPsign); 

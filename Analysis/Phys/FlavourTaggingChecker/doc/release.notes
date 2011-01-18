@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-01-18 - Marc Grabalosa
+ - patch to unitialized IP
+
 ! 2011-01-17 - Marc Grabalosa
  - Optimization strip12_v1
 
