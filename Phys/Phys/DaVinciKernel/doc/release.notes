@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v9r0 2011-01-18 =====================
+
 ! 2011-01-14 - Juan Palacios
  - DVAlgorithm
   . Inline i_bestVertex(particle).
@@ -13,7 +15,7 @@
  - DVAlgorithm: 
   . Add ForceP2PVBuild property, calculates and stores Particle->PV relations
     for selected particles and decay trees if this hasn't been done before.
-    Only avtive if WriteP2PV = true.
+    Only active if WriteP2PV = true.
   . Add cached access to default IPVReFitter tool.
   . Specialist virtual method for TES saving is now _saveInTES, called by 
     DVAlgorithm::saveInTES.
