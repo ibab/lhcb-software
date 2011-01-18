@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiFitters v4r1 2011-01-18 =====================
+
 ! 2011-01-14 - Vanya Belyaev
 
  - remove IPhysDesktop 
