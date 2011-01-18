@@ -37,8 +37,16 @@ from Configurables import DaVinci
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().EvtMax = 100                         # Number of events
-DaVinci().DataType = "MC09"      
+DaVinci().DataType = "2010"      
 DaVinci().Simulation   = True                  # It is MC
 DaVinci().ETCFile = "etc.root"
 
-importOptions("$DAVINCIROOT/options/MC09-Bs2JpsiPhiDst.py")
+#-- GAUDI jobOptions generated on Mon Jan 17 17:13:58 2011
+#-- Contains event types : 
+#--   13144006 - 1 files - 10000 events - 4.13 GBytes
+# MC 2010 Beam3500GeV-VeloClosed-MagDown-Nu3
+# bs->Jpsi, Phi
+from Gaudi.Configuration import * 
+
+EventSelector().Input   = [
+    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
