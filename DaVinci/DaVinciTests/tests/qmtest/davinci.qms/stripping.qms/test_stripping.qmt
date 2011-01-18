@@ -4,14 +4,15 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>../options/DVTestStripping.py</text>
+  <text>../options/Stripping/test_stripping_allstreams_sim2010_bs2jpsiphi.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |         18 |(  18.0000 +- 3.84187  )%|   -------   |   -------   |
+ |*"#accept"                                       |       100 |         13 |(  13.0000 +- 3.36303  )%|   -------   |   -------   |
  | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "#slow events"                                  |       100 |          1 |   0.010000 |   0.099499 |      0.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
