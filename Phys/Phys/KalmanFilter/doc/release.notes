@@ -5,6 +5,8 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================== KalmanFilter v1r1 2011-01-18 ===================
+
 ! 2011-01-14 - Vanya Belyaev
 
  - improve a little bit CPU effiicency of FastVertex 
