@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# @file AnalyzeHlt2Efficiency.py
+# @file Hlt2InclusivePhiLines.py
 # @author Albert Puig Navarro (albert.puig@cern.ch)
 # based on Magnus Lieng (magnus.lieng@cern.ch)
 #          Kim Vervink (Kim.Vervink@cern.ch)
@@ -75,7 +75,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                        , InputLocations  = [ BiKalmanFittedKaons ]
                                        )
         Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
-                                       , "TrackCombine"
+                                       , "TrackCombineSB"
                                        , DecayDescriptors = decayDesc
                                        , DaughtersCuts = { "K+" : "%s & %s & %s" % (KaonPtCut, KaonIpCut, KaonIpsCut) }
                                        , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
