@@ -24,8 +24,8 @@ include_path      none
 library DSTWriters ../src/*.cpp
 
 # ======= the patterns ========================================================
+apply_pattern component_library library=DSTWriters
 macro DSTWritersConfUserModules "DSTWriters.BaseDSTWriter DSTWriters.MicroDSTWriter DSTWriters.SelDSTWriter"
 macro_append DSTWritersConfUserModules_dependencies DSTWritersConfDbMerge 
-apply_pattern component_library library=DSTWriters
 apply_pattern install_python_modules
 # =============================================================================
