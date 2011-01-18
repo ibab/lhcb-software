@@ -14,7 +14,7 @@ branches          cmt doc python
 # Used packages
 #============================================================================
 use RichKernel v*  Rich
-
+use DSTWriters v*  Phys
 include_path      none
 
 #============================================================================

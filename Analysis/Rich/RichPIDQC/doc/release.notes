@@ -5,6 +5,11 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2011-01-18 - Juan Palacios
+ - cmt/requirements
+  . Use Phys/DSTWriters to fix warnings.
+  . Increase to v1r5p1.
+
 !========================== RichPIDQC v1r5 2010-07-27 ========================
 
 ! 2010-07-22 - Chris Jones
