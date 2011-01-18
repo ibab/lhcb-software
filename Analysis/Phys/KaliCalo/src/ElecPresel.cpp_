@@ -128,7 +128,7 @@ StatusCode Kali::ElecPresel::execute() {
   //}
   
 // Retrieve Particles 
-  const  LHCb::Particle::ConstVector&  parts  = desktop()->particles();
+  const  LHCb::Particle::ConstVector&  parts  = this->i_particles();
 //  ProtoParticles *protos = get<ProtoParticles>( m_Input );
 
   if (parts.size() == 0) return sc;
@@ -195,8 +195,8 @@ StatusCode Kali::ElecPresel::execute() {
             if (!CheckHCal (m_AllProto[i])) continue;
             m_AllProto[m_NETracks]   = m_AllProto[i];
             m_AllParts[m_NETracks++] = m_AllParts[i];
-// Save in desktop
-            desktop()->keep(m_AllParts[i]);
+// Save in local storage
+            this->markTree(m_AllParts[i]);
           }
         }
       }

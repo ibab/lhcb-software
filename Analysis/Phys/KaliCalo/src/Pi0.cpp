@@ -580,7 +580,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   {
     // keep these photons
     LHCb::Particle ph (**iphoton) ;
-    desktop()->keep( &ph  ) ;
+    this->markTree( &ph  ) ;
   }
   
   counter ( "#photons" ) += photons .size  () ;

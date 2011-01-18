@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-01-18 - Juan Palacios
+ - Adapt to changes in DVAlgorithm.
+ - Increase to v4r8.
+ - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
+
 !========================== KaliCalo v4r7 2010-12-20 ==========================
 
 ! 2010-12-15 - Albert Puig
