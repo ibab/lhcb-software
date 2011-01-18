@@ -28,13 +28,17 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                   ,'PhiDOCA'            : 0.2      # mm
                   ,'PhiVCHI2'           : 20       # dimensionless
                   ,'KaonRichPID'        : 0        # dimensionless
-                  ,'Prescale'           : {'Hlt2IncPhiSidebands'  : 0.1
+                  ,'Prescale'           : {'Hlt2IncPhi'           : 1.0
+                                          ,'Hlt2IncPhiSidebands'  : 0.1
                                           ,'Hlt2IncPhiTrackFit'   : 0.001
-                                          ,'Hlt2IncPhi'           : 1.0
                                           }
-                  ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 1.0
+                  ,'Postscale'          : {'Hlt2IncPhi'           : 1.0
+                                          ,'Hlt2IncPhiSidebands'  : 1.0
                                           ,'Hlt2IncPhiTrackFit'   : 1.0
-                                          ,'Hlt2IncPhi'           : 1.0
+                                          }
+                  ,'HltANNSvcID'        : {'IncPhi'           : 50000
+                                          ,'IncPhiSidebands'  : 50003
+                                          ,'IncPhiTrackFit'   : 50002
                                           }
                   }
     
@@ -42,6 +46,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
+        from Configurables import HltANNSvc
         from Configurables import CombineParticles
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedRichKaons
         
@@ -116,6 +121,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2InclusivePhiRich]
                         , postscale = self.postscale
                          )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
  
         ############################################################################
         #    Inclusive Phi robust and Track line
@@ -127,6 +134,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2InclusivePhi]
                         , postscale = self.postscale
                           )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
 
         ############################################################################
         #    Inclusive Phi complete line for mass sidebands
@@ -140,6 +149,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2InclusivePhiRichSB]
                         , postscale = self.postscale
                         )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
 
 # EOF
 
