@@ -4,6 +4,8 @@
 ! Purpose     : DaVinci independent functions and classes to help DaVinci life.
 !-----------------------------------------------------------------------------
 
+! ========================= DaVinciUtils v1r1 2011-01-18 =====================
+
 ! 2011-01-10 - Juan Palacios
  - DaVinciUtils/Functors.h
   . New file containing some unary predicates that check if a ContainedObject
