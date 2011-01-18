@@ -58,16 +58,18 @@ from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ trueSeq ]
 DaVinci().MoniSequence = [ TestCorrelations ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
+########################################################################
+#-- GAUDI jobOptions generated on Tue Jan 18 17:40:43 2011
+#-- Contains event types : 
+#--   11114004 - 1 files - 10000 events - 2.78 GBytes
+# MC_2010_428935_2010-Sim08Reco06-withTruth_11114004
+#
+from Gaudi.Configuration import * 
 
-##
-## Options
-##
-##-- GAUDI data cards generated on 11/8/07 5:37 PM
-##-- For Event Type = 11114001 / Data type = DST 1
-
-DaVinci().Input = [
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004871/0000/00004871_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
+EventSelector().Input   = [
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2010/DST/00008055/0000/00008055_00000053_1.dst' TYP='
+POOL_ROOTTREE' OPT='READ'"]
+########################################################################
 DaVinci().EvtMax = 500
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 10

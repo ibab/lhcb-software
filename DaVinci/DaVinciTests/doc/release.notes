@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-18 - Juan Palacios
+ - Moved davinci.stripping.test_bd2kstarmumu_mc09 to davinci.stripping.test_bd2kstarmumu_sim2010.
+
 ! 2011-01-17 - Juan Palacios
  - davinci.io
   . Update tests using obsolete MC09 data to 2010 Simulation.
