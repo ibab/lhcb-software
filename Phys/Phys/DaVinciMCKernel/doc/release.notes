@@ -5,6 +5,8 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v4r2p1 2011-01-18 ====================
+
 ! 2010-06-09 - V. Gligorov
  - Update BackCat documentation
 
