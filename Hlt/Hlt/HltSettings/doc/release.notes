@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r0p2 2011-01-18 ===================
 ! 2011-01-10 - Johannes Albrecht
  - resurrect micro bias Velo in Calibration_VeloMicroBias
 
