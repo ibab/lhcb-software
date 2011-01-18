@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-18 - Albert Puig Navarro
+ - Rewrite of InclusivePhiLines.
+
 !========================== Hlt2Lines v7r0 2010-12-08 ===================
 ! 2010-12-07 - Ulrich Kerzel
  - update cuts in Express Lines for Lambda and KShort
