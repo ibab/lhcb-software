@@ -1,0 +1,37 @@
+patch1 = { 'id' : '1c430de261b06df6ad68472e33c41f59'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+         }
+
+
+def updateL0( parent, tck, updates ) :
+	ids={}
+	ids[ tck ] = parent
+        mask = tck & 0x0000
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+	for (l0,comment) in updates :
+	  _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+	  ids[_tck] = updateL0TCK( ids[tck], l0, comment, cas = cas ) 
+	createTCKEntries( ids, cas = cas )
+
+
+
+
+def enableHlt2PassThrough( id, tck ) :
+        update =  { 'id'      : id
+                  , 'label'   : 'Disable L0-SPD, Enable Hlt2-PassThrough' 
+                  , 'updates' : {  'Hlt2PassThroughPreScaler' : {      'AcceptFraction': '1' }  }
+                  , 'cas'     : ConfigTarFileAccessSvc(Mode='ReadWrite')
+                  }
+	ids={ tck : updateProperties( **update ) }
+        createTCKEntries( ids, cas = update['cas'] )
+
+
+updateL0('fd9cbdf7186989af6e20a1b5be0b7c88',0x0014001f,[ ( '0x001e', 'Disable L0-SPD,PU' ) ] )
+enableHlt2PassThrough('fd9cbdf7186989af6e20a1b5be0b7c88',0x0013001f)
+
+updateL0('32aed9f8bb379ed71dca144e43b0dc88',0x00160021,[ ( '0x0020', 'Disable L0-SPD,PU' ) ] )
+enableHlt2PassThrough('32aed9f8bb379ed71dca144e43b0dc88',0x00150021)
+
+

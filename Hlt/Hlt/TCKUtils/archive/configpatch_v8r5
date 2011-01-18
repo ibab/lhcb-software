@@ -1,0 +1,6 @@
+
+patch1 = { 'id' : '6628a0de8b62736b4b09be89bc13d52b'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigFileAccessSvc()
+         }

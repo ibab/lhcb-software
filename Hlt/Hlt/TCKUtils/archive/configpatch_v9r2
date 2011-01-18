@@ -1,0 +1,144 @@
+
+patch1 = { 'id' : 'f2d67cf258fad757956ab22ca7d09d5e'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+         }
+
+#def fixSingleHadron( i,o ) :
+#	updates = [ ( 0x2810, 'Default'                      )
+#		  , ( 0x2710, 'Disable L0-SPD'               )
+#		  , ( 0x2610, 'Disable L0-PU'                )
+#		  , ( 0x2510, 'Disable L0-SPD,PU20'          ) 
+#		  , ( 0x2410, 'Disable L0-SPD,PU'            )
+#		  , ( 0x2310, 'Disable L0-SPD,PU20,FullBias' )
+#		  , ( 0x2210, 'Disable L0-SPD,PU,FullBias'   )
+#	          , ( 0x1710, 'Disable L0-SPD, L0-photon=139'   )
+#		  , ( 0x1410, 'Disable L0-SPD,PU, L0-photon=139')
+#		  ]
+#	ids = dict()
+#	for (l0,comment) in updates :
+#		patch = { 'id' :  tck2id(( ( i & 0xFFFF0000 ) | l0 ),ConfigTarFileAccessSvc())
+#			, 'updates' : { 'Hlt1LTUnbDiVF2FitTrack'  : { 'FilterDescriptor' : "[ 'FitVertexMaxChi2OverNdf,<,999.0' ]" } 
+#				      , 'Hlt1DiHadronVF2FitTrack' : { 'FilterDescriptor' : "[ 'FitVertexMaxChi2OverNdf,<,999.0' ]" } 
+#				      , 'Hlt1SingleHadronTF2FitTrack' : { 'FilterDescriptor': "[ 'FitChi2OverNdf,<,999.0' ]" }
+#				      } 
+#			, 'label' : comment
+#			, 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+#			}
+#		_tck = (( o & 0xFFFF0000 ) | l0 )
+#		print patch
+#		ids[ _tck ] = updateProperties( **patch ) 
+#	createTCKEntries( ids, cas =  ConfigTarFileAccessSvc(Mode='ReadWrite') )
+#
+#fixSingleHadron( 0x000a0000,0x000d0000)
+#fixSingleHadron( 0x000b0000,0x000e0000)
+#fixSingleHadron( 0x000c0000,0x000f0000)
+####################### ####################### #######################
+
+#### clone and update L0 TCKs for a set of configurations
+
+def updateL0( parent, tck ) :
+	ids={}
+	ids[ tck ] = parent
+        mask = tck & 0x0000
+	updates = [ ( '0x2710', 'Disable L0-SPD'               )
+		  , ( '0x2610', 'Disable L0-PU'                )
+		  , ( '0x2510', 'Disable L0-SPD,PU20'          ) 
+		  , ( '0x2410', 'Disable L0-SPD,PU'            )
+		  , ( '0x2310', 'Disable L0-SPD,PU20,FullBias' )
+		  , ( '0x2210', 'Disable L0-SPD,PU,FullBias'   )
+	          , ( '0x1810', 'Default, L0-photon=139'       )
+	          , ( '0x1710', 'Disable L0-SPD, L0-photon=139'   )
+		  , ( '0x1410', 'Disable L0-SPD,PU, L0-photon=139')
+		  ]
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+	for (l0,comment) in updates :
+	  _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+	  ids[_tck] = updateL0TCK( ids[tck], l0, comment, cas = cas ) 
+	createTCKEntries( ids, cas = cas )
+
+updateL0( '981f4de39439e6feaa4b901cbb2854a3', 0x000a2810 )
+updateL0( '691c9676a64d2fc4aad52b82938cf3d8', 0x000b2810 )
+updateL0( 'f8b4373947c08761be7f18aee8c03c5d', 0x000c2810 )
+
+updateL0( '6937375ee363dd25facec1f34d398a0d', 0x000d2810)
+updateL0( '18a198fb846b5723a4d8ef0b9bfbd682', 0x000e2810)
+updateL0( '2368dc8b004ffff46155ef7ce4a3781a', 0x000f2810)
+
+####################### ####################### #######################
+
+#def updateMBRate( old, new ) :
+#	labels = {  0x1810: 'Default, HltMB=100Hz'
+#		 ,  0x1710: 'Disable L0-SPD, HltMB=100Hz'
+#		 ,  0x1610: 'Disable L0-PU, HltMB=100Hz'
+#		 ,  0x1510: 'Disable L0-SPD,PU20, HltMB=100Hz'
+#		 ,  0x1410: 'Disable L0-SPD,PU, HltMB=100Hz'
+#		 ,  0x1310: 'Disable L0-SPD,PU20,FullBias, HltMB=100Hz'
+#		 ,  0x1210: 'Disable L0-SPD,PU,FullBias, HltMB=100Hz'
+#		 }
+#	patch = { 'id' : tck2id(old,ConfigTarFileAccessSvc())
+#		, 'updates' : { 'Hlt1MBMicroBiasRZVeloRateLimitedPostScaler'  : {  'Code':'RATE(50)' }
+#			      , 'Hlt1MBMicroBiasTStationRateLimitedPostScaler': {  'Code':'RATE(50)' }
+#			      , 'Hlt1L0AnyRateLimitedPostScaler'              : {  'Code':'RATE(10)' }
+#			      }
+#		, 'label' : labels[ old & 0x0000FFFF ]
+#		, 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+#		}
+#	ids = dict()
+#	ids[ ( new & 0xFFFF0000 ) | ( old &0x0000FFFF ) ] = updateProperties(**patch)
+#	createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+#
+#for i  in [ 0x1210,0x1310,0x1410,0x1510,0x1610,0x1710,0x1810 ] :
+#	updateMBRate( 0x000b0000 | i ,0x000d0000 )
+###	updateMBRate( 0x000c0000 | i ,0x000e0000 )
+
+
+def update2L0( parent, tck ) :
+	ids={}
+	ids[ tck ] = parent
+        mask = tck & 0x0000
+	updates = [ ( '0x001e', 'Disable L0-SPD,PU'               ) ]
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+	for (l0,comment) in updates :
+	  _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+	  ids[_tck] = updateL0TCK( ids[tck], l0, comment, cas = cas ) 
+	createTCKEntries( ids, cas = cas )
+
+
+
+update2L0('85fc94cd5950ecec83349ad979d6952c',0x000e001f)
+update2L0('adb3ba1633cb1eade83f24269b7efc55',0x000f001f)
+update2L0('2b9296eaaec128ab1d848c521009a699',0x0010001f)
+update2L0('626d961ceb962b09db24a386d4d90c06',0x0011001f)
+
+def update3L0( parent, tck ) :
+	ids={}
+	ids[ tck ] = parent
+        mask = tck & 0x0000
+	updates = [ ( '0x0020', 'Disable L0-SPD,PU' ) ]  
+        cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+        for (l0,comment) in updates :
+          _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+          ids[_tck] = updateL0TCK( ids[tck], l0, comment, cas = cas ) 
+        createTCKEntries( ids, cas = cas )
+
+update3L0('92d5049777c362b5fa3a464d931136b3',0x00120021)
+
+
+def addHlt2PassThroughToCore( ) :
+	ids={}
+        updates = [ { 'TCK' : 0x0012001e, 'id' : '9fc17daca4f4b3eeb893529536f202e7', 'label' : 'Disable L0-SPD,PU, Enable Hlt2-PassThrough' }
+                  , { 'TCK' : 0x0012001f, 'id' : '2b9296eaaec128ab1d848c521009a699', 'label' : 'Disable L0-SPD, Enable Hlt2-PassThrough' }
+		  ]
+        cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+        for update in updates :
+          tck = update.pop('TCK')	
+          update['cas'] = cas
+          update['updates'] = {  'Hlt2PassThroughPreScaler' : {      'AcceptFraction': '1' }  }
+          ids[ tck ] = updateProperties( **update )
+        createTCKEntries( ids, cas = cas )
+
+
+
+

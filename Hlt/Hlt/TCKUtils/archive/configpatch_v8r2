@@ -1,0 +1,31 @@
+
+patch1 = { 'id'       : '40d9202fdab4e6fbec5de5e41fe959aa'
+         , 'updates'  : { 'Hlt1VeloASidePreScaler'     : { 'AcceptFraction':'1' }
+                        , 'Hlt1VeloCSidePreScaler'     : { 'AcceptFraction':'1' }
+                        }
+         , 'label'    : 'Velo acc=1'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+patch1 = { 'id'       : '0279a88893bc9232a96a9357e0b11518'
+         , 'updates'  : { 'Hlt1ODINTechnicalODINFilter': { 'Code':'( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.AuxiliaryTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.TimingTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.CalibrationTrigger )' }
+                        }
+         , 'label'    : 'ODINTech,Aux,NZS,Timing,Calib acc=PVSS, TELL1Error acc=0 '
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+patch1 = { 'id'       : '0279a88893bc9232a96a9357e0b11518'
+         , 'updates'  : { 'Hlt1ODINTechnicalODINFilter': { 'Code':'( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.AuxiliaryTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.CalibrationTrigger )' }
+			, 'Hlt1ODINPhysicsODINFilter' : { 'Code':'( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.TimingTrigger )' }
+                        }
+         , 'label'    : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=0 '
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+
+patch1 = { 'id' : 'ad8e88ba295fbb2b9d54e65010eefcb1'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigFileAccessSvc()
+         }
+

@@ -1,0 +1,49 @@
+
+patch1 = { 'id' : 'de9aacfe29bee781766c06bc523111b5'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+         }
+
+#######################
+
+ids={}
+ids[ 0x00021810 ] = 'bcfe26c8d3c0d51154e37b179032d735'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x00020000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x00021810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+#######################
+
+
+prescales =  { 'Hlt1LumiPreScaler'                 : 0.00001
+             , 'Hlt1MBMicroBiasRZVeloPreScaler'    : 0.001
+             , 'Hlt1MBMicroBiasTStationPreScaler'  : 0.001
+             , 'Hlt1MBNoBiasPostScaler'            : 0.01
+             , 'Hlt1VeloCSidePreScaler'            : 1.0
+             , 'Hlt1VeloASidePreScaler'            : 1.0
+             }
+
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+updates = {}
+[ updates.update( { k:  { 'AcceptFraction' : '%s' % v }}) for (k,v) in prescales.iteritems() ]
+closingPatch = { 'id' : ids[0x00021210]
+               , 'updates' : updates
+               , 'label' : 'VeloClosing, Disable L0-SPD,PU,FullBias, Prescale Hlt1-Lumi,MB, Enable Hlt1Velo'
+               , 'cas' : cas
+               }
+id = updateProperties(**closingPatch)
+
+createTCKEntries({ 0x10021210: id},cas=cas)
+
+

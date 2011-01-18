@@ -1,0 +1,35 @@
+
+
+def enableHlt2BeamGasPassThrough( id, tck, comment ) :
+        update =  { 'id'      : id
+                  , 'label'   : comment
+                  , 'updates' : {  'Hlt2TransparentHltFilter' : {      'Code': "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|BeamGas.*|Velo.*|Incident|Tell1Error|HadronMonComp|ErrorEvent)Decision$')" }  }
+                  , 'cas'     : ConfigTarFileAccessSvc(Mode='ReadWrite')
+                  }
+        ids={ tck : updateProperties( **update ) }
+        createTCKEntries( ids, cas = update['cas'] )
+
+
+enableHlt2BeamGasPassThrough('8b35c2fcdd5f8f90e297b1d1efbd0a0c',0x0019001f,'Disable L0-SPD')
+enableHlt2BeamGasPassThrough('2458edea269e8c58b5d4d3211b8dafa8',0x001a001f,'Disable L0-SPD, Enable Hlt2-PassThrough')
+
+
+
+
+
+def updateL0( parent, tck, updates ) :
+        ids={}
+        ids[ tck ] = parent
+        mask = tck & 0x0000
+        cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+        for (l0,comment) in updates :
+	  print comment
+          _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+          ids[_tck] = updateL0TCK( ids[tck], l0, comment, cas = cas ) 
+        createTCKEntries( ids, cas = cas )
+
+
+updateL0('8d1a00ec22af25933e68cd71e901c483',0x0019001f,[ ( '0x0023', 'Disable L0-SPD, SpdMult-lt-650' ) ] )
+updateL0('8d1a00ec22af25933e68cd71e901c483',0x0019001f,[ ( '0x0024', 'Disable L0-SPD, SpdMult-lt-600' ) ] )
+
+

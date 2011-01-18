@@ -1,0 +1,116 @@
+
+def initialTCKs() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+
+	ids = { 0x808e0000 : '715e64917f285705f2dc5828e61373ad' }
+
+	patch1 = { 'id' : '715e64917f285705f2dc5828e61373ad'
+		 , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+		 , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+		 , 'cas'   : cas
+		 }
+	ids[ 0x808f0000 ] = updateProperties( **patch1 )
+	ids[ 0x80900000 ] = '86a8c5ab01440743a4c6bee5330b04aa'
+
+	createTCKEntries( ids, cas =  cas )
+
+
+def switchOffOld(id) :
+   # keep: 1Track.*, SingleMuonNoIP, DiMuonNoIP, ElectronTrackNoIP
+   #        and all the 'technical' stuff
+   keep = [ '4BsMuMu', 'Hlt1Track','Hlt1SingleElectronNoIP','SingleMuonNoIPL0', 'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoPV','ElectronTrackNoIP'
+          , 'Hlt1Lumi','Hlt1L0','Hlt1MB', 'Hlt1BeamGas','Hlt1Global','Hlt1Error','Hlt1Incident','Hlt1ODIN','Hlt1Tell1','Hlt1NZS']
+   x = getProperties(id,'Hlt1.*PreScaler','AcceptFraction')
+   updates = {}
+   for i in x :
+     if [ k for k in keep if i[0].find(k)!=-1 ] : continue
+     updates[ i[0].split('/')[-1] ] =  { 'AcceptFraction':'0' }
+   print updates
+   return updateProperties( id, updates, label = 'L0-hadron=130, Hlt1=Track+NoIP', cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+
+def switchOffBsMuMu(id, label ) :
+   updates = { 'Hlt1SingleMuon4BsMuMuPreScaler' : { 'AcceptFraction':'0' }
+             , 'Hlt1DiMuon4BsMuMuPreScaler'     : { 'AcceptFraction':'0' }
+             }
+   return updateProperties( id, updates, label, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+
+
+
+def updateL0( parent, tck, updates, extra = None ) :
+        ids={}
+        ids[ tck ] = parent
+        mask = tck & 0x0000
+        cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+        for (l0,label) in updates :
+	  print label
+          _tck = ( (tck&0xFFFF0000) | int(l0,16)  )
+          ids[_tck] = updateL0TCK( ids[tck], l0, label, cas = cas, extra = extra ) 
+        createTCKEntries( ids, cas = cas )
+
+#ids  = { 0x001b0028: '79b6c1dd259bb37f1d31d0664f676a44' }
+#ids  = { 0x001b0028: 'ff2aa536ff79d5b8c61f29702e28e1f5' }
+ids = { 0x001d0030: '5713a1c6b1e7b046cda9afa65492a4c1' }
+ids[ 0x001e0030 ] = switchOffOld( ids[0x001d0030] )
+createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+updateL0( ids[ 0x001e0030 ], 0x001f0029
+        , [ ( '0x0029', 'L0-hadron=180, Hlt1=Track+NoIP' ) ] 
+	, extra = { 'Hlt1ElectronTrackNoIPPreScaler' :   { 'AcceptFraction':'0.2' } 
+                  , 'Hlt1SingleMuonNoIPL0PreScaler' : { 'AcceptFraction':'0.2' }
+                  }
+        )
+updateL0( ids[ 0x001e0030 ], 0x001f0031
+        , [ ( '0x0031', 'L0-hadron=180,SPD-lt-450, Hlt1=Track+NoIP' ) ] 
+	, extra = { 'Hlt1ElectronTrackNoIPPreScaler' :   { 'AcceptFraction':'0.2' } 
+                  , 'Hlt1SingleMuonNoIPL0PreScaler' : { 'AcceptFraction':'0.2' }
+                  }
+        )
+
+#
+#ids  = { 0x001b0028: '6b398939bb4483e387794440de0b99d3' }
+#ids[ 0x001c0028 ] = switchOffOld( ids[0x001b0028] )
+#createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+#updateL0( ids[ 0x001c0028 ], 0x001c0028
+#        #, [ ( '0x0027', 'L0-hadron=180, Hlt1=Track+NoIP' ) ] 
+#	#, extra = { 'Hlt1ElectronTrackNoIPPreScaler' :   { 'AcceptFraction':'0.2' } }
+#        #)
+#
+##
+#ids  = { 0x001d0028: 'ffd3c64dbfabab26e640047d255f3193' }
+#ids[ 0x001e0028 ] = switchOffOld( ids[0x001d0028] )
+#createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+#updateL0( ids[ 0x001e0028 ], 0x001e0028
+#        #, [ ( '0x0027', 'L0-hadron=180, Hlt1=Track+NoIP' ) ] 
+#	#, extra = { 'Hlt1ElectronTrackNoIPPreScaler' :   { 'AcceptFraction':'0.2' } }
+#        #)
+#
+######
+#
+#ids = {}
+#ids[ 0x001f0027 ] = switchOffBsMuMu( 'cad2447b4e43f32aeddefbd98b14b44a', 'L0-hadron=180, Hlt1=Track+NoIP, DisableHlt1Bs2MuMu')
+#ids[ 0x00200028 ] = switchOffBsMuMu( 'ffd3c64dbfabab26e640047d255f3193', 'L0-hadron=130, Hlt1=All, DisableHlt1Bs2MuMu')
+#ids[ 0x00210028 ] = switchOffBsMuMu( 'e0fe9b6a2132be1bf20dbba0c90290d4', 'L0-hadron=130, Hlt1=Track+NoIP, DisableHlt1Bs2MuMu')
+#createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+id = updateProperties('82f0371f8fd06f79da2ead284869ee04'
+                     ,{ 'Hlt1TrackAllL0TFOTIP' : { 'FilterDescriptor': "[ 'IP_PV3D,>,0.100' ]" }
+                      , 'Hlt1TrackMuonTFOTIP' : { 'FilterDescriptor': "[ 'IP_PV3D,>,0.100' ]" }} 
+                     , label = 'L0-hadron=180, Hlt1=Track+NoIP, DisableHlt1Bs2MuMu, TrackAll,MuonIP=0.100' , cas = cas )
+createTCKEntries( { 0x00230027 : id } , cas = cas )
+
+
+def switchOffAllOld(id) :
+   # keep: 1Track.*, SingleMuonNoIP, DiMuonNoIP, ElectronTrackNoIP
+   #        and all the 'technical' stuff
+   keep = [ 'Hlt1Track' , 'Hlt1Lumi','Hlt1L0','Hlt1MB', 'Hlt1BeamGas','Hlt1Global','Hlt1Error','Hlt1Incident','Hlt1ODIN','Hlt1Tell1','Hlt1NZS']
+   x = getProperties(id,'Hlt1.*PreScaler','AcceptFraction')
+   updates = {}
+   for i in x :
+     if [ k for k in keep if i[0].find(k)!=-1 ] : continue
+     updates[ i[0].split('/')[-1] ] =  { 'AcceptFraction':'0' }
+   print updates
+   return updateProperties( id, updates, label = 'L0-hadron=180, Hlt1=TrackOnly', cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+
+
+x = switchOffAllOld('cad2447b4e43f32aeddefbd98b14b44a')
+createTCKEntries({0x00210027:x},cas=cas)

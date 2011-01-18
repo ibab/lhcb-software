@@ -1,0 +1,47 @@
+
+patch1 = { 'id' : '40d9202fdab4e6fbec5de5e41fe959aa'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'0' } 
+                       , 'Hlt1L0AnyL0DUFilter' : { 'Code': 'L0_DECISION' }
+		       }
+         , 'label' : 'Default'
+         , 'cas'   : ConfigFileAccessSvc()
+         }
+
+patch1 = { 'id' : 'dbd4640d8e64726f2d22d310b5fd58d7'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'0' } 
+                       , 'Hlt1L0AnyL0DUFilter' : { 'Code': 'L0_DECISION' }
+		       }
+         , 'label' : 'Velo acc=1'
+         , 'cas'   : ConfigFileAccessSvc()
+         }
+
+
+
+
+patch1 = { 'id' : '17f987780c68a823914490fe8e275d42'
+        , 'updates' : {  'Hlt1VeloASideVFDecision'                              : { 'FilterDescriptor' :  "[ 'VertexNumberOfASideTracks,>,2' ]" }
+		      ,  'Hlt1VeloASidePatPV3D.PVOfflineTool.PVSeed3DTool'      : { 'MinCloseTracks' : '1' }
+                      ,  'Hlt1VeloASidePatPV3D.PVOfflineTool.LSAdaptPV3DFitter' : { 'MinTracks' : '3' 
+                                                                                  , 'TrackErrorScaleFactor' : '2.0' 
+										  }
+                      ,  'Hlt1VeloCSideVFDecision'                              : { 'FilterDescriptor' :  "[ 'VertexNumberOfCSideTracks,>,2' ]" }
+		      ,  'Hlt1VeloCSidePatPV3D.PVOfflineTool.PVSeed3DTool'      : { 'MinCloseTracks' : '1' }
+                      ,  'Hlt1VeloCSidePatPV3D.PVOfflineTool.LSAdaptPV3DFitter' : { 'MinTracks' : '3' 
+                                                                                  , 'TrackErrorScaleFactor' : '2.0' 
+										  }
+                      }
+        , 'label' : 'Velo acc=1, relaxedPV3D'
+        , 'cas'   : ConfigFileAccessSvc()
+        }
+
+patch2 = patch1
+patch2.update( { 'id' : '3c51bda1431ccaff965ea40de6b30b4e' , 'label' : 'Default, relaxedPV3D' } )
+
+
+patch =  { 'id' : 'ab50f57d6feff60f5fcd249fdc9cc9b9'
+         , 'updates' : { 'Hlt1VeloASidePreScaler' : { 'AcceptFraction' : '1' } 
+                       , 'Hlt1VeloCSidePreScaler' : { 'AcceptFraction' : '1' } 
+                       }
+         , 'label' : 'Velo acc=1'
+         , 'cas'   : ConfigFileAccessSvc()
+         }

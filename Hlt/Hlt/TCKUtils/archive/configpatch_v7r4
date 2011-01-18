@@ -1,0 +1,28 @@
+
+patch1 = { 'id'       : 'c6b1f55a87273dca46639fb05c3b0f0a'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'@OnlineEnv.AcceptRate' }
+                        , 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } 
+                        }
+         , 'label'    : 'ODINRandom accept=PVSS, TELL1Error accept=1'
+         }
+
+patch2 = { 'id'       : 'c6b1f55a87273dca46639fb05c3b0f0a'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'@OnlineEnv.AcceptRate' }
+                        , 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'0' } 
+                        }
+         , 'label'    : 'ODINRandom accept=PVSS, TELL1Error accept=0'
+         }
+
+patch3 = { 'id'       : 'cf5731ff0b7133eaafa7f97fc38010b0'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'0.1' } }
+         , 'label'    : 'ODINRandom accept=0.1, TELL1Error accept=0'
+         }
+
+cas = ConfigFileAccessSvc()
+for patch in ( patch1, patch2, patch3 ) :
+    updateProperties(patch['id'], patch['updates'], patch['label'],cas=cas)
+     
+
+
+
+ 

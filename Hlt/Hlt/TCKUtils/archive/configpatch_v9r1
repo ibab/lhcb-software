@@ -1,0 +1,162 @@
+
+patch1 = { 'id' : 'd684c7e76cbf23c1ff823afa5fa36973'
+         , 'updates' : { 'Hlt1Tell1ErrorPreScaler' : { 'AcceptFraction':'1' } }
+         , 'label' : 'ODINPhys,Timing acc=1, ODINTech,Aux,NZS,Calib acc=PVSS, TELL1Error acc=1'
+         , 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+         }
+
+####################### ####################### #######################
+
+ids={}
+ids[ 0x00051810 ] = 'aea292b6e4b319f2e2c3488163522a65'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x00050000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x00051810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+
+####################### ####################### #######################
+
+ids={}
+ids[ 0x00061810 ] = '11d0c37fcedd7233b81854559044af30'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x00060000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x00061810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+#######################
+
+
+####################### ####################### #######################
+
+ids={}
+ids[ 0x00071810 ] = '6213e73147d43610fb79c1c49601ae6c'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x00070000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x00071810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+####################### ####################### #######################
+
+ids={}
+ids[ 0x00081810 ] = '579b5715f417b79178766aa3abcf4483'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x00080000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x00081810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+
+
+
+###################################################
+
+updates = [ ( 0x00081810, 'Default, HltMB=100Hz'               )
+	  , ( 0x00081710, 'Disable L0-SPD, HltMB=100Hz'               )
+          , ( 0x00081610, 'Disable L0-PU, HltMB=100Hz'                )
+          , ( 0x00081510, 'Disable L0-SPD,PU20, HltMB=100Hz'          ) 
+          , ( 0x00081410, 'Disable L0-SPD,PU, HltMB=100Hz'            )
+          , ( 0x00081310, 'Disable L0-SPD,PU20,FullBias, HltMB=100Hz' )
+          , ( 0x00081210, 'Disable L0-SPD,PU,FullBias, HltMB=100Hz'   )
+          ]
+
+ids = { }
+for i in updates :
+	patch = { 'id' : tck2id(i[0],ConfigTarFileAccessSvc())
+                , 'updates' : { 'Hlt1MBMicroBiasRZVeloRateLimitedPostScaler'  : {  'Code':'RATE(50)' }
+			      , 'Hlt1MBMicroBiasTStationRateLimitedPostScaler': {  'Code':'RATE(50)' }
+			      , 'Hlt1L0AnyRateLimitedPostScaler'              : {  'Code':'RATE(10)' }
+			      }
+         	, 'label' : i[1]
+         	, 'cas'   : ConfigTarFileAccessSvc(Mode='ReadWrite')
+         	}
+  	tck = ( 0x00090000 | ( i[0]&0x0000FFFF ) )
+        ids[ tck ] = updateProperties(**patch)
+
+
+createTCKEntries( ids, cas = ConfigTarFileAccessSvc(Mode='ReadWrite') )
+
+
+
+
+###################################################
+# the 'canary' Hlt2 configurations....
+#
+ids={}
+ids[ 0x000a1810 ] = 'd4672efe4747f806fc14a36f29e62678'
+updates = [ ( '0x1710', 'Disable L0-SPD'               )
+          , ( '0x1610', 'Disable L0-PU'                )
+          , ( '0x1510', 'Disable L0-SPD,PU20'          ) 
+          , ( '0x1410', 'Disable L0-SPD,PU'            )
+          , ( '0x1310', 'Disable L0-SPD,PU20,FullBias' )
+          , ( '0x1210', 'Disable L0-SPD,PU,FullBias'   )
+          ]
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+for (l0,comment) in updates :
+  tck = ( 0x000a0000 | int(l0,16)  )
+  ids[tck] = updateL0TCK( ids[0x000a1810], l0, comment, cas = cas ) 
+   
+createTCKEntries( ids, cas = cas )
+
+updates = [ ( 0x000a1810, 'Default, HltMB=100Hz'               )
+          , ( 0x000a1710, 'Disable L0-SPD, HltMB=100Hz'               )
+          , ( 0x000a1610, 'Disable L0-PU, HltMB=100Hz'                )
+          , ( 0x000a1510, 'Disable L0-SPD,PU20, HltMB=100Hz'          )
+          , ( 0x000a1410, 'Disable L0-SPD,PU, HltMB=100Hz'            )
+          , ( 0x000a1310, 'Disable L0-SPD,PU20,FullBias, HltMB=100Hz' )
+          , ( 0x000a1210, 'Disable L0-SPD,PU,FullBias, HltMB=100Hz'   )
+          ]
+
+ids = { }
+for i in updates :
+        patch = { 'id' : tck2id(i[0],ConfigTarFileAccessSvc())
+                , 'updates' : { 'Hlt1MBMicroBiasRZVeloRateLimitedPostScaler'  : {  'Code':'RATE(50)' }
+                              , 'Hlt1MBMicroBiasTStationRateLimitedPostScaler': {  'Code':'RATE(50)' }
+                              , 'Hlt1L0AnyRateLimitedPostScaler'              : {  'Code':'RATE(10)' }
+                              }
+                , 'label' : i[1]
+                , 'cas'   : cas
+                }
+        tck = ( 0x000b0000 | ( i[0]&0x0000FFFF ) )
+        ids[ tck ] = updateProperties(**patch)
+
+
+createTCKEntries( ids, cas = cas )
+##########
+
+

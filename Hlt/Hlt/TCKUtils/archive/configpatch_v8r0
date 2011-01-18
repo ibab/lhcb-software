@@ -1,0 +1,91 @@
+
+patch1 = { 'id'       : '45d4270f4bf8d45f00a355e4a05cd68e'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'@OnlineEnv.AcceptRate' }
+                        }
+         , 'label'    : 'ODINRandom acc=PVSS, TELL1Error acc=1'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+patch2 = { 'id'       : '7b8ae9040123bc9cd6e14037c512debd'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'1' }
+                        , 'Hlt1NonRandomODINPreScaler'     : { 'AcceptFraction':'1' }
+                        }
+         , 'label'    : 'ODINRandom=1, ODINNonRandom=1'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+
+patch3 = { 'id'       : '7b8ae9040123bc9cd6e14037c512debd'
+         , 'updates'  : { 'Hlt1VeloASidePreScaler'     : { 'AcceptFraction':'1' }
+                        , 'Hlt1VeloCSidePreScaler'     : { 'AcceptFraction':'1' }
+                        }
+         , 'label'    : 'ODINRandom=0.000001, ODINNonRandom=0.000001, Velo=1'
+         , 'cas'      : ConfigFileAccessSvc()
+         }
+
+patch4 = { 'id'       : 'ebed1a8817380439d87b04fcdd11c557'
+         , 'updates'  : { 'Hlt1RandomODINPreScaler'     : { 'AcceptFraction':'1' }
+                        , 'Hlt1NonRandomODINPreScaler'     : { 'AcceptFraction':'1' }
+                        }
+         , 'label'    : 'ODINRandom=1, ODINNonRandom=1'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+### lumi   : ODIN : RANDOM -> AUX (for new firmware, old code) 
+### future : ODIN : RANDOM -> LUMI  (new firmware, new ODIN.h)
+
+patch5 = { 'id'       : '7b8ae9040123bc9cd6e14037c512debd'
+         , 'updates'  : { 'Hlt1LumiNoBeamODINFilter'       : { 'Code': '( ODIN_TRGTYP == LHCb.ODIN.AuxilliaryTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.NoBeam )' }
+                        , 'Hlt1LumiBeamCrossingODINFilter' : { 'Code': '( ODIN_TRGTYP == LHCb.ODIN.AuxilliaryTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' }
+                        , 'Hlt1LumiBeam1ODINFilter'        : { 'Code': '( ODIN_TRGTYP == LHCb.ODIN.AuxilliaryTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam1 )' }
+                        , 'Hlt1LumiBeam2ODINFilter'        : { 'Code': '( ODIN_TRGTYP == LHCb.ODIN.AuxilliaryTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam2 )' }
+                        }
+         , 'label'    : 'ODINRandom=0.000001, ODINNonRandom=0.000001, LumiAux(ODINv6)'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+
+patch6 = { 'id'       : '1ac33eb5c28a133c9d64aebbbe5973fd'
+         , 'updates'  : { 'Hlt1Tell1ErrorPreScaler'     : { 'AcceptFraction':'0' }
+                        }
+         , 'label'    : 'ODINRandom acc=PVSS, TELL1Error acc=0'
+	 , 'cas'      : ConfigFileAccessSvc()
+         }
+
+
+patch7 = { 'id'      : 'b35ad7145c056125b730318eea9b4291'
+         , 'updates' :  { 'Hlt1PhotonTrackPreScaler'          : { 'AcceptFraction':'0' }
+	                , 'Hlt1PhotonFromEleTrackPreScaler'   : { 'AcceptFraction':'0' }
+	                , 'Hlt1PhotonDiTrackPreScaler'        : { 'AcceptFraction':'0' }
+	                , 'Hlt1PhotonFromEleDiTrackPreScaler' : { 'AcceptFraction':'0' }
+                        }
+         , 'label'   : 'Hlt1Photon.*=0'
+	 , 'cas'     : ConfigFileAccessSvc()
+         }
+ 
+
+patch8 = { 'id'      : '826f2a400d4795393666ce69a73828c9'
+         , 'updates' :  { 'LumiStripperPrescaler'          : { 'AcceptFraction':'0' }
+                        }
+         , 'label'   : 'Hlt1Photon.*=0, DoNotStripLumiExclusiveEvents'
+	 , 'cas'     : ConfigFileAccessSvc()
+         }
+
+
+patch9 = { 'id'      : 'fe0c7d313663a3ed06ba05dac37136d6'
+         , 'updates' :  { 'Hlt1LumiNoBeamPreScaler'       : { 'AcceptFraction':'0.001'}
+			, 'Hlt1LumiBeamCrossingPreScaler' : { 'AcceptFraction':'0.001'}
+			, 'Hlt1LumiBeam1PreScaler'        : { 'AcceptFraction':'0.001'}
+			, 'Hlt1LumiBeam2PreScaler'        : { 'AcceptFraction':'0.001'}
+                        }
+         , 'label'   : 'Hlt1Photon.*=0, Hlt1Lumi.*=0.001, DoNotStripLumiExclusiveEvents'
+	 , 'cas'     : ConfigFileAccessSvc()
+         }
+
+
+for patch in ( patch4 ) :
+    updateProperties(**patch)
+
+
+
+
