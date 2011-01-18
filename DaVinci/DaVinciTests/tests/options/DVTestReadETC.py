@@ -25,5 +25,5 @@ DaVinci().Input   = [
 from Configurables import  TagCollectionSvc
 ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
 
-FileCatalog().Catalogs = [ "xmlcatalog_file:$DAVINCIROOT/options/MC09-Bs2JpsiPhiDst.xml" ]
+FileCatalog().Catalogs = [ "xmlcatalog_file:$DAVINCITESTSROOT/tests/options/Stripping/Sim2010_Bs2JpsiPhi.xml" ]
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

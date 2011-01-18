@@ -10,8 +10,8 @@
 findReferenceBlock("""
 StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        18 |         18 |(  100.000 +- 5.55556  )%|   -------   |   -------   |
- | "#errors"                                       |        18 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |        13 |         13 |(  100.000 +- 7.69231  )%|   -------   |   -------   |
+ | "#errors"                                       |        13 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

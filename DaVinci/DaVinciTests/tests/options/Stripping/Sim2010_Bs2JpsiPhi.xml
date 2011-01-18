@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="2C580501-EF03-E011-8F76-0030487CB9F0">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>
