@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v3r0 2011-01-18 ===================
 ! 2011-01-16 - Victor Coco
  - Modify the saving of candidates to match the new requirements
 
