@@ -6,4 +6,4 @@ from Gaudi.Configuration import *
 
 EventSelector().Input   = [
 "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008414/0000/00008414_00000106_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
-FileCatalog().Catalogs = [ 'xmlcatalog_file:Sim2010_Bd2JpsiKs.xml' ]
+FileCatalog().Catalogs = [ 'xmlcatalog_file:$DAVINCITESTSROOT/tests/options/Stripping/Sim2010_Bd2JpsiKs.xml' ]
