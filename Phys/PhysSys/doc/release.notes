@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v10r0>2011-01-18 Phys v10r0 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v10r0                                  #
+###############################################################################
+
+- Based on LHCb v31r8 and Gaudi v21r11. Post-stripping12 development version.
+
+ * DVAlgorithm/DaVinciTools:
+   . No use made of IPhysDesktop anymore! Use DVAlgorithm methods directly.
+
 </PRE><H1><A NAME=v9r13>2010-12-17 Phys v9r12 </A></H1><PRE>
 
 ###############################################################################
