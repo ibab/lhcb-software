@@ -1,9 +1,9 @@
 package HltSys
-version v12r1
+version v12r2
 
 branches cmt doc 
 
-use Hlt1Lines           v6r0    Hlt   # Gerhard Raven
+use Hlt1Lines           v6r1    Hlt   # Gerhard Raven
 use Hlt2Lines           v7r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
 use Hlt2SharedParticles v5r0    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v10r2   Hlt   # Gerhard Raven
@@ -11,7 +11,7 @@ use HltBeamGasAlley     v2r3p1  Hlt   # Plamen Hopchev    ##### still TODO: use 
 use HltCommon           v7r1    Hlt   # Gerhard Raven
 use HltConf             v9r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v2r5    Hlt   # Neil Gauvin
+use HltDisplVertices    v3r0    Hlt   # Neil Gauvin, Victor Coco
 use HltEcalAlley        v3r0    Hlt   # Mariusz Witek
 use HltGlobalMonitor    v3r6p4  Hlt   # Bruno de Paula
 use HltHidValley        v1r3p1  Hlt   # Marcin Kucharczyk
@@ -23,14 +23,14 @@ use HltMuon             v3r6p2  Hlt   # Alessia Satta
 use HltRawData          v2r9    Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v11r1p1 Hlt   # Patrick Koppenburg
-use HltSettings         v5r0    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r0p2  Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r0    Hlt   # Tomasz Skwarnicki
 use HltTracking         v8r0p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
-use TCKUtils            v1r6p9  Hlt   # Gerhard Raven
+use TCKUtils            v1r6p10 Hlt   # Gerhard Raven
 use Fidel               v1r4p1  Phys  # Sara Furcas
 use LoKiTrigger         v11r2   Phys  # Vanya Belyaev
-use LoKiTracks          v1r4    Phys  # Vanya Belyaev
+use LoKiTracks          v1r5    Phys  # Vanya Belyaev
 
 
 # Declare this as a container package
