@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgo v9r3 2011-01-18 ==========================
+
 ! 2011-01-11 - Juan Palacios
  - Adapt to changes in DVAlgorithm protected methods.
 
