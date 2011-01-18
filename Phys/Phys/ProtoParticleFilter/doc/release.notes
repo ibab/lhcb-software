@@ -4,6 +4,8 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+!===================== ProtoParticleFilter v1r6 2011-01-18 =================
+
 ! 2011-01-14 - Chris Jones
  - Add support for new ANN probability PID variables
 
