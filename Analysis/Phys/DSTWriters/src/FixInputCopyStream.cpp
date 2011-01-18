@@ -53,7 +53,7 @@ StatusCode FixInputCopyStream::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  const IDataStoreLeaves::LeavesList & leaves = m_leavesTool->leaves();
+  m_leavesTool->leaves();
 
   return StatusCode::SUCCESS;
 }

@@ -6,7 +6,7 @@ __version__ = "$Id: BaseDSTWriter.py,v 1.12 2010-08-12 11:15:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from GaudiConf.Configuration import *
-from Configurables import FixInputCopyStream
+
 
 class BaseDSTWriter(ConfigurableUser) :
     """
@@ -119,6 +119,9 @@ class BaseDSTWriter(ConfigurableUser) :
         BaseDSTWriter configuration
         """
         log.info("Configuring BaseDSTWriter")
+
+        from Configurables import FixInputCopyStream
+        
         for sel in self.selectionSequences() :
             seq = GaudiSequencer("."+sel.name(), Members = [sel.sequence()],
                                  MeasureTime=True)

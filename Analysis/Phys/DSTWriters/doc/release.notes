@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-01-18 - Juan Palacios
+ - Fix build warnings.
+
 ! 2011-01-10 - Juan Palacios
  - Added C++ algorithm FixInputCopyStream, a  GaudiAlgorithm to fix 
    interference problems between OutputStream and InputCopyStream. 
