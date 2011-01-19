@@ -38,6 +38,11 @@
 	<arg type="int" name="pu" inout="BOTH"/>
       </method>      
 
+      <method name="index" type="long" const="TRUE" virtual="TRUE" inline="TRUE" 
+              desc="Avoids hiding base class method, ICC warning 1125">
+	<code> return ContainedObject::index(); </code>
+      </method>      
+
       <method name="decoding_data" type="bool" const="TRUE" inline="TRUE" 
               desc="True if an error occurred in the bank containing data">
 	<code> return ((m_decoding&amp;0x2)&gt;0); </code>

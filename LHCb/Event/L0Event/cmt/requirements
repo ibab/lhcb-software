@@ -30,7 +30,7 @@ macro_append L0EventObj2Dict_dependencies L0EventCustomDict
 apply_pattern god_dictionary files=../xml/*.xml
 # Disable some compiler warnings in the automatically generated dict code
 macro_append L0EventDict_cppflags "" \
-                       target-icc " -wd191 -wd1125"
+                       target-icc " -wd191"
 
 # Make the link library
 #============================================================================
