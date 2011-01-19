@@ -6,11 +6,12 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r4 2011-01-19 ============
+
 ! 2011-01-19 - Juan Palacios
  - Replace all calls to IPhysDesktop by new DVAlgorithm methods.
  - Increase to v6r4.
  - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
-
 
 !========================== FlavourTaggingChecker v6r3 2011-01-19 ============
 
