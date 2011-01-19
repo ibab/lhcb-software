@@ -11,8 +11,15 @@ Purpose             : LHCb physics packages
 
 - Based on LHCb v31r8 and Gaudi v21r11. Post-stripping12 development version.
 
+ *** Backwards incompatible version ***
+
  * DVAlgorithm/DaVinciTools:
    . No use made of IPhysDesktop anymore! Use DVAlgorithm methods directly.
+   . Simplification of DVAlgorithm derived classes.
+ * Improvements to KalmanFilter, LoKiFitters
+ * New symbols added to LoKiPhys, LoKiProtoParticles.
+ * ProtoParticleFilter: support for ANN prob. PID variables.
+ 
 
 </PRE><H1><A NAME=v9r13>2010-12-17 Phys v9r12 </A></H1><PRE>
 
