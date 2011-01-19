@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Olivier Callot
+ - Fix the nPRVelo3DExpect track extrainfo value. A factor 2 was missing,
+
 !========================= FastVelo v1r3 2011-01-17 =========================
 ! 2010-12-17 - Olivier Callot
  - Several improvements for higher efficiency at high nu. Mainly a change

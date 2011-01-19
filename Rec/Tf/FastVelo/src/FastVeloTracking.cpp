@@ -685,7 +685,8 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     }
     //== Add the number of found + missed R hits. Note that 'missed' is incomplete as we stop
     //== searching missed sensors after the maximum number of missed sensors has been reached.
-    newTrack->addInfo( LHCb::Track::nPRVelo3DExpect, (*itT).nbRHits() + (*itT).nbMissedSensors() );
+    //== Multiply by 2 to mimic the previous implementation in Pat.
+    newTrack->addInfo( LHCb::Track::nPRVelo3DExpect, 2 * ( (*itT).nbRHits() + (*itT).nbMissedSensors() ) );
 
     double zMin = 1.e9;
     double zMax = -1.e9;
