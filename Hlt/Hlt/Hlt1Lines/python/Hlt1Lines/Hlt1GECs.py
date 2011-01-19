@@ -25,7 +25,7 @@ def Hlt1GECLoose( reject = True ):
     from HltLine.HltLine import bindMembers, Hlt1Tool
     from Configurables import LoKi__VoidFilter as VoidFilter
     
-    tool = Hlt__GEC( "ActualGECsLoose", MaxOTHits = 10000, MaxITHits = 3000, MaxVeloHits = 4000 )
+    tool = Hlt__GEC( "ActualGECsLoose", MaxOTHits = 10000, MaxITHits = 3000, MaxVeloHits = 10000 )
 
     rej  = VoidFilter("Hlt1GECRejectLoose")
     rej.Code = "ACCEPT('%s')" % tool.getFullName()
