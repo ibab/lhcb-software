@@ -76,7 +76,8 @@ if __name__ == '__main__' :
                 protoParticle = p.proto()
                 if protoParticle :
                     nProtoParticles += 1
-
+                    print protoParticle
+                    print protoParticle.track()
     if verbose :
         print '======================================================================================'
         print 'Checked location', particleLocation
