@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! ======================= DisplVerticesMC v1r3 2011-01-19 ====================
+
 ! 2011-01-16 - Victor Coco
  - Modify the saving of candidates to match the new requirements
 
