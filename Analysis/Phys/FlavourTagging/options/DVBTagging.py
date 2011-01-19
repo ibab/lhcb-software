@@ -86,7 +86,7 @@ DaVinci().CondDBtag  = "sim-20100222-vc-md100"
 
 DaVinci().MoniSequence = [  cheatsel,
                             tag,
-                            tagcheck
+#                            tagcheck
                          ]  # The algorithms
 
 ########################################################################
@@ -94,6 +94,8 @@ DaVinci().MoniSequence = [  cheatsel,
 #
 # example data file (Bs2DsPi)
 #
+#EventSelector().Input = [ "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#bsjpsiphi
+EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-EventSelector().Input = [ "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'" ]
 

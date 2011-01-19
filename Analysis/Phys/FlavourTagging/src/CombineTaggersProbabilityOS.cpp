@@ -1,39 +1,39 @@
-#include "CombineTaggersProbability.h"
+#include "CombineTaggersProbabilityOS.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CombineTaggersProbability v1.3
+// Implementation file for class : CombineTaggersProbabilityOS v1.
 //
-// 2006-10-02 : Marco Musy 
+// 2011-01-18 : Marc Grabalosa 
 //-----------------------------------------------------------------------------
 
 using namespace LHCb ;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( CombineTaggersProbability );
+DECLARE_TOOL_FACTORY( CombineTaggersProbabilityOS );
 
 //=============================================================================
-CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
+CombineTaggersProbabilityOS::CombineTaggersProbabilityOS( const std::string& type,
 						      const std::string& name,
 						      const IInterface* parent ):
   GaudiTool ( type, name, parent ) { 
   declareInterface<ICombineTaggersTool>(this);
 
-  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.38 );
-  declareProperty( "OmegaScale",  m_omegascale  = 0.07 );
-  declareProperty( "ProbMin",     m_ProbMin     = 0.56 );
+  declareProperty( "OmegaMaxBin_OS", m_omegamaxbin_OS = 0.38 );
+  declareProperty( "OmegaScale_OS",  m_omegascale_OS  = 0.07 );
+  declareProperty( "ProbMin_OS",     m_ProbMin_OS     = 0.56 );
 
-  declareProperty( "P0_Cal_All",  m_P0_Cal_All   = 0.373); 
-  declareProperty( "P1_Cal_All",  m_P1_Cal_All   = 1.07 ); 
-  declareProperty( "Eta_Cal_All", m_Eta_Cal_All  = 0.348); 
+  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.364); 
+  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 1.08 ); 
+  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.338);
 
 }
-CombineTaggersProbability::~CombineTaggersProbability(){}
-StatusCode CombineTaggersProbability::initialize() { return StatusCode::SUCCESS; }
-StatusCode CombineTaggersProbability::finalize()   { return StatusCode::SUCCESS; }
+CombineTaggersProbabilityOS::~CombineTaggersProbabilityOS(){}
+StatusCode CombineTaggersProbabilityOS::initialize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersProbabilityOS::finalize()   { return StatusCode::SUCCESS; }
 
 //=============================================================================
-int CombineTaggersProbability::combineTaggers(FlavourTag& theTag, 
+int CombineTaggersProbabilityOS::combineTaggers(FlavourTag& theTag, 
 					      std::vector<Tagger*>& vtg ){
   if( vtg.empty() ) return 0;
 
@@ -55,11 +55,11 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endreq;
-  pnsum = 1 - m_P0_Cal_All - m_P1_Cal_All * ( (1-pnsum)-m_Eta_Cal_All);
-  debug() << " All pn="<< pnsum <<" w="<<1-pnsum<<endreq;
+  pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
+  debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;
 
   //throw away poorly significant tags
-  if(pnsum < m_ProbMin) {
+  if(pnsum < m_ProbMin_OS) {
     pnsum = 0.50;
     tagdecision = 0;
   }
@@ -70,10 +70,10 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   //ProbMin is a small offset to adjust for range of pnsum
   int category = 0;
   double omega = fabs(1-pnsum); 
-  if(      omega > m_omegamaxbin                ) category=1;
-  else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
-  else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;
-  else if( omega > m_omegamaxbin-m_omegascale*3 ) category=4;
+  if(      omega > m_omegamaxbin_OS                ) category=1;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS   ) category=2;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS*2 ) category=3;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS*3 ) category=4;
   else                                            category=5;
   if( !tagdecision ) category=0;
 

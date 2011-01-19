@@ -21,7 +21,9 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareInterface<IBTaggingTool>(this);
 
-  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); 
+  declareProperty( "CombineTaggersName",   m_CombineTaggersName   = "CombineTaggersProbability" ); 
+  declareProperty( "CombineTaggersOSName", m_CombineTaggersOSName = "CombineTaggersProbabilityOS" ); 
+
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "PVbyIPs");
@@ -39,7 +41,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
   declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggingParticles" );
-
+  
   declareProperty( "ForceSignalID",  m_ForceSignalID  = " ");
   
   m_util    = 0;
@@ -47,6 +49,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   m_pvReFitter = 0;
   m_dva =0;
   m_combine = 0;
+  m_combineOS = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
 }
@@ -103,6 +106,11 @@ StatusCode BTaggingTool::initialize() {
   m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
   if(! m_combine) {
     fatal() << "Unable to retrieve "<< m_CombineTaggersName << endreq;
+    return StatusCode::FAILURE;
+  }
+  m_combineOS = tool<ICombineTaggersTool> (m_CombineTaggersOSName, this);
+  if(! m_combineOS) {
+    fatal() << "Unable to retrieve "<< m_CombineTaggersOSName << endreq;
     return StatusCode::FAILURE;
   }
   if(m_ChoosePV =="RefitPV") {
@@ -226,7 +234,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
   m_combine -> combineTaggers( theTag, taggers );
-
+  debug()<<"omega: "<<theTag.omega()<<endreq;
   //now only using OS taggers
   std::vector<Tagger*> taggersOS;
   taggersOS.push_back(&muon);
@@ -234,7 +242,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   taggersOS.push_back(&kaon);
   taggersOS.push_back(&vtxCh);
   FlavourTag tmp_theTagOS = theTag;
-  m_combine -> combineTaggers( tmp_theTagOS, taggersOS );
+  m_combineOS -> combineTaggers( tmp_theTagOS, taggersOS );
+  debug()<<"omegaOS: "<<tmp_theTagOS.omega()<<endreq;
   ///fill FlavourTag object
   theTag.setDecisionOS( tmp_theTagOS.decision() );
   theTag.setCategoryOS( tmp_theTagOS.category() );

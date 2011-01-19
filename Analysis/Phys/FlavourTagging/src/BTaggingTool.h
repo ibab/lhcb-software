@@ -76,7 +76,7 @@ private:
 
   ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
   ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
-  ICombineTaggersTool *m_combine;
+  ICombineTaggersTool *m_combine, *m_combineOS;
   IPVReFitter* m_pvReFitter;
 
   DVAlgorithm* m_dva;
@@ -87,7 +87,7 @@ private:
   double m_thetaMin, m_distphi_cut;
   double m_IPPU_cut;
 
-  std::string m_taggerLocation, m_CombineTaggersName, m_ChoosePV;
+  std::string m_taggerLocation, m_CombineTaggersName, m_CombineTaggersOSName, m_ChoosePV;
   std::string m_ForceSignalID;
 
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
