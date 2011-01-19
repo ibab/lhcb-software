@@ -52,7 +52,8 @@ private:
 
   inline bool cloneOriginVertex(const LHCb::MCVertex* vertex) 
   {
-    return vertex && (vertex->isDecay() || vertex->isPrimary() );
+    return true;
+    //    return vertex && (vertex->isDecay() || vertex->isPrimary() );
   }
   
   void cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>& endVertices,

@@ -6,6 +6,11 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Juan Palacios
+ - src/MCParticleCloner.h
+  . Clone all types of origin vertex. Will have to see whether this causes 
+    problems in certain types of data.
+
 ! 2011-01-14 - Juan Palacios
  - src/RecVertexClonerWithTracks.cpp
   . Clear tracks SmartRefVector before adding cloned tracks.
