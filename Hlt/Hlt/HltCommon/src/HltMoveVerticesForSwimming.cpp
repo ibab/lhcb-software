@@ -221,7 +221,7 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(LHCb::Particle* myB, LHCb::Verte
   //Also move the clone of the offline PV to compute the new lifetime
   offPV->setPosition(offPV->position() + m_swimmingDistance*myB->slopes().Unit());
 
-  double pt,ept,chi2,ip,ipchi2,fd,fdchi2,dira = -99999999.;
+  double pt,ept,chi2,ip,ipchi2,fd,fdchi2 = -99999999.;
   sc =  m_fit->fit ( *offPV, *myB , pt, ept, chi2 );
   if (!sc) {  
     warning() << "The lifetime fit failed!!" << endmsg; 
