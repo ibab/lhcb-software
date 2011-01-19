@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Juan Palacios
+ - Big restructuring of tests. All suites are now directly on tests/qmtest.
+   Suite file tests/qmtest/davincitests.qms controls which suites are run.
+
 ! 2011-01-18 - Juan Palacios
  - Moved davinci.stripping.test_bd2kstarmumu_mc09 to davinci.stripping.test_bd2kstarmumu_sim2010.
 
