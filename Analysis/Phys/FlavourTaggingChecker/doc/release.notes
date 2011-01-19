@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r3 2011-01-19 ============
+
 ! 2011-01-19 - Marc Grabalosa
  - calibration of per event omega for OS and OS+SS
  - Optimized kSS with mc nu=2.5
