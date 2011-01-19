@@ -41,7 +41,7 @@ class Physics_draft2011:
 
     
     def L0TCK(self) :
-        return '0x002c'
+        return '0x002a'
 
     def HltType(self) :
         self.verifyType( Physics_draft2011 ) 
@@ -65,11 +65,11 @@ class Physics_draft2011:
                                             ,   'Muon_TrChi2'   : 10                    
                                             ,   'Photon_PT'     : 800
                                             ,   'Photon_P'      : 8000
-                                            ,   'Photon_IP'     : 0.13
+                                            ,   'Photon_IP'     : 0.110
                                             ,   'Photon_IPChi2' : 50
                                             ,   'Photon_TrChi2' : 5
                                             ,   'Velo_NHits'    : 9 
-                                            ,   'Velo_Qcut'     : 999 
+                                            ,   'Velo_Qcut'     : 3 
                                                 }
                        }
 

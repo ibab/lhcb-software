@@ -20,8 +20,18 @@ class Hadrons_draft2011 :
             # The topological 
             'Hlt2TopoOSTF2Body',
             'Hlt2TopoOSTF3Body',
-            'Hlt2TopoOSTF4Body'
+            'Hlt2TopoOSTF4Body',
+            # XGamma
+            'Hlt2Bs2PhiGamma',
+            'Hlt2Bs2PhiGammaWideBMass',
+            'Hlt2Bd2KstGamma',
+            'Hlt2Bd2KstGammaWideBMass',
+            'Hlt2Bd2KstGammaWideKMass'
             ]
+
+        # For inclusive phi extend using Albert's new setting
+        from Phi_draft2011 import Phi_draft2011 as PhiLines
+        lines.extend ( PhiLines().ActiveHlt2Lines() )
 
         return lines
 
@@ -31,5 +41,8 @@ class Hadrons_draft2011 :
  
         from TopoLines_September10 import TopoLines
         d.update ( TopoLines().Thresholds() )
+
+        from Phi_draft2011 import Phi_draft2011 as PhiLines
+        d.update ( PhiLines().Thresholds() )
 
         return d
