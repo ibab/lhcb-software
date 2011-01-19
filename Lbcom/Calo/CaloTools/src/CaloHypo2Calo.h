@@ -9,6 +9,10 @@
 #include "Calo2Calo.h"            
 #include "CaloUtils/CellNeighbour.h"
 
+#ifdef __INTEL_COMPILER        // Disable ICC remark from ROOT
+  #pragma warning(disable:654) // overloaded virtual function is only partially overridden 
+#endif
+
 /** @class CaloHypo2Calo CaloHypo2Calo.h
  *  
  *

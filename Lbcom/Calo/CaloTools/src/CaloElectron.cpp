@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloElectron );
+DECLARE_TOOL_FACTORY( CaloElectron )
 
 
 //=============================================================================

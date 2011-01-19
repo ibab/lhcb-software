@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloHypo2Calo );
+DECLARE_TOOL_FACTORY( CaloHypo2Calo )
 
 
 //=============================================================================

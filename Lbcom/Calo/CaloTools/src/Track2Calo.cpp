@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Track2Calo );
+DECLARE_TOOL_FACTORY( Track2Calo )
 
 
 //=============================================================================

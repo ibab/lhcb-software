@@ -16,8 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Calo2MCTool );
-
+DECLARE_TOOL_FACTORY( Calo2MCTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -286,7 +285,7 @@ void Calo2MCTool::addCluster(const LHCb::CaloCluster*   cluster  ){
       LHCb::CaloDigit* digit = entry.digit();
       if( NULL == digit )continue;
     // check digit is not yet registered 
-      bool ok = true;
+      ok = true;
       for(std::vector<const LHCb::CaloDigit*>::const_iterator id = m_digits.begin() ; id != m_digits.end() ; id++){
         if( *id == digit){ ok = false; break;}
       }

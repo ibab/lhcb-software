@@ -16,7 +16,7 @@
  *  @date   2009-07-29
  */
 
-DECLARE_TOOL_FACTORY( L0Calo2CaloTool );
+DECLARE_TOOL_FACTORY( L0Calo2CaloTool )
   
 /// Standard constructor
 L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,

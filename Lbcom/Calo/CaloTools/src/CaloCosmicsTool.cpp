@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloCosmicsTool );
+DECLARE_TOOL_FACTORY( CaloCosmicsTool )
 
 
 //=============================================================================
@@ -428,7 +428,7 @@ StatusCode CaloCosmicsTool::fit2D(){
     if( pos.Y() > m_calo->cellCenter( idMax ).Y() )idMax = cell;
     double adc  = (double) (*id).adc();
     if(adc<0)adc = 0;
-    Gaudi::XYZVector vec = pos-m_refPoint;
+    vec = pos-m_refPoint;
     if(vec.rho()!=0)adc /= vec.rho();
     double size = m_calo->cellSize( cell );
     double sx2  = size*size/12;
@@ -477,10 +477,10 @@ StatusCode CaloCosmicsTool::timing(){
   // compute asymmetries
   
   for(std::map<std::string,std::vector<std::string> >::iterator iasy = m_asy.begin(); iasy != m_asy.end() ; iasy++){
-    std::vector<std::string> asy = (*iasy).second;
+    std::vector<std::string> asym = (*iasy).second;
     std::string id = (*iasy).first;
-    std::string a1 = *(asy.begin());
-    std::string a2 = *(asy.begin()+1);
+    std::string a1 = *(asym.begin());
+    std::string a2 = *(asym.begin()+1);
     double sb1 = 0;
     double sb2 = 0;
     double rm  = 0;
