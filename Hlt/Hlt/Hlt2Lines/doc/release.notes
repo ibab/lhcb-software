@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Albert Puig Navarro
+ - Removed IP cut from InclusivePhiLines.
+
 ! 2011-01-18 - Albert Puig Navarro
  - Rewrite of InclusivePhiLines.
 
