@@ -9,8 +9,8 @@
   </set></argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>davinci.fsrs.davinci-merge-radiative</text><enumeral>PASS</enumeral></tuple>
-    <tuple><text>davinci.fsrs.davinci-dumpfsrs-tofile</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>fsrs.davinci-merge-radiative</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>fsrs.davinci-dumpfsrs-tofile</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
@@ -41,7 +41,7 @@ for line in reflines:
 if foundlines!=reflines:
   f.close()
   causes.append('missing FSRs')
-  result['davinci.fsrs.davinci-dumpfsrs']=result.Quote('\n'.join(['-'+line for line in reflines if line not in foundlines]))
+  result['fsrs.davinci-dumpfsrs']=result.Quote('\n'.join(['-'+line for line in reflines if line not in foundlines]))
 
 f.close()
 </text></argument> 

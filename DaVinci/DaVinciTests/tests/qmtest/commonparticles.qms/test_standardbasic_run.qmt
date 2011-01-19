@@ -7,7 +7,7 @@
   <text>../options/CommonParticles/DVTestStandardBasic.py</text>
 </set></argument>
 <argument name="prerequisites"><set>
-  <tuple><text>davinci.commonparticles.test_standardbasic_init</text><enumeral>PASS</enumeral></tuple>
+  <tuple><text>commonparticles.test_standardbasic_init</text><enumeral>PASS</enumeral></tuple>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

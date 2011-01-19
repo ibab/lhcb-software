@@ -7,7 +7,7 @@
   <text>../options/DVTestReadDst.py</text>
 </set></argument>
 <argument name="prerequisites"><set>
-  <tuple><text>davinci.io.test_write_dst</text><enumeral>PASS</enumeral></tuple>
+  <tuple><text>io.test_write_dst</text><enumeral>PASS</enumeral></tuple>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

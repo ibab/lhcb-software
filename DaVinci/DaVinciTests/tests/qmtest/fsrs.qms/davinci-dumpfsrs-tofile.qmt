@@ -33,7 +33,7 @@ if foundlines!=reflines:
   t.close()
   f.close()
   causes.append('unexpected FSRs')
-  result['davinci.fsrs.davinci-dumpfsrs-tofile']=result.Quote('\n'.join(['+'+line for line in foundlines if line not in reflines]+['-'+line for line in reflines if line not in foundlines]))
+  result['fsrs.davinci-dumpfsrs-tofile']=result.Quote('\n'.join(['+'+line for line in foundlines if line not in reflines]+['-'+line for line in reflines if line not in foundlines]))
 
 f.close()
 

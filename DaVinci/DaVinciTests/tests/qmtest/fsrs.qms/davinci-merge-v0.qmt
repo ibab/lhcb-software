@@ -8,8 +8,8 @@
   </argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>davinci.fsrs.davinci-strip-magup</text><enumeral>PASS</enumeral></tuple>
-   <tuple><text>davinci.fsrs.davinci-strip-magdown</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>fsrs.davinci-strip-magup</text><enumeral>PASS</enumeral></tuple>
+   <tuple><text>fsrs.davinci-strip-magdown</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
