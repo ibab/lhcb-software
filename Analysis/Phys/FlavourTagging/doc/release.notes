@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v12r2 2011-01-19 ==================
+
 ! 2011-01-19
   - Calibration of per event omega for OS and OS+SS combination
   - Optimized KSS with mc nu=2.5
