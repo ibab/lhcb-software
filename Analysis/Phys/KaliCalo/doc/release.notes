@@ -7,6 +7,8 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================== KaliCalo v4r8 2011-01-19 ==========================
+
 ! 2011-01-18 - Juan Palacios
  - Adapt to changes in DVAlgorithm.
  - Increase to v4r8.
