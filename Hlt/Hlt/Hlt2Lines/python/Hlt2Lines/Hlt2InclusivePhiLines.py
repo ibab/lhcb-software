@@ -21,7 +21,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIPS'            : 6        # dimensionless
-                  ,'TrackCHI2DOF'       : 5        # dimensionless
+                  ,'TrackChi2DOF'       : 5        # dimensionless
                   ,'PhiMassWin'         : 12       # MeV
                   ,'PhiMassWinSB'       : 30       # MeV
                   ,'PhiPT'              : 1800     # MeV
@@ -57,7 +57,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi selection, track cuts
         ############################################################################
         
-        TrackChi2DOF = "(TRCHI2DOF<%(TrackCHI2DOF)s)" % self.getProps()
+        TrackChi2DOF = "(TRCHI2DOF<%(TrackChi2DOF)s)" % self.getProps()
         KaonPtCut = "(PT>%(KaonPT)s*MeV)" % self.getProps()
         KaonIpsCut = "(MIPCHI2DV(PRIMARY)>%(KaonIPS)s)" % self.getProps()
         PhiMassCut = "(ADAMASS('phi(1020)')<%(PhiMassWin)s*MeV)" % self.getProps()
@@ -77,7 +77,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
                                        , "TrackCombineSB"
                                        , DecayDescriptors = decayDesc
-                                       , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackCHI2DOF, KaonPtCut, KaonIpsCut) }
+                                       , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
                                        , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
                                        , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
                                        , InputLocations  = [ BiKalmanFittedKaons ]
