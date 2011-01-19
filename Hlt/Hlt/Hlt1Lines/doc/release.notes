@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Johannes Albrecht
+ - move velo GEC to 10k as we use always SPD < 900
+
 !========================== Hlt1Lines v6r1   2011-01-18 ===================
 ! 2011-01-10 - Johannes Albrecht
  - move to loose GEC in 1Track
