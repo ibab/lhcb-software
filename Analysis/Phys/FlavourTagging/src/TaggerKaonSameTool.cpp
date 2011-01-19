@@ -25,17 +25,17 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "AverageOmega",    m_AverageOmega   = 0.33 );
   
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.45 *GeV );
-  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 *GeV );
-  declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.0 );
-  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.1 );
-  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
-  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
-  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 5.0 );
+  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 2.0 *GeV );
+  declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.5 );
+  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.3 );
+  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.1 );
+  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.9 *GeV);
+  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 4.0 );
   declareProperty( "KaonS_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
   declareProperty( "KaonS_distPhi_cut", m_distPhi_cut_kS= 0.005 );
 
-  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  1.0 );
-  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -1.0 );
+  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  7.0 );
+  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -5.0 );
 
   declareProperty( "ProbMin_kaonS",   m_ProbMin_kaonS    = 0. ); //no cut
 

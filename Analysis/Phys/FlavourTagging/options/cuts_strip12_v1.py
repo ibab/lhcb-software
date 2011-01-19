@@ -16,13 +16,13 @@ tag.BTaggingTool.IPPU_cut = 3.0
 tag.BTaggingTool.distphi_cut = 0.005
 
 tag.BTaggingTool.addTool ( CombineTaggersProbability )
-tag.BTaggingTool.CombineTaggersProbability.P0_Cal_All = 0.373
-tag.BTaggingTool.CombineTaggersProbability.P1_Cal_All = 1.07
-tag.BTaggingTool.CombineTaggersProbability.Eta_Cal_All = 0.348
+tag.BTaggingTool.CombineTaggersProbability.P0_Cal_All = 0.
+tag.BTaggingTool.CombineTaggersProbability.P1_Cal_All = 1.
+tag.BTaggingTool.CombineTaggersProbability.Eta_Cal_All = 0.
 tag.BTaggingTool.addTool ( CombineTaggersProbabilityOS )
-tag.BTaggingTool.CombineTaggersProbabilityOS.P0_Cal_OS = 0.364
-tag.BTaggingTool.CombineTaggersProbabilityOS.P1_Cal_OS = 1.08
-tag.BTaggingTool.CombineTaggersProbabilityOS.Eta_Cal_OS = 0.338
+tag.BTaggingTool.CombineTaggersProbabilityOS.P0_Cal_OS = 0.
+tag.BTaggingTool.CombineTaggersProbabilityOS.P1_Cal_OS = 1.
+tag.BTaggingTool.CombineTaggersProbabilityOS.Eta_Cal_OS = 0.
 
 tag.BTaggingTool.addTool ( TaggerMuonTool )
 tag.BTaggingTool.TaggerMuonTool.Muon_Pt_cut   = 1.1
