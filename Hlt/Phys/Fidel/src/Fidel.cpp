@@ -107,7 +107,7 @@ StatusCode Fidel::execute() {
 
   setFilterPassed(false);
 
-  const Particle::ConstVector& parts = desktop()->particles();
+  const Particle::ConstVector& parts = this->i_particles();
   
   LHCb::Particle::ConstVector::const_iterator ip1;
   LHCb::Particle::ConstVector::const_iterator ip2;
@@ -199,17 +199,17 @@ StatusCode Fidel::execute() {
 
       if ( !m_cut  ( &BCand ) )  { continue ; }                    // CONTINUE
 
-      const LHCb::VertexBase* bestPV  = this->bestPV(&BCand);
+      const LHCb::VertexBase* bestPV  = this->i_bestVertex(&BCand);
       Gaudi::XYZPoint Origin = bestPV->position();
 
-      const LHCb::Particle *myBCand = BCand.clone();
+      const LHCb::Particle myBCand(BCand);
       //const LHCb::VertexBase *BVtx = BCand.endVertex();
       
-      StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);
+      StatusCode sc = distanceCalculator()->distance(&myBCand,bestPV,impCand,ipchi2);
       if (!sc) return sc;
       
       //flight distance Projected B
-      StatusCode sc_B = distanceCalculator()->projectedDistance(myBCand,bestPV,dist_B,errdist_B);
+      StatusCode sc_B = distanceCalculator()->projectedDistance(&myBCand,bestPV,dist_B,errdist_B);
       if (!sc_B) return sc_B ;
       fs_B = dist_B / errdist_B;
       
@@ -262,13 +262,13 @@ StatusCode Fidel::execute() {
 
       */      
 
-      desktop()->keep(&BCand); 
+      this->markTree(&BCand); 
       setFilterPassed(true);
 
     }//ip2
   }//ip1
 
-  return desktop()->saveDesktop();
+  return StatusCode::SUCCESS;
   
 }
 
