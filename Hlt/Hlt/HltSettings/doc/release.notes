@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - V. Gligorov 
+ - Add inclusive Phi and XGamma lines to the draft 2011 settings, following
+   presentation in T&S meeting Jan 17. 
+ - Reintroduce cut on "missing" number of Velo hits, requires FastVelo 115554
+   in order to work. 
+
 !========================== HltSettings v5r0p2 2011-01-18 ===================
 ! 2011-01-10 - Johannes Albrecht
  - resurrect micro bias Velo in Calibration_VeloMicroBias
