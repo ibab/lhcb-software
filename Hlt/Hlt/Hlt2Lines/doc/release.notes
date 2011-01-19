@@ -10,6 +10,7 @@
 
 ! 2011-01-19 - Albert Puig Navarro
  - Removed IP cut from InclusivePhiLines.
+ - Added Track Chi2/dof cut in InclusivePhiLines.
 
 ! 2011-01-18 - Albert Puig Navarro
  - Rewrite of InclusivePhiLines.
