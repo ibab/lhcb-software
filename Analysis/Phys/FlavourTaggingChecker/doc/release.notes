@@ -8,7 +8,8 @@
 
 ! 2011-01-19 - Marc Grabalosa
  - calibration of per event omega for OS and OS+SS
-
+ - Optimized kSS with mc nu=2.5
+ 
 ! 2011-01-18 - Marc Grabalosa
  - patch to unitialized IP
 
