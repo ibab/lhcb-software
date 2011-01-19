@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Alex Shires
+ - Add in Hlt2MuNTrackLines configurable
+
 !========================== HltTracking v8r0p2 2011-01-05 ===================
 ! 2011-01-05 - Gerhard Raven
  - temporarily set DataType in RichRecSys -- does nothing but avoid an

@@ -58,6 +58,7 @@ from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines      import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
+from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
  
 #################################################################################################
 #
@@ -99,6 +100,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2KstareeLinesConf  
                              , Hlt2B2HHPi0LinesConf
                              , Hlt2B2KsHHLinesConf
+                             , Hlt2MuNTrackLinesConf
                              ]
     __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
