@@ -176,18 +176,18 @@ StatusCode LumiIntegrateFSR::finalize() {
 void LumiIntegrateFSR::add_to_xml() {
 
   // declare statEntities for xml output
-  LHCb::LumiIntegral::ValuePair defValue ( -1, 0 );
+  LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
   for ( int key = 0; key < LHCb::LumiCounters::LastGlobal; key++ ) {
     if ( m_integratorTool->integral().hasInfo(key) ) {
       LHCb::LumiIntegral::ValuePair value = m_integratorTool->integral().info( key, defValue );
       std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
       if ( value.first != -1 ) {
-	info() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
-	StatEntity statEntity( value.first, value.second, value.second, 0, 0 );
-	if ( m_counterSummarySvc != NULL ) {
-	  m_counterSummarySvc->addCounter(name(), counterName, statEntity, 
-					  Gaudi::CounterSummary::SaveAlwaysStatEntity);
-	  debug() << "declared counter: " << key << endmsg;
+        info() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
+        StatEntity statEntity( value.first, value.second, value.second, 0, 0 );
+        if ( m_counterSummarySvc != NULL ) {
+          m_counterSummarySvc->addCounter(name(), counterName, statEntity, 
+                                          Gaudi::CounterSummary::SaveAlwaysStatEntity);
+          debug() << "declared counter: " << key << endmsg;
 	}
       }
     }

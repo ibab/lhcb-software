@@ -27,7 +27,13 @@ DECLARE_ALGORITHM_FACTORY( LumiMergeFSR );
 //=============================================================================
 LumiMergeFSR::LumiMergeFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_BXTypes(0),
+    m_subtractBXTypes(0),
+    m_lumiFSRsVec(0),
+    m_FSRNameVec(0),
+    m_timeSpanFSRs(NULL),
+    m_navigatorTool(NULL)
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"   );

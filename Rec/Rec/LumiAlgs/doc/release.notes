@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Rob Lambert
+ - Try and reduce slc4 and slc5 differences by making sure all variables
+   are initialized in the constructors correctly
+   The tests still show minor differences which must be from 
+   numerical precision since they arise in 32-bit not 64-bit tests
+
 !========================= LumiAlgs v4r1p3 2011-01-17 =========================
 ! 2011-01-17 - Rob Lambert
  - Fix one small warning on slc4, LumiIntegrateFSR.cpp line 542,

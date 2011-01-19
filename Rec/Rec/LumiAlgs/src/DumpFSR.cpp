@@ -39,7 +39,13 @@ DECLARE_ALGORITHM_FACTORY( DumpFSR );
 DumpFSR::DumpFSR( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_incSvc(0)
+    m_fileRecordSvc(NULL),
+    m_current_fname(""),
+    m_count_files(0),
+    m_count_events(0),
+    m_events_in_file(0),
+    m_navigatorTool(NULL),
+    m_incSvc(NULL)
 {
   // need to get the registry
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );

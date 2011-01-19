@@ -30,7 +30,13 @@ DECLARE_ALGORITHM_FACTORY( LumiFileReader );
 //=============================================================================
 LumiFileReader::LumiFileReader( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_totDataSize(0.),
+    m_nbEvents(0),
+    m_bankType(LHCb::RawBank::FileID),
+    m_HltLumiSummary(NULL),
+    m_odin(NULL),
+    m_fileId()
 {
   declareProperty( "RawEventLocation"    , m_rawEventLocation    = LHCb::RawEventLocation::Default );
   declareProperty( "OutputFileName" , m_OutputFileName = "lumi.dat");

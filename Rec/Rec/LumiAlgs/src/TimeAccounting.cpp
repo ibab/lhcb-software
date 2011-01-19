@@ -28,8 +28,13 @@ DECLARE_ALGORITHM_FACTORY( TimeAccounting );
 //=============================================================================
 TimeAccounting::TimeAccounting( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_fileRecordSvc(NULL),
+    m_DataName(""),
+    m_timeSpanFSRs(NULL),
+    m_timeSpanFSR(NULL),
+    m_current_fname(""),
+    m_count_files(0)
 {
   declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default );
   declareProperty( "OutputDataContainer", m_FSRName = LHCb::TimeSpanFSRLocation::Default );

@@ -26,8 +26,9 @@ DECLARE_ALGORITHM_FACTORY( FilterOnLumiSummary );
 //=============================================================================
 FilterOnLumiSummary::FilterOnLumiSummary( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_Counter(0),
+    m_Value(0)
 {
   declareProperty( "InputDataContainer",  m_DataName = LHCb::HltLumiSummaryLocation::Default );
   declareProperty( "CounterName"       ,  m_CounterName = "Method" );

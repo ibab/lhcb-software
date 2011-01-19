@@ -30,7 +30,8 @@ DECLARE_ALGORITHM_FACTORY( LumiReadBackFSR );
 //=============================================================================
 LumiReadBackFSR::LumiReadBackFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_integratorTool(NULL)
 {
   declareProperty( "IntegratorToolName" , m_ToolName       = "LumiIntegrator" );  
 }

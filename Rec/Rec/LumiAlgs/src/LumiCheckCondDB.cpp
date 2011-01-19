@@ -38,9 +38,22 @@ LumiCheckCondDB::LumiCheckCondDB( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_condRelative(NULL),
+    m_condRelativeLog(NULL),
     m_condAbsolute(NULL),
     m_condCoefficients(NULL),
-    m_condGUIDs(NULL)
+    m_condCoefficientsLog(NULL),
+    m_condSampling(NULL),
+    m_condGUIDs(NULL),
+    m_calibRelative(0),
+    m_calibCoefficients(0),
+    m_calibRelativeLog(0),
+    m_calibCoefficientsLog(0),
+    m_statusScale(0.),
+    m_calibScale(0.),
+    m_calibScaleError(0.),
+    m_calibRevolutionFrequency(0.),
+    m_calibRandomFrequencyBB(0.),
+    m_calibCollidingBunches(0)
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "StartTime"          , m_startTime         = 1269817249  );

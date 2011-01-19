@@ -35,7 +35,14 @@ DECLARE_ALGORITHM_FACTORY( GetIntegratedLuminosity );
 //=============================================================================
 GetIntegratedLuminosity::GetIntegratedLuminosity( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_fileRecordSvc(NULL),
+    m_defaultStatusStr("UNCHECKED"),
+    m_defaultStatus(LHCb::EventCountFSR::UNCHECKED),
+    m_events_in_file(0),
+    m_count_input(0),
+    m_count_output(0),
+    m_integratorTool(NULL)
 {
   declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );

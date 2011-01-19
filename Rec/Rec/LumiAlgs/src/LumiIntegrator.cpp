@@ -28,14 +28,18 @@ DECLARE_TOOL_FACTORY( LumiIntegrator );
 LumiIntegrator::LumiIntegrator( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_ToolName(""),
+    m_count_files(0),
+    m_count_events(0),
+    m_duplicateFiles(0),
+    m_integral(0.),
+    m_lumi_scale(0.),
+    m_lumi_rel_error(0.),
+    m_LumiSum()
 {
   declareInterface<ILumiIntegrator>(this);
-  m_count_files = 0;
-  m_count_events = 0;
-  m_integral = 0;
-  m_lumi_scale = 0;
-  m_lumi_rel_error = 0;
+  
 }
 //=============================================================================
 // Destructor
@@ -74,18 +78,18 @@ StatusCode LumiIntegrator::integrate( LHCb::LumiIntegral& fsr, std::vector<doubl
 
 StatusCode LumiIntegrator::integrate( LHCb::LumiIntegral* fsr, std::vector<double> coeff, double f ){
   // get fsr and sum into lumi
-  LHCb::LumiIntegral::ValuePair defValue ( -1, 0 );
+  LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
   for ( int key = 0; key < int(coeff.size()) && key < LHCb::LumiCounters::LastGlobal; key++ ) {
     if ( coeff[key] != 0 ) {
       if ( fsr->hasInfo(key) ) {
-	LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
-	std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
-	if ( value.first != -1 ) {
-	  m_integral += value.second * coeff[key] * f;
-	  debug() << "counter " << counterName << ": " << key << " " 
-		  << value.first << " " << value.second 
-		  << " coefficient " << coeff[key] << " integral " << m_integral << endmsg;
-	}
+        LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
+        std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+        if ( value.first != -1 ) {
+          m_integral += value.second * coeff[key] * f;
+          debug() << "counter " << counterName << ": " << key << " " 
+                  << value.first << " " << value.second 
+                  << " coefficient " << coeff[key] << " integral " << m_integral << endmsg;
+        }
       }
     }
   }

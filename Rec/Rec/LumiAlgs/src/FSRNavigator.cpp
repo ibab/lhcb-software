@@ -27,7 +27,8 @@ DECLARE_TOOL_FACTORY( FSRNavigator );
 FSRNavigator::FSRNavigator( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_ToolName("")
 {
   declareInterface<IFSRNavigator>(this);
   // get the File Records service

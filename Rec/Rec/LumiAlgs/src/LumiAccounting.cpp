@@ -36,7 +36,14 @@ DECLARE_ALGORITHM_FACTORY( LumiAccounting );
 LumiAccounting::LumiAccounting( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_calibThresholds()
+    m_fileRecordSvc(NULL),
+    m_lumiFSRs(NULL),
+    m_lumiFSR(NULL),
+    m_current_fname(""),
+    m_count_files(0),
+    m_condThresholds(NULL),
+    m_calibThresholds(),
+    m_statusThresholds(0)
 {
   declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default );
   declareProperty( "InputDataContainer",  m_DataName = LHCb::HltLumiSummaryLocation::Default );
