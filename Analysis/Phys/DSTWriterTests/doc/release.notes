@@ -4,6 +4,12 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v2r2 2011-01-19 ==================
+
+! 2011-01-19 - Juan Palacios
+ - Small fixes to some old tests.
+ - Increase to v2r2.
+
 ! ========================== DstwriterTests v2r1 2010-12-20 ==================
 
 ! 2010-12-07 - Juan Palacios
