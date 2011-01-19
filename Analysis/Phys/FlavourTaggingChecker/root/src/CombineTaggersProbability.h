@@ -26,9 +26,8 @@ class CombineTaggersProbability {
 
  
  private:
-  double m_omegamaxbin;
-  double m_omegascale ;
-  double m_ProbMin    ;
+  double m_omegamaxbin, m_omegascale, m_ProbMin;
+  double m_P0_Cal_All, m_P1_Cal_All, m_Eta_Cal_All;
   FlavourTag* theTag;
 
 };

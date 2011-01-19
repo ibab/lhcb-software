@@ -16,6 +16,7 @@ int main () {
   CombineTaggersPID         combPIDtool ;
   CombineTaggersNN          combNNtool;
   CombineTaggersProbability combProbtool;
+  CombineTaggersProbabilityOS combProbOStool;
 
   EventViewer viewer;
   NNTuner nnetune(NNetTrain);
@@ -61,13 +62,20 @@ int main () {
       Tagger* tvtx  = vtxtool.tag(event);
    
       //Combination of tagger's decisions:
-      Taggers taggers; 
+      Taggers taggers, OStaggers; 
       taggers.push_back(tmuon); 
       taggers.push_back(tele); 
       taggers.push_back(tkaon); 
       taggers.push_back(tsame); 
       taggers.push_back(tvtx); 
+      OStaggers.push_back(tmuon); 
+      OStaggers.push_back(tele); 
+      OStaggers.push_back(tkaon); 
+      OStaggers.push_back(tvtx); 
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
+      debug()<<"omega: "<<theTag->omega()<<endreq;      
+      FlavourTag* tmp_theTagOS = combProbOStool.combineTaggers( OStaggers );
+      debug()<<"omegaOS: "<<tmp_theTagOS->omega()<<endreq;
       //FlavourTag* theTag = combNNtool.combineTaggers( taggers );
       //FlavourTag* theTag = combPIDtool.combineTaggers( taggers );
 

@@ -1,20 +1,20 @@
-#include "CombineTaggersProbability.h"
+#include "CombineTaggersProbabilityOS.h"
 #include "taggingutils.h"
 
-CombineTaggersProbability::CombineTaggersProbability() {
+CombineTaggersProbabilityOS::CombineTaggersProbabilityOS() {
 
-  declareProperty( "CombineTaggersProb_omegamaxbin", m_omegamaxbin = 0.38);
-  declareProperty( "CombineTaggersProb_omegascale",  m_omegascale  = 0.07);
-  declareProperty( "CombineTaggersProb_ProbMin",     m_ProbMin     = 0.56);
+  declareProperty( "CombineTaggersProb_omegamaxbin_OS", m_omegamaxbin_OS = 0.38);
+  declareProperty( "CombineTaggersProb_omegascale_OS",  m_omegascale_OS  = 0.07);
+  declareProperty( "CombineTaggersProb_ProbMin_OS",     m_ProbMin_OS     = 0.56);
 
-  declareProperty( "CombineTaggersProb_P0_Cal_All",  m_P0_Cal_All   = 0.373); 
-  declareProperty( "CombineTaggersProb_P1_Cal_All",  m_P1_Cal_All   = 1.07 ); 
-  declareProperty( "CombineTaggersProb_Eta_Cal_All", m_Eta_Cal_All  = 0.348); 
+  declareProperty( "CombineTaggersProb_ProbMin_OS_P0_Cal_OS",   m_P0_Cal_OS   = 0.364); 
+  declareProperty( "CombineTaggersProb_ProbMin_OS_P1_Cal_OS",   m_P1_Cal_OS   = 1.08 ); 
+  declareProperty( "CombineTaggersProb_ProbMin_OS_Eta_Cal_OS",  m_Eta_Cal_OS  = 0.338);
 
   theTag = new FlavourTag();
 }
 
-FlavourTag* CombineTaggersProbability::combineTaggers( Taggers& vtg ) {
+FlavourTag* CombineTaggersProbabilityOS::combineTaggers( Taggers& vtg ) {
   theTag->reset();
 
   theTag->setTaggers(vtg);
@@ -40,11 +40,11 @@ FlavourTag* CombineTaggersProbability::combineTaggers( Taggers& vtg ) {
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endreq;
-  pnsum = 1 - m_P0_Cal_All - m_P1_Cal_All * ( (1-pnsum)-m_Eta_Cal_All);
-  debug() << " All pn="<< pnsum <<" w="<<1-pnsum<<endreq;
+  pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
+  debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;
 
   //throw away poorly significant tags
-  if(pnsum < m_ProbMin) {
+  if(pnsum < m_ProbMin_OS) {
     pnsum = 0.50;
     tagdecision = 0;
   }
@@ -54,10 +54,10 @@ FlavourTag* CombineTaggersProbability::combineTaggers( Taggers& vtg ) {
   //ProbMin is a small offset to adjust for range of pnsum
   int category = 0;
   double omega = fabs(1-pnsum);
-  if(      omega > m_omegamaxbin                ) category=1;
-  else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
-  else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;
-  else if( omega > m_omegamaxbin-m_omegascale*3 ) category=4;
+  if(      omega > m_omegamaxbin_OS                   ) category=1;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS   ) category=2;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS*2 ) category=3;
+  else if( omega > m_omegamaxbin_OS-m_omegascale_OS*3 ) category=4;
   else                                            category=5;
   if( !tagdecision ) category=0;
 
