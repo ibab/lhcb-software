@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-19 - A. Shires
+ - Add Hlt2MuNTrackLinesConf to Hlt2.py 
+
 !========================== HltConf v9r0 2010-12-08 ===================
 ! 2010-11-29 - V. Gligorov
  - Add Hlt2SecondLoopExampleLine, an example of how to use the new 2-loop
