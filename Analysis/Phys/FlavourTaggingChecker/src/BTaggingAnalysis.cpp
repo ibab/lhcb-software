@@ -179,7 +179,6 @@ StatusCode BTaggingAnalysis::execute() {
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
   debug()<<"  Nr of rec. Vertices: " << verts.size() 
          <<"  Nr of rec. Particles: "<< parts.size() <<endreq;
-  desktop()->saveDesktop();
 
   //----------------------------------------------
   const Particle* AXBS = chooseBHypothesis(parts);

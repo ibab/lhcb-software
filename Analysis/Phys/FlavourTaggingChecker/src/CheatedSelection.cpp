@@ -136,15 +136,12 @@ StatusCode CheatedSelection::execute() {
           << " p="           << candB->p()/Gaudi::Units::GeV
           << " pt="          << candB->pt()/Gaudi::Units::GeV <<endreq;
 
-  // save desktop to TES in location specified by jobOptions
+
   axdaughter.push_back(candB);
   debug()<<"Going to save this B hypo to TES with "<<axdaughter.size()-1
          <<" daughters."<<endreq;
-  StatusCode sc = desktop()->saveTrees(axdaughter);
-  if (sc.isFailure()) {
-    warning() << "Unable to save Tree to TES" << endreq;
-    return StatusCode::SUCCESS;
-  }
+  // marke particles for savint to TES in location specified by jobOptions
+  this->markNewTrees(axdaughter);
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
