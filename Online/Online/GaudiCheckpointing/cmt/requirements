@@ -1,0 +1,22 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+package           GaudiCheckpointing 
+version           v0r1
+#============================================================================
+branches          cmt doc src
+# dependency list
+use GaudiOnline   v* Online -no_auto_import
+use DIM           v* Online
+
+apply_pattern install_python_modules
+
+# ==================== component libraries ==================================
+library  GaudiCheckpointing  *.cpp
+apply_pattern linker_library         library=GaudiCheckpointing
+apply_pattern generate_rootmap       library=GaudiCheckpointing
+apply_pattern generate_configurables library=GaudiCheckpointing
+
+macro_append GaudiCheckpointing_use_linkopts ' -g -O0 '
+macro_append CheckpointSvc_cppflags          ' -g -O0 '
+private
