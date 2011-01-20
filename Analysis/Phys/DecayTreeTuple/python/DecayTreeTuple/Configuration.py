@@ -17,7 +17,8 @@ def __splitname__(self, tool):
     while('::') in name:
       name=name.replace('::','__')
   return tool, name
- 
+
+  
 def addTupleTool(self,tool,name=None):
   """Correctly adds a TupleTool to a DecayTreeTuple or Branch instance, so that the user doesn't need to do the logic themselves
   tool can be any TupleTool, either the bare class, instance, string with '::' or string with '__'
@@ -41,7 +42,7 @@ def addTupleTool(self,tool,name=None):
     if 'getFullName' not in dir(tool):
       raise TypeError, ('tool instance must be a string or configurable, got '+str(type(tool))+' instead')
     mother,atype,aname=tool.splitName()
-    if aname==atype and tool.isPublic():
+    if aname==atype and tool.__class__.__name__==aname and tool.isPublic():
       raise TypeError, ('You are trying to add a default public tool-configurable to your ntuple: '
                         +tool.getFullName()
                         +' This is dangerous so not allowed with addTTool.'
@@ -100,6 +101,7 @@ def addTupleTool(self,tool,name=None):
   if type(tool) is not str and not operator.isCallable(config):
     #if a configurable was supplied I need to find its name twice ...
     mother,tool,name=config.splitName()
+    if(tool==name): tool=config.__class__.__name__
   
   if type(tool) is not str and operator.isCallable(config):
     #if a bare configurable was supplied I need to change the type to a string.. not easy to do that!

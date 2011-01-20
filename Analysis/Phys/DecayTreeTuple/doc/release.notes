@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-20 - Rob Lambert
+ - Fixed a bug in the addTupleTool wrapper if an instance was supplied
+	 in this case splitName seems to give odd results, and the __class__
+   must be called to find the true tool name
+
+! 2011-01-20 - Rob Lambert
  - Added TupleToolTrackPosition, propagates tracks to the given Z
    Stores X and Y
 
