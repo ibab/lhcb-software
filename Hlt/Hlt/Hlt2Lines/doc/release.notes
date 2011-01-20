@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - V. Gligorov
+ - Remove dependency on unfitted tracks in XGamma lines. 
+
 ! 2011-01-19 - Alex Shires
  - Add in Hlt2MuNTrackLines, a replacement for Hlt2MuTrack
 
