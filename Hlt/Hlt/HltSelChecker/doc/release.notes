@@ -4,11 +4,12 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v12r0   2011-01-20 ===================
 ! 2011-01-20 - Patrick Koppenburg
  - Remove all options except options/HltCorrelations.py
  - Fix bug in src/HltSelectionsBase.cpp (wrong ANN svc)
  - Fill list of selections on first even instead of initialise (that works in all cases)
- - v2r0
+ - v12r0
 
 !========================== HltSelChecker v11r1p1 2010-12-16 ===================
 ! 2010-??-?? - ??.?????
