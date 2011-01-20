@@ -89,11 +89,12 @@ namespace Rich
                                                      const LHCb::RichSmartID hpdID,
                                                      const bool createIfMissing = true ) const;
 
-      // Access the total number of RICH hits in the current event, for all configured TAE spills
-      unsigned int nTotalHits() const;
+      // Access the number of RICH hits in the given detector, in the current event, 
+      unsigned int nTotalHits( const Rich::DetectorType rich = Rich::InvalidDetector ) const;
 
-      // Access the total number of RICH hits in the current event, for the given list of TAE spills
-      unsigned int nTotalHits( const RawEventLocations& taeLocs ) const;
+      // Access the number of RICH hits in the given detector, the current event, 
+      unsigned int nTotalHits( const RawEventLocations& taeLocs,
+                               const Rich::DetectorType rich = Rich::InvalidDetector ) const;
       
     private: // private methods
 
@@ -118,7 +119,8 @@ namespace Rich
       const LHCb::RichSmartID::Vector & dummyVector() const;
 
       /// Count the total number of hits in a L1Map
-      unsigned int countTotalHits( const Rich::DAQ::L1Map & data ) const;
+      unsigned int countTotalHits( const Rich::DAQ::L1Map & data,
+                                   const Rich::DetectorType rich ) const;
 
     private: // private data
 
@@ -135,6 +137,8 @@ namespace Rich
       IRawDataFormatTool::RawEventLocations m_rawEventLocs;
 
       // Cached variables
+
+      /// The TAE event key
       std::string m_taeKey;
 
     };

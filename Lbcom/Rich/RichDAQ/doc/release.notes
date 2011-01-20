@@ -4,6 +4,13 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - Chris Jones
+ - Suppress Warning "Ingress/ODIN Event ID checks are disabled" in the 
+   RawDataFormatTool as this is now the default. Instead, warn when it is 
+   enabled (Check is not 100% reliable).
+ - Update RichRawBufferToSmartIDsTool to implement methods to obtain the number
+   of hits in RICH1 and RICH2 seperately.
+
 !========================== RichDAQ v3r29 2010-09-28 =========================
 ! 2010-08-30 - Chris Jones
  - Suppress unneccessary warning message during initialisation of the 

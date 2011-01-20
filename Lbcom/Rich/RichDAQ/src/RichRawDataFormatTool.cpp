@@ -94,8 +94,8 @@ StatusCode RawDataFormatTool::initialize()
   //  Warning( "ODIN integrity checks are enabled",          StatusCode::SUCCESS ).ignore();
   if ( !m_checkDataIntegrity )
     Warning( "HPD Data integrity checks are disabled",     StatusCode::SUCCESS ).ignore();
-  if ( !m_checkODINEventsIDs )
-    Warning( "Ingress/ODIN Event ID checks are disabled",  StatusCode::SUCCESS ).ignore();
+  if ( m_checkODINEventsIDs )
+    Warning( "Ingress/ODIN Event ID checks are enabled",   StatusCode::SUCCESS ).ignore();
   if ( !m_checkRICHEventsIDs )
     Warning( "Internal RICH Event ID checks are disabled", StatusCode::SUCCESS ).ignore();
   if ( !m_checkBxIDs )
