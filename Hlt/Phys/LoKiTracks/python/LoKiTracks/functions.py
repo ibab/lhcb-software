@@ -87,7 +87,7 @@ TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone )
 ## @see LoKi::Cuts::TrFALSE
 TrFALSE       = LoKi.Constant( _T , bool ) ( False )
 ## @see LoKi::Cuts::TrFILTER
-TrFILTER      = LoKi.Tracks.Selector 
+TrFILTER      = LoKi.Tracks.Filter
 ## @see LoKi::Cuts::TrHASINFO
 TrHASINFO     = LoKi.Tracks.HasInfo
 ## @see LoKi::Cuts::TrHASSTATE
@@ -123,6 +123,8 @@ TrQ           = LoKi.Tracks.Charge ()
 ## @see LoKi::Cuts::TrSELECTED
 TrSELECTED    = LoKi.Tracks.CheckFlag ( LHCb.Track.Selected ) 
 ## @see LoKi::Cuts::TrSELECTOR
+TrSELECTOR    = LoKi.Tracks.Selector 
+## @see LoKi::Cuts::TrSINFO
 TrSINFO       = LoKi.Tracks.SmartInfo
 ## @see LoKi::Cuts::TrTRUE
 TrTRUE        = LoKi.Constant( _T , bool ) ( True  )

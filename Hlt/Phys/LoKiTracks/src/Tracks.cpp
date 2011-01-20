@@ -18,12 +18,24 @@
 // ============================================================================
 #include "LoKi/Constants.h"
 #include "LoKi/Tracks.h"
+#include "LoKi/GetTools.h"
 // ============================================================================
 /** @file
  *  Implementation file for classes from the namespace LoKi::Tracks
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2007-08-08
  */
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @var s_SELECTOR
+   *  Invalid ppinter to ITrackSelector tool
+   *  @see ITrackSelector
+   */
+  ITrackSelector* const s_SELECTOR = 0 ;
+  // ==========================================================================
+}
 // ============================================================================
 // MANDATORY: virtual destructor  
 // ============================================================================
@@ -172,12 +184,11 @@ LoKi::Tracks::CheckFlag::operator()
 // constructor form the tool 
 // ============================================================================
 LoKi::Tracks::Selector::Selector 
-( ITrackSelector* tool ) 
+( const ITrackSelector* tool ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
-  , m_tool ( tool ) 
+  , m_tool ( const_cast<ITrackSelector*> ( tool ) ) 
 {
-  Assert ( m_tool.validPointer() , 
-           "LoKi::Tracks::Selector: IParticleSelector* point to NULL" );  
+  Assert ( m_tool.validPointer() , "ITrackSelector* point to NULL" );  
 }
 // ============================================================================
 // constructor form the tool 
@@ -187,19 +198,15 @@ LoKi::Tracks::Selector::Selector
   : LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
   , m_tool ( tool ) 
 {
-  Assert ( m_tool.validPointer() , " IParticleSelector* point to NULL" );  
+  Assert ( m_tool.validPointer() , "ITrackSelector* point to NULL" );  
 }
 // ============================================================================
-// copy constructor 
+// the default constructor is protected
 // ============================================================================
-LoKi::Tracks::Selector::Selector 
-( const LoKi::Tracks::Selector& right ) 
-  : LoKi::AuxFunBase             ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Track*>::Predicate ( right ) 
-  , m_tool ( right.m_tool ) 
-{
-  Assert ( m_tool.validPointer() , " IParticleSelector* point to NULL" );  
-}
+LoKi::Tracks::Selector::Selector ()     // the default constructor is protected
+  : LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
+  , m_tool ( s_SELECTOR ) 
+{}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -213,10 +220,42 @@ LoKi::Tracks::Selector::operator()
     return false ;
   }
   //
-  Assert ( m_tool.validPointer() , "IParticleSelector* points to NULL" );  
+  Assert ( m_tool.validPointer() , "ITrackSelector* points to NULL" );  
   // use the tool 
   return m_tool->accept ( *t ) ; 
 }
+// ============================================================================
+// set new selector tool 
+// ============================================================================
+void LoKi::Tracks::Selector::setSelector ( const ITrackSelector* selector ) 
+{ m_tool = const_cast<ITrackSelector*> ( selector ) ; }
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::Selector::fillStream( std::ostream& s ) const 
+{ return s << "TrSELECTOR" ; }
+// ============================================================================
+// constructor from the tool name 
+// ============================================================================
+LoKi::Tracks::Filter::Filter ( const std::string& nick ) 
+  : LoKi::Tracks::Selector () 
+  , m_nick ( nick ) 
+{
+  const ITrackSelector* s = LoKi::GetTools::trackSelector ( *this , m_nick ) ;
+  setSelector ( s ) ;
+  Assert ( 0 != s , "ITrackSelector* points to NULL" );
+}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::Filter::~Filter(){}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::Filter::fillStream( std::ostream& s ) const 
+{ return s << "TrFILTER('" << m_nick << "')" ; }
+// ============================================================================
+
 // ============================================================================
 /*  constructor from "info"
  *  @param key info index/mark/key
@@ -553,6 +592,9 @@ std::ostream& LoKi::Tracks::Cov2::fillStream ( std::ostream& s ) const
   //
   return s << m_i << "," << m_j << ")" ;
 }
+// ============================================================================
+
+
 // ============================================================================
 // The END 
 // ============================================================================

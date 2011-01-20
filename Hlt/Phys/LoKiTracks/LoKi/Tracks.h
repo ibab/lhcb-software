@@ -184,10 +184,9 @@ namespace LoKi
     } ;    
     // ========================================================================
     /** @class Selector
-     *  Simple class to use 
-     *  @see ITrackSelectorInterface 
+     *  Simple class to use "track-selector"
+     *  @see ITrackSelector
      *  @see LoKi:Cuts::TrSELECTOR
-     *  @see LoKi:Cuts::TrFILTER
      *  @author Vanya BELYAEV ibelayev@physics.syr.edu
      *  @date 2007-06-10
      */
@@ -197,11 +196,9 @@ namespace LoKi
     public :
       // ======================================================================
       /// constructor form the tool 
-      Selector (                       ITrackSelector*  tool ) ;
+      Selector ( const ITrackSelector*  tool ) ;
       /// constructor form the tool 
       Selector ( const LoKi::Interface<ITrackSelector>& tool ) ;
-      /// copy constructor 
-      Selector ( const Selector& );
       /// MANDATORY: virtual destructor 
       virtual ~Selector() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -209,23 +206,56 @@ namespace LoKi
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument t ) const ;
       /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrSELECTOR" ; }
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     public:
       // ======================================================================
       /// conversion operator to the tool
       operator const LoKi::Interface<ITrackSelector>&() const { return m_tool ;}    
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
-      // the default constructor is disabled 
-      Selector() ; ///< the default constructor is disabled 
+      /// the default constructor is protected
+      Selector () ;                     // the default constructor is protected
+      /// set new selector tool 
+      void setSelector ( const ITrackSelector* selector ) ;
       // ======================================================================
     private:
       // ======================================================================
       /// the tool itself 
       LoKi::Interface<ITrackSelector> m_tool ;            // the tool itself 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Filter
+     *  Simple class to use "track-selector"
+     *  @see ITrackSelector
+     *  @see LoKi:Cuts::TrFILTER
+     *  @author Vanya BELYAEV ibelayev@physics.syr.edu
+     *  @date 2007-06-10
+     */
+    class Filter : public Selector 
+    {
+    public :
+      // ======================================================================
+      /// constructor form the tool name 
+      Filter ( const std::string& nick ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Filter () ;
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  Filter* clone() const { return new Filter(*this) ; }
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Filter () ;                        // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the tool typename
+      std::string m_nick ;                                 // the tool typename
       // ======================================================================
     } ;
     // ========================================================================

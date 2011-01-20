@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiTracks
-version           v1r5
+version           v1r6
 
 # =============================================================================
 branches          cmt doc src dict python LoKi 
@@ -13,6 +13,7 @@ branches          cmt doc src dict python LoKi
 use               TrackEvent      v*    Event 
 use               TrackInterfaces v*    Tr
 use               LoKiCore        v*    Phys 
+use               LoKiUtils       v*    Phys 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes  more=LoKi

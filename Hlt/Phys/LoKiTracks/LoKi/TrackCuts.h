@@ -208,20 +208,19 @@ namespace LoKi
      *  @code 
      * 
      *    const LHCb::Track&    track = ... ;
-     *    // get the tool: 
-     *    const ITrackSelector* tool = ... ;
-     *    //create the function:
-     *    const TrCut accept = TrFILTER   ( tool ) ;
+     *    // create the function:
+     *    const TrCut accept = TrFILTER   ( "mytooltypename") ;
      *    // use it!
      *    const bool OK = accept ( track ) ;
      *
      *  @endcode 
      *
-     *  @see LoKi::Tracks::Selector
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
+     *  @see LoKi::Tracks::Filter
+     *  @see LoKi::Cuts::TrSELECTOR
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-01-20
      */
-    typedef LoKi::Tracks::Selector                                   TrFILTER ;
+    typedef LoKi::Tracks::Filter                                   TrFILTER ;
     // ========================================================================
     /** @typedef TrHASINFO 
      *  Trivial predicate which evaluates LHCb::Track::hasInfo

@@ -5,6 +5,15 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-20 - Vanya Belyaev
+
+ - add TrFILTER
+
+ - cmt/requirements 
+
+    version increment to v1r6
+
+
 !========================== LoKiTracks v1r5 2011-01-18 ===================
 ! 2011-01-12 - Vanya Belyaev
 
