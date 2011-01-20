@@ -13,7 +13,6 @@
 #===============================================
 #set echo on
 
-set LHCBEXTERNAL = "/afs/cern.ch/lhcb/externallib"
 set CONTRIB = "/afs/cern.ch/sw/contrib"
 set here = `pwd`
 
@@ -53,9 +52,9 @@ if ($package == "CMT") then
   if ($binary == "osf10" || $binary == "Darwin-PowerMacintosh") set binary = "mac"
 
   if ($binary == "linux") then
-     set exclude = " --exclude Darwin-PowerMacintosh --exclude demo --exclude tbroadcast --exclude Visual --exclude VisualC --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude .svn --exclude LinuxDebug"
+     set exclude = " --exclude Darwin-PowerMacintosh --exclude Darwin-Intel --exclude Darwin-i386 --exclude Darwin-x86_64 --exclude demo --exclude tbroadcast --exclude Visual --exclude VisualC --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude .svn --exclude LinuxDebug"
   else if ($binary == "win32") then
-     set exclude = " --exclude Darwin-PowerMacintosh --exclude demo --exclude Linux-ia64 --exclude Linux-x86_64 --exclude tbroadcast --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude Linux-i686 --exclude .svn --exclude LinuxDebug"
+     set exclude = " --exclude Darwin-PowerMacintosh --exclude Darwin-Intel --exclude Darwin-i386 --exclude Darwin-x86_64 --exclude demo --exclude Linux-ia64 --exclude Linux-x86_64 --exclude tbroadcast --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude Linux-i686 --exclude .svn --exclude LinuxDebug"
   else if ($binary == "mac") then
      set exclude = "--exclude demo --exclude Linux-ia64 --exclude Linux-x86_64 --exclude tbroadcast --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude Linux-i686 --exclude Visual --exclude VisualC --exclude .svn --exclude LinuxDebug"
   else

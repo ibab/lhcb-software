@@ -19,6 +19,7 @@ python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r6"
 compat_version = None
+line_size = 120
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
@@ -43,6 +44,7 @@ etc_dir = None
 bootscripts_dir = None
 targz_dir = None
 tmp_dir = None
+boot_script_loc = None
 
 # global creation mask
 globalmask = None
@@ -92,23 +94,24 @@ def usage() :
       get the list of projects to download
       download project sources
       if binaries are required: download project binaries
-      -p                 : name of the project to install (obsolete option)
-      -v                 : version of the project to install (obsolete option)
-      --version          : the version of this very script
-      -d or --debug      : to print more info
-      -l or --list       : to list the <project>_<version>_*.tar.gz files available on the web
-      -r or --remove     : remove the <project>/<version>
-      -c or --cmtversion : download this CMT version
-      -h or --help       : to print this help
-      -b                 : to import $CMTCONFIG binaries
-      --binary=<bin>     : to import another binary (i.e. $CMTCONFIG_dbg on Linux)
-                           this triggers a 'cmt broadcast cmt config' of all projects but LCGCMT
-      -f                 : to import source, $CMTCONFIG binaries, $CMTCONFIG_dbg binaries
-      -n or -nocheck     : no md5 check of the tar balls
-      --retry=<nb>       : nb of retries for the download (default=1)
-      -C                 : show compatible CMTCONFIGs for that platform
-      --dev-install      : use the devel location for the self-update
-      -u or --url        : use of different distribution location
+      -p                   : name of the project to install (obsolete option)
+      -v                   : version of the project to install (obsolete option)
+      --version            : the version of this very script
+      -d or --debug        : to print more info
+      -l or --list         : to list the <project>_<version>_*.tar.gz files available on the web
+      -r or --remove       : remove the <project>/<version>
+      -c or --cmtversion   : download this CMT version
+      -h or --help         : to print this help
+      -b                   : to import $CMTCONFIG binaries
+      --binary=<bin>       : to import another binary (i.e. $CMTCONFIG_dbg on Linux)
+                             this triggers a 'cmt broadcast cmt config' of all projects but LCGCMT
+      -f                   : to import source, $CMTCONFIG binaries, $CMTCONFIG_dbg binaries
+      -n or -nocheck       : no md5 check of the tar balls
+      --retry=<nb>         : nb of retries for the download (default=1)
+      -C                   : show compatible CMTCONFIGs for that platform
+      --dev-install        : use the devel location for the self-update
+      -u or --url          : use of different distribution location
+      -B or --boot-scripts : prepend boot scripts location (LbScripts base dir). For debug purposes.
 
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
@@ -128,6 +131,7 @@ def usage() :
     sys.exit()
 
 #----------------------------------------------------------------------------------
+
 
 def initRandSeed():
     random.seed("%d-%s" % (os.getpid(), socket.getfqdn()))
@@ -407,10 +411,10 @@ def createDir(here , logname):
                 log.debug('%s exists in %s ' % (dirnm, here))
             else:
                 os.mkdir(dirnm)
-                log.info('%s is created in %s ' % (dirnm, here))
+                log.debug('%s has been created in %s ' % (dirnm, here))
                 if dirnm == 'lcg':
                     os.mkdir(os.path.join(dirnm, 'external'))
-                    log.info('%s is created in %s ' % (os.path.join(dirnm, 'external'), here))
+                    log.debug('%s has been created in %s ' % (os.path.join(dirnm, 'external'), here))
                 if dirnm == 'lhcb':
                     if multiple_mysiteroot :
                         found_dbase = False
@@ -444,7 +448,7 @@ def createDir(here , logname):
             if dirnm == "tmp" :
                 createTmpDirectory()
     else :
-        log.warning("Cannot write in %s" % here)
+        log.warning("Cann't write in the %s folder" % here)
         good = False
 
     return good
@@ -544,7 +548,6 @@ def getFile(url, fname):
     log = logging.getLogger()
     if not url.endswith("/") :
         url = url + "/"
-    log.debug('%s%s ' % (url, fname))
 
     if fname.find('.tar.gz') != -1:
         filetype = 'x-gzip'
@@ -555,7 +558,7 @@ def getFile(url, fname):
                 try:
                     os.remove(dest)
                 except:
-                    log.info('can not remove fname %s' % dest)
+                    log.info("can't remove file name %s" % dest)
     elif fname.find('.html') != -1 or fname.find('.htm') != -1 :
         this_html_dir = html_dir.split(os.pathsep)[0]
         dest = os.path.join(this_html_dir, fname)
@@ -565,12 +568,13 @@ def getFile(url, fname):
         filetype = 'text'
         if fname.find('.py') != -1:
             dest = fname
-            if fname == 'install_project.py' : dest = 'latest_install_project.py'
+            if fname == 'install_project.py' :
+                dest = 'latest_install_project.py'
             if os.path.exists(dest):
                 try:
                     os.remove(dest)
                 except:
-                    log.warning('can not remove fname %s' % dest)
+                    log.warning("Can't remove file name %s" % dest)
 
 
     exist_flag = False
@@ -583,7 +587,7 @@ def getFile(url, fname):
             log.info("Retrieving %s" % url +fname)
             h = retrieve(url + fname, dest)[1]
             if h.type.find(filetype) == -1:
-                log.warning('cannot download %s - retry' % fname)
+                log.warning("Can't download %s - retry" % fname)
                 os.remove(dest)
             else:
                 if md5_check and isTarBall(dest):
@@ -598,7 +602,7 @@ def getFile(url, fname):
             local_retries = local_retries - 1
 
         if not hasbeendownloaded:
-            sys.exit('Cannot download %s after %s attempts - exit ' % (fname, nb_retries) + '\n')
+            sys.exit("Unable to download %s after %s attempts - exit " % (fname, nb_retries) + '\n')
 
     return exist_flag
 
@@ -638,7 +642,7 @@ def removeReferenceMD5(fnm, dest):
         try:
             os.remove(filename)
         except:
-            log.warning('cannot remove file %s' % filename)
+            log.warning("Can't remove file %s" % filename)
 
 def getReferenceMD5(url, filen, dest):
     log = logging.getLogger()
@@ -649,7 +653,7 @@ def getReferenceMD5(url, filen, dest):
             os.remove(filename)
         filename = retrieve(url + '/' + md5name, filename)[0]
     else:
-        log.warning('cannot retrieve %s' % md5name)
+        log.warning("Can't retrieve %s" % md5name)
     for line in open(filename, "r").readlines():
         md5sum = line.split(" ")[0]
     return md5sum
@@ -849,7 +853,7 @@ def getProjectList(name, version, binary=None, recursive=True):
         try :
             fdlines = getFileContent(url_dist + "html/" + tar_file_html)
         except :
-            log.fatal("Cannot retrieve dependency information for %s %s %s" % (name, version, binary))
+            log.fatal("Can't retrieve dependency information for %s %s %s" % (name, version, binary))
             sys.exit(1)
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
@@ -1001,7 +1005,7 @@ def getProjectTar(tar_list, already_present_list=None):
 
 
     for fname in tar_list.keys():
-        log.info('---------------------------------------------------------------------------------------------------------')
+        log.info('-' * line_size)
         if not isInstalled(fname) or overwrite_mode :
             log.debug(fname)
             if tar_list[fname] == "source":
@@ -1256,8 +1260,9 @@ def getBootScripts():
             if l.startswith(location) :
                 that_lhcb_dir = l
                 break
-        sys.path.insert(0, os.path.join(that_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
-        log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+        sys.path.insert(0, os.path.join(that_lhcb_dir,
+                                        "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version,
+                                        "InstallArea", "python"))
     else :
         if not check_only :
             log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
@@ -1276,16 +1281,24 @@ def getBootScripts():
             else :
                 if fix_perm :
                     changePermissions(this_bootscripts_dir, recursive=True)
-                sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
-                log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+                sys.path.insert(0, os.path.join(this_bootscripts_dir,
+                                                "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version,
+                                                "InstallArea", "python"))
+            atexit.register(cleanBootScripts)
         else :
             log.critical("LbScripts %s is not installed and cannot be installed in check mode" % lbscripts_version)
             sys.exit(2)
+
+    if boot_script_loc :
+        sys.path.insert(0, os.path.join(boot_script_loc, "InstallArea", "python"))
+        log.debug("Prepending %s to sys.path" % os.path.join(os.path.join(boot_script_loc, "InstallArea", "python")))
+
+    log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+
     import LbLegacy as lbl
     LbLegacy = lbl
     import LbConfiguration as lbconf
     LbConfiguration = lbconf
-    atexit.register(cleanBootScripts)
 
 def cleanBootScripts():
     log = logging.getLogger()
@@ -1321,9 +1334,9 @@ def getVersionList(pname, ver=None):
             PROJECT = pname.upper()
 
     if pname in lcg_tar :
-        webpage = urlopen(url_dist+'/source')
+        webpage = urlopen(url_dist + 'source')
     else :
-        webpage = urlopen(url_dist + '/' + PROJECT)
+        webpage = urlopen(url_dist + PROJECT)
 
     weblines = webpage.readlines()
     plist = []
@@ -2115,6 +2128,7 @@ def parseArgs():
     global latest_data_link
     global dev_install
     global url_dist
+    global boot_script_loc
 
 
 
@@ -2129,12 +2143,13 @@ def parseArgs():
         usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:Cu:',
+        opts, args = getopt.getopt(arguments, "hdflrbp:v:c:ng:s:Cu:B:",
             ['help', 'debug', 'full', 'list', 'remove', 'binary=',
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
-             'compatversion=', 'retrytime=', 'nofixperm', 'version',
-             'compatible-configs', "latest-data-link","url"])
+             'compatversion=', "retrytime=", "nofixperm", "version",
+             "compatible-configs", "latest-data-link","url",
+             "boot-scripts="])
 
     except getopt.GetoptError, err:
         print str(err)
@@ -2196,7 +2211,11 @@ def parseArgs():
             dev_install = True
         if key in ('-u', '--url'):
             url_dist = value
+        if key in ('-B', '--boot-scripts'):
+            boot_script_loc = value
 
+    if not url_dist.endswith("/") :
+        url_dist += "/"
 
     if not pname and len(args) > 0 :
         pname = args[0]
@@ -2233,7 +2252,9 @@ def main():
 
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120))
+    thelog.info('=' * line_size)
+    thelog.info(('<<< %s - Start of install_project.py %s with python %s >>>' % (start_time, script_version, txt_python_version)).center(line_size))
+    thelog.info('=' * line_size)
     thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
 
@@ -2269,7 +2290,9 @@ def main():
     runInstall(pname, pversion, binary)
 
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    thelog.info((' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120))
+    thelog.info('=' * line_size)
+    thelog.info(('<<< %s - End of install_project.py %s >>>' % (end_time, script_version)).center(line_size))
+    thelog.info('=' * line_size)
 
 
 if __name__ == "__main__":

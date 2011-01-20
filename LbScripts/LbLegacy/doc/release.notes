@@ -1,3 +1,10 @@
+2011-01-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: introduce a way to use a custom location
+	for LScripts as boot scripts (-B, --boot-scripts)
+	* scripts/mkexternaltar: fixed the exclusion list for CMT and the Darwin platforms
+	* tests/InstallProjectTest.py: added a test test for regression tests.
+
 2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar:
