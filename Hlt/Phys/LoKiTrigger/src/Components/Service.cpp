@@ -286,7 +286,8 @@ void Hlt::Service::handle ( const Incident& inc )
 {
   if ( !m_frozen ) 
   {
-    Warning ( "The Service is frozen! No further registrations are allowed!") ;
+    MsgStream& msg = msgStream ( MSG::INFO ) ;
+    msg <<  "The Service is frozen! No further registrations are allowed!" <<endmsg ;
     if ( !m_lockers.empty() ) 
     { Error ("Service is going to be frozen, but it is locked!") ; }
     //
