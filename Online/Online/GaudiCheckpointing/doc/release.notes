@@ -1,0 +1,9 @@
+Package: GaudiCheckpointing
+Author:  Markus Frank
+
+!================== GaudiOnline v0r1 2011-01-15 =============================
+
+New package:
+
+interface GaudiOnline to the checkpoint/restore mechanism.
+

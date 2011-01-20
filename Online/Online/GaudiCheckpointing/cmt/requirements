@@ -17,6 +17,6 @@ apply_pattern linker_library         library=GaudiCheckpointing
 apply_pattern generate_rootmap       library=GaudiCheckpointing
 apply_pattern generate_configurables library=GaudiCheckpointing
 
-macro_append GaudiCheckpointing_use_linkopts ' -g -O0 '
-macro_append CheckpointSvc_cppflags          ' -g -O0 '
-private
+macro_append GaudiCheckpointing_use_linkopts ' -g -O0 ' WIN32 ''
+macro_append CheckpointSvc_cppflags          ' -g -O0 ' WIN32 ''
+
