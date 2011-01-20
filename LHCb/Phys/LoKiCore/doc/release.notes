@@ -15,6 +15,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-01-20 - Vanya Belyaev
+
+ - src/ParticleProperties.cpp
+
+    fix bug in antiParticle function. 
+    Thanks to Marco & Coverity
+
+ - cmt/requirements 
+     version increment to v10r7 
+
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC remarks
 

@@ -286,7 +286,7 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
   }
   // get the anti particle 
   const LHCb::ParticleProperty* antiPP = p1->antiParticle() ;
-  if ( 0 == p1 ) 
+  if ( 0 == antiPP ) 
   {
     LoKi::Report::Error
       ( " LoKi::Particles::antiParticle("              + 
