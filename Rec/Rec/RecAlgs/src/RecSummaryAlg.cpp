@@ -21,7 +21,8 @@ DECLARE_ALGORITHM_FACTORY( RecSummaryAlg );
 //=============================================================================
 RecSummaryAlg::RecSummaryAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_richTool     ( NULL )
 {
   declareProperty( "SummaryLocation",
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
@@ -44,7 +45,7 @@ StatusCode RecSummaryAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Add any init stuff here
+  m_richTool = tool<Rich::DAQ::IRawBufferToSmartIDsTool>("Rich::DAQ::RawBufferToSmartIDsTool");
 
   return sc;
 }
@@ -79,11 +80,11 @@ StatusCode RecSummaryAlg::execute()
     }
 
     // Save track info tom summary
-    summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
-    summary->addInfo( LHCb::RecSummary::nDownstreamTracks, nDownstream );
-    summary->addInfo( LHCb::RecSummary::nUpstreamTracks,   nUpstream );
-    summary->addInfo( LHCb::RecSummary::nVeloTracks,       nVelo );
-    summary->addInfo( LHCb::RecSummary::nTTracks,          nT );
+    summary->addInfo( LHCb::RecSummary::nLongTracks,       (double)nLong );
+    summary->addInfo( LHCb::RecSummary::nDownstreamTracks, (double)nDownstream );
+    summary->addInfo( LHCb::RecSummary::nUpstreamTracks,   (double)nUpstream );
+    summary->addInfo( LHCb::RecSummary::nVeloTracks,       (double)nVelo );
+    summary->addInfo( LHCb::RecSummary::nTTracks,          (double)nT );
 
   }
   else
@@ -91,6 +92,7 @@ StatusCode RecSummaryAlg::execute()
     Warning( "No tracks available at '"+m_trackLoc+"'" ).ignore();
   }
 
+  // Do we have reconstructed PVs ?
   if ( exist<LHCb::RecVertices>(m_pvLoc) )
   {
 
@@ -98,13 +100,19 @@ StatusCode RecSummaryAlg::execute()
     const LHCb::RecVertices * pvs = get<LHCb::RecVertices>(m_pvLoc);
     
     // Save PV information
-    summary->addInfo( LHCb::RecSummary::nPVs, pvs->size() );
+    summary->addInfo( LHCb::RecSummary::nPVs, (double)pvs->size() );
 
   }
   else
   {
     Warning( "No PVs available at '"+m_pvLoc+"'" ).ignore();
   }
+
+  // RICH information
+  summary->addInfo( LHCb::RecSummary::nRich1Hits, 
+                    (double)m_richTool->nTotalHits(Rich::Rich1) );
+  summary->addInfo( LHCb::RecSummary::nRich2Hits, 
+                    (double)m_richTool->nTotalHits(Rich::Rich2) );
 
   if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
 

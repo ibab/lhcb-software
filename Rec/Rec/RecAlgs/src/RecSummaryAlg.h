@@ -13,6 +13,9 @@
 #include "Event/RecSummary.h"
 #include "Event/RecVertex.h"
 
+// tool interfaces
+#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
+
 /** @class RecSummaryAlg RecSummaryAlg.h
  *  
  *  Fill the LHCb::RecSUmmary class with summary information from the event
@@ -44,6 +47,9 @@ private:
 
   /// Location in the TES to load the reconstructed PVs from
   std::string m_pvLoc;
+
+  /// Pointer to RICH DAQ decoding tool
+  Rich::DAQ::IRawBufferToSmartIDsTool* m_richTool;
 
 };
 
