@@ -121,7 +121,7 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
   declareProperty("TrendTimeSpan",m_timeSpan = 125 );
   declareProperty("TrendBinWidth",m_binWidth = 1 );
-  declareProperty("GetStartOfRunFromCondDB",m_useCondDB = false);
+  declareProperty("GetStartOfRunFromCondDB",m_useCondDB = true);
 
 }
 //=============================================================================
