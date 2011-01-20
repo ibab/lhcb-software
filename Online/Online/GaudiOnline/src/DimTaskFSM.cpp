@@ -85,9 +85,7 @@ namespace  {
     std::string format = fmt;
     DimTaskFSM* p = (DimTaskFSM*)context;
     char buffer[2048];
-    buffer[0]='X';
-    buffer[1]='Y';
-    size_t len = ::vsnprintf(buffer+2, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
+    size_t len = ::vsnprintf(buffer, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
     p->output(level, buffer);
     return len;
   }
