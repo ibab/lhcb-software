@@ -10,15 +10,6 @@
  *
  */
 
-ApplicationMgr.Dlls += { "LbBcVegPy" };
-
-Generation.SampleGenerationTool       = "Special";
-Generation.Special.ProductionTool = "BcVegPyProduction";
-Generation.Special.BcVegPyProduction.Commands += {
-  "pypars mstp 51 10042"
-  ,"pypars mstp 2 1"
-  ,"pydat1 mstu 111 1"
-};
 Generation.Special.BcVegPyProduction.BcVegPyCommands += {
   "mixevnt imix 1" ,
   "mixevnt imixtype 1" ,
@@ -26,7 +17,9 @@ Generation.Special.BcVegPyProduction.BcVegPyCommands += {
   "vegasinf nitmx 20",
   "vegasinf number 1000000",
   "loggrade ivegasopen 0",
-  "loggrade igrade 1"
+  "loggrade igrade 1",
+  "upcom ecm 7000.0"
  } ;
+
 Generation.PileUpTool = "FixedLuminosityForRareProcess";
 

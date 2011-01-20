@@ -3,6 +3,8 @@
 ! Responsible : Patrick ROBBE
 !=====================================================================
 
+! 2011-01-20 - Patrick Robbe
+ - options/BcBegPy.py: add options in python format
 
 !===================== LbBcVegPy v3r0 2009-10-02 =====================
 ! 2009-10-02 - Jibo He
