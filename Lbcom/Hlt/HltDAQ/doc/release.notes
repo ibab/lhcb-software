@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-01-20 - Gerhard Raven
+ - replace the request in the requiremenents for HltTCK from v1r* to v*
+
 !========================= HltDAQ v2r5 2010-12-15 =========================
 ! 2010-12-14 - Gerhard Raven
  - PropertyConfigSvc: add possibility to apply transformations on properties just before 
