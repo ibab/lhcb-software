@@ -1,10 +1,10 @@
 #$Id: requirements,v 1.42 2010-09-08 09:18:23 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
-# Maintainer : Jose Angel Hernando Morata 
+# Maintainer : Vladimir Gligorov, Johannes Albrecht
 #============================================================================
 package           HltTracking
-version           v8r0p2
+version           v8r1
 
 # Structure
 #============================================================================
