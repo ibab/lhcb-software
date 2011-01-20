@@ -7,6 +7,11 @@ Purpose     : LHCb analysis packages
 
  *** Based on Phys v9r13. Backwards-incompatible baseline for early 2011 developments. ***
 
+ * Small MicroDST bug fixes. Bugs did not affect stripping.
+ * DSTWriters fix to stripping InputCopyStream corruption Gaudi feature.
+ * DecayTreeTuple: decorators to make python configuration easier.
+ * FlavourTagging optimised and calibrated for Stripping12.
+
 </PRE><H1><A NAME=v4r13>2010-12-21 Analysis v4r13 </A></H1><PRE>
 
  *** Based on Phys v9r13. Baseline for early 2011 developments. ***
