@@ -18,10 +18,13 @@ DECLARE_ALGORITHM_FACTORY( BeamGasTrigVertexCut );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-BeamGasTrigVertexCut::BeamGasTrigVertexCut(const std::string& name, ISvcLocator* pSvcLocator):
-                HltAlgorithm(name, pSvcLocator, false), m_trigEventsZnegative(0), m_trigEventsZpositive(0)	
+BeamGasTrigVertexCut::BeamGasTrigVertexCut(const std::string& name, ISvcLocator* pSvcLocator)
+    : HltAlgorithm(name, pSvcLocator, false)
+    , m_trigEventsZnegative(0)
+    , m_trigEventsZpositive(0)	
+    , m_trackSelection(*this)
 {
-  declareProperty( "RZTracksInputLocation", m_RZTracksLocation = "Rec/Track/RZVeloBeamGas" );
+  m_trackSelection.declareProperties();
   declareProperty( "HistoBinWidth", m_binWidth = 14);
   declareProperty( "MaxBinValueCut", m_maxCut = 4);
   declareProperty( "ZExclusionRangeLow", m_zExclusionRangeLow = 0.0);
@@ -41,21 +44,20 @@ BeamGasTrigVertexCut::~BeamGasTrigVertexCut() {};
 StatusCode BeamGasTrigVertexCut::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+  m_trackSelection.retrieveSelections();
+  m_trackSelection.registerSelection();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
 
   verbose() << "==> Initialize" << endmsg;
   
   debug() << "========== Algorithm parameters ======"            << endreq
-         << "RZTracksLocation     = " << m_RZTracksLocation     << endreq   
          << "HistoZRangeLow       = " << m_histoZMin << " mm"   << endreq
          << "HistoZRangeUp        = " << m_histoZMax << " mm"   << endreq
 	 << "HistoBinWidth        = " << m_binWidth  << " mm"	<< endreq
 	 << "MaxBinValueCut       = " << m_maxCut		<< endreq
 	 << "ZExclusionRangeLow   = " << m_zExclusionRangeLow   << " mm"    << endreq
-	 << "ZExclusionRangeUp    = " << m_zExclusionRangeUp    << " mm"    << endreq
-	 << "OutputSelectionName  = " << m_outputSelectionName  << endreq;
+	 << "ZExclusionRangeUp    = " << m_zExclusionRangeUp    << " mm"    << endreq;
 	 
-  m_trackSelection = &( registerTSelection<LHCb::Track>( m_outputSelectionName ) );
   
   return StatusCode::SUCCESS;
 };
@@ -70,14 +72,12 @@ StatusCode BeamGasTrigVertexCut::execute() {
   
   debug() << "==> Execute" << endmsg;
   
-  LHCb::Tracks* BGtracks;
-  if( exist<LHCb::Tracks>( m_RZTracksLocation ) ){ BGtracks = get<LHCb::Tracks>( m_RZTracksLocation ); }
-  else { error() << "Can't find input tracks" << endmsg; return StatusCode::SUCCESS; }  
+  const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
   debug() << "Number of tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
     
   
   // Fill the vector with the tracks z position at r=0
-  for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
+  for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
   {  
     double z = (*itT)->firstState().z();
     double r = (*itT)->firstState().x();
@@ -117,17 +117,17 @@ StatusCode BeamGasTrigVertexCut::execute() {
       debug() << "Vect Triggered Event \n\t start = " << firstEl << "\n\t end = " << lastEl << endmsg;
   
       //Fill the candidates container with the tracks with good  z_r0        
-      for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {  
+      for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {  
         double z = (*itT)->firstState().z();
         double r = (*itT)->firstState().x();
         double t = (*itT)->firstState().tx();
         double z_r0 = z - r/t;
         if( z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1) ) {  
-          m_trackSelection->push_back( *itT );
+          m_trackSelection.output()->push_back( *itT );
         }
       }
   
-      debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
+      debug() << "Number of Objects in the outputSelection = " << m_trackSelection.output()->size() << endmsg;
 
       if( firstEl > 0 ) m_trigEventsZpositive += 1;
       else              m_trigEventsZnegative += 1;	

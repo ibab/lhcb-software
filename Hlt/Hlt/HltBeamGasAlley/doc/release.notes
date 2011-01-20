@@ -3,6 +3,10 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+!========================== HltBeamGasAlley v2r4   2011-01-20 =================
+! 2011-01-20 Gerhard Raven
+ - migrate to use HltSelectionContainer
+
 !========================== HltBeamGasAlley v2r3p1 2010-03-28 =================
 ! 2010-03-04 Gerhard Raven
  - remove unneccessary code

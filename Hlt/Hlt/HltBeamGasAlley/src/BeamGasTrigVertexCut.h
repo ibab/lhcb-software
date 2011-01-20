@@ -18,7 +18,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
  private:
-  std::string    m_RZTracksLocation;  ///< Name of container with input RZ Tracks 
   double		 m_histoZMin;	  ///< Lower limit of the z_r0 histo
   double		 m_histoZMax;	  ///< Upper limit of the z_r0 histo
   int		     m_nBins;             ///< N of bins of the z_r0 histo  
@@ -30,8 +29,8 @@ public:
   unsigned       m_trigEventsZnegative;
   unsigned       m_trigEventsZpositive;
   
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_trackSelection;
   std::string       m_outputSelectionName;  
-  Hlt::TSelection<LHCb::Track>* m_trackSelection;
 
 };
 #endif // INCLUDE_BEAMGASTRIGVERTEXCUT_H 
