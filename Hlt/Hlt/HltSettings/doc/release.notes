@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r1   2011-01-20 ===================
 ! 2011-01-19 - V. Gligorov 
  - Add inclusive Phi and XGamma lines to the draft 2011 settings, following
    presentation in T&S meeting Jan 17. 
