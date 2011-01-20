@@ -108,7 +108,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                 , Member ('HltFilterFittedTracks', 'FFT',
                           OutputSelection = "%Decision",
                           InputSelection1 = '%TFTrkChi2', 
-                          InputSelection2 = 'PV3D',
+                          InputSelection2 = PV3D().outputSelection(),
                           MinIPCHI2 = ipchi2
                          )
                 #, Member ('TF','FFT'
@@ -167,7 +167,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                      ,    Member ('HltFilterFittedParticles', 'FFT'
                                  , OutputSelection = "%Decision"
                                  , InputSelection1 = 'TES:/Event/%s' % input
-                                 , InputSelection2 = 'PV3D'
+                                 , InputSelection2 = PV3D().outputSelection()
                                  , MinIPCHI2 = '%s'%ipchi2
                                  )   
                      ]
