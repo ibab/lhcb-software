@@ -220,7 +220,7 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
   Thread*  mother = chkpt_sys.motherofall;
   mtcp_output(MTCP_DEBUG,"wrapper clone*: Starting to clone threads: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
 	      fn, arg, parent_tidptr, child_tidptr, newtls, arg==mother ? "MOTHER_OF_ALL" : "",mother);
-  if ( mother != NULL ) {
+  if ( mother != 0 ) {
     // Track this thread
     Thread *t = new Thread();
     t->m_startFunc  = fn;   // this is the user's function
@@ -316,7 +316,7 @@ Thread *Thread::current()   {
 
 /// Save the system info of the process
 WEAK(void) Thread::saveSysInfo() {
-  chkpt_sys.saved_break = (void*) mtcp_sys_brk(NULL);  // kernel returns mm->brk when passed zero
+  chkpt_sys.saved_break = (void*) mtcp_sys_brk(0);  // kernel returns mm->brk when passed zero
   // Do this once, same for all threads.  But restore for each thread.
   if (mtcp_have_thread_sysinfo_offset())
     chkpt_sys.sysInfo = mtcp_get_thread_sysinfo();
@@ -333,7 +333,7 @@ WEAK(int) Thread::cleanup()   {
   mtcp_output(MTCP_DEBUG,"cleanup: %p->tid:%d\n",this,m_tid);
 
   // Remove thread block from 'threads' list
-  if ((*(this->prev) = this->next) != NULL) {
+  if ((*(this->prev) = this->next) != 0) {
     this->next->prev = this->prev;
   }
   // Remove thread block from parent's list of children
@@ -343,14 +343,14 @@ WEAK(int) Thread::cleanup()   {
     *lthread = xthread->m_siblings;
 
     // If this thread has children, give them to its parent
-    while((xthread = m_children) != NULL) {
+    while((xthread = m_children) != 0) {
       m_children   = xthread->m_siblings;
       xthread->m_siblings = parent->m_children;
       parent->m_children  = xthread;
     }
   }
   else {
-    while((xthread = m_children) != NULL) {
+    while((xthread = m_children) != 0) {
       m_children   = xthread->m_siblings;
       xthread->m_siblings = chkpt_sys.motherofall;
       chkpt_sys.motherofall = xthread;
@@ -697,7 +697,7 @@ WEAK(int) Thread::restart(int force_context)     {
     // which were pending for the entire process at the time of checkpoint.
     sigset_t tmp;
     sigfillset(&tmp);
-    for (Thread* t = s_threads; t != NULL; t = t->next) {
+    for (Thread* t = s_threads; t != 0; t = t->next) {
       sigandset(&sigpending_global, &tmp, &t->m_sigpending);
       tmp = sigpending_global;
     }
@@ -754,12 +754,12 @@ WEAK(int) Thread::restart(int force_context)     {
       tid = syscall(SYS_clone, Thread::restartMain,
 		    (void *)(child->m_savctx.SAVEDSP - 128),  // -128 for red zone
 		    cloneFlags,
-		    &child->m_restartArgs, child->m_pParentTID, NULL, child->m_pActualTID);
+		    &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
     } else {
       tid = (*CLONE_CALL)(Thread::restartMain,
 			  p,  // -128 for red zone
 			  cloneFlags,
-			  &child->m_restartArgs, child->m_pParentTID, NULL, child->m_pActualTID);
+			  &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
     }
 
     if ( tid < 0 )  {
@@ -797,7 +797,7 @@ WEAK(int) Thread::restart(int force_context)     {
 /// Save signal handlers and block signal delivery
 WEAK(void) Thread::restoreSignals()  {
   mtcp_output(MTCP_DEBUG,"restoreSignals: pid:%d tid:%d Restoreinprog:%d\n",mtcp_sys_getpid(),m_tid,restoreinprog.value());
-  if (_real_sigprocmask(SIG_SETMASK, &m_sigblockmask, NULL) >= 0) {
+  if (_real_sigprocmask(SIG_SETMASK, &m_sigblockmask, 0) >= 0) {
     // Raise the signals which were pending for only this thread at the time of checkpoint.
     for (int i = 1; i<NSIG; ++i ) {
       if (sigismember(&m_sigpending, i)  == 1  && 

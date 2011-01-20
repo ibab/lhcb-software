@@ -55,6 +55,9 @@ namespace CHECKPOINTING_NAMESPACE  {
    * @version 1.0
    */
   class FileHandler   {  
+  protected:
+    /// Default destructor
+    virtual ~FileHandler() {}
   public: 
     /// Handle single file entry
     virtual int handle(int fdnum)  const = 0;  
@@ -84,10 +87,10 @@ namespace CHECKPOINTING_NAMESPACE  {
   public: 
     /// Standard constructor
     FileCountHandler() : m_count(0) {}
-      /// Handle single file entry
-      virtual int handle(int /* fdnum */)  const {  ++m_count; return 1;}
-      /// Access number of files counted
-      int count() const { return m_count; }
+    /// Handle single file entry
+    virtual int handle(int /* fdnum */)  const {  ++m_count; return 1;}
+    /// Access number of files counted
+    int count() const { return m_count; }
   };
   
   /** @class MemCountFileHandler
@@ -101,10 +104,10 @@ namespace CHECKPOINTING_NAMESPACE  {
   public: 
     /// Standard constructor
     MemCountFileHandler() : m_count(2*sizeof(Marker)) {}
-      /// Handle single file entry
-      virtual int handle(int fdnum)  const;
-      /// Access number of bytes necessary
-      long count() const { return m_count; }
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
+    /// Access number of bytes necessary
+    long count() const { return m_count; }
   };
   
   
@@ -122,20 +125,17 @@ namespace CHECKPOINTING_NAMESPACE  {
     
   public:
     /// Standard constructor
-    FileWriteHandler(int fd) 
-      : m_fd(fd), m_bytes(0), m_count(0) {}
-      /// Default destructor
-      ~FileWriteHandler() { }
-      /// Access number of bytes written
-      long bytes() const { return m_bytes; }
-      /// Access number of bytes necessary
-      long count() const { return m_count; }
-      /// Start the write cycle
-      FileWriteHandler& start();
-      /// Stop and finish the write cycle
-      int stop();
-      /// Handle single file entry
-      virtual int handle(int fdnum)  const;
+    FileWriteHandler(int fd) : m_fd(fd), m_bytes(0), m_count(0) {}
+    /// Access number of bytes written
+    long bytes() const { return m_bytes; }
+    /// Access number of bytes necessary
+    long count() const { return m_count; }
+    /// Start the write cycle
+    FileWriteHandler& start();
+    /// Stop and finish the write cycle
+    int stop();
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
   };
   
   /** @class FileStreamOutHandler
@@ -150,8 +150,6 @@ namespace CHECKPOINTING_NAMESPACE  {
   public:
     /// Standard constructor
     FileStreamOutHandler(void* add);
-    /// Default destructor
-    ~FileStreamOutHandler() { }
     /// Access number of bytes written
     long bytes() const { return m_ptr-m_addr; }
     /// Access number of bytes necessary
@@ -178,19 +176,17 @@ namespace CHECKPOINTING_NAMESPACE  {
   public: 
     /// Standard constructor
     FileReadHandler(const void* add, bool restore=false) 
-      : m_addr((char*)add), m_ptr((char*)add), m_now(0), m_count(0), m_restore(restore) {}
-      /// Default destructor
-      ~FileReadHandler() {}
-      /// Access number of bytes necessary
-      long count() const { return m_count; }
-      /// Access number of bytes written
-      long bytes() const { return m_ptr-m_addr; }
-      /// Start the read cycle
-      FileReadHandler& start();
-      /// Stop and finish the read cycle
-      int stop();
-      /// Handle single file entry
-      virtual int handle(int fdnum)  const;
+    : m_addr((char*)add), m_ptr((char*)add), m_now(0), m_count(0), m_restore(restore) {}
+    /// Access number of bytes necessary
+    long count() const { return m_count; }
+    /// Access number of bytes written
+    long bytes() const { return m_ptr-m_addr; }
+    /// Start the read cycle
+    FileReadHandler& start();
+    /// Stop and finish the read cycle
+    int stop();
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
   };
 
   /** @class FileMemPrintHandler
@@ -202,8 +198,8 @@ namespace CHECKPOINTING_NAMESPACE  {
   public: 
     /// Standard constructor
     FileMemPrintHandler(const void* add) :  FileReadHandler(add) {}
-      /// Handle single file entry
-      virtual int handle(int fdnum)  const;
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
   };
 
   /** @class FileMapper
@@ -216,9 +212,9 @@ namespace CHECKPOINTING_NAMESPACE  {
   public: 
     /// Standard constructor
     FileMapper(const void* add, bool prt, bool restore) 
-      :  FileReadHandler(add, restore), m_print(prt) {}
-      /// Handle single file entry
-      virtual int handle(int fdnum)  const;
+    :  FileReadHandler(add, restore), m_print(prt) {}
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
   };
 
   /** @class FileMap

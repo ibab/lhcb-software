@@ -215,7 +215,7 @@ int MemMaps::scan(AreaHandler& handler) {
 	a.size = a.high - a.low;
 	*(int*)a.prot = *(int*)prot;
 	if ( !file[0] ) {
-	  unsigned long brk = (unsigned long)mtcp_sys_brk(NULL);
+	  unsigned long brk = (unsigned long)mtcp_sys_brk(0);
 	  if ( brk >= a.low && brk <= a.high ) file = "[heap]";
 	}
 	a.name_len = m_strcpy(a.name,file);

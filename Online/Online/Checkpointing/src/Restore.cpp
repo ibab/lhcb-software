@@ -506,7 +506,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   // Close image file (fd only gets in the way) */
   if ( fd != 0 ) mtcp_sys_close(fd);
   
-  void* brk = mtcp_sys_brk(NULL);
+  void* brk = mtcp_sys_brk(0);
   if( *(int*)nam == *(int*)"[heap]" && brk != nam + size) {
     //mtcp_output(MTCP_WARNING,"WARNING: break (%p) not equal to end of heap (%p)\n",brk,nam+size);
   }
