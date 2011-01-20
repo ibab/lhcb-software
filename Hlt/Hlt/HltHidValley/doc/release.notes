@@ -5,12 +5,12 @@
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
 
-!========================== HltHidValley v1r4 2011-01-20 =====================
+!========================== HltHidValley v2r0 2011-01-20 =====================
 
 ! 2011-01-20 - Juan Palacios
  - Hlt2HidValley
   . Replace all references to IPhysDesktop for DVAlgorithm equivalent methods.
- - Increase to v1r4.
+ - Increase to v2r0.
  - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
 
 !========================== HltHidValley v1r3p1 2010-06-08 ===================
