@@ -162,13 +162,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
     def __seqGEC(self):  
         '''Defines a global event cut (sets upper limit on n_tracks).'''
-        from HltTracking.Hlt2TrackingConfigurations import \
-             Hlt2UnfittedForwardTracking
         modules =  CoreFactory('CoreFactory').Modules
         if 'LoKiTrigger.decorators' not in modules:
             modules.append('LoKiTrigger.decorators')
         
-        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
 
         # by default, configure as a pass-all filter with similar code.
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
