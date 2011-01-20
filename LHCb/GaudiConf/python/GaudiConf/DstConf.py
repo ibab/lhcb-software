@@ -104,7 +104,8 @@ class DstConf(LHCbConfigurableUser):
             depth = "#1"
 
         writer.ItemList += [   "/Event/Rec/Header"                       + depth
-                             , "/Event/Rec/Status"                       + depth 
+                             , "/Event/Rec/Status"                       + depth
+                             , "/Event/Rec/Summary"                      + depth 
                              , "/Event/" + recDir + "/Track/Best"        + depth
                              , "/Event/" + recDir + "/Rich/PIDs"         + depth
                              , "/Event/" + recDir + "/Muon/MuonPID"      + depth
