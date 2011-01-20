@@ -52,7 +52,7 @@ private:
 
   inline bool cloneOriginVertex(const LHCb::MCVertex* vertex) 
   {
-    return true;
+    return vertex;
     //    return vertex && (vertex->isDecay() || vertex->isPrimary() );
   }
   
