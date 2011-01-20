@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # =============================================================================
 # @file Hlt2InclusivePhiLines.py
 # @author Albert Puig Navarro (albert.puig@cern.ch)
@@ -113,9 +112,11 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi complete line
         ############################################################################
 
+        from HltTracking.HltPVs import PV3D
         line = Hlt2Line('IncPhi'
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedKaons,
+                        , algos = [ PV3D(),
+                                    BiKalmanFittedKaons,
                                     Hlt2InclusivePhi,
                                     BiKalmanFittedRichKaons, 
                                     Hlt2InclusivePhiRich]
@@ -130,7 +131,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('IncPhiTrackFit'
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedKaons,
+                        , algos = [ PV3D(),
+                                    BiKalmanFittedKaons,
                                     Hlt2InclusivePhi]
                         , postscale = self.postscale
                           )
@@ -143,7 +145,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('IncPhiSidebands'
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedKaons,
+                        , algos = [ PV3D(),
+                                    BiKalmanFittedKaons,
                                     Hlt2InclusivePhiSB,
                                     BiKalmanFittedRichKaons,
                                     Hlt2InclusivePhiRichSB]
@@ -153,4 +156,3 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
 
 # EOF
-

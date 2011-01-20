@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v7r1 2011-01-20 ===================
+! 2011-01-20 - Gerhard Raven
+ - add PV3D to inclusive Phi lines
+
 ! 2011-01-20 - V. Gligorov
  - Remove dependency on unfitted tracks in XGamma lines. 
 
