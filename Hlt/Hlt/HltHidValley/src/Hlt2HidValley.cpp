@@ -67,8 +67,7 @@ StatusCode Hlt2HidValley::execute() {
   setFilterPassed(false);
 
   LHCb::Tracks* inputTracks = get<LHCb::Tracks>(m_inputTracks);
-  LHCb::Particle::ConstVector Pions ;
-  const LHCb::Particle::ConstVector& inputParts = desktop()->particles();
+  const LHCb::Particle::ConstVector& inputParts = this->i_particles();
   const LHCb::RecVertex::Range primVertices = this->primaryVertices();
   LHCb::RecVertices* displacedVrtcs = 
                      get<LHCb::RecVertices>(m_inputDisplacedVertices);
@@ -123,11 +122,12 @@ StatusCode Hlt2HidValley::execute() {
        (sumXYTrackfirstStates > 30. * Gaudi::Units::mm) && 
        (sumSVxyDist > 0.7 * Gaudi::Units::mm)) {
       setFilterPassed(true);
-      Pions.push_back(highestPtPion);
+      this->cloneAndMarkTree(highestPtPion);
     }			 
   }
- 
-  return desktop()->cloneTrees(Pions);
+
+  return StatusCode::SUCCESS;
+
 }
 
 //=============================================================================
