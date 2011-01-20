@@ -4,7 +4,12 @@ Helpers for construction of Stripping Selections
 __author__ = "Juan Palacios juan.palacios@cern.ch"
 __date__ = "30/06/2010"
 
-__all__ = ('checkConfig')
+__all__ = ('checkConfig',
+           'LineBuilder',
+           'lineNames',
+           'outputLocations',
+           'lineFromName'
+           )
 
 
 from StrippingConf.Configuration import StrippingLine
@@ -26,6 +31,28 @@ def checkConfig(reference_keys, configuration) :
     if len(configuration.keys()) != len(reference_keys) :
         raise KeyError('Configuration has unexpected number of parameters.')
 
+def lineNames(lineBuilder) :
+    """
+    Return a list with all the names of the lines handled by a lineBuilder.
+    """
+    return [line.name() for line in lineBuilder.lines()]
+
+def outputLocations(lineBuilder) :
+    """
+    Return a list with all the output locations of the lines handled by
+    a lineBuilder.
+    """
+    return [line.outputLocation() for line in lineBuilder.lines()]
+
+def lineFromName(lineBuilder, lineName) :
+    """
+    Get the line that has a given name. If not available, return None.
+    """
+    lines = filter(lambda x: x.name()==lineName , lineBuilder.lines())
+    if len(lines)>1 :
+        raise Exception("More than one line with name ", lineName)
+    if len(lines) == 0 : return None
+    return lines[0]
 
 class LineBuilder(object) :
 
@@ -34,6 +61,10 @@ class LineBuilder(object) :
     """
 
     __configuration_keys__ = ()
+
+    lineNames = lineNames
+    outputLocations = outputLocations
+    lineFromName = lineFromName
 
     def __init__(self, 
                  name,
@@ -65,3 +96,5 @@ class LineBuilder(object) :
         
     def lines(self) :
         return tuple(self._lines)
+
+
