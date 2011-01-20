@@ -80,6 +80,7 @@ namespace RTL {
   public:
     static ExitSignalHandler& instance();
     void install(int num, const string& name, struct sigaction& action);
+    void init();
     static void handler(int signum, siginfo_t *info,void * );
   };
   static ExitSignalHandler& s_RTL_ExitSignalHandler = ExitSignalHandler::instance();
@@ -89,6 +90,10 @@ extern "C" void* lib_rtl_exithandler_instance() {
 }
 
 RTL::ExitSignalHandler::ExitSignalHandler()  {
+  init();
+}
+
+void RTL::ExitSignalHandler::init()  {
   struct sigaction new_action;
   sigemptyset(&new_action.sa_mask);
   new_action.sa_handler   = 0;
@@ -141,7 +146,7 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
       ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
 		       info->si_signo,(*i).second.first.c_str(),dsc.ptr);
     }
-    if ( old && old != SIG_IGN ) {
+    if ( old && old != SIG_IGN )    {
       dsc.fun(signum,info,ptr);
       //::_exit(signum);
     }
@@ -533,6 +538,9 @@ namespace RTL {
 
   void RTL_reset() {
     s_processName = s_dataInterfaceName = s_nodeName = s_nodeNameShort = "";
+  }
+  void RTL_init_sigs() {
+    RTL::ExitSignalHandler::instance().init();
   }
   const string& processName()  {
     if ( s_processName.empty() )  {
