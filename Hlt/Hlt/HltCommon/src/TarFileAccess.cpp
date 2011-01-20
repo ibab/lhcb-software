@@ -514,6 +514,7 @@ TarFileAccess::listdir(const std::string &url) {
     if (resolved.first==0) return std::vector<std::string>();
 
     assert(1==0); 
+    return std::vector<std::string>();
 }
 
 std::auto_ptr<std::istream> 
