@@ -39,9 +39,9 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default tracking Sub-detector processing sequence
     DefaultTrackingSubdets = ["Decoding", "VELO","TT","IT","OT","Tr","Vertex"]
     ## Default reconstruction sequence for field-on data
-    DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO"]
+    DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO","SUMMARY"]
     ## Default reconstruction sequence for field-off data
-    DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
+    DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
     KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas",
                          "earlyData", "microBiasTrigger","upgrade" ]
@@ -184,6 +184,11 @@ class RecSysConf(LHCbConfigurableUser):
             self.setOtherProps(GlobalRecoConf(),["SpecialData","Context","OutputLevel"])
             GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")
 
+        # SUMMARY
+        if "SUMMARY" in recoSeq:
+            from Configurables import RecSummaryAlg
+            summary = RecSummaryAlg("RecSummary")
+            GaudiSequencer("RecoSUMMARYSeq").Members += [summary]
 
 ## @class RecMoniConf
 #  Configurable for LHCb reconstruction monitoring (without MC truth)

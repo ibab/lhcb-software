@@ -4,6 +4,12 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-01-20 - Chris Jones
+ - Add new SUMMARY sequence to reconstruction that runs the summary algorithm 
+   at the end of the event processing. Fills the new summary object that is 
+   saved on the DST as a simple summary of the main reconstruction quantities 
+   ( number tracks, PVs etc.)
+
 !========================= RecConf v1r4 2010-12-16 =========================
 ! 2010-12-06 - Chris Jones
  - Retire the RICH Markov ring finder package
