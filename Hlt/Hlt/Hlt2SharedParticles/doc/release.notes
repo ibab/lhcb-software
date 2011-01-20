@@ -5,6 +5,7 @@ $Id: release.notes,v 1.106 2010-09-05 18:42:43 fsoomro Exp $
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v5r1  2011-01-20 ===================
 ! 2011-01-20 - V. Gligorov
  - Add photons based on fitted tracks to TrackFittedBasicParticles
 
