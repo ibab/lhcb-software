@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - Patrick Robbe
+ - python/Gauss/Configuration.py: add new phase "GenToMCTree" to activate
+   filling of MCParticles/MCVertices for generator only productions
+
 !========================= Gauss v39r0 2010-12-12 ============================
 ! 2010-12-12 - Gloria Corti
  - Increase major version to make it clear this is the first version for MC10

@@ -100,7 +100,7 @@ class Gauss(LHCbConfigurableUser):
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
        ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3'], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','FTFP_BERT'], 'LHCbPhys': [True,False] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
-       ,'Phases'         : """ List of phases to run (Generator, Simulation) """
+       ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
        ,'Production'     : """ Generation type : ['PHYS', 'PGUN', 'MIB' (default 'PHYS')"""
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
@@ -212,15 +212,21 @@ class Gauss(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         #
-        knownOptions = ['NONE','SIM']
+        knownOptions = ['NONE','SIM','RSIM']
         output = self.getProp("Output").upper()
         if output == 'NONE':
             log.warning("No event data output produced")
             return
 
         simWriter = SimConf().writer()
+        fileExtension = ".gen"
+        if "GenToMCTree" in self.getProp("Phases"):
+            fileExtension = ".xgen"
+        elif "Simulation" in self.getProp("Phases"):
+            fileExtension = ".sim"
+        
         if not simWriter.isPropertySet( "Output" ):
-            simWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+            simWriter.Output = "DATAFILE='PFN:" + self.outputName() + fileExtension + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
         simWriter.RequireAlgs.append( 'GaussSequencer' )
 
         ApplicationMgr().OutStream = [ simWriter ]
@@ -769,6 +775,62 @@ class Gauss(LHCbConfigurableUser):
 
 
     ##
+    ## Configure the sequence to transform HepMC into MCParticles
+    ## skipping Geant4
+    def configureSkipGeant4( self, SpillOverSlots ):
+
+        """
+        Set up the sequence to transform HepMC into MCParticles
+        """
+
+        if "GenToMCTree" not in self.getProp("Phases"):
+            log.warning("No GenToMCTree phase.")
+            return
+        
+        ApplicationMgr().ExtSvc += [ "GiGa" ]
+
+        gaussSkipGeant4Seq = GaudiSequencer( "SkipGeant4" )
+        gaussSeq = GaudiSequencer("GaussSequencer")
+        gaussSeq.Members += [ gaussSkipGeant4Seq ]
+
+        self.configureGiGa()
+
+        for slot in SpillOverSlots:
+
+            TESNode = "/Event/"+self.slot_(slot)
+            
+            mainSkipGeant4Sequence = GaudiSequencer( self.slotName(slot)+"EventSeq" )
+
+            gaussSkipGeant4Seq.Members += [ mainSkipGeant4Sequence ]
+
+            mainSkipGeant4Sequence.Members +=  [ SimInit( self.slotName(slot)+"EventGaussSkipGeant4",
+                                                          GenHeader = TESNode + "Gen/Header" ,
+                                                          MCHeader = TESNode + "MC/Header" ) ]
+
+            skipGeant4Seq = GaudiSequencer( self.slotName(slot)+"SkipGeant4",
+                                            RequireObjects = [ TESNode + "Gen/HepMCEvents" ] )
+            mainSkipGeant4Sequence.Members += [ skipGeant4Seq ]
+
+            skipGeant4SlotSeq = GaudiSequencer( "Make"+self.slotName(slot)+"SkipGeant4" )
+            skipGeant4Seq.Members += [skipGeant4SlotSeq]
+
+            # CRJ : Set RootInTES - Everything down stream will then use the correct location
+            #       (assuming they use GaudiAlg get and put) so no need to set data locations
+            #       by hand any more ...
+            if slot != '' : skipGeant4SlotSeq.RootInTES = slot
+
+            genToSim = GenerationToSimulation( "GenToSim" + slot,
+                                               SkipGeant = True )
+            skipGeant4SlotSeq.Members += [ genToSim ]
+            
+            # Data packing ...
+            if self.getProp("EnablePack") :
+                packing = GaudiSequencer(self.slotName(slot)+"EventDataPacking")
+                skipGeant4SlotSeq.Members += [ packing ]
+                SimConf().PackingSequencers[slot] = packing
+
+
+    ##
     ##
     def configureSim( self, SpillOverSlots ):
 
@@ -1190,6 +1252,8 @@ class Gauss(LHCbConfigurableUser):
 ##             raise RuntimeError("Unknown phase '%s'"%phase)
                 
         self.configureGen( SpillOverSlots )
+        if "GenToMCTree" in self.getProp("Phases"):
+            self.configureSkipGeant4( SpillOverSlots ) 
         self.configureSim( SpillOverSlots )
         self.configureMoni( SpillOverSlots ) #(expert or default)
 
