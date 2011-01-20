@@ -1,14 +1,14 @@
-#include "CheckPointing/MainThread.h"
-#include "CheckPointing/MB.h"
-#include "CheckPointing/LibC.h"
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing/FutexState.h"
-#include "CheckPointing/Static.h"
-#include "CheckPointing/Thread.h"
-#include "CheckPointing/ThreadsLock.h"
-#include "CheckPointing/FileMap.h"
-#include "CheckPointing/Process.h"
-#include "CheckPointing.h"
+#include "Checkpoining/MainThread.h"
+#include "Checkpoining/MB.h"
+#include "Checkpoining/LibC.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining/FutexState.h"
+#include "Checkpoining/Static.h"
+#include "Checkpoining/Thread.h"
+#include "Checkpoining/ThreadsLock.h"
+#include "Checkpoining/FileMap.h"
+#include "Checkpoining/Process.h"
+#include "Checkpoining.h"
 
 #include <cstdio>
 #include <cerrno>
@@ -19,7 +19,7 @@
 #include <linux/futex.h>
 #include <unistd.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
   static CheckpointRestoreWrapper* p = 0;

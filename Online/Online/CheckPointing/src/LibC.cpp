@@ -1,7 +1,7 @@
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing/MemMaps.h"
-#include "CheckPointing/LibC.h"
-#include "CheckPointing.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining/MemMaps.h"
+#include "Checkpoining/LibC.h"
+#include "Checkpoining.h"
 #include <cstdio>
 #include <dlfcn.h>
 

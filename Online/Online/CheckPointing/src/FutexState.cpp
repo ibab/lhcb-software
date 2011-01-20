@@ -1,5 +1,5 @@
-#include "CheckPointing/FutexState.h"
-#include "CheckPointing.h"
+#include "Checkpoining/FutexState.h"
+#include "Checkpoining.h"
 #include "linux/futex.h"
 #include <syscall.h>
 #include <cstring>
@@ -7,7 +7,7 @@
 
 static const MtcpState futex_init_state = MTCP_STATE_INITIALIZER;
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 // cmpxchgl is only supported on Intel 486 processors and later.
 static inline int atomic_setif_int (int volatile *loc, int newval, int oldval)   {

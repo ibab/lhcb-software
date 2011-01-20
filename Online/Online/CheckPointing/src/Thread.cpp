@@ -1,11 +1,11 @@
-#include "CheckPointing/MainThread.h"
-#include "CheckPointing/Thread.h"
-#include "CheckPointing/MB.h"
+#include "Checkpoining/MainThread.h"
+#include "Checkpoining/Thread.h"
+#include "Checkpoining/MB.h"
 
-#include "CheckPointing/ThreadsLock.h"
-#include "CheckPointing/Static.h"
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing.h"
+#include "Checkpoining/ThreadsLock.h"
+#include "Checkpoining/Static.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining.h"
 #include "linux/futex.h"
 #include <cstring>
 #include <cstdio>
@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <termios.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 /* This allocation hack will work only if calls to mtcp_sys_get_thread_area
  * and mtcp_sys_get_thread_area are both inside the same file (mtcp.c).
@@ -42,7 +42,7 @@ static int         saved_termios_exists = 0;
 #define SIG_THREAD_CANCEL 32
 #define SIG_THREAD_SETXID 33
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 /**  Set the thread's STOPSIGNAL handler.  Threads are sent STOPSIGNAL when they are to suspend execution the application, save
  *  their state and wait for the checkpointhread to write the checkpoint file.

@@ -2,7 +2,7 @@
 #define CHECKPOINTING_CHECKPOINTING_H
 
 #include <cstdlib>
-#include "CheckPointing/Namespace.h"
+#include "Checkpoining/Namespace.h"
 
 
 #ifdef CHECKPOINTING_HAS_NAMESPACE

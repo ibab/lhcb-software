@@ -1,6 +1,6 @@
-#include "CheckPointing/FileMap.h"
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing.h"
+#include "Checkpoining/FileMap.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 /// Count the number of files in the proc file system known to this process
 WEAK(int) FileMap::count()    {

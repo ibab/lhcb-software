@@ -1,9 +1,9 @@
 #define CHECKPOINTING_STATIC_CPP
-#include "CheckPointing/Namespace.h"
-#include "CheckPointing/Static.h"
-#include "CheckPointing/MemMaps.h"
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing.h"
+#include "Checkpoining/Namespace.h"
+#include "Checkpoining/Static.h"
+#include "Checkpoining/MemMaps.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining.h"
 #include "Restore.h"
 #include "Save.h"
 
@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <sys/resource.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 namespace CHECKPOINTING_NAMESPACE {
   SysInfo chkpt_sys;

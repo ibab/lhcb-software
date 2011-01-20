@@ -1,13 +1,13 @@
-#include "CheckPointing/MMap.h"
-#include "CheckPointing/Process.h"
-#include "CheckPointing.h"
+#include "Checkpoining/MMap.h"
+#include "Checkpoining/Process.h"
+#include "Checkpoining.h"
 
 #include <cerrno>
 #include <cstring>
 #include <unistd.h>
 #include <fcntl.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 int test_Process_write() {
   // We assume, that at this stage

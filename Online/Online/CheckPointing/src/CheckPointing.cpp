@@ -1,11 +1,11 @@
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining.h"
 #include <unistd.h>
 #include <cstring>
 #include <cerrno>
 #include <cstdio>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 extern void mtcp_output(int lvl,const char* fmt,...);
 #ifdef CHECKPOINTING_HAS_NAMESPACE

@@ -1,5 +1,5 @@
-#include "CheckPointing/MainThread.h"
-#include "CheckPointing.h"
+#include "Checkpoining/MainThread.h"
+#include "Checkpoining.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -11,7 +11,7 @@
 void mtcp_output(int lvl,const char* fmt,...);
 void mtcp_abort (void);
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 using namespace std;
 
 #define NUM_THREADS 5

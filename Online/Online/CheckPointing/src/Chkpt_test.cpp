@@ -1,8 +1,8 @@
-#include "CheckPointing/MMap.h"
-#include "CheckPointing/Static.h"
-#include "CheckPointing/Process.h"
-#include "CheckPointing/MainThread.h"
-#include "CheckPointing.h"
+#include "Checkpoining/MMap.h"
+#include "Checkpoining/Static.h"
+#include "Checkpoining/Process.h"
+#include "Checkpoining/MainThread.h"
+#include "Checkpoining.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 static bool s_stop = false;
 

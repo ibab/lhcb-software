@@ -1,8 +1,8 @@
-#include "CheckPointing/Namespace.h"
-#include "CheckPointing/Static.h"
-#include "CheckPointing/MemMaps.h"
-#include "CheckPointing/SysCalls.h"
-#include "CheckPointing.h"
+#include "Checkpoining/Namespace.h"
+#include "Checkpoining/Static.h"
+#include "Checkpoining/MemMaps.h"
+#include "Checkpoining/SysCalls.h"
+#include "Checkpoining.h"
 #include "Restore.h"
 
 #include <cerrno>
@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-using namespace CheckPointing;
+using namespace Checkpoining;
 
 #ifndef __STATIC__
 DefineMarker(MEMAREA_BEGIN_MARKER,"AREA");
