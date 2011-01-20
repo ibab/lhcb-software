@@ -39,8 +39,6 @@ StatusCode HltSelectionsBase::initialize() {
   if ( sc.isFailure() ) return sc;
   if (msgLevel(MSG::DEBUG)) debug() << "HltSelectionsBase initialize" << endmsg ;
 
-  hltPairs dummy = selections(); // initialise
-
   return StatusCode::SUCCESS;
 }
 
@@ -51,7 +49,7 @@ const hltPairs& HltSelectionsBase::selections ( ) {
 
   if ( m_selections.empty()){
   
-    m_selections = svc<IANNSvc>("HltANNSvc")->items(m_hlt2SelectionID);
+    m_selections = svc<IANNSvc>("ANNDispatchSvc")->items(m_hlt2SelectionID);
     if ( m_selections.empty()) Exception("Empty selections!");
     if (msgLevel(MSG::INFO)) info() << "Selections" ;
     for ( hltPairs::const_iterator n = m_selections.begin() ; m_selections.end() != n ; n++){

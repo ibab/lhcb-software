@@ -32,6 +32,7 @@ HltCorrelations::HltCorrelations( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltSelectionsBase ( name , pSvcLocator )
    , m_algoCorr()
+  , m_first(true)
 {
   
 
@@ -51,17 +52,24 @@ HltCorrelations::~HltCorrelations() {}
 StatusCode HltCorrelations::initialize() {
   StatusCode sc = HltSelectionsBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by HltSelectionsBase
+
   if (msgLevel(MSG::DEBUG)) debug() << "HltCorrelations ==> Initialize" << endmsg;
   m_selTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
   m_algoCorr = tool<IAlgorithmCorrelations>("AlgorithmCorrelations",this);
 
+  return sc;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode HltCorrelations::createSelections ( ) {
   strings algos ;   // algorithms to be considered in correlations
 
   // Fill Hlt selections
   const hltPairs& sels = HltSelectionsBase::selections();
-
   algos.push_back("L0");
-
+  
   // trigger bits
   if ( m_firstBit > m_lastBit ) Exception("Inconsistent bit range");
   
@@ -89,17 +97,21 @@ StatusCode HltCorrelations::initialize() {
   }
 
   if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations: " << algos << endmsg ;
-  sc =  m_algoCorr->algorithms(algos);
-
-  return sc;
+  return  m_algoCorr->algorithms(algos);
+  
 }
-
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HltCorrelations::execute() {
-
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+  StatusCode sc = StatusCode::SUCCESS ;
+  if (m_first){
+    sc = createSelections();
+    if (!sc) return sc;
+    m_first = false;
+  }
+
   bool l0yes = false ;
   if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
     LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
@@ -141,7 +153,7 @@ StatusCode HltCorrelations::execute() {
     }
   }
   
-  StatusCode sc = moreAlgorithms() ;
+  sc = moreAlgorithms() ;
   if (!sc) return sc;
  
   if ( msgLevel(MSG::VERBOSE)) verbose() << "Calling endEvent" << endmsg ;

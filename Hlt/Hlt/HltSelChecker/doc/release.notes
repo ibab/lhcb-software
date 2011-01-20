@@ -3,21 +3,12 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
-!
-! To generate efficiencies at https://twiki.cern.ch/twiki/bin/view/LHCb/Hlt2EffsRates
-!
-! setenv dvv Physics_25Vis_25L0_2Hlt1_AllHlt2_Jun10 
-!
-! foreach a (`ls -1 options/DVTest-B*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
-! end
-! foreach a (`ls -1 options/DVTest-[C-Z]*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
-! end
-!
-! python scripts/GetEfficiencies.py ${dvv}
-!
-!-----------------------------------------------------------------------------
+
+! 2011-01-20 - Patrick Koppenburg
+ - Remove all options except options/HltCorrelations.py
+ - Fix bug in src/HltSelectionsBase.cpp (wrong ANN svc)
+ - Fill list of selections on first even instead of initialise (that works in all cases)
+ - v2r0
 
 !========================== HltSelChecker v11r1p1 2010-12-16 ===================
 ! 2010-??-?? - ??.?????

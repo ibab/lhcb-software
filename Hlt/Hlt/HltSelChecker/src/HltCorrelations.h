@@ -38,11 +38,13 @@ private:
 
 private:
   StatusCode moreAlgorithms(); ///< Fill more algorithms
+  StatusCode createSelections(); ///<get list of selections
 
   strings m_moreAlgorithms ;   ///< additional algorithms
   mutable IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
   mutable ICheckSelResults* m_selTool ; ///< Selection results tool
   unsigned int m_firstBit; ///< first routing bit to look at
   unsigned int m_lastBit ;///< last routing bit to look at
+  bool m_first ; ///< first event?
 };
 #endif // HLTCORRELATIONS_H
