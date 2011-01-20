@@ -2,21 +2,21 @@
 #define ONLINEKERNEL_DIMTASKFSM_H
 
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/IRunable.h"
-#include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/ObjectFactory.h"
+#include "GaudiOnline/ITaskFSM.h"
 #include "CPP/Interactor.h"
-#include <string>
+
+// Forward declarations
 class DimService;
 class DimCommand;
-class PropertyMgr;
 
 /*
  * LHCb namespace declaration
  */
 namespace LHCb  {
+
   /** @class DimTaskFSM DimTaskFSM.h GaudiOnline/DimTaskFSM.h
     *
     * The DimTaskFSM is an object to encapsulate applications,
@@ -52,41 +52,8 @@ namespace LHCb  {
     * @author  M.Frank
     * @version 1.0
     */
-  class DimTaskFSM : public Interactor, 
-                     virtual public IRunable,
-                     virtual public IAppMgrUI
-  {
+  class DimTaskFSM : public Interactor, virtual public ITaskFSM  {
   public:
-    enum Transitions { 
-      CONFIGURE=1, 
-      INITIALIZE, 
-      START,
-      ENABLE, 
-      NEXTEVENT, 
-      DISABLE, 
-      PRESTOP, 
-      STOP,
-      FINALIZE,
-      TERMINATE,
-      UNLOAD, 
-      ERROR,
-      STARTUP_DONE,
-      CONNECT_DIM=1000
-    };
-    enum State  {
-      ST_UNKNOWN   = 'U',
-      ST_NOT_READY = 'N',
-      ST_READY     = 'r',
-      ST_RUNNING   = 'R',
-      ST_STOPPED   = 'S',
-      ST_ERROR     = 'E'
-    };
-    enum SubState  {
-      SUCCESS_ACTION = 'S',
-      EXEC_ACTION    = 'E',
-      FAILED_ACTION  = 'F',
-      UNKNOWN_ACTION = 'U'
-    };
     struct FSMMonitoring {
       unsigned long lastCmd, doneCmd;
       int pid;
@@ -101,8 +68,6 @@ namespace LHCb  {
     std::string   m_stateName;
     /// Variable to contain the previous state name
     std::string   m_prevStateName;
-    /// Variable to contain the process name
-    std::string   m_procName;
     /// Pointer to dim command to treceive transition changes
     DimCommand*   m_command;
     /// Pointer to the dim service publishing the state
@@ -119,27 +84,14 @@ namespace LHCb  {
     unsigned long m_refCount;
 
   public:
-    /// Function to rearm the event loop
-    StatusCode rearm();
     /// Print error message (returns FAILURE)
     StatusCode printErr(int flag, const char* fmt, ...);
     /// Declare FSM state
     StatusCode _declareState(const std::string& new_state);
-    /// Declare FSM state
-    StatusCode declareState(State state);
-    /// Declare FSM sub-state
-    StatusCode declareSubState(SubState state);
-    /// Set transition target state
-    void setTargetState(State target) { m_monitor.targetState = char(target); }
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
     /// Translate integer state to string name
     static std::string stateName(int state);
-
-    /// (Re)connect DIM services
-    virtual StatusCode connectDIM();
-    /// Disconnect DIM services
-    virtual StatusCode disconnectDIM();
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)
@@ -148,10 +100,27 @@ namespace LHCb  {
     virtual ~DimTaskFSM();
     /// Print overload
     virtual void output(int level, const char* s);
+
     /// Interactor overload: handle Sensor stimuli
     virtual void handle(const Event& ev);
-    /// Cancel IO request
+
+    /// ITaskFSM overload: Cancel IO request/Event loop
     virtual StatusCode cancel();
+    /// ITaskFSM overload: Function to rearm the event loop
+    virtual StatusCode rearm();
+
+    /// ITaskFSM overload: Declare FSM state
+    virtual StatusCode declareState(State state);
+    /// ITaskFSM overload: Declare FSM sub-state
+    virtual StatusCode declareSubState(SubState state);
+    /// ITaskFSM overload: Set transition target state
+    virtual void setTargetState(State target) { m_monitor.targetState = char(target); }
+
+    /// ITaskFSM overload: (Re)connect DIM services
+    virtual StatusCode connectDIM(DimCommand* cmd=0);
+    /// ITaskFSM overload: Disconnect DIM services
+    virtual StatusCode disconnectDIM();
+
     /// Implmentation of IInterface::addRef
     virtual unsigned long addRef();
     /// Implmentation of IInterface::release
@@ -184,7 +153,7 @@ namespace LHCb  {
     /// Access FSM state
     virtual Gaudi::StateMachine::State FSMState() const;
 
-    /// Enable the event loop and event processing      (Ready      -> Running)
+    /// ITaskFSM overload: Enable the event loop and event processing (Ready -> Running)
     virtual StatusCode enable();
     /// Process single event                            (Running    -> Running)
     virtual StatusCode nextEvent(int num_event);

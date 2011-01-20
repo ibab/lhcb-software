@@ -47,7 +47,7 @@ namespace  {
     : DimCommand(nam.c_str(), (char*)"C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
-      // Decauple as quickly as possible from the DIM command loop !
+      // Decouple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
       //m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "configure"  ) {
@@ -85,7 +85,9 @@ namespace  {
     std::string format = fmt;
     DimTaskFSM* p = (DimTaskFSM*)context;
     char buffer[2048];
-    size_t len = ::vsnprintf(buffer, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
+    buffer[0]='X';
+    buffer[1]='Y';
+    size_t len = ::vsnprintf(buffer+2, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
     p->output(level, buffer);
     return len;
   }
@@ -104,7 +106,7 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   m_monitor.partitionID = -1;
   m_monitor.pad         = 0;
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
-  propertyMgr().declareProperty("Name",m_procName);
+  propertyMgr().declareProperty("Name",m_name);
   ::lib_rtl_install_printer(printout,this);
   connectDIM().ignore();
 }
@@ -115,15 +117,15 @@ DimTaskFSM::~DimTaskFSM()  {
   ::lib_rtl_install_printer(0,0);
 }
 
-StatusCode DimTaskFSM::connectDIM() {
+StatusCode DimTaskFSM::connectDIM(DimCommand* cmd) {
   std::string svcname;
-  m_procName = RTL::processName();
+  m_name = RTL::processName();
   m_monitor.pid = ::lib_rtl_pid();
-  svcname       = m_procName+"/status";
-  ::dis_start_serving((char*)m_procName.c_str());
-  m_command = new Command(m_procName, this);
+  svcname       = m_name+"/status";
+  ::dis_start_serving((char*)m_name.c_str());
+  m_command = cmd ? cmd : new Command(m_name, this);
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
-  svcname   = m_procName+"/fsm_status";
+  svcname   = m_name+"/fsm_status";
   m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
   return StatusCode::SUCCESS;
 }
@@ -136,7 +138,6 @@ StatusCode DimTaskFSM::disconnectDIM() {
   m_service = 0;
   m_command = 0;
   ::dis_stop_serving();
-  ::dis_stop_serving_dns(0);
   return StatusCode::SUCCESS;
 }
 
@@ -324,7 +325,7 @@ void DimTaskFSM::handle(const Event& ev)  {
 
 StatusCode DimTaskFSM::startupDone()  {
   m_stateName = ST_NAME_NOT_READY;
-  DimServer::start(m_procName.c_str());
+  DimServer::start(m_name.c_str());
   declareState(ST_NOT_READY);
   return StatusCode::SUCCESS;
 }

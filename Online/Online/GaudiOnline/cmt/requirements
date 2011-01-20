@@ -13,7 +13,6 @@ use MDF           v* DAQ            -no_auto_imports
 use DIM           v* Online         -no_auto_imports
 use OnlineKernel  v* Online
 use GaudiKernel   v*
-use GaudiAlg      v*
 
 apply_pattern install_more_includes more=GaudiOnline
 apply_pattern install_python_modules
@@ -30,8 +29,19 @@ macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 apply_pattern QMTest
 apply_pattern QMTestSummarize
 
+private
 # ==================== private test application =============================
-application  Gaudi              "../main/*.cpp"
+application  Gaudi              ../main/main.cpp
 macro_append Gaudi_dependencies " GaudiOnline "
 macro_append Gaudi_use_linkopts "" target-icc " -Wl,--no-as-needed "
+
+application  GaudiCheckpoint              ../main/checkpoint.cpp
+macro_append GaudiCheckpoint_dependencies " GaudiOnline "
+macro_append GaudiCheckpoint_use_linkopts "" target-icc " -Wl,--no-as-needed "
+
+# Some dim tests, which failed for checkpointing
+#use DIM v* Online
+#application  dim_fork0           ../main/dim_fork0.cpp
+#application  dim_fork1           ../main/dim_fork1.cpp
+
 apply_pattern application_path
