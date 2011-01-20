@@ -19,6 +19,10 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
     s << " nVeloTracks = " << info( LHCb::RecSummary::nVeloTracks, 0 );
   if ( hasInfo(LHCb::RecSummary::nTTracks) )
     s << " nTTracks = " << info( LHCb::RecSummary::nTTracks, 0 );
+  if ( hasInfo(LHCb::RecSummary::nRich1Hits) )
+    s << " nRich1Hits = " << info( LHCb::RecSummary::nRich1Hits, 0 );
+  if ( hasInfo(LHCb::RecSummary::nRich2Hits) )
+    s << " nRich2Hits = " << info( LHCb::RecSummary::nRich2Hits, 0 );
   return s << " }";
 }
 

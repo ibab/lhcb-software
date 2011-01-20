@@ -5,6 +5,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - Chris Jones
+ - Add number of RICH1 and RICH2 hits to reconstruction summary data object.
+
 ! 2011-01-19 - Chris Jones
  - Add new LHCb::RecSummary class, to store some basic summary information from
    the reconstruction.

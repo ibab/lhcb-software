@@ -6,7 +6,7 @@
 
      <class 
        author   = "C. Jones"
-       desc     =  "Holds basic summary information from the reconstruction"
+       desc     = "Holds basic summary information from the reconstruction"
        name     = "RecSummary"
        id       = "106" >
 
@@ -34,6 +34,8 @@
          <enumval name="nUpstreamTracks"    value="12"   desc="Number of reconstructed Upstream Tracks"/>
          <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
          <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
+         <enumval name="nRich1Hits"         value="20"   desc="Number of hits in RICH1"/>
+         <enumval name="nRich2Hits"         value="21"   desc="Number of hits in RICH2"/>
        </enum>
 
        <attribute
