@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r1 2011-01-20 ===================
+! 2011-01-20 - Gerhard Raven'
+ - remove obsolete (DC06!) options files
+
 ! 2011-01-19 - A. Shires
  - Add Hlt2MuNTrackLinesConf to Hlt2.py 
 
