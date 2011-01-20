@@ -31,6 +31,10 @@
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IDecayTreeFit.h"
 // ============================================================================
+// TrackInterfaces 
+// ============================================================================
+#include "TrackInterfaces/ITrackSelector.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
@@ -975,6 +979,83 @@ LoKi::GetTools::decayTreeFitter
   }
   //
   return 0 ;
+}
+// ============================================================================
+/*  get the track selector tool 
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  -  use IToolSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ITrackSelector* 
+LoKi::GetTools::trackSelector
+( const LoKi::AuxFunBase& base , 
+  const std::string&      nick ) 
+{
+  // 
+  const ITrackSelector* ts = trackSelector ( base.lokiSvc() , nick ) ;
+  if ( 0 == ts ) 
+  { base.Error ( "Unable to locate ITrackSelector '" + nick + "'" ) ; }
+  //
+  return ts ;
+}
+// ============================================================================
+/** get the track selector tool 
+/*  get the decay tree fitter 
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  -  use IToolSvc::retrieveTool 
+ *  @param (INPUT) base    the base to be used 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ITrackSelector* 
+LoKi::GetTools::trackSelector
+( const LoKi::ILoKiSvc*   base , 
+  const std::string&      nick ) 
+{
+  LoKi::ILoKiSvc* svc = const_cast<LoKi::ILoKiSvc*> ( base ) ;
+  // get the context service: 
+  SmartIF<IAlgContextSvc> cntx ( svc ) ;
+  // use it! 
+  const ITrackSelector* ts = trackSelector ( cntx , nick ) ;
+  if ( 0 != ts ) { return ts ; }                          // RETURN 
+  //
+  // try tool -service 
+  SmartIF<IToolSvc> tsvc ( svc ) ;
+  if ( !tsvc ) { return 0 ; }                             // REUTRN 
+  //
+  ITrackSelector* selector  = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( nick  , selector ) ;
+  if ( sc.isSuccess() && 0 != selector ) { return selector ; }
+  //
+  return 0 ;
+}
+// =========================================================================
+/*  get the track selector tool 
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  -  use IToolSvc::retrieveTool 
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// =========================================================================
+const ITrackSelector* 
+LoKi::GetTools::trackSelector
+( const IAlgContextSvc*   cntx ,
+  const std::string&      nick ) 
+{
+  //
+  if ( 0 == cntx ) { return 0 ; }                        // RETURN 
+  //
+  // get 'simple' algorithm from the context:
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+  if ( 0 == alg  ) { return 0 ; }                        // RETURN
+  //
+  // get the tool from the algorithm :
+  return alg -> tool<ITrackSelector> ( nick  , alg ) ;   // RETURN 
 }
 // ============================================================================
 // The END 

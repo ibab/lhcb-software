@@ -21,6 +21,7 @@ class IDecayTreeFit        ;
 class IVertexFit           ;
 class IParticleFilter      ;
 class IProtoParticleFilter ;
+class ITrackSelector       ;
 // ============================================================================
 namespace LoKi 
 {
@@ -33,7 +34,7 @@ namespace LoKi
     /** get the distance calculator 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::distanceCalculator
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -47,7 +48,7 @@ namespace LoKi
     /** get the distance calculator 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::distanceCalculator
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -76,7 +77,7 @@ namespace LoKi
     /** get the lifetime fitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::lifetimeFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -90,7 +91,7 @@ namespace LoKi
     /** get the lifetime fitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::lifetimeFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -118,7 +119,7 @@ namespace LoKi
     // ========================================================================
     /** get the particle transporter 
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -159,7 +160,7 @@ namespace LoKi
     /** get the particle refitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::particleReFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -173,7 +174,7 @@ namespace LoKi
     /** get the particle refitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::particleReFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -202,7 +203,7 @@ namespace LoKi
     /** get the mass fitter  
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::massFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -216,7 +217,7 @@ namespace LoKi
     /** get the particle refitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::particleReFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -245,7 +246,7 @@ namespace LoKi
     /** get the direction fitter  
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::directionFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -259,7 +260,7 @@ namespace LoKi
     /** get the direction fitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::directionFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -288,7 +289,7 @@ namespace LoKi
     /** get the vertex fitter  
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::vertexFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -302,7 +303,7 @@ namespace LoKi
     /** get the vertex fitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::vertexFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -330,7 +331,7 @@ namespace LoKi
     // ========================================================================
     /** get the protoparticle filter 
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -343,7 +344,7 @@ namespace LoKi
     // ========================================================================
     /** get the protoparticle filter 
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -356,7 +357,7 @@ namespace LoKi
     // ========================================================================
     /** get the protoparticle filter 
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) cntx context service 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -386,7 +387,7 @@ namespace LoKi
     /** get the particle filter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::particleFilter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -429,7 +430,7 @@ namespace LoKi
     /** get the decay tree fitter 
      *  -  try to locate IDVAlgorithm and rely on IDVAlgorithm::decayTreeFitter
      *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
-     *  -  use IToollSvc::retrieveTool 
+     *  -  use IToolSvc::retrieveTool 
      *  @param (INPUT) base    the base to be used 
      *  @param (INPUT) nick tool typename/nick 
      *  @return the tool 
@@ -452,6 +453,47 @@ namespace LoKi
     decayTreeFitter
     ( const IAlgContextSvc*   cntx      ,
       const std::string&      nick = "" ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  -  use IToolSvc::retrieveTool 
+     *  @param (INPUT) base    the base to be used 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITrackSelector* 
+    trackSelector
+    ( const LoKi::AuxFunBase& base , 
+      const std::string&      nick ) ;
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  -  use IToolSvc::retrieveTool 
+     *  @param (INPUT) base    the base to be used 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITrackSelector* 
+    trackSelector
+    ( const LoKi::ILoKiSvc*   base , 
+      const std::string&      nick ) ;
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  -  use IToolSvc::retrieveTool 
+     *  @param (INPUT) cntx context service 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITrackSelector* 
+    trackSelector
+    ( const IAlgContextSvc*   cntx ,
+      const std::string&      nick ) ;
     // ========================================================================
   } ; //
   // ==========================================================================
