@@ -14,7 +14,7 @@ use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r0    Hlt   # Neil Gauvin, Victor Coco
 use HltEcalAlley        v3r0    Hlt   # Mariusz Witek
 use HltGlobalMonitor    v3r6p4  Hlt   # Bruno de Paula
-use HltHidValley        v1r3p1  Hlt   # Marcin Kucharczyk
+use HltHidValley        v2r0    Hlt   # Marcin Kucharczyk
 use HltL0Conf           v2r15   Hlt   # Johannes Albrecht
 use HltLine             v4r6    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r17   Hlt   # Jaap Panman
@@ -28,7 +28,7 @@ use HltTisTosTobbing    v1r0    Hlt   # Tomasz Skwarnicki
 use HltTracking         v8r0p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
 use TCKUtils            v1r6p10 Hlt   # Gerhard Raven
-use Fidel               v1r4p1  Phys  # Sara Furcas
+use Fidel               v2r0    Phys  # Sara Furcas
 use LoKiTrigger         v11r2   Phys  # Vanya Belyaev
 use LoKiTracks          v1r5    Phys  # Vanya Belyaev
 
