@@ -5,10 +5,11 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+!========================== Fidel v2r0   2011-01-20 ==================
 ! 2011-01-19 - Juan PALACIOS
  - Replace calls to IPhysDesktop by calls to DVAlgorithm methods.
  - Fix memory leak.
- - Increase to v1r5.
+ - Increase to v2r0.
 
 !========================== Fidel v1r4p1 2010-07-08 ==================
 ! 2010-06-03 - Juan PALACIOS
