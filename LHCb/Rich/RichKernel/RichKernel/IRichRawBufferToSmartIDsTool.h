@@ -17,6 +17,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
+#include "Kernel/RichDetectorType.h"
 
 // RichKernel
 #include "RichKernel/RichDecodedData.h"
@@ -109,24 +110,32 @@ namespace Rich
         return this->richSmartIDs ( RawEventLocations(1,taeLoc), hpdID, createIfMissing );
       }
 
-      /** Access the total number of RICH hits in the current event, for all configured TAE spills
-       *  @return The total number of hits for the configured TAE locations
+      /** Access the number of RICH hits in the given detector, in the current event, 
+       *  for all configured TAE spills
+       *  @param rich The RICH detector (Rich::InvalidDetector means count both)
+       *  @return The total number of hits for the configured TAE locations and the given RICH
        */
-      virtual unsigned int nTotalHits() const = 0;
+      virtual unsigned int nTotalHits( const Rich::DetectorType rich = Rich::InvalidDetector ) const = 0;
 
-      /** Access the total number of RICH hits in the current event, for the given list of TAE spills
+      /** Access the number of RICH hits in the given detector, the current event, 
+       *  for the given list of TAE spills
        *  @param taeLocs The TAE location(s) ( "" for main event, "Prev1" for -25 ns etc. )
+       *  @param rich The RICH detector (Rich::InvalidDetector means count both)
        *  @return The total number of hits for the configured TAE locations
        */
-      virtual unsigned int nTotalHits( const RawEventLocations& taeLocs ) const = 0;
+      virtual unsigned int nTotalHits( const RawEventLocations& taeLocs,
+                                       const Rich::DetectorType rich = Rich::InvalidDetector ) const = 0;
 
-      /** Access the total number of RICH hits in the current event, for the given TAE spill
+      /** Access the number of RICH hits in the given RICH detecotr, in the current event, 
+       *  for the given TAE spill
        *  @param taeLoc The TAE location ( "" for main event, "Prev1" for -25 ns etc. )
+       *  @param rich The RICH detector (Rich::InvalidDetector means count both)
        *  @return The total number of hits for the configured TAE location
        */
-      inline unsigned int nTotalHits( const RawEventLocation& taeLoc )
+      inline unsigned int nTotalHits( const RawEventLocation& taeLoc,
+                                      const Rich::DetectorType rich = Rich::InvalidDetector )
       {
-        return this->nTotalHits ( RawEventLocations(1,taeLoc) );
+        return this->nTotalHits ( RawEventLocations(1,taeLoc), rich );
       }
 
     };

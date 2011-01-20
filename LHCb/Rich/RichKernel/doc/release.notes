@@ -4,13 +4,17 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2011-01-20 - Chris Jones
+ - Update IRawBufferToSmartIDsTool interface to allow the number of hits
+   in RICH1 and RICH2 to be seperately counted.
+
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
 
 ! 2011-01-11 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
-!========================= RichKernel v7r40 2010-11-27 =========================
+!===================== RichKernel v7r40 2010-11-27 =====================
 ! 2010-11-21 - Chris Jones
  - Add a new method to RichCommonBase to propagate job options
 
