@@ -2,6 +2,7 @@
 #include "CheckPointing/FileMap.h"
 #include "CheckPointing/SysCalls.h"
 #include "CheckPointing.h"
+#include "Restore.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -11,11 +12,12 @@
 
 using namespace CheckPointing;
 
-static const unsigned int FILE_START_MARKER = *(unsigned int*)"FILE";
-static const unsigned int FILE_END_MARKER   = *(unsigned int*)"file";
-  
+#ifndef __STATIC__
+DefineMarker(FILE_BEGIN_MARKER,"FILE");
+DefineMarker(FILE_END_MARKER,  "file");
+#endif
 
-int FileDesc::setup(int fdnum) {
+WEAK(int) FileDesc::setup(int fdnum) {
   char procfdname[PATH_MAX];
   struct stat f_link;
 
@@ -83,7 +85,7 @@ int FileDesc::setup(int fdnum) {
 }
 
 /// Print the data to standard output
-void FileDesc::print() {
+WEAK(void) FileDesc::print() {
   mtcp_output(MTCP_INFO,
 	      "FileHandler: /proc/self/fd/%d -> %s\n\t\tSiz:%d Dir:%s Reg:%s "
 	      "Sock:%s Fifo:%s Block:%s Tmp:%s Del:%s\n",
@@ -99,44 +101,16 @@ void FileDesc::print() {
 }
 
 /// Reopen file and attach it to the proper file descriptor
-int FileDesc::reopen() {
-  // Open the file on a temp fd
-  int flags = O_RDWR, mode = 0;
-
-  if (!(statbuf.st_mode & S_IWUSR)) flags = O_RDONLY;
-  else if (!(statbuf.st_mode & S_IRUSR)) flags = O_WRONLY;
-
-  if ( hasData ) {
-    ::tmpnam(name);
-    flags |= O_RDWR | O_CREAT;
-    mode = 0777;
-  }
-  int fdnum = mtcp_sys_open(name, flags, mode);
-  if (fdnum < 0)    {
-    mtcp_output(MTCP_ERROR,"FileDesc: error %d opening %s flags %o Skip file\n", 
-		mtcp_sys_errno, name, flags);
-    if (mtcp_sys_errno == EACCES) mtcp_output(MTCP_ERROR,"  Permission denied.\n");
-    return 0;
-  }
-  // Move it to the original fd if it didn't coincidentally open there
-  if (fd != fdnum) {
-    if (mtcp_sys_dup2 (fd, fdnum) < 0) {
-      mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] restore %s fd %d to %d SKIP file.\n", 
-		  mtcp_sys_errno, strerror(mtcp_sys_errno), name, fdnum, fd);
-      mtcp_sys_close (fdnum);
-      return 0;
-    }
-    mtcp_sys_close (fdnum);
-  }
-  return 1;
+WEAK(int) FileDesc::reopen() {
+  return checkpoint_file_reopen(this);
 }
 
-/// Write descriptor and possibly data to file identified by fileno
-int FileDesc::write(void* address)   const {
+/// Write descriptor and possibly data to memory
+WEAK(int) FileDesc::streamOut(void* address)   const {
   unsigned char* out = (unsigned char*)address;
   if ( out != 0 ) {
     long len = sizeof(FileDesc)-sizeof(name)+name_len+1;
-    out += saveMarker(out,FILE_START_MARKER);
+    out += saveMarker(out,FILE_BEGIN_MARKER);
     out += m_memcpy(out,this,len);
     if ( hasData ) {
       out += ::pread(fd,out,statbuf.st_size,0);
@@ -147,34 +121,27 @@ int FileDesc::write(void* address)   const {
   return -1;
 }
 
-/// Read descriptor and possibly data from file identified by fileno
-int FileDesc::read(const void* addr, bool restore) {
-  unsigned char* in = (unsigned char*)addr;
-  if ( in > 0 ) {
-    long len = sizeof(FileDesc)-sizeof(name);
-    in += checkMarker(in,FILE_START_MARKER);
-    in += m_memcpy(this,in,len);
-    in += m_memcpy(name,in,name_len+1);
-    restore = !S_ISSOCK(statbuf.st_mode);
-    if ( fd == chkpt_sys.checkpointFD ) restore = false;
-    restore = restore ? (reopen() == 1) : restore;
+/// Write descriptor and possibly data to file identified by fileno
+WEAK(int) FileDesc::write(int fd_out)   const {
+  if ( fd_out > 0 ) {
+    long len   = sizeof(FileDesc)-sizeof(name)+name_len+1;
+    long bytes = writeMarker(fd_out,FILE_BEGIN_MARKER);
+    bytes += m_writemem(fd_out,this,len);
     if ( hasData ) {
-      if ( restore ) {
-	::write(fd,in,statbuf.st_size);
+      char c;
+      for(long i=0;i<statbuf.st_size;++i) {
+	::pread(fd,&c,1,i);
+	::write(fd_out,&c,1);
       }
-      in += statbuf.st_size;
+      bytes += statbuf.st_size;
     }
-    if ( restore ) {
-      // Position the file to its same spot it was at when checkpointed
-      if (S_ISREG(statbuf.st_mode) && (mtcp_sys_lseek (fd, offset, SEEK_SET) != offset)) {
-	mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] positioning %s to %ld\n", 
-		    mtcp_sys_errno, strerror(mtcp_sys_errno), name, (long)offset);
-	return -1;
-      }
-      if ( isdel ) ::remove(name);
-    }
-    in += checkMarker(in,FILE_END_MARKER);
-    return addr_diff(in,addr);
+    bytes += writeMarker(fd_out,FILE_END_MARKER);
+    return bytes;
   }
   return -1;
+}
+
+/// Read descriptor and possibly data from file identified by fileno
+WEAK(int) FileDesc::read(const void* addr, bool restore) {
+  return checkpoint_file_read(this, addr, restore);
 }

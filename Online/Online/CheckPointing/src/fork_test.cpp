@@ -11,6 +11,7 @@
 void mtcp_output(int lvl,const char* fmt,...);
 void mtcp_abort (void);
 
+using namespace CheckPointing;
 using namespace std;
 
 #define NUM_THREADS 5
@@ -75,9 +76,9 @@ static void fork_apps()    {
     }
     --threads_starting;
     if (pthread_join(mm,&val) < 0) {
-      mtcp_output(MTCP_INFO,"mtcp_init: FAILED to join thread: WAIT\n");
+      mtcp_output(MTCP_INFO,"init: FAILED to join thread: WAIT\n");
     }
-    mtcp_output(MTCP_INFO,"mtcp_init: joined thread: WAIT\n");
+    mtcp_output(MTCP_INFO,"init: joined thread: WAIT\n");
   }
   else if ( pID>0 ) {
     sprintf(text,"gdb --pid %d",pID);
@@ -97,13 +98,8 @@ extern "C" int fork_test(int argc, char**) {
   mtcp_output(MTCP_INFO,"\n\n\nChecking threads.... \n\n\n");
 
   MainThread& m=MainThread::accessInstance();
-  if ( argc>1 ) {
-    printf("You got 10 seconds to start:\ngdb --pid %d\n\n",m.motherPID());
-    sleep(10);
-  }
-
   m.initialize();
-  mtcp_output(MTCP_INFO,"mtcp_init: TRY join thread: MAIN %p\n",m.cloneCall());
+  mtcp_output(MTCP_INFO,"init: TRY join thread: MAIN %p\n",CLONE_CALL);
 
   int tid = MainThread::currentThreadID();
   ++threads_starting;
@@ -120,19 +116,19 @@ extern "C" int fork_test(int argc, char**) {
   fork_apps();
 
   void* val;
-  mtcp_output(MTCP_INFO,"mtcp_init: TRY join thread: MAIN\n");
+  mtcp_output(MTCP_INFO,"init: TRY join thread: MAIN\n");
 
   if (pthread_join(main_pid,&val) < 0) {
     mtcp_output(MTCP_INFO,"init: FAILED to join thread: MAIN\n");
   }
-  mtcp_output(MTCP_INFO,"mtcp_init: joined thread: MAIN\n");
+  mtcp_output(MTCP_INFO,"init: joined thread: MAIN\n");
   for(int j=0; j<NUM_THREADS;++j) {
-    mtcp_output(MTCP_INFO,"mtcp_init: TRY: join thread: SLAVE[%d]\n",j);
+    mtcp_output(MTCP_INFO,"init: TRY: join thread: SLAVE[%d]\n",j);
     if (pthread_join(pid[j],&val) < 0) {
-      mtcp_output(MTCP_INFO,"mtcp_init: FAILED to join thread: SLAVE[%d]\n",j);
+      mtcp_output(MTCP_INFO,"init: FAILED to join thread: SLAVE[%d]\n",j);
     }
-    mtcp_output(MTCP_INFO,"mtcp_init: Joined thread: SLAVE[%d]\n",j);
+    mtcp_output(MTCP_INFO,"init: Joined thread: SLAVE[%d]\n",j);
   }
-  mtcp_output(MTCP_INFO,"mtcp_init: ******************** THREAD TEST FINISHED *************************\n");
+  mtcp_output(MTCP_INFO,"init: ******************** THREAD TEST FINISHED *************************\n");
   return 1;
 }

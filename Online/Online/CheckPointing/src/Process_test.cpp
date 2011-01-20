@@ -11,7 +11,7 @@ using namespace CheckPointing;
 
 int test_Process_write() {
   // We assume, that at this stage
-  const char* file_name = "proc.dat";
+  const char* file_name = "process_test.dat";
   long len;
   MMap m;
   Process p(Process::PROCESS_WRITE);
@@ -20,18 +20,13 @@ int test_Process_write() {
   int fd2=::open("/home/frankm/.bashrc",O_RDONLY|O_APPEND);
 
   mtcp_set_debug_level(0);
-  if ( (len=p.length()) > 0 ) {
-    p.setLength(len);
-    mtcp_output(MTCP_INFO,"The current process scan requires: %ld bytes.\n",len);
-    if ( m.create(file_name,len) ) {
-      void* mem = m.address();
-      long true_len = p.write(mem);
-      mtcp_output(MTCP_INFO,"Wrote %ld bytes of %ld space.\n",true_len,len);
-      m.commit(true_len);
-      ::close(fd1);
-      ::close(fd2);
-      return true_len;
-    }
+  mtcp_output(MTCP_INFO,"The current process scan requires: %ld bytes.\n",len);
+  if ( m.create(file_name) ) {
+    long true_len = p.write(m.fd());
+    mtcp_output(MTCP_INFO,"Wrote %ld bytes of %ld space.\n",true_len,len);
+    ::close(fd1);
+    ::close(fd2);
+    return true_len;
   }
   mtcp_output(MTCP_ERROR,"Process size scan failed:Got %ld bytes\n",len);
   ::close(fd1);
@@ -41,7 +36,7 @@ int test_Process_write() {
 
 int test_Process_read() {
   // We assume, that at this stage
-  const char* file_name = "proc.dat";
+  const char* file_name = "process_test.dat";
   MMap m;
   mtcp_set_debug_level(0);
   if ( m.open(file_name) ) {
@@ -60,7 +55,7 @@ int test_Process_read() {
 
 int test_Process_restore() {
   // We assume, that at this stage
-  const char* file_name = "proc.dat";
+  const char* file_name = "process_test.dat";
   MMap m;
   mtcp_set_debug_level(0);
   if ( m.open(file_name) ) {

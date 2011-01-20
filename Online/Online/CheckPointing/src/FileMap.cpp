@@ -11,7 +11,7 @@
 using namespace CheckPointing;
 
 /// Count the number of files in the proc file system known to this process
-int FileMap::count()    {
+WEAK(int) FileMap::count()    {
   FileCountHandler h;
   int rc = scan(h);
   if ( rc > 0 ) return h.count();
@@ -19,14 +19,14 @@ int FileMap::count()    {
 }
 
 /// Count the necessary amount of contiguous memory to save all data 
-long FileMap::memoryCount()    {
+WEAK(long) FileMap::memoryCount()    {
   MemCountFileHandler h;
   int rc = scan(h);
   if ( rc > 0 ) return h.count();
   return -1;
 }
 
-int FileMap::scan(const FileHandler& handler)  const   {
+WEAK(int) FileMap::scan(const FileHandler& handler)  const   {
   // Open /proc/self/fd directory - it contains a list of files I have open
   int dsiz = -1, fddir = mtcp_sys_open("/proc/self/fd",O_RDONLY,0);
   if (fddir >= 0) {
@@ -56,14 +56,14 @@ int FileMap::scan(const FileHandler& handler)  const   {
       mtcp_output(MTCP_ERROR,"FileMap: error reading /proc/self/fd: %s\n",strerror(mtcp_sys_errno));
       return -1;
     }
-    mtcp_output(MTCP_INFO,"FileMap: Scanned %d entries.\n",count);
+    mtcp_output(MTCP_DEBUG,"FileMap: Scanned %d entries.\n",count);
     return count;
   }
   mtcp_output(MTCP_ERROR,"FileMap: error opening directory /proc/self/fd: %s\n",strerror(errno));
   return -1;
 }
 
-int FileMap::analyze(const FileHandler& handler) {
+WEAK(int) FileMap::analyze(const FileHandler& handler) {
   long rc = 0, cnt=0;
   do {
     rc = handler.handle(-1);
