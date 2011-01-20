@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+  <package name='RecEvent'>
+
+     <class 
+       author   = "C. Jones"
+       desc     =  "Holds basic summary information from the reconstruction"
+       name     = "RecSummary"
+       id       = "106" >
+
+       <location name="Default" place="Rec/Summary" />
+
+       &DataObject;
+       <base name="DataObject"/>
+
+       <import name="GaudiKernel/VectorMap"/>
+
+       <typedef
+        type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
+        def    = "SummaryData"
+        desc   = "Vector of additional information"
+        access = "PUBLIC"
+       />
+
+       <enum
+         desc   = "List of summary data"
+         name   = "DataTypes"
+         access = "PUBLIC" >
+         <enumval name="nPVs"               value="0"    desc="Number of reconstructed Primary Vertices"/>
+         <enumval name="nLongTracks"        value="10"   desc="Number of reconstructed Long Tracks"/>
+         <enumval name="nDownstreamTracks"  value="11"   desc="Number of reconstructed Downstream Tracks"/>
+         <enumval name="nUpstreamTracks"    value="12"   desc="Number of reconstructed Upstream Tracks"/>
+         <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
+         <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
+       </enum>
+
+       <attribute
+        name="summaryData"
+        desc="Storage of the summary data"
+        type="SummaryData"
+        setMeth="FALSE"
+        getMeth="TRUE"
+       />
+
+       <method
+        name    = "hasInfo"
+        const   = "TRUE"
+        desc    = "Does the information exist for the given key"
+        argList = "const int key"
+        type    = "bool" >
+        <code>
+          return m_summaryData.end() != m_summaryData.find( key ) ;
+        </code>
+       </method>
+
+       <method
+        name    = "addInfo"
+        desc    = "Add or replace new information, associated with the specified key"
+        argList = "const int key, const double info"
+        type    = "bool" >
+        <code>
+          return m_summaryData.insert( key , info ).second ;
+        </code>
+       </method>
+
+       <method
+        name    = "info"
+        desc    = "Extract the information associated with the specified key. If there is no such information the default value will be returned."
+        argList = "const int key, const double def"
+        type    = "double"
+        const   = "TRUE" >
+        <code>
+           SummaryData::const_iterator i = m_summaryData.find( key ) ;
+           return m_summaryData.end() == i ? def : i->second ;
+        </code>
+       </method>
+
+       <method
+        name    = "eraseInfo"
+        desc    = "Erase the information associated with the specified key"
+        argList = "const int key"
+        type    = "LHCb::RecSummary::SummaryData::size_type" >
+        <code>
+          return m_summaryData.erase( key ) ; 
+        </code>
+       </method>
+
+       <method
+         name    = "fillStream"
+         desc    = "Print this ProtoParticle in a human readable way"
+         type    = "std::ostream&amp;"
+         virtual = "FALSE"
+         const   = "TRUE">
+         <arg
+           type = "std::ostream"
+           name = "s"/>
+       </method>
+
+     </class>
+  </package>
+</gdd>

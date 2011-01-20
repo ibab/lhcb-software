@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-01-19 - Chris Jones
+ - Add new LHCb::RecSummary class, to store some basic summary information from
+   the reconstruction.
+
 !========================= RecEvent v2r33 2010-12-06 =========================
 ! 2010-11-30 - Chris Jones
  - Add the enum "ProbNNghost" for the ProtoParticle ExtraInfo.
