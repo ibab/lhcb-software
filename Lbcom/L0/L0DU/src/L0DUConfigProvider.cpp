@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0DUConfigProvider );
+DECLARE_TOOL_FACTORY( L0DUConfigProvider )
 
 namespace {
   static const std::vector<std::string> s_dataFlags = 
@@ -45,7 +45,7 @@ namespace {
                                                                                 (std::string("L0Hcal"), 1)
                                                                                 (std::string("L0Muon"), 2)
                                                                                 (std::string("Other"),  3);
-};
+}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -441,9 +441,9 @@ StatusCode L0DUConfigProvider::createData(){
     if(!ok){
       fatal() << "requested operator "<< op <<" is not allowed " << endmsg;
       info() << "allowed operators are : " << endmsg;
-      for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it = s_operators.begin();
-          it!=s_operators.end();it++){
-        info() << "--> " << it->first << endmsg;
+      for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it2 = s_operators.begin();
+          it2!=s_operators.end();it2++){
+        info() << "--> " << it2->first << endmsg;
         return StatusCode::FAILURE;
       } 
     }
@@ -901,7 +901,7 @@ StatusCode L0DUConfigProvider::createChannels(){
     id++;
   }
   return StatusCode::SUCCESS;
-};
+}
 
 
 
@@ -1216,7 +1216,7 @@ bool L0DUConfigProvider::conditionCheck(LHCb::L0DUElementaryCondition* condition
   //  }
   m_condMax[ order ]= max;
   return true;
-};
+}
 
 
 bool L0DUConfigProvider::conditionOrdering(){

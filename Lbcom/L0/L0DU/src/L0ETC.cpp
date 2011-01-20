@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0ETC );
+DECLARE_ALGORITHM_FACTORY( L0ETC )
 
 
 //=============================================================================

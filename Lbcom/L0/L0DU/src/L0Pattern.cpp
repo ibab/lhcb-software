@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0Pattern );
+DECLARE_ALGORITHM_FACTORY( L0Pattern )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -39,7 +39,7 @@ L0Pattern::L0Pattern( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0Pattern::~L0Pattern() {}; 
+L0Pattern::~L0Pattern() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -70,7 +70,7 @@ StatusCode L0Pattern::initialize() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -183,7 +183,8 @@ StatusCode L0Pattern::execute() {
   m_bcid++;
   sc = ntp->write();
   return sc ;
-};
+}
+
 //=============================================================================
 //  Finalize
 //=============================================================================

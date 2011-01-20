@@ -21,7 +21,7 @@ using namespace Gaudi::Units;
 // and produce L0DUReport on TES AND/OR rawBank
 //
 //-----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY( L0DUAlg );
+DECLARE_ALGORITHM_FACTORY( L0DUAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -58,7 +58,7 @@ L0DUAlg::L0DUAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0DUAlg::~L0DUAlg() {}; 
+L0DUAlg::~L0DUAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -102,7 +102,7 @@ StatusCode L0DUAlg::initialize() {
   info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endmsg;    
 
   return sc;
-};
+}
 
 
 //=============================================================================
@@ -136,7 +136,7 @@ StatusCode L0DUAlg::execute() {
   } 
 
   return StatusCode::SUCCESS ;
-};
+}
 
 //=============================================================================
 //  Finalize

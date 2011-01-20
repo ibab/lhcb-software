@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-01-20 - Marco Cattaneo
+ - Fix ICC warnings and remarks
+
 !========================= L0DU v10r10 2010-10-25 =========================
 
 ! 2010-10-18 - Julien Cogan

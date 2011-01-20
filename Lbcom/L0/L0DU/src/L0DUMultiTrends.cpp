@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0DUMultiTrends );
+DECLARE_ALGORITHM_FACTORY( L0DUMultiTrends )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -53,7 +53,7 @@ L0DUMultiTrends::L0DUMultiTrends( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0DUMultiTrends::~L0DUMultiTrends() {}; 
+L0DUMultiTrends::~L0DUMultiTrends() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -89,7 +89,7 @@ StatusCode L0DUMultiTrends::initialize() {
 
   m_oBin = m_trendPeriod - 1; // origin trending bin  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -179,27 +179,27 @@ StatusCode L0DUMultiTrends::execute() {
       if( diff < 0)counter("lost events in trending") +=  1;
       else if( diff >= 0){ // may loose some events at first pass
         long nStep =  diff / m_trendStep ;
-        long bin = m_oBin+nStep;
+        long bin2 = m_oBin+nStep;
         // slide
-        if( bin >= m_trendPeriod){
-          int shift = bin-m_trendPeriod+1; 
+        if( bin2 >= m_trendPeriod){
+          int shift = bin2-m_trendPeriod+1; 
           debug() << "Sliding origin = " << m_origin 
                   << " time " << time << " s - eventNumber " << odin->eventNumber() 
                   << "  diff = " << diff << "   shift = " << shift <<endmsg;
           slideHistos(shift);
           doRates();
           m_oBin -= shift;
-          bin -= shift;
+          bin2 -= shift;
           //if(m_oBin < XXX) // restart :  protection against to far origin ??
         }
-        tFill( "Counters/Trending/Event" , bin );
+        tFill( "Counters/Trending/Event" , bin2 );
         if( m_dMon != 0x0 ){
           if((Physics & m_dMon)!= 0 &&  m_fromRaw->report().decision( Physics) )
-            tFill("Counters/Trending/Decisions/Data/Physics", bin );
+            tFill("Counters/Trending/Decisions/Data/Physics", bin2 );
           if((Beam1 & m_dMon) != 0  &&  m_fromRaw->report().decision( Beam1  ) )
-            tFill("Counters/Trending/Decisions/Data/Beam1"  , bin );
+            tFill("Counters/Trending/Decisions/Data/Beam1"  , bin2 );
           if((Beam2 & m_dMon) != 0  &&  m_fromRaw->report().decision( Beam2  ) )
-            tFill("Counters/Trending/Decisions/Data/Beam2"  , bin );
+            tFill("Counters/Trending/Decisions/Data/Beam2"  , bin2 );
           int ic  = 0;
           for(std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; it++){
             int itck = tck2int( *it );
@@ -208,11 +208,11 @@ StatusCode L0DUMultiTrends::execute() {
             ic++;
             std::string conf="Emul"+Gaudi::Utils::toString( ic )+"/";
             if((Physics & m_dMon)!= 0&& config->emulatedDecision(Physics ))
-              tFill("Counters/Trending/Decisions/"+conf+"Physics",bin ); 
+              tFill("Counters/Trending/Decisions/"+conf+"Physics",bin2 ); 
             if((Beam1 & m_dMon) != 0 && config->emulatedDecision(Beam1   ))
-              tFill("Counters/Trending/Decisions/"+conf+"Beam1", bin ); 
+              tFill("Counters/Trending/Decisions/"+conf+"Beam1", bin2 ); 
             if((Beam2 & m_dMon) != 0 &&  config->emulatedDecision(Beam2  ))
-              tFill("Counters/Trending/Decisions/"+conf+"Beam2", bin ); 
+              tFill("Counters/Trending/Decisions/"+conf+"Beam2", bin2 ); 
           }
         } 
         if( m_sMon ){
@@ -239,9 +239,9 @@ StatusCode L0DUMultiTrends::execute() {
               std::string name  =  trigger->name();
               std::string unit  = "Counters/Trending/SubTriggers/" + conf + name;
               if( "data" == *i && m_fromRaw->report().triggerDecisionByName( name ) ){
-                tFill( unit, bin );
+                tFill( unit, bin2 );
               }else if( trigger->emulatedDecision() ){
-                tFill( unit ,bin ); 
+                tFill( unit, bin2 ); 
               } 
             }
           }  
@@ -269,9 +269,9 @@ StatusCode L0DUMultiTrends::execute() {
               std::string name  =  channel->name();
               std::string unit  = "Counters/Trending/Channels/" + conf + name;
               if( "data" == *i && m_fromRaw->report().channelDecisionByName( name ) ){
-                tFill( unit, bin );
+                tFill( unit, bin2 );
               }else if( channel->emulatedDecision() ){
-                tFill( unit ,bin ); 
+                tFill( unit, bin2 ); 
               } 
             }
           }

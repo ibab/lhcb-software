@@ -2,7 +2,7 @@
 // Include files 
 #include <cmath>
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0DUReportMonitor );
+DECLARE_ALGORITHM_FACTORY( L0DUReportMonitor )
 
 
 //=============================================================================

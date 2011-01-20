@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0DUEmulatorTool );
+DECLARE_TOOL_FACTORY( L0DUEmulatorTool )
 
 
 //=============================================================================
@@ -523,10 +523,17 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
                        digit( L0DUBase::PileUp::Peak1 ) << 8 |
                        digit( L0DUBase::PileUp::Peak2 ) << 16 |
                        digit( L0DUBase::PileUp::Hits )  << 24 );
+#ifdef __INTEL_COMPILER       // Disable ICC warning
+  #pragma warning(disable:68) // integer conversion resulted in a change of sign
+  #pragma warning(push)
+#endif
     l0Block.push_back( digit(L0DUBase::Electron::Address ) | 0x2 << 14 |
                        digit(L0DUBase::Photon::Address ) << 16 | 0x2 << 30 );
     l0Block.push_back( digit(L0DUBase::Pi0Global::Address ) | 0x2 << 14 |
                        digit(L0DUBase::Pi0Local::Address ) << 16 | 0x2 << 30 );
+#ifdef __INTEL_COMPILER // Re-enable ICC warning 68
+  #pragma warning(pop)
+#endif
     l0Block.push_back( digit(L0DUBase::Hadron::Address ) | 0x3 << 14 |
                        digit( L0DUBase::PileUp::Peak1Pos) << 16 |
                        digit( L0DUBase::PileUp::Peak2Pos) << 24 );

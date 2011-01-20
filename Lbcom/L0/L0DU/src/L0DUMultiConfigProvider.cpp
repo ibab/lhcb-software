@@ -5,7 +5,7 @@
 #include<string>
 #include<sstream>
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "L0DUMultiConfigProvider.h"
@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0DUMultiConfigProvider );
+DECLARE_TOOL_FACTORY( L0DUMultiConfigProvider )
 
 
 //=============================================================================

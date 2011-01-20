@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 // DAQEvent
 #include "Event/RawEvent.h"
 // L0Event
@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0DUFromRawAlg );
+DECLARE_ALGORITHM_FACTORY( L0DUFromRawAlg )
 
 
 //=============================================================================

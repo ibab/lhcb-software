@@ -26,7 +26,7 @@ L0ProcessorDataDecoder::L0ProcessorDataDecoder
   , m_ok(false)
 {
   declareInterface<IL0ProcessorDataDecoder> ( this ) ;  
-};
+}
 // ============================================================================
 StatusCode L0ProcessorDataDecoder::initialize () 
 {
@@ -36,7 +36,7 @@ StatusCode L0ProcessorDataDecoder::initialize ()
   m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_dataContainer = new LHCb::L0ProcessorDatas();
   return StatusCode::SUCCESS;
-};
+}
 
 
 StatusCode L0ProcessorDataDecoder::finalize () 
@@ -44,14 +44,14 @@ StatusCode L0ProcessorDataDecoder::finalize ()
   debug() << "release L0ProcessoDataDecoder" << endmsg;
   delete m_dataContainer;
   return GaudiTool::finalize();
-};
+}
 
 
 
 // ============================================================================
 /// destructor
 // ============================================================================
-L0ProcessorDataDecoder::~L0ProcessorDataDecoder () {} ;
+L0ProcessorDataDecoder::~L0ProcessorDataDecoder () {} 
 // ============================================================================
 // ============================================================================
 bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<LHCb::L0ProcessorDatas*> datass){
