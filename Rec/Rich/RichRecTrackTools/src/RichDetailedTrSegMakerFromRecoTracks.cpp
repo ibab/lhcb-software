@@ -47,14 +47,14 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   // context specific defaults
   if ( contextContains("HLT") )
   {
-    m_trExt1Name   = "TrackParabolicExtrapolator";    
+    m_trExt1Name   = "TrackParabolicExtrapolator";
     m_trExt2Name   = "TrackLinearExtrapolator";
     // Rads                  Aerogel   Rich1Gas  Rich2Gas
     m_zTolerance   = list_of (3000*mm) (3000*mm) (4000*mm) ;
     m_minRadLength = list_of (0*mm)    (500*mm)  (1500*mm) ;
   }
   else // offline
-  { 
+  {
     m_trExt1Name   = "TrackRungeKuttaExtrapolator";
     m_trExt2Name   = "TrackParabolicExtrapolator";
     // Rads                  Aerogel   Rich1Gas  Rich2Gas
@@ -121,11 +121,11 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // Radiators
-  m_radiators.push_back( usedRads(Rich::Aerogel)  ? 
+  m_radiators.push_back( usedRads(Rich::Aerogel)  ?
                          getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : NULL );
-  m_radiators.push_back( usedRads(Rich::Rich1Gas) ? 
+  m_radiators.push_back( usedRads(Rich::Rich1Gas) ?
                          getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : NULL );
-  m_radiators.push_back( usedRads(Rich::Rich2Gas) ? 
+  m_radiators.push_back( usedRads(Rich::Rich2Gas) ?
                          getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
 
   if ( m_extrapFromRef )
@@ -149,7 +149,7 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
     return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
   }
 
-  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : " 
+  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : "
          << m_minRadLength << " mm " << endmsg;
 
   return sc;
@@ -210,12 +210,12 @@ constructSegments( const ContainedObject * obj,
     if ( !entryPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
 
     // check tolerance
-    if ( fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) 
+    if ( fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] )
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> Entry State : Requested z=" << zStart << " found z=" 
-                  << entryPStateRaw->z() << " failed tolerance check dz=" 
+        verbose() << "  -> Entry State : Requested z=" << zStart << " found z="
+                  << entryPStateRaw->z() << " failed tolerance check dz="
                   << m_zTolerance[rad] << endmsg;
       }
       continue;
@@ -232,8 +232,8 @@ constructSegments( const ContainedObject * obj,
     }
 
     // choose appropriate z end position for initial track states for this radiator
-    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] : 
-                            Rich::Aerogel  == rad ? m_nomZstates[0] : 
+    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] :
+                            Rich::Aerogel  == rad ? m_nomZstates[0] :
                             m_nomZstates[1] );
 
     // Get the track enrty state points
@@ -245,8 +245,8 @@ constructSegments( const ContainedObject * obj,
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> Exit State  : Requested z=" << zEnd << " found z=" 
-                  << exitPStateRaw->z() << " failed tolerance check dz=" 
+        verbose() << "  -> Exit State  : Requested z=" << zEnd << " found z="
+                  << exitPStateRaw->z() << " failed tolerance check dz="
                   << m_zTolerance[rad] << endmsg;
       }
       continue;
@@ -350,7 +350,7 @@ constructSegments( const ContainedObject * obj,
     if ( entryStateOK && exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
-                                            << " Zexit=" << intersects2.back().exitPoint().z() 
+                                            << " Zexit=" << intersects2.back().exitPoint().z()
                                             << endmsg;
 
       // make sure at current z positions
@@ -358,11 +358,11 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z() 
+        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z()
                   << endmsg;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
-      
+
     }
     else if ( entryStateOK )
     {
@@ -383,7 +383,7 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z() 
+        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z()
                   << endmsg;
       const bool sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
@@ -405,7 +405,7 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z() 
+        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z()
                   << endmsg;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
@@ -442,7 +442,7 @@ constructSegments( const ContainedObject * obj,
         = deBeam(rad)->intersectionPoints( entryPState->position(), vect, inter1, inter2 );
 
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  --> Beam Intersects : " << intType << " : " 
+        verbose() << "  --> Beam Intersects : " << intType << " : "
                   << inter1 << " " << inter2 << endmsg;
 
       sc = true;
@@ -478,7 +478,7 @@ constructSegments( const ContainedObject * obj,
         delete entryPState;
         delete exitPState;
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting." 
+          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting."
                     << endmsg;
         continue;
       }
@@ -554,6 +554,9 @@ constructSegments( const ContainedObject * obj,
                                                           exitPState->errTx2(),
                                                           exitPState->errTy2(),
                                                           exitPState->errP2() );
+    // Check for strange state errors
+    checkStateErrors( entryPState, rad, "entry state" );
+    checkStateErrors( exitPState,  rad, "exit state"  );
 
     // print out final points
     if ( msgLevel(MSG::VERBOSE) )
@@ -887,5 +890,33 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
   }
 
   return true;
+}
+//====================================================================================================
+
+//====================================================================================================
+void DetailedTrSegMakerFromRecoTracks::checkStateErrors( const LHCb::State * state,
+                                                         const Rich::RadiatorType rad,
+                                                         const std::string& desc ) const
+{
+  if ( state->errX2() < 0 )
+  {
+    Warning( Rich::text(rad) + " " + desc + " has negative errX^2", StatusCode::SUCCESS ).ignore();
+  }
+  if ( state->errY2() < 0 )
+  {
+    Warning( Rich::text(rad) + " " + desc + " has negative errY^2", StatusCode::SUCCESS ).ignore();
+  }
+  if ( state->errTx2() < 0 )
+  {
+    Warning( Rich::text(rad) + " " + desc + " has negative errTx^2", StatusCode::SUCCESS ).ignore();
+  }
+  if ( state->errTy2() < 0 )
+  {
+    Warning( Rich::text(rad) + " " + desc + " has negative errTy^2", StatusCode::SUCCESS ).ignore();
+  }
+  if ( state->errP2() < 0 )
+  {
+    Warning( Rich::text(rad) + " " + desc + " has negative errP^2", StatusCode::SUCCESS ).ignore();
+  }
 }
 //====================================================================================================

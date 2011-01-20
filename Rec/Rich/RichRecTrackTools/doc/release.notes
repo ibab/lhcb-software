@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - Chris Jones
+ - Add a check to Rich::Rec::DetailedTrSegMakerFromRecoTracks to test for
+   status with negative errors squared...
+
 !========================= RichRecTrackTools v1r26 2010-12-16 =========================
 ! 2010-11-21 - Chris Jones
  - Update the track selector base to not print the full list of track cuts if

@@ -75,6 +75,11 @@ namespace Rich
 
     private: // methods
 
+      /// Checks for 'strange' State errors
+      void checkStateErrors( const LHCb::State * state,
+                             const Rich::RadiatorType rad,
+                             const std::string& desc ) const;
+
       /** Find all intersections with the given radiator volume(s)
        *  @return The number of radiator intersections
        */
