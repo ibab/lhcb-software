@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : RichTrackSegment
  *
- *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.10 2009-07-09 11:14:01 jonrob Exp $
- *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
  *  @date   2002-05-31
@@ -123,6 +120,7 @@ namespace LHCb
     #pragma warning(disable:2259) // Non-pointer conversion may lose significant bits
     #pragma warning(push)
   #endif
+
       /// Constructor with explicit double values
       StateErrors( const double errX2,  ///< error on x squared
                    const double errY2,  ///< error on y squared
