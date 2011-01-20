@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!========================== HltCommon v7r1p1 2011-01-20 ==================
+! 2011-01-20 - Gerhard Raven
+ - fix some compiler warnings
 
 !========================== HltCommon v7r1 2010-12-08 ===================
 ! 2010-11-22 - V. Gligorov
