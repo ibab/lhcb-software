@@ -17,7 +17,7 @@ gen = Generation()
 gen.addTool( Special , name = "Special" )
 gen.Special.ProductionTool = "BcVegPyProduction"
 gen.Special.addTool( BcVegPyProduction , name = "BcVegPyProduction" )
-gen.Special.BcVegPyProduction.Commands += BcVegPyListOfCommands
+gen.Special.BcVegPyProduction.BcVegPyCommands += BcVegPyListOfCommands
 gen.PileUpTool = "FixedLuminosityForRareProcess";
 
 
