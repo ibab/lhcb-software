@@ -21,7 +21,7 @@ DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
 
 using namespace LHCb;
 
-static DimTaskFSM* s_dimtask_instance = 0;
+static ITaskFSM* s_dimtask_instance = 0;
 extern "C" void* DimTaskFSM_instance() {
   return s_dimtask_instance;
 }
