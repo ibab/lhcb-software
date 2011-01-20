@@ -287,8 +287,12 @@ void dim_tcpip_stop()
 #ifdef WIN32
 	closesock(DIM_IO_path[0]);
 #else
-	close(DIM_IO_path[0]);
-	close(DIM_IO_path[1]);
+	int s = DIM_IO_path[0];
+	DIM_IO_path[0] = -1;
+	close(s);
+	s = DIM_IO_path[1];
+	DIM_IO_path[1] = -1;
+	close(s);
 #endif
 	DIM_IO_path[0] = -1;
 	DIM_IO_path[1] = -1;

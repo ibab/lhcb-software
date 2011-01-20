@@ -210,11 +210,11 @@ void dim_stop()
 	*/
 #endif
 	dim_tcpip_stop();
-	dim_dtq_stop();	
 	if(IO_thread) 
 		pthread_join(IO_thread,0);
 	if(ALRM_thread) 
 		pthread_join(ALRM_thread,0);
+	dim_dtq_stop();	
 	IO_thread = 0;
 	ALRM_thread = 0;
 	DIM_THR_init_done = 0;
