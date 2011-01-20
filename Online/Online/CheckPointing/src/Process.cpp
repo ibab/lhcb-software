@@ -1,11 +1,11 @@
-#include "Checkpoining/Static.h"
-#include "Checkpoining/Process.h"
-#include "Checkpoining/MemMaps.h"
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/Process.h"
+#include "Checkpointing/MemMaps.h"
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing.h"
 #include "Restore.h"
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 #ifndef __STATIC__
 DefineMarker(PROCESS_BEGIN_MARKER,"PROC");

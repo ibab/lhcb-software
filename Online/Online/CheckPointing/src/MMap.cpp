@@ -1,7 +1,7 @@
-#include "Checkpoining/MMap.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MMap.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing.h"
 
 #include <cstdio>
 #include <cerrno>
@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 int MMap::create(const char* file_name, long len) {
   int fd = ::open(file_name,O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);

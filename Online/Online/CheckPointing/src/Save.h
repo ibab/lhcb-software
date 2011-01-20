@@ -1,9 +1,9 @@
 #ifndef CHECKPOINTING_SAVE_H
 #define CHECKPOINTING_SAVE_H
 
-#include "Checkpoining/Namespace.h"
+#include "Checkpointing/Namespace.h"
 /*
- * Checkpoining namespace declaration
+ * Checkpointing namespace declaration
  */
 namespace CHECKPOINTING_NAMESPACE  {
 

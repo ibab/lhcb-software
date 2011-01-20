@@ -1,8 +1,8 @@
-#include "Checkpoining/MMap.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining/Process.h"
-#include "Checkpoining/MainThread.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MMap.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/Process.h"
+#include "Checkpointing/MainThread.h"
+#include "Checkpointing.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 static bool s_stop = false;
 
@@ -37,7 +37,6 @@ static long make_checkPoint() {
   const char* file_name = "proc.dat";
   MainThread& m=MainThread::accessInstance();
   MMap f;
-  mtcp_set_debug_level(0);
   if ( f.create(file_name) ) {
     m.stop();
     int ret = m.checkpoint(f.fd());
@@ -49,7 +48,7 @@ static long make_checkPoint() {
       ::fprintf(stdout,"... checkpoint successfully restored ...\n");
       return 1;
     }
-    ::fprintf(stdout,"...resume after writing checkpoint file:%s rc=%d\n",file_name,ret);
+    ::fprintf(stdout,"...resume after writing checkpoint file:%s with %08X bytes\n",file_name,ret);
     return 2;
   }
   mtcp_output(MTCP_ERROR,"Process size scan failed.\n");
@@ -62,8 +61,6 @@ int test_thread_checkpoint() {
   int rc;
 
   m.initialize();
-  m.setPrint(0);
-
   if ((rc=::pthread_create (&main_pid, NULL, main_thread, (void*)5)) < 0) {
     mtcp_output(MTCP_FATAL,"Error CREATE main thread: %s rc=%d\n",::strerror(errno),rc);
   }
@@ -116,8 +113,16 @@ int test_thread_checkpoint();
 
 extern "C" int chkpt_tests(int argc, char** argv) {
   int opt = *(int*)"None";
-  if ( argc>1        ) opt = *(int*)argv[1];
-
+  int prt = MTCP_INFO, prt2=0;
+  const char* p = (char*)&opt, *q="";
+  for(int i=0; i<argc; ++i) {
+    if      ( argc>i && argv[i][1] == 'f' ) opt  = *(int*)(q=argv[++i]);
+    else if ( argc>i && argv[i][1] == 'p' ) prt  = argv[++i][0]-'0';
+    else if ( argc>i && argv[i][1] == 'n' ) prt2 = MTCP_PRINT_NO_PID;
+  }
+  ::fprintf(stdout,"Checkpointing_test: print level:%d tst function:%s [%c%c%c%c]\n",
+	      prt,q,p[0],p[1],p[2],p[3]);
+  mtcp_set_debug_level(prt+prt2);
   if      ( opt == *(int*)"m_write"   ) test_MemMaps_write();
   else if ( opt == *(int*)"m_read"    ) test_MemMaps_read();
   else if ( opt == *(int*)"m_share"   ) test_MemMaps_sharable();
@@ -130,6 +135,6 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   else if ( opt == *(int*)"p_restore" ) test_Process_restore();
 
   else if ( opt == *(int*)"t_checkpo" ) test_thread_checkpoint();
-
+  else mtcp_output(MTCP_ERROR,"No function given. Test is meaningless.\n");
   return 1;
 }

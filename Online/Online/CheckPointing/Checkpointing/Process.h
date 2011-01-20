@@ -3,23 +3,23 @@
 
 #define _ALIGN(x) x __attribute__((__packed__))
 
+#include "Checkpointing/Namespace.h"
 #include <climits>
 #include <sys/stat.h>
 
 /*
- * CheckPointing namespace declaration
+ * Checkpointing namespace declaration
  */
-namespace CheckPointing {
+namespace CHECKPOINTING_NAMESPACE {
 
   /** @class Process
    *
    * @author  M.Frank
    * @version 1.0
    */
-  class Process {
-    mutable long m_length;
-    int          m_flag;
+  struct Process {
   public:
+    int          m_flag;
     enum Flags {
       PROCESS_READ,
       PROCESS_WRITE,
@@ -28,35 +28,37 @@ namespace CheckPointing {
   public:
 
     /// Standard constructor
-    Process(int f=PROCESS_READ) : m_length(0), m_flag(f) {}
-    /// Calculate the length of the data to be stored
-    long length() const;
-    void setLength(long len) {     m_length = len; }
+    Process(int f=PROCESS_READ) : m_flag(f) {}
+    /// Access execution flag
+    int flag() const { return m_flag; }
     /// Write full process information to checkpoint file
-    int write(void* addr)  const;
+    int write(int fd)  const;
     /// Write header information to checkpoint file
-    int writeHeader(void* addr)  const;
+    int writeHeader(int fd)  const;
     /// Write trailer information to checkpoint file
-    int writeTrailer(void* addr)  const;
+    int writeTrailer(int fd)  const;
     /// Write system information to checkpoint file
-    int writeSysInfo(void* addr)  const;
+    int writeSysInfo(int fd)  const;
     /// Write the file descriptor information to checkpoint file
-    int writeFiles(void* addr)  const;
+    int writeFiles(int fd)  const;
     /// Write the memory areas to checkpoint file
-    int writeMemory(void* addr)  const;
+    int writeMemory(int fd)  const;
     
     /// Read full process information from checkpoint file
-    int read(const void* addr)  const;
+    int read(const void* addr);
     /// Read header information from checkpoint file
-    int readHeader(const void* addr)  const;
+    int readHeader(const void* addr);
     /// Read trailer information from checkpoint file
-    int readTrailer(const void* addr)  const;
+    int readTrailer(const void* addr);
     /// Read system information from checkpoint file
-    int readSysInfo(const void* addr)  const;
+    int readSysInfo(const void* addr);
     /// Read the file descriptor information from checkpoint file
-    int readFiles(const void* addr)  const;
+    int readFiles(const void* addr);
     /// Read the memory areas from checkpoint file
-    int readMemory(const void* addr)  const;
+    int readMemory(const void* addr);
+
+    /// Finalize restore process
+    int restoreFinish();
   };
 
 }

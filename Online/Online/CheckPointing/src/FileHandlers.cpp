@@ -1,6 +1,6 @@
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining.h"
-using namespace Checkpoining;
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing.h"
+using namespace Checkpointing;
 #include <unistd.h>
 
 #ifndef __STATIC__

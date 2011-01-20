@@ -1,17 +1,16 @@
-#include "Checkpoining/MemMaps.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining/MMap.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MemMaps.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/MMap.h"
+#include "Checkpointing.h"
 #include <cerrno>
 #include <cstring>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 int test_MemMaps_write() {
   const char* file_name = "memmaps_test.dat";
   MemMaps m;
   MMap f;
-  mtcp_set_debug_level(0);
   if ( f.create(file_name) ) {
     long len = m.write(f.fd());
     f.close();
@@ -26,7 +25,6 @@ int test_MemMaps_read() {
   const char* file_name = "memmaps_test.dat";
   MemMaps m;
   MMap f;
-  mtcp_set_debug_level(0);
   if ( f.open(file_name) ) {
     void* mem = f.address();
     AreaMapper mapper;
@@ -43,7 +41,6 @@ int test_MemMaps_read() {
 }
 
 int test_MemMaps_sharable() {
-  mtcp_set_debug_level(0);
   SysInfo& sys = chkpt_sys;
   sys.aquire();
   sys.print();

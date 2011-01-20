@@ -1,11 +1,11 @@
-#include "Checkpoining/MainThread.h"
-#include "Checkpoining/Thread.h"
-#include "Checkpoining/MB.h"
+#include "Checkpointing/MainThread.h"
+#include "Checkpointing/Thread.h"
+#include "Checkpointing/MB.h"
 
-#include "Checkpoining/ThreadsLock.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining.h"
+#include "Checkpointing/ThreadsLock.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing.h"
 #include "linux/futex.h"
 #include <cstring>
 #include <cstdio>
@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <termios.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 /* This allocation hack will work only if calls to mtcp_sys_get_thread_area
  * and mtcp_sys_get_thread_area are both inside the same file (mtcp.c).
@@ -26,6 +26,12 @@ static unsigned long int myinfo_gs;
          (unsigned long int)(&(((struct user_desc *)uinfo)->base_addr))), \
       mtcp_inline_syscall(arch_prctl,2,ARCH_GET_GS, &myinfo_gs) \
     )
+# define mtcp_sys_set_thread_area_base(base) \
+    ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS, \
+	*(unsigned long*)base), \
+      mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs) \
+    )
+
 # define mtcp_sys_set_thread_area(uinfo) \
     ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS, \
 	*(unsigned long int *)&(((struct user_desc *)uinfo)->base_addr)), \
@@ -42,7 +48,7 @@ static int         saved_termios_exists = 0;
 #define SIG_THREAD_CANCEL 32
 #define SIG_THREAD_SETXID 33
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 /**  Set the thread's STOPSIGNAL handler.  Threads are sent STOPSIGNAL when they are to suspend execution the application, save
  *  their state and wait for the checkpointhread to write the checkpoint file.
@@ -315,10 +321,8 @@ WEAK(void) Thread::saveSysInfo() {
   if (mtcp_have_thread_sysinfo_offset())
     chkpt_sys.sysInfo = mtcp_get_thread_sysinfo();
   // Do this once.  It's the same for all threads.
-#if 0
   saved_termios_exists = ( isatty(STDIN_FILENO)
 			   && tcgetattr(STDIN_FILENO, &saved_termios) >= 0 );
-#endif
   mtcp_output(MTCP_DEBUG,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
 }
 
@@ -593,7 +597,8 @@ WEAK(char*) Thread::tlsBase()   {
   if ( mtcp_sys_get_thread_area ( &gdtentrytls ) < 0 ) {
     mtcp_output(MTCP_FATAL,"Threads::tlsBase: error getting GDT TLS entry: %s\n",strerror (mtcp_sys_errno));
   }
-  return (char*)(*(unsigned long *)&(gdtentrytls.base_addr));
+  unsigned long *val = (unsigned long*)&gdtentrytls.base_addr;
+  return *(char**)val;
 }
 
 /// Setup the signal handling to stop/restart threads
@@ -651,6 +656,7 @@ WEAK(void) Thread::restoreSigActions() {
       if (errno == EINVAL) ::memset(&act,0,sizeof(act));
     }
     if ( i != STOPSIGNAL ) {
+      void** mask = (void**)&a->sa_mask;
       if ( i == SIG_THREAD_CANCEL && a->sa_sigaction != _thread_cancel_action )  {
 	s_thrCancel  = a->sa_sigaction;
 	a->sa_sigaction = _thread_cancel_action;
@@ -665,11 +671,11 @@ WEAK(void) Thread::restoreSigActions() {
 		      i,a->sa_handler,::strerror(errno));
 	}
 	mtcp_output(MTCP_INFO,"restoreSigActions: Restore action [sig:%d] -> %p Flags:%X Mask:%p\n",
-		    i, a->sa_handler, a->sa_flags, *(void**)&a->sa_mask);
+		    i, a->sa_handler, a->sa_flags, *mask);
       }
       else if ( 0 != act.sa_handler && SIG_DFL != act.sa_handler && SIG_IGN != act.sa_handler ) {
 	mtcp_output(MTCP_DEBUG,"restoreSigActions: Skip... action [sig:%d] -> %p Flags:%X Mask:%p\n",
-		    i, a->sa_handler, a->sa_flags, *(void**)&a->sa_mask);
+		    i, a->sa_handler, a->sa_flags, *mask);
       }
     }
   }
@@ -818,17 +824,14 @@ WEAK(long) Thread::set_tid_address ()   {
 WEAK(void) Thread::restoreTLS()  {
   pid_t motherpid = chkpt_sys.motherPID;
   const char* thr_typ = this == chkpt_sys.motherofall ? "MOTHER" : "CHILD";
+  unsigned long* base = (unsigned long*)&m_tls[0].base_addr;
+  pid_t *ppid = (pid_t*)(*base + TLS_PID_OFFSET);
 
   // The assumption that this points to the pid was checked by that tls_pid crap near the beginning
-  *(pid_t*)(*(unsigned long *)&(m_tls[0].base_addr) + TLS_PID_OFFSET) = motherpid;
-
-  // Likewise, we must jam the new pid into the mother thread's tid slot (checked by tls_tid carpola)
-  if (this == chkpt_sys.motherofall) {
-    *(pid_t*)(*(unsigned long *)&(m_tls[0].base_addr) + TLS_TID_OFFSET) = motherpid;
-  }
+  *ppid = motherpid;
 
   // Restore all three areas
-  int rc = mtcp_sys_set_thread_area (&(m_tls[0]));
+  int rc = mtcp_sys_set_thread_area_base(base);
   if (rc < 0) {
     mtcp_output(MTCP_FATAL,"restoreTLS[%s]: error %d restoring TLS entry[%d]\n",
 		thr_typ,mtcp_sys_errno,m_tls[0].entry_number);

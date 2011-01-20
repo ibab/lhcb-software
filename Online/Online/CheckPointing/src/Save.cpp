@@ -1,11 +1,11 @@
-#include "Checkpoining/Static.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining/MemMaps.h"
-#include "Checkpoining.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing/MemMaps.h"
+#include "Checkpointing.h"
 #include "Save.h"
 #include <unistd.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 #ifndef __STATIC__
 DefineMarker(SYS_BEGIN_MARKER,    "PSYS");

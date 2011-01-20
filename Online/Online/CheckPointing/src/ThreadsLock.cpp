@@ -1,5 +1,5 @@
-#include "Checkpoining/ThreadsLock.h"
-#include "Checkpoining/MB.h"
+#include "Checkpointing/ThreadsLock.h"
+#include "Checkpointing/MB.h"
 #include "linux/futex.h"
 
 static FutexState s_threadslocked;

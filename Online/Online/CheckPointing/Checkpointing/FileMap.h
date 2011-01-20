@@ -3,15 +3,14 @@
 
 #define _ALIGN(x) x __attribute__((__packed__))
 
+#include "Checkpointing/Namespace.h"
 #include <climits>
 #include <sys/stat.h>
 
 /*
- * CheckPointing namespace declaration
+ * Checkpointing namespace declaration
  */
-namespace CheckPointing {
-
-  typedef unsigned int Marker;
+namespace CHECKPOINTING_NAMESPACE  {
 
   /** @class FileDesc
    *
@@ -31,6 +30,7 @@ namespace CheckPointing {
 
     /// Length of the data structure
     long length() const      { return sizeof(FileDesc)-sizeof(name)+name_len+1; }
+    /// Length of the file data
     long dataLength() const  { return hasData ? statbuf.st_size : 0;            }
     /// Address to the data section of thsi file (if any)
     const char* data() const { return name+name_len+1;                          }
@@ -42,7 +42,9 @@ namespace CheckPointing {
     /// Reopen file and attach it to the proper file descriptor
     int reopen();
     /// Write descriptor and possibly data to file identified by fileno
-    int write(void* address)  const;
+    int write(int fd)  const;
+    /// StreamOut descriptor and possibly data to file identified by fileno
+    int streamOut(void* address)  const;
     /// Read descriptor and possibly data from file identified by fileno
     int read(const void* addr, bool restore);
   };
@@ -113,16 +115,19 @@ namespace CheckPointing {
    */
   class FileWriteHandler : public FileHandler {
   protected:
-    mutable char *m_addr, *m_ptr;
+    int  m_fd;
+    long m_offset;
+    mutable long  m_bytes;
     mutable long  m_count;
+    
   public:
     /// Standard constructor
-    FileWriteHandler(void* add) 
-      : m_addr((char*)add), m_ptr((char*)add), m_count(0) {}
+    FileWriteHandler(int fd) 
+      : m_fd(fd), m_bytes(0), m_count(0) {}
       /// Default destructor
       ~FileWriteHandler() { }
       /// Access number of bytes written
-      long bytes() const { return m_ptr-m_addr; }
+      long bytes() const { return m_bytes; }
       /// Access number of bytes necessary
       long count() const { return m_count; }
       /// Start the write cycle
@@ -133,6 +138,32 @@ namespace CheckPointing {
       virtual int handle(int fdnum)  const;
   };
   
+  /** @class FileStreamOutHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class FileStreamOutHandler : public FileHandler {
+  protected:
+    mutable char *m_addr, *m_ptr;
+    mutable long  m_count;
+  public:
+    /// Standard constructor
+    FileStreamOutHandler(void* add);
+    /// Default destructor
+    ~FileStreamOutHandler() { }
+    /// Access number of bytes written
+    long bytes() const { return m_ptr-m_addr; }
+    /// Access number of bytes necessary
+    long count() const { return m_count; }
+    /// Start the streamOut cycle
+    FileStreamOutHandler& start();
+    /// Stop and finish the streamOut cycle
+    int stop();
+    /// Handle single file entry
+    virtual int handle(int fdnum)  const;
+  };
+
   /** @class FileReadHandler
    *
    * @author  M.Frank
@@ -206,6 +237,9 @@ namespace CheckPointing {
 
     /// Default constructor
     FileMap() {}
+    /// Default destructor
+    ~FileMap() {}
+    
     /// Count the number of files in the proc file system known to this process
     int count();
     /// Count the necessary amount of contiguous memory to save all data 

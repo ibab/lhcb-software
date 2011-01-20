@@ -1,7 +1,7 @@
-#include "Checkpoining/Static.h"
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing.h"
 #include "Restore.h"
 
 #include <cerrno>
@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 #ifndef __STATIC__
 DefineMarker(FILE_BEGIN_MARKER,"FILE");

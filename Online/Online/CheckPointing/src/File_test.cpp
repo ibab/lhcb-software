@@ -1,7 +1,7 @@
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining.h"
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing.h"
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -10,7 +10,6 @@ namespace {
   struct Test : public FileMap {
     int fd1, fd2;
     Test() {
-      mtcp_set_debug_level(2);
       fd1=::open("/home/frankm/.bashrc",O_RDONLY);
       fd2=::open("/home/frankm/.bashrc",O_RDONLY|O_APPEND);
     }

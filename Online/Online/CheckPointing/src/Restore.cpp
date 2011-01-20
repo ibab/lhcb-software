@@ -1,10 +1,9 @@
-
-#include "Checkpoining/Static.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining/MemMaps.h"
-#include "Checkpoining/Process.h"
-#include "Checkpoining.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing/MemMaps.h"
+#include "Checkpointing/Process.h"
+#include "Checkpointing.h"
 #include "Restore.h"
 
 #include <cerrno>
@@ -14,7 +13,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 DefineMarker(FILE_BEGIN_MARKER,   "FILE");
 DefineMarker(FILE_END_MARKER,     "file");
@@ -36,7 +35,7 @@ DefineMarker(SYS_END_MARKER,      "psys");
  *   libmtcp.so address range for anything;
  * including "+ 1" since will set %esp/%rsp to tempstack+STACKSIZE
  */
-static long long tempstack[STACKSIZE + 1];
+STATIC(long long int) mtcp_internal_tempstack[STACKSIZE + 1];
 
 
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
@@ -543,7 +542,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* s
   /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
    * below, the optimizer generates non-PIC code if it's not -O0 - Gene
    */
-  long long* extendedStack = tempstack + STACKSIZE;
+  long long* extendedStack = mtcp_internal_tempstack + STACKSIZE;
 
   mtcp_set_debug_level(print_level);
   /* Switch to a stack area that's part of the shareable's memory address range

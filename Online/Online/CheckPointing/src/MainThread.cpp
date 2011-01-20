@@ -1,14 +1,14 @@
-#include "Checkpoining/MainThread.h"
-#include "Checkpoining/MB.h"
-#include "Checkpoining/LibC.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining/FutexState.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining/Thread.h"
-#include "Checkpoining/ThreadsLock.h"
-#include "Checkpoining/FileMap.h"
-#include "Checkpoining/Process.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MainThread.h"
+#include "Checkpointing/MB.h"
+#include "Checkpointing/LibC.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing/FutexState.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing/Thread.h"
+#include "Checkpointing/ThreadsLock.h"
+#include "Checkpointing/FileMap.h"
+#include "Checkpointing/Process.h"
+#include "Checkpointing.h"
 
 #include <cstdio>
 #include <cerrno>
@@ -19,7 +19,7 @@
 #include <linux/futex.h>
 #include <unistd.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
   static CheckpointRestoreWrapper* p = 0;
@@ -399,12 +399,13 @@ WEAK(void) MainThread::finishRestore() {
 WEAK(void) MainThread::showSigActions() {
   struct sigaction a;
   for (int i=1; i<NSIG; ++i ) {
+    void** mask = (void**)&a.sa_mask;
     if (mtcp_sys_sigaction(i,0,&a) < 0) {
       if (errno == EINVAL) ::memset(&a,0,sizeof(a));
     }
     if ( a.sa_handler != 0 ) {
       mtcp_output(MTCP_INFO,"Signal action [%d] -> %p Flags:%X Mask:%p\n",
-		  i, a.sa_handler, a.sa_flags, *(void**)&a.sa_mask);
+		  i, a.sa_handler, a.sa_flags, *mask);
     }
   }
 }

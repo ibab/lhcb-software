@@ -1,5 +1,5 @@
-#include "Checkpoining/MainThread.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MainThread.h"
+#include "Checkpointing.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -11,7 +11,7 @@
 void mtcp_output(int lvl,const char* fmt,...);
 void mtcp_abort (void);
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 using namespace std;
 
 #define NUM_THREADS 5
@@ -93,7 +93,7 @@ static void fork_apps()    {
   }
 }
 
-extern "C" int fork_test(int argc, char**) {
+extern "C" int fork_test(int /* argc */ , char**  /* argv */) {
   mtcp_set_debug_level(1);
   mtcp_output(MTCP_INFO,"\n\n\nChecking threads.... \n\n\n");
 

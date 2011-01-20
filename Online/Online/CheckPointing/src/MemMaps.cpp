@@ -1,7 +1,7 @@
-#include "Checkpoining/MemMaps.h"
-#include "Checkpoining/SysCalls.h"
-#include "Checkpoining/Static.h"
-#include "Checkpoining.h"
+#include "Checkpointing/MemMaps.h"
+#include "Checkpointing/SysCalls.h"
+#include "Checkpointing/Static.h"
+#include "Checkpointing.h"
 #include "Restore.h"
 
 #include <cstdio>
@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-using namespace Checkpoining;
+using namespace Checkpointing;
 
 #ifndef __STATIC__
 DefineMarker(MEMMAP_BEGIN_MARKER,"MMAP");
@@ -101,7 +101,7 @@ int AreaInfoHandler::handle(int, const Area& a)  {
       if ( checkpointAddr[0] > a.low )  checkpointAddr[0] = a.low;
       if ( checkpointAddr[1] < a.high ) checkpointAddr[1] = a.high;
     }
-    else if ( strstr(a.name,"libCheckpoining.so") ) {
+    else if ( strstr(a.name,"libCheckpointing.so") ) {
       m_prev = true;
       if ( !image[0] ) m_memcpy(image,a.name,sizeof(image));
       if ( imageAddr[0] > a.low )  imageAddr[0] = a.low;

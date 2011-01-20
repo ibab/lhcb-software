@@ -1,14 +1,15 @@
 #ifndef CHECKPOINTING_MEMMAPS_H
 #define CHECKPOINTING_MEMMAPS_H
 
+#include "Checkpointing/Namespace.h"
 #include <climits>
 #define _ALIGN(x) x __attribute__((__packed__))
 
 
 /*
- * CheckPointing namespace declaration
+ * Checkpointing namespace declaration
  */
-namespace CheckPointing {
+namespace CHECKPOINTING_NAMESPACE {
 
   // Forward declarations
   class Area;
@@ -37,20 +38,28 @@ namespace CheckPointing {
     long    offset;
     /// File name for this memory area
     char    name[PATH_MAX];
+
     /// Read memory area descriptor and data from file given by the file handle
-    int  read(const void* address);
+    int  read(const void* address, const AreaHandler& handler);
     /// Write memory area descriptor and data to file given by the file handle
-    int  write(void* address) const;
+    int  write(int fd, bool force_nulls=false) const;
+    /// Stream out memory area descriptor and to memory
+    int  streamOut(void* address, bool force_nulls=false) const;
     /// Print area descriptor to standard output
     void print(const char* opt="") const;
+    /// Print area descriptor with debug level to standard output
+    void print(int lvl,const char* opt="") const;
     /// Access protection flags for this memory area
     int  protection() const;
     /// Access mmap flags for this memory area
     int  mapFlags() const;
     /// Simple check if the memory area is mapped to a file
     int  isFile() const;
-    /// Returns the full spze requirement to save this memory area
+    /// Returns the full size requirement to save this memory area
     int  length() const;
+    /// Calculate the size of the data segment to be written
+    int  dataLength()  const;
+
   };
 
   /** @class AreaHandler
@@ -60,7 +69,9 @@ namespace CheckPointing {
    */
   class AreaHandler {
   public:
-    virtual int handle(int which, const Area& a) = 0;
+    int (*f_map)(const AreaHandler* self,const Area& a, const unsigned char* data, int data_len);
+    int (*f_handle)(const AreaHandler* self,int which, const Area& a);
+    AreaHandler() : f_map(0), f_handle(0) {}
   };
 
   /** @class AreaBaseHandler
@@ -79,7 +90,10 @@ namespace CheckPointing {
     long bytes() const {  return m_bytes; }
     long space() const {  return m_space; }
     long count() const {  return m_count; }
-    virtual int handle(int which, const Area& a);
+    static int do_map(const Area&, const unsigned char*, int data_len) 
+    {      return data_len;    }
+    static int mapArea(const Area& a, const unsigned char* data, int data_len);
+    int handle(int which, const Area& a);
   };
 
   /** @class AreaPrintHandler
@@ -89,8 +103,8 @@ namespace CheckPointing {
    */
   class AreaPrintHandler : public AreaBaseHandler {
   public:
-    AreaPrintHandler() {}
-    virtual int handle(int which, const Area& a);
+    AreaPrintHandler();
+    int handle(int which, const Area& a);
   };
 
   /** @class AreaInfoHandler
@@ -100,14 +114,18 @@ namespace CheckPointing {
    */
   class AreaInfoHandler : public AreaBaseHandler {
   public:
+    bool m_prev;
+    char image[PATH_MAX];
     unsigned long stack[2];
     unsigned long vdso[2];
     unsigned long vsyscall[2];
+    unsigned long imageAddr[2];
+    unsigned long checkpointAddr[2];
     unsigned long highAddr;
 
   public:
     AreaInfoHandler();
-    virtual int handle(int which, const Area& a);
+    int handle(int which, const Area& a);
   };
 
   /** @class AreaWriteHandler
@@ -116,23 +134,39 @@ namespace CheckPointing {
    * @version 1.0
    */
   class AreaWriteHandler : public AreaBaseHandler {
-    mutable char *m_addr, *m_ptr;
+  protected:
+    int m_fd;
+    int m_bytes;
   public:
-    AreaWriteHandler(void* add) : m_addr((char*)add), m_ptr((char*)add) {}
-    virtual int handle(int which, const Area& a);
-    long bytesWritten() const { return m_ptr-m_addr; }
+    AreaWriteHandler(int fd);
+    int handle(int which, const Area& a);
+    long bytesWritten() const { return m_bytes; }
   };
 
+  /** @class AreaChkptWriteHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class AreaChkptWriteHandler : public AreaWriteHandler {
+  public:
+    bool m_prev;
+    AreaChkptWriteHandler(int fd);
+    int handle(int which, const Area& a);
+  };
 
   /** @class AreaMapper
    *
    * @author  M.Frank
    * @version 1.0
    */
-  class AreaMapper : public AreaHandler   {
+  class AreaMapper : public AreaBaseHandler   {
   public:
-    AreaMapper()  {}
-    virtual int handle(int which, const Area& a);
+    AreaMapper();
+    int handle(int, const Area& ) { return 1; }
+    static int do_map(const Area& a, const unsigned char* data, int data_len) {
+      return mapArea(a,data,data_len);
+    }
   };
 
   /** @class MemMaps
@@ -142,13 +176,11 @@ namespace CheckPointing {
    */
   class MemMaps {
     friend class AreaCollector;
-    int   m_numArea;
-    Area* m_areas;
   public:
     /// Default constructor
-    MemMaps();
+    MemMaps() {}
     /// Default destructor
-    ~MemMaps();
+    ~MemMaps() {}
     /// Number of memory mapped areas/files
     int numLines()  const;
     /// Collect in process information about the memory mappings
@@ -157,17 +189,12 @@ namespace CheckPointing {
     void dump();
 
     /// Write descriptor information and data from the memory mappings to address
-    long write(void* address);
+    long write(int fd);
     /// Read descriptor information and data from the memory mappings
     long read(const void* address,AreaHandler& hdlr);
-
-    /// Write descriptor information and data from the memory mappings to file
-    long write(const char* file_name);
-    /// Read descriptor information and data from the memory mappings from file
-    long read(const char* file_name);
   };
 
-}  // End namespace CheckPointing
+}  // End namespace Checkpointing
 
 #undef _ALIGN
 
