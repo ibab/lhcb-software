@@ -73,7 +73,8 @@ namespace {
       f = TFile::Open(spec);
     }
     if ( f && !f->IsZombie() ) {
-      int fd = int(fileMap().size()+0xFEED);
+      static int fd = 0xFEED;
+      ++fd;
       fileMap()[fd] = f;
       return fd;
     }
