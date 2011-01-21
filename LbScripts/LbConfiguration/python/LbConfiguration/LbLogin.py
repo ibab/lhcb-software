@@ -6,7 +6,7 @@ import sys
 import os
 
 #============================================================================
-# bootstraping the location of the file
+# bootstrapping the location of the file
 try:
     _this_file = __file__
 except NameError :
