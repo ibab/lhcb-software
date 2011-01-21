@@ -48,7 +48,7 @@ static long make_checkPoint() {
       ::fprintf(stdout,"... checkpoint successfully restored ...\n");
       return 1;
     }
-    ::fprintf(stdout,"...resume after writing checkpoint file:%s with %08X bytes\n",file_name,ret);
+    ::fprintf(stdout,"...resume after writing checkpoint file:%s with 0x%08X bytes\n",file_name,ret);
     return 2;
   }
   mtcp_output(MTCP_ERROR,"Process size scan failed.\n");
