@@ -5,7 +5,7 @@ branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v27r0   Phys
-use  DaVinciTests               v1r8
+use  DaVinciTests               v2r0
 
 # Patches
 use MDF_ROOT                    v1r5    DAQ

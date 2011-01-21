@@ -3,6 +3,26 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v27r0>2011-01-21 DaVinci v27r0. For 2011 developments.</A></H1><PRE>
+
+  *** Based on LHCb v31r8 stack. Baseline version for early 2011 developments.
+  *** Backwards incompatible version with no PhysDesktop.
+
+
+                     ****** NOT FOR PRODUCTION ******
+
+     * DVAlgorithm/DaVinciTools:
+       . No use made of IPhysDesktop anymore! Use DVAlgorithm methods directly.
+       . Simplification of DVAlgorithm derived classes.
+     * Improvements to KalmanFilter, LoKiFitters
+     * New symbols added to LoKiPhys, LoKiProtoParticles.
+     * ProtoParticleFilter: support for ANN prob. PID variables.
+     * Small MicroDST bug fixes. Bugs did not affect stripping.
+     * DSTWriters fix to stripping InputCopyStream corruption Gaudi feature.
+     * DecayTreeTuple: decorators to make python configuration easier.
+     * FlavourTagging optimised and calibrated for Stripping12.
+     * Most changes related to removal of PhysDesktop.
+
 </PRE><H1><A NAME=v26r4>2010-12-21 DaVinci v26r4. Baseline for 2011 developments.</A></H1><PRE>
 
   * Based on LHCb v31r8 stack. Baseline version for early 2011 developments.
