@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Victor Coco
+ - PythiaProduction.cpp: set printing of inconsistency errors only in debug 
+   level
+
 !========================= LbPythia v9r0 2010-02-05 ==========================
 ! 2010-02-04 - Patrick Robbe
  - PythiaProduction.cpp: change PARP(90) parameter from 0.119 to 0.238

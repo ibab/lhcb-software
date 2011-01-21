@@ -1101,7 +1101,9 @@ StatusCode PythiaProduction::toHepMC
   { 
     theHepIO.set_trust_both_mothers_and_daughters ( true ) ;
     theHepIO.set_trust_mothers_before_daughters   ( true ) ;
-    theHepIO.set_print_inconsistency_errors       ( true );
+    theHepIO.set_print_inconsistency_errors       ( false );
+    if ( msgLevel( MSG::DEBUG ) ) 
+      theHepIO.set_print_inconsistency_errors       ( true );
     
     if ( !m_inconsistencies.empty() && 0 == m_HEPEVT_errors )
     { m_HEPEVT_errors = new std::ofstream ( m_inconsistencies.c_str() ) ; }
