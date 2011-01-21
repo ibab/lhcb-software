@@ -7,16 +7,16 @@
 #include <iostream>
 #include "TMarker.h"
 
-const int nov = 6;
+const int nov = 8;
 
 void XComp(){
 
   TCanvas *c2 = new TCanvas("c2", "c2",10,44,700,500);
   c2->SetGridx();
 
-  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0 ,0};
-  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0};
-  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0};
+  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3872 ,0 ,0};
+  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.5 ,0, 0};
+  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.2 , 0, 0};
   Float_t totErrors[nov]; Float_t Errors[nov];
   int i = 0;
   for (i = 0; i < nov -1 ; ++i ) {
@@ -25,26 +25,27 @@ void XComp(){
     std::cout << "Total error " <<  Errors[i] << std::endl;
   }
 
-  // make the average - sum the 1/w^2
+// make the average - sum the 1/w^2
   float sumWeight = 0;
   Float_t w2[nov] ;
-  for (i = 0; i < nov-1; ++i ) {
+  for (i = 0; i < nov-2; ++i ) {
     w2[i] = 1/(Errors[i]*Errors[i]);
     sumWeight += w2[i]; 
   }
 
   // take the average
   float avg = 0;
-  for ( i = 0; i < nov-1; ++i ) {
+  for ( i = 0; i < nov-2; ++i ) {
     avg += Values[i]*w2[i] ;
   }
   avg /= sumWeight;
+
   Errors[nov-1] = sqrt(1/sumWeight); 
   Values[nov-1]= avg;  
 
   char cvalue[100];
   float e = sqrt(1/sumWeight);
-  sprintf(cvalue, "Average %.2f", avg);
+  sprintf(cvalue, "New Average %.2f", avg);
 
   std::string header(cvalue);
 
@@ -53,18 +54,46 @@ void XComp(){
 
   std::string averageString = header + " #pm " + footer;
 
+  float xMinAvg = avg - e;
+  float xMaxAvg = avg + e;
 
-  //std::cout << aString << endl;
+  // take the average
+  sumWeight = 0;
+  Float_t w2[nov] ;
+  for (i = 0; i < nov-3; ++i ) {
+    w2[i] = 1/(Errors[i]*Errors[i]);
+    sumWeight += w2[i]; 
+  }
 
-  //sprintf(cvalue, "%f", avg);
-  //  std::cout << cvalue << std::endl;
-  //  std::cout << "Average mass " << avg << " +/- " << sqrt(1/sumWeight) << std::endl;
 
-  Int_t Colors[nov]={1,1,1,1,1,1};
-  char* Labels[nov] = {"CDF", "Babar B^{+}", "Babar B^{0}", "D0", "Belle", "Avg"};
-  Labels[nov-1] = averageString.c_str(); 
- 
-  float MinX = 3860;
+  avg = 0;
+  for ( i = 0; i < nov -3; ++i ) {
+    avg += Values[i]*w2[i] ;
+  }
+  avg /= sumWeight;
+  Errors[nov-2] = sqrt(1/sumWeight); 
+  Values[nov-2]= avg;  
+
+  e = sqrt(1/sumWeight);
+  sprintf(cvalue, "Old Average %.2f", avg);
+
+  std::string oldheader(cvalue);
+
+  sprintf(cvalue, "%.2f", e);
+  std::string oldfooter(cvalue);
+
+  std::string oldaverageString = oldheader + " #pm " + oldfooter;
+
+
+
+
+  Int_t Colors[nov]={1,1,1,1
+                    ,1,1,1,1};
+  char* Labels[nov] = {"CDF", "Babar B^{+}", "Babar B^{0}", "D0", "Belle", "LHCb (bogus)", "Avg" , "Avg"};
+  Labels[nov-2] = oldaverageString.c_str(); 
+  Labels[nov-1] = averageString.c_str();  
+
+  float MinX = 3858;
   float MaxX = 3878;
   float MinY = 0.;
   float MaxY = nov + 1;
@@ -115,7 +144,7 @@ void XComp(){
      g1->Draw();
      //     pav->Draw();
      g2->Draw();
-     label.DrawLatex(MinX+(MaxX-MinX)*0.18,y,Labels[i]);
+     label.DrawLatex(MinX+(MaxX-MinX)*0.22,y,Labels[i]);
   }
 
   frame->Draw("axissame");
