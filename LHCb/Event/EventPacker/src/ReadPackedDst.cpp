@@ -219,16 +219,14 @@ StatusCode ReadPackedDst::execute() {
 
     } else if ( LHCb::CLID_RecSummary == classID ) {
 
-      StandardPacker packer;
-
       LHCb::RecSummary* summary = new LHCb::RecSummary();
       put( summary, name + m_postfix );
       processLinks( summary, version );
       const int nSums = nextInt();
       for ( int iSum = 0; iSum < nSums; ++iSum )
       {
-        const int key      = nextInt();
-        const double value = packer.fltPacked(nextInt());
+        const int key   = nextInt();
+        const int value = nextInt();
         summary->addInfo( (LHCb::RecSummary::DataTypes)key, value );
       }
 

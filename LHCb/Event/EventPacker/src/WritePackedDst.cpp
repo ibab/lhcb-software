@@ -184,19 +184,14 @@ StatusCode WritePackedDst::execute()
 
     } else if ( LHCb::CLID_RecSummary == myClID ) {
 
-      StandardPacker packer;
-
       LHCb::RecSummary * in = get<LHCb::RecSummary>( *itC );
       PackedBank bank( in );
       bank.storeInt( in->summaryData().size() );
       for ( LHCb::RecSummary::SummaryData::const_iterator iS = in->summaryData().begin();
             iS != in->summaryData().end(); ++iS )
       {
-        const int& key      = iS->first;
-        const double& value = iS->second;
-        // fill into bank
-        bank.storeInt( key );
-        bank.storeInt( packer.fltPacked(value) ); 
+        bank.storeInt( iS->first  );
+        bank.storeInt( iS->second ); 
       }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
