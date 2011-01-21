@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Juan Palacios
+ - Make compatible with DaVinci v26 series.
+ - Increase to v3r11p1.
+
 ! 2011-01-20 - Rob Lambert
  - Fixed a bug in the addTupleTool wrapper if an instance was supplied
 	 in this case splitName seems to give odd results, and the __class__
