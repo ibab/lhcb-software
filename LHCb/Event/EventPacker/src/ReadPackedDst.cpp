@@ -5,6 +5,11 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
 #include "Event/RawEvent.h"
 #include "Event/PackedTrack.h"
 #include "Event/PackedCaloHypo.h"
@@ -19,6 +24,7 @@
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
+#include "Event/RecSummary.h"
 
 // local
 #include "ReadPackedDst.h"
@@ -211,6 +217,21 @@ StatusCode ReadPackedDst::execute() {
       getFromBlob<int>                        ( recVertices->refs()    , blobs );
       getFromBlob<std::pair<int,int> >        ( recVertices->extras() , blobs );
 
+    } else if ( LHCb::CLID_RecSummary == classID ) {
+
+      StandardPacker packer;
+
+      LHCb::RecSummary* summary = new LHCb::RecSummary();
+      put( summary, name + m_postfix );
+      processLinks( summary, version );
+      const int nSums = nextInt();
+      for ( int iSum = 0; iSum < nSums; ++iSum )
+      {
+        const int key      = nextInt();
+        const double value = packer.fltPacked(nextInt());
+        summary->addInfo( (LHCb::RecSummary::DataTypes)key, value );
+      }
+
     } else if ( LHCb::CLID_RecHeader == classID ) {
 
       LHCb::RecHeader* recHeader = new LHCb::RecHeader();
@@ -313,8 +334,9 @@ StatusCode ReadPackedDst::execute() {
 //=========================================================================
 //  Decode a blob to recreate the data
 //=========================================================================
-template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect,
-                                                        const std::vector<LHCb::RawBank*>& blobs ) {
+template <class CLASS> 
+void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect,
+                                 const std::vector<LHCb::RawBank*>& blobs ) {
   unsigned int totSize = *m_data++;
   unsigned int nObj    = *m_data++;
   int blobNb           = *m_data++;

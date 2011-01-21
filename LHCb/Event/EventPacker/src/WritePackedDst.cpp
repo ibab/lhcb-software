@@ -4,6 +4,11 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event model
 #include "Event/RawEvent.h"
 #include "Event/PackedTrack.h"
 #include "Event/PackedCaloHypo.h"
@@ -18,6 +23,7 @@
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
+#include "Event/RecSummary.h"
 
 #include "MDF/MDFHeader.h"
 #include "MDF/RawEventHelpers.h"
@@ -35,7 +41,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( WritePackedDst );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -45,6 +50,7 @@ WritePackedDst::WritePackedDst( const std::string& name,
 {
   declareProperty( "Containers", m_containers );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -174,6 +180,24 @@ StatusCode WritePackedDst::execute()
       storeInBlob( bank, &(*in->begin())      , (in->end() - in->begin()) , sizeof( LHCb::PackedTwoProngVertex) );
       storeInBlob( bank, &(*in->beginRefs())  , in->sizeRefs()            , sizeof( int ) );
       storeInBlob( bank, &(*in->beginExtra()) , in->sizeExtra()           , sizeof( std::pair<int,int> ) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_RecSummary == myClID ) {
+
+      StandardPacker packer;
+
+      LHCb::RecSummary * in = get<LHCb::RecSummary>( *itC );
+      PackedBank bank( in );
+      bank.storeInt( in->summaryData().size() );
+      for ( LHCb::RecSummary::SummaryData::const_iterator iS = in->summaryData().begin();
+            iS != in->summaryData().end(); ++iS )
+      {
+        const int& key      = iS->first;
+        const double& value = iS->second;
+        // fill into bank
+        bank.storeInt( key );
+        bank.storeInt( packer.fltPacked(value) ); 
+      }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_RecHeader == myClID ) {
