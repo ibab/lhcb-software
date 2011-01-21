@@ -14,6 +14,7 @@
 #include "Event/RecVertex.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/CaloDigit.h"
 
 // tool interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
@@ -46,11 +47,11 @@ public:
 
 private:
 
-  /// Adds the number of objectgs at the given TES location to the summary object
+  /// Adds the number of objects at the given TES location to the summary object
   template<class CLASS> 
-  void addSummary( LHCb::RecSummary * summary,
-                   const LHCb::RecSummary::DataTypes id,
-                   const std::string& location ) const
+  void addSizeSummary( LHCb::RecSummary * summary,
+                       const LHCb::RecSummary::DataTypes id,
+                       const std::string& location ) const
   {
     if ( exist<CLASS>(location) )
     {
@@ -79,14 +80,14 @@ private:
   /// TES location of IT clusters
   std::string m_itLoc;
 
+  /// TES location of CaloDigits
+  std::string m_spdLoc;
+
   /// Pointer to RICH DAQ decoding tool
   Rich::DAQ::IRawBufferToSmartIDsTool* m_richTool;
 
   /// OT tool
   const IOTRawBankDecoder* m_otTool;
-
-  /// L0 tool
-  IL0DUFromRawTool* m_l0Tool;
 
 };
 

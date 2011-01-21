@@ -23,8 +23,7 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_richTool     ( NULL ),
-    m_otTool       ( NULL ),
-    m_l0Tool       ( NULL )
+    m_otTool       ( NULL )
 {
   declareProperty( "SummaryLocation",
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
@@ -36,6 +35,8 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_veloLoc    = LHCb::VeloClusterLocation::Default );
   declareProperty( "ITClusterLocation", 
                    m_itLoc      = LHCb::STClusterLocation::ITClusters );
+  declareProperty( "SpdDigitLocation",
+                   m_spdLoc     = LHCb::CaloDigitLocation::Spd );
 }
 
 //=============================================================================
@@ -55,7 +56,6 @@ StatusCode RecSummaryAlg::initialize()
     tool<Rich::DAQ::IRawBufferToSmartIDsTool>
     ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
   m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
-  m_l0Tool = tool<IL0DUFromRawTool>("L0DUFromRawTool");
 
   return sc;
 }
@@ -108,7 +108,7 @@ StatusCode RecSummaryAlg::execute()
   }
 
   // PVs
-  addSummary<LHCb::RecVertices>( summary, LHCb::RecSummary::nPVs, m_pvLoc );
+  addSizeSummary<LHCb::RecVertices>( summary, LHCb::RecSummary::nPVs, m_pvLoc );
 
   // RICH information
   summary->addInfo( LHCb::RecSummary::nRich1Hits, 
@@ -117,27 +117,17 @@ StatusCode RecSummaryAlg::execute()
                     m_richTool->nTotalHits(Rich::Rich2) );
 
   // Velo
-  addSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc ); 
+  addSizeSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc ); 
 
   // IT
-  addSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc ); 
+  addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc ); 
 
   // OT
   summary->addInfo( LHCb::RecSummary::nOTClusters, 
                     m_otTool->totalNumberOfHits() );
 
   // SPD
-  m_l0Tool->fillDataMap();
-  const bool l0BankDecoderOK = m_l0Tool->decodeBank();
-  if ( !l0BankDecoderOK )
-  {
-    Warning( "Unable to extract information from L0DU RawBank" ).ignore();
-  }
-  else
-  {
-    summary->addInfo( LHCb::RecSummary::nSPDhits,
-                      m_l0Tool->data("Spd(Mult)") );
-  }
+  addSizeSummary<LHCb::CaloDigits>( summary, LHCb::RecSummary::nSPDhits, m_spdLoc );
 
   if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
 
