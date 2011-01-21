@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Olivier Callot
+ - New tool FastTTValidationTool to validate a Velo track by TT for HLT1
+ - New algorithm FastValidateWIthTT to test the tool.
+
 !========================= FastVelo v1r3p1 2011-01-21 =========================
 ! 2011-01-19 - Olivier Callot
  - Fix the nPRVelo3DExpect track extrainfo value. A factor 2 was missing,
