@@ -3,6 +3,8 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+!==================== Phys/HighPtJets v1r3 2011-01-21 =======================
+
 ! 2011-01-05 - Juan Palacios
  - Remove call to DVAlgorithm::desktop().
  - Increase to v1r3
