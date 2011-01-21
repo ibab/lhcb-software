@@ -12,7 +12,7 @@ DefineMarker(FILEMAP_END_MARKER,  "fmap");
 WEAK(int) FilePrintHandler::handle(int fdnum)  const {
   FileDesc dsc;
   if ( 1 == dsc.setup(fdnum) ) {
-    dsc.print();
+    dsc.print(MTCP_INFO);
   }
   return 1;
 }
@@ -131,7 +131,7 @@ WEAK(int) FileReadHandler::handle(int) const {
 WEAK(int) FileMemPrintHandler::handle(int) const {
   FileDesc *pdsc = (FileDesc*)(m_ptr+=sizeof(Marker));
   m_ptr += pdsc->length() + sizeof(Marker) + (pdsc->hasData ? pdsc->dataLength() : 0);
-  pdsc->print();
+  pdsc->print(MTCP_INFO);
   ++m_now;
   return m_now>= m_count ? 0 : 1;
 }
@@ -140,7 +140,7 @@ WEAK(int) FileMemPrintHandler::handle(int) const {
 WEAK(int) FileMapper::handle(int) const {
   FileDesc dsc;
   m_ptr += dsc.read(m_ptr, m_restore);
-  if ( m_print ) dsc.print();
+  if ( m_print ) dsc.print(MTCP_INFO);
   ++m_now;
   return m_now>= m_count ? 0 : 1;
 }

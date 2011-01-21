@@ -9,16 +9,26 @@ namespace CHECKPOINTING_NAMESPACE  {
 
   struct FileDesc;
 
+  /// Print file descriptor information
+  STATIC(void) checkpoint_file_print(int lvl, const FileDesc* d);
+  /// Reopen file descriptor for process restoration
   STATIC(int) checkpoint_file_reopen(FileDesc* d);
+  /// Read file descriptor information from file
   STATIC(int) checkpoint_file_fread(FileDesc* d, int fd, bool restore);
+  /// Read file descriptor information from memory block
   STATIC(int) checkpoint_file_read(FileDesc* d, const void* addr, bool restore);
 
   struct Process;
+  /// Read process descriptor header from memory
   STATIC(int) checkpointing_process_read_header(Process*, const void* addr);
+  /// Read process descriptor trailer from memory
   STATIC(int) checkpointing_process_read_trailer(Process*, const void* addr);
+  /// Read process descriptor header from file
   STATIC(int) checkpointing_process_fread_header(Process*,int fd);
+  /// Read process descriptor trailer from file
   STATIC(int) checkpointing_process_fread_trailer(Process*,int fd);
   STATIC(int) checkpointing_process_skip_sys(Process*,const void* addr);
+  /// Read full file descriptor information from memory
   STATIC(int) checkpointing_process_read_files(Process*,const void* addr);
 
   STATIC(int) checkpointing_process_read_memory(Process*, const void* addr);

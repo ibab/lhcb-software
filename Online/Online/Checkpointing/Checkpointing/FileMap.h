@@ -37,7 +37,7 @@ namespace CHECKPOINTING_NAMESPACE  {
     /// Load the proper data structures and initialize the properties from the fs
     int setup(int fdnum);
     /// Print the data to standard output
-    void print();
+    void print(int lvl) const;
 
     /// Reopen file and attach it to the proper file descriptor
     int reopen();

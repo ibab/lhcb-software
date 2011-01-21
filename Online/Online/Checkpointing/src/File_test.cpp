@@ -29,8 +29,8 @@ namespace {
     virtual int handle(int) const {
       FileDesc dsc, *pdsc = (FileDesc*)(m_ptr+sizeof(Marker));
       m_ptr += dsc.read(m_ptr, false);
-      dsc.print();
-      pdsc->print();
+      dsc.print(MTCP_INFO);
+      pdsc->print(MTCP_INFO);
       ++m_now;
       return m_now>= m_count ? 0 : 1;
     }

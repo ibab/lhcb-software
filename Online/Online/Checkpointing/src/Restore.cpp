@@ -37,13 +37,28 @@ DefineMarker(SYS_END_MARKER,      "psys");
  */
 STATIC(long long int) mtcp_internal_tempstack[STACKSIZE + 1];
 
+/// Print file descriptor information
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpoint_file_print(int lvl, const FileDesc* d) {
+  mtcp_output(lvl,
+	      "FileHandler: /proc/self/fd/%d -> %s\n\t\tSiz:%d Dir:%s Reg:%s "
+	      "Sock:%s Fifo:%s Block:%s Tmp:%s Del:%s\n",
+	      d->fd, d->name, d->statbuf.st_size,
+	      S_ISDIR(d->statbuf.st_mode)  ? "YES" : "NO", 
+	      S_ISREG(d->statbuf.st_mode)  ? "YES" : "NO", 
+	      S_ISSOCK(d->statbuf.st_mode) ? "YES" : "NO", 
+	      S_ISFIFO(d->statbuf.st_mode) ? "YES" : "NO",
+	      S_ISBLK(d->statbuf.st_mode)  ? "YES" : "NO",
+	      d->istmp ? "YES" : "NO",
+	      d->isdel ? "YES" : "NO"
+	      );
+}
 
+/// Reopen file descriptor for process restoration
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
   // Open the file on a temp fd
   int flags = O_RDWR, mode = 0;
   if (!(d->statbuf.st_mode & S_IWUSR)) flags = O_RDONLY;
   else if (!(d->statbuf.st_mode & S_IRUSR)) flags = O_WRONLY;
-
   if ( d->hasData ) {
     if ( d->istmp ) { // Generate artificial temporary name
       char* p = m_chrfind(d->name,' ');
@@ -76,6 +91,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
   return 1;
 }
 
+/// Read file descriptor information from memory block
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const void* addr, bool restore) {
   unsigned char* in = (unsigned char*)addr;
   if ( in > 0 ) {
@@ -107,6 +123,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const voi
   return -1;
 }
 
+/// Read file descriptor information from file
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, bool restore) {
   int is_sock=0, in = 0;
   if ( fd > 0 ) {
@@ -115,6 +132,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, 
     in += m_fread(fd,d,len);
     in += m_fread(fd,d->name,d->name_len+1);
     is_sock = S_ISSOCK(d->statbuf.st_mode);
+    //Debug: checkpoint_file_print(MTCP_WARNING,this);
     restore = !is_sock;
     if ( d->fd == chkpt_sys.checkpointFD ) restore = false;
     restore = restore ? (checkpoint_file_reopen(d) == 1) : restore;
@@ -139,6 +157,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, 
   return -1;
 }
 
+/// Read process descriptor header from memory
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_header(Process*, const void* addr) {
   const_Pointer ptr = (const_Pointer)addr;
   if ( ptr ) {
@@ -147,17 +166,20 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_header(Process*,
   return addr_diff(ptr,addr);
 }
 
+/// Read process descriptor trailer from memory
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_trailer(Process*, const void* addr) {
   size_t sz = checkMarker(addr,PROCESS_END_MARKER);
   return sz;
 }
 
+/// Read process descriptor header from file
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_header(Process*,int fd) {
   int sz = readMarker(fd,PROCESS_BEGIN_MARKER);
   return sz;
 }
 
 
+/// Read process descriptor trailer from file
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_trailer(Process*,int fd) {
   int sz = readMarker(fd,PROCESS_END_MARKER);
   return sz;
@@ -176,6 +198,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,con
   return addr_diff(in,addr);
 }
 
+/// Read full file descriptor information from memory
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,const void* addr)  {
   const_Pointer in = (const_Pointer)addr;
   if ( in ) {
@@ -188,7 +211,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,c
     long cnt=0;
     do {
       in += checkpoint_file_read(&dsc,in,true);
-      mtcp_output(MTCP_DEBUG,"restore: file: %d -> %s offset:%d\n",dsc.fd,dsc.name,dsc.offset);
+      mtcp_output(MTCP_DEBUG,"restore[addr:%p]: ",in);
+      checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
       ++cnt;
     } while (cnt<count);
     in += checkMarker(in,FILEMAP_END_MARKER);
@@ -268,6 +292,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_sys(Process*,in
   return in;
 }
 
+/// Read full file descriptor information from file
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*,int fd)  {
   int in = 0;
   if ( fd>0 ) {
@@ -280,7 +305,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*,
     long cnt=0;
     do {
       in += checkpoint_file_fread(&dsc,fd,true);
-      mtcp_output(MTCP_DEBUG,"restore[fd:%d]: file: %d -> %s offset:%d\n",fd,dsc.fd,dsc.name,dsc.offset);
+      mtcp_output(MTCP_DEBUG,"restore[fd:%d]: ",fd);
+      checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
       ++cnt;
     } while (cnt<count);
     in += readMarker(fd,FILEMAP_END_MARKER);
@@ -615,13 +641,13 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
   int rc = 0;
   char c, line[4096], *p=line;
   bool eq=false, com=false, ign=false, nrec=false;
-
   do {
     if ( (rc=mtcp_sys_read(fd,&c,1)) == 1 ) {
-      if (p-line > sizeof(line)-1 && !(c=='\n' || c=='\0' || c==';') ) continue;
+      if ( long(p-line) > long(sizeof(line)-1) && !(c=='\n' || c=='\0' || c==';') ) continue;
       if ( (com = c=='#' ? true : com) ) { if ( c!='\n')*p++ = c; continue; }
       switch(c) {
       case '\n':
+	com = false;
       case ';':
       case '\0':
 	if ( m_strncmp(line,"then",4)  == 0 && (m_isspace(line[4]) || m_isspace(c))) ign = true;
@@ -633,7 +659,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
 	    if ( handler ) handler(par,line);
 	  }
 	}
-	com = eq = ign = nrec = false;
+	eq = ign = nrec = false;
 	p  = line;
 	break;
       case ' ':
@@ -643,7 +669,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
 	  if      ( m_strncmp(line,"if ",   3) == 0 ) ign = true;
 	  else if ( m_strncmp(line,"export",6) == 0 ) ign = true;
 	  else if ( m_strncmp(line,"unset", 5) == 0 ) ign = true;
-	  else if ( m_strncmp(line,"LS_COLORS", 9) == 0 ) com = true;
+	  else if ( m_strncmp(line,"LS_COLORS",9) == 0 ) com = true;
 	  else if ( line[0] ) nrec = true;
 	}
 	break;
