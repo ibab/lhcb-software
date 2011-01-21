@@ -205,13 +205,13 @@ StatusCode CheckpointSvc::start() {
       return sc;
     }
     if ( !m_checkPoint.empty() ) {
-      MsgStream log(msgSvc(),name());
       CHKPT& chkpt =  CHKPT_get();
       int typ = chkpt.restartType();
-      log << MSG::ALWAYS << "===CHECKPOINT type:" << typ << endmsg;
       if ( typ == 1 )   {
+	MsgStream log(msgSvc(),name());
 	log << MSG::ALWAYS << "========= Stop threads after restart from checkpoint." << endmsg;
 	chkpt.stop();
+	chkpt.updateEnv();
       }
     }
     if ( m_numInstances > 0 ) {
