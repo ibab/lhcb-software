@@ -23,7 +23,7 @@ static int checkMarker(int fd, Marker should) {
   return 1;
 }
 
-static void load(const char* file_name, startRestore_t* func, SysInfo* pSys) {
+static void load(const char* file_name, SysInfo::start_restore_t* func, SysInfo* pSys) {
   const Marker PROCESS_BEGIN_MARKER = *(Marker*)"PROC";
   const Marker SYS_BEGIN_MARKER     = *(Marker*)"PSYS";
   const Marker SYS_END_MARKER       = *(Marker*)"psys";
@@ -31,6 +31,7 @@ static void load(const char* file_name, startRestore_t* func, SysInfo* pSys) {
   SysInfo sys;
 
   *func = 0;
+  if ( 0 == pSys ) pSys = &sys;
   if ( fd < 0 ) {
     mtcp_output(MTCP_FATAL,"Failed to open checkpoint file:%s\n",file_name);
   }
@@ -38,7 +39,6 @@ static void load(const char* file_name, startRestore_t* func, SysInfo* pSys) {
   checkMarker(fd,SYS_BEGIN_MARKER);
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_output(MTCP_DEBUG,"SysInfo has a size of %d bytes\n",siz);
-  if ( 0 == pSys ) pSys = &sys;
   mtcp_sys_read(fd,pSys,sizeof(SysInfo));
   mtcp_output(MTCP_DEBUG,"checkpoint: SysInfo:       %p \n",pSys->sysInfo);
   mtcp_output(MTCP_DEBUG,"checkpoint: Page   size:   %d [%X]\n",pSys->pageSize,pSys->pageSize);
@@ -86,7 +86,7 @@ static int usage() {
 
 /// Print data content
 int main(int argc, char** argv) {
-  startRestore_t func = 0;
+  SysInfo::start_restore_t func = 0;
   if ( argc > 1 ) {
     SysInfo* pSys = 0;
     int prt = MTCP_WARNING, opts=0;
