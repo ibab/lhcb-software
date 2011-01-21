@@ -99,9 +99,11 @@ StatusCode VeloClusterPosition::initialize()
 
     info()<< " --> Using DC06 tuning of the error parametrisation " <<endmsg;
     //parameters for calculation error determined in projected angle bins
+    m_p0Values.clear();
     m_p0Values+=-2.5, -3.591, -3.430, -4.112, -4.964, -5.705, -6.301, -7.065,
       -7.353, -7.055, -6.168, -4.814, -3.075, -1.067, 0.798, 2.753,
       4.446, 5.116, 6.411, 7.124, 7.683, 7.573, 9.946, 10.97, 11.0;
+    m_p1Values.clear();
     m_p1Values+=0.29, 0.29, 0.28, 0.28, 0.28, 0.27, 0.27, 0.269,
       0.239, 0.23, 0.215, 0.18, 0.15, 0.11, 0.09, 0.06, 
       0.04, 0.03, 0.0226, 0.0154, 0.0154, 0.0235, 0.0008, -0.0079, -0.0079;
@@ -110,9 +112,11 @@ StatusCode VeloClusterPosition::initialize()
 
     info()<< " --> Using 2010 tuning of the error parametrisation " <<endmsg;    
     //parameters determined for different pitch bins error type 3
+    m_p0Values.clear();
     m_p0Values+=-1.81, -0.478, -1.68, -2.35, -3.85, -4.65, -5.09, -5.81, -6.18,
                 -5.29, -4.01, -2.91, -1.09, 1.17, 2.98, 4.61, 6.16 , 8.57, 9.91,
                 10.4, 11.4, 13.3, 14.1, 14.2;;
+    m_p1Values.clear();
     m_p1Values+=0.322, 0.271, 0.284, 0.284, 0.294, 0.291, 0.286, 0.275, 0.262,
                 0.243, 0.213, 0.187, 0.15, 0.118, 0.0915, 0.0694, 0.0504, 0.0296, 
                 0.0175, 0.0191, 0.0133, -0.00502, -0.00776, -0.00654;
