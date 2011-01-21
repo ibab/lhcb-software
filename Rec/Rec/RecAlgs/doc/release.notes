@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Chris Jones
+ - Update RecSummaryAlg to use the same public RICH decoding tool as used
+   by the main RICH reconstruction sequence
+
 ! 2011-01-20 - Chris Jones
  - Add new algorithm RecSummaryAlg that fills the new summary object, that 
    contains some basic information from the reconstruction.

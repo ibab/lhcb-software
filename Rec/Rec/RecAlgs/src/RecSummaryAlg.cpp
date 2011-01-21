@@ -45,7 +45,9 @@ StatusCode RecSummaryAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_richTool = tool<Rich::DAQ::IRawBufferToSmartIDsTool>("Rich::DAQ::RawBufferToSmartIDsTool");
+  m_richTool = 
+    tool<Rich::DAQ::IRawBufferToSmartIDsTool>
+    ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
 
   return sc;
 }
