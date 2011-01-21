@@ -56,7 +56,8 @@ StatusCode TimingTuple::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
   m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");
-  m_richTool = tool<Rich::DAQ::IRawBufferToSmartIDsTool>("Rich::DAQ::RawBufferToSmartIDsTool");
+  m_richTool = 
+    tool<Rich::DAQ::IRawBufferToSmartIDsTool>("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" ); //global tool
   m_timer = m_timerTool->addTimer( name() );
   m_timerTool->start(m_timer) ; /// start it now
