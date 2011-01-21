@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Antonis Papanestis
+ - Changed the way to handle the refractive index of a gas radiator. Now the
+   relevant parametrs can be read from the CondDB and a gas mixture is 
+   supported.
+
 ! 2011-01-12 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
