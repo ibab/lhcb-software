@@ -28,7 +28,7 @@ use HltTracking         v8r1    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r6p10 Hlt   # Gerhard Raven
 use Fidel               v2r0    Phys  # Sara Furcas
 use LoKiTrigger         v11r2p1 Phys  # Vanya Belyaev
-use LoKiTracks          v1r6    Phys  # Vanya Belyaev
+use LoKiTracks          v1r5    Phys  # Vanya Belyaev
 
 
 
