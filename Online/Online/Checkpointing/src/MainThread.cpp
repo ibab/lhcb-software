@@ -472,7 +472,7 @@ WEAK(int) MainThread::setFileDescriptors(void* ptr) {
 
 /// After a restart allow to set environment etc. from stdin.
 int MainThread::updateEnv() {
-  return (chkpt_sys.restart_flags&MTCP_STDIN_ENV) ? chkpt_sys.setEnvironment() : 1;
+  return chkpt_sys.setEnvironment();
 }
 
 /// Set the printout level for the checkpoint/restore mechanism

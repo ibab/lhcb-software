@@ -618,6 +618,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
 
   do {
     if ( (rc=mtcp_sys_read(fd,&c,1)) == 1 ) {
+      if (p-line > sizeof(line)-1 && !(c=='\n' || c=='\0' || c==';') ) continue;
       if ( (com = c=='#' ? true : com) ) { if ( c!='\n')*p++ = c; continue; }
       switch(c) {
       case '\n':
@@ -642,6 +643,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
 	  if      ( m_strncmp(line,"if ",   3) == 0 ) ign = true;
 	  else if ( m_strncmp(line,"export",6) == 0 ) ign = true;
 	  else if ( m_strncmp(line,"unset", 5) == 0 ) ign = true;
+	  else if ( m_strncmp(line,"LS_COLORS", 9) == 0 ) com = true;
 	  else if ( line[0] ) nrec = true;
 	}
 	break;

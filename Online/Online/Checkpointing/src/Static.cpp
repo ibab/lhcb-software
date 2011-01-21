@@ -105,7 +105,7 @@ static void handle_set_env_string(void* /* par */, const char* s) {
   if ( q ) {
     *q = 0;
     if ( 0 == ::setenv(s,q+1,1) )
-      mtcp_output(MTCP_INFO,"Set environment: %s=%s\n",s,q+1);
+      mtcp_output(MTCP_DEBUG,"Set environment: %s=%s\n",s,q+1);
     else
       mtcp_output(MTCP_ERROR,"FAILED Set environment: %s=%s\n",s,q+1);
     return;
@@ -116,10 +116,11 @@ static void handle_set_env_string(void* /* par */, const char* s) {
 /// After successful restore update the process environment from file.
 long SysInfo::setEnvironment() {
   if ( MTCP_STDIN_ENV == (restart_flags&MTCP_STDIN_ENV) ) {
+    mtcp_output(MTCP_INFO,"Update process environment from stdin....\n");
     checkpointing_sys_process_file(STDIN_FILENO,0,handle_set_env_string);
     return 1;
   }
-  mtcp_output(MTCP_INFO,"The flag MTCP_STDIN_ENV is not set. Cannot handle environment.\n");
+  mtcp_output(MTCP_INFO,"The flag MTCP_STDIN_ENV is not set. Do not modify process environment.\n");
   return 1;
 }
 
