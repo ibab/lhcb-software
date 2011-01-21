@@ -64,8 +64,6 @@ StatusCode Calo2MCTool::initialize(){
   // incidentSvc
   IIncidentSvc* inc = incSvc() ;
   if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
-  return sc;
-
 
   //
   if( !m_hypo2Cluster ){

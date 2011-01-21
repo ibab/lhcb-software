@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2011-01-21 - Olivier Deschamps
+ - Fix Calo2MCTool initialization
+
 ! 2011-01-19 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
