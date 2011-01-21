@@ -212,7 +212,7 @@ class Gauss(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         #
-        knownOptions = ['NONE','SIM','RSIM']
+        knownOptions = ['NONE','SIM']
         output = self.getProp("Output").upper()
         if output == 'NONE':
             log.warning("No event data output produced")
@@ -793,7 +793,7 @@ class Gauss(LHCbConfigurableUser):
         gaussSeq = GaudiSequencer("GaussSequencer")
         gaussSeq.Members += [ gaussSkipGeant4Seq ]
 
-        self.configureGiGa()
+        #self.configureGiGa()
 
         for slot in SpillOverSlots:
 
