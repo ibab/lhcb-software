@@ -2,16 +2,27 @@
 #ifndef TIMINGTUPLE_H 
 #define TIMINGTUPLE_H 1
 
-// Include files
+#include <algorithm>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiKernel/Memory.h"
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiAlg/ISequencerTimerTool.h"
+
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "L0Interfaces/IL0DUFromRawTool.h"
 #include "Kernel/LHCbID.h"
 #include "LoKi/select.h"
-#include <algorithm>
-#include "Event/Track.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
+
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
+#include "Event/ODIN.h"
+#include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
+#include "Event/Track.h"
+
 //for velo count 
 #include "boost/bind.hpp"
 
@@ -69,13 +80,13 @@ private:
     StatusCode sc = evtSvc()->findObject( location , obj ) ;
     return sc.isSuccess() && 0 != obj && 0 != dynamic_cast<TYPE*>( obj ) ;
   }
+
   /// generic templated method to extract the number of entries in a given location.
   /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
   template<class CLASS> 
-  int number( const std::string& location){
-    if (safeExist<CLASS>(location)){
-      return (get<CLASS>(location))->size() ;
-    } else return -1 ;
+  inline int number( const std::string& location)
+  {
+    return ( safeExist<CLASS>(location) ? (get<CLASS>(location))->size() : -1 ) ;
   }
 
   // velo count from Matthew David Needham

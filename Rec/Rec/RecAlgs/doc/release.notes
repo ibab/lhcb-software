@@ -6,7 +6,9 @@
 
 ! 2011-01-21 - Chris Jones
  - Update RecSummaryAlg to use the same public RICH decoding tool as used
-   by the main RICH reconstruction sequence
+   by the main RICH reconstruction sequence.
+ - Add various new values to reconstruction summary object
+ - Convert to using a map<int,int> for summary object
 
 ! 2011-01-20 - Chris Jones
  - Add new algorithm RecSummaryAlg that fills the new summary object, that 

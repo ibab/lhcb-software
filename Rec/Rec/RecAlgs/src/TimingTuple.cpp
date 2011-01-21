@@ -1,20 +1,6 @@
 // $Id: $
-// Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-#include "GaudiAlg/ISequencerTimerTool.h"
-
-// local
 #include "TimingTuple.h"
-// from DAQEvent
-#include "Event/RawEvent.h"
-#include "Event/RawBank.h"
-#include "Event/ODIN.h"
-#include "GaudiKernel/Memory.h"
-#include "Event/STCluster.h"
-#include "Event/VeloCluster.h"
-#include "Event/Track.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TimingTuple
@@ -61,7 +47,7 @@ StatusCode TimingTuple::initialize() {
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" ); //global tool
   m_timer = m_timerTool->addTimer( name() );
   m_timerTool->start(m_timer) ; /// start it now
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
