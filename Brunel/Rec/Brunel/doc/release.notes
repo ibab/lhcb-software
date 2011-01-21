@@ -18,6 +18,10 @@ Purpose: LHCb reconstruction program
   . #115196: New expert monitoring for ProtoPIDANN
   . #115240: Switch default ANN configuration from MC2010Tune to MC10TuneV1,
              activate the new Ghost ID network for each track type.
+  . #115674: Suppress Warning "Ingress/ODIN Event ID checks are disabled"
+             Re-enable printing of decoding summary
+  . #115635: Add new SUMMARY sequence, runs RecSummaryAlg to fill new reco
+             summary object saved on DST
   . Move to a single sqlite file for ONLINE_2010 conditions 
 
 </PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>
