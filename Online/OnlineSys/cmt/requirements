@@ -18,8 +18,7 @@ use GaudiObjDesc      v11r10p1
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
 use Camera              v1r19    Online
-macro  Checkpointing_use "" target-x86_64 "Checkpointing v0r1 Online"
-use $(Checkpointing_use)
+use Checkpointing       v0r1     Online
 use CondDBServer        v1r4     Online
 use DIM                 v19r15   Online
 use ExampleGaucho       v3r4     Online
