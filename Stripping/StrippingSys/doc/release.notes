@@ -3,6 +3,12 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+</PRE><H1><A NAME=v1r3>2011-01-21 StrippingSys v1r3 </A></H1><PRE>
+
+ * PhysDesktop-less backwards incompatible version for 2011 vevelopment.
+ * NOT COMISSIONED FOR PRODUCTION.
+ * Most changes relate to removal of PhysDesktop.
+
 </PRE><H1><A NAME=v1r2>2010-12-20 StrippingSys v1r2 </A></H1><PRE>
 
 ! 2010-11-15 - Juan Palacios
