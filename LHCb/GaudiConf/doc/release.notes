@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-01-21 - Patrick Robbe
+ - SimConf: add new phases (GenToMCTree) used in Gauss to save generator
+   level information into MCParticles (skipping the full simulation 
+   phase). 
+
 ! 2011-01-20 - Chris Jones
  - Add the new reconstruction summary object to the DST content.
 
