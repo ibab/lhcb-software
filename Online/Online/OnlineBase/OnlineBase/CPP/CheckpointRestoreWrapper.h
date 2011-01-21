@@ -19,6 +19,8 @@ class CheckpointRestoreWrapper  {
  protected:
   /// Standard constructor
   CheckpointRestoreWrapper() {}
+  /// Standard destructor
+  virtual ~CheckpointRestoreWrapper() {}
  public:
   /// Set the printout level for the checkpoint/restore mechanism
   virtual int setPrint(int new_level) = 0;
