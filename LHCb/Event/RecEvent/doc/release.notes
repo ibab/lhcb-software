@@ -5,6 +5,11 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-01-21 - Chris Jones
+ - Convert reconstruction summary data object to internally use a map<int,int>
+   instead of a map<int,double>.
+ - Add various new summary values (IT,OT,SPD,Velo hits + Velo backward tracks).
+
 ! 2011-01-20 - Chris Jones
  - Add number of RICH1 and RICH2 hits to reconstruction summary data object.
 

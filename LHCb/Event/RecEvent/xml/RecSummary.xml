@@ -18,7 +18,7 @@
        <import name="GaudiKernel/VectorMap"/>
 
        <typedef
-        type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
+        type   = "GaudiUtils::VectorMap&lt;int,int&gt;"
         def    = "SummaryData"
         desc   = "Vector of additional information"
         access = "PUBLIC"
@@ -34,8 +34,13 @@
          <enumval name="nUpstreamTracks"    value="12"   desc="Number of reconstructed Upstream Tracks"/>
          <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
          <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
+         <enumval name="nBackTracks"        value="15"   desc="Number of reconstructed VELO backwards Tracks"/>
          <enumval name="nRich1Hits"         value="20"   desc="Number of hits in RICH1"/>
          <enumval name="nRich2Hits"         value="21"   desc="Number of hits in RICH2"/>
+         <enumval name="nVeloClusters"      value="30"   desc="Number of VELO clusters"/>
+         <enumval name="nITClusters"        value="40"   desc="Number of IT clusters"/>
+         <enumval name="nOTClusters"        value="50"   desc="Number of OT clusters"/>
+         <enumval name="nSPDhits"           value="60"   desc="Number of SPD hits"/>
        </enum>
 
        <attribute
@@ -60,7 +65,7 @@
        <method
         name    = "addInfo"
         desc    = "Add or replace new information, associated with the specified key"
-        argList = "const int key, const double info"
+        argList = "const int key, const int info"
         type    = "bool" >
         <code>
           return m_summaryData.insert( key , info ).second ;
@@ -70,8 +75,8 @@
        <method
         name    = "info"
         desc    = "Extract the information associated with the specified key. If there is no such information the default value will be returned."
-        argList = "const int key, const double def"
-        type    = "double"
+        argList = "const int key, const int def"
+        type    = "int"
         const   = "TRUE" >
         <code>
            SummaryData::const_iterator i = m_summaryData.find( key ) ;
