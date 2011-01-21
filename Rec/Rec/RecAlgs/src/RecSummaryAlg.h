@@ -46,23 +46,20 @@ public:
 
 private:
 
-  /// Check if an object exists
-  template <class TYPE>
-  bool safeExist  ( const std::string& location ) 
-  {
-    DataObject * obj = NULL ;
-    const StatusCode sc = evtSvc()->findObject( location , obj ) ;
-    return ( sc.isSuccess() && 
-             NULL != obj    && 
-             NULL != dynamic_cast<TYPE*>(obj) ) ;
-  }
-
-  /// generic templated method to extract the number of entries in a given location.
-  /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
+  /// Adds the number of objectgs at the given TES location to the summary object
   template<class CLASS> 
-  inline int number( const std::string& location)
+  void addSummary( LHCb::RecSummary * summary,
+                   const LHCb::RecSummary::DataTypes id,
+                   const std::string& location ) const
   {
-    return ( safeExist<CLASS>(location) ? (get<CLASS>(location))->size() : -1 ) ;
+    if ( exist<CLASS>(location) )
+    {
+      summary->addInfo( id, (int)(get<CLASS>(location))->size() );
+    }
+    else
+    {
+      Warning( "No data at '" + location + "'" ).ignore();
+    }
   }
 
 private:

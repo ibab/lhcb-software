@@ -93,7 +93,7 @@ StatusCode RecSummaryAlg::execute()
       }
     }
 
-    // Save track info tom summary
+    // Save track info to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
     summary->addInfo( LHCb::RecSummary::nDownstreamTracks, nDownstream );
     summary->addInfo( LHCb::RecSummary::nUpstreamTracks,   nUpstream );
@@ -107,21 +107,8 @@ StatusCode RecSummaryAlg::execute()
     Warning( "No tracks available at '"+m_trackLoc+"'" ).ignore();
   }
 
-  // Do we have reconstructed PVs ?
-  if ( exist<LHCb::RecVertices>(m_pvLoc) )
-  {
-
-    // Load the reconstructed PVs
-    const LHCb::RecVertices * pvs = get<LHCb::RecVertices>(m_pvLoc);
-    
-    // Save PV information
-    summary->addInfo( LHCb::RecSummary::nPVs, (int)pvs->size() );
-
-  }
-  else
-  {
-    Warning( "No PVs available at '"+m_pvLoc+"'" ).ignore();
-  }
+  // PVs
+  addSummary<LHCb::RecVertices>( summary, LHCb::RecSummary::nPVs, m_pvLoc );
 
   // RICH information
   summary->addInfo( LHCb::RecSummary::nRich1Hits, 
@@ -130,12 +117,10 @@ StatusCode RecSummaryAlg::execute()
                     m_richTool->nTotalHits(Rich::Rich2) );
 
   // Velo
-  summary->addInfo( LHCb::RecSummary::nVeloClusters, 
-                    number<LHCb::VeloClusters>(m_veloLoc) );
+  addSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc ); 
 
   // IT
-  summary->addInfo( LHCb::RecSummary::nITClusters, 
-                    number<LHCb::STClusters>(m_itLoc) );
+  addSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc ); 
 
   // OT
   summary->addInfo( LHCb::RecSummary::nOTClusters, 
