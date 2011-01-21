@@ -3,7 +3,6 @@
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
 #include "RTL/rtl.h"
 
 /*
@@ -51,5 +50,5 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,SignalAlg)
