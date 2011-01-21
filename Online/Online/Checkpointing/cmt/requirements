@@ -18,15 +18,15 @@ macro cmt_installarea_linkopts ''
 macro cpplinkflags             ' -static -g -O0 ' WIN32 ''
 
 public
-macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wextra -Wreturn-type -Wunused -fPIC ' WIN32 ''
 library Checkpointing 	../aux/Image.cpp \
 			../src/File_test.cpp \
 			../src/MemMaps_test.cpp \
 			../src/Process_test.cpp \
 			../src/Chkpt_test.cpp
-library Chkpt  		*.cpp
-
+macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wextra -Wreturn-type -Wunused -fPIC ' WIN32 ''
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '    WIN32 ''
+
+library Chkpt  		*.cpp
 macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shared ' WIN32 ''
 
 apply_pattern QMTest
