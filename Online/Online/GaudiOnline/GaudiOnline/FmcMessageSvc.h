@@ -27,6 +27,9 @@ namespace LHCb  {
     /// Implementation of IService::initialize()
     virtual StatusCode initialize();
 
+    /// Implementation of IService::start()
+    virtual StatusCode start();
+
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
 
@@ -56,7 +59,6 @@ namespace LHCb  {
     int m_tryN;
     char hostName[80];
     const char *pName;
-    const char *utgid;
     int fifoFD;
     int dfltFifoFD;
     int droppedN;
@@ -64,8 +66,7 @@ namespace LHCb  {
     StatusCode openFifo();
     void changeFifo(Property& prop);
     virtual void getPName();
-    virtual int printM(int out,int severity,const char* fName,
-                       const char *format,...);
+    virtual int printM(int out,int severity,const char* fName,const char *format,...);
     virtual int dimLoggerMsgSend(char *buf,int fifoFD);
     virtual int stdErrMsgSend(char *buf);
     virtual int sysLogMsgSend(char *buf,int severity);
