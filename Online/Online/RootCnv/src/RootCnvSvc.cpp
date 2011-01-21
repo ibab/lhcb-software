@@ -49,9 +49,28 @@ DECLARE_SERVICE_FACTORY(RootCnvSvc)
 #define S_FAIL StatusCode::FAILURE
 namespace GaudiRoot {  bool patchStreamers(MsgStream& log);    }
 
+// This does unfortunately not work....
+//#define GAUDI_MAJOR_VSN ((#GAUDI_VERSION[8]-'0')*10 + (#GAUDI_VERSION[9]-'0'))
+//#define GAUDI_MINOR_VSN ( #GAUDI_VERSION[12] ? ((#GAUDI_VERSION[11]-'0')*10 + (#GAUDI_VERSION[12]-'0')) : (#GAUDI_VERSION[11]-'0'))
+
+
 namespace { 
   static map<string, TClass*> s_classesNames;
   static map<CLID, TClass*>   s_classesClids;
+#ifdef GAUDI_v21r11
+  union ObjectTypes {
+    ObjectTypes(DataObject* p) { Object = p; }
+    DataObject*                                             Object;
+    KeyedContainer<KeyedObject<long>, Containers::Map>*     KeyMap;
+    KeyedContainer<KeyedObject<long>, Containers::HashMap>* KeyHashMap;
+    KeyedContainer<KeyedObject<long>, Containers::Array>*   KeyArray;
+    StatusCode update(int flag)  {
+      IUpdateable* obj = dynamic_cast<IUpdateable*>(Object);
+      if ( obj ) return obj->update(flag);
+      return S_FAIL;
+    }
+  };
+#endif
 }
 
 // Standard constructor
@@ -503,7 +522,32 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
           log() << MSG::ERROR << con->fid() << ": Failed to create address!!!!" << endmsg;
           return S_FAIL;
         }
+#ifdef GAUDI_v21r11
+        ObjectTypes obj(pObj);
+        const CLID id = (pObj->clID()&0xFFFF0000);
+        switch(id) 
+        {
+        case CLID_ObjectList:              /* ObjectList               */
+          return S_OK;
+        case CLID_ObjectVector:            /* ObjectVector             */
+          return S_OK;
+        case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
+          obj.KeyMap->configureDirectAccess();
+          return S_OK;
+        case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
+          obj.KeyHashMap->configureDirectAccess();
+          return S_OK;
+        case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
+          obj.KeyArray->configureDirectAccess();
+          return S_OK;
+        case 0:                            /* Any other object         */
+          return S_OK;
+        default:
+          return obj.update(0);
+        }
+#else
 	return pObj->update();
+#endif
       }
     }
     return S_FAIL;

@@ -16,7 +16,7 @@ apply_pattern reflex_dictionary dictionary=RootCnv \
 #===========================================================================
 library     RootCnv ../src/*.cpp
 apply_pattern component_library library=RootCnv
-macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY '
+macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
 
 application gaudi_merge ../merge/merge.cpp
 
