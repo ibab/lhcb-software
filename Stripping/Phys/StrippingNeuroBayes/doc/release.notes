@@ -4,6 +4,8 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!======================= StrippingNeuroBayes v1r1 2011-01-21 =================
+
 ! 2011-01-14 - Juan Palacios
  - DVAlgorithm::bestPV -> DVAlgorithm::i_bestVertex.
 
