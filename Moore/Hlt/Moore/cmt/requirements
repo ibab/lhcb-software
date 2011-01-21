@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version v11r1
+version v11r2
 
 branches doc cmt options python
 
@@ -22,13 +22,14 @@ use HepMC               v*      LCG_Interfaces -no_auto_imports
 use DDDB                v*      Det         -no_auto_imports
 use ParamFiles          v8r*                -no_auto_imports
 use FieldMap            v5r*                -no_auto_imports
-use HltTCK              v1r*    TCK         -no_auto_imports
+use HltTCK              v*      TCK         -no_auto_imports
 use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use HltTracking         v8r0p2  Hlt
-use HltSettings         v5r0p1  Hlt
+use TrackTools          v4r0p1  Tr
+use FastVelo            v1r3p1  Tf
+use LoKiFitters         v4r1p1  Phys
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
