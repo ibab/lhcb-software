@@ -514,7 +514,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   return data_len;
 }
 
-/// Print data content
+/// Print data content of SysInfo structure
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) {
   void* curr_break = mtcp_sys_brk(0);
   // Checkpoint image
@@ -539,6 +539,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) 
   mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s.restart_flags);
 }
 
+/// Main restart routine in checkpointing image
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* sys, int print_level,int flags) {
   /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
    * below, the optimizer generates non-PIC code if it's not -O0 - Gene
@@ -571,11 +572,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* s
   asm volatile ("xor %rbp,%rbp");
 #endif
   // Stack is wacked. Need to call a new routinne, which should never return.
-  checkpointing_restore_process();
+  checkpointing_sys_restore_process();
   asm volatile ("hlt");
 }
 
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_restore_process() {
+/// Secondary restore routine. Execution starts once we jumped to the local stack.
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
   struct stat sb;
   const char* nam = chkpt_sys.checkpointFile;
   int fdnum = chkpt_sys.checkpointFD;
@@ -600,9 +602,56 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_restore_process() {
   mtcp_output(MTCP_FATAL,"Failed to read process information from file %s.\n",nam);
 }
 
+/// Final restart routine. Execution starts once we are back on the stack of the restored process.
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_finish() {
-  SysInfo& s = chkpt_sys;
-  mtcp_output(MTCP_INFO,"restore: restore complete, resuming. Jump to:%p\n",s.finishRestore);
+  mtcp_output(MTCP_INFO,"sys_restore_finish: restore complete, resuming. Jump to:%p\n",chkpt_sys.finishRestore);
+
   // Jump to finishrestore in original program's libmtcp.so image
-  (*(s.finishRestore))();
+  (*(chkpt_sys.finishRestore))();
+}
+
+/// Handle input file to set environment etc.
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, void* par, checkpointing_string_handler_t handler) {
+  int rc = 0;
+  char c, line[4096], *p=line;
+  bool eq=false, com=false, ign=false, nrec=false;
+
+  do {
+    if ( (rc=mtcp_sys_read(fd,&c,1)) == 1 ) {
+      if ( (com = c=='#' ? true : com) ) { if ( c!='\n')*p++ = c; continue; }
+      switch(c) {
+      case '\n':
+      case ';':
+      case '\0':
+	if ( m_strncmp(line,"then",4)  == 0 && (m_isspace(line[4]) || m_isspace(c))) ign = true;
+	else if ( m_strncmp(line,"fi",2) == 0 && (m_isspace(line[2]) || m_isspace(c) || c==';')) ign = true;
+	if ( p > line ) {
+	  const char* opt = ign ? "Ignore: " : nrec ? "Not recognized: " : com ? "Comment: " : "";
+	  *p++ = 0;
+	  if ( *opt == 0 )  {
+	    if ( handler ) handler(par,line);
+	  }
+	}
+	com = eq = ign = nrec = false;
+	p  = line;
+	break;
+      case ' ':
+	if ( p==line ) break;
+	*p++ = c;
+	if ( !eq )  {
+	  if      ( m_strncmp(line,"if ",   3) == 0 ) ign = true;
+	  else if ( m_strncmp(line,"export",6) == 0 ) ign = true;
+	  else if ( m_strncmp(line,"unset", 5) == 0 ) ign = true;
+	  else if ( line[0] ) nrec = true;
+	}
+	break;
+      case '=':
+	eq = true;	// Fall through!
+      default:
+	*p++ = c;
+	break;
+      }
+    }
+  }
+  while(rc==1);
 }

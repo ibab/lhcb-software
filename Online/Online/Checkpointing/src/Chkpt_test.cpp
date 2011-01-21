@@ -96,7 +96,10 @@ int test_thread_checkpoint() {
   return 0;
 }
 
-
+int test_set_sys_environment() {
+  chkpt_sys.restart_flags = MTCP_STDIN_ENV;
+  return chkpt_sys.setEnvironment();
+}
 
 int test_FileMap_scan();
 int test_FileMap_memory();
@@ -110,19 +113,21 @@ int test_Process_read();
 int test_Process_restore();
 
 int test_thread_checkpoint();
+int test_set_environment(int flag);
 
 extern "C" int chkpt_tests(int argc, char** argv) {
   int opt = *(int*)"None";
-  int prt = MTCP_INFO, prt2=0;
+  int prt = MTCP_INFO, flag=0;
   const char* p = (char*)&opt, *q="";
   for(int i=0; i<argc; ++i) {
     if      ( argc>i && argv[i][1] == 'f' ) opt  = *(int*)(q=argv[++i]);
-    else if ( argc>i && argv[i][1] == 'p' ) prt  = argv[++i][0]-'0';
-    else if ( argc>i && argv[i][1] == 'n' ) prt2 = MTCP_PRINT_NO_PID;
+    else if ( argc>i && argv[i][1] == 'p' ) prt   = (argv[++i][0]-'0')|(prt&MTCP_PRINT_NO_PID);
+    else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
+    else if ( argc>i && argv[i][1] == 'e' ) flag |= MTCP_STDIN_ENV;
   }
-  ::fprintf(stdout,"Checkpointing_test: print level:%d tst function:%s [%c%c%c%c]\n",
-	      prt,q,p[0],p[1],p[2],p[3]);
-  mtcp_set_debug_level(prt+prt2);
+  ::fprintf(stdout,"Checkpointing_test: print level:%d flag:%d tst function:%s [%c%c%c%c]\n",
+	    prt,flag,q,p[0],p[1],p[2],p[3]);
+  mtcp_set_debug_level(prt);
   if      ( opt == *(int*)"m_write"   ) test_MemMaps_write();
   else if ( opt == *(int*)"m_read"    ) test_MemMaps_read();
   else if ( opt == *(int*)"m_share"   ) test_MemMaps_sharable();
@@ -135,6 +140,8 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   else if ( opt == *(int*)"p_restore" ) test_Process_restore();
 
   else if ( opt == *(int*)"t_checkpo" ) test_thread_checkpoint();
+  else if ( opt == *(int*)"t_environ" ) test_set_environment(flag);
+  else if ( opt == *(int*)"t_senviron") test_set_sys_environment();
   else mtcp_output(MTCP_ERROR,"No function given. Test is meaningless.\n");
   return 1;
 }

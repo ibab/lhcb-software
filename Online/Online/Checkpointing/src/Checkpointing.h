@@ -11,15 +11,18 @@ namespace CHECKPOINTING_NAMESPACE  {
   typedef unsigned char* Pointer;
   typedef const unsigned char* const_Pointer;
 
+  HIDDEN(int)    m_isspace(char s);
   HIDDEN(int)    m_strcmp(const char* t, const char* s);
+  HIDDEN(int)    m_strncmp(const char* t, const char* s, size_t len);
   HIDDEN(size_t) m_strcpy(char* t, const char* s);
   HIDDEN(size_t) m_strcat(char* t, const char* s);
+
   HIDDEN(size_t) m_memcpy(void* t, const void* s, size_t len);
   HIDDEN(size_t) m_fread(int fd, void* t, size_t len);
   HIDDEN(size_t) m_fcopy(int to_fd, int from_fd, size_t len);
   HIDDEN(size_t) m_fskip(int fd, size_t len);
 
-  HIDDEN(size_t) m_memset(void* t, unsigned char pattern, size_t len);
+  HIDDEN(size_t)      m_memset(void* t, unsigned char pattern, size_t len);
   HIDDEN(const char*) m_strfind(const char* s, const char* pattern);
   HIDDEN(const char*) m_chrfind(const char* s, const char pattern);
   HIDDEN(char*)       m_chrfind(char* s, const char pattern);

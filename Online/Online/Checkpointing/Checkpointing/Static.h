@@ -83,6 +83,8 @@ namespace CHECKPOINTING_NAMESPACE    {
     void aquire();
     /// Write static system information to file
     long write(int fd);
+    /// After successful restore update the process environment from file.
+    long setEnvironment();
     /// Print data content
     void print();
 #endif

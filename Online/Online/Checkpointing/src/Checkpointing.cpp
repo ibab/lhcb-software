@@ -12,9 +12,21 @@ extern void mtcp_output(int lvl,const char* fmt,...);
 namespace CHECKPOINTING_NAMESPACE {
 #endif
 
+HIDDEN(int)    m_isspace(char s) {
+  return s==' '||s=='\n'||s=='\t'||s=='\r'||s=='\v'||s=='\f' ? 1 : 0;
+}
+
 HIDDEN(int) m_strcmp(const char* t, const char* s) {
   if ( t && s ) {
     for(; *t && *s && *t==*s; ++s, ++t) ;
+    if ( *t == *s ) return 0;
+  }
+  return 1;
+}
+
+HIDDEN(int) m_strncmp(const char* t, const char* s, size_t len) {
+  if ( t && s ) {
+    for(size_t i=0; i<len && *t && *s && *t==*s; ++s, ++t, ++i) ;
     if ( *t == *s ) return 0;
   }
   return 1;

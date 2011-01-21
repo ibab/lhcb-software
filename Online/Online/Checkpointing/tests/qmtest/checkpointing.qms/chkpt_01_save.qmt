@@ -2,6 +2,12 @@
 
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>../test_save.sh</text></argument>
+  <argument name="args"><set>
+	<text>chkpt_tests</text>
+	<text>-p</text><text>3</text>
+	<text>-n</text>
+	<text>-f</text><text>t_checkpoint</text>
+  </set></argument>
   <argument name="unsupported_platforms"><set>
 		<text>win.*</text>
 		<text>slc4.*</text>

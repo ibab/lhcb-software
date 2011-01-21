@@ -13,6 +13,7 @@ apply_pattern install_more_includes more=Checkpointing
 
 # ==================== component libraries ==================================
 application restore     ../aux/main.cpp
+
 private 
 macro cmt_installarea_linkopts ''
 macro cpplinkflags             ' -static -g -O0 ' WIN32 ''

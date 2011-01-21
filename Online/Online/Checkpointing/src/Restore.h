@@ -44,11 +44,18 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(int) checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,int data_len);
 
   struct SysInfo;
+  typedef void (*checkpointing_string_handler_t)(void* param, const char* s);
 
+  /// Print data content of SysInfo structure
   STATIC(void) checkpointing_sys_print(const SysInfo& s);
+  /// Main restart routine in checkpointing image
   STATIC(void) checkpointing_sys_restore_start(SysInfo* sys,int print_level, int optional_flags);
+  /// Secondary restore routine. Execution starts once we jumped to the local stack.
+  STATIC(void) checkpointing_sys_restore_process();
+  /// Final restart routine. Execution starts once we are back on the stack of the restored process.
   STATIC(void) checkpointing_sys_restore_finish();
-  STATIC(void) checkpointing_restore_process();
+  /// Handle input file to set environment etc.
+  STATIC(void) checkpointing_sys_process_file(int fd, void* par, checkpointing_string_handler_t handler);
 
   // CHECKPOINTING_NAMESPACE::
 }

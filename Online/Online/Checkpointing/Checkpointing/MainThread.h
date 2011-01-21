@@ -37,6 +37,8 @@ class CheckpointRestoreWrapper  {
   virtual int forkInstance()    = 0;
   /// Child fork: Re-establish child to running state
   virtual int startChild()      = 0;
+  /// After a restart allow to set environment etc. from stdin.
+  virtual int updateEnv() = 0;
   
   /// Create a checkpoint file by writing to file descriptor fd
   virtual int checkpoint(int fd)= 0;
@@ -91,6 +93,8 @@ namespace CHECKPOINTING_NAMESPACE {
     //virtual void     stop();
     /// Resume all threads after the checkpoint was produced
     virtual int     resume();
+    /// After a restart allow to set environment etc. from stdin.
+    virtual int updateEnv();
 
     virtual void    initialize();
 

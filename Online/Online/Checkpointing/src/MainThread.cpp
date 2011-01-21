@@ -384,7 +384,7 @@ WEAK(void) MainThread::finishRestore() {
   // Fill in the new mother process id
   chkpt_sys.motherPID    = mtcp_sys_getpid();
   chkpt_sys.restart_type = SysInfo::RESTART_CHECKPOINT;
-  mtcp_output(MTCP_INFO,"finishRestore: motherPID:%d motherofall:%p; mtcp works; libc should work as well.\n",
+  mtcp_output(MTCP_INFO,"sys_restore_finish: motherPID:%d motherofall:%p; mtcp works; libc should work as well.\n",
 	      chkpt_sys.motherPID,chkpt_sys.motherofall);
 
   // Now move to the temporary stack for restoring all process properties at the time of the checkpoint.
@@ -392,6 +392,7 @@ WEAK(void) MainThread::finishRestore() {
   // Thread::restart() will have a big stack
   asm volatile (CLEAN_FOR_64_BIT(mov %0,%%esp)
 		: : "g" (chkpt_sys.motherofall->m_savctx.SAVEDSP - 128 ) : "memory");  // -128 for red zone
+
   chkpt_sys.motherofall->restart(1);
   mtcp_output(MTCP_INFO,"finishRestore: ALL Child threads are now started:%d\n",chkpt_sys.motherPID);
 }
@@ -467,6 +468,11 @@ WEAK(int) MainThread::setFileDescriptors(void* ptr) {
     }
   }
   return 0;
+}
+
+/// After a restart allow to set environment etc. from stdin.
+int MainThread::updateEnv() {
+  return (chkpt_sys.restart_flags&MTCP_STDIN_ENV) ? chkpt_sys.setEnvironment() : 1;
 }
 
 /// Set the printout level for the checkpoint/restore mechanism
