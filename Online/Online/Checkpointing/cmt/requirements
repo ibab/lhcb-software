@@ -18,10 +18,10 @@ macro cmt_installarea_linkopts ''
 macro cpplinkflags             ' -static -g -O0 ' WIN32 ''
 
 public
-library Checkpointing 	../aux/Image.cpp \
-			../src/File_test.cpp \
-			../src/MemMaps_test.cpp \
-			../src/Process_test.cpp \
+library Checkpointing 	../aux/Image.cpp         \
+			../src/File_test.cpp     \
+			../src/MemMaps_test.cpp  \
+			../src/Process_test.cpp  \
 			../src/Chkpt_test.cpp
 macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wextra -Wreturn-type -Wunused -fPIC ' WIN32 ''
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '    WIN32 ''
@@ -31,3 +31,8 @@ macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shar
 
 apply_pattern QMTest
 apply_pattern QMTestSummarize
+
+# This we cannot build neither on Windows nor on 32 bit platforms!
+apply_pattern disable_package_on platform=target-winxp
+apply_pattern disable_package_on platform=target-i686
+apply_pattern disable_package_on platform=target-ia32
