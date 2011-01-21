@@ -234,7 +234,7 @@ class SimConf(LHCbConfigurableUser) :
                 if self.getProp("DataType") != 'DC06' or slot == '':
                     list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
 
-            if "Simulation" in self.getProp("Phases") :
+            if "Simulation" in self.getProp("Phases") or "GenToMCTree" in self.getProp("Phases") :
                 list += [ self.tapeLocation( slot, 'MC', 'Header' ) ]
 
             # main event is manditory, spillover events optional.
@@ -264,7 +264,7 @@ class SimConf(LHCbConfigurableUser) :
 
     def addMCParticles( self, tape, eventLocations ) :
         
-        if "Simulation" in self.getProp("Phases") :
+        if "Simulation" in self.getProp("Phases") or "GenToMCTree" in self.getProp("Phases") :
 
             # Event locations
             for slot in eventLocations :
@@ -283,7 +283,7 @@ class SimConf(LHCbConfigurableUser) :
 
     def addMCVertices( self, tape, eventLocations ) :
         
-        if "Simulation" in self.getProp("Phases") :
+        if "Simulation" in self.getProp("Phases") or "GenToMCTree" in self.getProp("Phases") :
 
             # Event locations
             for slot in eventLocations :
