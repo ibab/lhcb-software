@@ -4,6 +4,12 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! ===================== StrippingUtils v1r1 2011-01-21 =======================
+
+! 2011-01-20 - Juan Palacios
+ - Add lineNames(), lineFromName(name), outputLocations() methods to StrippingUtils.Utils.LineBuilder. Available as free functions.
+- Increase to v1r1.
+
 ! ===================== StrippingUtils v1r0 2010-11-23 =======================
 
 ! 2010-11-15 - Juan Palacios
