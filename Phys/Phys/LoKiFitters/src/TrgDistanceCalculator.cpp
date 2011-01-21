@@ -770,7 +770,10 @@ LoKi::TrgDistanceCalculator::TrgDistanceCalculator
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
   : base_class ( type , name , parent ) 
-{}
+{
+  StatusCode sc = setProperty ( "MaxPrints" , 0 ) ;
+  Assert ( sc.isSuccess () , "Unable (re)set property 'MaxPrints'"    , sc ) ;
+}
 // ============================================================================
 /*  The method for the evaluation of the impact parameter ("distance")
  *  vector of the particle with respect to some vertex. 

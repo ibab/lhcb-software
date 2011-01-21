@@ -823,6 +823,8 @@ LoKi::DistanceCalculator::DistanceCalculator
   declareProperty 
     ( "DeltaPath"        , m_delta_path          , 
       "Delta c*tau (convergency criterion)"      ) ; 
+  StatusCode sc = setProperty ( "MaxPrints" , 0 ) ;
+  Assert ( sc.isSuccess () , "Unable (re)set property 'MaxPrints'"    , sc ) ;
 }
 // ============================================================================
 // virtual and protected desctructor 
