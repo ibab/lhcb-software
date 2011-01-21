@@ -1,9 +1,10 @@
- Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingSelections v2r3p1 2011-01-21 =============
 
 ! 2011-01-12 - Vanya Belyaev
 
