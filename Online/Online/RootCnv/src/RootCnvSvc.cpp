@@ -52,19 +52,6 @@ namespace GaudiRoot {  bool patchStreamers(MsgStream& log);    }
 namespace { 
   static map<string, TClass*> s_classesNames;
   static map<CLID, TClass*>   s_classesClids;
-
-  union ObjectTypes {
-    ObjectTypes(DataObject* p) { Object = p; }
-    DataObject*                                             Object;
-    KeyedContainer<KeyedObject<long>, Containers::Map>*     KeyMap;
-    KeyedContainer<KeyedObject<long>, Containers::HashMap>* KeyHashMap;
-    KeyedContainer<KeyedObject<long>, Containers::Array>*   KeyArray;
-    StatusCode update(int flag)  {
-      IUpdateable* obj = dynamic_cast<IUpdateable*>(Object);
-      if ( obj ) return obj->update(flag);
-      return S_FAIL;
-    }
-  };
 }
 
 // Standard constructor
@@ -516,28 +503,7 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
           log() << MSG::ERROR << con->fid() << ": Failed to create address!!!!" << endmsg;
           return S_FAIL;
         }
-        ObjectTypes obj(pObj);
-        const CLID id = (pObj->clID()&0xFFFF0000);
-        switch(id) 
-        {
-        case CLID_ObjectList:              /* ObjectList               */
-          return S_OK;
-        case CLID_ObjectVector:            /* ObjectVector             */
-          return S_OK;
-        case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
-          obj.KeyMap->configureDirectAccess();
-          return S_OK;
-        case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
-          obj.KeyHashMap->configureDirectAccess();
-          return S_OK;
-        case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
-          obj.KeyArray->configureDirectAccess();
-          return S_OK;
-        case 0:                            /* Any other object         */
-          return S_OK;
-        default:
-          return obj.update(0);
-        }
+	return pObj->update();
       }
     }
     return S_FAIL;
