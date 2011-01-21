@@ -536,9 +536,10 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) 
   // The finishRestore function pointer:
   mtcp_output(MTCP_INFO,"checkpoint: Restore start: %p finish:%p\n",s.startRestore,s.finishRestore);
   mtcp_output(MTCP_INFO,"checkpoint: Mother of all: %p \n",s.motherofall);
+  mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s.restart_flags);
 }
 
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* sys, int print_level) {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* sys, int print_level,int flags) {
   /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
    * below, the optimizer generates non-PIC code if it's not -O0 - Gene
    */
@@ -552,6 +553,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* s
     mtcp_output(MTCP_INFO,"restore_start....First check input system information:%p\n",sys);
     checkpointing_sys_print(*sys);
   }
+  chkpt_sys.restart_flags = flags;
   checkpointing_sys_print(chkpt_sys);
 
   // Now we move the process to the temporary stack allocated in this image

@@ -27,47 +27,52 @@ namespace CHECKPOINTING_NAMESPACE    {
       RESTART_CHECKPOINT = 1
     };
 
+    typedef void  (*start_restore_t)(SysInfo* sys,int print_level, int optional_flags);
+    typedef void   (*end_restore_t)();
+
     /// Current stack limit
-    unsigned long  stackLimitCurr;
+    unsigned long   stackLimitCurr;
     /// Hard OS dependent stack limit
-    unsigned long  stackLimitHard;
+    unsigned long   stackLimitHard;
     /// The start address of the checkpointing image
-    unsigned long  addrStart;
+    unsigned long   addrStart;
     /// The end address of the checkpointing image
-    unsigned long  addrEnd;
+    unsigned long   addrEnd;
     /// The size of the checkpointing image
-    unsigned long  addrSize;
+    unsigned long   addrSize;
     /// The start address of the checkpointing image
-    unsigned long  chkptStart;
+    unsigned long   chkptStart;
     /// The size of the checkpointing image
-    unsigned long  chkptSize;
+    unsigned long   chkptSize;
 
     /// The saved end-pointer of the process heap
-    void*          saved_break;
+    void*           saved_break;
 
     /// The function pointer to restore the process
-    void         (*startRestore)(SysInfo* sys,int print_level);
+    start_restore_t startRestore;
     /// The function pointer to finalize the restore of the process
-    void         (*finishRestore)();
+    end_restore_t   finishRestore;
 
     /// Pointer to the process dependent system information (opaque)
-    void*          sysInfo;
+    void*           sysInfo;
     /// Page size of the node
-    unsigned long  pageSize;
+    unsigned long   pageSize;
     /// File descriptor for the checkpointing image to avoid clashes on restart from checkpoint
-    int            checkpointFD;
+    int             checkpointFD;
     /// Pointer to the bootstraping thread
-    Thread*        motherofall;
+    Thread*         motherofall;
     /// The PID of the executing process
-    int            motherPID;
+    int             motherPID;
     /// The PID of the process performing the original checkpoint (=motherPID for normal running)
-    int            chkptPID;
+    int             chkptPID;
     /// Static flag containing the processing type (0=normal running,1=start from checkpoint)
-    int            restart_type;
+    int             restart_type;
+    /// Optional flags to steer restore
+    int             restart_flags;
     /// The name/path of the checkpointing code image
-    char           checkpointImage[1024];
+    char            checkpointImage[1024];
     /// The name/path of the checkpoint file
-    char           checkpointFile[1024];
+    char            checkpointFile[1024];
 
 #ifndef CHECKPOINTING_SYSINFO_STRUCT_ONLY
     /// Standard constructor

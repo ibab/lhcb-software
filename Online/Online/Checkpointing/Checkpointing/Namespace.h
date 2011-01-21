@@ -14,14 +14,20 @@ namespace Checkpointing {
 
 namespace CHECKPOINTING_NAMESPACE {
   enum MTCP_OUTPUT_LEVEL  { 
-    MTCP_DEBUG   = 1,
-    MTCP_INFO    = 2,
-    MTCP_WARNING = 3,
-    MTCP_ERROR   = 4,
-    MTCP_FATAL   = 5,
-    MTCP_MAX_LEVEL = 15,
-    MTCP_NO_HEADER = 64,
-    MTCP_PRINT_NO_PID = 128
+    MTCP_DEBUG        = 1,
+    MTCP_INFO         = 2,
+    MTCP_WARNING      = 3,
+    MTCP_ERROR        = 4,
+    MTCP_FATAL        = 5,
+    MTCP_MAX_LEVEL    = 15,
+    MTCP_SPARE_FLAG0  = (1<<4),  // = 16
+    MTCP_SPARE_FLAG1  = (1<<5),  // = 32
+    MTCP_NO_HEADER    = (1<<6),  // = 64
+    MTCP_PRINT_NO_PID = (1<<7)   // = 128
+  };
+  enum MTCP_RESTORE_FLAGS {
+    MTCP_STDIN_ENV    = (1<<0),  // = 1
+    MTCP_LAST_FLAG    = (1<<31)
   };
 }
 

@@ -46,7 +46,7 @@ namespace CHECKPOINTING_NAMESPACE  {
   struct SysInfo;
 
   STATIC(void) checkpointing_sys_print(const SysInfo& s);
-  STATIC(void) checkpointing_sys_restore_start(SysInfo* sys,int print_level);
+  STATIC(void) checkpointing_sys_restore_start(SysInfo* sys,int print_level, int optional_flags);
   STATIC(void) checkpointing_sys_restore_finish();
   STATIC(void) checkpointing_restore_process();
 

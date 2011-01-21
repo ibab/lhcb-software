@@ -48,6 +48,7 @@ SysInfo::SysInfo() {
   motherPID          = 0;
   chkptPID           = 0;
   restart_type       = 0;
+  restart_flags      = 0;
 }
 
 void SysInfo::setCheckpointFile(int fd) {

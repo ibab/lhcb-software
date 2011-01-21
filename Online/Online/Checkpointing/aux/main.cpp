@@ -10,8 +10,6 @@
 
 using namespace Checkpointing;
 
-typedef void (*startRestore_t)(SysInfo* sys,int print_level);
-
 static int checkMarker(int fd, Marker should) {
   Marker got;
   mtcp_sys_read(fd,&got,sizeof(got));
@@ -77,9 +75,11 @@ static void load(const char* file_name, startRestore_t* func, SysInfo* pSys) {
 
 static int usage() {
   mtcp_output(MTCP_ERROR,
-	      "Usage: restore -p(rint) <print-level> -i(nput) <file-name>       \n"
-	      "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.    \n"
-	      "       file-name = string   : Name of the checkpoint file.       \n"
+	      "Usage: restore -p(rint) <print-level> -i(nput) <file-name>         \n"
+	      "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.      \n"
+	      "       file-name = string   : Name of the checkpoint file.         \n"
+	      "       -n                   : Do not write PID in mtcp output.     \n"
+	      "       -e                   : Read new environment vars from stdin.\n"
 	      );
   return 1;
 }
@@ -89,23 +89,22 @@ int main(int argc, char** argv) {
   startRestore_t func = 0;
   if ( argc > 1 ) {
     SysInfo* pSys = 0;
-    int prt = MTCP_WARNING;
+    int prt = MTCP_WARNING, opts=0;
     {
-      int prt2 = 0;
       const char* file_name = 0;
       for(int i=0; i<argc; ++i) {
 	if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
-	else if ( argc>i && argv[i][1] == 'p' ) prt  = argv[++i][0]-'0';
-	else if ( argc>i && argv[i][1] == 'n' ) prt2 = MTCP_PRINT_NO_PID;
+	else if ( argc>i && argv[i][1] == 'p' ) prt   = argv[++i][0]-'0';
+	else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
+	else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
       }
-      prt += prt2;
       if ( 0 == file_name ) return usage();
       mtcp_set_debug_level(prt);
       mtcp_output(MTCP_ERROR,"restore: print level:%d input:%s\n",prt,file_name);
       load(file_name,&func,pSys);
     }
     // Now call the restore function - it shouldn't return
-    (*func)(pSys,prt);
+    (*func)(pSys,prt,opts);
     mtcp_output(MTCP_FATAL,"restore: restore routine returned (it should never do this!)\n");
   }
   return usage();
