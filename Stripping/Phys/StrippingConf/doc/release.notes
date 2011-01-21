@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v3r11 2011-01-21 ===================
+
 ! 2011-01-20 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
   . Provide support for experimental VoidEventSelection.
