@@ -14,6 +14,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
 // ============================================================================
 /** @file 
@@ -34,7 +35,7 @@ namespace Gaudi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 20090603
      */
-    class ValueWithError 
+    class GAUDI_API ValueWithError 
     {
     public:
       // ======================================================================
@@ -175,8 +176,28 @@ namespace Gaudi
       ValueWithError __div__  ( const double          right ) const ;
       ///        right / a   
       ValueWithError __rdiv__ ( const double          right ) const ;
-      ///       abs ( a )   
+      ///  abs ( a )   
       ValueWithError __abs__  () const ;
+      /// -me
+      ValueWithError __neg__  () const ;
+      /// +me  (no effect) 
+      ValueWithError __pos__  () const ; 
+      /// me**e 
+      ValueWithError __pow__  ( const int             e ) const ;
+      /// me**e 
+      ValueWithError __pow__  ( const double          e ) const ;
+      /// me**e 
+      ValueWithError __pow__  ( const ValueWithError& e ) const ;
+      /// e**me 
+      ValueWithError __rpow__ ( const int             e ) const ;
+      /// e**me 
+      ValueWithError __rpow__ ( const double          e ) const ;
+      /// exp(me) 
+      ValueWithError __exp__   () const ;
+      /// log(me) 
+      ValueWithError __log__   () const ;
+      /// log10(me) 
+      ValueWithError __log10__ () const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -300,15 +321,106 @@ namespace Gaudi
     ( const double          a , 
       const ValueWithError& b ) { return asym ( ValueWithError ( a ) , b ) ; }
     // ========================================================================
+    /** evaluate abs(a) 
+     *  @param a (INPUT) the value 
+     *  @return the absolute value 
+     */
+    GAUDI_API
+    ValueWithError abs 
+    ( const ValueWithError& a ) ;
+    // ========================================================================    
     /** evaluate the binomial efficiency for Bernulli scheme 
      *  @param n (INPUT) number of 'success' 
      *  @param N (INPUT) total number 
      *  @return the binomial efficiency 
      */
+    GAUDI_API
     ValueWithError binomEff   
     ( const size_t n , 
       const size_t N ) ;
     // ========================================================================
+    /** evaluate pow(a,b)
+     *  @param a (INPUT) the base 
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>a</c> raised to power <c>b</b> 
+     *  @warning invalid and small covarinaces are ignored 
+     */
+    GAUDI_API
+    ValueWithError pow 
+    ( const ValueWithError& a , 
+      const int             b ) ;
+    // ========================================================================    
+    /** evaluate pow(a,b)
+     *  @param a (INPUT) the base 
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>a</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError pow 
+    ( const ValueWithError& a , 
+      const double          b ) ;
+    // ========================================================================
+    /** evaluate pow(a,b)
+     *  @param a (INPUT) the base 
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>a</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError pow 
+    ( const int             a , 
+      const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate pow(a,b)
+     *  @param a (INPUT) the base 
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>a</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError pow 
+    ( const double          a , 
+      const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate pow(a,b)
+     *  @param a (INPUT) the base 
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>a</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError pow 
+    ( const ValueWithError& a , 
+      const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate exp(b)
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>e</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError exp
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate log(b)
+     *  @param b (INPUT) the parameter 
+     *  @return logarithm
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError log
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate log10(b)
+     *  @param b (INPUT) the parameter 
+     *  @return logarithm on base 10 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError log10
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
   namespace Parsers 

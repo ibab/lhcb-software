@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-01-22 - Vanya Belyaev
+ - add more functions for Gaudi::Math::ValueWithErrors 
+
 ! 2011-01-14 - Vanya Belyaev
  - add one more test TestAbs, that shows the difference between 
      std::fabs, std::abs , ::fabs and ::abs 

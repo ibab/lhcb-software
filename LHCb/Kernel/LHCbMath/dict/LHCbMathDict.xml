@@ -33,6 +33,10 @@
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
   
   <function name = "Gaudi::Math::blind" />
+  <function name = "Gaudi::Math::pow"   />
+  <function name = "Gaudi::Math::exp"   />
+  <function name = "Gaudi::Math::log"   />
+  <function name = "Gaudi::Math::log10" />
   
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
