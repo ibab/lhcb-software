@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 !========================= TrackTools v4r0p1 2011-01-21 =========================
+
+! 2011-01-23 - David Hutchcroft
+ - Added CountVeloTracks to satisfy Savannah task #18199
+   Filling the RecSummaryAlg from Best with the number of 3D VELO tracks
+   and correcting for the same track used twice properly.
+
 ! 2011-01-21 - Gerhard Raven
  - In VeloClusterPositionTool when overruling with a pre-cooked error 
    parameterisation, first clear before appending...
