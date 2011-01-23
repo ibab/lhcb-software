@@ -43,5 +43,5 @@
   <class name    = "IVeloPixClusterPosition" />
   <class name    = "IPitchResTool"           />
   <class name    = "ITrackStateProvider"     />
-
+  <class name    = "ICountVeloTracks"        />
 </lcgdict>

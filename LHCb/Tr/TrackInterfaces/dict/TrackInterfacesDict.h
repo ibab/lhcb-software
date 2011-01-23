@@ -43,6 +43,7 @@
 #include "TrackInterfaces/IVeloPixClusterPosition.h"
 #include "TrackInterfaces/IPitchResTool.h"
 #include "TrackInterfaces/ITrackStateProvider.h"
+#include "TrackInterfaces/ICountVeloTracks.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
 

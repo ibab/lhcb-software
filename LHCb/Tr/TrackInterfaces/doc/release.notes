@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2011-01-23 - David Hutchcroft
+ - Added ICountVeloTracks which counts the number of VELO tracks in "Best"
+
 ! 2011-01-13 - Vanya Belyaev
 
  - add ITrackStateProvider into Reflex dictionary
