@@ -280,8 +280,14 @@ int CheckpointSvc::stopMainInstance() {
 int CheckpointSvc::resumeMainInstance() {
   CHKPT& chkpt =  CHKPT_get();
   string proc = RTL::processName();
+  const char* dns = 0;
   // Let the paret resume its work
   chkpt.resume();
+  dns = ::getenv("DIM_DNS_NODE");
+  if ( dns ) {
+    ::dis_set_dns_node((char*)dns);
+    ::dic_set_dns_node((char*)dns);
+  }
   ::dim_init();
   //
   // We have to overload the underlying dim command, since for the 
@@ -353,6 +359,11 @@ int CheckpointSvc::execChild() {
   }
   /// Need to reset RTL to get proper processnames etc.
   RTL::RTL_reset();
+  const char* dns = ::getenv("DIM_DNS_NODE");
+  if ( dns ) {
+    ::dis_set_dns_node((char*)dns);
+    ::dic_set_dns_node((char*)dns);
+  }
   // Now it should be save to restart the children
   chkpt.startChild();
   string proc = RTL::processName();
