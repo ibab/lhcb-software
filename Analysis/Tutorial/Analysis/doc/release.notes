@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-24 - Rob Lambert
+ - Modified DecayTreeTuple tutorials to use the new wrappers
+
 !========================== Analysis v9r0 2011-01-19 =================
 
 ! 2011-01-14 - Juan Palacios

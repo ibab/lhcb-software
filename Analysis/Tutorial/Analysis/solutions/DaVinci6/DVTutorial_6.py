@@ -19,7 +19,7 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 # DecayTreeTuple
 #
-from Configurables import DecayTreeTuple, PhysDesktop
+from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple() 
 tuple.InputLocations = [ SeqBs2JpsiPhi.outputLocation() ]
 tuple.ToolList +=  [
