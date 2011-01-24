@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-25 - Alex Shires
+ - Update Hlt2MuNTrack code: cut options and TOS filters
+
 !========================== Hlt2Lines v7r1 2011-01-20 ===================
 ! 2011-01-20 - Gerhard Raven
  - add PV3D to inclusive Phi lines

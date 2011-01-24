@@ -8,6 +8,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
 from HltTracking.HltPVs import PV3D
 
+
 # Basic File: Htl2TopologicalLines in v6r0p1 of Hlt2/Hlt2Lines
 # Subsequent Author: A. Shires (alexander.shires@cern.ch)
 # 
@@ -26,35 +27,37 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
     #Keep these variables  - will want to ovveride them anyway
     __slots__ = {        
         #HLT1 filter?
-        'L0FILTER'          : "L0_CHANNEL('Muon')",                 
-        'HLT1FILTER'        : "",#"HLT_PASS_RE('Hlt1Track.*Decision')",
+        'L0FILTER'           : "L0_CHANNEL_RE('.*Muon')",                 
+        'HLT1FILTER'         : "",#"HLT_PASS_RE('Hlt1Track.*Decision')",
         #mu + n tracks filter cuts
-        'MCOR_MAX'          : 7000.0,  # MeV
-        'MCOR_MIN'          : 0.0,     # MeV 
-        'MCOR_NTR_MIN'      : 4000.0,  # MeV 
-        'SUM_PT_MIN'        : 2000.0,  # MeV
-        #'SUM_PT_2TR_MIN'    : 2000.0, # MeV
-        #'SUM_PT_3TR_MIN'    : 2000.0, # MeV
-        'MAX_PT_MIN'        : 1500.0,  # MeV 
-        'SUM_IPCHI2_MIN'    : 60,      #
-        #'SUM_IPCHI2_2TR_MIN': 80,     #
-        #'SUM_IPCHI2_2TR_MIN': 100,    #
-        'BPVVDCHI2_MIN'     : 32.0,    # unitless
-        'MIN_TRCHI2DOF_MAX' : 5,
-        #m + n tracks and n-1 tracks combination cuts
-        'AMAXDOCA_MAX'      : 0.12,    # mm  # loose doca for mu + n tracks
-        'AMAXDOCA_MIN'      : 0.12,    # mm  # tight doca for mu + 1 track
-        'AMINDOCA_MAX'      : 0.12,    # mm  # minimum doca for 2 body combinations
-        'DIRA_MIN'          : 0.99,    #     # mu + tr line + 2,3 track combos
-        'DIRA_TIGHT_MIN'    : 0.995,   #     # mu + 2, 3 tr line
-        #'DIRA_MuNTr_MIN'    : 0.995,   #     # mu + 2, 3 tr line
-        'MASS_VETO'      : 2000.0,     # MeV # moved from 2.5 GeV, 0 for track combos?
+        'MCOR_MAX'           : 7000.0,  # MeV
+        'MCOR_MIN'           : 0.0,     # MeV 
+        'MCOR_NTR_MIN'       : 4000.0,  # MeV 
+        'SUM_PT_1TR_MIN'     : 2000.0,  # MeV
+        'SUM_PT_2TR_MIN'     : 2000.0,  # MeV
+        'SUM_PT_3TR_MIN'     : 2600.0,  # MeV
+        'MAX_PT_MIN'         : 1500.0,  # MeV 
+        'MAX_PT_NTR_MIN'     : 1500.0,  # MeV 
+        'SUM_IPCHI2_1TR_MIN' : 50,      # unitless
+        'SUM_IPCHI2_2TR_MIN' : 75,      # unitless
+        'SUM_IPCHI2_3TR_MIN' : 100,     # unitless
+        'BPVVDCHI2_MIN'      : 32.0,    # unitless
+        'MIN_TRCHI2DOF_MAX'  : 4,       # unitless
+        #combination cuts
+        'AMAXDOCA_MAX'       : 0.12,    # mm  # loose doca for mu + 2,3 tracks
+        'AMAXDOCA_MIN'       : 0.12,    # mm  # tight doca for mu + 1 track, 2, 3 track combos
+        'DIRA_LOOSE_MIN'     : 0.2,     # rad # 2,3 track combos
+        'DIRA_TIGHT_MIN'     : 0.995,   # rad # mu + n tr line
+        # mother cuts
+        'MASS_1TR_VETO'      : 2000.0,  # MeV 
+        'MASS_2TR_VETO'      : 3000.0,  # MeV 
+        'MASS_3TR_VETO'      : 4000.0,  # MeV 
         # cuts on input particles
-        'ALL_MIPCHI2DV_MIN' : 25.0,    # unitless #mother IP CHI2 > then this if less than mass cut
-        'ALL_TRCHI2DOF_MAX' : 3.0,     # unitless
-        'ALL_MU_PT_MIN'     : 800.0,   # MeV
-        'ALL_TR_PT_MIN'     : 600.0,   # MeV
-        'ALL_P_MIN'         : 5000.0,  # MeV
+        'ALL_MIPCHI2DV_MIN'  : 25.0,    # unitless
+        'ALL_TRCHI2DOF_MAX'  : 3.0,     # unitless
+        'ALL_MU_PT_MIN'      : 800.0,   # MeV
+        'ALL_TR_PT_MIN'      : 600.0,   # MeV
+        'ALL_P_MIN'          : 5000.0,  # MeV
         # pre- and post-scale values
         'Prescale' : {},
         'Postscale' : {},
@@ -82,56 +85,63 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         if not l0filter:
             l0filter = None
         #create Hlt line
-        Hlt2Line(lineName, L0DU=l0filter, HLT=None, prescale=self.prescale,
+        Hlt2Line(lineName, L0DU=l0filter, HLT=hltfilter, prescale=self.prescale,
                  postscale=self.postscale,algos=Algos) 
         self.__updateHltANNSvc(lineName)
-        
+
+
+    def __combineTracks(self, name, inputSeq, decayDesc, extraCuts=None):
+        '''Configures track combinations'''  
+        props = self.getProps()      
+        # combo cuts
+        comboCuts = '(AM < %s*MeV)' % props['MCOR_MAX']
+        # tight DOCA for n tracks
+        comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator'))" % props["AMAXDOCA_MIN"]
+       # loose DIRA for n tracks
+        momCuts = "(BPVDIRA > %s)" % (props['DIRA_LOOSE_MIN'])
+        momCuts += "& (BPVVDCHI2 > %s)" % (props['BPVVDCHI2_MIN'])
+        combo = Hlt2Member(CombineParticles, 'Combine',
+                           DecayDescriptors=decayDesc,
+                           InputLocations=inputSeq, 
+                           CombinationCut=comboCuts,
+                           MotherCut=momCuts)
+    
+        return bindMembers(name, inputSeq+[combo])
+
     def __combine(self, name, inputSeq, decayDesc, extraCuts=None):
-        '''Configures common particle combos used by all topo lines.'''        
+        '''Configures mu + track combinations'''
         props = self.getProps() 
         # combo cuts
-        # high end mass cut
         comboCuts = '(AM < %s*MeV)' % props['MCOR_MAX']
         # same PV cut
         #comboCuts += "& (AALLSAMEBPV)"
-        # default DIRA value
-        diraval = 10.0
+        mass_veto = float(props['MASS_1TR_VETO'])
         # optional choices
-        if ("Combo" in name): 
-            # tight DOCA for n tracks
-            comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator'))" % props["AMAXDOCA_MIN"]
-            # loose DIRA for n tracks
-            diraval = props['DIRA_MIN']
-        elif ("Mu1Tr" in name):
+        if "Mu1Tr" in name:
             # tight DOCA for mu + track
             comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator'))" % props["AMAXDOCA_MIN"]
-            # tight DIRA for mu + track
-            diraval = props['DIRA_TIGHT_MIN']
-        else:
+        elif "Mu2Tr" in name:
             # loose DOCA for mu + 2,3 tracks
-            comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator')) " % props["AMAXDOCA_MIN"]
-            # tight DIRA for mu + 2,3 tracks
-            diraval = props['DIRA_TIGHT_MIN']
-               
-        if extraCuts and extraCuts.has_key('CombinationCut') :
-            comboCuts =  extraCuts['CombinationCut'] + ' & ' + comboCuts
-        
-        
-
-        # mass veto for mu + n track combinations
-        mass_veto = float(props['MASS_VETO'])
-        # reset for n tracks combinations
+            comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator')) " % props["AMAXDOCA_MAX"]
+            # mass veto
+            mass_veto = float(props['MASS_2TR_VETO'])                                   
+        elif "Mu3Tr" in name:  
+            # loose DOCA for mu + 2,3 tracks
+            comboCuts += "& (ACUTDOCA(%s,'LoKi::DistanceCalculator')) " % props["AMAXDOCA_MAX"]
+            # mass veto
+            mass_veto = float(props['MASS_3TR_VETO'])
 
         # Mother cuts
-        momCuts = "(BPVDIRA > %s)" % (diraval)
+        momCuts = "(BPVDIRA > %s)" % (props['DIRA_TIGHT_MIN'])
         momCuts += "& (BPVVDCHI2 > %s)" % (props['BPVVDCHI2_MIN'])
         # USE CORRELATION OF MASS AND IPCHI2
-        if not "Combo" in name: 
-            momCuts += "& ((M > %s*MeV) | (BPVIPCHI2() > %s))" % (mass_veto,props['ALL_MIPCHI2DV_MIN'])
-            
+        #momCuts += "& ((M > %s*MeV) | (BPVIPCHI2() > %s))" % (mass_veto,props['ALL_MIPCHI2DV_MIN'])
+        momCuts += "& (M > %s*MeV)" % (mass_veto)
+        #optional cuts
+        if extraCuts and extraCuts.has_key('CombinationCut') :
+            comboCuts =  extraCuts['CombinationCut'] + ' & ' + comboCuts            
         if extraCuts and extraCuts.has_key('MotherCut') :
-            momCuts = extraCuts['MotherCut'] + ' & ' + momCuts
-    
+            momCuts = extraCuts['MotherCut'] + ' & ' + momCuts 
         # put it all together
         combo = Hlt2Member(CombineParticles, 'Combine',
                            DecayDescriptors=decayDesc,
@@ -150,47 +160,93 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
 
         pid = "(('mu+'==ABSID) | ('K+'==ABSID) | ('pi+'==ABSID))"
         # cut values
-        sum_pt_min = float(props['SUM_PT_MIN'])
+        sum_pt_min = float(props['SUM_PT_1TR_MIN'])
         max_pt_min = float(props['MAX_PT_MIN'])
-        sum_ipchi2_min = float(props['SUM_IPCHI2_MIN'])
+        sum_ipchi2_min = float(props['SUM_IPCHI2_1TR_MIN'])
         mcor_min = float(props['MCOR_MIN'])
-
-        #print "AS DEBUG:", name, mcor_min, sum_pt_min
         #adjust for different lines
         if 'Mu2Tr' in name:
-            sum_pt_min += 500
-            #max_pt_min += 250
-            sum_ipchi2_min += 20
+            sum_pt_min = float(props['SUM_PT_2TR_MIN'])
+            sum_ipchi2_min = float(props['SUM_IPCHI2_2TR_MIN'])
             mcor_min = float(props['MCOR_NTR_MIN'])
+            max_pt_min = float(props['MAX_PT_NTR_MIN'])
         if 'Mu3Tr' in name:
-            sum_pt_min += 1000
-            #max_pt_min += 500
-            sum_ipchi2_min += 40
+            sum_pt_min = float(props['SUM_PT_3TR_MIN'])
+            sum_ipchi2_min = float(props['SUM_IPCHI2_3TR_MIN'])
             mcor_min = float(props['MCOR_NTR_MIN'])
-            
-        #print "AS DEBUG:", name, mcor_min, sum_pt_min
+            max_pt_min = float(props['MAX_PT_NTR_MIN'])
 
         cuts = "(MAXTREE(%s,PT) > %s*MeV) &" \
-               % (pid,props["MAX_PT_MIN"])
-        
-        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
+                % (pid,props["MAX_PT_MIN"])
+        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' \
+                % (pid,sum_pt_min)
         cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
                 % (mcor_min,props['MCOR_MAX'])
         cuts += '& (SUMTREE(MIPCHI2DV(PRIMARY),%s,0.0) > %s)' \
-                    % (pid,sum_ipchi2_min)
+                % (pid,sum_ipchi2_min)
         cuts += '& (MINTREE(%s,TRCHI2DOF) < %s)' \
-                    % (pid,props['MIN_TRCHI2DOF_MAX'])
+                % (pid,props['MIN_TRCHI2DOF_MAX'])
         if extraCode: cuts = cuts + ' & ' + extraCode
-
-        # print "AS DEBUG", cuts
 
         _filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
                             Code=cuts,Preambulo=preambulo)
         return bindMembers(name, inputSeq+[_filter])
 
+
+    def __inputMuonL0Filter(self, name, inputSeq):
+        '''Filters input muons and requires l0 TOS.'''
+        props = self.getProps()     
+        #configure tistostool
+        from Configurables import DataOnDemandSvc, L0SelReportsMaker, L0DecReportsMaker
+        DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
+        DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )
+        from Configurables import TisTosParticleTagger
+        TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter") 
+        TOSInputMuonsFilter.TriggerTisTosName= "L0TriggerTisTos"
+        TOSInputMuonsFilter.TisTosSpecs = { "L0.*Muon.*Decision%TOS":0 }
+        TOSInputMuonsFilter.ProjectTracksToCalo = FALSE
+        TOSInputMuonsFilter.CaloClustForCharged = FALSE
+        TOSInputMuonsFilter.CaloClustForNeutral = FALSE
+        TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
+        TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        #cuts
+        cuts = '(PT > %s*MeV) ' % (props['ALL_MU_PT_MIN'])
+        cuts += '& (P > %s*MeV) ' % (props['ALL_P_MIN'])
+        cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
+        cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
+        #create filter
+        _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
+                            Code=cuts)
+        # require PV3D reconstruction before our cut on IP!
+        return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
+
+    def __inputMuonHlt1Filter(self, name, inputSeq):
+        '''Filters input muons and requires htl1 TOS.'''
+        props = self.getProps()     
+        #configure tistostool
+        from Configurables import TisTosParticleTagger
+        TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter")
+        TOSInputMuonsFilter.TisTosSpecs = { "Hlt1Track.*Decision%TOS":0 }
+        TOSInputMuonsFilter.ProjectTracksToCalo = FALSE
+        TOSInputMuonsFilter.CaloClustForCharged = FALSE
+        TOSInputMuonsFilter.CaloClustForNeutral = FALSE
+        TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
+        TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        #cuts
+        cuts = '(PT > %s*MeV) ' % (props['ALL_MU_PT_MIN'])
+        #equal for all tracks
+        cuts += '& (P > %s*MeV) ' % (props['ALL_P_MIN'])
+        cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
+        cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
+        #create filter
+        _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
+                            Code=cuts)
+        # require PV3D reconstruction before our cut on IP!
+        return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
+
     def __inputParticleFilter(self, name, inputSeq):
         '''Filters input particles for all mu + n track lines.'''
-        props = self.getProps()        
+        props = self.getProps()     
         if "Muon" in name:
             cuts = '(PT > %s*MeV) ' % (props['ALL_MU_PT_MIN'])
         else:
@@ -205,7 +261,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         # require PV3D reconstruction before our cut on IP!
         return bindMembers(name, [PV3D()]+inputSeq+[_filter])
 
-    def __buildNBodySeqs(self,lineName,seqName,_inputMuons,_inputKaons):
+    def __buildNBodySeqs(self,lineName,_inputMuons,_inputKaons):
         '''Builds a set of mu + 1, 2 and 4 track lines.'''
         props = self.getProps()
         # 2-body     
@@ -213,28 +269,24 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         decay = ["B0 -> mu+ K+", "B0 -> mu+ K-", "B0 -> mu- K-"]
         extraCut = ""
         mu1track = self.__combine(name,[_inputKaons,_inputMuons],decay)
-        name = seqName.replace('MuNTr','Mu1Tr')        
         seqMu1Track = self.__filter(name,[mu1track])
         #2 track input to three body
-        name = "MuNTrack2TrackCombo"
+        name = "MuNTrack2Track"
         track2decay = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
-        track2body = self.__combine(name, [_inputKaons], track2decay)
+        track2body = self.__combineTracks(name, [_inputKaons], track2decay)
         # 3-body
-        name = lineName.replace('MuNTr','Mu2Tr')        
+        name = lineName.replace('MuNTr','Mu2Tr')
         decay = ["B+ -> K*(892)0 mu+", "B- -> K*(892)0 mu-"]
         mu2track = self.__combine(name,[track2body, _inputMuons],decay)
-        name = seqName.replace('MuNTr','Mu2Tr')        
         seqMu2Track = self.__filter(name,[mu2track])
         #3 track input to four body
-        name = "MuNTrack3TrackCombo"
+        name = "MuNTrack3Track"
         track3decay = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)- -> K*(892)0 K-"]
-        track3body = self.__combine(name, [track2body, _inputKaons], track3decay)
+        track3body = self.__combineTracks(name, [track2body, _inputKaons], track3decay)
         # 4-body
         name = lineName.replace('MuNTr','Mu3Tr')        
         decay = ["B0 -> D*(2010)+ mu-","B0 -> D*(2010)+ mu+","B0 -> D*(2010)- mu-"]
         mu3track = self.__combine(name,[track3body, _inputMuons],decay)
-        #                           extraCuts)
-        name = seqName.replace('MuNTr','Mu3Tr')        
         seqMu3Track = self.__filter(name,[mu3track])
         return (seqMu1Track,seqMu2Track,seqMu3Track)
 
@@ -252,7 +304,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
                                     ,[BiKalmanFittedKaons])
         _inputMuons = self.__inputParticleFilter('MuNTrackInputMuons'
                                     ,[BiKalmanFittedMuons])
-        Seqs = self.__buildNBodySeqs('MuNTrack','MuNTrack',
+        Seqs = self.__buildNBodySeqs('MuNTrack',
                                          _inputMuons, _inputKaons)
         self.__makeLines('MuNTrack',Seqs)        
 
