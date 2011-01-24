@@ -35,7 +35,7 @@ class GaudiAlgorithm      ;
 /** @class IDVAlgorithm Kernel/IDVAlgorithm.h
  *  
  *  Abstract interface containing some of the more useful methods currently
- *  in DVAlgorithm and IPhysDesktop.
+ *  in DVAlgorithm.
  *
  *  @author Juan PALACIOS
  *  @date   2010-01-12

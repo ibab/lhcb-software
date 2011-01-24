@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-24 - Juan Palacios
+ - Remove IPhysDesktop.
+
 ! 2011-01-17 - Marco Cattaneo
  - Fix ICC remarks
 
