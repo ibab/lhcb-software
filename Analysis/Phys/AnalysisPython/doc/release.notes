@@ -1,0 +1,100 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/AnalysisPython
+! Responsible : Juan PALACIOS
+! Purpose     : Collection of useful python modules for LHCb-specific 
+!               GaudiPython analyses
+!-----------------------------------------------------------------------------
+
+! 2011-01-23 - Vanya Belyaev
+
+ - AnalysiPython/ZipShelvel.py 
+      "zipped"-version of shelve DB 
+ - AnalysisPython/TPySelectorFix.py, 
+   Analysis/TPySelector.h,
+   src/TPySelector.cpp
+
+      helper classes and module to solve the problem in communiccation between
+      TTree/TChain and TPySelector in python
+
+ - cmt/requitements
+   version incremen to Incre
+ 
+
+!======================= Phys/AnalysisPython v1r6 2010-04-08 =================
+
+! 2010-03-23 - Juan Palacios
+ - cmt/requitements
+  . Increade to v1r6
+  . Add pytools and pyanalysis for py.test and matplotlib respectively.
+ - add tests directory
+
+!======================= Phys/AnalysisPython v1r5 2009-11-17 =================
+
+! 2009-11-12 - Juan Palacios
+ - python/AnalysisPython/Helpers.py
+  . Add printProperties, function to print the non-zero properties of a 
+    configurable.
+ - cmt/requirements
+  . Increase version to v1r5
+
+!======================= Phys/AnalysisPython v1r4 2009-10-28 =================
+
+ - python/AnalysisPython/Functors.py
+  . Add EvtMax argument to NextEvent constructor. Allows to control maximum
+    number of events. Default -1 (all events)
+ - cmt/requirements
+  . Increase version to v1r4
+
+!======================= Phys/AnalysisPython v1r3 2009-10-02 =================
+
+! 2009-09-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version vo v1r3
+ - python/AnalysisPython/Helpers.py
+  . Use LHCbMath.Types instead of LHCbMath
+
+!======================= Phys/AnalysisPython v1r2p1 2009-09-03 ===============
+
+! 2009-09-03 - Juan PALACIOS
+ - python/AnalysisPython/Helpers.py
+  . ProperTimeMC: fix checks for presence of particle, decay vertex.
+ - cmt/requirements
+  . Increase version to v1r2p1
+
+!======================= Phys/AnalysisPython v1r2 2009-08-11 =================
+
+! 2009-08-03 - Juan PALACIOS
+ - python/AnalysisPython/Functors.py
+  . Add python documentation
+
+! 2009-07-30 - Juan PALACIOS
+ - Add python/AnalysisPython/Rewind.py
+  . Module with add-on methods AppMgr.rewind and iHistogramSvc.reset
+
+ - python/AnalysisPython/HistoUtils.py
+  . book and bookProf now check if histogram already exists and re-set if this
+    is the case.
+ - cmt/requirements
+  . Increase version to v1r2
+
+!======================= Phys/AnalysisPython v1r1 2009-07-24 =================
+
+! 2009-07-16 - Juan PALACIOS
+ - added python/AnalysisPython/HistoUtils.py
+ - python/AnalysisPython/Dir.py
+  . Add nodes method and possibility to force loading of leaves.
+ - cmt/requirements
+  . Increase version to v1r1
+
+!======================= Phys/AnalysisPython v1r0 2009-07-15 =================
+
+! 2009-07-16 - Juan PALACIOS
+ - Add python/AnalysisPython/Dir.py
+  . Helper functions to explore data services by Vanya.
+
+! 2009-07-15 - Juan PALACIOS
+ - python/AnalysisPython/*.py
+  . Remove comparisons to None
+
+! 2009-07-14 - Juan PALACIOS
+ - First import of package.

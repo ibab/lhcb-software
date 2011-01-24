@@ -1,0 +1,19 @@
+<!-- 
+     * $Id: $ 
+     * ========================================================================
+     * @file
+     * The seleciton file to build Reflex dictionaries for AnalysisPython
+     * @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     * @date 2011-01-21
+     *                    $Revision$
+     *  Last modification $Date$
+     *                 by $Author$
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class    name = "Analysis::Selector" />
+  <class    name = "Analysis::Process"    />
+  
+</lcgdict> 
