@@ -140,9 +140,9 @@ void FastForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output 
   std::vector<LHCb::Track*> outvec;
   tracksFromTrack(*tr,outvec).ignore();
 
-  for (unsigned int i=0; i<outvec.size(); i++)
+  for ( unsigned int i=0; i<outvec.size(); i++ ) {
     output->insert(outvec[i]);
-
+  }
 }
 
 //=========================================================================
@@ -563,8 +563,10 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   if ( m_ttOffset < 9000. ) {
     double xOffset = m_ttToTScale * m_ttOffset;
-    minProj = xExtrap + xOffset - m_ttToTWindow;
-    maxProj = xExtrap + xOffset + m_ttToTWindow;
+    double tmp =  xExtrap + xOffset - m_ttToTWindow;
+    if ( tmp > minProj ) minProj = tmp;
+    tmp = xExtrap + xOffset + m_ttToTWindow;
+    if ( tmp < maxProj ) maxProj = tmp;
     if ( isDebug ) info() << ".. m_ttOffset " << m_ttOffset << " xExtrap " << xExtrap << " xOffset " << xOffset << endmsg;
   }
 
