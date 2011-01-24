@@ -3,7 +3,6 @@
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
-#include "RTL/rtl.h"
 
 /*
  *    LHCb namespace declaration
@@ -21,7 +20,7 @@ namespace LHCb  {
     /// Property: Probability to send signal. If < 0, signal is always sent
     std::vector<std::string> m_env;
 
-    /// Dump the environment
+    /// Dump the environment. Note we need LHCb::FmcMsgService.doPrintALways = True for this!
     StatusCode dump()  {
       typedef std::vector<std::string> _V;
       MsgStream log(msgSvc(),name());
@@ -31,8 +30,6 @@ namespace LHCb  {
 	const char* val = ::getenv(e.c_str());
 	log << "Environment variable: " << e << "=" 
 	    << (const char*)(val ? val : "****Undefined****") << endmsg;
-	std::cerr << "Environment variable: " << e << "=" 
-		  << (const char*)(val ? val : "****Undefined****") << std::endl;
       }
       return StatusCode::SUCCESS;
     }
@@ -48,11 +45,11 @@ namespace LHCb  {
     /// Start
     virtual StatusCode start()      { return dump(); }
     /// Start
-    virtual StatusCode stop()       { return dump(); }
+    virtual StatusCode stop()       { return StatusCode::SUCCESS; }
     /// Start
-    virtual StatusCode finalize()   { return dump(); }
+    virtual StatusCode finalize()   { return StatusCode::SUCCESS; }
     /// Main execution
-    virtual StatusCode execute()    {      return StatusCode::SUCCESS;     }
+    virtual StatusCode execute()    { return StatusCode::SUCCESS; }
   };
 }
 
