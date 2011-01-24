@@ -26,9 +26,6 @@ DVAlgorithm::DVAlgorithm
   ISvcLocator* pSvcLocator ) 
   : base_class    ( name , pSvcLocator )
 //
-  , m_desktop               ( 0 )
-  , m_desktopName           ( "MockPhysDesktop" )
-// 
   , m_vertexFitNames        () 
   , m_vertexFits            () 
   //

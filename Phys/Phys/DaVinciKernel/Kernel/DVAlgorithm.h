@@ -23,7 +23,6 @@
 // from DaVinciInterfaces
 // ============================================================================
 #include "Kernel/IDVAlgorithm.h"
-#include "Kernel/IPhysDesktop.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleFilter.h"
@@ -316,12 +315,6 @@ public:
   void setDecayDescriptor(const std::string& dd) {
     m_decayDescriptor = dd;
   }  
-
-  /// Accessor for PhysDesktop Tool
-  inline IPhysDesktop* desktop() const
-  {
-    return getTool<IPhysDesktop>(m_desktopName, m_desktop, this) ;
-  }
 
   /// accessor for IOnOffline tool
   inline IOnOffline* onOffline() const
@@ -837,11 +830,6 @@ private:
   virtual void writeEmptyTESContainers() ;
 
 private:
-
-  /// Reference to desktop tool
-  mutable IPhysDesktop* m_desktop;
-  /// Concrete type desktop
-  std::string m_desktopName;
 
   std::string m_outputLocation; ///< Output location TES folder.
 

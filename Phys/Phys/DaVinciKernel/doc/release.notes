@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-01-24 - Juan Palacios
+ - Remove IPhysDesktop.
+ - Increase to v9r1.
+
 !======================== DaVinciKernel v9r0 2011-01-18 =====================
 
 ! 2011-01-14 - Juan Palacios
