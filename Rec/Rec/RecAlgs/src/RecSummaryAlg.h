@@ -20,6 +20,7 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "L0Interfaces/IL0DUFromRawTool.h"
+#include "TrackInterfaces/ICountVeloTracks.h"
 
 // LoKi
 #include "LoKi/select.h"
@@ -88,6 +89,9 @@ private:
 
   /// OT tool
   const IOTRawBankDecoder* m_otTool;
+
+  /// CountVeloTracks tool
+  const ICountVeloTracks* m_countVeloTracks;
 
 };
 

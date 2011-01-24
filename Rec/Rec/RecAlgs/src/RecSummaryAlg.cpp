@@ -57,6 +57,8 @@ StatusCode RecSummaryAlg::initialize()
     ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
   m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
+  m_countVeloTracks = tool<ICountVeloTracks>("CountVeloTracks");
+
   return sc;
 }
 
@@ -78,7 +80,7 @@ StatusCode RecSummaryAlg::execute()
     const LHCb::Tracks * tracks = get<LHCb::Tracks>(m_trackLoc);
 
     // Count each track type (Is there a more elegant way to do this ?)
-    int nLong(0), nDownstream(0), nUpstream(0), nVelo(0), nT(0), nBack(0);
+    int nLong(0), nDownstream(0), nUpstream(0), nT(0), nBack(0);
     for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
           iTk != tracks->end(); ++iTk )
     {
@@ -86,12 +88,10 @@ StatusCode RecSummaryAlg::execute()
       else if ( (*iTk)->type() == LHCb::Track::Downstream ) { ++nDownstream; }
       else if ( (*iTk)->type() == LHCb::Track::Upstream   ) { ++nUpstream; }
       else if ( (*iTk)->type() == LHCb::Track::Ttrack     ) { ++nT; }
-      else if ( (*iTk)->type() == LHCb::Track::Velo       ) 
-      { 
-        if ( (*iTk)->checkFlag(LHCb::Track::Backward) ) { ++nBack; }
-        else                                            { ++nVelo; }
-      }
+      else if ( (*iTk)->type() == LHCb::Track::Velo &&
+		(*iTk)->checkFlag(LHCb::Track::Backward)  ) { ++nBack; }
     }
+    int nVelo = m_countVeloTracks->nVeloTracks(*tracks);
 
     // Save track info to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );

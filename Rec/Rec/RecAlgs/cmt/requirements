@@ -16,6 +16,7 @@ use GaudiAlg        v*
 use GaudiUtils      v*
 use AIDA            v*   LCG_Interfaces
 use RichKernel      v* Rich
+use TrackInterfaces v* Tr
 
 library RecAlgs ../src/*.cpp
 
