@@ -21,6 +21,7 @@ if ( $?XDG_CONFIG_DIRS ) then
   unset d
 endif
 set cfgfiles="$cfgfiles /etc/default/LHCb" 
+set cfgfiles="$cfgfiles /etc/xdg/LHCb/default"
 
 foreach c ( $cfgfiles )
   echo $c

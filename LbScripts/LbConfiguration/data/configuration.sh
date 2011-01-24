@@ -21,7 +21,8 @@ if [[ -n "$XDG_CONFIG_DIRS" ]]; then
   done 
   unset d
 fi
-cfgfiles="$cfgfiles /etc/default/LHCb" 
+cfgfiles="$cfgfiles /etc/default/LHCb"
+cfgfiles="$cfgfiles /etc/xdg/LHCb/default"
 
 
 for c in $cfgfiles
