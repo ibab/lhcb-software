@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-24 - Juan Palacios
+ - IDecayFinder
+  . Add templated methods hasDecay and findDecay acting on iterators of
+    LHCb::Particle containers.
+ - IChangePID
+  . Add templated method changePID.
+
+! 2011-01-24 - Juan Palacios
  - Remove IPhysDesktop.
 
 ! 2011-01-17 - Marco Cattaneo

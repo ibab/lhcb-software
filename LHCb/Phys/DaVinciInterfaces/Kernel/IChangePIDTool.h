@@ -30,7 +30,12 @@ public:
   /// Change the PID of each member of a vector of particles
   virtual std::vector<LHCb::Particle> changePID( const LHCb::Particle::ConstVector & ) = 0;
 
-protected:
+  /// Templated findDecay method working on particle container iterators.
+  template <class PARTICLE>
+  inline std::vector<LHCb::Particle> changePID( PARTICLE begin,
+                                                PARTICLE end    )  {
+    return changePID ( LHCb::Particle::ConstVector ( begin , end ) );
+  }
 
 private:
 
