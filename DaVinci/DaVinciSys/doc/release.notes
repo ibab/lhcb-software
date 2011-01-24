@@ -7,7 +7,7 @@ Purpose             : LHCb physics analysis application
 
   *** Based on LHCb v31r8 stack. Baseline version for early 2011 developments.
   *** Backwards incompatible version with no PhysDesktop.
-
+  *** HLT running not supported.
 
                      ****** NOT FOR PRODUCTION ******
 
