@@ -18,6 +18,7 @@
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiSerialize/SerializeBaseCnv.h"
 
+#ifdef GAUDI_v21r11
 namespace {
   union ObjectTypes {
     ObjectTypes(DataObject* p) { Object = p; }
@@ -34,6 +35,7 @@ namespace {
     }
   };
 }
+#endif
 
 /// Standard Constructor
 SerializeBaseCnv::SerializeBaseCnv(long typ, const CLID& clid, ISvcLocator* svc)
@@ -80,7 +82,8 @@ StatusCode SerializeBaseCnv::createRep(DataObject* pObj, IOpaqueAddress*& refpA)
 
 /// Update the references of an updated transient object.
 StatusCode SerializeBaseCnv::updateObjRefs(IOpaqueAddress* /* pA */, DataObject* pObj) {
-  if ( pObj )  {
+#ifdef GAUDI_v21r11
+  if ( pObj )    {
     ObjectTypes obj(pObj);
     const CLID id = (pObj->clID()&0xFFFF0000);
     switch(id) {
@@ -104,6 +107,9 @@ StatusCode SerializeBaseCnv::updateObjRefs(IOpaqueAddress* /* pA */, DataObject*
     }
   }
   return StatusCode::SUCCESS;
+#else
+  return pObj ? pObj->update() : StatusCode::FAILURE;
+#endif
 }
 
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
