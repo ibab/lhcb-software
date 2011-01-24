@@ -80,7 +80,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ## last algorithm should have name of line, plus 'Decision'
         from Configurables import BeamGasTrigVertexCut
         algVtxCut = BeamGasTrigVertexCut( 'Hlt1%sDecision' % name
-                                        , InputSelection     = algRZTracking.OutputTracksName
+                                        , InputSelection     = 'TES:%s'%algRZTracking.OutputTracksName
                                         , MaxBinValueCut     = self.getProp("MaxBinValueCut")
                                         , HistoBinWidth      = self.getProp("HistoBinWidth")
                                         , HistoZRangeLow     = self.getProp(whichBeam+"VtxRangeLow")
@@ -124,7 +124,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         L0condition = "L0_CHANNEL('%s')" %(self.getProp('L0ChannelBXLonely' + whichBeam))
 
         algVtxCutBXLonelyBG = BeamGasTrigVertexCut( 'Hlt1%sDecision' % nameLonely
-                                                  , InputSelection     = algRZTracking.OutputTracksName
+                                                  , InputSelection     = 'TES:%s'%algRZTracking.OutputTracksName
                                                   , MaxBinValueCut     = self.getProp("MaxBinValueCut")
                                                   , HistoBinWidth      = self.getProp("HistoBinWidth")
                                                   , HistoZRangeLow     = self.getProp(whichBeam+"VtxRangeLow")
@@ -193,7 +193,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         from Configurables import BeamGasTrigVertexCut
         algVtxCut = BeamGasTrigVertexCut( 'Hlt1%sDecision' % lineName 
-                                        , InputSelection     = algRTracking2.OutputTracksName
+                                        , InputSelection     = 'TES:%s'%algRTracking2.OutputTracksName
                                         , MaxBinValueCut     = self.getProp("MaxBinValueCut")
                                         , HistoBinWidth      = self.getProp("HistoBinWidth")
                                         , HistoZRangeLow     = self.getProp("Beam1VtxRangeLow")
