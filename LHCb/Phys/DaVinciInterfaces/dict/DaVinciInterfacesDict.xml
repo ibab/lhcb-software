@@ -32,7 +32,6 @@
   <class name = "IParticleTransporter"/>
   <class name = "IParticleTisTos"/> 
   <class name = "IParticleTupleTool"/>
-  <class name = "IPhysDesktop"/>
   <class name = "IPlotTool"/>
   <class name = "IProtoParticleFilter"/>
   <class name = "IPVReFitter"/>
