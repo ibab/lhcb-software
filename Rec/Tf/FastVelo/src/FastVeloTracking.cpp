@@ -1418,14 +1418,15 @@ void FastVeloTracking::findUnusedPhi( ) {
   double phiUnusedFirstTol  = m_phiUnusedFirstTol;
   double phiUnusedSecondTol = m_phiUnusedSecondTol;
   double maxQFactor         = m_maxQFactor;
+  int firstSensor = m_hitManager->lastPhiSensor();
+  int lastSensor  = firstSensor - 15;
   if ( m_tracks.size() < 10 ) {    // clean event (e.g. Velo open)
     phiUnusedFirstTol  = 20.;
     phiUnusedSecondTol = 20.;
     maxQFactor         =  2.;
+    lastSensor         = firstSensor - 30;
   }
   
-  int firstSensor = m_hitManager->lastPhiSensor();
-  int lastSensor  = firstSensor - 15;
   for ( int phi0 = firstSensor; lastSensor <= phi0; --phi0 ) {
     int phi1 = phi0 - 2;
     int phi2 = phi1 - 2;
@@ -1530,12 +1531,20 @@ void FastVeloTracking::findUnusedPhi( ) {
 
                   if ( temp.qFactor() > maxQFactor ) continue;
                   FastVeloSensor* s = r2;
-                  while ( 0 <= s->next( true ) ) {
+                  int nMiss = 0;
+                  while ( 0 <= s->next( true ) && nMiss <= m_maxMissed ) {
                     s = m_hitManager->sensor( s->next( true ) );
                     if ( temp.rAtZ( s->z() ) < s->rMin() ) break;
-                    if ( !temp.addBestRCluster( s, m_maxChi2ToAdd ) ) break;
+                    if ( !temp.addBestRCluster( s, m_maxChi2ToAdd ) ) nMiss++;
                     FastVeloSensor* phiSensor = m_hitManager->sensor( s->number() + 64 );
-                    if ( !temp.addBestPhiCluster( phiSensor->hits(zone), m_maxChi2ToAdd ) ) break;
+                    int phiZone = 0;
+                    double rInPhi = temp.rAtZ( phiSensor->z() );
+                    if ( temp.rAtZ( phiSensor->z() ) > phiSensor->rMax( 0 ) ) phiZone = 1;
+                    for ( FastVeloHits::iterator itH = phiSensor->hits(phiZone).begin(); 
+                            phiSensor->hits(phiZone).end() != itH ; ++itH ) {
+                      (*itH)->setPhiWeight(rInPhi );
+                    }
+                    if ( !temp.addBestPhiCluster( phiSensor->hits(phiZone), m_maxChi2ToAdd ) ) nMiss++;
                   }
 
                   if ( !temp.removeWorstRAndPhi( m_maxChi2PerHit, 6 ) ) {
