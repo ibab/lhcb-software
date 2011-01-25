@@ -32,3 +32,15 @@ RooPsi2m.cxx
    * Toy MC for sensitivity to X Mass.
    * Signal model: Voightian, Background Model: RooBackPdf (parameters from same sign data)
    * To run at command line: .L xtoy.C; xtoy("output.root", nSignal, nBack) 
+
+* meanP.C
+--------
+
+   * Make to make plots of deltaM and resolution of psi2S versus p, pt, Q, m23
+   * Uses as input  mass_systematics.root
+
+* toypulls
+---------
+
+   * Example macro to analyse output of toy study
+   * Uses as input for example forpulls.root (600 event signal, S/B = 0.1 results)
