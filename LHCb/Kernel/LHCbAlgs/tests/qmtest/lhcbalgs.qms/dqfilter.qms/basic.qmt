@@ -34,6 +34,8 @@ app.EvtMax = 5
 <argument name="validator"><text>
 
 expected = {
+            "filtering on BeginEvent": 1,
+            "Updating Data Quality flags": 5,
             "good event": 2,
             "bad event": 3,
             "Ignoring flag: OtherDet": 0,

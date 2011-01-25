@@ -61,7 +61,12 @@ StatusCode DQFilter::initialize()
 
 StatusCode DQFilter::execute()
 {
-  // If we get here, either we are
+  // Print the message only if we do not use the BeginEvent incident
+  // otherwise it gets printed twice for good events.
+  if ((!m_beginEvent) && (msgLevel() <= MSG::VERBOSE)) {
+    verbose() << "Filter event: "
+              << ((m_bad) ? "bad" : "good") << " event" << endmsg;
+  }
   setFilterPassed(!m_bad);
   return StatusCode::SUCCESS;
 }
