@@ -793,7 +793,7 @@ class Gauss(LHCbConfigurableUser):
         gaussSeq = GaudiSequencer("GaussSequencer")
         gaussSeq.Members += [ gaussSkipGeant4Seq ]
 
-        #self.configureGiGa()
+        self.configureGiGa()
 
         for slot in SpillOverSlots:
 
@@ -1250,6 +1250,10 @@ class Gauss(LHCbConfigurableUser):
 ##         self.setProp("MainSequence",mainSeq)
 ##         for phase in mainSeq:
 ##             raise RuntimeError("Unknown phase '%s'"%phase)
+
+        ### Check for configuration consistency
+        if ( ( "GenToMCTree" in self.getProp("Phases") ) and ( "Simulation" in self.getProp("Phases") ) ):
+            raise RuntimeError("GenToMCTree and Simulation cannot be part of Phases simultaneously")
                 
         self.configureGen( SpillOverSlots )
         if "GenToMCTree" in self.getProp("Phases"):

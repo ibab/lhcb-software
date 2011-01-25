@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-01-25 - Patrick Robbe
+ - python/Gauss/Configuration.py: add protection against incompatible 
+   options for Phases
+
 ! 2011-01-20 - Patrick Robbe
  - python/Gauss/Configuration.py: add new phase "GenToMCTree" to activate
    filling of MCParticles/MCVertices for generator only productions
