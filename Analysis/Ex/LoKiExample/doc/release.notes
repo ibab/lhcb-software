@@ -7,6 +7,13 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiExample v8r7p1 2011-01-25 =================
+
+! 2011-01-05 - Juan Palacios
+ - src/TestFunctor.cpp
+  . Really remove call to DVALgorithm::desktop().
+ - Increase to v8r7p1.
+
 !========================== LoKiExample v8r7 2011-01-19 ===================
 
 ! 2011-01-05 - Juan Palacios

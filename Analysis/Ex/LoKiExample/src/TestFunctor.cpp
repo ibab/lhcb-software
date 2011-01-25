@@ -121,7 +121,7 @@ StatusCode LoKi::TestFunctor::execute()
   typedef  LHCb::Particle::Range PARTICLES ;
   
   // get the particles from desktop 
-  const PARTICLES particles = desktop()->particles() ;
+  const PARTICLES particles = this->particles() ;
   
   // do something with functors, e.g. print them:
   for ( PARTICLES::const_iterator iparticle = particles.begin() ; 
