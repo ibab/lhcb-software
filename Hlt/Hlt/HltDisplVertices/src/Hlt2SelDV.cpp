@@ -234,7 +234,7 @@ StatusCode Hlt2SelDV::execute() {
   }
 
   //------------------The Code---------------------------  
-  Particle::ConstVector preys = desktop()->particles();
+  Particle::Range preys = particles();
   if( msgLevel( MSG::DEBUG ) )
     debug() << "There are " << preys.size() <<" particles in TES !" << endmsg;
   if( preys.size() < m_NbCands ){
@@ -250,8 +250,8 @@ StatusCode Hlt2SelDV::execute() {
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
   //Particle::ConstVector Cands;
   int nbCands(0);
-  Particle::ConstVector::const_iterator iend = preys.end();
-  for( Particle::ConstVector::const_iterator is = preys.begin(); 
+  Particle::Range::const_iterator iend = preys.end();
+  for( Particle::Range::const_iterator is = preys.begin(); 
        is < iend; ++is ){
     const Particle * p = (*is);
 
