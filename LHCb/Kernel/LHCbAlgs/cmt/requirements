@@ -38,4 +38,6 @@ apply_pattern   QMTest
 private
 use DetDescSvc v* Det -no_auto_imports
 use DetCond    v* Det -no_auto_imports
+use SQLDDDB    v* Det -no_auto_imports
+use sqlite     v* LCG_Interfaces -no_auto_imports
 end_private

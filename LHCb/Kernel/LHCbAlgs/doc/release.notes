@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-01-25 - Marco Clemencic
+ - Added an algorithm to filter events according to the Data Quality flags in
+   the conditions database.
+   The algorithm (DQFilter) can operate during the BeginEvent (default) or as
+   a standard filter. It can be configured to ignore some Data Quality flags.
+
 !======================== LHCbAlgs v2r35 2010-09-27 ==========================
 ! 2010-09-24 - Marco Clemencic
  - Added forgotten dependency on Event/RecEvent
