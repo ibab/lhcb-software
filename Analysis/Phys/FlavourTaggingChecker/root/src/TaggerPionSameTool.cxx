@@ -2,12 +2,12 @@
 
 TaggerPionSameTool::TaggerPionSameTool() {
 
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5.0 *GeV );
+  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 750 );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5000 );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
   declareProperty( "PionSame_LCS_cut",   m_lcs_cut       = 5.0 );
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
-  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
+  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2500);
+  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1500);
   declareProperty( "PionSame_ghost_cut",  m_ghost_cut_pS     = -999.0);
   declareProperty( "PionSame_ipPU_cut", m_ipPU_cut_pS      = 3.0 );
   declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
@@ -53,9 +53,9 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
     verbose()<<" Pion PIDk="<< (*ipart)->PIDk() <<endreq;
 
     double Pt = (*ipart)->pt();
-    if( Pt < m_Pt_cut_pionS )  continue;
+    if( Pt < m_Pt_cut_pionS*0.001 )  continue;//GeV
     double P  = (*ipart)->p();
-    if( P  < m_P_cut_pionS )  continue;
+    if( P  < m_P_cut_pionS*0.001 )  continue;//GeV
     verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
     double lcs = (*ipart)->LCS();
@@ -71,7 +71,7 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
     if(IPsig > m_IPs_cut_pionS)  continue;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
-    if(dQ > m_dQcut_pionS ) continue;
+    if(dQ > m_dQcut_pionS*0.001 ) continue;
     verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
 
     //ip and phi wrt PU
@@ -99,7 +99,7 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
   if( !ipionS ) return tpionS;
 
   double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
-  if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
+  if( extra_dQ > m_dQcut_extra_pionS*0.001 ) return tpionS;
   verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
 
   hcut_pS_dqe ->Fill(extra_dQ);

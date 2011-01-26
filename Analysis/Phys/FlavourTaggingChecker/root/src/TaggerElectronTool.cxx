@@ -2,8 +2,8 @@
 
 TaggerElectronTool::TaggerElectronTool() {
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1000. );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 );
   declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5. );
   declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 2. );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
@@ -52,10 +52,10 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     if(msgLevel(MSG::VERBOSE)) verbose() << " Ele PIDe="<< axp->PIDe() <<endmsg;
 
     double Pt = axp->pt();
-    if( Pt < m_Pt_cut_ele )  continue;
+    if( Pt < m_Pt_cut_ele*0.001 )  continue;//to have GeV
 
     double P = axp->p();
-    if( P < m_P_cut_ele )  continue;
+    if( P < m_P_cut_ele*0.001 )  continue;//to have GeV
     if(msgLevel(MSG::VERBOSE)) verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
     if( axp->LCS() > m_lcs_cut_ele ) continue;

@@ -74,8 +74,9 @@ int main () {
       OStaggers.push_back(tvtx); 
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
       debug()<<"omega: "<<theTag->omega()<<endreq;      
-      FlavourTag* tmp_theTagOS = combProbOStool.combineTaggers( OStaggers );
-      debug()<<"omegaOS: "<<tmp_theTagOS->omega()<<endreq;
+      debug()<<"omegaOS: "<<theTag->omegaOS()<<endreq;      
+      //FlavourTag* tmp_theTagOS = combProbOStool.combineTaggers( OStaggers );
+      //debug()<<"omegaOS: "<<tmp_theTagOS->omega()<<endreq;
       //FlavourTag* theTag = combNNtool.combineTaggers( taggers );
       //FlavourTag* theTag = combPIDtool.combineTaggers( taggers );
 

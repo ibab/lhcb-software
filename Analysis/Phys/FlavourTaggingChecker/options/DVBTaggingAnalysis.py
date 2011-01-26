@@ -49,6 +49,8 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 tag.BTaggingTool.OutputLevel = 4
 
 #Import cuts for strip12/strip10/strip9/mc2010
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v3.py')
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v2.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v1.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10_v1.py')
@@ -111,7 +113,7 @@ MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 DaVinci().EvtMax     = 300                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
-DaVinci().TupleFile  = "analysis.root"     # Ntuple
+DaVinci().TupleFile  = "test.root"     # Ntuple
 
 DaVinci().Simulation = True
 DaVinci().DataType   = "2010" 

@@ -6,6 +6,13 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-01-26 - Marc Grabalosa
+  - Fixed bug in vertexch for (B id<0). New calibration constants
+  - New option files MeV
+  - Calibration of per event omega for OS, OS+SS combination without calibration
+  - Optimized KSS with data
+  - Raise to v6r5
+
 !========================== FlavourTaggingChecker v6r4 2011-01-19 ============
 
 ! 2011-01-19 - Juan Palacios

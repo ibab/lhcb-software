@@ -2,8 +2,8 @@
 
 TaggerKaonOppositeTool::TaggerKaonOppositeTool() {
 
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.8 *GeV );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 5.875 *GeV );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 800  );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 5875 );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4.05 );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.25 );
   declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 2.125 );
@@ -53,10 +53,10 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon PID pass"<<endreq;
 
     double Pt = axp->pt();
-    if( Pt < m_Pt_cut_kaon )  continue;
+    if( Pt < m_Pt_cut_kaon*0.001 )  continue;//GeV
  
     double P = axp->p();
-    if( P < m_P_cut_kaon )  continue;
+    if( P < m_P_cut_kaon*0.001 )  continue;//GeV
  
     if(msgLevel(MSG::VERBOSE)) verbose() << " Kaon P="<< P <<" Pt="<<Pt<<endmsg;
     double lcs = axp->LCS();

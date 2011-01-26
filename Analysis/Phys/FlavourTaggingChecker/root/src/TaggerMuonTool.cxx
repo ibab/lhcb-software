@@ -2,8 +2,8 @@
 
 TaggerMuonTool::TaggerMuonTool( ) {
 
-  declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
-  declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
+  declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1100 );
+  declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 );
   declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
   declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 );
   declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
@@ -44,10 +44,10 @@ Tagger* TaggerMuonTool::tag(Event& event) {
     if(msgLevel(MSG::VERBOSE)) verbose() << " Muon PIDm"<< axp->PIDm()<<endreq;
 
     double Pt = axp->pt();
-    if( Pt < m_Pt_cut_muon ) continue;
+    if( Pt < m_Pt_cut_muon*0.001 ) continue;//to have GeV
 
     double P = axp->p();
-    if( P  < m_P_cut_muon ) continue;
+    if( P  < m_P_cut_muon*0.001 ) continue;//to have GeV
     if(msgLevel(MSG::VERBOSE)) verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
 
     double lcs = axp->LCS();

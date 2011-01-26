@@ -49,12 +49,12 @@ class FlavourTag {
   int    TrueTag() { return m_TrueTag; }///< true tag coming from MC knowledge
   double omega()   { return m_omega; }///< estimator of the mistag (must be tuned by the user on real data to obtain a reliable number)
 
-  /* int    decisionOS(){ return m_decisionOS; } */
-  /* int    categoryOS(){ return m_categoryOS; } */
-  /* double omegaOS()   { return m_omegaOS; } */
-  /* void setOmegaOS(double a)   { m_omegaOS = a; } */
-  /* void setDecisionOS(int a)   { m_decisionOS = a; } */
-  /* void setCategoryOS(int a)   { m_categoryOS = a; } */
+  int    decisionOS(){ return m_decisionOS; } 
+  int    categoryOS(){ return m_categoryOS; } 
+  double omegaOS()   { return m_omegaOS; } 
+  void setOmegaOS(double a)   { m_omegaOS = a; } 
+  void setDecisionOS(int a)   { m_decisionOS = a; } 
+  void setCategoryOS(int a)   { m_categoryOS = a; } 
 
   Taggers taggers()  {return m_taggers;}///< retrieve container of Tagger pointers
   void addTagger(Tagger* a) {m_taggers.push_back(a);} ///< store this tagger

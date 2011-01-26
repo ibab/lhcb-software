@@ -14,9 +14,9 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
   declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.17 );
   declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
 
-  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.45 ); 
-  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.38 ); 
-  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.394 ); 
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.451 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.358 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.398 ); 
 
   //For CombinationTechnique "Probability":
   declareProperty( "P0",           m_P0                   =  5.255669e-01 );
@@ -145,7 +145,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     NNinputs.at(6) = Vdocamax;
     NNinputs.at(7) = maxprobf;
     NNinputs.at(8) = Vflaglong/(vflagged? vflagged:1);
-    NNinputs.at(9) = Vch; 
+    NNinputs.at(9) = fabs(Vch); 
     NNinputs.at(10) = SVtau;
 
     omega = 1 - nnet.MLPvtx( NNinputs );

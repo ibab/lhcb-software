@@ -2,18 +2,18 @@
 
 TaggerKaonSameTool::TaggerKaonSameTool() {
 
-  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.45 *GeV );
-  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 2.0 *GeV );
+  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 550 );
+  declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4200 );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.5 );
-  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.3 );
-  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.1 );
-  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.9 *GeV);
-  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 4.0 );
+  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 0.8 );
+  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 0.8 );
+  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 2000 );
+  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.75 );
   declareProperty( "KaonS_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
   declareProperty( "KaonS_distPhi_cut", m_distPhi_cut_kS= 0.005 );
 
-  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut   =  7.0 );
-  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut  = -5.0 );
+  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut   =  6.5 );
+  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut  = -1.0 );
 
   declareProperty( "ProbMin_kaonS",   m_ProbMin_kaonS  = 0. ); //no cut
 
@@ -60,10 +60,10 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
     if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS PID pass" <<endreq;
 
     double Pt = (*ipart)->pt();
-    if( Pt < m_Pt_cut_kaonS )  continue;
+    if( Pt < m_Pt_cut_kaonS*0.001 )  continue;//GeV
 
     double P  = (*ipart)->p();
-    if( P < m_P_cut_kaonS )  continue;
+    if( P < m_P_cut_kaonS*0.001 )  continue;//GeV
     if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endreq;
 
     if( (*ipart)->LCS() > m_lcs_cut ) continue;
@@ -95,7 +95,7 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
     if(msgLevel(MSG::VERBOSE)) verbose()<<" KaonS Deta="<<deta<<" KaonS dQ="<<dQ
 					<<" Dphi="<<dphi<<endreq;
 
-    if(dQ > m_dQcut_kaonS ) continue;
+    if(dQ > m_dQcut_kaonS*0.001 ) continue;
  
     ncand++;
  

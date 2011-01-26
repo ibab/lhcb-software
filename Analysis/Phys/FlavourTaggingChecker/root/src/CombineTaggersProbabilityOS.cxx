@@ -7,9 +7,9 @@ CombineTaggersProbabilityOS::CombineTaggersProbabilityOS() {
   declareProperty( "CombineTaggersProb_omegascale_OS",  m_omegascale_OS  = 0.07);
   declareProperty( "CombineTaggersProb_ProbMin_OS",     m_ProbMin_OS     = 0.56);
 
-  declareProperty( "CombineTaggersProb_ProbMin_OS_P0_Cal_OS",   m_P0_Cal_OS   = 0.364); 
-  declareProperty( "CombineTaggersProb_ProbMin_OS_P1_Cal_OS",   m_P1_Cal_OS   = 1.08 ); 
-  declareProperty( "CombineTaggersProb_ProbMin_OS_Eta_Cal_OS",  m_Eta_Cal_OS  = 0.338);
+  declareProperty( "CombineTaggersProb_ProbMin_OS_P0_Cal_OS",   m_P0_Cal_OS   = 0.363); 
+  declareProperty( "CombineTaggersProb_ProbMin_OS_P1_Cal_OS",   m_P1_Cal_OS   = 1.09 ); 
+  declareProperty( "CombineTaggersProb_ProbMin_OS_Eta_Cal_OS",  m_Eta_Cal_OS  = 0.335);
 
   theTag = new FlavourTag();
 }
