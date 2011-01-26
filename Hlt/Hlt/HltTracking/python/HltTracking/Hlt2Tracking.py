@@ -45,7 +45,6 @@ from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
-from Hlt2Lines.Hlt2CharmLines             import Hlt2CharmLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
@@ -80,7 +79,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              # $HLTCONFROOT/python/HltConf/Hlt2.py 
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf
-                             , Hlt2CharmLinesConf
                              , Hlt2CharmHadD02HHLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
