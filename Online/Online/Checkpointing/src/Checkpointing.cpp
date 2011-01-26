@@ -154,7 +154,7 @@ HIDDEN(size_t) m_writemem(int fd, const void* ptr, size_t size) {
     bf += rc;
   }
   if ( num_zero > 0 ) {
-    mtcp_output(MTCP_INFO,"writefile: error %d NULL bytes...\n",num_zero);
+    mtcp_output(MTCP_INFO,"writefile: wrote %d of %d NULL bytes...\n",num_zero,size);
   }
   return size;
 }
