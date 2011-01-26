@@ -4,9 +4,13 @@
 #define LOKI_MCKINEMATICS_H 1
 // ============================================================================
 // Include files
-// ============================================================================/
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // LoKiCore 
-// ============================================================================/
+// ============================================================================
 #include "LoKi/Kinematics.h"
 // ============================================================================
 // forward declarations 
@@ -29,6 +33,7 @@ namespace LHCb { class MCParticle ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::MCKinematics 
    *  collection varios kinematic-related functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -44,7 +49,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    double GAUDI_API mass 
     ( const LHCb::MCParticle* p ) ;
     // ========================================================================
     /** Trivial function to evaluate the mass MCParticle
@@ -55,7 +60,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    double GAUDI_API mass 
     ( const LHCb::MCParticle* p1 , 
       const LHCb::MCParticle* p2 ) ;
     // ========================================================================
@@ -68,7 +73,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    double GAUDI_API mass 
     ( const LHCb::MCParticle* p1 , 
       const LHCb::MCParticle* p2 ,
       const LHCb::MCParticle* p3 ) ;
@@ -83,21 +88,25 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-17
      */
-    double mass 
+    double GAUDI_API mass 
     ( const LHCb::MCParticle* p1 , 
       const LHCb::MCParticle* p2 ,
       const LHCb::MCParticle* p3 ,
       const LHCb::MCParticle* p4 ) ;
     // ========================================================================   
-  } // end of namespace LoKi::MCKinematics 
+  } //                                      end of namespace LoKi::MCKinematics 
+  // ==========================================================================
   namespace Kinematics
   {
+    // ========================================================================
     /// export the namespace into the proper scope 
     using namespace LoKi::MCKinematics ;
-  } // end of namespace LoKi::Kinematics 
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                        end of namespace LoKi::Kinematics 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_MCKINEMATICS_H
 // ============================================================================

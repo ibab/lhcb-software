@@ -62,9 +62,10 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-10
    */
-  class MCFinderObj : public LoKi::Base 
+  class GAUDI_API MCFinderObj : public LoKi::Base 
   {
   public: 
+    // ========================================================================
     /** Standard constructor
      *  @param name object name 
      *  @param finder the mc-decay finder itself
@@ -87,10 +88,14 @@ namespace LoKi
       const IMCDecayFinder* finder   , 
       const GaudiTool*      algo     , 
       const IReporter*      reporter ) ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// virtual and protected  destructor 
-    virtual ~MCFinderObj(); ///< Destructor
+    virtual ~MCFinderObj();                                      // Destructor
+    // ========================================================================
   public:
+    // ========================================================================
     /** find MC decays.
      *  
      *  It is just a short cut for very convinient and simple DecayFinder 
@@ -202,7 +207,9 @@ namespace LoKi
     }
     /// clear the internal storage of decays
     void clear() ;
+    // ========================================================================
   private:
+    // ========================================================================
     /** templated decay extractor to eliminate code duplication 
      *  @param decay decay descriptor
      *  @param source data source 
@@ -214,10 +221,14 @@ namespace LoKi
     inline LoKi::Types::MCRange _findDecays 
     ( const std::string& decay  , 
       const SOURCE&      source ) const ;
+    // ========================================================================
   private:
-    // the default constructor is disabled 
-    MCFinderObj() ;
+    // ========================================================================
+    /// the default constructor is disabled 
+    MCFinderObj() ;                      // the default constructor is disabled 
+    // ========================================================================
   private:
+    // ========================================================================
     typedef GaudiUtils::HashMap<std::string,LoKi::MCTypes::MCContainer> MCDecays ;
     // "the temporary" storage of decays 
     mutable MCDecays                m_decays ; ///< the storage of decays 
@@ -227,9 +238,11 @@ namespace LoKi
     LoKi::Interface<GaudiTool>      m_tool   ; ///< data provider 
     // data provider 
     LoKi::Interface<GaudiAlgorithm> m_algo   ; ///< data provider 
+    // ========================================================================
   } ;
-} // end of the namespace LoKi
-// ===========================================================================
+  // ==========================================================================
+} //                                                  end of the namespace LoKi
+// ============================================================================
 /** templated decay extractor to eliminate code duplication 
  *  @paran decay decay descriptor
  *  @param source data source 
@@ -237,7 +250,7 @@ namespace LoKi
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-11
  */
-// ===========================================================================
+// ============================================================================
 template <class SOURCE>
 inline LoKi::Types::MCRange 
 LoKi::MCFinderObj::_findDecays 
@@ -263,22 +276,22 @@ LoKi::MCFinderObj::_findDecays
   {
     found = m_finder->findDecay ( source , init );
     if ( !found || 0 == init ) { continue ; } 
-    // extract decay members ? 
-    if ( members ) ///< extract decay members 
+    /// extract decay members ? 
+    if ( members ) // extract decay members 
     {
       mcVct.clear() ;
       m_finder->decayMembers( init , mcVct ) ;
       decays.insert( decays.end() , mcVct.begin() , mcVct.end() ) ;
       mcVct.clear() ;
     } 
-    else /// < deal only with heads  
+    else // deal only with heads  
     { decays.push_back( const_cast<LHCb::MCParticle*>( init ) ) ; } 
   }
   //
   return LoKi::Types::MCRange ( decays.begin() , decays.end() );
 } 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_MCFINDEROBJ_H
 // ============================================================================

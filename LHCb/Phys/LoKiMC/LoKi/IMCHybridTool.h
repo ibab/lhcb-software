@@ -20,6 +20,7 @@
 // ============================================================================
 namespace LoKi
 { 
+  // ==========================================================================
   /** @class IMCHybridTool IMCHybridTool.h LoKi/IMCHybridTool.h
    *
    *  Helper interface for implementation of C++/Python "Hybrid" solution
@@ -35,9 +36,10 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    */
-  class IMCHybridTool : public virtual IAlgTool 
+  class GAUDI_API IMCHybridTool : public virtual IAlgTool 
   {
   public:
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
     // ========================================================================

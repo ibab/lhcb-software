@@ -12,33 +12,43 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid 
   {
+    // ========================================================================
     /** @class MCHybridLock  MCHybriddLock.h LoKi/MCHybridLock.h 
      *  Helper class (sentry) to connent IMCHybridTool to MCHybridEngine  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-09
      */
-    class MCLock 
+    class GAUDI_API MCLock 
     {
     public:
-      // contructor : Lock 
-      MCLock  ( IMCHybridTool* tool ) ; ///< contructor : Lock 
-      // destrcutor : UnLock
-      virtual ~MCLock () ;            ///< destrcutor : UnLock
+      // ======================================================================
+      /// constructor : Lock 
+      MCLock  ( IMCHybridTool* tool ) ;                 //  contructor : Lock 
+      /// destrcutor : UnLock
+      virtual ~MCLock () ;                              //  destructor : UnLock
+      // ======================================================================
     private:
-      // no default constructor 
-      MCLock () ;                     //</ no default constructor 
-      // no copy constructor 
-      MCLock ( const MCLock& ) ; ///< no copy constructor 
-      // no assignement opeartor 
-      MCLock& operator = ( const MCLock& ) ; //< no assignement operator
+      // ======================================================================
+      /// no default constructor 
+      MCLock () ;                                     // no default constructor 
+      /// no copy constructor 
+      MCLock ( const MCLock& ) ;                     // no copy constructor 
+      /// no assignement opeartor 
+      MCLock& operator = ( const MCLock& ) ;         // no assignement operator
+      // ======================================================================
     private:
-      // the tool itself 
-      LoKi::Interface<LoKi::IMCHybridTool> m_tool ;  ///< the tool itself 
+      // ======================================================================
+      /// the tool itself 
+      LoKi::Interface<LoKi::IMCHybridTool> m_tool ;          // the tool itself 
+      // ======================================================================
     } ;
-  }
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                        the end of namespace LoKi::Hybrid 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

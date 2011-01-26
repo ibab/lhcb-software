@@ -38,6 +38,7 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::MCParticle*>::Tree&           tree       ,
       const Decays::iNode&                                            mother     , 
@@ -56,6 +57,7 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::MCParticle*>::Tree& tree       ,
       const Decays::iNode&                                  mother     ,
@@ -69,6 +71,7 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-22 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::MCParticle*>::Tree& tree   ,
       const Decays::Parsers::Tree&                          parsed ,

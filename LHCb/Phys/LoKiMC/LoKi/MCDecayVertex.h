@@ -57,9 +57,9 @@ namespace LoKi
      */
     const LHCb::MCVertex* decayVertex ( const LHCb::MCParticle* p ) ;
     // ========================================================================
-  } // end of namespace LoKi::MCVertices
+  } //                                        end of namespace LoKi::MCVertices
   // ==========================================================================
-} //end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

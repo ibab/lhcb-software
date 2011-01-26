@@ -37,7 +37,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyav@physics.syr.edu
      *  @date 2006-12-07
      */
-    class SourceTES : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Source 
+    class GAUDI_API SourceTES 
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Source 
     { 
       // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Source _Source;
@@ -139,7 +140,7 @@ namespace LoKi
      *  @see LoKi::Cuts::MCNUM
      *  @date   2010-10-24
      */
-    class TESCounter 
+    class GAUDI_API TESCounter 
       : public LoKi::Functor<void,double>
     {
     public:
@@ -198,7 +199,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-04
      */
-    class SourceTES : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Source 
+    class GAUDI_API SourceTES 
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Source 
     { 
       // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Source _Source;

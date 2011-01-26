@@ -31,7 +31,7 @@
 namespace LoKi 
 {
   // ==========================================================================
-  /// forward decalration 
+  /// forward declaration 
   class MCFinderObj ; 
   // ==========================================================================
   /** @class MCFinder MCFinder.h LoKi/MCFinder.h
@@ -42,23 +42,27 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-11
    */
-  class MCFinder : public LoKi::Interface<LoKi::MCFinderObj>
+  class GAUDI_API MCFinder : public LoKi::Interface<LoKi::MCFinderObj>
   {
   public: 
+    // ========================================================================
     /// Standard constructor
     MCFinder ( const LoKi::MCFinderObj* ); 
     /// virtual destructor
-    virtual ~MCFinder( ); ///< Destructor
+    virtual ~MCFinder( );    // Destructor
     /// implicit conversion to the pointer 
     operator const LoKi::MCFinderObj* () const ; 
     /// check for pointer validity:
     bool operator! () const { return validPointer() ; }
+    // ========================================================================
   private:
-    // the default constructor is disabled 
-    MCFinder() ;
+    // ========================================================================
+    /// the default constructor is disabled 
+    MCFinder() ;                         // the default constructor is disabled 
+    // ========================================================================
   } ;
   // ==========================================================================
-} // end of the namespace LoKi
+} //                                                  end of the namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -20,16 +20,19 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @class IMCHybridFactory IMCHybridFactory.h LoKi/IMCHybridFactory.h
    *  The abstract interface to "hybrid factory"  
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
    *  @date   2007-06-10
    */
-  class IMCHybridFactory : public virtual IAlgTool
+  class GAUDI_API IMCHybridFactory : public virtual IAlgTool
   {
   public: 
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     // predicates:

@@ -9,6 +9,7 @@
 #include "LoKi/MCChild.h"
 #include "LoKi/MCAlgs.h"
 #include "LoKi/Algs.h"
+#include "LoKi/GetN.h"
 // ============================================================================
 /** @file
  *  Implementation file for LoKi MC-tree-functors 
@@ -80,7 +81,7 @@ namespace
     /// constructor 
     _Pid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // ========================================================================
-    /// the major method: find "not a pid" 
+    /// the major method: find "a pid" 
     inline bool operator () ( const LHCb::MCParticle* p ) const 
     { return 0 != p && m_pid.check ( p->particleID () ) ; }
     // ========================================================================
@@ -91,7 +92,29 @@ namespace
     // ========================================================================    
   } ;
   // ========================================================================== 
-}
+  /// the actual matching function
+  bool match 
+  ( Decays::MCSection::iterator                          first , 
+    Decays::MCSection::iterator                          last  , 
+    Decays::Trees::MCExclusive::TreeList::const_iterator begin ,
+    Decays::Trees::MCExclusive::TreeList::const_iterator end   ) 
+  {
+    //
+    if ( std::distance ( first , last ) != std::distance ( begin , end ) ) 
+    { return false ; }
+    //
+    //    (1) sort the sections 
+    std::stable_sort ( first , last ) ;
+    do // (2) make all possible permutations of the section  
+    {  // (3) match all fields:
+      if ( std::equal ( begin , end , first , Equal () ) ) { return true ; } 
+    } //  (4) next permutation
+    while ( std::next_permutation ( first , last ) ) ;
+    //
+    return false ;
+  }
+  // ==========================================================================
+} //                                                 end of anonymous namespace 
 // ============================================================================
 // MCEXCLUSIVE 
 // ============================================================================
@@ -229,25 +252,18 @@ bool Decays::Trees::MCExclusive::operator()
   // perform the real matching:
   // match children? 
   if ( 0 == nChildren()               ) { return true  ; }        // RETURN
-  // (1) get the proper decay sections:
+  //   (1) get the proper decay sections:
   Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
-  // (2) loop over all sections
+  //   (2) loop over all sections
   for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
-    // skip the combinations  which does not match at all 
-    if ( nChildren() != isect->size() ) { continue ; }
-    // (4) sort the section 
-    std::stable_sort ( isect->begin() , isect->end() ) ;
-    do // make all possible permutations of the section  
-    {
-      // (5) match all fields:
-      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
-      { return true ; }                                            // RETURN 
-    } // next permutation
-    while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
+    if ( match ( isect -> begin () , 
+                 isect -> end   () ,
+                 childBegin     () , 
+                 childEnd       () ) ) { return true ; } // RETURN
   } // next section
   // no match 
   return false ;                                                   // RETURN 
@@ -841,6 +857,10 @@ bool Decays::Trees::Photos::operator()
   Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
+  //
+  const _Pid   gamma     ( m_photon ) ;
+  const NotPid not_gamma ( m_photon ) ;
+  // 
   for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
@@ -849,29 +869,98 @@ bool Decays::Trees::Photos::operator()
     if ( nChildren() > isect->size() ) { continue ; }                  // CONTINUE 
     // (4) count photons
     const size_t nGamma = 
-      std::count_if ( isect->begin() , isect->end() , _Pid(m_photon) ) ;
+      std::count_if ( isect->begin () , isect->end () , gamma ) ;
     if ( nChildren () + nGamma < isect->size() ) { continue ; }        // CONTINUE 
-    // (4) sort the section
-    std::stable_sort ( isect->begin() , isect->end() ) ;
-    // (6) check "inclusive"
+    //
+    // (5) check "inclusive"
     if ( !LoKi::Algs::found_N 
          ( isect -> begin () , 
            isect -> end   () , 
            children().trees() ) ) { continue ; }                     // CONTINUE 
-    // (5) make all possible permutations:
-    do 
+    //
+    //  (6) start some branches: 
+    //
+    // A. simplest cases: 
+    //             a. no photons at all 
+    //             b. no room for photons
+    if      ( 0             == nGamma              || 
+              isect->size() == nChildren()          ) 
     {
-      // (6) match all declared mandatory fields:
-      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() )
-           && // the rest is only photons 
-           onlyPid (  isect->begin () + nChildren () , 
-                      isect->end   () , m_photon     ) ) { return true ; }
-    } // next permutation
-    while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
-  } // next section
+      if ( match ( isect -> begin () , 
+                   isect -> end   () , 
+                   childBegin     () , 
+                   childEnd       () ) ) { return true ; }              // RETURN 
+      //
+      continue ;                                                        // CONTINUE 
+    }
+    //
+    // B. check the "non-photon" part
+    //  
+    Decays::MCSection::iterator iphys = 
+      std::partition  ( isect->begin() , isect->end() , not_gamma ) ;
+    //
+    const std::size_t nPhys = iphys - isect->begin() ;
+    //      a. no room for photons 
+    if ( nPhys == nChildren() ) 
+    {
+      if ( match ( isect -> begin () , 
+                   iphys             , 
+                   childBegin     () , 
+                   childEnd       () ) ) { return true ; }              // RETURN 
+      //
+      continue ;                                                        // CONTINUE 
+    }
+    else if ( nPhys > nChildren() ) { continue ; }                      // CONTINUE  
+    // 
+    // C. general case:
+    //
+    const std::size_t  nPhotons  = nChildren() - nPhys ;
+    LoKi::GetN_<Decays::MCSection,std::less<const LHCb::MCParticle*> > 
+      getN ( nPhotons        , 
+             iphys           , 
+             isect -> end () ) ;
+    //
+    Decays::MCSection sect ;
+    sect.reserve ( nChildren() ) ;
+    while ( nPhotons == getN.next ( std::back_inserter ( sect ) ) )
+    {
+      sect.insert ( sect.end() , isect->begin() , iphys ) ;
+      //
+      if ( match ( sect.begin () , sect.end () , 
+                   childBegin () , childEnd () ) ) { return true ; }
+      sect.clear   () ;
+      sect.reserve ( nChildren() ) ;
+    }
+  } // go to the next section
+  // 
   // no match 
   return false ; // RETURN 
 }
+// ============================================================================
+//     // (4) sort the section
+//     std::stable_sort ( isect->begin() , isect->end() ) ;
+//     // (6) check "inclusive"
+//     if ( !LoKi::Algs::found_N 
+//          ( isect -> begin () , 
+//            isect -> end   () , 
+//            children().trees() ) ) { continue ; }                     // CONTINUE 
+//     // (5) make all possible permutations:
+//     do 
+//     {
+//       // (6) match all declared mandatory fields:
+//       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() )
+//            && // the rest is only photons 
+//            onlyPid (  isect->begin () + nChildren () , 
+//                       isect->end   () , m_photon     ) ) { return true ; }
+//     } // next permutation
+//     while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
+//   } // next section
+//   // no match 
+//   return false ; // RETURN 
+// }
+// // ============================================================================
+
+
 
 
 // ============================================================================

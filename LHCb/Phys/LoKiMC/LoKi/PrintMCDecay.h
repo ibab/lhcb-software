@@ -61,6 +61,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     std::ostream&
     printDecay 
     ( const LHCb::MCParticle*      particle                , 
@@ -86,6 +87,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     std::ostream&
     printDecay 
     ( const LHCb::MCParticle*      particle                , 
@@ -111,6 +113,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     MsgStream& 
     printDecay 
     ( const LHCb::MCParticle*      particle                , 
@@ -136,6 +139,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     MsgStream& 
     printDecay 
     ( const LHCb::MCParticle*      particle          , 
@@ -160,6 +164,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     std::string 
     printDecay 
     ( const LHCb::MCParticle*      particle                , 
@@ -183,12 +188,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API
     std::string 
     printDecay 
     ( const LHCb::MCParticle* particle          , 
       const bool              decayOnly = true  ) ;
     // ========================================================================
-  } // end of namespace LoKi::PrintMC
+  } //                                           end of namespace LoKi::PrintMC
   // ==========================================================================
   namespace Print
   {
@@ -196,11 +202,11 @@ namespace LoKi
     using LoKi::PrintMC::s_maxLevel2 ;
     using namespace LoKi::PrintMC    ;
     // ========================================================================
-  } // end of namespace LoKi::Print  
+  } //                                             end of namespace LoKi::Print  
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PRINTMCDECAY_H
 // ============================================================================

@@ -12,8 +12,10 @@
 // ===========================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid
   {
+    // ========================================================================
     /** @class MCEngineActor MCHybridEngineActor.h LoKi/MCHybridEngineActor.h
      *  
      *  This file is a part of LoKi project - 
@@ -27,7 +29,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2004-06-29
      */
-    class MCEngineActor
+    class GAUDI_API MCEngineActor
     { 
     public:
       // ======================================================================
@@ -133,26 +135,35 @@ namespace LoKi
       // ======================================================================     
       /// Standard constructor
       MCEngineActor() ;
-      virtual ~MCEngineActor( ); ///< Destructor
+      /// desctructor 
+      virtual ~MCEngineActor( ); // Destructor
       // ======================================================================     
     private:
+      // ======================================================================
       // just to save some lines 
       template <class TYPE>
       inline StatusCode _add 
-      ( const std::string& name , const TYPE& cut ) const ; ///< just to save some lines 
+      ( const std::string& name , const TYPE& cut ) const ; 
+      // ======================================================================
     private:
+      // ======================================================================
       // the copy contructor is disabled 
       MCEngineActor           ( const MCEngineActor& );
       // ther assignement operator is disabled 
       MCEngineActor& operator=( const MCEngineActor& );
+      // ======================================================================
     private:
+      // ======================================================================
       // the tool itself 
       LoKi::Interface<LoKi::IMCHybridTool> m_tool ;
+      // ======================================================================
     };
-  } // end of namespace LoKi::Hybrid
-} // end of namespace LoKi
-// ===========================================================================
-// The END 
-// ===========================================================================
+    // ========================================================================
+  } //                                           end of namespace LoKi::Hybrid
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
+//                                                                      The END 
+// ============================================================================
 #endif // LOKI_MCCUTSHOLDER_H
-// ===========================================================================
+// ============================================================================

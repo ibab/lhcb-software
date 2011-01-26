@@ -44,6 +44,7 @@ namespace LoKi
      *  @param parent pointer to the mother particle 
      *  @return true if particle belongd to decay tree of parent 
      */
+    GAUDI_API
     bool fromMCTree 
     ( const LHCb::MCParticle* particle  , 
       const LHCb::MCParticle* parent    ) ;
@@ -55,15 +56,16 @@ namespace LoKi
      *  @param parent pointer to the mother veretx  
      *  @return true if particle belongd to decay tree of parent 
      */
+    GAUDI_API
     bool fromMCTree 
     ( const LHCb::MCParticle* particle  , 
       const LHCb::MCVertex*   parent    ) ;
     // ========================================================================    
-  } // end of namespace LoKi::MCTrees
+  } //                                           end of namespace LoKi::MCTrees
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_MCTREES_H
 // ============================================================================
