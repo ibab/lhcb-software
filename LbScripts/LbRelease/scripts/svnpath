@@ -24,6 +24,9 @@ class SubversionPath(Script):
                                help = "preferred access method to revision system [ssh|anonymous]")
         self.parser.add_option("-P", "--project", action = "store_true",
                                help = "Return the URL of the project instead of the package")
+        self.parser.add_option("--branches", action = "store_true",
+                               help = "look for versions also in the branches directories "
+                                      "(false by default, but implied if the version name ends with 'b')")
         self.parser.set_defaults(repositories = [],
                                  protocol = "default")
     def main(self):
@@ -42,22 +45,25 @@ class SubversionPath(Script):
                     self.tags.append("trunk")
                 else:
                     self.tags.append(t)
+                    if t.endswith('b'):
+                        # Tags ending with 'b' imply --branches
+                        self.options.branches = True
         else:
             # if no version is specified look only for trunk
             self.tags = ["trunk"]
-        
+
         # use the repository specified or all of the known ones
         if self.options.repositories:
             self.repositories = self.options.repositories
         else: # use all repositories
             self.repositories = repositories.keys()
-        
+
         # find the (first) repository containing the package
         repos = self.packageRepos()
         if not repos:
             self.log.error("Cannot find package '%s'", self.package)
             return 1
-        
+
         project = self.options.project
         module = self.package
         # loop over all requested tags and collect the paths
@@ -71,7 +77,7 @@ class SubversionPath(Script):
             else:
                 self.log.warning("Cannot find tag '%s' for package '%s'", tag, module)
         print " ".join(paths)
-        
+
     def packageRepos(self):
         """
         Find the repository that contains the requested package.
@@ -101,6 +107,8 @@ class SubversionPath(Script):
             # repository and return it if true.
             if url:
                 repos = rcs.connect(url)
+                # enable branches if required
+                repos.useBranches = self.options.branches
                 if self.options.project:
                     if self.package in repos.projects:
                         return repos

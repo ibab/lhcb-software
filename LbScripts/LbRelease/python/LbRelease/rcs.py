@@ -378,7 +378,7 @@ class CVS(RevisionControlSystem):
 
         # prepare options for CVS checkout
         options = ("-d", self.repository, "checkout", "-P")
-        isHead = version.lower() == "head"
+        isHead = version.lower() in ["head", "trunk"]
         if project:
             version = "%s_%s" % (module, version)
         if not isHead:
@@ -460,6 +460,7 @@ class SubversionCmd(RevisionControlSystem):
         self._ls_cache = {}
         self._latestRevisionCached = None
         self.forceScan = False
+        self.useBranches = False
 
     @classmethod
     def canHandle(cls, repository):
@@ -483,6 +484,9 @@ class SubversionCmd(RevisionControlSystem):
         """
         # Strip the leading and trailing "/" for consistency
         path = path.strip("/")
+        # remove the leading repository name, if present
+        if path.startswith(self.repository):
+            path = path[len(self.repository):]
         # Rationalize "//" for consistency
         while "//" in path:
             path = path.replace("//", "/")
@@ -496,6 +500,17 @@ class SubversionCmd(RevisionControlSystem):
         """
         Function provided for readability.
         """
+        # Use efficiently the _ls_cache
+        path = path.strip("/") # the paths are used without the leading and trailing '/'
+        if path in self._ls_cache: # check if the path is in the cache
+            return True
+        if "/" in path: # if the path has more than one level, try to use the cache for the parent path
+            d, b = path.rsplit("/", 1) # separate dirname and basename
+            if d in self._ls_cache:
+                l = self._ls_cache[d]
+                if (b in l) or ((b+'/') in l): # allow for files and dirs
+                    return True
+        # If path and dirname(path) are not in the cache, look for path in the repository
         return self._ls(path)
 
     def _walk(self, path = ""):
@@ -644,7 +659,7 @@ class SubversionCmd(RevisionControlSystem):
                     for m in self._find("/".join([p,"trunk",h]), "cmt/requirements", levels = 1):
                         modules[h + m] = p
                 # look in the tags directories for dismissed packages
-                # FIXME: branches not supported
+                # NOTE: branches not supported... not sure it is needed
                 #for d in ["tags", "branches"]:
                 for d in ["tags"]:
                     # first level candidates:
@@ -714,7 +729,7 @@ class SubversionCmd(RevisionControlSystem):
                            for p in self._ls("")
                            if p.endswith("/") and p not in projects ]
             for c in candidates:
-                # FIXME: branches not supported
+                # NOTE: branches not supported... no need to look for projects in branches
                 #if self._find(c + "tags/" + c, "cmt/project.cmt", exists_only = True) or \
                 #    self._find(c + "branches/" + c, "cmt/project.cmt", exists_only = True):
                 if self._find(c + "tags/" + c.upper(), "cmt/project.cmt", exists_only = True):
@@ -754,10 +769,11 @@ class SubversionCmd(RevisionControlSystem):
                 P_ = P + "_"
                 vers= []
                 for v in [ l[:-1]
-                          # FIXME: branches not supported
-                          #for l in self._ls("/".join([p,"tags",P])) + self._ls("/".join([p,"branches",P]))
-                          for l in self._ls("/".join([p,"tags",P]))
-                          if l.endswith("/") ]:
+                           for l in self._ls("/".join([p,"tags",P]))
+                                    + ( self.useBranches
+                                        and self._ls("/".join([p,"branches",P]))
+                                        or [] )
+                           if l.endswith("/") ]:
                     if v.startswith(P_):
                         v = v[len(P_):]
                     vers.append(v)
@@ -767,8 +783,8 @@ class SubversionCmd(RevisionControlSystem):
                 if module in self.modules:
                     proj = self.modules[module]
                     versions.update(self._find("/".join([proj,"tags",module])))
-                    # FIXME: branches not supported
-                    #versions.update(self._find("/".join([proj,"branches",module])))
+                    if self.useBranches:
+                        versions.update(self._find("/".join([proj,"branches",module])))
                     # FIXME: the project tags for the packages are not supported (yet) by GetPack.py
                     #versions.update(self._find("/".join([proj,"tags",proj.upper()]), module))
                     #versions.update(self._find("/".join([proj,"branches",proj.upper()]), module))
@@ -790,7 +806,7 @@ class SubversionCmd(RevisionControlSystem):
             return True
         return super(SubversionCmd, self).hasVersion(module, version, isProject)
 
-    def _computePaths(self, module, version, isProject = False, vers_dir = False):
+    def _computePaths(self, module, version, isProject = False, vers_dir = False, global_tag = False):
         """
         Return the URL to the requested version of the module and the (relative)
         path that should be used for the check out.
@@ -805,7 +821,7 @@ class SubversionCmd(RevisionControlSystem):
             dst = module
             if vers_dir:
                 dst = os.path.join(dst, version)
-            if isProject: # projects in SVN _are_ the content of the "cmt" directory
+            if isProject and not global_tag: # projects in SVN _are_ the content of the "cmt" directory
                 dst = os.path.join(dst, "cmt")
         else:
             if isProject:
@@ -817,16 +833,18 @@ class SubversionCmd(RevisionControlSystem):
                 root = self.modules[module]
             # Compare the version string with the revision ID regexp
             revId = re.match("^r([0-9]+)$", version)
-            src = [self.repository, root]
             if revId or version.lower() in ["head", "trunk"]: # a revId or trunk (or head) are checked out from trunk
-                src.append("trunk")
+                src = [root, "trunk"]
                 if not isProject:
                     src.append(module)
             else:
-                src += ["tags", module, versiondir]
-            if isProject: # for projects we check-out only the cmt directory
+                src = [root, "tags", module, versiondir]
+                if self.useBranches and not self._exists("/".join(src)):
+                    # fall back on branches if we are using them
+                    src = [root, "branches", module, versiondir]
+            if isProject and not global_tag: # for projects we check-out only the cmt directory
                 src.append("cmt")
-            src = "/".join(src)
+            src = "/".join([self.repository] + src)
             if revId: # Special syntax for revision IDs
                 src += "@" + revId.group(1)
             dst = module
@@ -887,7 +905,7 @@ class SubversionCmd(RevisionControlSystem):
         return self._computePaths(module, version, isProject)[0]
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False):
+                 project = False, eclipse = False, global_tag = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -899,6 +917,8 @@ class SubversionCmd(RevisionControlSystem):
         @param project: if the module name refers to a project
         @param eclipse: if the eclipse configuration must be created (by default
                         it is created only if in an eclipse workspace)
+        @param global_tag: if True and project == True, check out the complete
+                           project tag, otherwise only the 'cmt' directory
         """
         from os.path import exists, join, dirname, realpath, isdir
         # check for the validity of the version
@@ -916,7 +936,7 @@ class SubversionCmd(RevisionControlSystem):
         # workspace (i.e. exists(<dest>/../.metadata) or if we are asked explicitly
         eclipse = eclipse or exists(join(dirname(realpath(dest)), ".metadata"))
 
-        src, dst = self._computePaths(module, version, project, vers_dir)
+        src, dst = self._computePaths(module, version, project, vers_dir, global_tag)
 
         # Check if we can do an advanced (eclipse-friendly checkout)
         # - first prepare the top level directory if needed
@@ -933,8 +953,8 @@ class SubversionCmd(RevisionControlSystem):
             out = _svn("info", dest, stderr = None)[0]
             try:
                 url = (l for l in out.splitlines() if l.startswith("URL:")).next().split()[-1]
-                # check if the trunk directory of the package is the same as the top dir
-                if src.replace("tags", "trunk").startswith(url):
+                # check if the trunk (or branch) directory of the package is the same as the top dir
+                if src.replace("tags", "trunk").replace("branches", "trunk").startswith(url):
                     # the package is in the same project dir
                     ldst = dst.replace("\\", "/").split("/")
                     step = dest
@@ -989,10 +1009,15 @@ class SubversionCmd(RevisionControlSystem):
         self._assertModule(module, isProject)
         trunkUrl = self.url(module, "trunk", isProject)
         versionUrl = self.url(module, version, isProject)
-        _, _, retcode = _svn("copy",
-                             "-m", "Tagging %s %s as %s" % ({True: "project",
-                                                             False: "package"}[isProject],
-                                                            module, version),
+        msg = "Tagging %s %s as %s" % ({True: "project",
+                                        False: "package"}[isProject],
+                                       module, version)
+        if isProject: # check if the
+            versdir = versionUrl.rsplit("/", 1)[0] # strip the trailing '/cmt'
+            if not self._exists(versdir):
+                _svn("mkdir", "--parents", "-m", msg, versdir)
+                # ignore errors
+        _, _, retcode = _svn("copy", "-m", msg,
                              trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
 

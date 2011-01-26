@@ -380,6 +380,11 @@ class GetPack(Script):
                                       "instead of the curses version")
         self.parser.add_option("--eclipse", action = "store_true",
                                help = "enable eclipse-friendly check-out and configuration")
+        self.parser.add_option("--branches", action = "store_true",
+                               help = "look for versions also in the branches directories "
+                                      "(false by default, but implied if the version name ends with 'b')")
+        self.parser.add_option("--global-tag", action = "store_true",
+                               help = "usable only in conjunction with --project to check out a project global tag/branch")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
@@ -431,7 +436,7 @@ class GetPack(Script):
         else:
             self.log.warning("Cannot find requirements file, 'cmt config' skipped.")
 
-    def checkout(self, package, version = "head"):
+    def checkout(self, package, version = "trunk"):
         reps = self.packages[package]
         if len(reps) > 1:
             if self.options.batch:
@@ -445,12 +450,12 @@ class GetPack(Script):
         else:
             idx = 0
         rep = self.repositories[reps[idx]]
-        if version.lower() != "head": # head is always valid
+        if version.lower() not in ["trunk", "head"]: # head is always valid
             versions = rep.listVersions(package)
             if not versions:
-                self.log.warning("No version found for package '%s', using 'head'" % package)
-                version = "head"
-                versions = ["head"] # this is to pass the next check
+                self.log.warning("No version found for package '%s', using 'trunk'" % package)
+                version = "trunk"
+                versions = ["trunk"] # this is to pass the next check
             if version:
                 if version not in versions:
                     vers = None # temporary variable
@@ -474,16 +479,17 @@ class GetPack(Script):
             else:
                 self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions, guessDefaultVersion(package))
-        # Fix the case of the special version "head"
-        if version.lower() == "head":
+        # Fix the case of the special version "head" (done here because we may have changed
+        # the value of version since last time we checked)
+        if version.lower() in ["trunk", "head"]:
             version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
         rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
         # Call "cmt config"
         if self.options.version_dirs:
-            pkgdir =  os.path.join(package, version, "cmt")
+            pkgdir = os.path.join(package, version, "cmt")
         else:
-            pkgdir =  os.path.join(package, "cmt")
+            pkgdir = os.path.join(package, "cmt")
         if not self.options.no_config:
             self._doCMTConfig(cwd = pkgdir)
         # return the path to the cmt directory of the package to be able to call
@@ -519,8 +525,11 @@ class GetPack(Script):
                         self.log.warning("Version '%s' not found for project '%s', using '%s'" % (version, project, vers))
                         version = vers
                     else:
-                        self.log.warning("Version '%s' not found for project '%s'" % (version, project))
-                        version = self._askVersion(versions)
+                        # Since the version is not in the filtered list and it is not a "-pre"
+                        # try to ask to the repository if it knows about it.
+                        if not rep.hasVersion(project, version, isProject = True):
+                            self.log.warning("Version '%s' not found for project '%s'" % (version, project))
+                            version = self._askVersion(versions)
             else:
                 self.log.warning("Version not specified for project '%s'" % project)
                 version = self._askVersion(versions)
@@ -529,7 +538,8 @@ class GetPack(Script):
         if version.lower() == "head":
             version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
-        rep.checkout(project, version, vers_dir = True, project = True, eclipse = self.options.eclipse)
+        rep.checkout(project, version, vers_dir = True, project = True,
+                     eclipse = self.options.eclipse, global_tag = self.options.global_tag)
         project = project.upper()
         pkgdir =  os.path.join(project, "%s_%s" % (project, version))
         return (project, version, pkgdir)
@@ -582,6 +592,8 @@ class GetPack(Script):
                 self.log.info("Using repository '%s' for '%s'", url, rep)
                 bridge = rcs.connect(url)
                 if bridge:
+                    # enable branches if requested
+                    bridge.useBranches = self.options.branches
                     self._repositories[rep] = bridge
                 else:
                     self.log.warning("Invalid repository URL '%s'", rep)
@@ -644,6 +656,9 @@ class GetPack(Script):
         # Replace old options '-rr' and '-rh' into the new equivalents
         for old, new in [ ('-rr', '-R'), ('-rh', '-H') ]:
             while old in args:
+                self.log.warning("Special option '%s' is deprecated and will "
+                                 "disappear in a future version. Use '%s' instead.",
+                                 old, new)
                 args[args.index(old)] = new
         Script.parseOpts(self, args)
         # Set the default versions if --recursive-head is requested
@@ -689,9 +704,16 @@ class GetPack(Script):
             else:
                 self.parser.error("package name is required unless '-i' is used")
 
+        if (self.project_version or self.requested_package_version or "").endswith('b'):
+            # version ending with 'b' implies --branches
+            self.options.branches = True
+
         if self.options.really_recursive or self.options.recursive_head:
             # recursion is implied by the aboves
             self.options.recursive = True
+
+        if self.options.global_tag and not self.options.project:
+            self.parser.error("Option '--global-tag' can only be used together with '--project'")
 
         if self.options.no_curses:
             global selectFromList
