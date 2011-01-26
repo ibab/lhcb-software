@@ -235,20 +235,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
   m_combine -> combineTaggers( theTag, taggers );
   debug()<<"omega: "<<theTag.omega()<<endreq;
-  //now only using OS taggers
-  std::vector<Tagger*> taggersOS;
-  taggersOS.push_back(&muon);
-  taggersOS.push_back(&elec);
-  taggersOS.push_back(&kaon);
-  taggersOS.push_back(&vtxCh);
-  FlavourTag tmp_theTagOS = theTag;
-  m_combineOS -> combineTaggers( tmp_theTagOS, taggersOS );
-  debug()<<"omegaOS: "<<tmp_theTagOS.omega()<<endreq;
-  ///fill FlavourTag object
-  theTag.setDecisionOS( tmp_theTagOS.decision() );
-  theTag.setCategoryOS( tmp_theTagOS.category() );
-  theTag.setOmegaOS   ( tmp_theTagOS.omega() );
-
+  debug()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------
   int sameside = kaonS.decision();

@@ -35,7 +35,7 @@ public:
 private:
 
   double m_ProbMin, m_omegascale, m_omegamaxbin;
-  double m_P0_Cal_All, m_P1_Cal_All, m_Eta_Cal_All;
+  double m_P0_Cal_OS, m_P1_Cal_OS, m_Eta_Cal_OS;
 
 };
 #endif // COMBINETAGGERSPROBABILITY_H

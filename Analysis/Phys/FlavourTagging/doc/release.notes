@@ -5,16 +5,23 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-01-26 Marc Grabalosa
+  - Fixed bug in vertexch for (B id<0). New calibration constants
+  - New option files MeV
+  - Calibration of per event omega for OS, OS+SS combination without calibration
+  - Optimized KSS with data
+  - Raise to v12r3
+
 !========================== FlavourTagging v12r2 2011-01-19 ==================
 
-! 2011-01-19
+! 2011-01-19 Marc Grabalosa
   - Calibration of per event omega for OS and OS+SS combination
   - Optimized KSS with mc nu=2.5
 
-! 2011-01-17
+! 2011-01-17 Marc Grabalosa
   - New optimization and calibration for strip12_v1.
 
-! 2011-01-05
+! 2011-01-05 
  . Remove calls to DVALgorithm::desktop().
 
 ! 2010-12-23 - Marc Grabalosa

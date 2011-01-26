@@ -25,7 +25,7 @@ tag.BTaggingTool.CombineTaggersProbabilityOS.P1_Cal_OS = 1.08
 tag.BTaggingTool.CombineTaggersProbabilityOS.Eta_Cal_OS = 0.338
     
 tag.BTaggingTool.addTool ( TaggerMuonTool )
-tag.BTaggingTool.TaggerMuonTool.Muon_Pt_cut   = 1.1
+tag.BTaggingTool.TaggerMuonTool.Muon_Pt_cut   = 1100
 tag.BTaggingTool.TaggerMuonTool.Muon_P_cut    = 0.0 
 tag.BTaggingTool.TaggerMuonTool.Muon_IPs_cut  = 0.0
 tag.BTaggingTool.TaggerMuonTool.Muon_lcs_cut  = 2.2
@@ -39,7 +39,7 @@ tag.BTaggingTool.TaggerMuonTool.Muon_P1_Cal   = 1.36
 tag.BTaggingTool.TaggerMuonTool.Muon_Eta_Cal  = 0.316
 
 tag.BTaggingTool.addTool ( TaggerElectronTool )
-tag.BTaggingTool.TaggerElectronTool.Ele_Pt_cut    = 1.
+tag.BTaggingTool.TaggerElectronTool.Ele_Pt_cut    = 1000
 tag.BTaggingTool.TaggerElectronTool.Ele_P_cut     = 0.0
 tag.BTaggingTool.TaggerElectronTool.Ele_lcs_cut   = 5.
 tag.BTaggingTool.TaggerElectronTool.Ele_IPs_cut   = 2.
@@ -57,8 +57,8 @@ tag.BTaggingTool.TaggerElectronTool.Ele_P1_Cal    = 1.47
 tag.BTaggingTool.TaggerElectronTool.Ele_Eta_Cal   = 0.341
 
 tag.BTaggingTool.addTool ( TaggerKaonOppositeTool )
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut   = 0.8
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P_cut    = 5.875
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut   = 800
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P_cut    = 5875
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IPs_cut  = 4.05
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IP_cut   = 1.25
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_LCS_cut  = 2.125
@@ -74,12 +74,12 @@ tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P1_Cal   = 0.89
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Eta_Cal  = 0.359
 
 tag.BTaggingTool.addTool ( TaggerKaonSameTool )
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 0.45
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut   = 2.0
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 450
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut   = 2000
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_IP_cut  = 3.5
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Phi_cut = 1.3
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Eta_cut = 1.1
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_dQ_cut  = 1.9
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_dQ_cut  = 1900
 tag.BTaggingTool.TaggerKaonSameTool.KaonS_LCS_cut    = 4.
 tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kS_cut  = 7.0
 tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kpS_cut = -5.
@@ -89,12 +89,12 @@ tag.BTaggingTool.TaggerKaonSameTool.ProbMin_kaonS    = 0.0
 tag.BTaggingTool.TaggerKaonSameTool.AverageOmega     = 0.33
 
 tag.BTaggingTool.addTool ( TaggerPionSameTool )
-tag.BTaggingTool.TaggerPionSameTool.PionSame_Pt_cut       = 0.75
-tag.BTaggingTool.TaggerPionSameTool.PionSame_P_cut        = 5.0
+tag.BTaggingTool.TaggerPionSameTool.PionSame_Pt_cut       = 750
+tag.BTaggingTool.TaggerPionSameTool.PionSame_P_cut        = 5000
 tag.BTaggingTool.TaggerPionSameTool.PionSame_IPs_cut      = 3.5
 tag.BTaggingTool.TaggerPionSameTool.PionS_LCS_cut         = 5.0
-tag.BTaggingTool.TaggerPionSameTool.PionSame_dQ_cut       = 2.5
-tag.BTaggingTool.TaggerPionSameTool.PionSame_dQ_extra_cut = 1.5 
+tag.BTaggingTool.TaggerPionSameTool.PionSame_dQ_cut       = 2500
+tag.BTaggingTool.TaggerPionSameTool.PionSame_dQ_extra_cut = 1500 
 tag.BTaggingTool.TaggerPionSameTool.Pion_ghost_cut        = -999.
 tag.BTaggingTool.TaggerPionSameTool.PionSame_ipPU_cut     = 3.
 tag.BTaggingTool.TaggerPionSameTool.PionSame_distPhi_cut  = 0.005 
