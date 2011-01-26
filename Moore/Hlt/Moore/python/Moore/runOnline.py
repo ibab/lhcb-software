@@ -14,10 +14,10 @@ def start() :
 
     Moore().RunOnline = True
 
-    ### default database setup
+    ### default database setup -- require an explit tag when running in the LHCb partition...
     Moore().Simulation = False
-    Moore().DDDBtag    = 'hlt-20100906'
-    Moore().CondDBtag  = 'hlt-20100906'
+    Moore().DDDBtag    = 'hlt-20100906' if OnlineEnv.PartitionName != 'LHCb' else 'unknown'
+    Moore().CondDBtag  = 'hlt-20100906' if OnlineEnv.PartitionName != 'LHCb' else 'unknown'
 
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
@@ -30,21 +30,11 @@ def start() :
        # Moore().CondDBtag = 'sim-20090402-vc-md100'
 
     ### pick up requested DB tag 
-    ### use old capitalization
-    if hasattr(OnlineEnv,'condDBTag') and OnlineEnv.condDBTag :
-        Moore().CondDBtag = OnlineEnv.condDBTag
-        #Moore().DDDBtag   = OnlineEnv.condDBTag
-        Moore().UseDBSnapshot = True
-    ### canonical capitalization
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
-        Moore().CondDBtag = OnlineEnv.CondDBTag
-        #Moore().DDDBtag   = OnlineEnv.CondDBTag
-        Moore().UseDBSnapshot = True
-
-    ### pick up lumi trigger rate
-    if hasattr(OnlineEnv,'LumiTrigger') and OnlineEnv.LumiTrigger :
-        Moore().ReferenceRate = sum(OnlineEnv.LumiPars)*1000 # go from KHz to Hz
-        Moore().ReferencePredicate = '( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger )'
+       tags = OnlineEnv.CondDBTag.split('|')
+       Moore().CondDBtag = tags[0]
+       Moore().DDDBtag   = tags[1]
+       Moore().UseDBSnapshot = True
 
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
