@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2011-01-26 - Marco Clemencic
+ - Fixed compilation problem on VC9
+
 ! 2011-01-17 - Marco Cattaneo
  - Fix some ICC remarks
 

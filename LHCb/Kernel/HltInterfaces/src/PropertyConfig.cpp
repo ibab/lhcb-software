@@ -39,10 +39,10 @@ PropertyConfig::updateCache() const
 
 PropertyConfig PropertyConfig::copyAndModify(const std::string& key, const std::string& value ) const
 {
-    PropertyConfig::Properties update = properties();
-    PropertyConfig::Properties::iterator i = find_if( update.begin(),  
-                                                      update.end(),
-                                                      bind(&PropertyConfig::Prop::first,_1) == key );
+    Properties update = properties();
+    Properties::iterator i = find_if( update.begin(),  
+                                      update.end(),
+                                      bind(&Prop::first,_1) == key );
     if (i==update.end()) {
           cerr << "trying to update a non-existing property: " << key << endl;
           return PropertyConfig();
