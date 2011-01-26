@@ -43,5 +43,6 @@ macro_append GaudiCheckpoint_use_linkopts "" target-icc " -Wl,--no-as-needed "
 #use DIM v* Online
 #application  dim_fork0           ../main/dim_fork0.cpp
 #application  dim_fork1           ../main/dim_fork1.cpp
+#application   dim_restart         ../main/dim_restart.cpp
 
 apply_pattern application_path
