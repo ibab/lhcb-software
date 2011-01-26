@@ -15,6 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-01-26 - Vanya Belyaev
+
+ - LoKi/GetN.h
+
+    new class to get all N-body combinations from some array 
+ 
 ! 2011-01-20 - Vanya Belyaev
 
  - src/ParticleProperties.cpp
@@ -23,7 +29,7 @@
     Thanks to Marco & Coverity
 
  - cmt/requirements 
-     version increment to v10r7 
+     version increment to v10r8
 
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC remarks
