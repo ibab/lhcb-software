@@ -5,6 +5,19 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-26 - Vanya Belyaev
+
+ - LoKi/Vertices1.h, LoKi/Particles10.h
+
+    add "missing" include for LHCb::RecVertex 
+
+    it prevents the compilation for "minimal" configuration 
+
+
+- cmt/requirements 
+
+    version increment to v9r8 
+
 ! ========================== LoKiPhys v9r7 2011-01-18 =========================
 
 ! 2011-01-16 - Vanya Belyaev

@@ -10,7 +10,9 @@
 #include "LoKi/Particles9.h"
 #include "LoKi/PhysRangeTypes.h"
 // ============================================================================
-namespace LHCb { class RecVertex ; }
+// Event 
+// ============================================================================
+#include "Event/RecVertex.h"
 // ============================================================================
 /** @file
  *
@@ -40,7 +42,7 @@ namespace LoKi
      *  
      *  @see LHCb::Particle
      *  @see LHCb::Vertex
-     *  @see LHCb::PrimVertex
+     *  @see LHCb::RecVertex
      *  @see LoKi::Particles::HasTracks
      *
      *  @see LoKi::Cuts::PVTRACK
