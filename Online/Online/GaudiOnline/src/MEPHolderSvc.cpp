@@ -57,7 +57,7 @@ MEPHolderSvc::~MEPHolderSvc()   {
 
 // IInterface implementation: Query interface
 StatusCode MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IRunable::interfaceID() )  {
+  if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

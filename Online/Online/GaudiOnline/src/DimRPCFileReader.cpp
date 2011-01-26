@@ -46,7 +46,7 @@ DimRPCFileReader::~DimRPCFileReader()  {
 
 /// IInterface implementation : queryInterface
 StatusCode DimRPCFileReader::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IRunable::interfaceID() ) {
+  if ( IRunable::interfaceID().versionMatch(riid) ) {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

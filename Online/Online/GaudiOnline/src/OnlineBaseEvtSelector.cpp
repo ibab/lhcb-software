@@ -58,9 +58,9 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
 
 // IInterface::queryInterface
 StatusCode OnlineBaseEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if ( riid == IEvtSelector::interfaceID() )
+  if ( IEvtSelector::interfaceID().versionMatch(riid) )
     *ppvIf = (IEvtSelector*)this;
-  else if ( riid == ISuspendable::interfaceID() )
+  else if ( ISuspendable::interfaceID().versionMatch(riid) )
     *ppvIf = (ISuspendable*)this;
   else
     return OnlineService::queryInterface( riid, ppvIf );

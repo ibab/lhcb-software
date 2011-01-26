@@ -85,13 +85,15 @@ namespace LHCb  {
     DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc);
     /// Standard Destructor
     virtual ~DimRPCFileReader();
-    // IInterface implementation : queryInterface
+    /// IInterface implementation : queryInterface
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
+    /// Low level overload from Service base class: sysStart
     virtual StatusCode sysStart();
     /// IService implementation: finalize the service
     virtual StatusCode finalize();
+    /// Low level overload from Service base class: sysStop
     virtual StatusCode sysStop();
     /// Incident handler implemenentation: Inform that a new incident has occured
     void handle(const Incident& inc);

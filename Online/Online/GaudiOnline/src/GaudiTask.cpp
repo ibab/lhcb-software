@@ -293,7 +293,9 @@ int GaudiTask::initApplication()  {
       if ( sc.isSuccess() )   {
         if ( loc )  {
 	  if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+	    Incident incident(name(),"APP_INITIALIZED");
 	    m_incidentSvc->addListener(this,"DAQ_ERROR");
+	    m_incidentSvc->fireIncident(incident);
 	    return 1;
 	  }
 	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
@@ -334,6 +336,8 @@ int GaudiTask::startApplication()  {
       }
       StatusCode sc = m_subMgr->start();
       if ( sc.isSuccess() )   {
+	Incident incident(name(),"APP_RUNNING");
+	m_incidentSvc->fireIncident(incident);
 	if ( 0 == m_handle )  {
 	  if ( ip->getProperty("Runable",nam).isSuccess() )  {
 	    size_t id1 = nam.find_first_of("\"");
@@ -392,6 +396,10 @@ int GaudiTask::stopApplication()  {
 	log << MSG::ERROR << "Failed to stop the application" << endmsg;
 	gauditask_task_unlock();
 	return 0;
+      }
+      else if ( m_incidentSvc ) {
+	Incident incident(name(),"APP_STOPPED");
+	m_incidentSvc->fireIncident(incident);
       }
     }
     catch(const std::exception& e) {

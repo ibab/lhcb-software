@@ -508,7 +508,7 @@ StatusCode MEPErrorAdder::run() {
 // IInterface implementation: Query interface
 StatusCode
 MEPErrorAdder::queryInterface(const InterfaceID& riid, void** ppvInterface) {
-  if ( riid == IRunable::interfaceID() )   {
+  if ( IRunable::interfaceID().versionMatch(riid) )   {
     *ppvInterface = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;
