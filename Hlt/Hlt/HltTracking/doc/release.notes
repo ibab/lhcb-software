@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-Jan-26 - Patrick Spradlin
+ - Added Hlt2CharmHadD02HHLinesConf to Hlt2Tracking.__used_configurables__ list.
+   Requires Hlt2Lines 116037.
+
 !========================== HltTracking v8r1  2011-01-20 ===================
 ! 2011-01-19 - Alex Shires
  - Add in Hlt2MuNTrackLines configurable
