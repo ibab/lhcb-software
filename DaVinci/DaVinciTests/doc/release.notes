@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-26 - Rob Lambert
+ - Maintainance on existing FSR tests
+ - merging of FSRs is now tested correctly
+ - however the files in the test are out-dated still 
+   ,and full coverage is not acheived
+
 ! 2011-01-21 - Juan Palacios
  - Increase to v2r0.
 

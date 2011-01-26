@@ -15,7 +15,7 @@
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
 import os
-f=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs.ref'),'r')
+f=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs-aftermerge.ref'),'r')
 reflines=f.readlines()
 
 #split the entry after FileRecords to get the shortes string to match
@@ -37,11 +37,13 @@ for line in reflines:
 #print foundlines
 
 ######## Check for consistency #############
-
 if foundlines!=reflines:
+  t=open(os.path.expandvars('$DAVINCITESTSROOT/tests/refs/test-FSRs-aftermerge.ref.new'),'w')
+  t.write('\n'.join(foundlines))
+  t.close()
   f.close()
   causes.append('missing FSRs')
-  result['fsrs.davinci-dumpfsrs']=result.Quote('\n'.join(['-'+line for line in reflines if line not in foundlines]))
+  result['fsrs.davinci-dumpfsrs-radiative']=result.Quote('\n'.join(['+'+line for line in foundlines if line not in reflines]+['-'+line for line in reflines if line not in foundlines]))
 
 f.close()
 </text></argument> 
