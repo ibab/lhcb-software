@@ -20,7 +20,7 @@ class Hlt2SecondLoopExampleLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
         from Configurables import HltANNSvc
-        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedSecondLoopPions        
 

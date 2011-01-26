@@ -59,7 +59,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
-        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.GoodParticles import GoodKaons
         from Hlt2SharedParticles.DiMuon import DiMuon

@@ -98,7 +98,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import bindMembers
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
-        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.BasicParticles import Electrons, NoCutsPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons

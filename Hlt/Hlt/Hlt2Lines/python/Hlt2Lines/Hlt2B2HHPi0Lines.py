@@ -44,7 +44,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
         from Configurables import HltANNSvc
-        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from Hlt2SharedParticles.Pi0 import MergedPi0s,ResolvedPi0s
