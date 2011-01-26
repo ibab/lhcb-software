@@ -1,3 +1,7 @@
+2011-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed bug #75480 <https://savannah.cern.ch/bugs/?75480>
+
 2011-01-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* data/configuration.csh: added the /etc/xdg directory for the system

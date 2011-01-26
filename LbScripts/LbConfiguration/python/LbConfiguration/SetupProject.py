@@ -578,7 +578,8 @@ class GetNightlyCMTPROJECTPATH(ContentHandler):
         today = days[self._day]
         yesterday = days[self._day-1]
         d = [ s.replace("%DAY%",today).replace("%YESTERDAY%",yesterday)
-              for s in self._path ]
+              for s in self._path
+              if os.path.exists(s) ] # drop entries that do not exist (bug #75480)
         return d
     def value(self):
         """Return the CMTPROJECTPATH.
