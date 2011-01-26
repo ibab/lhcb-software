@@ -18,8 +18,8 @@ branches          cmt doc src python
 # use   Package          v1r*    Hat
 
 
-use DaVinciKernel              v*      Phys
-
+use DaVinciKernel      v*       Phys
+use DaVinciTools       v*       Phys
 
 # NeuroBayes
 # NB is currently only supported on linux GCC (WIN32 libs in preparation)
@@ -30,7 +30,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          StrippingNeuroBayes    ../src/*.cpp 
+library          StrippingNeuroBayes    ../src/*.cpp -import=AIDA 
 
 
 #============================================================================

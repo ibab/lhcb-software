@@ -4,6 +4,11 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-01-26 - Ulrich Kerzel
+- first version of lifetime unbiased B->hh network
+  - train on MC10 with pre-cuts
+  - also include teacher.cc, logfiles, etc in new directory "trainings" for Bhh net 
+
 !======================= StrippingNeuroBayes v1r1 2011-01-21 =================
 
 ! 2011-01-14 - Juan Palacios
