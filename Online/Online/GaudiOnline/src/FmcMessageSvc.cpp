@@ -14,7 +14,7 @@
 #include "RTL/rtl.h"
 #define BUF_SZ 4096
 #define SYSLOG_BUF_SZ 990
-
+#define NO_FIFO (-1)
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc)
 
@@ -26,8 +26,8 @@ LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
   setErrorLogger(this);
   hostName[0] = 0;
   pName       = NULL;
-  fifoFD      = -1;
-  dfltFifoFD  = -1;
+  fifoFD      = NO_FIFO;
+  dfltFifoFD  = NO_FIFO;
   declareProperty("fifoPath",m_fifoPath= fifo ? fifo : "/tmp/logSrv.fifo");
   declareProperty("noDrop",  m_noDrop=false);
   declareProperty("tryN",    m_tryN=2);
@@ -35,14 +35,12 @@ LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
 }
 
 /// Destructor.
-LHCb::FmcMessageSvc::~FmcMessageSvc()
-{
+LHCb::FmcMessageSvc::~FmcMessageSvc()   {
   setErrorLogger(0);
 }
 
 /// IInterface implementation : queryInterface
-StatusCode LHCb::FmcMessageSvc::queryInterface(const InterfaceID& riid, void **ppIf)
-{
+StatusCode LHCb::FmcMessageSvc::queryInterface(const InterfaceID& riid, void **ppIf)  {
   if( IErrorLogger::interfaceID().versionMatch(riid) )  {
     *ppIf=(IErrorLogger*)this;
     addRef();
@@ -60,21 +58,42 @@ StatusCode LHCb::FmcMessageSvc::initialize()  {
 
 /// Start Service 
 StatusCode LHCb::FmcMessageSvc::start()   {
-  StatusCode sc=OnlineMessageSvc::start();
+  StatusCode sc = OnlineMessageSvc::start();
   if(sc.isFailure())return sc;
   // After a fork, we have to reload here the utgid
-  if(fifoFD!=-1)  {
+  if( fifoFD != NO_FIFO )  {
     close(fifoFD);
-    fifoFD=-1;
+    fifoFD = NO_FIFO;
+  }
+  if ( pName ) {
+    delete pName;
+    pName = 0;
   }
   return openFifo();
 }
 
+/// Restart Service 
+StatusCode LHCb::FmcMessageSvc::restart()  {
+  StatusCode sc = setProperties();
+  if ( sc.isSuccess() ) {
+    if( fifoFD != NO_FIFO )  {
+      close(fifoFD);
+      fifoFD = NO_FIFO;
+    }
+    if ( pName ) {
+      delete pName;
+      pName = 0;
+    }
+    return openFifo();
+  }
+  return sc;
+}
+
 void LHCb::FmcMessageSvc::changeFifo(Property& ) {
   /*-------------------------------------------------------------------------*/
-  if(fifoFD!=-1)  {
+  if(fifoFD != NO_FIFO)  {
     close(fifoFD);
-    fifoFD=-1;
+    fifoFD = NO_FIFO;
   }
   openFifo();
 }
@@ -111,7 +130,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
         if( S_ISFIFO(statBuf.st_mode))     {        /* dfltFifoPath is a FIFO */
           /* open dfltFifoPath */
           dfltFifoFD = ::open(dfltFifoPath,O_RDWR|O_NONBLOCK|O_APPEND);
-          if(dfltFifoFD!=-1)      {         /* dfltFifoPath open() succeeded */
+          if(dfltFifoFD!=NO_FIFO)      {         /* dfltFifoPath open() succeeded */
             errU|=L_DIM;
           }
         }
@@ -148,7 +167,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   /* open error log */
   if ( m_noDrop ) fifoFD = ::open(fifo_name.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
   else            fifoFD = ::open(fifo_name.c_str(),O_RDWR|O_NONBLOCK|O_APPEND);
-  if(fifoFD==-1)  {
+  if(fifoFD==NO_FIFO)  {
     if(errno==ENXIO)    {
       bool dflt = 0 == strcmp(fifo_name.c_str(),dfltFifoPath);
       printM(errU,MSG::FATAL,__func__,"open(\"%s\"): No process has the FIFO "
@@ -189,9 +208,9 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   /* succeeded in opening the secondary logger and we have no more need of   */
   /* the default logger.                                                     */
   if(strcmp(fifo_name.c_str(),dfltFifoPath))  {
-    if(dfltFifoFD!=-1)    {
+    if(dfltFifoFD!=NO_FIFO)    {
       close(dfltFifoFD);
-      dfltFifoFD=-1;
+      dfltFifoFD=NO_FIFO;
     }
   }
   return StatusCode::SUCCESS;
@@ -199,9 +218,9 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
 
 /// Finalize Service
 StatusCode LHCb::FmcMessageSvc::finalize()  {
-  if(fifoFD!=-1)  {
+  if(fifoFD!=NO_FIFO)  {
     close(fifoFD);
-    fifoFD=-1;
+    fifoFD=NO_FIFO;
   }
   return OnlineMessageSvc::finalize();
 }
@@ -312,7 +331,7 @@ void LHCb::FmcMessageSvc::getPName()   {
     exit(1);
   }
   pathName[len]='\0';
-  pName=strdup(basename(pathName));
+  pName = strdup(basename(pathName));
   return;
 }
 /*****************************************************************************/
@@ -375,7 +394,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
 /* send a message to the DIM logger */
 int LHCb::FmcMessageSvc::dimLoggerMsgSend(char *buf,int fifoFD)
 {
-  if(fifoFD==-1)return -1;
+  if(fifoFD==NO_FIFO)return -1;
   return write(fifoFD,buf,strlen(buf));
 }
 /*****************************************************************************/

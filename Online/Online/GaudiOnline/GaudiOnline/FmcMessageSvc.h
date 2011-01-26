@@ -30,6 +30,9 @@ namespace LHCb  {
     /// Implementation of IService::start()
     virtual StatusCode start();
 
+    /// Implementation of IService::restart()
+    virtual StatusCode restart();
+
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
 
