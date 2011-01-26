@@ -33,6 +33,9 @@ class Hadrons_draft2011 :
         from Phi_draft2011 import Phi_draft2011 as PhiLines
         lines.extend ( PhiLines().ActiveHlt2Lines() )
 
+        from CharmLines_draft2011 import CharmLines
+        lines.extend ( CharmLines().ActiveHlt2Lines() )
+
         return lines
 
     def Thresholds(self) : 
@@ -44,5 +47,8 @@ class Hadrons_draft2011 :
 
         from Phi_draft2011 import Phi_draft2011 as PhiLines
         d.update ( PhiLines().Thresholds() )
+
+        from CharmLines_draft2011 import CharmLines
+        d.update ( CharmLines().Thresholds() )
 
         return d

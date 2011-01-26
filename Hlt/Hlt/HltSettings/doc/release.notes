@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Jan-26 - Patrick Spradlin
+ - Added new draft settings file CharmLines_draft2011.py
+ - Modified Hadrons_draft2011.py to use the new Charm settings.
+ * Requires Hlt2Lines 116037.
+
 !========================== HltSettings v5r1   2011-01-20 ===================
 ! 2011-01-19 - V. Gligorov 
  - Add inclusive Phi and XGamma lines to the draft 2011 settings, following
