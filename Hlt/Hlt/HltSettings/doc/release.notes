@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-Jan-26 - Patrick Spradlin
- - Added new draft settings file CharmLines_draft2011.py
- - Modified Hadrons_draft2011.py to use the new Charm settings.
+ - Added new draft settings file CharmHadronLines_draft2011.py
+ - Modified Hadrons_draft2011.py to use the new CharmHadron settings.
  * Requires Hlt2Lines 116037.
 
 !========================== HltSettings v5r1   2011-01-20 ===================

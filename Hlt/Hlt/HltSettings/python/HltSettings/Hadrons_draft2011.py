@@ -33,8 +33,8 @@ class Hadrons_draft2011 :
         from Phi_draft2011 import Phi_draft2011 as PhiLines
         lines.extend ( PhiLines().ActiveHlt2Lines() )
 
-        from CharmLines_draft2011 import CharmLines
-        lines.extend ( CharmLines().ActiveHlt2Lines() )
+        from CharmHadronLines_draft2011 import CharmHadronLines
+        lines.extend ( CharmHadronLines().ActiveHlt2Lines() )
 
         return lines
 
@@ -48,7 +48,7 @@ class Hadrons_draft2011 :
         from Phi_draft2011 import Phi_draft2011 as PhiLines
         d.update ( PhiLines().Thresholds() )
 
-        from CharmLines_draft2011 import CharmLines
-        d.update ( CharmLines().Thresholds() )
+        from CharmHadronLines_draft2011 import CharmHadronLines
+        d.update ( CharmHadronLines().Thresholds() )
 
         return d

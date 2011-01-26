@@ -1,4 +1,4 @@
-class CharmLines :
+class CharmHadronLines :
     """
     Threshold settings for Hlt1 and 2 in nominal conditions (list of exclusive)
     
