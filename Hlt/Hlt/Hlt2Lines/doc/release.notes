@@ -11,6 +11,9 @@
 ! 2011-Jan-26 - Patrick Spradlin
  - Copied 2-body hadronic charm lines to new file/configurable
    Hlt2CharmHadD02HHLines.
+ - Removed obsolete Hlt2CharmLines.py.
+   Removal requires updated: HltConf 116042 and HltTracking 116043.
+   Also recommended: HltSettings 116045.
 
 ! 2011-01-25 - Roel Aaij
  - Remove import of PhysDesktop from line definitions
