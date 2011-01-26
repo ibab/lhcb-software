@@ -15,8 +15,8 @@ void XComp(){
   c2->SetGridx();
 
   Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3872 ,0 ,0};
-  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.5 ,0, 0};
-  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.2 , 0, 0};
+  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.4 ,0, 0};
+  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.1 , 0, 0};
   Float_t totErrors[nov]; Float_t Errors[nov];
   int i = 0;
   for (i = 0; i < nov -1 ; ++i ) {

@@ -32,6 +32,12 @@ void StyleTH1F(TH1F* histo){
   histo->SetTitle("");
 }
 
+void StyleTH1D(TH1D* histo){
+  setAxisFont(histo ->GetXaxis());  
+  setAxisFont(histo ->GetYaxis());  
+  histo->SetTitle("");
+}
+
 void StyleGraph(TGraph* graph){
   setAxisFont(graph ->GetXaxis());  
   setAxisFont(graph ->GetYaxis());  
