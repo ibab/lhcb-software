@@ -68,6 +68,8 @@ namespace LHCb  {
     bool                      m_masterProcess;
     /// Internal flag to indicate child checking
     bool                      m_restartChildren;
+    /// Internal flag to indicate if chldren should be killed in releaseChildren
+    bool                      m_killChildren;
     /// Reference to the IncidentSvc instance
     IIncidentSvc             *m_incidentSvc;
     /// Reference to the steering FSM unit (DimTaskFSM)
@@ -260,6 +262,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("TaskType",           m_taskType      = "Gaudi");
   declareProperty("UtgidPattern",       m_utgid         = "%N_%T_%02d");
   declareProperty("ExitAfterCheckpoint",m_exit          = true);
+  declareProperty("KillChildren",       m_killChildren  = false);
 }
 
 /// IInterface implementation : queryInterface
@@ -418,9 +421,9 @@ int CheckpointSvc::numCores() const {
 
 /// Release children. We are no longer the owner of them!
 void CheckpointSvc::releaseChildren() {
-  // If the children are not in a process group themselves,
-  // we can try and send them a SIGTERM to stop....
-  if ( !m_childSessions ) {
+  if ( m_killChildren && !m_childSessions ) {
+    // If the children are not in a process group themselves,
+    // we can try and send them a SIGTERM to stop....
     int proc_group = getpgrp();
     killpg(proc_group,SIGTERM);
   }
@@ -514,8 +517,8 @@ int CheckpointSvc::saveCheckpoint() {
       int ret = chkpt.checkpoint(fd);
       ::close(fd);
       MsgStream log(msgSvc(),name());
-      log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
-      log << MSG::INFO << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+      log << MSG::ALWAYS << MARKER << " FINISHED CHECKPOINT " << endmsg;
+      log << MSG::ALWAYS << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
       return StatusCode::SUCCESS;
     }
     else {
@@ -689,13 +692,18 @@ int CheckpointSvc::waitChildren() {
       }
     }
   } while (w_pid>0);
+  if ( count == 0 ) {
+    for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
+      if ( (*i).second == -1 ) ++count;
+    }
+  }
   return count;
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
 void CheckpointSvc::handle(const Incident& inc) {
   MsgStream log(msgSvc(),name());
-  log << MSG::ALWAYS << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   
   if ( inc.type() == "APP_INITIALIZED" ) {
     if ( !m_checkPoint.empty() ) {
