@@ -125,6 +125,7 @@ HIDDEN(size_t) m_writemem(int fd, const void* ptr, size_t size) {
   static char const zeroes[4096] = { 0 };
   const char* buff = (const char*)ptr;
   char const *bf = buff;
+  int num_zero = 0;
 
   for(size_t sz = size; sz > 0; ) {
     ssize_t rc = 0;
@@ -138,6 +139,7 @@ HIDDEN(size_t) m_writemem(int fd, const void* ptr, size_t size) {
     if (wt == 0) {
       rc = (sz > sizeof zeroes ? sizeof zeroes : sz);
       m_writemem(fd, zeroes, rc);
+      num_zero += rc;
     }
     // Otherwise, check for real error
     else {
@@ -150,6 +152,9 @@ HIDDEN(size_t) m_writemem(int fd, const void* ptr, size_t size) {
     // It's ok, we're on to next part
     sz -= rc;
     bf += rc;
+  }
+  if ( num_zero > 0 ) {
+    mtcp_output(MTCP_INFO,"writefile: error %d NULL bytes...\n",num_zero);
   }
   return size;
 }
