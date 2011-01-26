@@ -106,6 +106,7 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_name);
   ::lib_rtl_install_printer(printout,this);
+  DimServer::autoStartOff();
   connectDIM().ignore();
 }
 
@@ -120,11 +121,11 @@ StatusCode DimTaskFSM::connectDIM(DimCommand* cmd) {
   m_name = RTL::processName();
   m_monitor.pid = ::lib_rtl_pid();
   svcname       = m_name+"/status";
-  ::dis_start_serving((char*)m_name.c_str());
   m_command = cmd ? cmd : new Command(m_name, this);
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname   = m_name+"/fsm_status";
   m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
+  ::dis_start_serving((char*)m_name.c_str());
   return StatusCode::SUCCESS;
 }
 
@@ -323,7 +324,7 @@ void DimTaskFSM::handle(const Event& ev)  {
 
 StatusCode DimTaskFSM::startupDone()  {
   m_stateName = ST_NAME_NOT_READY;
-  DimServer::start(m_name.c_str());
+  ::dis_start_serving((char*)m_name.c_str());
   declareState(ST_NOT_READY);
   return StatusCode::SUCCESS;
 }
