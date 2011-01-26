@@ -96,7 +96,7 @@ namespace LHCb  {
     /// Low level overload from Service base class: sysStop
     virtual StatusCode sysStop();
     /// Incident handler implemenentation: Inform that a new incident has occured
-    void handle(const Incident& inc);
+    virtual void handle(const Incident& inc);
     /// IRunable implementation : Run the class implementation
     virtual StatusCode run();
   };
