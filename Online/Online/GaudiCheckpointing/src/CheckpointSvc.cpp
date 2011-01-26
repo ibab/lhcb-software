@@ -1,6 +1,6 @@
 //  ============================================================
 //
-//  CheckpointSvc.cpp
+//  CheckpointSvc.h
 //  ------------------------------------------------------------
 //
 //  Package   : GaudiCheckpointing
@@ -9,16 +9,21 @@
 //
 //  ===========================================================
 // $Id: CheckpointSvc.cpp,v 1.7 2010-03-03 13:16:49 frankb Exp $
+#ifndef GAUDICHECKPOINTING_CHECKPOINTSVC_H
+#define GAUDICHECKPOINTING_CHECKPOINTSVC_H
 
 // Include files from Gaudi
 #include "GaudiKernel/Service.h" 
-#include "CPP/Interactor.h"
+#include "GaudiKernel/IIncidentListener.h" 
 
 extern "C" {
 #include "dis.hxx"
 }
 
 #include <map>
+
+// Forward declarations
+class IIncidentSvc;
 
 /*
  *    LHCb namespace declaration
@@ -34,7 +39,7 @@ namespace LHCb  {
    *  @author Markus Frank
    *  @date   2005-10-13
    */
-  class CheckpointSvc : public Service, public Interactor   {
+  class CheckpointSvc : public Service, public IIncidentListener   {
     typedef std::map<int,int> Children;
     typedef void*             Files;
 
@@ -61,6 +66,10 @@ namespace LHCb  {
 
     /// Internal flag to identify the master process with respect to children
     bool                      m_masterProcess;
+    /// Internal flag to indicate child checking
+    bool                      m_restartChildren;
+    /// Reference to the IncidentSvc instance
+    IIncidentSvc             *m_incidentSvc;
     /// Reference to the steering FSM unit (DimTaskFSM)
     ITaskFSM                 *m_fsm;
     /// Opaque file buffer to restore child environment
@@ -105,8 +114,8 @@ namespace LHCb  {
     /// Destructor
     virtual ~CheckpointSvc()  {    }
 
-    /// Interactor overload: react to Sensor stimuli
-    virtual void handle(const Event& ev);
+    /// IInterface overload: queryInterface
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
     /// Service overload: Initialize the service
     virtual StatusCode initialize();
@@ -114,40 +123,59 @@ namespace LHCb  {
     /// Service overload: Start the service
     virtual StatusCode start();
 
-    /// Service overload: stop the algorithm
-    virtual StatusCode stop() {
-      waitChildren();
-      return Service::stop();
-    }
+    /// Service overload: stop the service
+    virtual StatusCode stop();
 
-    /// Service overload: Initialize the service
-    virtual StatusCode finalize() {
-      m_fsm = 0;
-      waitChildren();
-      m_children.clear();
-      return Service::finalize();
-    }
+    /// Service overload: finalize the service
+    virtual StatusCode finalize();
+
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    virtual void handle(const Incident& inc);
+
+    /// Set flag for child checking
+    void restartChildren(bool value) { m_restartChildren=value; }
+
+    /// Release children. We are no longer the owner of them!
+    void releaseChildren();
   };
 }
-
+#endif // GAUDICHECKPOINTING_CHECKPOINTSVC_H
+//  ============================================================
+//
+//  CheckpointSvc.cpp
+//  ------------------------------------------------------------
+//
+//  Package   : GaudiCheckpointing
+//
+//  Author    : Markus Frank
+//
+//  ===========================================================
+// $Id: CheckpointSvc.cpp,v 1.7 2010-03-03 13:16:49 frankb Exp $
 
 #include "GaudiKernel/IJobOptionsSvc.h" 
-#include "GaudiOnline/ITaskFSM.h"
+#include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiOnline/ITaskFSM.h"
 #include "CPP/CheckpointRestoreWrapper.h"
-
-#include "CPP/IocSensor.h"
-
-#include "CPP/Event.h"
 #include "RTL/rtl.h"
 
 #include <cerrno>
 #include <cstdlib>
-#include <dlfcn.h>
 #include <fcntl.h>
-#include <sys/wait.h>
+#ifdef _WIN32
+  typedef int pid_t;
+  static inline pid_t waitpid(int, int*, int) { return 0; }
+  static int killpg(int,int) { return -1;}
+  static int getpgrp() { return -1; }
+  #define WUNTRACED   1
+  #define WCONTINUED  1
+  #define WNOHANG     1
+  #include <io.h>
+#else
+  #include <unistd.h>
+  #include <sys/wait.h>
+#endif
 #include <sys/stat.h>
-#include <unistd.h>
 
 using namespace std;
 
@@ -158,10 +186,6 @@ typedef CheckpointRestoreWrapper CHKPT;
 #define CHKPT_get CheckpointRestoreWrapper__instance
 #define MARKER "=============================================="
 
-// Helper function to write, when threads are stopped and libC does not work
-//static inline void _WRITE(const char* x)   { ::write(STDERR_FILENO,x,strlen(x)); }
-//static inline void _WRITE(const string& x) { ::write(STDERR_FILENO,x.c_str(),x.length()); }
-
 namespace  {
 
   /** @class Command
@@ -169,41 +193,63 @@ namespace  {
     *  @author M.Frank
     */
   class Command : public DimCommand  {
-    /// Command target
-    Interactor* m_master;
-
+    /// Reference to checkpoint service
+    LHCb::CheckpointSvc* m_check;
+    /// Reference to main task control instance
+    LHCb::ITaskFSM*      m_fsm;
   public:
     /// Constructor
-    Command(const std::string& nam, Interactor* master) 
-      : DimCommand(nam.c_str(), (char*)"C"), m_master(master) { }
+    Command(const std::string& nam, LHCb::CheckpointSvc* svc, LHCb::ITaskFSM* fsm) 
+      : DimCommand(nam.c_str(), (char*)"C"), m_check(svc), m_fsm(fsm) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
       using namespace LHCb;
       // Decouple as quickly as possible from the DIM command loop !
-      IocSensor& ioc = IocSensor::instance();
       std::string cmd = getString();
-      if      ( cmd == "configure"  )
-	ioc.send(m_master,ITaskFSM::ST_READY);
-      else if ( cmd == "start"      )
-	ioc.send(m_master,ITaskFSM::ST_RUNNING);
-      else if ( cmd == "stop"       )
-	ioc.send(m_master,ITaskFSM::ST_STOPPED);
-      else if ( cmd == "reset"      )
-	ioc.send(m_master,ITaskFSM::ST_NOT_READY);
-      else if ( cmd == "unload"     )
-	ioc.send(m_master,ITaskFSM::ST_UNKNOWN);
-      else
-	ioc.send(m_master,ITaskFSM::ST_ERROR);
+      if      ( cmd == "configure"  ) {
+	// This may never occur again for the checkpointed process!
+	m_fsm->output(MSG::FATAL,"Logic error: A checkpointed process may never be initialized a second time!");
+	m_fsm->setTargetState(ITaskFSM::ST_READY);
+	m_fsm->declareState(ITaskFSM::ST_READY);
+	m_check->restartChildren(false);
+      }
+      else if ( cmd == "start"      ) {
+	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+	m_fsm->declareState(ITaskFSM::ST_RUNNING);
+	m_check->restartChildren(true);
+      }
+      else if ( cmd == "stop"       ) {
+	m_fsm->setTargetState(ITaskFSM::ST_STOPPED);
+	m_fsm->declareState  (ITaskFSM::ST_STOPPED);
+	m_check->restartChildren(false);
+      }
+      else if ( cmd == "reset"      ) {
+	m_fsm->setTargetState(ITaskFSM::ST_NOT_READY);
+	m_fsm->declareState(ITaskFSM::ST_NOT_READY);
+	m_check->restartChildren(false);
+      }
+      else if ( cmd == "unload"     ) {
+	m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
+	m_fsm->declareState(ITaskFSM::ST_UNKNOWN);	
+	// Sleep for 1 second, then exit
+	::lib_rtl_sleep(1000);
+	m_check->releaseChildren();
+	::exit(0);
+      }
+      else {
+	m_fsm->declareState(ITaskFSM::ST_ERROR);
+	m_fsm->declareSubState(ITaskFSM::UNKNOWN_ACTION);
+      }
     }
   };
 }
 
-
 /// Standard constructor
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc) 
-  : Service(nam,pSvc), m_fsm(0), m_files(0)
+  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
 {
   m_masterProcess = false;
+  m_restartChildren = false;
   declareProperty("NumberOfInstances",  m_numInstances  = 0);
   declareProperty("UseCores",           m_useCores      = false);
   declareProperty("ChildSessions",      m_childSessions = false);
@@ -216,6 +262,17 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("ExitAfterCheckpoint",m_exit          = true);
 }
 
+/// IInterface implementation : queryInterface
+StatusCode CheckpointSvc::queryInterface(const InterfaceID& riid, void** ppIf)   {
+  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
+    *ppIf = (IRunable*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return Service::queryInterface(riid, ppIf);
+}
+
+
 /// Service overload: Initialize the service
 StatusCode CheckpointSvc::initialize() {
   StatusCode sc = Service::initialize();
@@ -224,7 +281,11 @@ StatusCode CheckpointSvc::initialize() {
     typedef void* (*instance_t)();
     string proc = RTL::processName();
     instance_t func = 0;
-    func = (instance_t)dlsym(0,"DimTaskFSM_instance");
+    sc = System::getProcedureByName(0,"DimTaskFSM_instance",(System::EntryPoint*)&func);
+    if( !sc.isSuccess() ) {
+      log << MSG::FATAL << "Cannot access function: DimTaskFSM_instance" << endmsg;
+      return sc;
+    }
     log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
     m_fsm = (ITaskFSM*)func();
     log << " Interactor: " << (unsigned long) m_fsm << endmsg;
@@ -232,6 +293,14 @@ StatusCode CheckpointSvc::initialize() {
       CHKPT& chkpt =  CHKPT_get();
       chkpt.setPrint(m_printLvl);
     }
+    sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
+    if( !sc.isSuccess() ) {
+      log << MSG::FATAL << "Service [IncidentSvc] not found" << endmsg;
+      return sc;
+    }
+    m_incidentSvc->addListener(this,"APP_INITIALIZED");
+    m_incidentSvc->addListener(this,"APP_STARTED");
+    m_incidentSvc->addListener(this,"APP_STOPPED");
   }
   return sc;
 }
@@ -244,40 +313,42 @@ StatusCode CheckpointSvc::start() {
     log << MSG::FATAL << "Failed to start service base class." << endmsg;
     return sc;
   }
-  if ( m_numInstances != 0 || !m_checkPoint.empty() ) {
+  if ( m_numInstances != 0 )   {
     stopMainInstance();
-    if ( !(sc=saveCheckpoint()).isSuccess() ) {
-      MsgStream log(msgSvc(),name());
-      log << MSG::FATAL << "Failed to create checkpoint for process:" 
-	  << RTL::processName() << endmsg;
-      return sc;
-    }
-    if ( !m_checkPoint.empty() ) {
-      CHKPT& chkpt =  CHKPT_get();
-      int typ = chkpt.restartType();
-      if ( typ == 1 )             // restore from file in progress
-	sc = finishRestore();
-      else
-	sc = finishCheckpoint();
-      if ( !sc.isSuccess() ) {
-	return sc;
+    int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
+    for(int i=0; i<n_child; ++i)    {
+      pid_t pid = forkChild(i+1);
+      if ( 0 == pid )   {
+	return execChild();
       }
     }
-    if ( m_numInstances != 0 ) {
-      int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
-      for(int i=0; i<n_child; ++i)    {
-	pid_t pid = forkChild(i+1);
-	if ( 0 == pid )   {
-	  return execChild();
-	}
-      }
-    }
-    resumeMainInstance();
-    if ( m_numInstances != 0 ) {
-      return watchChildren();  // Will never return for the parent's instance!
-    }
+    m_restartChildren = true;
+    m_state = m_targetState; // Update internal Gaudi FSM
+    resumeMainInstance();    // And restore execution
+    m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+    m_fsm->declareState(ITaskFSM::ST_RUNNING);
+    return watchChildren();  // Will never return for the parent's instance!
   }
   return sc;
+}
+
+/// Service overload: stop the service
+StatusCode CheckpointSvc::stop() {
+  waitChildren();
+  return Service::stop();
+}
+
+/// Service overload: finalize the service
+StatusCode CheckpointSvc::finalize() {
+  if ( m_incidentSvc ) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+    m_incidentSvc = 0;
+  }
+  m_fsm = 0;
+  waitChildren();
+  m_children.clear();
+  return Service::finalize();
 }
 
 namespace {
@@ -345,6 +416,16 @@ int CheckpointSvc::numCores() const {
   return n_core;
 }
 
+/// Release children. We are no longer the owner of them!
+void CheckpointSvc::releaseChildren() {
+  // If the children are not in a process group themselves,
+  // we can try and send them a SIGTERM to stop....
+  if ( !m_childSessions ) {
+    int proc_group = getpgrp();
+    killpg(proc_group,SIGTERM);
+  }
+}
+
 /// Perform actions after writing the checkpoint file
 int CheckpointSvc::finishCheckpoint() {
   if ( m_exit ) {
@@ -364,18 +445,18 @@ int CheckpointSvc::finishCheckpoint() {
 int CheckpointSvc::finishRestore() {
   CHKPT& chkpt =  CHKPT_get();
   chkpt.resume();
-  MsgStream log(msgSvc(),name());
-  string utgid = buildChildUTGID(0);
-  ::setenv("UTGID",utgid.c_str(),1);
-  log << MSG::INFO << "Update process environment and restart options." << endmsg;
   chkpt.updateEnv();
   RTL::RTL_reset();
   StatusCode sc = parseRestartOptions();
   if ( !sc.isSuccess() ) {
-    log << MSG::FATAL << "Failed to parse job options after checkpoint restart." << endmsg;
+    MsgStream err(msgSvc(),name());
+    err << MSG::FATAL << "Failed to parse job options after checkpoint restart." << endmsg;
     return sc.getCode();
   }
-  log << MSG::ALWAYS << "Stop threads after restart from checkpoint." << endmsg;
+  MsgStream log(msgSvc(),name());
+  log << MSG::INFO;
+  log << "Update process environment and restart options." << endmsg;
+  log << "Stop threads after restart from checkpoint. " << endmsg;
   chkpt.stop();
   return StatusCode::SUCCESS;
 }
@@ -384,7 +465,6 @@ int CheckpointSvc::finishRestore() {
 int CheckpointSvc::parseRestartOptions()    {
   const char* env = ::getenv("RESTARTOPTS");
   if ( env ) {
-    MsgStream log(msgSvc(),name());
     const char* opt_path = ::getenv("JOBOPTSEARCHPATH");
     SmartIF<IJobOptionsSvc> jos(serviceLocator()->service("JobOptionsSvc",true));
     if( !jos.isValid() ) {
@@ -393,13 +473,30 @@ int CheckpointSvc::parseRestartOptions()    {
     // set first generic Properties
     StatusCode sc = jos->readOptions(env,opt_path ? opt_path : "");
     if( sc.isSuccess() )   {
-      sc = setProperties();
+      SmartIF<IProperty> prp(msgSvc());
+      sc = jos->setMyProperties("MessageSvc", prp);
       if ( sc.isSuccess() ) {
-	//log << MSG::WARNING << "Processed RESTARTOPTS:" << env << endmsg;
-	return StatusCode::SUCCESS;
+     	sc = setProperties();
+	if ( sc.isSuccess() ) {
+	  RTL::RTL_reset();
+	  string utgid = buildChildUTGID(0);
+	  ::setenv("UTGID",utgid.c_str(),1);
+	  const char* dns = ::getenv("DIM_DNS_NODE");
+	  MsgStream log(msgSvc(),name());
+	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
+	      << " Process:" << RTL::processName() 
+	      << " Node:" << RTL::nodeNameShort() 
+	      << " DNS:" << (const char*)(dns ? dns : "???????")
+	      << endmsg;
+	  return StatusCode::SUCCESS;
+	}
+	MsgStream err(msgSvc(),name());
+	err << MSG::FATAL << "Failed to update properties of MessageSvc." << endmsg;
+	return sc.getCode();
       }
     }
-    log << MSG::FATAL << "Failed to process RESTARTOPTS:" << env << endmsg;
+    MsgStream err(msgSvc(),name());
+    err << MSG::FATAL << "Failed to process RESTARTOPTS:" << env << endmsg;
     return sc.getCode();
   }
   return StatusCode::SUCCESS;
@@ -409,7 +506,7 @@ int CheckpointSvc::parseRestartOptions()    {
 int CheckpointSvc::saveCheckpoint() {
   if ( !m_checkPoint.empty() ) {{
       MsgStream log(msgSvc(),name());
-      log << MSG::ALWAYS << MARKER << " WRITING  CHECKPOINT " << MARKER << endmsg;
+      log << MSG::ALWAYS << MARKER << " WRITING  CHECKPOINT " << endmsg;
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);
     if ( fd > 0 ) {
@@ -417,13 +514,13 @@ int CheckpointSvc::saveCheckpoint() {
       int ret = chkpt.checkpoint(fd);
       ::close(fd);
       MsgStream log(msgSvc(),name());
-      log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << MARKER << endmsg;
+      log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
       log << MSG::INFO << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
       return StatusCode::SUCCESS;
     }
     else {
-      MsgStream log(msgSvc(),name());
-      log << MSG::ERROR << "Failed to create checkpoint file:" << m_checkPoint << endmsg;
+      MsgStream err(msgSvc(),name());
+      err << MSG::ERROR << "Failed to create checkpoint file:" << m_checkPoint << endmsg;
     }
     return StatusCode::FAILURE;
   }
@@ -435,8 +532,8 @@ int CheckpointSvc::stopMainInstance() {
   MsgStream log(msgSvc(),name());
   CHKPT& chkpt =  CHKPT_get();
   m_fsm->disconnectDIM();
-  //::dis_stop_serving();
-  //::dim_stop();
+  ::dis_stop_serving();
+  ::dim_stop();
   ::lib_rtl_usleep(10000);
   chkpt.stop();
   if ( m_files ) ::free(m_files);
@@ -451,15 +548,21 @@ int CheckpointSvc::stopMainInstance() {
 /// Resume main process instance from checkpoint. Restarts dim
 int CheckpointSvc::resumeMainInstance() {
   CHKPT& chkpt =  CHKPT_get();
-  string proc = RTL::processName();
+  string proc  = RTL::processName();
   const char* dns = 0;
   // Let the paret resume its work
   chkpt.resume();
   dns = ::getenv("DIM_DNS_NODE");
+  MsgStream log(msgSvc(),name()); 
+
+  log << MSG::INFO;
+  log << "ProcessName:" << proc << " ";
   if ( dns ) {
+    log << "DIM_DNS_NODE:" << dns << " ";
     ::dis_set_dns_node((char*)dns);
     ::dic_set_dns_node((char*)dns);
   }
+  log << endmsg;
   ::dim_init();
   //
   // We have to overload the underlying dim command, since for the 
@@ -467,7 +570,10 @@ int CheckpointSvc::resumeMainInstance() {
   // This new command make sure nothing will happen 
   // ever again inside Gaudi.
   //
-  Command* command = new Command(proc,this);
+  Command* command = 0;
+  if ( FSMState() == Gaudi::StateMachine::RUNNING ) {
+    command = new Command(proc,this,m_fsm);
+  }
   m_fsm->connectDIM(command);
   ::dis_start_serving((char*)proc.c_str());
   return 1;
@@ -535,7 +641,7 @@ int CheckpointSvc::watchChildren() {
   while(1)   {
     ::lib_rtl_sleep(2000);
     int count = waitChildren();
-    if ( count > 0 ) {
+    if ( count > 0 && m_restartChildren ) {
       stopMainInstance();
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
 	int id  = (*i).first;
@@ -543,8 +649,7 @@ int CheckpointSvc::watchChildren() {
 	  int pid = forkChild(id);
 	  if ( 0 == pid )    {
 	    // This is a child process. Exit here and ensure start() is completed!
-	    execChild();
-	    return StatusCode::SUCCESS;
+	    return execChild();
 	  }
 	  // Parents continue with the loop until all dead childen are restarted!
 	}
@@ -553,9 +658,13 @@ int CheckpointSvc::watchChildren() {
     }
     else {
       MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "Parent process sleeping. Children:";
-      for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i)
-	log << (*i).second << " ";
+      log << MSG::INFO << "watchChildren:";
+      for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
+	if ( (*i).second != -1 )
+	  log << (*i).second << " ";
+	else
+	  log << "No." << (*i).first << "/DEAD ";
+      }
       log << endmsg;
     }
   }
@@ -583,41 +692,30 @@ int CheckpointSvc::waitChildren() {
   return count;
 }
 
-/// Interactor overload: react to Sensor stimuli
-void CheckpointSvc::handle(const Event& ev) {
-  if(ev.eventtype == IocEvent)  {
-    switch(ev.type) {
-    case ITaskFSM::ST_READY:
-      // This may never occur again for the checkpointed process!
-      m_fsm->output(MSG::FATAL,"Logic error: A checkpointed process may never be initialized a second time!");
-      m_fsm->setTargetState(ITaskFSM::ST_READY);
-      m_fsm->declareState(ITaskFSM::ST_ERROR);
-      return;
-    case ITaskFSM::ST_RUNNING:
-      m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-      m_fsm->declareState(ITaskFSM::ST_RUNNING);
-      return;
-    case ITaskFSM::ST_STOPPED:
-      m_fsm->setTargetState(ITaskFSM::ST_STOPPED);
-      m_fsm->declareState  (ITaskFSM::ST_STOPPED);
-      return;
-    case ITaskFSM::ST_NOT_READY:
-      m_fsm->setTargetState(ITaskFSM::ST_NOT_READY);
-      m_fsm->declareState(ITaskFSM::ST_NOT_READY);
-      return;
-    case ITaskFSM::ST_UNKNOWN:
-      m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
-      m_fsm->declareState(ITaskFSM::ST_UNKNOWN);
-      
-      // Sleep for 1 second, then exit
-      ::lib_rtl_sleep(1000);
-      ::exit(0);
-      return;
-    default:
-      m_fsm->declareState(ITaskFSM::ST_ERROR);
-      m_fsm->declareSubState(ITaskFSM::UNKNOWN_ACTION);
-      return;
+/// Incident handler implemenentation: Inform that a new incident has occured
+void CheckpointSvc::handle(const Incident& inc) {
+  MsgStream log(msgSvc(),name());
+  log << MSG::ALWAYS << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  
+  if ( inc.type() == "APP_INITIALIZED" ) {
+    if ( !m_checkPoint.empty() ) {
+      StatusCode sc;
+      stopMainInstance();
+      if ( !(sc=saveCheckpoint()).isSuccess() ) {
+	MsgStream log(msgSvc(),name());
+	log << MSG::FATAL << "Failed to create checkpoint for process:" 
+	    << RTL::processName() << endmsg;
+	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
+      }
+      CHKPT& chkpt =  CHKPT_get();
+      int typ = chkpt.restartType();
+      sc = ( typ == 1 ) ? finishRestore() : finishCheckpoint();
+      if ( !sc.isSuccess() ) {
+	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
+      }
+      resumeMainInstance();
     }
   }
+  else if ( inc.type() == "APP_STOPPED" ) {
+  }
 }
-
