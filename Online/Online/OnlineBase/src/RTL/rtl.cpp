@@ -540,7 +540,9 @@ namespace RTL {
     s_processName = s_dataInterfaceName = s_nodeName = s_nodeNameShort = "";
   }
   void RTL_init_sigs() {
+#ifndef _WIN32
     RTL::ExitSignalHandler::instance().init();
+#endif
   }
   const string& processName()  {
     if ( s_processName.empty() )  {
