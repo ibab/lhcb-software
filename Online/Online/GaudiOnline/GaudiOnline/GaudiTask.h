@@ -47,7 +47,7 @@ namespace LHCb  {
     /// Property: optional options
     std::string       m_optOptions;
     /// Property: Auto start flag
-    bool              m_autostart;
+    int               m_autostart;
     /// Main appliation manager object
     IAppMgrUI*        m_appMgr;
     /// Sub application manager object

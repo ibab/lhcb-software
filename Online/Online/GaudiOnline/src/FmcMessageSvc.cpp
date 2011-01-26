@@ -24,13 +24,13 @@ LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
 {
   const char* fifo = ::getenv("LOGFIFO");
   setErrorLogger(this);
-  hostName[0]=0;
-  pName=NULL;
-  fifoFD=-1;
-  dfltFifoFD=-1;
+  hostName[0] = 0;
+  pName       = NULL;
+  fifoFD      = -1;
+  dfltFifoFD  = -1;
   declareProperty("fifoPath",m_fifoPath= fifo ? fifo : "/tmp/logSrv.fifo");
-  declareProperty("noDrop",m_noDrop=false);
-  declareProperty("tryN",m_tryN=2);
+  declareProperty("noDrop",  m_noDrop=false);
+  declareProperty("tryN",    m_tryN=2);
   m_fifoPath.declareUpdateHandler(&FmcMessageSvc::changeFifo, this);
 }
 
@@ -102,15 +102,15 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   errU=L_STD|L_SYS;
   /* If the logger is a secondary logger, try to open also the default       */
   /* logger to send it possible errors in opening the secondary logger.      */
-  if(strcmp(fifo_name.c_str(),dfltFifoPath))  {
+  if( ::strcmp(fifo_name.c_str(),dfltFifoPath))  {
     /* check if dfltFifoPath is writable */
-    if(access(dfltFifoPath,W_OK)!=-1) {   /* write access to dfltFifoPath OK */
+    if( ::access(dfltFifoPath,W_OK)!=-1) {   /* write access to dfltFifoPath OK */
       /* get dfltFifoPath information */
-      if(stat(dfltFifoPath,&statBuf)!=-1) {  /* dfltFifoPath information got */
+      if( ::stat(dfltFifoPath,&statBuf)!=-1) {  /* dfltFifoPath information got */
         /* check if dfltFifoPath is a FIFO */
-        if(S_ISFIFO(statBuf.st_mode))     {        /* dfltFifoPath is a FIFO */
+        if( S_ISFIFO(statBuf.st_mode))     {        /* dfltFifoPath is a FIFO */
           /* open dfltFifoPath */
-          dfltFifoFD=open(dfltFifoPath,O_RDWR|O_NONBLOCK|O_APPEND);
+          dfltFifoFD = ::open(dfltFifoPath,O_RDWR|O_NONBLOCK|O_APPEND);
           if(dfltFifoFD!=-1)      {         /* dfltFifoPath open() succeeded */
             errU|=L_DIM;
           }
@@ -120,18 +120,16 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   }
   /*-------------------------------------------------------------------------*/
   /* check if m_fifoPath is writable */
-  if(access(fifo_name.c_str(),W_OK)==-1)    {              /* access denied */
+  if( ::access(fifo_name.c_str(),W_OK)==-1)    {              /* access denied */
     printM(errU,MSG::FATAL,__func__,"access(\"%s\"): %s!",fifo_name.c_str(),
            strerror(errno));
-    if(errno==ENOENT)    {
-      if(!strcmp(fifo_name.c_str(),dfltFifoPath))  {
-        printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" (without -p or -s "
-               "options) on the node \"%s\"!",hostName);
-      }
-      else    {
-        printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv -p %s -s <srv_name>\""
-               " on the node \"%s\"!",fifo_name.c_str(),hostName);
-      }
+    if( errno==ENOENT )    {
+      bool dflt = 0 == strcmp(fifo_name.c_str(),dfltFifoPath);
+      printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" %s -p %s -s %s on the node \"%s\"!",
+	     dflt ? "(without" : "",
+	     dflt ? "or"       : fifo_name.c_str(),
+	     dflt ? "options)" : "<srv_name>",
+	     hostName);
     }
     return StatusCode::FAILURE;
   }
@@ -148,24 +146,21 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
     return StatusCode::FAILURE;
   }
   /* open error log */
-  if(m_noDrop)fifoFD=open(fifo_name.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
-  else fifoFD=open(fifo_name.c_str(),O_RDWR|O_NONBLOCK|O_APPEND);
+  if ( m_noDrop ) fifoFD = ::open(fifo_name.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
+  else            fifoFD = ::open(fifo_name.c_str(),O_RDWR|O_NONBLOCK|O_APPEND);
   if(fifoFD==-1)  {
     if(errno==ENXIO)    {
+      bool dflt = 0 == strcmp(fifo_name.c_str(),dfltFifoPath);
       printM(errU,MSG::FATAL,__func__,"open(\"%s\"): No process has the FIFO "
              "\"%s\" open for reading!",fifo_name.c_str(),fifo_name.c_str());
-      if(!strcmp(fifo_name.c_str(),dfltFifoPath))      {
-        printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" (without -p or -s "
-               "options) on the node \"%s\"!",fifo_name.c_str(),hostName);
-      }
-      else      {
-        printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv -p %s -s <srv_name>"
-               "\" on the node \"%s\"!",fifo_name.c_str(),hostName);
-      }
+      printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" %s -p %s -s %s on the node \"%s\"!",
+	     dflt ? "(without" : "",
+	     dflt ? "or"       : fifo_name.c_str(),
+	     dflt ? "options)" : "<srv_name>",
+	     hostName);
     }
     else    {
-      printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",fifo_name.c_str(),
-             strerror(errno));
+      printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",fifo_name.c_str(),::strerror(errno));
     }
     return StatusCode::FAILURE;
   }
@@ -222,7 +217,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
                "[FATAL]", "[ALWAYS]"};
   time_t now;
   struct tm lNow;
-  char sNow[13];                                           /* Oct12-134923\0 */
+  char sNow[32];                                           /* Oct12-134923\0 */
   char header[BUF_SZ/2];/* Oct12-134923[DEBUG]pcdom: psSrv(psSrv_0): main(): */
   size_t msgLen=0;
   size_t bufAvailLen=0;
@@ -233,7 +228,8 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   /* time string */
   now=time(NULL);
   localtime_r(&now,&lNow);
-  strftime(sNow,13,"%b%d-%H%M%S",&lNow);
+  strftime(sNow,sizeof(sNow),"%b%d-%H%M%S",&lNow);
+  sNow[sizeof(sNow)-1] = 0;
   /*-------------------------------------------------------------------------*/
   /* compose message header */
   typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
@@ -333,7 +329,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   struct tm lNow;
   char rawMsg[BUF_SZ]="";
   char msg[BUF_SZ]="";
-  char sNow[13];                                           /* Oct12-134923\0 */
+  char sNow[32];                                           /* Oct12-134923\0 */
   va_list ap;
 
   /*-------------------------------------------------------------------------*/
@@ -347,7 +343,8 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   /* time string */
   now=time(NULL);
   localtime_r(&now,&lNow);
-  strftime(sNow,13,"%b%d-%H%M%S",&lNow);
+  strftime(sNow,sizeof(sNow),"%b%d-%H%M%S",&lNow);
+  sNow[sizeof(sNow)-1] = 0;
   /*-------------------------------------------------------------------------*/
   /* compose message string with header */
   severity = (severity>int(sizeof(sl)/sizeof(sl[0]))) 
@@ -355,8 +352,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],hostName,
            pName,utgid.c_str(),fName,rawMsg);
   /*-------------------------------------------------------------------------*/
-  /* add string terminator if missed */
-  if(!memchr(msg,0,BUF_SZ))msg[BUF_SZ-1]='\0';
+  msg[BUF_SZ-1]='\0';
   /* add newline if missed */
   if(!strchr(msg,'\n'))  {
     int msgLen=strlen(msg);

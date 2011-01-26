@@ -88,7 +88,7 @@ GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
   propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
   propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
-  propertyMgr().declareProperty("AutoStart",      m_autostart   = false);
+  propertyMgr().declareProperty("AutoStart",      m_autostart   = 0);
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
   ::PyEval_InitThreads();
@@ -130,10 +130,20 @@ StatusCode GaudiTask::run()  {
         ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
       }
       m_appMgr = ui;
-      if ( m_autostart )  {
+      if ( m_autostart == 1 )  {
+	std::cout << "Commencing checkpoint sequence..." << std::endl;
+	IOCSENSOR.send(this,CONFIGURE);
+      }
+      else if ( m_autostart == 2 )  {
 	std::cout << "Commencing autostart sequence..." << std::endl;
 	IOCSENSOR.send(this,CONFIGURE);
 	IOCSENSOR.send(this,INITIALIZE);
+      }
+      else if ( m_autostart == 3 )  {
+	std::cout << "Commencing autostart sequence..." << std::endl;
+	IOCSENSOR.send(this,CONFIGURE);
+	IOCSENSOR.send(this,INITIALIZE);
+	IOCSENSOR.send(this,START);
       }
       StatusCode sc = m_appMgr->run();
       if ( !sc.isSuccess() ) {

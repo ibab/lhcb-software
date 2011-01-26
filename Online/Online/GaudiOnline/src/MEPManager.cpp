@@ -178,6 +178,7 @@ StatusCode MEPManager::start()  {
 
 StatusCode MEPManager::i_init()  {
   MsgStream log(msgSvc(), name());
+  setProperties();
   m_procName = RTL::processName();
   log << MSG::INFO << m_connectWhen << "> Process name:" << m_procName
       << " Connecting to MBM Buffers." << endmsg;

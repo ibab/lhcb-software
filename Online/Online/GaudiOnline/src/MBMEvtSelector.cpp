@@ -391,6 +391,7 @@ StatusCode MBMEvtSelector::initialize()    {
 /// IService overload: start MEP manager service
 StatusCode MBMEvtSelector::start() {
   StatusCode sc = OnlineService::start();
+  setProperties();
   if ( m_currContext ) {
     StatusCode sc = m_currContext->connect(input());
     if ( !sc.isSuccess() ) {

@@ -80,6 +80,12 @@ StatusCode OnlineMessageSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
+/// Start Service 
+StatusCode OnlineMessageSvc::start() {
+  setProperties();
+  return Service::start();
+}
+
 void OnlineMessageSvc::setupLimits(Property& prop) {
   int ic = 0;
   if (prop.name() == "fatalLimit") {

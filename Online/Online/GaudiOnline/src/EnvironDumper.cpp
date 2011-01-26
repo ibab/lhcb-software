@@ -19,12 +19,14 @@ namespace LHCb  {
   protected:
     /// Property: Probability to send signal. If < 0, signal is always sent
     std::vector<std::string> m_env;
+    /// Property: print level
+    int                      m_level;
 
     /// Dump the environment. Note we need LHCb::FmcMsgService.doPrintALways = True for this!
     StatusCode dump()  {
       typedef std::vector<std::string> _V;
       MsgStream log(msgSvc(),name());
-      log << MSG::ALWAYS;
+      log << MSG::Level(m_level);
       for(_V::const_iterator i=m_env.begin(); i!=m_env.end(); ++i) {
 	const std::string& e = *i;
 	const char* val = ::getenv(e.c_str());
@@ -37,19 +39,20 @@ namespace LHCb  {
     /// Standard constructor
     EnvironDumper(const std::string& nam,ISvcLocator* pSvc) : Algorithm(nam,pSvc)  {
       declareProperty("Environment",m_env);
+      declareProperty("PrintLevel", m_level=MSG::INFO);
     }
     /// Destructor
     virtual ~EnvironDumper()  {} 
     /// Initialization
-    virtual StatusCode initialize() { return dump(); }
+    virtual StatusCode initialize() { return dump();                  }
     /// Start
-    virtual StatusCode start()      { return dump(); }
+    virtual StatusCode start()      { setProperties(); return dump(); }
     /// Start
-    virtual StatusCode stop()       { return StatusCode::SUCCESS; }
+    virtual StatusCode stop()       { return StatusCode::SUCCESS;     }
     /// Start
-    virtual StatusCode finalize()   { return StatusCode::SUCCESS; }
+    virtual StatusCode finalize()   { return StatusCode::SUCCESS;     }
     /// Main execution
-    virtual StatusCode execute()    { return StatusCode::SUCCESS; }
+    virtual StatusCode execute()    { return StatusCode::SUCCESS;     }
   };
 }
 

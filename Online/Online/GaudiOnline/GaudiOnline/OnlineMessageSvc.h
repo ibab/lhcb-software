@@ -51,6 +51,9 @@ namespace LHCb {
     /// Implementation of IService::initialize()
     virtual StatusCode initialize();
 
+    /// Implementation of IService::start()
+    virtual StatusCode start();
+
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
 

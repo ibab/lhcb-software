@@ -233,8 +233,8 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string msgsvc  = "MessageSvc";
   std::string opts    = "";
   std::string optopts = "";
-  bool autostart = cli.getopt("autostart",3) != 0;
-  bool evtLoop   = cli.getopt("loop",4) != 0;
+  bool autostart  = cli.getopt("autostart",3) != 0;
+  bool evtLoop    = cli.getopt("loop",4) != 0;
   cli.getopt("dll",3,dll);
   cli.getopt("tasktype",8,type);
   cli.getopt("runable",3,runable);
@@ -252,7 +252,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
     p->setProperty(StringProperty("Runable",runable));
     p->setProperty(StringProperty("OptionalOptions",optopts));
     p->setProperty(BooleanProperty("HaveEventLoop",evtLoop));
-    p->setProperty(BooleanProperty("AutoStart",autostart));
+    p->setProperty(IntegerProperty("AutoStart",autostart ? 2 : 0));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       return runner->run();
