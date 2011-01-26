@@ -349,7 +349,7 @@ again:
       return 0;
     }
     Thread::saveSysInfo();
-    mtcp_output(MTCP_INFO,"stopThreads: finished\n");
+    mtcp_output(MTCP_INFO,"stopThreads: finished --pid %d\n",mtcp_sys_getpid());
     return 1;
   }
   return 0;

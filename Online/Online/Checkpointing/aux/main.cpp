@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
     int prt = MTCP_WARNING, opts=0;
     {
       const char* file_name = 0;
-      for(int i=0; i<argc; ++i) {
+      for(int i=1; i<argc; ++i) {
 	if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
 	else if ( argc>i && argv[i][1] == 'p' ) prt   = argv[++i][0]-'0';
 	else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
       }
       if ( 0 == file_name ) return usage();
       mtcp_set_debug_level(prt);
-      mtcp_output(MTCP_ERROR,"restore: print level:%d input:%s\n",prt,file_name);
+      mtcp_output(MTCP_INFO,"restore: print level:%d input:%s\n",prt,file_name);
       load(file_name,&func,pSys);
     }
     // Now call the restore function - it shouldn't return

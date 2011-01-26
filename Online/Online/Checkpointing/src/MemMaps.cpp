@@ -126,6 +126,19 @@ AreaWriteHandler::AreaWriteHandler(int fd)
 
 int AreaWriteHandler::handle(int, const Area& a)    {
   // Skip if the memory region is where we actually write!
+  if ( a.high == chkpt_sys.addrEnd ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
+    return 0;
+  }  
+  else if( *(int*)a.name == *(int*)"[vdso]" ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP VDSO area:");
+    return 0;
+  }
+  else if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
+    return 0;
+  }
+
   long rc = a.write(m_fd);
   if ( rc > 0 )  {
     updateCounts(a);
