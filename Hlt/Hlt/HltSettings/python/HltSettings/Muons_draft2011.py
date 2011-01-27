@@ -42,7 +42,12 @@ class Muons_draft2011 :
             'Hlt2DiMuonDY1',
             'Hlt2DiMuonDY2',
             'Hlt2DiMuonDY3',
-            'Hlt2DiMuonDY4'
+            'Hlt2DiMuonDY4',
+
+            # control rate via flight distance chi2, sum IP chi2 cuts - avoid PT cuts
+            'Hlt2Mu1Track',
+            'Hlt2Mu2Track',
+            'Hlt2Mu3Track'
                  
             ]
             
@@ -59,6 +64,7 @@ class Muons_draft2011 :
 
         from Hlt2Lines.Hlt2InclusiveMuonLines  import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
+        from Hlt2Lines.Hlt2MuNTrackLines  import Hlt2MuNTrackLinesConf
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
             'UnbiasedDiMuonMinMass'    : 2900      # MeV
@@ -94,27 +100,53 @@ class Muons_draft2011 :
             'SingleMuonPt'         : 1300      # MeV
             ,'SingleMuonIP'        : 0.11     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
-          ##   ,'MuTrackMuPt'         : 1000       # MeV
-##             ,'MuTrackTrPt'         : 600       # MeV
-##             ,'MuTrackTrChi2'       : 5.0       # dimensionless
-##             ,'MuTrackChi2'         : 15.0      # dimensionless
-##             ,'MuTrackMuIPChi2'     : 9.0       # dimensionless
-##             ,'MuTrackTrIPChi2'     : 9.0       # dimensionless
-##             ,'MuTrackDoca'         : 0.200     # mm
-##             ,'MuTrackFDChi2'       : 64.0      # dimensionless
-##             ,'MuTrackMass'         : 2000      # MeV
-##             ,'MuTrackSumPt'        : 2200      # MeV
-##             ,'MuTrackCorMass'      : 7000.0    # MeV
-##             ,'MuTrackDIRA'         : 0.995       # dimensionless
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0001
                               ,'Hlt2SingleMuon'        : 0.02 # make sure that Hlt1SingleMuonNoIPL0 * Hlt2SingleMuon = 0.02
                               ,'Hlt2SingleHighPTMuon'  : 1.0
-                           #   ,'Hlt2IncMuTrack'        : 1.0
-
                               }
             }}
                   )
         
+        d.update( { Hlt2MuNTrackLinesConf : {
+            'L0FILTER'           : "L0_CHANNEL_RE('.*Muon')"
+            ,'HLT1FILTER'         : ""
+            #mu + n tracks filter cuts
+            ,'MCOR_MAX'           : 7000.0  # MeV
+            ,'MCOR_MIN'           : 0.0     # MeV 
+            ,'MCOR_NTR_MIN'       : 4000.0  # MeV 
+            ,'SUM_PT_1TR_MIN'     : 2000.0  # MeV
+            ,'SUM_PT_2TR_MIN'     : 2000.0  # MeV
+            ,'SUM_PT_3TR_MIN'     : 2600.0  # MeV
+            ,'MAX_PT_MIN'         : 1500.0  # MeV 
+            ,'MAX_PT_NTR_MIN'     : 1500.0  # MeV 
+            ,'SUM_IPCHI2_1TR_MIN' : 50      # unitless
+            ,'SUM_IPCHI2_2TR_MIN' : 75      # unitless
+            ,'SUM_IPCHI2_3TR_MIN' : 100     # unitless
+            ,'BPVVDCHI2_MIN'      : 32.0    # unitless
+            ,'MIN_TRCHI2DOF_MAX'  : 3       # unitless
+            #combination cuts
+            ,'AMAXDOCA_MAX'       : 0.12    # mm 
+            ,'AMAXDOCA_MIN'       : 0.12    # mm 
+            ,'DIRA_LOOSE_MIN'     : 0.99    # rad
+            ,'DIRA_TIGHT_MIN'     : 0.995   # rad
+            # mother cuts
+            ,'MASS_1TR_VETO'      : 2000.0  # MeV 
+            ,'MASS_2TR_VETO'      : 3000.0  # MeV 
+            ,'MASS_3TR_VETO'      : 4000.0  # MeV 
+            # cuts on input particles
+            ,'ALL_MIPCHI2DV_MIN'  : 16.0    # unitless
+            ,'ALL_TRCHI2DOF_MAX'  : 3.0     # unitless
+            ,'ALL_MU_PT_MIN'      : 800.0   # MeV
+            ,'ALL_TR_PT_MIN'      : 600.0   # MeV
+            ,'ALL_P_MIN'          : 5000.0  # MeV
+            ,'Prescale'   : { 'Hlt2Mu1Track'   : 1.0
+                              ,'Hlt2Mu2Track'  : 1.0
+                              ,'Hlt2Mu3Track'  : 1.0
+                              }
+            }}
+                  )
+
+
         return d
     
 

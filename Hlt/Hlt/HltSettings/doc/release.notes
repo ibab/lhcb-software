@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011--1-27
+ - Adding Hlt2MuNTrackLines to the Muons_draft2011.py. Cuts kept identical.
+ * Requires Hlt2Lines 116138
+
 ! 2011-Jan-26 - Patrick Spradlin
  - Added new draft settings file CharmHadronLines_draft2011.py
  - Modified Hadrons_draft2011.py to use the new CharmHadron settings.
