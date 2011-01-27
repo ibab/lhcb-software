@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           ROMon
-version           v1r26
+version           v1r27
 #============================================================================
 branches          cmt doc src ROMon
 include_path none
