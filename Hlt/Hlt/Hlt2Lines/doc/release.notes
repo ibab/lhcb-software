@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 - Johannes Albrecht
+ - Hlt2InclusiveDimuonLines: add chi2 cuts, come cleanup
+
 ! 2011-Jan-26 - Patrick Spradlin
  - Copied 2-body hadronic charm lines to new file/configurable
    Hlt2CharmHadD02HHLines.
