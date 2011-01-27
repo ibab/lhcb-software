@@ -165,19 +165,27 @@ namespace LHCb  {
 #include <cstdlib>
 #include <fcntl.h>
 #ifdef _WIN32
-  typedef int pid_t;
-  static inline pid_t waitpid(int, int*, int) { return 0; }
-  static int killpg(int,int) { return -1;}
-  static int getpgrp() { return -1; }
-  #define WUNTRACED   1
-  #define WCONTINUED  1
-  #define WNOHANG     1
   #include <io.h>
+  typedef int pid_t;
+  static inline  int   setenv(const char*, const char*, int) { return -1; }
+  static inline  pid_t waitpid(int, int*, int) { return -1; }
+  static inline  int   killpg(int,int) { return -1;}
+  static inline  int   getpgrp() { return -1; }
+  static inline  int   setsid() { return -1; }
+  #define WUNTRACED     1
+  #define WCONTINUED    1
+  #define WNOHANG       1
+  #define STDIN_FILENO  1
+  #define STDOUT_FILENO 2
+  #define STDERR_FILENO 3
+  #define S_IWUSR       _S_IWRITE 
+  #define S_IRUSR       _S_IREAD
 #else
   #include <unistd.h>
   #include <sys/wait.h>
 #endif
 #include <sys/stat.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -397,10 +405,10 @@ string CheckpointSvc::buildChildUTGID(int which) const {
 
 /// Access the number of cors in the machines
 int CheckpointSvc::numCores() const {
-  int rc=0, n_core=-1, fd = open("/proc/stat",O_RDONLY);
+  int n_core=-1, fd = ::open("/proc/stat",O_RDONLY);
   if ( fd ) {
     char buff[2048], *q=0, *p=0;
-    rc = ::read(fd,buff,sizeof(buff));
+    int rc = ::read(fd,buff,sizeof(buff));
     ::close(fd);
     if ( rc > 0 ) {
       for(q=p=buff; p<buff+rc;++p) {
