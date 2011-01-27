@@ -301,8 +301,8 @@ StatusCode CheckpointSvc::initialize() {
     m_fsm = (ITaskFSM*)func();
     log << " Interactor: " << (unsigned long) m_fsm << endmsg;
     if ( !m_checkPoint.empty() || m_numInstances != 0 ) {
-      CHKPT& chkpt =  CHKPT_get();
-      chkpt.setPrint(m_printLvl);
+      CHKPT* chkpt =  CHKPT_get();
+      chkpt->setPrint(m_printLvl);
     }
     sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
     if( !sc.isSuccess() ) {
@@ -454,9 +454,9 @@ int CheckpointSvc::finishCheckpoint() {
 
 /// Perform all action necessary to properly startup the process after restore from the checkpoint file
 int CheckpointSvc::finishRestore() {
-  CHKPT& chkpt =  CHKPT_get();
-  chkpt.resume();
-  chkpt.updateEnv();
+  CHKPT* chkpt =  CHKPT_get();
+  chkpt->resume();
+  chkpt->updateEnv();
   RTL::RTL_reset();
   StatusCode sc = parseRestartOptions();
   if ( !sc.isSuccess() ) {
@@ -468,7 +468,7 @@ int CheckpointSvc::finishRestore() {
   log << MSG::INFO;
   log << "Update process environment and restart options." << endmsg;
   log << "Stop threads after restart from checkpoint. " << endmsg;
-  chkpt.stop();
+  chkpt->stop();
   return StatusCode::SUCCESS;
 }
 
@@ -521,8 +521,8 @@ int CheckpointSvc::saveCheckpoint() {
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);
     if ( fd > 0 ) {
-      CHKPT& chkpt =  CHKPT_get();
-      int ret = chkpt.checkpoint(fd);
+      CHKPT* chkpt =  CHKPT_get();
+      int ret = chkpt->checkpoint(fd);
       ::close(fd);
       MsgStream log(msgSvc(),name());
       log << MSG::ALWAYS << MARKER << " FINISHED CHECKPOINT " << endmsg;
@@ -541,28 +541,28 @@ int CheckpointSvc::saveCheckpoint() {
 /// Checkpoint main process instance. Stops dim
 int CheckpointSvc::stopMainInstance() {
   MsgStream log(msgSvc(),name());
-  CHKPT& chkpt =  CHKPT_get();
+  CHKPT* chkpt =  CHKPT_get();
   m_fsm->disconnectDIM();
   ::dis_stop_serving();
   ::dim_stop();
   ::lib_rtl_usleep(10000);
-  chkpt.stop();
+  chkpt->stop();
   if ( m_files ) ::free(m_files);
   m_files = 0;
-  chkpt.getFileDescriptors(&m_files);
+  chkpt->getFileDescriptors(&m_files);
   if ( m_dumpFD ) {
-    chkpt.dumpFileDescriptors(m_files);
+    chkpt->dumpFileDescriptors(m_files);
   }
   return 1;
 }
 
 /// Resume main process instance from checkpoint. Restarts dim
 int CheckpointSvc::resumeMainInstance() {
-  CHKPT& chkpt =  CHKPT_get();
+  CHKPT* chkpt =  CHKPT_get();
   string proc  = RTL::processName();
   const char* dns = 0;
   // Let the paret resume its work
-  chkpt.resume();
+  chkpt->resume();
   dns = ::getenv("DIM_DNS_NODE");
   MsgStream log(msgSvc(),name()); 
 
@@ -594,10 +594,10 @@ int CheckpointSvc::resumeMainInstance() {
 int CheckpointSvc::forkChild(int which) {
   string proc  = RTL::processName();
   string utgid = buildChildUTGID(which);
-  CHKPT& chkpt =  CHKPT_get();
+  CHKPT* chkpt =  CHKPT_get();
 
   ::setenv("UTGID",utgid.c_str(),1);
-  pid_t pid = chkpt.forkInstance();
+  pid_t pid = chkpt->forkInstance();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
   }
@@ -616,7 +616,7 @@ int CheckpointSvc::forkChild(int which) {
 
 /// Execute child process
 int CheckpointSvc::execChild() {
-  CHKPT& chkpt =  CHKPT_get();
+  CHKPT* chkpt =  CHKPT_get();
   MsgStream log(msgSvc(),name());
   log << MSG::ALWAYS;
   for(int j=0; j<3; ++j) {
@@ -624,7 +624,7 @@ int CheckpointSvc::execChild() {
       log << "Error dup fd:" << j << " " << ::strerror(errno) << endmsg;
     }
   }
-  chkpt.setFileDescriptors(m_files);
+  chkpt->setFileDescriptors(m_files);
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
     if (sid < 0) {
@@ -639,7 +639,7 @@ int CheckpointSvc::execChild() {
     ::dic_set_dns_node((char*)dns);
   }
   // Now it should be save to restart the children
-  chkpt.startChild();
+  chkpt->startChild();
   string proc = RTL::processName();
   ::dim_init();
   ::dis_start_serving((char*)proc.c_str());
@@ -723,8 +723,8 @@ void CheckpointSvc::handle(const Incident& inc) {
 	    << RTL::processName() << endmsg;
 	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
       }
-      CHKPT& chkpt =  CHKPT_get();
-      int typ = chkpt.restartType();
+      CHKPT* chkpt =  CHKPT_get();
+      int typ = chkpt->restartType();
       sc = ( typ == 1 ) ? finishRestore() : finishCheckpoint();
       if ( !sc.isSuccess() ) {
 	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
