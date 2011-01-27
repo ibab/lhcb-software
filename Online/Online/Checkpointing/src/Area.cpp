@@ -66,7 +66,6 @@ int Area::streamOut(void* ptr, bool write_nulls)    const {
     print(MTCP_DEBUG,"Wrote memory area:");
     return addr_diff(out,ptr);
   }
-  return 0;
 }
 
 /// Write memory area descriptor and data to file given by the file handle
@@ -113,7 +112,6 @@ int Area::write(int fd, bool write_nulls)    const {
     bytes += writeMarker(fd,MEMAREA_END_MARKER);
     return bytes;
   }
-  return 0;
 }
 
 /// Calculate the size of the data to be written

@@ -65,7 +65,8 @@ int test_thread_checkpoint() {
     mtcp_output(MTCP_FATAL,"Error CREATE main thread: %s rc=%d\n",::strerror(errno),rc);
   }
   int count = 0;
-  while(1)  {
+  bool run = true;
+  while(run)  {
     ::sleep(2);
     ++count;
     if ( count == 2 ) {
@@ -90,6 +91,7 @@ int test_thread_checkpoint() {
       }
       ::fprintf(stdout,"...Child ended...exit...\n");
       ::fflush(stdout);
+      run = false;
       _exit(0);
     }
   }

@@ -38,13 +38,16 @@ static unsigned long int myinfo_gs;
       mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs) \
     )
 
+#ifdef CHECKPOINT_TERMINAL
+static struct      termios saved_termios;
+static int         saved_termios_exists = 0;
+#endif
+
 static Thread     *s_threads = 0;
 static FutexState  restoreinprog;
 static int         s_restoring = 0;
 static sigset_t    sigpending_global;    // pending signals for the process
 static int         dmtcp_info_pid_virtualization_enabled = 0;
-static struct      termios saved_termios;
-static int         saved_termios_exists = 0;
 #define SIG_THREAD_CANCEL 32
 #define SIG_THREAD_SETXID 33
 
@@ -152,12 +155,12 @@ static void growstack(int kbStack) {
 extern "C" pid_t __getpid()  {
   return mtcp_sys_getpid();
 }
-asm (".global getpid ; .type getpid,@function ; getpid = __getpid");
+__asm__ (".global getpid ; .type getpid,@function ; getpid = __getpid");
 
 extern "C" int __getppid()  {
   return mtcp_sys_getppid();
 }
-asm (".global getppid ; .type getppid,@function ; getppid = __getppid");
+__asm__ (".global getppid ; .type getppid,@function ; getppid = __getppid");
 
 #include <fcntl.h>
 
@@ -166,7 +169,7 @@ extern "C" int __open(const char* pathname, int flags, mode_t mode)  {
   mtcp_output(MTCP_DEBUG,"Open file: fd:%d=%s with flags: %08X Mode:%X\n",rc,pathname,flags,mode);
   return rc;
 }
-asm (".global open ; .type open,@function ; open = __open");
+__asm__ (".global open ; .type open,@function ; open = __open");
 
 
 #define mtcp_sys_creat(args...)  mtcp_inline_syscall(creat,2,args)
@@ -176,20 +179,20 @@ extern "C" int __creat(const char* pathname, mode_t mode)  {
   mtcp_output(MTCP_DEBUG,"Create file: fd:%d=%s with Mode:%X\n",rc,pathname,mode);
   return rc;
 }
-asm (".global creat ; .type creat,@function ; creat = __creat");
+__asm__ (".global creat ; .type creat,@function ; creat = __creat");
 
 extern "C" int __close(int fd)  {
   mtcp_output(MTCP_DEBUG,"Close file: %d\n",fd);
   return mtcp_sys_close(fd);
 }
-asm (".global close ; .type close,@function ; close = __close");
+__asm__ (".global close ; .type close,@function ; close = __close");
 
 extern "C" int __pipe(int fd[2])  {
   int rc = mtcp_sys_pipe(fd);
   mtcp_output(MTCP_DEBUG,"Pipe: rc=%d fd=[%d,%d]\n",rc,fd[0],fd[1]);
   return rc;
 }
-asm (".global pipe ; .type pipe,@function ; pipe = __pipe");
+__asm__ (".global pipe ; .type pipe,@function ; pipe = __pipe");
 
 /****************************************************************************
  *									     
@@ -255,7 +258,7 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
   }
   return (rc);
 }
-asm (".global clone ; .type clone,@function ; clone = __clone");
+__asm__ (".global clone ; .type clone,@function ; clone = __clone");
 
 
 /// Standard constructor
@@ -321,8 +324,10 @@ WEAK(void) Thread::saveSysInfo() {
   if (mtcp_have_thread_sysinfo_offset())
     chkpt_sys.sysInfo = mtcp_get_thread_sysinfo();
   // Do this once.  It's the same for all threads.
-  saved_termios_exists = ( isatty(STDIN_FILENO)
-			   && tcgetattr(STDIN_FILENO, &saved_termios) >= 0 );
+#ifdef CHECKPOINT_TERMINAL
+  saved_termios_exists = (isatty(STDIN_FILENO)
+			  && tcgetattr(STDIN_FILENO,&saved_termios) >= 0);
+#endif
   mtcp_output(MTCP_DEBUG,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
 }
 
@@ -592,7 +597,7 @@ WEAK(void) Thread::saveTLS()    {
 WEAK(char*) Thread::tlsBase()   {
   mtcp_segreg_t TLSSEGREG;
   struct user_desc gdtentrytls;
-  asm volatile ("movl %%fs,%0" : "=q" (TLSSEGREG)); /* q = a,b,c,d for i386; 8 low bits of r class reg for x86_64 */
+  __asm__ volatile ("movl %%fs,%0" : "=q" (TLSSEGREG)); /* q = a,b,c,d for i386; 8 low bits of r class reg for x86_64 */
   gdtentrytls.entry_number = TLSSEGREG / 8;
   if ( mtcp_sys_get_thread_area ( &gdtentrytls ) < 0 ) {
     mtcp_output(MTCP_FATAL,"Threads::tlsBase: error getting GDT TLS entry: %s\n",strerror (mtcp_sys_errno));
@@ -650,7 +655,7 @@ WEAK(void) Thread::saveSignals()  {
 
 /// Restore all the signal handlers with different settings
 WEAK(void) Thread::restoreSigActions() {
-  for (int res, i=1; i<NSIG; ++i ) {
+  for (int i=1; i<NSIG; ++i ) {
     struct sigaction act, *a = &chkpt_sys.motherofall->m_sigactions[i];
     if (mtcp_sys_sigaction(i,0,&act) < 0) {
       if (errno == EINVAL) ::memset(&act,0,sizeof(act));
@@ -666,7 +671,7 @@ WEAK(void) Thread::restoreSigActions() {
 	a->sa_sigaction = _thread_setxid_action;
       }
       if ( act.sa_handler != a->sa_handler ) {
-	if ((res=_real_sigaction(i,a,0)) < 0) {
+	if ( _real_sigaction(i,a,0) < 0) {
 	  mtcp_output(MTCP_FATAL,"restoreSigActions: Failed to set stored sigaction[%d]:%p. [%s]\n",
 		      i,a->sa_handler,::strerror(errno));
 	}
@@ -702,13 +707,13 @@ WEAK(int) Thread::restart(int force_context)     {
       tmp = sigpending_global;
     }
     //this->set_tid_address();
-    #if 0
+#ifdef CHECKPOINT_TERMINAL
     // Do it once only, in motherofall thread.
     if (saved_termios_exists)
       if ( ! isatty(STDIN_FILENO)
            || tcsetattr(STDIN_FILENO, TCSANOW, &saved_termios) < 0 )
         mtcp_output(MTCP_WARNING,"WARNING: restart: failed to restore terminal\n");
-    #endif
+#endif
   }
 
   restoreSignals();

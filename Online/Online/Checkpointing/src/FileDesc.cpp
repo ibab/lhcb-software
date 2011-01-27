@@ -13,11 +13,6 @@
 
 using namespace Checkpointing;
 
-#ifndef __STATIC__
-DefineMarker(FILE_BEGIN_MARKER,"FILE");
-DefineMarker(FILE_END_MARKER,  "file");
-#endif
-
 WEAK(int) FileDesc::setup(int fdnum) {
   char procfdname[PATH_MAX];
   struct stat f_link;

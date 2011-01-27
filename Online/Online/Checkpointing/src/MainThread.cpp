@@ -41,7 +41,7 @@ MainThread::MainThread()  {
   chkpt_sys.restart_type  = SysInfo::RESTART_NORMAL;
   chkpt_sys.finishRestore = MainThread::finishRestore;
   chkpt_sys.motherPID     = chkpt_sys.chkptPID = mtcp_sys_getpid();
-  asm (".global clone ; .type clone,@function ; clone = __clone");
+  __asm__ (".global clone ; .type clone,@function ; clone = __clone");
 }
 
 WEAK(MainThread&) MainThread::accessInstance() {
@@ -352,7 +352,6 @@ again:
     mtcp_output(MTCP_INFO,"stopThreads: finished --pid %d\n",mtcp_sys_getpid());
     return 1;
   }
-  return 0;
 }
 
 WEAK(int) MainThread::resume()   {
@@ -390,7 +389,7 @@ WEAK(void) MainThread::finishRestore() {
   // Now move to the temporary stack for restoring all process properties at the time of the checkpoint.
   // Call another routine because our internal stack is whacked and we can't have local vars
   // Thread::restart() will have a big stack
-  asm volatile (CLEAN_FOR_64_BIT(mov %0,%%esp)
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp)
 		: : "g" (chkpt_sys.motherofall->m_savctx.SAVEDSP - 128 ) : "memory");  // -128 for red zone
 
   chkpt_sys.motherofall->restart(1);

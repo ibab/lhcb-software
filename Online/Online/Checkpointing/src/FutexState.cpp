@@ -12,25 +12,27 @@ using namespace Checkpointing;
 // cmpxchgl is only supported on Intel 486 processors and later.
 static inline int atomic_setif_int (int volatile *loc, int newval, int oldval)   {
   char rc;
-  asm volatile ("lock ; cmpxchgl %2,%1 ; sete %%al" : "=a" (rc) : "m" (*loc), "r" (newval), "a" (oldval) : "cc", "memory");
+  __asm__ volatile ("lock ; cmpxchgl %2,%1 ; sete %%al" : "=a" (rc) : "m" (*loc), "r" (newval), "a" (oldval) : "cc", "memory");
   return rc;
 }
 
+#if 0  // Not used right now
 static inline int atomic_setif_ptr (void *volatile *loc, void *newval, void *oldval)  {
   char rc;
-  asm volatile ("lock ; cmpxchg %2,%1 ; sete %%al" : "=a" (rc) : "m" (*loc), "r" (newval), "a" (oldval) : "cc", "memory");
+  __asm__ volatile ("lock ; cmpxchg %2,%1 ; sete %%al" : "=a" (rc) : "m" (*loc), "r" (newval), "a" (oldval) : "cc", "memory");
   return rc;
 }
+#endif
 
 static inline int mtcp_futex(int *uaddr, int op, int val, const struct timespec *timeout)  {
   int rc;
-  register long int a1 asm ("rdi") = (long int)uaddr;
-  register long int a2 asm ("rsi") = (long int)op;
-  register long int a3 asm ("rdx") = (long int)val;
-  register long int a4 asm ("r10") = (long int)timeout;
-  register long int a5 asm ("r8")  = (long int)0;
+  register long int a1 __asm__ ("rdi") = (long int)uaddr;
+  register long int a2 __asm__ ("rsi") = (long int)op;
+  register long int a3 __asm__ ("rdx") = (long int)val;
+  register long int a4 __asm__ ("r10") = (long int)timeout;
+  register long int a5 __asm__ ("r8")  = (long int)0;
 
-  asm volatile ("syscall"
+  __asm__ volatile ("syscall"
                 : "=a" (rc)
                 : "0" (SYS_futex),
                   "r" (a1), "r" (a2), "r" (a3), "r" (a4), "r" (a5)

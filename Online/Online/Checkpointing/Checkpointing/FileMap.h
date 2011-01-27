@@ -71,6 +71,8 @@ namespace CHECKPOINTING_NAMESPACE  {
    */
   class FilePrintHandler : public FileHandler {
   public: 
+    /// Standard constructor
+    FilePrintHandler() {}
     /// Handle single file entry
     virtual int handle(int fdnum)  const;   
   };

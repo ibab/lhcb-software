@@ -26,7 +26,7 @@ STATIC(void*) get_at_sysinfo() {
     my_environ = environ;
 #if 0
   // Walk the stack.
-  asm volatile (CLEAN_FOR_64_BIT(mov %%ebp, %0\n\t)
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %%ebp, %0\n\t)
                 : "=g" (stack) );
   mtcp_output(MTCP_INFO,"stack 2: %p\n", stack);
 
@@ -85,7 +85,7 @@ int mtcp_have_thread_sysinfo_offset() {
   result = 0;
   if (result == -1) {
     void * sysinfo;
-    asm volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" : "=r" (sysinfo));
+    __asm__ volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" : "=r" (sysinfo));
     result = (sysinfo == get_at_sysinfo());
   }
   return result;
@@ -96,11 +96,11 @@ int mtcp_have_thread_sysinfo_offset() {
 //  as part of kernel TCB (thread control block) at beginning of TLS ??
 void* mtcp_get_thread_sysinfo() {
   void *sysinfo;
-  asm volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" : "=r" (sysinfo) );
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" : "=r" (sysinfo) );
   return sysinfo;
 }
 
 void mtcp_set_thread_sysinfo(void *sysinfo) {
-  asm volatile (CLEAN_FOR_64_BIT(mov %0, %%gs:) DEFAULT_SYSINFO_OFFSET "\n\t" : : "r" (sysinfo) );
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0, %%gs:) DEFAULT_SYSINFO_OFFSET "\n\t" : : "r" (sysinfo) );
 }
 

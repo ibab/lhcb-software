@@ -241,7 +241,7 @@
     unsigned long resultvar;						      \
     LOAD_ARGS_##nr (args)						      \
     LOAD_REGS_##nr							      \
-    asm volatile (							      \
+    __asm__ volatile (							      \
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
     : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
@@ -265,7 +265,7 @@
   long int __arg1 = (long) (a1);			\
   LOAD_ARGS_0 ()
 #define LOAD_REGS_1					\
-  register long int _a1 asm ("rdi") = __arg1;		\
+  register long int _a1 __asm__ ("rdi") = __arg1;	\
   LOAD_REGS_0
 #define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
 
@@ -273,7 +273,7 @@
   long int __arg2 = (long) (a2);			\
   LOAD_ARGS_1 (a1)
 #define LOAD_REGS_2					\
-  register long int _a2 asm ("rsi") = __arg2;		\
+  register long int _a2 __asm__ ("rsi") = __arg2;	\
   LOAD_REGS_1
 #define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
 
@@ -281,7 +281,7 @@
   long int __arg3 = (long) (a3);			\
   LOAD_ARGS_2 (a1, a2)
 #define LOAD_REGS_3					\
-  register long int _a3 asm ("rdx") = __arg3;		\
+  register long int _a3 __asm__ ("rdx") = __arg3;	\
   LOAD_REGS_2
 #define ASM_ARGS_3	ASM_ARGS_2, "r" (_a3)
 
@@ -289,7 +289,7 @@
   long int __arg4 = (long) (a4);			\
   LOAD_ARGS_3 (a1, a2, a3)
 #define LOAD_REGS_4					\
-  register long int _a4 asm ("r10") = __arg4;		\
+  register long int _a4 __asm__ ("r10") = __arg4;	\
   LOAD_REGS_3
 #define ASM_ARGS_4	ASM_ARGS_3, "r" (_a4)
 
@@ -297,7 +297,7 @@
   long int __arg5 = (long) (a5);			\
   LOAD_ARGS_4 (a1, a2, a3, a4)
 #define LOAD_REGS_5					\
-  register long int _a5 asm ("r8") = __arg5;		\
+  register long int _a5 __asm__ ("r8") = __arg5;	\
   LOAD_REGS_4
 #define ASM_ARGS_5	ASM_ARGS_4, "r" (_a5)
 
@@ -305,7 +305,7 @@
   long int __arg6 = (long) (a6);			\
   LOAD_ARGS_5 (a1, a2, a3, a4, a5)
 #define LOAD_REGS_6					\
-  register long int _a6 asm ("r9") = __arg6;		\
+  register long int _a6 __asm__ ("r9") = __arg6;	\
   LOAD_REGS_5
 #define ASM_ARGS_6	ASM_ARGS_5, "r" (_a6)
 
@@ -320,7 +320,7 @@
 #  define PTR_MANGLE(reg)	xorq __pointer_chk_guard_local(%rip), reg
 #  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
 # else
-#  define PTR_MANGLE(reg)	asm ("xorq __pointer_chk_guard_local(%%rip), %0"\
+#  define PTR_MANGLE(reg)	__asm__ ("xorq __pointer_chk_guard_local(%%rip), %0"\
 				     : "=r" (reg) : "0" (reg))
 #  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
 # endif
@@ -329,7 +329,7 @@
 #  define PTR_MANGLE(reg)	xorq %fs:POINTER_GUARD, reg
 #  define PTR_DEMANGLE(reg)	PTR_MANGLE (reg)
 # else
-#  define PTR_MANGLE(var)	asm ("xorq %%fs:%c2, %0"		      \
+#  define PTR_MANGLE(var)	__asm__ ("xorq %%fs:%c2, %0"		      \
 				     : "=r" (var)			      \
 				     : "0" (var),			      \
 				       "i" (offsetof (tcbhead_t,	      \

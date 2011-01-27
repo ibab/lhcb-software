@@ -598,20 +598,20 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* s
   // Now we move the process to the temporary stack allocated in this image
   // in order to execute the process restore. After this, we move back
   // to the regular stack pointer.
-  asm volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
                 /* This next assembly language confuses gdb,
 		   but seems to work fine anyway */
                 CLEAN_FOR_64_BIT(xor %%ebp,%%ebp\n\t)
                 : : "g" (extendedStack) : "memory");
 #if 0  /* Same as above.... */
-  asm volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
                 : : "g" (extendedStack) : "memory");
-  //asm("mov $0,%rbp");
-  asm volatile ("xor %rbp,%rbp");
+  //__asm__("mov $0,%rbp");
+  __asm__ volatile ("xor %rbp,%rbp");
 #endif
   // Stack is wacked. Need to call a new routinne, which should never return.
   checkpointing_sys_restore_process();
-  asm volatile ("hlt");
+  __asm__ volatile ("hlt");
 }
 
 /// Secondary restore routine. Execution starts once we jumped to the local stack.

@@ -17,11 +17,6 @@ namespace CHECKPOINTING_NAMESPACE {
   SysInfo chkpt_sys;
 }
 
-#ifndef __STATIC__
-DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
-DefineMarker(SYS_END_MARKER,      "psys");
-#endif
-
 #define PAGE_SIZE 4096
 
 SysInfo::SysInfo() {
@@ -77,8 +72,8 @@ void SysInfo::aquire() {
     AreaInfoHandler hdlr;
     MemMaps mm;
     if ( 1 == mm.scan(hdlr) ) {
-      size_t sz = hdlr.imageAddr[1]-hdlr.imageAddr[0];
-      sz = (sz+PAGE_SIZE-1) & -PAGE_SIZE;
+      unsigned long sz = hdlr.imageAddr[1]-hdlr.imageAddr[0];
+      sz = ((sz+PAGE_SIZE-1) & (-PAGE_SIZE));
       m_memcpy(checkpointImage,hdlr.image,sizeof(checkpointImage));
       chkptStart = hdlr.checkpointAddr[0];
       chkptSize  = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];

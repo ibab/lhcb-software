@@ -24,7 +24,10 @@ library Checkpointing 	../aux/Image.cpp         \
 			../src/MemMaps_test.cpp  \
 			../src/Process_test.cpp  \
 			../src/Chkpt_test.cpp
-macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wextra -Wreturn-type -Wunused -fPIC ' WIN32 ''
+macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wreturn-type -Wunused -fPIC ' WIN32 ''
+macro_append lib_Checkpointing_cppflags " -Wextra " \
+  target-icc " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
+
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '    WIN32 ''
 
 library Chkpt  		*.cpp
@@ -37,3 +40,4 @@ apply_pattern QMTestSummarize
 apply_pattern disable_package_on platform=target-winxp
 apply_pattern disable_package_on platform=target-i686
 apply_pattern disable_package_on platform=target-ia32
+

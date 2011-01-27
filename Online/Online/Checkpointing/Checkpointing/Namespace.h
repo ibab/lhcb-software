@@ -4,7 +4,7 @@
 namespace Checkpointing {
   typedef unsigned int Marker;
   typedef unsigned long VA;
-};
+}
 
 #ifndef CHECKPOINTING_NAMESPACE 
 #define CHECKPOINTING_NAMESPACE Checkpointing

@@ -16,7 +16,7 @@ WEAK(int&) __mtcp_sys_errno() {
 
 WEAK(void) mtcp_abort(void)    {
   mtcp_output(MTCP_ERROR,"Calling abort due to internal errors.\n");
-  asm volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
+  __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
 }
 
 WEAK(int) mtcp_get_debug_level() {
