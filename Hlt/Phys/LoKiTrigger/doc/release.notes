@@ -5,6 +5,20 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+
+! 2011-01-27 - Vanya Belyaev
+
+   Fix some problems with on-line Moore:
+
+ - LoKiTrigger/functions.h
+      comment out the import of LoKiTrigger.Service module 
+
+ - LoKiTrigger/Service.h
+      comment out the import of GaudiPython.GaudiAlgs module 
+
+ - cmt/requirements
+      version increment to v11r3
+
 !========================== LoKiTrigger v11r2p1 2011-01-20 ===================
 ! 2011-01-20 - Gerhard Raven
  - move 'frozen' warning (at start of run) to info

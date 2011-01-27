@@ -486,8 +486,6 @@ _vd       = 'std::vector<double>'           ## std.vector ( 'double')
 ## bindAbsMax . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMax . __doc__
 
 
-import LoKiTrigger.Service
-
 # =============================================================================
 if '__main__' == __name__ :
     print 80*'*'

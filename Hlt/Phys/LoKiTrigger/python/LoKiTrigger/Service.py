@@ -3,7 +3,20 @@
 # $Id$ 
 # =============================================================================
 ## @file LoKiTrigger/Service.py
-#  Useful decorator for Hlt::Service 
+#    Useful decorator for Hlt::Service 
+#
+#        This file is a part of LoKi project - 
+#    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+#
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+#
+#   By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @see Hlt::IRegister 
 #  @see Hlt::IData
 #  @see Hlt::IInspector 
@@ -19,11 +32,17 @@
 """
 Useful decorator for HLT Service and its interfaces
 
+      This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
 
-                    $Revision$
-  Last modification $Date$
-                 by $Author$
- 
+The package has been designed with the kind help from
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+contributions and advices from G.Raven, J.van Tilburg, 
+A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.:
+ ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
@@ -34,8 +53,9 @@ __date__    = "2009-03-25"
 __all__ = ( 'iHltInspector', )
 # =============================================================================
 import GaudiPython.Bindings
-import GaudiPython.GaudiAlgs
-import os.path,sys
+
+## comment out: this line needs to be imported in user-code explicitly
+# import GaudiPython.GaudiAlgs
 
 cpp           = GaudiPython.Bindings.gbl
 iService      = GaudiPython.Bindings.iService
@@ -563,8 +583,10 @@ class iHltInspector(iService) :
             
         file.write ( '};\n' )   ## CLOSING LINE 
         file.flush ()
-        
+
+        import sys 
         if 'linux2' == sys.platform :
+            import os 
             cmd = ' dot %s -Tfig | display & ' % file.name 
             print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
@@ -629,8 +651,10 @@ class iHltInspector(iService) :
             
         file.write ( '}; \n ' )   ## CLOSING LINE 
         file.flush ()
-                
+
+        import sys 
         if 'linux2' == sys.platform :
+            import os 
             cmd = ' dot %s -Tfig | display & ' % file.name
             print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
@@ -732,7 +756,9 @@ class iHltInspector(iService) :
         file.write ( '};\n' )   ## CLOSING LINE 
         file.flush ()
 
+        import sys 
         if 'linux2' == sys.platform :
+            import os 
             cmd = ' dot %s -Tpng | display & ' % file.name  
             print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
