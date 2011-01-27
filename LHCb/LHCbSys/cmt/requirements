@@ -68,8 +68,13 @@ use IOExample             v3r5    Ex      # Marco Cattaneo
 
 # Packages without Hat, cannot have comment field. Maintainer M.Cattaneo
 use GaudiConf             v13r7
+
 use GaudiObjDesc          v11r10p2
 #use GaudiPatches          v1r2
+
+# Maintainer Juan Palacios
+use GaudiConfUtils        v1r0
+
 
 use HepMCBack             v1r1    Gen     # Gloria Corti, Patrick Robbe
 
