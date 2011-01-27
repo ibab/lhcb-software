@@ -61,9 +61,9 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "PhiUnusedSecondTol", m_phiUnusedSecondTol = 10. );
 
   // Parameters for debugging
-  declareProperty( "DebugToolName" ,   m_debugToolName  = ""        );
-  declareProperty( "WantedKey"       , m_wantedKey      = -100      );
-  declareProperty( "MeasureTime"     , m_doTiming       = false     );
+  declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
+  declareProperty( "WantedKey"         , m_wantedKey      = -100      );
+  declareProperty( "TimingMeasurement" , m_doTiming       = false     );
 }
 //=============================================================================
 // Destructor
@@ -85,16 +85,16 @@ StatusCode FastVeloTracking::initialize() {
 
   if ( m_doTiming) {
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool/Timer", this );
-    m_timeTotal   = m_timerTool->addTimer( "Total" );
+    m_timeTotal   = m_timerTool->addTimer( "Fast Velo total" );
     m_timerTool->increaseIndent();
-    m_timePrepare = m_timerTool->addTimer( "Prepare" );
-    m_timeFwd4    = m_timerTool->addTimer( "Forward quadruplets" );
-    m_timeBkwd4   = m_timerTool->addTimer( "Backward quadruplets" );
-    m_timeFwd3    = m_timerTool->addTimer( "Forward triplets" );
-    m_timeBkwd3   = m_timerTool->addTimer( "Backward triplets" );
-    m_timeSpace   = m_timerTool->addTimer( "Space tracks" );
-    m_timeUnused  = m_timerTool->addTimer( "Unused Phi" );
-    m_timeFinal   = m_timerTool->addTimer( "Store tracks" );
+    m_timePrepare = m_timerTool->addTimer( "Fast Velo prepare" );
+    m_timeFwd4    = m_timerTool->addTimer( "Fast Velo forward quadruplets" );
+    m_timeBkwd4   = m_timerTool->addTimer( "Fast Velo backward quadruplets" );
+    m_timeFwd3    = m_timerTool->addTimer( "Fast Velo forward triplets" );
+    m_timeBkwd3   = m_timerTool->addTimer( "Fast Velo backward triplets" );
+    m_timeSpace   = m_timerTool->addTimer( "Fast Velo space tracks" );
+    m_timeUnused  = m_timerTool->addTimer( "Fast velo unused Phi" );
+    m_timeFinal   = m_timerTool->addTimer( "Fast velo store tracks" );
     m_timerTool->decreaseIndent();
   }
 
@@ -676,7 +676,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     if ( !(*itT).isValid() ) continue;
     LHCb::Track *newTrack = new LHCb::Track();
     newTrack->setType( LHCb::Track::Velo );
-    newTrack->setHistory( LHCb::Track::PatVelo );
+    newTrack->setHistory( LHCb::Track::PatFastVelo );
     newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
     if ( m_debug ) {
       info() << "=== Store track Nb " << outputTracks->size() << endmsg;
