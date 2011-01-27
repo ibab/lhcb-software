@@ -11,8 +11,13 @@ use GaudiPolicy v*
 include_dirs  $(CHECKPOINTINGROOT)
 apply_pattern install_more_includes more=Checkpointing
 
+macro Checkpointing_package_cpp_build_flags ' -Wextra ' WIN32 '' \
+  target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 '
+macro_append Checkpointing_package_cpp_build_flags ' -ansi -Wreturn-type -Wunused ' WIN32 ''
+
 # ==================== component libraries ==================================
-application restore     ../aux/main.cpp
+application  restore           ../aux/main.cpp
+macro_append restore_cppflags  ' $(Checkpointing_package_cpp_build_flags) '
 
 private 
 macro cmt_installarea_linkopts ''
@@ -24,16 +29,11 @@ library Checkpointing 	../aux/Image.cpp         \
 			../src/MemMaps_test.cpp  \
 			../src/Process_test.cpp  \
 			../src/Chkpt_test.cpp
-macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wreturn-type -Wunused -fPIC '
-macro_append lib_Checkpointing_cppflags ' -Wextra ' \
-  target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 '
-
+macro_append lib_Checkpointing_cppflags ' -g -O0 -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '
 
 library Chkpt  		*.cpp
-macro_append lib_Checkpointing_cppflags ' -ansi -Wreturn-type -Wunused -fPIC '
-macro_append lib_Chkpt_cppflags ' -Wextra ' \
-  target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 '
+macro_append lib_Chkpt_cppflags         ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shared '
 
 apply_pattern QMTest
