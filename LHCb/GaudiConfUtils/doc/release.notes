@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : DaVinci_HEAD/GaudiConfUtils
+! Responsible : Juan Palacios
+! Purpose     : Helper python modules for Configurable manipulations.
+!-----------------------------------------------------------------------------
+
+! 2011-01-27 - Juan Palacios
+ - First import. Contains module GaudiConfUtils.Utils, with functions
+  * isIterable: Return True if a configurable exists in the Configurables module.
+  * isConfigurable: Return True if an object is a Configurable.
+  * isIterable: Test if an object is iterable but not a string type or Configurable.
+  * filterConfigurables: Return a list containing all the Configurables present in an arbitrery list of symbols.
+  * getConfigurablesFromModule: Return a list with all the configurables in a module
+
+  Usage: 
+  from GaudiConfUtils import isConfigurable, ...
