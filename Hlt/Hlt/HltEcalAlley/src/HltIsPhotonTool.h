@@ -59,6 +59,5 @@ private:
 				      double& showerkappa, double& showertail, double& showerenergy);
   // temporaray fix
   ICaloClusterization* m_tool1;
-  bool m_temporaryFix;
 };
 #endif // HLTISPHOTONTOOL_H
