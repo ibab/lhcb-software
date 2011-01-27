@@ -19,42 +19,53 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
     #------------------------
     # Don't touch my variables!
     __slots__ = {
-                ## Cut values for one stage track-fit (OSTF) lines.
-                ## 2-body!
-                  'OSTFAllTrkPtLL_2Body'          : 500.0      # in MeV
-                , 'OSTFAllTrkPLL_2Body'           : 5000.0     # in MeV
-                , 'OSTFAllTrkPVIPChi2LL_2Body'    : 2.0        # unitless
-                , 'OSTFAllTrkChi2UL_2Body'        : 5.0        # unitless
-                , 'OSTFPairMinDocaUL_2Body'       : 0.10       # in mm
-                , 'OSTFTrkMaxPtLL_2Body'          : 1500.0     # in MeV
-                , 'OSTFVtxPVDispChi2LL_2Body'     : 25.0       # unitless
-                , 'OSTFPointLL_2Body'             : 0.99985     # unitless
-                , 'OSTFVtxChi2UL_2Body'           : 10.0       # unitless
-                , 'OSTFDPtLL_2Body'               : 2000.0     # in MeV
+                ## Cut values for basic D0 -> hh signal lines
+                  'Trk_PT_MIN'               : 800.0      # MeV
+                , 'Trk_P_MIN'                : 5000.0     # MeV
+                , 'Trk_MIPCHI2DV_MIN'        : 2.0        # neuter
+                , 'Trk_TRCHI2DOF_MAX'        : 5.0        # neuter
+                , 'Pair_AMINDOCA_MAX'        : 0.10       # mm
+                , 'Trk_Max_APT_MIN'          : 1500.0     # MeV
+                , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
+                , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
+                , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
+                , 'D0_PT_MIN'                : 2000.0     # MeV
+                , 'Sig_M_MIN'                : 1839.0     # MeV
+                , 'Sig_M_MAX'                : 1889.0     # MeV
+                , 'WideMass_M_MIN'           : 1700.0     # MeV
+                , 'WideMass_M_MAX'           : 2100.0     # MeV
                 ## 2-body inclusive!
-                , 'OSTFAllTrkPtLL_2BodyInc'          : 500.0      # in MeV
-                , 'OSTFAllTrkPLL_2BodyInc'           : 5000.0     # in MeV
-                , 'OSTFAllTrkPVIPChi2LL_2BodyInc'    : 16.0        # unitless
-                , 'OSTFAllTrkChi2UL_2BodyInc'        : 3.0        # unitless
-                , 'OSTFPairMinDocaUL_2BodyInc'       : 0.15       # in mm
-                , 'OSTFVtxPVDispChi2LL_2BodyInc'     : 100.0       # unitless
-                , 'OSTFTrkMaxPtLL_2BodyInc'          : 1000.0     # in MeV
-                , 'OSTFDPtLL_2BodyInc'               : 1500.0     # in MeV
-                , 'OSTFDSumPtLL_2BodyInc'            : 1800.0     # in MeV
-                , 'OSTFDIPChi2LL_2BodyInc'           : 2.0       # unitless
-                , 'OSTFMCOR_MIN_2BodyInc'            : 300.        # MeV
-                , 'OSTFMCOR_MAX_2BodyInc'            : 3200.        # MeV
+                , 'Inc_Trk_PT_MIN'           : 500.0      # MeV
+                , 'Inc_Trk_P_MIN'            : 5000.0     # MeV
+                , 'Inc_Trk_MIPCHI2DV_MIN'    : 16.0       # neuter
+                , 'Inc_Trk_TRCHI2DOF_MAX'    : 3.0        # neuter
+                , 'Inc_Pair_AMINDOCA_MAX'    : 0.15       # in mm
+                , 'Inc_D0_BPVVDCHI2_MIN'     : 100.0      # neuter
+                , 'Inc_Trk_Max_APT_MIN'      : 1000.0     # MeV
+                , 'Inc_D0_PT_MIN'            : 1500.0     # MeV
+                , 'Inc_D0_SUMPT_MIN'         : 1800.0     # MeV
+                , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
+                , 'Inc_D0_MCOR_MIN'          : 300.       # MeV
+                , 'Inc_D0_MCOR_MAX'          : 3200.      # MeV
                 ## GEC
-                , 'ComRobUseGEC'            : True       # do or do not
-                , 'ComRobGEC'               : 120        # max number of tracks
-                , 'Prescale'                : { 'Hlt2Charm2BodyWideMass' : 0.05 }
-                , 'Postscale'               : { }
+                , 'GEC_Filter_NTRACK'        : True       # do or do not
+                , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                , 'Prescale'         : { }
+                , 'Postscale'        : { 'Hlt2CharmD02KKWideMass'     : 0.05
+                                         , 'Hlt2CharmD02KPiWideMass'  : 0.05
+                                         , 'Hlt2CharmD02PiPiWideMass' : 0.05
+                                       }
                 # The HltANNSvc ID numbers for each line should be configurable.
-                , 'HltANNSvcID'  : { ## Main One stage lines
-                                     'Hlt2Charm2BodyDecision' : 50283
-                                   , 'Hlt2Charm2BodyIncDecision' : 50284 
-                                   ## One stage wide mass lines
-                                   , 'Hlt2Charm2BodyWideMassDecision' : 50285
+                , 'HltANNSvcID'  : { ## Signal lines
+                                     'Hlt2CharmD02KKDecision'     : 50880
+                                   , 'Hlt2CharmD02KPiDecision'    : 50881
+                                   , 'Hlt2CharmD02PiPiDecision'   : 50882
+                                   ## Inclusive lines
+                                   , 'Hlt2Charm2BodyIncDecision'  : 50284 
+                                   ## Wide mass lines
+                                   , 'Hlt2CharmD02KKWideMassDecision'   : 50890
+                                   , 'Hlt2CharmD02KPiWideMassDecision'  : 50891
+                                   , 'Hlt2CharmD02PiPiWideMassDecision' : 50892
                                    }
                   }
 
@@ -90,12 +101,26 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __ostfCombine2Body(self, name, inputSeq, decayDesc, extracuts = None) : # {
+    def __combine(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        "Configure combinatorics.  Returns a bindMembers."
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        # Construct a cut string for the combination.
-        combcuts = "(AM<2100*MeV) & (AALLSAMEBPV)" % self.getProps()
+        ## Mass window for shared combinatorics
+        massmin = min(self.getProp('Sig_M_MIN'), self.getProp('WideMass_M_MIN'))
+        massmax = max(self.getProp('Sig_M_MAX'), self.getProp('WideMass_M_MAX'))
+
+        masscut = "(%s*MeV < AM) & (AM < %s*MeV)" % (massmin, massmax)
+
+        combcuts = masscut + \
+                   "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
+                       "| (APT2 > %(Trk_Max_APT_MIN)s))" \
+                   "& (APT > %(D0_PT_MIN)s)" \
+                   "& (AALLSAMEBPV)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
+                       "< %(Pair_AMINDOCA_MAX)s )" \
+                   % self.getProps()
+
 
         # extracuts allows additional cuts to be applied for special
         #   cases, including the tight doca requirement of the 2-body and
@@ -104,8 +129,10 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + '&' + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL_2Body)s )
-            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL_2Body)s *MeV)""" % self.getProps()
+        parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
+                     "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
+                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )" \
+                     % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
@@ -118,16 +145,47 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                                        , MotherCut = parentcuts
                                      )
 
-        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
-        return topoNBody
+        combSeq = bindMembers( name, inputSeq + [ combineTopoNBody ] )
+        return combSeq
     # }
 
-    def __ostfCombine2BodyInc(self, name, inputSeq, decayDesc, extracuts = None) : # {
+
+    def __filter(self, name, inputSeq, extracode = None) : # {
+        "Filter combinatorics.  Returns a bindMembers."
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltLine.Hlt2Monitoring import Hlt2Monitor
+
+        codestr = "(ALL)"
+        
+        if extracode :
+          codestr = extracode + '&' + codestr
+        filter = Hlt2Member( FilterDesktop
+                             , 'Filter'
+                             , InputLocations = inputSeq
+                             , Code = codestr
+                             , PreMonitor  =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_in',nbins=101) 
+                             , PostMonitor =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_out',nbins=101)   
+                           )
+        filterSeq = bindMembers( name, inputSeq + [ filter ] )
+        return filterSeq
+    # }
+
+
+    def __combineInc(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        """
+        Configure combinatorics for inclusive selection.  
+        Returns a bindMembers.
+        """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
         # Construct a cut string for the combination.
-        combcuts = "(AM<2000*MeV) & (AALLSAMEBPV)" % self.getProps()
+        combcuts = "(AM<2000*MeV) & (AALLSAMEBPV) " \
+                   "& ((APT1 > %(Inc_Trk_Max_APT_MIN)s) " \
+                       "| (APT2 > %(Inc_Trk_Max_APT_MIN)s))" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
+                        "< %(Inc_Pair_AMINDOCA_MAX)s )" % self.getProps()
 
         # extracuts allows additional cuts to be applied for special
         #   cases, including the tight doca requirement of the 2-body and
@@ -136,8 +194,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + '&' + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL_2BodyInc)s )
-            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL_2BodyInc)s *MeV)""" % self.getProps()
+        parentcuts = "(BPVVDCHI2> %(Inc_D0_BPVVDCHI2_MIN)s )" % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
@@ -150,44 +207,14 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                                        , MotherCut = parentcuts
                                      )    
 
-        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
-        return topoNBody
+        combSeq = bindMembers( name, inputSeq + [ combineTopoNBody ] )
+        return combSeq
     # }
 
-
-    def __ostfFilter2Body(self, name, inputSeq, extracode = None) : # {
+    def __filterInc(self, name, inputSeq, extracode = None) : # {
         """
-        # Function to configure a filter for the one stage track-fit
-        #   topological lines.  It lashes the new FilterDesktop to a
-        #   bindMembers with its antecedents.
-        # The argument inputSeq should be a list of bindMember sequences that
-        #   produces the particles to filter.
-        """
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltLine.Hlt2Monitoring import Hlt2Monitor
-
-        codestr = "(BPVDIRA > %(OSTFPointLL_2Body)s )" % self.getProps()
-        if extracode :
-          codestr = codestr + '&' + extracode
-        filter = Hlt2Member( FilterDesktop
-                             , 'TFFilter'
-                             , InputLocations = inputSeq
-                             , Code = codestr
-                             , PreMonitor  =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_in',nbins=101) 
-                             , PostMonitor =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_out',nbins=101)   
-                           )
-        filterSeq = bindMembers( name, inputSeq + [ filter ] )
-        return filterSeq
-    # }
-
-    def __ostfFilter2BodyInc(self, name, inputSeq, extracode = None) : # {
-        """  
-        # Function to configure a filter for the one stage track-fit
-        #   topological lines.  It lashes the new FilterDesktop to a
-        #   bindMembers with its antecedents.
-        # The argument inputSeq should be a list of bindMember sequences that
-        #   produces the particles to filter.
+        Filter combinatorics for inclusive selection.  
+        Returns a bindMembers.
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
@@ -195,11 +222,18 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         props = self.getProps()
         preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
-        codestr = '(in_range(%s*MeV,MCOR,%s*MeV))' % (props['OSTFMCOR_MIN_2BodyInc'],props['OSTFMCOR_MAX_2BodyInc'])
+        massRng = '(in_range(%s*MeV,MCOR,%s*MeV))' \
+                  % (props['Inc_D0_MCOR_MIN'],props['Inc_D0_MCOR_MAX'])
+
+        codestr = "(PT > %(Inc_D0_PT_MIN)s)" \
+                  "& (SUMTREE(PT,('pi+'==ABSID),0.0) > %(Inc_D0_SUMPT_MIN)s)" \
+                  + "& " + massRng + " & " + \
+                  "& (BPVIPCHI2() > %(Inc_D0_BPVIPCHI2_MIN)s)" \
+                  % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
-                             , 'TFFilter'
+                             , 'Filter'
                              , InputLocations = inputSeq
                              , Code = codestr
                              , Preambulo=preambulo 
@@ -229,8 +263,8 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
 
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
-        if self.getProp('ComRobUseGEC') : # {
-            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+        if self.getProp('GEC_Filter_NTRACK') : # {
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
             
         Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmKillTooManyInTrkAlg'
@@ -242,75 +276,16 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __robInPartFilter(self, name, inputSeq) : # {
-        """
-        # Function to configure a filter for the input particles of the
-        #   robust stages of the charm lines.  It lashes the new FilterDesktop
-        #   to a bindMembers with its antecedents.
-        # The argument inputSeq should be a list of bindMember sequences that
-        #   produces the particles to filter.
-        """
+    def __inPartFilter(self, name, inputContainers) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        daugcuts = """(PT> %(ComRobAllTrkPtLL)s *MeV)
-                      & (P> %(ComRobAllTrkPLL)s *MeV)
-                      & (MIPDV(PRIMARY)> %(ComRobAllTrkPVIPLL)s )""" % self.getProps()
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , InputLocations = inputSeq
-                            , Code = daugcuts
-                           )
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D() ] + inputSeq + [ filter ] )
-
-        return filterSeq
-    # }
-
-
-    def __tfInPartFilter(self, name, inputContainers) : # {
-        """
-        # Function to configure a filter for the input particles of the
-        #   post-track-fit stages of the charm lines.  It lashes the new
-        #   FilterDesktop to a bindMembers with its antecedents.
-        # The argument inputContainer should be 
-        #   a list of bindMember sequences that produces the particles
-        #   to filter.
-        """
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
-                    & (P> %(ComTFAllTrkPLL)s *MeV)
-                    & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
-                    & (TRCHI2DOF< %(ComTFAllTrkChi2UL)s )""" % self.getProps()
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , InputLocations = inputContainers
-                            , Code = incuts
-                           )
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        ## Require tracking before attempts to fit the tracks.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter] )
-
-        return filterSeq
-    # }
-
-
-    def __ostfInPartFilter2Body(self, name, inputContainers) : # {
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = """(PT> %(OSTFAllTrkPtLL_2Body)s *MeV)
-                    & (P> %(OSTFAllTrkPLL_2Body)s *MeV)
-                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL_2Body)s )
-                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL_2Body)s )""" % self.getProps()
+        incuts = "(PT> %(Trk_PT_MIN)s *MeV)" \
+                 "& (P> %(Trk_P_MIN)s *MeV)" \
+                 "& (TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+                 "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" \
+                 % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -324,15 +299,15 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         return filterSeq
     # }
 
-    def __ostfInPartFilter2BodyInc(self, name, inputContainers) : # {
+    def __inPartFilterInc(self, name, inputContainers) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D 
 
-        incuts = """(PT> %(OSTFAllTrkPtLL_2BodyInc)s *MeV)
-                    & (P> %(OSTFAllTrkPLL_2BodyInc)s *MeV)
-                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL_2BodyInc)s )
-                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL_2BodyInc)s )""" % self.getProps()
+        incuts = """(PT> %(Inc_Trk_PT_MIN)s *MeV)
+                    & (P> %(Inc_Trk_P_MIN)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(Inc_Trk_MIPCHI2DV_MIN)s )
+                    & (TRCHI2DOF< %(Inc_Trk_TRCHI2DOF_MAX)s )""" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -350,84 +325,81 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
 
 
     def __apply_configuration__(self) :
-        ###################################################################
-        # Decay descriptors
-        ###################################################################
-        decayDesc2Body = [  "D0 -> pi+ pi-"
-                          , "D0 -> K+ K-"   
-                          , "D0 -> K+ pi-"  , "D0 -> pi+ K-"]
-        decayDesc2BodyInc = [  "D0 -> pi+ pi-"
-                          , "D0 -> pi+ pi+"   
-                          , "D0 -> pi- pi-"]
 
-
-        ###################################################################
-        # Combinations for one stage lines that run on fitted tracks, for
-        # low rate running.
-        ###################################################################
+        ## Input particles
+        ### ###############################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclOSTFInputKaons2Body = self.__ostfInPartFilter2Body('CharmInputKaons2Body', [ BiKalmanFittedKaons] )
-        lclOSTFInputPions2Body = self.__ostfInPartFilter2Body('CharmInputPions2Body', [ BiKalmanFittedPions] )
-        lclOSTFInputKaons2BodyInc = self.__ostfInPartFilter2BodyInc('CharmInputKaons2BodyInc', [ BiKalmanFittedKaons] )
-        lclOSTFInputPions2BodyInc = self.__ostfInPartFilter2BodyInc('CharmInputPions2BodyInc', [ BiKalmanFittedPions] )
+        lclInputKaons = self.__inPartFilter('CharmHadD02HHKaons', [ BiKalmanFittedKaons] )
+        lclInputPions = self.__inPartFilter('CharmHadD02HHPions', [ BiKalmanFittedPions] )
 
-        # 2-body combinations
-        ###################################################################
-        charmOSTF2Body = self.__ostfCombine2Body(  name = 'Charm2Body'
-                                , inputSeq = [ lclOSTFInputKaons2Body, lclOSTFInputPions2Body ]
-                                , decayDesc = decayDesc2Body 
-                                , extracuts = { 'CombinationCut' : 
-                                                "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(OSTFPairMinDocaUL_2Body)s )" % self.getProps() 
-                                              }
+
+        ## D0 -> h- h+ lines
+        ### ###############################################################
+        decayModes = {   'CharmD02KK'   : "D0 -> K- K+"
+                       , 'CharmD02KPi'  : "[D0 -> K- pi+]cc"
+                       , 'CharmD02PiPi' : "D0 -> pi- pi+"
+                     }
+
+        sigMassCut  = "in_range(%s*MeV, M, %s*MeV)" \
+                      % (self.getProp('Sig_M_MIN'), self.getProp('Sig_M_MAX'))
+
+        wideMassCut = "in_range(%s*MeV, M, %s*MeV)" \
+                      % (self.getProp('WideMass_M_MIN'), \
+                         self.getProp('WideMass_M_MAX'))
+
+
+        for modeName in decayModes.keys() : # {
+            ## Combinatorics
+            d02hhComb = self.__combine(  name = modeName
+                                , inputSeq = [ lclInputKaons, 
+                                               lclInputPions ]
+                                , decayDesc = [ decayModes[modeName] ]
+                           )
+
+            ## Signal window filter
+            d02hhSigSeq = self.__filter( name = modeName
+                                     , inputSeq = [ d02hhComb ]
+                                     , extracode = sigMassCut
+                           )
+
+            ## Signal window line
+            d02hhSigLine = self.__makeLine(modeName, algos = [ d02hhSigSeq ])
+
+
+            ## Wide mass window filter
+            wmModeName = modeName + 'WideMass'
+            d02hhWMSeq = self.__filter( name = wmModeName
+                                     , inputSeq = [ d02hhComb ]
+                                     , extracode = wideMassCut
+                           )
+
+            ## Wide mass window line
+            d02hhSigLine = self.__makeLine(wmModeName, algos = [ d02hhWMSeq ])
+
+        # }
+
+
+
+
+
+
+        ### ###############################################################
+        ## 2-body inclusive line
+        ### ###############################################################
+        lclInputPionsInc = self.__inPartFilterInc('CharmHadD02HHIncPions',
+                                                  [ BiKalmanFittedPions] )
+
+        charmInc = self.__combineInc(  name = 'Charm2BodyInc'
+                                , inputSeq = [ lclInputPionsInc ]
+                                , decayDesc = [  "D0 -> pi+ pi-"
+                                               , "D0 -> pi+ pi+"
+                                               , "D0 -> pi- pi-"]
                                )
 
-        # 2-body inclusive combinations
-        ###################################################################
-        charmOSTF2BodyInc = self.__ostfCombine2BodyInc(  name = 'Charm2BodyInc'
-                                , inputSeq = [ lclOSTFInputKaons2BodyInc, lclOSTFInputPions2BodyInc ]
-                                , decayDesc = decayDesc2BodyInc 
-                                , extracuts = { 'CombinationCut' : 
-                                                "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(OSTFPairMinDocaUL_2BodyInc)s )" % self.getProps() 
-                                              }    
-                               )
+        charmIncSeq = self.__filterInc('Charm2BodyInc'
+                                     , [charmInc]
+                                    )
 
-
-        ###################################################################
-        # Decision sequences for the one stage lines
-        ###################################################################
-
-        # 2-body decision
-        ###################################################################
-        charmOSTF2BodySeq = self.__ostfFilter2Body('Charm2Body'
-                                     , [charmOSTF2Body]
-                                     , extracode = 'in_range(1839*MeV, M, 1889*MeV) & (PT > %(OSTFDPtLL_2Body)s) & (VFASPF(VCHI2PDOF) < %(OSTFVtxChi2UL_2Body)s)' % self.getProps()) 
-
-        # 2-body inclusive decision
-        ###################################################################
-        charmOSTF2BodyIncSeq = self.__ostfFilter2BodyInc('Charm2BodyInc'
-                                     , [charmOSTF2BodyInc]
-                                     , extracode = "(SUMTREE(PT,('pi+'==ABSID),0.0) > %(OSTFDSumPtLL_2BodyInc)s) & (PT > %(OSTFDPtLL_2BodyInc)s) & (BPVIPCHI2() > %(OSTFDIPChi2LL_2BodyInc)s)" % self.getProps())
-
-        # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
-        ###################################################################
-        charmOSTF2BodySBSeq = self.__ostfFilter2Body('CharmPostOSTF2BodyWideMass'
-                                     , [charmOSTF2Body]
-                                     , extracode = 'in_range(1700*MeV, M, 2100*MeV)')
-
-
-
-        # Line creation for one stage track fit lines.
-        ###################################################################
-        charmOSNBodySeq = {  '2Body' : {  'Std'  : charmOSTF2BodySeq
-                                        , 'Wide' : charmOSTF2BodySBSeq }
-                          }
-
-        for charmSeq in charmOSNBodySeq.keys() :
-            osLineName   = 'Charm' + charmSeq
-            oswmTFLineName = 'Charm' + charmSeq + 'WideMass'
-            self.__makeLine(osLineName, algos = [ charmOSNBodySeq[charmSeq]['Std'] ])
-            self.__makeLine(oswmTFLineName, algos = [ charmOSNBodySeq[charmSeq]['Wide'] ])
-
-        #Make the inclusive line!
-        self.__makeLine("Charm2BodyInc",algos=[charmOSTF2BodyIncSeq])
+        ## Make the inclusive line!
+        self.__makeLine("Charm2BodyInc",algos=[charmIncSeq])
 
