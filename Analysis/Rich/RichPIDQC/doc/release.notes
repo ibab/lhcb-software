@@ -5,6 +5,10 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 - Juan Palacios
+ - Remove PhysDesktop imports.
+ - Increase to v1r5p2.
+
 !========================== RichPIDQC v1r5p1 2011-01-19 ======================
 
 ! 2011-01-18 - Juan Palacios
