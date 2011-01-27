@@ -131,13 +131,13 @@ void ReprocessingWriter::closeFiles(bool force) {
     }
     tmp = tmp->getNext();
   }
-  for(tmp = m_openFiles.getFirstFile(); tmp; )   {
+  for(tmp = m_parkFiles.getFirstFile(); tmp; )   {
     toDelete = (force || tmp->getTimeSinceLastWrite()>m_runFileKeepTimeout) ? tmp : 0;
     if ( toDelete ) {
       if(tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
 	toDelete = tmp;
 	*m_log << MSG::INFO << "Remove file:" << *(tmp->getFileName()) << endmsg;
-	tmp = m_openFiles.removeFile(tmp);
+	tmp = m_parkFiles.removeFile(tmp);
 	delete toDelete;
 	continue;
       }
@@ -240,6 +240,9 @@ void ReprocessingWriter::closeFile(File *f)   {
   *m_log << MSG::INFO << "RUN:" << std::dec << f->getRunNumber()
 	 << " ...closing file:" << *(f->getFileName()) << endmsg;
 
+  *m_log << MSG::ERROR << "RUN:" << std::dec << f->getRunNumber()
+	 << " ...closing file:" << *(f->getFileName()) << endmsg;
+
   unsigned int trgEvents[MAX_TRIGGER_TYPES];
   if(f->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0) {
     *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
@@ -266,6 +269,8 @@ void ReprocessingWriter::closeFile(File *f)   {
 		 statEvents);
   
   m_srvConnection->sendCommand(&header, &pdu);
+  *m_log << MSG::INFO << "RUN:" << std::dec << f->getRunNumber()
+	 << " Successfully closed file:" << *(f->getFileName()) << endmsg;
 }
 
 /* Writes out the buffer to the socket through the Connection object.
