@@ -18,7 +18,7 @@ def PatChecking():
    if "Truth" in trackAlgs :
       GaudiSequencer("RecoTruthSeq").Members +=  [ UnpackMCParticle(), UnpackMCVertex(), PatLHCbID2MCParticle() ]
       
-   if not TrackSys().veloOpen() and not TrackSys().fastVelo() :
+   if not TrackSys().veloOpen() and "FastVelo" not in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVeloRZ") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
       TrackAssociator("AssocVeloRZ").TracksInContainer     = "Rec/Track/RZVelo";

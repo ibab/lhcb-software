@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2011-01-27 - Stephanie Hansmann-Menzemer
+ - change to new tracking reco sequence from 2011 data taking on
+ - set early data tuning as default
 
 !========================= TrackSys v5r1 2010-12-16 =========================
 ! 2010-12-10 - Olivier Callot

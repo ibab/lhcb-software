@@ -25,15 +25,17 @@ class TrackSys(LHCbConfigurableUser):
        ,"WithMC":       False # set to True to use MC truth
        ,"OutputType": "" # set to "RDST" for special RDST sequence
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
-       , "DataType": "2010" # propagated from Brunel(), used to determine which monitors to run
-       , "FastVelo": False # use the FastVelo package instead of PatVelo
+       ,"DataType": "2010" # propagated from Brunel(), used to determine which monitors to run
         }
     
     ## Possible expert options
     KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "noMaterialCorrections",
                                   "fastSequence", "timing"]
-    ## Default track pattern recognition algorithms to run
-    DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
+
+    ## Default track pattern recognition algorithms to run in 2010
+    DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
+    ## Default track pattern recognition algorithms to run in 2011
+    DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
     ## Cosmic track pattern recognition algorithms to run
@@ -45,7 +47,10 @@ class TrackSys(LHCbConfigurableUser):
     def defineOptions(self):
       if "cosmics" not in self.getProp("SpecialData"):
            if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
-               self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
+               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProb("DataType") :  
+                 self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
+               else:
+                 self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
            if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
                self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
            for prop in self.getProp("ExpertTracking"):
@@ -58,8 +63,6 @@ class TrackSys(LHCbConfigurableUser):
                self.setProp("ExpertTracking",self.CosmicExpertTracking)
                                                                
 
-    ## @brief Shortcut to the FastVelo option
-    def fastVelo(self) : return self.getProp("FastVelo")
     ## @brief Shortcut to the fieldOff option
     def fieldOff(self) : return "fieldOff" in self.getProp("SpecialData")
     ## @brief Shortcut to the veloOpen option
@@ -68,8 +71,6 @@ class TrackSys(LHCbConfigurableUser):
     def cosmics(self)  : return "cosmics"  in self.getProp("SpecialData")
     ## @brief Shortcut to the beamGas option
     def beamGas(self)  : return "beamGas"  in self.getProp("SpecialData")
-    ## @brief Shortcut to the noDrifttimes option
-    def earlyData(self): return "earlyData" in self.getProp("SpecialData")
     ## @brief Shortcut to the noDrifttimes option
     def noDrifttimes(self) : return "noDrifttimes" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the simplifiedGeometry option

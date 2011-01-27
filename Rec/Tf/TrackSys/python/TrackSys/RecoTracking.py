@@ -37,7 +37,7 @@ def RecoTracking(exclude=[]):
    # Which algs to run ?
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
    
-   if "Velo" in trackAlgs :
+   if "Velo" or "FastVelo" in trackAlgs :
       GaudiSequencer("RecoDecodingSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters")]
 
       veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
@@ -54,42 +54,40 @@ def RecoTracking(exclude=[]):
    
    GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
    
-   if TrackSys().earlyData():
-      from STTools import STOfflineConf
-      STOfflineConf.EarlyDataConf().configureTools()
-      #importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
-   else:
-      from STTools import STOfflineConf
-      STOfflineConf.DefaultConf().configureTools()
-      #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
 
+   from STTools import STOfflineConf
+   STOfflineConf.DefaultConf().configureTools()
+   #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
+   
    ## Velo tracking
+   if "FastVelo" in trackAlgs :
+      GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
+      if TrackSys().timing() :
+         FastVeloTracking().TimingMeasurement = True; 
+
    if "Velo" in trackAlgs :
-      if TrackSys().fastVelo():
-          GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
-      else:
-         if TrackSys().veloOpen():
-            if TrackSys().beamGas(): 
-               GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
-                                                          Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-            else:
-               GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
-               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
-               Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
-               if TrackSys().timing() :
-                  Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
+      if TrackSys().veloOpen():
+         if TrackSys().beamGas(): 
+            GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
+                                                       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
          else:
-            GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
-                                                       Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
-                                                       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")
-                                                       ]
-            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
+            GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
+            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
+            Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
             if TrackSys().timing() :
-               Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").TimingMeasurement = True;
-               Tf__PatVeloRTracking("PatVeloRTracking").TimingMeasurement = True;
                Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
+      else:
+         GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
+                                                    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
+                                                    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")
+                                                    ]
+         Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+         Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
+         if TrackSys().timing() :
+            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").TimingMeasurement = True;
+            Tf__PatVeloRTracking("PatVeloRTracking").TimingMeasurement = True;
+            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
             
          
    ## Special OT decoder for cosmics to merge spills.
@@ -173,16 +171,11 @@ def RecoTracking(exclude=[]):
          ## Seed fit initialization
          GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
          TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
-         if TrackSys().fastVelo():
+         if "FastVelo" in trackAlgs :
             TrackStateInitAlg("InitSeedFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
             TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
-         # Choose fitter configuration
-         if stdSeq and "Match" not in trackAlgs :
-            # Use standard fitter
-            GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFit("FitSeed", "Rec/Track/Seed")]
-         if "Match" in trackAlgs :
-            # Use small ErrorQoP fitter, needed for Match
-            GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+         # Use small ErrorQoP fitter, needed for Match
+         GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
             
    ## Match
    if "Match" in trackAlgs and "PatMatch" in trackAlgs :
@@ -208,7 +201,7 @@ def RecoTracking(exclude=[]):
       GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
       cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
       from PatAlgorithms import PatAlgConf
-      PatAlgConf.DownstreamConf().configureAlg()
+      #PatAlgConf.DownstreamConf().configureAlg()
       if TrackSys().timing() :
          PatDownstream("PatDownstream").TimingMeasurement = True;
       
@@ -230,7 +223,7 @@ def RecoTracking(exclude=[]):
    GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
    GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
    TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/AllBest"
-   if TrackSys().fastVelo():
+   if "FastVelo" in trackAlgs :
       TrackStateInitAlg("InitBestFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
       TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
 
@@ -242,7 +235,7 @@ def RecoTracking(exclude=[]):
 
                                  
    ## Velo fitting
-   if "Velo" in trackAlgs :
+   if "Velo" or "FastVelo" in trackAlgs :
       ## Prepare the velo tracks for the fit
       track.DetectorList += [ "VeloFit"]
       GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
