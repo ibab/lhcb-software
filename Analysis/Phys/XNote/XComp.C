@@ -14,9 +14,9 @@ void XComp(){
   TCanvas *c2 = new TCanvas("c2", "c2",10,44,700,500);
   c2->SetGridx();
 
-  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3872 ,0 ,0};
-  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.4 ,0, 0};
-  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.1 , 0, 0};
+  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3874.54 ,0 ,0};
+  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.44 ,0, 0};
+  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.14  , 0, 0};
   Float_t totErrors[nov]; Float_t Errors[nov];
   int i = 0;
   for (i = 0; i < nov -1 ; ++i ) {
@@ -89,7 +89,7 @@ void XComp(){
 
   Int_t Colors[nov]={1,1,1,1
                     ,1,1,1,1};
-  char* Labels[nov] = {"CDF", "Babar B^{+}", "Babar B^{0}", "D0", "Belle", "LHCb (bogus)", "Avg" , "Avg"};
+  char* Labels[nov] = {"CDF", "Babar B^{+}", "Babar B^{0}", "D0", "Belle", "LHCb (blind)", "Avg" , "Avg"};
   Labels[nov-2] = oldaverageString.c_str(); 
   Labels[nov-1] = averageString.c_str();  
 
