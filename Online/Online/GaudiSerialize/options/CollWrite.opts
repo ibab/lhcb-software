@@ -1,0 +1,28 @@
+ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
+ApplicationMgr.TopAlg    += { "LHCb::RawEventTestCreator/RawEventGen"};
+#include "$MDFROOT/options/MDFCheck.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
+
+ApplicationMgr.HistogramPersistency  = "NONE";
+// ApplicationMgr.ExtSvc += {"Gaudi::SerializeCnvSvc/SerializeCnvSvc"};
+// EventPersistencySvc.CnvServices += {"SerializeCnvSvc"};
+// SerializeCnvSvc.OutputLevel = 2;
+
+Writer.OutputLevel         = 2;
+Writer.NumMcTracks         = 1;
+ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
+
+
+EvtTupleSvc.Output = {"EvtColl DATAFILE='tuples' OPT='RECREATE' SVC='Gaudi::SerializeCnvSvc'" };
+RootMini.ItemList  = { "/Event#1"   } ;
+RootMini.Output    = "DATAFILE='PFN:POOLIO.mdst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
+ApplicationMgr.OutStream += { "OutputStream/RootMini" };
+ApplicationMgr.OutStream += { "EvtCollectionWrite/Writer" };
+ApplicationMgr.OutStream += { "TupleWriter"};
+TupleWriter.Output        = "DATAFILE='PFN:my_tuples.dat' SVC='LHCb::RawDataCnvSvc/RawTupleCnvSvc' OPT='REC'";
+TupleWriter.ItemList      = { "/NTUPLES/EvtColl/RawTupleData#1" };
+TupleWriter.Preload       = false;
+TupleWriter.EvtDataSvc    = "EvtTupleSvc";
+MessageSvc.OutputLevel    = 1;
