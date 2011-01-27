@@ -3,7 +3,8 @@
 #define RODIMFSMSERVICE_H 1
 
 // Include files
-#include "GaudiKernel/MsgStream.h"   // Get default definitions from Gaudi
+//#include "GaudiKernel/MsgStream.h"   // Get default definitions from Gaudi
+#include <string>
 #include "dim/dis.hxx"
 
 /** @class RODimFsmService RODimFsmService.h
