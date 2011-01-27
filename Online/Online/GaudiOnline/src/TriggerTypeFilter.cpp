@@ -29,7 +29,9 @@ class TriggerTypeFilter: public GaudiAlgorithm {
 	StatusCode Expo( unsigned int numSteps);
 };
 #endif // TRIGGERTYPEFILTER_TRIGGERTYPEFILTER_H
-  DECLARE_ALGORITHM_FACTORY( TriggerTypeFilter )
+
+
+DECLARE_ALGORITHM_FACTORY( TriggerTypeFilter )
 TriggerTypeFilter::TriggerTypeFilter( const std::string& name,	ISvcLocator* pSvcLocator)  
   : GaudiAlgorithm ( name , pSvcLocator ),
   m_triggerTypeToPass(0)
@@ -44,6 +46,8 @@ StatusCode TriggerTypeFilter::initialize() {
   debug() << "==> Initialize" << endmsg;
   return StatusCode::SUCCESS;
 }
+
+
 StatusCode TriggerTypeFilter::execute() {
   debug() << "==> Execution counter:" << endmsg;
   debug()<< " ==> getRawEvent() " <<endmsg;
@@ -64,6 +68,8 @@ StatusCode TriggerTypeFilter::execute() {
   else setFilterPassed(false) ;
   return StatusCode::SUCCESS;
 }
+
+
 StatusCode TriggerTypeFilter::finalize() {
   debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  
