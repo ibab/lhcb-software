@@ -27,9 +27,9 @@ StubLinker::StubLinker(const std::string& type,
   // constructor
 
   declareProperty("deltaSx",  m_deltaSx = 0.03);
-  declareProperty("deltaXCon", m_deltaXCon = 0.006);
-  declareProperty("outlierCutParabola", m_outlierCutParabola = 3.1);
-  declareProperty("outlierCutLine", m_outlierCutLine = 3.5);
+  declareProperty("deltaXCon", m_deltaXCon = 0.08);
+  declareProperty("outlierCutParabola", m_outlierCutParabola = 6.0);
+  declareProperty("outlierCutLine", m_outlierCutLine = 6.0);
 
   declareInterface<ITsaStubLinker>(this);
 

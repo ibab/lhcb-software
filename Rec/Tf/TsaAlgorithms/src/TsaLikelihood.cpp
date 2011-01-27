@@ -34,13 +34,13 @@ Likelihood::Likelihood(const std::string& type,
   m_parabolaFit(0)
 {
 
-  declareProperty("LikCut", m_likCut = -32.0);
+  declareProperty("LikCut", m_likCut = -40.0);
   declareProperty("ITEff", m_itEff = 0.995);
-  declareProperty("OTEff", m_otEff = 0.91);
+  declareProperty("OTEff", m_otEff = 0.85);
   declareProperty("f1Par", m_f1Par = list_of(5.335)(0.005433)(7.551)(0.04098));
   declareProperty("f2Par", m_f2Par = list_of(6.884)(35.49)(5.62)(6.928));
   declareProperty("weights", m_weights = list_of(1.0)(1.0)(1./2.)(1./2.)(1.0)(1.0)(1.0));
-  declareProperty("outlierCut", m_outlierCut = 3.1);
+  declareProperty("outlierCut", m_outlierCut = 6.0);
 
   declareInterface<ITsaSeedStep>(this);
 };

@@ -29,10 +29,10 @@ SeedAddHits::SeedAddHits(const std::string& type,
 
   declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
-  declareProperty("tol", m_tol =  1.0*Gaudi::Units::mm);
-  declareProperty("dCut", m_dCut = 0.18*Gaudi::Units::mm);
-  declareProperty("outlierCutParabola",m_outlierCutParabola = 3.1);
-  declareProperty("outlierCutLine",m_outlierCutLine = 3.5);
+  declareProperty("tol", m_tol =  7.0*Gaudi::Units::mm);
+  declareProperty("dCut", m_dCut = 0.7*Gaudi::Units::mm);
+  declareProperty("outlierCutParabola",m_outlierCutParabola = 6.0);
+  declareProperty("outlierCutLine",m_outlierCutLine = 6.0);
   declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
 
   declareInterface<ITsaSeedAddHits>(this);

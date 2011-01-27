@@ -40,11 +40,11 @@ StubExtender::StubExtender(const std::string& type,
   declareProperty("nTotalCut2", m_nTotalCut2 = 11);
   declareProperty("y0Cut1", m_y0Cut1 = 400);
   declareProperty("y0Cut2", m_y0Cut2 = 100);
-  declareProperty("dxCut", m_dxCut = 0.80);
+  declareProperty("dxCut", m_dxCut = 1.00);
   declareProperty("dyCut", m_dyCut = 30.0);
 
-  declareProperty("outlierCutLine", m_outlierCutLine = 3.5);
-  declareProperty("outlierCutParabola", m_outlierCutParabola = 3.1);
+  declareProperty("outlierCutLine", m_outlierCutLine = 6.0);
+  declareProperty("outlierCutParabola", m_outlierCutParabola = 6.0);
 
   m_scth = 1.0/TsaConstants::sth;
 

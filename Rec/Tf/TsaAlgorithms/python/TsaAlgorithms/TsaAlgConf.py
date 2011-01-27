@@ -61,29 +61,6 @@ class TsaSeedConf(object):
             tsaSeed.calcLikelihood = False
             
         
-        if  TrackSys().earlyData():
-            tsaSeed.SeedAddHits.dCut = 0.7
-            tsaSeed.SeedAddHits.tol = 7.0
-            tsaSeed.SeedAddHits.outlierCutParabola = 6.0
-            tsaSeed.SeedAddHits.outlierCutLine = 6.0
-            tsaSeed.stubLinker.outlierCutParabola = 6.0
-            tsaSeed.stubLinker.deltaXCon = 0.08
-            tsaSeed.stubLinker.deltaSx = 0.03
-            tsaSeed.stubLinker.outlierCutLine = 6.0
-            tsaSeed.stubExtender.outlierCutParabola = 6.0
-            tsaSeed.stubExtender.outlierCutLine = 6.0
-            tsaSeed.stubExtender.dxCut = 1.0
-            tsaSeed.stubExtender.dyCut = 30.
-            tsaSeed.stubFinder.yCut = 5
-            tsaSeed.stubFinder.yTol = 10
-#            tsaSeed.stubFinder.dAngle = 0.35
-            tsaSeed.addTool(Tf__Tsa__Likelihood, name = "likelihood")
-            tsaSeed.likelihood.LikCut = -40
-            tsaSeed.likelihood.outlierCut = 6.0
-            tsaSeed.likelihood.OTEff = 0.85
-            
-            tsaConv.LikCut = -40
-        
         
     def configureTools(self, xTools, stereoTools):
         
@@ -134,44 +111,45 @@ class TsaSeedConf(object):
             stereoTools[3].yTol2 = 20
             stereoTools[4].yTol2 = 20
             
-        if  TrackSys().earlyData():
-            xTools[0].outlierCut = 6.0
-            xTools[1].outlierCut = 6.0
-            xTools[2].outlierCut = 6.0
-            xTools[3].outlierCut = 6.0
-            xTools[4].outlierCut = 6.0
-            stereoTools[0].outlierCut = 6.0
-            stereoTools[1].outlierCut = 6.0
-            stereoTools[2].outlierCut = 6.0
-            stereoTools[3].outlierCut = 6.0
-            stereoTools[4].outlierCut = 6.0
-            xTools[0].deltaX = 0.7
-            xTools[1].deltaX = 0.7
-            xTools[2].deltaX = 0.7
-#            xTools[0].x0Cut = 2000.
-#            xTools[1].x0Cut = 2000.
-#            xTools[2].x0Cut = 2000.
-            xTools[3].deltaX = 1.2
-            xTools[4].deltaX = 1.2
-#            xTools[0].dthCut = 0.45
-#            xTools[1].dthCut = 0.45
-#            xTools[2].dthCut = 0.45
-#            xTools[3].dthCut = 0.75
-#            xTools[4].dthCut = 0.75
-            stereoTools[0].syCut = 0.02
-            stereoTools[1].syCut = 0.02
-            stereoTools[2].syCut = 0.02
-            stereoTools[0].yTol = 10.0
-            stereoTools[1].yTol = 10.0
-            stereoTools[2].yTol = 10.0
-            stereoTools[3].nHit = 14
-            stereoTools[4].nHit = 14
-            stereoTools[3].syCut = 0.08
-            stereoTools[4].syCut = 0.08
-            stereoTools[3].yTol2 = 10.0
-            stereoTools[4].yTol2 = 10.0
-            stereoTools[3].maxDriftRadius = 3.
-            xTools[3].maxDriftRadius = 3.
-            stereoTools[4].maxDriftRadius = 3.
-            xTools[4].maxDriftRadius = 3.
 
+        xTools[0].outlierCut = 6.0
+        xTools[1].outlierCut = 6.0
+        xTools[2].outlierCut = 6.0
+        xTools[3].outlierCut = 6.0
+        xTools[4].outlierCut = 6.0
+        stereoTools[0].outlierCut = 6.0
+        stereoTools[1].outlierCut = 6.0
+        stereoTools[2].outlierCut = 6.0
+        stereoTools[3].outlierCut = 6.0
+        stereoTools[4].outlierCut = 6.0
+        xTools[0].deltaX = 0.7
+        xTools[1].deltaX = 0.7
+        xTools[2].deltaX = 0.7
+        #            xTools[0].x0Cut = 2000.
+        #            xTools[1].x0Cut = 2000.
+        #            xTools[2].x0Cut = 2000.
+        xTools[3].deltaX = 1.2
+        xTools[4].deltaX = 1.2
+        #            xTools[0].dthCut = 0.45
+        #            xTools[1].dthCut = 0.45
+        #            xTools[2].dthCut = 0.45
+        #            xTools[3].dthCut = 0.75
+        #            xTools[4].dthCut = 0.75
+        stereoTools[0].syCut = 0.02
+        stereoTools[1].syCut = 0.02
+        stereoTools[2].syCut = 0.02
+        stereoTools[0].yTol = 10.0
+        stereoTools[1].yTol = 10.0
+        stereoTools[2].yTol = 10.0
+        stereoTools[3].nHit = 14
+        stereoTools[4].nHit = 14
+        stereoTools[3].syCut = 0.08
+        stereoTools[4].syCut = 0.08
+        stereoTools[3].yTol2 = 10.0
+        stereoTools[4].yTol2 = 10.0
+        stereoTools[3].maxDriftRadius = 3.
+        xTools[3].maxDriftRadius = 3.
+        stereoTools[4].maxDriftRadius = 3.
+        xTools[4].maxDriftRadius = 3.
+        
+        

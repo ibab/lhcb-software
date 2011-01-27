@@ -21,12 +21,12 @@ StubFind::StubFind(const std::string& type,
 {
   // constructer
   declareProperty("sector", m_sector = 0);
-  declareProperty("yTol", m_yTol = 3.0);
+  declareProperty("yTol", m_yTol = 10.0);
   declareProperty("xSearch_xsParam", m_xsParam = 1.0/3125.0);
   declareProperty("sxCut", m_sxCut = 0.4);
   declareProperty("dAngle", m_dAngle = 0.3);
   declareProperty("syCut", m_syCut = 0.25);
-  declareProperty("yCut", m_yCut = 3.0);
+  declareProperty("yCut", m_yCut = 5.0);
 
   // constructer
   declareInterface<ITsaStubFind>(this);

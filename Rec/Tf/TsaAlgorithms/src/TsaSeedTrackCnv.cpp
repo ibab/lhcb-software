@@ -18,7 +18,7 @@ SeedTrackCnv::SeedTrackCnv(const std::string& name,
   BaseAlg(name, pSvcLocator)
 {
   // constructor
-  declareProperty("LikCut", m_likCut = -32.);
+  declareProperty("LikCut", m_likCut = -40.);
   declareProperty("inputLocation", m_inputLocation = SeedTrackLocation::Default);
   declareProperty("outputLocation", m_outputLocation = LHCb::TrackLocation::Tsa );
 }

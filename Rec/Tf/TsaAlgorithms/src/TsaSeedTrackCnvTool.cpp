@@ -99,7 +99,7 @@ LHCb::Track* SeedTrackCnvTool::convert(const SeedTrack* aTrack) const
     addState(aTrack, fitTrack, *iterZ );
   } // iterZ
 
-  // add history
+  // add histor5Ay
   fitTrack->addInfo(LHCb::Track::TsaLikelihood, aTrack->lik());
 
   return fitTrack;
