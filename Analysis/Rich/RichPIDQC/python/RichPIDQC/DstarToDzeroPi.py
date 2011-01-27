@@ -116,7 +116,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
         # Particle Monitoring plots
         if self.getProp("RunMonitors") :
 
-            from Configurables import ( ParticleMonitor, PhysDesktop )
+            from Configurables import ParticleMonitor
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
             plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(M-MAXTREE('D0'==ABSID,M)<147.43) "\
