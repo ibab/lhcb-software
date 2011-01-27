@@ -16,12 +16,12 @@
 // Framework includes
 #include "dic.hxx"
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMonDefs.h"
 #include "ROMon/ROMon.h"
 #include "ROMon/ROMonInfo.h"
 #include "ROMon/RODimFSMListener.h"
-#include "GaudiKernel/strcasecmp.h"
 
 namespace {
   struct FSMMonitoring {
@@ -50,9 +50,9 @@ RODimFSMListener::~RODimFSMListener() {
 void RODimFSMListener::addHandler(const string& node,const string& svc)    {
   static string myNode = RTL::nodeNameShort();
   static string myUtgid = RTL::processName();
-  if ( ::strncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
-    if ( ::strncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
-      if ( ::strncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
+  if ( ::str_ncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
+    if ( ::str_ncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
+      if ( ::str_ncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
         DimLock lock;
         string nam = svc+"/fsm_status";
         Clients::iterator i=m_clients.find(nam);

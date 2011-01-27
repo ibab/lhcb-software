@@ -19,8 +19,8 @@
 #include <set>
 
 // Framework include files
-#include "GaudiKernel/strcasecmp.h"
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/MonitoringDisplay.h"
@@ -175,7 +175,7 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
   txt[0][0] = txt[1][0] = 0;
   nTsk = 0;
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
+    if ( ::str_ncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
         string buff_nam = (*ib).name;
@@ -222,7 +222,7 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
                           "Node","Buffer","Received","Produced","Pending","Space[kB]","Free Slots","Free Users");
   
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
+    if ( ::str_ncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
         const MBMBuffer::Control& ctrl = (*ib).ctrl;
@@ -272,8 +272,8 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
                           "Node","Buffer","Received","Produced","Pending",
                           "Sent","Free[kB]","Slots","Users");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0 ) {
-      is_reco = ::strncasecmp((*n).name,"mona09",6) == 0;
+    if ( ::str_ncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0 ) {
+      is_reco = ::str_ncasecmp((*n).name,"mona09",6) == 0;
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
         string buff_nam = (*ib).name;
