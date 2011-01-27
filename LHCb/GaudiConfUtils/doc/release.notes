@@ -4,6 +4,8 @@
 ! Purpose     : Helper python modules for Configurable manipulations.
 !-----------------------------------------------------------------------------
 
+! ========================= GaudiConfUtils v1r0 2011-01-27 ===================
+
 ! 2011-01-27 - Juan Palacios
  - First import. Contains module GaudiConfUtils.Utils, with functions
   * isIterable: Return True if a configurable exists in the Configurables module.
