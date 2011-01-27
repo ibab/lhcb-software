@@ -1,6 +1,8 @@
 2011-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLCGCMTtar: added support for icc11
+	* python/LbLegacy/install_project.py: fixes for unknow binary
+	* scripts/mkLCGCMTtar: added support for icc11 and winxp
+
 
 2011-01-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

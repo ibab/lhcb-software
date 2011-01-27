@@ -112,7 +112,7 @@ def pkgFilter(NAME, pak, vers, binary):
             keep = False
         if pak == "pyqt" and vers.startswith("3.") :
             keep = False
-    if binary.startswith("win32") and pak == "pyqt_compat" :
+    if (binary.startswith("win32") or binary.find("winxp") != -1 )and pak == "pyqt_compat" :
         keep = False
     if pak.lower() == "icc" :
         keep = False
@@ -206,8 +206,10 @@ def get_lcg_version(cmtpath):
 #----------------------------------------------------------------------------
 def getCMTExtraTags(binary):
     cmtargs = "-tag=LHCb,LHCbGrid"
-    if binary.find("win32") != -1 :
+    if  binary.startswith("win32") or binary.startswith("i686-winxp") :
         cmtargs = "-tag=LHCb,WIN32"
+    elif  binary.startswith("win64") or binary.startswith("x86_64-winxp") :
+        cmtargs = "-tag=LHCb,WIN64"
     else :
         if binary.find("slc3") != -1 :
             cmtargs = "-tag=LHCb,LHCbGrid,slc3"
@@ -300,6 +302,9 @@ def get_tar_name(root, gen, native, bin):
             if bin == 'win32_vc71':
                 lcgbin = lcgbin+'_dbg'
                 dirlist.append(bin+'_dbg')
+            elif bin == 'i686-winxp-vc9-opt' :
+                lcgbin = lcgbin.replace("-opt", "-dbg")
+                dirlist.append(bin.replace("-opt", "-dbg"))
             else:
                 dirlist.append(bin)
             name = native+lcgbin+'.tar.gz'
@@ -453,7 +458,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
                         os.remove(os.path.join(packpath,dirlist[0],lnk))
                         print 'remove %s '%(os.path.join(packpath,dirlist[0],lnk))
         else:
-            if not (key == 'CASTOR' and ext_bin_dir.find('win32') != -1):
+            if not (key == 'CASTOR' and ((ext_bin_dir.find('win32') != -1) or (ext_bin_dir.find("winxp") != -1) )):
                 print "%s %s %s is missing" % (key, value, ext_bin_dir)
                 missing.append(os.path.join(key,value,ext_bin_dir))
 
@@ -571,7 +576,7 @@ if __name__ == "__main__":
     str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
     logfile.write(str)
 
-    if sys.platform == 'win32':
+    if (sys.platform == 'win32') or (sys.platform == 'win64'):
         rmcmd = 'rmdir /s/q '
     else:
         rmcmd = '/bin/rm -fr '

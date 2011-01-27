@@ -76,6 +76,7 @@ show_compatible_configs = False
 install_binary = False
 latest_data_link = False
 dev_install = False
+extra_binary = None
 
 #----------------------------------------------------------------------------------
 
@@ -700,6 +701,8 @@ def getPackVer(fname):
     if fname.find("LBSCRIPTS") == -1 :
         import LbConfiguration.Platform
         binary_list = LbConfiguration.Platform.binary_dbg_list + LbConfiguration.Platform.binary_opt_list
+        if extra_binary :
+            binary_list.append(extra_binary)
         for b in binary_list:
             if fname.find(b) != -1:
                 bin = b
@@ -807,6 +810,20 @@ except ImportError:
                 version = cptes[1]
         return name, version, binary
 
+
+def getUnknowTarBallNameItems(tb_name, binary):
+    corename = tb_name.replace(".tar.gz","")
+    s_binary = None
+    if corename.endswith(binary) :
+        s_binary = binary
+        corename = corename.replace(binary, "")
+    coreitems = corename.split("_")
+    s_version = coreitems[-1]
+    s_name = coreitems[1]
+    return s_name, s_version, s_binary
+
+
+
 def getProjectList(name, version, binary=None, recursive=True):
     log = logging.getLogger()
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
@@ -900,6 +917,8 @@ def getProjectList(name, version, binary=None, recursive=True):
     if recursive :
         for tb_name in html_list :
             s_name, s_version, s_binary = getTarBallNameItems(tb_name)
+            if not s_binary and binary and (tb_name.find(binary) != -1) :
+                _, s_version, s_binary = getUnknowTarBallNameItems(tb_name, binary)
             if s_name and s_version :
                 if not (s_name.upper() == name.upper() and s_version == version and s_binary == binary) :
                     sub_project_list, sub_html_list = getProjectList(s_name, s_version, s_binary)
@@ -2079,6 +2098,7 @@ def untarFile(fname):
 
 def checkBinaryName(binary):
     global make_flag
+    global extra_binary
 
     from LbConfiguration.Platform import NativeMachine, isBinaryOpt, getBinaryDbg, binary_list
 
@@ -2114,6 +2134,7 @@ def checkBinaryName(binary):
         next = sys.stdin.readline()
         if next.lower()[0] != 'y':
             sys.exit()
+        extra_binary = binary
 
     return binary
 
