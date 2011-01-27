@@ -15,8 +15,8 @@ static CheckpointRestoreWrapper* _get() {
 }
 #endif
 
-CheckpointRestoreWrapper& CheckpointRestoreWrapper__instance() {
+CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance() {
   static CheckpointRestoreWrapper* s_instance = _get();
-  if ( s_instance ) return *s_instance;
+  if ( s_instance ) return s_instance;
   throw std::runtime_error("No valid CheckpointRestore interface defined!");
 }

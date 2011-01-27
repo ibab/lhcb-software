@@ -48,6 +48,6 @@ class CheckpointRestoreWrapper  {
   virtual int dumpFileDescriptors(void* ptr) = 0;
 };
 
-CheckpointRestoreWrapper& CheckpointRestoreWrapper__instance();
+CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance();
 
 #endif // CHECKPOINTRESTOREWRAPPER_H
