@@ -179,7 +179,8 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
     float mindist, minchi2;
     for (veloIter = veloTracks.begin(); veloIter != veloTracks.end() ; ++veloIter) {
       if ((*veloIter)->history() != LHCb::Track::PatVelo &&
-	  (*veloIter)->history() != LHCb::Track::PatVeloGeneral) continue;
+	  (*veloIter)->history() != LHCb::Track::PatVeloGeneral &&
+	  (*veloIter)->history() != LHCb::Track::PatFastVelo) continue;
 
       Gaudi::XYZPoint velopunktx,velopunkty;
       sc = m_linearextrapolator->position(*(*veloIter),m_zmagnet,velopunktx,LHCb::ParticleID(13));
