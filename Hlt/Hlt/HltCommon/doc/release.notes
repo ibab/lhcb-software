@@ -3,6 +3,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2011-01-27 - Gerhard Raven
+ - remove HltFixedRateScaler -- not used, superseded by LoKi equivalent
+ - remove HltGlobalHcalCut -- not used
+
 !========================== HltCommon v7r1p1 2011-01-20 ==================
 ! 2011-01-20 - Gerhard Raven
  - fix some compiler warnings
