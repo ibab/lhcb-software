@@ -24,14 +24,17 @@ library Checkpointing 	../aux/Image.cpp         \
 			../src/MemMaps_test.cpp  \
 			../src/Process_test.cpp  \
 			../src/Chkpt_test.cpp
-macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wreturn-type -Wunused -fPIC ' WIN32 ''
-macro_append lib_Checkpointing_cppflags " -Wextra " \
-  target-icc " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
+macro_append lib_Checkpointing_cppflags ' -g -O0 -ansi -Wreturn-type -Wunused -fPIC '
+macro_append lib_Checkpointing_cppflags ' -Wextra ' \
+  target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 '
 
-macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '    WIN32 ''
+macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '
 
 library Chkpt  		*.cpp
-macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shared ' WIN32 ''
+macro_append lib_Checkpointing_cppflags ' -ansi -Wreturn-type -Wunused -fPIC '
+macro_append lib_Chkpt_cppflags ' -Wextra ' \
+  target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 '
+macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shared '
 
 apply_pattern QMTest
 apply_pattern QMTestSummarize

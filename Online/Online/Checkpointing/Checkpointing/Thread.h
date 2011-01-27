@@ -7,7 +7,7 @@
 #include "asm/prctl.h"
 #include "asm/ldt.h"
 
-#ifdef __x86_64__
+#if defined(__x86_64__) || defined(__ia64__)
   typedef unsigned int mtcp_segreg_t;
   // TLS segment registers used differently in i386 and x86_64. - Gene 
   #define TLSSEGREG fs

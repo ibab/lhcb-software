@@ -39,8 +39,13 @@ namespace CHECKPOINTING_NAMESPACE {
 #else
 #define STATIC(x) x
 #define INLINE(x) x
+#ifdef __INTEL_COMPILER
+#define WEAK(x)   x
+#define HIDDEN(x) x
+#else
 #define WEAK(x)   __attribute__ ((weak)) x
 #define HIDDEN(x) __attribute__ ((weak)) x
+#endif
 #endif
 
 #endif  // CHECKPOINTING_NAMESPACE_H
