@@ -22,12 +22,12 @@
 #
 # =============================================================================
 package       BenderSys
-version       v15r4
+version       v16r0
 
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v15r4   Phys 
+use           Bender         v16r0   Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v15r4   Ex
