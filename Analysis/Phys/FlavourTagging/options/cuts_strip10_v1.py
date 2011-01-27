@@ -7,7 +7,7 @@
 ########################################################################
 
 from Gaudi.Configuration import *
-from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool
+from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool, CombineTaggersProbability
 
 tag = BTagging ('BTagging')
 tag.addTool ( BTaggingTool )
