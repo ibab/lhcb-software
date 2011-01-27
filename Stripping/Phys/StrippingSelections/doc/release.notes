@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-01-27 - Juan Palacios
+ - StrippingTrackEffDownMuon, StrippingTrackEffVeloMuon
+  . Remove import of PhysDesktop.
+ - Increase to v2r4.
+
 !========================== StrippingSelections v2r3p1 2011-01-21 =============
 
 ! 2011-01-12 - Vanya Belyaev

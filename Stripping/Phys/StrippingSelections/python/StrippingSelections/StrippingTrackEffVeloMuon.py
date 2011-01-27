@@ -135,7 +135,7 @@ class StrippingTrackEffVeloMuonConf(LHCbConfigurableUser):
 
     def VeloCaloMuons( self ):
 	self.makeMyVeloCaloMuons()
-	from Configurables import CombineParticles, PhysDesktop, FilterDesktop
+	from Configurables import CombineParticles, FilterDesktop
 	
 	selseq = GaudiSequencer("MuonSelSequence")
 

@@ -133,7 +133,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 	self.makeMyMuons("DownMuonsForTrackEff", "Downstream")
 	
 	
-	from Configurables import CombineParticles, PhysDesktop, FilterDesktop
+	from Configurables import CombineParticles, FilterDesktop
 
 	MyDownJpsis = CombineParticles("DownJpsisForTrackEff")
 	MyDownJpsis.InputLocations = [ "DownMuonsForTrackEff" ]
