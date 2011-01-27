@@ -18,6 +18,8 @@
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiSerialize/SerializeBaseCnv.h"
 
+using namespace Gaudi;
+
 #ifdef GAUDI_v21r11
 namespace {
   union ObjectTypes {

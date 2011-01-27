@@ -39,6 +39,7 @@
 using ROOT::Reflex::PluginService;
 using namespace std;
 using namespace LHCb;
+using namespace Gaudi;
 typedef const std::string& CSTR;
 
 #define S_OK   StatusCode::SUCCESS
@@ -52,10 +53,10 @@ namespace {
   struct DataObjectPush {
     DataObject* m_ptr;
     DataObjectPush(DataObject* p) : m_ptr(p) {
-      pushCurrentDataObject(&m_ptr);
+      ::pushCurrentDataObject(&m_ptr);
     }
     ~DataObjectPush() {
-      popCurrentDataObject();
+      ::popCurrentDataObject();
     }
   };
 }
@@ -110,9 +111,8 @@ StatusCode SerializeCnvSvc::finalize()    {
     m_dataMgr->release();
   }
   StatusCode status = ConversionSvc::finalize();
-  log << MSG::INFO << "POOL conversion service " << name() << " ";
-  log << (char*)(status.isSuccess() ? "successfully" : "with errors");
-  log << " finalized." << endmsg;
+  log << MSG::INFO << "Serialization conversion service " << name() << " ";
+  log << (char*)(status.isSuccess() ? "successfully" : "with errors") << " finalized." << endmsg;
   return status;
 }
 

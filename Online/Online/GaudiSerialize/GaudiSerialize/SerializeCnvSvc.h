@@ -15,148 +15,151 @@
 #include "GaudiKernel/ClassID.h"
 
 // Bit of a hack, but this storage type is (again) free
-#define SERIALIZE_StorageType ROOT_StorageType
+#define SERIALIZE_StorageType CDF_StorageType
 
 // Forward declarations
 class IDataManagerSvc;
 
 static const InterfaceID IID_ISerializeMgr("ISerializeCnvSvc", 1 , 0); 
 
-// Forward declarations
-class IDataManagerSvc;
+/*
+ *  Gaudi namespace declaration
+ */
+namespace Gaudi {
 
-/** @class SerializeCnvSvc SerializeCnvSvc.h GaudiSerialize/SerializeCnvSvc.h
-  *
-  * Description:
-  * 
-  * SerializeCnvSvc class implementation definition.
-  *
-  * @author Markus Frank
-  * @version 1.0
-  */
-class SerializeCnvSvc : public ConversionSvc  {
- protected:
-  typedef std::vector<DataObject*> Objects;
-  IDataManagerSvc* m_dataMgr;
-  Objects          m_objects;
-  /// Property: Location of bank object in TES
-  std::string      m_location;
-
- public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_ISerializeMgr; }
-
-  /// Standard constructor
-  SerializeCnvSvc(const std::string& name, ISvcLocator* svc);
-
-  /// Standard destructor
-  virtual ~SerializeCnvSvc();
-
-  /// Update state of the service
-  virtual StatusCode updateServiceState(IOpaqueAddress* pAddress);
-
-  /** Standard way to print errors. after the printout an exception is thrown.
-    * @param      msg      [IN]     Message string to be printed.
-    *
-    * @return     Status code returning failure.
-    */
-  StatusCode error(const std::string& msg);
-
-  /** Connect to data provider service. Re-connects to data manager service.
-   *  @param      pDataSvc    New data provider object.
-   *  @return     Status code indicating success or failure.
+  /** @class SerializeCnvSvc SerializeCnvSvc.h GaudiSerialize/SerializeCnvSvc.h
+   *
+   * Description:
+   * 
+   * SerializeCnvSvc class implementation definition.
+   *
+   * @author Markus Frank
+   * @version 1.0
    */
-  StatusCode setDataProvider(IDataProviderSvc* pDataSvc);
+  class SerializeCnvSvc : public ConversionSvc  {
+  protected:
+    typedef std::vector<DataObject*> Objects;
+    IDataManagerSvc* m_dataMgr;
+    Objects          m_objects;
+    /// Property: Location of bank object in TES
+    std::string      m_location;
 
-public:
+  public:
+    /// Retrieve interface ID
+    static const InterfaceID& interfaceID() { return IID_ISerializeMgr; }
 
-  /// ConversionSvc overload: Query interface
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    /// Standard constructor
+    SerializeCnvSvc(const std::string& name, ISvcLocator* svc);
 
-  /// ConversionSvc overload: initialize Db service
-  virtual StatusCode initialize();
+    /// Standard destructor
+    virtual ~SerializeCnvSvc();
 
-  /// ConversionSvc overload: Finalize Db service
-  virtual StatusCode finalize();
+    /// Update state of the service
+    virtual StatusCode updateServiceState(IOpaqueAddress* pAddress);
 
-  /// ConversionSvc overload: Create new Converter using factory
-  virtual IConverter* createConverter(long typ, 
-                                      const CLID& wanted, 
-                                      const ICnvFactory* fac);
+    /** Standard way to print errors. after the printout an exception is thrown.
+     * @param      msg      [IN]     Message string to be printed.
+     *
+     * @return     Status code returning failure.
+     */
+    StatusCode error(const std::string& msg);
 
-  /// ConversionSvc overload: Load the class (dictionary) for the converter 
-  virtual void loadConverter(DataObject*);
+    /** Connect to data provider service. Re-connects to data manager service.
+     *  @param      pDataSvc    New data provider object.
+     *  @return     Status code indicating success or failure.
+     */
+    StatusCode setDataProvider(IDataProviderSvc* pDataSvc);
 
-  /** Connect the output file to the service with open mode.
-   *  @param      outputFile  String containig output file
-   *  @param      openMode    String containig opening mode of the output file
-   *  @return     Status code indicating success or failure.
-   */
-  virtual StatusCode connectOutput(const std::string& outputFile,
-                                   const std::string& openMode);
+  public:
 
-  /** Connect the output file to the service.
-   *  @param      outputFile  String containig output file
-   *  @return     Status code indicating success or failure.
-   */
-  virtual StatusCode connectOutput(const std::string& outputFile);
+    /// ConversionSvc overload: Query interface
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
-  /** Commit pending output.
-   *  @param      outputFile  String containig output file
-   *  @param      do_commit   if true commit the output and flush
-   *                          eventually pending items to the database
-   *                          if false, discard pending buffers.
-   *                          Note: The possibility to commit or rollback
-   *                          depends on the database technology used!
-   *  @return     Status code indicating success or failure.
-   */
-  virtual StatusCode commitOutput(const std::string& outputFile,
-                                  bool               do_commit);
+    /// ConversionSvc overload: initialize Db service
+    virtual StatusCode initialize();
 
-  /** Disconnect from an existing data stream.
-    * @param      dbName      String containing name of the database
-    *
-    * @return     Status code indicating success or failure.
-    */
-  virtual StatusCode disconnect(const std::string& dbName);
+    /// ConversionSvc overload: Finalize Db service
+    virtual StatusCode finalize();
 
-  /** IAddressCreator implementation: Address creation.
-    * Create an address using the link infotmation together with
-    * the triple (database name/container name/object name).
-    * 
-    * @param refLink        Reference to abstract link information
-    * @param dbName         Database name
-    * @param containerName  Object container name
-    * @param refpAddress    Opaque address information to retrieve object
-    * @return               StatusCode indicating SUCCESS or failure
-    */
-  virtual StatusCode createAddress( long                 svc_type,
-                                    const CLID&          clid,
-                                    const std::string*   par, 
-                                    const unsigned long* ip,
-                                    IOpaqueAddress*&     refpAddress);
+    /// ConversionSvc overload: Create new Converter using factory
+    virtual IConverter* createConverter(long typ, 
+					const CLID& wanted, 
+					const ICnvFactory* fac);
+
+    /// ConversionSvc overload: Load the class (dictionary) for the converter 
+    virtual void loadConverter(DataObject*);
+
+    /** Connect the output file to the service with open mode.
+     *  @param      outputFile  String containig output file
+     *  @param      openMode    String containig opening mode of the output file
+     *  @return     Status code indicating success or failure.
+     */
+    virtual StatusCode connectOutput(const std::string& outputFile,
+				     const std::string& openMode);
+
+    /** Connect the output file to the service.
+     *  @param      outputFile  String containig output file
+     *  @return     Status code indicating success or failure.
+     */
+    virtual StatusCode connectOutput(const std::string& outputFile);
+
+    /** Commit pending output.
+     *  @param      outputFile  String containig output file
+     *  @param      do_commit   if true commit the output and flush
+     *                          eventually pending items to the database
+     *                          if false, discard pending buffers.
+     *                          Note: The possibility to commit or rollback
+     *                          depends on the database technology used!
+     *  @return     Status code indicating success or failure.
+     */
+    virtual StatusCode commitOutput(const std::string& outputFile,
+				    bool               do_commit);
+
+    /** Disconnect from an existing data stream.
+     * @param      dbName      String containing name of the database
+     *
+     * @return     Status code indicating success or failure.
+     */
+    virtual StatusCode disconnect(const std::string& dbName);
+
+    /** IAddressCreator implementation: Address creation.
+     * Create an address using the link infotmation together with
+     * the triple (database name/container name/object name).
+     * 
+     * @param refLink        Reference to abstract link information
+     * @param dbName         Database name
+     * @param containerName  Object container name
+     * @param refpAddress    Opaque address information to retrieve object
+     * @return               StatusCode indicating SUCCESS or failure
+     */
+    virtual StatusCode createAddress( long                 svc_type,
+				      const CLID&          clid,
+				      const std::string*   par, 
+				      const unsigned long* ip,
+				      IOpaqueAddress*&     refpAddress);
   
-  /** IAddressCreator implementation: Creates an address in string form to object form
-   *  @param      svc_type    Technology identifier encapsulated
-   *                          in this address.
-   *  @param      clid        Class identifier of the DataObject
-   *                          represented by the opaque address
-   *  @param      address     Input address.
-   *  @param      refpAddress Output address in string form.
-   *  @return     Status code indicating success or failure.
-   */
-  virtual StatusCode createAddress( long svc_type,
-				    const CLID& clid,
-				    const std::string& refAddress,
-				    IOpaqueAddress*& refpAddress) {
-    return this->ConversionSvc::createAddress(svc_type,clid,refAddress,refpAddress);
-  }
+    /** IAddressCreator implementation: Creates an address in string form to object form
+     *  @param      svc_type    Technology identifier encapsulated
+     *                          in this address.
+     *  @param      clid        Class identifier of the DataObject
+     *                          represented by the opaque address
+     *  @param      address     Input address.
+     *  @param      refpAddress Output address in string form.
+     *  @return     Status code indicating success or failure.
+     */
+    virtual StatusCode createAddress( long svc_type,
+				      const CLID& clid,
+				      const std::string& refAddress,
+				      IOpaqueAddress*& refpAddress) {
+      return this->ConversionSvc::createAddress(svc_type,clid,refAddress,refpAddress);
+    }
 
-  /// Mark an object for write given an object reference
-  virtual StatusCode writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr);
+    /// Mark an object for write given an object reference
+    virtual StatusCode writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr);
 
-  /// Read existing object. Open transaction in read mode if not active
-  virtual StatusCode readObject(IOpaqueAddress* pA, DataObject*& refpObj);
+    /// Read existing object. Open transaction in read mode if not active
+    virtual StatusCode readObject(IOpaqueAddress* pA, DataObject*& refpObj);
+  };
+}         // End namespace Gaudi
 
-};
 #endif  // SERIALIZE_SERIALIZECNVSVC_H

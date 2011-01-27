@@ -25,3 +25,4 @@ macro_append  GaudiSerialize_pp_cppflags ' -D$(GaudiPolicy_project_release) '
 private
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
+use GaudiExamples v*

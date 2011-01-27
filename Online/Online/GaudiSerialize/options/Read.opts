@@ -1,7 +1,7 @@
 #include "$MDFROOT/options/MDFCheck.opts"
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-EventPersistencySvc.CnvServices     += {"SerializeCnvSvc/SerializeCnvSvc"};
+EventPersistencySvc.CnvServices     += {"Gaudi::SerializeCnvSvc/SerializeCnvSvc"};
 EventSelector.Input                  = {
   "DATA='file://GaudiBanks.dat' SVC='LHCb::MDFSelector'"
 };

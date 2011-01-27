@@ -5,11 +5,11 @@ ApplicationMgr.EvtMax     = 1000;
 ApplicationMgr.EvtSel     = "NONE";
 
 ApplicationMgr.HistogramPersistency  = "NONE";
-EventPersistencySvc.CnvServices += {"SerializeCnvSvc/SerializeCnvSvc"};
+EventPersistencySvc.CnvServices += {"Gaudi::SerializeCnvSvc/SerializeCnvSvc"};
 SerializeCnvSvc.OutputLevel = 2;
 ApplicationMgr.OutStream += { "Serial", "LHCb::MDFWriter/Writer"};
 Serial.ItemList           = { "/Event#999" } ;
-Serial.Output             = "DATAFILE='root.buffers' SVC='SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'";
+Serial.Output             = "DATAFILE='root.buffers' SVC='Gaudi::SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'";
 Writer.Connection         = "file://GaudiBanks.dat";
 Writer.Compress           = 0;
 Writer.ChecksumType       = 0;
