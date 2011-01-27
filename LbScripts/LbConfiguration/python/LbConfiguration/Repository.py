@@ -1,5 +1,5 @@
 """
-Module for handling of software repository informations. 
+Module for handling of software repository informations.
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
@@ -33,7 +33,7 @@ class RepositoryInfo(object):
             self._path = path
     ## Property for the validation of the path
     path = property(_get_path, _set_path)
-    
+
 
 ## Subversion specific implementation of RepositoryInfo
 class SVNReposInfo(RepositoryInfo):
@@ -63,10 +63,10 @@ class CVSReposInfo(RepositoryInfo):
 ## List of known repositories
 repositories = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/gaudi"),
                             "anonymous": SVNReposInfo("http", "svnweb.cern.ch", "/guest/gaudi") },
-                 "lhcb":  { "kerberos":  CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/lhcb"),
-                            "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
-                            "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
-                            "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
+#                 "lhcb":  { "kerberos":  CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/lhcb"),
+#                            "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
+#                            "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
+#                            "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
                  "lbsvn": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/lhcb"),
                             "anonymous": SVNReposInfo("http", "svnweb.cern.ch", "/guest/lhcb") },
                  "dirac": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/dirac"),
@@ -99,6 +99,6 @@ def getRepositories(user_svn=None, user_cvs=None, protocol="default"):
             dummy, protocol, rest, path = r.split(":")
             user, host = splituser(rest)
             reps["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
-            i += 1    
+            i += 1
     return reps
 

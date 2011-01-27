@@ -6,7 +6,7 @@ import sys
 Python_version     = "2.5"
 CMT_version        = "v1r22"
 tbroadcast_version = "v2.0.5"
-doxygen_version    = "1.6.2"
+doxygen_version    = "1.7.2"
 
 
 external_projects  = ['LCGCMT', 'GENSER', 'OpenScientist']

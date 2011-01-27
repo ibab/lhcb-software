@@ -1,3 +1,9 @@
+2011-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/External.py: moved to doxygen 1.7.2
+	* python/LbConfiguration/Platform.py: added support for icc11 and winxp
+	* python/LbConfiguration/Repository.py: commented out CVS repositories
+
 2011-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed bug #75480 <https://savannah.cern.ch/bugs/?75480>
