@@ -93,14 +93,6 @@ namespace HltUtils
   Gaudi::XYZVector closestDistance(const LHCb::Track& track1, 
                                    const LHCb::Track& track2);
 
-  inline double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2) {
-    return track2.slopes().Eta() - track1.slopes().Eta();
-  }
-
-  inline double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2) {
-    return track2.slopes().Phi() -  track1.slopes().Phi();;
-  }
-
   inline double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2) {
     return acos( track1.slopes().Unit().Dot(  track2.slopes().Unit()  ) );
   }
@@ -164,14 +156,6 @@ namespace HltUtils
   
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
 
-  // calocellid tools
-  std::vector<LHCb::CaloCellID> get3x3CellIDs( const LHCb::CaloCellID& centercell );	
-	
-  std::vector<LHCb::CaloCellID> get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell );
-	
-  bool matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
-                     const std::vector<LHCb::CaloCellID>& offcells );
-	
 
 };
 
