@@ -100,7 +100,6 @@ from Configurables import HltVertexToTracks      as VertexToTracks
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
-from Configurables import HltGlobalHcalCut   as GlobalHcalCut
 from SelPy.selection import FlatSelectionListBuilder
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
@@ -349,7 +348,6 @@ _types_ = { TrackUpgrade  : 'TU'
           , HltFilterFittedParticles : 'HltFilterFittedParticles'
           , Hlt__TrackFilter : 'Hlt::TrackFilter'
           , Hlt__TrackPipe : 'Hlt::TrackPipe'
-          , GlobalHcalCut  : 'GlobalHcalCut'
           } 
 
 ## protected attributes 

@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2011-01-27 - Vanya Belyaev
+ - remove unused HltGlobalHcalCut
+
 !========================== HltLine v4r6  2010-12-08 ===================
 ! 2010-11-30 - Vanya Belyaev
 
