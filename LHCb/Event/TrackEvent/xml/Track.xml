@@ -75,6 +75,7 @@
         <enumval name = "TTGeneric"      value="18" desc="track produced with the TTGenericTracking algorithm"/>
 	<enumval name = "PatVeloPixCheated" value="19" desc="track produced with the CheatedVeloPixPat algorithm"/>
 	<enumval name = "HLTImportedTrack" value="20" desc="track imported from HLT to offline"/>
+        <enumval name = "PatFastVelo"    value="21" desc="track produced by FastVelo algorithm"/>
       </enum>
 
       <enum

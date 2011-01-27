@@ -3,6 +3,8 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+! 2011-01-27 - Stephanie Hansmann-Menzemer
+ - Add track history PatFastVelo
 
 ! 2011-01-11 - Marco Cattaneo
  - Fix ICC warnings and remarks
