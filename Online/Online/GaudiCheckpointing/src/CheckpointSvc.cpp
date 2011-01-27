@@ -525,8 +525,8 @@ int CheckpointSvc::saveCheckpoint() {
       int ret = chkpt->checkpoint(fd);
       ::close(fd);
       MsgStream log(msgSvc(),name());
-      log << MSG::ALWAYS << MARKER << " FINISHED CHECKPOINT " << endmsg;
-      log << MSG::ALWAYS << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+      log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
+      log << MSG::INFO << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
       return StatusCode::SUCCESS;
     }
     else {
