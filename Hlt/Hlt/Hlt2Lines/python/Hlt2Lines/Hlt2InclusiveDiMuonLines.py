@@ -24,16 +24,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {  'Prescale'                  : {  'Hlt2UnbiasedDiMuon'         :  0.05
-                                                    ,'Hlt2UnbiasedDiMuonLowMass' :  0.001
-                                                    ,'Hlt2DiMuonUnbiasedJPsiLow' :  0.25
-                                                    ,'Hlt2BiasedDiMuonSimple'    :  0.01  
-                                                    ,'Hlt2BiasedDiMuonRefined'   :  0.01
-                                                    ,'Hlt2BiasedDiMuonIP'        :  0.5
-                                                    ,'Hlt2DiMuonDY1'             :  0.01
-                                                    ,'Hlt2DiMuonDY2'             :  0.01
-                                                    }
+    __slots__ = {  'Prescale'                  : {
+        'Hlt2DiMuonDY1'             :  0.1
+        }
 
+                   ,'TrChi2'                  :   10      #chi2PerDof 
+                   ,'TrChi2Tight'             :    5      #chi2PerDof 
                    ,'UnbiasedDiMuonMinMass'   : 2700      # MeV
                    ,'UnbiasedDiMuonPt'        : 1000      # MeV
                    ,'UnbiasedDiMuonMuPt'      :  500      # MeV
@@ -59,17 +55,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'UnbiasedBmmVertexChi2'   :   25
 
                    ,'UnbiasedZmmMinMass'      :40000      # MeV
-                   ,'UnbiasedZmmPt'           :10000      # MeV
+                   ,'UnbiasedZmmPt'           :    0      # MeV
 
                    ,'DYPt'                    :  500      # MeV
                    ,'DY1MinMass'              : 2500      # MeV
-                   ,'DY1MaxMass'              : 5000      # MeV
                    ,'DY2MinMass'              : 5000      # MeV
-                   ,'DY2MaxMass'              :10000      # MeV
-                   ,'DY3MinMass'              :10000      # MeV
-                   ,'DY3MaxMass'              :20000      # MeV
+                   ,'DY3MinMass'              :10000      # MeV 
                    ,'DY4MinMass'              :20000      # MeV
-                   ,'DY4MaxMass'              :40000      # MeV
                    
                    ,'BiasedSingleMuonPt'      :  700      # MeV
                    ,'BiasedMass'              :  500      # MeV
@@ -89,7 +81,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'PromptJPsiHighPt'        : 2000      # MeV
                    ,'PromptJPsiMuPt'          :  700      # MeV
                    ,'PromptJPsiVChi2'         :   15
-                   ,'PromptJPsiTrChi2'        :    5
 
                    ,'DetachedDiMuonMinMass'   : 1000 #MeV
                    ,'DetachedDiMuonPt'        :    0  #MeV
@@ -182,7 +173,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (PT>%(PromptJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2Tight)s )"%  self.getProps()
                                  , 'PostMonitor' :
                                    Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  }
@@ -200,7 +191,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (PT>%(PromptJPsiHighPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2Tight)s )"%  self.getProps()
                                  , 'PostMonitor' :
                                     Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  }
@@ -216,6 +207,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonLowMass'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedDiMuonLowMinMass)s*MeV)"\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
                                  "& (PT>%(UnbiasedDiMuonLowPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonLowMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonLowChi2)s )"%  self.getProps()
@@ -231,6 +223,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps()
                                  , 'PreMonitor' : Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
@@ -255,6 +248,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonPsi2S'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<%(UnbiasedPsi2SMassWindow)s*MeV) "\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
                                  "& (PT>%(UnbiasedPsi2SPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedPsi2SMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() 
@@ -486,6 +480,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member(   FilterDesktop 
                                , "Filter"
                                , Code = "(MM>%(DetachedDiMuonMinMass)s*MeV)"\
+                               "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
                                " & (PT>%(DetachedDiMuonPt)s*MeV)"\
                                " & (MINTREE('mu-'==ABSID,PT)>%(DetachedDiMuonMuPt)s*MeV) "\
                                "& (VFASPF(VCHI2PDOF)<%(DetachedDiMuonVertexChi2)s )"\
@@ -513,6 +508,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         DiMuonBiasedMass = line.clone( 'DiMuonDetachedHeavy'
                                        , prescale = self.prescale
                                        , Filter = { 'Code' : "(MM>%(DetachedHeavyDiMuonMinMass)s*MeV)"\
+                                                    "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
                                                     " & (PT>%(DetachedHavyDiMuonPt)s*MeV)"\
                                                     " & (MINTREE('mu-'==ABSID,PT)>%(DetachedDiMuonMuPt)s*MeV) "\
                                                     "& (VFASPF(VCHI2PDOF)<%(DetachedDiMuonVertexChi2)s )"\
