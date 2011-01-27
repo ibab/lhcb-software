@@ -225,6 +225,10 @@ def evtDataSvc():
   return svc
 
 #------------------------------------------------------------------------------------------------
+def monSvc(name='MonitorSvc'):
+  return Configs.MonitorSvc(name)
+  
+#------------------------------------------------------------------------------------------------
 def mbmSelector(input=None,type=None,decode=True,TAE=False):
   svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
   if decode is not None:
@@ -274,7 +278,7 @@ def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=N
 def mbmInitApp(partID, partName, flags,partitionBuffers=False):
   "MBM manager applications to initialize buffer managers."
   mepMgr = mepManager(partID,partName,[],partitionBuffers=partitionBuffers,flags=flags)
-  return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=onlineRunable(1))
+  return _application('NONE','NONE',extsvc=[monSvc(),mepMgr],runable=onlineRunable(1))
 
 #------------------------------------------------------------------------------------------------
 def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=0x400):
@@ -288,7 +292,7 @@ def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=
     runable.ErrorBuffer  = errBuffer
     runable.RoutingBits  = routing
     runable.HandleErrors = 2
-  extsvc               = [Configs.MonitorSvc(), mepMgr]
+  extsvc               = [monSvc(), mepMgr]
   runable.Requirements = [mbm_requirements['MEP']]
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
   evtloop.Wait         = 3
@@ -298,7 +302,6 @@ def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=
 def mepConverterApp(partID, partName, bursts=True, freq=0.,errors=None):
   "MEP to event converter application for usage of multi event packet buffers."
   print 'Running event producer with error flag:',errors
-  monSvc               = Configs.MonitorSvc()
   buffs                = ['MEP','EVENT']
   if errors: buffs.append('SEND')
   mepMgr               = mepManager(partID,partName,buffs)
@@ -315,7 +318,7 @@ def mepConverterApp(partID, partName, bursts=True, freq=0.,errors=None):
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
   evtloop.Wait         = 1
   msgSvc().OutputLevel = 1
-  return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
+  return _application('NONE',evtsel='NONE',extsvc=[monSvc(),mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
 def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,request=None,algs=[],input_type=MDF_NONE):
@@ -328,14 +331,14 @@ def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decod
   if target is not None:
     sender             = evtSender(target=target,input_type=input_type)
     algs.append(sender)
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def dataReceiverApp(partID, partName, buffer, partitionBuffers=True,algs=[]):
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers)
   runable              = onlineRunable(3)
   receiver             = evtReceiver(buffer)
-  extsvc               = [Configs.MonitorSvc(),mepMgr,receiver]
+  extsvc               = [monSvc(),mepMgr,receiver]
   return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
@@ -344,7 +347,7 @@ def evtServerApp(partID, partName, buffer, partitionBuffers,request='USER'):
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers)
   runable              = evtServerRunable(mepMgr,buffer=buffer,request=request)
   evtPers              = rawPersistencySvc()
-  return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=runable)
+  return _application('NONE','NONE',extsvc=[monSvc(),mepMgr],runable=runable)
 
 #------------------------------------------------------------------------------------------------
 def netConsumerApp(partID, partName, source, algs=[]):
@@ -354,7 +357,7 @@ def netConsumerApp(partID, partName, source, algs=[]):
   evtSel               = netSelector(source,'ALL')
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def panoramixSimApp(partID, partName, source, algs=[]):
@@ -366,7 +369,7 @@ def panoramixSimApp(partID, partName, source, algs=[]):
   evtSel.CancelOnDeath = True
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,runable,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,runable,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def defaultFilterApp(partID, partName, percent, print_freq):
@@ -383,7 +386,7 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   #delay                = Configs.LHCb__DelaySleepAlg('Delay')
   #delay.DelayTime      = 999999;
   #algs.append(delay)
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def simpleFilterApp(partID, partName, percent, print_freq):
@@ -394,7 +397,7 @@ def simpleFilterApp(partID, partName, percent, print_freq):
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=print_freq),prescaler(percent=percent)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def bufferCons(partID, partName, buffer, partitionBuffers, decode):
@@ -403,7 +406,7 @@ def bufferCons(partID, partName, buffer, partitionBuffers, decode):
   evtSel               = mbmSelector(input=buffer,decode=decode,type='ALL')
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=0.001)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def bufferReformatter(partID, partName, input, output, partitionBuffers, decode, routing=0x1):
@@ -413,7 +416,7 @@ def bufferReformatter(partID, partName, input, output, partitionBuffers, decode,
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=0.001)]
   algs                 = [evtMerger(buffer=output,name='In2Out',location='DAQ/RawEvent',routing=routing)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
@@ -422,7 +425,7 @@ def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
   evtSel               = mbmSelector(input=buffer,decode=decode,type='ALL')
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=0.001),diskWriter(output=output,input=3,compress=0)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True, routing=0x1):
@@ -434,7 +437,7 @@ def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True, routing=
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()
   algs                 = [evtMerger(buffer=buffers[0],name='MDF2MBM',location='DAQ/RawEvent',routing=routing)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def mdf2mbmReproApp(partID, partName, buffers, input, partitionBuffers=True, routing=0x1):
@@ -454,7 +457,7 @@ def mdf2mbmReproApp(partID, partName, buffers, input, partitionBuffers=True, rou
   #add                  = fidAddAlg()
   #prt                  = fidPrintAlg()  
   algs                 = [add, prt, merger]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
 def dimFileReaderApp(partID, partName, buffer, partitionBuffers=True, routing=0x1):
@@ -465,4 +468,13 @@ def dimFileReaderApp(partID, partName, buffer, partitionBuffers=True, routing=0x
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()
   algs                 = [evtMerger(buffer=buffer,name='Writer',location='DAQ/RawEvent',routing=routing)]
-  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def eventMerger(partID,partName,input='EVENT',output='SEND',partitionBuffers=False,location='/Event/DAQ/RawEvent',routing=0x800):
+  buffers = [input,output]
+  mepMgr   = mepManager(partID,partName,buffers,partitionBuffers)
+  evtdata  = evtDataSvc()
+  evtPers  = rawPersistencySvc()
+  merger   = evtMerger(buffer=output,name='Writer',location=location,routing=routing,datatype=MDF_NONE)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,mbmSelector(input)],runable=evtRunable(mepMgr),algs=[merger])
