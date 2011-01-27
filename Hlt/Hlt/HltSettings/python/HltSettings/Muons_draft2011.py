@@ -26,19 +26,23 @@ class Muons_draft2011 :
             'Hlt2DiMuonLowMass',
             #'Hlt2DiMuonSameSign',
 
+            # control rate via: 1) mass: 120 --> 70,
+            # then rediscuss with beta_s DO NOT INCREASE PT!!
             'Hlt2DiMuonJPsi',
             'Hlt2DiMuonPsi2S',
             'Hlt2DiMuonB',
             'Hlt2DiMuonZ',
 
+            # control rate via: DLS cut, dimuon PT
             'Hlt2DiMuonDetached',
             'Hlt2DiMuonDetachedJPsi',
-            'Hlt2DiMuonDetachedHeavy'
+            'Hlt2DiMuonDetachedHeavy',
 
-            #'Hlt2DiMuonDY1',
-            #'Hlt2DiMuonDY2',
-            #'Hlt2DiMuonDY3',
-            #'Hlt2DiMuonDY4',
+            # control rate via: prescale
+            'Hlt2DiMuonDY1',
+            'Hlt2DiMuonDY2',
+            'Hlt2DiMuonDY3',
+            'Hlt2DiMuonDY4'
                  
             ]
             
@@ -75,21 +79,12 @@ class Muons_draft2011 :
             ,'DetachedDiMuonDLS'       :   7
 
             
-       ##      ,'DYPt'                    : 0.0      # MeV
-##             ,'DY1MinMass'              : 2500      # MeV
-##             ,'DY1MaxMass'              : 6000      # MeV
-##             ,'DY2MinMass'              : 5000      # MeV
-##             ,'DY2MaxMass'              :12000      # MeV
-##             ,'DY3MinMass'              :10000      # MeV
-##             ,'DY3MaxMass'              :25000      # MeV
-##             ,'DY4MinMass'              :20000      # MeV
-##             ,'DY4MaxMass'              :50000      # MeV
-          
+            #,'DYPt'                    : 0.0      # MeV
+
             , 'Prescale'   : { 'Hlt2DiMuon'          : 0.1
                                , 'Hlt2DiMuonLowMass' : 0.002
-                               #,'Hlt2DiMuonDY1'              :  0.1
+                               , 'Hlt2DiMuonDY1'              :  0.1
                                #,'Hlt2DiMuonDY2'              :  1
-                               ,'Hlt2DiMuonSameSign'         :  0.05
                                #,'Hlt2BiasedDiMuonIP'         :  1
                                }           
             }}
