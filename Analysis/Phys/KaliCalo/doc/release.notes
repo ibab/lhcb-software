@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-01-27 - Juan Palacios
+ - KaliCalo.Configuration
+  . Remove PhysDesktop imports.
+ - Increase to v4r8p1.
+
 !========================== KaliCalo v4r8 2011-01-19 ==========================
 
 ! 2011-01-18 - Juan Palacios

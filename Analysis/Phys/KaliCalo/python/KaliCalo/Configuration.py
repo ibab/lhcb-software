@@ -376,7 +376,6 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         ## 4. Specific settings for Phtoton Maker 
         from ParticleMaker.ParticleMakerConf import PhotonMakerAlg, PhotonMaker
-        from DaVinciTools.DaVinciToolsConf   import PhysDesktop 
         
         maker =  PhotonMakerAlg (
             'StdLooseAllPhotons' ,
@@ -404,7 +403,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         The configuration for Kali-Pi0 algorithm
         """
-        from Configurables import Kali__Pi0, PhysDesktop
+        from Configurables import Kali__Pi0
         
         kali = Kali__Pi0 (
             "KaliPi0"                                       ,
