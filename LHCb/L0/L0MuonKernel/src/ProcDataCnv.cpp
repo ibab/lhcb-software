@@ -944,7 +944,7 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::unapplyCompression(boost::dynamic_b
   
   int nbitsPrefix  = 5;
   int nbitsSequence= nbitsPrefix+1;
-  int maximumLength = int(pow(2,nbitsPrefix));
+  int maximumLength = 1 << nbitsPrefix; //int(pow(2,nbitsPrefix));
 
   // if the no bits are set in the compressed bistset, return the corresponding sequence
   unsigned int compressedSize = compressed.size();

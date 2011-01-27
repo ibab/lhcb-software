@@ -4,12 +4,12 @@
 
 
 int L0Muon::pendulumM1(int icol, int procVersion){
-  if (procVersion==0)  return (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));  
-  return (icol==0) ? 0 : int(pow(-1,icol)*int((icol+1)/2));
+  if (procVersion==0)  return (icol==0) ? 0 : int(pow(-1.,icol+1)*int((icol+1)/2));  
+  return (icol==0) ? 0 : int(pow(-1.,icol)*int((icol+1)/2));
 }
 int L0Muon::pendulumM2(int icol, int procVersion){
-  if (procVersion==0)  return (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));  
-  return (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+  if (procVersion==0)  return (icol==0) ? 0 : int(pow(-1.,icol+1)*int((icol+1)/2));  
+  return (icol==0) ? 0 : int(pow(-1.,icol+1)*int((icol+1)/2));
 }
 
 void L0Muon::candidatesOrdering(std::vector<L0Muon::PMuonCandidate> * cands, int procVersion){
