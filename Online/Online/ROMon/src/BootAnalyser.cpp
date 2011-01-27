@@ -266,6 +266,8 @@ struct BootDataProcessor : public DataFile::DataProcessor {
     const char* host;
     BootNodeStatus* boot = 0;
 
+    if ( !ptr ) return true;
+    if ( ::strlen(ptr)<16 ) return true;
     if ( !start ) start = line.time();
     if ( ::strstr(info,"kernel: Initializing CPU") )
       boot = updateStatus(info,BootNodeStatus::CPU_STARTED);
