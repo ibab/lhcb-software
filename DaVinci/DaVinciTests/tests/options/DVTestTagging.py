@@ -13,7 +13,7 @@ from Configurables import GaudiSequencer
 #
 # Some selections. 
 #
-from Configurables import CheatedSelection, PhysDesktop
+from Configurables import CheatedSelection
 
 cheatsel = CheatedSelection("CheatedSelection")
 cheatsel.InputLocations = [ "Phys/TaggingPions" ]

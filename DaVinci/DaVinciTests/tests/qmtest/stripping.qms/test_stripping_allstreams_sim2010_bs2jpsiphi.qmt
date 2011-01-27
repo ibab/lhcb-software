@@ -12,7 +12,6 @@ StrippingBs2JpsiPhiLine                                     SUCCESS Number of co
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |       100 |         13 |(  13.0000 +- 3.36303  )%|   -------   |   -------   |
  | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "#slow events"                                  |       100 |          1 |   0.010000 |   0.099499 |      0.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

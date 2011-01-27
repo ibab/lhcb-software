@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 - Juan Palacios
+ - Remove imports of PhysDesktop.
+ - Do not test for slow events in stripping.test_stripping_allstreams_sim2010_bs2jpsiphi.
+
 ! 2011-01-26 - Rob Lambert
  - Maintainance on existing FSR tests
  - merging of FSRs is now tested correctly
