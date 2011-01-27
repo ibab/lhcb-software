@@ -2,7 +2,7 @@
 #include "main.cpp"
 #undef main
 class CheckpointRestoreWrapper;
-extern CheckpointRestoreWrapper& CheckpointRestoreWrapper__instance();
+extern CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance();
 
 int main (int argc, char** argv)  {
   CheckpointRestoreWrapper__instance();
