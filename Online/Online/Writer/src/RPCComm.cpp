@@ -245,7 +245,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   std::string file;
   char startStr[] = "<string>";
   char endStr[] = "</string>";
-  char failStr[] = "<value><int>0</int></value>";
+  char failStr[] = "<value><int>0</int></value>"; // RunDB error code is 0 (don't ask why ...)
   size_t start, end, err;
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber);
@@ -269,7 +269,6 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   if(err != res.npos) {
       throw RetryException("RunDB answer is error");
   }
-
 
   start = res.find(startStr); 
   if(start == res.npos)
