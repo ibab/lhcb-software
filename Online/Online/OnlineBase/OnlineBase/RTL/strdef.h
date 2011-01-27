@@ -12,7 +12,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #define __CXX_CONSTANT 
-#endif
+#endif /* __cplusplus      */
 
 /* Case sensitive wild card matching  */
 int str_match_wild (__CXX_CONSTANT char *candidate_string, __CXX_CONSTANT char *pattern_string);
@@ -25,14 +25,22 @@ int str_lowcase(__CXX_CONSTANT char* src, char* dst, size_t dest_len);
 #undef __CXX_CONSTANT
 #ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus      */
+
 #ifdef __cplusplus
 inline const char* strstr_safe(const char* p1, const char* p2)  { return ::strstr((char*)p1,p2);   }
 inline const char* strchr_safe(const char* p1, char p2)         { return ::strchr((char*)p1,p2);   }
+
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
-#define snprintf _snprintf
-#endif
-#endif
+#define snprintf  _snprintf
+inline int str_casecmp(const char *s1, const char *s2)          { return ::strcasecmp(s1, s2);     }
+inline int str_ncasecmp(const char *s1,const char *s2, size_t n){ return ::strncasecmp(s1, s2, n); }
+#else  // linux & gcc
+inline int str_casecmp(const char *s1, const char *s2)          { return ::strcasecmp(s1, s2);     }
+inline int str_ncasecmp(const char *s1,const char *s2, size_t n){ return ::strncasecmp(s1, s2, n); }
+#endif   /* _WIN32         */
 
-#endif // _RTL_STRDEF_H
+#endif   /* __cplusplus    */
+
+#endif   /* _RTL_STRDEF_H  */
