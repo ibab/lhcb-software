@@ -50,30 +50,30 @@ from Configurables import PVOfflineTool
 from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
 
-# J. Albrecht 2010-04-16
+# New tune JvT 2010-07-14
 # globally set the resolutions for ST
 #when syntax errors there are fixed take from 
 #importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
 from Configurables import STOfflinePosition, STOnlinePosition
 
-STOnlinePosition().ErrorVec=[0.289,0.339,0.322]
+STOnlinePosition().ErrorVec=[0.257, 0.245, 0.277]
 STOnlinePosition().APE = 0.197
 
 ITOnl = STOnlinePosition("ITLiteClusterPosition")
-ITOnl.ErrorVec=[0.28,0.20,0.3]
-ITOnl.APE=0.05
+ITOnl.ErrorVec=[0.253,0.236,0.273]
+ITOnl.APE=0.0758
 #ITOnl.DetType = "IT"
 
 STPos = STOfflinePosition("ITClusterPosition")
-STPos.LinSharingCorr2 = 0.61
-STPos.LinSharingCorr2 = 0.61
-STPos.CubicSharingCorr2 = 7.4
-STPos.LinSharingCorr4 = 0.63
+STPos.LinSharingCorr2 = -0.0152  
+STPos.CubicSharingCorr2 = 12.33 
+STPos.CubicSharingCorr3 = 4.369 
+STPos.LinSharingCorr4 = 0.530 
 STPos.DetType = "IT"
-STPos.ErrorVec = [0.28, 0.20, 0.3, 0.2]
-STPos.APE = 0.05
+STPos.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ]
+STPos.APE = 0.0758
 
-STOfflinePosition().ErrorVec = [0.289, 0.339, 0.322, 0.459]
+STOfflinePosition().ErrorVec = [0.257, 0.245, 0.277, 0.208]
 STOfflinePosition().APE = 0.197
 
 #############################################################################################
