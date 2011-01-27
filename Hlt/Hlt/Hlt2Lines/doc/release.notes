@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 - Alex Shires
+ - Hlt2MuNTrack update with latest cuts and code
+ - L0 and Hlt1 TOS filters kept for future development
+
 ! 2011-01-27 - Johannes Albrecht
  - Hlt2InclusiveDimuonLines: add chi2 cuts, come cleanup
 

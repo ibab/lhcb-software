@@ -42,18 +42,18 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         'SUM_IPCHI2_2TR_MIN' : 75,      # unitless
         'SUM_IPCHI2_3TR_MIN' : 100,     # unitless
         'BPVVDCHI2_MIN'      : 32.0,    # unitless
-        'MIN_TRCHI2DOF_MAX'  : 4,       # unitless
+        'MIN_TRCHI2DOF_MAX'  : 3,       # unitless
         #combination cuts
         'AMAXDOCA_MAX'       : 0.12,    # mm  # loose doca for mu + 2,3 tracks
         'AMAXDOCA_MIN'       : 0.12,    # mm  # tight doca for mu + 1 track, 2, 3 track combos
-        'DIRA_LOOSE_MIN'     : 0.2,     # rad # 2,3 track combos
+        'DIRA_LOOSE_MIN'     : 0.99,    # rad # 2,3 track combos
         'DIRA_TIGHT_MIN'     : 0.995,   # rad # mu + n tr line
         # mother cuts
         'MASS_1TR_VETO'      : 2000.0,  # MeV 
         'MASS_2TR_VETO'      : 3000.0,  # MeV 
         'MASS_3TR_VETO'      : 4000.0,  # MeV 
         # cuts on input particles
-        'ALL_MIPCHI2DV_MIN'  : 25.0,    # unitless
+        'ALL_MIPCHI2DV_MIN'  : 16.0,    # unitless
         'ALL_TRCHI2DOF_MAX'  : 3.0,     # unitless
         'ALL_MU_PT_MIN'      : 800.0,   # MeV
         'ALL_TR_PT_MIN'      : 600.0,   # MeV
@@ -134,8 +134,6 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         # Mother cuts
         momCuts = "(BPVDIRA > %s)" % (props['DIRA_TIGHT_MIN'])
         momCuts += "& (BPVVDCHI2 > %s)" % (props['BPVVDCHI2_MIN'])
-        # USE CORRELATION OF MASS AND IPCHI2
-        #momCuts += "& ((M > %s*MeV) | (BPVIPCHI2() > %s))" % (mass_veto,props['ALL_MIPCHI2DV_MIN'])
         momCuts += "& (M > %s*MeV)" % (mass_veto)
         #optional cuts
         if extraCuts and extraCuts.has_key('CombinationCut') :
