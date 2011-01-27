@@ -66,14 +66,18 @@ use DetCondExample        v11r9   Ex      # Marco Clemencic
 use DetDescExample        v7r7p1  Ex      # Marco Clemencic
 use IOExample             v3r5    Ex      # Marco Cattaneo
 
-# Packages without Hat, cannot have comment field. Maintainer M.Cattaneo
+# Packages without Hat, cannot have comment field.
+
+# Maintainer M.Cattaneo
 use GaudiConf             v13r7
 
-use GaudiObjDesc          v11r10p2
-#use GaudiPatches          v1r2
-
-# Maintainer Juan Palacios
+# Maintainer J.Palacios
 use GaudiConfUtils        v1r0
+
+# Maintainer S.Roiser
+use GaudiObjDesc          v11r10p2
+
+#use GaudiPatches          v1r2
 
 
 use HepMCBack             v1r1    Gen     # Gloria Corti, Patrick Robbe
