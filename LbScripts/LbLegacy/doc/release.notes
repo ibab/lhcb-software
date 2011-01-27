@@ -1,3 +1,7 @@
+2011-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: added support for icc11
+
 2011-01-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: introduce a way to use a custom location
