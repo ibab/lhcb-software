@@ -42,31 +42,30 @@
 #define mtcp_sys_dup2(args...)    mtcp_inline_syscall(dup2,2,args)
 #define mtcp_sys_getpid(args...)  mtcp_inline_syscall(getpid,0)
 #define mtcp_sys_getppid(args...) mtcp_inline_syscall(getppid,0)
-#define mtcp_sys_fork(args...)    mtcp_inline_syscall(fork,0)
-#define mtcp_sys_vfork(args...)   mtcp_inline_syscall(vfork,0)
-#define mtcp_sys_execve(args...)  mtcp_inline_syscall(execve,3,args)
-#define mtcp_sys_wait4(args...)   mtcp_inline_syscall(wait4,4,args)
-#define mtcp_sys_gettimeofday(args...)  mtcp_inline_syscall(gettimeofday,2,args)
-#define mtcp_sys_mmap(args...)  (void*)mtcp_inline_syscall(mmap,6,args)
-#define mtcp_sys_munmap(args...)  mtcp_inline_syscall(munmap,2,args)
-#define mtcp_sys_msync(args...)  (void*)mtcp_inline_syscall(msync,3,args)
-#define mtcp_sys_mprotect(args...) mtcp_inline_syscall(mprotect,3,args)
+#define mtcp_sys_fork(args...)             mtcp_inline_syscall(fork,0)
+#define mtcp_sys_vfork(args...)            mtcp_inline_syscall(vfork,0)
+#define mtcp_sys_execve(args...)           mtcp_inline_syscall(execve,3,args)
+#define mtcp_sys_wait4(args...)            mtcp_inline_syscall(wait4,4,args)
+#define mtcp_sys_gettimeofday(args...)     mtcp_inline_syscall(gettimeofday,2,args)
+#define mtcp_sys_mmap(args...)             (void*)mtcp_inline_syscall(mmap,6,args)
+#define mtcp_sys_munmap(args...)           mtcp_inline_syscall(munmap,2,args)
+#define mtcp_sys_msync(args...)            (void*)mtcp_inline_syscall(msync,3,args)
+#define mtcp_sys_mprotect(args...)         mtcp_inline_syscall(mprotect,3,args)
 #define mtcp_sys_set_tid_address(args...)  mtcp_inline_syscall(set_tid_address,1,args)
-#define mtcp_sys_brk(args...)    (void*)(mtcp_inline_syscall(brk,1,args))
+#define mtcp_sys_brk(args...)              (void*)(mtcp_inline_syscall(brk,1,args))
 #ifdef __NR_getdents
-#define mtcp_sys_getdents(args...)    mtcp_inline_syscall(getdents,3,args)
+#define mtcp_sys_getdents(args...)         mtcp_inline_syscall(getdents,3,args)
 #endif
 #ifdef __NR_getdents64
-#define mtcp_sys_getdents64(args...)  mtcp_inline_syscall(getdents64,3,args)
+#define mtcp_sys_getdents64(args...)       mtcp_inline_syscall(getdents64,3,args)
 #endif
 
-#define mtcp_sys_fcntl2(args...) mtcp_inline_syscall(fcntl,2,args)
-#define mtcp_sys_fcntl3(args...) mtcp_inline_syscall(fcntl,3,args)
-#define mtcp_sys_mkdir(args...)  mtcp_inline_syscall(mkdir,2,args)
+#define mtcp_sys_fcntl2(args...)           mtcp_inline_syscall(fcntl,2,args)
+#define mtcp_sys_fcntl3(args...)           mtcp_inline_syscall(fcntl,3,args)
+#define mtcp_sys_mkdir(args...)            mtcp_inline_syscall(mkdir,2,args)
 
-
-#define mtcp_sys_kernel_gettid(args...)  mtcp_inline_syscall(gettid,0)
-#define mtcp_sys_kernel_tkill(args...)   mtcp_inline_syscall(tkill,2,args)
+#define mtcp_sys_kernel_gettid(args...)    mtcp_inline_syscall(gettid,0)
+#define mtcp_sys_kernel_tkill(args...)     mtcp_inline_syscall(tkill,2,args)
 
 int mtcp_have_thread_sysinfo_offset();
 void *mtcp_get_thread_sysinfo(void);
