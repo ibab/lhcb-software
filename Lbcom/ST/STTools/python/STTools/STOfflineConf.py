@@ -1,23 +1,5 @@
 from Configurables import STOfflinePosition
 
-class EarlyDataConf(object):
-    def configureTools(self,
-                       IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
-                       TT=STOfflinePosition('ToolSvc.STOfflinePosition')
-                       ):
-        # New tune (JvT - 14.07.2010)
-        if IT is not None:
-            IT.LinSharingCorr2 = -0.0152 
-            IT.CubicSharingCorr2 = 12.33
-            IT.CubicSharingCorr3 = 4.369
-            IT.LinSharingCorr4 = 0.530
-            IT.DetType = "IT"
-            IT.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ];
-            IT.APE = 0.0758  # corresponds to 15 um
-        
-        if TT is not None:
-            TT.APE = 0.197 # corresponds to 36 um
-
 class DefaultConf(object):
     def configureTools(self,
                        IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
@@ -31,6 +13,7 @@ class DefaultConf(object):
             IT.LinSharingCorr4 = 0.530
             IT.DetType = "IT"
             IT.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ];
+            IT.APE = 0.0758 # corresponds to 15 um
             # Uncomment to switch to old settings
             #IT.LinSharingCorr2 = 0.61
             #IT.CubicSharingCorr2 = 7.4;
@@ -41,7 +24,8 @@ class DefaultConf(object):
             #IT.DetType = "IT"
 
         if TT is not None:
-            pass
+            TT.APE = 0.197 # corresponds to 36 um
+            #pass
             # Uncomment to switch to old settings
             #TT.LinSharingCorr2 = 1.1
             #TT.CubicSharingCorr2 = 5.4;

@@ -1,6 +1,8 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+! 2010-10-27 Stephanie Hansmann-Menzemer
+ - remove early data tuning
 
 !========================= STTools v4r5 2010-10-25 =========================
 ! 2010-10-15 Mark Tobin
