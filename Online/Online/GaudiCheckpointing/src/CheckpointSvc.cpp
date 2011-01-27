@@ -582,8 +582,10 @@ int CheckpointSvc::resumeMainInstance() {
   // ever again inside Gaudi.
   //
   Command* command = 0;
-  if ( FSMState() == Gaudi::StateMachine::RUNNING ) {
-    command = new Command(proc,this,m_fsm);
+  if ( m_numInstances != 0 )   {
+    if ( FSMState() == Gaudi::StateMachine::RUNNING )    {
+      command = new Command(proc,this,m_fsm);
+    }
   }
   m_fsm->connectDIM(command);
   ::dis_start_serving((char*)proc.c_str());
