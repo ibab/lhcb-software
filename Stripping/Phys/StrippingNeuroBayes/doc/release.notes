@@ -4,6 +4,9 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 - Ulrich Kerzel
+- add working options file to test Bhh network
+
 ! 2011-01-26 - Ulrich Kerzel
 - first version of lifetime unbiased B->hh network
   - train on MC10 with pre-cuts

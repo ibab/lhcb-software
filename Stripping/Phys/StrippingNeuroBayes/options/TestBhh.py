@@ -77,7 +77,7 @@ LoKiTupleBhh.Variables = {
     "NetOut"  : "INFO(LHCb.Particle.LastGlobal+1, -999)",
     "NetProb" : "INFO(LHCb.Particle.LastGlobal+2, -999)"
     }
-tupleMuMu.addTool(LoKiTupleMuMu)
+tupleBhh.addTool(LoKiTupleBhh)
 
 ########################################################################
 #
@@ -108,20 +108,26 @@ DaVinci().EvtMax                     = 5000;
 #DaVinci().EvtMax                     = -1;
 DaVinci().DataType                   = "2010"
 
-DaVinci().Simulation                 = False
+DaVinci().Simulation                 = True #False
 DaVinci().UserAlgorithms             = [ SeqBhh, tupleBhh]
 
 DaVinci().DataType                   = "2010"
 #DaVinci().InputType                  = 'SDST'
 DaVinci().InputType                  = 'DST'
 
-DaVinci().DDDBtag                    = "head-20101003" #"head-20100518" # "head-20100407"
-DaVinci().CondDBtag                  = "head-20101010" #"head-20100730" # "head-20100509"
+#MC10, Sim01
+DaVinci().DDDBtag                    = "head-20101206"
+DaVinci().CondDBtag                  = "sim-20101210-vc-md100"
+        
 
-#DaVinci().SkipEvents = 20100
-EventSelector().Input   = [
-    "DATAFILE='PFN:/work/kerzel/00007574_00000133_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-    ]
+#DaVinci().DDDBtag                    = ""
+#DaVinci().CondDBtag                  = ""
+
+# MC2010: BsKK
+EventSelector().Input = [
+    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008674/0000/00008674_00000016_1.allstreams.dst' TYP='POOL_ROOT' OPT='READ'"
+            ]
+
 
 #EventSelector().Input   = [
 #    "   DATAFILE='LFN:/lhcb/data/2010/SDST/00007951/0000/00007951_00001135_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
