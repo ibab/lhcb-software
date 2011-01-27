@@ -32,7 +32,8 @@ TrackAddLikelihood::TrackAddLikelihood(const std::string& name,
  declareProperty("types", m_types = boost::assign::list_of(Track::PatVelo )(Track::PatVeloTT )
                                            (Track::PatForward )(Track::TrackMatching )
                                            (Track::PatMatch )(Track::PatSeeding )
-                                           (Track::PatDownstream)(Track::TsaTrack)(Track::PatVeloGeneral));
+                                           (Track::PatDownstream)(Track::TsaTrack)(Track::PatVeloGeneral)
+                                           (Track::PatFastVelo));
 }
 
 TrackAddLikelihood::~TrackAddLikelihood()

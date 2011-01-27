@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2010-10-27 - Stephanie Hansmann-Menzemer
+  Make TrackAddLikelkhood and TrackFromDST algorithm aware of new track histories
 
 !========================= TrackUtils v1r39p1 2010-10-28 =========================
 ! 2010-10-20 - Gerhard Raven

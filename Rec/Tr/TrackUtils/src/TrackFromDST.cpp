@@ -46,12 +46,15 @@ StatusCode TrackFromDST::initialize()
   
   // Map the track history flags to the corresponding output containers
   // ------------------------------------------------------------------
-  m_map[ LHCb::Track::TrackSeeding  ] = LHCb::TrackLocation::Seed;
-  m_map[ LHCb::Track::PatVelo       ] = LHCb::TrackLocation::Velo;
+  m_map[ LHCb::Track::TrackSeeding  ] = LHCb::TrackLocation::Seed; 
+  m_map[ LHCb::Track::PatSeeding    ] = LHCb::TrackLocation::Seed;
+  m_map[ LHCb::Track::PatVelo       ] = LHCb::TrackLocation::Velo; 
+  m_map[ LHCb::Track::PatFastVelo   ] = LHCb::TrackLocation::Velo;
   m_map[ LHCb::Track::PatVeloTT     ] = LHCb::TrackLocation::VeloTT;
   m_map[ LHCb::Track::PatForward    ] = LHCb::TrackLocation::Forward;
   m_map[ LHCb::Track::TrackMatching ] = LHCb::TrackLocation::Match;
-  m_map[ LHCb::Track::TsaTrack      ] = LHCb::TrackLocation::Tsa;
+  m_map[ LHCb::Track::PatMatch ]      = LHCb::TrackLocation::Match;
+  m_map[ LHCb::Track::TsaTrack      ] = LHCb::TrackLocation::Seed;
   m_map[ LHCb::Track::PatDownstream ] = LHCb::TrackLocation::Downstream;
   
   return StatusCode::SUCCESS;
