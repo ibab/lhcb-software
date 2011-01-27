@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-01-27 - Marco Clemencic
+ - Fixed compilation error on VC9.
+
 ! 2011-01-20 - Gerhard Raven
  - replace the request in the requiremenents for HltTCK from v1r* to v*
  - change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from false to true 

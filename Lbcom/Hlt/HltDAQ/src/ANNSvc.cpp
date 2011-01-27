@@ -212,7 +212,7 @@ ANNSvc::keys(const IANNSvc::major_key_type& major) const {
     std::transform(i.begin(),
                    i.end(),
                    std::back_inserter(k),
-                   bl::bind(&IANNSvc::minor_value_type::first,bl::_1));
+                   bl::bind(&minor_value_type::first,bl::_1));
     return k;
 }
 
