@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-01-27 Marc Grabalosa
+  - Bug for OScombination, remove CombineTaggersProbabilityOS factory
+
 ! 2011-01-26 Marc Grabalosa
   - Fixed bug in vertexch for (B id<0). New calibration constants
   - New option files MeV

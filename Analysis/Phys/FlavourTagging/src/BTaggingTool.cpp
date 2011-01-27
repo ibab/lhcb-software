@@ -22,7 +22,6 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareInterface<IBTaggingTool>(this);
 
   declareProperty( "CombineTaggersName",   m_CombineTaggersName   = "CombineTaggersProbability" ); 
-  declareProperty( "CombineTaggersOSName", m_CombineTaggersOSName = "CombineTaggersProbabilityOS" ); 
 
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
@@ -49,7 +48,6 @@ BTaggingTool::BTaggingTool( const std::string& type,
   m_pvReFitter = 0;
   m_dva =0;
   m_combine = 0;
-  m_combineOS = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
 }
@@ -106,11 +104,6 @@ StatusCode BTaggingTool::initialize() {
   m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
   if(! m_combine) {
     fatal() << "Unable to retrieve "<< m_CombineTaggersName << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_combineOS = tool<ICombineTaggersTool> (m_CombineTaggersOSName, this);
-  if(! m_combineOS) {
-    fatal() << "Unable to retrieve "<< m_CombineTaggersOSName << endreq;
     return StatusCode::FAILURE;
   }
   if(m_ChoosePV =="RefitPV") {
