@@ -62,9 +62,16 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
   if ( d->hasData ) {
     if ( d->istmp ) { // Generate artificial temporary name
       char* p = m_chrfind(d->name,' ');
+      if ( !p ) p = d->name + d->name_len;
       if ( p ) {
-	p[0] = '_';
-	p[1] = 0;
+	pid_t pid = mtcp_sys_getpid();
+	*p++ = '_';
+	if ( pid>10000 ) *p++ =  (pid/10000)+'0';
+	if ( pid>1000  ) *p++ = ((pid%10000)/1000)+'0';
+	if ( pid>100   ) *p++ = ((pid%1000)/100)+'0';
+	if ( pid>10    ) *p++ = ((pid%100)/10)+'0';
+	*p++ = (pid%10)+'0';
+	*p++ = 0;
       }
       //::tmpnam(d->name);
     }
