@@ -324,7 +324,7 @@ StatusCode CheckpointSvc::start() {
     log << MSG::FATAL << "Failed to start service base class." << endmsg;
     return sc;
   }
-  if ( m_numInstances != 0 )   {
+  if ( m_useCores || (m_numInstances != 0) )   {
     stopMainInstance();
     int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
     for(int i=0; i<n_child; ++i)    {
