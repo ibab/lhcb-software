@@ -1022,11 +1022,11 @@ static DIS_DNS_CONN *create_dns(long dnsid)
 
 void dis_dns_init()
 {
-	static int done = 0;
+	static int dis_dns_init_done = 0;
 	DIS_DNS_CONN *dnsp;
 	void dim_init_threads(void);
 
-	if(!done)
+	if(!dis_dns_init_done)
 	{
 		if(!Threads_off)
 		{
@@ -1041,7 +1041,7 @@ void dis_dns_init()
 		}
 		dnsp = create_dns(0);
 		Default_DNS = dnsp;
-		done = 1;
+		dis_dns_init_done = 1;
 		ENABLE_AST
 		}
 	}

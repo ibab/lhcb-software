@@ -911,9 +911,16 @@ extern void get_all_colors();
 extern void set_title();
 extern void set_icon_title();
 
+        char text[128];
+        int len;
 	if(tag){}
+	sprintf(text,"DID - DIM Information Display on ");
+	len = strlen(text);
+        dim_get_dns_node(text+len);
+	len = strlen(text);
+	sprintf(text+len,":%d",dim_get_dns_port());
 	get_all_colors(display,Matrix_id[Curr_matrix]);
-	set_title(toplevel_widget,"DID - DIM Information Display");
+	set_title(toplevel_widget,text);
 	set_icon_title(toplevel_widget,"DID");
 	Timer_q = dtq_create();
 	dic_info_service("DIS_DNS/SERVER_INFO",MONITORED,0,0,0,update_servers,0,
