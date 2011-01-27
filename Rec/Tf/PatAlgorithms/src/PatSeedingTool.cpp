@@ -79,11 +79,11 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "zMagnet",			m_zMagnet		= -1e42 );
   declareProperty( "xMagTol",			m_xMagTol		= 2000. * Gaudi::Units::mm );
   // window to collect hits from
-  declareProperty( "TolCollectOT",		m_tolCollectOT		=    3. * Gaudi::Units::mm );
-  declareProperty( "TolCollectIT",		m_tolCollectIT		=    .3 * Gaudi::Units::mm );
+  declareProperty( "TolCollectOT",		m_tolCollectOT		=    4. * Gaudi::Units::mm );
+  declareProperty( "TolCollectIT",		m_tolCollectIT		=    .6 * Gaudi::Units::mm );
   declareProperty( "TolCollectITOT",		m_tolCollectITOT	=    .6 * Gaudi::Units::mm );
   // clone killing in xz projection
-  declareProperty( "MinXPlanes",		m_minXPlanes		=    5                     );
+  declareProperty( "MinXPlanes",		m_minXPlanes		=    4                     );
   declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
   declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
@@ -96,7 +96,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "zForYMatch",		m_zForYMatch		= 9000. * Gaudi::Units::mm );
   // spread of run of stereo hits in projection plane
   declareProperty( "MaxRangeOT",		m_maxRangeOT		=  150. * Gaudi::Units::mm );
-  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   15. * Gaudi::Units::mm );
+  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   35. * Gaudi::Units::mm );
   // pointing criterium in y
   declareProperty( "yCorrection",		m_yCorrection		= -1e42);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
@@ -115,18 +115,18 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   // internal fit, outlier removal, minimum number of planes
   //------------------------------------------------------------------------
-  declareProperty( "MaxChi2HitOT",		m_maxChi2HitOT		=   30.                    );
-  declareProperty( "MaxChi2HitIT",		m_maxChi2HitIT		=   10.                    );
+  declareProperty( "MaxChi2HitOT",		m_maxChi2HitOT		=   56.25                  );
+  declareProperty( "MaxChi2HitIT",		m_maxChi2HitIT		=   36.                    );
   declareProperty( "MaxTrackChi2",		m_maxTrackChi2     	=   15.                    );
   declareProperty( "MaxFinalChi2",		m_maxFinalChi2     	=   12.25                  );
   declareProperty( "MaxFinalTrackChi2",		m_maxFinalTrackChi2	=    9.                    );
   declareProperty( "MaxTrackChi2LowMult",	m_maxTrackChi2LowMult	=    6.			   );
-  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=    9			   );
-  declareProperty( "MaxMisses",			m_maxMisses		=    1			   );
-  declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   17			   );
+  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=    8			   );
+  declareProperty( "MaxMisses",			m_maxMisses		=    2			   );
+  declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   15			   );
 
   declareProperty( "MinPlanesPerStation",	m_minPlanesPerStation	=    1			   );
-  declareProperty( "MaxHoles",			m_maxHoles		=    2			   );
+  declareProperty( "MaxHoles",			m_maxHoles		=    4			   );
   declareProperty( "ITStubLooseChi2",		m_itStubLooseChi2	= 1500.			   );
   declareProperty( "ITStubTightChi2",		m_itStubTightChi2	=   80.			   );
 

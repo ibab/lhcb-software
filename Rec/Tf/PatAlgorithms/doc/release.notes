@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2011-01-27 - Stephanie Hansmann-Menzemer
+ - set early data tunings as default
 
 ! 2011-01-24 - Olivier Callot
  - FIx the serach window in FastForwardTool when a minimal moentum/Pt is given.

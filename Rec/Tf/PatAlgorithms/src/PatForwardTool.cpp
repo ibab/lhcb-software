@@ -38,7 +38,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
 
-  declareProperty( "SecondLoop"            , m_secondLoop            = false );
+  declareProperty( "SecondLoop"            , m_secondLoop            = true );
   declareProperty( "ZAfterVelo"            , m_zAfterVelo            = 1640. * Gaudi::Units::mm );
   declareProperty( "YCompatibleTol"        , m_yCompatibleTol        =   10. * Gaudi::Units::mm );
   declareProperty( "YCompatibleTolFinal"   , m_yCompatibleTolFinal   =    1. * Gaudi::Units::mm );
@@ -52,10 +52,10 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "MaxSpreadSlopeY"       , m_maxSpreadSlopeY       = 70.   );
   declareProperty( "MinPt"                 , m_minPt                 = 80. * Gaudi::Units::MeV );
   declareProperty( "MinMomentum"           , m_minMomentum           =  1. * Gaudi::Units::GeV );
-  declareProperty( "MaxChi2"               , m_maxChi2               =  20       );
-  declareProperty( "MaxChi2Track"          , m_maxChi2Track          =  20       );
-  declareProperty( "MinHits"               , m_minHits               =  14       );
-  declareProperty( "MinOTHits"             , m_minOTHits             =  16       );
+  declareProperty( "MaxChi2"               , m_maxChi2               =  40       );
+  declareProperty( "MaxChi2Track"          , m_maxChi2Track          =  40       );
+  declareProperty( "MinHits"               , m_minHits               =  12       );
+  declareProperty( "MinOTHits"             , m_minOTHits             =  14       );
   declareProperty( "CenterOTYSize"         , m_centerOTYSize         =  100 * Gaudi::Units::mm );
   declareProperty( "MaxDeltaY"             , m_maxDeltaY             =  30.      );
   declareProperty( "MaxDeltaYSlope"        , m_maxDeltaYSlope        =  300.      );
