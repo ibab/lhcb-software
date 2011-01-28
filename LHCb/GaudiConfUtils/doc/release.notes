@@ -4,7 +4,22 @@
 ! Purpose     : Helper python modules for Configurable manipulations.
 !-----------------------------------------------------------------------------
 
-! ========================= GaudiConfUtils v1r0 2011-01-27 ===================
+! 2011-01-28 - Marco Clemencic
+ - Added meta-module GaudiConfUtils.ConfigurableGenerators to provide
+   ConfigurableGenerator classes: wrapper classes with the same properties of
+   the configurable with the same name that can be used to prepare set of
+   configurations without actually instantiate the configurable (done only
+   when explicitly requested).
+
+   Usage:
+
+   from GaudiConfUtils.ConfigurableGenerators import AnAlgClass
+   conf1 = AnAlgClass(Prop1 = "a")
+   conf1.Prop2 = 4
+   conf2 = AnAlgClass(Prop1 = "b")
+
+   myAlg = conf1("MyAlg")
+   yourAlg = conf2.configurable("YourAlg")
 
 ! 2011-01-27 - Juan Palacios
  - First import. Contains module GaudiConfUtils.Utils, with functions
@@ -14,5 +29,5 @@
   * filterConfigurables: Return a list containing all the Configurables present in an arbitrery list of symbols.
   * getConfigurablesFromModule: Return a list with all the configurables in a module
 
-  Usage: 
+  Usage:
   from GaudiConfUtils import isConfigurable, ...
