@@ -4,6 +4,10 @@
 ! Purpose     : ROOT plugin to read MDF files.
 !-----------------------------------------------------------------------------
 
+!========================== MDF_ROOT v1r6 2011-01-28 =========================
+! 2011-01-28 - Markus Frank
+ - Fix bug in options processing.
+
 !========================== MDF_ROOT v1r5 2011-01-20 =========================
 ! 2011-01-20 - Markus Frank
  - Fix bug in file descriptor assignment causing wrong files to be closed.

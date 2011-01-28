@@ -27,23 +27,11 @@ static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #include <map>
 #include <iostream>
 namespace {
-#if 0
 
-  /// This is no longer needed, since now these TFile properties are accessible
-  struct MyFile : public TFile {
-    Long64_t offset() const { 
-      const TFile* f = this;
-      std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead() 
-		<< " Size:"             << f->GetSize() 
-		<< " Relative offset:"  << (long)f->GetRelOffset()
-		<< " Archive offset:"   << (long)this->fArchiveOffset
-		<< std::endl;
-      return this->GetRelOffset(); 
-    }
-    Long64_t aoffset() const { return this->fArchiveOffset; }
-  };
-#endif
   typedef std::map<int,TFile*> FileMap;
+
+  //#define MDF_ROOT_DEBUG
+
   FileMap& fileMap() {
     static FileMap s_fileMap;
     return s_fileMap;
@@ -51,8 +39,12 @@ namespace {
   int root_open(const char *filepath, int flags, unsigned int mode) {
     TFile* f = 0;
     TUrl url(filepath);
-    TString opts="filetype=raw", proto, spec;
-    opts += url.GetOptions();
+    TString opts="filetype=raw", proto, spec, tmp=url.GetOptions();
+
+    if ( tmp.Length()>0 ) {
+      opts += "&";
+      opts += url.GetOptions();
+    }
     url.SetOptions(opts);
     proto = url.GetProtocol();
     if ( proto == "file" || proto == "http" ) {
@@ -61,11 +53,13 @@ namespace {
     }
     else {
       spec = url.GetUrl();
-    }
-    //std::cout << "URL:" << url.GetUrl() << std::endl;
-    //std::cout << "   opts:    " << url.GetOptions() << std::endl;
-    //std::cout << "   protocol:" << url.GetProtocol() << std::endl;
-    //std::cout << "   specs:   " << (const char*)spec << std::endl;
+    } 
+#ifdef MDF_ROOT_DEBUG
+    std::cout << "URL:" << url.GetUrl() << std::endl;
+    std::cout << "   opts:    " << url.GetOptions() << std::endl;
+    std::cout << "   protocol:" << url.GetProtocol() << std::endl;
+    std::cout << "   specs:   " << (const char*)spec << std::endl;
+#endif
     if ( (flags&(O_WRONLY|O_CREAT))!=0 && ((mode&S_IWRITE)!= 0) ) {
       f = TFile::Open(spec,"RECREATE","",0);
     }
@@ -125,13 +119,12 @@ namespace {
     if ( i != fileMap().end() ) {
       TFile* f = (*i).second;
       if ( f->GetBytesRead()+size > f->GetSize() ) {
-	/*
+#ifdef MDF_ROOT_DEBUG
 	std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead() 
 		  << " Size:"             << f->GetSize() 
 		  << " Relative offset:"  << (long)f->GetRelOffset()
-		  << " Archive offset:"   << (long)this->fArchiveOffset
 		  << std::endl;
-	*/
+#endif
 	return 0;
       }
       if ( f->ReadBuffer((char*)ptr,size)==0 )
@@ -147,13 +140,11 @@ namespace {
     }
     return -1;
   }
-  int root_stat(const char*   /* path */, struct stat * /*statbuf */) {    return -1;  }
-  int root_stat64(const char* /* path */, struct stat64 * /* statbuf */) { return -1; }
-  int root_fstat (int /* s */,  struct stat* /* statbuf */) { return -1; }
-  int root_fstat64(int /* s */, struct stat64* /* statbuf */) { return -1; }
-  char* root_serror() {
-    return (char*)gSystem->GetError();
-  }
+  int root_stat(const char*   /* path */, struct stat * /*statbuf */)     { return -1; }
+  int root_stat64(const char* /* path */, struct stat64 * /* statbuf */)  { return -1; }
+  int root_fstat (int /* s */,  struct stat* /* statbuf */)               { return -1; }
+  int root_fstat64(int /* s */, struct stat64* /* statbuf */)             { return -1; }
+  char* root_serror()                             { return (char*)gSystem->GetError(); }
 }
 
 extern "C" EXPORT LHCb::PosixIO* MDF_ROOT()  {
