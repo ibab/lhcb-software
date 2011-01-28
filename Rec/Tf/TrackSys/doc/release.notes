@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2011-01-28 - Stephanie Hansmann-Menzemer
+ - add switch ForceNewSeq and ForceOldSeq to run tracking sequence which are
+ not default for a given data set.
+
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
  - change to new tracking reco sequence from 2011 data taking on
  - set early data tuning as default

@@ -26,6 +26,8 @@ class TrackSys(LHCbConfigurableUser):
        ,"OutputType": "" # set to "RDST" for special RDST sequence
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
        ,"DataType": "2010" # propagated from Brunel(), used to determine which monitors to run
+       ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
+       ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType 
         }
     
     ## Possible expert options
@@ -42,9 +44,19 @@ class TrackSys(LHCbConfigurableUser):
     CosmicPatRecAlgorithms    = ["PatSeed"]
     ## Cosmic expert swithces
     CosmicExpertTracking      = ["noDrifttimes"] 
-            
+
     ## @brief Check the options are sane etc.
     def defineOptions(self):
+        
+      if self.getProp( "ForceNewSeq" ) and self.getProp( "ForceOldSeq" ) :
+         raise RuntimeError("Cannot force both old and new tracking sequence at once")
+
+      if self.getProp( "ForceNewSeq" ) :
+         self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
+
+      if self.getProp( "ForceOldSeq" ):
+         self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
+    
       if "cosmics" not in self.getProp("SpecialData"):
            if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
                if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProb("DataType") :  
