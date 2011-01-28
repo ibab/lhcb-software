@@ -10,7 +10,7 @@
   </set></argument>
   <argument name="unsupported_platforms"><set>
 		<text>win.*</text>
-		<text>slc4.*</text>
+		<text>slc4_ia32.*</text>
   </set></argument>
   <argument name="reference"><text>../refs/chkpt_01_save.ref</text></argument>
 </extension>

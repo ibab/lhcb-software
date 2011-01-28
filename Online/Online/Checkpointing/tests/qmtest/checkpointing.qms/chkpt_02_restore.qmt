@@ -4,7 +4,7 @@
   <argument name="program"><text>../test_restore.sh</text></argument>
   <argument name="unsupported_platforms"><set>
 		<text>win.*</text>
-		<text>slc4.*</text>
+		<text>slc4_ia32.*</text>
   </set></argument>
   <argument name="reference"><text>../refs/chkpt_02_restore.ref</text></argument>
 </extension>
