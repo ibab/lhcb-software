@@ -1100,7 +1100,7 @@ class SubversionCmd(RevisionControlSystem):
             log.info("Setting the new packages property")
             _svn("propset", "--file", modlist, "packages", root_dir)
             log.info("Committing the changes.")
-            _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir)
+            _, _, status = _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir)
 
         return status
 
@@ -1192,5 +1192,5 @@ def moveSVNPackage(package, project, user_repos):
         status = 1
         return status
     else :
-        repo.move(package, project)
+        status = repo.move(package, project)
     return status
