@@ -359,10 +359,11 @@ SerializeNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   
 
 // Update the transient object: NTuples end here when reading records
 StatusCode SerializeNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
-#if 0
   INTuple* tupl = dynamic_cast<INTuple*>(pObj);
   SerializeAddress* rpA = dynamic_cast<SerializeAddress*>(pAddr);
   if ( 0 != tupl && 0 != rpA )  {
+#if 0
+
     SerializeDataConnection* con = (SerializeDataConnection*)rpA->ipar()[0];
     if ( con )   {
       TTree* tree = rpA->section;
@@ -486,9 +487,9 @@ StatusCode SerializeNTupleCnv::i__updateObjSerialize(SerializeAddress* rpA, INTu
       return StatusCode::FAILURE;
     }
     log() << MSG::INFO << "End of input Ntuple." << endmsg;
+#endif
     return StatusCode::FAILURE;
   }
-#endif
   return StatusCode::FAILURE;
 }
 

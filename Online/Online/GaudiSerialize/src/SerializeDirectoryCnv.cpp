@@ -45,8 +45,6 @@ SerializeDirectoryCnv::createRep(DataObject* pObj,IOpaqueAddress*& /* refpAddr *
 
 // Converter overrides: Update the references of an updated transient object.
 StatusCode 
-SerializeDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr, 
-                                DataObject* pObject)
-{
+SerializeDirectoryCnv::updateObjRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pObj */)  {
   return StatusCode::SUCCESS;
 }
