@@ -16,8 +16,14 @@ class Test(unittest.TestCase):
     package_tags = [(FakeTransaction({'/Project/tags/Package/v1r0': ('A', (1234, '/Project/trunk/Package'), 'dir')},
                                      {'/Project/trunk/Package':'dir'}),
                                      True),
+                    (FakeTransaction({'/Project/tags/Hat/Package/v1r0': ('A', (1234, '/Project/trunk/Hat/Package'), 'dir')},
+                                     {'/Project/trunk/Hat/Package':'dir'}),
+                                     True),
                     (FakeTransaction({'/Project/tags/Package/v1r1': ('A', (1234, '/Project/branches/Package/v1r0b'), 'dir')},
                                      {'/Project/branches/Package/v1r0b':'dir'}),
+                                     True),
+                    (FakeTransaction({'/Project/tags/Package/v1r1': ('A', (1234, '/Project/tags/Package/v1r0'), 'dir')},
+                                     {'/Project/tags/Package/v1r0':'dir'}),
                                      True),
                     (FakeTransaction({'/Project/tags/Package/test': ('A', (1234, '/Project/trunk/Package'), 'dir')},
                                      {'/Project/trunk/Package':'dir'}),
@@ -25,9 +31,33 @@ class Test(unittest.TestCase):
                     (FakeTransaction({'/Project/tags/Package/v1r1': ('A', (1234, '/Project/branches/Package'), 'dir')},
                                      {'/Project/branches/Package':'dir'}),
                                      (False, 'Invalid tag copy')),
+                    (FakeTransaction({'/Project/tags/v1r1': ('A', (1234, '/Project/trunk'), 'dir')},
+                                     {'/Project/trunk/Package':'dir'}),
+                                     (False, 'Invalid tag copy')),
+                    #(FakeTransaction({'/Project/tags/Hat/v1r0': ('A', (1234, '/Project/trunk/Hat'), 'dir')},
+                    #                 {'/Project/trunk/Hat/Package/cmt':'dir'}),
+                    #                 False),
                     ]
     project_tags = [
                     (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0/cmt': ('A', (999, '/Project/trunk/cmt'), 'dir')},
+                                     {'/Project/trunk/cmt': 'dir',
+                                      '/Project/trunk/Package': 'dir',
+                                      }),
+                                      True),
+                    (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0/cmt':
+                                         ('A', (999, '/Project/branches/PROJECT/PROJECT_v1b/cmt'), 'dir')},
+                                     {'/Project/trunk/cmt': 'dir',
+                                      '/Project/trunk/Package': 'dir',
+                                      }),
+                                      True),
+                    (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r0':
+                                         ('A', (999, '/Project/branches/PROJECT/PROJECT_v1b'), 'dir')},
+                                     {'/Project/trunk/cmt': 'dir',
+                                      '/Project/trunk/Package': 'dir',
+                                      }),
+                                      True),
+                    (FakeTransaction({'/Project/tags/PROJECT/PROJECT_v1r1/cmt':
+                                         ('A', (999, '/Project/tags/PROJECT/PROJECT_v1r0/cmt'), 'dir')},
                                      {'/Project/trunk/cmt': 'dir',
                                       '/Project/trunk/Package': 'dir',
                                       }),
@@ -110,6 +140,18 @@ class Test(unittest.TestCase):
                  (FakeTransaction({"/path/to/xml/data.txt": ('M', (-1, None), 'file')},
                                   files = {"/path/to/xml/data.txt": "text"}), True)
                  ]
+
+    move_package = [
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/Dest/trunk/Package': 'dir'}),
+                                      True),
+                    ]
 
     def assertCheckTxn(self, txn, checker, result):
         check = checker(txn)

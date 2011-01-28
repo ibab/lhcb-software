@@ -161,42 +161,68 @@ class TagCheckerBase(PathChecker):
 class PackageTag(TagCheckerBase):
     """
     Checker class for package tags.
+    It allows the following copies:
+     - Proj/trunk/[Hat/]Package -> Proj/tags/[Hat/]Package/vXrY
+     - Proj/{branches,tags}/[Hat/]Package/vXrY -> Proj/tags/[Hat/]Package/vXrZ
+    and prevent:
+     - if the projects do not match
+     - if the version is not valid
+     - if the packages do not match
     """
     def _validCopy(self, src, dest):
         try:
-            # parse the source path
-            project, trunk, package = src.strip("/").split("/", 2)
-            # it must come from trunk or branches
-            if trunk not in ["trunk", "branches"]: return False
-            if trunk == "branches":
-                # force one extra level for the package branches
-                #  - if such extra level is not there we get and exception
-                #  - if there is more than one the package name will be invalid
-                # @fixme: the copy branch/Pack/cmt -> tags/Pack/vXrY works
-                package, _bname = package.rsplit("/", 1)
-            if not package: return False
-            base = "/".join(["", project, "tags", package, ""])
-            if not dest.startswith(base): return False
-            version = dest[len(base):]
-            return self.format.match(version)
+            # splitted source
+            ss = src.strip("/").split("/")
+            lss = len(ss)
+            # splitted destination
+            ds = dest.strip("/").split("/")
+            lds = len(ds)
+            if not self.format.match(ds[-1]): # the last fragment of dts mast be a version
+                return False
+            if lds < 4: # not enough levels for a tag
+                return False
+            # @fixme: how to prevent Proj/trunk/Hat -> Proj/tags/Hat/vXrY ?
+            #         to be done at the level of the transaction?
+            if ss[1] == "trunk": # first (simple case)
+                if (lss + 1) == lds:
+                    return ss[2:] == ds[2:-1]
+            elif ss[1] in [ "tags", "branches" ]:
+                if lss == lds:
+                    return ss[2:-1] == ds[2:-1]
         except:
             return False
-        return True
+        return False
 
 class ProjectTag(TagCheckerBase):
     """
     Checker class for project tags.
+    It allows the following copies:
+     - Proj/trunk/cmt -> Proj/tags/PROJ/PROJ_vXrY/cmt
+     - Proj/{branches,tags}/PROJ/PROJ_vXb -> Proj/tags/PROJ/PROJ_vXrY
+     - Proj/{branches,tags}/PROJ/PROJ_vXb/cmt -> Proj/tags/PROJ/PROJ_vXrY/cmt
+    and prevent:
+     - if the project do not match
+     - if the version is not valid
+     - ...
     """
     def _validCopy(self, src, dest):
         try:
-            ds = dest.strip("/").split("/")
+            # splitted source
             ss = src.strip("/").split("/")
+            lss = len(ss)
+            # splitted destination
+            ds = dest.strip("/").split("/")
+            lds = len(ds)
             proj = ss[0].upper()
-            return ((ds[0] == ss[0]) # same project
-                    and (len(ss) == 3 and ss[2] == "cmt") # the source must be the cmt directory
-                    and (len(ds) == 5 and ds[2] == proj and ds[4] == "cmt"
-                         and ds[3].startswith(proj + "_")
-                         and self.format.match(ds[3][len(proj) + 1:]))
+            return (# lengths matches
+                    ((lss, lds) in [(3, 5), (4, 4), (5, 5)])
+                    and (ds[0] == ss[0]) # same project
+                    and ( (lss == 4) # 3 and 5 are acceptable only if we have 'cmt'
+                          or ( ss[-1] == ds[-1] == "cmt" ) )
+                    # and (ds[1] == "tags") # implicit
+                    and (ds[2] == proj) # 'PROJ' subdirectory
+                    and ds[3].startswith(proj + "_") # version prefix
+                    and self.format.match(ds[3][len(proj) + 1:])
                     )
         except:
             return False

@@ -1,3 +1,8 @@
+2011-01-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker/StdCheckers.py: improved tag checking to allow tag cloning from tags and branches
+	* python/LbRelease/SvnChecker/_test.py: improved tests to cover more use cases
+
 2011-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/rcs.py: fixed return arguments in the move action.
