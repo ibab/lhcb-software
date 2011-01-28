@@ -10,6 +10,10 @@ static int s_mtcp_sys_errno = 0;
 static int s_mtcp_debug_syscalls = MTCP_ERROR;
 static char const s_mtcp_hexdigits[] = "0123456789ABCDEF";
 
+WEAK(int&) __mtcp_sys_errno() {
+  return s_mtcp_sys_errno;
+}
+
 STATIC(void) rwrite(char const *buff, int size)   {
   int offs, rc;
   for (offs = 0; offs < size; offs += rc) {
@@ -194,10 +198,6 @@ gofish:
   printflocked.wake(1);
 #endif
   if ( lvl >= MTCP_FATAL ) mtcp_abort();
-}
-
-WEAK(int&) __mtcp_sys_errno() {
-  return s_mtcp_sys_errno;
 }
 
 WEAK(void) mtcp_abort(void)    {

@@ -1,6 +1,7 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
+#include "Checkpointing/Namespace.h"
 #include <gnu/libc-version.h>
 #include <sys/syscall.h>
 #include "sysdep-x86_64.h"
@@ -73,12 +74,12 @@ void mtcp_set_thread_sysinfo(void *sysinfo);
 
 #ifndef CHECKPOINTING_OUTPUT
 #define CHECKPOINTING_OUTPUT
-void mtcp_output(int lvl, const char* fmt,...);
-void mtcp_set_debug_level(int lvl);
-int  mtcp_get_debug_level();
+WEAK(void) mtcp_output(int lvl, const char* fmt,...);
+WEAK(void) mtcp_set_debug_level(int lvl);
+WEAK(int)  mtcp_get_debug_level();
 #ifndef MTCP_ERRNO
 #define MTCP_ERRNO
-extern int& __mtcp_sys_errno();
+WEAK(int&) __mtcp_sys_errno();
 #define mtcp_sys_errno (__mtcp_sys_errno())
 #endif
 #endif // CHECKPOINTING_OUTPUT
