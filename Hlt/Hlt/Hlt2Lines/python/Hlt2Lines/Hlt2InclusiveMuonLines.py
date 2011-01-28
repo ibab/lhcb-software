@@ -25,8 +25,11 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2IncMuTrackNoIP'            : 1.0
                                    }
                   
+                  ,'TrChi2'              :   10      #chi2PerDof 
+                  ,'TrChi2Tight'         :    5      #chi2PerDof 
                   ,'SingleMuonPt'        : 1000      # MeV
-                  ,'SingleMuonIP'        : 0.080     # mm
+                  ,'SingleMuonIP'        : 0.25     # mm
+                  ,'SingleMuonIPChi2'    : 100
                   ,'SingleMuonHighPt'    : 10000     # MeV
                   # Mu+track cuts 
                   ,'MuTrackMuPt'         : 800       # MeV
@@ -110,11 +113,17 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Bs2MuMuDecision" : 50193 } )        
         
         #--------------------------------------------
-        Hlt2SelSingleMuon= Hlt2Member( FilterDesktop
-                                       , "Filter"
-                                       , InputLocations  = [BiKalmanFittedMuons]
-                                       , Code = "((PT>%(SingleMuonPt)s*MeV) & (MIPDV(PRIMARY)>%(SingleMuonIP)s))" % self.getProps()
-                                       )
+        Hlt2SelSingleMuon = Hlt2Member( FilterDesktop
+                                        , "Filter"
+                                        , InputLocations  = [BiKalmanFittedMuons]
+                                        , Code = "( (PT>%(SingleMuonPt)s*MeV) "\
+                                            "& (MIPDV(PRIMARY)>%(SingleMuonIP)s)"\
+                                            "& (TRCHI2DOF<%(TrChi2Tight)s)"\
+                                            "& (MIPCHI2DV(PRIMARY)>%(SingleMuonIPChi2)s) "\
+                                            ")" % self.getProps()
+                                        )
+        
+        
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
                         , algos = [ PV3D(), BiKalmanFittedMuons, Hlt2SelSingleMuon ]
