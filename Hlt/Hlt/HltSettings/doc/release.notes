@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Jan-28 - Patrick Spradlin
+ - CharmHadronLines_draft2011:  Updated to include Hlt2CharmHadD2HHHLines.
+   Included Hlt2CharmHadD2HHH and Hlt2CharmHadD2HHHWideMass in the activeLines
+   for draft 2011 settings in anticipation the presentation in the
+   31 Jan T&S meeting.
+ * Requires Hlt2Lines 116279.
+
 ! 2011-Jan-27 - Patrick Spradlin
  - CharmHadronLines_draft2011:  Updated to account for name changes in
    Hlt2CharmHadD02HHLines.py.
