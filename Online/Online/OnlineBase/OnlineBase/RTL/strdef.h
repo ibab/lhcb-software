@@ -34,8 +34,8 @@ inline const char* strchr_safe(const char* p1, char p2)         { return ::strch
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #define snprintf  _snprintf
-inline int str_casecmp(const char *s1, const char *s2)          { return ::strcasecmp(s1, s2);     }
-inline int str_ncasecmp(const char *s1,const char *s2, size_t n){ return ::strncasecmp(s1, s2, n); }
+inline int str_casecmp(const char *s1, const char *s2)          { return ::_stricmp(s1, s2);     }
+inline int str_ncasecmp(const char *s1,const char *s2, size_t n){ return ::_strnicmp(s1, s2, n); }
 #else  // linux & gcc
 inline int str_casecmp(const char *s1, const char *s2)          { return ::strcasecmp(s1, s2);     }
 inline int str_ncasecmp(const char *s1,const char *s2, size_t n){ return ::strncasecmp(s1, s2, n); }
