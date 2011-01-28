@@ -444,6 +444,7 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   bool endofrun=false;
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {   
+   //  msg << MSG::WARNING << " m_dimInfoIt " << m_dimInfoIt->first << endreq; 
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
      std::string farm=m_processMgr->getFarm();
      //Moore breaks Presenter history mode
