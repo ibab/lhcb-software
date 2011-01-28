@@ -141,6 +141,25 @@ namespace ANNGlobalPID
 
   private:
 
+    /// Checks if the ProtoParticle has any RICH information
+    bool hasRichInfo( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( getInput(proto,"RichUsedAero")  > 0.5 ||
+               getInput(proto,"RichUsedR1Gas") > 0.5 ||
+               getInput(proto,"RichUsedR2Gas") > 0.5 );
+    }
+
+    /// Checks if the ProtoParticle has any ECAL information
+    bool hasEcalInfo( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( getInput(proto,"InAccEcal")  > 0.5 );
+    }
+
+    /// Run track preselection
+    bool trackPreSel( const LHCb::ProtoParticle * proto ) const;
+
+  private:
+
     /// Track selector type
     std::string m_trSelType;
 

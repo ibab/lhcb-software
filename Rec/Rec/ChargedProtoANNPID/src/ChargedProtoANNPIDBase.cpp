@@ -116,7 +116,7 @@ double ChargedProtoANNPIDBase::getInput( const LHCb::ProtoParticle * proto,
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+14 == input )
   {
-    var = (double)proto->calo().size();
+    var = static_cast<double>(proto->calo().size());
   }
 
   // -----------------------------------------------------------------------------------------------

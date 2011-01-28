@@ -56,7 +56,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
   // ParamFile root
   const std::string paramEnv = "CHARGEDPROTOANNPIDPARAMROOT";
   if ( !getenv(paramEnv.c_str()) ) return Error( "$"+paramEnv+" not set" );
-  const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
+  const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
                                   "/data/" + m_netVersion + "/" );
 
   // configuration file path
@@ -85,7 +85,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 
     // Track Pre-Selection
     config >> m_trackPreSel;
-    
+
     // Proto variable to fill
     if      ( "electron" == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNe; }
     else if ( "muon"     == particleType ) { m_protoInfo = LHCb::ProtoParticle::ProbNNmu; }
@@ -104,24 +104,24 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     config >> paramFileName;
     paramFileName = paramRoot+paramFileName;
     std::ifstream ftest(paramFileName.c_str());
-    if ( !ftest.is_open() ) return Error( "Network parameters file '" + 
+    if ( !ftest.is_open() ) return Error( "Network parameters file '" +
                                           paramFileName + "' cannot be opened" );
     ftest.close();
 
     // Read the list of inputs
     std::string input;
     StringInputs inputs;
-    while ( config >> input ) 
-    { 
-      if ( !input.empty() ) 
+    while ( config >> input )
+    {
+      if ( !input.empty() )
       {
         if ( input.find("#") == std::string::npos )
         {
-          inputs.push_back(input); 
+          inputs.push_back(input);
         }
       }
     }
-    
+
     // Load the network
     if ( "NeuroBayes" == annType )
     {
@@ -150,7 +150,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ghostProp );
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp    );
     sc = sc && release(joSvc);
-    if ( sc.isFailure() ) 
+    if ( sc.isFailure() )
     { return Error( "Problems setting TrackSelector Properties" ); }
 
     // get an instance of the track selector
@@ -162,7 +162,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
               << "Track Selection  = " << trackType << " " << m_trackPreSel << endmsg
               << "Network type     = " << annType << endmsg
               << "ParamFile        = " << paramFileName << endmsg
-              << "ANN inputs (" << inputs.size() << ")  = " << inputs 
+              << "ANN inputs (" << inputs.size() << ")  = " << inputs
               << endmsg;
 
   }
@@ -197,27 +197,22 @@ StatusCode ChargedProtoANNPIDAlg::execute()
   {
     LHCb::ProtoParticle * proto = *iP;
 
-    // Select ProtoParticles
-    if ( !proto->track() ) 
+    // Select Tracks
+    if ( !proto->track() )
     { return Error( "Charged ProtoParticle has NULL Track pointer" ); }
     if ( !m_trSel->accept(*(proto->track())) ) continue;
 
-    // Track Pre-selection
-    if ( !m_trackPreSel.empty() && "TrackPreSelNone" != m_trackPreSel )
+    // Clear current ANN PID information
+    if ( proto->hasInfo(m_protoInfo) )
     {
-      if      ( "TrackPreSelIsLooseMuon" == m_trackPreSel )
-      {
-        if ( getInput(proto,"MuonIsLooseMuon") < 0.5 ) { continue; }
-      }
-      else if ( "TrackPreSelIsMuon"      == m_trackPreSel )
-      {
-        if ( getInput(proto,"MuonIsMuon")      < 0.5 ) { continue; }
-      }
-      else
-      {
-        return Error( "Unknown Track pre-selection '" + m_trackPreSel + "'" );
-      }
+      std::ostringstream mess;
+      mess << "ProtoParticle already has '" << m_protoInfo << "' information -> Replacing.";
+      Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
+      proto->eraseInfo(m_protoInfo);
     }
+
+    // Track Pre-selection
+    if ( !trackPreSel(proto) ) continue;
 
     // get the ANN output for this proto
     const double nnOut = m_netHelper->getOutput( proto );
@@ -225,12 +220,6 @@ StatusCode ChargedProtoANNPIDAlg::execute()
       verbose() << " -> ANN value = " << nnOut << endmsg;
 
     // add to protoparticle
-    if ( proto->hasInfo(m_protoInfo) )
-    {
-      std::ostringstream mess;
-      mess << "ProtoParticle already has '" << m_protoInfo << "' information -> Replacing.";
-      Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
-    }
     proto->addInfo( m_protoInfo, nnOut );
 
   } // loop over protos
@@ -239,6 +228,49 @@ StatusCode ChargedProtoANNPIDAlg::execute()
 
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+// Run track preselection
+//=============================================================================
+bool
+ChargedProtoANNPIDAlg::trackPreSel( const LHCb::ProtoParticle * proto ) const
+{
+  bool OK = true;
+  if ( !m_trackPreSel.empty() && "TrackPreSelNone" != m_trackPreSel )
+  {
+    if      ( "TrackPreSelIsLooseMuon" == m_trackPreSel )
+    {
+      OK = ( getInput(proto,"MuonIsLooseMuon") > 0.5 );
+    }
+    else if ( "TrackPreSelIsMuon"      == m_trackPreSel )
+    {
+      OK = ( getInput(proto,"MuonIsMuon") > 0.5 );
+    }
+    else if ( "TrackPreSelHasRICHInfo" == m_trackPreSel )
+    {
+      OK = hasRichInfo(proto);
+    }
+    else if ( "TrackPreSelHasECALInfo" == m_trackPreSel )
+    {
+      OK = hasEcalInfo(proto);
+    }
+    else if ( "TrackPreSelHasECALorRICHInfo" == m_trackPreSel )
+    {
+      OK = ( hasRichInfo(proto) || hasEcalInfo(proto) );
+    }
+    else if ( "TrackPreSelHasECALandRICHInfo" == m_trackPreSel )
+    {
+      OK = ( hasRichInfo(proto) && hasEcalInfo(proto) );
+    }
+    else
+    {
+      OK = false;
+      Exception( "Unknown Track pre-selection '" + m_trackPreSel + "'" );
+    }
+  }
+  return OK;
+}
+//=============================================================================
 
 //=============================================================================
 // Get ANN output for NeuroBayes network helper
