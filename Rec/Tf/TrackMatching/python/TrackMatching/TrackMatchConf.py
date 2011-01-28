@@ -17,7 +17,4 @@ class MatchingConf(object):
             tkMatch.chi2TCut = 1000
             tkMatch.ExtrapolatorSeed = "TrackLinearExtrapolator"
                 
-        if TrackSys().earlyData():
-            tkMatch.LikCut = -35
-            tkMatch.Chi2MatchingCut = 900
         

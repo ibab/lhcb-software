@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2010-01-27 - Stephanie Hansmann-Menzemer
+ - set early data tuning as default
 
 !========================= TrackMatching v2r32 2010-09-27 ====================
 ! 2010-09-27 - Victor Coco

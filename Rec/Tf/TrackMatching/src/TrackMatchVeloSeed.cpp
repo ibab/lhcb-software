@@ -72,7 +72,7 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty( "VarZParameters",   m_varZParameters );
   declareProperty( "AddTTClusters",    m_addTTClusters = true );
   declareProperty("Chi2SeedCut", m_chi2SeedCut = 25.);
-  declareProperty("LikCut", m_likCut = -30.0);
+  declareProperty("LikCut", m_likCut = -35.0);
   declareProperty("referenceT", m_refT = 7500.);
   declareProperty("maxStepSize" , m_maxStepSize = 1500.);
   declareProperty("chi2TCut", m_chi2TCut = 200);
