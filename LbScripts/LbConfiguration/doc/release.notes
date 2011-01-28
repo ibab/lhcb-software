@@ -1,3 +1,11 @@
+2011-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* data/login_postscript.bat: New file.
+	* data/login_postscript.csh: New file.
+	* data/login_postscript.sh: New file.
+	* scripts/generateLogin: added post setup script to the LbLogin.{sh,csh,bat} wrappers. This is
+	intended for platform specific customization (like the icc compiler or the Visual C++ location).
+
 2011-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: moved to doxygen 1.7.2

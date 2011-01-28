@@ -542,6 +542,9 @@ set LbLogin_tmpfile=
 
 """
 
+    content += getConfigurationFragment(shell, "login_postscript")
+
+
     f.write(content)
     f.close()
 
