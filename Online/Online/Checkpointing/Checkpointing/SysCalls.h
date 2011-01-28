@@ -5,7 +5,7 @@
 #include <sys/syscall.h>
 #include "sysdep-x86_64.h"
 
-#if defined(__x86_64__) || defined(__ia64__)
+#if defined(__x86_64__) || defined(__INTEL_COMPILER)
 # define eax rax
 # define ebx rbx
 # define ecx rcx
@@ -123,7 +123,7 @@ void mtcp_abort (void);
  */
 
 #if __GLIBC_PREREQ (2,11)
-# if defined(__x86_64__) || defined(__ia64__)
+# if defined(__x86_64__) || defined(__INTEL_COMPILER)
 #  define TLS_PID_OFFSET \
            (512+26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct
 #  define TLS_TID_OFFSET (512+26*sizeof(void *))  // offset of tid in pthread struct

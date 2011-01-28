@@ -33,12 +33,20 @@ namespace CHECKPOINTING_NAMESPACE {
 
 #ifdef __STATIC__
 #define STATIC(x) static x
-#define WEAK(x)   inline  x
 #define HIDDEN(x) static inline  x
 #define INLINE(x) inline x
+
+#ifdef __INTEL_COMPILER
+#define WEAK(x)   x
 #else
+#define WEAK(x)   inline  x
+#endif
+
+#else
+
 #define STATIC(x) x
 #define INLINE(x) x
+
 #ifdef __INTEL_COMPILER
 #define WEAK(x)   x
 #define HIDDEN(x) x
@@ -46,6 +54,7 @@ namespace CHECKPOINTING_NAMESPACE {
 #define WEAK(x)   __attribute__ ((weak)) x
 #define HIDDEN(x) __attribute__ ((weak)) x
 #endif
+
 #endif
 
 #endif  // CHECKPOINTING_NAMESPACE_H

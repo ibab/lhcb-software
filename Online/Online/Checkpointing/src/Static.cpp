@@ -73,7 +73,8 @@ void SysInfo::aquire() {
     MemMaps mm;
     if ( 1 == mm.scan(hdlr) ) {
       unsigned long sz = hdlr.imageAddr[1]-hdlr.imageAddr[0];
-      sz = ((sz+PAGE_SIZE-1) & (-PAGE_SIZE));
+      //sz = ((sz+PAGE_SIZE-1) & (-PAGE_SIZE)); // icc does not like this...
+      sz = ((sz+PAGE_SIZE-1)/PAGE_SIZE)*PAGE_SIZE;
       m_memcpy(checkpointImage,hdlr.image,sizeof(checkpointImage));
       chkptStart = hdlr.checkpointAddr[0];
       chkptSize  = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];
