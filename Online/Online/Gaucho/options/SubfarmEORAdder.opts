@@ -1,0 +1,36 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+//#include "$OPTIONS"
+
+ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+
+MessageSvc.OutputLevel  = 3;
+HistogramPersistencySvc.Warnings = false;
+
+//AdderSvc.taskname="RecBrunel"; // Could be empty.
+//AdderSvc.refreshTime=20;
+//AdderSvc.dimclientdns="hlt01";
+//AdderSvc.partitionname="LHCb";
+
+//AdderSvc.subfarmname=@OnlineEnv.SubFarms;
+//AdderSvc.partitionname=@OnlineEnv.PartitionName;
+
+AdderSvc.SourceTaskPattern="Moore";
+AdderSvc.MyName="Adder";
+AdderSvc.SourceServiceName="EOR";
+
+AdderSvc.TopLevel=false;
+AdderSvc.SaveRootDir="/home/beat/Hist/Savesets";
+AdderSvc.IsSaver=false;
+AdderSvc.SaveInterval= 120;
+AdderSvc.PartitionName="LHCb";
+AdderSvc.SaveSetTaskName="Moore";
+AdderSvc.ExpandRate=false;
+AdderSvc.AdderType="subfarm";
+AdderSvc.TaskPattern="[0-9][0-9]_EoRAdder";
+AdderSvc.IsEOR=true;

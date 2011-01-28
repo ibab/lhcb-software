@@ -1,4 +1,4 @@
-! $Id: release.notes.txt,v 1.1.1.1 2003-06-05 09:34:45 vanphil Exp $
+! $Id: release.notes.txt,v 1.1.1.1 2003/06/05 09:34:45 vanphil Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Philippe.Vannerem@cern.ch
 

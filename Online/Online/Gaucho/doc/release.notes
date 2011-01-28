@@ -1,30 +1,7 @@
-! $Id: release.notes,v 1.16 2010-08-22 09:49:43 robbep Exp $
+! $Id: release.notes,v 1.14 2009/11/16 15:46:34 niko Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
-
-! 2011-01-24 - Eric van Herwijnen
- - Last working version (from Online v4r43 in the pit) before Beat's new
- MonitorSvc. 
-
-! 2010-08-22 - Patrick Robbe
- - src/lib/MonH2D.cpp: fix problem with number of bins for vertical axis
-   labels.
-
-! 2010-04-23 - Eric van Herwijnen
- - Added axis label support to the end of the boost binary archive and used
- boost class versioning. Presenters from Online v4r37 can read these histograms,
- could not test later versions yet.
- - Added start & stop methods to MonitorSvc, AdderSvc and SaverSvc so they can
- become GaudiOnline class1 tasks. Thus they can stay READY on STOP RUN in the
- EFF.
- - Savesets are now saved in a directory GauchoJob (instead of Moore), so that
- the presenter can be used in history mode for the EFF.
- - Changed the end of run behaviour: adders set endofrun flag when all
- contributions at endofrun have been received. The saver checks for this flag
- and sets an EOR flag on the saveset. This happens a few minutes after stopping
- the run, although the Adder/Saver are then already in the READY state.
- - Behaviour on fast run change still to be tested.
 
 ! 2009-11-05 - Eric van Herwijnen
  - moved msg in MonProfile.splitObject - not understood bug

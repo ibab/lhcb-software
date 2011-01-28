@@ -26,21 +26,21 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IGauchoMonitorSvc; }
   
-/*  virtual void declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) = 0;
+  virtual void declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const int&  var, const  std::string& desc,  const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const long&  var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const double& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const std::string& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const std::pair<double,double>& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, const  std::string& desc, const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const std::string& format, const void * var, int size, const std::string& desc, const IInterface* owner) = 0;*/
+  virtual void declareInfo(const std::string& name, const std::string& format, const void * var, int size, const std::string& desc, const IInterface* owner) = 0;
   
-/*  virtual void declareInfo(const std::string& name, const MonObject* var, const  std::string& desc, const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const float&  var, const  std::string& desc,  const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const std::pair<int,int>& var, const std::string& desc, const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const std::pair<double,int>& var, const std::string& desc, const IInterface* owner) = 0;*/
+//  virtual void declareInfo(const std::string& name, const MonObject* var, const  std::string& desc, const IInterface* owner) = 0;
+//  virtual void declareInfo(const std::string& name, const float&  var, const  std::string& desc,  const IInterface* owner) = 0;
+//  virtual void declareInfo(const std::string& name, const std::pair<int,int>& var, const std::string& desc, const IInterface* owner) = 0;
+//  virtual void declareInfo(const std::string& name, const std::pair<double,int>& var, const std::string& desc, const IInterface* owner) = 0;
   
-  virtual void updateSvc( const std::string& name, bool endOfRun=false, const IInterface* owner = 0 ) = 0;
+  virtual void updateSvc( const std::string& name, int runno, const IInterface* owner = 0 ) = 0;
   virtual void updateAll( bool endOfRun=false , const IInterface* owner = 0) = 0;
   //virtual void resetHistos( const IInterface* owner = 0 ) = 0; 
   //virtual void resetHistos(bool saveHistos) = 0;
@@ -57,6 +57,11 @@ public:
   virtual void enableMonObjectsForString() = 0;
   virtual void enableMonObjectsForPairs() = 0;
   virtual void enableMonObjectsForHistos() = 0;
+  virtual void Lock(void)=0;
+  virtual void UnLock(void)=0;
+  virtual void resetHistos( const IInterface*  )=0;
+  virtual void setRunNo(int runno) = 0;
+
   
   
 };
