@@ -8,6 +8,9 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 
+#include "GaudiKernel/ToolHandle.h"
+#include "OTDAQ/IOTRawBankDecoder.h"
+
 // forward declarations
 class IOTRawBankDecoder;
 class DeOTDetector;
@@ -27,6 +30,7 @@ public:
 
   virtual ~OTTimeCreator( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode finalize();
   virtual StatusCode execute   ();    ///< Algorithm execution
  
 protected:
@@ -37,7 +41,7 @@ private:
   std::string m_timeLocation;
   bool m_tofCorrection;                     ///< Time of Flight Correction
   DeOTDetector* m_tracker;                  ///< Pointer to XML geometry 
-  IOTRawBankDecoder* m_rawBankDecoder ;     ///< Pointer to OTRawBankDecoder tool
+  ToolHandle<IOTRawBankDecoder> m_decoder;
 };
 
 #endif // OTDAQ_OTTIMECREATOR_H
