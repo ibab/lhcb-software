@@ -10,26 +10,6 @@ static int s_mtcp_sys_errno = 0;
 static int s_mtcp_debug_syscalls = MTCP_ERROR;
 static char const s_mtcp_hexdigits[] = "0123456789ABCDEF";
 
-WEAK(int&) __mtcp_sys_errno() {
-  return s_mtcp_sys_errno;
-}
-
-WEAK(void) mtcp_abort(void)    {
-  mtcp_output(MTCP_ERROR,"Calling abort due to internal errors.\n");
-  __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
-}
-
-WEAK(int) mtcp_get_debug_level() {
-  return s_mtcp_debug_syscalls;
-}
-
-WEAK(void) mtcp_set_debug_level(int lvl)   {
-  if ( (s_mtcp_debug_syscalls&MTCP_MAX_LEVEL) < MTCP_INFO )    {
-    mtcp_output(MTCP_ERROR,"Change debug level from %d to:%d\n",s_mtcp_debug_syscalls,lvl);
-  }
-  s_mtcp_debug_syscalls = lvl;
-}
-
 STATIC(void) rwrite(char const *buff, int size)   {
   int offs, rc;
   for (offs = 0; offs < size; offs += rc) {
@@ -152,54 +132,54 @@ gofish:
     case 'l': {
       goto gofish;
     }
-    case '0' ... '9': {      /* Ignore digits (field width) */
+    case '0' ... '9': {      // Ignore digits (field width)
       goto gofish;
     }
-    case 'c': {      /* Single character */
+    case 'c': {      // Single character
       char buff[4];
       buff[0] = va_arg (ap, int); // va_arg (ap, char);
       rwrite (buff, 1);
       break;
     }
 
-    case 'd': {      /* Signed decimal integer */
+    case 'd': {      // Signed decimal integer
       int n = va_arg (ap, int);
       mtcp_print_int_dec(n);
       break;
     }
 
-    case 'u': {      /* Unsigned decimal integer */
+    case 'u': {      // Unsigned decimal integer
       unsigned int n = va_arg (ap, unsigned int);
       mtcp_print_int_unsigned(n);
       break;
     }
 
-    case 'o': {      /* Unsigned octal number */
+    case 'o': {      // Unsigned octal number
       unsigned int n = va_arg (ap, unsigned int);
       mtcp_print_int_oct(n);
       break;
     }
 
     case 'X':
-    case 'x': {      /* Unsigned hexadecimal number */
+    case 'x': {      // Unsigned hexadecimal number
       unsigned int n = va_arg (ap, unsigned int);
       mtcp_print_int_hex(n);
       break;
     }
 
-    case 'p': {      /* Address in hexadecimal */
+    case 'p': {      // Address in hexadecimal
       VA n = (VA)va_arg (ap, void*);
       mtcp_print_addr(n);
       break;
     }
 
-    case 's': {      /* Null terminated string */
+    case 's': {      // Null terminated string
       p = va_arg (ap, char*);
       rwrite (p, helper::stringlen(p));
       break;
     }
 
-    default:        /* Anything else, print the character as is */
+    default:         // Anything else, print the character as is
       rwrite (q, 1);
       break;
     }
@@ -216,3 +196,22 @@ gofish:
   if ( lvl >= MTCP_FATAL ) mtcp_abort();
 }
 
+WEAK(int&) __mtcp_sys_errno() {
+  return s_mtcp_sys_errno;
+}
+
+WEAK(void) mtcp_abort(void)    {
+  mtcp_output(MTCP_ERROR,"Calling abort due to internal errors.\n");
+  __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
+}
+
+WEAK(int) mtcp_get_debug_level() {
+  return s_mtcp_debug_syscalls;
+}
+
+WEAK(void) mtcp_set_debug_level(int lvl)   {
+  if ( (s_mtcp_debug_syscalls&MTCP_MAX_LEVEL) < MTCP_INFO )    {
+    mtcp_output(MTCP_ERROR,"Change debug level from %d to:%d\n",s_mtcp_debug_syscalls,lvl);
+  }
+  s_mtcp_debug_syscalls = lvl;
+}
