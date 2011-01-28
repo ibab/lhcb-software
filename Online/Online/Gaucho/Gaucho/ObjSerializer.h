@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ONLINE_GAUCHO_OBJSERIALIZER_H
+#define ONLINE_GAUCHO_OBJSERIALIZER_H
+
 #include <string>
 #include <vector>
 #include <map>
@@ -25,3 +27,4 @@ public:
   virtual void DeSerializeObj(std::vector<std::string> &nams,void *&ptr);
   virtual MonObj *findobj(const char *n);
 };
+#endif // ONLINE_GAUCHO_OBJSERIALIZER_H

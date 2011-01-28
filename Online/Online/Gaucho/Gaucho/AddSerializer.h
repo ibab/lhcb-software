@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ONLINE_GAUCHO_ADDSERIALIZER_H
+#define ONLINE_GAUCHO_ADDSERIALIZER_H
+
 #include "string.h"
 #include "ObjSerializer.h"
 #include "dimhist.h"
@@ -49,3 +51,5 @@ public:
   void DeSerializeObj(char *name,void *&ptr);
   void DeSerializeObj(std::vector<std::string> &nams,void *&ptr);
 };
+
+#endif // ONLINE_GAUCHO_ADDSERIALIZER_H
