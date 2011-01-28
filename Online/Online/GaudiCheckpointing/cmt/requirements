@@ -6,8 +6,10 @@ version           v0r1
 #============================================================================
 branches          cmt doc src
 # dependency list
-use GaudiOnline   v* Online -no_auto_import
+use GaudiKernel   v*
 use DIM           v* Online
+use OnlineBase    v* Online
+use GaudiOnline   v* Online -no_auto_imports
 
 apply_pattern install_python_modules
 

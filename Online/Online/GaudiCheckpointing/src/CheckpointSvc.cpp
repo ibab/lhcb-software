@@ -372,13 +372,13 @@ namespace {
   string upper(const string& s) {
     string r=s;
     for(size_t i=0; i<s.length(); ++i)
-      r[i]=toupper(s[i]);
+      r[i] = char(toupper(s[i]));
     return r;
   }
   string lower(const string& s) {
     string r=s;
     for(size_t i=0; i<s.length(); ++i)
-      r[i]=tolower(s[i]);
+      r[i] = char(tolower(s[i]));
     return r;
   }
 }
@@ -651,7 +651,8 @@ int CheckpointSvc::execChild() {
 
 /// Watch children while running. If a child dies, restart it
 int CheckpointSvc::watchChildren() {
-  while(1)   {
+  bool run_loop = true;
+  while(run_loop)   {
     ::lib_rtl_sleep(2000);
     int count = waitChildren();
     if ( count > 0 && m_restartChildren ) {
@@ -712,9 +713,10 @@ int CheckpointSvc::waitChildren() {
 
 /// Incident handler implemenentation: Inform that a new incident has occured
 void CheckpointSvc::handle(const Incident& inc) {
-  MsgStream log(msgSvc(),name());
-  log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
-  
+  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  }
   if ( inc.type() == "APP_INITIALIZED" ) {
     if ( !m_checkPoint.empty() ) {
       StatusCode sc;
