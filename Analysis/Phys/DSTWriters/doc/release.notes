@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-01-28 - Juan Palacios
+ - Add code to copy LHCb::RecSummary objects with CopyRecSummary algorithm.
+ - Increase to v1r16.
+
 ! ======================== DSTWriters v1r15 2011-01-19 =======================
 
 ! 2011-01-18 - Juan Palacios

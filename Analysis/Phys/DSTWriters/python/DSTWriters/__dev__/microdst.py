@@ -15,6 +15,7 @@ from Configurables import OutputStream
 from streamconf import OutputStreamConf
 
 from microdstelements import  (CloneRecHeader,
+                               CloneRecSummary,
                                CloneODIN,
                                ClonePVs,
                                CloneParticleTrees,
@@ -27,6 +28,7 @@ from microdstelements import  (CloneRecHeader,
 
 def microDSTElements() :
     return [CloneRecHeader(),
+            CloneRecSummary(),
             CloneODIN(),
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),
@@ -40,6 +42,7 @@ def microDSTStreamConf() :
 
 def stripMicroDSTElements() :
     return [CloneRecHeader(),
+            CloneRecSummary(),
             CloneODIN(),
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),

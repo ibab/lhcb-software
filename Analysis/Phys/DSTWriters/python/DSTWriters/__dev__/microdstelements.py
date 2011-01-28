@@ -8,6 +8,7 @@ responsible for copying some data to a MicroDST partition.
 __author__  = 'Juan Palacios juan.palacios@nikhef.nl'
 
 __all__ = ( 'CloneRecHeader',
+            'CloneRecSummary',
             'CloneODIN',
             'CloneParticleTrees',
             'ClonePVs',
@@ -35,6 +36,14 @@ class CloneRecHeader(MicroDSTElement) :
         cloner = CopyRecHeader(self.personaliseName(sel, "CopyRecHeader"))
         self.setOutputPrefix(cloner)
         return [cloner]
+
+class CloneRecSummary(MicroDSTElement) :
+    def __call__(self, sel):
+        from Configurables import CopyRecSummary
+        cloner = CopyRecSummary(self.personaliseName(sel, "CopyRecSummary"))
+        self.setOutputPrefix(cloner)
+        return [cloner]
+
 
 class CloneODIN(MicroDSTElement) :
     def __call__(self, sel) :

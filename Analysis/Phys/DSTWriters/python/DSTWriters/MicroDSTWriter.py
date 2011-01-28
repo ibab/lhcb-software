@@ -11,9 +11,10 @@ from BaseDSTWriter import BaseDSTWriter
 from DSTWriters.__dev__.dstwriterutils import ConfigurableList, setCloneFilteredParticlesToTrue
 
 class MicroDSTWriter(BaseDSTWriter) :
-    __slots__ = { "CopyParticles"        : True
+    __slots__ = { "CopyParticles"          : True
                   , "CopyODIN"             : True
                   , "CopyRecHeader"        : True
+                  , "CopyRecSummary"       : True
                   , "CopyPVs"              : True
                   , "CopyProtoParticles"   : True
                   , "CopyBTags"            : True
@@ -85,6 +86,14 @@ class MicroDSTWriter(BaseDSTWriter) :
                                                      "CopyRecHeader"))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
+
+    def _copyRecSummary(self, sel):
+        from Configurables import CopyRecSummary
+        cloner = CopyRecSummary(self._personaliseName(sel,
+                                                      "CopyRecSummary"))
+        self.setOutputPrefix(sel, cloner)
+        return [cloner]
+
 
     def _copyODIN(self, sel) :
         from Configurables import CopyODIN
@@ -209,6 +218,8 @@ class MicroDSTWriter(BaseDSTWriter) :
             clonerList+=self._copyODIN(sel)
         if self.getProp("CopyRecHeader")     :
             clonerList+=self._copyRecHeader(sel)
+        if self.getProp("CopyRecSummary")     :
+            clonerList+=self._copyRecSummary(sel)
         if self.getProp("CopyParticles")     :
             clonerList+=self._copyParticleTrees(sel)
         if self.getProp("CopyPVs")           :

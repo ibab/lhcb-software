@@ -18,6 +18,7 @@ class SelDSTWriter(MicroDSTWriter) :
     __slots__ = { "SaveCandidates"     : True,
                   "CopyODIN"           : False,
                   "CopyRecHeader"      : False,
+                  "CopyRecSummary"     : False,
                   "CopyPVs"            : False,
                   "CopyProtoParticles" : False,
                   "CopyBTags"          : False,
@@ -27,6 +28,7 @@ class SelDSTWriter(MicroDSTWriter) :
     _propertyDocDct = {"SaveCandidates" : """Copy candidate decay tree. Default: True.""",
                        "CopyODIN" : """Copy ODIN bank into /Event/OutputPrefix. Default: False. """,
                        "CopyRecHeader" : """Copy RecHeader bank into /Event/OutputPrefix """,
+                       "CopyRecSummary" : """Copy RecSummary object into /Event/OutputPrefix """,
                        "CopyPVs" : """ Copy primary vertices bank into /Event/OutputPrefix. Default: False. """,
                        "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """
                        }
