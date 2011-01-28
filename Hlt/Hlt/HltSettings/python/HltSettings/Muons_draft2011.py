@@ -98,10 +98,10 @@ class Muons_draft2011 :
 
         d.update( { Hlt2InclusiveMuonLinesConf : {
             'SingleMuonPt'         : 1300      # MeV
-            ,'SingleMuonIP'        : 0.11     # mm
+            #,'SingleMuonIP'        : 0.11     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0001
-                              ,'Hlt2SingleMuon'        : 0.02 # make sure that Hlt1SingleMuonNoIPL0 * Hlt2SingleMuon = 0.02
+                              ,'Hlt2SingleMuon'        : 0.2 
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               }
             }}
