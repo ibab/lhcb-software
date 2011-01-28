@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Jan-28 - Patrick Spradlin for Sandra Amato and Carla Gobel
+ + Hlt2CharmHadD2HHHLines.py:  New file for 3-body D+/D_s+ -> 3h lines.
+
 ! 2011-Jan-27 - Patrick Spradlin
  - Hlt2CharmHadD02HHLines: Cleaned up the code and renamed lines, methods,
    and properties.
