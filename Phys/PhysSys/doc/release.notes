@@ -3,6 +3,18 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v10r1>2011-01-28 Phys v10r1 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v10r1                                  #
+###############################################################################
+
+- Based on LHCb v31r8 and Gaudi v21r11. Post-stripping12 development version
+  for HLT v12r3.
+
+ *** Backwards incompatible version. No PhysDesktops! ***
+
+
 </PRE><H1><A NAME=v10r0>2011-01-18 Phys v10r0 </A></H1><PRE>
 
 ###############################################################################

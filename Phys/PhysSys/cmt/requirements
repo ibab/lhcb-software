@@ -1,12 +1,11 @@
-#$Id: requirements,v 1.243 2010-08-27 13:49:59 jpalac Exp $
 package PhysSys
-version v10r0
+version v10r1
 
 branches doc cmt
 
 ####################################################################
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
-use  DaVinciKernel              v9r0     Phys    # Juan Palacios
+use  DaVinciKernel              v9r1     Phys    # Juan Palacios
 use  DaVinciMaps                v1r3p1   Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
@@ -16,7 +15,7 @@ use  PhysSelPython              v6r1     PhysSel # Juan Palacios
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r6     Phys    # Chris Jones
-use  DaVinciTools       	v22r0    Phys    # Juan Palacios
+use  DaVinciTools       	v22r1    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
 use  ParticleMaker      	v5r10 	 Phys    # Chris Jones
 use  VertexFit			v6r7     Phys    # Yuehong Xie
@@ -26,12 +25,12 @@ use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
 use LoKi                        v8r1     Phys    # Vanya Belyaev
-use LoKiUtils                   v1r0     Phys    # Vanya Belyaev
+use LoKiUtils                   v1r1     Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
 use LoKiAlgoMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
 use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
-use LoKiPhys                    v9r7     Phys    # Vanya Belyaev
+use LoKiPhys                    v9r8     Phys    # Vanya Belyaev
 use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
