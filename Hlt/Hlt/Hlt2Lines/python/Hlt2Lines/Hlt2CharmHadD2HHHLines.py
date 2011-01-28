@@ -26,8 +26,13 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                   , 'MCOR_MAX_2BodyFor3Body'        : 3500.    # MeV
                   # prescales
                   , 'Prescale'                  : {
-                    'Hlt2Charm3BodyWideMass'    : 0.1
-                                                }
+                        'Hlt2CharmHadD2HHHWideMass'    : 0.1
+                        }
+                  , 'HltANNSvcID'  : {
+                          'Hlt2CharmHad2BodyForD2HHHDecision' : 50910
+                        , 'Hlt2CharmHadD2HHHDecision'         : 50911
+                        , 'Hlt2CharmHadD2HHHWideMassDecision' : 50912
+                        }
                 }
 
     def __InPartFilterLowIP(self, name, inputContainers) : 
@@ -183,34 +188,42 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         kaonsFor3Body = self.__InPartFilter3Body('CharmInputKaons3Body', [ BiKalmanFittedSecondLoopKaons] )
  
         # Make 3Body 
-        Charm3BodyCombine = self.__3BodyCombine (  name = 'Charm3Body'
+        Charm3BodyCombine = self.__3BodyCombine (  name = 'CharmHadD2HHH'
                                                   , inputSeq = [ Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP ]
                                                   , decayDesc = ["D+ -> K*(892)0 pi+", "D+ -> K*(892)0 pi-"
                                                                 ,"D+ -> K*(892)0 K+",  "D+ -> K*(892)0 K-" ] 
                                                  )   
         # 3Body line
-	Hlt2Charm3Body = self.__3BodyFilter ( name = 'Charm3Body', inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
+	Hlt2Charm3Body = self.__3BodyFilter ( name = 'CharmHadD2HHH', inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
         # 3Body WideMass line - with prescale
-        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = 'Charm3BodyWideMass', inputSeq = [Charm3BodyCombine], extracode = "in_range(1700*MeV, M, 2100*MeV)")
+        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = 'CharmHadD2HHHWideMass', inputSeq = [Charm3BodyCombine], extracode = "in_range(1700*MeV, M, 2100*MeV)")
 
         ###########################################################################
         # Define the Hlt2 Lines
         #
         # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
-        line = Hlt2Line('Charm2BodyFor3Body', prescale = self.prescale
+        line = Hlt2Line('CharmHad2BodyForD2HHH', prescale = self.prescale
                         , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body]
 			, postscale = self.postscale
                         )
-        line = Hlt2Line('Charm3Body', prescale = self.prescale
+        decName = "Hlt2CharmHad2BodyForD2HHHDecision"
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line('CharmHadD2HHH', prescale = self.prescale
                         , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3Body]
 			, postscale = self.postscale
                         )
-        line = Hlt2Line('Charm3BodyWideMass', prescale = self.prescale
+        decName = "Hlt2CharmHadD2HHHDecision"
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line('CharmHadD2HHHWideMass', prescale = self.prescale
                         , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3BodyWideMass]
 			, postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Charm2BodyFor3BodyDecision" : 50919 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Charm3BodyDecision" : 50917 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Charm3BodyWideMassDecision" : 50918 } )
+        decName = "Hlt2CharmHadD2HHHWideMassDecision"
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 	

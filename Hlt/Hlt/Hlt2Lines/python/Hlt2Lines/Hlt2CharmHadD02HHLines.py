@@ -51,21 +51,21 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                 , 'GEC_Filter_NTRACK'        : True       # do or do not
                 , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
                 , 'Prescale'         : { }
-                , 'Postscale'        : { 'Hlt2CharmD02KKWideMass'     : 0.05
-                                         , 'Hlt2CharmD02KPiWideMass'  : 0.05
-                                         , 'Hlt2CharmD02PiPiWideMass' : 0.05
+                , 'Postscale'        : { 'Hlt2CharmHadD02KKWideMass'     : 0.05
+                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.05
+                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.05
                                        }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : { ## Signal lines
-                                     'Hlt2CharmD02KKDecision'     : 50880
-                                   , 'Hlt2CharmD02KPiDecision'    : 50881
-                                   , 'Hlt2CharmD02PiPiDecision'   : 50882
+                                     'Hlt2CharmHadD02KKDecision'     : 50880
+                                   , 'Hlt2CharmHadD02KPiDecision'    : 50881
+                                   , 'Hlt2CharmHadD02PiPiDecision'   : 50882
                                    ## Inclusive lines
-                                   , 'Hlt2Charm2BodyIncDecision'  : 50284 
+                                   , 'Hlt2CharmHad2BodyIncDecision'  : 50870 
                                    ## Wide mass lines
-                                   , 'Hlt2CharmD02KKWideMassDecision'   : 50890
-                                   , 'Hlt2CharmD02KPiWideMassDecision'  : 50891
-                                   , 'Hlt2CharmD02PiPiWideMassDecision' : 50892
+                                   , 'Hlt2CharmHadD02KKWideMassDecision'   : 50890
+                                   , 'Hlt2CharmHadD02KPiWideMassDecision'  : 50891
+                                   , 'Hlt2CharmHadD02PiPiWideMassDecision' : 50892
                                    }
                   }
 
@@ -219,15 +219,12 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        props = self.getProps()
         preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
-        massRng = '(in_range(%s*MeV,MCOR,%s*MeV))' \
-                  % (props['Inc_D0_MCOR_MIN'],props['Inc_D0_MCOR_MAX'])
 
         codestr = "(PT > %(Inc_D0_PT_MIN)s)" \
                   "& (SUMTREE(PT,('pi+'==ABSID),0.0) > %(Inc_D0_SUMPT_MIN)s)" \
-                  + "& " + massRng + " & " + \
+                  "& (in_range(%(Inc_D0_MCOR_MIN)s*MeV,MCOR,%(Inc_D0_MCOR_MAX)s*MeV))" \
                   "& (BPVIPCHI2() > %(Inc_D0_BPVIPCHI2_MIN)s)" \
                   % self.getProps()
         if extracode :
@@ -335,9 +332,9 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
 
         ## D0 -> h- h+ lines
         ### ###############################################################
-        decayModes = {   'CharmD02KK'   : "D0 -> K- K+"
-                       , 'CharmD02KPi'  : "[D0 -> K- pi+]cc"
-                       , 'CharmD02PiPi' : "D0 -> pi- pi+"
+        decayModes = {   'CharmHadD02KK'   : "D0 -> K- K+"
+                       , 'CharmHadD02KPi'  : "[D0 -> K- pi+]cc"
+                       , 'CharmHadD02PiPi' : "D0 -> pi- pi+"
                      }
 
         sigMassCut  = "in_range(%s*MeV, M, %s*MeV)" \
@@ -389,17 +386,17 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         lclInputPionsInc = self.__inPartFilterInc('CharmHadD02HHIncPions',
                                                   [ BiKalmanFittedPions] )
 
-        charmInc = self.__combineInc(  name = 'Charm2BodyInc'
+        charmInc = self.__combineInc(  name = 'CharmHad2BodyInc'
                                 , inputSeq = [ lclInputPionsInc ]
                                 , decayDesc = [  "D0 -> pi+ pi-"
                                                , "D0 -> pi+ pi+"
                                                , "D0 -> pi- pi-"]
                                )
 
-        charmIncSeq = self.__filterInc('Charm2BodyInc'
+        charmIncSeq = self.__filterInc('CharmHad2BodyInc'
                                      , [charmInc]
                                     )
 
         ## Make the inclusive line!
-        self.__makeLine("Charm2BodyInc",algos=[charmIncSeq])
+        self.__makeLine("CharmHad2BodyInc",algos=[charmIncSeq])
 
