@@ -55,8 +55,9 @@ StatusCode TriggerTypeFilter::execute() {
   else   {
     const std::vector<LHCb::RawBank*>&  odinBanks = raw->banks(LHCb::RawBank::ODIN);
     if(odinBanks.size() >0){ 
-      LHCb::OnlineRunInfo *odin = odinBanks[0]->begin<LHCb::OnlineRunInfo>(); 
-      if ( odin->triggerType == m_triggerTypeToPass) setFilterPassed(true);
+      LHCb::OnlineRunInfo *odin = odinBanks[0]->begin<LHCb::OnlineRunInfo>();
+      unsigned int typ = m_triggerTypeToPass;
+      if ( odin->triggerType == typ) setFilterPassed(true);
       else setFilterPassed(false) ;
     }
     else   {
