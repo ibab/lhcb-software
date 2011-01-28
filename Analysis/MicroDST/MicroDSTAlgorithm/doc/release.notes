@@ -4,6 +4,11 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2011-01-28 - Juan Palacios
+ - CopyRecSummary
+  . New MicroDSTAlgorithm to clone LHCb::RecSummary objects.
+ - Increase to v5r2.
+
 !========================== MicroDSTAlgorithm v5r1 2010-11-18 ===============
 
 ! 2010-11-18 - Juan Palacios
