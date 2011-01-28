@@ -14,6 +14,10 @@ WEAK(int&) __mtcp_sys_errno() {
   return s_mtcp_sys_errno;
 }
 
+STATIC(void) __mtcp_abort(void)    {
+  __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
+}
+
 STATIC(void) rwrite(char const *buff, int size)   {
   int offs, rc;
   for (offs = 0; offs < size; offs += rc) {
@@ -197,12 +201,16 @@ gofish:
   printflocked.set(0,1);
   printflocked.wake(1);
 #endif
-  if ( lvl >= MTCP_FATAL ) mtcp_abort();
+  if ( lvl >= MTCP_FATAL )   {
+    const char* mp = "Calling abort due to internal errors.\n";
+    rwrite(mp,helper::stringlen(mp));
+    __mtcp_abort();
+  }
 }
 
 WEAK(void) mtcp_abort(void)    {
   mtcp_output(MTCP_ERROR,"Calling abort due to internal errors.\n");
-  __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
+  __mtcp_abort();
 }
 
 WEAK(int) mtcp_get_debug_level() {
