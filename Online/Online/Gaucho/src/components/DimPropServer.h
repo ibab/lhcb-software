@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimPropServer.h,v 1.4 2008-08-06 15:40:59 evh Exp $
+//$Header: /local/reps/lhcb/Online/Gaucho/src/components/DimPropServer.h,v 1.4 2008/08/06 15:40:59 evh Exp $
 #ifndef GAUCHO_DIMPROPSERVER_H
 #define GAUCHO_DIMPROPSERVER_H 1
 

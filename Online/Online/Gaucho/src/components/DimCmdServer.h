@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.12 2008-08-06 15:40:59 evh Exp $
+//$Header: /local/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.12 2008/08/06 15:40:59 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
