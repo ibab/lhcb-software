@@ -4,6 +4,11 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2011-01-29 - Juan Palacios
+ - Fix typo in LineBuilder.
+ - Load LineBuilder and helper functions in module StrippingUtils.
+ - Increase to v1r2.
+
 ! ===================== StrippingUtils v1r1 2011-01-21 =======================
 
 ! 2011-01-20 - Juan Palacios

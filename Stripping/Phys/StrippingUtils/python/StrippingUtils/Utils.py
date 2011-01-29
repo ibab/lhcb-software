@@ -70,19 +70,19 @@ class LineBuilder(object) :
                  name,
                  config) :
         
-        checkConfig(self._configKeys(),
+        checkConfig(self.configKeys(),
                     config)
         self._config = config
         self._name = name
         self._lines = []
 
-    def _configKeys(self) :
+    def configKeys(self) :
         return self.__configuration_keys__
 
     def name(self) :
         return self._name
 
-    def configurationParamerter(self, key) :
+    def configurationParameter(self, key) :
         return self._config[key]
 
     def registerLine(self, line) :
