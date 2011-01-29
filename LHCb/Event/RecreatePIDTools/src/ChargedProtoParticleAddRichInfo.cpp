@@ -67,10 +67,7 @@ StatusCode ChargedProtoParticleAddRichInfo::execute()
 {
   // Load the RichPIDs
   const bool richSc = getRichData();
-  if ( !richSc )
-  {
-    return Warning( "No RichPIDs -> ProtoParticles will not be changed.", StatusCode::SUCCESS );
-  }
+  if ( !richSc ) { return StatusCode::SUCCESS; }
 
   // ProtoParticle container
   if ( !exist<ProtoParticles>(m_protoPath) )
@@ -106,7 +103,8 @@ bool ChargedProtoParticleAddRichInfo::getRichData()
   // Do we have any RichPID results
   if ( !exist<RichPIDs>(m_richPath) )
   {
-    Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS, 1 ).ignore();
+    Warning( "No RichPIDs at '" + m_richPath +
+             "' -> ProtoParticles will not be changed.", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
 

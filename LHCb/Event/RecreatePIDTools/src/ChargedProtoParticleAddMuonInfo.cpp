@@ -61,10 +61,7 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
 {
   // Load the MuonPIDs
   const bool muonSc = getMuonData();
-  if ( !muonSc )
-  {
-    return Warning( "No MuonPIDs -> ProtoParticles will not be changed.", StatusCode::SUCCESS );
-  }
+  if ( !muonSc ) { return StatusCode::SUCCESS; }
 
   // ProtoParticle container
   if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
@@ -163,7 +160,8 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   // Do we have any MuonPID results
   if ( !exist<LHCb::MuonPIDs>(m_muonPath) )
   {
-    Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
+    Warning( "No MuonPIDs at '" + m_muonPath + 
+             "' -> ProtoParticles will not be changed.", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
 
