@@ -3,6 +3,10 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2011-01-29 - Chris Jones
+ - Add support for TT tracks to TrackSelectorBase
+
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
  - add new track history PatFastVelo to VeloMuonBuilder code
 

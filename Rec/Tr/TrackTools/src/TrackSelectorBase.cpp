@@ -4,9 +4,6 @@
  *
  *  Implementation file for reconstruction tool : TrackSelectorBase
  *
- *  CVS Log :-
- *  $Id: TrackSelectorBase.cpp,v 1.3 2010-04-05 19:18:56 wouter Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/12/2005
  */
@@ -28,8 +25,9 @@ TrackSelectorBase::TrackSelectorBase( const std::string& type,
   // interface
   declareInterface<ITrackSelector>(this);
   // JOs
-  m_trTypes =
-    boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream")("Ttrack")("Backward");
+  m_trTypes = boost::assign::list_of
+    ("Velo")("VeloR")("Long")("Upstream")
+    ("Downstream")("Ttrack")("Backward")("TT");
   declareProperty( "TrackTypes", m_trTypes );
 }
 
@@ -54,6 +52,7 @@ StatusCode TrackSelectorBase::initialize()
       else if ( *iT == "Upstream"   ) { m_selTypes[LHCb::Track::Upstream]   = true; }
       else if ( *iT == "Downstream" ) { m_selTypes[LHCb::Track::Downstream] = true; }
       else if ( *iT == "Ttrack"     ) { m_selTypes[LHCb::Track::Ttrack]     = true; }
+      else if ( *iT == "TT"         ) { m_selTypes[LHCb::Track::TT]         = true; }
       else if ( *iT == "Backward"   ) { m_selTypes[Backward]                = true; }
       else
       {
