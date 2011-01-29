@@ -143,7 +143,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import HltANNSvc
-        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedSecondLoopPions, BiKalmanFittedKaons, BiKalmanFittedSecondLoopKaons
         from HltTracking.HltPVs import PV3D
