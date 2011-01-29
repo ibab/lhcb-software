@@ -82,13 +82,12 @@ class RecSysConf(LHCbConfigurableUser):
         if "Vertex" in recoSeq:
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
-            if "earlyData" in self.getProp("SpecialData"):
-                if "2009" == self.getProp("DataType"):
-                    from PatPV import PVConf 
-                    PVConf.VLoosePV().configureAlg()
-                else:     
-                  if ( "veloOpen" in self.getProp("SpecialData") or
-                       "microBiasTrigger" in self.getProp("SpecialData") ):
+            if "2009" == self.getProp("DataType"):
+                from PatPV import PVConf 
+                PVConf.VLoosePV().configureAlg()
+            else:     
+                if ( "veloOpen" in self.getProp("SpecialData") or
+                     "microBiasTrigger" in self.getProp("SpecialData") ):
                     from PatPV import PVConf
                     PVConf.LoosePV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
