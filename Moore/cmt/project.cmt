@@ -1,8 +1,7 @@
 project MOORE
 
-use HLT     HLT_v11r2
-use LBCOM	LBCOM_v9r6
-use REC		REC_v10r4
+use HLT     HLT_v12r2
+use LBCOM   LBCOM_v9r9
 
 container       MooreSys
 build_strategy	with_installarea
