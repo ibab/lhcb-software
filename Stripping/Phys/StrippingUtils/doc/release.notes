@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-29 - Juan Palacios
+ - Add tests for outputLocations(), lineNames() and lineFromName(name) metoods.
  - Fix typo in LineBuilder.
  - Load LineBuilder and helper functions in module StrippingUtils.
  - Increase to v1r2.

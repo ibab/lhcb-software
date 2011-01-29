@@ -27,7 +27,7 @@ def test_line_builder(builderType, conf_dict) :
     test_duplicate_name_raises(builderType, conf_dict)
     test_many_instances(builderType, conf_dict)
     test_bad_configuration_raises(builderType, conf_dict)
-    
+        
 def test_many_instances(builderType, conf_dict) :
     print 'test_make_many_instances', builderType.__name__, '...'
     """
@@ -38,9 +38,15 @@ def test_many_instances(builderType, conf_dict) :
     for n in '0123456789' :
         b = builderType(baseName + n, conf_dict)
         lines = b.lines()
-        test_lines(b)
-        test_cannot_modify_lines(b)
-        test_line_locations(b)
+        test_linebuilder_instance(b)
+
+def test_linebuilder_instance(b) :
+    test_lines(b)
+    test_cannot_modify_lines(b)
+    test_line_locations(b)
+    test_lineNames_method(b)
+    test_outputLocations_method(b)
+    test_lineFromName_method(b)
         
 def test_duplicate_name_raises(builderType, conf_dict) :
     print 'test_duplicate_name_raises', builderType.__name__, '...'
@@ -71,7 +77,7 @@ def test_line_location(line, allowEmptyLocation=True) :
     """
     if allowEmptyLocation and line.outputLocation() == '' :
         return
-    assert 'Stripping'+line.outputLocation().split('/')[-1] == line.name()
+    assert 'Stripping'+line.outputLocation().split('/')[-2] == line.name()
 
 def test_lines(builder) :
     print 'test_lines', type(builder).__name__, '...'
@@ -108,3 +114,17 @@ def test_line_locations(builder, allowEmptyLocation=True) :
     for line in lines :
         test_line_location(line, allowEmptyLocation)
 
+
+def test_lineNames_method(builder):
+    names = [l.name() for l in builder.lines()]
+    for name in names :
+        assert name in builder.lineNames()
+
+def test_outputLocations_method(builder) :
+    locations = [line.outputLocation() for line in builder.lines()]
+    for location in locations :
+        assert location in builder.outputLocations()
+
+def test_lineFromName_method(builder) :
+    for line in builder.lines() :
+        assert line == builder.lineFromName(line.name())

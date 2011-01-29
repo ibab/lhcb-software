@@ -35,14 +35,14 @@ def lineNames(lineBuilder) :
     """
     Return a list with all the names of the lines handled by a lineBuilder.
     """
-    return [line.name() for line in lineBuilder.lines()]
+    return tuple([line.name() for line in lineBuilder.lines()])
 
 def outputLocations(lineBuilder) :
     """
     Return a list with all the output locations of the lines handled by
     a lineBuilder.
     """
-    return [line.outputLocation() for line in lineBuilder.lines()]
+    return tuple([line.outputLocation() for line in lineBuilder.lines()])
 
 def lineFromName(lineBuilder, lineName) :
     """
