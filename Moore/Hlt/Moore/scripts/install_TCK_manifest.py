@@ -25,12 +25,8 @@ if not cpManifest(manifest,target) :
     if manifest.endswith('dev') :
         manifest = manifest.rstrip('dev')
         cpManifest(manifest,target)
-    if manifest.endswith('p1') :
-        manifest = manifest.rstrip('p1')
-        cpManifest(manifest,target)
-    if manifest.endswith('p2') :
-        manifest = manifest.rstrip('p2')
-        cpManifest(manifest,target)
-    if manifest.endswith('p3') :
-        manifest = manifest.rstrip('p3')
-        cpManifest(manifest,target)
+    for suffix in [ 'p1','p2','p3','p4','p5' ] :
+        if manifest.endswith(suffix) :
+            manifest = manifest.rstrip(suffix)
+            cpManifest(manifest,target)
+            continue

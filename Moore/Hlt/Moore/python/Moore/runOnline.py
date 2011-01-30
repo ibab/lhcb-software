@@ -16,18 +16,14 @@ def start() :
 
     ### default database setup -- require an explit tag when running in the LHCb partition...
     Moore().Simulation = False
-    Moore().DDDBtag    = 'hlt-20100906' if OnlineEnv.PartitionName != 'LHCb' else 'unknown'
-    Moore().CondDBtag  = 'hlt-20100906' if OnlineEnv.PartitionName != 'LHCb' else 'unknown'
+    Moore().DDDBtag    = 'unknown-please-specify-in-PVSS' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
+    Moore().CondDBtag  = 'unknown-please-specify-in-PVSS' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
 
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
-    if OnlineEnv.PartitionName == 'FEST' :
-       Moore().EnableRunChangeHandler = False
-       # Moore().Simulation = True
-       # Moore().DDDBtag   = 'MC09-20090602'
-       # Moore().CondDBtag = 'sim-20090402-vc-md100'
+    if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
 
     ### pick up requested DB tag 
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :

@@ -34,19 +34,17 @@ def ContainsFNmatch(dir,matches) :
 def AmalgatePath(path,target):
     return None
 #
-cmt = subprocess.Popen(['cmt','show','version'],stdout=subprocess.PIPE)
-version = string.strip(cmt.communicate()[0],'\n')
-
+version = sys.argv[2]
 env   = 'SetupMoore_'+version+'.sh'
 setup = '$LHCBSCRIPTS/' + env
 moore = '$MOOREROOT'
-if len(sys.argv)>2:
+if len(sys.argv)>3:
     moore = os.environ['MOOREROOT']
     setup = os.path.join(moore,'job',env)
     print 'generating ' + setup
     #ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
     from LbConfiguration.SetupProject import SetupProject
-    SetupProject().main(['--dev-dir=/home/online/ONLINE','--use','OnlineSys','--runtime-project','Online'] + sys.argv[3:] + [ '--shell=sh','--output='+setup,'Moore',version])
+    SetupProject().main(['--dev-dir=/home/online/ONLINE','--use','OnlineSys','--runtime-project','Online'] + sys.argv[4:] + [ '--shell=sh','--output='+setup,'Moore',version])
 
     print 'removing use of StripPath.sh'
     # remove call to StripPath.sh from generated SetupProject.sh
@@ -65,23 +63,15 @@ if len(sys.argv)>2:
                 value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
             if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
                 value = StripPath(value)
-                #value = StripPath(value,lambda x: not re.search('Hlt/HltPython/python',x))
                 #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
             line = 'export %s="%s"'%(name,value)
         if input!=line : f.write('#ORIG:# %s\n'%input)
         f.write(line+'\n')        
-    #print 'checking for tcmalloc'
-    #tcmalloc = os.path.expandvars('$LCG_release_area/tcmalloc/1.3/$CMTCONFIG/lib/libtcmalloc_minimal.so')
-    #if os.path.isfile(tcmalloc) :
-    #    f.write('#Added TCMALLOC\n')
-    #    f.write('export LD_PRELOAD=%s\n'%tcmalloc)
-
     f.close()
 
 
 
 print 'using ' + setup
-
 print 'generating '+ sys.argv[1]
 file = open(sys.argv[1],'w+')
 file.write( """#!/bin/sh

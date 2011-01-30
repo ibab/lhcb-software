@@ -89,8 +89,6 @@ class Moore(LHCbConfigurableUser):
         , 'TimeOutBits'       : 0x200
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
-        , 'ReferenceRate' : 80  # rate of ReferencePredicate returning 'True'
-        , 'ReferencePredicate' : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger' # the source of the ReferenceRate
         , 'REQ1' : ''
 
         }   

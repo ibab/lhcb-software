@@ -3,6 +3,9 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+! 2011-01-30 - Gerhard Raven
+ - tweak online installation procedure
+
 ! 2011-01-26 - Gerhard Raven
  - require both DDDB and CondDB tag to be given by OnlineEnv.CondDBTag
 
