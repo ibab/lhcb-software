@@ -79,3 +79,7 @@ def PV3D() :
                              , OutputSelection   = "PV3D" )
 
     return bindMembers( "HltPVsPV3D", [ MinimalVelo, recoPV3D, preparePV3D]) 
+
+_PV3D = PV3D().setOutputSelection( 'PV3D' )
+from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
+Hlt1Factory ( "Hlt1Factory" ).Lines += ["recoPV3D = execute(%s) " % [ m.getFullName() for m in _PV3D.members()]]
