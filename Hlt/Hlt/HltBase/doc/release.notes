@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v10r3 2011-01-30 ===================
 ! 2011-01-27 - Gerhard Raven
  - remove obsolete, unused code in HltUtils
 
