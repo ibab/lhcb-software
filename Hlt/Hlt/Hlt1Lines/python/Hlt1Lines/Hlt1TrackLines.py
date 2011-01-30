@@ -51,6 +51,10 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                 }
     
     def __apply_configuration__(self) : 
+        props = self.getProps()
+        #
+        # Begin imports
+        #
         from HltLine.HltLine import Hlt1Line   as Line
         from HltLine.HltLine import bindMembers
         from HltLine.HltLine import Hlt1Member as Member
@@ -60,11 +64,26 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs  import PV3D
         from Configurables import HltTrackUpgradeTool, PatForwardTool
         from Configurables import HltFilterFittedVertices
-        
+        from HltLine.HltDecodeRaw import DecodeIT
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
+        from HltTracking.Hlt1TrackUpgradeConf import Forward
+        from HltTracking.Hlt1TrackUpgradeConf import FitTrack
+        from Configurables import MuonRec, MuonIDAlg
+        from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName
+        from HltTracking.HltTrackNames import HltAllMuonTracksName, HltMuonIDSuffix
+        from MuonID import ConfiguredMuonIDs
+        from Configurables import ChargedProtoParticleMaker
+        from Configurables import ChargedProtoParticleAddMuonInfo
+        from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        from Configurables import LoKi__HltUnit          as HltUnit
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        from Configurables import Hlt__Track2Candidate  
+        import HltLine.HltDecodeRaw 
+        import HltTracking.HltReco 
+        #
         def trackprepare(ip,pt,p):
-            from HltLine.HltDecodeRaw import DecodeIT
-            from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
-            from HltTracking.Hlt1TrackUpgradeConf import Forward
             return [ Hlt1GECLoose(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
@@ -97,7 +116,6 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
 
 
         def afterburn(chi2,ipchi2):
-            from HltTracking.Hlt1TrackUpgradeConf import FitTrack
             return [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'TF' , 'TrkChi2'
@@ -117,10 +135,6 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                 ]
 
         def muonAfterburn(chi2,ipchi2) :
-            from Configurables import MuonRec, MuonIDAlg
-            from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName, HltAllMuonTracksName, HltMuonIDSuffix
-            from MuonID import ConfiguredMuonIDs
-            from HltTracking.Hlt1TrackUpgradeConf import FitTrack
             cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="2010")
             HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1TrackMuonIDAlg")
             HltMuonIDAlg.TrackLocation          = FitTrack.TESOutput # "Hlt1/Track/FitTrack" # hardwired in $HLTTRACKINGROOT/src/HltTrackUpgradeTool, under reconame 'FitTrack' 
@@ -139,17 +153,14 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                 , MuonRec() 
                 , HltMuonIDAlg ]
 
-            from Configurables import ChargedProtoParticleMaker
             charged      = ChargedProtoParticleMaker("Hlt1TrackMuonProtoPMaker")
             charged.InputTrackLocation  = [ HltMuonIDAlg.TrackLocation  ]
             charged.OutputProtoParticleLocation = "Hlt1/ProtoP/TrackMuon"
             
-            from Configurables import ChargedProtoParticleAddMuonInfo
             muon                = ChargedProtoParticleAddMuonInfo("Hlt1TrackChargedProtoPAddMuon")
             muon.ProtoParticleLocation  = charged.OutputProtoParticleLocation 
             muon.InputMuonPIDLocation   = HltMuonIDAlg.MuonIDLocation  
             
-            from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter
             Hlt1Muons = CombinedParticleMaker("Hlt1TrackMuonCPM")
             Hlt1Muons.Particle = "muon" 
             Hlt1Muons.addTool(ProtoParticleMUONFilter,'Muon')
@@ -158,8 +169,6 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             Hlt1Muons.WriteP2PVRelations = False 
 
             after += [charged,muon,Hlt1Muons]
-
-            from Configurables import LoKi__VoidFilter as VoidFilter
 
             input = 'Phys/%s/Particles' % Hlt1Muons.getName()
 
@@ -173,20 +182,70 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                      ]
             return after
 
-        props = self.getProps()
-     
-        from Hlt1Lines.HltL0Candidates import L0Channels
+        def hlt1Track_Preambulo() :
+            factory = CoreFactory( "Hlt1Factory" )
+            for m in [  "LoKiCore.decorators"    ,
+                        "LoKiTracks.decorators"  ,
+                        "LoKiTrigger.decorators" ,
+                        "LoKiNumbers.decorators" ,
+                        "LoKiCore.functions"     ,
+                        "LoKiCore.math"          ,
+                        "LoKiHlt.algorithms"     ] :
+                if not m in factory.Modules : factory.Modules.append ( m )
+            factory.Lines += [
+                        "from GaudiKernel.SystemOfUnits import GeV, MeV" ,
+                        "import Hlt1Lines.Hlt1Units"
+                            ]
+            TrackAllL0Preambulo = [ 
+                "veloCandidates = ( execute( decodeVELO ) & recoPV3D & execute ( veloReco  ) ) * TC_SELECTION ( 'VeloCandidates' ) ",
+                ## ``Upgrade''
+                "forwardUpgrade = TC_UPGRADE_TR ( ''    , Hlt1Lines.Hlt1Units.Forward  )  ",
+                "trackFit       = TC_UPGRADE_TR ( ''    , Hlt1Lines.Hlt1Units.FitTrack )  ",
+                ##  
+            ]
+            return TrackAllL0Preambulo 
+
+        def hlt1TrackNonMuon_Streamer(name,theseprops) :
+            hlt1TrackNonMuon_Unit = HltUnit(
+                name,
+                ##OutputLevel = 1 ,
+                Preambulo = hlt1Track_Preambulo(),
+                Code = """
+                veloCandidates
+                >>  ( ( TrVELOIDC('R') + TrVELOIDC('Phi') ) > %(NVELO)s )
+                >>  ( Tr_HLTMIP ( 'PV3D' ) > %(VELOIP)s )
+                >>  execute(decodeIT)
+                >>  forwardUpgrade
+                >>  ( TrPT > %(PT)s * MeV )
+                >>  ( TrP  > %(P)s  * MeV )
+                >>  trackFit
+                >>  ( TrCHI2 < %(TrChi2)s )
+                >>  ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s )    
+                >> ~TC_EMPTY
+                """ % { 'NVELO'   :   theseprops["Velo_NHits"],
+                        'VELOIP'  :   theseprops["IP"]        ,
+                        'PT'      :   theseprops["PT"]        ,
+                        'P'       :   theseprops["P"]         ,
+                        'TrChi2'  :   theseprops["TrChi2"]    ,
+                        'IPChi2'  :   theseprops["IPChi2"]
+                        }
+            )       
+            hlt1TrackNonMuon_Streamer = [Hlt1GECLoose(),hlt1TrackNonMuon_Unit] 
+            return hlt1TrackNonMuon_Streamer
+
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS" 
-             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
-             )
-        Line ( 'TrackNoMu'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Electron','Photon'] ] ) 
-             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
+             , algos = hlt1TrackNonMuon_Streamer(       "TrackAllL0Unit",
+                                                    {   "Velo_NHits":props["Velo_NHits"]  ,
+                                                        "IP"        :props["AllL0_IP"]    ,
+                                                        "PT"        :props["AllL0_PT"]    ,
+                                                        "P"         :props["AllL0_P"]     ,
+                                                        "TrChi2"    :props["AllL0_TrChi2"],   
+                                                        "IPChi2"    :props["AllL0_IPChi2"]  
+                                                    }
+                                                )
              )
         Line ( 'TrackMuon'
              , prescale = self.prescale
@@ -198,6 +257,13 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
-             , algos = (trackprepare(ip=props["Photon_IP"],pt=props["Photon_PT"],p=props["Photon_P"]) + afterburn(chi2=props["Photon_TrChi2"],ipchi2=props["Photon_IPChi2"]))  
+             , algos = hlt1TrackNonMuon_Streamer(       "TrackPhotonUnit",
+                                                    {   "Velo_NHits":props["Velo_NHits"]   ,
+                                                        "IP"        :props["Photon_IP"]    ,
+                                                        "PT"        :props["Photon_PT"]    ,
+                                                        "P"         :props["Photon_P"]     ,
+                                                        "TrChi2"    :props["Photon_TrChi2"],
+                                                        "IPChi2"    :props["Photon_IPChi2"]                                                        }
+                                                )
              )    
 
