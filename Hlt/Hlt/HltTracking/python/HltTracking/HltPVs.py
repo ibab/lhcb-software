@@ -46,6 +46,8 @@ from HltVertexNames import HltSharedVerticesPrefix
 from HltVertexNames import Hlt3DPrimaryVerticesName,_vertexLocation
 from HltVertexNames import HltGlobalVertexLocation
 
+_factory_decorated = []
+
 #### Primary vertex algorithms...
 def PV3D() :
 
@@ -78,8 +80,20 @@ def PV3D() :
                                                     }
                              , OutputSelection   = "PV3D" )
 
-    return bindMembers( "HltPVsPV3D", [ MinimalVelo, recoPV3D, preparePV3D]) 
+    pv3d =  bindMembers( "HltPVsPV3D", [ MinimalVelo, recoPV3D, preparePV3D]) 
 
-_PV3D = PV3D().setOutputSelection( 'PV3D' )
-from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
-Hlt1Factory ( "Hlt1Factory" ).Lines += ["recoPV3D = execute(%s) " % [ m.getFullName() for m in _PV3D.members()]]
+    #   
+    ## register the symbols for factory:
+    #   
+    global _factory_decorated 
+    if not _factory_decorated : 
+        from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
+        _factory = Hlt1Factory ( "Hlt1Factory" )
+        _pv3d    = [ m.getFullName() for m in pv3d.members() ] 
+        _factory.Lines += [
+            ## recontruct 3D-primary vertices  
+            "PV3D     =    %s  " % _pv3d 
+            ]   
+        _factory_decorated += _pv3d 
+     
+    return pv3d
