@@ -385,7 +385,6 @@ std::ostream& LoKi::Tracks::StateZ::fillStream ( std::ostream& s ) const
   }
   return s << " TrSTATEZ( LHCb.State." << state() << " ) " ;
 }
-
 // ============================================================================
 // mandatory: the only one essential method 
 // ============================================================================
@@ -399,6 +398,20 @@ LoKi::Tracks::Chi2::operator()
     return LoKi::Constants::InvalidChi2 ;
   }
   return t->chi2() ; 
+}
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Chi2PerDoF::result_type 
+LoKi::Tracks::Chi2PerDoF::operator() 
+  ( LoKi::Tracks::Chi2PerDoF::argument t ) const 
+{ 
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvaildChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  return t->chi2PerDoF() ; 
 }
 // ============================================================================
 // mandatory: the only one essential method 

@@ -5,6 +5,16 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-30 - Vanya BELYAEV
+
+ - new symbol TrCHI2PDOF 
+
+     new symbol for Vava & Roel 
+
+ - cmt/requirements 
+
+     version increment to v1r7 
+
 !========================== LoKiTracks v1r6 2011-01-20 ===================
 ! 2011-01-20 - Vanya Belyaev
 

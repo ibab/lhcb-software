@@ -76,6 +76,16 @@ namespace LoKi
      */
     const LoKi::Tracks::Chi2                                           TrCHI2 ; 
     // ========================================================================
+    /** @var TrCHI2PDOF
+     *  the simple function which returns LHCb::Track::chi2PerDoF
+     *  @see LHCb::Track
+     *  @see LHCb::Track::chi2PerDoF
+     *  @see LoKi::Tracks::Chi2PerDoF
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-07-27
+     */
+    const LoKi::Tracks::Chi2PerDoF                                 TrCHI2PDOF ; 
+    // ========================================================================
     /** @var TrCLONE
      *  simple objects which check the "Flag" of the track:
      *

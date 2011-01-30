@@ -2,8 +2,12 @@
 // ============================================================================
 #ifndef LOKI_TRACKS_H 
 #define LOKI_TRACKS_H 1
-// =======================================================================
+// ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -36,7 +40,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Key : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API Key : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -57,7 +61,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class InTES : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
+    class GAUDI_API InTES : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
     {
     public:
       // ======================================================================
@@ -79,7 +83,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class Charge : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API Charge : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -101,7 +105,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class TransverseMomentum 
+    class GAUDI_API TransverseMomentum 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
@@ -125,7 +129,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class Momentum : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API Momentum : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -155,7 +159,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physiocs.syr.edu
      *  @date   2007-06-08
      */  
-    class CheckFlag 
+    class GAUDI_API CheckFlag 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate 
     {
     public:
@@ -184,13 +188,13 @@ namespace LoKi
     } ;    
     // ========================================================================
     /** @class Selector
-     *  Simple class to use "track-selector"
+     *  Simple class GAUDI_API to use "track-selector"
      *  @see ITrackSelector
      *  @see LoKi:Cuts::TrSELECTOR
      *  @author Vanya BELYAEV ibelayev@physics.syr.edu
      *  @date 2007-06-10
      */
-    class Selector 
+    class GAUDI_API Selector 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
     {
     public :
@@ -228,13 +232,13 @@ namespace LoKi
     } ;
     // ========================================================================
     /** @class Filter
-     *  Simple class to use "track-selector"
+     *  Simple class GAUDI_API to use "track-selector"
      *  @see ITrackSelector
      *  @see LoKi:Cuts::TrFILTER
      *  @author Vanya BELYAEV ibelayev@physics.syr.edu
      *  @date 2007-06-10
      */
-    class Filter : public Selector 
+    class GAUDI_API Filter : public Selector 
     {
     public :
       // ======================================================================
@@ -273,7 +277,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasInfo : public LoKi::ExtraInfo::CheckInfo<const LHCb::Track*>
+    class GAUDI_API HasInfo : public LoKi::ExtraInfo::CheckInfo<const LHCb::Track*>
     {
     public:
       // ======================================================================
@@ -308,7 +312,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Info : public LoKi::ExtraInfo::GetInfo<const LHCb::Track*>
+    class GAUDI_API Info : public LoKi::ExtraInfo::GetInfo<const LHCb::Track*>
     {
     public:
       // ======================================================================
@@ -348,7 +352,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class SmartInfo 
+    class GAUDI_API SmartInfo 
       : public LoKi::ExtraInfo::GetSmartInfo<const LHCb::Track*>
     {
     public:
@@ -382,7 +386,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Chi2 : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API Chi2 : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -398,13 +402,35 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Chi2PerDoF
+     *  simple evaluator of the LHcb::Track::chi2PerDoF
+     *  @see LoKi::Cuts::TrCHI2PDOF
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2007-06-08
+     */  
+    class GAUDI_API Chi2PerDoF : public Chi2
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~Chi2PerDoF () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  Chi2PerDoF* clone() const { return new Chi2PerDoF(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrCHI2PDOF" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class ProbChi2
      *  simple evaluator of the LHCb::Track::probChi2
      *  @see LoKi::Cuts::TrPROBCHI2
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class ProbChi2 : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API ProbChi2 : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -426,7 +452,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class HasStateAt : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
+    class GAUDI_API HasStateAt : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
     {
     public:
       // ======================================================================
@@ -465,7 +491,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class IsOnTrack : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
+    class GAUDI_API IsOnTrack : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate
     {
     public:
       // ======================================================================
@@ -499,7 +525,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */  
-    class Type : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API Type : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -523,7 +549,7 @@ namespace LoKi
      *  @author Vanya Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class StateZ 
+    class GAUDI_API StateZ 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
@@ -565,7 +591,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-12-09
      */
-    class Cov2
+    class GAUDI_API Cov2
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
       // ======================================================================
