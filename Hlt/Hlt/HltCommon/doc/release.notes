@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v7r2 2011-01-30 ==================
 ! 2011-01-27 - Gerhard Raven
  - remove HltFixedRateScaler -- not used, superseded by LoKi equivalent
  - remove HltGlobalHcalCut -- not used
