@@ -5,6 +5,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r2 2011-01-30 ===================
 ! 2011-Jan-28 - Patrick Spradlin
  - Added Hlt2CharmHadD2HHHLinesConf to Hlt2Conf.__used_configurables__ list.
    Requires Hlt2Lines 116279.
