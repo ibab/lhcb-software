@@ -51,7 +51,7 @@ class Physics_draft2011:
         """
         Returns a dictionary of cuts
 	"""
-	from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
+        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
                                             ,   'AllL0_P'       : 13300
@@ -109,6 +109,7 @@ class Physics_draft2011:
 		  #'Hlt1Tell1Error' ,
 		  #'Hlt1Incident' ,
 		  #'Hlt1ErrorEvent',
+          'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco' , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2',
 		  'Hlt1NoPVPassThrough',
 		  'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
