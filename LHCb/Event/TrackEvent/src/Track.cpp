@@ -128,23 +128,13 @@ double Track::probChi2() const
 //=============================================================================
 State & Track::closestState( double z )
 {
-  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
-    std::vector<Node*>::iterator iter =
-      std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
-                        TrackFunctor::distanceAlongZ<Node>(z) );
-    if ( iter == m_fitResult->nodes().end() )
-      throw GaudiException( "No state closest to z","Track.cpp",
-                            StatusCode::FAILURE );
-    return (*iter)->state();
-  } else {
-    std::vector<State*>::const_iterator iter =
-      std::min_element( m_states.begin(),m_states.end(),
-                        TrackFunctor::distanceAlongZ<State>(z) );
-    if ( iter == m_states.end() )
-      throw GaudiException( "No state closest to z","Track.cpp",
-                            StatusCode::FAILURE );
-    return *(*iter);
-  }
+  std::vector<State*>::const_iterator iter =
+    std::min_element( m_states.begin(),m_states.end(),
+		      TrackFunctor::distanceAlongZ<State>(z) );
+  if ( iter == m_states.end() )
+    throw GaudiException( "No state closest to z","Track.cpp",
+			  StatusCode::FAILURE );
+  return *(*iter);
 }
 
 //=============================================================================

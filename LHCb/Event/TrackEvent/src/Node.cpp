@@ -15,3 +15,10 @@ LHCb::Node* LHCb::Node::clone() const
   return new LHCb::Node(*this);
         
 }
+
+double LHCb::Node::chi2() const
+{
+  double res = residual() ;
+  double err = errResidual() ;
+  return res*res/(err*err) ;
+}

@@ -17,6 +17,7 @@
       <import name='Event/Measurement' />
       <import name='Event/TrackParameters' />
       <import name='Event/TrackTypes' />
+      <import name='LHCbMath/ValueWithError' />
 
       &StlPtrVector;
 
@@ -63,6 +64,7 @@
       <attribute
         type    = 'Type'
         name    = 'type'
+	access  = 'PROTECTED'
         setMeth = 'TRUE'
         getMeth = 'TRUE'
         desc    = 'type of node' />
@@ -70,15 +72,17 @@
       <attribute
         type    = 'LHCb::State'
         name    = 'state'
+	access  = 'PROTECTED'
         setMeth = 'TRUE'
-        getMeth = 'TRUE'
-        nonconstaccessor = 'TRUE'
+        getMeth = 'FALSE'
+	nonconstaccessor = 'FALSE'
         desc    = 'state' />
-
+      
       <attribute
         type    = 'LHCb::StateVector'
         name    = 'refVector'
         desc    = 'the reference vector'
+	access  = 'PROTECTED'
         setMeth = 'FALSE'
         getMeth = 'TRUE' />
 
@@ -86,11 +90,13 @@
         type    = 'bool'
         name    = 'refIsSet'
         desc    = 'flag for the reference vector'
+	access  = 'PROTECTED'
         setMeth = 'FALSE' />
 
       <attribute
         type    = 'LHCb::Measurement*'
         name    = 'measurement'
+	access  = 'PROTECTED'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
         desc    = 'pointer to the measurement (not owner)' />
@@ -98,22 +104,30 @@
       <attribute
         type    = 'double'
         name    = 'residual'
-        desc    = 'the residual value' />
+        desc    = 'the residual value' 
+	access  = 'PROTECTED'
+        getMeth = 'FALSE'/>
 
       <attribute
         type    = 'double'
         name    = 'errResidual'
-        desc    = 'the residual error'/>
+        desc    = 'the residual error'
+	access  = 'PROTECTED'
+        getMeth = 'FALSE'/>
 
       <attribute
         type    = 'double'
         name    = 'errMeasure'
-        desc    = 'the measure error' />
+        desc    = 'the measure error' 
+	access  = 'PROTECTED'
+	/>
 
       <attribute
         type    = 'Gaudi::TrackProjectionMatrix'
         name    = 'projectionMatrix'
-        desc    = 'the projection matrix' />
+        desc    = 'the projection matrix' 
+	access  = 'PROTECTED'
+	/>
 
       <method
         name    = 'setRefVector'
@@ -133,22 +147,47 @@
   m_refIsSet  = true;
   m_refVector = refVector;
         </code>
-      </method>
+      </method>  
 
       <method
         type    = 'double'
         name    = 'chi2'
         const   = 'TRUE'
         desc    = 'Retrieve the local chi^2 '>
-        <code>
-  return ( (fabs(m_residual) > TrackParameters::lowTolerance) &amp;&amp; 
-           (m_errResidual > TrackParameters::lowTolerance) ?
-           gsl_pow_2( m_residual/m_errResidual ) : 0.0 );
+      </method>
 
+      <method
+        type    = 'const LHCb::State&amp; '
+        name    = 'state'
+        const   = 'TRUE'
+        virtual   = 'TRUE'
+        desc    = 'Retrieve the state'>
+	<code> return m_state ; </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'residual'
+        const   = 'TRUE'
+        virtual   = 'TRUE'
+        desc    = 'Retrieve the residual '>
+	<code>
+         return m_residual ;
         </code>
       </method>
 
       <method
+        type    = 'double'
+        name    = 'errResidual'
+        const   = 'TRUE'
+        virtual   = 'TRUE'
+        desc    = 'Retrieve the error in the residual '>
+	<code>
+         return m_errResidual ;
+        </code>
+      </method>
+
+       <method
         type    = 'LHCb::Measurement &amp;'
         name    = 'measurement'
         desc    = 'Retrieve the reference to the measurement'>
@@ -190,7 +229,7 @@
 	const   = 'TRUE'
         desc    = 'Return the error on the residual squared'>
         <code>
-  return m_errResidual * m_errResidual;
+  double x = errResidual() ; return x*x ;
         </code>
       </method>
 
@@ -246,6 +285,14 @@
         </code>
       </method>
 
+      <method
+	type = 'void'
+	name = 'setLocation'
+	desc = 'Set the location of the state in this node.'>
+        <arg type = 'LHCb::State::Location' name='location' />
+	<code> m_state.setLocation( location ) ; </code>
+      </method>
+      
     </class>
 
   </package>
