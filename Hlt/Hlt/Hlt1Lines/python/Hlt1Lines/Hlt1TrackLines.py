@@ -197,7 +197,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                         "import Hlt1Lines.Hlt1Units"
                             ]
             TrackAllL0Preambulo = [ 
-                "veloCandidates = ( execute( decodeVELO ) & recoPV3D & execute ( veloReco  ) ) * TC_SELECTION ( 'VeloCandidates' ) ",
+                "veloCandidates = ( execute( decodeVELO ) & execute( PV3D ) & execute ( veloReco  ) ) * TC_SELECTION ( 'VeloCandidates' ) ",
                 ## ``Upgrade''
                 "forwardUpgrade = TC_UPGRADE_TR ( ''    , Hlt1Lines.Hlt1Units.Forward  )  ",
                 "trackFit       = TC_UPGRADE_TR ( ''    , Hlt1Lines.Hlt1Units.FitTrack )  ",
@@ -206,6 +206,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             return TrackAllL0Preambulo 
 
         def hlt1TrackNonMuon_Streamer(name,theseprops) :
+            PV3D()
             hlt1TrackNonMuon_Unit = HltUnit(
                 name,
                 ##OutputLevel = 1 ,
@@ -213,21 +214,23 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                 Code = """
                 veloCandidates
                 >>  ( ( TrVELOIDC('R') + TrVELOIDC('Phi') ) > %(NVELO)s )
+                >>  ( TrNVELOMISS < %(NVELOMISS)s )
                 >>  ( Tr_HLTMIP ( 'PV3D' ) > %(VELOIP)s )
                 >>  execute(decodeIT)
                 >>  forwardUpgrade
                 >>  ( TrPT > %(PT)s * MeV )
                 >>  ( TrP  > %(P)s  * MeV )
                 >>  trackFit
-                >>  ( TrCHI2 < %(TrChi2)s )
+                >>  ( TrCHI2PDOF < %(TrChi2)s )
                 >>  ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s )    
                 >> ~TC_EMPTY
-                """ % { 'NVELO'   :   theseprops["Velo_NHits"],
-                        'VELOIP'  :   theseprops["IP"]        ,
-                        'PT'      :   theseprops["PT"]        ,
-                        'P'       :   theseprops["P"]         ,
-                        'TrChi2'  :   theseprops["TrChi2"]    ,
-                        'IPChi2'  :   theseprops["IPChi2"]
+                """ % { 'NVELO'     :   theseprops["Velo_NHits"],
+                        'NVELOMISS' :   theseprops["Velo_Qcut"] ,
+                        'VELOIP'    :   theseprops["IP"]        ,
+                        'PT'        :   theseprops["PT"]        ,
+                        'P'         :   theseprops["P"]         ,
+                        'TrChi2'    :   theseprops["TrChi2"]    ,
+                        'IPChi2'    :   theseprops["IPChi2"]
                         }
             )       
             hlt1TrackNonMuon_Streamer = [Hlt1GECLoose(),hlt1TrackNonMuon_Unit] 
@@ -239,6 +242,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
              , L0DU = "L0_DECISION_PHYSICS" 
              , algos = hlt1TrackNonMuon_Streamer(       "TrackAllL0Unit",
                                                     {   "Velo_NHits":props["Velo_NHits"]  ,
+                                                        "Velo_Qcut" :props["Velo_Qcut"]   , 
                                                         "IP"        :props["AllL0_IP"]    ,
                                                         "PT"        :props["AllL0_PT"]    ,
                                                         "P"         :props["AllL0_P"]     ,
@@ -259,6 +263,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
              , L0DU = "L0_CHANNEL('Photon')"
              , algos = hlt1TrackNonMuon_Streamer(       "TrackPhotonUnit",
                                                     {   "Velo_NHits":props["Velo_NHits"]   ,
+                                                        "Velo_Qcut" :props["Velo_Qcut"]    ,
                                                         "IP"        :props["Photon_IP"]    ,
                                                         "PT"        :props["Photon_PT"]    ,
                                                         "P"         :props["Photon_P"]     ,
