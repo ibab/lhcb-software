@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-01-30 - V. Gligorov
+ - Stream TrackAllL0 and TrackPhoton. 
+
 !========================== Hlt1Lines v6r1   2011-01-20 ===================
 ! 2011-01-20 - Gerhard Raven 
  - adapt to update to BG lines
