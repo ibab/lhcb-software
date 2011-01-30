@@ -1,3 +1,5 @@
+
+
 #ifdef _WIN32
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
@@ -95,6 +97,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MaterialLocator", m_materialLocator);
   declareProperty( "UpdateTransport", m_updateTransport = true );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
+  declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
@@ -155,6 +158,7 @@ StatusCode TrackMasterFitter::initialize()
 
   sc = m_materialLocator.retrieve() ;
   if ( sc.isFailure() ) return sc;
+
   
   m_debugLevel   = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
 
@@ -186,7 +190,8 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const
 //=========================================================================
 StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 {
- 
+  if(m_debugLevel)
+    debug() << " TrackMasterFitter::fit" << endmsg ;
 
   // any track that doesnt make it to the end is failed
   track.setFitStatus( Track::FitFailed );
@@ -212,13 +217,12 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( sc.isFailure() )
       return failure( "unable to update the ref vectors" );
   }
-  
+
   // create a covariance matrix to seed the Kalman fit
-  State& seed = nodes.front()->state() ;
   TrackSymMatrix seedCov ; // Set off-diagonal elements to zero
   if (m_useSeedStateErrors) {
     State state0 = track.firstState();
-    double z1 = nodes.front()->state().z();
+    double z1 = nodes.front()->z();
     extrapolator(track.type())->propagate(state0,z1);
     seedCov = state0.covariance() ;
     if ( m_debugLevel )
@@ -230,13 +234,15 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     seedCov(1,1) = m_errorY*m_errorY ;
     seedCov(2,2) = m_errorTx*m_errorTx ;
     seedCov(3,3) = m_errorTy*m_errorTy ;
-    seedCov(4,4) = gsl_pow_2( m_errorQoP[0] * seed.qOverP() ) + gsl_pow_2(m_errorQoP[1]);   
+    seedCov(4,4) = gsl_pow_2( m_errorQoP[0] * track.firstState().qOverP() ) + gsl_pow_2(m_errorQoP[1]);   
   }
   kalfitresult->setSeedCovariance( seedCov ) ;
+  static_cast< FitNode*>( nodes.front() )->setSeedCovariance( seedCov ) ;
+  static_cast< FitNode*>( nodes.back() )->setSeedCovariance( seedCov ) ;
 
   if ( m_debugLevel )
-    debug() << "SeedState: z = " << seed.z()
-	    << " stateVector = " << seed.stateVector()
+    debug() << "SeedState: z = " << nodes.front()->z()
+	    << " stateVector = " << nodes.front()->refVector()
 	    << " covariance  = " << seedCov << endmsg;
   
   // Iterate the track fit for linearisation. Be careful with chi2
@@ -247,7 +253,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   bool converged = false ;
   for ( ; iter <= m_numFitIter && !converged ; ++iter ) {   
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
-    
+
     // update reference trajectories with smoothed states
     // TODO: combine this with the projection of the residuals which now resides in TrackKalmanFilter
     if( iter > 1) {
@@ -273,16 +279,23 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   
   // Outlier removal iterations
   iter = kalfitresult->nOutliers() ;
+  LHCb::Node* outlier(0) ;
   while ( iter < m_numOutlierIter && track.nDoF() > 1 &&
-          outlierRemoved( track ) ) {
+          (outlier = outlierRemoved( track )) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
     
     // update reference trajectories with smoothed states
-    sc = updateRefVectors( track, pid );
-    if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
+    if (m_updateReferenceInOutlierIters) {
+      sc = updateRefVectors( track, pid );
+      if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
+    }
+    
+    // deactivate the outlier
+    static_cast<LHCb::FitNode*>(outlier)->deactivateMeasurement() ;
     
     // Call the track fit
     sc = m_trackNodeFitter -> fit( track );
+
     if ( sc.isFailure() ) {
       // Should only be used if the track belongs to a container and therefore has a key!
       //std::ostringstream mess;
@@ -297,20 +310,26 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     ++iter;  
   }
   
+  // TODO: if outliers are removed, we add one more iteration to update the reference
+  
   // determine the track states at user defined z positions
   sc = determineStates( track );
   if ( sc.isFailure() ) 
     return failure( "failed in determining states" ) ;
-
+  
   if ( m_debugLevel && !track.states().empty() )
     debug() << "first state = " << track.firstState() << endmsg;
-
+  
   // fill extra info
   fillExtraInfo( track ) ;
-
-  // make sure to declare the track successful
-  track.setFitStatus( Track::Fitted );
-
+  
+  // declare the track successful if there are no errors
+  if( kalfitresult->inError() ) {
+    sc = Warning(kalfitresult->getError(),StatusCode::FAILURE,0) ;
+  } else {
+    track.setFitStatus( Track::Fitted );
+  }
+  
   return sc;
 }
 
@@ -341,11 +360,14 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
   if ( ( upstream && !track.checkFlag(Track::Backward ) ) ||
        ( !upstream && track.checkFlag(Track::Backward ))) 
     std::swap( lastMeasurementNode, firstMeasurementNode ) ;
-  firstMeasurementNode->state().setLocation( State::FirstMeasurement );
-  track.addToStates(firstMeasurementNode->state()) ;
 
-  lastMeasurementNode->state().setLocation( State::LastMeasurement );
-  track.addToStates(lastMeasurementNode->state()) ;
+  State firststate = firstMeasurementNode->state() ;
+  firststate.setLocation( State::FirstMeasurement );
+  track.addToStates( firststate ) ;
+
+  State laststate = lastMeasurementNode->state() ;
+  laststate.setLocation( State::LastMeasurement );
+  track.addToStates( laststate ) ;
 
   // Add the states at the reference positions
   // ------------------------------------------
@@ -372,14 +394,12 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
 //=========================================================================
 //
 //=========================================================================
-bool TrackMasterFitter::outlierRemoved( Track& track ) const
+LHCb::Node* TrackMasterFitter::outlierRemoved( Track& track ) const
 {
   // return true if outlier chi2 cut < 0
-  if ( m_chi2Outliers < 0.0 ) return true;
+  LHCb::Node* outlier(0) ;
+  if ( m_chi2Outliers < 0.0 ) return outlier ;
 
-  // flag (true if outliers are removed)
-  bool outlierWasRemoved = false;
-  
   // Count the number of hits of each type
   enum HitType {VeloR, VeloPhi, TT, T, Muon, Unknown} ;
   static HitType hittypemap[11] = { Unknown, VeloR, VeloPhi, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
@@ -399,7 +419,10 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
   for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode )
     if ( (*iNode)->hasMeasurement() &&
 	 (*iNode)->type() == LHCb::Node::HitOnTrack ) {
+      // Computing the chi2 will triggerthe smoothing. That's why it
+      // is slow. We haven;t yet found a good alternative.
       const double chi2 = (*iNode)->chi2();
+      
       HitType hittype = hittypemap[int((*iNode)->measurement().type())] ;
       if ( chi2 > worstChi2 &&
 	   numHits[hittype] > minNumHits[hittype] ) {
@@ -410,6 +433,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
   
   // if a node is found: remove its measurement from the track
   if ( iWorstNode != nodes.end() ) {
+    outlier = *iWorstNode ;
 
     if (m_debugLevel)
       debug() << "Measurement " << iWorstNode-nodes.begin() 
@@ -420,14 +444,9 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
               << " at z=" << (*iWorstNode)->z() 
               << " with chi2=" << (*iWorstNode) -> chi2() 
               << " removed." << endmsg;
-
-    // Remove measurement from node (node still exists w/o measurement)
-    // One also needs to delete the measurement from the track!
-    (*iWorstNode)->setType( LHCb::Node::Outlier ) ;
-    outlierWasRemoved = true;
   }
-
-  return outlierWasRemoved;
+  
+  return outlier ;
 }
 
 //=========================================================================
@@ -435,11 +454,17 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID pid ) const
 { 
+  if( m_debugLevel ) 
+    debug() << "TrackMasterFitter::updateRefVectors" << endmsg ;
+  
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<Node*>& nodes = track.fitResult()->nodes();
   for (TrackFitResult::NodeContainer::iterator iNode = nodes.begin(); 
-       iNode != nodes.end(); ++iNode ) 
+       iNode != nodes.end(); ++iNode ) {
     (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ;
+  }
+  if( m_debugLevel ) 
+    debug() << "Ref vector for first state: " << nodes.front()->refVector() << endmsg ;
   
   // update the projections. need to be done every time ref is
   // updated. we can move this code here at some point.
@@ -515,7 +540,7 @@ double TrackMasterFitter::closestToBeamLine( const State& state ) const
 StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) const 
 {
   // Clear the nodes
-  LHCb::TrackFitResult& fitresult = *(track.fitResult()) ;
+  LHCb::KalmanFitResult& fitresult = static_cast<LHCb::KalmanFitResult&>(*(track.fitResult())) ;
   fitresult.clearNodes() ;
   
   // Clear the measurements if asked for
@@ -572,8 +597,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   // At a node for the position at the beamline
   if ( m_stateAtBeamLine && (track.hasTT() || track.hasVelo()) ) {
     const LHCb::State& refstate = *(track.checkFlag(Track::Backward) ? track.states().back() : track.states().front()) ;
-    FitNode* node = new FitNode( closestToBeamLine(refstate) );
-    node->state().setLocation( State::ClosestToBeam );
+    FitNode* node = new FitNode( closestToBeamLine(refstate), State::ClosestToBeam  );
     nodes.push_back( node ) ;
   }
 
@@ -594,8 +618,10 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
        it != nodes.end(); ++it ) {
     LHCb::StateVector ref = tracktraj.stateVector((*it)->z())  ;
     (*it)->setRefVector( ref ) ;
-    (*it)->state().setState(ref) ;
   }
+  
+  // set links between nodes
+  fitresult.establishNodeLinks() ;
   
   // update the projections. need to be done every time ref is updated
   sc = projectReference( track ) ;
@@ -646,7 +672,10 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
 //=========================================================================
 
 StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb::ParticleID pid) const
-{
+{  
+  if( m_debugLevel ) 
+    debug() << "TrackMasterFitter::updateMaterialCorrections" << endmsg ;
+
   // the noise in each node is the noise in the propagation between
   // the previous node and this node.
 
@@ -679,7 +708,20 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
 
     if ( m_debugLevel ) debug() << "scattering momentum: " << scatteringMomentum << endreq ;
 
-    LHCb::TrackTraj tracktraj( nodes ) ;
+    // this is farily trickky now: we want to use TracjTraj, but we
+    // cannot create it directly from the nodes, because that would
+    // trigger the filter!
+    
+    // note that this is the same traj as used in setting the first
+    // ref. cannot we just save it somewhere?
+    LHCb::TrackTraj::StateContainer states ;
+    states.insert( states.end(), track.states().begin(), track.states().end() ) ;
+    LHCb::TrackTraj tracktraj(states) ;
+    double zmin = nodes.front()->z() ;
+    double zmax = nodes.back()->z() ;
+    if(zmin>zmax) std::swap(zmin,zmax) ;
+    tracktraj.setRange( zmin,zmax ) ;
+
     IMaterialLocator::Intersections intersections ;
     m_materialLocator->intersect( tracktraj, intersections ) ;
     
@@ -689,8 +731,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
     for(++inode; inode!=nodes.end(); ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode) ;
       double ztarget = node->z() ;
-      
-      LHCb::State state = (*inode)->state() ;
+      LHCb::State state( node->refVector() ) ;
       state.covariance() = Gaudi::TrackSymMatrix() ;
       state.setQOverP( 1/scatteringMomentum  ) ;
       m_materialLocator->applyMaterialCorrections(state,intersections,zorigin,pid,true,applyenergyloss) ;
@@ -707,6 +748,9 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
 
 StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
 {
+  if( m_debugLevel ) 
+    debug() << "TrackMasterFitter::updateTransport" << endmsg ;
+
   // sets the propagation between the previous node and this. node that the reference 
   // of the previous node is used.
   StatusCode sc = StatusCode::SUCCESS ;
@@ -748,12 +792,13 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       Gaudi::TrackVector tranportvec = statevector.parameters() - F * refvector->parameters() ;
       node->setTransportMatrix( F );
       node->setTransportVector( tranportvec );
-      node->setTransportIsSet( true );
       
       // update the reference
       refvector = &((*inode)->refVector()) ;
     }
   }
+  if( m_debugLevel ) 
+    debug() << "End of TrackMasterFitter::updateTransport" << endmsg ;
   return sc ;
 }
 
@@ -766,7 +811,10 @@ inline bool LessThanFirst(const T& lhs, const T& rhs)
 StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
 						  LHCb::ParticleID pid ) const
 {
-   // given existing states on the track, this tool adds states at fixed
+  if( m_debugLevel ) 
+    debug() << "TrackMasterFitter::initializeRefStates" << endmsg ;
+
+  // given existing states on the track, this tool adds states at fixed
   // z-positions along the track. if a track state already exists
   // sufficiently close to the desired state, it will not add the
   // state.

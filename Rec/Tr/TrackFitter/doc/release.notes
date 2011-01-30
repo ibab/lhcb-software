@@ -3,6 +3,26 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+TODO: remove unused properties from TrackKalmanFilter
+
+! 2011-01-29 - Wouter Hulsbergen
+- fixed order of updating projection and removing outlier
+
+! 2011-01-23 - Wouter Hulsbergen
+- change TrackKalmanFilter to update cache such that code can be easier profiled
+- small clean-up of TrackMasterFitter
+
+! 2011-01-20 - Victor Coco
+- Remove the catching of exception in TrackKalmanFilter
+
+! 2011-01-19 - Victor Coco
+- Check KalmanFitResult error flag at the end of the fit and retrun appropriate
+  error (in TrackKalmanFilter)
+
+! 2011-01-17 - Wouter Hulsbergen & Victor Coco
+- Major modification. All the node clculation logic went into FitNode, TrackKalmanFilter
+  is used to loop over nodes. 
+
 !========================= TrackFitter v3r2 2011-01-17 =========================
 ! 2011-01-11 - Victor Coco
 - get the inverse matrix as reference in predictReverseFit in TrackKalmanFilter

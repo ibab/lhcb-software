@@ -64,7 +64,7 @@ private:
   StatusCode determineStates( LHCb::Track& track ) const;
 
   //! remove outliers from the node vector
-  bool outlierRemoved( LHCb::Track& track ) const;
+  LHCb::Node* outlierRemoved( LHCb::Track& track ) const;
 
   //! update the reference vector for each measurement before next iteration
   StatusCode updateRefVectors( LHCb::Track& track, LHCb::ParticleID pid ) const;
@@ -131,6 +131,7 @@ private:
   bool m_makeMeasurements;
   bool m_updateTransport ;            ///< Update the transport matrices between iterations
   bool m_updateMaterial ;             ///< Update material corrections between iterations
+  bool m_updateReferenceInOutlierIters ; ///< Update projection in iterations in which outliers are removed
   double m_minMomentumForELossCorr ;  ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ;   ///< Apply material corrections
   bool m_applyEnergyLossCorrections ; ///< Apply material corrections
