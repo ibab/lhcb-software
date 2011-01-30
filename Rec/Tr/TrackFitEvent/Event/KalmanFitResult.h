@@ -10,6 +10,22 @@ namespace LHCb
   class KalmanFitResult : public TrackFitResult
   {
   public:
+    enum algoType{ Predict,
+		   Filter,
+		   Smooth,
+		   ComputeResidual,
+		   WeightedAverage
+    };
+    enum errorType{ Initialization,
+		    MatrixInversion,
+		    AlgError,
+		    Other
+    };
+    enum directionType{Forward ,
+		       Backward,
+		       BiDirection
+    };
+    
     // default constructor. do nothing.
     KalmanFitResult() ;
     
@@ -25,6 +41,9 @@ namespace LHCb
     // clone
     virtual TrackFitResult* clone() const ;
 
+    // set links between nodes and to parent
+    void establishNodeLinks() ;
+    
     // get the seed covariance
     const Gaudi::TrackSymMatrix& seedCovariance() const {
       return m_seedCovariance ;
@@ -91,9 +110,33 @@ namespace LHCb
       return m_chi2 - m_chi2VeloTTT - m_chi2Muon ;
     }
 
+    ChiSquare computeChiSquareForwardFit() ;
+
+    // set the error flag
+    void setErrorFlag(ushort extrainfo ,ushort algnum , ushort errnum);
+    
+    // check if there is an error
+    bool inError( );
+
+    // check the type of error
+    std::string getError( );
+
   private:
     void computeChiSquares() const ;
-    
+
+  private: 
+     enum errorBits{ typeBits = 0,   // error type bit position
+                     algBits  = 2,   // function bit position
+                     dirBits  = 5,   // direction bit position
+                     globalBits  = 7   // global error bit position
+     };
+     enum errorMasks{ typeMask = 0x03,    // error type mask
+		      algMask  = 0x1C,   // function mask  
+		      dirMask  = 0x60,   // direction mask  
+		      globalMask  = 0x80   // direction mask          
+     };
+
+
   private:
     Gaudi::TrackSymMatrix m_seedCovariance ;
     int m_nTrackParameters ;
@@ -104,12 +147,9 @@ namespace LHCb
     mutable ChiSquare m_chi2MuonT ;
     mutable ChiSquare m_chi2Muon ;
     mutable bool m_chi2CacheValid ;
+    ushort m_errorFlag;
   } ;  
 }
 
 #endif
-
-
-
-
 

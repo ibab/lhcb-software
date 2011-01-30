@@ -6,12 +6,15 @@ namespace LHCb
 {
   // default constructor. do nothing.
   KalmanFitResult::KalmanFitResult() 
-    : m_nTrackParameters(5), m_chi2CacheValid(false) {}
+    : m_nTrackParameters(5), m_chi2CacheValid(false),m_errorFlag(0x00) {}
   
   // copy constructor
   KalmanFitResult::KalmanFitResult(const KalmanFitResult& rhs) 
     : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),
-      m_nTrackParameters(rhs.m_nTrackParameters), m_chi2CacheValid(false) {}
+      m_nTrackParameters(rhs.m_nTrackParameters), m_chi2CacheValid(false),m_errorFlag(0x00)
+  {
+    establishNodeLinks() ;
+  }
   
   // copy from TrackFitResult
   KalmanFitResult::KalmanFitResult(const TrackFitResult& rhs) 
@@ -24,6 +27,71 @@ namespace LHCb
   TrackFitResult* KalmanFitResult::clone() const
   {
     return new KalmanFitResult(*this) ;
+  }
+
+
+  void KalmanFitResult::setErrorFlag(ushort direction, ushort algnum , ushort errnum) 
+  {
+    m_errorFlag = (((ushort) 1 ) << globalBits)
+      +(((ushort)direction) << dirBits ) 
+      +(((ushort)algnum) << algBits ) 
+      +(((ushort)errnum) << typeBits);  
+  }
+
+  bool KalmanFitResult::inError(){
+    if ( m_errorFlag == 0 ) return false;
+    else return true;
+  }
+
+  std::string KalmanFitResult::getError(){
+    ushort direction = ( m_errorFlag & dirMask ) >> dirBits ;
+    ushort algnum = ( m_errorFlag & algMask ) >> algBits ;
+    ushort errnum = ( m_errorFlag & typeMask ) ;
+    std::ostringstream errMsg;
+    std::ostringstream dir;
+    // Set the direction
+    switch (direction){
+    case Forward:
+      dir<<"forward "; break;
+    case Backward:
+      dir<<"backward "; break;
+    default : dir<<""; break;
+    }
+    // Set the algorithm
+    switch (algnum){
+    case Predict:
+      errMsg<<"Error in predict "<<dir.str()<<"function: ";
+      if(errnum == Initialization) errMsg<<"seed covariance is not set!";
+      else if(errnum == AlgError) errMsg<<"something goes wrong in the prediction";
+      else errMsg<<"unknown error";
+      break;
+    case Filter:
+      errMsg<<"Error in filter "<<dir.str()<<"function: ";
+      if(errnum == Initialization) errMsg<<"projection matrix is not set!";
+      else if(errnum == AlgError) errMsg<<"something goes wrong in the filtering";
+      else errMsg<<"unknown error";
+      break;
+    case Smooth:
+      errMsg<<"Error in smooth function: ";
+      if( errnum == MatrixInversion )errMsg<<"error in matrix inversion";
+      if( errnum == Other )errMsg<<"problem with HCH.";
+      else errMsg<<"unknown error";
+      break;
+    case ComputeResidual:
+      errMsg<<"Error in compute residual: ";
+      if( errnum == Other )errMsg<<" non positive variance.";
+      else errMsg<<"unknown error";
+      break;
+    case WeightedAverage:
+      errMsg<<"Error in weighted average: ";
+      if( errnum == Other )errMsg<<" non positive variance.";
+      else errMsg<<"unknown error";
+      break;  
+    default:
+      errMsg<<"Unknown error...";
+      break;
+    }
+    return errMsg.str();
   }
 
 
@@ -59,7 +127,7 @@ namespace LHCb
       int    nhitsMuon(0), nhitsT(0), nhitsTT(0), nhitsVelo(0) ; 
       BOOST_FOREACH( const LHCb::Node* node, nodes() ) {
 	if( node->type() == LHCb::Node::HitOnTrack ) {
-	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
+	  const LHCb::FitNode* fitnode = static_cast<const LHCb::FitNode*>(node) ;
 	  
 	  switch( node->measurement().type() ) {
 	  case Measurement::VeloR:
@@ -121,5 +189,41 @@ namespace LHCb
     }
     
     m_chi2CacheValid = true ;
+  } 
+
+  ChiSquare KalmanFitResult::computeChiSquareForwardFit()
+  {
+    LHCb::FitNode* lastnode(0) ;
+    double chisq(0) ; int ndof(0) ;
+    BOOST_FOREACH( LHCb::Node* node, nodes()) {
+      if( node->type()==LHCb::Node::HitOnTrack ) {
+	LHCb::FitNode* fitnode = static_cast<FitNode*>(node) ;
+	chisq   += fitnode->deltaChi2Forward() ;
+	lastnode = fitnode ;
+	++ndof ;
+      }
+    }
+    // Count the number of active track parameters. For now, just look at the momentum.
+    if(lastnode) {
+      const double threshold = 0.1 ;
+      size_t npar = (lastnode->filteredState(LHCb::FitNode::Forward).covariance()(4,4) 
+		     / m_seedCovariance(4,4) < threshold ? 5 : 4) ;
+      setNTrackParameters( npar ) ;
+      ndof -= npar ;
+    }
+    return ChiSquare( chisq, ndof ) ;
   }
+  
+  void KalmanFitResult::establishNodeLinks() 
+  {
+    LHCb::FitNode* prev(0) ;
+    for( NodeContainer::const_iterator it = nodes().begin() ;
+	 it != nodes().end(); ++it ) {
+      LHCb::FitNode* fitnode = static_cast<FitNode*>(*it) ;
+      fitnode->setPreviousNode( prev ) ;
+      fitnode->setParent(this) ;
+      prev = fitnode ;
+    }
+  }
+    
 }

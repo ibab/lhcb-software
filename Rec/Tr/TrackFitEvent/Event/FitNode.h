@@ -5,9 +5,16 @@
 // from TrackEvent
 #include "Event/Node.h"
 #include "Event/Measurement.h"
+#include "Event/KalmanFitResult.h"
+#include "LHCbMath/ValueWithError.h"
+
 #include "GaudiKernel/boost_allocator.h"
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
+
+namespace LHCb {
+  class KalmanFitResult ;
+}
 
 namespace LHCb
 {
@@ -32,9 +39,27 @@ namespace LHCb
    *  @author Matthew Needham
    *  @date   19-08-1999
    */
+  
+  // struct UnidirectionalKalmanFilterData {
+  //     UnidirectionalKalmanFilterData() :
+  //       deltaChi2(0), status(Initialized),hasInfoUpstream(Unknown) {}
+  //     enum FilterStatus {Initialized, Predicted, Filtered, Smoothed } ;
+  //     enum CachedBool   {False=0, True=1, Unknown=2;} ;
+  //     State             predictedState ;  ///< predicted state of forward/backward filter
+  //     State             filteredState ;   ///< filtered state of forward filter
+  //     double            deltaChi2 ;       ///< chisq contribution in forward filter
+  //     FilterStatus      status ;          ///< Status of the Node in the fit process
+  //     CachedBool        hasInfoUpstream ; ///< Are the nodes with active measurement upstream of this node?
+  //   } ;
+
 
   class FitNode: public Node {
   public:
+    // important note: for the Forward fit, smoothed means
+    // 'classical'. for the backward fit, it means 'bidirectional'.
+    enum FilterStatus {Uninitialized, Initialized, Predicted, Filtered, Smoothed } ;
+    enum CachedBool   {False=0, True=1, Unknown=2 } ;    
+    enum Direction {Forward=0, Backward=1} ;
 
     /// Default constructor
     FitNode();
@@ -43,7 +68,7 @@ namespace LHCb
     FitNode( double zPos, LHCb::State::Location location = LHCb::State::LocationUnknown );
 
     /// Constructor from a Measurement
-    FitNode(Measurement& meas );
+    FitNode(Measurement& meas );   
 
     /// Destructor
     virtual ~FitNode();
@@ -82,87 +107,71 @@ namespace LHCb
       m_noiseMatrix = noiseMatrix;
     }
 
-    /// set the transport flag
-    void setTransportIsSet( bool transportIsSet ) {
-      m_transportIsSet = transportIsSet;
-    }
-
-    /// set the inversion flag
-    void setTransportIsInverted(bool isInverted){
-      m_transportIsInverted = isInverted;
-    }
-
-    /// Check if the transport information is set correctly
-    bool transportIsSet() const
+    /// set the seed matrix
+    void setSeedCovariance(const Gaudi::TrackSymMatrix& cov )
     {
-      return m_transportIsSet;
+      m_predictedState[Forward].covariance() = cov ;
+      m_predictedState[Backward].covariance() = cov ;
     }
 
-    /// Check if the invert transport matrix have been computed correctly  
-    bool transportIsInverted() const
+    /// update the projection
+    void updateProjection( const Gaudi::TrackProjectionMatrix& H,
+			   double refresidual, double errmeasure )
     {
-      return m_transportIsInverted;
+      setProjectionMatrix( H ) ;
+      setRefResidual( refresidual ) ;
+      setErrMeasure( errmeasure ) ;
+      setResidual(0) ;
+      setErrResidual(0) ;
+      resetFilterStatus(Predicted) ;
     }
     
     /// Retrieve the projection term (obsolete)
-    double projectionTerm() const { return m_refResidual + (projectionMatrix()*refVector().parameters())(0) ; }
+    double projectionTerm() const 
+    { return m_refResidual + (projectionMatrix()*refVector().parameters())(0) ; }
     
     /// retrieve state predicted by the kalman filter step
-    State& predictedStateForward()
-    { return m_predictedStateForward; }
-
-    /// retrieve state predicted by the kalman filter step
-    const State& predictedStateForward() const
-    { return m_predictedStateForward; }
-
-    /// set state predicted by the kalman filter
-    void setPredictedStateForward( const State& predictedStateForward );
+    const State& predictedStateForward() const { return predictedState(Forward) ; }
 
     /// retrieve predicted state from backward filter
-    State& predictedStateBackward()
-    { return m_predictedStateBackward; }
-
-    /// retrieve predicted state from backward filter
-    const State& predictedStateBackward() const
-    { return m_predictedStateBackward; }
-
-    /// set predicted state from backward filter
-    void setPredictedStateBackward( const State& predictedStateBackward );
+    const State& predictedStateBackward() const  { return predictedState(Backward) ; }
 
     /// retrieve state filtered by the kalman filter step
-    const State& filteredStateForward() const { return m_filteredStateForward; }
-    
-    /// set state filtered by the kalman filter
-    void setFilteredStateForward( const State& s ) { m_filteredStateForward = s ; }
-    
-    /// retrieve filtered state from backward filter
-    const State& filteredStateBackward() const { return m_filteredStateBackward; }
-    
-    /// set filtered state from backward filter
-    void setFilteredStateBackward( const State& s ) { m_filteredStateBackward = s ; }
+    const State& filteredStateForward() const { return filteredState(Forward) ; }
 
+    /// retrieve state filtered by the kalman filter step
+    const State& filteredStateBackward() const { return filteredState(Backward) ; }
+    
+    /// retrieve the state, overloading the inline function in Node
+    virtual const State& state() const { return biSmoothedState() ; }
+
+    /// retrieve the state, overloading the inline function in Node
+    // virtual State& state() { assert(0) ; static LHCb::State s ; return s ; }
+    
+    /// retrieve the residual, overloading the function in Node
+    virtual double residual() const {  biSmoothedState() ; return m_residual ; }
+
+    /// retrieve the residual, overloading the function in Node
+    virtual double errResidual() const { biSmoothedState() ; return m_errResidual ; }
+    
     /// retrieve unbiased residual
-    double unbiasedResidual() const 
-    { return residual() * errMeasure2() / errResidual2() ; }
+    double unbiasedResidual() const { 
+      biSmoothedState() ;
+      return type()==HitOnTrack ? m_residual * errMeasure2()/(m_errResidual*m_errResidual) : m_residual ; }
 
     /// retrieve error on unbiased residual
-    double errUnbiasedResidual() const 
-    { return errMeasure2()/errResidual() ; }
-
+    double errUnbiasedResidual() const {
+      biSmoothedState() ;
+      return type()==HitOnTrack ? errMeasure2()/m_errResidual : m_errResidual ; }
+    
     /// retrieve the unbiased smoothed state at this position
     State unbiasedState() const ;
-
-    /// set chisq contribution in upstream filter
-    void setDeltaChi2Forward(double dchi2) { m_deltaChi2Forward = dchi2 ; }
-
+    
     /// retrieve chisq contribution in upstream filter
-    double deltaChi2Forward() const { return m_deltaChi2Forward ; }
-
-    /// set chisq contribution in downstream filter
-    void setDeltaChi2Backward(double dchi2) { m_deltaChi2Backward = dchi2 ; }
+    double deltaChi2Forward() const { filteredStateForward(); return m_deltaChi2[Forward] ; }
 
     /// retrieve chisq contribution in downstream filter
-    double deltaChi2Backward() const { return m_deltaChi2Backward ; }
+    double deltaChi2Backward() const { filteredStateBackward(); return m_deltaChi2[Backward] ; }
 
     /// set the residual of the reference
     void setRefResidual( double res ) { m_refResidual = res ; }
@@ -176,9 +185,6 @@ namespace LHCb
     /// get the delta-energy
     double deltaEnergy() const { return m_deltaEnergy ; }
 
-    /// set the smoother gain matrix
-    void setSmootherGainMatrix( const Gaudi::TrackMatrix& m) { m_smootherGainMatrix = m ; }
-    
     // get the smoother gain matrix
     const Gaudi::TrackMatrix& smootherGainMatrix() const { return m_smootherGainMatrix ; }
 
@@ -194,6 +200,36 @@ namespace LHCb
     /// get the delta-energy
     double doca() const { return m_doca ; }
 
+    /// get the filter status (only useful for debugging)
+    FilterStatus filterStatus( int direction ) const { return m_filterStatus[direction] ; }
+
+    /// Deactivate this node (outlier)
+    void deactivateMeasurement(bool deactivate = true) ;
+    
+    Gaudi::Math::ValueWithError computeResidualFromFilter() const ;
+        
+    int index() const ;
+
+    /// set previous node
+    void setPreviousNode( FitNode* previousNode ) { 
+      m_prevNode = previousNode ; 
+      if( m_prevNode ) m_prevNode->m_nextNode = this ;
+    }
+
+    void unLink() {
+      m_prevNode = m_nextNode = 0 ;
+      m_parent = 0 ;
+    }
+    
+    /// set the parent
+    void setParent( KalmanFitResult* p) { m_parent = p ; }
+    /// get the parent
+    KalmanFitResult* getParent(){ return m_parent ; }
+   
+    
+    /// update node residual using a smoothed state
+    Gaudi::Math::ValueWithError computeResidual(const LHCb::State& state, bool biased) const ;
+    
 #ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )
@@ -226,27 +262,91 @@ namespace LHCb
       ::operator delete (p, pObj);
     }
 #endif
+
+    // protected:
+    
+    // ! check that the contents of the cov matrix are fine
+    //bool isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
+
+  public:
+    const FitNode* prevNode( int direction ) const { return direction==Forward ? m_prevNode : m_nextNode ; }
+    const FitNode* nextNode( int direction ) const { return direction==Forward ? m_nextNode : m_prevNode ; }
+    
+    /// retrieve the predicted state
+    const LHCb::State& predictedState( int direction ) const {
+      if(  m_filterStatus[direction] < Predicted ) unConst().computePredictedState(direction) ;
+      return m_predictedState[ direction ] ;
+    }
+
+    /// retrieve the filtered state
+    const LHCb::State& filteredState( int direction ) const {
+      if(  m_filterStatus[direction] < Filtered ) unConst().computeFilteredState(direction) ;
+      return m_filteredState[ direction ] ;
+    }
+    
+    /// retrieve the bismoothed state
+    const LHCb::State& biSmoothedState() const {
+      if(  m_filterStatus[Backward] < Smoothed ) unConst().computeBiSmoothedState() ;
+      return m_state ;
+    }
+    
+    /// retrieve the classically smoothed state
+    const LHCb::State& classicalSmoothedState() const {
+      if(  m_filterStatus[Forward] < Smoothed ) unConst().computeClassicalSmoothedState() ;
+      return m_classicalSmoothedState ;
+    }
+
+    /// This is used from the projectors (or from any set method?)
+    void resetFilterStatus(FilterStatus s = Initialized) {
+      resetFilterStatus(Forward,s) ;
+      resetFilterStatus(Backward,s) ;
+    }
+    
+
+  private:
+    void computePredictedState( int direction ) ;
+    void computeFilteredState( int direction ) ;
+    void computeBiSmoothedState() ;
+    void computeClassicalSmoothedState() ;
+    
+  private:
+    /// update node residual using weighted average of forward and backward filter
+    void updateResidual() ;
+    
+    /// update node residual using a smoothed state
+    void updateResidual(const LHCb::State& state) ;
+    
+    ///
+    FitNode& unConst() const { return const_cast<FitNode&>(*this) ; }
+    
+    bool hasInfoUpstream( int direction ) const ;
+
+    void resetFilterStatus( int direction, FilterStatus s = Initialized) ;
+
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;       ///< transport matrix for propagation from previous node to this one
     Gaudi::TrackMatrix    m_invertTransportMatrix; ///< transport matrix for propagation from this node to the previous one
-    Gaudi::TrackVector    m_transportVector;    ///< transport vector for propagation from previous node to this one
-    Gaudi::TrackSymMatrix m_noiseMatrix;        ///< noise in propagation from previous node to this one
-    double                m_deltaEnergy;        ///< change in energy in propagation from previous node to this one
-    bool                  m_transportIsSet;     ///< Flag for transport params
-    bool                  m_transportIsInverted;///< Flag for transport matrix inverted
-    double                m_refResidual;        ///< residual of the reference    
-    State                 m_predictedStateForward;  ///< predicted state of forward filter
-    State                 m_predictedStateBackward; ///< predicted state of backward filter (bi-directional fit only)
-    State                 m_filteredStateForward;  ///< filtered state of forward filter
-    State                 m_filteredStateBackward; ///< filtered state of backward filter (bi-directional fit only)
-    double                m_deltaChi2Forward;       ///< chisq contribution in forward filter
-    double                m_deltaChi2Backward;      ///< chisq contribution in backward filter (bi-directional fit only)
-    Gaudi::TrackMatrix    m_smootherGainMatrix ;    ///< smoother gain matrix (smoothedfit only)
-    Gaudi::XYZVector      m_pocaVector ;            ///< unit vector perpendicular to state and measurement
-    double                m_doca ;              ///< signed doca (of ref-traj). for ST/velo this is equal to minus (ref)residual
+    Gaudi::TrackVector    m_transportVector;       ///< transport vector for propagation from previous node to this one
+    Gaudi::TrackSymMatrix m_noiseMatrix;           ///< noise in propagation from previous node to this one
+    double                m_deltaEnergy;           ///< change in energy in propagation from previous node to this one
+    bool                  m_transportIsSet;        ///< Flag for transport params
+    double                m_refResidual;           ///< residual of the reference    
+    FilterStatus          m_filterStatus[2] ;      ///< Status of the Node in the fit process
+    CachedBool            m_hasInfoUpstream[2] ;   ///< Are the nodes with active measurement upstream of this node?
+    State                 m_predictedState[2];     ///< predicted state of forward/backward filter
+    State                 m_filteredState[2];      ///< filtered state of forward filter
+    LHCb::State           m_classicalSmoothedState ;
+    double                m_deltaChi2[2];          ///< chisq contribution in forward filter
+    Gaudi::TrackMatrix    m_smootherGainMatrix ;   ///< smoother gain matrix (smoothedfit only)
+    Gaudi::XYZVector      m_pocaVector ;           ///< unit vector perpendicular to state and measurement
+    double                m_doca ;                 ///< signed doca (of ref-traj). for ST/velo this is equal to minus (ref)residual 
+    FitNode*              m_prevNode;              ///< Previous Node
+    FitNode*              m_nextNode;              ///< Next Node
+    KalmanFitResult*      m_parent ;               ///< Owner
   };
 
 } // namespace LHCb
 
 #endif // TRACKFITEVENT_FITNODE_H
+
