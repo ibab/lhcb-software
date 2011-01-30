@@ -172,6 +172,9 @@ TrTSALIKELIHOOD = LoKi.Tracks.Info  ( LHCb.Track.TsaLikelihood    , -1000 )
 ## @see LoKi::Cuts::TrCLONEDIST
 TrCLONEDIST     = LoKi.Tracks.Info  ( LHCb.Track.CloneDist        , 1.e+9 ) 
 
+## @see LoKi::Cuts::TrNVELOMISS
+TrNVELOMISS     = LoKi.Tracks.NVeloMissed ()
+
 # =============================================================================
 
 

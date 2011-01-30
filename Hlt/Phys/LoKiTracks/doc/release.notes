@@ -5,6 +5,10 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-01-30 - Vanya BELYAEV 
+
+ - new symbol TrNVELOMISS 
+
 ! 2011-01-30 - Vanya BELYAEV
 
  - new symbol TrCHI2PDOF 

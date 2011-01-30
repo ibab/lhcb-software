@@ -640,6 +640,28 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class NVeloMissed
+     *  @see Hlt::MissedVeloHits 
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date 2011-01-28
+     */
+    class GAUDI_API NVeloMissed 
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~NVeloMissed() ;
+      /// MANDATORY: clone method (virtual constructor) 
+      virtual  NVeloMissed* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrNVELOMISS" ; }
+      // ======================================================================
+    } ;  
+    // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 

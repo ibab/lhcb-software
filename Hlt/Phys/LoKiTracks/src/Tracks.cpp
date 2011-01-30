@@ -607,6 +607,40 @@ std::ostream& LoKi::Tracks::Cov2::fillStream ( std::ostream& s ) const
 }
 // ============================================================================
 
+// ============================================================================
+// MANDATORY: virtual descructor  
+// ============================================================================
+LoKi::Tracks::NVeloMissed::~NVeloMissed(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::NVeloMissed*
+LoKi::Tracks::NVeloMissed::clone() const
+{ return new LoKi::Tracks::NVeloMissed ( *this ) ; }
+// ============================================================================
+// MANDATORY: theonbly one essential method
+// ============================================================================
+LoKi::Tracks::NVeloMissed::result_type 
+LoKi::Tracks::NVeloMissed::operator() 
+  ( LoKi::Tracks::NVeloMissed::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ( "LHCb::Track* points to NULL, return NegativeInfnity" ) ;
+    return LoKi::Constants::NegativeInfinity ;  
+  } 
+  //
+  if      ( t -> hasInfo ( LHCb::Track::nPRVelo3DExpect ) )
+  { return     t -> info ( LHCb::Track::nPRVelo3DExpect , -1 ) - t -> nLHCbIDs () ; }
+  else if ( t -> hasInfo ( LHCb::Track::nPRVeloRZExpect ) )
+  { return 2 * t -> info ( LHCb::Track::nPRVeloRZExpect , -1 ) - t -> nLHCbIDs () ; }
+  //
+  return -1 ;
+}
+
+
+
+
 
 // ============================================================================
 // The END 

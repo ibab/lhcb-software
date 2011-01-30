@@ -1103,6 +1103,13 @@ namespace LoKi
      */
     const LoKi::Tracks::Info TrCLONEDIST ( LHCb::Track::CloneDist , 1 * Gaudi::Units::km ) ;
     // ========================================================================
+    /** @var TrNVELOMISS 
+     *  @see Hlt::MissedVeloHits
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-01-28
+     */
+    const LoKi::Tracks::NVeloMissed                               TrNVELOMISS ;
+    // ========================================================================
  } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 
