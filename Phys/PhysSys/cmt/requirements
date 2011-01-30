@@ -19,7 +19,7 @@ use  DaVinciTools       	v22r1    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
 use  ParticleMaker      	v5r10 	 Phys    # Chris Jones
 use  VertexFit			v6r7     Phys    # Yuehong Xie
-use  LoKiFitters                v4r1     Phys    # Vanya Belyaev
+use  LoKiFitters                v4r1p1   Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r11    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
