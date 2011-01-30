@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-01-30 - V. Gligorov
+ - Stream the PVs.
+
 !========================== HltTracking v8r2  2011-01-30 ===================
 ! 2011-Jan-28 - Patrick Spradlin
  - Added Hlt2CharmHadD2HHHLinesConf to Hlt2Tracking.__used_configurables__ list.
