@@ -5,6 +5,11 @@
 !----------------------------------------------------------------------------
 
 
+!========================== HltEcalAlley v3r1 2011-01-30 ===================
+! 2011-01-28 - Gerhard Raven
+ - remove support for temporary fix which was obsolete for a long time...
+
+
 !========================== HltEcalAlley v3r0 2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784. Update naming convention for
