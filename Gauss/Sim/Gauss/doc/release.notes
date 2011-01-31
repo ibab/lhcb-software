@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Silvia Miglioranzi
+ - Updated QMTest ref files (based on Gauss v39r0) for platforms:
+   -  x86_64-slc5-gcc43-opt 
+   -  slc4_amd64_gcc34 
+   -  slc4_ia32_gcc34
+
 ! 2011-01-25 - Patrick Robbe
  - python/Gauss/Configuration.py: add protection against incompatible 
    options for Phases
