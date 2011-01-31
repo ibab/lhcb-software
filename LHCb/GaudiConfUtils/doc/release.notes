@@ -4,6 +4,7 @@
 ! Purpose     : Helper python modules for Configurable manipulations.
 !-----------------------------------------------------------------------------
 
+!========================= GaudiConfUtils v1r0 2011-01-31 =========================
 ! 2011-01-28 - Marco Clemencic
  - Added meta-module GaudiConfUtils.ConfigurableGenerators to provide
    ConfigurableGenerator classes: wrapper classes with the same properties of
