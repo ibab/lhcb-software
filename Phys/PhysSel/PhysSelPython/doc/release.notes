@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-31 - Juan Palacios
+ - test/qmtest/physselpython.qms
+  . All tests directly call py.test.
+
+! 2011-01-31 - Juan Palacios
  - Use GaudiConfUtils helper functions and ConfigurableGenerators.
  - Selection funciton wrapper understands Configurables and ConfiguravleGenerators.
  - Increare to v7r0.
