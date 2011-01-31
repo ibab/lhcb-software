@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbPythia
 ! Responsible : Patrick Robbe
-! Purpose     : 
+! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!======================== LbPythia v9r0p1 2011-01-31 =========================
 ! 2011-01-21 - Victor Coco
  - PythiaProduction.cpp: set printing of inconsistency errors only in debug 
    level
