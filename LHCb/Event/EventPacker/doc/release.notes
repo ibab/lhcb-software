@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r6 2011-01-31 =========================
 ! 2011-01-21 - Chris Jones
  - Add support for LHCb::RecSummary in the (Write/Read)PackedDst algorithms.
 
