@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r40 2011-01-31 =========================
 ! 2011-01-31 - Illya Shapoval
  - SQLDDDB dependecy is changed to pickup the one with major version
    increased to v6. 
