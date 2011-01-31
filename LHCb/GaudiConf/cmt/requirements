@@ -1,5 +1,5 @@
 package GaudiConf
-version v13r7
+version           v13r8
 
 branches doc cmt options python src
 include_path none
