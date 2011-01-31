@@ -1,5 +1,5 @@
 package GaussSys
-version v39r0
+version v39r1
 
 branches cmt doc
 
@@ -8,15 +8,18 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v39r0 Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v39r1 Sim"  WIN32 ""
 use ${Gauss_use} 
+
+# NEEDED FOR MC10
+use GaudiConf           v13r8
 
 # Generator packages: Basic configuration
 macro GENSER_use        "GENSER       v8r0    Gen"  WIN32 ""
 macro EvtGen_use        "EvtGen       v11r10  Gen"  WIN32 ""
 macro EvtGenExtras_use  "EvtGenExtras v2r5p1  Gen"  WIN32 ""
 macro Generators_use    "Generators   v10r9   Gen"  WIN32 ""
-macro LbPythia_use      "LbPythia     v9r0    Gen"  WIN32 ""
+macro LbPythia_use      "LbPythia     v9r0p1  Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
 use ${EvtGenExtras_use}
@@ -26,7 +29,7 @@ use ${LbPythia_use}
 # Generators packages: extensions to Pythia6
 macro LbAlpGen_use      "LbAlpGen     v1r0    Gen"  WIN32 ""
 macro BcVegPy_use       "BcVegPy      v2r1    Gen"  WIN32 ""
-macro LbBcVegPy_use     "LbBcVegPy    v3r0    Gen"  WIN32 ""
+macro LbBcVegPy_use     "LbBcVegPy    v3r1    Gen"  WIN32 ""
 macro LbHidValley_use   "LbHidValley  v2r3    Gen"  WIN32 ""
 #use ${LbAlpGen_use}
 use ${BcVegPy_use}

@@ -3,9 +3,68 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v39r1">2011-01-31 - GaussSys v39r1</A></H1><PRE>
+<H2><A NAME="Note">Release for MC10 production. 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v31r7 (and Gaudi v21r11)</b>
+   AppConfig v3r*,
+   <b>DecFiles v23r*</b>, 
+   ParamFiles v8r3, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   <b>pythia6 424.2</b>, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r4 (based on geant4.9.2.p04) and Geant4Files v92r0
+   XmlVis v1r12,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 145</b>
+</A></H3>
+
+
+! 2011-01-31 - Gloria Corti
+ - Use package GaudiConf v13r8 from LHCb to be able to generate XGEN, 
+   i.e. generator level with filling of MCParticles/MCVertices directly 
+   from HepMC.
 
 ! 2011-01-31 - Silvia Miglioranzi
  - Updated QMTest ref files (based on Gauss v39r0) for slc4,slc5 platforms. 
+
+!========================= Gauss v39r1 2010-01-31 ============================
+! 2011-01-31 - Gloria CORTI
+ - Increase minor version
+ - Fix version of some generator database packages:
+   . MIBData       v3r2
+   . BcVegPyData   v2r0
+
+! 2011-01-31 - Silvia Miglioranzi
+ - Added QMTest gauss-xgen.qmt (plus test option testGauss-XGen.py and test
+   ref files for slc4, slc5 platforms).
+
+! 2011-01-31 - Silvia Miglioranzi
+ - Updated QMTest ref files (based on Gauss v39r0) for platforms:
+   -  x86_64-slc5-gcc43-opt
+   -  slc4_amd64_gcc34
+   -  slc4_ia32_gcc34
+
+! 2011-01-25 - Patrick Robbe
+ - python/Gauss/Configuration.py: add protection against incompatible
+   options for Phases
+
+! 2011-01-20 - Patrick Robbe
+ - python/Gauss/Configuration.py: add new phase "GenToMCTree" to activate
+   filling of MCParticles/MCVertices for generator only productions
+
+!===================== LbBcVegPy v3r1 2011-01-31 =====================
+! 2011-01-20 - Patrick Robbe
+ - options/BcBegPy.py: add options in python format
+
+!======================== LbPythia v9r0p1 2011-01-31 =========================
+! 2011-01-21 - Victor Coco
+ - PythiaProduction.cpp: set printing of inconsistency errors only in debug
+   level
 
 !=============================================================================
 </PRE><H1><A NAME="v39r0">2010-12-12 - GaussSys v39r0</A></H1><PRE>
