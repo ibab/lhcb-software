@@ -36,7 +36,7 @@ public:
   MonCounter(char *name, char *title, double *data );
   MonCounter();
   void setup(MONTYPE typ, void *ext, char *name, char *title);
-  /*virtual*/ ~MonCounter();
+  virtual ~MonCounter();
   int setname ( char* name);
   void clear(void);
   int titlen();
