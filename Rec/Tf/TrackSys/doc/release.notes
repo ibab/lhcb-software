@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2011-01-31 - Stephanie Hansmann-Menzemer
+- bug fix for cosmic sequence
+
 ! 2011-01-28 - Stephanie Hansmann-Menzemer
  - add switch ForceNewSeq and ForceOldSeq to run tracking sequence which are
  not default for a given data set.

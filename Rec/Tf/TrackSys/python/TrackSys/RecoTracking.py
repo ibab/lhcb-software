@@ -235,7 +235,7 @@ def RecoTracking(exclude=[]):
 
                                  
    ## Velo fitting
-   if "Velo" or "FastVelo" in trackAlgs :
+   if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
       ## Prepare the velo tracks for the fit
       track.DetectorList += [ "VeloFit"]
       GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
