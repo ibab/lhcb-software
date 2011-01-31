@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!========================= XmlTools v6r4 2011-01-31 =========================
 ! 2011-01-10 - Marco Cattaneo
  - Remove obsolete file XmlTools_dll.cpp
 
