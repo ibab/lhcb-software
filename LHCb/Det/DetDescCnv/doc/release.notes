@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!========================= DetDescCnv v4r12 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
 
