@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Gloria Corti
+ - Newer version of Hijing needs to link against pythia_hijing library to
+   resolve all symbols
+
 !========================= LbHijing v5r1 2009-11-04 ==========================
 ! 2009-10-23 - Silvia Miglioranzi
  - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran' 

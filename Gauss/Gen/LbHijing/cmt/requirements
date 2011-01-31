@@ -4,7 +4,7 @@
 # Maintainer : Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v5r1
+version       v6r0
 
 
 # Structure, i.e. directories to process. 
@@ -34,3 +34,6 @@ library       LbHijing          component/*.cpp
 apply_pattern component_library library=LbHijing 
 apply_pattern linker_library    library=LbHijingLib 
 apply_pattern library_stamps    library=LbHijingLib 
+
+macro_append hijing_linkopts " -lpythia_hijing"
+
