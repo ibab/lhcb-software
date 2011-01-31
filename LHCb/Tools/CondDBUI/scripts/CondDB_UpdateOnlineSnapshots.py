@@ -227,10 +227,11 @@ from scratch. It updates also user's SQLDDDB release notes accordingly.""")
             if _make_snapshots(since,until,4): new_snapshots.append(str(year))
             else:
                 if len(new_snapshots):
-                    new_snapshots_files = [os.path.join(db_path,'ONLINE-%s.db'%d) for d in new_snapshots]
+                    new_snapshots_files = [os.path.join(db_path,'ONLINE-%s.db'%d)
+                                           for d in new_snapshots]
                     for f in new_snapshots_files:
                         if os.path.isfile(f): os.remove(f)
-                    log.info("Your set of ONLNE snapshots wasn't updated.")
+                    log.info("ONLINE snapshots were not updated.")
                 return 1
     else:
         for s in range(number_of_new_snapshots):
@@ -255,13 +256,14 @@ from scratch. It updates also user's SQLDDDB release notes accordingly.""")
             if _make_snapshots(since,until,6): new_snapshots.append(str(year) + '-%02d'%month)
             else:
                 if len(new_snapshots):
-                    new_snapshots_files = [os.path.join(db_path,'ONLINE-%s.db'%d.replace('-','')) for d in new_snapshots]
+                    new_snapshots_files = [os.path.join(db_path,'ONLINE-%s.db'%d.replace('-',''))
+                                           for d in new_snapshots]
                     for f in new_snapshots_files:
                         if os.path.isfile(f): os.remove(f)
-                    log.info("Your set of ONLINE snapshots wasn't updated.")
+                    log.info("ONLINE snapshots weren't updated.")
                 return 1
 
-    log.info('Snapshots are updated successfully! Delivered slices are: %s' %new_snapshots_files)
+    log.info('Snapshots are updated successfully! Delivered slices are: %s' %new_snapshots)
     _update_rel_notes(options.sqldddb,new_snapshots)
 
     return 0

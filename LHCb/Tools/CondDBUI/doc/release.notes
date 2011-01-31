@@ -6,6 +6,9 @@
 ! =============================================================================
 
 !========================= CondDBUI v3r8 2011-01-31 =========================
+! 2011-01-31 - Illya Shapoval
+ - Minor bug fix in 'CondDB_UpdateOnlineSnapshots.py' script.
+
 ! 2011-01-28 - Illya Shapoval
  - 'CondDBAdmin_DQ_Commit.py' script added. It (de)populates DQFLAGS database
    with DQ Flags in a specified IOV and updates SQLDDDB Release Notes web page.
