@@ -766,7 +766,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   // various counts
   unsigned int nHPDbanks(0), decodedHits(0);
 
-  // Data bank size in words
+  // Data bank size in 32 bit words
   const int bankSize = bank.size() / 4;
 
   // Get bank version
@@ -777,12 +777,6 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
   if ( bankSize > 0 )
   {
-
-    // ... otherwise, must have at least 2 entries
-    if ( bankSize < 2 )
-    {
-      Exception( "Non-empty RICH Bank size is less than 2 !" );
-    }
 
     // Get Ingress map to decode into for this L1 board
     IngressMap & ingressMap = decodedData[L1ID];
@@ -1572,7 +1566,7 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
 
     // Bit numbers
     os << LINES << endmsg;
-    os << "          bit |";
+    os << "      bit |";
     for ( int iCol = 31; iCol >= 0; --iCol )
     {
       os << boost::format("%3i") % iCol;
