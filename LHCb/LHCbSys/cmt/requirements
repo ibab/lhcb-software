@@ -35,7 +35,7 @@ use DetDescSvc            v3r0    Det     # Marco Clemencic, Matt Needham
 use Magnet                v7r1    Det     # Marco Cattaneo
 use MuonDet               v9r3    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r5    Det     # Jan Amoraal
-use RichDet               v15r3   Det     # Chris Jones
+use RichDet               v16r0   Det     # Chris Jones
 use STDet                 v4r23   Det     # J. van Tilburg, Matt Needham
 use VeloDet               v13r13  Det     # Mark Tobin, Kurt Rinnert
 use VeloPixDet            v1r9    Det     # Victor Coco

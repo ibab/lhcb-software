@@ -6,6 +6,36 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v32r0>2011-01-31 LHCbSys v32r0</A></H1><PRE>
+This version uses Gaudi v22r0 and LCG_58f
+
+- Development version on top of the latest Gaudi/Root for 2011 data
+
+Highlights:
+
+- LHCb now compiles on icc with no warnings, 
+  many packages changed/patched/revised to accommodate that
+
+- Det/RichDet v16r0, The first RichDet to support 2011 Rich Gas mixture
+  Database tags for 2011 are not compatible with previous versions
+
+- Event/RecEvent v2r34, Added the LHCb::RecSummary class, an extension to 
+  the event model to hold basic summary information about the reconstruction 
+
+- GaudiConfUtils v1r0, New module to provide helper functions in python to
+  work with configurables. New ConfigurableGenerators for use by LineBuilder
+  classes in the Stripping
+
+- Removal of IPhysDesktop, obsolete interface no longer required after
+  re-write of Phys for 2011 development
+
+- Support of DQFLAGS partition of CondDB, a database partition to
+  hold time-dependent data quality flags    
+
+For further details and links to the changesets see:
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=LHCb&version=v32r0
+
 </PRE><H1><A NAME=v31r8>2010-12-14 LHCbSys v31r8</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
 
