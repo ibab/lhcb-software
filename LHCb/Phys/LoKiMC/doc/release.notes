@@ -15,14 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiMC v9r4 2011-01-31 =========================
 ! 2011-01-26 - Vanya Belyaev
-
  - MCDecays.cpp:
-
     Drastical speedup of worst case of PHOTOS-matcher 
 
  - add many GAUDI_API directives 
-
  - cmt/requirements
     version increment to v9r4
 
