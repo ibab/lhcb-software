@@ -3,7 +3,7 @@
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v11r12p2
+version           v11r13
 
 # Structure, i.e. directories to process. 
 #============================================================================
