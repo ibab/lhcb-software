@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IP2VVMCPartAngleCalculator.h"            // Interface
 #include "MCInterfaces/IMCDecayFinder.h"
+#include "Kernel/IParticlePropertySvc.h"
 
 
 /** @class MCBd2KstarMuMuAngleCalculator MCBd2KstarMuMuAngleCalculator.h v1r3/MCBd2KstarMuMuAngleCalculator.h
@@ -68,6 +69,8 @@ public:
 protected:
   
   StatusCode daughters( const LHCb::MCParticle* mother );
+  bool hasMother( const LHCb::MCParticle* particle, 
+                  const std::vector<unsigned int>& ids ) const;
   
     
 private:
@@ -78,6 +81,14 @@ private:
   const LHCb::MCParticle* m_pPi;
   
   IMCDecayFinder* m_mcDecayFinder;
+  LHCb::IParticlePropertySvc* m_ppSvc;
+  
+  std::vector< std::string > m_MuOrigin;
+  std::vector< std::string > m_KPiOrigin;
+  
+  std::vector< unsigned int > m_MuOriginID;
+  std::vector< unsigned int > m_KPiOriginID;
+  
   
 };
 #endif // MCANGLECALCULATOR_H

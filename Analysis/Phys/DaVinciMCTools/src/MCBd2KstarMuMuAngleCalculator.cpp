@@ -5,10 +5,15 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "Kernel/ParticleProperty.h"
+
 #include "Event/MCParticle.h"
 // local
 #include "MCBd2KstarMuMuAngleCalculator.h"
 #include "Kernel/DaVinciP2VVAngles.h"
+
+#include <boost/assign/list_of.hpp>
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCBd2KstarMuMuAngleCalculator
@@ -32,6 +37,8 @@ MCBd2KstarMuMuAngleCalculator::MCBd2KstarMuMuAngleCalculator( const std::string&
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IP2VVMCPartAngleCalculator>(this);
+  declareProperty("KaonPionOrigin",  m_KPiOrigin = boost::assign::list_of("K*(892)0"));
+  declareProperty("MuonOrigin",      m_MuOrigin  = boost::assign::list_of("J/psi(1S)")("psi(2S)")("B0")("B_s0"));
 }
 
 //=============================================================================
@@ -50,12 +57,39 @@ StatusCode MCBd2KstarMuMuAngleCalculator::initialize() {
   
   info() << "Initializing Angle Calculator Tool" << endmsg ;
   
-  // use descendats method to get falttened list of daughters
   m_mcDecayFinder = tool<IMCDecayFinder>("MCDecayFinder",this);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  
+  std::vector< std::string >::const_iterator istr;
+
+  for ( istr = m_KPiOrigin.begin(); istr != m_KPiOrigin.end(); ++istr ){
+    const LHCb::ParticleProperty* pp = m_ppSvc->find( *istr );
+    if ( NULL != pp ) m_KPiOriginID.push_back( pp->particleID().abspid() );
+  }
+  
+  for ( istr = m_MuOrigin.begin(); istr != m_MuOrigin.end(); ++istr ){
+    const LHCb::ParticleProperty* pp = m_ppSvc->find( *istr );
+    if ( NULL != pp ) m_MuOriginID.push_back( pp->particleID().abspid() );
+  }
   
   return sc ;
 }
 
+
+bool MCBd2KstarMuMuAngleCalculator::hasMother( const LHCb::MCParticle* particle, 
+                                               const std::vector< unsigned int >& ids ) const 
+{
+  const LHCb::MCParticle* mother = particle->mother();
+
+  if ( NULL == mother ) return false ;
+  std::vector< unsigned int >::const_iterator it;
+
+  for ( it = ids.begin(); it != ids.end(); ++it ){
+    if ( (*it) == (mother->particleID().abspid()) ) return true;
+  }
+
+  return false;
+}
 
 StatusCode MCBd2KstarMuMuAngleCalculator::daughters( const LHCb::MCParticle* mother )
 {
@@ -68,24 +102,30 @@ StatusCode MCBd2KstarMuMuAngleCalculator::daughters( const LHCb::MCParticle* mot
   m_pMuPlus = NULL ;
   m_pK = NULL;
   m_pPi = NULL;
-
-  if ( 4 > descendants.size() ) return StatusCode::FAILURE;
   
   for (iter = descendants.begin(); iter != descendants.end(); ++iter ){
     
-     int pid = (*iter)->particleID().pid() ;
+    int pid   = (*iter)->particleID().pid() ;
     int absid = (*iter)->particleID().abspid() ;
-
-    if ( 13 == pid || 11 == pid ) m_pMuMinus = (*iter);
-    else if ( -13 == pid || -11 == pid ) m_pMuPlus = (*iter);
-    else if ( 321 == absid ) m_pK = (*iter);
-    else if ( 211 == absid ) m_pPi = (*iter);
+    
+    if ( 13 == pid || 11 == pid ) {
+      if ( hasMother(*iter, m_MuOriginID) ) m_pMuMinus = (*iter);
+    }
+    else if ( -13 == pid || -11 == pid ) {
+      if ( hasMother(*iter, m_MuOriginID) ) m_pMuPlus = (*iter);
+    }
+    else if ( 321 == absid ) {
+      if ( hasMother(*iter, m_KPiOriginID) ) m_pK = (*iter);
+    }
+    else if ( 211 == absid ) {
+      if ( hasMother(*iter, m_KPiOriginID) ) m_pPi = (*iter);
+    }
   }
-
+  
   if ( NULL == m_pK || NULL == m_pMuPlus || 
        NULL == m_pMuMinus || NULL == m_pPi ){
     return StatusCode::FAILURE ;
-  }
+  }  
   
   return StatusCode::SUCCESS ;
 }
