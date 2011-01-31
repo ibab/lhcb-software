@@ -117,6 +117,13 @@ StatusCode DeRichGasRadiator::initialize ( )
                                     &DeRichGasRadiator::updateProperties );
   }
 
+  // scale factor
+  if ( hasCondition( "RadiatorComposition" ) )
+  {
+    updMgrSvc()->registerCondition( this, condition("RadiatorComposition").path(),
+                                    &DeRichGasRadiator::updateProperties );
+  }
+
   if ( !HltMode )
   {
     sc = updMgrSvc()->update(this);
@@ -231,15 +238,29 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   TabulatedProperty::Table& aTable = modTabProp->table();
   aTable.clear();
   aTable.reserve( momVect.size() );
+
   // identify the gas radiator and the ref index formula type.
   // for now use the Single term formula for CF4 as default. This may be switched to classic by changing the following
   // flag in the future, if needed.
 
   double RefTemperature(293.0);
+  unsigned int numOfGases( 1 );
+  Condition* compCond( NULL );
+  std::vector<double> gasFractions;
 
-  enum GasRadRef {C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm};
+  if ( hasCondition( "RadiatorComposition" ) )
+  {
+    compCond = condition( "RadiatorComposition" );
+    numOfGases = compCond->param<int>("NumberOfGases");
+    gasFractions =  compCond->paramVect<double>("GasFractions");
+    if ( numOfGases == 1 )
+      gasFractions[0] = 1.0;
+  }
+
+  enum GasRadRef {C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture};
 
   GasRadRef curRadMedium = C4F10_Classic;  // initialize with one of the options.
+
   if ( material()->name().find("CF4") != std::string::npos )
   {
     // the following value is for backward compatibility with old versions of DB.
@@ -266,15 +287,21 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     curRadMedium=C4F10_Classic;
     RefTemperature = param<double>("C4F10ReferenceTemp");
   }
+  else if (material()->name().find("R2RadiatorGas")!= std::string::npos )
+  {
+    curRadMedium = mixture;
+  }
   else
   {  // it is none of the known radiator gases.
     error()<<" Unknown radiator medium for refractive index determination in DeRichGasRadiator:  "
            <<  material()->name()<< endmsg;
     return StatusCode::FAILURE;
   }
+
   double SellE1(0.0),SellE2(0.0),SellF1(0.0),SellF2(0.0),SellLorGasFac(0.0);
   double RhoEffectiveSellDefault(0.0),GasMolWeight(0.0) ;
   double AParam(0.0),AMultParam(0.0),MomConvWave(0.0), aWaveZero(0.0),EphyZSq(0.0);
+  std::vector<double> AParamVect, AMultParamVect, aWaveZeroVect;
   double GasRhoCur( 0.0 );
 
   // the classic sellmeir formulae here are all at reference temperature of
@@ -323,7 +350,16 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     }
     GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
       (Gaudi::Units::STP_Temperature/curTemp);
-
+  }
+  else if ( mixture == curRadMedium )
+  {
+    // same as above but need to get the papameters from the CondDB
+    AParamVect = compCond->paramVect<double>("SellMeirAFactors");
+    AMultParamVect = compCond->paramVect<double>("SellMeirAMultiplicationFactors");
+    aWaveZeroVect=  compCond->paramVect<double> ("SellMeirLambdaZeroFactors");
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
+      (Gaudi::Units::STP_Temperature/curTemp);
   }
   else
   {
@@ -334,7 +370,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }  // end if on ref index options
 
   // calculate ref index
-  double nMinus1=0.0;
+  double nMinus1( 0.0 );
   for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
   {
     const double epho = momVect[ibin]/Gaudi::Units::eV;
@@ -353,6 +389,22 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 
       nMinus1 =
         scaleFactor * (AParam*AMultParam*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
+
+    }
+    else if ( mixture == curRadMedium )
+    {
+
+      nMinus1 = 0.0;
+      for (unsigned int gas=0; gas<numOfGases; ++gas)
+      {
+
+        if(aWaveZeroVect[gas] > 1.0)  // typical value when exists = 61.9
+        {
+          EphyZSq =  ( MomConvWave / aWaveZeroVect[gas] ) * ( MomConvWave / aWaveZeroVect[gas] );
+        }
+        nMinus1 += scaleFactor * gasFractions[gas] *
+          (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
+      }
 
     }
     else
