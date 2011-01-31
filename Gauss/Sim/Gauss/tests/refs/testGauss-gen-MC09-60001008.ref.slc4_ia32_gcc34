@@ -1,17 +1,17 @@
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/60001008.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/Beam1GasVeLo.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/LHCB/LHCB_v31r5/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/LHCB/LHCB_v31r5/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/60001008.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/Beam1GasVeLo.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v31r7/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v31r7/GaudiConf/options/units.opts'
 # Generation.MinimumBias.PythiaProduction.BeamToolName = "FixedTarget";
 # Generation.PileUpTool = "FixedNInteractions";
 # Generation.VertexSmearingTool = "FlatZSmearVertex";
 # Generation.FlatZSmearVertex.ZMin = -2.0*m;
 # Generation.FlatZSmearVertex.ZMax = 0.5*m;
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/Beam1GasVeLo.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/Beam1GasVeLo.opts'
 # Generation.EventType = 60001008;
 # Generation.SampleGenerationTool = "MinimumBias";
 # Generation.MinimumBias.ProductionTool = "HijingProduction";
@@ -19,19 +19,19 @@
 # Generation.MinimumBias.HijingProduction.Commands += {  "hijinginit frame LAB",  "hijinginit targ A",  "hijinginit beam1",  "hijinginit iat 16",  "hijinginit izt 8"};
 # Generation.FlatZSmearVertex.BeamDirection = 1;
 # Generation.UniformSmearVertex.BeamDirection = 1;
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/60001008.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbHijing/options/Hijing.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/60001008.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbHijing/options/Hijing.opts'
 # ApplicationMgr.Dlls += { "LbHijing" };
 # Generation.MinimumBias.ProductionTool = "HijingProduction";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbHijing/options/Hijing.opts'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbHijing/options/Hijing.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
 # applying configuration of Gauss
-# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/LHCB/LHCB_v31r5/GaudiConf/options/units.opts' already included, ignored.
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v31r7/GaudiConf/options/units.opts' already included, ignored.
 # WARNING: No simulation phase.
 # WARNING: No event data output produced
 # WARNING: No histograms produced
@@ -46,6 +46,7 @@
 # |-TotalCrossSection   = 9.7199999999999989e-24  (default: 9.7199999999999989e-24)
 # |-BeamCrossingAngle   = 0.00032900000000000003  (default: 0.00032900000000000003)
 # |-InteractionPosition = [0.0, 0.0, 0.0]  (default: [0.0, 0.0, 0.0])
+# |-BeamLineAngles      = [0.0, 0.0]  (default: [0.0, 0.0])
 # |-PhysicsList         = {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True}
 # |                     (default: {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True})
 # |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
@@ -70,8 +71,8 @@
 # GaussTape.OptItemList = []
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v38r7
-                                          running on lxbuild156.cern.ch on Tue Sep  7 15:36:09 2010
+                                                   Welcome to Gauss version v39r0
+                                          running on lxplus440.cern.ch on Fri Jan 28 20:07:47 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : LbHijing
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -82,9 +83,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.51 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.75 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -99,7 +100,7 @@ Generation.FixedNInte...   INFO Rate (MHz) of colliding bunches stored in events
 Generation.FixedNInte...   INFO Total cross section (mbarn) stored in events97.2
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "MC09-20090602"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
@@ -109,6 +110,7 @@ ToolSvc.EvtGenDecay.P...   INFO Colliding Beam Parameters:
 ToolSvc.EvtGenDecay.P...   INFO Beam Momentum (TeV): 5
 ToolSvc.EvtGenDecay.P...   INFO Vertical crossing angle (microradian): 0
 ToolSvc.EvtGenDecay.P...   INFO Horizontal crossing angle (microradian): 329
+ToolSvc.EvtGenDecay.P...   INFO Beam Line rotated (x,y) in microradian: 0, 0
  ==== PYTHIA WILL USE LHAPDF ====
  *************************************
  *       LHAPDF Version 5.7.1        *
@@ -345,25 +347,25 @@ GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Delta Memory/MB"                               |         9 |      0.004 | 0.00044444 |  0.0012571 |      0.0000 |   0.0040000 |
- | "Total Memory/MB"                               |        10 |   3769.116 |     376.91 |  0.0012000 |      376.91 |      376.91 |
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+ | "Total Memory/MB"                               |        10 |   3830.996 |     383.10 |  0.0012000 |      383.10 |      383.10 |
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.51 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   1.75 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |     6.399 |     8.317 |    0.890      41.4 |      10 |     0.083 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |     6.199 |     8.244 |    0.876      41.4 |      10 |     0.082 |
-TimingAuditor.TIMER        INFO   Generator                   |     6.199 |     8.239 |    0.872      41.4 |      10 |     0.082 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     6.199 |     8.236 |    0.869      41.4 |      10 |     0.082 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.200 |     0.308 |    0.101       1.9 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO     Generation                |     5.999 |     7.833 |    0.706      41.1 |      10 |     0.078 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.000 |     0.083 |    0.037       0.3 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.000 |     0.079 |    0.035       0.3 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO EVENT LOOP                    |     4.000 |     3.965 |    0.798      17.9 |      10 |     0.040 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |     4.000 |     3.922 |    0.782      17.9 |      10 |     0.039 |
+TimingAuditor.TIMER        INFO   Generator                   |     4.000 |     3.918 |    0.779      17.9 |      10 |     0.039 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     4.000 |     3.916 |    0.776      17.9 |      10 |     0.039 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.300 |     0.261 |    0.135       1.2 |      10 |     0.003 |
+TimingAuditor.TIMER        INFO     Generation                |     3.600 |     3.584 |    0.586      17.7 |      10 |     0.036 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.100 |     0.062 |    0.031       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.100 |     0.058 |    0.027       0.2 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 FileRecordCnvSvc           INFO File sharing enabled. Do not retire files.
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
