@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.53 2010-01-12 17:55:01 marcocle Exp $
 package CondDBUI
 
-version           v3r7
+version           v3r8
 
 branches cmt doc python scripts qt_resources
 #ignore_pattern package_stamps
