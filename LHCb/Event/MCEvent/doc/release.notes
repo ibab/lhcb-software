@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v2r18 2011-01-31 =========================
+! 2011-01-12 - Marco Cattaneo	
+ - Fix ICC warnings and remarks
+
 !======================== MCEvent v2r17 2010-04-26 ===========================
 ! 2010-04-13 - Chris Jones
  - Add support for new RICH background source; Scintillation in the CF4 
