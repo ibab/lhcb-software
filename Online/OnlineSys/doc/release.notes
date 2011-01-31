@@ -6,6 +6,56 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r45>2010-02-04 OnlineSys v4r45</A></H1>
+<PRE>
+   Based in Gaudi v22r0.
+   Several updates. Most importand one:
+   New implementation of the MonitorSvc and
+   corresponding tools. For this reason: NO Presenter yet!
+   This release is supposed to test the MonitorSvc with the 
+   HLT.
+
+   ** NOT TO BE USED BY THE SUBDETECTOR TASKS **
+
+
+---- Packages overrides from LHCb:
+     MDF               v3r28    DAQ
+     MDF_ROOT          v1r6     DAQ
+     DAQEvent          v9r2     Event
+     GaudiObjDesc      v11r10p1
+
+---- Updated Packages from Online:
+     FarmMonitor         v2r2     Online
+     DIM                 v19r15   Online
+     FarmMonitor         v2r2     Online
+     Gaucho              v7r0     Online
+     GaudiOnline         v2r46    Online
+     GaudiRootCnvTests   v1r0     Online
+     OnlineBase          v1r5     Online
+     OnlineHistDB        v7r3     Online
+     OnlineKernel        v2r5     Online
+     OnlineTools         v1r4     Online
+     PyDIM               v2r11    Online
+     RawBankSizes        v2r10    Online
+     RootCnv             v1r2     Online
+     ROMon               v1r27    Online
+     ROLogger            v0r21    Online
+     Trending            v1r2     Online
+     UPI                 v1r20    Online
+     Writer              v1r31    Online
+
+---- New Packages:
+     Checkpointing       v0r1     Online
+     GaudiCheckpointing  v0r1     Online
+
+---- Obsolete:
+     ExampleGaucho       v3r4     Online
+
+---- Not part of this release:
+     Presenter           v2r3     Online
+
+</PRE>
+
 <H1><A NAME=v4r43>2010-10-04 OnlineSys v4r44</A></H1>
 <PRE>
    Based in Gaudi v21r11.
