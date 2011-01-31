@@ -21,8 +21,8 @@ use Camera              v1r19    Online
 use Checkpointing       v0r1     Online
 #use CondDBServer        v1r4     Online
 use DIM                 v19r15   Online
-use ExampleGaucho       v3r4     Online
-use FarmMonitor         v2r2     Online
+####use ExampleGaucho       v3r4     Online
+####use FarmMonitor         v2r1     Online
 use Gaucho              v7r0     Online
 use GaudiCheckpointing  v0r1     Online
 use GaudiOnline         v2r46    Online
@@ -41,7 +41,7 @@ use OnlineHistDB        v7r3     Online
 use OnlineKernel        v2r5     Online
 use OnlineTools         v1r4     Online
 use OnlineTasks         v1r33    Online
-use Presenter           v2r3     Online
+####use Presenter           v2r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r10    Online
 use RootCnv             v1r2     Online
