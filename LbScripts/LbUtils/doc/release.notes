@@ -1,3 +1,8 @@
+2011-01-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/xdg.py: initial implementation of the XDG (freedesktop.org)
+	directory base specifications.
+
 2010-12-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/Tar.py:
