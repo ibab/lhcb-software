@@ -1,22 +1,22 @@
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/22112000.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/22112000.opts'
 # Generation.EventType = 22112000;
 # Generation.SampleGenerationTool = "SignalPlain";
 # Generation.SignalPlain.ProductionTool = "PythiaProduction";
 # ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/D0_mumu.dec";
 # Generation.SignalPlain.SignalPIDList = {421,-421};
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/22112000.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/22112000.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbPythia/options/Pythia.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbPythia/options/Pythia.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
 # applying configuration of Gauss
 # WARNING: No simulation phase.
 # WARNING: No event data output produced
@@ -32,6 +32,7 @@
 # |-TotalCrossSection   = 9.7199999999999989e-24  (default: 9.7199999999999989e-24)
 # |-BeamCrossingAngle   = 0.00032900000000000003  (default: 0.00032900000000000003)
 # |-InteractionPosition = [0.0, 0.0, 0.0]  (default: [0.0, 0.0, 0.0])
+# |-BeamLineAngles      = [0.0, 0.0]  (default: [0.0, 0.0])
 # |-PhysicsList         = {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True}
 # |                     (default: {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True})
 # |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
@@ -56,8 +57,8 @@
 # GaussTape.OptItemList = []
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v38r7
-                                          running on lxbuild156.cern.ch on Tue Sep  7 15:35:02 2010
+                                                   Welcome to Gauss version v39r0
+                                          running on lxplus440.cern.ch on Fri Jan 28 20:07:30 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -67,9 +68,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.77 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -85,7 +86,7 @@ Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
 Generation.FixedLumin...   INFO Mean number of interaction/bunch = 1.00269
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "MC09-20090602"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
@@ -95,6 +96,7 @@ ToolSvc.EvtGenDecay.P...   INFO Colliding Beam Parameters:
 ToolSvc.EvtGenDecay.P...   INFO Beam Momentum (TeV): 5
 ToolSvc.EvtGenDecay.P...   INFO Vertical crossing angle (microradian): 0
 ToolSvc.EvtGenDecay.P...   INFO Horizontal crossing angle (microradian): 329
+ToolSvc.EvtGenDecay.P...   INFO Beam Line rotated (x,y) in microradian: 0, 0
  ==== PYTHIA WILL USE LHAPDF ====
  *************************************
  *       LHAPDF Version 5.7.1        *
@@ -124,6 +126,7 @@ Generation.SignalPlai...   INFO Colliding Beam Parameters:
 Generation.SignalPlai...   INFO Beam Momentum (TeV): 5
 Generation.SignalPlai...   INFO Vertical crossing angle (microradian): 0
 Generation.SignalPlai...   INFO Horizontal crossing angle (microradian): 329
+Generation.SignalPlai...   INFO Beam Line rotated (x,y) in microradian: 0, 0
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
 Generation.SignalPlain     INFO Generating Signal events of D~0 D0
@@ -159,90 +162,90 @@ GaussGen                SUCCESS 10 events processed
 GaussGen                SUCCESS ==================================================================
 Generation                 INFO **************************************************
 Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
-Number of all events (including empty events) : 211
-Number of events with 0 interaction : 81
+Number of all events (including empty events) : 361
+Number of events with 0 interaction : 135
 
 Generation                 INFO ***********   Generation counters   **************
-Number of generated events : 130
-Number of generated interactions : 207
-Number of generated interactions with >= 1b : 3
+Number of generated events : 226
+Number of generated interactions : 372
+Number of generated interactions with >= 1b : 2
 Number of generated interactions with >= 3b : 0
 Number of generated interactions with 1 prompt B : 0
-Number of generated interactions with >= 1c : 15
+Number of generated interactions with >= 1c : 17
 Number of generated interactions with >= 3c : 1
-Number of generated interactions with >= prompt C : 3
-Number of generated interactions with b and c : 3
+Number of generated interactions with >= prompt C : 1
+Number of generated interactions with b and c : 1
 Number of accepted events : 10
-Number of interactions in accepted events : 21
-Number of accepted interactions with >= 1b : 3
+Number of interactions in accepted events : 18
+Number of accepted interactions with >= 1b : 2
 Number of accepted interactions with >= 3b : 0
 Number of accepted interactions with 1 prompt B : 0
-Number of accepted interactions with >= 1c : 12
+Number of accepted interactions with >= 1c : 10
 Number of accepted interactions with >= 3c : 1
 Number of accepted interactions with >= prompt C : 0
-Number of accepted interactions with b and c : 3
+Number of accepted interactions with b and c : 1
 
 Generation.SignalPlain     INFO *************   Signal counters   ****************
-Number of events for generator level cut, before : 11, after : 10
-Efficiency of the generator level cut : 0.90909 +/- 0.086678
+Number of events for generator level cut, before : 12, after : 10
+Efficiency of the generator level cut : 0.83333 +/- 0.10758
 Number of z-inverted events : 3
 
 Number of events for generator particle level cut, before : 3, after : 2
 Efficiency of the generator particle level cut : 0.66667 +/- 0.27217
-Number of events for generator anti-particle level cut, before : 8, after : 5
-Efficiency of the generator anti-particle level cut : 0.625 +/- 0.17116
+Number of events for generator anti-particle level cut, before : 9, after : 5
+Efficiency of the generator anti-particle level cut : 0.55556 +/- 0.16563
 
 Number of signal D0 in sample : 3 [fraction : 0.3 +/- 0.14491]
 Number of signal D~0 in sample : 7 [fraction : 0.7 +/- 0.14491]
 
 Number of accepted B0 : 0 [fraction : 0 +/- 0]
-Number of accepted B+ : 0 [fraction : 0 +/- 0]
+Number of accepted B+ : 1 [fraction : 1 +/- 0]
 Number of accepted Bs0 : 0 [fraction : 0 +/- 0]
-Number of accepted b-Baryon : 1 [fraction : 1 +/- 0]
+Number of accepted b-Baryon : 0 [fraction : 0 +/- 0]
 Number of accepted Bc+ : 0 [fraction : 0 +/- 0]
-Number of accepted anti-B0 : 1 [fraction : 0.33333 +/- 0.27217]
-Number of accepted B- : 2 [fraction : 0.66667 +/- 0.27217]
+Number of accepted anti-B0 : 1 [fraction : 1 +/- 0]
+Number of accepted B- : 0 [fraction : 0 +/- 0]
 Number of accepted anti-Bs0 : 0 [fraction : 0 +/- 0]
 Number of accepted anti-b-Baryon : 0 [fraction : 0 +/- 0]
 Number of accepted Bc- : 0 [fraction : 0 +/- 0]
 Number of accepted (bb) : 0
 
-Number of accepted D0 : 5 [fraction : 0.45455 +/- 0.15013]
-Number of accepted D+ : 2 [fraction : 0.18182 +/- 0.11629]
-Number of accepted Ds+ : 3 [fraction : 0.27273 +/- 0.13428]
-Number of accepted c-Baryon : 1 [fraction : 0.090909 +/- 0.086678]
-Number of accepted anti-D0 : 2 [fraction : 0.33333 +/- 0.19245]
-Number of accepted D- : 1 [fraction : 0.16667 +/- 0.15215]
-Number of accepted Ds- : 1 [fraction : 0.16667 +/- 0.15215]
-Number of accepted anti-c-Baryon : 2 [fraction : 0.33333 +/- 0.19245]
+Number of accepted D0 : 7 [fraction : 0.7 +/- 0.14491]
+Number of accepted D+ : 2 [fraction : 0.2 +/- 0.12649]
+Number of accepted Ds+ : 0 [fraction : 0 +/- 0]
+Number of accepted c-Baryon : 1 [fraction : 0.1 +/- 0.094868]
+Number of accepted anti-D0 : 4 [fraction : 0.8 +/- 0.17889]
+Number of accepted D- : 1 [fraction : 0.2 +/- 0.17889]
+Number of accepted Ds- : 0 [fraction : 0 +/- 0]
+Number of accepted anti-c-Baryon : 0 [fraction : 0 +/- 0]
 Number of accepted (cc) : 0
 
-Number of accepted B : 0 [fraction : 0 +/- 0]
-Number of accepted B* : 2 [fraction : 1 +/- 0]
+Number of accepted B : 1 [fraction : 0.5 +/- 0.35355]
+Number of accepted B* : 1 [fraction : 0.5 +/- 0.35355]
 Number of accepted B** : 0 [fraction : 0 +/- 0]
 
-Number of accepted D : 4 [fraction : 0.4 +/- 0.15492]
-Number of accepted D* : 6 [fraction : 0.6 +/- 0.15492]
-Number of accepted D** : 0 [fraction : 0 +/- 0]
+Number of accepted D : 1 [fraction : 0.1 +/- 0.094868]
+Number of accepted D* : 8 [fraction : 0.8 +/- 0.12649]
+Number of accepted D** : 1 [fraction : 0.1 +/- 0.094868]
 
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 9156
+= Number of particles generated: 10162
 = Number of events: 10
-= Mean multiplicity: 915.6
+= Mean multiplicity: 1016.2
 =                                                                 =
-= Number of pseudo stable particles generated: 7790
+= Number of pseudo stable particles generated: 8588
 = Number of events: 10
-= Mean pseudo stable multiplicity: 779
+= Mean pseudo stable multiplicity: 858.8
 =                                                                 =
-= Number of charged stable particles generated: 2302
+= Number of charged stable particles generated: 2548
 = Number of events: 10
-= Mean charged stable multiplicity: 230.2
+= Mean charged stable multiplicity: 254.8
 =                                                                 =
-= Number of charged stable particles in LHCb eta 466
+= Number of charged stable particles in LHCb eta 648
 = Number of events: 10
-= Mean charged stable multiplicity in LHCb eta: 46.6
+= Mean charged stable multiplicity in LHCb eta: 64.8
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
@@ -264,34 +267,34 @@ Generation.SignalPlain  SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(II
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I          207          6357 I  9.671E+01 I
- I  11 f + f' -> f + f' (QCD)       I           27             0 I  1.221E+01 I
+ I   0 All included subprocesses    I          372         12109 I  9.654E+01 I
+ I  11 f + f' -> f + f' (QCD)       I           36             0 I  9.770E+00 I
  I  12 f + fbar -> f' + fbar'       I            0             0 I  0.000E+00 I
  I  13 f + fbar -> g + g            I            0             0 I  0.000E+00 I
- I  28 f + g -> f + g               I           21             0 I  9.498E+00 I
- I  53 g + g -> f + fbar            I            3             0 I  1.357E+00 I
- I  68 g + g -> g + g               I           63             0 I  2.850E+01 I
- I  91 Elastic scattering           I           35            35 I  2.079E+01 I
- I  92 Single diffractive (XB)      I           16            16 I  7.003E+00 I
- I  93 Single diffractive (AX)      I           11            11 I  7.003E+00 I
- I  94 Double  diffractive          I           28            28 I  9.785E+00 I
- I  95 Low-pT scattering            I            0           117 I  0.000E+00 I
+ I  28 f + g -> f + g               I           38             0 I  1.031E+01 I
+ I  53 g + g -> f + fbar            I            2             0 I  5.428E-01 I
+ I  68 g + g -> g + g               I          114             0 I  3.094E+01 I
+ I  91 Elastic scattering           I           82            82 I  2.079E+01 I
+ I  92 Single diffractive (XB)      I           30            30 I  7.003E+00 I
+ I  93 Single diffractive (AX)      I           28            28 I  7.003E+00 I
+ I  94 Double  diffractive          I           41            42 I  9.552E+00 I
+ I  95 Low-pT scattering            I            0           191 I  0.000E+00 I
  I 421 g + g  -> cc~[3S1(1)] + g    I            0             0 I  0.000E+00 I
- I 422 g + g  -> cc~[3S1(8)] + g    I            0             6 I  6.583E-02 I
- I 423 g + g  -> cc~[1S0(8)] + g    I            0             6 I  6.240E-03 I
- I 424 g + g  -> cc~[3PJ(8)] + g    I            0            11 I  3.388E-02 I
- I 425 g + q  -> q + cc~[3S1(8)]    I            0             1 I  1.889E-02 I
- I 426 g + q  -> q + cc~[1S0(8)]    I            0             2 I  1.416E-04 I
- I 427 g + q  -> q + cc~[3PJ(8)]    I            0             4 I  3.719E-03 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I            0             5 I  7.905E-02 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I            0             5 I  4.005E-03 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I            0            18 I  2.580E-02 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I            0             5 I  2.473E-04 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I            0             4 I  3.137E-04 I
  I 428 q + q~ -> g + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
  I 429 q + q~ -> g + cc~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 431 g + g  -> cc~[3P0(1)] + g    I            1            43 I  1.191E-01 I
- I 432 g + g  -> cc~[3P1(1)] + g    I            0            15 I  4.621E-02 I
- I 433 g + g  -> cc~[3P2(1)] + g    I            1            38 I  2.296E-01 I
- I 434 q + g  -> q + cc~[3P0(1)]    I            1            12 I  1.627E-02 I
- I 435 q + g  -> q + cc~[3P1(1)]    I            0             6 I  1.080E-02 I
- I 436 q + g  -> q + cc~[3P2(1)]    I            0            12 I  8.243E-03 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I            0            94 I  1.172E-01 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I            0            34 I  1.026E-01 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I            1           102 I  2.310E-01 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I            0            17 I  8.804E-03 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I            0            10 I  5.166E-04 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I            0            18 I  4.413E-02 I
  I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 438 q + q~ -> g + cc~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 439 q + q~ -> g + cc~[3P2(1)]    I            0             0 I  0.000E+00 I
@@ -307,7 +310,7 @@ Generation.SignalPlain  SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(II
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000E+00 I
  I 471 g + g  -> bb~[3P0(1)] + g    I            0             0 I  0.000E+00 I
  I 472 g + g  -> bb~[3P1(1)] + g    I            0             0 I  0.000E+00 I
- I 473 g + g  -> bb~[3P2(1)] + g    I            0             0 I  0.000E+00 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I            0             1 I  1.668E-02 I
  I 474 q + g  -> q + bb~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 475 q + g  -> q + bb~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 476 q + g  -> q + bb~[3P2(1)]    I            0             0 I  0.000E+00 I
@@ -330,13 +333,13 @@ Generation.SignalPlain  SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(II
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |      0.124 |   0.013778 |   0.037576 |      0.0000 |     0.12000 |
- | "Total Memory/MB"                               |        10 |   3536.636 |     353.66 |   0.059288 |      353.59 |      353.71 |
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+ | "Delta Memory/MB"                               |         9 |      0.004 | 0.00044444 |  0.0012571 |      0.0000 |   0.0040000 |
+ | "Total Memory/MB"                               |        10 |   3600.396 |     360.04 |  0.0012000 |      360.04 |      360.04 |
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.77 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
  ==============================================================================
@@ -349,34 +352,34 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I          207          6357 I  9.671E+01 I
- I  11 f + f' -> f + f' (QCD)       I           27             0 I  1.221E+01 I
+ I   0 All included subprocesses    I          372         12109 I  9.654E+01 I
+ I  11 f + f' -> f + f' (QCD)       I           36             0 I  9.770E+00 I
  I  12 f + fbar -> f' + fbar'       I            0             0 I  0.000E+00 I
  I  13 f + fbar -> g + g            I            0             0 I  0.000E+00 I
- I  28 f + g -> f + g               I           21             0 I  9.498E+00 I
- I  53 g + g -> f + fbar            I            3             0 I  1.357E+00 I
- I  68 g + g -> g + g               I           63             0 I  2.850E+01 I
- I  91 Elastic scattering           I           35            35 I  2.079E+01 I
- I  92 Single diffractive (XB)      I           16            16 I  7.003E+00 I
- I  93 Single diffractive (AX)      I           11            11 I  7.003E+00 I
- I  94 Double  diffractive          I           28            28 I  9.785E+00 I
- I  95 Low-pT scattering            I            0           117 I  0.000E+00 I
+ I  28 f + g -> f + g               I           38             0 I  1.031E+01 I
+ I  53 g + g -> f + fbar            I            2             0 I  5.428E-01 I
+ I  68 g + g -> g + g               I          114             0 I  3.094E+01 I
+ I  91 Elastic scattering           I           82            82 I  2.079E+01 I
+ I  92 Single diffractive (XB)      I           30            30 I  7.003E+00 I
+ I  93 Single diffractive (AX)      I           28            28 I  7.003E+00 I
+ I  94 Double  diffractive          I           41            42 I  9.552E+00 I
+ I  95 Low-pT scattering            I            0           191 I  0.000E+00 I
  I 421 g + g  -> cc~[3S1(1)] + g    I            0             0 I  0.000E+00 I
- I 422 g + g  -> cc~[3S1(8)] + g    I            0             6 I  6.583E-02 I
- I 423 g + g  -> cc~[1S0(8)] + g    I            0             6 I  6.240E-03 I
- I 424 g + g  -> cc~[3PJ(8)] + g    I            0            11 I  3.388E-02 I
- I 425 g + q  -> q + cc~[3S1(8)]    I            0             1 I  1.889E-02 I
- I 426 g + q  -> q + cc~[1S0(8)]    I            0             2 I  1.416E-04 I
- I 427 g + q  -> q + cc~[3PJ(8)]    I            0             4 I  3.719E-03 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I            0             5 I  7.905E-02 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I            0             5 I  4.005E-03 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I            0            18 I  2.580E-02 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I            0             5 I  2.473E-04 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I            0             4 I  3.137E-04 I
  I 428 q + q~ -> g + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
  I 429 q + q~ -> g + cc~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 431 g + g  -> cc~[3P0(1)] + g    I            1            43 I  1.191E-01 I
- I 432 g + g  -> cc~[3P1(1)] + g    I            0            15 I  4.621E-02 I
- I 433 g + g  -> cc~[3P2(1)] + g    I            1            38 I  2.296E-01 I
- I 434 q + g  -> q + cc~[3P0(1)]    I            1            12 I  1.627E-02 I
- I 435 q + g  -> q + cc~[3P1(1)]    I            0             6 I  1.080E-02 I
- I 436 q + g  -> q + cc~[3P2(1)]    I            0            12 I  8.243E-03 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I            0            94 I  1.172E-01 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I            0            34 I  1.026E-01 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I            1           102 I  2.310E-01 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I            0            17 I  8.804E-03 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I            0            10 I  5.166E-04 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I            0            18 I  4.413E-02 I
  I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 438 q + q~ -> g + cc~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 439 q + q~ -> g + cc~[3P2(1)]    I            0             0 I  0.000E+00 I
@@ -392,7 +395,7 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000E+00 I
  I 471 g + g  -> bb~[3P0(1)] + g    I            0             0 I  0.000E+00 I
  I 472 g + g  -> bb~[3P1(1)] + g    I            0             0 I  0.000E+00 I
- I 473 g + g  -> bb~[3P2(1)] + g    I            0             0 I  0.000E+00 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I            0             1 I  1.668E-02 I
  I 474 q + g  -> q + bb~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 475 q + g  -> q + bb~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 476 q + g  -> q + bb~[3P2(1)]    I            0             0 I  0.000E+00 I
@@ -412,19 +415,19 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  ********* Total number of warnings =                           0 *************
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   1.74 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |   123.181 |   123.311 |   56.410     233.6 |      10 |     1.233 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |   123.181 |   123.226 |   56.382     233.5 |      10 |     1.232 |
-TimingAuditor.TIMER        INFO   Generator                   |   123.181 |   123.220 |   56.377     233.5 |      10 |     1.232 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   123.081 |   123.216 |   56.373     233.5 |      10 |     1.232 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.400 |     0.634 |    0.304       2.2 |      10 |     0.006 |
-TimingAuditor.TIMER        INFO     Generation                |   121.882 |   121.908 |   54.943     232.4 |      10 |     1.219 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.800 |     0.656 |    0.291       1.2 |      10 |     0.007 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.800 |     0.651 |    0.286       1.2 |      10 |     0.007 |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO EVENT LOOP                    |   143.178 |   142.979 |   73.325     247.5 |      10 |     1.430 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |   143.178 |   142.915 |   73.308     247.5 |      10 |     1.429 |
+TimingAuditor.TIMER        INFO   Generator                   |   143.178 |   142.912 |   73.305     247.5 |      10 |     1.429 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   143.178 |   142.909 |   73.302     247.5 |      10 |     1.429 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.400 |     0.353 |    0.173       1.3 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO     Generation                |   141.979 |   142.045 |   72.696     246.9 |      10 |     1.420 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.700 |     0.500 |    0.299       0.8 |      10 |     0.005 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.700 |     0.496 |    0.295       0.8 |      10 |     0.005 |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 FileRecordCnvSvc           INFO File sharing enabled. Do not retire files.
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
