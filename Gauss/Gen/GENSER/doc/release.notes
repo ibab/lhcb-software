@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Gloria CORTI
+ - Put back changes in requirements and hijing directory (see entry of 
+   2010-09-14 and 2010-09-17) to commission the use of Hijing 1.36.a.2
+   from the LCG release area
+
 !========================== GENSER v8r0 2010-12-13 ===========================
 ! 2010-12-12 - Gloria Corti
  - Rename back RLU_HIJING to RLU as we kept the older version of Hijing
