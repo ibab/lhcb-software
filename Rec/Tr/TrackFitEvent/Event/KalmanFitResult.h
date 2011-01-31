@@ -110,6 +110,7 @@ namespace LHCb
       return m_chi2 - m_chi2VeloTTT - m_chi2Muon ;
     }
 
+    // return (chisq,dof) for the forward direction fit
     ChiSquare computeChiSquareForwardFit() ;
 
     // set the error flag
@@ -120,6 +121,12 @@ namespace LHCb
 
     // check the type of error
     std::string getError( );
+
+    // check if the fit is bidirectionnal or not
+    bool biDirectionnal( ){return m_biDirectionnal;};
+
+    // set the type of fit: bidirectionnal or not?
+    void setBiDirectionnal( bool bidir ){ m_biDirectionnal=bidir;};
 
   private:
     void computeChiSquares() const ;
@@ -147,6 +154,7 @@ namespace LHCb
     mutable ChiSquare m_chi2MuonT ;
     mutable ChiSquare m_chi2Muon ;
     mutable bool m_chi2CacheValid ;
+    bool m_biDirectionnal ;
     ushort m_errorFlag;
   } ;  
 }

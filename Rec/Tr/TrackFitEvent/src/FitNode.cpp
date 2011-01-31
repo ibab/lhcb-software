@@ -120,7 +120,10 @@ namespace LHCb {
   }
   
   
-  /// Calculate an unbiased state
+  //==========================================================================
+  // Calculate an unbiased state
+  //==========================================================================
+
   LHCb::State FitNode::unbiasedState() const
   {
     // we can redo this routine by smoothing the unfiltered states
@@ -141,6 +144,10 @@ namespace LHCb {
     ROOT::Math::AssignSym::Evaluate(unbiasedC, (unit + K*H)*biasedC) ;
     return State( unbiasedX, unbiasedC, z(), state().location()) ;
   }
+
+  //==========================================================================
+  // Cache the transport matrix, compute and cache invert transport matrix too 
+  //==========================================================================
   
   void FitNode::setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix )  {
     m_transportMatrix = transportMatrix;
@@ -226,7 +233,7 @@ namespace LHCb {
   //=========================================================================
   void FitNode::computePredictedState(int direction)
   {
-    //std::cout << "Predicting node " << z() << " " << index() << " " << direction << std::endl ;
+    //std::cout << "Predicting node " << z() << " " << " " << direction << std::endl ;
     
     // get the filtered state from the previous node. if there wasn't
     // any, we will want to copy the reference vector and leave the
@@ -247,13 +254,11 @@ namespace LHCb {
 	// new: start the backward filter from the forward filter 
 	if( direction==Backward ) 
 	  stateVec = filteredState(Forward).stateVector();
-      	//std::cout << "no information upstream. copying seed." << index() << std::endl ;
+      	//std::cout << "no information upstream. copying seed." << std::endl ;
       } else {
 	if(direction==Forward) {
 	  const TrackMatrix& F = transportMatrix() ;
 	  stateVec = F * previousState.stateVector() + transportVector() ;
-	  //similarityAlmostUpperTriangular( F, previousState.covariance() , stateCov , 3 );
-	  //stateCov = Similarity( F,previousState.covariance() ) ;
 	  similarity(F,previousState.covariance() , stateCov) ;
 	  stateCov += this->noiseMatrix();
 	} else {
@@ -261,8 +266,6 @@ namespace LHCb {
 	  static TrackSymMatrix tempCov ;
 	  tempCov = previousState.covariance() + prevnode->noiseMatrix();
 	  stateVec = invF * ( previousState.stateVector() - prevnode->transportVector()) ;
-	  //stateCov = Similarity( invF, tempCov );
-	  //similarityAlmostUpperTriangular( invF, tempCov , stateCov , 3 );
 	  similarity(invF,tempCov,stateCov) ;
 	}
       }
@@ -290,7 +293,7 @@ namespace LHCb {
   //=========================================================================
   void FitNode::computeFilteredState( int direction )
   {
-    //std::cout << "Filtering node " << z() << " " << index() << " " << direction << std::endl ;
+    //std::cout << "Filtering node " << z() << " " << " " << direction << std::endl ;
     // get the predicted state
     LHCb::State& state = m_filteredState[direction] ;
     // copy the predicted state
@@ -314,9 +317,6 @@ namespace LHCb {
 	KalmanFitResult* kfr = this->getParent();
 	if (!kfr->inError())
 	  kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
-	  //std::cout << "Error: projection is not set! " << index() << " " << H << std::endl ;
-	//assert(0) ;
-	//throw std::exception() ;
       }
       // calculate gain matrix K
       static SMatrix<double,5,1> CHT, K ;
@@ -348,11 +348,6 @@ namespace LHCb {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
 	kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
-      std::cout << "ERRRORRR: something goes wrong in the filter."
-		<< m_filteredState[direction].covariance() << std::endl 
-		<< predictedState(direction) << std::endl ;
-      assert(0) ;
-      //throw std::exception() ;
     }
   }
   
@@ -362,7 +357,7 @@ namespace LHCb {
   //=========================================================================
   void FitNode::computeBiSmoothedState() 
   {
-    //std::cout << "Smoothing node at z=" << z() << " " << index() << " " << type() << std::endl ;
+    //std::cout << "Smoothing node at z=" << z() << " " << " " << type() << std::endl ;
     LHCb::State& state = m_state ;
     if( ! hasInfoUpstream(Forward) ) {
       // last node in backward direction
@@ -411,7 +406,6 @@ namespace LHCb {
       //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
       //C += C1 + ROOT::Math::Similarity(K,R) ;
     }
-    
     updateResidual(state) ;
     m_filterStatus[Backward] = Smoothed ;
   }
@@ -430,7 +424,12 @@ namespace LHCb {
     } else {
       // Get the predicted state from the next node
       const FitNode* nextnode = nextNode(Forward) ;
-      assert(nextnode) ;
+      if (nextnode){
+	KalmanFitResult* kfr = this->getParent();
+	if (!kfr->inError())
+	  kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
+      }
+
       
       const LHCb::State& nextPredictedState = nextnode->predictedState(Forward) ;
       const TrackVector& nextNodeX    = nextPredictedState.stateVector() ;
@@ -500,12 +499,20 @@ namespace LHCb {
     }
     // now we fill the residual
     updateResidual(state) ;
-    if( hasMeasurement() ) assert( m_errResidual > 0 ) ;
+    if( hasMeasurement() && m_errResidual > 0 ){
+      KalmanFitResult* kfr = this->getParent();
+      if (!kfr->inError())
+	kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
+    }
 
     // finally update the _Forward_ state
     m_filterStatus[Forward] = Smoothed ;
   }
   
+  //=========================================================================
+  // update node residual using a smoothed state
+  //=========================================================================
+
   Gaudi::Math::ValueWithError FitNode::computeResidual( const LHCb::State& state, bool biased ) const
   {
     double r(0),R(0) ;
@@ -524,6 +531,9 @@ namespace LHCb {
   }
   
   
+  //=========================================================================
+  //  update node residual using a smoothed state
+  //=========================================================================
   void FitNode::updateResidual( const LHCb::State& smoothedState )
   {
     Gaudi::Math::ValueWithError res ;
@@ -537,6 +547,10 @@ namespace LHCb {
   }
   
   
+  //=========================================================================
+  // update node residual using weighted average of forward and backward filter
+  //=========================================================================
+
   void FitNode::updateResidual()
   {
     if( m_filterStatus[Forward] != Smoothed &&
@@ -546,6 +560,10 @@ namespace LHCb {
       setErrResidual(res.error()) ;
     }
   }
+
+  //=========================================================================
+  // Compute smoothed residual by taking weighted average
+  //=========================================================================
   
   Gaudi::Math::ValueWithError FitNode::computeResidualFromFilter() const
   {
@@ -578,27 +596,12 @@ namespace LHCb {
       double r = this->refResidual() + (Hsub*(refXsub - X))(0) ;
       double V = this->errMeasure2();
       double HCH = Similarity( Hsub, C )(0,0) ;
-      //std::cout << "sqrt(HCH) from partial smooth: " << index() << " " << sqrt(HCH) << std::endl ;
+      //std::cout << "sqrt(HCH) from partial smooth: " << " " << sqrt(HCH) << std::endl ;
       
       double sign = type()==LHCb::Node::HitOnTrack? -1 : 1 ;
       double R = V + sign * HCH;
       rc = Gaudi::Math::ValueWithError( r, R ) ;
     }
-    return rc ;
-  }
-    
-  // inline bool TrackKalmanFilter::isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
-  // {
-  //   unsigned int i = 0u;
-  //   for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
-  //   return i == Gaudi::TrackSymMatrix::kRows ;
-  // }
-  
-  
-  int FitNode::index() const
-  {
-    int rc = 0 ;
-    if( m_prevNode ) rc = m_prevNode->index() +1 ;
     return rc ;
   }
 }

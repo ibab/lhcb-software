@@ -29,7 +29,7 @@ namespace LHCb
     return new KalmanFitResult(*this) ;
   }
 
-
+  // set the error flag out of direction, algorithm and error type identifiers 
   void KalmanFitResult::setErrorFlag(ushort direction, ushort algnum , ushort errnum) 
   {
     m_errorFlag = (((ushort) 1 ) << globalBits)
@@ -38,11 +38,13 @@ namespace LHCb
       +(((ushort)errnum) << typeBits);  
   }
 
+  // check the global error status of the node
   bool KalmanFitResult::inError(){
     if ( m_errorFlag == 0 ) return false;
     else return true;
   }
 
+  // get the error description
   std::string KalmanFitResult::getError(){
     ushort direction = ( m_errorFlag & dirMask ) >> dirBits ;
     ushort algnum = ( m_errorFlag & algMask ) >> algBits ;
@@ -94,7 +96,7 @@ namespace LHCb
     return errMsg.str();
   }
 
-
+  // return (chisq,dof) out of the differnet contribution
   void KalmanFitResult::computeChiSquares() const 
   {
     // This routine calculates the chisquare contributions from
@@ -191,6 +193,7 @@ namespace LHCb
     m_chi2CacheValid = true ;
   } 
 
+  // return (chisq,dof) for the forward direction fit
   ChiSquare KalmanFitResult::computeChiSquareForwardFit()
   {
     LHCb::FitNode* lastnode(0) ;
@@ -214,6 +217,7 @@ namespace LHCb
     return ChiSquare( chisq, ndof ) ;
   }
   
+  /// setup the link to previous/next fitnode
   void KalmanFitResult::establishNodeLinks() 
   {
     LHCb::FitNode* prev(0) ;
