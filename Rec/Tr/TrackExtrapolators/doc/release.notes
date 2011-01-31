@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Wouter Hulsbergen
+ - fixed bug in TrackStateProvider
+
 !========================= TrackExtrapolators v2r29 2010-09-27 =========================
 ! 2010-09-21 - Wouter Hulsbergen
  - several bug fixes in TrackStateProvider

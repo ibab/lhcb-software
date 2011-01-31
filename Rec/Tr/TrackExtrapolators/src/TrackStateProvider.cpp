@@ -313,6 +313,7 @@ StatusCode TrackStateProvider::state( LHCb::State& thestate,
       transmat(0,2) = transmat(1,3) = dz ;
       thestate.stateVector()(0) += dz * thestate.stateVector()(2)  ;
       thestate.stateVector()(1) += dz * thestate.stateVector()(3)  ;
+      thestate.setZ( z ) ;
       thestate.setCovariance( ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>
 			      ( transmat, state->covariance() ) );
     }
