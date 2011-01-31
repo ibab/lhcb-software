@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r11 2011-01-31 =========================
 ! 2011-01-11 - Marco Cattaneo
  - Suppress ICC warning 1572 when including HepMC includes
  - Add in gdd.dtd "useBase" attribute to method element. genSrcUtils.py uses
