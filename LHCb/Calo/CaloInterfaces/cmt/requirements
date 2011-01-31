@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.50 2010-03-17 14:00:37 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v8r0
+version           v8r1
 
 # =============== structure ===================================================
 branches          cmt doc CaloInterfaces src 
