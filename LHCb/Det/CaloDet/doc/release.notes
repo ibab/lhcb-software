@@ -4,6 +4,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v10r9 2011-01-31 =========================
 ! 2011-01-13 - Marco Cattaneo
  - Fix ICC remarks
  - Remove obsolete file CaloDet_dll.cpp
