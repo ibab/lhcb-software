@@ -5,7 +5,7 @@
 
 # =============== structure ===============================================
 package VeloPixDet
-version          v1r8
+version           v1r9
 branches         src cmt doc VeloPixDet dict
 
 # =============== used packages ===========================================

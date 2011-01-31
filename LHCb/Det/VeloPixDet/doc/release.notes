@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VeloPixDet v1r9 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
 
