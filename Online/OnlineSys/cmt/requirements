@@ -22,7 +22,7 @@ use Checkpointing       v0r1     Online
 #use CondDBServer        v1r4     Online
 use DIM                 v19r15   Online
 ####use ExampleGaucho       v3r4     Online
-####use FarmMonitor         v2r1     Online
+use FarmMonitor         v2r2     Online
 use Gaucho              v7r0     Online
 use GaudiCheckpointing  v0r1     Online
 use GaudiOnline         v2r46    Online
