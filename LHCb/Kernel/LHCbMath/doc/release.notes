@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r23 2011-01-31 =========================
 ! 2011-01-22 - Vanya Belyaev
  - add more functions for Gaudi::Math::ValueWithErrors 
 
