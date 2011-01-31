@@ -4,6 +4,7 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+!========================= RecreatePIDTools v1r2 2011-01-31 =========================
 ! 2010-12-22 - Chris Jones
  - Fix ChargedProtoCombineDLLsAlg to not throw an exception when the input
    ProtoParticles do not exist. Issues a warning and exits cleaning instead.
