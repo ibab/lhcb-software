@@ -5,19 +5,16 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r3 2011-01-31 =========================
 ! 2011-01-16 - Vanya Belyaev
-
  - TreeCloners.cpp 
-
     fix a bug, that under certains condition could result 
     in double deletion
 
 ! 2011-01-14 - Vanya Belyaev
-
  - add Reflex dictionary
 
 ! 2011-01-13 - Vanya Belyaev
-
  - LHCb::RecVertexHolder 
       add missing method 
  - Increase version to v2r3.
