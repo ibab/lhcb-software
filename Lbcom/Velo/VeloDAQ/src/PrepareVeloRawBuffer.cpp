@@ -37,12 +37,12 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   GaudiAlgorithm (name , pSvcLocator),
   m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
-  m_bankVersion(VeloDAQ::v2)
+  m_bankVersion(VeloDAQ::v3)
 {
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
   declareProperty("RawEventLocation",m_rawEventLoc=LHCb::RawEventLocation::Default);
   declareProperty("DumpInputClusters",m_dumpInputClusters=false);
-  declareProperty("BankVersion", m_bankVersion=VeloDAQ::v2);
+  declareProperty("BankVersion", m_bankVersion=VeloDAQ::v3);
 }
 
 //=============================================================================

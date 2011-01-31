@@ -1,5 +1,5 @@
 # Created    : 06/03/04
-# Maintainer : Chris Parkes
+# Maintainer : David Hutchcroft, Kurt Rinnert
 #
 package VeloDAQ
 version           v6r0p1
