@@ -15,16 +15,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v10r8 2011-01-31 =========================
 ! 2011-01-26 - Vanya Belyaev
-
  - LoKi/GetN.h
-
     new class to get all N-body combinations from some array 
  
 ! 2011-01-20 - Vanya Belyaev
-
  - src/ParticleProperties.cpp
-
     fix bug in antiParticle function. 
     Thanks to Marco & Coverity
 
