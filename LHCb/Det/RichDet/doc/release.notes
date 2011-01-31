@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v15r3 2011-01-31 =========================
 ! 2011-01-21 - Antonis Papanestis
  - Changed the way to handle the refractive index of a gas radiator. Now the
    relevant parametrs can be read from the CondDB and a gas mixture is 
