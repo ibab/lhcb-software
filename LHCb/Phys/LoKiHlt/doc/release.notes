@@ -4,6 +4,7 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r4 2011-01-31 =========================
 ! 2011-01-17 - Marco Cattaneo
  - Fix ICC remarks and warnings
 
