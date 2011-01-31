@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Illya Shapoval
+ - SQLDDDB dependecy is changed to pickup the one with major version
+   increased to v6. 
+
 ! 2010-12-20 - Marco Cattaneo
  - Update database tags for SQLDDDB v5r44:
    . DDDB, 2009, 2010: head-20101206
