@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-01-31 - Silvia Miglioranzi
+ - Added QMTest gauss-xgen.qmt (plus test option testGauss-XGen.py and test
+   ref files for slc4, slc5 platforms).
+
+! 2011-01-31 - Silvia Miglioranzi
  - Updated QMTest ref files (based on Gauss v39r0) for platforms:
    -  x86_64-slc5-gcc43-opt 
    -  slc4_amd64_gcc34 
