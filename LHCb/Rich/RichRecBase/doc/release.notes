@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r3 2011-01-31 =========================
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
