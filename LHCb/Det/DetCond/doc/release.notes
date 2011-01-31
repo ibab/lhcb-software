@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r17 2011-01-31 =========================
 ! 2011-01-28 - Illya Shapoval
  - Configuration machinery is upgraded to load DQFLAGS partition (implemeted in
    standalone SQLite file in SQLDDDB) to populate '/Conditions/DQ/Flags'
