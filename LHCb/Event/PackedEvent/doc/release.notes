@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r4 2011-01-31 =========================
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
