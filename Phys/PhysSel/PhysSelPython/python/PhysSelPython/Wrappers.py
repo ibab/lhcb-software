@@ -46,8 +46,8 @@ from SelPy.selection import Selection as Sel
 from SelPy.selection import AutomaticData as autodata
 
 from Configurables import LoKi__VoidFilter as VoidFilter
-from Configurables import FilterDesktop
-from PhysSelPython.Utils import configurableExists
+from GaudiConfUtils import configurableExists, isConfigurable
+from GaudiConfUtils import ConfigurableGenerators
 
 def Selection(name, *args, **kwargs) :
     """
@@ -58,6 +58,13 @@ def Selection(name, *args, **kwargs) :
     """
     if configurableExists(name) :
         raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
+
+    algorithm = kwargs.pop('Algorithm')
+    if isConfigurable( algorithm )  :
+        algGen = getattr(ConfigurableGenerators, algorithm.__class__.__name__)(**algorithm.getValuedProperties())
+        kwargs['ConfGenerator'] = algGen
+    else :
+        kwargs['ConfGenerator'] = algorithm
     return Sel(name, *args, **kwargs)
 
 class AutomaticData(autodata) :
@@ -215,8 +222,7 @@ class MergedSelection(object) :
             raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
 
         self._sel = Selection(name,
-                              Algorithm = FilterDesktop(_algName,
-                                                        Code='ALL'),
+                              Algorithm = ConfigurableGenerators.FilterDesktop(Code='ALL'),
                               RequiredSelections = RequiredSelections,
                               OutputBranch = OutputBranch)
         

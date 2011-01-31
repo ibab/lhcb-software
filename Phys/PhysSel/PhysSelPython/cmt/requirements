@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           PhysSelPython
-version           v6r1
+version           v7r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,6 +15,7 @@ branches          cmt doc python
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use       GaudiPython      v*
+use       GaudiConfUtils   v*        -no_auto_imports
 use       GaudiConf        v*        -no_auto_imports
 use       SelPy            v*   Phys   -no_auto_imports
 use       pytools          v*   LCG_Interfaces -no_auto_imports

@@ -17,3 +17,4 @@ def configurableExists(name) :
 
 def isConfigurable(alg) :
     return issubclass(type(alg), Configurable) or issubclass(type(alg), ConfigurableMeta)
+
