@@ -3,6 +3,7 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r3 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
 
@@ -528,3 +529,4 @@
               options/MuonDet.opts
      must be included in a job that uses this package    
 
+!========================= MuonDet v9r3 2011-01-31 =========================
