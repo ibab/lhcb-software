@@ -13,22 +13,22 @@ from SelPy.configurabloids import DummyAlgorithm
 from SelPy.selection import FlatSelectionListBuilder, Selection
 
 class SelectionTree(object) :
-    sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),
+    sel000 = Selection('0.00000', ConfGenerator = DummyAlgorithm('Alg0.00000'),
                        RequiredSelections = [])
-    sel001 = Selection('0.00001', Algorithm = DummyAlgorithm('Alg0.00001'),
+    sel001 = Selection('0.00001', ConfGenerator = DummyAlgorithm('Alg0.00001'),
                        RequiredSelections = [])
-    sel002 = Selection('0.00002', Algorithm = DummyAlgorithm('Alg0.00002'),
+    sel002 = Selection('0.00002', ConfGenerator = DummyAlgorithm('Alg0.00002'),
                        RequiredSelections = [])
-    sel003 = Selection('0.00003', Algorithm = DummyAlgorithm('Alg0.00003'),
+    sel003 = Selection('0.00003', ConfGenerator = DummyAlgorithm('Alg0.00003'),
                        RequiredSelections = [])
     
-    sel100 = Selection('1.00000', Algorithm = DummyAlgorithm('Alg1.00000'),
+    sel100 = Selection('1.00000', ConfGenerator = DummyAlgorithm('Alg1.00000'),
                        RequiredSelections = [sel000, sel001])
     
-    sel101 = Selection('1.00001', Algorithm = DummyAlgorithm('Alg1.00001'),
+    sel101 = Selection('1.00001', ConfGenerator = DummyAlgorithm('Alg1.00001'),
                        RequiredSelections = [sel002, sel003])
     
-    sel200 = Selection('2.00000', Algorithm = DummyAlgorithm('Alg2.00000'),
+    sel200 = Selection('2.00000', ConfGenerator = DummyAlgorithm('Alg2.00000'),
                        RequiredSelections = [sel100, sel101])
 
     algos = FlatSelectionListBuilder(sel200).selectionList
@@ -38,15 +38,15 @@ class SelectionTree(object) :
 def test_FlatSelectionListBuilder_order_line() :
 
     
-    sel000 = Selection('0.0000', Algorithm = DummyAlgorithm('Alg0.0000'),
+    sel000 = Selection('0.0000', ConfGenerator = DummyAlgorithm('Alg0.0000'),
                       RequiredSelections = [])
-    sel001 = Selection('0.0001', Algorithm = DummyAlgorithm('Alg0.0001'),
+    sel001 = Selection('0.0001', ConfGenerator = DummyAlgorithm('Alg0.0001'),
                       RequiredSelections = [sel000])
-    sel101 = Selection('1.0000', Algorithm = DummyAlgorithm('Alg1.0000'),
+    sel101 = Selection('1.0000', ConfGenerator = DummyAlgorithm('Alg1.0000'),
                       RequiredSelections = [sel001])
-    sel102 = Selection('1.0001', Algorithm = DummyAlgorithm('Alg1.0001'),
+    sel102 = Selection('1.0001', ConfGenerator = DummyAlgorithm('Alg1.0001'),
                       RequiredSelections = [sel101])
-    sel203 = Selection('2.0000', Algorithm = DummyAlgorithm('Alg2.000'),
+    sel203 = Selection('2.0000', ConfGenerator = DummyAlgorithm('Alg2.000'),
                       RequiredSelections = [sel102])
 
     algos = FlatSelectionListBuilder(sel203).selectionList
@@ -70,13 +70,13 @@ def test_FlatSelectionListBuilder_removes_duplicates() :
     sel002 = SelectionTree.sel002
     sel003 = SelectionTree.sel003
 
-    sel100 = Selection('1.10000', Algorithm = DummyAlgorithm('Alg1.10000'),
+    sel100 = Selection('1.10000', ConfGenerator = DummyAlgorithm('Alg1.10000'),
                        RequiredSelections = [sel000, sel001, sel002])
     
-    sel101 = Selection('1.10001', Algorithm = DummyAlgorithm('Alg1.10001'),
+    sel101 = Selection('1.10001', ConfGenerator = DummyAlgorithm('Alg1.10001'),
                        RequiredSelections = [sel001, sel002, sel003])
     
-    sel200 = Selection('2.10000', Algorithm = DummyAlgorithm('Alg2.10000'),
+    sel200 = Selection('2.10000', ConfGenerator = DummyAlgorithm('Alg2.10000'),
                        RequiredSelections = [sel100, sel101])
 
     algos = FlatSelectionListBuilder(sel200).selectionList

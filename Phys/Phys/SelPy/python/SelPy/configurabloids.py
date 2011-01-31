@@ -78,6 +78,12 @@ class DummyAlgorithm(object) :
 #        else :
 #            return DummyAlgorithm(name, **kwargs)
 
+    def configurable(self, name) :
+        return DummyAlgorithm(name)
+
+    def __call__(self, name) :
+        return DummyAlgorithm(name)
+
     def __getattr__(self, attr) :
         return getattr(self.__instance[self._name], attr)
     def __setattr(self, attr) :

@@ -62,11 +62,12 @@ AutomaticData = AutoData
 
 class Selection(object) :
     """
-    Wrapper class for offline selection. Takes a top selection GaudiAlgorithm
-    configurable plus a list of required selection configurables. It uses
-    the required selections to set the list of input data locations of the
-    top selection. The method used to set the input data locations is defined
-    by the 'InputDataSetter' constructor argument (default 'InputLocations').
+    Wrapper class for offline selection. Takes a top selection
+    Configurable Generator plus a list of required selection configurables.
+    It uses the required selections to set the list of input data locations
+    of the top selection. The method used to set the input data locations is
+    defined by the 'InputDataSetter' constructor argument
+    (default 'InputLocations').
     Makes the output location of the data available via outputLocation(),
     a concatenation of
 
@@ -77,7 +78,8 @@ class Selection(object) :
     Example: selection for A -> B(bb), C(cc)
 
        # create and configure selection algorithm configurable:
-       A2B2bbC2cc = CombineParticles('A2B2bbC2cc')
+       from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+       A2B2bbC2cc = CombineParticles()
        A2B2bbC2cc.DecayDescriptor = ...
        A2B2bbC2cc.MotherCut = ...
        # now assume SelB and SelC have been defined in modules B2bb and C2cc
@@ -88,7 +90,7 @@ class Selection(object) :
        # Output will go to 'Phys' + A2B2bbC2cc.name()
        from PhysSelPython.Wrappers import Selection
        SelA2B2bbC2cc = Selection('SelA2B2bbC2cc',
-                                 Algorithm = A2B2bbC2cc,
+                                 ConfGenerator = A2B2bbC2cc,
                                  RequiredSelections = [SelB, SelC])
        print SelA2BsbbC2cc.outputLocation()
        'Phys/SelA2B2bbC2cc/Particles'
@@ -99,7 +101,7 @@ class Selection(object) :
 
     def __init__(self,
                  name,
-                 Algorithm,
+                 ConfGenerator,
                  RequiredSelections = [],
                  OutputBranch = "Phys",
                  InputDataSetter = "InputLocations",
@@ -118,14 +120,15 @@ class Selection(object) :
         self._name = name
         _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
         _outputLocations = filter(lambda s : s != '', _outputLocations)
-        _inputLocations = getattr(Algorithm, InputDataSetter)
-        if len(_inputLocations) != 0 :
-            if not compatibleSequences(_outputLocations,
-                                       _inputLocations) :
-                raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
-                                                 '\nInputLocations: '+str(_inputLocations)+\
-                                                 '\nRequiredSelections: '+str(_outputLocations))
-        self.alg = Algorithm.clone(self._name)
+        if hasattr(ConfGenerator, InputDataSetter) :
+            _inputLocations = getattr(ConfGenerator, InputDataSetter)
+            if len(_inputLocations) != 0 :
+                if not compatibleSequences(_outputLocations,
+                                           _inputLocations) :
+                    raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
+                                                     '\nInputLocations: '+str(_inputLocations)+\
+                                                     '\nRequiredSelections: '+str(_outputLocations))
+        self.alg = ConfGenerator(self._name) # get the configurable.
         self.alg.__setattr__(InputDataSetter, list(_outputLocations))
         self._outputBranch = OutputBranch
         self._outputLocation = (self._outputBranch + '/' + self.name() + '/' + Extension).replace('//','/')
