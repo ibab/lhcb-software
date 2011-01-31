@@ -5,6 +5,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r34 2011-01-31 =========================
 ! 2011-01-21 - Chris Jones
  - Convert reconstruction summary data object to internally use a map<int,int>
    instead of a map<int,double>.
