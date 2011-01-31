@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v2r17 2011-01-31 =========================
 ! 2011-01-10 Marco Cattaneo
  - Fix ICC warnings and remarks
 
