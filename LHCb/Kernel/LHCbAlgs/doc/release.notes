@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r36 2011-01-31 =========================
 ! 2011-01-25 - Marco Clemencic
  - Added an algorithm to filter events according to the Data Quality flags in
    the conditions database.
