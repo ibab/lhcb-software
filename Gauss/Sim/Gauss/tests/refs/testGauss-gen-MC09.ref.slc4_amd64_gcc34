@@ -1,23 +1,23 @@
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r72/options/Gauss/MC09-b5TeV-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/11144103.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r88/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/11144103.opts'
 # Generation.EventType = 11144103;
 # Generation.SampleGenerationTool = "SignalRepeatedHadronization";
 # Generation.SignalRepeatedHadronization.ProductionTool = "PythiaProduction";
 # ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/Bd_JpsiKS,mm=CPV,DecProdCut.dec";
 # Generation.SignalRepeatedHadronization.CutTool = "DaughtersInLHCb";
 # Generation.SignalRepeatedHadronization.SignalPIDList = {511,-511};
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Gen/DecFiles/options/11144103.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v23r3/options/11144103.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbPythia/options/Pythia.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v39r0/Gen/LbPythia/options/Pythia.opts'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/group/gauss/Gauss_v39r0/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
 # applying configuration of Gauss
 # WARNING: No simulation phase.
 # WARNING: No event data output produced
@@ -33,6 +33,7 @@
 # |-TotalCrossSection   = 9.7199999999999989e-24  (default: 9.7199999999999989e-24)
 # |-BeamCrossingAngle   = 0.00032900000000000003  (default: 0.00032900000000000003)
 # |-InteractionPosition = [0.0, 0.0, 0.0]  (default: [0.0, 0.0, 0.0])
+# |-BeamLineAngles      = [0.0, 0.0]  (default: [0.0, 0.0])
 # |-PhysicsList         = {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True}
 # |                     (default: {'Em': 'Opt1', 'GeneralPhys': True, 'Hadron': 'LHEP', 'LHCbPhys': True})
 # |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
@@ -57,8 +58,8 @@
 # GaussTape.OptItemList = []
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v38r7
-                                          running on lxbuild111.cern.ch on Tue Sep  7 11:17:55 2010
+                                                   Welcome to Gauss version v39r0
+                                          running on lxplus416.cern.ch on Fri Jan 28 16:12:22 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -68,9 +69,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -86,7 +87,7 @@ Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
 Generation.FixedLumin...   INFO Mean number of interaction/bunch = 1.00269
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "MC09-20090602"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
@@ -96,6 +97,7 @@ ToolSvc.EvtGenDecay.P...   INFO Colliding Beam Parameters:
 ToolSvc.EvtGenDecay.P...   INFO Beam Momentum (TeV): 5
 ToolSvc.EvtGenDecay.P...   INFO Vertical crossing angle (microradian): 0
 ToolSvc.EvtGenDecay.P...   INFO Horizontal crossing angle (microradian): 329
+ToolSvc.EvtGenDecay.P...   INFO Beam Line rotated (x,y) in microradian: 0, 0
  ==== PYTHIA WILL USE LHAPDF ====
  *************************************
  *       LHAPDF Version 5.7.1        *
@@ -125,6 +127,7 @@ Generation.SignalRepe...   INFO Colliding Beam Parameters:
 Generation.SignalRepe...   INFO Beam Momentum (TeV): 5
 Generation.SignalRepe...   INFO Vertical crossing angle (microradian): 0
 Generation.SignalRepe...   INFO Horizontal crossing angle (microradian): 329
+Generation.SignalRepe...   INFO Beam Line rotated (x,y) in microradian: 0, 0
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
 Generation.SignalRepe...   INFO Generating Signal events of B~0 B0
@@ -167,9 +170,6 @@ EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
-
-     Error type 4 has occured after     2220 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
@@ -178,7 +178,6 @@ GaussGen                   INFO Evt 6,  Run 1082,  Nr. in job = 6 with seeds [10
 GaussGen                   INFO Evt 7,  Run 1082,  Nr. in job = 7 with seeds [1082, 7, 1402449382, 0]
 GaussGen                   INFO Evt 8,  Run 1082,  Nr. in job = 8 with seeds [1082, 8, 1642482307, 0]
 GaussGen                   INFO Evt 9,  Run 1082,  Nr. in job = 9 with seeds [1082, 9, 129275425, 0]
-Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 10,  Run 1082,  Nr. in job = 10 with seeds [1082, 10, 606355924, 0]
 GaussGen                   INFO Evt 11,  Run 1082,  Nr. in job = 11 with seeds [1082, 11, 900588775, 0]
 GaussGen                   INFO Evt 12,  Run 1082,  Nr. in job = 12 with seeds [1082, 12, 1359158161, 0]
@@ -186,8 +185,10 @@ GaussGen                   INFO Evt 13,  Run 1082,  Nr. in job = 13 with seeds [
 GaussGen                   INFO Evt 14,  Run 1082,  Nr. in job = 14 with seeds [1082, 14, 1820316298, 0]
 GaussGen                   INFO Evt 15,  Run 1082,  Nr. in job = 15 with seeds [1082, 15, 2118350353, 0]
 GaussGen                   INFO Evt 16,  Run 1082,  Nr. in job = 16 with seeds [1082, 16, 1600370414, 0]
+
+     Error type 4 has occured after    30817 PYEXEC calls:
+     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 17,  Run 1082,  Nr. in job = 17 with seeds [1082, 17, 617468275, 0]
-DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GaussGen                   INFO Evt 18,  Run 1082,  Nr. in job = 18 with seeds [1082, 18, 923039200, 0]
 GaussGen                   INFO Evt 19,  Run 1082,  Nr. in job = 19 with seeds [1082, 19, 932144966, 0]
 GaussGen                   INFO Evt 20,  Run 1082,  Nr. in job = 20 with seeds [1082, 20, 633455531, 0]
@@ -203,6 +204,7 @@ GaussGen                   INFO Evt 29,  Run 1082,  Nr. in job = 29 with seeds [
 GaussGen                   INFO Evt 30,  Run 1082,  Nr. in job = 30 with seeds [1082, 30, 321494703, 0]
 GaussGen                   INFO Evt 31,  Run 1082,  Nr. in job = 31 with seeds [1082, 31, 560151330, 0]
 GaussGen                   INFO Evt 32,  Run 1082,  Nr. in job = 32 with seeds [1082, 32, 1839883347, 0]
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GaussGen                   INFO Evt 33,  Run 1082,  Nr. in job = 33 with seeds [1082, 33, 191537109, 0]
 GaussGen                   INFO Evt 34,  Run 1082,  Nr. in job = 34 with seeds [1082, 34, 421411644, 0]
 GaussGen                   INFO Evt 35,  Run 1082,  Nr. in job = 35 with seeds [1082, 35, 1875826332, 0]
@@ -224,9 +226,6 @@ GaussGen                   INFO Evt 50,  Run 1082,  Nr. in job = 50 with seeds [
 GaussGen                   INFO Evt 51,  Run 1082,  Nr. in job = 51 with seeds [1082, 51, 1844667425, 0]
 GaussGen                   INFO Evt 52,  Run 1082,  Nr. in job = 52 with seeds [1082, 52, 1552531790, 0]
 GaussGen                   INFO Evt 53,  Run 1082,  Nr. in job = 53 with seeds [1082, 53, 608124998, 0]
-
-     Error type 9 has occured after   134694 PYEXEC calls:
-     (PYPTIS:) Weight   1.5994E+03 above unity
 GaussGen                   INFO Evt 54,  Run 1082,  Nr. in job = 54 with seeds [1082, 54, 974220266, 0]
 GaussGen                   INFO Evt 55,  Run 1082,  Nr. in job = 55 with seeds [1082, 55, 921826847, 0]
 GaussGen                   INFO Evt 56,  Run 1082,  Nr. in job = 56 with seeds [1082, 56, 623137412, 0]
@@ -262,9 +261,6 @@ GaussGen                   INFO Evt 85,  Run 1082,  Nr. in job = 85 with seeds [
 GaussGen                   INFO Evt 86,  Run 1082,  Nr. in job = 86 with seeds [1082, 86, 826811259, 0]
 GaussGen                   INFO Evt 87,  Run 1082,  Nr. in job = 87 with seeds [1082, 87, 1333419999, 0]
 GaussGen                   INFO Evt 88,  Run 1082,  Nr. in job = 88 with seeds [1082, 88, 1541208228, 0]
-
-     Error type 4 has occured after   220410 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 89,  Run 1082,  Nr. in job = 89 with seeds [1082, 89, 603948819, 0]
 GaussGen                   INFO Evt 90,  Run 1082,  Nr. in job = 90 with seeds [1082, 90, 510655460, 0]
 GaussGen                   INFO Evt 91,  Run 1082,  Nr. in job = 91 with seeds [1082, 91, 262299209, 0]
@@ -417,16 +413,10 @@ GaussGen                   INFO Evt 237,  Run 1082,  Nr. in job = 237 with seeds
 GaussGen                   INFO Evt 238,  Run 1082,  Nr. in job = 238 with seeds [1082, 238, 1225287911, 0]
 GaussGen                   INFO Evt 239,  Run 1082,  Nr. in job = 239 with seeds [1082, 239, 594341890, 0]
 GaussGen                   INFO Evt 240,  Run 1082,  Nr. in job = 240 with seeds [1082, 240, 1006446258, 0]
-
-     Error type 4 has occured after   564122 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 241,  Run 1082,  Nr. in job = 241 with seeds [1082, 241, 901978686, 0]
 GaussGen                   INFO Evt 242,  Run 1082,  Nr. in job = 242 with seeds [1082, 242, 661880219, 0]
 GaussGen                   INFO Evt 243,  Run 1082,  Nr. in job = 243 with seeds [1082, 243, 359782808, 0]
 GaussGen                   INFO Evt 244,  Run 1082,  Nr. in job = 244 with seeds [1082, 244, 119815421, 0]
-
-     Error type 9 has occured after   568066 PYEXEC calls:
-     (PYPTIS:) Weight   1.6518E+03 above unity
 GaussGen                   INFO Evt 245,  Run 1082,  Nr. in job = 245 with seeds [1082, 245, 254341021, 0]
 GaussGen                   INFO Evt 246,  Run 1082,  Nr. in job = 246 with seeds [1082, 246, 829568047, 0]
 GaussGen                   INFO Evt 247,  Run 1082,  Nr. in job = 247 with seeds [1082, 247, 1068093598, 0]
@@ -508,6 +498,7 @@ GaussGen                   INFO Evt 322,  Run 1082,  Nr. in job = 322 with seeds
 GaussGen                   INFO Evt 323,  Run 1082,  Nr. in job = 323 with seeds [1082, 323, 423817726, 0]
 GaussGen                   INFO Evt 324,  Run 1082,  Nr. in job = 324 with seeds [1082, 324, 501218375, 0]
 GaussGen                   INFO Evt 325,  Run 1082,  Nr. in job = 325 with seeds [1082, 325, 205084922, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 326,  Run 1082,  Nr. in job = 326 with seeds [1082, 326, 843162623, 0]
 GaussGen                   INFO Evt 327,  Run 1082,  Nr. in job = 327 with seeds [1082, 327, 1139558228, 0]
 GaussGen                   INFO Evt 328,  Run 1082,  Nr. in job = 328 with seeds [1082, 328, 351136088, 0]
@@ -644,7 +635,6 @@ GaussGen                   INFO Evt 458,  Run 1082,  Nr. in job = 458 with seeds
 GaussGen                   INFO Evt 459,  Run 1082,  Nr. in job = 459 with seeds [1082, 459, 738550178, 0]
 GaussGen                   INFO Evt 460,  Run 1082,  Nr. in job = 460 with seeds [1082, 460, 1112079101, 0]
 GaussGen                   INFO Evt 461,  Run 1082,  Nr. in job = 461 with seeds [1082, 461, 830626160, 0]
-Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 462,  Run 1082,  Nr. in job = 462 with seeds [1082, 462, 126485888, 0]
 GaussGen                   INFO Evt 463,  Run 1082,  Nr. in job = 463 with seeds [1082, 463, 385000525, 0]
 GaussGen                   INFO Evt 464,  Run 1082,  Nr. in job = 464 with seeds [1082, 464, 1051260065, 0]
@@ -669,6 +659,7 @@ GaussGen                   INFO Evt 482,  Run 1082,  Nr. in job = 482 with seeds
 GaussGen                   INFO Evt 483,  Run 1082,  Nr. in job = 483 with seeds [1082, 483, 567159380, 0]
 GaussGen                   INFO Evt 484,  Run 1082,  Nr. in job = 484 with seeds [1082, 484, 281053241, 0]
 GaussGen                   INFO Evt 485,  Run 1082,  Nr. in job = 485 with seeds [1082, 485, 2095190798, 0]
+Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 486,  Run 1082,  Nr. in job = 486 with seeds [1082, 486, 1866188078, 0]
 GaussGen                   INFO Evt 487,  Run 1082,  Nr. in job = 487 with seeds [1082, 487, 1769585066, 0]
 GaussGen                   INFO Evt 488,  Run 1082,  Nr. in job = 488 with seeds [1082, 488, 1538268695, 0]
@@ -676,9 +667,6 @@ GaussGen                   INFO Evt 489,  Run 1082,  Nr. in job = 489 with seeds
 GaussGen                   INFO Evt 490,  Run 1082,  Nr. in job = 490 with seeds [1082, 490, 1426080563, 0]
 GaussGen                   INFO Evt 491,  Run 1082,  Nr. in job = 491 with seeds [1082, 491, 1752459807, 0]
 GaussGen                   INFO Evt 492,  Run 1082,  Nr. in job = 492 with seeds [1082, 492, 1465206753, 0]
-
-     Error type 4 has occured after  1200982 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 493,  Run 1082,  Nr. in job = 493 with seeds [1082, 493, 468865308, 0]
 GaussGen                   INFO Evt 494,  Run 1082,  Nr. in job = 494 with seeds [1082, 494, 92271048, 0]
 GaussGen                   INFO Evt 495,  Run 1082,  Nr. in job = 495 with seeds [1082, 495, 1103719010, 0]
@@ -704,6 +692,9 @@ GaussGen                   INFO Evt 514,  Run 1082,  Nr. in job = 514 with seeds
 GaussGen                   INFO Evt 515,  Run 1082,  Nr. in job = 515 with seeds [1082, 515, 595758974, 0]
 GaussGen                   INFO Evt 516,  Run 1082,  Nr. in job = 516 with seeds [1082, 516, 1918606396, 0]
 GaussGen                   INFO Evt 517,  Run 1082,  Nr. in job = 517 with seeds [1082, 517, 239723789, 0]
+
+     Error type 2 has occured after  1127058 PYEXEC calls:
+     (PYINDF:) unphysical flavour combination
 GaussGen                   INFO Evt 518,  Run 1082,  Nr. in job = 518 with seeds [1082, 518, 17021326, 0]
 GaussGen                   INFO Evt 519,  Run 1082,  Nr. in job = 519 with seeds [1082, 519, 372564976, 0]
 GaussGen                   INFO Evt 520,  Run 1082,  Nr. in job = 520 with seeds [1082, 520, 1418523026, 0]
@@ -834,9 +825,6 @@ GaussGen                   INFO Evt 644,  Run 1082,  Nr. in job = 644 with seeds
 GaussGen                   INFO Evt 645,  Run 1082,  Nr. in job = 645 with seeds [1082, 645, 931376457, 0]
 GaussGen                   INFO Evt 646,  Run 1082,  Nr. in job = 646 with seeds [1082, 646, 275669658, 0]
 GaussGen                   INFO Evt 647,  Run 1082,  Nr. in job = 647 with seeds [1082, 647, 573113871, 0]
-
-     Error type 4 has occured after  1580310 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 648,  Run 1082,  Nr. in job = 648 with seeds [1082, 648, 183260187, 0]
 GaussGen                   INFO Evt 649,  Run 1082,  Nr. in job = 649 with seeds [1082, 649, 114380640, 0]
 GaussGen                   INFO Evt 650,  Run 1082,  Nr. in job = 650 with seeds [1082, 650, 1047445054, 0]
@@ -850,9 +838,6 @@ GaussGen                   INFO Evt 657,  Run 1082,  Nr. in job = 657 with seeds
 GaussGen                   INFO Evt 658,  Run 1082,  Nr. in job = 658 with seeds [1082, 658, 1239073659, 0]
 GaussGen                   INFO Evt 659,  Run 1082,  Nr. in job = 659 with seeds [1082, 659, 913874103, 0]
 GaussGen                   INFO Evt 660,  Run 1082,  Nr. in job = 660 with seeds [1082, 660, 635763620, 0]
-
-     Error type 4 has occured after  1623206 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 661,  Run 1082,  Nr. in job = 661 with seeds [1082, 661, 320984606, 0]
 GaussGen                   INFO Evt 662,  Run 1082,  Nr. in job = 662 with seeds [1082, 662, 135249914, 0]
 GaussGen                   INFO Evt 663,  Run 1082,  Nr. in job = 663 with seeds [1082, 663, 177988957, 0]
@@ -872,9 +857,6 @@ GaussGen                   INFO Evt 676,  Run 1082,  Nr. in job = 676 with seeds
 GaussGen                   INFO Evt 677,  Run 1082,  Nr. in job = 677 with seeds [1082, 677, 961270674, 0]
 GaussGen                   INFO Evt 678,  Run 1082,  Nr. in job = 678 with seeds [1082, 678, 720778983, 0]
 GaussGen                   INFO Evt 679,  Run 1082,  Nr. in job = 679 with seeds [1082, 679, 1759359677, 0]
-
-     Error type 4 has occured after  1679310 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 680,  Run 1082,  Nr. in job = 680 with seeds [1082, 680, 2058835568, 0]
 GaussGen                   INFO Evt 681,  Run 1082,  Nr. in job = 681 with seeds [1082, 681, 880396790, 0]
 GaussGen                   INFO Evt 682,  Run 1082,  Nr. in job = 682 with seeds [1082, 682, 266535125, 0]
@@ -938,6 +920,9 @@ GaussGen                   INFO Evt 739,  Run 1082,  Nr. in job = 739 with seeds
 GaussGen                   INFO Evt 740,  Run 1082,  Nr. in job = 740 with seeds [1082, 740, 1869628602, 0]
 GaussGen                   INFO Evt 741,  Run 1082,  Nr. in job = 741 with seeds [1082, 741, 565815630, 0]
 GaussGen                   INFO Evt 742,  Run 1082,  Nr. in job = 742 with seeds [1082, 742, 334237107, 0]
+
+     Error type 9 has occured after  1715174 PYEXEC calls:
+     (PYPTIS:) Weight   2.7099E+00 above unity
 GaussGen                   INFO Evt 743,  Run 1082,  Nr. in job = 743 with seeds [1082, 743, 1849587364, 0]
 GaussGen                   INFO Evt 744,  Run 1082,  Nr. in job = 744 with seeds [1082, 744, 1009488511, 0]
 GaussGen                   INFO Evt 745,  Run 1082,  Nr. in job = 745 with seeds [1082, 745, 1203546529, 0]
@@ -973,7 +958,6 @@ GaussGen                   INFO Evt 774,  Run 1082,  Nr. in job = 774 with seeds
 GaussGen                   INFO Evt 775,  Run 1082,  Nr. in job = 775 with seeds [1082, 775, 1666804381, 0]
 GaussGen                   INFO Evt 776,  Run 1082,  Nr. in job = 776 with seeds [1082, 776, 1375422433, 0]
 GaussGen                   INFO Evt 777,  Run 1082,  Nr. in job = 777 with seeds [1082, 777, 1552506121, 0]
-Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 778,  Run 1082,  Nr. in job = 778 with seeds [1082, 778, 2104762082, 0]
 GaussGen                   INFO Evt 779,  Run 1082,  Nr. in job = 779 with seeds [1082, 779, 1425671675, 0]
 GaussGen                   INFO Evt 780,  Run 1082,  Nr. in job = 780 with seeds [1082, 780, 1728129545, 0]
@@ -1000,6 +984,9 @@ GaussGen                   INFO Evt 800,  Run 1082,  Nr. in job = 800 with seeds
 GaussGen                   INFO Evt 801,  Run 1082,  Nr. in job = 801 with seeds [1082, 801, 965777512, 0]
 GaussGen                   INFO Evt 802,  Run 1082,  Nr. in job = 802 with seeds [1082, 802, 1730081668, 0]
 GaussGen                   INFO Evt 803,  Run 1082,  Nr. in job = 803 with seeds [1082, 803, 1863006417, 0]
+
+     Error type 4 has occured after  1883648 PYEXEC calls:
+     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 804,  Run 1082,  Nr. in job = 804 with seeds [1082, 804, 1253653177, 0]
 GaussGen                   INFO Evt 805,  Run 1082,  Nr. in job = 805 with seeds [1082, 805, 257213409, 0]
 GaussGen                   INFO Evt 806,  Run 1082,  Nr. in job = 806 with seeds [1082, 806, 864338393, 0]
@@ -1032,14 +1019,8 @@ GaussGen                   INFO Evt 832,  Run 1082,  Nr. in job = 832 with seeds
 GaussGen                   INFO Evt 833,  Run 1082,  Nr. in job = 833 with seeds [1082, 833, 1704104371, 0]
 GaussGen                   INFO Evt 834,  Run 1082,  Nr. in job = 834 with seeds [1082, 834, 1868798010, 0]
 GaussGen                   INFO Evt 835,  Run 1082,  Nr. in job = 835 with seeds [1082, 835, 1973396658, 0]
-
-     Error type 4 has occured after  1999620 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 836,  Run 1082,  Nr. in job = 836 with seeds [1082, 836, 1660845936, 0]
 GaussGen                   INFO Evt 837,  Run 1082,  Nr. in job = 837 with seeds [1082, 837, 251061369, 0]
-
-     Error type 4 has occured after  2011436 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 838,  Run 1082,  Nr. in job = 838 with seeds [1082, 838, 1047246411, 0]
 GaussGen                   INFO Evt 839,  Run 1082,  Nr. in job = 839 with seeds [1082, 839, 1285968576, 0]
 GaussGen                   INFO Evt 840,  Run 1082,  Nr. in job = 840 with seeds [1082, 840, 1956225718, 0]
@@ -1125,6 +1106,9 @@ GaussGen                   INFO Evt 919,  Run 1082,  Nr. in job = 919 with seeds
 GaussGen                   INFO Evt 920,  Run 1082,  Nr. in job = 920 with seeds [1082, 920, 1933977039, 0]
 GaussGen                   INFO Evt 921,  Run 1082,  Nr. in job = 921 with seeds [1082, 921, 1206636315, 0]
 GaussGen                   INFO Evt 922,  Run 1082,  Nr. in job = 922 with seeds [1082, 922, 511835212, 0]
+
+     Error type 4 has occured after  2164446 PYEXEC calls:
+     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 923,  Run 1082,  Nr. in job = 923 with seeds [1082, 923, 680726622, 0]
 GaussGen                   INFO Evt 924,  Run 1082,  Nr. in job = 924 with seeds [1082, 924, 541163830, 0]
 GaussGen                   INFO Evt 925,  Run 1082,  Nr. in job = 925 with seeds [1082, 925, 382234180, 0]
@@ -1175,6 +1159,9 @@ GaussGen                   INFO Evt 969,  Run 1082,  Nr. in job = 969 with seeds
 GaussGen                   INFO Evt 970,  Run 1082,  Nr. in job = 970 with seeds [1082, 970, 940597180, 0]
 GaussGen                   INFO Evt 971,  Run 1082,  Nr. in job = 971 with seeds [1082, 971, 1171979089, 0]
 GaussGen                   INFO Evt 972,  Run 1082,  Nr. in job = 972 with seeds [1082, 972, 1556564473, 0]
+
+     Error type 9 has occured after  2278746 PYEXEC calls:
+     (PYPTIS:) Weight   1.3401E+00 above unity
 GaussGen                   INFO Evt 973,  Run 1082,  Nr. in job = 973 with seeds [1082, 973, 1293527710, 0]
 GaussGen                   INFO Evt 974,  Run 1082,  Nr. in job = 974 with seeds [1082, 974, 2025480463, 0]
 GaussGen                   INFO Evt 975,  Run 1082,  Nr. in job = 975 with seeds [1082, 975, 1906144165, 0]
@@ -1197,9 +1184,6 @@ GaussGen                   INFO Evt 991,  Run 1082,  Nr. in job = 991 with seeds
 GaussGen                   INFO Evt 992,  Run 1082,  Nr. in job = 992 with seeds [1082, 992, 822030446, 0]
 GaussGen                   INFO Evt 993,  Run 1082,  Nr. in job = 993 with seeds [1082, 993, 364436741, 0]
 GaussGen                   INFO Evt 994,  Run 1082,  Nr. in job = 994 with seeds [1082, 994, 357988633, 0]
-
-     Error type 4 has occured after  2389913 PYEXEC calls:
-     (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 995,  Run 1082,  Nr. in job = 995 with seeds [1082, 995, 1071926836, 0]
 GaussGen                   INFO Evt 996,  Run 1082,  Nr. in job = 996 with seeds [1082, 996, 1242981016, 0]
 GaussGen                   INFO Evt 997,  Run 1082,  Nr. in job = 997 with seeds [1082, 997, 591303913, 0]
@@ -1212,130 +1196,132 @@ GaussGen                SUCCESS 1000 events processed
 GaussGen                SUCCESS ==================================================================
 Generation                 INFO **************************************************
 Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
-Number of all events (including empty events) : 1185802
-Number of events with 0 interaction : 435412
+Number of all events (including empty events) : 1151111
+Number of events with 0 interaction : 421505
 
 Generation                 INFO ***********   Generation counters   **************
-Number of generated events : 750390
-Number of generated interactions : 1188060
-Number of generated interactions with >= 1b : 8890
-Number of generated interactions with >= 3b : 144
-Number of generated interactions with 1 prompt B : 89
-Number of generated interactions with >= 1c : 81593
-Number of generated interactions with >= 3c : 11345
-Number of generated interactions with >= prompt C : 7956
-Number of generated interactions with b and c : 1858
+Number of generated events : 729606
+Number of generated interactions : 1155962
+Number of generated interactions with >= 1b : 8787
+Number of generated interactions with >= 3b : 116
+Number of generated interactions with 1 prompt B : 101
+Number of generated interactions with >= 1c : 80875
+Number of generated interactions with >= 3c : 11440
+Number of generated interactions with >= prompt C : 7825
+Number of generated interactions with b and c : 1920
 Number of accepted events : 1000
-Number of interactions in accepted events : 2009
-Number of accepted interactions with >= 1b : 1011
-Number of accepted interactions with >= 3b : 26
-Number of accepted interactions with 1 prompt B : 1
-Number of accepted interactions with >= 1c : 304
-Number of accepted interactions with >= 3c : 39
-Number of accepted interactions with >= prompt C : 7
-Number of accepted interactions with b and c : 234
+Number of interactions in accepted events : 1993
+Number of accepted interactions with >= 1b : 1006
+Number of accepted interactions with >= 3b : 24
+Number of accepted interactions with 1 prompt B : 0
+Number of accepted interactions with >= 1c : 274
+Number of accepted interactions with >= 3c : 41
+Number of accepted interactions with >= prompt C : 6
+Number of accepted interactions with b and c : 205
 
 Generation.SignalRepe...   INFO *************   Signal counters   ****************
-Number of events for generator level cut, before : 2775, after : 479
-Efficiency of the generator level cut : 0.17261 +/- 0.007174
-Number of z-inverted events : 521
+Number of events for generator level cut, before : 2681, after : 516
+Efficiency of the generator level cut : 0.19247 +/- 0.0076139
+Number of z-inverted events : 484
 
-Number of events for generator particle level cut, before : 1818, after : 313
-Efficiency of the generator particle level cut : 0.17217 +/- 0.0088542
-Number of events for generator anti-particle level cut, before : 957, after : 166
-Efficiency of the generator anti-particle level cut : 0.17346 +/- 0.01224
+Number of events for generator particle level cut, before : 1760, after : 344
+Efficiency of the generator particle level cut : 0.19545 +/- 0.0094524
+Number of events for generator anti-particle level cut, before : 921, after : 172
+Efficiency of the generator anti-particle level cut : 0.18675 +/- 0.012841
 
-Number of signal B0 in sample : 670 [fraction : 0.67 +/- 0.014869]
-Number of signal B~0 in sample : 330 [fraction : 0.33 +/- 0.014869]
+Number of signal B0 in sample : 650 [fraction : 0.65 +/- 0.015083]
+Number of signal B~0 in sample : 350 [fraction : 0.35 +/- 0.015083]
 
-Number of accepted B0 : 126 [fraction : 0.35393 +/- 0.025344]
-Number of accepted B+ : 143 [fraction : 0.40169 +/- 0.025983]
-Number of accepted Bs0 : 43 [fraction : 0.12079 +/- 0.017272]
-Number of accepted b-Baryon : 44 [fraction : 0.1236 +/- 0.017443]
+Number of accepted B0 : 139 [fraction : 0.37265 +/- 0.025035]
+Number of accepted B+ : 157 [fraction : 0.42091 +/- 0.025563]
+Number of accepted Bs0 : 40 [fraction : 0.10724 +/- 0.016021]
+Number of accepted b-Baryon : 37 [fraction : 0.099196 +/- 0.015478]
 Number of accepted Bc+ : 0 [fraction : 0 +/- 0]
-Number of accepted anti-B0 : 283 [fraction : 0.40661 +/- 0.018619]
-Number of accepted B- : 293 [fraction : 0.42098 +/- 0.018714]
-Number of accepted anti-Bs0 : 63 [fraction : 0.090517 +/- 0.010876]
-Number of accepted anti-b-Baryon : 57 [fraction : 0.081897 +/- 0.010394]
+Number of accepted anti-B0 : 262 [fraction : 0.3893 +/- 0.018795]
+Number of accepted B- : 285 [fraction : 0.42348 +/- 0.019047]
+Number of accepted anti-Bs0 : 69 [fraction : 0.10253 +/- 0.011693]
+Number of accepted anti-b-Baryon : 57 [fraction : 0.084695 +/- 0.010733]
 Number of accepted Bc- : 0 [fraction : 0 +/- 0]
-Number of accepted (bb) : 0
+Number of accepted (bb) : 2
 
-Number of accepted D0 : 380 [fraction : 0.53901 +/- 0.018774]
-Number of accepted D+ : 146 [fraction : 0.20709 +/- 0.015262]
-Number of accepted Ds+ : 86 [fraction : 0.12199 +/- 0.012326]
-Number of accepted c-Baryon : 93 [fraction : 0.13191 +/- 0.012745]
-Number of accepted anti-D0 : 256 [fraction : 0.43986 +/- 0.020575]
-Number of accepted D- : 123 [fraction : 0.21134 +/- 0.016923]
-Number of accepted Ds- : 125 [fraction : 0.21478 +/- 0.017023]
-Number of accepted anti-c-Baryon : 78 [fraction : 0.13402 +/- 0.014121]
-Number of accepted (cc) : 23
+Number of accepted D0 : 341 [fraction : 0.51201 +/- 0.019369]
+Number of accepted D+ : 152 [fraction : 0.22823 +/- 0.016263]
+Number of accepted Ds+ : 92 [fraction : 0.13814 +/- 0.01337]
+Number of accepted c-Baryon : 81 [fraction : 0.12162 +/- 0.012665]
+Number of accepted anti-D0 : 262 [fraction : 0.46454 +/- 0.021001]
+Number of accepted D- : 126 [fraction : 0.2234 +/- 0.017539]
+Number of accepted Ds- : 98 [fraction : 0.17376 +/- 0.015955]
+Number of accepted anti-c-Baryon : 78 [fraction : 0.1383 +/- 0.014536]
+Number of accepted (cc) : 32
 
-Number of accepted B : 226 [fraction : 0.226 +/- 0.013226]
-Number of accepted B* : 665 [fraction : 0.665 +/- 0.014926]
-Number of accepted B** : 109 [fraction : 0.109 +/- 0.0098549]
+Number of accepted B : 207 [fraction : 0.207 +/- 0.012812]
+Number of accepted B* : 677 [fraction : 0.677 +/- 0.014788]
+Number of accepted B** : 116 [fraction : 0.116 +/- 0.010126]
 
 Number of accepted D : 0 [fraction : 0 +/- 0]
 Number of accepted D* : 1000 [fraction : 1 +/- 0]
 Number of accepted D** : 0 [fraction : 0 +/- 0]
 
-HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'B0' 	Actual is 0.46067+-0.0122876(0.462217)	Nominal is 0.457183 [mm]
-HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'B+' 	Actual is 0.464955+-0.0220194(0.465022)	Nominal is 0.49106 [mm]
+HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'B0' 	Actual is 0.461436+-0.0121317(0.454413)	Nominal is 0.457183 [mm]
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'B+' 	Actual is 0.46661+-0.0208302(0.440399)	Nominal is 0.49106 [mm]
 HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B+' StatusCode=FAILURE
-HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'B_s0' 	Actual is 0.454745+-0.0437767(0.461216)	Nominal is 0.441294 [mm]
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'B_s0' 	Actual is 0.396624+-0.0295526(0.30995)	Nominal is 0.441294 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B_s0' StatusCode=FAILURE
 HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: No 'B_c+' Particles are found! StatusCode=FAILURE
-HepMCLifeTime             ERROR  >2   sigma deviation in lifetime for 'Lambda_b0' 	Actual is 0.332185+-0.0347293(0.329471)	Nominal is 0.413714 [mm]
-HepMCLifeTime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >2 sigma deviation for 'Lambda_b0' StatusCode=FAILURE
-HepMCLifeTime             ERROR  >2   sigma deviation in lifetime for 'D0' 	Actual is 0.133646+-0.00389269(0.129457)	Nominal is 0.122945 [mm]
-HepMCLifeTime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >2 sigma deviation for 'D0' StatusCode=FAILURE
-HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'D+' 	Actual is 0.311077+-0.0173248(0.335494)	Nominal is 0.311784 [mm]
-HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'D_s+' 	Actual is 0.15229+-0.00888827(0.148463)	Nominal is 0.149896 [mm]
-HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'Lambda_c+' 	Actual is 0.0617215+-0.00440661(0.058294)	Nominal is 0.0599585 [mm]
+HepMCLifeTime              INFO  >0.5 sigma deviation in lifetime for 'Lambda_b0' 	Actual is 0.440657+-0.0459513(0.426135)	Nominal is 0.413714 [mm]
+HepMCLifeTime              INFO  >0.5 sigma deviation in lifetime for 'D0' 	Actual is 0.125309+-0.00378643(0.120573)	Nominal is 0.122945 [mm]
+HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'D+' 	Actual is 0.315347+-0.0147117(0.295335)	Nominal is 0.311784 [mm]
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'D_s+' 	Actual is 0.137635+-0.00827107(0.134389)	Nominal is 0.149896 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'D_s+' StatusCode=FAILURE
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'Lambda_c+' 	Actual is 0.0557225+-0.0041601(0.0516254)	Nominal is 0.0599585 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'Lambda_c+' StatusCode=FAILURE
 HepMCLifeTime           SUCCESS Booked 9 Histogram(s) : 1D=9
 HepMCLifeTime           SUCCESS List of booked 1D histograms in directory         "Gen/HepMCLifeTime" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | LifeTime B+               | "LifeTime B+"                                 |   446   |    0.46495 | 0.46502    |      2.022 |     5.9558 |
- | LifeTime B0               | "LifeTime B0"                                 |   1681  |    0.38777 | 0.45618    |     2.2103 |     7.5037 |
+ | LifeTime B+               | "LifeTime B+"                                 |   447   |    0.46661 | 0.4404     |     1.4486 |     2.0283 |
+ | LifeTime B0               | "LifeTime B0"                                 |   1672  |     0.3872 | 0.44946    |      2.251 |     8.4895 |
  | LifeTime B_c+             | "LifeTime B_c+"                               |    0    |          0 | 0          |          0 |          0 |
- | LifeTime B_s0             | "LifeTime B_s0"                               |   168   |    0.30046 | 0.43232    |     2.2004 |     5.4815 |
- | LifeTime D+               | "LifeTime D+"                                 |   375   |    0.31108 | 0.33549    |     2.6955 |     11.131 |
- | LifeTime D0               | "LifeTime D0"                                 |   1106  |    0.13365 | 0.12946    |     1.8738 |     4.7324 |
- | LifeTime D_s+             | "LifeTime D_s+"                               |   279   |    0.15229 | 0.14846    |     1.7797 |     3.6699 |
- | LifeTime Lambda_b0        | "LifeTime Lambda_b0"                          |    90   |    0.33218 | 0.32947    |     1.8069 |     4.4247 |
- | LifeTime Lambda_c+        | "LifeTime Lambda_c+"                          |   175   |   0.061721 | 0.058294   |     1.8463 |     4.6164 |
+ | LifeTime B_s0             | "LifeTime B_s0"                               |   163   |    0.26766 | 0.3152     |     1.3295 |     1.1242 |
+ | LifeTime D+               | "LifeTime D+"                                 |   403   |    0.31535 | 0.29534    |     1.6571 |     3.1033 |
+ | LifeTime D0               | "LifeTime D0"                                 |   1014  |    0.12531 | 0.12057    |     1.6288 |     3.1492 |
+ | LifeTime D_s+             | "LifeTime D_s+"                               |   264   |    0.13763 | 0.13439    |     1.9336 |     5.4408 |
+ | LifeTime Lambda_b0        | "LifeTime Lambda_b0"                          |    86   |    0.44066 | 0.42613    |     1.5113 |     2.2595 |
+ | LifeTime Lambda_c+        | "LifeTime Lambda_c+"                          |   154   |   0.055722 | 0.051625   |     1.3353 |     1.6783 |
 HepMCLifeTime           SUCCESS Number of counters : 9
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "LifeTime B+"                                   |       446 |   207.3699 |    0.46495 |    0.46502 |   0.0017768 |      3.3235 |
- | "LifeTime B0"                                   |      1415 |   651.8483 |    0.46067 |    0.46222 |  0.00042110 |      4.1805 |
+ | "LifeTime B+"                                   |       447 |   208.5746 |    0.46661 |    0.44040 |   0.0016046 |      2.4253 |
+ | "LifeTime B0"                                   |      1403 |   647.3945 |    0.46144 |    0.45441 |  0.00013319 |      4.1647 |
  | "LifeTime B_c+"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "LifeTime B_s0"                                 |       111 |   50.47666 |    0.45474 |    0.46122 |   0.0036635 |      2.3930 |
- | "LifeTime D+"                                   |       375 |   116.6538 |    0.31108 |    0.33549 |  0.00029272 |      2.5840 |
- | "LifeTime D0"                                   |      1106 |   147.8126 |    0.13365 |    0.12946 |  8.2883e-06 |     0.88252 |
- | "LifeTime D_s+"                                 |       279 |   42.48902 |    0.15229 |    0.14846 |  0.00062564 |     0.87767 |
- | "LifeTime Lambda_b0"                            |        90 |   29.89664 |    0.33218 |    0.32947 |   0.0079422 |      1.8877 |
- | "LifeTime Lambda_c+"                            |       175 |   10.80126 |   0.061721 |   0.058294 |  0.00083493 |     0.32975 |
-HepMCLifeTime           SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/2/2/0
-HepMCLifeTime           SUCCESS  #ERRORS     = 1        Message = '>2 sigma deviation for 'D0''
-HepMCLifeTime           SUCCESS  #ERRORS     = 1        Message = '>2 sigma deviation for 'Lambda_b0''
+ | "LifeTime B_s0"                                 |       110 |   43.62868 |    0.39662 |    0.30995 |   0.0070224 |      1.4381 |
+ | "LifeTime D+"                                   |       403 |   127.0849 |    0.31535 |    0.29534 |  5.4009e-05 |      1.6086 |
+ | "LifeTime D0"                                   |      1014 |   127.0631 |    0.12531 |    0.12057 |  1.3866e-05 |     0.76754 |
+ | "LifeTime D_s+"                                 |       264 |   36.33557 |    0.13763 |    0.13439 |  0.00048085 |     0.88882 |
+ | "LifeTime Lambda_b0"                            |        86 |   37.89647 |    0.44066 |    0.42613 |   0.0032814 |      2.1017 |
+ | "LifeTime Lambda_c+"                            |       154 |   8.581261 |   0.055722 |   0.051625 |  0.00033848 |     0.25618 |
+HepMCLifeTime           SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/5/0
 HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B_s0''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'D_s+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'Lambda_c+''
 HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = 'No 'B_c+' Particles are found!'
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 850795
+= Number of particles generated: 840462
 = Number of events: 1000
-= Mean multiplicity: 850.795
+= Mean multiplicity: 840.462
 =                                                                 =
-= Number of pseudo stable particles generated: 719257
+= Number of pseudo stable particles generated: 709343
 = Number of events: 1000
-= Mean pseudo stable multiplicity: 719.257
+= Mean pseudo stable multiplicity: 709.343
 =                                                                 =
-= Number of charged stable particles generated: 218182
+= Number of charged stable particles generated: 214234
 = Number of events: 1000
-= Mean charged stable multiplicity: 218.182
+= Mean charged stable multiplicity: 214.234
 =                                                                 =
-= Number of charged stable particles in LHCb eta 53176
+= Number of charged stable particles in LHCb eta 52480
 = Number of events: 1000
-= Mean charged stable multiplicity in LHCb eta: 53.176
+= Mean charged stable multiplicity in LHCb eta: 52.48
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
@@ -1379,82 +1365,82 @@ Generation.SignalRepe...SUCCESS  #WARNINGS   = 1        Message = 'releaseSvc(II
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I      1188060      40908871 I  9.680E+01 I
- I  11 f + f' -> f + f' (QCD)       I       146441             0 I  1.195E+01 I
- I  12 f + fbar -> f' + fbar'       I          117             0 I  9.547E-03 I
- I  13 f + fbar -> g + g            I          131             0 I  1.069E-02 I
- I  28 f + g -> f + g               I       133499             0 I  1.089E+01 I
- I  53 g + g -> f + fbar            I         8496             0 I  6.933E-01 I
- I  68 g + g -> g + g               I       343218             0 I  2.801E+01 I
- I  91 Elastic scattering           I       255628        255628 I  2.079E+01 I
- I  92 Single diffractive (XB)      I        85954         85954 I  7.003E+00 I
- I  93 Single diffractive (AX)      I        85685         85685 I  7.003E+00 I
- I  94 Double  diffractive          I       119859        120918 I  9.699E+00 I
- I  95 Low-pT scattering            I            0        640952 I  0.000E+00 I
- I 421 g + g  -> cc~[3S1(1)] + g    I           51          3289 I  4.187E-03 I
- I 422 g + g  -> cc~[3S1(8)] + g    I          263         16907 I  1.975E-02 I
- I 423 g + g  -> cc~[1S0(8)] + g    I          178         18765 I  1.476E-02 I
- I 424 g + g  -> cc~[3PJ(8)] + g    I          406         48383 I  3.104E-02 I
- I 425 g + q  -> q + cc~[3S1(8)]    I           51          3570 I  3.926E-03 I
- I 426 g + q  -> q + cc~[1S0(8)]    I           31          3564 I  2.380E-03 I
- I 427 g + q  -> q + cc~[3PJ(8)]    I           72          8989 I  5.126E-03 I
- I 428 q + q~ -> g + cc~[3S1(8)]    I            0            34 I  2.381E-05 I
- I 429 q + q~ -> g + cc~[1S0(8)]    I            0             1 I  1.455E-08 I
- I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             7 I  4.382E-06 I
- I 431 g + g  -> cc~[3P0(1)] + g    I         2128        259198 I  1.731E-01 I
- I 432 g + g  -> cc~[3P1(1)] + g    I         1140        106463 I  9.525E-02 I
- I 433 g + g  -> cc~[3P2(1)] + g    I         2464        292078 I  2.031E-01 I
- I 434 q + g  -> q + cc~[3P0(1)]    I          320         47427 I  2.755E-02 I
- I 435 q + g  -> q + cc~[3P1(1)]    I          199         21655 I  1.628E-02 I
- I 436 q + g  -> q + cc~[3P2(1)]    I          406         54133 I  3.444E-02 I
- I 437 q + q~ -> g + cc~[3P0(1)]    I            0             1 I  1.899E-06 I
- I 438 q + q~ -> g + cc~[3P1(1)]    I            0            47 I  2.353E-05 I
- I 439 q + q~ -> g + cc~[3P2(1)]    I            0            41 I  1.503E-05 I
- I 461 g + g  -> bb~[3S1(1)] + g    I            1            42 I  1.850E-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I            3           166 I  3.212E-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I            1            70 I  1.194E-04 I
- I 464 g + g  -> bb~[3PJ(8)] + g    I            0            14 I  4.245E-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I            0            50 I  7.101E-05 I
- I 466 g + q  -> q + bb~[1S0(8)]    I            0            15 I  2.816E-05 I
- I 467 g + q  -> q + bb~[3PJ(8)]    I            0             7 I  1.250E-06 I
- I 468 q + q~ -> g + bb~[3S1(8)]    I            0             0 I  0.000E+00 I
+ I   0 All included subprocesses    I      1155962      39909089 I  9.679E+01 I
+ I  11 f + f' -> f + f' (QCD)       I       142658             0 I  1.194E+01 I
+ I  12 f + fbar -> f' + fbar'       I          117             0 I  9.794E-03 I
+ I  13 f + fbar -> g + g            I          126             0 I  1.055E-02 I
+ I  28 f + g -> f + g               I       130704             0 I  1.094E+01 I
+ I  53 g + g -> f + fbar            I         8206             0 I  6.869E-01 I
+ I  68 g + g -> g + g               I       334161             0 I  2.797E+01 I
+ I  91 Elastic scattering           I       247397        247397 I  2.079E+01 I
+ I  92 Single diffractive (XB)      I        83855         83855 I  7.003E+00 I
+ I  93 Single diffractive (AX)      I        83306         83306 I  7.003E+00 I
+ I  94 Double  diffractive          I       116520        117607 I  9.694E+00 I
+ I  95 Low-pT scattering            I            0        624903 I  0.000E+00 I
+ I 421 g + g  -> cc~[3S1(1)] + g    I           54          3494 I  4.107E-03 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I          245         16538 I  1.969E-02 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I          158         18398 I  1.458E-02 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I          388         46645 I  3.073E-02 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I           55          3559 I  3.877E-03 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I           29          3401 I  2.301E-03 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I           58          8724 I  5.240E-03 I
+ I 428 q + q~ -> g + cc~[3S1(8)]    I            0            31 I  1.860E-05 I
+ I 429 q + q~ -> g + cc~[1S0(8)]    I            0             2 I  3.750E-07 I
+ I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             8 I  2.196E-06 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I         2083        251526 I  1.734E-01 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I         1110        103406 I  9.263E-02 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I         2439        283613 I  2.012E-01 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I          327         45911 I  2.766E-02 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I          224         20932 I  1.738E-02 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I          399         52746 I  3.410E-02 I
+ I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
+ I 438 q + q~ -> g + cc~[3P1(1)]    I            0            45 I  2.496E-05 I
+ I 439 q + q~ -> g + cc~[3P2(1)]    I            0            46 I  1.362E-05 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I            1            45 I  1.964E-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I            8           196 I  3.899E-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I            1            60 I  4.956E-05 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I            0            23 I  5.163E-05 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I            1            71 I  1.064E-04 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I            0            24 I  3.583E-05 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            2             2 I  3.833E-05 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            0             1 I  4.387E-13 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I           22          1351 I  2.123E-03 I
- I 472 g + g  -> bb~[3P1(1)] + g    I           12           316 I  3.025E-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I           37          1670 I  2.866E-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I            4           322 I  3.873E-04 I
- I 475 q + g  -> q + bb~[3P1(1)]    I            0            60 I  3.047E-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I            8           491 I  5.336E-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I           27          1247 I  2.326E-03 I
+ I 472 g + g  -> bb~[3P1(1)] + g    I           13           308 I  1.428E-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I           32          1634 I  2.720E-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I            3           316 I  2.391E-04 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            0            58 I  2.080E-05 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I            7           467 I  4.934E-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000E+00 I
- I 478 q + q~ -> g + bb~[3P1(1)]    I            0             1 I  6.816E-10 I
- I 479 q + q~ -> g + bb~[3P2(1)]    I            0             0 I  0.000E+00 I
- I 480 g + g  -> Psi(2S) + g        I           33          1290 I  2.153E-03 I
- I 481 g + g  -> Upsilon(2S) + g    I            3            31 I  1.869E-04 I
- I 482 g + g  -> Upsilon(3S) + g    I            1            34 I  7.954E-05 I
- I 483 g + g  -> Upsilon(4S) + g    I            1            32 I  1.158E-04 I
- I 485 g + g  -> psi(3770) + g      I         1197          9353 I  1.015E-01 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             0 I  0.000E+00 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            1             1 I  2.315E-06 I
+ I 480 g + g  -> Psi(2S) + g        I           33          1337 I  2.050E-03 I
+ I 481 g + g  -> Upsilon(2S) + g    I            5            33 I  2.205E-04 I
+ I 482 g + g  -> Upsilon(3S) + g    I            2            25 I  1.327E-04 I
+ I 483 g + g  -> Upsilon(4S) + g    I            1            20 I  1.529E-04 I
+ I 485 g + g  -> psi(3770) + g      I         1206          9213 I  1.008E-01 I
  I                                  I                            I            I
  ==============================================================================
 
- ********* Total number of errors, excluding junctions =        0 *************
- ********* Total number of errors, including junctions =       12 *************
- ********* Total number of warnings =                         100 *************
+ ********* Total number of errors, excluding junctions =        1 *************
+ ********* Total number of errors, including junctions =        6 *************
+ ********* Total number of warnings =                         242 *************
  ********* Fraction of events that fail fragmentation cuts =  0.00002 *********
 
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |       990 |      2.048 |  0.0020687 |   0.079691 |     -1.0240 |      2.0480 |
- | "Total Memory/MB"                               |      1000 |   604483.2 |     604.48 |    0.26897 |      602.46 |      605.54 |
+ | "Delta Memory/MB"                               |       990 |     65.668 |   0.066331 |     2.0818 |      0.0000 |      65.536 |
+ | "Total Memory/MB"                               |      1000 |   679465.6 |     679.47 |     11.563 |      615.76 |      681.57 |
 GaussGen.GaussGenMemory SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/2/0
-GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 1        Message = 'Delta Memory for the event exceeds 3*sigma'
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
 GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 3        Message = 'Total Memory for the event exceeds 3*sigma'
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
  ==============================================================================
@@ -1467,83 +1453,83 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I      1188060      40908871 I  9.680E+01 I
- I  11 f + f' -> f + f' (QCD)       I       146441             0 I  1.195E+01 I
- I  12 f + fbar -> f' + fbar'       I          117             0 I  9.547E-03 I
- I  13 f + fbar -> g + g            I          131             0 I  1.069E-02 I
- I  28 f + g -> f + g               I       133499             0 I  1.089E+01 I
- I  53 g + g -> f + fbar            I         8496             0 I  6.933E-01 I
- I  68 g + g -> g + g               I       343218             0 I  2.801E+01 I
- I  91 Elastic scattering           I       255628        255628 I  2.079E+01 I
- I  92 Single diffractive (XB)      I        85954         85954 I  7.003E+00 I
- I  93 Single diffractive (AX)      I        85685         85685 I  7.003E+00 I
- I  94 Double  diffractive          I       119859        120918 I  9.699E+00 I
- I  95 Low-pT scattering            I            0        640952 I  0.000E+00 I
- I 421 g + g  -> cc~[3S1(1)] + g    I           51          3289 I  4.187E-03 I
- I 422 g + g  -> cc~[3S1(8)] + g    I          263         16907 I  1.975E-02 I
- I 423 g + g  -> cc~[1S0(8)] + g    I          178         18765 I  1.476E-02 I
- I 424 g + g  -> cc~[3PJ(8)] + g    I          406         48383 I  3.104E-02 I
- I 425 g + q  -> q + cc~[3S1(8)]    I           51          3570 I  3.926E-03 I
- I 426 g + q  -> q + cc~[1S0(8)]    I           31          3564 I  2.380E-03 I
- I 427 g + q  -> q + cc~[3PJ(8)]    I           72          8989 I  5.126E-03 I
- I 428 q + q~ -> g + cc~[3S1(8)]    I            0            34 I  2.381E-05 I
- I 429 q + q~ -> g + cc~[1S0(8)]    I            0             1 I  1.455E-08 I
- I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             7 I  4.382E-06 I
- I 431 g + g  -> cc~[3P0(1)] + g    I         2128        259198 I  1.731E-01 I
- I 432 g + g  -> cc~[3P1(1)] + g    I         1140        106463 I  9.525E-02 I
- I 433 g + g  -> cc~[3P2(1)] + g    I         2464        292078 I  2.031E-01 I
- I 434 q + g  -> q + cc~[3P0(1)]    I          320         47427 I  2.755E-02 I
- I 435 q + g  -> q + cc~[3P1(1)]    I          199         21655 I  1.628E-02 I
- I 436 q + g  -> q + cc~[3P2(1)]    I          406         54133 I  3.444E-02 I
- I 437 q + q~ -> g + cc~[3P0(1)]    I            0             1 I  1.899E-06 I
- I 438 q + q~ -> g + cc~[3P1(1)]    I            0            47 I  2.353E-05 I
- I 439 q + q~ -> g + cc~[3P2(1)]    I            0            41 I  1.503E-05 I
- I 461 g + g  -> bb~[3S1(1)] + g    I            1            42 I  1.850E-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I            3           166 I  3.212E-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I            1            70 I  1.194E-04 I
- I 464 g + g  -> bb~[3PJ(8)] + g    I            0            14 I  4.245E-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I            0            50 I  7.101E-05 I
- I 466 g + q  -> q + bb~[1S0(8)]    I            0            15 I  2.816E-05 I
- I 467 g + q  -> q + bb~[3PJ(8)]    I            0             7 I  1.250E-06 I
- I 468 q + q~ -> g + bb~[3S1(8)]    I            0             0 I  0.000E+00 I
+ I   0 All included subprocesses    I      1155962      39909089 I  9.679E+01 I
+ I  11 f + f' -> f + f' (QCD)       I       142658             0 I  1.194E+01 I
+ I  12 f + fbar -> f' + fbar'       I          117             0 I  9.794E-03 I
+ I  13 f + fbar -> g + g            I          126             0 I  1.055E-02 I
+ I  28 f + g -> f + g               I       130704             0 I  1.094E+01 I
+ I  53 g + g -> f + fbar            I         8206             0 I  6.869E-01 I
+ I  68 g + g -> g + g               I       334161             0 I  2.797E+01 I
+ I  91 Elastic scattering           I       247397        247397 I  2.079E+01 I
+ I  92 Single diffractive (XB)      I        83855         83855 I  7.003E+00 I
+ I  93 Single diffractive (AX)      I        83306         83306 I  7.003E+00 I
+ I  94 Double  diffractive          I       116520        117607 I  9.694E+00 I
+ I  95 Low-pT scattering            I            0        624903 I  0.000E+00 I
+ I 421 g + g  -> cc~[3S1(1)] + g    I           54          3494 I  4.107E-03 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I          245         16538 I  1.969E-02 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I          158         18398 I  1.458E-02 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I          388         46645 I  3.073E-02 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I           55          3559 I  3.877E-03 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I           29          3401 I  2.301E-03 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I           58          8724 I  5.240E-03 I
+ I 428 q + q~ -> g + cc~[3S1(8)]    I            0            31 I  1.860E-05 I
+ I 429 q + q~ -> g + cc~[1S0(8)]    I            0             2 I  3.750E-07 I
+ I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             8 I  2.196E-06 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I         2083        251526 I  1.734E-01 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I         1110        103406 I  9.263E-02 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I         2439        283613 I  2.012E-01 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I          327         45911 I  2.766E-02 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I          224         20932 I  1.738E-02 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I          399         52746 I  3.410E-02 I
+ I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
+ I 438 q + q~ -> g + cc~[3P1(1)]    I            0            45 I  2.496E-05 I
+ I 439 q + q~ -> g + cc~[3P2(1)]    I            0            46 I  1.362E-05 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I            1            45 I  1.964E-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I            8           196 I  3.899E-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I            1            60 I  4.956E-05 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I            0            23 I  5.163E-05 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I            1            71 I  1.064E-04 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I            0            24 I  3.583E-05 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            2             2 I  3.833E-05 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            0             1 I  4.387E-13 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I           22          1351 I  2.123E-03 I
- I 472 g + g  -> bb~[3P1(1)] + g    I           12           316 I  3.025E-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I           37          1670 I  2.866E-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I            4           322 I  3.873E-04 I
- I 475 q + g  -> q + bb~[3P1(1)]    I            0            60 I  3.047E-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I            8           491 I  5.336E-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I           27          1247 I  2.326E-03 I
+ I 472 g + g  -> bb~[3P1(1)] + g    I           13           308 I  1.428E-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I           32          1634 I  2.720E-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I            3           316 I  2.391E-04 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            0            58 I  2.080E-05 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I            7           467 I  4.934E-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000E+00 I
- I 478 q + q~ -> g + bb~[3P1(1)]    I            0             1 I  6.816E-10 I
- I 479 q + q~ -> g + bb~[3P2(1)]    I            0             0 I  0.000E+00 I
- I 480 g + g  -> Psi(2S) + g        I           33          1290 I  2.153E-03 I
- I 481 g + g  -> Upsilon(2S) + g    I            3            31 I  1.869E-04 I
- I 482 g + g  -> Upsilon(3S) + g    I            1            34 I  7.954E-05 I
- I 483 g + g  -> Upsilon(4S) + g    I            1            32 I  1.158E-04 I
- I 485 g + g  -> psi(3770) + g      I         1197          9353 I  1.015E-01 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             0 I  0.000E+00 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            1             1 I  2.315E-06 I
+ I 480 g + g  -> Psi(2S) + g        I           33          1337 I  2.050E-03 I
+ I 481 g + g  -> Upsilon(2S) + g    I            5            33 I  2.205E-04 I
+ I 482 g + g  -> Upsilon(3S) + g    I            2            25 I  1.327E-04 I
+ I 483 g + g  -> Upsilon(4S) + g    I            1            20 I  1.529E-04 I
+ I 485 g + g  -> psi(3770) + g      I         1206          9213 I  1.008E-01 I
  I                                  I                            I            I
  ==============================================================================
 
- ********* Total number of errors, excluding junctions =        0 *************
- ********* Total number of errors, including junctions =       12 *************
- ********* Total number of warnings =                         100 *************
+ ********* Total number of errors, excluding junctions =        1 *************
+ ********* Total number of errors, including junctions =        6 *************
+ ********* Total number of warnings =                         242 *************
  ********* Fraction of events that fail fragmentation cuts =  0.00002 *********
 
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |  5162.882 |  6371.953 |   12.905   54466.1 |    1000 |  6371.953 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |  5162.834 |  6371.781 |   12.876   54465.8 |    1000 |  6371.781 |
-TimingAuditor.TIMER        INFO   Generator                   |  5162.833 |  6371.775 |   12.874   54465.8 |    1000 |  6371.775 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  5162.829 |  6371.771 |   12.870   54465.8 |    1000 |  6371.771 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.371 |     0.590 |    0.123      14.9 |    1000 |     0.590 |
-TimingAuditor.TIMER        INFO     Generation                |  5161.424 |  6369.876 |   12.312   54463.9 |    1000 |  6369.876 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     1.012 |     1.278 |    0.276      22.4 |    1000 |     1.278 |
-TimingAuditor.TIMER        INFO      HepMCLifeTime            |     0.519 |     0.677 |    0.145      21.0 |    1000 |     0.677 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.479 |     0.588 |    0.118       7.1 |    1000 |     0.588 |
-TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO EVENT LOOP                    |  3891.761 |  3896.972 |   28.466   30030.5 |    1000 |  3896.972 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |  3891.729 |  3896.946 |   28.443   30030.4 |    1000 |  3896.946 |
+TimingAuditor.TIMER        INFO   Generator                   |  3891.728 |  3896.943 |   28.441   30030.4 |    1000 |  3896.943 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  3891.725 |  3896.941 |   28.439   30030.4 |    1000 |  3896.941 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.292 |     4.479 |    0.088    1370.0 |    1000 |     4.479 |
+TimingAuditor.TIMER        INFO     Generation                |  3890.650 |  3891.677 |   27.510   30029.8 |    1000 |  3891.677 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.770 |     0.772 |    0.195       2.8 |    1000 |     0.772 |
+TimingAuditor.TIMER        INFO      HepMCLifeTime            |     0.443 |     0.439 |    0.111       1.7 |    1000 |     0.439 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.318 |     0.327 |    0.074       1.2 |    1000 |     0.327 |
+TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 FileRecordCnvSvc           INFO File sharing enabled. Do not retire files.
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
