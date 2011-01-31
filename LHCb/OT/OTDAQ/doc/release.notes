@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v7r9 2011-01-31 =========================
 ! 2011-01-28 - Alexandr Kozlinskiy
  - Initialize OTRawBankDecoder as public tool in OTTimeCreator.
 
