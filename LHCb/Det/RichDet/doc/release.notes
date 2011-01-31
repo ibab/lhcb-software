@@ -4,12 +4,18 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v15r3 2011-01-31 =========================
-! 2011-01-21 - Antonis Papanestis
+!========================= RichDet v16r0 2011-01-31 =========================
+
+! 2011-01-31 - Rob Lambert
+ - The following change was accidentally not added into v15r3, 
+   although the release notes were changed.
+
+! 2011-01-31 - Antonis Papanestis
  - Changed the way to handle the refractive index of a gas radiator. Now the
-   relevant parametrs can be read from the CondDB and a gas mixture is 
+   relevant parameters can be read from the CondDB and a gas mixture is 
    supported.
 
+!========================= RichDet v15r3 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
