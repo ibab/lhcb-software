@@ -46,7 +46,7 @@ private:
 
   // job options
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit
-  bool m_smooth;                    ///< Flag for smoothing
+  //bool m_smooth;                    ///< Flag for smoothing
   
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;

@@ -97,7 +97,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MaterialLocator", m_materialLocator);
   declareProperty( "UpdateTransport", m_updateTransport = true );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
-  declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;
+  declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;  
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;

@@ -21,7 +21,8 @@ def ConfiguredMasterFitter( Name,
                             LiteClusters       = False,
                             ApplyMaterialCorrections = None,
                             StateAtBeamLine = True,
-                            MaxNumberOutliers = 2 ):
+                            MaxNumberOutliers = 2 ,
+                            FastOutlierIteration = True ):
     # set the mutable default arguments
     if FieldOff is None:                 FieldOff = TrackSys().fieldOff()
     if SimplifiedGeometry is None:       SimplifiedGeometry = TrackSys().simplifiedGeometry()
@@ -75,6 +76,9 @@ def ConfiguredMasterFitter( Name,
     # change the smoother
     if KalmanSmoother:
         fitter.NodeFitter.BiDirectionalFit = False
+
+    if FastOutlierIteration:
+        fitter.UpdateReferenceInOutlierIterations = False
 
     # don't use drift times
     if NoDriftTimes:
@@ -131,6 +135,29 @@ def ConfiguredEventFitter( Name,
     return eventfitter
 
 
+
+def ConfiguredHltFitter( Name ):
+    fitter = ConfiguredMasterFitter(Name,
+                                    FieldOff=None,
+                                    SimplifiedGeometry = True,
+                                    LiteClusters = True)
+
+    fitter.NodeFitter.BiDirectionalFit    = True
+    fitter.NumberFitIterations = 1
+    fitter.MaxNumberOutliers = 2
+    fitter.UpdateTransport = False
+    fitter.AddDefaultReferenceNodes = True   
+    fitter.UpdateReferenceInOutlierIterations = False   
+
+    ## Force to use drift time
+    from Configurables import TrajOTProjector, TrackProjectorSelector
+    otprojector = TrajOTProjector('OTFastFitProjector')
+    otprojector.PrefitStrategy = 0
+    fitter.Projector.OT = otprojector
+    
+    return fitter
+
+
 def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
                           ForceUseDriftTime = True ):
     fitter = ConfiguredMasterFitter(Name,
@@ -141,7 +168,7 @@ def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
     fitter.MaxNumberOutliers = 0
     fitter.AddDefaultReferenceNodes = False
     fitter.NodeFitter.BiDirectionalFit = False
-    fitter.NodeFitter.Smooth = False
+    fitter.UpdateReferenceInOutlierIterations = False
     if ForceUseDriftTime:
         from Configurables import TrajOTProjector, TrackProjectorSelector
         otprojector = TrajOTProjector('OTFastFitProjector')

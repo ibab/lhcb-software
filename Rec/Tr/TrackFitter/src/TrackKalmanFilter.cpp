@@ -36,7 +36,6 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   declareInterface<ITrackKalmanFilter>( this );
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
-  declareProperty( "Smooth", m_smooth = true ) ;
   declareProperty( "DoF", m_DoF = 5u);
 }
 
@@ -71,6 +70,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
   // The seed covariance comes from the KalmanFitResult
   LHCb::KalmanFitResult* kalfit = dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
   if( !kalfit) return Warning("No kalfit on track",StatusCode::FAILURE,0) ;
+  kalfit->setBiDirectionnal(m_biDirectionalFit);
   
   LHCb::KalmanFitResult::NodeContainer& nodes = kalfit->nodes() ;
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
@@ -91,11 +91,13 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     fitnode->predictedState(LHCb::FitNode::Forward) ;
     fitnode->filteredState(LHCb::FitNode::Forward) ;
   }
-  for( LHCb::TrackFitResult::NodeContainer::reverse_iterator inode = kalfit->nodes().rbegin() ;
-       inode != kalfit->nodes().rend(); ++inode) {
-    LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*inode) ;
-    fitnode->predictedState(LHCb::FitNode::Backward) ;
-    fitnode->filteredState(LHCb::FitNode::Backward) ;
+  if(m_biDirectionalFit){
+    for( LHCb::TrackFitResult::NodeContainer::reverse_iterator inode = kalfit->nodes().rbegin() ;
+	 inode != kalfit->nodes().rend(); ++inode) {
+      LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*inode) ;
+      fitnode->predictedState(LHCb::FitNode::Backward) ;
+      fitnode->filteredState(LHCb::FitNode::Backward) ;
+    }
   }
   
   // This is the only thing we KalmanFilter stll for: set the total
@@ -105,7 +107,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(node) ;
     if( node->type()==LHCb::Node::HitOnTrack ) {
       chisq   += fitnode->deltaChi2Forward() ;
-      chisqbw += fitnode->deltaChi2Backward() ;
+      if(m_biDirectionalFit)chisqbw += fitnode->deltaChi2Backward() ;
       laststate = &(fitnode->filteredState(LHCb::FitNode::Forward)) ;
       ++ndof ;
     }
