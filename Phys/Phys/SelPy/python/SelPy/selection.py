@@ -13,7 +13,6 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 __all__ = ('AutomaticData',
            'AutoData',
            'Selection',
-           'FlatSelectionListBuilder',
            'flatAlgorithmList',
            'NameError',
            'NonEmptyInputLocations',
@@ -223,39 +222,6 @@ class SelSequence(object) :
     def __getitem__(self, index) :
         return self.algos[index]
     
-class FlatSelectionListBuilder(object) :
-    """
-    Builds a flat selection list. Takes a Selection object
-    corresponding to the top selection algorithm, and recursively uses
-    Selection.requiredSelections to make a flat list with all the required
-    selecitons needed to run the top selection. 
-
-    Example: selection sequence for A -> B(bb), C(cc). Add pre-selectors alg0
-             and alg1, and counter counter0.
-
-    # Assume module A2B2bbC2cc defining a Selection object for the decay
-    # A -> B(bb), C(cc)
-    from A2B2bbC2cc import SelA2B2bbC2cc
-    from PhysSelPython.selection import FlatSelectionListBuilder
-    SeqA2B2bbC2cc = FlatSelectionListBuilder('SeqA2B2bbC2cc',
-                                             TopSelection = SelA2B2bbC2cc)
-    # use it
-    mySelList = SeqA2B2bbC2cc.selectionList()
-    print mySelList
-    """
-    __author__ = "Juan Palacios juan.palacios@nikhef.nl"
-
-    def __init__(self,
-                 TopSelection) :
-
-        print 'Warning: FlatSelectionListBuilder deprecated. Please use flatAlgorithmList function instead.'
-        _alg = TopSelection.algorithm()
-        self.selectionList = []
-        if (_alg != None) :
-            _selList = flatSelectionList(TopSelection)
-            _selList = filter(lambda a : type(a) != AutoData, _selList)
-            self.selectionList = [sel.algorithm() for sel in _selList]
-            self.selectionList = removeDuplicates(self.selectionList)
     
 def flatAlgorithmList(selection) :
     """
