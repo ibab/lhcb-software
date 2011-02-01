@@ -39,6 +39,19 @@ namespace LHCb
    *  @author Matthew Needham
    *  @date   19-08-1999
    */
+  
+  // struct UnidirectionalKalmanFilterData {
+  //     UnidirectionalKalmanFilterData() :
+  //       deltaChi2(0), status(Initialized),hasInfoUpstream(Unknown) {}
+  //     enum FilterStatus {Initialized, Predicted, Filtered, Smoothed } ;
+  //     enum CachedBool   {False=0, True=1, Unknown=2;} ;
+  //     State             predictedState ;  ///< predicted state of forward/backward filter
+  //     State             filteredState ;   ///< filtered state of forward filter
+  //     double            deltaChi2 ;       ///< chisq contribution in forward filter
+  //     FilterStatus      status ;          ///< Status of the Node in the fit process
+  //     CachedBool        hasInfoUpstream ; ///< Are the nodes with active measurement upstream of this node?
+  //   } ;
+
 
   class FitNode: public Node {
   public:
@@ -128,10 +141,11 @@ namespace LHCb
 
     /// retrieve state filtered by the kalman filter step
     const State& filteredStateBackward() const { return filteredState(Backward) ; }
-    
+
+
     /// retrieve the state, overloading the inline function in Node
     virtual const State& state() const { 
-      if(m_parent->biDirectionnal()) return biSmoothedState() ;
+      if(m_parent->biDirectionnalSmoother()) return biSmoothedState() ;
       else return classicalSmoothedState();
     }
 
@@ -140,29 +154,51 @@ namespace LHCb
     
     /// retrieve the residual, overloading the function in Node
     virtual double residual() const { 
-      if(m_parent->biDirectionnal()) biSmoothedState() ;
+      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
       else classicalSmoothedState();
       return m_residual ; 
     }
 
     /// retrieve the residual, overloading the function in Node
     virtual double errResidual() const { 
-      if(m_parent->biDirectionnal()) biSmoothedState() ;
+      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
       else classicalSmoothedState();
       return m_errResidual ; 
     }
     
     /// retrieve unbiased residual
     double unbiasedResidual() const { 
-      if(m_parent->biDirectionnal()) biSmoothedState() ;
+      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
       else classicalSmoothedState();
       return type()==HitOnTrack ? m_residual * errMeasure2()/(m_errResidual*m_errResidual) : m_residual ; }
 
     /// retrieve error on unbiased residual
     double errUnbiasedResidual() const {
-      if(m_parent->biDirectionnal()) biSmoothedState() ;
+      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
       else classicalSmoothedState();
       return type()==HitOnTrack ? errMeasure2()/m_errResidual : m_errResidual ; }
+    
+    /*  /// retrieve the state, overloading the inline function in Node
+    virtual const State& state() const { return biSmoothedState() ; }
+
+    /// retrieve the state, overloading the inline function in Node
+    // virtual State& state() { assert(0) ; static LHCb::State s ; return s ; }
+    
+    /// retrieve the residual, overloading the function in Node
+    virtual double residual() const {  biSmoothedState() ; return m_residual ; }
+
+    /// retrieve the residual, overloading the function in Node
+    virtual double errResidual() const { biSmoothedState() ; return m_errResidual ; }
+    
+    /// retrieve unbiased residual
+    double unbiasedResidual() const { 
+      biSmoothedState() ;
+      return type()==HitOnTrack ? m_residual * errMeasure2()/(m_errResidual*m_errResidual) : m_residual ; }
+
+    /// retrieve error on unbiased residual
+    double errUnbiasedResidual() const {
+      biSmoothedState() ;
+      return type()==HitOnTrack ? errMeasure2()/m_errResidual : m_errResidual ; }*/
     
     /// retrieve the unbiased smoothed state at this position
     State unbiasedState() const ;
@@ -206,8 +242,9 @@ namespace LHCb
     /// Deactivate this node (outlier)
     void deactivateMeasurement(bool deactivate = true) ;
     
-    /// Compute smoothed residual by taking weighted average
     Gaudi::Math::ValueWithError computeResidualFromFilter() const ;
+        
+    int index() const ;
 
     /// set previous node
     void setPreviousNode( FitNode* previousNode ) { 
@@ -215,10 +252,16 @@ namespace LHCb
       if( m_prevNode ) m_prevNode->m_nextNode = this ;
     }
 
+    void unLink() {
+      m_prevNode = m_nextNode = 0 ;
+      m_parent = 0 ;
+    }
+    
     /// set the parent
     void setParent( KalmanFitResult* p) { m_parent = p ; }
     /// get the parent
     KalmanFitResult* getParent(){ return m_parent ; }
+   
     
     /// update node residual using a smoothed state
     Gaudi::Math::ValueWithError computeResidual(const LHCb::State& state, bool biased) const ;
@@ -256,6 +299,11 @@ namespace LHCb
     }
 #endif
 
+    // protected:
+    
+    // ! check that the contents of the cov matrix are fine
+    //bool isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
+
   public:
     const FitNode* prevNode( int direction ) const { return direction==Forward ? m_prevNode : m_nextNode ; }
     const FitNode* nextNode( int direction ) const { return direction==Forward ? m_nextNode : m_prevNode ; }
@@ -292,13 +340,9 @@ namespace LHCb
     
 
   private:
-    /// Compute the predicted state in the required direction
     void computePredictedState( int direction ) ;
-    /// Compute the filtered state in the required direction
     void computeFilteredState( int direction ) ;
-    /// Compute the smoothed state using bi-directionnal smoothing
     void computeBiSmoothedState() ;
-    /// Compute the smoothed state using standard smoothing
     void computeClassicalSmoothedState() ;
     
   private:
@@ -308,13 +352,11 @@ namespace LHCb
     /// update node residual using a smoothed state
     void updateResidual(const LHCb::State& state) ;
     
-    /// return unconst reference to the fitnode
+    ///
     FitNode& unConst() const { return const_cast<FitNode&>(*this) ; }
     
-    /// check if node is the first one in a given direction
     bool hasInfoUpstream( int direction ) const ;
 
-    /// insure the consitency of the status
     void resetFilterStatus( int direction, FilterStatus s = Initialized) ;
 
   private:

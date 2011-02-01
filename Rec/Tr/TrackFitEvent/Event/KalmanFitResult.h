@@ -122,11 +122,11 @@ namespace LHCb
     // check the type of error
     std::string getError( );
 
-    // check if the fit is bidirectionnal or not
-    bool biDirectionnal( ){return m_biDirectionnal;};
+    // check if the fit is bidirectionnal or classical(false)
+    bool biDirectionnalSmoother( ){return m_bidirectionalSmoother;};
 
-    // set the type of fit: bidirectionnal or not?
-    void setBiDirectionnal( bool bidir ){ m_biDirectionnal=bidir;};
+    // set the type of fit: bidirectionnal or classical(false)
+    void setBiDirectionnalSmoother( bool bidir ){ m_bidirectionalSmoother=bidir;};
 
   private:
     void computeChiSquares() const ;
@@ -154,8 +154,8 @@ namespace LHCb
     mutable ChiSquare m_chi2MuonT ;
     mutable ChiSquare m_chi2Muon ;
     mutable bool m_chi2CacheValid ;
-    bool m_biDirectionnal ;
     ushort m_errorFlag;
+    bool m_bidirectionalSmoother ;
   } ;  
 }
 

@@ -6,12 +6,12 @@ namespace LHCb
 {
   // default constructor. do nothing.
   KalmanFitResult::KalmanFitResult() 
-    : m_nTrackParameters(5), m_chi2CacheValid(false),m_errorFlag(0x00) {}
+    : m_nTrackParameters(5), m_chi2CacheValid(false),m_errorFlag(0x00),m_bidirectionalSmoother(true) {}
   
   // copy constructor
   KalmanFitResult::KalmanFitResult(const KalmanFitResult& rhs) 
     : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),
-      m_nTrackParameters(rhs.m_nTrackParameters), m_chi2CacheValid(false),m_errorFlag(0x00)
+      m_nTrackParameters(rhs.m_nTrackParameters), m_chi2CacheValid(false),m_errorFlag(0x00),m_bidirectionalSmoother(true)
   {
     establishNodeLinks() ;
   }

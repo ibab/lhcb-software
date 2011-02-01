@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-02-01 - Victor Coco
+ - correct classical smoother call
+
 ! 2011-01-31 - Victor Coco
  - removing assert from FitNode + clean and add comments
 
