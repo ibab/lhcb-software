@@ -50,10 +50,10 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 873 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xf633250
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xf633470
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf81b8a0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf911840
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x107df410
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x107df630
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x109c7450
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10abd3f0
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
@@ -88,10 +88,10 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 900 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf9568d0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf955290
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xf936260
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xf91a040
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x10af9ff0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10a9f970
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x10a9a750
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1092d6e0
   KEY: TTree	Event;3	Root data for Gaudi
   KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
@@ -123,14 +123,15 @@ Tree:FileRecords 0
 +++ section ['Containers'][0]                                       Start:      16 ...       24 [8 entries]
 +++ section ['Databases'][0]                                        Start:       2 ...        3 [1 entries]
 +++ section ['Links'][0]                                            Start:      28 ...       42 [14 entries]
++++ Added new GUID FID=12307486-2DE5-11E0-9797-37048A89BEEF to merge file.
 +++ Added 22 Sections entries with 914 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0xf8f1510
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0xf8e9e80
-  OBJ: TTree	Refs	Root Section data : 0 at: 0xf8d2800
-  OBJ: TTree	Sections	Root Section data : 0 at: 0xf91a040
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x10b1d2c0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10b1b150
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x10b3f3a0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x10ac5bf0
   KEY: TTree	Event;4	Root data for Gaudi
   KEY: TTree	FileRecords;4	Root data for Gaudi
-  KEY: TTree	Refs;6	Root Section data
+  KEY: TTree	Refs;7	Root Section data
   KEY: TTree	Sections;6	Root Section data

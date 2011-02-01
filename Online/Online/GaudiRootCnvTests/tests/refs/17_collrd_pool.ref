@@ -45,8 +45,8 @@ EventSelector.Input =  [ "COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:P
 JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.pool.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus257.cern.ch on Fri Sep  3 11:07:14 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus309.cern.ch on Tue Feb  1 09:57:00 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
@@ -71,100 +71,99 @@ Gaudi::Examples::EvtCollectionSelector   SELECTED : True
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#EvtCount[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#SumCount[0]
-ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
-ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
-ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
-ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/10963C36-E12D-E011-8195-003048672FAC#EvtCount[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/10963C36-E12D-E011-8195-003048672FAC#SumCount[0]
+ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/10963C36-E12D-E011-8195-003048672FAC
+ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/10963C36-E12D-E011-8195-003048672FAC
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/10963C36-E12D-E011-8195-003048672FAC/EvtCount=1000
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/10963C36-E12D-E011-8195-003048672FAC/SumCount=123456
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550612.385306 0 (0) 1 (1) 2 (2)
+ReadAlg           SUCCESS FileInfo record: 10963C36-E12D-E011-8195-003048672FAC/EvtCount=1000
+ReadAlg           SUCCESS FileInfo record: 10963C36-E12D-E011-8195-003048672FAC/SumCount=123456
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550612.391662 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550612.395726 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550612.403793 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550613.50416 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 55
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7646 py=8.89134 pz=10.2737
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1296550614.762216 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.1578 py=9.51566 pz=9.19358
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550612.385306 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550612.391662 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550612.395726 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550612.403793 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550613.50416 0 (0) 1 (1) 2 (2)
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 55
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7646 py=8.89134 pz=10.2737
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1296550614.762216 0 (0) 1 (1) 2 (2)
 Gaudi::RootNTup...   INFO End of input Ntuple.
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-EvtTupleSvc.Eve...   INFO Disconnected data IO:40F92596-3AB7-DF11-BDE5-001E4F3E563A[POOLIO.tags]
-RootCnvSvc           INFO Disconnected data IO:2A82CE75-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.mdst]
-RootCnvSvc           INFO Disconnected data IO:76179875-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.dst]
+EvtTupleSvc.Eve...   INFO Disconnected data IO:BCF21739-E12D-E011-A90B-003048672FAC[POOLIO.tags]
+RootCnvSvc           INFO Disconnected data IO:10963C36-E12D-E011-8195-003048672FAC[POOLIO.dst]
+RootCnvSvc           INFO Disconnected data IO:92245936-E12D-E011-8195-003048672FAC[POOLIO.mdst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 ReadAlg:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
 ReadAlg:initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:execute      INFO Time User   : Tot=   92 [ms] Ave/Min/Max= 7.67(+- 7.61)/    3/   32 [ms] #= 12
-ChronoStatSvc        INFO Time User   : Tot=0.618  [s]                                             #=  1
+ReadAlg:execute      INFO Time User   : Tot=   23 [ms] Ave/Min/Max= 1.92(+- 2.84)/    0/   11 [ms] #= 12
+ChronoStatSvc        INFO Time User   : Tot=  328 [ms]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
-Number of MyVertex instances:0
 Number of MyTrack instances:1

@@ -46,8 +46,8 @@ EventSelector.Input +=  [ "DATAFILE='PFN:POOLIO.mdst' SVC='Gaudi::RootEvtSelecto
 JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/RD.pool.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus257.cern.ch on Fri Sep  3 11:06:58 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus309.cern.ch on Tue Feb  1 09:56:58 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
@@ -63,77 +63,75 @@ HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#EvtCount[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#SumCount[0]
-ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
-ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/10963C36-E12D-E011-8195-003048672FAC#EvtCount[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/10963C36-E12D-E011-8195-003048672FAC#SumCount[0]
+ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/10963C36-E12D-E011-8195-003048672FAC
+ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/10963C36-E12D-E011-8195-003048672FAC
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/10963C36-E12D-E011-8195-003048672FAC/EvtCount=1000
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/10963C36-E12D-E011-8195-003048672FAC/SumCount=123456
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1283504755.322193 0 (0) 1 (1) 2 (2)
-ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
-ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1283504755.839119 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1283504755.8528 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1283504755.861528 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1283504755.864692 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1283504755.873181 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1283504756.293766 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1283504756.768202 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1283504757.266199 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1283504757.715144 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1296550612.193239 0 (0) 1 (1) 2 (2)
+ReadAlg           SUCCESS FileInfo record: 10963C36-E12D-E011-8195-003048672FAC/EvtCount=1000
+ReadAlg           SUCCESS FileInfo record: 10963C36-E12D-E011-8195-003048672FAC/SumCount=123456
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550612.385306 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550612.391662 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550612.395726 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1296550612.400812 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550612.403793 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1296550612.406327 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1296550612.410762 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1296550612.412252 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1296550612.416802 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1296550612.610211 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1296550612.828275 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1296550613.053739 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1296550613.27181 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550613.50416 0 (0) 1 (1) 2 (2)
 EventSelector     SUCCESS Reading Event record 501. Record number within stream 1: 501
-ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1283504758.674793 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1283504759.153662 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1283504759.612208 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1283504760.571503 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1296550613.726574 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1296550613.952603 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1296550614.172512 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1296550614.433895 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1296550614.762216 0 (0) 1 (1) 2 (2)
 EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:POOLIO.mdst' SVC='Gaudi::RootEvtSelector'
 EventSelector     SUCCESS Reading Event record 1001. Record number within stream 2: 1
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1283504755.322193 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1283504755.839119 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1283504755.8528 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1283504755.861528 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1283504755.864692 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1283504755.873181 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1283504756.293766 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1283504756.768202 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1283504757.266199 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1283504757.715144 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1296550612.193239 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550612.385306 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550612.391662 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550612.395726 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1296550612.400812 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550612.403793 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1296550612.406327 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1296550612.410762 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1296550612.412252 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1296550612.416802 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1296550612.610211 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1296550612.828275 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1296550613.053739 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1296550613.27181 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550613.50416 0 (0) 1 (1) 2 (2)
 EventSelector     SUCCESS Reading Event record 1501. Record number within stream 2: 501
-ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1283504758.674793 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1283504759.153662 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1283504759.612208 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1283504760.571503 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1296550613.726574 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1296550613.952603 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1296550614.172512 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1296550614.433895 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1296550614.762216 0 (0) 1 (1) 2 (2)
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-RootCnvSvc           INFO Disconnected data IO:2A82CE75-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.mdst]
-RootCnvSvc           INFO Disconnected data IO:76179875-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.dst]
+RootCnvSvc           INFO Disconnected data IO:10963C36-E12D-E011-8195-003048672FAC[POOLIO.dst]
+RootCnvSvc           INFO Disconnected data IO:92245936-E12D-E011-8195-003048672FAC[POOLIO.mdst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 ReadAlg:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:initialize   INFO Time User   : Tot=    1 [ms]                                             #=  1
-ReadAlg:execute      INFO Time User   : Tot= 4.08  [s] Ave/Min/Max= 2.04(+- 1.44)/    0/   38 [ms] #=2000
-ChronoStatSvc        INFO Time User   : Tot= 5.07  [s]                                             #=  1
+ReadAlg:initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
+ReadAlg:execute      INFO Time User   : Tot=0.846  [s] Ave/Min/Max=  423(+-  539)/    0/1e+04 [us] #=2000
+ChronoStatSvc        INFO Time User   : Tot= 1.27  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
-Number of MyVertex instances:0
-Number of MyTrack instances:0

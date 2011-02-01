@@ -35,14 +35,14 @@ EvtTupleSvc.Output =  [ "EvtColl DATAFILE='PFN:ROOTIO.3.tags' OPT='RECREATE' SVC
 JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.3.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus257.cern.ch on Fri Sep  3 11:05:05 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus309.cern.ch on Tue Feb  1 09:56:40 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 EvtTupleSvc          INFO Added stream file:PFN:ROOTIO.3.tags as EvtColl
-IODataManager        INFO Referring to dataset ROOTIO.3.tags by its file ID:383FE458-3AB7-DF11-BF4C-001E4F3E563A
+IODataManager        INFO Referring to dataset ROOTIO.3.tags by its file ID:30D1C42F-E12D-E011-B142-003048672FAC
 Gaudi::RootData...   INFO Recreate Database file:PFN:ROOTIO.3.tags as /EvtColl
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
@@ -78,19 +78,17 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 EvtTupleSvc          INFO NTuples saved successfully
-EvtTupleSvc.Evt...   INFO Disconnected data IO:383FE458-3AB7-DF11-BF4C-001E4F3E563A[ROOTIO.3.tags]
-RootCnvSvc           INFO Disconnected data IO:7A9FB738-3AB7-DF11-8196-001E4F3E563A[ROOTIO.3.dst]
-RootCnvSvc           INFO Disconnected data IO:E0CFD538-3AB7-DF11-8196-001E4F3E563A[ROOTIO.3.mdst]
+EvtTupleSvc.Evt...   INFO Disconnected data IO:30D1C42F-E12D-E011-B142-003048672FAC[ROOTIO.3.tags]
+RootCnvSvc           INFO Disconnected data IO:0ADFE828-E12D-E011-94A2-003048672FAC[ROOTIO.3.mdst]
+RootCnvSvc           INFO Disconnected data IO:4EF0D928-E12D-E011-94A2-003048672FAC[ROOTIO.3.dst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 Writer:finalize      INFO Time User   : Tot=    0 [us]                                             #=  1
-Writer:initialize    INFO Time User   : Tot=   44 [ms]                                             #=  1
-Writer:execute       INFO Time User   : Tot= 2.02  [s] Ave/Min/Max= 2.02(+- 3.41)/    0/   42 [ms] #=1000
-ChronoStatSvc        INFO Time User   : Tot= 2.75  [s]                                             #=  1
+Writer:initialize    INFO Time User   : Tot=   26 [ms]                                             #=  1
+Writer:execute       INFO Time User   : Tot=  374 [ms] Ave/Min/Max=  374(+-  835)/    0/9e+03 [us] #=1000
+ChronoStatSvc        INFO Time User   : Tot=0.738  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
-Number of MyVertex instances:0
-Number of MyTrack instances:0

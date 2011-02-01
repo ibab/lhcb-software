@@ -57,8 +57,8 @@ RootMini.Output = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='RootCnvSvc' OPT='RECREATE'"
 JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/WR.1.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus257.cern.ch on Fri Sep  3 11:02:52 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus309.cern.ch on Tue Feb  1 09:56:20 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
@@ -81,7 +81,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1283504574.185361 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1296550582.446802 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:1 Track:      10.802     9.50498     8.43243 Org:  31 0.0948131 0.0882022 0.0890405
 ReadAlg             DEBUG    Decays:  16
 ReadAlg             DEBUG      0.0955367 0.0974241 0.0982723 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -129,9 +129,9 @@ ReadAlg             DEBUG       0.114853 0.0927442 0.0921961 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.105636 0.0965541   0.09253 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.118701 0.0819518  0.107732 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.106563 0.0702038  0.101916 Collisions:  0 (-1)  1 (-1)  2 (-1)
-IODataManager        INFO Referring to dataset ROOTIO.1.dst by its file ID:60B9A009-3AB7-DF11-BC47-001E4F3E563A
-IODataManager        INFO Referring to dataset ROOTIO.1.mdst by its file ID:7A2BD309-3AB7-DF11-BC47-001E4F3E563A
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504574.531026 0 (-1) 1 (-1) 2 (-1)
+IODataManager        INFO Referring to dataset ROOTIO.1.dst by its file ID:84C18124-E12D-E011-8D8A-003048672FAC
+IODataManager        INFO Referring to dataset ROOTIO.1.mdst by its file ID:A6E6A824-E12D-E011-8D8A-003048672FAC
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550582.709881 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:2 Track:     10.1578     9.51566     9.19358 Org:  12   0.10708  0.109034  0.096556
 ReadAlg             DEBUG    Decays:  54
 ReadAlg             DEBUG       0.097666 0.0945251 0.0900927 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -295,7 +295,7 @@ ReadAlg             DEBUG       0.100675 0.0887908 0.0964475 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.10432  0.111781  0.104624 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0918394 0.0974881  0.108724 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0815648 0.0984427  0.109819 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504574.554433 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550582.718481 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:3 Track:     10.4989     10.4342     9.78193 Org:  16 0.0883089 0.0980969 0.0989754
 ReadAlg             DEBUG    Decays:   4
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -411,7 +411,7 @@ ReadAlg             DEBUG       0.106024  0.095753  0.112037 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.115886  0.089338 0.0764793 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.103776 0.0928696  0.091886 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504574.568884 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550582.723691 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:4 Track:     8.95659     9.22111     10.7468 Org:  35    0.1082 0.0979698 0.0960275
 ReadAlg             DEBUG    Decays:   3
 ReadAlg             DEBUG       0.110419  0.089749 0.0925822 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -572,7 +572,7 @@ ReadAlg             DEBUG       0.100286 0.0804912 0.0973343 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.104589  0.112811 0.0884065 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0922139  0.102432  0.120081 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0937731 0.0932409  0.108906 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1283504574.592864 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1296550582.730612 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:5 Track:     11.1213     8.18301     7.64467 Org:  39 0.0963519   0.10652 0.0938699
 ReadAlg             DEBUG    Decays:  38
 ReadAlg             DEBUG      0.0990801 0.0982084  0.113384 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -634,7 +634,7 @@ ReadAlg             DEBUG       0.109127  0.104738 0.0983583 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.108677 0.0962482 0.0913227 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0848865 0.0908803  0.105893 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0970337  0.112413  0.110682 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504574.601056 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550582.733706 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:6 Track:     10.7592     9.68162     11.3563 Org:  18 0.0941401  0.107751  0.104851
 ReadAlg             DEBUG    Decays:  13
 ReadAlg             DEBUG       0.105539 0.0980193  0.108179 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -692,7 +692,7 @@ ReadAlg             DEBUG      0.0944417 0.0948405  0.117754 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101398  0.106449 0.0964367 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0963533 0.0964479 0.0917974 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0859672 0.0977685 0.0958356 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1283504574.609888 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1296550582.737005 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:7 Track:     9.57394     9.64294      9.8672 Org:  41  0.104371  0.107245  0.100854
 ReadAlg             DEBUG    Decays:  30
 ReadAlg             DEBUG       0.093229 0.0949693  0.103098 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -837,7 +837,7 @@ ReadAlg             DEBUG      0.0982539  0.092417 0.0971565 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.11164 0.0984174  0.107819 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG        0.10548 0.0675091 0.0905533 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.100201  0.103858  0.124267 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1283504574.623519 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1296550582.741712 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:8 Track:      10.978     9.54438     10.9297 Org:   0  0.109247 0.0814294 0.0902878
 ReadAlg             DEBUG    Decays:   5
 ReadAlg             DEBUG       0.121196  0.106986  0.101088 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -873,7 +873,7 @@ ReadAlg             DEBUG       0.109247 0.0814294 0.0902878 Collisions:  0 (-1)
 ReadAlg             DEBUG      0.0982567 0.0796269   0.10203 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.121357  0.106839  0.093799 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.104233  0.113049 0.0996277 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1283504574.628025 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1296550582.743445 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:9 Track:     10.6032     10.0631     9.13475 Org:  74 0.0837793  0.115122  0.107758
 ReadAlg             DEBUG    Decays:  18
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -999,12 +999,12 @@ ReadAlg             DEBUG      0.0980792  0.107177  0.107921 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101559  0.107907 0.0933493 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0891228 0.0988304 0.0977403 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1283504574.645674 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1283504575.250094 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1283504575.756359 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1283504576.518596 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1283504577.265239 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504578.024939 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1296550582.749048 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1296550583.017205 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1296550583.280666 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1296550583.604065 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1296550583.92555 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550584.844822 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:500 Track:     9.79151     8.83918     10.2866 Org:  41 0.0956371 0.0804239  0.106273
 ReadAlg             DEBUG    Decays:  44
 ReadAlg             DEBUG       0.094814 0.0955636 0.0770906 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -1167,31 +1167,29 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 ReadAlg:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
-RootMini:finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
-RootDst:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
 ReadAlg:initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
 WriteAlg:finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
-RootMini:initia...   INFO Time User   : Tot=    0 [us]                                             #=  1
+RootMini:finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
+RootDst:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
 MiniRecords:ini...   INFO Time User   : Tot=    0 [us]                                             #=  1
+RootMini:initia...   INFO Time User   : Tot=    0 [us]                                             #=  1
 DstRecords:init...   INFO Time User   : Tot=    0 [us]                                             #=  1
-MiniRecords:exe...   INFO Time User   : Tot=    0 [us] Ave/Min/Max=    0(+-    0)/    0/    0 [us] #=500
+WriteAlg:initia...   INFO Time User   : Tot=    0 [us]                                             #=  1
+MiniRecords:fin...   INFO Time User   : Tot=    0 [us]                                             #=  1
 DstRecords:execute   INFO Time User   : Tot=    0 [us] Ave/Min/Max=    0(+-    0)/    0/    0 [us] #=500
-RootDst:initialize   INFO Time User   : Tot=    1 [ms]                                             #=  1
-WriteAlg:initia...   INFO Time User   : Tot=0.999 [ms]                                             #=  1
-MiniRecords:fin...   INFO Time User   : Tot=    2 [ms]                                             #=  1
-DstRecords:fina...   INFO Time User   : Tot=    4 [ms]                                             #=  1
-ReadAlg:execute      INFO Time User   : Tot=   31 [ms] Ave/Min/Max=   62(+-  393)/    0/5e+03 [us] #=500
-WriteAlg:execute     INFO Time User   : Tot=  305 [ms] Ave/Min/Max= 0.61(+-0.546)/    0/    5 [ms] #=500
-RootMini:execute     INFO Time User   : Tot= 1.23  [s] Ave/Min/Max= 2.47(+- 8.88)/    0/  106 [ms] #=500
-RootDst:execute      INFO Time User   : Tot= 2.18  [s] Ave/Min/Max= 4.35(+- 14.4)/    0/  169 [ms] #=500
-ChronoStatSvc        INFO Time User   : Tot= 3.92  [s]                                             #=  1
+RootDst:initialize   INFO Time User   : Tot=0.999 [ms]                                             #=  1
+MiniRecords:exe...   INFO Time User   : Tot=    1 [ms] Ave/Min/Max=    2(+- 44.7)/    0/1e+03 [us] #=500
+DstRecords:fina...   INFO Time User   : Tot=    2 [ms]                                             #=  1
+ReadAlg:execute      INFO Time User   : Tot=   20 [ms] Ave/Min/Max=   40(+-  224)/    0/2e+03 [us] #=500
+WriteAlg:execute     INFO Time User   : Tot=   97 [ms] Ave/Min/Max=  194(+-  395)/    0/1e+03 [us] #=500
+RootMini:execute     INFO Time User   : Tot=  485 [ms] Ave/Min/Max= 0.97(+- 2.74)/    0/   33 [ms] #=500
+RootDst:execute      INFO Time User   : Tot= 1.06  [s] Ave/Min/Max= 2.13(+- 5.22)/    0/   80 [ms] #=500
+ChronoStatSvc        INFO Time User   : Tot= 1.76  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-RootCnvSvc           INFO Disconnected data IO:60B9A009-3AB7-DF11-BC47-001E4F3E563A[ROOTIO.1.dst]
-RootCnvSvc           INFO Disconnected data IO:7A2BD309-3AB7-DF11-BC47-001E4F3E563A[ROOTIO.1.mdst]
+RootCnvSvc           INFO Disconnected data IO:84C18124-E12D-E011-8D8A-003048672FAC[ROOTIO.1.dst]
+RootCnvSvc           INFO Disconnected data IO:A6E6A824-E12D-E011-8D8A-003048672FAC[ROOTIO.1.mdst]
 XMLCatalog           INFO File 'ROOTIO.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
-Number of MyVertex instances:0
-Number of MyTrack instances:0

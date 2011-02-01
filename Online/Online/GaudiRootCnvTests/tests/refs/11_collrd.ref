@@ -44,8 +44,8 @@ EventSelector.Input =  [ "COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:R
 JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.1.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus257.cern.ch on Fri Sep  3 11:05:22 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus309.cern.ch on Tue Feb  1 09:56:45 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
@@ -63,7 +63,7 @@ HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [0]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 39
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6774 [1]=18.1075 [2]=17.3899 [3]=17.9673 [4]=17.6287
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6774 [1]=18.1075 [2]=17.3899 [3]=17.9673 [4]=17.6287
@@ -72,178 +72,177 @@ Gaudi::Examples::EvtCollectionSelector   SELECTED : True
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A#/EvtCount[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A#/SumCount[0]
-ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A
-ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A/EvtCount=500
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/60B9A009-3AB7-DF11-BC47-001E4F3E563A/SumCount=123456
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1283504574.185361 0 (0) 1 (1) 2 (2)
-ReadAlg           SUCCESS FileInfo record: 60B9A009-3AB7-DF11-BC47-001E4F3E563A/EvtCount=500
-ReadAlg           SUCCESS FileInfo record: 60B9A009-3AB7-DF11-BC47-001E4F3E563A/SumCount=123456
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/84C18124-E12D-E011-8D8A-003048672FAC#/EvtCount[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/84C18124-E12D-E011-8D8A-003048672FAC#/SumCount[0]
+ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/84C18124-E12D-E011-8D8A-003048672FAC
+ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/84C18124-E12D-E011-8D8A-003048672FAC
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/84C18124-E12D-E011-8D8A-003048672FAC/EvtCount=500
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/84C18124-E12D-E011-8D8A-003048672FAC/SumCount=123456
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1296550582.446802 0 (0) 1 (1) 2 (2)
+ReadAlg           SUCCESS FileInfo record: 84C18124-E12D-E011-8D8A-003048672FAC/EvtCount=500
+ReadAlg           SUCCESS FileInfo record: 84C18124-E12D-E011-8D8A-003048672FAC/SumCount=123456
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [1]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.1578 py=9.51566 pz=9.19358
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504574.531026 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550582.709881 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [2]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504574.554433 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550582.718481 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [3]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504574.568884 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550582.723691 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [5]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504574.601056 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550582.733706 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [6]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 20
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7931 [1]=17.6738 [2]=18.2356 [3]=17.2335 [4]=18.7499
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7931 [1]=17.6738 [2]=18.2356 [3]=17.2335 [4]=18.7499
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.57394 py=9.64294 pz=9.8672
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1283504574.609888 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1296550582.737005 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [7]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 30
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.1953 [1]=18.3717 [2]=17.7559 [3]=17.5532 [4]=16.9245
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.1953 [1]=18.3717 [2]=17.7559 [3]=17.5532 [4]=16.9245
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.978 py=9.54438 pz=10.9297
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1283504574.623519 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1296550582.741712 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [8]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 43
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.2377 [1]=16.0736 [2]=17.7182 [3]=18.0329 [4]=17.3308
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.2377 [1]=16.0736 [2]=17.7182 [3]=18.0329 [4]=17.3308
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.6032 py=10.0631 pz=9.13475
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1283504574.628025 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1296550582.743445 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [9]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504578.024939 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550584.844822 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [10]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 39
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6774 [1]=18.1075 [2]=17.3899 [3]=17.9673 [4]=17.6287
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6774 [1]=18.1075 [2]=17.3899 [3]=17.9673 [4]=17.6287
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.802 py=9.50498 pz=8.43243
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A#/EvtCount[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A#/SumCount[0]
-ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A
-ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A/EvtCount=500
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/7A2BD309-3AB7-DF11-BC47-001E4F3E563A/SumCount=123456
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1283504574.185361 0 (0) 1 (1) 2 (2)
-ReadAlg           SUCCESS FileInfo record: 7A2BD309-3AB7-DF11-BC47-001E4F3E563A/EvtCount=500
-ReadAlg           SUCCESS FileInfo record: 7A2BD309-3AB7-DF11-BC47-001E4F3E563A/SumCount=123456
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC#/EvtCount[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC#/SumCount[0]
+ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC
+ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC/EvtCount=500
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/A6E6A824-E12D-E011-8D8A-003048672FAC/SumCount=123456
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1296550582.446802 0 (0) 1 (1) 2 (2)
+ReadAlg           SUCCESS FileInfo record: A6E6A824-E12D-E011-8D8A-003048672FAC/EvtCount=500
+ReadAlg           SUCCESS FileInfo record: A6E6A824-E12D-E011-8D8A-003048672FAC/SumCount=123456
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [11]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.1578 py=9.51566 pz=9.19358
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504574.531026 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1296550582.709881 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [12]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504574.554433 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1296550582.718481 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [13]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504574.568884 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1296550582.723691 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [15]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504574.601056 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1296550582.733706 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [16]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 20
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7931 [1]=17.6738 [2]=18.2356 [3]=17.2335 [4]=18.7499
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7931 [1]=17.6738 [2]=18.2356 [3]=17.2335 [4]=18.7499
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.57394 py=9.64294 pz=9.8672
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1283504574.609888 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1296550582.737005 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [17]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 30
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.1953 [1]=18.3717 [2]=17.7559 [3]=17.5532 [4]=16.9245
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.1953 [1]=18.3717 [2]=17.7559 [3]=17.5532 [4]=16.9245
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.978 py=9.54438 pz=10.9297
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1283504574.623519 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1296550582.741712 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [18]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 43
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.2377 [1]=16.0736 [2]=17.7182 [3]=18.0329 [4]=17.3308
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.2377 [1]=16.0736 [2]=17.7182 [3]=18.0329 [4]=17.3308
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.6032 py=10.0631 pz=9.13475
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1283504574.628025 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1296550582.743445 0 (0) 1 (1) 2 (2)
 EvtTupleSvc.Eve...  ERROR Return INVALID MergeSection for:<local>_Dir1_Dir2_Dir3_Collection  [19]
-EvtTupleSvc.Eve...  ERROR FID:2E64CA52-3AB7-DF11-8957-001E4F3E563A -> PFN:ROOTIO.1.tags
+EvtTupleSvc.Eve...  ERROR FID:66DDCF2D-E12D-E011-A37E-003048672FAC -> PFN:ROOTIO.1.tags
 Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
 Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504578.024939 0 (0) 1 (1) 2 (2)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1296550584.844822 0 (0) 1 (1) 2 (2)
 Gaudi::RootNTup...   INFO End of input Ntuple.
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-EvtTupleSvc.Eve...   INFO Disconnected data IO:2E64CA52-3AB7-DF11-8957-001E4F3E563A[ROOTIO.1.tags]
-RootCnvSvc           INFO Disconnected data IO:60B9A009-3AB7-DF11-BC47-001E4F3E563A[ROOTIO.1.dst]
-RootCnvSvc           INFO Disconnected data IO:7A2BD309-3AB7-DF11-BC47-001E4F3E563A[ROOTIO.1.mdst]
+EvtTupleSvc.Eve...   INFO Disconnected data IO:66DDCF2D-E12D-E011-A37E-003048672FAC[ROOTIO.1.tags]
+RootCnvSvc           INFO Disconnected data IO:84C18124-E12D-E011-8D8A-003048672FAC[ROOTIO.1.dst]
+RootCnvSvc           INFO Disconnected data IO:A6E6A824-E12D-E011-8D8A-003048672FAC[ROOTIO.1.mdst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 ReadAlg:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:initialize   INFO Time User   : Tot=    1 [ms]                                             #=  1
-ReadAlg:execute      INFO Time User   : Tot=  200 [ms] Ave/Min/Max= 11.1(+- 15.8)/    2/   56 [ms] #= 18
-ChronoStatSvc        INFO Time User   : Tot=0.744  [s]                                             #=  1
+ReadAlg:initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
+ReadAlg:execute      INFO Time User   : Tot=   48 [ms] Ave/Min/Max= 2.67(+- 3.64)/    0/   12 [ms] #= 18
+ChronoStatSvc        INFO Time User   : Tot=  355 [ms]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
-Number of MyVertex instances:0
 Number of MyTrack instances:1
