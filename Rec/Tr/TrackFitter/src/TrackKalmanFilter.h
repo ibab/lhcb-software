@@ -45,8 +45,11 @@ public:
 private:
 
   // job options
-  bool m_biDirectionalFit;          ///< Flag for bidirectional fit
-  //bool m_smooth;                    ///< Flag for smoothing
+  bool m_biDirectionalFit;          ///< Flag for bidirectional fit (GHOST)
+  bool m_smooth;                    ///< Flag for smoothing (GHOST)
+
+  bool  m_forceBidirectional;      ///< Flag for forcing the caching of reverse fit (for profiling reason)
+  bool  m_forceSmooth;             ///< Flag for force the smoothin  (for debug reason)
   
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;

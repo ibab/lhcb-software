@@ -120,6 +120,7 @@ private:
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
   int m_numOutlierIter;             ///< max number of outliers to be removed
   bool m_useSeedStateErrors;        ///< use errors of the seed state
+  bool m_useClassicalSmoother  ;      ///< Use classical smoother
   
   double m_errorX ;                 ///< Seed error on x
   double m_errorY ;                 ///< Seed error on y

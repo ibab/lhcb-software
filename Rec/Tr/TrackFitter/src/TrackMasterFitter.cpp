@@ -97,7 +97,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MaterialLocator", m_materialLocator);
   declareProperty( "UpdateTransport", m_updateTransport = true );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
-  declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;  
+  declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
@@ -111,6 +111,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 4 ) ;
   declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
   declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = 0.01 ) ;
+  declareProperty( "UseClassicalSmoother",       m_useClassicalSmoother = false ) ;
 }
 
 //=========================================================================
@@ -202,6 +203,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     kalfitresult = track.fitResult() ? 
       new LHCb::KalmanFitResult(*track.fitResult()) :
       new LHCb::KalmanFitResult() ;
+    if( m_useClassicalSmoother )kalfitresult->setBiDirectionnalSmoother(false);
     track.setFitResult( kalfitresult ) ;
   }
   

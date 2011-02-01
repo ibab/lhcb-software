@@ -36,6 +36,9 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   declareInterface<ITrackKalmanFilter>( this );
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
+  declareProperty( "Smooth", m_smooth = true ) ;
+  declareProperty( "ForceBiDirectional" , m_forceBidirectional  = false   );
+  declareProperty( "ForceSmooth" , m_forceSmooth  = false   );
   declareProperty( "DoF", m_DoF = 5u);
 }
 
@@ -52,7 +55,6 @@ StatusCode TrackKalmanFilter::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
-
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
   return StatusCode::SUCCESS;
@@ -70,7 +72,6 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
   // The seed covariance comes from the KalmanFitResult
   LHCb::KalmanFitResult* kalfit = dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
   if( !kalfit) return Warning("No kalfit on track",StatusCode::FAILURE,0) ;
-  kalfit->setBiDirectionnal(m_biDirectionalFit);
   
   LHCb::KalmanFitResult::NodeContainer& nodes = kalfit->nodes() ;
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
@@ -91,7 +92,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     fitnode->predictedState(LHCb::FitNode::Forward) ;
     fitnode->filteredState(LHCb::FitNode::Forward) ;
   }
-  if(m_biDirectionalFit){
+  if(m_forceBidirectional){
     for( LHCb::TrackFitResult::NodeContainer::reverse_iterator inode = kalfit->nodes().rbegin() ;
 	 inode != kalfit->nodes().rend(); ++inode) {
       LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*inode) ;
@@ -99,7 +100,6 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
       fitnode->filteredState(LHCb::FitNode::Backward) ;
     }
   }
-  
   // This is the only thing we KalmanFilter stll for: set the total
   // chisquare of the track. This could also be done from
   // TrackMasterFitter.
@@ -107,14 +107,18 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(node) ;
     if( node->type()==LHCb::Node::HitOnTrack ) {
       chisq   += fitnode->deltaChi2Forward() ;
-      if(m_biDirectionalFit)chisqbw += fitnode->deltaChi2Backward() ;
+      chisqbw += fitnode->deltaChi2Backward() ;
       laststate = &(fitnode->filteredState(LHCb::FitNode::Forward)) ;
       ++ndof ;
     }
-    // force the smoothing. put this behind a flag?
-    //fitnode->state() ;
   }
-  
+  // force the smoothing. 
+  if (m_forceSmooth){
+    for( LHCb::TrackFitResult::NodeContainer::iterator inode = kalfit->nodes().begin() ;
+	 inode != kalfit->nodes().end(); ++inode)
+      static_cast<LHCb::FitNode*>(*inode)->state() ; 
+  }
+
   if (kalfit->inError()){
     sc = Warning(kalfit->getError(), StatusCode::FAILURE, 0 ) ;
   }

@@ -5,6 +5,12 @@
 
 TODO: remove unused properties from TrackKalmanFilter
 
+! 2011-02-01 - Victor Coco
+ - correct classical smoother call
+
+! 2011-01-29 - Wouter Hulsbergen
+- correct classical smoother call
+
 ! 2011-01-29 - Wouter Hulsbergen
 - fixed order of updating projection and removing outlier
 
