@@ -1,5 +1,25 @@
 from Configurables import STOfflinePosition
 
+class DefaultConfMC09(object):
+    def configureTools(self,
+                       IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
+                       TT=STOfflinePosition('ToolSvc.STOfflinePosition')
+                       ):
+        # New tune (JvT - 14.07.2010)
+        if IT is not None:
+            IT.LinSharingCorr2 = -0.0152
+            IT.CubicSharingCorr2 = 12.33
+            IT.CubicSharingCorr3 = 4.369
+            IT.LinSharingCorr4 = 0.530
+            IT.DetType = "IT"
+            IT.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ];
+            IT.APE = 0.0
+        if TT is not None:
+            TT.APE = 0.0
+                            
+
+
+
 class DefaultConf(object):
     def configureTools(self,
                        IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
