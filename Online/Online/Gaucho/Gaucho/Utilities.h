@@ -12,12 +12,12 @@
 
 #define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
-#define toLowerCase(s) (\
-{\
-  for (unsigned int i=0;i<s.size();i++)\
-  {\
-    s[i] = tolower(s[i]);\
-  }\
-}\
-)
+static inline void toLowerCase(std::string& s)
+{
+  for(size_t i=0;i<s.size();i++)
+  {
+    s[i] = tolower(s[i]);
+  }
+}
+
 #endif /* UTILITIES_H_ */
