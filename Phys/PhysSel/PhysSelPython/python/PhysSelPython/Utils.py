@@ -8,13 +8,7 @@ __all__ = ('configurableExists',
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
 
-from GaudiConf.Configuration import allConfigurables
-from GaudiKernel.Configurable import Configurable
-from GaudiKernel.ConfigurableMeta import ConfigurableMeta
+from GaudiConfUtils import configurableExists
+from GaudiConfUtils import isConfigurable
 
-def configurableExists(name) :
-    return allConfigurables.get(name) != None
-
-def isConfigurable(alg) :
-    return issubclass(type(alg), Configurable) or issubclass(type(alg), ConfigurableMeta)
-
+print "Warning: PhysSelPython.Utils deprecated! Use GaudiConfUtils."
