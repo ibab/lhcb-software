@@ -14,7 +14,7 @@ branches          cmt doc python scripts
 #============================================================================
 use   GaudiPolicy v*
 use   Python      v*  LCG_Interfaces
-use   processing  v*  LCG_Interfaces
+use   pytools     v*  LCG_Interfaces
 # HltCommon is needed because of configurables used
 use   HltCommon      v*  Hlt
 # this is where the data lives..
