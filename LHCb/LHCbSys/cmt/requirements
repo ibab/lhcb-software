@@ -91,7 +91,7 @@ use LHCbKernel            v12r7   Kernel  # Marco Cattaneo
 use LHCbMath              v3r23   Kernel  # Juan Palacios
 use MCInterfaces          v1r12   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r9    Kernel  # Vanya Belyaev 
-use Relations             v5r10   Kernel  # Ivan Belyaev
+use Relations             v6r0    Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
 use XMLSummaryKernel      v1r0p2  Kernel  # Rob Lambert
 
