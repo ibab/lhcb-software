@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v22r1
+version           v22r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,6 +15,7 @@ branches          cmt doc src python
 # Used packages. 
 #============================================================================
 use  Boost                 v* LCG_Interfaces
+use  GaudiConfUtils        v* -no_auto_imports
 use  DaVinciKernel         v* Phys
 use  DaVinciMaps           v* Phys
 use  LHCbMath              v* Kernel

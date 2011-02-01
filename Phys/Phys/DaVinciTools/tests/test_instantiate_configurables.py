@@ -4,74 +4,13 @@ if __name__ == '__main__' :
 
     import sys
     from Gaudi.Configuration import *
-    from Configurables import ( AlgorithmCorrelationsAlg,
-                                Bd2KstarMuMuAngleCalculator,
-                                BremAdder,
-                                Bs2JpsiPhiAngleCalculator,
-                                CheckOverlap,
-                                CheckPV,
-                                CheckSelResult,
-                                CheckSelResultsTool,
-                                CheckVeloOverlap,
-                                CombineParticles,
-                                ConjugateNeutralPID,
-                                CountParticles,
-                                DaVinciInit,
-                                DecayFinder,
-                                DecodeSimpleDecayString,
-                                FilterDesktop,
-                                FilterEventList,
-                                FilterInTrees,
-                                FindCloneTool,
-                                NeutralCCChangePIDTool,
-                                GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_,
-                                GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_,
-                                OnOfflineTool,
-                                GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_,
-                                GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_,
-                                P2VVAngleCalculator,
-                                ParticleDescendants,
-                                PhysDesktop,
-                                PrintDecayTree,
-                                PVRelatorAlg,
-                                RemoveClones
-                                )
-
-    components = ( AlgorithmCorrelationsAlg,
-                   Bd2KstarMuMuAngleCalculator,
-                   BremAdder,
-                   Bs2JpsiPhiAngleCalculator,
-                   CheckOverlap,
-                   CheckPV,
-                   CheckSelResult,
-                   CheckSelResultsTool,
-                   CheckVeloOverlap,
-                   CombineParticles,
-                   ConjugateNeutralPID,
-                   CountParticles,
-                   DaVinciInit,
-                   DecayFinder,
-                   DecodeSimpleDecayString,
-                   FilterDesktop,
-                   FilterEventList,
-                   FilterInTrees,
-                   FindCloneTool,
-                   NeutralCCChangePIDTool,
-                   GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_,
-                   GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_,
-                   OnOfflineTool,
-                   GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_,
-                   GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_,
-                   P2VVAngleCalculator,
-                   ParticleDescendants,
-                   PhysDesktop,
-                   PrintDecayTree,
-                   PVRelatorAlg,
-                   RemoveClones
-                   )
-
+    from GaudiConfUtils import getConfigurablesFromModule
+    import DaVinciTools.DaVinciToolsConf
+    
     errors = ['======== Error Summary =========================================']
     successes = ['======== Success Summary =======================================']
+
+    components = getConfigurablesFromModule(DaVinciTools.DaVinciToolsConf)
 
     for component in components :
         try :
