@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r6 2011-02-01 =========================
 ! 2011-01-27 - Marco Clemencic
  - Fixed compilation error on VC9.
 
