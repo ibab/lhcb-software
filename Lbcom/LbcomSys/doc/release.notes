@@ -6,6 +6,41 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r0>2011-02-02 LbcomSys v10r0</A></H1><PRE>
+This version uses Gaudi v22r0 and LHCb v32r0
+
+- Development release for 2011 data-taking
+
+- Changes in supported platforms:
+  . slc4_ia32_gcc34(_dbg), slc4_amd64_gcc34(_dbg), win32_vc71_dbg removed
+  . i686-slc5-gcc43-{opt,dbg}, x86_64-icc11-{opt,dbg}, i686-winxp-vc9-dbg added
+
+- Packages updated: CaloTools v6r1, HltDAQ v2r6, L0DU v10r11, RichDAQ v3r30,
+    STTools v4r6, VeloDAQ v6r1
+
+- Functionality changes:
+  . change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from 
+    false to true (HltDAQ v2r6)
+  . Update RichRawBufferToSmartIDsTool to implement methods to obtain the number
+    of hits in RICH1 and RICH2 separately (RichDAQ v3r30)
+  . Remove earlyData tuning (earlyData settings are now the default) and add
+    special option for running on MC with APE=0 (STTools v4r6)
+  . PrepareVeloRawBuffer: default bank version set to v3 (VeloDAQ v6r1)
+
+- Monitoring changes:
+  . Remove check on L1 bank sizes being less than 2 32bit words (RichDAQ v3r30)
+  . Suppress Warning "Ingress/ODIN Event ID checks are disabled" in the
+    RawDataFormatTool as this is now the default. Instead, warn when it is
+    enabled (Check is not 100% reliable) (RichDAQ v3r30)
+
+- Packaging changes:
+  . replace use HltTCK from v1r* to v* (HltDAQ v2r6)
+
+- Bug fixes:
+  . Fix Calo2MCTool initialization (CaloTools v6r1)
+  . Fix icc warnings and remarks (CaloTools v6r1, L0DU v10r11)
+  . Fix vc9 compilation error (HltDAQ v6r1)
+
 </PRE><H1><A NAME=v9r9>2010-12-16 LbcomSys v9r9</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r8
 
