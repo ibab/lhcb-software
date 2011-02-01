@@ -4,6 +4,12 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+! 2011-02-01 - Juan Palacios
+ - DataObject2ObjectMap
+  . Remove IUpdatable inheritance.
+  . Implement virtual StatusCode DataObject::update()
+ - Increase to v2r0.
+
 !======================== DaVinciMaps v1r3p1 2011-01-18 ======================
 
 ! 2011-01-18 - Juan Palacios
