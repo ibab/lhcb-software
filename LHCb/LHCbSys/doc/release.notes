@@ -19,15 +19,15 @@ Development version on top of the latest Gaudi/Root for 2011 data
     CaloDet v10r9, DDDB v1r40, DetCond v12r17, DetDesc v18r22, DetDescCnv v4r12,
     MuonDet v9r3, RichDet v16r0, STDet v4r23, VeloDet v13r13, VeloPixDet v1r9,
     DAQEvent v9r3, DigiEvent v2r17, EventAssoc v5r1, EventPacker v2r6,
-    GenEvent v5r7, HltEvent v9r1, L0Event v19r1, MCEvent v2r18, PackedEvent v4r4,
-    PhysEvent v11r13, RecEvent v2r34, RecreatePIDTools v1r2, TrackEvent v5r10,
-    VeloEvent v16r10, DetCondExample v11r10, GaudiConf v13r8, GaudiConfUtils v1r0,
-    GaudiObjDesc v11r11, HltInterfaces v4r3, LHCbAlgs v2r36, LHCbKernel v12r7,
-    LHCbMath v3r23, PartProp v1r9, Relations v5r10, L0MuonKernel v9r6, OTDAQ v7r9,
-    DaVinciInterfaces v2r8, DaVinciTypes v2r3, LoKiCore v10r8, LoKiGen v9r5,
-    LoKiHlt v3r4, LoKiMC v9r4, RichKernel v7r41, RichRecBase v4r3,
-    STTELL1Event v1r10, CondDBUI v3r8, XmlTools v6r4, TrackInterfaces v4r18,
-    TrackKernel v1r6
+    GenEvent v5r7, HltEvent v9r1, L0Event v19r1, LumiEvent v3r1, MCEvent v2r18,
+    PackedEvent v4r4, PhysEvent v11r13, RecEvent v2r34, RecreatePIDTools v1r2,
+    TrackEvent v5r10, VeloEvent v16r10, DetCondExample v11r10, GaudiConf v13r8,
+    GaudiConfUtils v1r0, GaudiObjDesc v11r11, HltInterfaces v4r3, LHCbAlgs v2r36,
+    LHCbKernel v12r7, LHCbMath v3r23, PartProp v1r9, Relations v5r10,
+    L0MuonKernel v9r6, OTDAQ v7r9, DaVinciInterfaces v2r8, DaVinciTypes v2r3,
+    LoKiCore v10r8, LoKiGen v9r5, LoKiHlt v3r4, LoKiMC v9r4, RichKernel v7r41,
+    RichRecBase v4r3, STTELL1Event v1r10, CondDBUI v3r8, XmlTools v6r4,
+    TrackInterfaces v4r18, TrackKernel v1r6
 
 For links to the changesets see:
 https://cern.ch/lhcb-tag-collector/display.html?project=LHCb&version=v32r0
@@ -40,9 +40,8 @@ Functionality changes:
 
 - Support of DQFLAGS partition of CondDB, holds time-dependent data quality flags
   (DetCond v12r17, CondDBUI v3r8). Needs SQLDDDB v6*, picked up by DDDB v1r40.
-  Added DQFilter algorithm to filter events according to these Data Quality flags;
-  it can operate during the BeginEvent (default) or as a standard filter
-  (LHcbAlgs v2r36)
+  Added DQFilter algorithm to filter events according to these flags; it can
+  operate during BeginEvent (default) or as a standard filter (LHCbAlgs v2r36)
 
 - Added support for 2011 Rich gas mixture (RichDet v16r0). 
   Previous versions of RichDet do not support 2011 CondDB tags for Rich
@@ -90,8 +89,8 @@ Functionality changes:
 Bug fixes:
 - Fix in generation of xrootd connection string when svcClass option given
   (MDF_ROOT v1r6)
-- Fix in file descriptor assignment causing wrong files to be closed when ageLimit
-  reached (MDF_ROOT v1r5)
+- Fix in file descriptor assignment causing wrong files to be closed when
+  ageLimit reached (MDF_ROOT v1r5)
 - Minor fix in debug output (CaloDet v10r9)
 - Fixed PID tools to not throw exception if input ProtoParticles do not exist.
   Issue a warning and handle cleanly instead (RecreatePIDTools v1r2)
@@ -105,13 +104,13 @@ Bug fixes:
   (CaloInterfaces v8r1, Tell1Kernel v1r12, CaloDet v10r9, DetCond v12r17,
    DetDesc v18r22, DetDescCnv v4r12, MuonDet v9r3, RichDet v16r0, STDet v4r23,
    VeloDet v13r13, VeloPixDet v1r9, DAQEvent v9r3, DigiEvent v2r17, 
-   EventAssoc v5r1, GenEvent v5r7, HltEvent v9r1, L0Event v19r1, MCEvent v2r18,
-   PackedEvent v4r4, PhysEvent v11r13, TrackEvent v5r10, VeloEvent v16r10,
-   DetCondExample v11r10, GaudiObjDesc v11r11, HltInterfaces v4r3,
-   LHCbKernel v12r7, LHCbMath v3r23, PartProp v1r9, Relations v5r10,
-   DaVinciInterfaces v2r8, LoKiCore v10r8, LoKiGen v9r5, LoKiHlt v3r4, 
-   LoKiMC v9r4, RichKernel v7r41, RichRecBase v4r3, STTELL1Event v1r10,
-   XmlTools v6r4, TrackKernel v1r6
+   EventAssoc v5r1, GenEvent v5r7, HltEvent v9r1, L0Event v19r1, LumiEvent v3r1,
+   MCEvent v2r18, PackedEvent v4r4, PhysEvent v11r13, TrackEvent v5r10,
+   VeloEvent v16r10, DetCondExample v11r10, GaudiObjDesc v11r11,
+   HltInterfaces v4r3, LHCbKernel v12r7, LHCbMath v3r23, PartProp v1r9,
+   Relations v5r10, DaVinciInterfaces v2r8, LoKiCore v10r8, LoKiGen v9r5,
+   LoKiHlt v3r4,  LoKiMC v9r4, RichKernel v7r41, RichRecBase v4r3,
+   STTELL1Event v1r10, XmlTools v6r4, TrackKernel v1r6)
 
 - Fix compilation on vc9
   (HltInterfaces v4r3, L0MuonKernel v9r6)
