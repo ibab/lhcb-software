@@ -40,7 +40,7 @@ use OnlineBase          v1r5     Online
 use OnlineHistDB        v7r3     Online
 use OnlineKernel        v2r5     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r33    Online
+use OnlineTasks         v1r34    Online
 ####use Presenter           v2r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r10    Online
