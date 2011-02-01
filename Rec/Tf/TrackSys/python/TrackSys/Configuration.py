@@ -76,6 +76,8 @@ class TrackSys(LHCbConfigurableUser):
                                                                
 
     ## @brief Shortcut to the fieldOff option
+    def MC09(self)     : return "MC09" == self.getProp( "DataType" )
+    ## @brief Shortcut to the fieldOff option
     def fieldOff(self) : return "fieldOff" in self.getProp("SpecialData")
     ## @brief Shortcut to the veloOpen option
     def veloOpen(self) : return "veloOpen" in self.getProp("SpecialData")

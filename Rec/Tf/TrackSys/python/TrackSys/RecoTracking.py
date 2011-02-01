@@ -56,7 +56,11 @@ def RecoTracking(exclude=[]):
    
 
    from STTools import STOfflineConf
-   STOfflineConf.DefaultConf().configureTools()
+   if TrackSys().MC09() :
+      STOfflineConf.DefaultConfMC09().configureTools()
+   else :
+      STOfflineConf.DefaultConf().configureTools()
+
    #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
    
    ## Velo tracking
