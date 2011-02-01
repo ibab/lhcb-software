@@ -38,10 +38,10 @@ macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
 apply_pattern dim_exe name=dns files=dns.c 
 apply_pattern dim_exe name=did files="did/make_did.c"
 
-macro_append  didlinkopts "  " \
- target-i686              " -L/usr/X11R6/lib   -lXm "    \
- target-x86_64            " -L/usr/X11R6/lib64 -lXm "    \
- WIN32                    " "
+macro_append  didlinkopts    "  " \
+ target-linux&target-i686    " -L/usr/X11R6/lib   -lXm "    \
+ target-linux&target-x86_64  " -L/usr/X11R6/lib64 -lXm "    \
+ WIN32                       " "
 
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
