@@ -1,10 +1,11 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+!========================= STTools v4r6 2011-02-01 =========================
 ! 2010-10-01 Stephanie Hansmann-Menzemer
  - add special option for running on MC (with APE=0)
 
-!========================= STTools v4r6 2011-02-01 =========================
 ! 2010-10-27 Stephanie Hansmann-Menzemer
  - remove early data tuning
 
