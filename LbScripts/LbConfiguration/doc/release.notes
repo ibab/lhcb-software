@@ -1,3 +1,8 @@
+2011-02-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added method to extract the number of CPU and the lsb_release
+	informations from the native machine.
+
 2011-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* data/login_postscript.bat: New file.

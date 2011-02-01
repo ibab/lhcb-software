@@ -224,7 +224,7 @@ linux_flavour_aliases = {
 lsb_flavour_aliases   = {
                          "sl"   : ["ScientificSL"],
                          "slc"  : ["ScientificCERNSLC"],
-                         "fc"   : ["Fedora"],
+                         "fc"   : ["Fedora", "Fedora Core"],
                          "co"   : ["CentOS"]
                         }
 
@@ -281,6 +281,10 @@ class NativeMachine:
         self._compversion = None
         self._compiler = None
         self._sysinfo = None
+        self._lsb_distributor_id = None
+        self._lsb_description = None
+        self._lsb_release = None
+        self._lsb_codename = None
         if hasattr(platform, "uname") :
             self._sysinfo = platform.uname()
         if sys.platform == "win32" :
@@ -548,3 +552,114 @@ class NativeMachine:
 
         platformstr = "_".join(platformlist)
         return platformstr
+    def numberOfCPUs(self):
+        """ Number of virtual or physical CPUs on this system, i.e.
+        user/real as output by time(1) when called with an optimally scaling userspace-only program"""
+        res = 0
+        # Python 2.6+
+        try:
+            import multiprocessing
+            return multiprocessing.cpu_count()
+        except (ImportError,NotImplementedError):
+            pass
+
+        # POSIX
+        try:
+            res = int(os.sysconf('SC_NPROCESSORS_ONLN'))
+
+            if res > 0:
+                return res
+        except (AttributeError,ValueError):
+            pass
+
+        # Windows
+        try:
+            res = int(os.environ['NUMBER_OF_PROCESSORS'])
+
+            if res > 0:
+                return res
+        except (KeyError, ValueError):
+            pass
+        # BSD
+        try:
+            import subprocess
+            sysctl = subprocess.Popen(['sysctl', '-n', 'hw.ncpu'], stdout=subprocess.PIPE)
+            scStdout = sysctl.communicate()[0]
+            res = int(scStdout)
+
+            if res > 0:
+                return res
+        except (OSError, ValueError, ImportError):
+            pass
+
+        # Linux
+        try:
+            res = open('/proc/cpuinfo').read().count('processor\t:')
+
+            if res > 0:
+                return res
+        except IOError:
+            pass
+
+        # Solaris
+        try:
+            pseudoDevices = os.listdir('/devices/pseudo/')
+            expr = re.compile('^cpuid@[0-9]+$')
+
+            res = 0
+            for pd in pseudoDevices:
+                if expr.match(pd) != None:
+                    res += 1
+
+            if res > 0:
+                return res
+        except OSError:
+            pass
+
+        # Other UNIXes (heuristic)
+        try:
+            try:
+                dmesg = open('/var/run/dmesg.boot').read()
+            except IOError:
+                dmesgProcess = subprocess.Popen(['dmesg'], stdout=subprocess.PIPE)
+                dmesg = dmesgProcess.communicate()[0]
+
+            res = 0
+            while '\ncpu' + str(res) + ':' in dmesg:
+                res += 1
+
+            if res > 0:
+                return res
+        except OSError:
+            pass
+
+        return res
+    def LSBDistributorID(self):
+        if not self._lsb_distributor_id and self.OSType() == "Linux" :
+            if os.path.exists("/usr/bin/lsb_release") :
+                lsbstr = os.popen("lsb_release -i").read()[:-1]
+                if lsbstr :
+                    self._lsb_distributor_id = lsbstr.split(":")[-1].strip()
+        return self._lsb_distributor_id
+    def LSBDescription(self):
+        if not self._lsb_description and self.OSType() == "Linux" :
+            if os.path.exists("/usr/bin/lsb_release") :
+                lsbstr = os.popen("lsb_release -d").read()[:-1]
+                if lsbstr :
+                    self._lsb_description = lsbstr.split(":")[-1].strip()
+        return self._lsb_description
+    def LSBRelease(self):
+        if not self._lsb_release and self.OSType() == "Linux" :
+            if os.path.exists("/usr/bin/lsb_release") :
+                lsbstr = os.popen("lsb_release -r").read()[:-1]
+                if lsbstr :
+                    self._lsb_release = lsbstr.split(":")[-1].strip()
+        return self._lsb_release
+    def LSBCodeName(self):
+        if not self._lsb_codename and self.OSType() == "Linux" :
+            if os.path.exists("/usr/bin/lsb_release") :
+                lsbstr = os.popen("lsb_release -c").read()[:-1]
+                if lsbstr :
+                    self._lsb_codename = lsbstr.split(":")[-1].strip()
+        return self._lsb_codename
+
