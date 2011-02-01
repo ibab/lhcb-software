@@ -5,6 +5,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-01 - Roel Aaij
+ - Remove check for type of track in UpgradeTool
 
 !========================== LoKiTrigger v11r3 2011-01-30 ===================
 ! 2011-01-27 - Vanya Belyaev

@@ -245,10 +245,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
   LHCb::Track::ConstVector&  output  , 
   LHCb::Track::Container*    otracks ) const
 {  
-  // seed is already ugraded track ?
-  if ( seed->checkType ( trType () ) ) { output.push_back ( seed ) ; }
   // not reconstructed yet ?
-  else if ( -1 == seed->info ( recoID () , -1 ) ) 
+  if ( -1 == seed->info ( recoID () , -1 ) ) 
   {
     // recontruct it!!!
     StatusCode sc = reco ( seed , output , otracks ) ;
