@@ -1,16 +1,19 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.51 2010-01-12 19:09:49 marcocle Exp $ 
+! $Id: release.notes,v 1.51 2010-01-12 19:09:49 marcocle Exp $
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
-! Purpose     : Collection of useful components for checking of 
-!               Detector Description, Material Budget etc 
+! Purpose     : Collection of useful components for checking of
+!               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
+
+! 2011-02-01 - Illya Shapoval
+ -  Added tests 'loaddddb2011.qmt','loaddddb-sim-2011.qmt'.
 
 !========================= DetDescChecks v5r4 2010-10-25 =========================
 
-! 2010-10-05 - Illya Shapoval 
- - Added tests 'loaddddb-sim-2010.qmt','loaddddb-sim-2009.qmt' and 
+! 2010-10-05 - Illya Shapoval
+ - Added tests 'loaddddb-sim-2010.qmt','loaddddb-sim-2009.qmt' and
  'loaddddb-sim-MC09.qmt' for checking latest simulation global and local tags
  for 2010, 2009 and MC09 data types.
 
@@ -34,11 +37,11 @@
  - Remove obsolete files DetDescChecks_dll.cpp and DirHbookName.h
 
 ! 2009-11-15 - Vanya Belyaev
- - rename algorithms, put minor fixes 
- - provide python-scripts to run checks 
- - add qmtests for the algorithms 
- - remove opts-files & directory 
- - cmt/requirements: version increment to v5r0 
+ - rename algorithms, put minor fixes
+ - provide python-scripts to run checks
+ - add qmtests for the algorithms
+ - remove opts-files & directory
+ - cmt/requirements: version increment to v5r0
 
 !======================= DetDescChecks v4r11 2009-07-14 ========================
 ! 2009-07-09 - Marco Clemencic
@@ -77,7 +80,7 @@
 
 ! 2008-06-12 - Marco Clemencic
  - Added a QMTest-based test for LoadDDDB.
- 
+
 !======================= DetDescChecks v4r6 2008-04-17 ========================
 ! 2008-04-17 - Marco Clemencic
  - Improved the output in case of GaudiException in LoadDDDB.
@@ -93,9 +96,9 @@
  - Improved the error message of LoadDDDB in case of exceptions.
 
 ! 2007-12-19 - Vanya BELYAEV
-   see the presentation at T-Rec meeting, 17.12.2007  
+   see the presentation at T-Rec meeting, 17.12.2007
 
- - add new algorithm DetDesc::CheckOverlap 
+ - add new algorithm DetDesc::CheckOverlap
    and the conrresponding configuration file options/CheckOverlap.opts
 
 !======================= DetDescChecks v4r4 2007-10-05 ========================
@@ -152,12 +155,12 @@
 !======================= DetDescChecks v2r3 2005-05-03 =========================
 ! 2005-05-03 - Vanya BELYAEV
  - small polishing of algorithms
-   - use nice new methods "plot2D" (kindly provided by Chris) to 
+   - use nice new methods "plot2D" (kindly provided by Chris) to
      book and fill 2D histograms.
    - cleanup the code (initialization, etc...)
    - fix multuple "shoots" --> "shots"
    - add the "progress bar" :
-     e.g. for VolumeCheckAlg (similar for MaterialBudgetAlg) 
+     e.g. for VolumeCheckAlg (similar for MaterialBudgetAlg)
 
 VolumeCheckAlg       INFO  Start 3D shots #100000
 0%   10   20   30   40   50   60   70   80   90   100%
@@ -180,11 +183,11 @@ VolumeCheckAlg       INFO  Start ZX shots #10000
 |----|----|----|----|----|----|----|----|----|----|
 ***************************************************
 
-  options/DetDesckChecks.opts 
-   - rename "Shoots<XX>" -> "Shots<XX>" 
+  options/DetDesckChecks.opts
+   - rename "Shoots<XX>" -> "Shots<XX>"
   cmt/requirements
    - add usage of Boost library
-   - version increment to v2r3 
+   - version increment to v2r3
 
 !======================= DetDescChecks v2r2 2005-01-25 =========================
 ! 2005-01-25 - Marco Cattaneo
@@ -198,13 +201,13 @@ VolumeCheckAlg       INFO  Start ZX shots #10000
    package
 
 ! 2004-06-28 M Needham
- - changes to requirements - need to include AIDA  
+ - changes to requirements - need to include AIDA
 
 ! 2004-03-01 - Vanya BELYAEV
  - technical improvements
- - use new bases 
- - update in cmt/requirements 
- - increase the versions  
+ - use new bases
+ - update in cmt/requirements
+ - increase the versions
 
 ! 2002-08-21 - Juan Palacios
   - modified MaterialBudgetAlg to perform a scan with trajectories distributed
@@ -220,149 +223,149 @@ VolumeCheckAlg       INFO  Start ZX shots #10000
   - added application to requirements
 
 ! 2002-05-26 - Vanya Belyaev
- - new package 
+ - new package
  - src/MaterialBudgetAlg.h,.cpp : algorithm moved from DetDesc package
 
 /** @class MaterialBudgetAlg MaterialBudgetAlg.h
- *  
- *  Simple algorithm, which perform the evaluation of the 
- *  material budget using Transport Service ("LHCb's GEANE") 
  *
- *  The algorithm produces 2 2-dimentional plots with the 
+ *  Simple algorithm, which perform the evaluation of the
+ *  material budget using Transport Service ("LHCb's GEANE")
+ *
+ *  The algorithm produces 2 2-dimentional plots with the
  *  evaluationfo the material budget ( in units of radiation length)
- *  between origin vertes and x-y point at the reference plane. 
- *  The plot need to be normalized properly. Normalization is given 
+ *  between origin vertes and x-y point at the reference plane.
+ *  The plot need to be normalized properly. Normalization is given
  *  by histogram number 2. The proper normalization is achieved e.g in PAW
- *  @code 
+ *  @code
  *  PAW> hi/oper/div 1 2 10
- *  PAW> hi/plot     10     lego1 
- *  @endcode 
+ *  PAW> hi/plot     10     lego1
+ *  @endcode
  *
  *  The full list of algorithm properties and their default values:
- *  <ul>                   
- *  <li> @p ShootingPoint  Position of the "origin vertex" 
+ *  <ul>
+ *  <li> @p ShootingPoint  Position of the "origin vertex"
  *                             (default value <tt>{ 0. , 0. , 0. }</tt>)
- *  <li> @ Shoots          Number of random shoots per event 
- *                                           (default value is @p  1000 ) 
+ *  <li> @ Shoots          Number of random shoots per event
+ *                                           (default value is @p  1000 )
  *  <li> @ zPlane          @p Z -position of the reference plane
  *                                           (default value is @p 12000 )
- *  <li> @ xMax            Maximal value of @p X at reference plane 
- *                                           (default value is @p  4000 ) 
- *  <li> @ yMax            Maximal value of @p Y at reference plane 
- *                                           (default value is @p  3000 ) 
- *  <li> @ xMin            Minimal value of @p X at reference plane 
- *                                           (default value is @p     0 ) 
- *  <li> @ yMin            Minimal value of @p Y at reference plane 
- *                                           (default value is @p     0 ) 
- *  <li> @ nBx             Number of bins in @p X -direction 
- *                                           (default value is @p    50 ) 
- *  <li> @ nBy             Number of bins in @p Y -direction 
+ *  <li> @ xMax            Maximal value of @p X at reference plane
+ *                                           (default value is @p  4000 )
+ *  <li> @ yMax            Maximal value of @p Y at reference plane
+ *                                           (default value is @p  3000 )
+ *  <li> @ xMin            Minimal value of @p X at reference plane
+ *                                           (default value is @p     0 )
+ *  <li> @ yMin            Minimal value of @p Y at reference plane
+ *                                           (default value is @p     0 )
+ *  <li> @ nBx             Number of bins in @p X -direction
  *                                           (default value is @p    50 )
- *  <li> @ TransportSvc    The name of Gaudi Transport Service 
+ *  <li> @ nBy             Number of bins in @p Y -direction
+ *                                           (default value is @p    50 )
+ *  <li> @ TransportSvc    The name of Gaudi Transport Service
  *                                  (default value is @p "TransportSvc" )
- *  <li> @ RndmService     The name of Gaudi Random Numbers Service 
+ *  <li> @ RndmService     The name of Gaudi Random Numbers Service
  *                                    (default value is @p "RndmGenSvc" )
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   23/04/2002
  */
 
- - src/VolumeCheckAlh.h,.cpp    : algorithm for extensive and detailed tests 
-                                  of Logical Volumes and Assemblies  
+ - src/VolumeCheckAlh.h,.cpp    : algorithm for extensive and detailed tests
+                                  of Logical Volumes and Assemblies
 /** @class VolumeCheckAlg VolumeCheckAlg.h
- *  
- *  Simple algorithm which performs an extensive and detailed 
- *  check of logical volume 
- * 
- *  Algorithm has one mandatory property which is the full 
- *  name of logical volume to be tested. 
- * 
- *  The algorithm performs an extensive printout of 
+ *
+ *  Simple algorithm which performs an extensive and detailed
+ *  check of logical volume
+ *
+ *  Algorithm has one mandatory property which is the full
+ *  name of logical volume to be tested.
+ *
+ *  The algorithm performs an extensive printout of
  *  logical volume, its solid( if any) and material(if any).
  *
- *  The algorithm produces 8 2-dimentional plots with 
- *  material profile for the given logical volume. 
- *  The actual profiles could be obtained by the proper 
- *  normalization of distributions, e.g. using PAW: 
- *  @code 
+ *  The algorithm produces 8 2-dimentional plots with
+ *  material profile for the given logical volume.
+ *  The actual profiles could be obtained by the proper
+ *  normalization of distributions, e.g. using PAW:
+ *  @code
  *  PAW > hi/li
  *
- *  ===> Directory : 
- *          1 (2)    3D-Material Budget for /dd/Geometry/Pipe/BeamPipe  
- *          2 (2)    3D-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          3 (2)    XY-Material Budget for /dd/Geometry/Pipe/BeamPipe  
- *          4 (2)    XY-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          5 (2)    YZ-Material Budget for /dd/Geometry/Pipe/BeamPipe  
- *          6 (2)    YZ-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          7 (2)    ZX-Material Budget for /dd/Geometry/Pipe/BeamPipe  
- *          8 (2)    ZX-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *  PAW > hi/oper/div 1 2 10 
+ *  ===> Directory :
+ *          1 (2)    3D-Material Budget for /dd/Geometry/Pipe/BeamPipe
+ *          2 (2)    3D-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe
+ *          3 (2)    XY-Material Budget for /dd/Geometry/Pipe/BeamPipe
+ *          4 (2)    XY-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe
+ *          5 (2)    YZ-Material Budget for /dd/Geometry/Pipe/BeamPipe
+ *          6 (2)    YZ-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe
+ *          7 (2)    ZX-Material Budget for /dd/Geometry/Pipe/BeamPipe
+ *          8 (2)    ZX-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe
+ *  PAW > hi/oper/div 1 2 10
  *  PAW > hi/oper/div 3 4 30
  *  PAW > hi/oper/div 5 6 50
  *  PAW > hi/oper/div 7 8 70
  *  PAW > hi/plot 10 lego1.sph
- *  PAW > hi/plot 30 lego1    
+ *  PAW > hi/plot 30 lego1
  *  PAW > hi/plot 50 lego1
  *  PAW > hi/plot 70 lego1
- *  @endcode 
+ *  @endcode
  *
  *  The first pair of the plots (1&2) represents the material budget
- *  of the volume itself in spherical coordinates. Thus the histogram 10 
- *  form example above shold have the same "topological" characteristics 
- *  as the whole logical volume. This distribution must be viewed using 
- *  SPHERICAL coordinates  (option @p SPH for @p PAW). 
- *  
- *  Other pairs of distributions represent the xy (3&4), yz(5&6) and 
+ *  of the volume itself in spherical coordinates. Thus the histogram 10
+ *  form example above shold have the same "topological" characteristics
+ *  as the whole logical volume. This distribution must be viewed using
+ *  SPHERICAL coordinates  (option @p SPH for @p PAW).
+ *
+ *  Other pairs of distributions represent the xy (3&4), yz(5&6) and
  *  zx(7&8) projections of the volume.
  *
- *  The upper and lower limits of the histograms are evaluated automatically 
- *  for logical volumes of the type LVolume. For logical volumes of the type 
- *  LAssembly ("Logical Assembly") the parameters shoudl be given by algorithm 
+ *  The upper and lower limits of the histograms are evaluated automatically
+ *  for logical volumes of the type LVolume. For logical volumes of the type
+ *  LAssembly ("Logical Assembly") the parameters shoudl be given by algorithm
  *  properties  @p MinX, @p MaxX , @p MinY, @p MaxY , @p MinZ and @p MaxZ .
- *  
+ *
  *  The full list of algorithm properties and their default values:
- *  <ul>                   
- *  <li> @p Volume    The name (full path)  of logical volume to be tested 
- *                                                           (@b mandatory )   
- *  <li> @p Shoots3D  Number of random shoots for 3D-profile 
- *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsXY  Number of random shoots for XY-profile 
- *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsYZ  Number of random shoots for YX-profile 
- *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsZX  Number of random shoots for ZX-profile 
- *                                                 (default value @p 10000 ) 
+ *  <ul>
+ *  <li> @p Volume    The name (full path)  of logical volume to be tested
+ *                                                           (@b mandatory )
+ *  <li> @p Shoots3D  Number of random shoots for 3D-profile
+ *                                                 (default value @p 10000 )
+ *  <li> @p ShootsXY  Number of random shoots for XY-profile
+ *                                                 (default value @p 10000 )
+ *  <li> @p ShootsYZ  Number of random shoots for YX-profile
+ *                                                 (default value @p 10000 )
+ *  <li> @p ShootsZX  Number of random shoots for ZX-profile
+ *                                                 (default value @p 10000 )
  *  <li> @p Null      Position of the "null vertex" for 3D-profile
  *                                (default value <tt>{ 0. , 0. , 0. }</tt>)
- *  <li> @p MinX      Minimal value of @p X for 2D-projection profiles. 
+ *  <li> @p MinX      Minimal value of @p X for 2D-projection profiles.
  *                    It is used only for logical assemblies
  *                                             (default value is @p -10000 )
- *  <li> @p MaxX      Maximal value of @p X for 2D-projection profiles. 
+ *  <li> @p MaxX      Maximal value of @p X for 2D-projection profiles.
  *                    It is used only for logical assemblies
  *                                             (default value is @p  10000 )
- *  <li> @p MinY      Minimal value of @p Y for 2D-projection profiles. 
+ *  <li> @p MinY      Minimal value of @p Y for 2D-projection profiles.
  *                    It is used only for logical assemblies
  *                                             (default value is @p -10000 )
- *  <li> @p MaxY      Maximal value of @p Y for 2D-projection profiles. 
+ *  <li> @p MaxY      Maximal value of @p Y for 2D-projection profiles.
  *                    It is used only for logical assemblies
  *                                             (default value is @p  10000 )
- *  <li> @p MinZ      Minimal value of @p Z for 2D-projection profiles. 
+ *  <li> @p MinZ      Minimal value of @p Z for 2D-projection profiles.
  *                    It is used only for logical assemblies
  *                                             (default value is @p -10000 )
- *  <li> @p MaxZ      Maximal value of @p Z for 2D-projection profiles. 
+ *  <li> @p MaxZ      Maximal value of @p Z for 2D-projection profiles.
  *                    It is used only for logical assemblies
- *                                             (default value is @p  10000 ) 
- *  <li> @p RandomNumberService The name of the Gaudi Random Number Service 
+ *                                             (default value is @p  10000 )
+ *  <li> @p RandomNumberService The name of the Gaudi Random Number Service
  *                                       (default value is @p "RndmGenSvc" )
- *  </ul> 
+ *  </ul>
  *
- *  @see ILVolume 
- *  @see  LVolume 
- *  @see  LAssembly 
- *  @see  Material 
- *  @see ISolid 
+ *  @see ILVolume
+ *  @see  LVolume
+ *  @see  LAssembly
+ *  @see  Material
+ *  @see ISolid
  *  @see  SolidBox
- *  
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   2002-05-25
  */
