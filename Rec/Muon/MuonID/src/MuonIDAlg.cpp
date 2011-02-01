@@ -142,7 +142,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
 
-  declareProperty("FOIfactor",m_foifactor = 1.);
+  declareProperty("FOIfactor",m_foifactor = 1.2);
 
   declareProperty("distMuon",m_distMuon );
   declareProperty("distPion",m_distPion );

@@ -233,12 +233,6 @@ class ConfiguredMuonIDs():
     mymuid.FOIfactor = self.info.FOIfactor
       
     mymuid.PreSelMomentum = self.info.PreSelMomentum
-    mymuid.useTtrack = False
-    if "earlyData" in self.specialData:
-      print "# MuonID WARNING: Ttracks enabled for SpecialData = earlyData"
-      mymuid.FOIfactor = 1.2
-      mymuid.useTtrack = True
-      mymuid.PreSelMomentum = 1000
 
     mymuid.distMuon= self.info.distMuon
     mymuid.distPion= self.info.distPion

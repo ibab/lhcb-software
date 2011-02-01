@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-02-01 - Erica Polycarpo 
+ - remove lines which set options according to "earlyData" flag in the configurable 
+ - change default value of FOIfactor to 1.2 in the cpp
+
 !======================== MuonID v7r9p2 2010-09-24 ============================
 ! 2010-09-14 - Helder Lopes
  - Supressed a few printouts (Savannah bug 64670)
