@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-02-01 - Rob Lambert
+ - Removed AutomaticList and CollateTriggerList from TupleToolTriggerBase,
+   Now if you specify Verbose you have to give a list.
+   To find out the list, talk to the other members of your group
+   or run ReadHltReport in your sequence
+
 !========================== DecayTreeTuple v3r11p1 2011-01-21 ===============
 
 ! 2011-01-21 - Juan Palacios

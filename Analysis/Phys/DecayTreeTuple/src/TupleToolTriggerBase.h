@@ -28,9 +28,6 @@
  *
  *  - Verbose:     Sets all the verbose flags to true
  *
- *  - UseAutomaticTriggerList: Get the list of triggers from the event and TCK
- *  
- *  - CollateTriggerList: Print an entire list of L0/HLT lines from the TCKs at the end
  *  
  *  - TriggerList: Supply a list of triggers you are interested in (all of them?)
  *                 Necessary if the triggers change in the middle of your job!!
@@ -65,8 +62,6 @@ protected:
   bool m_verboseHlt1;   ///< get details on Hlt1
   bool m_verboseHlt2;   ///< get details on Hlt2
   
-  bool m_useAutomaticTriggerList; ///<take the triggers from event 1
-                                  ///< This is really bad if they change
   
   bool m_collateTriggerList;      ///<print a list of all found triggers
   
@@ -77,23 +72,10 @@ protected:
   std::vector<std::string> m_hlt1;
   std::vector<std::string> m_hlt2;
   
-  // cache the trigger to check if/when names mutate from event-to-event
-  std::vector<std::string> m_l0_init;
-  std::vector<std::string> m_hlt1_init;
-  std::vector<std::string> m_hlt2_init;
-  
-  // collect all Trigger names for ease of the user, print in finalize
-  std::vector<std::string> m_l0_all;
-  std::vector<std::string> m_hlt1_all;
-  std::vector<std::string> m_hlt2_all;
   
   std::vector<std::string> m_triggerList;//property: list of triggers to specifically look at
   
-  StatusCode autoListMode();
-  
-  bool compileAutoList();
   bool compileMyList(const std::vector<std::string>& list);
-  bool checkAutoList();
   bool appendToList();
   
   std::vector< std::string > l0TriggersFromL0DU() const;
