@@ -16,7 +16,6 @@
 // from Gaudi
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/System.h"
 
 /** @class IRelationBase IRelationBase.h Relations/IRelationBase.h
@@ -27,7 +26,6 @@
  */
 class IRelationBase 
   : public IInterface 
-  , public IUpdateable  
 {
 public:
   

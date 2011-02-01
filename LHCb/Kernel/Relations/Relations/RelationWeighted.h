@@ -338,11 +338,8 @@ namespace Relations
     /// rebuild ALL relations from ALL  object to ALL objects
     virtual  StatusCode rebuild() { return i_rebuild() ;}
     /// update the object after POOL/ROOT reading 
-    virtual StatusCode update( int flag ) 
-    {
-      if ( 0 == flag ) { return i_rebuild() ; }
-      return StatusCode::SUCCESS ;
-    }   
+    virtual StatusCode update() { return i_rebuild() ; }
+
     // ========================================================================
   public:
     // ========================================================================

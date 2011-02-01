@@ -5,6 +5,19 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2011-02-01 - Juan Palacios
+ - Relations/RelationWeighted.h
+ - Relations/Relation1D.h
+ - Relations/IRelationBase.h
+ - Relations/RelationWeighted1D.h
+ - Relations/Relation2.h
+ - Relations/Relation2D.h
+ - Relations/Relation.h
+ - Relations/Relation2Weighted.h
+ - Relations/RelationWeighted2D.h
+  . Remove IUpdateable inheritance. Implement StatusCode DataObject::update().
+ - Increase to v6r0.
+
 !========================= Relations v5r10 2011-01-31 =========================
 ! 2011-01-17 - Marco Cattaneo
  - Fix ICC remarks

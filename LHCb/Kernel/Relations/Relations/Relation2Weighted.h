@@ -279,13 +279,12 @@ namespace Relations
     /// rebuild ALL relations from ALL  object to ALL objects 
     virtual  StatusCode rebuild() { return i_rebuild () ; }
     /// update the object after POOL/ROOT reading 
-    virtual StatusCode update( int flag ) 
+    virtual StatusCode update() 
     {
       /// update/reset cross-links 
       m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
       m_inverse .setInverseBase ( m_direct   .directBase () );
-      if ( 0 == flag ) { return i_rebuild() ; }
-      return StatusCode::SUCCESS ;
+      return i_rebuild() ;
     }
     // ========================================================================
   public:
