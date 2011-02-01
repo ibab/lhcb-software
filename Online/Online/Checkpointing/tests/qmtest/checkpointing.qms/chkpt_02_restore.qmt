@@ -3,6 +3,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>../test_restore.sh</text></argument>
   <argument name="unsupported_platforms"><set>
+		<text>i686.*</text>
 		<text>win.*</text>
 		<text>slc4_ia32.*</text>
   </set></argument>

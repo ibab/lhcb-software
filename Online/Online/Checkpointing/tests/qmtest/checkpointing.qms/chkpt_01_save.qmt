@@ -9,6 +9,7 @@
 	<text>-f</text><text>t_checkpoint</text>
   </set></argument>
   <argument name="unsupported_platforms"><set>
+		<text>i686.*</text>
 		<text>win.*</text>
 		<text>slc4_ia32.*</text>
   </set></argument>
