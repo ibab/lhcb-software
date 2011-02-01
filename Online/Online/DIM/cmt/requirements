@@ -39,6 +39,7 @@ apply_pattern dim_exe name=dns files=dns.c
 apply_pattern dim_exe name=did files="did/make_did.c"
 
 macro_append  didlinkopts " /usr/X11R6/lib/libMrm.so.3 "\
+ i686-slc5                " -L/usr/X11R6/lib   -lXm "\
  slc4-ia32                " -L/usr/X11R6/lib   -lXm "\
  slc4-amd64               " -L/usr/X11R6/lib64 -lXm " \
  target-x86_64            " -L/usr/X11R6/lib64 -lXm " \
