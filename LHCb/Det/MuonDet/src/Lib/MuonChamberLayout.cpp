@@ -1223,7 +1223,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   std::vector<DeMuonChamber*> myChs = createChambersFromTile(mytiles);
 
   //Correct XYZ and Deltas for local to Global transformation
-  deltax = Dx;  deltaz = Dz;  deltaz = Dz;
+  deltax = Dx;  deltay = Dy;  deltaz = Dz;
   if(!myChs.empty()) {
 
     DeMuonChamber* muChamber = myChs.at(0);

@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2011-02-01 - Alessia Satta
+ - Fix a method of MuonChamberLayout which initialize wrongly a variable
+
+
 !========================= MuonDet v9r3 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
