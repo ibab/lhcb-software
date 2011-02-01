@@ -1,3 +1,10 @@
+2011-02-01  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: sending data to RSS feed database;
+	i686-slc5-gcc43-opt and i686-slc5-gcc43-dbg platforms added to the table of build order
+	* python/LbRelease/LHCbNightliesWebpage.py: new file. Moved from LCG Nightlies repository
+	* data/nightlies.crontab: backup of the Nightlies crontab
+
 2011-01-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker/StdCheckers.py: improved tag checking to allow tag cloning from tags and branches

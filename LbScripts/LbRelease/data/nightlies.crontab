@@ -1,0 +1,102 @@
+############################
+# NIGHTLIES SERVER RESTART #
+############################
+58 23 * * * lxbuild135 ~kkruzele/public/killtree.py kill `ps xf | grep "nightliesServer.sh" | grep -v "grep" | awk '{print $1}'`
+20 0 * * * lxbuild135 ~/bin/nightliesServer.sh
+############################
+# NIGHTLIES CLIENTS START  #
+#
+######################
+# lhcb-compatibility #
+######################
+35 0 * * * buildlhcb04 export GAUDI_QMTEST_DEFAULT_SUITE=compatibility && /afs/cern.ch/user/l/lhcbsoft/bin/nightliesClient.sh x86_64-slc5-gcc43-opt lhcb-compatibility
+37 0 * * * buildlhcb01 export GAUDI_QMTEST_DEFAULT_SUITE=compatibility && /afs/cern.ch/user/l/lhcbsoft/bin/nightliesClient.sh x86_64-slc5-gcc43-dbg lhcb-compatibility
+#################
+# lhcb-coverity #
+#################
+36 0 * * 4 cerncoverity rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-coverity/* /build/LHCb/nightlies/lhcb-coverity && ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt lhcb-coverity
+#######################
+# lhcb-lcg-head (ICC) #
+#######################
+01 6 * * 4 buildlhcb04 ~/bin/nightliesClient.sh x86_64-slc5-icc11-dbg lhcb-lcg-head
+#########################
+# -- generic clients -- #
+#########################
+05 01 * * * buildlhcb05 ~/bin/nightliesClient.sh slc4_amd64_gcc34 > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_5a.txt 2>&1
+06 01 * * * buildlhcb04 ~/bin/nightliesClient.sh slc4_ia32_gcc34 > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_4a.txt 2>&1
+07 01 * * * buildlhcb03 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_3a.txt 2>&1
+08 01 * * * buildlhcb02 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2a.txt 2>&1
+09 01 * * * buildlhcb01 ~/bin/nightliesClient.sh i686-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_1a.txt 2>&1
+35 01 * * * buildlhcb01 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_1b.txt 2>&1
+36 01 * * * buildlhcb02 ~/bin/nightliesClient.sh i686-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2b.txt 2>&1
+37 01 * * * buildlhcb03 ~/bin/nightliesClient.sh slc4_amd64_gcc34 > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_3b.txt 2>&1
+38 01 * * * buildlhcb04 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_4b.txt 2>&1
+39 01 * * * buildlhcb05 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_5b.txt 2>&1
+04 02 * * * buildlhcb01 ~/bin/nightliesClient.sh i686-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_1c.txt 2>&1
+05 02 * * * buildlhcb02 ~/bin/nightliesClient.sh slc4_ia32_gcc34 > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2c.txt 2>&1
+06 02 * * * buildlhcb03 ~/bin/nightliesClient.sh i686-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_3c.txt 2>&1
+07 02 * * * buildlhcb04 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_4c.txt 2>&1
+08 02 * * * buildlhcb05 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_5c.txt 2>&1
+01 09 * * * buildlhcb01 ~/bin/nightliesClient.sh i686-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2d.txt 2>&1
+02 09 * * * buildlhcb02 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2d.txt 2>&1
+03 09 * * * buildlhcb03 ~/bin/nightliesClient.sh slc4_ia32_gcc34 > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_3d.txt 2>&1
+04 09 * * * buildlhcb04 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_4d.txt 2>&1
+05 09 * * * buildlhcb05 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_5d.txt 2>&1
+41 13 * * * buildlhcb01 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_1e.txt 2>&1
+42 13 * * * buildlhcb02 ~/bin/nightliesClient.sh x86_64-slc5-gcc43-opt > /afs/cern.ch/lhcb/software/nightlies/www/logs/nightliesClient_`date +\%a`_2e.txt 2>&1
+############################
+# generate summary webpage #
+############################
+*/15 * * * * lxplus export AFSROOT=/afs && export PYTHONPATH=/afs/cern.ch/user/l/lhcbsoft/PRODUCTION/prod-LCG:$PYTHONPATH && /afs/cern.ch/user/l/lhcbsoft/PRODUCTION/prod-LHCb/LbRelease/LHCbNightliesWebpage.py /afs/cern.ch/lhcb/software/nightlies/www/index-LHCb-cache.html
+7,28,42,56 * * * * lxplus export AFSROOT=/afs && export PYTHONPATH=/afs/cern.ch/user/l/lhcbsoft/PRODUCTION/prod-LCG:$PYTHONPATH && /afs/cern.ch/user/l/lhcbsoft/PRODUCTION/prod-LHCb/LbRelease/LHCbNightliesWebpage.py /afs/cern.ch/lhcb/software/nightlies/www/index-LHCb-test.html SVN
+###################################
+# remove log files from last week #
+###################################
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-gaudi-head.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-lcg-head.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-branches.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-patches.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-prerelease.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-head.`date +\%a`_*
+10 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/www/logs/lhcb-compatibility.`date +\%a`_*
+#########################################
+# remove files from today and yesterday #
+#########################################
+# (clean from yesterday)
+2 0 * * * lxbuild111 rm -rf /build/nightlies/lhcb-*/`date --date='1 day ago' +\%a`/*
+2 0 * * * lxbuild120 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * lxbuild156 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * buildlhcb01 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * buildlhcb02 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * buildlhcb03 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * buildlhcb04 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+2 0 * * * buildlhcb05 rm -rf /build/nightlies/lhcb-*/`date --date='1 days ago' +\%a`/*
+# (clean)
+10 0 * * * lxbuild111 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * lxbuild120 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * lxbuild156 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * buildlhcb01 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * buildlhcb02 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * buildlhcb03 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * buildlhcb04 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+10 0 * * * buildlhcb05 rm -rf /build/nightlies/lhcb-*/`date +\%a`
+############################################
+# finish all nightlies runs from yesterday #
+############################################
+3 0 * * * lxbuild111 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * lxbuild120 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * lxbuild156 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * buildlhcb01 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * buildlhcb02 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * buildlhcb03 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * buildlhcb04 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+3 0 * * * buildlhcb05 ~/bin/killTree.sh nightlies `date --date='1 day ago' +\%a`
+############################################################################### (cleanAFS)
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-branches/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-patches/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-prerelease/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-head/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-gaudi-head/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies/lhcb-lcg-head/`date +\%a`/*
+5 0 * * * lxplus rm -rf /afs/cern.ch/lhcb/software/nightlies-compatibility/`date +\%a`/*
+##########################################################################################

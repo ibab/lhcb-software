@@ -579,6 +579,8 @@ class LHCbProjectBuilder(object):
     @fork_call
     def test(self):
         print "[LHCb] test"
+        from checkTestLogs import checkTestLogs
+        import datetime
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
@@ -601,6 +603,42 @@ class LHCbProjectBuilder(object):
         if self.systemType != 'windows':
             testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest')
             testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest/')
+            try:
+                testResults = checkTestLogs(None, None, self.slot, self.project, datetime.date.today().strftime('%a'), os.environ['CMTCONFIG'], False)
+                import sqlite3
+                import datetime
+                slotObj = self.slot
+                platform = os.environ['CMTCONFIG']
+                projObj = self.project
+                total = testResults[1]
+                noErr = testResults[2]
+                noOK = testResults[3]
+                db_date = datetime.date.today().strftime('%Y-%m-%d')
+                db_time = datetime.datetime.now().strftime('%H:%M:%S.000')
+                db_slot = slotObj.getName()
+                db_plat = platform
+                db_proj = projObj.getTag().split('_')[0]
+                db_testlog = db_slot + "." + datetime.date.today().strftime("%a") + "_" + projObj.getTag() +"-"+platform+"-qmtest/index.html"
+                if os.path.exists('/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results'):
+                    dbconn = sqlite3.connect('/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results')
+                    dbc = dbconn.cursor()
+                    dbc.execute('select count(*) from results where date=? and slot=? and platform=? and project=?', (db_date, db_slot, db_plat, db_proj))
+                    if dbc.fetchall()[0][0] == 0: # no record, so insert the new one
+                        if total is None or noErr is None or noOK is None:
+                            dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,NULL,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, noOK, db_testlog))
+                        else:
+                            dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,?,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, total-noErr-noOK, noOK, db_testlog))
+                        dbconn.commit()
+                        dbc.close()
+                    else: # record is there, so update
+                        if total is None or noErr is None or noOK is None:
+                            dbc.execute('update results set tests_failed=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
+                        else:
+                            dbc.execute('update results set tests_failed=?, tests_untested=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, total-noErr-noOK, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
+                        dbconn.commit()
+                        dbc.close()
+            except:
+                pass
             if os.path.exists(testSummaryFrom):
                 if os.path.exists(testSummaryTo):
                     shutil.rmtree(testSummaryTo, ignore_errors=True)
@@ -889,8 +927,8 @@ class LHCbServer(BaseServer.Server):
     def cmpWorkUnits(self, a, b): # a=(slot, platform), b=(slot, platform)
         #POLICY: slots in order, then platforms in order
         slotOrder = ['lhcb-prerelease','lhcb-head','lhcb-patches','lhcb-branches','lhcb-gaudi-head','lhcb-lcg-head']
-        platOrder = ['x86_64-slc5-gcc43-opt','slc4_amd64_gcc34','slc4_ia32_gcc34',
-                     'x86_64-slc5-gcc43-dbg','slc4_amd64_gcc34_dbg','slc4_ia32_gcc34_dbg',
+        platOrder = ['x86_64-slc5-gcc43-opt','i686-slc5-gcc43-opt','slc4_amd64_gcc34','slc4_ia32_gcc34',
+                     'x86_64-slc5-gcc43-dbg','i686-slc5-gcc43-dbg','slc4_amd64_gcc34_dbg','slc4_ia32_gcc34_dbg',
                      'win32_vc71_dbg']
         # compare slot names
         self._log.debug('cmtWorkUnits: %s %s' %(str(a), str(b)))
