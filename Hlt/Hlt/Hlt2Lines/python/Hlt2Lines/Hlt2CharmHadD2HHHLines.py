@@ -163,7 +163,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
 
         #First stage - Combine 2 Body with pt > 500MeV	
-	Hlt2Charm2BodyFor3Body = Hlt2Member( CombineParticles
+	Charm2BodyCombine = Hlt2Member( CombineParticles
                           , "Combine_Stage1"
                           , DecayDescriptors = ["K*(892)0 -> pi+ pi+" , "K*(892)0 -> pi+ pi-"
                           , "K*(892)0 -> pi- pi-" , "K*(892)0 -> K+ K+"
@@ -179,6 +179,8 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                                          & (BPVVDCHI2> %(VtxPVDispChi2_2BodyFor3Body)s )""" % self.getProps()
                           , Preambulo = preambulo 
                           , InputLocations = [ pions2BodyFor3Body , kaons2BodyFor3Body ])
+
+        Hlt2Charm2BodyFor3Body =  bindMembers('CharmHadD2HHH', [ pions2BodyFor3Body , kaons2BodyFor3Body, Charm2BodyCombine ])
 			  
         #Second Stage - picks up a low pt track too
 
