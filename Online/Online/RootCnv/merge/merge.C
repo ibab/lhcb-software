@@ -441,7 +441,8 @@ int merge(const char* target, const char* source, bool fixup=false, bool dbg=tru
     //gSystem->Load("libGaudiExamplesDict");
   }
 #endif
-  //printf("+++ Target:%s\n+++ Source file:%s\n",target,source);
+  //printf("+++ Target:%s\n+++ Source file:%s Fixup:%s Dbg:%s\n",
+  //	 target,source, fixup ? "YES" : "NO",s_dbg ? "YES" : "NO");
   RootDatabaseMerger m;
   MergeStatus ret = m.exists(target) ? m.attach(target) : m.create(target);
   if ( ret == MERGE_SUCCESS ) {

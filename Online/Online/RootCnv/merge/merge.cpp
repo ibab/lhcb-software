@@ -50,9 +50,10 @@ int main(int argc, char** argv) {
   gROOT->SetBatch(kTRUE);
   for(size_t i=0; i<input.size();++i)  {
     const string& in = input[i];
-    fixup = fixup && ((i+1)==input.size());
-    //::printf("+++ Target:%s\n+++ Source file:%s\n",output.c_str(),in.c_str());
-    int result = merge(output.c_str(),in.c_str(),fixup,dbg);
+    bool do_fixup = fixup && ((i+1)==input.size());
+    //::printf("+++ Target:%s\n+++ Source file:%s Fixup:%s Dbg:%s %d %d\n",
+    //         output.c_str(),in.c_str(),do_fixup ? "YES" : "NO",dbg ? "YES" : "NO",i,input.size());
+    int result = merge(output.c_str(),in.c_str(),do_fixup,dbg);
     if ( result == MERGE_ERROR ) {
       printf("\nERROR: File merge failed after %ld files.\n\n",long(i+1));
       return 1;
