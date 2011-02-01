@@ -21,7 +21,8 @@ macro_append restore_cppflags  ' $(Checkpointing_package_cpp_build_flags) '
 
 private 
 macro cmt_installarea_linkopts ''
-macro cpplinkflags             ' -static -g -O0 ' WIN32 ''
+macro cppdebugflags            ' -g -O0 ' WIN32 ''
+macro cpplinkflags             ' -static ' WIN32 ''
 
 public
 library Checkpointing 	../aux/Image.cpp         \
@@ -29,7 +30,7 @@ library Checkpointing 	../aux/Image.cpp         \
 			../src/MemMaps_test.cpp  \
 			../src/Process_test.cpp  \
 			../src/Chkpt_test.cpp
-macro_append lib_Checkpointing_cppflags ' -g -O0 -fPIC $(Checkpointing_package_cpp_build_flags) '
+macro_append lib_Checkpointing_cppflags ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '
 
 library Chkpt  		*.cpp
