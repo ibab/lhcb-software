@@ -1,6 +1,6 @@
 project ONLINE
 
-use GAUDI GAUDI_v21r11
+use GAUDI GAUDI_v22r0
 #use GAUDI GAUDI_HEAD
 
 build_strategy with_installarea
