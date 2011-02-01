@@ -7,34 +7,120 @@
 
 
 </PRE><H1><A NAME=v32r0>2011-01-31 LHCbSys v32r0</A></H1><PRE>
-This version uses Gaudi v22r0 and LCG_58f
+This version uses Gaudi v22r0 and LCG_60
+Development version on top of the latest Gaudi/Root for 2011 data
 
-- Development version on top of the latest Gaudi/Root for 2011 data
+- Changes in supported platforms:
+  . slc4_ia32_gcc34(_dbg), slc4_amd64_gcc34(_dbg), win32_vc71_dbg removed
+  . i686-slc5-gcc43-{opt,dbg}, x86_64-icc11-{opt,dbg}, i686-winxp-vc9-dbg added
 
-Highlights:
+- Packages added:    GaudiConfUtils v1r0
+- Packages modified: CaloInterfaces v8r1, MDF_ROOT v1r6, Tell1Kernel v1r12,
+    CaloDet v10r9, DDDB v1r40, DetCond v12r17, DetDesc v18r22, DetDescCnv v4r12,
+    MuonDet v9r3, RichDet v16r0, STDet v4r23, VeloDet v13r13, VeloPixDet v1r9,
+    DAQEvent v9r3, DigiEvent v2r17, EventAssoc v5r1, EventPacker v2r6,
+    GenEvent v5r7, HltEvent v9r1, L0Event v19r1, MCEvent v2r18, PackedEvent v4r4,
+    PhysEvent v11r13, RecEvent v2r34, RecreatePIDTools v1r2, TrackEvent v5r10,
+    VeloEvent v16r10, DetCondExample v11r10, GaudiConf v13r8, GaudiConfUtils v1r0,
+    GaudiObjDesc v11r11, HltInterfaces v4r3, LHCbAlgs v2r36, LHCbKernel v12r7,
+    LHCbMath v3r23, PartProp v1r9, Relations v5r10, L0MuonKernel v9r6, OTDAQ v7r9,
+    DaVinciInterfaces v2r8, DaVinciTypes v2r3, LoKiCore v10r8, LoKiGen v9r5,
+    LoKiHlt v3r4, LoKiMC v9r4, RichKernel v7r41, RichRecBase v4r3,
+    STTELL1Event v1r10, CondDBUI v3r8, XmlTools v6r4, TrackInterfaces v4r18,
+    TrackKernel v1r6
 
-- LHCb now compiles on icc with no warnings, 
-  many packages changed/patched/revised to accommodate that
+For links to the changesets see:
+https://cern.ch/lhcb-tag-collector/display.html?project=LHCb&version=v32r0
 
-- Det/RichDet v16r0, The first RichDet to support 2011 Rich Gas mixture
-  Database tags for 2011 are not compatible with previous versions
+Functionality changes:
+- New default DataType: 2011 (DDDB v1r40) 
+- New default database tags, updated for SQLDDDB v5r44 (DDDB v1r40):
+  + DDDB, 2009, 2010: head-20101206
+  + 2011 defaults currently the same as for 2010
 
-- Event/RecEvent v2r34, Added the LHCb::RecSummary class, an extension to 
-  the event model to hold basic summary information about the reconstruction 
+- Support of DQFLAGS partition of CondDB, holds time-dependent data quality flags
+  (DetCond v12r17, CondDBUI v3r8). Needs SQLDDDB v6*, picked up by DDDB v1r40.
+  Added DQFilter algorithm to filter events according to these Data Quality flags;
+  it can operate during the BeginEvent (default) or as a standard filter
+  (LHcbAlgs v2r36)
 
-- GaudiConfUtils v1r0, New module to provide helper functions in python to
+- Added support for 2011 Rich gas mixture (RichDet v16r0). 
+  Previous versions of RichDet do not support 2011 CondDB tags for Rich
+- Added support for lists of active and inactive HPDs (RichDet v15r3)
+
+- Added LHCb::RecSummary class, added to DST content. Holds basic summary info
+  about the reconstruction (EventPacker v2r6, RecEvent v2r34, GaudiConf v13r8)
+
+- Add track history PatFastVelo (TrackEvent v5r10)
+- Modification of Track::closestState (TrackEvent v5r10)
+- Node::residual and Node::errResidual become virtual (TrackEvent v5r10)
+
+- SimConf: add new phases (GenToMCTree) used in Gauss to save generator
+  level information into MCParticles (skipping the full simulation phase)
+  (GaudiConf v13r8)
+
+- GaudiConfUtils v1r0: New module to provide helper functions in python to
   work with configurables. New ConfigurableGenerators for use by LineBuilder
   classes in the Stripping
 
-- Removal of IPhysDesktop, obsolete interface no longer required after
-  re-write of Phys for 2011 development
+- Changes to DaVinci interfaces (DaVinciInterfaces v2r8)
+  . Removal of IPhysDesktop, obsolete interface no longer required after
+    re-write of Phys for 2011 development
+  . IDecayFinder: Add templated methods hasDecay and findDecay acting on
+    iterators of LHCb::Particle containers.
+  . IChangePID: Add templated method changePID.
 
-- Support of DQFLAGS partition of CondDB, a database partition to
-  hold time-dependent data quality flags    
+- 'CondDB_UpdateOnlineSnapshots.py' script added, which updates SQLDDDB ONLINE
+   snapshots. It detects used time scheme (per-year or per-month) of ONLINE
+   snapshots and updates them to extend their coverage up to current time.
+   If no ONLINE snapshots are found it will generate them from scratch.
+   It updates also user's SQLDDDB release notes accordingly (CondDBUI v3r8)
 
-For further details and links to the changesets see:
+- Other changes:
+  . Update IRawBufferToSmartIDsTool interface to allow the number of hits
+    in RICH1 and RICH2 to be separately counted (RichKernel v7r41)
+  . Initialize OTRawBankDecoder as public tool in OTTimeCreator (OTDAQ v7r9)
+  . Add more functions for Gaudi::Math::ValueWithErrors (LHCbMath v3r23)
+  . LoKi/GetN.h: new class to get all N-body combinations from some array
+    (LoKiCore v10r8)
+  . MCDecays.cpp: Drastical speedup of worst case of PHOTOS-matcher (LoKiMC v9r4)
+  . Add many GAUDI_API directives (LoKiMC v9r4)
+  . Added ICountVeloTracks interface (TrackInterfaces v4r18)
 
-https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=LHCb&version=v32r0
+Bug fixes:
+- Fix in generation of xrootd connection string when svcClass option given
+  (MDF_ROOT v1r6)
+- Fix in file descriptor assignment causing wrong files to be closed when ageLimit
+  reached (MDF_ROOT v1r5)
+- Minor fix in debug output (CaloDet v10r9)
+- Fixed PID tools to not throw exception if input ProtoParticles do not exist.
+  Issue a warning and handle cleanly instead (RecreatePIDTools v1r2)
+- TreeCloners.cpp: Fix a bug that under certain conditions could result
+  in double deletion (DaVinciTypes v2r3)
+- Add missing Reflex dictionaries (DaVinciTypes v2r3, TrackInterfaces v4r18)
+- Add missing method to LHCb::RecVertexHolder (DaVinciTypes v2r3)
+- ParticleProperties.cpp: fix bug in antiParticle function (LoKiCore v10r8)
+
+- Remove most icc compilation warnings and many remarks
+  (CaloInterfaces v8r1, Tell1Kernel v1r12, CaloDet v10r9, DetCond v12r17,
+   DetDesc v18r22, DetDescCnv v4r12, MuonDet v9r3, RichDet v16r0, STDet v4r23,
+   VeloDet v13r13, VeloPixDet v1r9, DAQEvent v9r3, DigiEvent v2r17, 
+   EventAssoc v5r1, GenEvent v5r7, HltEvent v9r1, L0Event v19r1, MCEvent v2r18,
+   PackedEvent v4r4, PhysEvent v11r13, TrackEvent v5r10, VeloEvent v16r10,
+   DetCondExample v11r10, GaudiObjDesc v11r11, HltInterfaces v4r3,
+   LHCbKernel v12r7, LHCbMath v3r23, PartProp v1r9, Relations v5r10,
+   DaVinciInterfaces v2r8, LoKiCore v10r8, LoKiGen v9r5, LoKiHlt v3r4, 
+   LoKiMC v9r4, RichKernel v7r41, RichRecBase v4r3, STTELL1Event v1r10,
+   XmlTools v6r4, TrackKernel v1r6
+
+- Fix compilation on vc9
+  (HltInterfaces v4r3, L0MuonKernel v9r6)
+
+- Remove obsolete xxx_dll.cpp file
+  (CaloDet v10r9, XmlTools v6r4)
+
+- Remove includes of obsolete DeclareFactoryEntries.h
+  (DetCondExample v11r10)
 
 </PRE><H1><A NAME=v31r8>2010-12-14 LHCbSys v31r8</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
