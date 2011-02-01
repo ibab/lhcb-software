@@ -59,7 +59,7 @@ class TrackSys(LHCbConfigurableUser):
     
       if "cosmics" not in self.getProp("SpecialData"):
            if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
-               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProb("DataType") :  
+               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :  
                  self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
                else:
                  self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)

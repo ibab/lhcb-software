@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+! 2011-02-01 - Rob Lambert
+ - Fixed typo in TrackSys configurable getProb->getProp
+
 ! 2011-02-01 - Stephanie Hansmann-Menzemer
 - add switch for MC09 to be propagated to STTools to ensure to run with
 APE=0.0 on MC
