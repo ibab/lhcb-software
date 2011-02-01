@@ -59,6 +59,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "CenterOTYSize"         , m_centerOTYSize         =  100 * Gaudi::Units::mm );
   declareProperty( "MaxDeltaY"             , m_maxDeltaY             =  30.      );
   declareProperty( "MaxDeltaYSlope"        , m_maxDeltaYSlope        =  300.      );
+  declareProperty( "MaxXCandidateSize"     , m_maxXCandidateSize     =  50       );
 
   declareProperty( "RangePerMeV"           , m_rangePerMeV           =  5250. * Gaudi::Units::GeV );
   declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
@@ -869,15 +870,18 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
                 << endmsg;
     }
-    //== Try to merge the lists, if the first new point is close to the last one...
-    PatFwdHits temp( itB, itE );       // Create a copy of the list
-    if ( spread > x1 - lastEnd ) {
-      (*m_candidates.rbegin()).addCoords( temp );
-    } else {
-      PatFwdTrackCandidate aCandidate( track.track(), temp );
-      m_candidates.push_back( aCandidate );
+    //== Protect against too dirty area.
+    if ( itE - itB < m_maxXCandidateSize ) { 
+      PatFwdHits temp( itB, itE );       // Create a copy of the list
+      //== Try to merge the lists, if the first new point is close to the last one...
+      if ( spread > x1 - lastEnd ) {
+        (*m_candidates.rbegin()).addCoords( temp );
+      } else {
+        PatFwdTrackCandidate aCandidate( track.track(), temp );
+        m_candidates.push_back( aCandidate );
+      }
+      lastEnd = x2;
     }
-    lastEnd = x2;
     itP = --itE;
   }
 

@@ -117,6 +117,7 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
     double m_centerOTYSize;
     double m_maxDeltaY;
     double m_maxDeltaYSlope;
+    int    m_maxXCandidateSize;
 
     double m_rangePerMeV;
     double m_minRange;

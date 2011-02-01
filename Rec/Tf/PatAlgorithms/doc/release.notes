@@ -3,11 +3,16 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2011-02-01 - Olivier Callot
+ - Add a new cut in PatForwardTool to exclude dirty area, MaxXCandidateSize = 50
+   This gains 15% of the time for almost no change in efficiency/ghost rate
+
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
  - set early data tunings as default
 
 ! 2011-01-24 - Olivier Callot
- - FIx the serach window in FastForwardTool when a minimal moentum/Pt is given.
+ - Fix the search window in FastForwardTool when a minimal momentum/Pt is given.
 
 !========================= PatAlgorithms v4r10 2011-01-17 =========================
 ! 2011-01-17 - Rob Lambert
