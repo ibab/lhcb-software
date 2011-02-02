@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r0 2011-02-02 =========================
+! 2011-02-02 - Rob Lambert
+ - Updated major version because this changes the DST format
+
 ! 2011-01-20 - Chris Jones
  - Add new SUMMARY sequence to reconstruction that runs the summary algorithm 
    at the end of the event processing. Fills the new summary object that is 
