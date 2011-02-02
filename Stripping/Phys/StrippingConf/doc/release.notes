@@ -5,6 +5,14 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2011-02-02 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . StrippingLine constructor argument algos is optional. New argument
+    selection added. Only one can be used, with algos left there for backwards
+    compatibility. selection should take a single selection-type object.
+    Currently, the only test for seleciton is that it isn't a Configurable.
+ - Increase to v3r12.
+
 !========================== StrippingConf v3r11 2011-01-21 ===================
 
 ! 2011-01-20 - Juan Palacios

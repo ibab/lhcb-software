@@ -20,6 +20,7 @@ from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import LoKi__VoidFilter  as VOIDFilter
 from SelPy.selection import flatAlgorithmList
+from GaudiConfUtils import isConfigurable
 #from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
@@ -180,7 +181,13 @@ class bindMembers (object) :
         alg = alg.createConfigurable( line, **alg.Args )
         return self._default_handler_( line,  alg )
 
-    def __init__( self, line, algos ) :
+    def __init__( self, line, algos = None, selection = None ) :
+        if algos and selection :
+            raise Exception('only algos or selection can be set. You have set both.')
+        if selection :
+            if isConfigurable(selection) :
+                raise TypeError('StrippingLine selection cannot be Configurable type.')
+            algos = [selection]
         self._members = []
         self._outputloc = None
         for alg in algos:
