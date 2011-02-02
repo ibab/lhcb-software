@@ -411,7 +411,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if os.environ.has_key("CMTEXTRATAGS") :
         del os.environ["CMTEXTRATAGS"]
 
-    os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
+    os.environ["CMTCONFIG"] = "x86_64-slc5-gcc43-opt"
     llsargs = []
     llsargs.append("--silent")
     llsargs.append("--shell=%s" % shell)

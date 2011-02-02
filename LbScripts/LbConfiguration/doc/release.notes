@@ -1,3 +1,7 @@
+2011-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: changed the default CMTCONFIG used.
+
 2011-02-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added method to extract the number of CPU and the lsb_release
