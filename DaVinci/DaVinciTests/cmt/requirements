@@ -1,5 +1,5 @@
 package DaVinciTests
-version v2r0
+version v2r1
 
 branches doc cmt tests
 use GaudiConf v* -no_auto_imports
