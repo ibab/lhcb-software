@@ -56,7 +56,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_trackDir ( ),
     m_gloPoint ( ),
     m_fracPos ( 0. ),
-    m_corrFactor ( 1.10 )
+    m_corrFactor ( 1.0 )
 {
   declareInterface<IVeloClusterPosition>(this);
   // default paramertrizations are of form error=slope*pitch+const
@@ -78,7 +78,7 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
   declareProperty("P0Values", m_p0Values);
   declareProperty("P1Values", m_p1Values);
   declareProperty("SplineType", m_splineType="Cspline");
-  declareProperty("ParaClass", m_paraClass="MC10");
+  declareProperty("ParaClass", m_paraClass="DC06");
 }
 //=============================================================================
 // Destructor
@@ -102,24 +102,31 @@ StatusCode VeloClusterPosition::initialize()
     m_p0Values.clear();
     m_p0Values+=-2.5, -3.591, -3.430, -4.112, -4.964, -5.705, -6.301, -7.065,
       -7.353, -7.055, -6.168, -4.814, -3.075, -1.067, 0.798, 2.753,
-      4.446, 5.116, 6.411, 7.124, 7.683, 7.573, 9.946, 10.97, 11.0;
+      4.446, 5.116, 6.411, 7.124, 7.683, 7.573, 9.946, 10.97;
     m_p1Values.clear();
     m_p1Values+=0.29, 0.29, 0.28, 0.28, 0.28, 0.27, 0.27, 0.269,
       0.239, 0.23, 0.215, 0.18, 0.15, 0.11, 0.09, 0.06, 
-      0.04, 0.03, 0.0226, 0.0154, 0.0154, 0.0235, 0.0008, -0.0079, -0.0079;
+      0.04, 0.03, 0.0226, 0.0154, 0.0154, 0.0235, 0.0008, -0.0079;
 
   }else if("MC10"==m_paraClass){
 
     info()<< " --> Using 2010 tuning of the error parametrisation " <<endmsg;    
     //parameters determined for different pitch bins error type 3
+    // m_p0Values+=-1.81, -0.478, -1.68, -2.35, -3.85, -4.65, -5.09, -5.81, -6.18,
+    //             -5.29, -4.01, -2.91, -1.09, 1.17, 2.98, 4.61, 6.16 , 8.57, 9.91,
+    //             10.4, 11.4, 13.3, 14.1, 14.2;;
+    // m_p1Values.clear();
+    // m_p1Values+=0.322, 0.271, 0.284, 0.284, 0.294, 0.291, 0.286, 0.275, 0.262,
+    //             0.243, 0.213, 0.187, 0.15, 0.118, 0.0915, 0.0694, 0.0504, 0.0296, 
+    //             0.0175, 0.0191, 0.0133, -0.00502, -0.00776, -0.00654;
     m_p0Values.clear();
-    m_p0Values+=-1.81, -0.478, -1.68, -2.35, -3.85, -4.65, -5.09, -5.81, -6.18,
-                -5.29, -4.01, -2.91, -1.09, 1.17, 2.98, 4.61, 6.16 , 8.57, 9.91,
-                10.4, 11.4, 13.3, 14.1, 14.2;;
+    m_p0Values+=3.17, -0.641, -1.8, -2.56, -3.64, -4.15, -4.4, -4.94, -5.18, -4.53,
+                -3.14, -0.777, 0.796, 2.98, 4.99, 6.23, 6.62, 8.06, 9.3, 10.5, 10.3,
+                12.6, 14.6, 7.73;
     m_p1Values.clear();
-    m_p1Values+=0.322, 0.271, 0.284, 0.284, 0.294, 0.291, 0.286, 0.275, 0.262,
-                0.243, 0.213, 0.187, 0.15, 0.118, 0.0915, 0.0694, 0.0504, 0.0296, 
-                0.0175, 0.0191, 0.0133, -0.00502, -0.00776, -0.00654;
+    m_p1Values+=0.211, 0.273, 0.282, 0.281, 0.283, 0.274, 0.265, 0.253, 0.241, 0.224,
+                0.195, 0.155, 0.123, 0.0898, 0.0619, 0.0407, 0.0361, 0.0219, 0.0078,
+                0.00155, 0.0134, -0.0105, -0.027, 0.0784;
 
   }else{
 
@@ -136,9 +143,10 @@ StatusCode VeloClusterPosition::initialize()
     ++value;
   }
   debug()<< " Parametrisation proj angles bins: " << m_projAngles.size() <<endmsg;
-
+  debug()<< (m_projAngles.size()) << " vs. " << (m_p0Values.size()) <<endmsg;
   assert(m_projAngles.size()==m_p0Values.size());
   assert(m_projAngles.size()==m_p1Values.size());
+  
 
   m_minAngle=m_projAngles.front();
   m_maxAngle=m_projAngles.back();
