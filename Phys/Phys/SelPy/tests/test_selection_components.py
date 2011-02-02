@@ -10,7 +10,7 @@ import sys
 sys.path.append('../python')
 
 from SelPy.configurabloids import DummyAlgorithm
-from SelPy.selection import FlatSelectionListBuilder, Selection
+from SelPy.selection import flatAlgorithmList, Selection
 
 class SelectionTree(object) :
     sel000 = Selection('0.00000', ConfGenerator = DummyAlgorithm('Alg0.00000'),
@@ -31,11 +31,11 @@ class SelectionTree(object) :
     sel200 = Selection('2.00000', ConfGenerator = DummyAlgorithm('Alg2.00000'),
                        RequiredSelections = [sel100, sel101])
 
-    algos = FlatSelectionListBuilder(sel200).selectionList
+    algos = flatAlgorithmList(sel200)
     alg_names = [a.name() for a in algos]
 
 
-def test_FlatSelectionListBuilder_order_line() :
+def test_flatAlgorithmList_order_line() :
 
     
     sel000 = Selection('0.0000', ConfGenerator = DummyAlgorithm('Alg0.0000'),
@@ -49,10 +49,10 @@ def test_FlatSelectionListBuilder_order_line() :
     sel203 = Selection('2.0000', ConfGenerator = DummyAlgorithm('Alg2.000'),
                       RequiredSelections = [sel102])
 
-    algos = FlatSelectionListBuilder(sel203).selectionList
+    algos = flatAlgorithmList(sel203)
     assert [a.name() for a in algos] == ['0.0000', '0.0001', '1.0000', '1.0001', '2.0000']
     
-def test_FlatSelectionListBuilder_order_tree() :
+def test_flatAlgorithmList_order_tree() :
 
     alg_names = SelectionTree.alg_names
     
@@ -63,7 +63,7 @@ def test_FlatSelectionListBuilder_order_tree() :
     assert alg_names.index('1.00000') < alg_names.index('2.00000')
     assert alg_names.index('1.00001') < alg_names.index('2.00000')
 
-def test_FlatSelectionListBuilder_removes_duplicates() :
+def test_flatAlgorithmList_removes_duplicates() :
     
     sel000 = SelectionTree.sel000
     sel001 = SelectionTree.sel001
@@ -79,7 +79,7 @@ def test_FlatSelectionListBuilder_removes_duplicates() :
     sel200 = Selection('2.10000', ConfGenerator = DummyAlgorithm('Alg2.10000'),
                        RequiredSelections = [sel100, sel101])
 
-    algos = FlatSelectionListBuilder(sel200).selectionList
+    algos = flatAlgorithmList(sel200)
     alg_names = [a.name() for a in algos]
     assert len(algos) == 7
     assert alg_names.count('0.00000') == 1

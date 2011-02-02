@@ -108,18 +108,16 @@ class Selection(object) :
 
         if name in Selection.__used_names :
             raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
-
         self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
         
-        self.requiredSelections = []
-        for sel in RequiredSelections :
-            self.requiredSelections.append(sel)
         self._name = name
+        self.alg = ConfGenerator(self._name) # get the configurable.
+        self.requiredSelections = list(RequiredSelections)
         _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
         _outputLocations = filter(lambda s : s != '', _outputLocations)
-        if hasattr(ConfGenerator, InputDataSetter) :
+        if InputDataSetter and hasattr(ConfGenerator, InputDataSetter) :
             _inputLocations = getattr(ConfGenerator, InputDataSetter)
             if len(_inputLocations) != 0 :
                 if not compatibleSequences(_outputLocations,
@@ -127,8 +125,9 @@ class Selection(object) :
                     raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
                                                      '\nInputLocations: '+str(_inputLocations)+\
                                                      '\nRequiredSelections: '+str(_outputLocations))
-        self.alg = ConfGenerator(self._name) # get the configurable.
-        self.alg.__setattr__(InputDataSetter, list(_outputLocations))
+
+        if InputDataSetter :
+            self.alg.__setattr__(InputDataSetter, list(_outputLocations))
         self._outputBranch = OutputBranch
         self._outputLocation = (self._outputBranch + '/' + self.name() + '/' + Extension).replace('//','/')
 
