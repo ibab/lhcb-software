@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r0 2011-02-02 =========================
+! 2011-02-02 - Rob Lambert
+ - New major version because this changes what's in the DST
+
 ! 2011-01-24 - David Hutchcroft
  - Changed code to count VELO tracks to use new CountVeloTracks tool
  - Added Tr/TrackInterfaces to requirements
