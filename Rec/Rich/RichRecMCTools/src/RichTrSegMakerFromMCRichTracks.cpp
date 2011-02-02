@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
- * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.12 2009-07-30 11:17:12 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -145,10 +142,10 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     const Gaudi::XYZVector & exitStateMomentum = segment->exitMomentum();
 
     // Create intersection info
-    RichRadIntersection::Vector intersects;
-    intersects.push_back( RichRadIntersection( entryPoint, entryStateMomentum,
-                                               exitPoint, exitStateMomentum,
-                                               *radiator ) );
+    Rich::RadIntersection::Vector intersects;
+    intersects.push_back( Rich::RadIntersection( entryPoint, entryStateMomentum,
+                                                 exitPoint, exitStateMomentum,
+                                                 *radiator ) );
 
     if ( Rich::Aerogel == rad )
     {

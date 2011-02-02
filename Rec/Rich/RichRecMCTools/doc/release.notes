@@ -4,7 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecMCTools v2r28 2010-12-16 =========================
+! 2011-02-02 - Chris Jones
+ - Adapt to removal of depreciated RichRadIntersection typedef.
+
+!===================== RichRecMCTools v2r28 2010-12-16 ========================
 ! 2010-11-22 - Chris Jones
  - Remove temporary hack in last commit, neccessary for use in a minimal patch
    release.
@@ -16,11 +19,11 @@
 ! 2010-11-12 - Antonis Papanestis
  - Added methods to easily access the MC info on scintillation
 
-!====================== RichRecMCTools v2r27 2010-06-21 =====================
+!====================== RichRecMCTools v2r27 2010-06-21 =======================
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. 
 
-!====================== RichRecMCTools v2r26 2010-03-18 =====================
+!====================== RichRecMCTools v2r26 2010-03-18 =======================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 
