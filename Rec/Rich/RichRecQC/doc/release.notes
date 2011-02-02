@@ -4,7 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecQC v2r48 2010-12-16 =========================
+! 2011-02-02 - Chris Jones
+ - Adapt to removal of depreciated RichRadIntersection typedef.
+
+!======================== RichRecQC v2r48 2010-12-16 =========================
 ! 2010-11-21 - Chris Jones
  - Add optional event filter to start of monitor sequence
  - Enable extra histograms in PID monitors when using Expert Histograms

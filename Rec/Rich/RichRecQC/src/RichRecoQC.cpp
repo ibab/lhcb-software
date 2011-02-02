@@ -327,8 +327,8 @@ StatusCode RecoQC::execute()
       {
         // get the list of radiator intersections
         const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
-        const RichRadIntersection::Vector & intersects = tkSeg.radIntersections();
-        for ( RichRadIntersection::Vector::const_iterator intersect = intersects.begin();
+        const Rich::RadIntersection::Vector & intersects = tkSeg.radIntersections();
+        for ( Rich::RadIntersection::Vector::const_iterator intersect = intersects.begin();
               intersect != intersects.end(); ++intersect )
         {
           const DeRichAerogelRadiator* d = 
