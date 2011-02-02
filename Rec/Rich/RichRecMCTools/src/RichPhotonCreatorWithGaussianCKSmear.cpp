@@ -129,7 +129,7 @@ StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
   }
 
   // Execute base class method
-  sc = sc && PhotonCreatorBase::finalize();
+  sc = PhotonCreatorBase::finalize() && sc;
 
   // return
   return sc;
@@ -180,7 +180,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
 
     } // radiator is to be smeared
 
-  } // photon allready smeared
+  } // photon already smeared
 
   // Return pointer to this photon
   return newPhoton;
