@@ -4,7 +4,10 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecMonitors v2r30 2010-12-16 =========================
+! 2011-02-02 - Chris Jones
+ - Adapt to removal of depreciated RichRadIntersection typedef.
+
+!====================== RichRecMonitors v2r30 2010-12-16 =====================
 ! 2010-11-21 - Chris Jones
  - Various improvements and bug fixes to the track resolution monitor
 
