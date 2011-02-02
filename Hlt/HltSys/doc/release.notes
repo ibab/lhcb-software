@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2011-02-02 - Roel Aaij
+ - Add Hlt/Hlt1Muons which contains new code for Hlt1 Muon
+   lines
+
 </PRE><H1><A NAME=v12r2>2011-01-18 HltSys v12r2/A></H1><PRE>
 ! 2011-01-18 - Gerhard Raven
  - Move forward to Phys v10r0

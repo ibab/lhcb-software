@@ -29,7 +29,7 @@ use TCKUtils            v1r6p10 Hlt   # Gerhard Raven
 use LoKiTrigger         v11r3   Phys  # Vanya Belyaev
 use LoKiTracks          v1r6    Phys  # Vanya Belyaev
 use BBDecTreeTool       v1r0    Phys  # Mike Williams
-
+use Hlt1Muons           v1r0    Hlt   # Roel Aaij
 
 # Declare this as a container package
 apply_pattern container_package
