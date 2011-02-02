@@ -2,6 +2,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v7r10 2011-02-02 =========================
 ! 2011-02-01 - Erica Polycarpo 
  - remove lines which set options according to "earlyData" flag in the configurable 
  - change default value of FOIfactor to 1.2 in the cpp
