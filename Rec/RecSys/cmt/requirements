@@ -58,7 +58,7 @@ use RichIFBAnalysis      v1r1p1  Rich # Ross Young, Chris Jones
 
 # Tf packages: Track Pattern Recognition
 use FastVelo             v1r4    Tf   # Olivier Callot
-use PatAlgorithms        v4r10    Tf   # Stephanie Hansmann-Menzemer
+use PatAlgorithms        v4r11   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r25p1 Tf   # David Hutchcroft
 use PatVeloTT            v3r15   Tf   # Mariusz Witek
 use TfTools              v1r13   Tf   # Stephanie Hansmann-Menzemer
