@@ -1,14 +1,18 @@
 package DaVinciSys
-version v27r0
+version v27r1
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v27r0   Phys
-use  DaVinciTests               v2r0
+use  DaVinci                 	v27r1   Phys
+use  DaVinciTests               v2r1
 
 # Patches
-use MDF_ROOT                    v1r5    DAQ
+use MDF_ROOT                    v1r6    DAQ
+use GaudiConfUtils              v1r0    -no_auto_imports
+use SelPy                       v3r0    Phys
+use PhysSelPython               v7r0    PhysSel
+use StrippingUtils              v1r2    Phys
 
 # Declare this as a container package
 apply_pattern container_package
