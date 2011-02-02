@@ -1,3 +1,8 @@
+2011-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Processes.py: removed getNumberOfCores. Please use LbConfiguration.Platform.NativeMachine
+	instead.
+
 2011-01-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/xdg.py: initial implementation of the XDG (freedesktop.org)

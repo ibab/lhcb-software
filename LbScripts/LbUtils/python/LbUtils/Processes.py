@@ -118,23 +118,6 @@ def killTree(pid):
     killBranch(pstree)
 
 
-def getNumberOfCores():
-    """ detects the number of cores of the machine """
-    if hasattr(os, "sysconf"):
-        if os.sysconf_names.has_key("SC_NPROCESSORS_ONLN"):
-            # Linux & Unix:
-            ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
-            if isinstance(ncpus, int) and ncpus > 0:
-                return ncpus
-        else: # OSX:
-            return int(os.popen2("sysctl -n hw.ncpu")[1].read())
-    # Windows:
-    if os.environ.has_key("NUMBER_OF_PROCESSORS"):
-        ncpus = int(os.environ["NUMBER_OF_PROCESSORS"])
-        if ncpus > 0:
-            return ncpus
-    return 1 # Default
-
 _call_command_log = logging.getLogger("_call_command")
 def callCommand(cmd, *args, **kwargs):
     """
