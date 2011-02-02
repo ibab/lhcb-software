@@ -4,9 +4,6 @@
  *
  *  Header file for RICH particle ID enumeration : Rich::Side
  *
- *  CVS Log :-
- *  $Id: RichSide.h,v 1.12 2009-05-15 15:48:03 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */

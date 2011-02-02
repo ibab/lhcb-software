@@ -46,7 +46,38 @@
   <class name = "LHCb::Inspector" />
   <class name = "IAccept"                      />
   <class name = "extend_interfaces1<IAlgTool>" />
-  
+
+  <variable pattern="Rich::NRadiatorTypes"  />
+  <enum name = "Rich::RadiatorType" />
+  <class name = "Rich::RadiatorTypeVector" />
+  <class name = "Rich::Radiators" />
+  <function pattern="Rich::radiators*" />
+
+  <variable pattern="Rich::NRiches"  />
+  <enum name = "Rich::DetectorType" />
+  <class name = "Rich::DetectorVector" />
+  <class name = "Rich::Detectors" />
+  <function pattern="Rich::detectors*" />
+
+  <variable pattern="Rich::NParticleTypes"  />
+  <enum name = "Rich::ParticleIDType" />
+  <class name = "Rich::ParticleIDTypeVector" />
+  <class name = "Rich::Particles" />
+  <function pattern="Rich::particles*" />
+
+  <variable pattern="Rich::NTotalHPDPanels"  />
+  <variable pattern="Rich::NHPDPanelsPerRICH"  />
+  <enum name = "Rich::Side" />
+  <class name = "Rich::RichSideVector" />
+  <class name = "Rich::Sides" />
+  <function pattern="Rich::sides*" />
+
+  <class name = "Rich::RadIntersection" />
+  <class name = "Rich::RadIntersection::Vector" />
+  <class name = "Rich::RadIntersection::Sorter" />
+
+  <function pattern="Rich::text*" />
+
 <!-- Counters in TES --> 
 
   <class name = "Gaudi::Counter"  id = "00000096-0000-0000-0000-000000000000" />
@@ -58,10 +89,8 @@
   <class name = "std::vector<std::pair<std::string,double> >"      />
   <class name = "std::vector<std::pair<std::string,StatEntity> > " />
   
-
   <!--- These should really be moved to GaudiKernel or Reflex --> 
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
-  
 
 </lcgdict>
 

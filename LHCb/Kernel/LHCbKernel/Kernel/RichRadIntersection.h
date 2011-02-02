@@ -4,9 +4,6 @@
  *
  *  Header file for RICH utility class : Rich::RadIntersection
  *
- *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.6 2008-01-24 17:31:20 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
  */
@@ -229,9 +226,5 @@ namespace Rich
   };
 
 }
-
-/** Backwards compatibility typedef
- *  @todo Remove eventually */
-typedef Rich::RadIntersection RichRadIntersection;
 
 #endif // KERNEL_RichRadIntersection_H

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
- *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.13 2009-05-15 15:48:03 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -20,7 +17,7 @@
 #include <vector>
 #include <iostream>
 
-//  General namespace for RICH specific definitions documented in RichSide.h
+// General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich
 {
 
@@ -60,7 +57,7 @@ namespace Rich
   typedef std::vector<Rich::RadiatorType> RadiatorTypeVector;
 
   /// Std const Vector typedef
-  typedef std::vector<const Rich::RadiatorType> RadiatorTypeConstVector;
+  //typedef std::vector<const Rich::RadiatorType> RadiatorTypeConstVector;
 
   /// Std vector typedef
   typedef RadiatorTypeVector Radiators;
@@ -72,8 +69,7 @@ namespace Rich
   inline std::ostream& operator << ( std::ostream& s,
                                      const Rich::RadiatorType & radiator )
   {
-    s << Rich::text( radiator );
-    return s;
+    return s << Rich::text( radiator );
   }
 
 }

@@ -45,6 +45,12 @@
 #include "Kernel/IAccept.h"
 #include "Kernel/Counters.h"
 
+#include "Kernel/RichParticleIDType.h"
+#include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichDetectorType.h"
+#include "Kernel/RichSide.h"
+#include "Kernel/RichRadIntersection.h"
+
 // end include files
 
 namespace {
@@ -72,6 +78,14 @@ namespace {
     std::vector<LHCb::VeloPixChannelID>                 m_std_vector_VeloPixChannelID;
     std::vector<LHCb::LHCbID>::const_iterator           m_std_vector_LHCbID_const_iterator;
     std::map<std::pair<int,unsigned int>,unsigned int>  m_L0DUReport_Summaries;
+    Rich::Radiators                                     m_RICH_Radiators;
+    Rich::RadiatorTypeVector                            m_RICH_Rad_V;
+    Rich::Detectors                                     m_RICH_Detectors;
+    Rich::DetectorVector                                m_RICH_Det_V;
+    Rich::ParticleIDTypeVector                          m_RICH_PID_V;
+    Rich::Particles                                     m_RICH_Particles;
+    Rich::RichSideVector                                m_RICH_Side_V;
+    Rich::Sides                                         m_RICH_Sides;
     // end instantiations
   };
 }

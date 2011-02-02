@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-02-02 - Chris Jones
+ - Add various Rich methods, classes and variables to python dictionary.
+ - Remove a few obsolete CVS doxygen comments.
+ - Remove depreciated RichRadIntersection typedef.
+
 !========================= LHCbKernel v12r7 2011-01-31 =========================
 ! 2011-01-07 - Marco Cattaneo
  - Fix icc warnings and remarks

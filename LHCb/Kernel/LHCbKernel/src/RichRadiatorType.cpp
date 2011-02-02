@@ -4,9 +4,6 @@
  *
  *  Implementation file for enumeration : Rich::RadiatorType
  *
- *  CVS Log :-
- *  $Id: RichRadiatorType.cpp,v 1.9 2007-02-01 16:45:22 jonrob Exp $
- *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
  */

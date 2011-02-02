@@ -4,9 +4,6 @@
  *
  *  Header file to define hash functions for RichSmartIDs
  *
- *  CVS Log :-
- *  $Id: RichSmartIDHashFuncs.h,v 1.3 2006-03-24 10:53:51 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
  */

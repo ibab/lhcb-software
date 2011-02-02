@@ -4,9 +4,6 @@
  *
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
- *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.4 2010-03-09 18:28:02 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */

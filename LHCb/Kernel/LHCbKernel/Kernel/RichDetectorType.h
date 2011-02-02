@@ -4,9 +4,6 @@
  *
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
- *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.11 2009-05-15 15:48:03 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -61,8 +58,7 @@ namespace Rich
   inline std::ostream& operator << ( std::ostream & s,
                                      const Rich::DetectorType & detector )
   {
-    s << Rich::text( detector );
-    return s;
+    return s << Rich::text( detector );
   }
 
 }
