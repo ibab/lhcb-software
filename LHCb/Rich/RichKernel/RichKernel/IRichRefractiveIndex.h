@@ -84,7 +84,7 @@ namespace Rich
      *
      *  @return The overall average refractive index
      */
-    virtual double refractiveIndex ( const RichRadIntersection::Vector & intersections ) const = 0;
+    virtual double refractiveIndex ( const Rich::RadIntersection::Vector & intersections ) const = 0;
 
     /** Calculates the refractive index R.M.S. for a given set of radiator intersections
      *  for all visable photon energies.
@@ -93,7 +93,7 @@ namespace Rich
      *
      *  @return The refractive index R.M.S.
      */
-    virtual double refractiveIndexRMS ( const RichRadIntersection::Vector & intersections ) const = 0;
+    virtual double refractiveIndexRMS ( const Rich::RadIntersection::Vector & intersections ) const = 0;
 
     /** Calculates the refractive index standard deviation  for a given set of radiator intersections
      *  for all visable photon energies.
@@ -102,7 +102,7 @@ namespace Rich
      *
      *  @return The refractive index S.D.
      */
-    virtual double refractiveIndexSD ( const RichRadIntersection::Vector & intersections ) const = 0;
+    virtual double refractiveIndexSD ( const Rich::RadIntersection::Vector & intersections ) const = 0;
 
     /** Calculates the average refractive index for a given set of radiator intersections
      *  for all visable photon energies.
@@ -112,7 +112,7 @@ namespace Rich
      *
      *  @return The overall average refractive index
      */
-    virtual double refractiveIndex ( const RichRadIntersection::Vector & intersections,
+    virtual double refractiveIndex ( const Rich::RadIntersection::Vector & intersections,
                                      const double energy ) const = 0;
 
   };

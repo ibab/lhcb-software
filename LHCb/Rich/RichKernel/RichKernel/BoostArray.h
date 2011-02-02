@@ -4,9 +4,6 @@
  *
  *  Header file for boost::array + Additional Gaudi methods
  *
- *  CVS Log :-
- *  $Id: BoostArray.h,v 1.6 2005-06-17 14:26:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */

@@ -213,7 +213,7 @@ namespace LHCb
      *  of the entry and exit states.
      */
     RichTrackSegment( const SegmentType t,           ///< The segment type
-                      const RichRadIntersection::Vector & intersects, ///< The radiator intersections
+                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
                       const Rich::RadiatorType rad,  ///< The radiator type
                       const Rich::DetectorType rich, ///< The detector type
                       const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
@@ -249,7 +249,7 @@ namespace LHCb
      *  In addition the middle point and the momentum vector at that point are given explicitly.
      */
     RichTrackSegment( const SegmentType t,           ///< The segment type
-                      const RichRadIntersection::Vector & intersects, ///< The radiator intersections
+                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
                       const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
                       const Gaudi::XYZVector& middV, ///< The momentum vector at the radiator mid point
                       const Rich::RadiatorType rad,  ///< The radiator type
@@ -307,7 +307,7 @@ namespace LHCb
   public:
 
     /// Provides read-only access to the radiator intersections
-    inline const RichRadIntersection::Vector & radIntersections() const
+    inline const Rich::RadIntersection::Vector & radIntersections() const
     {
       return m_radIntersections;
     }
@@ -524,7 +524,7 @@ namespace LHCb
   private:  // methods
 
     /// Provides write access to the radiator intersections
-    inline RichRadIntersection::Vector & radIntersections()
+    inline Rich::RadIntersection::Vector & radIntersections()
     {
       return m_radIntersections;
     }
@@ -555,7 +555,7 @@ namespace LHCb
     SegmentType m_type;
 
     /// The raw intersections with the radiator volumes
-    RichRadIntersection::Vector m_radIntersections;
+    Rich::RadIntersection::Vector m_radIntersections;
 
     /// The middle point of the segment in the radiator volume
     Gaudi::XYZPoint m_middlePoint;

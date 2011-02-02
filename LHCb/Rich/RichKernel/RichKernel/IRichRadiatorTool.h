@@ -65,7 +65,7 @@ namespace Rich
     virtual unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                                         const Gaudi::XYZVector& globalVector,
                                         const Rich::RadiatorType radiator,
-                                        RichRadIntersection::Vector& intersections ) const = 0;
+                                        Rich::RadIntersection::Vector& intersections ) const = 0;
 
   };
 
