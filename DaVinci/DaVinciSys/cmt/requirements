@@ -9,6 +9,9 @@ use  DaVinciTests               v2r1
 
 # Patches
 use MDF_ROOT                    v1r6    DAQ
+use GaudiConfUtils              v1r0    -no_auto_imports
+use SelPy                       v2r99   Phys
+use PhysSelPython               v6r99   PhysSel
 use StrippingUtils              v1r2    Phys
 use HltLine                     v4r6p1  Hlt
 # Declare this as a container package
