@@ -104,6 +104,16 @@ Hlt2BiKalmanFittedKaons.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelec
 Hlt2BiKalmanFittedKaons.WriteP2PVRelations 		=  False
 ##########################################################################
 #
+# Make the kaons w/ muon ID available
+#
+Hlt2BiKalmanFittedKaonsWithMuonID			= NoPIDsParticleMaker("Hlt2BiKalmanFittedKaonsWithMuonID")
+Hlt2BiKalmanFittedKaonsWithMuonID.addTool(ProtoParticleMUONFilter('Muon'))
+Hlt2BiKalmanFittedKaonsWithMuonID.Particle 		= "kaon"
+Hlt2BiKalmanFittedKaonsWithMuonID.Input 		= BiKalmanFittedMuonProtoMaker.outputSelection()
+Hlt2BiKalmanFittedKaonsWithMuonID.Muon.Selection        = [""]
+Hlt2BiKalmanFittedKaonsWithMuonID.WriteP2PVRelations	= False
+##########################################################################
+#
 # Make the protons
 #
 Hlt2BiKalmanFittedProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedProtons")
@@ -211,3 +221,4 @@ BiKalmanFittedElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloProt
 BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichKaons 	] )
 BiKalmanFittedRichProtons   = bindMembers( None, [ BiKalmanFittedChargedRichForProtonsHadronProtoMaker , Hlt2BiKalmanFittedRichProtons ] )
 BiKalmanFittedPhotons       = bindMembers( None, [ BiKalmanFittedNeutralProtoMaker  ,   Hlt2BiKalmanFittedPhotons         ] ) 
+BiKalmanFittedKaonsWithMuonID = bindMembers( None, [ BiKalmanFittedMuonProtoMaker, Hlt2BiKalmanFittedKaonsWithMuonID] )
