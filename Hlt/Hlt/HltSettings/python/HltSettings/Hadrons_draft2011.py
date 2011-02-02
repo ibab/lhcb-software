@@ -18,9 +18,12 @@ class Hadrons_draft2011 :
 
         lines = [
             # The topological 
-            'Hlt2TopoOSTF2Body',
-            'Hlt2TopoOSTF3Body',
-            'Hlt2TopoOSTF4Body',
+            'Hlt2Topo2Body',
+            'Hlt2Topo3Body',
+            'Hlt2Topo4Body',
+            'Hlt2TopoMu2Body',
+            'Hlt2TopoMu3Body',
+            'Hlt2TopoMu4Body',
             # XGamma
             'Hlt2Bs2PhiGamma',
             'Hlt2Bs2PhiGammaWideBMass',
@@ -42,7 +45,7 @@ class Hadrons_draft2011 :
        
         d = { }
  
-        from TopoLines_September10 import TopoLines
+        from TopoLines_draft2011 import TopoLines
         d.update ( TopoLines().Thresholds() )
 
         from Phi_draft2011 import Phi_draft2011 as PhiLines
