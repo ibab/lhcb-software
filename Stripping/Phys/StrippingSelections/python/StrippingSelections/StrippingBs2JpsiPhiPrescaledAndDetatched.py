@@ -22,7 +22,7 @@ __all__ = ('Bs2JpsiPhiPrescaledAndDetatchedConf',
            'makeBs2JpsiPhi')
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -113,8 +113,8 @@ def makePhi2KK(name, PhiPT) :
     name             : name of the Selection.
     PhiPT            : Minimum transverse momentum of Phi (MeV).
     """
-    _phiFilter = FilterDesktop("_filterFor"+name)
-    _phiFilter.Code = "(PT> (PhiPT)s *MeV)" % locals()
+    _code = "(PT> (PhiPT)s *MeV)" % locals()
+    _phiFilter = FilterDesktop(Code = _code)
     _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 
     return Selection (name,
@@ -144,8 +144,7 @@ def makeBs2JpsiPhi(name,
     if BsLTIME != None :
         _motherCuts += "& (BPVLTIME()> %(BsLTIME)s*ps)" % locals()
     print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
-    _Bs = CombineParticles( '_'+ name,
-                            DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+    _Bs = CombineParticles( DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                             MotherCut = _motherCuts)
 
     return Selection ( name,

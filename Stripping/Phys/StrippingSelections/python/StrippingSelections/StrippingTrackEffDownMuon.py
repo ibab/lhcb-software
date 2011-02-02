@@ -39,7 +39,8 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 		}
 
     def nominal_line( self ):
-	PatAlgConf.DownstreamConf().configureAlg()
+        pass
+#	PatAlgConf.DownstreamConf().configureAlg()
 	
 
 	#FIXME: Only necessary if Downstream tracking is not defined in a Configurable

@@ -42,7 +42,6 @@
 # Authors: J. Nardulli & V. Gligorov 
 
 from Gaudi.Configuration import *
-from Configurables import DecayTreeTuple
 from Configurables import CombineParticles, FilterDesktop
 from StrippingConf.StrippingLine import StrippingLine
 

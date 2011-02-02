@@ -13,6 +13,7 @@ include_path      none
 #============================================================================
 use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
+use GaudiConfUtils       v*     -no_auto_imports
 use StrippingUtils       v*     Phys
 use StrippingConf        v*     Phys
 use PhysSelPython        v*     PhysSel
