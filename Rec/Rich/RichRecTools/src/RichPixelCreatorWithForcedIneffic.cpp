@@ -69,7 +69,7 @@ StatusCode PixelCreatorWithForcedIneffic::finalize()
 LHCb::RichRecPixel *
 PixelCreatorWithForcedIneffic::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
-  const double rF = m_rejFrac[cluster.rich()][cluster.panel().panel()];
+  const double& rF = m_rejFrac[cluster.rich()][cluster.panel().panel()];
   return ( 0 < rF && m_rndm() < rF ?
            NULL : PixelCreatorFromRawBuffer::buildPixel(cluster) );
 }
@@ -77,7 +77,7 @@ PixelCreatorWithForcedIneffic::buildPixel( const Rich::HPDPixelCluster& cluster 
 LHCb::RichRecPixel *
 PixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID & id ) const
 {
-  const double rF = m_rejFrac[id.rich()][id.panel()];
+  const double& rF = m_rejFrac[id.rich()][id.panel()];
   return ( 0 < rF && m_rndm() < rF ?
            NULL : PixelCreatorFromRawBuffer::buildPixel(id) );
 }

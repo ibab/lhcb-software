@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.5 2007-09-14 13:39:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
  */
