@@ -28,7 +28,7 @@ from LbLegacy.vol_for_releases import create_volume
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
 from LbUtils.Links import fixLinks
-from LbUtils.Processes import getNumberOfCores
+from LbConfiguration.Platform import NativeMachine
 from LbUtils.afs.volume import Volume
 
 import logging
@@ -85,6 +85,11 @@ def help() :
 
       """
     sys.exit()
+
+def getNumberOfCores():
+    m = NativeMachine()
+    return m.numberOfCPUs()
+
 
 #-----------------------------------------------------------------------------------
 def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=True):
@@ -230,7 +235,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         CMTPATH = ''
         os.environ['CMTPATH'] = CMTPATH
         log.info('CMTPATH = %s, tbroadcast= %s' % (os.environ['CMTPATH'], tbroadcast))
-        
+
     not_ready_file = os.path.join(rel_dir, PACK, PACK + "_" + pversion, "NOT_READY")
 
 #========================== action : new ================================================
@@ -253,7 +258,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             fd.write("This project is not ready and cannot be used by SetupProject\n")
             fd.write("In order to finalize the project and remove this file, use the 'K' action\n")
             fd.close()
-            
+
         if CMTPROJECTPATH == '':
             # create cmt project
             log.warning(' no CMTPROJECTPATH : build cmt/project.cmt')

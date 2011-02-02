@@ -1,3 +1,8 @@
+2011-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: use LbConfiguration.Platform.NativeMachine to extract the number of
+	CPUs.
+
 2011-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixes for unknow binary
