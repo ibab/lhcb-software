@@ -1110,6 +1110,24 @@ namespace LoKi
      */
     const LoKi::Tracks::NVeloMissed                               TrNVELOMISS ;
     // ========================================================================
+    /** @var TrNTHITS 
+     *  get effective number of T-hits for Johannes:  2x#IT + #OT
+     *  @see LoKi::Tracks::NTHits
+     *  @see LoKi::Cuts::TrTNORMIDC
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-02-02
+     */
+    const LoKi::Tracks::NTHits                                       TrNTHITS ;
+    // ========================================================================
+    /** @var TrNTHITS 
+     *  get effective number of T-hits for Vava:  2x#IT + #OT
+     *  @see LoKi::Tracks::NTHits
+     *  @see LoKi::Cuts::TrNTHITS
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-02-02
+     */
+    const LoKi::Tracks::NTHits                                     TrTNORMIDC ;
+    // ========================================================================
  } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 

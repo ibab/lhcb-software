@@ -637,8 +637,50 @@ LoKi::Tracks::NVeloMissed::operator()
   //
   return -1 ;
 }
+// ============================================================================
 
-
+// ============================================================================
+// MANDATORY: virtual descructor  
+// ============================================================================
+LoKi::Tracks::NTHits::~NTHits(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::NTHits*
+LoKi::Tracks::NTHits::clone() const
+{ return new LoKi::Tracks::NTHits( *this ) ; }
+// ============================================================================
+// MANDATORY: theonbly one essential method
+// ============================================================================
+LoKi::Tracks::NTHits::result_type 
+LoKi::Tracks::NTHits::operator() 
+  ( LoKi::Tracks::NTHits::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ( "LHCb::Track* points to NULL, return -1000" ) ;
+    return -1000 ;  
+  } 
+  //
+  typedef LHCb::Track::LHCbIDContainer IDs ;
+  //
+  const IDs& ids = t->lhcbIDs() ;
+  // 
+  int nIDs = 0 ;
+  for ( IDs::const_iterator iid = ids.begin() ; ids.end() != iid ; ++iid ) 
+  {
+    if      ( iid -> isIT () ) {   nIDs += 2 ; }
+    else if ( iid -> isOT () ) { ++nIDs      ; } 
+  }
+  // 
+  return nIDs ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::NTHits::fillStream( std::ostream& s ) const 
+{ return s << "TrNTHITS" ; }
+// ============================================================================
 
 
 

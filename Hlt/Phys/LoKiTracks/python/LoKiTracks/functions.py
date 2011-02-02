@@ -174,6 +174,10 @@ TrCLONEDIST     = LoKi.Tracks.Info  ( LHCb.Track.CloneDist        , 1.e+9 )
 
 ## @see LoKi::Cuts::TrNVELOMISS
 TrNVELOMISS     = LoKi.Tracks.NVeloMissed ()
+## @see LoKi::Cuts::TrNTHITS    (for Johannes)
+TrNTHITS        = LoKi.Tracks.NTHits      ()
+## @see LoKi::Cuts::TrTNORMIDC  (for Vava) 
+TrTNORMIDC      = LoKi.Tracks.NTHits      ()
 
 # =============================================================================
 

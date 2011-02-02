@@ -5,6 +5,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // Kernel
 // ============================================================================
 #include "Kernel/OTChannelID.h"
@@ -37,7 +41,8 @@ namespace LoKi
      *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-12-17
      */
-    class CountIDs : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    class GAUDI_API CountIDs 
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
       // ======================================================================
@@ -78,7 +83,7 @@ namespace LoKi
      *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-12-17
      */
-    class CountOTIDs 
+    class GAUDI_API CountOTIDs 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
@@ -145,7 +150,7 @@ namespace LoKi
      *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-12-17
      */
-    class CountSTIDs 
+    class GAUDI_API CountSTIDs 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
@@ -212,7 +217,7 @@ namespace LoKi
      *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-12-17
      */
-    class CountVeloIDs 
+    class GAUDI_API CountVeloIDs 
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:

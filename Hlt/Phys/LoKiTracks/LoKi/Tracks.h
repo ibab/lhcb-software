@@ -662,6 +662,29 @@ namespace LoKi
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class NTHits
+     *  Count number of effective T-hits : 2x#IT + #OT
+     *  @see LoKi::Cuts::TrNTHITS
+     *  @see LoKi::Cuts::TrTNORMIDC
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date 2011-02-02
+     */
+    class GAUDI_API NTHits
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~NTHits () ;
+      /// MANDATORY: clone method (virtual constructor) 
+      virtual  NTHits* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;  
+    // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 
