@@ -5,6 +5,34 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r1>2011-02-02 RecSys v11r1</A></H1><PRE>
+This version uses Gaudi v22r0 and LHCb v32r0
+
+- Development release, first release of Rec not on slc4.
+
+- Highlights:
+
+  - 2011 track sequence uses FastVelo by default
+    . add ForceOldSeq and ForceNewSeq switch in TrackSys to override
+    . Major change: TrackSys v6r0
+
+  - EarlyData flags now the default for 2010 and 2011 datatypes
+    . Many packages changed
+    . Removes the need to set EarlyData flag
+    . Older datatypes (such as MC09) will keep the old MC-tuned defaults
+
+  - Modification to DST content:
+    . Add new algorithm RecSummaryAlg that fills the new summary object
+    . contains some basic information from the reconstruction
+    . Major change Rec/RecAlgs v2r0, and Rec/RecConf v2r0
+
+  - Major modification of the KalmanFilter implementation:
+    . Major change: Tr/TrackFitter v4r0
+    . see changeset r116383
+
+
+For more details, links to changesets and bugs, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v11r1
 
 </PRE><H1><A NAME=v11r0>2011-01-17 RecSys v11r0</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r8
