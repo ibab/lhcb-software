@@ -89,9 +89,9 @@ StatusCode RecSummaryAlg::execute()
       else if ( (*iTk)->type() == LHCb::Track::Upstream   ) { ++nUpstream; }
       else if ( (*iTk)->type() == LHCb::Track::Ttrack     ) { ++nT; }
       else if ( (*iTk)->type() == LHCb::Track::Velo &&
-		(*iTk)->checkFlag(LHCb::Track::Backward)  ) { ++nBack; }
+                (*iTk)->checkFlag(LHCb::Track::Backward)  ) { ++nBack; }
     }
-    int nVelo = m_countVeloTracks->nVeloTracks(*tracks);
+    const int nVelo = m_countVeloTracks->nVeloTracks(*tracks);
 
     // Save track info to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
