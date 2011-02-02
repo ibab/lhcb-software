@@ -4,6 +4,8 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! ===================== StrippingUtils v1r2 2011-02-02 =======================
+
 ! 2011-01-29 - Juan Palacios
  - Add tests for outputLocations(), lineNames() and lineFromName(name) metoods.
  - Fix typo in LineBuilder.
