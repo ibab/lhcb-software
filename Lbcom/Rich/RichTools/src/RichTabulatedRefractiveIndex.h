@@ -85,20 +85,20 @@ namespace Rich
 
     // Calculates the average refractive index for a given set of radiator intersections
     // for all visable photon energies.
-    double refractiveIndex ( const RichRadIntersection::Vector & intersections,
+    double refractiveIndex ( const Rich::RadIntersection::Vector & intersections,
                              const double energy ) const;
 
     // Calculates the average refractive index for a given set of radiator intersections
     // for all visable photon energies
-    double refractiveIndex ( const RichRadIntersection::Vector & intersections ) const;
+    double refractiveIndex ( const Rich::RadIntersection::Vector & intersections ) const;
 
     // Calculates the refractive index R.M.S. for a given set of radiator intersections
     // for all visable photon energies.
-    double refractiveIndexRMS ( const RichRadIntersection::Vector & intersections ) const;
+    double refractiveIndexRMS ( const Rich::RadIntersection::Vector & intersections ) const;
 
     // Calculates the refractive index S.D. for a given set of radiator intersections
     // for all visable photon energies.
-    double refractiveIndexSD ( const RichRadIntersection::Vector & intersections ) const;
+    double refractiveIndexSD ( const Rich::RadIntersection::Vector & intersections ) const;
 
   private:
 

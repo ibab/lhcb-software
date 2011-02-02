@@ -69,7 +69,7 @@ void SnellsLawRefraction::buildAeroPlaneInfo() const
   acquireTool( "RichRadiatorTool", radiatorTool );
 
   // get three points in exit plane
-  RichRadIntersection::Vector intersections;
+  Rich::RadIntersection::Vector intersections;
   Gaudi::XYZPoint p1(100,100,0), p2(100,-100,0), p3(-100,-100,0);
   const Gaudi::XYZVector v(0,0,1);
   radiatorTool->intersections( p1, v, Rich::Aerogel, intersections );

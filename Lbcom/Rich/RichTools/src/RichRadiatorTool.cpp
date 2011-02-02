@@ -91,7 +91,7 @@ unsigned int
 Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
                                    const Gaudi::XYZVector& globalVector,
                                    const Rich::RadiatorType radiator,
-                                   RichRadIntersection::Vector & intersections ) const
+                                   Rich::RadIntersection::Vector & intersections ) const
 {
 
   // tally for the number of intersections
@@ -110,9 +110,9 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
                                     exit ) )
     {
       // save this intersection
-      intersections.push_back( RichRadIntersection( entry, globalVector,
-                                                    exit,  globalVector,
-                                                    *iR ) );
+      intersections.push_back( Rich::RadIntersection( entry, globalVector,
+                                                      exit,  globalVector,
+                                                      *iR ) );
       ++totalIntersections;
     }
   }
@@ -120,14 +120,14 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   // If more than one intersection sort into increasing z position
   if ( totalIntersections > 1 )
   {
-    RichRadIntersection::Sorter::sortByZ( intersections );
+    Rich::RadIntersection::Sorter::sortByZ( intersections );
   }
 
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << radiator << " Intersections :";
-    for ( RichRadIntersection::Vector::const_iterator iS = intersections.begin();
+    for ( Rich::RadIntersection::Vector::const_iterator iS = intersections.begin();
           iS != intersections.end(); ++iS )
     {
       debug() << " " << (*iS).entryPoint() << "->" << (*iS).exitPoint();

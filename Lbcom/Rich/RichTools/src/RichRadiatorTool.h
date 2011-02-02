@@ -73,7 +73,7 @@ namespace Rich
     unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
                                 const Gaudi::XYZVector& globalVector,
                                 const Rich::RadiatorType radiator,
-                                RichRadIntersection::Vector& intersections ) const;
+                                Rich::RadIntersection::Vector& intersections ) const;
 
   private:
 

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-02-02 - Chris Jones
+ - Adapt to removal of depreciated RichRadIntersection typedef.
+ 
 !========================= RichTools v2r31 2010-10-25 =========================
 
 ! 2010-10-16 - Chris Jones
