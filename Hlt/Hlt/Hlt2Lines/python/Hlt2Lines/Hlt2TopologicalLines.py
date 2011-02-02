@@ -7,68 +7,57 @@ from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
 from HltTracking.HltPVs import PV3D
+from HltLine.HltLine import Hlt1Tool as Tool
+from Configurables import BBDecTreeTool as BBDT
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     '''Class to configure Hlt2 topological lines.'''
-
-    # Steering variables:
     #
+    # Steering variables:
     # NB: these values can be (and most likely are) overridden by those
     # specified in HltSettings/TopoLines.py (so don't change their names!).
-    __slots__ = {        
-        # global cuts
-        'MCOR_MAX'          : 7000.0, # MeV
-        'MCOR_MIN'          : 4000.0, # MeV
-        'SUM_PT_MIN'        : 4000.0, # MeV
-        'MAX_PT_MIN'        : 1500.0, # MeV
+    #
+    __slots__ = {
+        # single track cuts
         'ALL_PT_MIN'        : 500.0,  # MeV
         'ALL_P_MIN'         : 5000.0, # MeV
-        'AMAXDOCA_MAX'      : 0.12,   # mm
-        'AMINDOCA_MAX'      : 0.12,   # mm
+        'ALL_MIPCHI2DV_MIN' : 4.0,    # unitless
+        'ALL_TRCHI2DOF_MAX' : 4.0,    # unitless
+        # upfront combo cuts
+        'AMAXDOCA_MAX'      : 0.2,    # mm        
+        'BPVVDCHI2_MIN'     : 100.0,  # unitless
+        'MIN_TRCHI2DOF_MAX' : 2.4,    # unitless
+        'V2BODYCHI2_MAX'    : 10,     # unitless
+        # bdt cuts
+        'BDT_2BODY_MIN'     : 0.65,
+        'BDT_3BODY_MIN'     : 0.7,
+        'BDT_4BODY_MIN'     : 0.2,
+        'BDT_2BODYMU_MIN'   : 0.3,
+        'BDT_3BODYMU_MIN'   : 0.33,
+        'BDT_4BODYMU_MIN'   : 0.09,
+        # bdt param file versions
+        'BDT_2BODY_PARAMS'  : 'v1r0',
+        'BDT_3BODY_PARAMS'  : 'v1r0',
+        'BDT_4BODY_PARAMS'  : 'v1r0',
+        # global event cuts
         'USE_GEC'           : False,
         'GEC_MAX'           : 350,
         'HLT1FILTER'        : "",
-        'M_CHARM_VETO'      : 2500,   # MeV
-        'SUM_IPCHI2_MIN'    : 100,
-        # fit cuts
-        'ALL_MIPCHI2DV_MIN' : 16.0,    # unitless
-        'ALL_TRCHI2DOF_MAX' : 5.0,   # unitless
-        'BPVVDCHI2_MIN'     : 64.0,   # unitless
-        'MIN_TRCHI2DOF_MAX' : 3,
-        # robust
-        'ALL_MIPDV_MIN'     : 0.025,  # mm
-        'BPVVD_MIN'         : 2.0,    # mm
-        'BPVVDR_MIN'        : 0.2,    # mm
         # pre- and post-scale values are set in HltSettings/TopoLines.py
         'Prescale' : {},
         'Postscale' : {},
         # HltANNSvc IDs for each line (need to be configurable)
-        'HltANNSvcID' : {'Hlt2Topo2BodySADecision'        : 50700,
-                         'Hlt2Topo3BodySADecision'        : 50710,
-                         'Hlt2Topo4BodySADecision'        : 50720,
-                         'Hlt2TopoTF2BodySADecision'      : 50730,
-                         'Hlt2TopoTF3BodySADecision'      : 50770,
-                         'Hlt2TopoTF4BodySADecision'      : 50810,
-                         'Hlt2TopoTF2BodyReq2YesDecision' : 50740,
-                         'Hlt2TopoTF2BodyReq3YesDecision' : 50750,
-                         'Hlt2TopoTF2BodyReq4YesDecision' : 50760,
-                         'Hlt2TopoTF3BodyReq2YesDecision' : 50780,
-                         'Hlt2TopoTF3BodyReq3YesDecision' : 50790,
-                         'Hlt2TopoTF3BodyReq4YesDecision' : 50800,
-                         'Hlt2TopoTF4BodyReq2YesDecision' : 50820,
-                         'Hlt2TopoTF4BodyReq3YesDecision' : 50830,
-                         'Hlt2TopoTF4BodyReq4YesDecision' : 50840,
-                         'Hlt2TopoOSTF2BodyDecision'      : 50733,
-                         'Hlt2TopoOSTF3BodyDecision'      : 50773,
-                         'Hlt2TopoOSTF4BodyDecision'      : 50813,
-                         'Hlt2TopoRobTF2BodyDecision'     : 50735,
-                         'Hlt2TopoRobTF3BodyDecision'     : 50775,
-                         'Hlt2TopoRobTF4BodyDecision'     : 50815
+        'HltANNSvcID' : {'Hlt2Topo2BodyDecision'      : 50736,
+                         'Hlt2Topo3BodyDecision'      : 50776,
+                         'Hlt2Topo4BodyDecision'      : 50816,
+                         'Hlt2TopoMu2BodyDecision'    : 50737,
+                         'Hlt2TopoMu3BodyDecision'    : 50777,
+                         'Hlt2TopoMu4BodyDecision'    : 50817
                          }
         }
-
+    
     def __updateHltANNSvc(self,line):
         '''Updates the HltANNSvc after a new line has been constructed.'''
         lineName = 'Hlt2' + line + 'Decision'
@@ -88,196 +77,147 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         Hlt2Line(lineName, HLT=hltfilter, prescale=self.prescale,
                  postscale=self.postscale,algos=lclAlgos) 
         self.__updateHltANNSvc(lineName)
-        
-    def __combine(self, name, stage, inputSeq, decayDesc, extraCuts=None):
-        '''Configures common particle combos used by all topo lines.'''        
-        props = self.getProps() 
-        # combo cuts
-        comboCuts = '(AM < %s*MeV)' % props['MCOR_MAX']
-        comboCuts += "& (AALLSAMEBPV) & " \
-                     "(AMAXDOCA('LoKi::DistanceCalculator') < %s)" \
-                     % props["AMAXDOCA_MAX"]
-        
-        if extraCuts and extraCuts.has_key('CombinationCut') :
-            comboCuts =  extraCuts['CombinationCut'] + ' & ' + comboCuts
-
-        # cuts for the vertexed combo
-        #momCuts = '(VFASPF(VCHI2) < 10) & '
-        momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
-        momCuts += "& ((M > %s*MeV) | (BPVIPCHI2() > %s))" \
-                   % (props['M_CHARM_VETO'],props['ALL_MIPCHI2DV_MIN'])
-        if stage == 'ComRob':
-            momCuts = "(BPVVD > %s) & (BPVVDR > %s)" % \
-                      (props['BPVVD_MIN'],props['BPVVDR_MIN'])
-            
-        if extraCuts and extraCuts.has_key('MotherCut') :
-            momCuts = extraCuts['MotherCut'] + ' & ' + momCuts
-
-        # put it all together
-        combo = Hlt2Member(CombineParticles, 'Combine',
-                           DecayDescriptors=decayDesc,
-                           InputLocations=inputSeq, CombinationCut=comboCuts,
-                           MotherCut=momCuts)
-
-        return bindMembers(name, inputSeq+[combo])
-
-    # old code from the POINT days
-    #def __getPointingCut(self,stage):
-    #    if stage == 'ComRob': pt = 'RobustPointingUL'
-    #    elif stage == 'ComTF': pt = 'TFPointUL'
-    #    else: pt = stage + 'PointUL'               
-    #    return "(BPVTRGPOINTINGWPT < %s)" % self.getProps()[pt]
-        
-    def __filter(self, name, stage, inputSeq, extraCode=None):
-        '''Configures filter for all stages of topo lines.'''
-        props = self.getProps()
-        
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
-        pid = "(('pi+'==ABSID) | ('K+'==ABSID))"
-        
-        cuts = "(MAXTREE(%s,PT) > %s*MeV) &" \
-               % (pid,props["MAX_PT_MIN"])
-        sum_pt_min = float(props['SUM_PT_MIN'])
-        sum_ipchi2_min = float(props['SUM_IPCHI2_MIN'])
-        if name.find('3Body') >=0:
-            sum_pt_min += 250
-            sum_ipchi2_min += 50
-        if name.find('4Body') >= 0:
-            sum_pt_min += 500
-            sum_ipchi2_min += 100
-        
-        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
-        cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
-                % (props['MCOR_MIN'],props['MCOR_MAX'])
-        if stage != 'ComRob':            
-            cuts += '& (SUMTREE(MIPCHI2DV(PRIMARY),%s,0.0) > %s)' \
-                    % (pid,sum_ipchi2_min)
-            cuts += '& (MINTREE(%s,TRCHI2DOF) < %s)' \
-                    % (pid,props['MIN_TRCHI2DOF_MAX'])
-        if extraCode: cuts = cuts + ' & ' + extraCode
-        filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
-                            Code=cuts,Preambulo=preambulo)
-        return bindMembers(name, inputSeq+[filter])
 
     def __seqGEC(self):  
         '''Defines a global event cut (sets upper limit on n_tracks).'''
+        from HltTracking.Hlt2TrackingConfigurations import \
+             Hlt2UnfittedForwardTracking
         modules =  CoreFactory('CoreFactory').Modules
         if 'LoKiTrigger.decorators' not in modules:
             modules.append('LoKiTrigger.decorators')
         
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
 
         # by default, configure as a pass-all filter with similar code.
-        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
-        #filtCode = "CONTAINS('/Event/Raw/Velo/LiteClusters') < 3000"
-        if self.getProp('USE_GEC'):
-            filtCode = "CONTAINS('" + tracks.outputSelection() + \
-                       "') < %(GEC_MAX)s" % self.getProps()
-
+        max = ' > -1'
+        if self.getProp('USE_GEC'): max = '< ' + self.getProps()['GEC_MAX']
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') " + max
+        
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg',
                                                  Code=filtCode)
         return bindMembers(None,[tracks, Hlt2TopoKillTooManyInTrkAlg])
-
-    def __inPartFilter(self, name, stage, inputSeq):
-        '''Filters input particles for all stages of topo lines.'''
+    
+    def __inPartFilter(self, name, inputSeq):
+        '''Filters input particles for topo lines.'''
         props = self.getProps()        
         cuts = '(PT > %s*MeV) & (P > %s*MeV) ' \
                % (props['ALL_PT_MIN'],props['ALL_P_MIN'])
-        if stage == 'ComRob':
-            cuts += '& (MIPDV(PRIMARY) > %(ALL_MIPDV_MIN)s)' % props
-        else:
-            cuts += '& (MIPCHI2DV(PRIMARY) > %s) & (TRCHI2DOF < %s)' % \
-                    (props['ALL_MIPCHI2DV_MIN'],
-                     props['ALL_TRCHI2DOF_MAX'])
+        cuts += '& (MIPCHI2DV(PRIMARY) > %s) & (TRCHI2DOF < %s)' % \
+                (props['ALL_MIPCHI2DV_MIN'],props['ALL_TRCHI2DOF_MAX'])
         
         filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
         return bindMembers(name, [PV3D()]+inputSeq+[filter])
 
-    def __buildNBodySeqs(self,lineName,seqName,stage,input):
-        '''Builds a set of 2, 3 and 4 body lines for a given stage.'''
-        # NB: Decay descriptors are just dummies
-        props = self.getProps()
+    def __filterNforN(self,n,input):
+        '''Filters n-body combos for n-body line'''
+        pid = "('K+'==ABSID)"
+        minPtSum = 3000        
+        if n > 2: minPtSum = 4000
+        cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
+        cuts += '& (MINTREE(%s,TRCHI2DOF) < %s)' \
+                % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
+        filter = Hlt2Member(FilterDesktop, 'FilterNforN',
+                            InputLocations=input,Code=cuts)
+        return bindMembers('Topo%d' % n, input+[filter])
 
-        # 2-body
-        name = lineName.replace('NBody','2Body')        
-        decay = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
-        extraCut = "(AMINDOCA('LoKi::DistanceCalculator') < %s)" \
-                   % props['AMINDOCA_MAX']
-        topo2Body = self.__combine(name,stage,[input],decay,
-                                   {'CombinationCut':extraCut})
-        name = seqName.replace('NBody','2Body')        
-        seq2Body = self.__filter(name,stage,[topo2Body])
-        # 3-body
-        name = lineName.replace('NBody','3Body')        
-        decay = ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
-        topo3Body = self.__combine(name,stage,[input,topo2Body],decay)
-        name = seqName.replace('NBody','3Body')        
-        seq3Body = self.__filter(name,stage,[topo3Body])
-        # 4-body
-        name = lineName.replace('NBody','4Body')        
-        decay = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
-        ptcut = '(ASUM(SUMTREE(PT,BASIC)) > %s*MeV' % props['SUM_PT_MIN']
-        extraCuts = {'CombinationCut' : '(AM > 2*GeV) & (%s)' % ptcut}
-        extraCuts = {}
-        topo4Body = self.__combine(name,stage,[input,topo3Body],decay,
-                                   extraCuts)
-        name = seqName.replace('NBody','4Body')        
-        seq4Body = self.__filter(name,stage,[topo4Body])
-        return (seq2Body,seq3Body,seq4Body)
+    def __filterBDT(self,n,input):
+        '''Applies the BDT cut.'''
+        props = self.getProps()
+        file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
+              % (n,props['BDT_%dBODY_PARAMS'%n])
+        bdttool = Tool(type=BBDT,name='TrgBBDT',NBody=n,
+                       Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file)
+        cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
+        filter = Hlt2Member(FilterDesktop, 'FilterBDT', InputLocations=input,
+                            Code=cuts,tools=[bdttool]) 
+        return bindMembers('Topo%d' % n, input+[filter])
+
+    def __filterMuonBDT(self,n,input):
+        '''Applies the muon and BDT cuts.'''
+        props = self.getProps()
+        file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
+              % (n,props['BDT_%dBODY_PARAMS'%n])
+        bdttool = Tool(type=BBDT,name='TrgBBDT',NBody=n,
+                       Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file)
+        cuts = "(FILTER('BBDecTreeTool/TrgBBDT')) & (INTREE(ISMUON))"
+        filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
+                            InputLocations=input,Code=cuts,tools=[bdttool]) 
+        return bindMembers('TopoMu%d' % n, input+[filter])
+
+    def __filter2forN(self,n,input):
+        '''Filters 2-body combos for 3- and 4-body lines.'''
+        props = self.getProps()
+        m = 6000
+        if n == 4: m = 5000
+        cuts = '(M < %d*MeV) & (VFASPF(VCHI2) < %s)' \
+               % (m,props['V2BODYCHI2_MAX'])
+        filter = Hlt2Member(FilterDesktop, 'Filter2forN', InputLocations=input,
+                             Code=cuts)
+        return bindMembers('Topo%d' % n, input+[filter])
+
+    def __filter3for4(self,input):
+        '''Filters 3-body combos for 4-body line.'''
+        cuts = '(M < 6000*MeV)'
+        filter = Hlt2Member(FilterDesktop, 'Filter3for4', InputLocations=input,
+                            Code=cuts)
+        return bindMembers('Topo', input+[filter])
+    
+    def __combine(self, name, input, decay):
+        '''Configures common particle combos used by all topo lines.'''        
+        props = self.getProps() 
+        comboCuts = '(AM < 7000*MeV) & (AALLSAMEBPV)' 
+        comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)" \
+                     % props["AMAXDOCA_MAX"]
+        momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
+        combo = Hlt2Member(CombineParticles, 'Combine',DecayDescriptors=decay,
+                           InputLocations=input, CombinationCut=comboCuts,
+                           MotherCut=momCuts)
+        return bindMembers(name, input+[combo])
+
+    def __allNBody(self,n,input):
+        '''All n-body combos.'''
+        decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-"],
+                 ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"],
+                 ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]]
+        return self.__combine('Topo%dBodyAll'%n,input,decay[n-2])
 
     def __makeLines(self,name,seqs):
+        '''Makes the lines.'''
         for n in [2,3,4]:
             lineName = name.replace('NBody','%dBody' % n)
             self.__makeLine(lineName,algos=[seqs[n-2]])
 
-    def __makeReqLines(self,robSeqs,tfSeqs):
-        for n in [2,3,4]:
-            for m in [2,3,4]:
-                lineName = 'TopoTF%dBodyReq%dYes' % (n,m)
-                self.__makeLine(lineName,algos=[robSeqs[m-2],tfSeqs[n-2]])
-                        
     def __apply_configuration__(self):
-        '''Constructs all of the lines. Currently just assigns all particle
-        Kaon ID'''
-        from Hlt2SharedParticles.GoodParticles import GoodKaons
+        '''Constructs all of the lines.'''
         from Hlt2SharedParticles.TrackFittedBasicParticles \
-             import BiKalmanFittedKaons
+             import BiKalmanFittedKaonsWithMuonID
+        # input particles
+        input = self.__inPartFilter('TopoInputKaons',
+                                    [BiKalmanFittedKaonsWithMuonID])
 
-        # robust lines
-        stage = 'ComRob'
-        input = self.__inPartFilter('TopoInputKaons',stage,[GoodKaons])
-        robustSeqs = self.__buildNBodySeqs('TopoNBody','RobustTopoNBody',stage,
-                                           input)
-        self.__makeLines('TopoNBodySA',robustSeqs)
-        
-        # post-track-fit lines
-        stage = 'ComTF'
-        input = self.__inPartFilter('TopoTFInputKaons',stage,
-                                    [BiKalmanFittedKaons])
-        tfSeqs = self.__buildNBodySeqs('TopoTFNBody','PostTFTopoNBody',stage,
-                                       input)
-        self.__makeLines('TopoTFNBodySA',tfSeqs)
-        self.__makeReqLines(robustSeqs,tfSeqs)
+        # make 2-body line
+        all2 = self.__allNBody(2,[input])
+        topo2_all = self.__filterNforN(2,[all2])
+        topo2 = self.__filterBDT(2,[topo2_all])
+        topo2_mu = self.__filterMuonBDT(2,[topo2_all]) 
+        # make 3-body line
+        filt23 = self.__filter2forN(3,[all2])
+        all3 = self.__allNBody(3,[input,filt23])
+        topo3_all = self.__filterNforN(3,[all3])
+        topo3 = self.__filterBDT(3,[topo3_all])
+        topo3_mu = self.__filterMuonBDT(3,[topo3_all]) 
+        # make 4-body line
+        filt24 = self.__filter2forN(4,[filt23])
+        filt3 = self.__filter3for4([all3])
+        all4 = self.__allNBody(4,[input,filt3])
+        topo4_all = self.__filterNforN(4,[all4]) 
+        topo4 = self.__filterBDT(4,[topo4_all])
+        topo4_mu = self.__filterMuonBDT(4,[topo4_all]) 
 
-        # one-stage track-fit lines
-        stage = 'OSTF'
-        input = self.__inPartFilter('TopoOSTFInputKaons',stage,
-                                    [BiKalmanFittedKaons])
-        ostfSeqs = self.__buildNBodySeqs('TopoOSTFNBody','OSTFTopoNBody',
-                                         stage, input)
-        self.__makeLines('TopoOSTFNBody',ostfSeqs)
-        
-        # pseudo-robust lines
-        stage = 'ComRob'
-        input = self.__inPartFilter('TopoRobTFInputKaons',stage,
-                                    [BiKalmanFittedKaons])
-        robTFSeqs = self.__buildNBodySeqs('TopoRobTFNBody','RobTFTopoNBody',
-                                          stage, input)
-        self.__makeLines('TopoRobTFNBody',robTFSeqs)
-
+        # make the lines
+        self.__makeLines('TopoNBody',[topo2,topo3,topo4])
+        self.__makeLines('TopoMuNBody',[topo2_mu,topo3_mu,topo4_mu])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
