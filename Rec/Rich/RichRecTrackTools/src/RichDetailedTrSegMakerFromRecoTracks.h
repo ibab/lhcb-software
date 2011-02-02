@@ -87,7 +87,7 @@ namespace Rich
       getRadIntersections( const Gaudi::XYZPoint&   point,     ///< The start point
                            const Gaudi::XYZVector&  direction, ///< The direction from the start point
                            const DeRichRadiator * rad,         ///< The radiator
-                           RichRadIntersection::Vector & intersections ///< The intersections with the given radiator
+                           Rich::RadIntersection::Vector & intersections ///< The intersections with the given radiator
                            ) const;
 
       /** Get just the first intersection with the radiator volume

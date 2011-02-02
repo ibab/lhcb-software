@@ -276,7 +276,7 @@ constructSegments( const ContainedObject * obj,
 
     // use state closest to the entry point in radiator
     Gaudi::XYZPoint entryPoint1;
-    RichRadIntersection::Vector intersects1;
+    Rich::RadIntersection::Vector intersects1;
     bool entryStateOK = false;
     if ( getNextInterPoint( entryPState->position(),
                             entryPState->slopes(),
@@ -311,7 +311,7 @@ constructSegments( const ContainedObject * obj,
     // If gas radiator try and use exit state to get exit point more precisely
     bool exitStateOK = false;
     Gaudi::XYZPoint entryPoint2;
-    RichRadIntersection::Vector intersects2;
+    Rich::RadIntersection::Vector intersects2;
     if ( rad != Rich::Aerogel )
     {
       if ( getNextInterPoint(  exitPState->position(),
@@ -537,7 +537,7 @@ constructSegments( const ContainedObject * obj,
     exitStateMomentum *= exitPState->p()/std::sqrt(exitStateMomentum.Mag2());
 
     // Update final intersections
-    RichRadIntersection::Vector & final_intersects = ( entryStateOK ? intersects1 : intersects2 );
+    Rich::RadIntersection::Vector & final_intersects = ( entryStateOK ? intersects1 : intersects2 );
     final_intersects.front().setEntryPoint(entryPoint);
     final_intersects.front().setEntryMomentum(entryStateMomentum);
     final_intersects.back().setExitPoint(exitPoint);
@@ -720,7 +720,7 @@ DetailedTrSegMakerFromRecoTracks::
 getRadIntersections( const Gaudi::XYZPoint  & point,
                      const Gaudi::XYZVector & direction,
                      const DeRichRadiator * rad,
-                     RichRadIntersection::Vector & intersections ) const
+                     Rich::RadIntersection::Vector & intersections ) const
 {
   // clear the intersections
   intersections.clear();
@@ -742,7 +742,7 @@ getNextInterPoint( const Gaudi::XYZPoint&   point,
                    const DeRichRadiator * rad,
                    Gaudi::XYZPoint& interP ) const
 {
-  RichRadIntersection::Vector intersections;
+  Rich::RadIntersection::Vector intersections;
   bool OK = false;
   if ( 0 < getRadIntersections(point,direction,rad,intersections) )
   {
@@ -761,7 +761,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State *& state,
 {
   if ( m_radiators[Rich::Aerogel] )
   {
-    RichRadIntersection::Vector intersections;
+    Rich::RadIntersection::Vector intersections;
     if ( 0 < getRadIntersections ( state->position(),
                                    state->slopes(),
                                    m_radiators[Rich::Aerogel],

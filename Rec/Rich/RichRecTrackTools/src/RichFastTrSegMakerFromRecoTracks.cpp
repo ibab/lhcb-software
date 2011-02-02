@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
- * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
  */
@@ -353,10 +350,10 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
                                                          states[1]->errP2() );
 
       // Create intersection info
-      RichRadIntersection::Vector intersects;
-      intersects.push_back( RichRadIntersection( entryPoint, entryVect,
-                                                 exitPoint, entryVect, // seems best to always use entry momentum !!
-                                                 m_deRads[*rad] ) );
+      Rich::RadIntersection::Vector intersects;
+      intersects.push_back( Rich::RadIntersection( entryPoint, entryVect,
+                                                   exitPoint, entryVect, // seems best to always use entry momentum !!
+                                                   m_deRads[*rad] ) );
 
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
