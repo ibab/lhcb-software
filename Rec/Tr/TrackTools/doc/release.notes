@@ -1,0 +1,944 @@
+-----------------------------------------------------------------------------
+! Package     : Tr/TrackTools
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : Package for tracking tools not accessing MC information
+!-----------------------------------------------------------------------------
+
+! 2011-01-29 - Chris Jones
+ - Add support for TT tracks to TrackSelectorBase
+
+! 2011-01-27 - Stephanie Hansmann-Menzemer
+ - add new track history PatFastVelo to VeloMuonBuilder code
+
+!========================= TrackTools v4r0p1 2011-01-21 =========================
+
+! 2011-01-23 - David Hutchcroft
+ - Added CountVeloTracks to satisfy Savannah task #18199
+   Filling the RecSummaryAlg from Best with the number of 3D VELO tracks
+   and correcting for the same track used twice properly.
+
+! 2011-01-21 - Gerhard Raven
+ - In VeloClusterPositionTool when overruling with a pre-cooked error 
+   parameterisation, first clear before appending...
+ 
+!========================= TrackTools v4r0 2010-12-16 =========================
+! 2010-12-14 - Tomasz Szumlak
+ - rewording of the printouts in initialize (still VeloClusterPosition tool) 
+
+! 2010-12-13 - Tomasz Szumlak
+ - fix in requirements - add new dependency needed for interpolation
+   in the VeloClusterPosition tool
+ - change type of the m_corrFactor member from float to double 
+
+! 2010-12-13 - Tomasz Szumlak
+ - add VeloClusterPosition tool, previously at Velo/VeloTools
+ - add new error parametrisation calculated based on the latest
+   velo simulation tuning (this new parametrisation is set as
+   a default one) 
+
+!========================= TrackTools v3r35p3 2010-11-11 =========================
+! 2010-11-10 - Manuel Tobias Schiller
+ - fix uninitialised pointer member in MeasurementProviderT and invalidate
+   that pointer on EndEvent (where the pointee becomes invalid) instead of
+   on BeginEvent
+
+!========================= TrackTools v3r35p2 2010-10-28 =========================
+! 2010-10-22 - Michel De Cian
+ - Added "setFilterPassed" to MuonTTTrack.cpp
+
+! 2010-10-12 - Marco Cattaneo
+ - Fix one more windows warning, converting double to float
+
+!======================== TrackTools v3r35 2010-10-01 =======================
+! 2010-10-01 - Rob Lambert
+ - Fix windows warnings, converting double to float
+
+! 2010-09-27 - Victor Coco
+ - modify initialisation of m_veloFitter in TrackStateInitTool, to be able to 
+   modify via configurables.
+
+! 2010-09-24 - Stephanie Hansmann-Menzemer
+ - add fix to OT expected hits
+
+! 2010-09-24 - Chris Jones
+ - For convenience, as Track P and Pt values to information printed by
+   the TrackSelector tools, when in VERBOSE printout mode.
+
+! 2010-09-20 - Michel De Cian
+ - Added cut on minimal number of TT hits in MuonTTTrack.cpp
+
+! 2010-09-16 - Paul Seyfert
+ - added VeloMuonBuilder.cpp/h and VeloCaloBuilder.cpp/h to make tracks with
+   Velo and Ecal / Muon respectively.
+
+! 2010-09-15 - Michel De Cian
+ - added MuonTTTrack.cpp/h to make tracks with Muon and TT station, added
+   MuonInterfaces to used packages in the requirements file.
+
+!======================== TrackTools v3r34p2 2010-08-03 =======================
+! 2010-08-13 - Wouter Hulsbergen
+ - restore TrackInterpolator to r52948
+
+! 2010-08-07 - Stephanie Hansmann-Menzemer
+ - reverted changes from W.H. from 2010-07-23 as they screw up the 
+   calorimeter track linking
+
+!======================== TrackTools v3r34p1 2010-08-03 =======================
+
+
+!======================== TrackTools v3r34 2010-07-26 ========================
+! 2010-07-23 - Wouter Hulsbergen
+ - Cleaned up TrackInterpolator by using cached filtered states in FitNode
+
+!======================== TrackTools v3r33 2010-07-20 ========================
+! 2010-07-15 - Jeroen VAN TILBURG
+ - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
+
+!======================== TrackTools v3r32 2010-06-21 ======================
+! 2010-06-16 - Rob Lambert
+ - Fix additional windows warning
+
+! 2010-06-10 - Wouter Hulsbergen
+ - Added method to TrackVertexer to compute decay length
+
+! 2010-06-09 - Rob Lambert
+ - Fix final windows warning
+
+! 2010-06-07 - Rob Lambert
+ - Fixes for windows warnings savannah task #15808
+
+!======================== TrackTools v3r31 2010-05-21 ======================
+! 2010-05-14 - Rob Lambert
+ - Fix for an ignore statuscode in TrackInterpolator
+
+! 2010-05-12 - Rob Lambert
+ - Review of warnings
+
+! 2010-04-29 J Luisier
+ - Changed ITIsolatedTrackSelector : now uses ITHitExpectation tool and cuts
+   on difference between number of found and expected hits.
+
+!======================== TrackTools v3r30 2010-04-26 ======================
+! 2010-04-22 - Stephanie Hansmann-Menzemer
+ - addapt to changes in interfaces of magnetic field service
+
+! 2010-04-15 - Wouter Hulsbergen
+ - added VeloTrackSelector and ITTrackSelector for use in Alignment
+
+! 2010-04-15 - Wouter Hulsbergen
+ - bug fix for downstream tracks in TrackStateInitTool
+
+! 2010-04-13 - Victor Coco
+ - add VeloPixLiteMeasurementProvider classto deal with VeloPixLiteMeasurement
+   in the track fit
+ - make MeasurmentProvider aware of it
+
+
+!======================== TrackTools v3r29 2010-04-09 ======================
+! 2010-04-09 - Wouter Hulsbergen
+ - fixed compilation warning in TrackSelectorBase
+
+! 2010-04-07 - Wouter Hulsbergen
+ - replaced FastParabolicExtraplator by ParabolicExtrapolator
+
+! 2010-04-07 - Stephanie Hansmann-Menzemer
+ - add polarity in FastMomentumEstimate
+
+! 2010-04-06 J Luisier
+ - Changed ITIsolatedTackSelector property, allows to have two different cuts
+    for max number of hits, according to track type.
+
+! 2010-04-05 - Wouter Hulsbergen
+ - Added Backward as track type to TrackSelectorBase
+
+!======================== TrackTools v3r28 2010-03-25 ======================
+! 2010-03-25 - David Hutchcroft
+ - Fixed conditon to monitor in TrackVelodEdxCharge.cpp
+
+! 2010-03-19 - David Hutchcroft
+ - Made dEdx parameters TrackVelodEdxCharge load from a condition in
+   SIMCOND/LHCBCOND
+ - Reset default used if condition is missing to MC09 setting for consistency 
+   with existing MC
+
+! 2010-03-17 - David Hutchcroft
+ - retune dEdx in velo to match 2009 data and improve Doxygen comments for 
+   TrackVelodEdxCharge
+
+!======================== TrackTools v3r27 2010-02-24 ======================
+! 2010-02-22 - Wouter Hulsbergen
+ - improve initialization of Long and Downstream tracks in TrackStateInitTool
+ - added some cuts to TrackSelector
+
+!======================== TrackTools v3r26 2010-02-15 ======================
+
+! 2010-02-01 - Manuel Tobias Schiller
+ - modified TrackHitCollector to include suggestions from Tracking workshop:
+   unbiased residuals from fitter (where available), saner interface
+
+! 2010-01-27 - Manuel Tobias Schiller
+ - added TrackHitCollector, a tool which collects hits around a track,
+   returning a vector with LHCbIDs (and optionally residuals)
+
+!======================== TrackTools v3r25 2010-01-21 ======================
+! 2010-01-21 J Luisier
+ - Changed STClusterCollector so that it can run on B field on data. An option was
+   added to allow to run B off data. Default option is B ON.
+
+! 2009-12-18 Mark Tobin
+ - bug fix in TTHitExpectationTool to provide correct expected channel ids and
+ change default input to ALL.
+
+!======================== TrackTools v3r24p1 2009-12-18 ======================
+! 2009-12-18 Stefania Vecchi
+ - changes in the MuonMeasurementProvider::addToMeasurements
+    setting MuonProvider.clusterize = True it is possible to make 2 
+    measurements for each "cluster" of LHCbIDs 
+   The default is MuonProvider.clusterize = False (backward compatible)
+   in this case the tool makes 2 measurement for each LHCbIDs
+
+!======================== TrackTools v3r24 2009-11-24 ========================
+! 2009-11-24 Stephanie Hansmann-Menzemer
+ - set b field off momentum from 1 GeV to 100 GeV
+
+!======================== TrackTools v3r23 2009-11-16 ========================
+! 2009-11-11 Kostyantyn Holubyev
+ - Modified TrackCloneFinder::flagClones method to randomly mark a clone
+   if chi2 information is not available from the fit. Necessary for fast
+   reconstruction.
+
+! 2009-11-11 Kostyantyn Holubyev
+ - Fixed a bug in TrackStateInitTool, in createTStationStates: break
+   statement added to prevent the undefined behavior.
+
+! 2009-10-31 - Stephanie Hansmann-Menzemer
+ - check for existence of cluster locations in TrackNNGhostId
+
+! 2009-10-30 - Marco Cattaneo
+ - Fix compilation warnings
+
+! 2009-10-21 and 23 - Johannes Albrecht
+ - fix small memory leak in TrackNNGhostId, add ghost id for all track types
+
+
+! 2009-11-14 Kostyantyn Holubyev
+ - Added a tool TrackInitFit, a wrapper around TrackStateInitTool
+   and TrackMasterFitter, to be used for dst refit. Interfaced to ITrackFitter
+
+!======================== TrackTools v3r22 2009-10-20 ========================
+
+! 2009-10-20 Stephanie Hansmann-Menzemer
+ - fix memory leak in TrackStateInitTool
+
+! 2009-10-16 Wouter Hulsbergen
+ - make measurement providers private tool of 'master' provider
+
+! 2009-10-08 Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
+! 2009-10-07 - Johannes Albrecht
+ - Add TrackNNGhostId tool to compute the ghost probability using a standalone 
+   neural net
+
+! 2009-10-06 - Marco Cattaneo
+ - Remove obsolete file options/FastMomentumEstimate.opts
+
+!======================== TrackTools v3r21 2009-09-03 ========================
+! 2009-08-26 Georg Krocker
+ - in TrackCloneFinder retuned cuts for fast clone finding to match the 
+   performance of the full clone killing
+
+! 2009-08-05 Stephanie Hansmann-Menzemer
+ - adapt to changes in Track.xml class
+
+!======================== TrackTools v3r20 2009-07-28 ========================
+! 2009-07-19 M Needham
+- Follow changes in IHitExpectation interface 
+
+!======================== TrackTools v3r19 2009-07-14 ========================
+! 2009-07-14 - Marco Cattaneo
+ - Remove obsolete file TrackTools_dll.cpp
+
+! 2009-07-09 - Wouter Hulsbergen
+ - Fix bug in TrackVertexer that was introduced when moving code from
+ TrackStateVertex in TrackKernel migration
+
+! 2009-07-08 - Wouter Hulsbergen
+ - Adapted to migration of track classes to TrackKernel
+
+! 2009-07-06 - Chris Jones
+ - Add new base class "TrackSelectorBase" for all track selectors that implements
+   common functionality.
+
+! 2009-07-03 M Needham
+ - Minor change in TTHitExpectation to get required behaviour, again
+
+! 2009-07-03 M Needham
+ - Minor change in TTHitExpectation to get required behaviour  
+
+! 2009-07-03 M Needham
+ - Add isolated track selector for IT (ITIsolatedTrackSelector)
+ - Add possibility to select parts of IT or TT to IT/TTHitExpectation
+ - Add possiblity to select part of IT or TT to STClusterCollector + speed up code
+
+! 2009-07-02 M Needham
+ - Update parameters in Tracklikelihood
+
+! 2009-07-01 - Chris Jones
+ - Update track selectors :-
+  + Add min and max cuts for all quantities.
+  + Add cuts on all track quality variables
+  + Add new DelegatingTrackSelector that allows differnt cuts to be applied
+    to different track types.
+
+!======================== TrackTools v3r18 2009-06-30 ========================
+! 2009-06-26 - Wouter Hulsbergen
+- In TrackCloneFinder:
+  . Clean up all code related to testing for clones by comparing measurements.
+    The original reason to use measurements was that you can skip outliers in the
+    comparison. Unfortunately, that has been broken for a long timee since we do
+    not explicitely delete the measurement for outliers anymore. If this needs to
+    be reintroduced in the future, then one should use the nodes instead and
+    check the outlier flag.
+  . Use new functionliaty in Track to compare LHCbIDs. This is much faster
+  . Fix the interface: the 'areClones' call had a flag to set the track clones
+    flag. If the flag was set to false it would still do all the work, but simply
+    not return anything. Replaced this by two calls: one that simply returns a
+    boolean if tracks are clones and another one that sets the flags.
+
+!======================== TrackTools v3r17 2009-05-08 ========================
+! 2009-05-08 - Georg Krocker
+- add the possibility of a restricted search to TrackCloneFinder tool. Possible
+  use case is HLT, were one would not compare the Hit content of each track 
+  with each other but rather restrict the clone search to track which are 
+  physically close
+
+! 2009-04-08 - Stephanie Hansmann-Menzemer
+- fix bug with ancestors in TrackStateInitTool
+
+! 2009-04-06 M Needham
+ - Add STClusterCollector tool
+
+!======================== TrackTools v3r16 2009-03-11 ========================
+! 2009-03-11 - Stephanie Hansmann-Menzemer
+- add momentum computation for upstream tracks to TrackStateInitTool
+
+! 2009-03-02 - Pavel Krokovny
+- New tool is implemented: "TrackStateInitTool"
+  This tool re-initialize the track starting from LHCbIDs. It can be used to get
+   the same fit results without dependence on previous fitting history.
+   Input: LHCb track.
+  It cleans the states, nodes and measurement the the tracks. Then it obtains
+  a new states using Velo and TT hits. The PatVeloFitLHCbIDs and
+  PatSeedingTool are used for the Velo and T-stations respectively.
+  This tool should be used after the pattern recognition algorithms.
+  
+-  New algorithm is implemented: "TrackStateInitAlg".
+   It apply the TrackStateInitTool for the all tracks in container.
+  Properties: default tracks container = LHCb::TrackLocation::Default,
+                     clear existing states on track = true.      
+
+! 2009-03-02 - David Hutchcroft
+ - Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+
+!======================== TrackTools v3r15 2009-02-20 ========================
+! 2009-02-09 - Johannes Albrecht
+ - changes to run the track fit with Lite clusters in MeasurementProvider.cpp,h
+    undid all changes in the last two revisions and added instead the 
+    properties for the providers for the subdetectors
+
+! 2009-01-22 - Wouter Hulsbergen
+ - Added option to correct for error on energy loss error on
+   StateSimpleBetheBlochEnergyCorrectionTool
+
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
+! 2009-01-19 David Hutchcroft
+ - Added code to handle Velo Lite measurements to tools
+
+! 2009-03-02 - David Hutchcroft
+ - Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+
+!======================== TrackTools v3r14 2009-02-20 ========================
+! 2009-02-09 - Johannes Albrecht
+ - changes to run the track fit with Lite clusters in MeasurementProvider.cpp,h
+    undid all changes in the last two revisions and added instead the 
+    properties for the providers for the subdetectors
+
+! 2009-01-22 - Wouter Hulsbergen
+ - Added option to correct for error on energy loss error on
+   StateSimpleBetheBlochEnergyCorrectionTool
+
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
+! 2009-01-19 David Hutchcroft
+ - Added code to handle Velo Lite measurements to tools
+
+!======================== TrackTools v3r14 2009-01-13 ========================
+! 2009-01-13 W. Hulsbergen
+ - Bug fix in TrackInterpolator (having to do with outliers)
+
+! 2009-01-12 W. Hulsbergen
+ - Make TrackInterpolator::Extrapolator a jobOption
+
+! 2009-01-06 M Needham
+ - Make measurement providers jobOptions
+
+! 2009-01-06 M Needham
+ - Add TTLite/ITLite creation to MeasurementProviderT.cpp
+
+! 2008-12-17 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
+! 2008-12-02 Wouter Hulsbergen
+ - OTMeasurementProvider: added property to set otdecoder and adapted to
+   change in otdecoder interface
+ - LongReferenceCreator: adapted to change in Track::stateAt
+ - TrackSelector: added cut on minimum number of OT hits
+
+! 2008-12-02 M Needham
+ - Move TrackVeloCharge algorithm to use SiChargeFun
+   + profit from new functionality of the measurement classes 
+
+!======================== TrackTools v3r13 2008-11-21 ========================
+! 2008-10-24 M Needham
+ - Tidy up TrackCaloMatch algorithm
+ - Add selector [ITTrackConfirmation]
+ - Use centre of sector to get nominal z [MeasurementProviderT.cpp]
+ - Bug fix in TrackUsedLHCbID [duplicates handled correctly]
+
+! 2008-10-19 M Needham
+ - Changes in likelihood tool [allow detector to be missing in init
+ - Changes in expected hit tools [allow choice of extrapolator ]
+
+
+! 2008-10-17 - Wouter Hulsbergen
+ - made MeasurementProvider even less verbose
+
+!======================== TrackTools v3r12 2008-10-02 ========================
+! 2008-09-26 - Wouter Hulsbergen
+ - added option to set cluster location in STMeasurementProvider
+
+! 2008-09-18 - Wouter Hulsbergen
+ - made TrackVertexer and MeasurementProvider less verbose
+
+!======================== TrackTools v3r11 2008-09-05 ========================
+! 2008-08-20 - Stephanie Hansmann-Menzemer
+ - make FastMomentumTool and PtTransporter safe for 0 b field
+
+! 2008-08-11 - Thomas Ruf
+ - StateSimpleBetheBlochEnergyCorrectionTool.cpp, correction never applied,
+   added missing tX[4] = 1.0/newP;
+
+!======================== TrackTools v3r10 2008-07-29 ========================
+! 2008-07-28 - Chris Jones
+ - Add options to TrackSelector to reject clones
+
+! 2008-07-24 - Wouter Hulsbergen
+ - adapted to change in FitNode
+ - use new matrix inversion
+
+! 2008-07-19 - Marco Cattaneo
+ - Fix compilation warning in TrackPtKick.cpp
+ - Adapt tools to use new ILHCbMagnetSvc interface where needed
+
+! 2008-07-17 - Stephanie Hansmann-Menzemer
+ - Adapt to new B field map and to changes in momentum interfaces
+
+!======================== TrackTools v3r9 2008-07-17 ========================
+! 2008-07-14 M Needham
+ - Add use of dead strips to TTHitExpectation
+
+! 2008-07-11 - David Hutchcroft
+ - Added tests for VELO sensors readout and bad strips to VeloExpectation
+
+! 2008-07-10 - Wouter Hulsbergen
+ - added more cuts to TrackSelector
+ - make TrackVertexer less verbose
+
+!======================== TrackTools v3r8 2008-07-02 ========================
+! 2008-07-01 - Marco Cattaneo
+ - Fix compilation warning (comment unused variable)
+
+! 2008-06-27 - Louis Nicolas
+ - Important bug fix in StateSimpleBetheBlochEnergyCorrectionTool.
+   The previous correction was causing some tracks to have huge chi2/dof.
+
+! 2008-06-17 - Louis Nicolas, Matt Needham
+ - LongTrackReferenceCreator: Changed default extrapolator to TrackMasterExtrapolator
+ - StateSimpleBetheBlochEnergyCorrectionTool: added safety checks
+
+! 2008-06-06 - Louis Nicolas
+ - TrackLikelihood: added a safety check to avoid FPE in initialisation of "lik"
+
+!======================== TrackTools v3r7 2008-06-05 ========================
+! 2008-06-05 - Marco Cattaneo
+ - Fix compiler warning
+
+! 2008-05-29 Stephanie Hansmann-Menzemer
+ - fix float/double conversions
+
+! 2008-05-28 Wouter Hulsbergen
+ - check #dof for chisquare cut in TrackSelector
+ - extend interface of TrackVertexer
+
+! 2008-05-22 - Marco Cattaneo
+ - In PtTransporter, get IFunctionTool.h from TrackInterfaces
+
+! 2008-05-21 - Johannes Albrecht
+ - PtTransporter.h,cpp: add interface for Hlt implementation
+
+! 2008-05-20 - Marco Cattaneo
+ - Fix a doxygen warning
+
+! 2008-05-20 - Stephanie Hansmann-Menzemer
+ - add StateDetailedBetheBloch dE/dx correction tool
+
+!======================== TrackTools v3r6 2008-05-09 ========================
+! 2008-05-08 - Johannes Albrecht
+ - PtTransporter.h,cpp: new tool to transport pt from T to origin
+
+! 2008-05-05 - Adrian Perieanu
+ - TrackCloneFinder: update for speed and lower clone rate
+
+! 2008-04-29 - Jaap Panman
+ - Add HltV0Upgrade.cpp and HltV0Upgrade.h (needs also IHltV0Upgrade)
+
+! 2008-04-18 M Needham
+ - Update to changes in STDet [introduction of DeSTSensor]
+
+!======================== TrackTools v3r5 2008-04-16 ========================
+! 2008-04-16 - Patrick Koppenburg
+ - TrackSelector : initialisation printout in debug instead of info. That
+   saves >200 lines of useless printout in a typical stripping job.
+
+! 2008-03-31 Jan Amoraal
+ - Remove whitespace from property iWeight of TrackSelector. Python doesn't
+   like it.
+
+! 2008-03-31 M Needham
+ - Follow interface adaption in IStateCorrection tool
+
+!======================== TrackTools v3r4p1 2008-03-28 ======================
+! 2008-03-28 - Wouter Hulsbergen
+ - Change MeasurementProviderT to make it crash more gently if the
+   clusters have not been loaded.
+
+! 2008-03-20 - Manuel Tobias Schiller
+ - fixed bug in FastMomentumEstimate.cpp: sigmaQOverP used to be negative
+   for qOverP negative
+
+!======================== TrackTools v3r4 2008-02-08 ========================
+! 2008-02-08 - Marco Cattaneo
+ - Add missing includes following changes in event model includes
+
+! 2008-02-04 - Wouter Hulsbergen
+ - Adapted MuonMeasurementProvider to change in MuonMeasurement interface
+
+!======================== TrackTools v3r3 2008-02-02 ========================
+! 2008-02-02 M Needham
+ - Correct small bug in TrackSelector eta cut
+
+! 2008-01-24 - Wouter Hulsbergen
+ - Change Si measurement providers to use track-state by default
+
+!======================== TrackTools v3r2 2007-12-11 ========================
+! 2007-12-11 - Wouter Hulsbergen
+ - Added missing 'template<>' in MeasurementProviderT
+
+! 2007-12-06 - Wouter Hulsbergen
+ - Added const to 'StateCorrection' tools
+
+! 2007-12-03 - Wouter Hulsbergen
+ - Added TrackVertexer
+ 
+! 2007-11-30 - Wouter Hulsbergen
+ - fixed Interpolator such that it also does the right thing for extrapolation
+ - remove extrapolators from MeasurementProviders: use TrackTraj instead
+ - add OTMeasurementProvider which calculates tof correction
+ - adapt to new functionality in Track such that measurements no longer cloned
+ - adapt LongTrackReferenceCreator to chaneg in Measurement interface
+
+! 2007-11-29 - Stephanie Hansmann-Menzemer
+ - change ZAtT -> ZEndT
+
+! 2007-11-20 - Wouter HULSBERGEN
+ - added missing tolerances for float comparison in LongTrackRefCreator
+
+!======================== TrackTools v3r1 2007-11-09 ========================
+! 2007-11-09 - Marco Cattaneo
+ - Add a missing template<> declaration needed by gcc 4.0 on osx
+
+! 2007-11-08 Stephanie Hansmann-Menzemer
+ - add default values for momentum parametrization in FastMomentumEstimate
+
+! 2007-10-30 Stephanie Hansmann-Menzemer
+ - add Fast Momentum Tool and according option file
+
+!======================== TrackTools v3r0 2007-10-12 ========================
+! 2007-10-10 Stephanie Hansmann-Menzemer
+ - adapt to Tf framework
+
+!======================== TrackTools v2r19 2007-10-08 ========================
+! 2007-10-06 M Needham
+ - deweighting factor to 1
+
+! 2007-10-05 Wouter Hulsbergen
+ - make sensible check on t-station range in LongTrackReferenceCreator
+
+! 2007-10-03 M Needham
+ - Change deweighting to 2 in likelihood
+
+!======================== TrackTools v2r18 2007-09-20 ========================
+! 2007-09-14 M Needham
+ - Update hit expectation tools
+
+! 2007-09-11 M Needham
+ - Add hit expectation tools
+
+! 2007-09-06 M. Needham
+ - more ensuring no comparisions between of equality between floats !
+
+! 2007-09-05 - Wouter Hulsbergen
+ - got rid of != for doubles in MeasurementProvider
+
+! 2007-08-27
+ - Use chi2 in clone killing in case the two tracks have the 
+   same number of hits 
+
+!======================== TrackTools v2r17 2007-07-23 ========================
+! 2007-07-23 - Silvia Pozzi and Wouter Hulsbergen
+- changed MeasurementProvider to allow for creation of y trajectory for Muon hits
+
+!======================== TrackTools v2r16 2007-07-05 ========================
+! 2007-07-05 - Marco Cattaneo
+ - Fix a doxygen warning
+
+! 2007-07-04 M Needham
+ - Add selection by eta/likelihood to track selector
+
+! 2007-06-25 M Needham
+ - Small change in Measurement provider (following new functionality in LHCbID)
+
+!======================== TrackTools v2r15 2007-05-30 ========================
+! 2007-05-29 M. Needham
+ - Changes in VeloExpectation: 
+   * Follow change to interface
+   * Use closestState rather than firstState                            
+
+! 2007-05-23 M. Needham
+ - Follow change in TrackManipulator
+
+!======================== TrackTools v2r14 2007-05-09 ========================
+! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo
+ - Add MuonMeasurements to MeasurementProvider
+
+!======================== TrackTools v2r13 2007-03-29 ========================
+! 2007-03-29 - Marco Cattaneo
+ - Adapt to change in VeloDet interface
+
+!======================== TrackTools v2r12 2007-03-21 ========================
+! 2007-03-20 - M. Needham
+ - Add some consts, fix untested StatusCodes
+ - Minor modifications to TrackPtKick, to calculate error as function of p
+
+! 2007-03-13 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Remove obsolete TrackTools_load.cpp file
+
+! 2007-03-12 M. Needham
+ - Add VeloExpectation tool
+
+!======================== TrackTools v2r11 2007-02-06 ========================
+! 2007-02-06 - Marco Cattaneo
+ - Remove LHCbDefinitions includes and dependency
+
+! 2007-01-23 - Eduardo Rodrigues
+ - bug fix in the TrackCloneFinder tool
+   (affects comparisons of hits in the seeding stations)
+
+!======================== TrackTools v2r10 2006-11-30 ========================
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
+! 2006-11-23 - Marco Cattaneo
+ - Fix incorrect test introduced in LongTrackReferenceCreator
+
+! 2006-11-22 - Jeroen van Tilburg
+ - TrackInterpolator: Fixed a problem with the internal filter step (residuals
+   were not calculated. 
+ - TrackInterpolator: Adapted to the new State naming convention in FitNode
+   (no hidden assumption on the fit direction).
+
+! 2006-11-16 - Jeroen VAN TILBURG
+ - Created new tool: TrackInterpolator. Inherits from ITrackInterpolator. Uses
+   the states in FitNode and calculates the weighted mean at the given
+   z-position.
+
+! 2006-10-19 - Eduardo Rodrigues
+ - adapted LongTrackReferenceCreator so that it can be used when refitting
+   tracks from DST
+
+!======================== TrackTools v2r9 2006-09-01 =========================
+! 2006-09-01 - Eduardo Rodrigues
+ - removed unused variable messages from state correction tools
+ - corrected electron dE/dx formula
+
+! 2006-08-22 - Eduardo Rodrigues
+ - new tools introduced for state corrections:
+   - StateSimpleBetheBlockEnergyCorrectionTool
+   - StateElectronEnergyCorrectionTool
+   - StateThickMSCorrectionTool
+   - StateThinMSCorrectionTool
+   (The original code was in the master extrapolator)
+
+!======================== TrackTools v2r8 2006-08-21 =========================
+! 2006-08-17 M Needham
+ - Update the Pt kick tool parameters
+
+! 2006-08-15 - Eduardo Rodrigues
+ - TrackCloneFinder: "CompareAtLHCbIDsLevel" flag set to false
+ - improvements/clean-up in TrackCloneFinder and MeasurementProvider
+
+!======================== TrackTools v2r7 2006-08-02 =========================
+! 2006-08-02 - Chris Jones
+ - Add Ttrack to the list of default selected track types in TrackSelector
+
+! 2006-08-01 - Marco Cattaneo
+ - Use DECLARE_TOOL_FACTORY, GaudiKernel/SystemOfUnits.h
+
+! 2006-08-01 - Eduardo Rodrigues
+ - LongTrackReferenceCreator: better use of the track event model.
+   Removed unnecessary State cloning.
+
+! 2006-08-01 M Needham
+ - protect against missing states
+
+!======================== TrackTools v2r6 2006-07-25 =========================
+! 2006-07-24 M Needham
+ - Remove unphysical terms from the parameterization in pt kick tool
+ - Tune pt kick parameters for DC'06
+
+! 2006-07-19 - Christopher Rob Jones
+ - Add TrackVelodEdxCharge tool for calculating Velo charge from dE/dx
+
+!======================== TrackTools v2r5 2006-07-06 =========================
+! 2006-07-06 - Chris Jones
+ - Update TrackSelector default cuts to be truly NULL
+
+! 2006-06-29 M Needham
+ - Updates since poca tool interface moved to LHCbKernel
+
+! 2006-06-23 - Jeroen Van Tilburg
+ - LongTrackReferenceCreator: Added a flag to set the OT L/R ambiguities. By
+   default this is set to false, since it is set on the fly in TrajOTProjector.
+
+! 2006-06-22 - Edwin Bos
+ - Added debug statements to TrajPoca.cpp
+ - Changed MaxnTry from 3 to 100 and MaxDist from 10 to 10^8
+
+!======================== TrackTools v2r4 2006-06-20 =========================
+! 2006-06-20 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+ - clone finder tool compares LHCbIDs by default (was Measurements by default)
+
+! 2006-06-18 - Chris Jones
+ - More changes to TrackSelector, to add both max and min cuts
+  + NOTE : Changes in job options names where needed to keep things sensible
+
+! 2006-06-14 - Eduardo Rodrigues
+ - changes in TrackCloneFinder:
+   - propagation of changes in the interface (simplifications)
+   - added debugging info if requested
+
+! 2006-06-14 - Jeroen van Tilburg
+ - LongTrackReferenceCreator: also add the OT L/R ambiguity.
+
+! 2006-06-13 - Chris Jones
+ - Improvements to TrackSelector, to allow selection based on track type
+
+! 2006-05-20 M Needham
+ - Add LongTrackReferenceCreator (a ITrackManipulator)
+
+! 2006-05-19 - David Hutchcroft
+ - Changed DeVelo location to DeVeloLocation::Default (from hardcoded string)
+
+!======================== TrackTools v2r3 2006-05-16 =========================
+! 2006-05-16 - Marco Cattaneo
+ - Adapt to Gaudi::Units, plus minor cleanups
+
+! 2006-05-08 - Eduardo Rodrigues
+ - using separate STClusterPosition tools for TT and IT (different tunings)
+ - consistency checks introduced in TrackCloneFinder
+
+!======================== TrackTools v2r2 2006-05-03 =========================
+! 2006-05-02 - Eduardo Rodrigues
+ - consistent const arguments and return types in TrajectoryProvider
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
+!======================== TrackTools v2r1 2006-04-12 =========================
+! 2006-04-12 - Mark Tobin
+ - Fix to work with new DeVelo interface
+
+! 2006-04-07 - David Hutchcroft
+ - Modified code to use VeloClusterTool to get the Velo clusters positions
+
+! 2006-04-05 - Edwin Bos
+ - adapted to using auto_ptr
+
+! 2006-03-26 - Eduardo Rodrigues
+ - adaptations to new SMatrix-5.10.00b and higher
+
+!======================== TrackTools v2r0 2006-03-08 =========================
+! 2006-03-08 - Eduardo Rodrigues
+ - update to new VeloDet path
+ - TrajMeasurementProvider tool removed - no more needed
+
+! 2006-03-03 - Eduardo Rodrigues
+ - TrajectoryProvider:
+   - all arguments const, as in interface
+   - clean-up of unnecessary tools
+
+! 2006-02-28 - Jeroen van Tilburg
+ - TrajectoryProvider: Extracts the Trajectory directly from the Measurement.
+ - MeasurementProvider: VeloRMeasurement does not require radius anymore.
+ - minor cosmetics.
+
+! 2006-02-24 - Eduardo Rodrigues
+ - improvements to MeasurementProvider:
+   - possible to ignore Velo/TT/IT/OT info via options
+   - measurements of "type to ignore" will not be made
+   This is particularly useful e.g. when no STClusters are made
+
+! 2006-02-23 - Eduardo Rodrigues
+ - added new TrajMeasurementProvider tool (inherits from IMeasurementProvider)
+ - TrajectoryProvider tool now uses new VeloClusterPosition tool
+
+! 2006-02-21 M Needham
+ - Implementations of Track calorimeter matching tool and 
+   also the Track selector
+
+! 2006-02-17 - Eduardo Rodrigues
+ - introduced new trajectory provider tool TrajectoryProvider
+   (all implemented apart from Velo - need trajectory method in det. elem.)
+ - changes to IMeasurementProvider propagated to MeasurementProvider
+
+! 2006-02-15 - Eduardo Rodrigues
+ - using TrackUnitsConverters.h in TrackEvent to convert units for
+   safer matrix invertions
+
+! 2006-02-15 - Marco Cattaneo
+ - Migrate requirements to DigiEvent
+
+! 2006-02-10 - Gerhard Raven
+ - properly implement point-poca in TrajPoca
+
+! 2006-02-10 - Gerhard Raven & Edwin Bos
+ - update to follow minor changes to Trajectories.
+
+! 2006-02-07 - Eduardo Rodrigues
+ - migration to LHCb v20r0
+
+!======================== TrackTools v1r4 2006-01-27 =========================
+! 2006-01-20 - Eduardo Rodrigues
+ - MeasurementProvider: all LHCbIDs spare bits are set to 0 before the
+   Measurements are made
+
+! 2006-01-19 - Eduardo Rodrigues
+ - updates to MeasurementProvider:
+   - improvements in the handling of possible behaviours
+   - detailed documentation added
+
+! 2006-01-17 - Eduardo Rodrigues
+ - minor correction to MeasurementProvider
+
+! 2006-01-17 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - Added TrajPoca, a tool which calculates the
+ - Points Of Closest Approach between two Trajectories
+
+! 2005-12-14 - Eduardo Rodrigues
+ - propagation of changes ITMeasurement -> STMeasurement
+
+! 2005-12-13 - Eduardo Rodrigues
+ - new tool TrackCloneFinder added: it checks whether two input tracks
+   are clones of each other and makes a choice based on hit sharing criteriae
+
+! 2005-12-01 - Eduardo Rodrigues
+ - propagation of changes in ITMeasurement class
+
+! 2005-12-01 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First version of the TrajPoca tool:
+   a "TrajPoca" tool calculates the point of closest approach
+   between two trajectories
+
+!======================== TrackTools v1r3 2005-11-29 =========================
+! 2005-11-08 - Eduardo Rodrigues
+ - it++ replaced by ++it
+ - possible memory leak corrected
+
+! 2005-11-02 - Eduardo Rodrigues
+ - MeasurementProvider tool sets Status flag for tracks with Measurements.
+   Added protection against failure in making Measurements
+
+!======================== TrackTools v1r2 2005-09-20 =========================
+! 2005-09-20 - Jose A. Hernando
+ - MeasurementProvider returns ownership of Measurement
+
+! 2005-09-08 - Eduardo Rodrigues
+ - TrackChi2Calculator tool added, copied from TrMatching, for the new
+   track event model
+
+! 2005-09-06 - Marco Cattaneo
+ - Remove BIntegrator tool, moved to Magnet package
+
+!======================== TrackTools v1r1 2005-07-20 =========================
+! 2005-06-29 - Eduardo Rodrigues
+ - MeasurementProvider inherits from new IMeasurementProvider interface
+   in Tr/TrackInterfaces
+ - minor typos corrected
+
+!======================== TrackTools v1r0 2005-05-25 =========================
+! 2005-05-25 - Marco Cattaneo
+ - Remove TrackTools directory, header files moved to src
+ - Initialize base class of GaudiTools
+
+! 2005-05-24 - Eduardo Rodrigues
+ - MeasurementProvider tool moved here from Tr/TrackFitEvent
+ - requirements file updated
+
+! 2005-05-23 - Eduardo Rodrigues
+ - TrackAcceptance, TrueStateCreator and TrackSelector tools moved to
+   the new package Tr/TrackMCTools (for tools that access MC information)
+
+! 2005-05-20 - Eduardo Rodrigues
+ - all tool interfaces removed and put into the new package 
+   Tr/TrackInterfaces. Corresponding changes made to derived tools
+ - ClusterLHCbIDCnv tool removed as no longer needed
+
+! 2005-05-13 - Jacopo Nardulli
+ - ITrackPtKick.h interface and TrackPtKick tool added
+
+! 2005-05-12 - Eduardo Rodrigues
+ - IBIntegrator.h interface and BIntegrator tool added
+
+! 2005-05-09 - Eduardo Rodrigues
+ - ITrackSelector interface and TrackSelector tool added
+
+! 2005-04-11 - Eduardo Rodrigues
+ - ITrackReconstructible pure virtual interface taken from Tr/TrAssociators
+   and derived tool TrackAcceptance taken from Tr/TrCheck.
+   Both adapted to latest Gaudies
+
+! 2005-04-06 - Eduardo Rodrigues
+ - TrueStateCreator tool added
+
+! 2005-04-04 - Eduardo Rodrigues
+ - IStateCreator interface added
+
+! 2005-04-01 - Jose Hernando, Eduardo Rodrigues
+ - first version of a help tool to convert from the LHCbID
+   to a OTTime or XxxCluster, and vice-versa
