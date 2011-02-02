@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r11 2011-02-02 =========================
 ! 2011-02-01 - Olivier Callot
  - Add a new cut in PatForwardTool to exclude dirty area, MaxXCandidateSize = 50
    This gains 15% of the time for almost no change in efficiency/ghost rate
