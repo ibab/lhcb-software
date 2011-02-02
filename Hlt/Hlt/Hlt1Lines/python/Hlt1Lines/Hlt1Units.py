@@ -45,6 +45,7 @@ __all__ = (
     'TMuonConf'      , ## the 'track-upgrade'-configuration for TMuonConf
     'Forward'        , ## the 'track-upgrade'-configuration for Forward
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
+    'MatchVeloMuon'  , ## the 'track-upgrade'-configuration for MatchVeloMuon
     ## match 
     'VeloT'          , ## the 'track-match'-configuration   for VeloT
     'VeloL0Muon'     , ## the 'track-match'-configuration   for VeloL0Muon
@@ -110,6 +111,23 @@ FitTrack = LoKi.Hlt1.UpgradeConf        (
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
+MatchVeloMuon = LoKi.Hlt1.UpgradeConf (
+    "MatchVeloMuon"              ,                     ##               "Tool" 
+    "Hlt1/Track/VeloMuon"        ,                     ##          "TESOutput"
+    LHCb.Track.Velo              ,                     ##          "TrackType"
+    False                        ,                     ##              "Owner"
+    True                         ,                     ##        "TransferIDs"
+    True                         ,                     ##   "TransferAncestor"
+    True                         ,                     ##  "TransferExtraInfo"
+    True                         )                     ##          "OrderByPt"
+
+_trUpgrader = {}
+_trUpgrader [ 'TMuonConf' ] = TMuonConf
+_trUpgrader [ 'Forward'   ] = Forward
+_trUpgrader [ 'FitTrack'  ] = FitTrack
+_trUpgrader [ 'MatchVeloMuon' ] = MatchVeloMuon
+
+# =============================================================================
 
 
 # =============================================================================
@@ -132,7 +150,7 @@ FitTrack = LoKi.Hlt1.UpgradeConf        (
 # =============================================================================
 VeloT = LoKi.Hlt1.MatchConf  (
     "PatMatchTool"                 ,                   ##               "Tool"
-    "Hlt1/Track/VeloT"              ,                   ##          "TESOutput"
+    "Hlt1/Track/VeloT"             ,                   ##          "TESOutput"
     LHCb.Track.Long                ,                   ##          "TrackType"
     True                           ,                   ##        "TransferIDs"
     True                           ,                   ##  "TransferAncestors"

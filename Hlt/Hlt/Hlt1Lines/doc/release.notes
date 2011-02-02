@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-02 - Roel Aaij
+ - Add UpgradeConf object for new MatchVeloMuon tool
+
 ! 2011-01-30 - V. Gligorov
  - Stream TrackAllL0 and TrackPhoton. 
 
