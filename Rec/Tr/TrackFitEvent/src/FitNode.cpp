@@ -346,9 +346,9 @@ namespace LHCb {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
 	kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
-      std::cout << "ERRRORRR: something goes wrong in the filter."
-		<< m_filteredState[direction].covariance() << std::endl 
-		<< predictedState(direction) << std::endl ;
+//       std::cout << "ERRRORRR: something goes wrong in the filter."
+// 		<< m_filteredState[direction].covariance() << std::endl 
+// 		<< predictedState(direction) << std::endl ;
     }
   }
   
