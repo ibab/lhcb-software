@@ -1,0 +1,10 @@
+x86_64-slc5-gcc43-opt/*
+genConf/*
+cmt/*
+!cmt/requirements
+*.o
+*.so
+*~
+#*
+.svn/*
+*/.svn/*

@@ -1,0 +1,170 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltMuonAlley
+! Responsible : Sandra Amato & Alessia Satta
+! Purpose     : Decision Algorithms for the muon trigger
+!-----------------------------------------------------------------------------
+!========================== HltMuonAlley v3r0p1 2010-02-17 ===================
+! 2010-02-12 - Gerhard Raven
+ - replace some float with double
+
+!========================== HltMuonAlley v3r0 2009-06-03 ===================
+! 2009-04-30 - Gerhard Raven
+ - move track matching code to HltTracking
+ - remove unneeded cast
+
+!========================== HltMuonAlley v2r9 2009-05-06 ===================
+
+! 2009-04-30 - Alessia Satta
+ - Update for renamed MuonPosTool in MuonFastPosTool
+
+!========================== HltMuonAlley v2r8 2009-02-23 ===================
+! 2009-02-15 - Leandro de Paula
+ - HltIsMuonTool.cpp: Change to run with MC2008. (M4 hits can come before M5 ones)
+
+!========================== HltMuonAlley v2r7p1 2009-01-15 ===================
+!========================== HltMuonAlley v2r7 2008-11-24 ===================
+! 2008-10-01 - Leandro de Paula 
+ - HltDeltaPTool.h, cpp: changed to use ancertors
+
+!========================== HltMuonAlley v2r6 2008-10-03 ===================
+! 2008-10-01 - Leandro de Paula 
+ - HltIsMuonTool split into HltDeltaPTool and HltIsMuonTool
+ - HltDeltaPTool.h, cpp: implements dp/p cut
+ - HltIsMuonTool.h, cpp: implements IsMuon cut
+!========================== HltMuonAlley v2r5 2008-08-06 ===================
+! 2008-07-21 - Johannes Albrecht
+ - HltMatchTVeloTracks.h, cpp adapt interface for ITrackMomentumEstimate tool
+
+!========================== HltMuonAlley v2r4p1 2008-07-09 ===================
+! 2008-06-27 - Patrick Koppenburg
+ - HltIsMuonTool : Check StatusCodes. Protect debug().
+ - Increment to v2r4p1
+
+!========================== HltMuonAlley v2r4 2008-06-09 ===================
+! 2008-06-03 - Sandra Amato
+  - HltIsMuonTool: updated default parameters
+                   include dp/p cut
+! 2008-06-02 - Gerhard Raven
+  - HltMatchTVeloTracks: explictly ignore implictly ignored StatusCode
+  - HltIsMuonTool: use double instead of float
+! 2008-05-28 - Alessia Satta
+  - Change in HltIsMuonTool to use directly the trigger part of muon data 
+    format and not the offline. aim: get rid of MuonRec which is time 
+    consuming. There is a switch to choose the input.
+! 2008-05-22 - Gerhard Raven
+  - HltMatchTVeloTracks,HltIsMuonTool,HltMuonIDDistanceTool:
+  follow migration of ITrackMatch from HltBase to TrackInterfaces
+  replace floats with double -- why use floats given that they are NOT faster?
+! 2008-05-14 - Gerhard Raven
+  remove 'info()' printout of 'ecco' in HltMatchVeloTTracks
+  remove implementation of finalize which is identical to the default..
+
+!========================== HltMuonAlley v2r3 2008-04-25 ===================
+! 2008-02-17 - Jose A. Hernando
+   In HltMatchTVeloTracks.cpp, propagate extraInfo of the Velo to the matched track
+
+!========================== HltMuonAlley v2r2 2008-03-07 ===================
+! 2008-02-13 - Gerhard Raven
+  make a few cosmetic changes in HltMuonIDDistanceTool.cpp, and add comment
+  about modifying a 'const Track&' in this tool....
+
+! 2008-02-11 - Gerhard Raven
+  add .cvsignore file to ignore install.history and Makefile in cmt directory
+
+! 2008-02-07 - Jose A. Hernando, Leandro de Paula
+  even smaller bug in HltIsMuonTool properties
+
+! 2008-02-06 - Jose A. Hernando, Leandro de Paula
+  small bug in HltIsMuonTool properties
+
+!========================== HltMuonAlley v2r1 2008-02-05 ===================
+! 2008-01-29 - Jose A. Hernando, Leandro de Paula
+  adding HltIsMuonTool
+
+! 2008-01-22 - Jose A. Hernando 
+  HLT-clean adaptations
+  HltMatchTVeloTracks (to match Velo and T segments)
+
+!========================== HltMuonAlley v2r0 2007-12-17 ===================
+! 2007-12-06 - Jose A. Hernando (from Sandra)
+  - HltMuonIDDistanceTool
+    function to compute muonID distance variable
+	- remove obsolete algorithms:
+   	HltMuonTrigger2MuonsNoIP.h
+	  HltMuonTrigger2MuonsWithIP.h
+    L0Muon2Tracks.h  --> HltCommon HltL0MuonPrepare
+    L0Vertex2Tracks.cpp --> HltCommon HltVertexToTracks
+
+! 2007-11-22 - Sandra Amato
+ - remove obsolete algorithms: HltMuonPreTriggerDiMuons.cpp, 
+   HltMuonPreTriggerSingle.cpp, HltMuonTriggerDiMuons.cpp,
+   HltMuonTriggerSingle.cpp, MatchPatVeloRL0.cpp,
+   MatchPatVeloRMuonHits.cpp, MatchPatVeloSpaceL0.cpp,
+   MatchPatVeloSpaceMuonHits.cpp
+ - remove the PatContainers from the other ones.
+
+! 2007-11-15 Gerhard Raven
+   - streamline L0Vertex2Tracks a bit...
+
+!========================== HltMuonAlley v1r6 2007-11-14 ===================
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v1r6
+
+! 2007-10-30 Sandra Amato
+   - fix Abs value in HltMuonTrigger2MuonsWithIP
+   - remove requirement of opposite charge from HltMuonTrigger2MuonsNoIP
+     and HltMuonTrigger2MuonsWithIP
+   - require both tracks not to come from the same ancestor
+   - fix bug in  checkIfL0Dimuon in HltMuonTrigger2MuonsNoIP
+     and HltMuonTrigger2MuonsWithIP
+   - require at least one track from L0 when making dimuons
+
+!========================= HltMuonAlley v1r5p1 2007-10-28 ===================
+! 2007-10-12 Jose A. Hernando 
+   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
+
+!========================== HltMuonAlley v1r5 2007-09-23 ===================
+! 2007-08-03 - Alessia Satta
+ - modify L0Muon2Tracks and add L0Vertex2Tracks to be compliant with the new rule:
+   no possible to have both output and vertex output from a HltAlgo. Use the HltSys
+   committed today
+
+!========================== HltMuonAlley v1r4 2007-07-31 ===================
+! 2007-07-26 - Alessia Satta
+ - uncomment a parameter initialization in HltMuonTrigger2MuonsNoIP.cpp 
+   (thanks to Sandra)
+
+! 2007-07-12 - Alessia Satta
+ - add code for improved L0 dimuon confirmation
+ 
+! 2007-06-25 - Jose A. Hernando
+ - remove saveInSummary, DiMuon algos, report twice in the summary!, hack temporally
+
+! 2007-06-20 - Jose A. Hernando
+ - minor changes, remove begin,end Execute
+
+!========================== HltMuonAlley v1r3 2007-02-12 =====================
+! 2007-02-12 - Alessia Satta
+ - Updated for new L0MuonCandidate methods
+
+! 2007-02-05 - Jose A. Hernando
+ - src/*DiMuons.cpp changing info() to debug() for dd printout
+
+! ======================== HltMuonAlley v1r2 2007-01-11 ======================
+! 2007-01-11 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros
+
+! ======================== HltMuonAlley v1r1 2006-10-30 ======================
+! 2006-10-30 - Alessia Satta
+ - Compatible with new HltTracking and HltEvent
+	
+! ======================== HltMuonAlley v1r0 2006-09-27 ======================
+! 2006-10-19 - Alessia Satta
+ - Fix a outside limit acces in vector MatchPatVeloSpaceMuonHits.cpp
+
+! 2006-09-27 - Marco Cattaneo
+ - Adapt to changed include file locations
+
+! 2006-01-19 Alessia Satta
+	- first version for DC06
+

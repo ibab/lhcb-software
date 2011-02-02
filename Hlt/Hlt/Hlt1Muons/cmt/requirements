@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2010-11-17
+# Maintainer : Roel Aaij
+#============================================================================
+package           Hlt1Muons
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src Hlt1Muons
+include_path      none
+
+# Used packages
+#============================================================================
+use GaudiAlg            v*
+use TrackEvent		v*    Event
+use MuonDet             v*    Det
+use TrackInterfaces     v*    Tr
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          Hlt1Muons    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=Hlt1Muons
