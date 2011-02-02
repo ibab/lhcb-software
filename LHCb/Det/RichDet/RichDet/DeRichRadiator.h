@@ -201,7 +201,7 @@ public:
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
-                                      std::vector<RichRadIntersection>& intersections ) const = 0;
+                                      Rich::RadIntersection::Vector& intersections ) const = 0;
 
   /** Returns the refractive index at the given photon energy for this radiator
    *  @param energy The photon energy

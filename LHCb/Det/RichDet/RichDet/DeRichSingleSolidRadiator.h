@@ -88,7 +88,7 @@ public:
   //  can be more than one intersections
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
-                                      std::vector<RichRadIntersection>& intersections ) const;
+                                      Rich::RadIntersection::Vector& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
   virtual double refractiveIndex( const double energy, bool hlt = false ) const;

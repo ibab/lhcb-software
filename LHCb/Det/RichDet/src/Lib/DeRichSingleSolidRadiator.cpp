@@ -205,7 +205,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
 unsigned int DeRichSingleSolidRadiator::
 intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
-               std::vector<RichRadIntersection>& intersections ) const
+               Rich::RadIntersection::Vector& intersections ) const
 {
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
   const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
@@ -215,7 +215,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 
   if (noTicks != 0) {
     for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
-      intersections.push_back(RichRadIntersection
+      intersections.push_back(Rich::RadIntersection
                               (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
                                vGlobal,
                                geometry()->toGlobal(pLocal + ticks[tick+1]*vLocal),

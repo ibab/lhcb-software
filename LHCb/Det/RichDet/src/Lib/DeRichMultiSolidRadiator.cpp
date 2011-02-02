@@ -249,7 +249,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
 unsigned int DeRichMultiSolidRadiator::
 intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
-               RichRadIntersection::Vector& intersections ) const
+               Rich::RadIntersection::Vector& intersections ) const
 {
   const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
   const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
@@ -270,7 +270,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
       totalTicks += noTicks;
       for ( unsigned int tick = 0; tick < noTicks; tick += 2 )
       {
-        intersections.push_back(RichRadIntersection
+        intersections.push_back(Rich::RadIntersection
                                 (geometry()->toGlobal(m_toTopLevel[solid]*
                                                       (solidLocalPoint+solidLocalVector*ticks[tick])),
                                  vGlobal,
