@@ -775,6 +775,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   // Flag to indicate if a given L1 bank has been printed out in case of an error
   bool l1BankErrorDump = true;
 
+  // If we have some words to process, start the decoding
   if ( bankSize > 0 )
   {
 
