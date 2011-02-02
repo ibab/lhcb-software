@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!========================= TsaAlgorithms v3r24 2011-02-02 =========================
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
 - use early data tuning as default
 
