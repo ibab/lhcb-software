@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v4r1p4 2011-02-02 =========================
 ! 2011-01-19 - Rob Lambert
  - Try and reduce slc4 and slc5 differences by making sure all variables
    are initialized in the constructors correctly
