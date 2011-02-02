@@ -28,7 +28,7 @@ use HltTracking         v8r2    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r6p10 Hlt   # Gerhard Raven
 use LoKiTrigger         v11r3   Phys  # Vanya Belyaev
 use LoKiTracks          v1r6    Phys  # Vanya Belyaev
-
+use BBDecTreeTool       v1r0    Phys  # Mike Williams
 
 
 # Declare this as a container package
