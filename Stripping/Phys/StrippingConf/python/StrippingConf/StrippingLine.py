@@ -181,13 +181,8 @@ class bindMembers (object) :
         alg = alg.createConfigurable( line, **alg.Args )
         return self._default_handler_( line,  alg )
 
-    def __init__( self, line, algos = None, selection = None ) :
-        if algos and selection :
-            raise Exception('only algos or selection can be set. You have set both.')
-        if selection :
-            if isConfigurable(selection) :
-                raise TypeError('StrippingLine selection cannot be Configurable type.')
-            algos = [selection]
+    def __init__( self, line, algos ) :
+
         self._members = []
         self._outputloc = None
         for alg in algos:
@@ -307,11 +302,19 @@ class StrippingLine(object):
                    HLT       = None ,   # HltDecReports predicate
                    FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
                    checkPV   = True ,   # Check PV before running algos 
-                   algos     = []   ,   # the list of algorithms/members
+                   algos     = None ,   # the list of algorithms/members
+                   selection = None ,
                    postscale = 1    ,   # postscale factor
                    MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
                    MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
                    **args           ) : # other configuration parameters
+
+        if algos and selection :
+            raise Exception('only algos or selection can be set. You have set both.')
+        if selection :
+            if isConfigurable(selection) :
+                raise TypeError('StrippingLine selection cannot be Configurable type.')
+            algos = [selection]
 
         ## 1) clone all arguments
         name   = deepcopy ( name   )
