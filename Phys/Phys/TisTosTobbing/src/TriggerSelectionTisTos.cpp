@@ -184,7 +184,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
       }
     }
     if( p2lhcbids ){
-      p2lhcbids->update(0); // temporary hack. Framework should do this automatically but isn't.
+      //      p2lhcbids->update(0); // temporary hack. Framework should do this automatically but isn't.
       std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
       if( hits.size() ){        
         if ( msgLevel(MSG::VERBOSE) ) 
