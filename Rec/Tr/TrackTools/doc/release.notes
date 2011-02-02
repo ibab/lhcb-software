@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-02-02 - Michel De Cian
+ - Change output location of MuonTTTrack.cpp to Rec/<instance name>/Tracks
+
+
 !========================= TrackTools v4r1 2011-02-02 =========================
 ! 2011-01-29 - Chris Jones
  - Add support for TT tracks to TrackSelectorBase

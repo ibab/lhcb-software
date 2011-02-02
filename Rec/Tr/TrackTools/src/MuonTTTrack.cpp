@@ -29,7 +29,7 @@ MuonTTTrack::MuonTTTrack( const std::string& name,
   declareProperty( "MC",                  m_MC                = false                     );
   declareProperty( "AddTTHits",           m_addTTHits         = true                      );
   declareProperty( "FillMuonStubInfo",    m_fillMuonStubInfo  = false                     );
-  declareProperty( "OutputLocation",      m_outputLoc         = "Rec/Track/MuonTTTracks"  );
+  declareProperty( "OutputLocation",      m_outputLoc         = "Rec/"+name+"/Tracks"     );
   declareProperty( "MinNTTHits",          m_minNumberTTHits   = 2                         );
 }
 //=============================================================================
