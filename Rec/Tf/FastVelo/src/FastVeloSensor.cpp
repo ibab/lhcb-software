@@ -77,6 +77,13 @@ void FastVeloSensor::setGeometry ( DeVeloSensor* sensor, double xBeam, double yB
   m_isRight = sensor->isRight();
   m_z       = sensor->z();
   m_centre  = sensor->localToGlobal(  Gaudi::XYZPoint( 0., 0., 0. ) );
+  //== Hack to prevent too small numbers when converting to float later!
+  double xTmp = m_centre.x();
+  double yTmp = m_centre.y();
+  if ( fabs( xTmp ) < 1.e-9 ) xTmp = 0.;
+  if ( fabs( yTmp ) < 1.e-9 ) yTmp = 0.;
+  m_centre  = Gaudi::XYZPoint( xTmp, yTmp, m_centre.z());
+
   Gaudi::XYZPoint temp;
   temp = sensor->localToGlobal( Gaudi::XYZPoint( 10., 0., 0. ) );
   m_dzDx = ( temp.z() - m_centre.z() ) / ( temp.x() - m_centre.x() );

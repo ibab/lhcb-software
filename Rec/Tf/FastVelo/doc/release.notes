@@ -3,11 +3,15 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
+
+! 2011-02-02 - Olivier Callot
+ - Protect the geometry from a double-float underflow, for the case of DC06...
+
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
  - assign track history PatFastVelo to Velo tracks, add timing measurement options
 
 ! 2011-01-24 - Olivier Callot
- - Fix a two bugs in the unused phi hits processing.
+ - Fix two bugs in the unused phi hits processing.
 
 ! 2011-01-21 - Olivier Callot
  - New tool FastTTValidationTool to validate a Velo track by TT for HLT1
