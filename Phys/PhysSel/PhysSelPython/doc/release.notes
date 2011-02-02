@@ -5,6 +5,8 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!==================== PhysSel/PhysSelPython v7r0 2011-02-02 ================
+
 ! 2011-02-01 - Juan Palacios
  - Deprecate PhysSelPython.Utils, use GaudiConfUtils instead.
 
@@ -14,7 +16,7 @@
 
 ! 2011-01-31 - Juan Palacios
  - Use GaudiConfUtils helper functions and ConfigurableGenerators.
- - Selection funciton wrapper understands Configurables and ConfiguravleGenerators.
+ - Selection funciton wrapper understands Configurables and ConfigurableGenerators.
  - Increare to v7r0.
 
 !==================== PhysSel/PhysSelPython v6r1 2011-01-18 ================
