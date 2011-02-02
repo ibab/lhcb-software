@@ -13,6 +13,7 @@ use GaudiConfUtils              v1r0    -no_auto_imports
 use SelPy                       v2r99   Phys
 use PhysSelPython               v6r99   PhysSel
 use StrippingUtils              v1r2    Phys
+use StrippingConf               v3r12   Phys
 use HltLine                     v4r6p1  Hlt
 # Declare this as a container package
 apply_pattern container_package
