@@ -100,7 +100,7 @@ from Configurables import HltVertexToTracks      as VertexToTracks
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
-from SelPy.selection import FlatSelectionListBuilder
+from SelPy.selection import FlatAlgorithmList
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
 def filterName   ( line , level = 'Hlt1') :
@@ -593,7 +593,7 @@ class bindMembers (object) :
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
 
     def _handle_Selection(self, line, alg) :
-        members = FlatSelectionListBuilder(alg).selectionList
+        members = FlatAlgorithmList(alg)
         for a in members :
             self._members += [a]
         self._outputsel = alg.outputLocation()

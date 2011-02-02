@@ -5,6 +5,11 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-02-02 - Juan Palacios
+ - HltLine
+  . Replace obsolete FlatSelectionListBuilder with FlatAlgorithmList.
+ - Increase to v4r7p1.
+
 !========================== HltLine v4r7  2011-01-30 ===================
 ! 2011-01-27 - Gerhard Raven
  - remove unused HltGlobalHcalCut
