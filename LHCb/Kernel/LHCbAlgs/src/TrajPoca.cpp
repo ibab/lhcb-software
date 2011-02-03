@@ -52,7 +52,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
 {
   StatusCode status = StatusCode::SUCCESS;
 
-  unsigned int maxWarnings = 5;
+  unsigned int maxWarnings = 0;
   if( msgLevel( MSG::DEBUG ) ) maxWarnings = 9999;
 
   static Gaudi::XYZPoint newPos1, newPos2;
