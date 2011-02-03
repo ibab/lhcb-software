@@ -5,6 +5,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-03 - Vanya Belyaev
+
+ - add timers
+
+ - cmt/requirements
+      version increment to v11r3
+
 ! 2011-02-01 - Roel Aaij
  - Remove check for type of track in UpgradeTool
 

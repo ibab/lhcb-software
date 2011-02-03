@@ -144,6 +144,30 @@ namespace LoKi
        ( const Pipe& fun , const LoKi::Dump& dump  ) 
        { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
        // ======================================================================
+     public: // timing
+       // ======================================================================
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     ChronoEntity*            t ) 
+       { return LoKi::timer   ( c , t ) ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     IChronoSvc*              s , 
+                     const std::string&       t )
+       { return LoKi::timer   ( c , s , t  ) ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     const std::string&       t )
+       { return LoKi::timer   ( c , t  ) ; } 
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rmod__    ( const Pipe&              c , 
+                     const LoKi::Timer&       t ) 
+       { return t % c  ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rmod__    ( const Pipe&              c , 
+                     ChronoEntity*            t ) 
+       { return t % c  ; }
+       // ======================================================================
      public: // specific for HltCandidates
        // ======================================================================
        // __rshift__
@@ -342,6 +366,30 @@ namespace LoKi
       __rshift__ 
       ( const Source& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public: // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    const LoKi::Timer&       t ) 
+      { return t % c  ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    ChronoEntity*            t ) 
+      { return t % c  ; }
       // ======================================================================
     public: // cause 
       // ======================================================================
