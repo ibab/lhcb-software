@@ -8,7 +8,7 @@
 #   a) unbiased dimuon selections, i.e. dimuon selections without
 #           cuts correlated to the Bs lifetime (J. Albrecht)
 #
-#   b) biased dimuon (Leandro de Paula)
+#   b) biased dimuon and dimuon without PV (Leandro de Paula)
 #
 ##
 from Gaudi.Configuration import *
@@ -91,6 +91,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'DetachedHeavyDiMuonMinMass': 2950 # MeV
                    ,'DetachedHeavyDiMuonDLS'    : 3
                    ,'DetachedHavyDiMuonPt'      : 0
+
+                   ,'NoPVPt'                    : 1500 # MeV
+                   ,'NoPVMass'                  : 1000 # MeV
 
                    }
     
@@ -530,4 +533,40 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                       )
 
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedJPsiDecision" : 50044 } )
+
+        #--------------------------------------------
+        '''                           
+        line for dimuon without PV reconstruction  
+
+           Leandro de Paula - leandro.de.paula@cern.ch
+
+        '''
+        NoPVMassCut = "(AM>%(NoPVMass)s*MeV)" % self.getProps()
+        NoPVPTCut   = "(APT<%(NoPVPt)s*MeV)" % self.getProps()
+
+        Hlt1Muons = "HLT_PASS_RE('Hlt1.*Muon.*Decision')"
+        Hlt1NoPVMuons = "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"
+        DiMuNoPV = Hlt2Member(CombineParticles
+                               , "DiMuonNoPV"
+                               , DecayDescriptors = ["J/psi(1S) -> mu+ mu-"]
+                               , DaughtersCuts = { "mu+" : "(PT>400*MeV) ",
+                                                   "mu-" : "(PT>400*MeV) "}
+                               , CombinationCut = NoPVMassCut+"&"+NoPVPTCut
+                               , MotherCut = "ALL"
+                               , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",0,7000)
+                               +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,2000)
+                               , InputPrimaryVertices = "None"
+                               , UseP2PVRelations = False
+                               , InputLocations  = [ BiKalmanFittedMuons ]
+                              )
+
+        line = Hlt2Line('DiMuonNoPV'
+                        , prescale = self.prescale
+                        , HLT = Hlt1NoPVMuons
+                        , algos = [BiKalmanFittedMuons, DiMuNoPV]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonNoPVDecision" : 50047 } )
+
+        #--------------------------------------------
 
