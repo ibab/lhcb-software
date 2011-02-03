@@ -95,9 +95,9 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
     "Hlt1DiHadronLTUnbiasedDecision"        :  202,
-    "Hlt1OneTrackAllL0Decision"             :  203,
-    "Hlt1OneTrackMuonDecision"              :  204,
-    "Hlt1OneTrackPhotonDecision"            :  205,  
+    "Hlt1TrackAllL0Decision"                :  203,
+    "Hlt1TrackMuonDecision"                 :  204,
+    "Hlt1TrackPhotonDecision"               :  205,  
     # HAViaT
     "Hlt1SingleHadronViaTDecision"          :  230,
     "Hlt1DiHadronViaTDecision"              :  231,
