@@ -43,6 +43,7 @@ __version__ = "CVS Tag: $Name:$, version $Revision$ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore
+import LoKiTrigger.Hlt
 
 # Namespaces:
 from LoKiCore.basic import cpp, std, LoKi
@@ -52,10 +53,11 @@ Hlt      = cpp.Hlt
 # =============================================================================
 ## new stuff ##
 # =============================================================================
+
 _TC = 'const Hlt::Candidate*'
 _TS = 'const Hlt::Stage*'
-_vC = std.vector( _TC      ) ## std::vetcor<const Hlt::Candidate*>
-_vD = std.vector( 'double' ) ## std::vetcor<double>
+_vC = std.vector( _TC      ) ## std::vector<const Hlt::Candidate*>
+_vD = std.vector( 'double' ) ## std::vector<double>
 
 
 ## @see LoKi::Types::TC_Func
