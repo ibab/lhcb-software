@@ -78,6 +78,8 @@ def getPlatformType(cmtconfig):
         platformtype = cmtconfig.split("-")[1]
     else :
         platformtype = cmtconfig.split("_")[0]
+    if platformtype == "sl6" :
+        platformtype = "slc6"
     if platformtype == "sl5" :
         platformtype = "slc5"
     if platformtype == "sl4" :
@@ -229,6 +231,7 @@ lsb_flavour_aliases   = {
                         }
 
 flavor_runtime_compatibility = {
+                                "slc6"  : ["slc6", "slc5"],
                                 "slc5"  : ["slc5", "slc4"],
                                 "slc4"  : ["slc4", "slc3"],
                                 "slc3"  : ["slc3"],
@@ -251,6 +254,7 @@ arch_runtime_compatiblity = {
                                 }
 
 flavor_runtime_equivalence = {
+                              "slc6"  : ["slc6"],
                               "slc5"  : ["slc5", "co5", "rhel5", "ub9", "fc13", "fc12", "fc11", "fc10"],
                               "slc4"  : ["slc4", "co4", "rhel4", "deb4"],
                               "slc3"  : ["slc3", "suse90", "suse100"],
@@ -405,7 +409,7 @@ class NativeMachine:
     def nativeCompilerVersion(self, position=None):
         if not self._compversion :
             if self._ostype == "Windows" :
-                self._compversion = "vc71"
+                self._compversion = "vc9"
             else :
                 compstr = " ".join(os.popen("g++ --version").readlines())[:-1]
                 vmatch = re.compile("\ +(\d+(?:\.\d+)*)")
@@ -555,7 +559,7 @@ class NativeMachine:
     def numberOfCPUs(self):
         """ Number of virtual or physical CPUs on this system, i.e.
         user/real as output by time(1) when called with an optimally scaling userspace-only program"""
-        res = 0
+        res = 1
         # Python 2.6+
         try:
             import multiprocessing

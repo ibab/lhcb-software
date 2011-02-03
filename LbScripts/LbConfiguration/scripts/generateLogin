@@ -432,8 +432,6 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if not withoutpython :
         setupprojargs.append("--runtime-project")
         setupprojargs.append("LCGCMT")
-        if shell == "bat" :
-            setupprojargs.append("'5[0-8]*'")
         setupprojargs.append("Python")
     genProjectSetup(cachefilename, "LbScripts", version, cmtconfig="slc4_ia32_gcc34",
                     shell=shell, setup_project_extra_args=setupprojargs,
