@@ -69,7 +69,7 @@ class Hlt1Conf(LHCbConfigurableUser):
       # add a few thing to our printout
       from HltLine.HltLine     import addHlt1Prop
       addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
-                  , 'Code', 'InputLocations'
+                  , 'Code', 'Preambulo', 'InputLocations'
                   , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                   , 'OutputSelection','Context' ])
       
