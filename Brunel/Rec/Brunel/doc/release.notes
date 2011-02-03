@@ -21,6 +21,11 @@ Purpose: LHCb reconstruction program
   . #115674: Suppress Warning "Ingress/ODIN Event ID checks are disabled"
   . #115635: Add new SUMMARY sequence, runs RecSummaryAlg to fill new reco
              summary object saved on DST
+  . #116712: Remove use of earlyData flag in MuonID
+  . #116318: Remove use of earlyData flag in PV Reco
+  . #116127, 116216: earlyData settings become default in tracking
+  . #116130: Switch to new tracking sequence, remove use of earlyData flag
+  . #116384, 116383: Major modification of Kalman filter implementation
   . Move to a single sqlite file for ONLINE_2010 conditions 
 
 </PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>
