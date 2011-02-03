@@ -16,9 +16,6 @@
 // Muon Detector
 #include <MuonDet/DeMuonDetector.h>
 
-// Hlt1Muon
-#include <Hlt1Muons/IOutputTool.h>
-
 // local
 #include "IsMuonTool.h"
 #include "Hlt1MuonHit.h"
@@ -58,7 +55,6 @@ StatusCode IsMuonTool::initialize()
    if ( sc.isFailure() ) return sc;
 
    m_hitManager = tool< Hlt1MuonHitManager >( "Hlt1MuonHitManager" );
-   m_outputTool = tool< IOutputTool >( "OutputTool" );
 
    // fill local arrays of pad sizes and region sizes
    m_det = getDet< DeMuonDetector >( "/dd/Structure/LHCb/DownstreamRegion/Muon" );

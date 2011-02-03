@@ -53,7 +53,6 @@ private:
 
    // Tools
    Hlt1MuonHitManager* m_hitManager;
-   IOutputTool* m_outputTool;
 
    mutable std::vector< double > m_trackX; // position of track in x(mm) in each station
    mutable std::vector< double > m_trackY; // position of track in y(mm) in each station

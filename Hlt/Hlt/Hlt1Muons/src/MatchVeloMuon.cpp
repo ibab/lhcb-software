@@ -13,9 +13,6 @@
 #include <GaudiKernel/SystemOfUnits.h>
 #include <GaudiKernel/boost_allocator.h>
 
-// Hlt1Muons
-#include <Hlt1Muons/IOutputTool.h>
-
 // local
 #include "MatchVeloMuon.h"
 #include "Hlt1MuonHit.h"
