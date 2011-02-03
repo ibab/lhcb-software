@@ -7,6 +7,7 @@
 #include "ReferencePicker.h"
 #include "DatabasePagePathDialog.h"
 #include "ElogDialog.h"
+#include "ReferenceDialog.h"
 #include "HistoPropDialog.h"
 #include "CreateTrendingHistogramDialog.h"
 

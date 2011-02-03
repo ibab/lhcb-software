@@ -204,6 +204,11 @@ class DbRootHist : public HistogramIdentifier
   /// produce virtual histogram on the fly
   TH1* makeVirtualHistogram(std::vector<TH1*> &sources);
 
+  TH1* getReference( OnlineHistogram* h,
+                     int startrun,
+                     std::string DataType );
+  
+
  protected:
   TH1 * m_rootHistogram ; ///< pointer to the underlying ROOT histogram
   TString   m_histoRootName ; ///< generated ROOT histo name for identification

@@ -41,10 +41,8 @@ public:
   void CloseWindow();
 
 private:
-  PresenterMainFrame *m_mainFrame;
   TGTextButton       *m_okButton;
   TGTextButton       *m_cancelButton;
-  int                 m_msgBoxReturnCode;
 
   std::string* m_logbook;
   std::string* m_username;

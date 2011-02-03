@@ -1,8 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/Presenter
-! Responsible : Peter Somogyi
+! Responsible : Olivier Callot
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
+
+! 2011-02-03 - Olivier Callot
+ - Add a new button to set the TCK and the reference run number. This is used
+   to access the reference file for histograms:
+	   first in /hist/Reference/<taskname>/<tck>_<referenceRun>.root
+     then     /hist/Reference/<taskname>/<tck>_1.root
+     last     /hist/Reference/<taskname>/default_1.root
+ - New files for the menu, the icon, and some cleanup of other files.
 
 ! 2010-10-26 - Patrick Robbe
  - Archive.cpp: Protect against corrupted history files

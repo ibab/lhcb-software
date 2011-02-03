@@ -30,8 +30,6 @@ ClassImp(ElogDialog)
 
 ElogDialog::ElogDialog(PresenterMainFrame* gui, int width, int height) :
       TGTransientFrame(gClient->GetRoot(), gui, width, height),
-      m_mainFrame(gui),
-      m_msgBoxReturnCode(0),
       m_hasProblem( false ) {
   SetCleanup(kDeepCleanup);
   Connect("CloseWindow()", "ElogDialog", this, "DontCallClose()");

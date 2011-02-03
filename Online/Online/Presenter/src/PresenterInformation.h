@@ -97,10 +97,17 @@ class PresenterInformation
   /// Get history mode
   bool historyMode( ) const { return m_historyMode ; } ;
 
+  /// Set reference Run 
+  void setReferenceRun( const int rRun ) { m_referenceRun = rRun ; } ; 
+
+  /// Get reference Run
+  int referenceRun( ) const { return m_referenceRun; } ;
+
  private:
   pres::PresenterMode m_presenterMode ;      ///< presenter mode
   bool                m_globalHistoryByRun ; ///< global history mode
   std::string         m_currentTCK ;         ///< current TCK
+  int                 m_referenceRun ;       ///< reference run number
   bool                m_historyTrendPlots ;  ///< history trend plot
   std::string         m_currentPartition ;   ///< Current partition
   std::string         m_rwTimePoint ;        ///< History stuff

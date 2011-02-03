@@ -24,6 +24,7 @@ class TGDockableFrame;
 class TString;
 class TGButton;
 class TGPictureButton;
+class TGTextButton;
 class TGFrame;
 class TGString;
 class TGPopupMenu;
@@ -149,7 +150,8 @@ public:
       M_UtgidPicker,
       M_PartitionList,
       M_Previous_Interval,
-      M_Next_Interval
+      M_Next_Interval,
+      SET_REFERENCE_COMMAND
     };
 
   struct obsolete_BulkHistoOptions {
@@ -294,7 +296,7 @@ public:
   void sortTreeChildrenItemsChildren(TGListTree* treeList,
                                      TGListTreeItem* node);
 
-
+  void setReference();
 
   void enableAutoCanvasLayoutBtn();
   void disableAutoCanvasLayoutBtn();
@@ -441,7 +443,6 @@ public:
   std::string       m_rundbConfig ;
   bool              m_resumePageRefreshAfterLoading;
   bool              m_loadingPage;
-  std::string       m_currentPartition;
   std::string       m_currentPageName;
   std::string       m_referencePath;
   std::string       m_savesetPath;
@@ -578,6 +579,7 @@ public:
   TGPictureButton*  m_pickReferenceHistoButton;
   TGComboBox*       m_historyIntervalComboBox;
   TGComboBox*       m_partitionSelectorComboBox;
+  TGPictureButton*  m_setReferenceButton;
 
   const TGPicture*  m_openedFolderIcon;
   const TGPicture*  m_closedFolderIcon;
