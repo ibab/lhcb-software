@@ -1,5 +1,5 @@
 package PhysSys
-version v10r1
+version v10r2
 
 branches doc cmt
 
@@ -7,7 +7,6 @@ branches doc cmt
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
 use  DaVinciKernel              v9r1     Phys    # Juan Palacios
 use  DaVinciMaps                v1r3p1   Phys    # Juan Palacios
-use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
 use  SelPy                      v2r1     Phys    # Juan Palacios
 use  PhysSelPython              v6r1     PhysSel # Juan Palacios
@@ -24,14 +23,10 @@ use  DecayTreeFitter            v1r11    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
-use LoKi                        v8r1     Phys    # Vanya Belyaev
 use LoKiUtils                   v1r1     Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
-use LoKiAlgoMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
-use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
 use LoKiPhys                    v9r8     Phys    # Vanya Belyaev
-use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 
