@@ -1,0 +1,9 @@
+! $Id:$
+! -----------------------------------------------------------------------------
+! Package     : Phys/BBDecTreeTool
+! Responsible : Michael Williams
+! Purpose     : Decision Tree classifier for Hlt2 topological trigger
+! -----------------------------------------------------------------------------
+
+! 2011-02-02 - Michael Williams
+ - initial import
