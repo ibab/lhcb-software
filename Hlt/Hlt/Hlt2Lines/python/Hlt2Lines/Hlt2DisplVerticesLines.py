@@ -87,10 +87,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #from Hlt2SharedParticles.BasicParticles import NoCutsPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from HltTracking.HltPVs import PV3D
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-        #from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        #Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         #######################################################################
         # Eventually get primary vertices
         DVSeq = []
@@ -102,7 +100,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
-        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2UnfittedForwardTracking.hlt2VeloTracking()).outputSelection()]
+        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()).outputSelection()]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)
