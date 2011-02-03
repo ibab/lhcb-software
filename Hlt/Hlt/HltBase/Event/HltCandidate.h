@@ -69,7 +69,7 @@ namespace Hlt
    * created Wed May 26 15:35:22 2010
    * 
    */
-  class Candidate: public ContainedObject
+  class GAUDI_API Candidate: public ContainedObject
   {
   public:
     // ========================================================================
@@ -128,7 +128,7 @@ namespace Hlt
     /// Retrieve (non-const)  Reference to the stages
     inline       SmartRefVector<Hlt::Stage>& stages()       { return m_stages ; }
     /// Update  Reference to the stages
-    void setStages(const SmartRefVector<Hlt::Stage>& value) ; 
+    void setStages ( const SmartRefVector<Hlt::Stage>& value ) ; 
     /// Add to (pointer) reference to the stages
     void addToStages ( const Hlt::Stage* value ) ; 
     /// Remove from  reference to the stages
@@ -162,6 +162,20 @@ namespace Hlt
      */
     template <class TYPE>
     const TYPE* get ( const int slot = 0 ) const ;
+    // ========================================================================
+  public: // python-friendly access 
+    // ========================================================================
+    /** easy accessor to various  underlying objects through bypassin 
+     *  of stage-object
+     *  @see Hlt::Stage::get_ 
+     *  @see Hlt::Candidate::get
+     *  @param slot the slot to be used for data extraction 
+     *     - 0 corresponds to the current stage , 
+     *     - negative value corresponds to initiator stage 
+     *     - positive value corresponds to step-back in history
+     *  @return the obejct 
+     */
+    const ContainedObject* get_ ( const int slot = 0 ) const ;
     // ========================================================================
   public: // standard 
     // ========================================================================  

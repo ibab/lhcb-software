@@ -3,9 +3,21 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2011-02-03 - Vanya Belyaev
+
+ - HltCandidate
+
+    add accessor method  suitable for python 
+
+ - cmt/requirements 
+
+    version increment v10r4
+ 
 !========================== HltBase v10r3 2011-01-30 ===================
 ! 2011-01-27 - Gerhard Raven
  - remove obsolete, unused code in HltUtils
+
 
 !========================== HltBase v10r2 2010-12-08 ===================
 ! 2010-12-07 - Vanya Belyaev

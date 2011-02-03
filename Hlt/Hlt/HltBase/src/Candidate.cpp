@@ -120,6 +120,25 @@ std::ostream& Gaudi::Utils::toStream
   return c->fillStream ( s ) ;
 }
 // ============================================================================
+/*  easy accessor to various  underlying objects through bypassin 
+ *  of stage-object
+ *  @see Hlt::Stage::get_ 
+ *  @see Hlt::Candidate::get
+ *  @param slot the slot to be used for data extraction 
+ *     - 0 corresponds to the current stage , 
+ *     - negative value corresponds to initiator stage 
+ *     - positive value corresponds to step-back in history
+ *  @return the obejct 
+ */
+// ============================================================================
+const ContainedObject*
+Hlt::Candidate::get_( const int slot ) const 
+{
+  const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+  if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+  return _stage->get_ () ;
+}  
+// ============================================================================
 
 // ============================================================================
 // The END 

@@ -74,7 +74,7 @@ namespace Hlt
    * created Thu May 20 14:15:40 2010
    *
    */
-  class Stage: public ContainedObject 
+  class GAUDI_API Stage: public ContainedObject 
   {
     // ========================================================================
     // friend class 
@@ -184,8 +184,6 @@ namespace Hlt
      *  @endcode
      */
     template<typename T> T* get() ;
-    /// Get a wrapped object (suitable for python)
-    const ContainedObject* _get() const;
     /** Set a wrapped object
      *   @code
      *  Hlt::Stage* stage = ...;
@@ -206,6 +204,13 @@ namespace Hlt
      *  @endcode
      */
     template<typename T> bool is() const;
+    // ========================================================================
+  public: // python-friendly access 
+    // ========================================================================
+    /// Get a wrapped object (suitable for python)
+    const ContainedObject* _get  () const ;
+    /// Get a wrapped object (suitable for python)
+    const ContainedObject*  get_ () const { return _get() ; }
     // ========================================================================
   public:
     // ========================================================================
