@@ -60,13 +60,13 @@ def ConfiguredFastKalman( parent ) :
     from Configurables import TrackMasterFitter
     parent.addTool( TrackMasterFitter, name = 'Fit')
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-    fitter = ConfiguredFastFitter( getattr(parent,'Fit') )
-    fitter.NodeFitter.BiDirectionalFit    = True
-    fitter.NodeFitter.Smooth        = True
-    #fitter.AddDefaultReferenceNodes = True
-    fitter.NumberFitIterations = 1
-    fitter.MaxNumberOutliers = 2
-    fitter.UpdateTransport = False
+    fitter = ConfiguredHltFitter( getattr(parent,'Fit') )
+##     fitter.NodeFitter.BiDirectionalFit    = True
+##     fitter.NodeFitter.Smooth        = True
+##     #fitter.AddDefaultReferenceNodes = True
+##     fitter.NumberFitIterations = 1
+##     fitter.MaxNumberOutliers = 2
+##     fitter.UpdateTransport = False
 
 ####################################################
 TMuonConf = HltTrackUpgradeTool('TMuonConf')

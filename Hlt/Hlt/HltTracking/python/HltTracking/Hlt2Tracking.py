@@ -902,20 +902,20 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Hlt2StagedFastFit.TracksInContainer    = tracks.outputSelection() 
         Hlt2StagedFastFit.TracksOutContainer    = hlt2StagedFastFitOutputLocation  
         Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
-        from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-        fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'))
+        from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+        fitter = ConfiguredHltFitter( getattr(Hlt2StagedFastFit,'Fitter'))
 
-        ## FIXME: this should be done by calling ConfiguredFastFitter with the right arguments...
-        if (self.getProp("FastFitType") == HltUniDirectionalKalmanFitSuffix) :
-                fitter.NodeFitter.BiDirectionalFit      = False
-                fitter.NodeFitter.Smooth                = False
-        if (self.getProp("FastFitType") == HltBiDirectionalKalmanFitSuffix) :
-                fitter.NodeFitter.BiDirectionalFit    = True
-                fitter.NodeFitter.Smooth        = True
-                fitter.AddDefaultReferenceNodes = True    # says Wouter
-                fitter.NumberFitIterations = 1 
-                fitter.MaxNumberOutliers = 2 
-                fitter.UpdateTransport = False        
+##        ## FIXME: this should be done by calling ConfiguredFastFitter with the right arguments...
+##         if (self.getProp("FastFitType") == HltUniDirectionalKalmanFitSuffix) :
+##                 fitter.NodeFitter.BiDirectionalFit      = False
+##                 fitter.NodeFitter.Smooth                = False
+##         if (self.getProp("FastFitType") == HltBiDirectionalKalmanFitSuffix) :
+##                 fitter.NodeFitter.BiDirectionalFit    = True
+##                 fitter.NodeFitter.Smooth        = True
+##                 fitter.AddDefaultReferenceNodes = True    # says Wouter
+##                 fitter.NumberFitIterations = 1 
+##                 fitter.MaxNumberOutliers = 2 
+##                 fitter.UpdateTransport = False        
  
         # Build the bindMembers        
         bm_name         = self.__trackfitAlgosAndToolsPrefix(secondLoop)+"FastFitSeq"
