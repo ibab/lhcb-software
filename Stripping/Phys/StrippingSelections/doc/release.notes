@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-03 - Juan Palacios
+ - StrippingBs2JpsiPhiPrescaledAndDetatched
+  . Use StrippingLine's "selection" constructor argument instead of "algos".
+  . Remove some debug printouts.
+ - Increase to v3r0.
+ - REQUIRES DaVinci v27r1 OR HIGHER!!!!
+
 !========================== StrippingSelections v2r4 2011-02-02 ===============
 
 ! 2011-02-02 - Juan Palacios

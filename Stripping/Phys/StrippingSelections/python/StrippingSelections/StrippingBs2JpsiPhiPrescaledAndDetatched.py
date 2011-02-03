@@ -93,12 +93,12 @@ class Bs2JpsiPhiPrescaledAndDetatchedConf(LineBuilder) :
         self.prescaled_line = StrippingLine(prescaled_name+"Line",
                                             prescale = config['PrescaledLinePrescale'],
                                             postscale = config['PrescaledLinePostscale'],
-                                            algos = [ self.selBs2JpsiPhi ]
+                                            selection = self.selBs2JpsiPhi
                                             )
         self.detatched_line = StrippingLine(detatched_name+"Line",
                                             prescale = config['DetatchedLinePrescale'],
                                             postscale = config['DetatchedLinePostscale'],
-                                            algos = [ self.selBs2JpsiPhiDetatched ]
+                                            selection =  self.selBs2JpsiPhiDetatched
                                             )
 
         self.registerLine(self.prescaled_line)
@@ -143,7 +143,7 @@ def makeBs2JpsiPhi(name,
     _motherCuts = "(ADMASS('B_s0')<%(BsMassWin)s *MeV) & (BPVLTFITCHI2()<%(BsLTFITCHI2)s) & (VFASPF(VCHI2)<%(BsVCHI2)s)" % locals()
     if BsLTIME != None :
         _motherCuts += "& (BPVLTIME()> %(BsLTIME)s*ps)" % locals()
-    print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
+    #print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
     _Bs = CombineParticles( DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                             MotherCut = _motherCuts)
 
