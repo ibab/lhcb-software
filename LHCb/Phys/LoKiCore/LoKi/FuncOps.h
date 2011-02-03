@@ -290,6 +290,25 @@ namespace LoKi
                                const int                i ) 
       { return LoKi::plot    ( c , h , i ) ; }
       // ======================================================================
+      // timing
+      // ======================================================================
+      static Fun __timer__   ( const Func&              c , 
+                               ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static Fun __timer__   ( const Func&              c , 
+                               IChronoSvc*              s , 
+                               const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static Fun __timer__   ( const Func&              c , 
+                               const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static Fun __rmod__    ( const Func&              c , 
+                               const LoKi::Timer&       t ) 
+      { return t % c  ; }
+      static Fun __rmod__    ( const Func&              c , 
+                               ChronoEntity*            t ) 
+      { return t % c  ; }
+      // ======================================================================
       // EqualTo
       // ======================================================================
       static Cut __equal_to__ ( const Func&   fun  , 
@@ -455,6 +474,9 @@ namespace LoKi
       static Cut __and__      ( const Cuts&  cut1 , 
                                 const Cuts&  cut2 ) { return cut1 && cut2 ; }
       static Cut __invert__   ( const Cuts&  cut  ) { return !cut ; }
+      // ======================================================================
+      // monitoring 
+      // ======================================================================
       // monitor with printout 
       static Cut __monitor__  ( const Cuts&        c        ,
                                 const std::string& s = "\n" , 
@@ -497,6 +519,26 @@ namespace LoKi
         const LoKi::Monitoring::Flag f )
       { return LoKi::monitor 
           ( c , LoKi::Monitoring::getCounter ( f , g , n ) ) ; }
+      // ======================================================================
+      // timing
+      // ======================================================================
+      static Cut __timer__   ( const Cuts&              c , 
+                               ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static Cut __timer__   ( const Cuts&              c , 
+                               IChronoSvc*              s , 
+                               const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static Cut __timer__   ( const Cuts&              c , 
+                               const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static Cut __rmod__    ( const Cuts&              c , 
+                               const LoKi::Timer&       t ) 
+      { return t % c  ; }
+      static Cut __rmod__    ( const Cuts&              c , 
+                               ChronoEntity*            t ) 
+      { return t % c  ; }
+      // ======================================================================
       //
       static Fun __switch__   ( const Cuts&  cut  , 
                                 const Func&  fun1 ,
@@ -694,6 +736,30 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __timer__   ( const Map&              c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __timer__   ( const Map&              c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __timer__   ( const Map&              c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rmod__    ( const Map&               c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rmod__    ( const Map&               c , 
+                    ChronoEntity*            t ) { return t % c  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // _union_ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
       _union_          ( const Map& fun  , const Map& fun2 ) 
@@ -791,6 +857,30 @@ namespace LoKi
       __rshift__ 
       ( const Pipe& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __timer__   ( const Pipe&              c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __timer__   ( const Pipe&              c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __timer__   ( const Pipe&              c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rmod__    ( const Pipe&              c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rmod__    ( const Pipe&              c , 
+                    ChronoEntity*            t ) { return t % c  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -924,6 +1014,30 @@ namespace LoKi
       __rrshift__ ( const FunVal&                                 fun , 
                     const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
       { return val >> fun  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
+      __timer__   ( const FunVal&            c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
+      __timer__   ( const FunVal&            c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double >
+      __timer__   ( const FunVal&            c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double >
+      __rmod__    ( const FunVal&            c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double >
+      __rmod__    ( const FunVal&            c , 
+                    ChronoEntity*            t ) { return t % c  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1088,6 +1202,30 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    ChronoEntity*            t ) { return t % c  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // _union_ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       _union_          ( const Source& fun  , const Source& fun2 ) 
@@ -1151,6 +1289,30 @@ namespace LoKi
       __rrshift__ ( const CutVal&                                 fun , 
                     const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
       { return val >> fun  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __timer__   ( const CutVal&            c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __timer__   ( const CutVal&            c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __timer__   ( const CutVal&            c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __rmod__    ( const CutVal&            c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __rmod__    ( const CutVal&            c , 
+                    ChronoEntity*            t ) { return t % c  ; }
       // ======================================================================
      public:
       // ======================================================================

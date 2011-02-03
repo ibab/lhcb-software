@@ -801,6 +801,36 @@ def includes ( fun1 , fun2 ) :
 
 
 # =============================================================================
+## create the timer predicate or timer symbol :
+#
+#  @code
+#
+#    >>> fun   = ...
+#    >>> fun_t = timer ( 'ququ' ) % fun
+#
+#    >>> fun   = ... 
+#    >>> fun_t = timer ( fun , 'wuwu' ) 
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-06-06 
+def timer ( obj , *args ) :
+    """
+    Define the timers
+    """
+    ##
+    if hasattr ( obj , '__timer__' )         : return obj.__timer__ ( *args )
+    ## 
+    if isinstance ( obj , str ) :
+        if   not args          : return LoKi.Timer ( obj )
+        elif 1 == len ( args ) :
+            arg0 = args[0]
+            if hasattr ( arg0 , '__timer__' ) : return timer ( arg0 , obj ) 
+    ##
+    raise TypeErorr, "Invalid arguments "
+    
+# =============================================================================
 ##  create the 'conditional source/cause' 
 #
 #  @code

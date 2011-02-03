@@ -290,6 +290,9 @@ def decorateShifts ( funcs , calls ) :
     _rshift_    = None
     _rrshift_   = None
     
+    _rmod_      = None
+    _timer_     = None
+    
     # streamers: right shift 
     if hasattr ( calls , '__rshift__' ) :                    
         def _rshift_ ( s , a ) :
@@ -304,7 +307,6 @@ def decorateShifts ( funcs , calls ) :
             return calls.__rshift__ ( s , a )
         _rshift_  . __doc__  += calls.__rshift__  . __doc__
         
-
     # streamers: right right shift 
     if hasattr ( calls , '__rrshift__' ) :                    
         def _rrshift_ ( s , a ) :
@@ -318,13 +320,43 @@ def decorateShifts ( funcs , calls ) :
             """
             return calls.__rrshift__ ( s , a )
         _rrshift_ . __doc__  += calls.__rrshift__ . __doc__
-                    
+
+    # "right mod" - the special meaning, if exists 
+    if hasattr ( calls , '__rmod__' ) :                    
+        def _rmod_ ( s , a ) :
+            """
+            ``Right-mod'' : other % fun 
+            
+            >>> fun = ...
+            >>> fun = Timer('aaa') % fun 
+            
+            """
+            return calls.__rmod__ ( s , a )
+        _rmod_ . __doc__  += calls.__rmod__ . __doc__
+
+
+    # "timer" - the special meainng, if exists 
+    if hasattr ( calls , '__timer__' ) :                    
+        def _timer_ ( s , *a ) :
+            """
+            ``Timer'' : create timer functor 
+            
+            >>> fun = ...
+            >>> fun = timer ( fun , 'ququ' )
+            
+            """
+            return calls.__timer__ ( s , *a )
+        _timer_ . __doc__  += calls.__timer__ . __doc__
+
+
     # decorate the functions 
     for fun in funcs :
         
         # finally redefine the methods:
         if _rrshift_         : fun . __rrshift__ = _rrshift_   # (right) operator>> 
         if _rshift_          : fun . __rshift__  = _rshift_    #         operator>> 
+        if _rmod_            : fun . __rmod__    = _rmod_      #         operator%
+        if _timer_           : fun . __timer__   = _timer_     # timer 
         
     return funcs
 
@@ -427,6 +459,8 @@ def decorateFunctionOps ( funcs , opers ) :
     _pow_       = None 
     _rpow_      = None 
 
+    _rmod_      = None 
+
     _sin_       = None 
     _cos_       = None 
     _tan_       = None 
@@ -462,7 +496,9 @@ def decorateFunctionOps ( funcs , opers ) :
     _max_element_     = None
     _min_abs_element_ = None
     _max_abs_element_ = None
-    
+
+    _timer_ = None 
+
     # comparisons: operator <
     if hasattr ( opers , '__lt__' ) :
         def _lt_   (s,a) :
@@ -758,6 +794,22 @@ def decorateFunctionOps ( funcs , opers ) :
             """
             return opers.__rpow__ (s,a)
         _rpow_ . __doc__  += opers.__rpow__ . __doc__
+
+            
+    # pseudo-math:  rigth % 
+    if hasattr ( opers , '__rmod__' ) :                    
+        def _rmod_ (s,a) :
+            """
+            Construct the ``right mod''-function:  other % fun
+            
+            >>> fun = ...
+            >>> fun = Timer ('timer') % fun 
+            
+            Uses:\n
+            """
+            return opers.__rmod__ (s,a)
+        _rmod_ . __doc__  += opers.__rmod__ . __doc__
+
             
     # home-made math (just to be coherent)
         
@@ -1101,6 +1153,20 @@ def decorateFunctionOps ( funcs , opers ) :
             return opers.__in_list__ ( fun , lst )    
         _in_list_ . __doc__ += opers.__in_list__ .  __doc__ 
 
+    # "timer"
+    if hasattr ( opers , '__timer__' ) :
+        def _timer_ ( fun , *args ) :
+            """
+            Create the ``timer'' for fiven functor 
+
+            >>> fun  = ... 
+            >>> fun  = timer ( fun , 'ququ' ) 
+
+            """
+            #
+            return opers.__timer__ ( fun , *args )    
+        _timer_ . __doc__ += opers.__timer__ .  __doc__ 
+
     # 'yields'
     if hasattr ( opers , '__yields__' ) :
         def _yields_ ( s ) :
@@ -1283,6 +1349,8 @@ def decorateFunctionOps ( funcs , opers ) :
         if _abs_             : fun . __abs__     = _abs_       # 
         if _pow_             : fun . __pow__     = _pow_       # 
         if _rpow_            : fun . __rpow__            = _rpow_      #
+        # pseudo-math
+        if _rmod_            : fun . __rmod__            = _rmod_      #
         # some other math:
         if _sin_             : fun . __sin__             = _sin_       #
         if _cos_             : fun . __cos__             = _cos_       #
@@ -1308,7 +1376,9 @@ def decorateFunctionOps ( funcs , opers ) :
         if _equal_to_        : fun . __equal_to__        = _equal_to_  #
         if _in_range_        : fun . __in_range__        = _in_range_  #
         if _in_list_         : fun . __in_list__         = _in_list_   #
-        
+
+        if _timer_           : fun . __timer__           = _timer_  #
+
         # functional part:
         if _yields_          : fun . __yields__          = _yields_           #
         if _process_         : fun . __process__         = _process_          #
@@ -1358,7 +1428,9 @@ def decoratePredicateOps ( cuts , opers ) :
     _difference_      = None
     _sym_difference_  = None
     _includes_        = None
-    
+
+    _timer_  = None
+
     # boolean operations: OR 
     if hasattr ( opers , '__or__' ) :
         def _or_  (s,a) :
@@ -1414,6 +1486,21 @@ def decoratePredicateOps ( cuts , opers ) :
             """
             return opers.__monitor__(s,*m)
         _monitor_ . __doc__  += opers.__monitor__  . __doc__
+
+    # timer 
+    if hasattr ( opers , '__timer__' ) :
+        def _timer_ ( s , *args ) :
+            """
+            Construct ``timing'' functor: 
+            
+            >>> cut = ...
+            >>> cut = timer ( cut , 'ququ' )
+            
+            Uses:\n
+            """
+            return opers.__timer__  ( s , *args )
+        _timer_  . __doc__  += opers.__timer__   . __doc__
+
 
     # switch
     if hasattr ( opers , '__switch__' ) :        
@@ -1603,6 +1690,7 @@ def decoratePredicateOps ( cuts , opers ) :
         if _process_ : cut . __process__ = _process_   # process 
         if _count_   : cut . __count__   = _count_     # process 
         if _has_     : cut . __has__     = _has_       # process 
+        if _timer_   : cut . __timer__   = _timer_     # timer
 
         if _union_         :
             cut . _union_         =  _union_

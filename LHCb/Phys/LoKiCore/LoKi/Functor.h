@@ -29,12 +29,16 @@ namespace LoKi
    *  of numerious brilliant ideas by Gerhard "The Great".
    *
    *  This file is a part of LoKi project - 
-   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *  ``C++ ToolKit  for Smart and Friendly Physics Analysis''
    *
    *  The package has been designed with the kind help from
    *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design 
+   *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-10-31
@@ -489,9 +493,9 @@ namespace LoKi
   Constant<void,TYPE2>::fillStream( std::ostream& s ) const 
   { return  Gaudi::Utils::toStream ( this->m_value , s ) ; }
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_FUNCTOR_H
 // ============================================================================

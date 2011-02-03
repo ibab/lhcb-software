@@ -41,6 +41,7 @@
   <function name = "LoKi::Print::toString" />
   
   <class name    = "LoKi::Dump"            />
+  <class name    = "LoKi::Timer"           />
   
   <class name    = "Bender::Welcome"       />
   
