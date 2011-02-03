@@ -101,11 +101,14 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
+        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
+                     "BPVCORRM = sqrt(M**2 + PTRANS**2) + PTRANS"]
+
         combcuts = """( (APT1+APT2+APT3) > %(DSumPt_3Body)s) 
                        & (AM<2100*MeV)
                        & (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_3Body)s)
                        & (AALLSAMEBPV)""" % self.getProps()
-        mothercuts = """  (MCOR < %(MCOR_MAX_3Body)s*MeV) 
+        mothercuts = """  (BPVCORRM < %(MCOR_MAX_3Body)s*MeV) 
                          & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)
                          & (VFASPF(VCHI2PDOF) < %(VtxChi2_3Body)s) 
                          & (BPVVDCHI2> %(VtxPVDispChi2_3Body)s )
@@ -116,6 +119,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                           , InputLocations = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
+                          , Preambulo = preambulo 
                           )
         return bindMembers(name, [PV3D()] + inputSeq + [combineCharm3Body])
 
@@ -160,7 +164,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
        
         # Evaluate mcor for 2 Body
         preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
+                     "BPVCORRM = sqrt(M**2 + PTRANS**2) + PTRANS"]
 
         #First stage - Combine 2 Body with pt > 500MeV	
 	Charm2BodyCombine = Hlt2Member( CombineParticles
@@ -174,7 +178,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
 			       & (AM<2100*MeV) 
 			       & (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Doca_2BodyFor3Body)s )
                                & (AALLSAMEBPV)""" % self.getProps()
-                          , MotherCut = """(MCOR < %(MCOR_MAX_2BodyFor3Body)s*MeV)
+                          , MotherCut = """(BPVCORRM < %(MCOR_MAX_2BodyFor3Body)s*MeV)
                                          & (BPVVD> %(VtxPVDisp_2BodyFor3Body)s )
                                          & (BPVVDCHI2> %(VtxPVDispChi2_2BodyFor3Body)s )""" % self.getProps()
                           , Preambulo = preambulo 
