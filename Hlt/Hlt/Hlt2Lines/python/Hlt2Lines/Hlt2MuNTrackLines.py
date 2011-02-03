@@ -10,7 +10,10 @@ from HltTracking.HltPVs import PV3D
 
 
 # Basic File: Htl2TopologicalLines in v6r0p1 of Hlt2/Hlt2Lines
-# Subsequent Author: A. Shires (alexander.shires@cern.ch)
+# Aim: Mu + n Track Lines, inclusive muon trigger for lines
+# which need low pt muon and associated tracks
+# Background reduction from filters and FD, IP Chi2 cuts
+# Author: A. Shires (alexander.shires@cern.ch)
 # 
 
 
@@ -21,12 +24,11 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
 
     # Steering variables:
     #
-    # NB: these values can be (and most likely are) overridden by those
-    # specified in HltSettings/TopoLines.py (so don't change their names!).
+    # NB: these values are overridden by those
+    # specified in HltSettings/Muons_draft2011.py.
     #   
-    #Keep these variables  - will want to ovveride them anyway
     __slots__ = {        
-        #HLT1 filter?
+        #L0 and HLT1 filter
         'L0FILTER'           : "L0_CHANNEL_RE('.*Muon')",                 
         'HLT1FILTER'         : "",#"HLT_PASS_RE('Hlt1Track.*Decision')",
         #mu + n tracks filter cuts
@@ -260,7 +262,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         return bindMembers(name, [PV3D()]+inputSeq+[_filter])
 
     def __buildNBodySeqs(self,lineName,_inputMuons,_inputKaons):
-        '''Builds a set of mu + 1, 2 and 4 track lines.'''
+        '''Builds a set of mu + 1, 2 and 3 track lines.'''
         props = self.getProps()
         # 2-body     
         name = lineName.replace('MuNTr','Mu1Tr')        
@@ -294,7 +296,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
             self.__makeLine(lineName,algos=[seqs[n-1]])
 
     def __apply_configuration__(self):
-        '''Constructs all of the lines. ToDo: Sort out particle ID'''
+        '''Constructs all of the lines'''
         from Hlt2SharedParticles.TrackFittedBasicParticles \
              import BiKalmanFittedKaons, BiKalmanFittedMuons
         # lines
