@@ -316,6 +316,9 @@ class StrippingLine(object):
                 raise TypeError('StrippingLine selection cannot be Configurable type.')
             algos = [selection]
 
+        if not algos :
+            algos = []
+
         ## 1) clone all arguments
         name   = deepcopy ( name   )
         ODIN   = deepcopy ( ODIN   )
