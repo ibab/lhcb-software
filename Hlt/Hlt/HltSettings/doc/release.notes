@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Feb-03 - Alex Shires
+ - update Muons_draft2011 for Hlt2MuNTrackLines. Mu + 3 Track line prescale
+   to 0.0 and update Hlt1 filter to TrackMuon. Cut adjustments to come.
+
 ! 2011-02-03 - Leandro de Paula
  - add Hlt2DiMuonNoPV to Muon_draft2011.py
 
@@ -23,7 +27,7 @@
    Hlt2CharmHadD02HHLines.py.
  * Requires Hlt2Lines 116185
 
-! 2011--1-27
+! 2011--1-27 - Alex Shires
  - Adding Hlt2MuNTrackLines to the Muons_draft2011.py. Cuts kept identical.
  * Requires Hlt2Lines 116138
 

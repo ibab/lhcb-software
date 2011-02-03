@@ -110,8 +110,8 @@ class Muons_draft2011 :
                   )
         
         d.update( { Hlt2MuNTrackLinesConf : {
-            'L0FILTER'           : "L0_CHANNEL_RE('.*Muon')"
-            ,'HLT1FILTER'         : ""
+            'L0FILTER'            : "L0_CHANNEL_RE('.*Muon')"
+            ,'HLT1FILTER'         : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
             #mu + n tracks filter cuts
             ,'MCOR_MAX'           : 7000.0  # MeV
             ,'MCOR_MIN'           : 0.0     # MeV 
@@ -124,7 +124,7 @@ class Muons_draft2011 :
             ,'SUM_IPCHI2_1TR_MIN' : 50      # unitless
             ,'SUM_IPCHI2_2TR_MIN' : 75      # unitless
             ,'SUM_IPCHI2_3TR_MIN' : 100     # unitless
-            ,'BPVVDCHI2_MIN'      : 32.0    # unitless
+            ,'BPVVDCHI2_MIN'      : 36.0    # unitless
             ,'MIN_TRCHI2DOF_MAX'  : 3       # unitless
             #combination cuts
             ,'AMAXDOCA_MAX'       : 0.12    # mm 
@@ -143,7 +143,7 @@ class Muons_draft2011 :
             ,'ALL_P_MIN'          : 5000.0  # MeV
             ,'Prescale'   : { 'Hlt2Mu1Track'   : 1.0
                               ,'Hlt2Mu2Track'  : 1.0
-                              ,'Hlt2Mu3Track'  : 1.0
+                              ,'Hlt2Mu3Track'  : 0.0
                               }
             }}
                   )
