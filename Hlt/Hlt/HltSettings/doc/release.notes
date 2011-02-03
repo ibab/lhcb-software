@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-03 - Leandro de Paula
+ - add Hlt2DiMuonNoPV to Muon_draft2011.py
+
 !========================== HltSettings v5r2   2011-01-30 ===================
 ! 2011-01-30 - Gerhard Raven
  - add beamgas lines to draft 2011 setting

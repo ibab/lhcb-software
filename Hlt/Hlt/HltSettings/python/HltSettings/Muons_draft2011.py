@@ -38,6 +38,8 @@ class Muons_draft2011 :
             'Hlt2DiMuonDetachedJPsi',
             'Hlt2DiMuonDetachedHeavy',
 
+            'Hlt2DiMuonNoPV',
+
             # control rate via: prescale
             'Hlt2DiMuonDY1',
             'Hlt2DiMuonDY2',
