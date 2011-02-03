@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-02-03 Marc Grabalosa
+  - Added options calibrated for mc(nu2.5)
+
 ! 2011-01-27 Marc Grabalosa
   - Bug for OScombination, remove CombineTaggersProbabilityOS factory
   - Mod options for bug OSCombine
