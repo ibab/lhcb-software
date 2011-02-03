@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v5r0
+version v5r1
 
 branches doc cmt
 
@@ -17,7 +17,11 @@ use  DaVinciMonitors            v1r14    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5p1   Rich   # Chris Jones
 use  KaliCalo                   v4r8     Phys   # Vanya Belyaev
 ####################################################################
+use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
 use  DaVinciMCTools     	v9r27p1  Phys   # Juan Palacios
+use  LoKiAlgoMC                 v9r1     Phys   # Vanya Belyaev
+use  LoKiGenMC                  v9r0     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r1     Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
