@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-02-04 - Juan Palacios
+ - Add needed LoKi MC packages.
+ - Increase to v5r3.
+
 !================== LoKiJets v5r2p2 2010-07-12 ===============================
 
 ! 2010-07-12 - Juan Palacios
