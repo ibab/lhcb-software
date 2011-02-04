@@ -28,10 +28,15 @@ use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
 use LoKiPhys                    v9r8     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
+use LoKi                        v9r0     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 
 #===================================================================
 use TisTosTobbing		v6r5	 Phys	 # Tomasz Skwarnicki
+
+#===================================================================
+# Temporary MC stuff.
+use DaVinciMCKernel v4r2p1 Phys
 
 # Declare this as a container package
 apply_pattern container_package
