@@ -59,7 +59,7 @@ def ConfiguredFastKalman( parent ) :
     parent = getattr( parent, HltTrackFit.__name__ )
     from Configurables import TrackMasterFitter
     parent.addTool( TrackMasterFitter, name = 'Fit')
-    from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
     fitter = ConfiguredHltFitter( getattr(parent,'Fit') )
 ##     fitter.NodeFitter.BiDirectionalFit    = True
 ##     fitter.NodeFitter.Smooth        = True

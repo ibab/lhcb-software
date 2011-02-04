@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-04 - Victor Coco
+ - small fix in hlt1 track fit config
+
 ! 2011-02-03 - Victor Coco
  - Track fit configuration now call the ConfiguredHltFitter. AddDefaultReferenceNodes is now to True in Hlt1 (consistent with Hlt2)
 
