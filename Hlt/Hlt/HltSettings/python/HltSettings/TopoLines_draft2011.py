@@ -44,10 +44,10 @@ class TopoLines :
             # bdt cuts
             'BDT_2BODY_MIN'     : 0.65,
             'BDT_3BODY_MIN'     : 0.7,
-            'BDT_4BODY_MIN'     : 0.2,
+            'BDT_4BODY_MIN'     : 0.42,
             'BDT_2BODYMU_MIN'   : 0.3,
             'BDT_3BODYMU_MIN'   : 0.33,
-            'BDT_4BODYMU_MIN'   : 0.09,
+            'BDT_4BODYMU_MIN'   : 0.2,
             # bdt param file versions
             'BDT_2BODY_PARAMS'  : 'v1r0',
             'BDT_3BODY_PARAMS'  : 'v1r0',
