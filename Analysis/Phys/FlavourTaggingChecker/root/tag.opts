@@ -50,4 +50,6 @@ EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 #IncludeFile cuts_strip10.py
 #IncludeFile cuts_strip9.py
 #IncludeFile cuts_mc2010.py
+#IncludeFile cuts_mc2010_nu25.py
+#IncludeFile cuts_mc2010_nu25_v1.py
 

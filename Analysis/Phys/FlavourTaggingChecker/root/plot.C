@@ -18,16 +18,47 @@
   bool endblock = 1;
   //  goto taggercandidates;
   //  goto general;
-  goto asymm;
+  //  goto asymm;
   //  goto nnet;
   //  goto vertex;
   //  goto omegapt;
   //  goto addseed;
-  //  goto vtxcharge;
+  goto vtxcharge;
+  //  goto config;  
   //  goto pid;
   //  goto effeff_cut;
   //  goto secondaryvertex;
   //  goto multipleinteraction;
+  goto omegataggers;
+
+omegataggers:///////////////////////////////////////////////////////
+  cout<<"Plot omega for taggers"<<endl;
+  hom_combOSSS->SetTitle("Combination of taggers");
+  hom_combOSSS->GetXaxis()->SetTitle("Omega");
+  hom_combOSSS->GetYaxis()->SetTitle("Events");
+  hom_combOSSS->SetLineWidth(3);   hom_combOSSS->SetLineColor(1);   hom_combOSSS->Draw();  
+  hom_combOS->SetLineWidth(3); hom_combOS->SetLineColor(2); hom_combOS->Draw("same");
+  hom_ss->SetLineColor(6);       hom_ss->Draw("same");
+  hom_k->SetLineColor(5);        hom_k->Draw("same");
+  hom_e->SetLineColor(4);        hom_e->Draw("same");
+  hom_mu->SetLineColor(3);       hom_mu->Draw("same");
+  hom_vtx->SetLineColor(7);      hom_vtx->Draw("same");
+  //categories
+  l1 = new TLine(0.17,0, 0.17, 3500);
+  l2 = new TLine(0.24,0, 0.24, 3500);
+  l3 = new TLine(0.31,0, 0.31, 3500);
+  l4 = new TLine(0.38,0, 0.38, 3500);
+  l1->Draw("same");  l2->Draw("same");  l3->Draw("same");  l4->Draw("same");
+  TLegend *leg = new TLegend(0.7483221,0.7027972,0.8892617,0.8916084,NULL,"brNDC");
+  TLegendEntry *entry=leg->AddEntry("hom_combOSSS","OS + SS","l");
+  entry=leg->AddEntry("hom_combOS","OS","l");
+  entry=leg->AddEntry("hom_mu","muon","l");
+  entry=leg->AddEntry("hom_e","ele","l");
+  entry=leg->AddEntry("hom_k","kaon","l");
+  entry=leg->AddEntry("hom_ss","sameside","l");
+  entry=leg->AddEntry("hom_vtx","vtx","l");
+  leg->Draw();
+  goto end;
 
 taggercandidates:////////////////////////////////////////////////////
 
@@ -136,34 +167,44 @@ taggercandidates:////////////////////////////////////////////////////
   plot_ratio("deltaphi",hvdphi2  , hvdphi0, hvdphi0);  
   if(endblock) goto end;
 
- // addseed://///////////////////////////////////////////////////////////
-//   cout<<"plotting at addseed"<<endl;
-//   plot_ratio("pt",htr_pt1, htr_pt0, htr_ptd );          if(wait())return;
-//   plot_ratio("mass",htr_mass1, htr_mass0, htr_massd );  if(wait())return;
-//   plot_ratio("ip",htr_ip1, htr_ip0, htr_ipd );          if(wait())return;
-//   plot_ratio("ips",htr_ips1, htr_ips0, htr_ipsd );      if(wait())return;
-//   plot_ratio("ipsv",htr_ipsv1, htr_ipsv0, htr_ipsvd );  if(wait())return;
-//   plot_ratio("ipsvs",htr_ipsvs1, htr_ipsvs0, htr_ipsvsd ); if(wait())return;
-//   plot_ratio("doca",htr_DOCA1, htr_DOCA0, htr_DOCAd );  if(wait())return;
-//   plot_ratio("deltaphi",htr_deltaphi1, htr_deltaphi0, htr_deltaphid );
-//   if(endblock) goto end;
+ addseed://///////////////////////////////////////////////////////////
+  //   cout<<"plotting at addseed"<<endl;
+  //   plot_ratio("pt",htr_pt1, htr_pt0, htr_ptd );          if(wait())return;
+  //   plot_ratio("mass",htr_mass1, htr_mass0, htr_massd );  if(wait())return;
+  //   plot_ratio("ip",htr_ip1, htr_ip0, htr_ipd );          if(wait())return;
+  //   plot_ratio("ips",htr_ips1, htr_ips0, htr_ipsd );      if(wait())return;
+  //   plot_ratio("ipsv",htr_ipsv1, htr_ipsv0, htr_ipsvd );  if(wait())return;
+  //   plot_ratio("ipsvs",htr_ipsvs1, htr_ipsvs0, htr_ipsvsd ); if(wait())return;
+  //   plot_ratio("doca",htr_DOCA1, htr_DOCA0, htr_DOCAd );  if(wait())return;
+  //   plot_ratio("deltaphi",htr_deltaphi1, htr_deltaphi0, htr_deltaphid );
+  if(endblock) goto end;
 
- // vtxcharge://///////////////////////////////////////////////////////////
-//   cout<<"plotting at vtxcharge"<<endl;
-//   c->Clear(); c->Divide(1,3);
-//   c.cd(1); hvtx_pullz.Draw(); hvtx_pullz2.SetLineColor(3); hvtx_pullz2.Draw("same");
-//   hvtx_pullzd.SetLineStyle(2);hvtx_pullzd.SetLineColor(4); hvtx_pullzd.Draw("same");
-//   c.cd(2); hvtx_pullf.Draw();
-//   c.cd(3); hvtx_pulltheta.Draw();c.cd(); if(wait())return;
+ vtxcharge://///////////////////////////////////////////////////////////
+  cout<<"plotting at vtxcharge"<<endl;
+  //make sure tVch->setcharge( Vch ); in TaggerVertex and put MinVCh to 0!
+  hvtxch_r->SetLineColor(kGreen); hvtxch_r->Draw();
+  hvtxch_w->SetLineColor(kRed); hvtxch_w->Draw("same");
+  //  hvtxch_u->SetLineColor(kBlue); hvtxch_u->Draw("same");
+  c->Print("output/hvtxch.gif"); if(wait())return;
+  plot_Eff_Omega(hvtxch_r, hvtxch_w); if(wait())return;
+  plotEffectiveEff(hvtxch_r, hvtxch_w); if(wait())return;
 
-//   plot_ratio("vertexcharge", hvtxch1, hvtxch0, hvtxchb);  if(wait())return;
-//   plot_omega(hvtxch1,     hvtxch0, "vertexcharge");     if(wait())return;
-//   plot_omega(hvtx_ptmin1, hvtx_ptmin0, "hvtx_ptmin");   if(wait())return;
-//   plot_omega(hvtx_ipsmin1, hvtx_ipsmin0, "hvtx_ipsmin");   if(wait())return;
-//   plot_omega(hvtx_docamax1, hvtx_docamax0, "hvtx_docamax");  if(wait())return;
-//   plot_omega(hvtx_maxprobf1, hvtx_maxprobf0, "hvtx_maxprobf"); if(wait())return;
-//   plot_omega(hvtx_vflagged1, hvtx_vflagged0, "hvtx_vflagged"); if(wait())return;
+  //  c->Clear(); c->Divide(1,3);
+  //  c.cd(1); hvtx_pullz.Draw(); hvtx_pullz2.SetLineColor(3); hvtx_pullz2.Draw("same");
+  //  hvtx_pullzd.SetLineStyle(2);hvtx_pullzd.SetLineColor(4); hvtx_pullzd.Draw("same");
+  //  c.cd(2); hvtx_pullf.Draw();
+  //  c.cd(3); hvtx_pulltheta.Draw();c.cd(); if(wait())return;
+  
+  //  plot_ratio("vertexcharge", hvtxch1, hvtxch0, hvtxchb);  if(wait())return;
+  //  plot_omega(hvtxch1,     hvtxch0, "vertexcharge");     if(wait())return;
+  //  plot_omega(hvtx_ptmin1, hvtx_ptmin0, "hvtx_ptmin");   if(wait())return;
+  //  plot_omega(hvtx_ipsmin1, hvtx_ipsmin0, "hvtx_ipsmin");   if(wait())return;
+  //  plot_omega(hvtx_docamax1, hvtx_docamax0, "hvtx_docamax");  if(wait())return;
+  //  plot_omega(hvtx_maxprobf1, hvtx_maxprobf0, "hvtx_maxprobf"); if(wait())return;
+  //  plot_omega(hvtx_vflagged1, hvtx_vflagged0, "hvtx_vflagged"); if(wait())return;
+  if(endblock) goto end;
 
+ config://///////////////////////////////////////////////////////////
   c->Clear(); c->Divide(1,2);
   plot_omega(hright,       hwrong,  "ip");  if(wait())return;
   plot_omega(homphi_mu_r,  homphi_mu_w,  "mu_distphi"); if(wait())return;

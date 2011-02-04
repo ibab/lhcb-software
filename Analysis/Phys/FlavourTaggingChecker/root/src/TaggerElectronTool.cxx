@@ -61,7 +61,7 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     if( axp->LCS() > m_lcs_cut_ele ) continue;
 
     if( axp->type() != Particle::Long && 
-        axp->type() != Particle::Matched && 
+        axp->type() != Particle::Matched && //old FTC long and matched are trtyop=7
         axp->type() != Particle::Upstream ) continue;
 
     double tsa = axp->likelihood();

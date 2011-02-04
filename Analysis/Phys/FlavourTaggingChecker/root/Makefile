@@ -104,8 +104,6 @@ lib/tag.o: tag.cxx
 	$(COMPILE)
 lib/CombineTaggersProbability.o: src/CombineTaggersProbability.cxx 
 	$(COMPILE)
-lib/CombineTaggersProbabilityOS.o: src/CombineTaggersProbabilityOS.cxx 
-	$(COMPILE)
 lib/CombineTaggersNN.o: src/CombineTaggersNN.cxx 
 	$(COMPILE)
 lib/CombineTaggersPID.o: src/CombineTaggersPID.cxx
@@ -174,7 +172,6 @@ lib/tag.o: src/EventViewer.h
 lib/tag.o: src/PerformanceMonitor.h 
 lib/tag.o: src/TaggerVertexChargeTool.h src/SVertexOneSeedTool.h
 lib/tag.o: src/CombineTaggersProbability.h src/CombineTaggersPID.h
-lib/tag.o: src/CombineTaggersProbabilityOS.h src/CombineTaggersPID.h
 lib/tag.o: src/CombineTaggersNN.h tag_histo.h
 lib/CombineTaggersNN.o: src/CombineTaggersNN.h include/Particle.h
 lib/CombineTaggersNN.o: include/globals.h include/FlavourTag.h
@@ -186,10 +183,6 @@ lib/CombineTaggersProbability.o: src/CombineTaggersProbability.h
 lib/CombineTaggersProbability.o: include/Particle.h include/globals.h
 lib/CombineTaggersProbability.o: include/FlavourTag.h include/Tagger.h
 lib/CombineTaggersProbability.o: src/taggingutils.h
-lib/CombineTaggersProbabilityOS.o: src/CombineTaggersProbabilityOS.h
-lib/CombineTaggersProbabilityOS.o: include/Particle.h include/globals.h
-lib/CombineTaggersProbabilityOS.o: include/FlavourTag.h include/Tagger.h
-lib/CombineTaggersProbabilityOS.o: src/taggingutils.h
 lib/NNTuner.o: src/NNTuner.h include/Tagger.h include/Particle.h
 lib/NNTuner.o: include/globals.h include/Event.h include/Vertex.h
 lib/NNTuner.o: src/TaggerElectronTool.h include/GenericTool.h

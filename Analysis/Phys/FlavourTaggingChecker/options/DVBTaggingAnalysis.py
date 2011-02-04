@@ -57,6 +57,8 @@ tag.BTaggingTool.OutputLevel = 4
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_strip9.py')
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25.py')
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25_v1.py')
 
 ########################################################################
 # Flavour tagging Checker:

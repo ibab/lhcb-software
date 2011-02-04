@@ -16,7 +16,6 @@ int main () {
   CombineTaggersPID         combPIDtool ;
   CombineTaggersNN          combNNtool;
   CombineTaggersProbability combProbtool;
-  CombineTaggersProbabilityOS combProbOStool;
 
   EventViewer viewer;
   NNTuner nnetune(NNetTrain);
@@ -54,6 +53,10 @@ int main () {
       debug()<<"============================ Process Event"<<endl;
       Particles parts = event.particles();//candidate particles
 
+      Particle* BSpart = event.signalB();
+      //fatal()<<"BSID: "<<BSpart->ID()<<", BSMCID: "<<BSpart->MCID()<<endreq;
+      //if (BSpart->ID()==-531) continue; //only B+/B-
+
       //Individual tagger's response:
       Tagger* tmuon = mutool .tag(event);
       Tagger* tele  = eletool.tag(event);
@@ -72,13 +75,12 @@ int main () {
       OStaggers.push_back(tele); 
       OStaggers.push_back(tkaon); 
       OStaggers.push_back(tvtx); 
+      //Tagger combination technique
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
-      debug()<<"omega: "<<theTag->omega()<<endreq;      
-      debug()<<"omegaOS: "<<theTag->omegaOS()<<endreq;      
-      //FlavourTag* tmp_theTagOS = combProbOStool.combineTaggers( OStaggers );
-      //debug()<<"omegaOS: "<<tmp_theTagOS->omega()<<endreq;
       //FlavourTag* theTag = combNNtool.combineTaggers( taggers );
       //FlavourTag* theTag = combPIDtool.combineTaggers( taggers );
+      debug()<<"omega: "<<theTag->omega()<<endreq;      
+      debug()<<"omegaOS: "<<theTag->omegaOS()<<endreq;      
 
       int TrueTag = event.TrueTag();
       theTag->setTrueTag(TrueTag);
@@ -94,7 +96,6 @@ int main () {
       //************************************************************************
 
       //shortcuts
-      Particle* BSpart = event.signalB();
       Particle* BOpart = event.oppositeB();
       double     Btime = event.BProperTime(); //in ps
       bool        isBs = event.isBs();
@@ -524,6 +525,18 @@ int main () {
         if(tele->decision()==TrueTag) hright->Fill(var); else hwrong->Fill(var);
       }
 
+      if(tvtx){
+	debug()<<"Vdec: "<<tvtx->decision()<<"Vch: "<<tvtx->charge()<<endreq;
+	if(tvtx->decision()==TrueTag) hvtxch_r->Fill(fabs(tvtx->charge())); //abs(Vch)
+	if(tvtx->decision()==-1*TrueTag) hvtxch_w->Fill(fabs(tvtx->charge())); 
+	if(tvtx->decision()==0) hvtxch_u->Fill(fabs(tvtx->charge())); 
+	/*
+        if(tvtx->decision()==TrueTag) hvtxch_r->Fill(tvtx->charge()); //Vch
+        if(tvtx->decision()==-1*TrueTag) hvtxch_w->Fill(tvtx->charge()); 
+        if(tvtx->decision()==0) hvtxch_u->Fill(tvtx->charge()); 
+	*/
+      }
+
       //more histos:
       if(TrueTag== tagdecision) {h100->Fill(1-omega); h103->Fill(omega);}
       if(TrueTag==-tagdecision) {h102->Fill(1-omega); h104->Fill(omega);}
@@ -558,6 +571,15 @@ int main () {
         if(tvtx->decision()==TrueTag) h540p->Fill(tvtx->omega()); 
         else h640p->Fill(tvtx->omega());	
       }
+
+      //omega plot for taggers
+      if (imuon) hom_mu->Fill(tmuon->omega());
+      if (iele) hom_e->Fill(tele->omega());
+      if (ikaon) hom_k->Fill(tkaon->omega());
+      if (isame) hom_ss->Fill(tsame->omega());
+      if (tvtx->decision()) hom_vtx->Fill(tvtx->omega());
+      if (theTag->decisionOS()) hom_combOS->Fill(theTag->omegaOS());
+      if (theTag->decision()) hom_combOSSS->Fill(theTag->omega());
 
       //oscillation plots:
       int Btag = TrueTag;

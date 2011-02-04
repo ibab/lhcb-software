@@ -6,6 +6,12 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-02-04 - Marc Grabalosa
+  - Removed TrackMatching form BTaggingAnalysis
+  - More plots in /root. VCh plots, Omega for comb and taggers plots.
+  - Modification of NN tuning (solved bug on normalization)
+  · Raise to v6r6
+
 !========================== FlavourTaggingChecker v6r5 2011-02-03 ============
 
 ! 2011-01-26 - Marc Grabalosa

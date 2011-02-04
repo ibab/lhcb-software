@@ -61,7 +61,7 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
     double lcs = (*ipart)->LCS();
     if( lcs > m_lcs_cut ) continue;
     if( (*ipart)->type() != Particle::Long && 
-        (*ipart)->type() != Particle::Matched ) continue;
+        (*ipart)->type() != Particle::Matched ) continue; //old FTC long and matched tracks are trtyp=7
 
     double tsa = (*ipart)->likelihood();
     if(tsa < m_ghost_cut_pS) continue;

@@ -1,11 +1,11 @@
 # Created    : 2002-05-22
-# Maintainer : Marco Grabalosa
+# Maintainer : Marc Grabalosa
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTaggingChecker
-version           v6r5
+version           v6r6
 
 # Structure, i.e. directories to process. 
 #============================================================================

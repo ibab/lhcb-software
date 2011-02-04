@@ -23,7 +23,6 @@
 #include "TaggerDZeroTool.h"
 
 #include "CombineTaggersProbability.h"
-#include "CombineTaggersProbabilityOS.h"
 #include "CombineTaggersPID.h"
 #include "CombineTaggersNN.h"
 

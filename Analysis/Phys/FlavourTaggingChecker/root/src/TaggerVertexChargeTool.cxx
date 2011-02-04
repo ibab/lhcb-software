@@ -88,12 +88,13 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     Vptmin  += (*ip)->pt()/GeV;
     Vipsmin += (*ip)->IPs();
     if( (*ip)->type()== Particle::Long || 
-        (*ip)->type()== Particle::Matched) Vflaglong++;
+        (*ip)->type()== Particle::Matched) Vflaglong++; //old FTC long and matched have trtyp=7
     Vdocamax += (*ip)->DOCA();
     if(msgLevel(MSG::DEBUG)) debug()<<"docaSV:"<<(*ip)->DOCA()<<endmsg;
   }
   if(norm) {
     Vch /= norm;
+    tVch->setcharge( Vch ); //to use only for Vch plot
     if(fabs(Vch) < m_MinimumVCharge ) Vch = 0;
     Vptmin  /= vflagged;
     Vipsmin /= vflagged;

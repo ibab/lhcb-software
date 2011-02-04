@@ -48,7 +48,7 @@ class Tagger {
   double RawNNetOutput() { return m_RawNNetOutput; }///< return raw neural net output
   double omega()   { return m_Omega; }///< return estimated omega (user needs to calibrate is using data)
   int    decision(){ return m_Decision; }///< tagger decision on flavour
-  int    charge()  { return m_charge; }///< tagger charge
+  double    charge()  { return m_charge; }///< tagger charge
   int    type()    { return m_Type; }///< tagger type
 
   /// return particles used by this tagger to make decision
@@ -60,7 +60,7 @@ class Tagger {
   void setRawNNetOutput(double a)  { m_RawNNetOutput = a; }
   void setOmega(double a)   { m_Omega = a; }
   void setDecision(int a)   { m_Decision = a; }
-  void setcharge(int a)     { m_charge = a; }
+  void setcharge(double a)     { m_charge = a; }
   void setType(int a)       { m_Type = a; }
 
 
@@ -77,7 +77,8 @@ class Tagger {
 
  private:
   double m_RawNNetOutput, m_Omega;
-  int    m_Decision, m_charge, m_Type;
+  int    m_Decision, m_Type;
+  double m_charge;
   Particles m_taggerparts;
 
 };

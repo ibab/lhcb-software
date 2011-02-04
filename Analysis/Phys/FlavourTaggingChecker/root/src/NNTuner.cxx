@@ -13,7 +13,7 @@ NNTuner::NNTuner(TString& NNetTrain){
 
     hpidcat = new TH1F("hpidcat", "PID cat", 50, 0.0, 0.5);
     nntrain = new TTree("nntrain", fname);
-
+    
     nntrain->Branch("iscorrect",&iscorrect, "iscorrect/I");
     nntrain->Branch("tagger", &tagger,  "tagger/I");
     nntrain->Branch("mult",   &mult,    "mult/F");
@@ -145,7 +145,24 @@ void NNTuner::Fill(Event& event, FlavourTag* thetag){
     nndq    = (BSpart->momentum() + tagpart->momentum()).M() 
              - BSpart->momentum().M();
     nnkrec  = event.pileup();
-    
+
+    //normalize input of NN, otherwise does not work
+    mult /= 90.;
+    ptB /= 25.;
+    partP = std::min( sqrt(partP)/15., 1.); 
+    partPt = std::min( sqrt(partPt)/2.5, 1.); 
+    double tmp=0;
+    if(IPPV<0) tmp=-sqrt(-IPPV); else tmp=sqrt(IPPV);//IPPV
+    tmp /= 10.; 
+    if(tmp> 1) tmp= 1; if(tmp<-1) tmp=-1;
+    IPPV=tmp;
+    nndeta /= 2.; 
+    nndphi /= 3.;
+    nndq /= 12.;
+    if(nndq>1.) nndq = 1.;
+    nnkrec = (nnkrec-1)/4.;
+    //--
+
     Vertices mySVs = event.getSecondaryVertices();
     if(mySVs.empty()) return;
     Vertex* mySV = mySVs.at(0);
@@ -158,6 +175,14 @@ void NNTuner::Fill(Event& event, FlavourTag* thetag){
     vratio  = mySV->getVratio();
     vcharge = mySV->getVCharge();
     svtau   = mySV->getSVtau();
+
+    //normalize input of NN for vtx
+    //    problem with par.at(1)->pileup we are normalizing it, old NN is not norm
+    vflag /= 4.;  
+    ptmin /= 2.;
+    ipsmin /= 30.;
+    docamax /= 0.1;
+    svtau /= 5.; 
     
     nntrain->Fill();// <-- fills branch
     //cout << mult<<" "<< ptB<<" "<< partP<<" "<< partPt<<" "

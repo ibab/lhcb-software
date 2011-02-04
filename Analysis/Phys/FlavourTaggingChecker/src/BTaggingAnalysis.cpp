@@ -317,7 +317,8 @@ StatusCode BTaggingAnalysis::execute() {
     double trackp = track->p();
     
     long trtyp = track->type();
-    if (track->checkHistory(Track::TrackMatching) == true) trtyp=7;
+    //studies of long (forward and matched tracks) TrackMatching->PatMatch 
+    //if (track->checkHistory(Track::TrackMatching) == true) trtyp=7; 
 
     double distphi;
     m_util->isinTree( axp, axdaugh, distphi );

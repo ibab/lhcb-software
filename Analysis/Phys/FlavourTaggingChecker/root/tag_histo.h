@@ -20,6 +20,15 @@ TH1F* h2    = new TH1F("h2","nr of primary vtx" ,10, 0., 10);
 TH1F* h3    = new TH1F("h3","Pt B Opposite",50, 0, 100.);
 TH1F* h4    = new TH1F("h4","track multiplicity",50, 0, 100.);
 
+//Omega for taggers and combination
+TH1F* hom_combOS = new TH1F("hom_combOS","hom_combOS", 50, 0, 0.6);
+TH1F* hom_combOSSS = new TH1F("hom_combOSSS","hom_combOSSS", 50, 0, 0.6);
+TH1F* hom_e = new TH1F("hom_e","hom_e", 50, 0, 0.6);
+TH1F* hom_mu = new TH1F("hom_mu","hom_mu", 50, 0, 0.6);
+TH1F* hom_k = new TH1F("hom_k","hom_k", 50, 0, 0.6);
+TH1F* hom_ss = new TH1F("hom_ss","hom_ss", 50, 0, 0.6);
+TH1F* hom_vtx = new TH1F("hom_vtx","hom_vtx", 50, 0, 0.6);
+
 //B pt
 TH1F* h6    = new TH1F("h6","B pT ",100, 0.0, 30.);
 TH1F* h6rSS = new TH1F("h6rSS","B pT ",100, 0.0, 30.);
@@ -345,5 +354,10 @@ TH1F* homphi_kO_w = new TH1F("homphi_kO_w","w(dphi)", 50, x1, x2);
 TH1F* homphi_kS_r = new TH1F("homphi_kS_r","w(dphi)", 50, x1, x2);
 TH1F* homphi_kS_w = new TH1F("homphi_kS_w","w(dphi)", 50, x1, x2);
 
-
+//vtx charge
+//x1=-1.01; x2=1.01;
+x1=0.01; x2=1.1; //abs value
+TH1F* hvtxch_r = new TH1F("hvtxch_r","vtxch", 50, x1, x2);
+TH1F* hvtxch_w = new TH1F("hvtxch_w","vtxch", 50, x1, x2);
+TH1F* hvtxch_u = new TH1F("hvtxch_u","vtxch", 50, x1, x2);
 
