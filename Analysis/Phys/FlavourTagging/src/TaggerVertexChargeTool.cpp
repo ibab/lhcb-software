@@ -120,9 +120,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ip, RecVert, minip, miniperr);
     Vipsmin += minip/miniperr;
     const Track* iptrack = (*ip)->proto()->track();
-    if( iptrack->type()== Track::Long || 
-        iptrack->checkHistory(Track::TrackMatching)==true) Vflaglong++;//matched tracks are long tracks
-    //    if( iptrack->type()== Track::Long ) Vflaglong++;
+    if( iptrack->type()== Track::Long ) Vflaglong++;
     double docaSV, docaErrSV;
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV);
     Vdocamax += docaSV;
