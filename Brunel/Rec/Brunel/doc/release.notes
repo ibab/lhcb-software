@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
 - Changes to example options
   . Remove options and catalogs accessing DC06 and MC09 files that no longer
     exist
+  . Remove all imports of earlyData.py, since this now the default
 
 - Changes to qmtests:
   . Add a test brunel.brunel2011magdown, for the time being identical to

@@ -4,9 +4,7 @@
 #   gaudirun.py COLLISION10-Beam3500GeV-VeloClosed-MagOff.py
 #
 from GaudiKernel.ProcessJobOptions import importOptions
-importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 importOptions("$APPCONFIGOPTS/Brunel/moff.py")
-#importOptions("$APPCONFIGOPTS/UseOracle.py")
 
 from Gaudi.Configuration import FileCatalog, EventSelector
 from Configurables import Brunel

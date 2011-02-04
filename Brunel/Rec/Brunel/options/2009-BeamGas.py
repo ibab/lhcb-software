@@ -7,7 +7,6 @@ from GaudiKernel.ProcessJobOptions import importOptions
 importOptions("$APPCONFIGOPTS/Brunel/moff.py")
 importOptions("$APPCONFIGOPTS/Brunel/veloOpen.py")
 importOptions("$APPCONFIGOPTS/Brunel/beamGas.py")
-importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 
 from Gaudi.Configuration import FileCatalog, EventSelector
 from Configurables import Brunel

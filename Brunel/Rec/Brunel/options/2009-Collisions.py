@@ -4,9 +4,7 @@
 #   gaudirun.py 2009-Collisions.py
 #
 from GaudiKernel.ProcessJobOptions import importOptions
-importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 importOptions("$APPCONFIGOPTS/Brunel/veloOpen.py")
-#importOptions("$APPCONFIGOPTS/UseOracle.py")
 
 from Gaudi.Configuration import FileCatalog, EventSelector
 from Configurables import Brunel
