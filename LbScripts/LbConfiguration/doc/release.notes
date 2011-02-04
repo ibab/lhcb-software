@@ -1,3 +1,8 @@
+2011-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the "--ignore-not-ready" flag for the call to SetupProject.
+	This will allow the cache files to be generated at build time with mkproject.
+
 2011-02-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added raw support for slc6

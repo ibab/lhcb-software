@@ -840,6 +840,8 @@ class LbLoginScript(SourceScript):
             log.debug("Calling SetupProject directly")
 
             setupprojargs = []
+            # needed for the deployment: otherwise the cache is not generated
+            setupprojargs.append("--ignore-not-ready")
             if opts.log_level == "DEBUG" :
                 setupprojargs.append("--debug")
             if opts.log_level == "CRITICAL" :
