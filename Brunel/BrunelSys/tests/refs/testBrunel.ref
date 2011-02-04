@@ -49,10 +49,11 @@
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
 # |-DataType                 = '2011'
-# |-WithMC                   = False
+# |-ForceOldSeq              = False
 # |-OutputType               = ''
-# |-FastVelo                 = False
+# |-ForceNewSeq              = False
 # |-SpecialData              = []  (default: [])
+# |-WithMC                   = False
 # |-TrackPatRecAlgorithms    = []  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
@@ -74,7 +75,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v37r7
-                                          running on volhcb27.cern.ch on Fri Jan 21 09:04:53 2011
+                                          running on volhcb27.cern.ch on Fri Feb  4 13:14:33 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -84,7 +85,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.87 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -138,14 +139,14 @@ RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be re
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
 DecodeVeloClusters   INFO Cancel processing of events with more than 10000 Velo clusters
-ONLINE_201001        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201001        INFO Using TAG ""
-RecoVELOSeq          INFO Member list: Tf::PatVeloRTracking/PatVeloRTracking, Tf::PatVeloSpaceTracking/PatVeloSpaceTracking, Tf::PatVeloGeneralTracking/PatVeloGeneralTracking, with context 'Offline'
+ONLINE_201101        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
+ONLINE_201101        INFO Using TAG ""
+RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
 RecoOTSeq            INFO Member list: , with context 'Offline'
 RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline'
-Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
+Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
@@ -155,42 +156,19 @@ MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/softwar
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_down.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_down.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_down.cdf
-MagneticFieldSvc     INFO Map scaled by factor 6.96045e-07 with polarity internally used: -1 signed relative current: -6.96045e-07
-TrackSeedPatSeq      INFO Member list: Tf::Tsa::Seed/TsaSeed, Tf::Tsa::SeedTrackCnv/TsaSeedTrackCnv, with context 'Offline'
-ToolSvc.TsaData...   INFO Max OT cluster size     = 5
-ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
-ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
-TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
-MagneticFieldSvc     INFO Map scaled by factor 6.96045e-07 with polarity internally used: -1 signed relative current: -6.96045e-07
-ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
-ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
-ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
-ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.PatTTMa...   INFO  No B field detected.
-ToolSvc.VeloClu...   INFO  --> Using 2010 tuning of the error parametrisation
-ToolSvc.STOffli...   INFO APE set to 0
-ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208
-ToolSvc.ITClust...   INFO APE set to 0
-ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185
-FitSeedForMatch      INFO
-FitSeedForMatch      INFO =========== FitSeedForMatch Settings ============
-FitSeedForMatch      INFO   Tracks input container   : Rec/Track/Seed
-FitSeedForMatch      INFO   Tracks output container  : Rec/Track/Seed
-FitSeedForMatch      INFO   Fitter name              : FitSeedForMatch.Fitter
-FitSeedForMatch      INFO ==================================================
-FitSeedForMatch      INFO
-TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
-ToolSvc.TrackHe...   INFO ExtrapolatorID=5
+MagneticFieldSvc     INFO Map scaled by factor 8.99013e-07 with polarity internally used: -1 signed relative current: -8.99013e-07
+TrackSeedPatSeq      INFO Member list: PatSeeding, with context 'Offline'
+TrackMatchPatSeq     INFO Member list: PatMatch, with context 'Offline'
 TrackDownstream...   INFO Member list: PatDownstream, with context 'Offline'
 PatDownstream        INFO ========================================
 PatDownstream        INFO  deltaP             = 2
 PatDownstream        INFO  xPredTol           = 150000
 PatDownstream        INFO  TolMomentum        = 20000
-PatDownstream        INFO  TolMatch           = 0.5
-PatDownstream        INFO  TolUV              = 1
-PatDownstream        INFO  MaxDistance        = 0.1
-PatDownstream        INFO  MaxChisq           = 10
-PatDownstream        INFO  MaxWindowSize      = 6
+PatDownstream        INFO  TolMatch           = 1.5
+PatDownstream        INFO  TolUV              = 2
+PatDownstream        INFO  MaxDistance        = 0.3
+PatDownstream        INFO  MaxChisq           = 20
+PatDownstream        INFO  MaxWindowSize      = 10
 PatDownstream        INFO  RemoveUsed         = 0
 PatDownstream        INFO  RemoveAll          = 0
 PatDownstream        INFO  LongChisq          = 1.5
@@ -198,6 +176,17 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT, with context 'Offline'
+MagneticFieldSvc     INFO Map scaled by factor 8.99013e-07 with polarity internally used: -1 signed relative current: -8.99013e-07
+ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
+ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
+ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
+ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
+ToolSvc.PatTTMa...   INFO  No B field detected.
+ToolSvc.VeloClu...   INFO  --> Using 2010 tuning of the error parametrisation
+ToolSvc.STOffli...   INFO APE set to 0.197
+ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208
+ToolSvc.ITClust...   INFO APE set to 0.0758
+ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
 TrackFitSeq          INFO Member list: TrackEventCloneKiller, TrackStateInitAlg/InitBestFit, TrackEventFitter/FitBest, TrackContainerCopy/CopyBest, with context 'Offline'
@@ -229,6 +218,7 @@ FitVelo              INFO ==================================================
 FitVelo              INFO
 TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLikelihood, TrackAddNNGhostId, with context 'Offline'
 TrackClonesSeq       INFO Member list: TrackBuildCloneTable/FindTrackClones, TrackCloneCleaner/FlagTrackClones, with context 'Offline'
+ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/Track/BestClones'
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
 TrackEraseExtra...   INFO Member list: TrackEraseExtraInfo, with context 'Offline'
@@ -573,11 +563,6 @@ CreateITLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-PatVeloGeneralT...   INFO No events processed
-FitSeedForMatch      INFO   Fitting performance   :     0.00 %
-FitSeedForMatch   SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitBest              INFO   Fitting performance   :     0.00 %
 FitBest           SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -678,7 +663,7 @@ ChargedProtoPMoni    INFO  # Tracks Per Event         |    Track     |     RICH 
 ChargedProtoPMoni    INFO ----------------------------------------------------------------------------------------------------------------------------------------------------
 ChargedProtoPMoni    INFO ====================================================================================================================================================
 FSRWriter            INFO Set up File Summary Record
-RootDBase.open    SUCCESS Brunel.dst File version:52600
+RootDBase.open    SUCCESS Brunel.dst File version:52800
 FSRWriter            INFO Events output: 1
 DstWriter            INFO Events output: 0
 EventLoopMgr         INFO Histograms converted successfully according to request.
@@ -711,7 +696,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.87 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -780,9 +765,7 @@ TimingAuditor.T...   INFO      CreateTTLiteClusters     |     0.000 |     0.000 
 TimingAuditor.T...   INFO      CreateITClusters         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      CreateITLiteClusters     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoVELOSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PatVeloRTracking         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PatVeloSpaceTracking     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PatVeloGeneralTracking   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      FastVeloTracking         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoTTSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoITSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoOTSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -791,13 +774,9 @@ TimingAuditor.T...   INFO      Track                    |     0.000 |     0.000 
 TimingAuditor.T...   INFO       TrackForwardPatSeq      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        PatForward             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackSeedPatSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        TsaSeed                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        TsaSeedTrackCnv        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackSeedFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InitSeedFit            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitSeedForMatch        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        PatSeeding             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackMatchPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        TrackMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        PatMatch               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackDownstreamPatSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        PatDownstream          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackVeloTTPatSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1079,6 +1058,7 @@ TimingAuditor.T...   INFO      PackMuonTracks           |     0.000 |     0.000 
 TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
