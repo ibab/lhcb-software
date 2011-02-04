@@ -7,6 +7,25 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!================== LoKiJets v5r4 2011-02-04 ===============================
+
+! 2011-02-02 - Cédric Potterat
+ - add src/LoKiSeedConeJetMaker
+    creat Jet with a cone algo around a seed
+    (seed created by a call to a LoKiJetMaker Algo)
+ - add src/LoKiSeedFinder
+    creat Seed for LoKiSeedConeJetMaker (Barcelona and Milano Algo)
+    can be call as a LoKiJetMaker alog, output Seed
+ - add src/LoKiVVSeedFinder
+    creat Seed for LoKiSeedConeJetMaker (Lausanne Algo)
+    can be call as a LoKiJetMaker alog, output Seed
+ - add src/LoKiMCPartBHadronSeed
+    creat Seed for LoKiSeedConeJetMaker (MCPart B Hadron is the Seed)
+    can be call as a LoKiJetMaker alog, output Seed
+ - Increase to v5r4.
+
+!================== LoKiJets v5r3 2011-02-04 ===============================
+
 ! 2011-02-04 - Juan Palacios
  - Add needed LoKi MC packages.
  - Increase to v5r3.
