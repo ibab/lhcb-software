@@ -3,7 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v10r1>2011-01-28 Phys v10r1 </A></H1><PRE>
+</PRE><H1><A NAME=v11r0>2011-02-07 Phys v11r0 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v11r0                                  #
+###############################################################################
+
+- Based on LHCb v32r0 and Gaudi v22r0. For HLT.
+
+ * Includes all improvements to Selection toolkit for February stripping
+   line definitions.
+
 
 ###############################################################################
 #                                 PHYS v10r1                                  #

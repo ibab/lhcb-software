@@ -1,20 +1,20 @@
 package PhysSys
-version v10r2
+version v11r0
 
 branches doc cmt
 
 ####################################################################
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
 use  DaVinciKernel              v9r1     Phys    # Juan Palacios
-use  DaVinciMaps                v1r3p1   Phys    # Juan Palacios
+use  DaVinciMaps                v2r0     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v2r1     Phys    # Juan Palacios
-use  PhysSelPython              v6r1     PhysSel # Juan Palacios
+use  SelPy                      v3r0     Phys    # Juan Palacios
+use  PhysSelPython              v7r0     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r6     Phys    # Chris Jones
-use  DaVinciTools       	v22r1    Phys    # Juan Palacios
+use  DaVinciTools       	v22r2    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
 use  ParticleMaker      	v5r10 	 Phys    # Chris Jones
 use  VertexFit			v6r7     Phys    # Yuehong Xie
@@ -23,7 +23,7 @@ use  DecayTreeFitter            v1r11    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
-use LoKiUtils                   v1r1     Phys    # Vanya Belyaev
+use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
 use LoKiPhys                    v9r8     Phys    # Vanya Belyaev
@@ -31,7 +31,7 @@ use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 
 #===================================================================
-use TisTosTobbing		v6r4	 Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v6r5	 Phys	 # Tomasz Skwarnicki
 
 # Declare this as a container package
 apply_pattern container_package
