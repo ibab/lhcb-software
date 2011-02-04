@@ -122,7 +122,7 @@ bool BBDecTreeTool::keepRegion(const std::vector<double> &vars) const {
     }
     return false;
   }
-  else{ //if(m_nbody == 3){
+  else if(m_nbody == 3){
     if(ptSum < 4000 || doca > 0.1) return false;
     if(ptMin > 3000) return true;
     if(ptSum > 15000) return true;
@@ -136,6 +136,21 @@ bool BBDecTreeTool::keepRegion(const std::vector<double> &vars) const {
     if(fdChi2 > 1000){    
       if(ptMin > 1500) return true;
       if(ptSum > 7000 && ptMin > 600) return true;
+    }
+    return false;
+  }
+  else {
+    if(ptSum < 4000 || doca > 0.1) return false;
+    if(ptMin > 2000) return true;
+    if(ptSum > 15000) return true;
+    if(m < 3500) return false;
+    if(fdChi2 > 300){
+      if(ptMin > 1750) return true;
+      if(ptSum > 8000 && ptMin > 600) return true;
+    }
+    if(fdChi2 > 1000){    
+      if(ptMin > 1250) return true;
+      if(ptSum > 7500 && ptMin > 550) return true;
     }
     return false;
   }
