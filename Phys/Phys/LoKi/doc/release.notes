@@ -5,6 +5,12 @@
 ! Purpose     : The suite for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKi v9r0 2011-02-04 =============================
+
+! 2011-02-04 - Juan PALACIOS
+ - Remove all MC packages.
+ - Increase to v9r0.
+
 !=========================== LoKi v8r1 2009-01-08 =============================
 ! 2008-12-04 - Vanya BELYAEV
  - list all Loki packages 

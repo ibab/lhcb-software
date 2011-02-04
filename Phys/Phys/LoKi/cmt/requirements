@@ -12,13 +12,13 @@ branches          LoKi cmt doc src
 # =============== dependencies ================================================
 use               LoKiCore          v*   Phys 
 use               LoKiNumbers       v*   Phys 
-use               LoKiGen           v*   Phys
-use               LoKiMC            v*   Phys
-use               LoKiGenMC         v*   Phys
+#use               LoKiGen           v*   Phys
+#use               LoKiMC            v*   Phys
+#use               LoKiGenMC         v*   Phys
 use               LoKiPhys          v*   Phys
-use               LoKiPhysMC        v*   Phys
+#use               LoKiPhysMC        v*   Phys
 use               LoKiAlgo          v*   Phys
-use               LoKiAlgoMC        v*   Phys
+#use               LoKiAlgoMC        v*   Phys
 use               LoKiArrayFunctors v*   Phys 
 use               LoKiHlt           v*   Phys 
 
