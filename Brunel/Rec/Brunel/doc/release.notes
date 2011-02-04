@@ -6,10 +6,15 @@ Purpose: LHCb reconstruction program
 - Changes to configurable:
   . default DataType is now 2011
 
+- Changes to example options
+  . Remove options and catalogs accessing DC06 and MC09 files that no longer
+    exist
+
 - Changes to qmtests:
   . Add a test brunel.brunel2011magdown, for the time being identical to
     brunel.brunel2010magdown (same input data and same reference) to validate 
     2011 DataType settings
+  . Remove obsolete brunel.brunel-mc09-stripping test
 
 - Changes to references to reflect changes in Brunel v38r1 output
   . #114925: all Calo corrections now taken from CondDB
