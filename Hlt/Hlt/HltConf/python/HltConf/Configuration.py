@@ -11,6 +11,7 @@ from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
+import HltConf.HltInit
 
 ##################################################################################
 class HltConf(LHCbConfigurableUser):
@@ -613,7 +614,6 @@ class HltConf(LHCbConfigurableUser):
         log.debug("Hlt configuration")
         import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions('$HLTCONFROOT/options/HltInit.py')
         
         self.confType()
         self.endSequence()

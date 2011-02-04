@@ -1,5 +1,7 @@
 from Configurables import HltANNSvc 
 
+print 'Running HltInit.py'
+
 # quick hack to make sure Hlt2Global is OK...
 Hlt2ID = HltANNSvc().Hlt2SelectionID
 if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
