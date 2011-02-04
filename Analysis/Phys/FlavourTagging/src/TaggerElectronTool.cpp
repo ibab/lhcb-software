@@ -118,7 +118,8 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
     if(track->type() != Track::Long 
-       && track->checkHistory(Track::TrackMatching)!=true) continue;
+       && track->checkHistory(Track::TrackMatching)!=true) continue; //matched tracks are only long
+    //    if(track->type() != Track::Long) continue;
  
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
