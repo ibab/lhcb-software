@@ -2,7 +2,9 @@
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
-! ====================================================================
+! =============================================================================
+
+!========================== TisTosTobbing v6r5 2011-02-04 =====================
 
 ! 2011-02-02 - Juan Palacios
  - src/TriggerSelectionTisTos.cpp
@@ -10,7 +12,7 @@
     THIS NEEDS TO BE TESTED!!!
  - Increase to v6r5.
 
-!========================== TisTosTobbing v6r4 2011-01-18 ===================
+!========================== TisTosTobbing v6r4 2011-01-18 =====================
 
 ! 2011-01-11 - Juan Palacios
  - Adapt to changes in DVAlgorithm protected methods.
@@ -25,7 +27,7 @@
  - Increase to v6r4.
  - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
 
-!========================== TisTosTobbing v6r3 2010-11-21 ===================
+!========================== TisTosTobbing v6r3 2010-11-21 =====================
 
 ! 2010-11-21 - Juan Palacios
  - src/TriggerSelectionTisTos.cpp
