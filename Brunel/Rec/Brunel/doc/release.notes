@@ -16,6 +16,8 @@ Purpose: LHCb reconstruction program
     brunel.brunel2010magdown (same input data and same reference) to validate 
     2011 DataType settings
   . Remove obsolete brunel.brunel-mc09-stripping test
+  . Input file for brunel2010magdown test is now taken from 'freezer' castor
+    directory, to test rootd access to this pool.
 
 - Changes to references to reflect changes in Brunel v38r1 output
   . #114925: all Calo corrections now taken from CondDB
