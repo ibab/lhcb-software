@@ -4,10 +4,12 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v22r2 2011-02-04 ===================
+
 ! 2011-02-01 - Juan Palacios
  - Use GaudiConfUtils.getConfigurablesFromModule to simplify Configurable
    instantiation test.
- - Increase to v22r1.
+ - Increase to v22r2.
 
 !========================== DaVinciTools v22r1 2011-01-28 ===================
 
