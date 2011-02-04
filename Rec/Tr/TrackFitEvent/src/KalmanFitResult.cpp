@@ -30,12 +30,12 @@ namespace LHCb
   }
 
   // set the error flag out of direction, algorithm and error type identifiers 
-  void KalmanFitResult::setErrorFlag(ushort direction, ushort algnum , ushort errnum) 
+  void KalmanFitResult::setErrorFlag(unsigned short direction, unsigned short algnum , unsigned short errnum) 
   {
-    m_errorFlag = (((ushort) 1 ) << globalBits)
-      +(((ushort)direction) << dirBits ) 
-      +(((ushort)algnum) << algBits ) 
-      +(((ushort)errnum) << typeBits);  
+    m_errorFlag = (((unsigned short) 1 ) << globalBits)
+      +(((unsigned short)direction) << dirBits ) 
+      +(((unsigned short)algnum) << algBits ) 
+      +(((unsigned short)errnum) << typeBits);  
   }
 
   // check the global error status of the node
@@ -46,9 +46,9 @@ namespace LHCb
 
   // get the error description
   std::string KalmanFitResult::getError(){
-    ushort direction = ( m_errorFlag & dirMask ) >> dirBits ;
-    ushort algnum = ( m_errorFlag & algMask ) >> algBits ;
-    ushort errnum = ( m_errorFlag & typeMask ) ;
+    unsigned short direction = ( m_errorFlag & dirMask ) >> dirBits ;
+    unsigned short algnum = ( m_errorFlag & algMask ) >> algBits ;
+    unsigned short errnum = ( m_errorFlag & typeMask ) ;
     std::ostringstream errMsg;
     std::ostringstream dir;
     // Set the direction

@@ -114,7 +114,7 @@ namespace LHCb
     ChiSquare computeChiSquareForwardFit() ;
 
     // set the error flag
-    void setErrorFlag(ushort extrainfo ,ushort algnum , ushort errnum);
+    void setErrorFlag(unsigned short extrainfo ,unsigned short algnum , unsigned short errnum);
     
     // check if there is an error
     bool inError( );
@@ -154,7 +154,7 @@ namespace LHCb
     mutable ChiSquare m_chi2MuonT ;
     mutable ChiSquare m_chi2Muon ;
     mutable bool m_chi2CacheValid ;
-    ushort m_errorFlag;
+    unsigned short m_errorFlag;
     bool m_bidirectionalSmoother ;
   } ;  
 }
