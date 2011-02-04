@@ -246,12 +246,47 @@ def netSelector(input=None,type=None):
   return svc
 
 #------------------------------------------------------------------------------------------------
-def end_config(print_config=True):
+def end_config_normal(print_config=True):
   import GaudiPython
   gaudi = GaudiPython.AppMgr()
   patchExitHandler()
   if print_config: printConfiguration()
   return gaudi
+
+#------------------------------------------------------------------------------------------------
+def end_config_checkpoint(print_config, checkpoint):
+  import os, sys, GaudiPython
+  forker = Configs.LHCb__CheckpointSvc("CheckpointSvc")
+  forker.NumberOfInstances   = 0
+  #forker.NumberOfInstances   = 5
+  forker.UseCores            = False  # -> N(core-1) procs!
+  forker.ChildSessions       = False
+  forker.DumpFiles           = False
+  forker.Checkpoint          = checkpoint
+  forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
+  forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
+  forker.ExitAfterCheckpoint = True
+  ApplicationMgr().ExtSvc.append(forker)
+  if CFG.allConfigurables.has_key('MEPManager'):
+    mep = CFG.allConfigurables['MEPManager']
+    mep.ConnectWhen = 'start'
+    print 'Modified MEPManager to connect at start'    
+  printConfiguration()
+  print 132*'='
+  print "== Starting checkpoint generation."
+  print 132*'='
+  sys.stdout.flush()
+  gaudi = GaudiPython.AppMgr()
+  gaudi.service('MEPManager').ConnectWhen = 'start'
+  patchExitHandler()
+  return gaudi
+
+#------------------------------------------------------------------------------------------------
+def end_config(print_config=True):
+  import os
+  if os.environ.has_key('CHECKPOINT_FILE'):
+    return end_config_checkpoint(print_config,os.environ['CHECKPOINT_FILE'])
+  return end_config_normal(print_config)
 
 #------------------------------------------------------------------------------------------------
 def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=None, evtloop=None):

@@ -280,6 +280,10 @@ int GaudiTask::configApplication()  {
   }
   Gaudi::setInstance((IAppMgrUI*)0);
   Gaudi::setInstance((ISvcLocator*)0);
+  if ( m_autostart != 0 ) {
+    log << MSG::FATAL << "configApplication failed. --> Exit(-1)" << endmsg;
+    ::exit(-1);
+  }
   return 0;
 }
 
@@ -299,13 +303,13 @@ int GaudiTask::initApplication()  {
 	    return 1;
 	  }
 	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
-	  return 0;
+	  goto Error;
         }
         log << MSG::ERROR << "Failed to access service locator object" << endmsg;
-        return 0;
+	goto Error;
       }
       log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
-      return 0;
+      goto Error;
     }
     else  {
       log << MSG::INFO << "2nd. layer is already executing" << endmsg;
@@ -314,6 +318,11 @@ int GaudiTask::initApplication()  {
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
+  }
+ Error:
+  if ( m_autostart != 0 ) {
+    log << MSG::FATAL << "initApplication failed. --> Exit(-1)" << endmsg;
+    ::exit(-1);
   }
   return 0;
 }
@@ -330,7 +339,7 @@ int GaudiTask::startApplication()  {
       if ( 0 == m_incidentSvc ) {  // In case we were removed during stop(): reconnect
 	if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
 	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
-	  return 0;
+	  goto Error;
 	}
 	m_incidentSvc->addListener(this,"DAQ_ERROR");
       }
@@ -350,10 +359,10 @@ int GaudiTask::startApplication()  {
 		return 1;
 	      }
 	      log << MSG::ERROR << "Failed to start runable." << endmsg;
-	      return 0;
+	      goto Error;
 	    }
 	    log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
-	    return 0;
+	    goto Error;
 	  }
 	}
 	else  {
@@ -362,13 +371,18 @@ int GaudiTask::startApplication()  {
 	}
       }
       log << MSG::ERROR << "Failed to start application manager" << endmsg;
-      return 0;
+      goto Error;
     }
     log << MSG::ERROR << "Failed to access service locator object" << endmsg;
-    return 0;
+    goto Error;
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
+  }
+ Error:
+  if ( m_autostart != 0 ) {
+    log << MSG::FATAL << "startApplication failed. --> Exit(-1)" << endmsg;
+    ::exit(-1);
   }
   return 0;
 }
