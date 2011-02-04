@@ -25,7 +25,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"WithMC":       False # set to True to use MC truth
        ,"OutputType": "" # set to "RDST" for special RDST sequence
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
-       ,"DataType": "2010" # propagated from Brunel(), used to determine which monitors to run
+       ,"DataType": "2011" # propagated from Brunel(), used to determine which monitors to run
        ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
        ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType 
         }

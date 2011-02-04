@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2011-02-04 - Stephanie Hansmann-Menzemer
+ - add 2011 as data type
 
 !========================= TrackSys v6r0 2011-02-02 =========================
 ! 2011-02-01 - Rob Lambert
