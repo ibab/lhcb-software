@@ -21,9 +21,12 @@ class MountPoint(Directory):
             raise IsNotaMountPoint, "%s is not a mount point" % self._name
 
 class IsNotaVolume(Exception):
-    pass        
+    pass
 
 class IsNotaMountPointOfVolume(Exception):
+    pass
+
+class BadVolumeName(Exception):
     pass
 
 
@@ -47,7 +50,7 @@ class Volume(object):
                 if m.getVolumeName() == name :
                     self._name = name
                 else :
-                    raise IsNotaMountPointOfVolume, "%s is not a mount point of %s" % (m.name(), name) 
+                    raise IsNotaMountPointOfVolume, "%s is not a mount point of %s" % (m.name(), name)
             else :
                 # deduce the volume name from the mountpoint
                 self._name = m.getVolumeName()
@@ -63,7 +66,7 @@ class Volume(object):
         else :
             raise HasNoMountPoint, "%s has no mount point" % self._name
     def name(self):
-        return self._name 
+        return self._name
     def flush(self):
         log = logging.getLogger()
         for m in self._mtpoints :
@@ -74,7 +77,7 @@ class Volume(object):
                 log.error(line[:-1])
             if p.wait() != 0:
                 raise IOError, "Could not flush volume %s" % self._name
-            
+
     def usedSpace(self, display_size=None):
         log = logging.getLogger()
         used_size = 0
@@ -151,33 +154,36 @@ class Volume(object):
 def createVolume(path, volume_name, quota = None, user = None, group = None):
     """
     Create an AFS volume in the specified path with the specified name.
-    
+
     @param path: directory where to create the volume
     @param volume_name: name to use for the volume
     @param quota: initial quota, if specified
     @param group: group whose librarians will have access
-    
+
     @return: Volume instance
     """
+
+    if len(volume_name) > 22 :
+        raise BadVolumeName, "Volume name %s is too long. volume names are limited to 22 characters." % volume_name
     if not user:
         import getpass
         user = getpass.getuser()
-    
+
     # create the new volume
     cmd = ["afs_admin", "create", "-u", user]
     if quota:
         cmd += ["-q", str(quota)]
-        
+
     proc = Popen(cmd + [path, volume_name])
     if proc.wait() != 0:
         raise IOError, "Could not create volume %s in %s" % (volume_name, path)
-    
+
     volume = Volume(name=volume_name, dirname=path)
-    
+
     if group:
         # give write access to librarians
         vol_acl = {}
         vol_acl[group + ':librarians'] = "all"
         volume.addACL(vol_acl)
-    
+
     return volume
