@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2011-02-04 - Stephanie Hansmann-Menzemer
+ - add check for untested status code
 
 !========================= PatAlgorithms v4r11 2011-02-02 =========================
 ! 2011-02-01 - Olivier Callot

@@ -140,7 +140,12 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     
     makeTrack(*vTr, *sTr, *match, (*itM).dist() );
 
-    if(m_addTT) m_addTTClusterTool->addTTClusters( *match );
+    if(m_addTT){
+      StatusCode sc = m_addTTClusterTool->addTTClusters( *match );
+      if ( sc.isFailure() ) 
+	Warning("adding TT clusters failed!",sc).ignore();
+    }
+
     matchs.insert( match);
 
   }//end loop match cands
