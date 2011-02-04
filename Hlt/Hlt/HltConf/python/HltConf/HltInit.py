@@ -1,6 +1,5 @@
 from Configurables import HltANNSvc 
 
-print 'Running HltInit.py'
 
 # quick hack to make sure Hlt2Global is OK...
 Hlt2ID = HltANNSvc().Hlt2SelectionID
