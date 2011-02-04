@@ -1002,8 +1002,7 @@ LoKi::GetTools::trackSelector
   return ts ;
 }
 // ============================================================================
-/** get the track selector tool 
-/*  get the decay tree fitter 
+/* get the track selector tool 
  *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
  *  -  use IToolSvc::retrieveTool 
  *  @param (INPUT) base    the base to be used 

@@ -5,6 +5,11 @@
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
 
+! 2011-02-04 - Juan Palacios
+ - src/GetTools.cpp
+  . Fix warning.
+ - Increase to v1r1p1
+
 ! ========================== LoKiUtils v1r1 2011-01-28 =========================
 
 ! 2011-01-20 - Vanya Belyaev
