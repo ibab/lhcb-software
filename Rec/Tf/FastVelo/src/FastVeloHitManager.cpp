@@ -33,10 +33,6 @@ FastVeloHitManager::FastVeloHitManager( const std::string& type,
 // Destructor
 //=============================================================================
 FastVeloHitManager::~FastVeloHitManager() {
-  info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
-  for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-    if ( NULL != *itS ) delete *itS;
-  }
 } 
 //=============================================================================
 // Initialization
@@ -71,6 +67,16 @@ StatusCode FastVeloHitManager::initialize() {
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+//  Finalize method.
+//=========================================================================
+StatusCode FastVeloHitManager::finalize ( ) {
+  info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
+  for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
+    if ( NULL != *itS ) delete *itS;
+  }
+  return GaudiTool::finalize();
+}
 //=========================================================================
 //  Rebuild the geometry. Needed in case something changes in the Velo during the run...
 //=========================================================================

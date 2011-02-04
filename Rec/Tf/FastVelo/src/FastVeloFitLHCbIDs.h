@@ -25,7 +25,7 @@ public:
 
   virtual ~FastVeloFitLHCbIDs( ); ///< Destructor
 
-  StatusCode initialize(); ///< initialize
+  virtual StatusCode initialize(); ///< initialize
 
   /// fit the track using the LHCbIDs on it with the FastVelo internal fit
   virtual StatusCode fit ( LHCb::Track & track, 

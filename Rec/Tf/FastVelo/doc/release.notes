@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-02-04 - Olivier Callot
+ - Move the final printing from the destructor to the finalize method in FastVeloHitManager
+
 !========================= FastVelo v1r4 2011-02-02 =========================
 ! 2011-02-02 - Olivier Callot
  - Protect the geometry from a double-float underflow, for the case of DC06...

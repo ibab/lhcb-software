@@ -33,6 +33,8 @@ public:
 
   virtual StatusCode initialize();
 
+  virtual StatusCode finalize();
+
   void buildFastHits();
 
   void clearHits();
