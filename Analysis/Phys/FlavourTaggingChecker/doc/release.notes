@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-02-04 - Juan Palacios
+ - Add missing use of Phys/DaVinciMCKernel to requirements.
+
 ! 2011-02-04 - Marc Grabalosa
   - Removed TrackMatching form BTaggingAnalysis
   - More plots in /root. VCh plots, Omega for comb and taggers plots.
