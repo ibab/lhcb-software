@@ -7,6 +7,9 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-05 - Juan Palacios
+ - Use LoKi MC packages explicitly.
+ - Increase to v8r8.
 !========================== LoKiExample v8r7p1 2011-01-25 =================
 
 ! 2011-01-05 - Juan Palacios
