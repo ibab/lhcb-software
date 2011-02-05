@@ -22,7 +22,7 @@ def ConfiguredMasterFitter( Name,
                             ApplyMaterialCorrections = None,
                             StateAtBeamLine = True,
                             MaxNumberOutliers = 2 ,
-                            FastOutlierIteration = True ):
+                            FastOutlierIteration = False ):
     # set the mutable default arguments
     if FieldOff is None:                 FieldOff = TrackSys().fieldOff()
     if SimplifiedGeometry is None:       SimplifiedGeometry = TrackSys().simplifiedGeometry()
