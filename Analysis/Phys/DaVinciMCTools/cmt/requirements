@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v9r27p1
+version           v9r28
 
 # This template is an example for a standard Algorithm package
 #
@@ -25,6 +25,7 @@ use  PhysEvent           v*  Event
 use  GenEvent            v*  Event
 use  DaVinciKernel       v*  Phys
 use  DaVinciMCKernel     v*  Phys
+use  LoKiPhysMC          v*  Phys
 use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event

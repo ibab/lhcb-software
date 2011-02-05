@@ -4,10 +4,12 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-02-05 - Juan Palacios
+ - Use Phys/LoKiPhysMC.
+ - Increase to v9r28.
+
 ! 2011-01-31 - Thomas Blake
  - Bug fix for MCBd2KstarMuMuAngleCalculator related to particle finding
-
-
 
 !========================== DaVinciMCTools v9r27p1 2010-12-20 ================
 
