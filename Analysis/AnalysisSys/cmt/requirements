@@ -17,7 +17,7 @@ use  DaVinciMonitors            v1r14    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5p1   Rich   # Chris Jones
 use  KaliCalo                   v4r8     Phys   # Vanya Belyaev
 ####################################################################
-use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
+#use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
 use  DaVinciMCTools     	v9r27p1  Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r1     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r0     Phys   # Vanya Belyaev
