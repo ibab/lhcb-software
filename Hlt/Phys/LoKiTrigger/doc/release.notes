@@ -5,6 +5,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-06 - Gerhard Raven
+ - undo the addition of timers temporarily until the release
+   on top of LHCB_v32r0 has been done, as the relevant code
+   is not in v32r0 (will be in the next release). The addition
+   can be replayed by inverting 'svn merge -r116908:116907 .'
+
+
 ! 2011-02-03 - Vanya Belyaev
 
  - Hlt.py 
