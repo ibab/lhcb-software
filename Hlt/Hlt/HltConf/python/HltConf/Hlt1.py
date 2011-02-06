@@ -32,7 +32,6 @@ from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
 from Hlt1Lines.Hlt1CosmicLines   import Hlt1CosmicLinesConf
 from Hlt1Lines.Hlt1MBLines import Hlt1MBLinesConf
 from Hlt1Lines.Hlt1TrackLines import Hlt1TrackLinesConf
-import HltConf.HltInit
 
 
 class Hlt1Conf(LHCbConfigurableUser):
