@@ -140,7 +140,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
               % (n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',NBody=n,
                        Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file)
-        cuts = "(FILTER('BBDecTreeTool/TrgBBDT')) & (INTREE(ISMUON))"
+        cuts = "INTREE(HASPROTO & HASMUON & ISMUON) & FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
                             InputLocations=input,Code=cuts,tools=[bdttool]) 
         return bindMembers('TopoMu%d' % n, input+[filter])
