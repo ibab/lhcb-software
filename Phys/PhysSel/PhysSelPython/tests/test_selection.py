@@ -30,7 +30,7 @@ def test_automatic_data() :
     assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
 
 
-def test_void_event_selection() :
+def test_VoidEventSelection() :
      sel00 = AutomaticData(Location = 'Phys/Sel00x')
      ves00 = VoidEventSelection('VES00',
                                 Code = 'Test (<Location>) > X',
@@ -39,7 +39,7 @@ def test_void_event_selection() :
      assert ves00.outputLocation() == 'Phys/Sel00x/Particles'
      assert ves00.algorithm().Code == "Test ('Phys/Sel00x/Particles') > X"
 
-def test_void_event_selection_code_integrity() :
+def test_VoidEventSelection_code_integrity() :
 
     sel00 = AutomaticData(Location = 'Phys/Sel00x')
 
@@ -66,10 +66,10 @@ def test_void_event_selection_code_integrity() :
     assert ves04.algorithm().Code == coderef
 
 
-def test_void_event_selection_with_existing_name_raises() :
+def test_VoidEventSelection_with_existing_name_raises() :
     raises(NameError, VoidEventSelection, 'VES00', Code = 'blah', RequiredSelection = AutomaticData(Location='blah/blah'))
     
-def test_void_event_selection_with_existing_configurable_name_raises() :
+def test_VoidEventSelection_with_existing_configurable_name_raises() :
 
     selFilter = FilterDesktop('SelFilter0')
     sel = AutomaticData(Location = 'Phys/Sel')
@@ -158,9 +158,9 @@ def test_tree_InputLocations_propagated() :
     sel0 = Selection('Sel001', Algorithm = alg0,
                      RequiredSelections = [sel00, sel01])
     assert len(alg0.InputLocations) == 0
-    assert len(sel0.alg.InputLocations) == 2
-    assert sel0.alg.InputLocations.count('Phys/Sel00/Particles') ==1
-    assert sel0.alg.InputLocations.count('Phys/Sel01/Particles') ==1
+    assert len(sel0.algorithm().InputLocations) == 2
+    assert sel0.algorithm().InputLocations.count('Phys/Sel00/Particles') ==1
+    assert sel0.algorithm().InputLocations.count('Phys/Sel01/Particles') ==1
 
 
 '''
@@ -188,8 +188,8 @@ def test_selection_with_existing_selection_name_raises() :
     raises(NameError, Selection, 'Sel003', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
 
-    assert sel0.alg.InputLocations == ['Phys/Sel02/Particles',
-                                       'Phys/Sel03/Particles']
+    assert sel0.algorithm().InputLocations == ['Phys/Sel02/Particles',
+                                               'Phys/Sel03/Particles']
 
 def test_clone_selection_with_existing_selection_name_raises() :
     
@@ -202,7 +202,7 @@ def test_clone_selection_with_existing_selection_name_raises() :
 
     raises( NameError, sel0.clone, name = 'Sel004', Algorithm = alg0,
             RequiredSelections = [sel02, sel03])
-    assert sel0.alg.InputLocations == ['Phys/Sel02/Particles',
+    assert sel0.algorithm().InputLocations == ['Phys/Sel02/Particles',
                                        'Phys/Sel03/Particles']
         
 def test_clone_selection_with_new_alg() :
@@ -213,9 +213,9 @@ def test_clone_selection_with_new_alg() :
     assert alg1.name() == 'Alg1'
     assert len(alg1.InputLocations) == 0
 
-    assert len(sel0.alg.InputLocations) == 2
-    assert sel0.alg.InputLocations.count('Phys/Sel00/Particles') ==1
-    assert sel0.alg.InputLocations.count('Phys/Sel01/Particles') ==1
+    assert len(sel0.algorithm().InputLocations) == 2
+    assert sel0.algorithm().InputLocations.count('Phys/Sel00/Particles') ==1
+    assert sel0.algorithm().InputLocations.count('Phys/Sel01/Particles') ==1
 
 def test_clone_selection_with_new_InputLocations() :
     sel = test_instantiate_tree('0002')
@@ -223,9 +223,9 @@ def test_clone_selection_with_new_InputLocations() :
     clone01 = AutomaticData(Location = 'Phys/Clone01')
     selClone = sel.clone('sel0_clone1',
                          RequiredSelections = [clone00, clone01])
-    assert len(selClone.alg.InputLocations) == 2
-    assert selClone.alg.InputLocations.count('Phys/Clone00/Particles') ==1
-    assert selClone.alg.InputLocations.count('Phys/Clone01/Particles') ==1
+    assert len(selClone.algorithm().InputLocations) == 2
+    assert selClone.algorithm().InputLocations.count('Phys/Clone00/Particles') ==1
+    assert selClone.algorithm().InputLocations.count('Phys/Clone01/Particles') ==1
 
 def test_selection_with_name_overlap_doesnt_raise() :
     sel02 = AutomaticData(Location = 'Phys/Sel02')

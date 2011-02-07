@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           PhysSelPython
-version           v7r0
+version           v8r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

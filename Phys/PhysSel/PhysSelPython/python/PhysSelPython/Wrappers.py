@@ -12,7 +12,7 @@ are available:
    - MergedSelection    Merges a set of selections in OR mode, writing all data to a single location.
    - EventSelection     Wraps an algorithm that selects an event and produces no output data.
    - VoidEventSelection Selects event based on TES container properties, applying a LoKi__VoidFilter compatible cut to the data from a required selection.
-   
+   - PassThroughSelection
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
@@ -21,6 +21,7 @@ __all__ = ('DataOnDemand',
            'Selection',
            'MergedSelection',
            'EventSelection',
+           'PassThroughSelection',
            'SelectionSequence',
            'MultiSelectionSequence',
            'SelSequence',
@@ -35,29 +36,37 @@ from copy import copy
 from Configurables import GaudiSequencer
 
 from SelPy.selection import ( flatAlgorithmList,
+                              NamedObject,
+                              UniquelyNamedObject,
                               AutomaticData,
                               NameError,
                               NonEmptyInputLocations,
                               IncompatibleInputLocations,
-                              update_overlap,
                               SelSequence                )
 
+from SelPy.utils import update_dict_overlap
+
 from SelPy.selection import Selection as Sel
+from SelPy.selection import EventSelection as EvtSel
+from SelPy.selection import PassThroughSelection as PassThroughSel
 from SelPy.selection import AutomaticData as autodata
 
 from Configurables import LoKi__VoidFilter as VoidFilter
 from GaudiConfUtils import configurableExists, isConfigurable
 from GaudiConfUtils import ConfigurableGenerators
 
-def Selection(name, *args, **kwargs) :
-    """
-    Wrapper around SelPy.Selection. Since SelPy.Selection clones it's input
-    algorithm giving it it's own name, check first whether a configurable
-    with that name already exists and raise a NameError if that is the case.
-    If not, construct and return a SelPy.Selection.
-    """
+def checkName(name) :
     if configurableExists(name) :
         raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
+
+def selectionWrapper(selType, name, *args, **kwargs) :
+    """
+    Construct a selection of type selType with construction arguments.
+    Checks if name already belongs to an existing Configurable.
+    Checks whether input is Configurable and if so, extracts its non-default
+    parameters and passes them as a configurableGenerator.
+    """
+    checkName(name)
 
     algorithm = kwargs.pop('Algorithm')
     if isConfigurable( algorithm )  :
@@ -65,7 +74,38 @@ def Selection(name, *args, **kwargs) :
         kwargs['ConfGenerator'] = algGen
     else :
         kwargs['ConfGenerator'] = algorithm
-    return Sel(name, *args, **kwargs)
+    return selType(name, *args, **kwargs)
+
+def Selection(name, *args, **kwargs) :
+    """
+    Wrapper around SelPy.Selection. Since SelPy.Selection takes a
+    ConfigurableGenerator as input and constructs a Configurable 
+    with it it's own name, check first whether a configurable
+    with that name already exists and raise a NameError if that is the case.
+    If not, construct and return a SelPy.Selection.
+    """
+    return selectionWrapper(Sel, name, *args, **kwargs)
+
+def EventSelection(name, *args, **kwargs) :
+    """
+    Wrapper around SelPy.EventSelection. Since SelPy.EventSelection takes a
+    ConfigurableGenerator as input and constructs a Configurable 
+    with it it's own name, check first whether a configurable
+    with that name already exists and raise a NameError if that is the case.
+    If not, construct and return a SelPy.EventSelection.
+    """
+    return selectionWrapper(EvtSel, name, *args, **kwargs)
+
+def PassThroughSelection(name, *args, **kwargs) :
+    """
+    Wrapper around SelPy.PassThroughSelection. Since
+    SelPy.PassThroughSelection takes a
+    ConfigurableGenerator as input and constructs a Configurable 
+    with it it's own name, check first whether a configurable
+    with that name already exists and raise a NameError if that is the case.
+    If not, construct and return a SelPy.EventSelection.
+    """
+    return selectionWrapper(PassThroughSel, name, *args, **kwargs)    
 
 class AutomaticData(autodata) :
     """
@@ -105,42 +145,10 @@ class AutomaticData(autodata) :
         return VoidFilter('SelFilter'+self._name,
                           Code = "CONTAINS('"+self._location+"')>0")
 
-#    def algName(self) :
-#        return self.algorithm().name()
-
 DataOnDemand = AutomaticData
 
-class EventSelection(object) :
-    """
-    Selection wrapper class for configured event selection algorithm.
-    Algorithm produces no output data and is assumed to be correctly
-    configured. Only action expected from it is that is selects or
-    rejects an event. Can be used just like a Selection object.
-    Example:
-    from PhysSelPython.Wrappers import EventSelection, SelectionSequence
-    from Configurables import SomeEventSelectionAlg
-    evtSel = EventSelection(SomeEventSelectionAlg('MyEvtSel', **params)
-    help(SelectionSequence)
-    selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
-    """
-    def __init__(self, algorithm ,
-                 RequiredSelection = None  ) :
-        self._alg = algorithm
-        self.requiredSelection  = RequiredSelection 
-        if self.requiredSelection :
-            self.requiredSelections = [ RequiredSelection ]
-        else   : self.requiredSelections = []
-    
-    def name(self) :
-        return self._alg.name()
-    def algorithm(self) :
-        return self._alg
-    def outputLocation(self) :
-        if self.requiredSelection :
-            return self.requiredSelection.outputLocation()
-        return ''
 
-class VoidEventSelection(object) :
+class VoidEventSelection(UniquelyNamedObject) :
     """
     Selection class for event selection based on contents of TES location.
     Can be used just like a Selection object.
@@ -158,40 +166,31 @@ class VoidEventSelection(object) :
     """
 
     __author__ = "Juan Palacios palacios@physik.uzh.ch"
-
-    __used_names = []
     
     def __init__(self,
                  name,
                  Code,
                  RequiredSelection ) :
 
-        if name in VoidEventSelection.__used_names :
-            raise NameError('VoidEventSelection name ' + name + ' has already been used. Pick a new one.')
-
+        UniquelyNamedObject.__init__(self, name)
         
-        if configurableExists(name) :
-            raise NameError('Target Configurable '+ name + ' already exists. Pick a new one.')
+        if configurableExists(self.name()) :
+            raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
         
-        self._name = name
         self.requiredSelection  = RequiredSelection 
         self.requiredSelections = [ RequiredSelection ]
         _code = Code.replace('<Location>',
                              "'"+self.requiredSelection.outputLocation()+"'")
         _code = _code.replace('\"\'', '\'').replace('\'\"', '\'').replace('\'\'','\'')
-        self._alg = VoidFilter(self._name,
+        self._alg = VoidFilter(self.name(),
                                Code = _code)
 
-        VoidEventSelection.__used_names.append(name)
-        
-    def name(self) :
-        return self._name
     def algorithm(self) :
         return self._alg
     def outputLocation(self) :
         return self.requiredSelection.outputLocation()
     
-class MergedSelection(object) :
+class MergedSelection(NamedObject) :
     """
     Selection wrapper class for merging output of various Selections.
     Can be used just like any Selection object.
@@ -213,13 +212,10 @@ class MergedSelection(object) :
                  OutputBranch = "Phys",
                  sequencerType=GaudiSequencer) :
 
+        NamedObject.__init__(self, name)
         self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
-
-        _algName = '_'+ name
-        if configurableExists(_algName) :
-            raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
 
         self._sel = Selection(name,
                               Algorithm = ConfigurableGenerators.FilterDesktop(Code='ALL'),
@@ -229,7 +225,6 @@ class MergedSelection(object) :
         self.algos = flatAlgorithmList(self._sel)
 
         self.requiredSelections = []
-        self._name = name
         self._alg = sequencerType('Seq'+self.name(),
                                   Members = self.algos,
                                   ModeOR = True,
@@ -237,13 +232,12 @@ class MergedSelection(object) :
 
     def algorithm(self) :
         return self._alg
-    def name(self) :
-        return self._name
+
     def outputLocation(self) :
         return self._sel.outputLocation()
 
     def clone(self, name, **args) :
-        new_dict = update_overlap(self.__ctor_dict__, args)
+        new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return MergedSelection(name, **new_dict)
 
 class SelectionSequence(SelSequence) :
@@ -300,12 +294,12 @@ class SelectionSequence(SelSequence) :
         return self.gaudiseq
 
     def clone(self, name, **args) :
-        new_dict = update_overlap(self.__ctor_dict__, args)
+        new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return SelectionSequence(name, **new_dict)
 
 
     
-class MultiSelectionSequence(object) :
+class MultiSelectionSequence(UniquelyNamedObject) :
     """
     Wrapper class for offline multiple selection sequence creation.
     Takes a list of SelectionSequence objects and produces on demand a
@@ -320,7 +314,7 @@ class MultiSelectionSequence(object) :
                  Sequences = [],
                  sequencerType = GaudiSequencer) :
 
-        self._name = name
+        UniquelyNamedObject.__init__(self, name)
         self.sequences = list(Sequences)
         self.gaudiseq = None
         self.algos = []
@@ -334,9 +328,6 @@ class MultiSelectionSequence(object) :
                                       ModeOR = True,
                                       ShortCircuit = False,
                                       Members = [seq.sequence() for seq in self.sequences])
-        
-    def name(self) :
-        return self._name
         
     def outputLocations(self) :
         return [seq.outputLocation() for seq in self.sequences]

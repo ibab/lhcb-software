@@ -45,11 +45,12 @@ class MockStrippingLine(object) :
 
     _getMemberAlgs = {'MergedSelection' : lambda x : [x.algorithm()]   }
 
-    _getSelectionAlgs = { 'Selection'          : _cloneSelection,
-                          'MergedSelection'    : _cloneSelection,
-                          'EventSelection'     : _eventSelection,
-                          'VoidEventSelection' : _eventSelection,
-                          'AutomaticData'      : _mergedSelection  }
+    _getSelectionAlgs = { 'Selection'            : _cloneSelection,
+                          'MergedSelection'      : _cloneSelection,
+                          'EventSelection'       : _eventSelection,
+                          'VoidEventSelection'   : _eventSelection,
+                          'PassThroughSelection' : _eventSelection,
+                          'AutomaticData'        : _mergedSelection  }
     
     
     def __init__(self, name, selection) :
