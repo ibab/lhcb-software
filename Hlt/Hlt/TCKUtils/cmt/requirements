@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven
 #============================================================================
 package           TCKUtils
-version           v1r6p10
+version           v1r7
 
 #============================================================================
 # Structure, i.e. directories to process. 
