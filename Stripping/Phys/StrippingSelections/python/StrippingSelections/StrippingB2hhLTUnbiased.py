@@ -102,8 +102,10 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     # loose line  - also used as input for NeuroBayes based nominal line
     #
     def B2hhLoose( self, Name, BMassMin, BMassMax ) :
+        from GaudiKernel.SystemOfUnits import GeV
         
-        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K) & TRCHI2DOF < 5 & (PT > 1.5 *GeV) & (P> 10.0 *GeV)"
+        
+        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < 5) & (PT > 1.5*GeV) & (P> 10.0*GeV)"
         combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.1)"         % locals()
         motherCut = "(VFASPF(VCHI2/VDOF) < 25) & (MAXTREE(('K+'==ABSID) ,PT) > 2.0*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > 0.1)"
             
