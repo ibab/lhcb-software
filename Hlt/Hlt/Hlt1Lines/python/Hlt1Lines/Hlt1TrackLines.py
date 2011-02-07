@@ -77,7 +77,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             FullPV3D
             >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
                   ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s ) )
+                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) )
             >>  execute( decodeIT )
             >> %(forward)s
             >>  ( ( TrPT > %(PT)s * MeV ) & \
@@ -108,7 +108,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             FullPV3D
             >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
                   ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s ) )
+                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
             >>  execute( decodeIT )
             >>  LooseForward
             >>  ( ( TrPT > %(PT)s * MeV ) & \
