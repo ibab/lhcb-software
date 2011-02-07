@@ -5,11 +5,35 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Roel Aaij
+ - Moved Hlt1Units.py from Hlt1Lines to Hlt1StreamerConf.py
+ - Added exported strings which are to be added to Preambulo by users for
+   - HltPVs.py
+   - HltReco.py
+   - Hlt1Streamers.py
+ - Hlt1Streamers.py
+   - this file is temporary and will be merged into Hlt1TrackUpgradeConf.py 
+     once the "old" symbols have become obsolete.
+   - Contains configuration of Forward and FitTrack Hlt1 upgrades. Created
+     TightForward and LooseForward
+ - HltPVs.py
+   - Refactored definition of PV3D to using exported strings; still backwards
+     compatible.
+ - HltReco.py
+   - Refactored candidate definition to use exported string.
+ - Hlt1TrackUpgradeConf.py
+   - Added fuction to configure MatchVeloMuon
+ - Hlt1TrackUpgradeTool
+   - Get a public tool instead of a private one
+
 ! 2011-02-04 - Victor Coco
  - small fix in hlt1 track fit config
 
 ! 2011-02-03 - Victor Coco
  - Track fit configuration now call the ConfiguredHltFitter. AddDefaultReferenceNodes is now to True in Hlt1 (consistent with Hlt2)
+
+! 2011-02-02 - Roel Aaij
+ - Add UpgradeConf object for new MatchVeloMuon tool
 
 ! 2011-01-30 - V. Gligorov
  - Stream the PVs.

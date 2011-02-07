@@ -1,5 +1,9 @@
 from Gaudi import Configuration
-from Configurables import HltTrackUpgradeTool, L0ConfirmWithT, PatConfirmTool, PatSeedingTool, PatForwardTool, HltGuidedForward
+from Configurables import ( HltTrackUpgradeTool, L0ConfirmWithT,
+                            PatConfirmTool, PatSeedingTool,
+                            PatForwardTool, HltGuidedForward,
+                            MatchVeloMuon, HltTrackFit )
+                            
 from HltLine.HltLine import Hlt1Tool
 
 import PyCintex
@@ -10,53 +14,43 @@ EarlyDataTracking = False
 
 ### create one instance for each output container...
 
+__all__ = ( 'ConfiguredPatSeeding',
+            'ConfiguredForward',
+            'ConfiguredFastKalman',
+            'ConfiguredMatchVeloMuon',
+            'Forward',
+            'GuidedForward',
+            'TMuonConf',
+            'THadronConf',
+            'TEleConf',
+            'Velo',
+            'FitTrack',
+            'RadCor' )
+            
 def ConfiguredPatSeeding( minPSeed = 3000):
     # Add the option to define a minimum PT/P 
     # for the tracking to consider
     # Only relevant for the forward upgrade
-        if EarlyDataTracking:
-            return Hlt1Tool( PatSeedingTool,
-                         OTNHitsLowThresh=12,
-                         MinTotalPlanes = 7,
-                         MaxMisses = 2,
-                         MaxTrackChi2LowMult=10,
-                         MaxFinalTrackChi2=20,
-                         MaxFinalChi2=30,
-                         MaxTrackChi2=40,
-                         MaxChi2HitIT=10,
-                         MaxChi2HitOT=30,
-                         MinMomentum = minPSeed
-                         )
-        else : return Hlt1Tool(PatSeedingTool,MinMomentum = minPSeed)
+    return Hlt1Tool( PatSeedingTool, MinMomentum = minPSeed )
         
-
-def ConfiguredForward( parent ) :
-    if EarlyDataTracking: 
-            return Hlt1Tool( PatForwardTool
-                             , MinXPlanes = 4
-                             , MinPlanes = 8
-                             , MaxSpreadX = 1.5
-                             , MaxSpreadY = 3.0
-                             , MaxChi2 = 40
-                             , MaxChi2Track = 40
-                             , MinHits = 12
-                             , MinOTHits = 14 ).createConfigurable( parent )
-    else : 
-            myMinPt =  800  #### MOVE TO 800 (used to be 500 )
-            myMinP  = 8000 #### MOVE TO 8000 (used to be 5000 )
-            return Hlt1Tool( PatForwardTool
-                             , SecondLoop = True
-                             , MaxChi2 = 40
-                             , MaxChi2Track = 40
-                             , MinHits = 12
-                             , MinOTHits = 14
-                             , MinPt = myMinPt
-                             , MinMomentum = myMinP ).createConfigurable( parent )
+_minPt =  800  #### MOVE TO 800 (used to be 500 )
+_minP  = 8000 #### MOVE TO 8000 (used to be 5000 )
+def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt ) :
+    if name == None: name = PatForwardTool.__name__
+    return Hlt1Tool( PatForwardTool
+                     , name
+                     , SecondLoop = True
+                     , MaxChi2 = 40
+                     , MaxChi2Track = 40
+                     , MinHits = 12
+                     , MinOTHits = 14
+                     , MinPt = minPt
+                     , MinMomentum = minP ).createConfigurable( parent )
             
-def ConfiguredFastKalman( parent ) :
-    from Configurables import HltTrackFit
-    parent.addTool( HltTrackFit )
-    parent = getattr( parent, HltTrackFit.__name__ )
+def ConfiguredFastKalman( parent, name = None ) :
+    if name == None: name = HltTrackFit.__name__
+    parent.addTool( HltTrackFit, name )
+    parent = getattr( parent, name )
     from Configurables import TrackMasterFitter
     parent.addTool( TrackMasterFitter, name = 'Fit')
     from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
@@ -68,8 +62,18 @@ def ConfiguredFastKalman( parent ) :
 ##     fitter.MaxNumberOutliers = 2
 ##     fitter.UpdateTransport = False
 
+def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
+    if name == None: name = MatchVeloMuon.__name__
+    return Hlt1Tool( MatchVeloMuon
+                     , name
+                     , MaxChi2DoFX = 10
+                     , XWindow = 200
+                     , YWindow = 200
+                     ## Set this according to PatForward
+                     , MinMomentum = minP - 500 ).createConfigurable( parent )
+
 ####################################################
-TMuonConf = HltTrackUpgradeTool('TMuonConf')
+TMuonConf = HltTrackUpgradeTool( 'TMuonConfUpgrade' )
 TMuonConf.View       = True
 TMuonConf.ITrackType = LHCb.Track.Muon
 TMuonConf.OTrackType = LHCb.Track.Ttrack
@@ -101,7 +105,7 @@ myTMuonConfTool = Hlt1Tool( L0ConfirmWithT, 'TMuonConf'
 TMuonConf.Tool       = myTMuonConfTool.getFullName()
     
 ####################################################
-THadronConf = HltTrackUpgradeTool("THadronConf")
+THadronConf = HltTrackUpgradeTool( "THadronConfUpgrade" )
 myHadronConfTool =  Hlt1Tool( type = L0ConfirmWithT , name='THadronConf'
                                                 , particleType = 1
                                                 , trackingTool='PatConfirmTool'
@@ -123,7 +127,7 @@ THadronConf.TESOutput = "Hlt1/Track/THadronConf"
 
 
 ####################################################
-TEleConf = HltTrackUpgradeTool("TEleConf")
+TEleConf = HltTrackUpgradeTool( "TEleConfUpgrade" )
 myEleConfTool = Hlt1Tool( L0ConfirmWithT 
                         , 'TEleConf' 
                         , particleType = 2 
@@ -182,7 +186,3 @@ RadCor.View = False
 RadCor.ITrackType = LHCb.Track.Long
 RadCor.OTrackType = LHCb.Track.Long
 RadCor.TESOutput = "Hlt1/Track/RadCor"
-
-
-
-

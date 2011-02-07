@@ -34,6 +34,7 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'MinimalVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
+          , 'VeloCandidates'
           )
 ############################################################################################
 # Option to decide which pattern to use
@@ -85,14 +86,14 @@ STOfflinePosition().APE = 0.197
 from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix 
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
+from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
 
 if useFastVelo :
     recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = "Hlt/Track/Velo" )
-    recoVelo.HLT1Only = True
-   
+    recoVelo.HLT1Only = True   
 else :
    recoVelo         = Tf__PatVeloSpaceTracking('Hlt1And2RecoVelo'
                                                , InputTracksName  = "Hlt/Track/RZVelo" 
@@ -109,27 +110,27 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , FilterDescriptor = ["IsBackward,<,0.5"]
                               , OutputSelection     = "Velo" )
 
-#from Configurables import LoKi__HltUnit
-#prepare3DVelo = LoKi__HltUnit('Hlt1Prepare3DVelo', Code = "TrSOURCE('%s', ~TrBACKWARD) >> TrREGISTER('Velo') >> ~TrEMPTY" % recoVelo.OutputTracksName )
-
 #############################################################################################
 # Define the reconstruction sequence 
 #############################################################################################
-
 from HltLine.HltDecodeRaw import DecodeVELO
 from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
+MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
 
 if useFastVelo :
-    MinimalVelo     = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+    MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 else :
-    MinimalVelo     = bindMembers( None, [MinimalRZVelo, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+    MinimalVelo = bindMembers( None, [MinimalRZVelo, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 
-Velo            = bindMembers( None, [                    MinimalVelo, prepare3DVelo ] ).setOutputSelection('Velo')
+Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 
+
+# ==============================================================================
+# Hlt1Seeding, FIXME: convert to new framework; needed by MicroBias
+# ==============================================================================
 from Configurables import PatSeeding
 from HltLine.HltDecodeRaw import DecodeIT
 Hlt1Seeding = bindMembers( None, [ DecodeIT,
@@ -142,27 +143,24 @@ Hlt1Seeding = bindMembers( None, [ DecodeIT,
 # ==============================================================================
 from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
 from Configurables import Hlt__Track2Candidate
-
-_factory = Hlt1Factory ( "Hlt1Factory" )
-
+_VeloSelection = 'VeloCandidates'
 ## append Track->Candidate converter to the end of velo recontruction. tmp?
 _veloTracks = Hlt__Track2Candidate (
     'Velo2Candidates' ,
     Code            = "~TrBACKWARD"    , ## skip backward tracks 
     InputSelection  = "Hlt/Track/Velo" ,
-    OutputSelection = 'VeloCandidates'
+    OutputSelection = _VeloSelection,
     )
-_Velo = bindMembers ( None ,
-                      [ Velo , _veloTracks ] ).setOutputSelection('VeloCandidates')
+_Velo = bindMembers ( None , [ MinimalVelo, _veloTracks ] )
 
 #
-## register the symbols for factory:
+## Create the strings which users will import
 #  
-_factory.Lines += [
-    ## ``Gate'' or ``Cause''  : reconstruct Velo & convert to Candidates
-    "veloReco       =  %s  " % [ m.getFullName() for m in _Velo.members() ] 
-    ]
-
+# Velo candidates
+import HltLine.HltDecodeRaw 
+VeloCandidates = "%s = execute( %s ) * SELECTION( '%s' )" % \
+                ( _Velo.outputSelection(), [ m.getFullName() for m in _Velo.members() ],
+                  _Velo.outputSelection() )
 # ==============================================================================
 # The END 
 # ==============================================================================

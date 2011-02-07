@@ -2,7 +2,7 @@
 # configurations for HLT2
 #
 __author__  =  "V. Gligorov vladimir.gligorov@cern.ch"
-from Configurables import Hlt2Tracking
+from Hlt2Tracking  import Hlt2Tracking
 from HltTrackNames import Hlt2TracksPrefix, HltUnfittedTracksSuffix, Hlt2ForwardTracksName
 from HltTrackNames import HltBiDirectionalKalmanFitSuffix,Hlt2DownstreamTracksName 
 from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix 
@@ -57,16 +57,16 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
 #
 def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
-                                                                                 Prefix                 = Hlt2TracksPrefix,
-                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2ForwardTracksName,
-                                                                                 DoFastFit              = True,
-                                                                                 DoSeeding              = False,
-                                                                                 DoCloneKilling         = False,
-                                                                                 RichHypos              = ["pion","proton"],
-                                                                                 RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }  } 
-                                                                        )
+     return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
+                         Prefix                 = Hlt2TracksPrefix,
+                         FastFitType            = HltBiDirectionalKalmanFitSuffix,
+                         Hlt2Tracks             = Hlt2ForwardTracksName,
+                         DoFastFit              = True,
+                         DoSeeding              = False,
+                         DoCloneKilling         = False,
+                         RichHypos              = ["pion","proton"],
+                         RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }  }
+                         )
 #
 def setDataTypeForTracking(trackingInstance, dataType):
 

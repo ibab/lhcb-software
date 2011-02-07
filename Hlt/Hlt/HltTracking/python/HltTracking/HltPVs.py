@@ -46,18 +46,16 @@ from HltVertexNames import HltSharedVerticesPrefix
 from HltVertexNames import Hlt3DPrimaryVerticesName,_vertexLocation
 from HltVertexNames import HltGlobalVertexLocation
 
-_factory_decorated = []
+from Configurables import PatPV3D
+from Configurables import PVOfflineTool, PVSeedTool, LSAdaptPV3DFitter
+from HltReco import MinimalVelo
 
-#### Primary vertex algorithms...
-def PV3D() :
+PV3DSelection = 'PV3D'
 
-    from Configurables import PatPV3D
-    from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPV3DFitter
-    from HltReco import MinimalVelo
-
+def _RecoPV3D():
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
-    recoPV3D =  PatPV3D('HltPVsPV3D' )
+    recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
@@ -65,35 +63,31 @@ def PV3D() :
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = output3DVertices
-    recoPV3D.PVOfflineTool.InputTracks = [MinimalVelo.outputSelection()]
+    recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
 
     from Configurables import HltVertexFilter   
- 
     preparePV3D = HltVertexFilter( 'Hlt1PreparePV3D'
-                             , InputSelection = "TES:" + recoPV3D.OutputVerticesName
-                             , RequirePositiveInputs = False
-                             , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
-                             , HistoDescriptor = {'VertexZPosition': ( 'PV3D: VertexZPosition',-200.,200.,200),
-                                                  'VertexZPositionBest': ( 'PV3D: Highest VertexZPosition',-200,200.,100),
-                                                  'VertexTransversePosition': ( 'PV3D: VertexTransversePosition',0,1,50),
-                                                  'VertexTransversePositionBest': ( 'PV3D: Highest VertexTransversePosition',0,1,50)
-                                                    }
-                             , OutputSelection   = "PV3D" )
+                                   , InputSelection = "TES:" + recoPV3D.OutputVerticesName
+                                   , RequirePositiveInputs = False
+                                   , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
+                                   , HistoDescriptor = {'VertexZPosition': ( 'PV3D: VertexZPosition',-200.,200.,200),
+                                                        'VertexZPositionBest': ( 'PV3D: Highest VertexZPosition',-200,200.,100),
+                                                        'VertexTransversePosition': ( 'PV3D: VertexTransversePosition',0,1,50),
+                                                        'VertexTransversePositionBest': ( 'PV3D: Highest VertexTransversePosition',0,1,50)
+                                                        }
+                                   , OutputSelection   = PV3DSelection )
 
-    pv3d =  bindMembers( "HltPVsPV3D", [ MinimalVelo, recoPV3D, preparePV3D]) 
+    return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D ] )
 
-    #   
-    ## register the symbols for factory:
-    #   
-    global _factory_decorated 
-    if not _factory_decorated : 
-        from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
-        _factory = Hlt1Factory ( "Hlt1Factory" )
-        _pv3d    = [ m.getFullName() for m in pv3d.members() ] 
-        _factory.Lines += [
-            ## recontruct 3D-primary vertices  
-            "PV3D     =    %s  " % _pv3d 
-            ]   
-        _factory_decorated += _pv3d 
-     
-    return pv3d
+def PV3D():
+    return bindMembers( "HltPVsPV3D", [ MinimalVelo, _RecoPV3D() ])
+
+## Symbols for streamer framework
+RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in _RecoPV3D().members() ]
+
+def to_action( symbol ):
+    return symbol.split( '=' )[ 1 ]
+
+from HltReco import VeloCandidates
+FullPV3D = "FullPV3D = %s >> execute( %s )" \
+           % ( to_action( VeloCandidates ), [ m.getFullName() for m in _RecoPV3D().members() ] )

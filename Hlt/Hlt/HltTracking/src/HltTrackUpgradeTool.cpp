@@ -59,7 +59,7 @@ StatusCode HltTrackUpgradeTool::initialize() {
   StatusCode sc = HltBaseTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
+  m_timer = tool< ISequencerTimerTool >( "SequencerTimerTool" );
 
   debug() << " InitReco " << endreq;
 
@@ -78,15 +78,13 @@ StatusCode HltTrackUpgradeTool::initialize() {
   Assert(!m_TESOutput.empty(), " No TES output location defined! " );
   Assert(!m_toolName.empty(), " No Tool name defined! " );
   
-  m_tool = tool<ITracksFromTrack>(m_toolName,this);
-  m_viewTool = m_hasView ? tool<ITrackView>(m_toolName,this) : 0 ;
-    
+  m_tool = tool<ITracksFromTrack>( m_toolName );
+  m_viewTool = m_hasView ? tool<ITrackView>( m_toolName ) : 0;
   
-  Assert(m_tool!=0," setReco() failed to create tool "+m_toolName);
+  Assert( m_tool != 0, " setReco() failed to create tool " + m_toolName );
 
-  // m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
   m_timer->increaseIndent();
-  m_timerTool = m_timer->addTimer(m_toolName);
+  m_timerTool = m_timer->addTimer( m_toolName );
   m_timer->decreaseIndent();
 
   return sc;
