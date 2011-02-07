@@ -33,6 +33,7 @@ public:
   bool decodeBank(int ibank=0 );
 
   unsigned int data(std::string name);
+  double dataScaled(std::string name);
   unsigned int version(){return m_vsn;};
   unsigned int tck(){  return m_tck; }
   unsigned int firmware(){  return m_pgaVsn; }
@@ -56,9 +57,9 @@ private:
   bool decoding(int ibank);
   bool getL0DUBanksFromRaw();
   inline void encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
-  inline void dataMap(std::string name, unsigned int data );
+  inline void dataMap(std::string name, unsigned int data , double scale = 1.);
   void fillBCIDData();
-  double scale(unsigned int base);
+  double scale(const unsigned int base[L0DUBase::Index::Size]);
   inline bool nextData();
   void putStatusOnTES();
   //
@@ -76,7 +77,7 @@ private:
   IL0CondDBProvider*     m_condDB;  
   //
   const std::vector<LHCb::RawBank*>* m_banks;  
-  std::map<std::string, unsigned int> m_dataMap;
+  std::map<std::string, std::pair<unsigned int,double> > m_dataMap;
   unsigned int m_vsn;
   unsigned int m_status;
   unsigned int m_pgaVsn;
@@ -114,7 +115,7 @@ private:
 
 
 inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
-  if(name != "")dataMap(name,data);
+  if(name != "")dataMap(name,data,scale(base));
   if(!m_encode)return;
   LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
@@ -130,8 +131,8 @@ inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const
   }  
 }
 
-inline void L0DUFromRawTool::dataMap(std::string name, unsigned int data){
-  if(m_fill)m_dataMap[name]=data;
+inline void L0DUFromRawTool::dataMap(std::string name, unsigned int data,double scale){
+  if(m_fill)m_dataMap[name]=std::make_pair(data,scale);
 }
 
 inline bool L0DUFromRawTool::nextData(){

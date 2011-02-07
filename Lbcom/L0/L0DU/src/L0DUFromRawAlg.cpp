@@ -129,10 +129,7 @@ StatusCode L0DUFromRawAlg::execute() {
         verbose() << "    - Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endmsg;
       }
     }
-  }
-  
-
-  
+  }  
   return StatusCode::SUCCESS;
 }
 

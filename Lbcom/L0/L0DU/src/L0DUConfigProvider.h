@@ -134,5 +134,7 @@ private:
   bool m_check;
   unsigned long m_condMask;
   unsigned int m_reported;
+  std::vector<int> m_FOIx;
+  std::vector<int> m_FOIy;
 };
 #endif // L0DUCONFIGPROVIDER_H

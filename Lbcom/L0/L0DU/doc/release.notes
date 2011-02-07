@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+
+
+! 2011-01-24 - Olivier Deschamps
+	- adapt to change in L0Event (new data DiMuonProd)
+
 !========================= L0DU v10r11 2011-02-01 =========================
 ! 2011-01-20 - Marco Cattaneo
  - Fix ICC warnings and remarks

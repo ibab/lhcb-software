@@ -67,6 +67,8 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Conditions"              , m_conditions )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "Channels"                , m_channels   )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "Triggers"                , m_triggers   )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "MuonFOIx"                , m_FOIx)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "MuonFOIy"                , m_FOIy)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   // for options defined configuration
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION")
     ->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
@@ -256,6 +258,9 @@ void L0DUConfigProvider::createConfig(std::string slot){
   if(it == m_configs.end()){
     m_configs[slot] = new LHCb::L0DUConfigs();
   }
+  if( !m_FOIx.empty() )m_config->setMuonFOIx( m_FOIx );
+  if( !m_FOIy.empty() )m_config->setMuonFOIy( m_FOIy );
+
   m_configs[slot]->insert( m_config );
   //=====================================
   printConfig(*m_config,slot);
@@ -1135,14 +1140,14 @@ std::vector<std::string> L0DUConfigProvider::triggerNameFromData( std::vector<st
   // 1st pass for the main trigger : L0Muon, L0Ecal, L0Hcal
   bool hasTrigger = false;
   for(std::vector<std::string>::iterator id = dataList.begin() ; id != dataList.end() ; id++){
-    std::string dataName = id->substr(0,2);
-    if( dataName == "Mu" || dataName == "DiMu" ){ 
+    std::string dataName = id->substr(0,4);
+    if( dataName == "Muon" || dataName == "DiMu" ){ 
       name.push_back( "L0Muon" ) ;
       hasTrigger = true;
-    } else if( dataName == "El" || dataName == "Ph" || dataName == "Lo" || dataName == "Gl" ){
+    } else if( dataName == "Elec" || dataName == "Phot" || dataName == "Loca" || dataName == "Glob" ){
       name.push_back( "L0Ecal" );
       hasTrigger = true;
-    } else if( dataName == "Ha" ){
+    } else if( dataName == "Hadr" ){
       name.push_back( "L0Hcal" );
       hasTrigger = true;
     }
@@ -1204,8 +1209,8 @@ bool L0DUConfigProvider::conditionCheck(LHCb::L0DUElementaryCondition* condition
   }
 
 
-  if( order < 0 ){
-    warning() << "Cannot associate a condition type to '" << condition->name() << "'" << endmsg;
+  if( order <= 0 ){
+    warning() << "Cannot associate a condition order to '" << condition->name() << "'" << endmsg;
     return false;
   }
   //  if( condition->threshold() == 0 && condition->comparator() == ">" ){ // special case for empty register
@@ -1337,7 +1342,8 @@ bool L0DUConfigProvider::configChecker(){
   double maxRate = -1.;
   for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator it = m_condOrder.begin();m_condOrder.end()!=it;++it){
     std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
-    double ctRate = (m_condMax[k] > 0) ? (double) conds.size() / (double) m_condMax[k] : 0;
+    double ctRate = 0;
+    if( conds.size() != 0)ctRate = (m_condMax[k] > 0) ? (double) conds.size() / (double) m_condMax[k] : 999.;
     if(ctRate > maxRate)maxRate = ctRate;
 
 

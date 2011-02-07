@@ -388,14 +388,18 @@ bool L0DUFromRawTool::decoding(int ibank){
     
     // PGA3 processing
     if( !nextData() )return false;
-    dataMap(Name[Muon1Pt] ,(*m_data & 0x0000007F ) >> 0  );
+    int mu1 = (*m_data & 0x0000007F ) >> 0;
+    dataMap(Name[Muon1Pt] ,mu1  ,scale(L0DUBase::Muon1::Pt));
     dataMap(Name[Muon1Sgn],(*m_data & 0x00000080 ) >> 7  );
-    dataMap(Name[Muon2Pt] ,(*m_data & 0x00007F00 ) >> 8  );
+    int mu2 = (*m_data & 0x00007F00 ) >> 8;
+    dataMap(Name[Muon2Pt] ,mu2  ,scale(L0DUBase::Muon2::Pt));
     dataMap(Name[Muon2Sgn],(*m_data & 0x00008000 ) >> 15 );
-    dataMap(Name[Muon3Pt] ,(*m_data & 0x007F0000 ) >> 16 );
+    dataMap(Name[Muon3Pt] ,(*m_data & 0x007F0000 ) >> 16 ,scale(L0DUBase::Muon3::Pt));
     dataMap(Name[Muon3Sgn],(*m_data & 0x00800000 ) >> 23 );
-    dataMap(Name[DiMuonPt],(*m_data & 0xFF000000 ) >> 24 );
-    
+    dataMap(Name[DiMuonPt],(*m_data & 0xFF000000 ) >> 24, scale(L0DUBase::Muon1::Pt));
+    //
+    dataMap(Name[DiMuonProdPt], mu1*mu2,scale(L0DUBase::Muon1::Pt));
+
     if( !nextData() )return false;
     dataMap(Name[Muon1Add],(*m_data & 0x0000FFFF ) >>0   );
     dataMap(Name[Muon2Add],(*m_data & 0xFFFF0000 ) >>16  );
@@ -496,7 +500,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     unsigned int decision  = (m_rsda >> 12) & 1;
     unsigned int fb        = (m_rsda >> 13) & 1;
     unsigned int ttb       = (m_rsda >> 14) & 1;
-    
+
     int decisionValue = 0x0;
     if( decision == 1)decisionValue |= LHCb::L0DUDecision::Physics;
     if( beam1    == 1)decisionValue |= LHCb::L0DUDecision::Beam1;
@@ -652,8 +656,8 @@ bool L0DUFromRawTool::decoding(int ibank){
       m_sumEt[-im]= (*m_data >> 16*odd) & 0x3FFF ;
       if( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[Bx=" << -im << "] = " <<  m_sumEt[-im] << endmsg;
     }
-     dataMap("Sum(Et,Prev2)",m_sumEt[-2]);
-     dataMap("Sum(Et,Prev1)",m_sumEt[-1]);
+    dataMap("Sum(Et,Prev2)",m_sumEt[-2],scale(L0DUBase::Sum::Et));
+    dataMap("Sum(Et,Prev1)",m_sumEt[-1],scale(L0DUBase::Sum::Et));
 
     if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX sumET decoded ... " << endmsg;
 
@@ -681,17 +685,17 @@ bool L0DUFromRawTool::decoding(int ibank){
       if( msgLevel( MSG::VERBOSE) )verbose() << " SumEt[Bx=" << ip+1 << "] = " <<  m_sumEt[ip+1] << endmsg;
     }
     if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " next BX sumET decoded ..." << endmsg;
-     dataMap("Sum(Et,Next1)",m_sumEt[1]);
-     dataMap("Sum(Et,Next2)",m_sumEt[2]);
+    dataMap("Sum(Et,Next1)",m_sumEt[1],scale(L0DUBase::Sum::Et));
+    dataMap("Sum(Et,Next2)",m_sumEt[2],scale(L0DUBase::Sum::Et));
 
     // check the size 
     if( msgLevel( MSG::VERBOSE) )verbose() << " <============= Decoding completed successfuly =============>" << endmsg;
     
     // Print all data values extracted from rawBank
     if ( msgLevel( MSG::VERBOSE) ){
-      for(std::map<std::string, unsigned int>::iterator imap = m_dataMap.begin();
+      for(std::map<std::string, std::pair<unsigned int,double> >::iterator imap = m_dataMap.begin();
           imap!=m_dataMap.end();imap++){
-        verbose() << "   --> Data " << (*imap).first << " = " <<  (*imap).second << endmsg;
+        verbose() << "   --> Data = (value,scale) : " << imap->first << " = " <<  imap->second << endmsg;
       }
     }
     
@@ -710,12 +714,25 @@ bool L0DUFromRawTool::decoding(int ibank){
         m_emuTool->process(temp, m_processorDatas).ignore();
       }
     }
+    // add data value to L0DUReport embeded map if not available via L0DUConfig (i.e. status bit or no emulation or unknown TCK)
+    for( std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.begin();
+         m_dataMap.end() != it ; ++it){ 
+      std::string name = it->first;
+      if( "" == name)continue;
+      unsigned int    di = (it->second).first;
+      double sc = (it->second).second;
+      if( m_report.dataDigit(name) != di )m_report.addToData(name,di, sc);
+    }
+    
+    
+
     // Fill report with the consecutive BXs info
     if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endmsg;
     m_report.setChannelsDecisionSummaries( m_cds );
     m_report.setConditionsValueSummaries(  m_ecs );
     m_report.setChannelsPreDecisionSummaries( m_tcs );  
     m_report.setSumEt( m_sumEt );    
+    m_report.setBcid( m_bcid2 );
     if ( msgLevel( MSG::VERBOSE) )verbose() 
       << " <==== Building output (emulated ProcessorData & L0DUReport) completed successfuly ====>" 
       << endmsg;
@@ -739,14 +756,24 @@ bool L0DUFromRawTool::decoding(int ibank){
 
 unsigned int L0DUFromRawTool::data(std::string name){
   // look for data in dataMap :
-  std::map<std::string, unsigned int>::iterator it = m_dataMap.find(name);
-  if( m_dataMap.end() != it) return (*it).second;
+  std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.find(name);
+  if( m_dataMap.end() != it) return ((*it).second).first;
   // not found : look for in config->data() (e.g. compound)
   return m_report.dataDigit( name );
 }
 
-double L0DUFromRawTool::scale(unsigned int base){
-  return m_condDB->scale( base );
+double L0DUFromRawTool::dataScaled(std::string name){
+  // look for data in dataMap :
+  std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.find(name);
+  if( m_dataMap.end() != it) return double(((*it).second).first)*((*it).second).second;
+  // not found : look for in config->data() (e.g. compound)
+  return m_report.dataValue( name );
+}
+
+
+
+double L0DUFromRawTool::scale(const unsigned int base[L0DUBase::Index::Size]){
+  return m_condDB->scale( base[L0DUBase::Index::Scale] );
 }
 
 

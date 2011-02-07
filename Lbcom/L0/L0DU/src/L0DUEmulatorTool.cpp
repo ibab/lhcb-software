@@ -86,7 +86,7 @@ StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  std::vector<std:
 
 //=============================================================================
 StatusCode L0DUEmulatorTool::fillData(){
-
+  if(m_config == NULL)return StatusCode::FAILURE;
   m_config->clearDataValue(); // reset data + emulation flag
   
   LHCb::L0DUElementaryData::Map& dataMap = m_config->data();
@@ -163,7 +163,7 @@ StatusCode L0DUEmulatorTool::fillData(){
   if( msgLevel(MSG::VERBOSE))verbose() << "Muon sorted " << endmsg;
 
   int dimuon = 0;
-
+  int dimuonP= 0;
   double ptScale = scale(L0DUBase::Muon1::Pt);
   double adScale = scale(L0DUBase::Muon1::Address);
   double sgScale = scale(L0DUBase::Muon1::Sign);
@@ -173,7 +173,12 @@ StatusCode L0DUEmulatorTool::fillData(){
   for(unsigned int i = 0; i != m_muHighest.size();++i){
     int k = m_muHighest[i];
     int pt = muonVec[k];
-    if(i<2)dimuon += pt;
+    if(i<2){
+      dimuon += pt;
+      if( i==0)dimuonP=pt;
+      else 
+        dimuonP *= pt;
+    }
     std::stringstream num("");
     num << i+1;
     dataMap["Muon"+num.str()+"(Pt)"]->setOperand( pt , ptScale , ptMax );
@@ -208,6 +213,7 @@ StatusCode L0DUEmulatorTool::fillData(){
     dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , sgScale , sgMax);
   }
   dataMap[Name[DiMuonPt]]->setOperand( dimuon , ptScale , ptMax*2+1);  
+  dataMap[Name[DiMuonProdPt]]->setOperand( dimuonP , ptScale , (ptMax+1)*(ptMax+1)-1);  
   if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endmsg;
 
   // -------------------------------------
@@ -335,7 +341,6 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
     LHCb::L0DUElementaryCondition* condition = (*icond).second ;
     if(condition->reported())m_report.setConditionValue(condition->name(), condition->emulatedValue() );
   }
-
   return m_report;
 }
 
