@@ -5,6 +5,15 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Vanya Belyaev
+
+!========================== LoKiTrigger v11r4 2011-02-07 ===================
+
+ - tag as v11r4 
+
+ - cmt/requirements
+      version increment to v11r3
+
 ! 2011-02-07 - Roel Aaij
  - UpgradeTool and MatchTool now get public tools.
 
