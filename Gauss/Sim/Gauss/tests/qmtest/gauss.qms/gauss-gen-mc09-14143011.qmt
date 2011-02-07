@@ -4,7 +4,7 @@
   <argument name="args"><set>
     <text>$GAUSSOPTS/Gauss-MC09.py</text>
     <text>$DECFILESROOT/options/14143011.opts</text>
-    <text>$LBBCVEGPYROOT/options/BcVegPy.opts</text>
+    <text>$LBBCVEGPYROOT/options/BcVegPy.py</text>
     <text>$GAUSSOPTS/GenStandAlone.py</text>
     <text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
     <text>$GAUSSROOT/tests/options/testGauss-gen-10evts-defaults.py</text>
