@@ -139,7 +139,7 @@ class bindMembers (object) :
         gaudiSeq = seq.sequence()
         members = gaudiSeq.Members
         self._members += members
-        loc = seq.outputLocations()[0]
+        loc = seq.outputLocation()
         self._outputloc = loc
 
     def _handleSelectionType(self, line, sel) :
