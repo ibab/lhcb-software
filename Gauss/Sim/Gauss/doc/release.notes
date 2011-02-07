@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Silvia Miglioranzi
+ - Updated ref files for QMTests gauss-dev, gauss-mc09 and gauss-up (on slc4 
+   64,32 and slc5 platforms).
+   Updated test gauss-gen-mc09-14143011.qmt to use BcVegPy.py (instead of 
+   BcVegPy.opts).
+
 !========================= Gauss v39r1 2010-01-31 ============================
 ! 2011-01-31 - Gloria CORTI
  - Increase minor version
