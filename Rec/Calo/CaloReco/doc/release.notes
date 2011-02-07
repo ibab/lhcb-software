@@ -6,7 +6,14 @@
 
 ! -----------------------------------------------------------------------------
 
-!========================= CaloReco v5r8 2011-01-17 =========================
+
+! 2011-07-02 - Olivier Deschamps
+	- CaloECorrection : cluster energy offset via CaloDAQ/ICaloDigitFilterTool
+	- Add : digit masking/offset in Cluster sequence (Brunel.opts/Reconstruction.py)
+	- Add : Et threshold in cluster selection for hypo building
+	- few protections here and therrequirements : add dpencency on CaloUtils
+
+
 - 2010-12-20 - Olivier Deschamps
  - reduce verbosity and fix untested StatusCode 
 

@@ -111,9 +111,7 @@ protected:
     DirVector&           taggedCellsDirect,
     const DeCalorimeter* detector );
   
-  inline void setEXYCluster
-  ( LHCb::CaloCluster*         cluster,
-    const DeCalorimeter* detector );
+  inline StatusCode setEXYCluster( LHCb::CaloCluster*         cluster,const DeCalorimeter* detector );
 
 private:
 

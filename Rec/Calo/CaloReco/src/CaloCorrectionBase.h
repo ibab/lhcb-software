@@ -10,6 +10,7 @@
 #include "Kernel/CaloCellID.h"
 #include "CaloUtils/ClusterFunctors.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloDAQ/ICaloDigitFilterTool.h"
 #include "Event/CaloHypo.h"
 #include "Event/CaloDigit.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -141,6 +142,10 @@ public:
       else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; }
     }
   }
+
+  ICaloDigitFilterTool* pileup(){ return m_pileup;}
+  
+    
   
 protected:
   std::string m_conditionName;
@@ -157,6 +162,7 @@ protected:
   std::string m_detData;
   const DeCalorimeter* m_det;
   Gaudi::XYZPoint  m_origin;
+  ICaloDigitFilterTool* m_pileup;
 
 private:
 

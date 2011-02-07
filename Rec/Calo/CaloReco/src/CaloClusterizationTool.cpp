@@ -129,10 +129,7 @@ CaloClusterizationTool::appliRulesTagger
 };
 
 // ============================================================================
-inline void CaloClusterizationTool::setEXYCluster
-( LHCb::CaloCluster* cluster,
-  const DeCalorimeter* detector ) 
-{
+inline StatusCode CaloClusterizationTool::setEXYCluster( LHCb::CaloCluster* cluster, const DeCalorimeter* detector ){
   ///
   double E, X, Y;
   ///
@@ -141,8 +138,8 @@ inline void CaloClusterizationTool::setEXYCluster
       cluster->entries().end  () ,
       detector , E , X , Y      );
   ///
-  if( sc.isSuccess() )
-  {
+  counter("Cluster energy") += E;
+  if( sc.isSuccess() ){
     cluster->position().parameters()( LHCb::CaloPosition::E ) = E ;
     cluster->position().parameters()( LHCb::CaloPosition::X ) = X ;
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
@@ -150,6 +147,7 @@ inline void CaloClusterizationTool::setEXYCluster
   else 
   { Error( " E,X and Y of cluster could not be evaluated!",sc).ignore(); }
   ///
+  return sc;
 }
 // ============================================================================
 // Standard constructor, initializes variables
@@ -360,6 +358,9 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     LHCb::CaloCellID seedID = (*itTagSeed)->cellID();
     LHCb::CaloCluster* cluster = new  LHCb::CaloCluster();
     const LHCb::CaloDigit* digit = (*itTagSeed)->digit() ;
+
+    if( digit->e() <0 )continue; // does not keep cluster with seed.energy = 0
+
     cluster->entries().push_back( LHCb::CaloClusterEntry( digit , seed ) );
     cluster->setSeed( digit->cellID() );
     
@@ -387,14 +388,18 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
       cluster->entries().push_back( LHCb::CaloClusterEntry( digit , shared ) );
     };
 
-    setEXYCluster ( cluster, m_detector );
+    if( setEXYCluster ( cluster, m_detector ).isSuccess() ){
     
-    cluster->setType( LHCb::CaloCluster::CellularAutomaton ) ;
-    cluster->position().setZ( zPosition( cluster )  );
+      cluster->setType( LHCb::CaloCluster::CellularAutomaton ) ;
+      cluster->position().setZ( zPosition( cluster )  );
     
-    //  put cluster to the output
-    clusters.push_back( cluster );
-  
+      //  put cluster to the output
+      clusters.push_back( cluster );
+    }else{
+      delete cluster;
+    }
+    
+    
     itTagClustered1 = itTagClustered2;
     itTagSeed++;
   }

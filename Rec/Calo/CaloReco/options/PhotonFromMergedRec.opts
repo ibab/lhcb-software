@@ -3,3 +3,4 @@ PhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrect
 PhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
 PhotonFromMergedRec.Tools    += { "CaloLCorrection/LCorrection" };   // Lcorrection
 PhotonFromMergedRec.Tools    += { "CaloExtraDigits/SpdPrsExtraS" };   // ExtraDigits
+

@@ -26,7 +26,8 @@ CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",
 
 
 //------ Clusterize, clean & compute cluster parameters 
-CaloClusters.Members += { "CellularAutomatonAlg/EcalClust",
+CaloClusters.Members += { "CaloDigitFilterAlg/CaloDigitFilter",
+                          "CellularAutomatonAlg/EcalClust",
                           "CaloSharedCellAlg/EcalShare",
                           "CaloClusterCovarianceAlg/EcalCovar"};
 

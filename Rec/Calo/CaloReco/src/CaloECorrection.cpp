@@ -106,7 +106,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
   // Get position
   const LHCb::CaloPosition& position = MainCluster->position();
-  const double eEcal = position. e () ;
+  double eEcal = position. e () ;
   const double xBar  = position. x () ;
   const double yBar  = position. y () ;
 
@@ -167,7 +167,17 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   Asx *=  signX;
   Asy *=  signY;
 
+  // Pileup subtraction at the cluster level
+  if( m_pileup->method("Ecal") >= 10 ){
+    //info() << m_pileup->getScale() << " " << m_pileup->offset( cellID ) << " " << eEcal <<endmsg;    
+    double offset = m_pileup->offset( cellID );
+    if(offset < eEcal){
+      eEcal -= offset;
+      counter("Pileup offset") -= offset;
+    }
+  }
   
+  // apply corrections
   double aG  = getCorrection(CaloCorrection::alphaG    , cellID         );  // global Ecal factor
   double aE  = getCorrection(CaloCorrection::alphaE    , cellID , eEcal );  // longitudinal leakage
   double aB  = getCorrection(CaloCorrection::alphaB    , cellID , bDist );  // lateral leakage
@@ -213,6 +223,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   // update position
   LHCb::CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
   parameters ( LHCb::CaloPosition::E ) = eCor ;
+  counter("Corrected energy")+=eCor;
   //  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
   
   return StatusCode::SUCCESS ;

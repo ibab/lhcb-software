@@ -99,6 +99,7 @@ StatusCode CaloCorrectionBase::initialize() {
 
   // get external tools
   m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
+  m_pileup = tool<ICaloDigitFilterTool>("CaloDigitFilterTool","FilterTool");
 
   return setConditionParams(m_conditionName);
 }

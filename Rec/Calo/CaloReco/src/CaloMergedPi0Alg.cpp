@@ -535,7 +535,9 @@ StatusCode CaloMergedPi0Alg::execute()
         }
       }
     }
-
+    
+    if( Emax[0] <=0 || Emax [1] <= 0 )continue; // OD
+  
 
     int erasel[2];
     int erasec[2];

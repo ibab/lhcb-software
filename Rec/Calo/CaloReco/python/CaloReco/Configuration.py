@@ -71,7 +71,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'UseSpd'              : False      # Use Spd as Neutrality Criteria
         , 'UsePrs'              : False      # Use Prs to select Neutral clusters
         , 'UseTracksE'          : True       # Use Tracks as Charge  Criteria 
-        , 'UseSpdE'             : True       # Use Spd as Charge Criteria
+        , 'UseSpdE'             : True       # Use Spd as Charged Criteria
         , 'UsePrsE'             : True       # Use Prs to select Charged clusters
         , 'UseTracksM'          : True       # Use Tracks for MergedPi0s-ID
         , 'CaloStandalone'      : False      # useTrackX = false + usePrs/Spd = true
@@ -101,7 +101,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'UseSpdE'            : """ Use Spd as Charge criterion """ 
         , 'UsePrsE'            : """ Use Prs as  EM criterion for charged """ 
         , 'UseTracksM'         : """ Use Tracks for MergedPi0s-ID """
-        , 'CaloStandalone'     : """ UseTrackX = false + usePrs/Spd = true """ 
+        , 'CaloStandalone'     : """ UseTrack = false + usePrs/Spd = true """ 
         , 'NeutralID'          : """ Apply neutralID """ 
         , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand (for components in RecList) """ 
         , 'TrackLocations'     : """ TrackLocations (Photon/Electron selection)""" 

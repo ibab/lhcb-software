@@ -62,7 +62,8 @@ def clusterReco ( context , enableRecoOnDemand ) :
     Define the recontruction of Ecal Clusters
     """
     
-    from Configurables import ( CellularAutomatonAlg     ,
+    from Configurables import ( CaloDigitFilterAlg       ,
+                                CellularAutomatonAlg     ,
                                 CaloSharedCellAlg        ,
                                 CaloClusterCovarianceAlg ,
                                 CaloClusterizationTool) 
@@ -78,10 +79,11 @@ def clusterReco ( context , enableRecoOnDemand ) :
 
     ## Define the context-dependent sequencer
     seq   = getAlgo ( GaudiSequencer           , "ClusterReco", context , "Rec/Calo/EcalClusters" , enableRecoOnDemand )
+    filter= getAlgo ( CaloDigitFilterAlg       , "CaloDigitFilter",context)
     clust = getAlgo ( CellularAutomatonAlg     , "EcalClust"  , context )
-    share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context ) 
-    covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context )
-    seq.Members = [ clust , share , covar ]
+    share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  
+    covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
+    seq.Members = [ filter, clust , share , covar ]
     setTheProperty ( seq , 'Context' , context )
 
 
@@ -141,6 +143,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     ### a/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster  , "PhotonCluster" )
     alg.SelectionTools = [ alg.PhotonCluster ]
+    alg.PhotonCluster.MinEnergy = 150.*MeV
     
     ### b/ Neutral cluster (track-based and/or Spd/Prs-based)    
     if   useTracks     :
@@ -250,6 +253,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     ## 1/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster               , "ElectronCluster" )
     alg.SelectionTools = [ alg.ElectronCluster ]
+    alg.ElectronCluster.MinEnergy = 150.*MeV
 
     ## 2/  hits in Spd
     if useSpdE : 
