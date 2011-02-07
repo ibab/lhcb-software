@@ -46,8 +46,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( TrPT > %(DiMuon_PT)s * MeV )
-            >>  ( TrP  > %(DiMuon_P)s  * MeV )
+            >>  ( ( TrPT > %(DiMuon_PT)s * MeV ) & ( TrP  > %(DiMuon_P)s  * MeV ) )
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
@@ -61,6 +60,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >>  ( RV_MASS ( 'mu+' , 'mu-' ) > 1000 ) 
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1NewDiMuonDecision' )
             >> ~TC_EMPTY
             """ % self.getProps()
             )
