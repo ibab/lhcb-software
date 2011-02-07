@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r3   2011-02-07 ===================
 ! 2011-02-07 - Roel Aaij
  - Add Hlt1NewDiMuonLines to Physics_draft2011.
 
