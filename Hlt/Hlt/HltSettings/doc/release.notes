@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Roel Aaij
+ - Add Hlt1NewDiMuonLines to Physics_draft2011.
+
 ! 2011-Feb-03 - Alex Shires
  - update Muons_draft2011 for Hlt2MuNTrackLines. Mu + 3 Track line prescale
    to 0.0 and update Hlt1 filter to TrackMuon. Cut adjustments to come.

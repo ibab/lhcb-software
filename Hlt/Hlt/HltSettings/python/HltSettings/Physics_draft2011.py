@@ -17,7 +17,7 @@ def __update_conf__( current, extra ) :
                     cur[k] = v
                 print 'result: %s' % cur[k]
 
-class Physics_draft2011:
+class Physics_draft2011( object ):
     """
     draft settings for 2011 runnings
     
@@ -52,6 +52,7 @@ class Physics_draft2011:
         Returns a dictionary of cuts
 	"""
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
+        from Hlt1Lines.Hlt1NewMuonLines        import Hlt1NewMuonLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
                                             ,   'AllL0_P'       : 13300
@@ -71,6 +72,14 @@ class Physics_draft2011:
                                             ,   'Velo_NHits'    : 9 
                                             ,   'Velo_Qcut'     : 3 
                                                 }
+                     , Hlt1NewMuonLinesConf : {  'L0SingleMuon'    : "Muon"
+                                              ,  'L0SingleMuonGEC' : "Muon"
+                                              ,  'DiMuon_VxDOCA'   :   0.2
+                                              ,  'DiMuon_VxChi2'   :    25
+                                              ,  'DiMuon_P'        :  6000
+                                              ,  'DiMuon_PT'       :   500
+                                              ,  'DiMuon_TrChi2'   :     4
+                                              }
                        }
 
         from Muons_draft2011 import Muons_draft2011
@@ -80,10 +89,6 @@ class Physics_draft2011:
         __update_conf__(thresholds,  Hadrons_draft2011().Thresholds() )
 
         return thresholds
-
-
-
-
                        
     def ActiveHlt2Lines(self) :
         """
@@ -98,27 +103,24 @@ class Physics_draft2011:
         hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
         
         return hlt2
-      
-
        
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """
-        lines = [ #'Hlt1ODINTechnical',
-		  #'Hlt1Tell1Error' ,
-		  #'Hlt1Incident' ,
-		  #'Hlt1ErrorEvent',
-          'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco' , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2',
-		  'Hlt1NoPVPassThrough',
-		  'Hlt1TrackAllL0',
+        #'Hlt1ODINTechnical',
+        #'Hlt1Tell1Error' ,  
+        #'Hlt1Incident' ,    
+        #'Hlt1ErrorEvent',
+        lines = [ 'Hlt1BeamGasBeam1',
+                  'Hlt1BeamGasBeam2',
+                  'Hlt1BeamGasCrossing',
+                  'Hlt1BeamGasCrossingForcedRZReco',
+                  'Hlt1BeamGasCrossingLonelyBeam1',
+                  'Hlt1BeamGasCrossingLonelyBeam2',
+                  'Hlt1NoPVPassThrough',
+                  'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
-                  'Hlt1TrackPhoton' ]
-
+                  'Hlt1TrackPhoton',
+                  'Hlt1NewDiMuon' ]
         return lines 
-
-
-
-
-
-
