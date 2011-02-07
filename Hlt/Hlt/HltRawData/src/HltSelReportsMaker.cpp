@@ -21,6 +21,8 @@
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+#include "Event/HltStage.h"
+#include "Event/HltCandidate.h"
 
 
 //#include "Kernel/CaloCellCode.h"
@@ -272,14 +274,25 @@ StatusCode HltSelReportsMaker::execute() {
 #endif
      // unsuccessful selections can't save candidates
      if( !sel->decision() )continue;
-     
-     const ContainedObject* candidate = getFirst<LHCb::Track>(sel);
+
+     // first see if we have have
+     // HltSelReportsMaker                      WARNING HltSelReportsMaker::  Unsupported data type CLID=7561 - skip selection ID=Hlt1TrackAllL0Decision
+     // EventSelector                           SUCCESS Reading Event record 401. Record number within stream 1: 401
+     const ContainedObject* candidate = 0;
+     if ( sel->classID() == Hlt::Candidate::classID() ) {
+        const Hlt::TSelection<Hlt::Candidate>& csel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);
+        const Hlt::Candidate* cand = *csel.begin();
+        if (cand!=0) {
+            const Hlt::Stage* stage = cand->currentStage();
+            // let's first try track...
+            candidate = stage->get<LHCb::Track>();
+        }
+     } 
+     if (candidate==0)      candidate = getFirst<LHCb::Track>(sel);
      if (candidate==0)      candidate = getFirst<LHCb::RecVertex>(sel);
      if (candidate==0)      candidate = getFirst<LHCb::Particle>(sel);
      if (candidate==0)      candidate = getFirst<LHCb::CaloCluster>(sel);
      if (candidate==0)      {
-       
-       if( sel->classID()==1 )continue; // skip selections of selections for now
        
        std::ostringstream mess;
        mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
@@ -358,7 +371,20 @@ StatusCode HltSelReportsMaker::execute() {
 
      std::vector<const ContainedObject*> candidates; candidates.reserve( sel->size() );
      
-     if( sel->classID() == LHCb::Track::classID() ) {
+     if( sel->classID() == Hlt::Candidate::classID() ) {
+       const Hlt::TSelection<Hlt::Candidate>& csel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);
+       for (Hlt::TSelection<Hlt::Candidate>::const_iterator it = csel.begin(); it != csel.end(); ++it) {
+         const Hlt::Candidate* cand = *it;
+         const Hlt::Stage* stage = cand->currentStage();
+         const LHCb::Track *trk = stage->get<LHCb::Track>();
+         if (trk==0) {
+            Warning( " Unsupported data type in stage - skip selection ID=" +selName,StatusCode::SUCCESS, 10 );
+            continue;
+         }
+         candidates.push_back( trk );
+       }
+
+     } else if( sel->classID() == LHCb::Track::classID() ) {
        
        const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
        for (Hlt::TrackSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {

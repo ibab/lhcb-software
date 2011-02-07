@@ -4,7 +4,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltRawData
-version           v2r9
+version           v2r10
 
 #============================================================================
 # Structure, i.e. directories to process. 

@@ -4,6 +4,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2011-02-07 - Gerhard Raven
+ - support Tracks which are wrapped in HltStage/HltCandidate. Other types
+   are still missing, and will have to be added eventually... HltVertex
+   is easy, but L0{Muon,Calo,DiMuon} and HltMultiTrack need thinking...
 
 !========================== HltRawData v2r9 2010-11-18 ===================
 
