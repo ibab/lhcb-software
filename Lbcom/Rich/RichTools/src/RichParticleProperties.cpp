@@ -28,9 +28,9 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ParticleProperties );
 Rich::ParticleProperties::ParticleProperties ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
-  : RichToolBase ( type, name, parent ),
-    m_refIndex   ( NULL               ),
-    m_pidTypes   ( Rich::particles()  )
+  : Rich::ToolBase ( type, name, parent ),
+    m_refIndex     ( NULL               ),
+    m_pidTypes     ( Rich::particles()  )
 {
   // declare interface
   declareInterface<IParticleProperties>(this);
@@ -42,7 +42,7 @@ StatusCode Rich::ParticleProperties::initialize()
 {
 
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

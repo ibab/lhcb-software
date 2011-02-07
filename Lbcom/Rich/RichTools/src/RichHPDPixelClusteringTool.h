@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
- *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.1 2008-10-17 11:06:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
  */
@@ -47,7 +44,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class HPDPixelClusteringTool : public RichToolBase,
+    class HPDPixelClusteringTool : public Rich::ToolBase,
                                    virtual public IPixelClusteringTool
     {
 

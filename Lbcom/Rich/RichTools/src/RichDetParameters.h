@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DetParameters
  *
- *  CVS Log :-
- *  $Id: RichDetParameters.h,v 1.10 2009-01-20 16:00:55 cattanem Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
@@ -55,9 +52,6 @@ namespace Rich
 
     // Initialization of the tool after creation
     StatusCode initialize();
-
-    // Finalization of the tool before deletion
-    StatusCode finalize();
 
   public: // methods (and doxygen comments) inherited from interface
 

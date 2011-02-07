@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::DetParameters
  *
- * CVS Log :-
- * $Id: RichDetParameters.cpp,v 1.9 2008-08-15 14:27:28 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -30,11 +27,11 @@ namespace Rich
   DetParameters::DetParameters( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : RichToolBase ( type, name , parent ),
-      m_maxPhotEn  ( Rich::NRadiatorTypes ),
-      m_minPhotEn  ( Rich::NRadiatorTypes ),
-      m_meanPhotEn ( Rich::NRadiatorTypes ),
-      m_refSD      ( Rich::NRadiatorTypes )
+    : Rich::ToolBase ( type, name , parent ),
+      m_maxPhotEn    ( Rich::NRadiatorTypes ),
+      m_minPhotEn    ( Rich::NRadiatorTypes ),
+      m_meanPhotEn   ( Rich::NRadiatorTypes ),
+      m_refSD        ( Rich::NRadiatorTypes )
   {
 
     declareInterface<IDetParameters>(this);
@@ -64,7 +61,7 @@ namespace Rich
   StatusCode DetParameters::initialize()
   {
     // Initialise base class
-    const StatusCode sc = RichToolBase::initialize();
+    const StatusCode sc = Rich::ToolBase::initialize();
     if ( sc.isFailure() ) return sc;
 
     // Initialise the data. Eventually, some of this should come from a DataBase
@@ -75,12 +72,6 @@ namespace Rich
     m_radOutLimLoc[Rich::Rich2Gas] = RadLimits ( 50,  690,  0,   696 );
 
     return sc;
-  }
-
-  StatusCode DetParameters::finalize()
-  {
-    // base class finalize
-    return RichToolBase::finalize();
   }
 
   double DetParameters::maxPhotonEnergy( const Rich::RadiatorType rad ) const

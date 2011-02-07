@@ -23,12 +23,12 @@ Rich::TabulatedRefractiveIndex::
 TabulatedRefractiveIndex ( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : RichToolBase  ( type, name, parent         ),
-    m_riches      ( Rich::NRiches              ),
-    m_detParams   ( NULL                       ),
-    m_radiators   ( Rich::NRadiatorTypes,
-                    (const DeRichRadiator *)(NULL) ),
-    m_hltMode     ( false                      )
+  : Rich::ToolBase ( type, name, parent         ),
+    m_riches       ( Rich::NRiches              ),
+    m_detParams    ( NULL                       ),
+    m_radiators    ( Rich::NRadiatorTypes,
+                     (const DeRichRadiator *)(NULL) ),
+    m_hltMode      ( false                      )
 {
   // interface
   declareInterface<IRefractiveIndex>(this);
@@ -37,7 +37,7 @@ TabulatedRefractiveIndex ( const std::string& type,
 StatusCode Rich::TabulatedRefractiveIndex::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Get tools

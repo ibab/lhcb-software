@@ -30,7 +30,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool );
 Rich::RadiatorTool::RadiatorTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase ( type, name, parent )
+  : Rich::ToolBase ( type, name, parent )
 {
   declareInterface<IRadiatorTool>(this);
 }
@@ -48,7 +48,7 @@ StatusCode Rich::RadiatorTool::initialize ( )
 {
 
   // intialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // RICH1 gas
