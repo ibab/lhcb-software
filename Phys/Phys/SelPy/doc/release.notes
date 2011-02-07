@@ -4,6 +4,8 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v3r1 2011-02-07 ==============================
+
 ! 2011-02-07 - Juan Palacios
  - python/SelPy/utils.py
   . Added NamedObject, UniquelyNamedObject base classes for Selection types.
