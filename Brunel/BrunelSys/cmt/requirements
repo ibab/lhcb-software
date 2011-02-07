@@ -22,3 +22,5 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use TrackFitter v4r1 Tr
+use TrackTools  v4r2 Tr

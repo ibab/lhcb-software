@@ -3,10 +3,78 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-12-21 - Marco Cattaneo
- - QMTest Reference updated for:
-  . #115007: reduce CaloReco verbosity
-  . #115040: New default DDDB tag for real data: head-20101206
+</PRE><H1><A NAME=v38r1>2011-02-08 BrunelSys v38r1</A></H1><PRE>
+This version uses projects LCG 60, Gaudi v22r0, LHCb v32r0, Lbcom v10r0,
+ Rec v11r1 (plus TrackFitter v4r1 and TrackTools v4r2) 
+ and SQLDDDB v6r0, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+Development version, in preparation for 2011 data taking
+
+- Changes to supported platforms:
+  . slc4_ia32_gcc34(_dbg), win32_vc71_dbg no longer supported
+  . support added for i686-slc5-gcc43-{opt,dbg}
+  . support in prepration for i686-winxp-vc9-dbg and x86_64-slc5-icc11-{opt,dbg}
+
+- Configuration changes
+  . Default DataType is now 2011
+  . Removed support for ETC input
+  . #116130: New tracking sequence is now the default for new data types 
+             (including 2011). Summary of changes:
+             . Switch to FastVelo
+             . Switch to PatSeeding
+             . Switch to PatMatching and remove SeedFitting
+    New options Brunel().ForceOldSeq and Brunel().ForceNewSeq can be used to 
+    switch between old and new sequences (TrackSys v6r0, Brunel v38r1)
+  . #116712,#116318,#116127,#116216,#116122: "earlyData" setting is now the
+    default (was used for all 2010 data and MC processing) 
+    (STTools v4r6, MuonID v7r0, RecConf v2r0, PatAlgorithms v4r11,
+     TrackMatching v2r33, TrackSys v6r0)
+
+- New tuning:
+  . #116384, 116383: Major modification of Kalman filter implementation
+                    (speed improvement, no change in performance) 
+                    (TrackFitEvent v5r6, TrackFitter v4r1)
+  . #114881: FastVelo efficiency improvement at high nu (FastVelo v1r3)
+  . #116680: Add cut against dirty area in PatForwardTool (PatAlgorithms v4r11)
+  . #115240: Switch default ANN configuration from MC2010Tune to MC10TuneV1,
+             activate the new Ghost ID network for each track type
+             (ChargedProtoANNPID v1r1, GlobalReco v6r34)
+  . #115040: New default DDDB tag for real data: head-20101206. Includes:
+    . rich-20101205 - updates to aerogel parameters
+    . velo-20101130 - new RF foil description
+  . #116912: Put back DC06 Velo error parameterisation, MC10 one introduced
+             in Brunel v38r0 (#114631) needs more study (TrackTools v4r2)
+
+- New functionality:
+  . #115635,#115873: Add new SUMMARY sequence, runs RecSummaryAlg to fill new
+    reconstruction summary object (RecEvent v2r34, RecConf v2r0, RecAlgs v2r0,
+    TrackTools v4r1, TrackInterfaces v4r18, EventPacker v2r6)
+  . #114925: all Calo corrections now taken from CondDB (CaloReco v5r8)
+
+- Persistency changes
+  . #116124,#116126: new Track::History flags following tracking sequence changes
+    (N.B. Track::History should not be used outside tracking, use Track::Types
+     instead) (TrackSys v6r0, TrackEvent v5r10, FastVelo v1r4, TrackUtils v1r40)
+  . #115635: Rec/Summary added to DST, holds basic summary information from the
+             reconstruction (GaudiConf v13r8)
+
+- Monitoring changes
+  . #115196: New expert monitoring for ProtoPIDANN (GlobalReco v6r34)
+  . #115007: reduce CaloReco verbosity (CaloReco v5r8)
+  . #115674: Suppress Warning "Ingress/ODIN Event ID checks are disabled"
+             (RichDAQ v3r30)
+
+- Changes to qmtests:
+  . Add a test brunel.brunel2011magdown, for the time being identical to
+    brunel.brunel2010magdown (same input data and same reference) to validate 
+    2011 DataType settings
+  . Remove obsolete brunel.brunel-mc09-stripping test
+  . Input file for brunel2010magdown test is now taken from 'freezer' castor
+    directory, to test rootd access to this pool.
+
+- Changes to example options
+  . Remove options and catalogs accessing DC06+MC09 files that no longer exist
+  . Remove all imports of earlyData.py, since this now the default
 
 </PRE><H1><A NAME=v38r0>2010-12-21 BrunelSys v38r0</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9,
