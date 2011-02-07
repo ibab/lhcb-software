@@ -696,13 +696,27 @@ namespace LoKi
       ( const Map& fun , const LoKi::BasicFunctors<double>::CutVal& fun2 ) 
       { return fun >> fun2 ; }
       //
-      // add the dumps
-      //
+      // ======================================================================
+    public : // add the dumps
+      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
       __rshift__ 
       ( const  Map& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<double> ( dump ) ; }
+      // ======================================================================
+    public: // gate-2 
+      // ======================================================================
+      // __rrshift__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rrshift__ 
+      ( const Map& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // __rmult__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rmult__ 
+      ( const Map& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
     public:
       // ======================================================================
@@ -858,9 +872,20 @@ namespace LoKi
       ( const Pipe& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
       // ======================================================================
-    public:
+    public: // gate-2
+      // ======================================================================      
+      // __rrshift__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rrshift__ 
+      ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // __rmult__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rmult__ 
+      ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
-      // timing
+    public: // timing
       // ======================================================================
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __timer__   ( const Pipe&              c , 
@@ -1015,7 +1040,20 @@ namespace LoKi
                     const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
       { return val >> fun  ; }
       // ======================================================================
-    public:
+    public: // gate-2
+      // ======================================================================      
+      // __rrshift__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
+      __rrshift__ 
+      ( const FunVal& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // __rmult__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
+      __rmult__ 
+      ( const FunVal& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // ======================================================================
+   public:
       // ======================================================================
       // timing
       // ======================================================================
@@ -1200,9 +1238,7 @@ namespace LoKi
       __cause__ ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
       { return LoKi::cause ( fun , fun2 ) ; }      
       // ======================================================================
-    public:
-      // ======================================================================
-      // timing
+    public: // timing
       // ======================================================================
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __timer__   ( const Source&            c , 
@@ -1290,7 +1326,20 @@ namespace LoKi
                     const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
       { return val >> fun  ; }
       // ======================================================================
-    public:
+    public: // gate-2
+      // ======================================================================      
+      // __rrshift__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __rrshift__ 
+      ( const CutVal& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // __rmult__  : gate 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __rmult__ 
+      ( const CutVal& fun , const LoKi::Functor<void,bool>& gate )  
+      { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+      // ======================================================================
+     public:
       // ======================================================================
       // timing
       // ======================================================================

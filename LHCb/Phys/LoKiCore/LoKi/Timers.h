@@ -139,7 +139,7 @@ namespace LoKi
       virtual typename LoKi::Functor<TYPE1,TYPE2>::result_type operator() 
         ( typename LoKi::Functor<TYPE1,TYPE2>::argument a ) const 
       {
-        if ( 0 == m_timer && !(!m_svc ) && m_first )
+        if ( 0 == m_timer && m_first && !(!m_svc ) )
         { m_timer = m_svc->chronoStart ( m_tname ) ; }
         //
         Chrono _timer ( m_timer ) ;
@@ -237,7 +237,7 @@ namespace LoKi
       /// MANDATORY: the only one essenital method 
       virtual typename LoKi::Functor<void,TYPE2>::result_type operator() () const 
       {
-        if ( 0 == m_timer && !(!m_svc ) && m_first )
+        if ( 0 == m_timer && m_first && !(!m_svc ) )
         { m_timer = m_svc->chronoStart ( m_tname ) ; }
         //
         //
@@ -334,20 +334,26 @@ namespace LoKi
   /// operator form of timers 
   template <class TYPE1, class TYPE2>
   inline 
-  LoKi::Functors::Timer_<TYPE1,TYPE2>
+  LoKi::FunctorFromFunctor<TYPE1,TYPE2>
   operator %( const LoKi::Timer&                timer  , 
               const LoKi::Functor<TYPE1,TYPE2>& fun    )
-  { return LoKi::Functors::Timer_<TYPE1,TYPE2>( fun , timer.name() ) ; }
+  {
+    if ( timer.name().empty() ) { return fun ; }
+    return LoKi::Functors::Timer_<TYPE1,TYPE2>( fun , timer.name() ) ; 
+  }
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
 /// operator form of timers 
 template <class TYPE1, class TYPE2>
 inline 
-LoKi::Functors::Timer_<TYPE1,TYPE2>
+LoKi::FunctorFromFunctor<TYPE1,TYPE2>
 operator %( ChronoEntity*                     timer  , 
             const LoKi::Functor<TYPE1,TYPE2>& fun    )
-{ return LoKi::Functors::Timer_<TYPE1,TYPE2>( fun , timer ) ; }
+{
+  if ( 0 == timer ) { return fun ; }
+  return LoKi::Functors::Timer_<TYPE1,TYPE2> ( fun , timer ) ;
+}
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

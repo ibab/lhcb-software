@@ -15,6 +15,15 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Vanya Belyaev
+
+ - add "rigth-side" form of gate for pipes, maps, fun&cut-vals :
+
+        gate >> stream 
+
+        gate *  stream  
+
+
 ! 2011-02-03 - Vanya Belyaev
 
  - Timers.h, Timers.cpp
