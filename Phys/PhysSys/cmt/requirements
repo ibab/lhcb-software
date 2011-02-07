@@ -8,8 +8,8 @@ use  DaVinciUtils               v1r1     Phys    # Juan Palacios
 use  DaVinciKernel              v9r1     Phys    # Juan Palacios
 use  DaVinciMaps                v2r0     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v3r0     Phys    # Juan Palacios
-use  PhysSelPython              v7r0     PhysSel # Juan Palacios
+use  SelPy                      v3r1     Phys    # Juan Palacios
+use  PhysSelPython              v8r0     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
