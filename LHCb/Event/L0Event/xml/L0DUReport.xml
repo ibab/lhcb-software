@@ -59,7 +59,8 @@
       <attribute  desc=" sum(Et) value over several BX"            name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
       <attribute  desc=" validity of the report"   name="valid"  type="bool"/>
       <attribute  desc=" L0DU bank version number"   name="bankVersion"  type="int"/>
-
+      <attribute  desc=" embeded data map" name="dataMap" type = "std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;"/>
+      <attribute  desc=" L0DU BCID" name ="bcid" type = "int" />
 
       <method
         name="clear"
@@ -76,6 +77,8 @@
           m_tck = 0x0000;
           m_configuration = 0;
           m_valid = true;
+          m_bcid  = 0;
+          m_dataMap.clear();
         </code>
       </method>
 
@@ -136,10 +139,6 @@
         </code>
       </method>
 
-
-
-
-
       <method
         name="dataDigit"
         argList="const std::string name"
@@ -147,11 +146,16 @@
         type="unsigned int"
         const="TRUE">
         <code> 
+          // first check the embedded data map
+          std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::const_iterator ib = m_dataMap.find(name);
+          if( m_dataMap.end() != ib)return (ib->second).first;
+
+          // else check the configuration
           if(0 == m_configuration)return 0;
           const LHCb::L0DUElementaryData::Map&amp; data = m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0;
-          return ((*it).second)->digit();
+          return (it->second)->digit();
         </code>
       </method>
 
@@ -162,6 +166,11 @@
         type="double"
         const="TRUE">
         <code> 
+          // first check the embedded data map
+          std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::const_iterator ib = m_dataMap.find(name);
+          if( m_dataMap.end() != ib)return double((ib->second).first)*(ib->second).second;
+
+          // else check the configuration
           if(0 == m_configuration)return 0.;
           const LHCb::L0DUElementaryData::Map&amp; data=m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
@@ -170,7 +179,17 @@
         </code>
       </method>
 
-
+      <method
+        name="addToData"
+        argList="const std::string name,int value,double scale"
+        desc="add value/scale pair to the embedded data map"
+        type="void">
+        <code> 
+          std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::iterator ib = m_dataMap.find(name);
+          if( m_dataMap.end() == ib)m_dataMap[name] = std::make_pair(value,scale);
+        </code>
+      </method>
+      
 
       <method  
         name   = "setChannelsPreDecisionSummary"

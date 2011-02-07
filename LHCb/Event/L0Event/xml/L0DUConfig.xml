@@ -73,7 +73,8 @@
       <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
       <attribute name = "triggers" desc = "Set of L0DU channels" type = "LHCb::L0DUTrigger::Map"  nonconstaccessor='TRUE'/>      
       <attribute name = "completed" desc = "Complete Configuration (i.e. contain Processor Data Value -> ready for emulation)" type = "bool"  nonconstaccessor='TRUE'/>      
-
+      <attribute name = "muonFOIx"  desc = "Muon FOI x" type= "std::vector&lt;int&gt;" />
+      <attribute name = "muonFOIy"  desc = "Muon FOI y" type= "std::vector&lt;int&gt;" />
 
 
       <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "unsigned int" const = 'TRUE'><code>return key();</code></method>
@@ -292,6 +293,26 @@
         </code>
       </method>
 
+
+      <method
+        name="elementaryCondition" 
+        argList="std::string channelName, std::string dataName"
+        desc="return the  elementaryCondition from channel and data names"
+        type="const LHCb::L0DUElementaryCondition*" >
+        <code> 
+	  const LHCb::L0DUChannel* channel = channels()[channelName];
+	  if( NULL == channel )return NULL;
+	  const LHCb::L0DUElementaryCondition::Map&amp; conds = channel->elementaryConditions();
+	  for( LHCb::L0DUElementaryCondition::Map::const_iterator ic = conds.begin() ; conds.end() !=ic ; ++ic){
+	  const LHCb::L0DUElementaryCondition* condition = ic->second;
+	  if( NULL == condition )continue;
+	  const LHCb::L0DUElementaryData* data = condition->data();
+	  if( NULL == data)continue;
+	  if( data->name() == dataName )return condition;
+	  }
+         return NULL;
+        </code>
+      </method>
 
 
     </class>

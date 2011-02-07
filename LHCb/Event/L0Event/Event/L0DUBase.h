@@ -12,7 +12,7 @@ namespace L0DUBase{
   */
   namespace NumberOf{
     static const unsigned int Compounds    = 8;
-    static const unsigned int Data        = 27;
+    static const unsigned int Data        = 28;
     static const unsigned int Channels    = 32;
     static const unsigned int Conditions  =128;
     static const unsigned int ConditionsInBank  =32;
@@ -31,7 +31,7 @@ namespace L0DUBase{
     
 
     static const unsigned int MaxNumber[NumberOf::Compounds] = { 0, 4, 10, 4, 2, 4, 6, 6 };  
-    static const unsigned int ConditionOrder[NumberOf::Compounds]  = { 0, 18,19,20,21,22,23,24 };  
+    static const unsigned int ConditionOrder[NumberOf::Compounds]  = { 0, 19,20,21,22,23,24,25 };  
     static const unsigned int OperatorType[NumberOf::Compounds]= { 0, 1,2,1,1,1,2,1 };  
   }
   
@@ -41,7 +41,7 @@ namespace L0DUBase{
                PuPeak1,PuPeak2,
                PuPeak1Pos,PuPeak2Pos,
                PuHits,
-               Muon1Pt,Muon2Pt,Muon3Pt,DiMuonPt,
+               Muon1Pt,Muon2Pt,Muon3Pt,DiMuonPt,DiMuonProdPt,
                ElectronAdd,PhotonAdd,GlobalPi0Add,LocalPi0Add,HadronAdd,
                Muon1Add,Muon2Add,Muon3Add,
                Muon1Sgn,Muon2Sgn,Muon3Sgn};
@@ -49,7 +49,7 @@ namespace L0DUBase{
     static const std::string Name[NumberOf::Data]= {
       "Electron(Et)", "Photon(Et)", "GlobalPi0(Et)", "LocalPi0(Et)","Hadron(Et)","Sum(Et)","Spd(Mult)",
       "PUPeak1(Cont)","PUPeak2(Cont)","PUPeak1(Pos)","PUPeak2(Pos)","PUHits(Mult)",
-      "Muon1(Pt)","Muon2(Pt)","Muon3(Pt)","DiMuon(Pt)",
+      "Muon1(Pt)","Muon2(Pt)","Muon3(Pt)","DiMuon(Pt)","DiMuonProd(Pt1Pt2)",
       "Electron(Add)", "Photon(Add)", "GlobalPi0(Add)", "LocalPi0(Add)","Hadron(Add)",
       "Muon1(Add)","Muon2(Add)","Muon3(Add)",
       "Muon1(Sgn)","Muon2(Sgn)","Muon3(Sgn)",
@@ -60,17 +60,17 @@ namespace L0DUBase{
       CompoundData::PuCont,CompoundData::PuCont,
       CompoundData::PuPos,CompoundData::PuPos,
       CompoundData::None,
-      CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::MuonPt,
+      CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::None,CompoundData::None,
       CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,
       CompoundData::MuonAdd,CompoundData::MuonAdd,CompoundData::MuonAdd,
       CompoundData::MuonSgn,CompoundData::MuonSgn,CompoundData::MuonSgn
     };
     static const unsigned int MaxNumber[NumberOf::Data]={8,6,5,5,8,
-                                                         6,6,
+                                                         4,8,
                                                          4,4,
                                                          2,2,
                                                          6,
-                                                         8,6,4,8,
+                                                         10,5,3,4,4,
                                                          0,0,0,0,0,
                                                          0,0,0,
                                                          0,0,0};
@@ -78,17 +78,17 @@ namespace L0DUBase{
     static const unsigned int ConditionOrder[NumberOf::Data]={1,2,3,4,5,
                                                               6,7,
                                                               8,9,10,
-                                                     11,12,
-                                                              13,14,15,16,
-                                                              // BCID + compoound Data inserted here
-                                                              25,26,27,28,29,
-                                                              30,31,32,
-                                                     33,34,35};  
+                                                              11,12,
+                                                              13,14,15,16,17,
+                                                              // BCID + compound Data inserted here (1+7 compound types)
+                                                              26,27,28,29,30,
+                                                              31,32,33,
+                                                              34,35,36};  
     }
   
   namespace RAMBCID{
     static const unsigned int Max = 255;
-    static const unsigned int ConditionOrder = 17;
+    static const unsigned int ConditionOrder = 18;
     static const unsigned int MaxNumber = 4;
     static const std::string  Name = "RamBCID";
   }

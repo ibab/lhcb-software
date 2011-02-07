@@ -3,6 +3,16 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+
+! 2011-01-24 - Olivier Deschamps
+  - L0DUBase   : update according to the latest firmware update (new data DiMuonProd + condition number changes)
+  - L0DUCounter : counter base change from 10^3 to 10^6 
+  - L0DUReport : 
+    - add embedded data value map (useful when data is not available via config smartref)
+    - add L0DU BCID as attribute of L0DUReport             
+  - L0DUConfig  : add muon FOIx/y as a configuration attribute
+
+
 !========================= L0Event v19r1 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
