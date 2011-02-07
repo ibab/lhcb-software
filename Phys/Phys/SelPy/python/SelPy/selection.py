@@ -251,9 +251,6 @@ class SelSequence(UniquelyNamedObject) :
     def outputLocation(self) :
         return self._topSelection.outputLocation()
 
-    def outputLocations(self) :
-        return [self.outputLocation()]
-
     def clone(self, name, **args) :
         new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return SelSequence(name, **new_dict)
