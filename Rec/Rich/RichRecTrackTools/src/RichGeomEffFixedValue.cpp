@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::GeomEffFixedValue
  *
- *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -29,7 +26,7 @@ DECLARE_TOOL_FACTORY( GeomEffFixedValue );
 GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
-  : RichRecToolBase      ( type, name, parent ),
+  : ToolBase             ( type, name, parent ),
     m_ckAngle            ( NULL ),
     m_geomTool           ( NULL ),
     m_fixedValue         ( Rich::NRadiatorTypes, 0.7 ),
@@ -52,7 +49,7 @@ GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
 StatusCode GeomEffFixedValue::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

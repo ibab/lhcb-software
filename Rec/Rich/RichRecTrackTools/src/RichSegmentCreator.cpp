@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::SegmentCreator
  *
- *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.4 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -28,7 +25,7 @@ DECLARE_TOOL_FACTORY( SegmentCreator );
 SegmentCreator::SegmentCreator ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : RichRecToolBase ( type, name, parent      ),
+  : ToolBase        ( type, name, parent      ),
     m_signal        ( NULL                    ),
     m_segments      ( 0                       ),
     m_richRecSegmentLocation ( LHCb::RichRecSegmentLocation::Default ),
@@ -52,7 +49,7 @@ SegmentCreator::SegmentCreator ( const std::string& type,
 StatusCode SegmentCreator::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   if ( msgLevel(MSG::DEBUG) )
@@ -97,7 +94,7 @@ StatusCode SegmentCreator::finalize()
   }
 
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return ToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"

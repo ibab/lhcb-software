@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::InterpCKResVthetaForRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -27,8 +24,8 @@ InterpCKResVthetaForRecoTracks::
 InterpCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_ckAngle       ( NULL )
+  : ToolBase   ( type, name, parent ),
+    m_ckAngle  ( NULL )
 {
 
   declareInterface<ICherenkovResolution>(this);

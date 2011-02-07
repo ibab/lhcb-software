@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
- *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.6 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -26,7 +23,7 @@ DECLARE_TOOL_FACTORY( GeomEffPhotonTracing );
 GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
                                              const std::string& name,
                                              const IInterface* parent )
-  : RichRecToolBase   ( type, name, parent ),
+  : ToolBase          ( type, name, parent ),
     m_rayTrace        ( NULL ),
     m_ckAngle         ( NULL ),
     m_richSys         ( NULL ),
@@ -52,7 +49,7 @@ StatusCode GeomEffPhotonTracing::initialize()
   using namespace Gaudi::Units;
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

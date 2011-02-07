@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::PhotonEmissionPoint
  *
- *  CVS Log :-
- *  $Id: RichPhotonEmissionPoint.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -28,7 +25,7 @@ DECLARE_TOOL_FACTORY( PhotonEmissionPoint );
 PhotonEmissionPoint::PhotonEmissionPoint ( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
-  : RichRecToolBase ( type, name, parent )
+  : ToolBase ( type, name, parent )
 {
   // tool interface
   declareInterface<IPhotonEmissionPoint>(this);

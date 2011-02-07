@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::GeomEffCKMassRing
  *
- *  CVS Log :-
- *  $Id: RichGeomEffCKMassRing.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -26,7 +23,7 @@ DECLARE_TOOL_FACTORY( GeomEffCKMassRing );
 GeomEffCKMassRing::GeomEffCKMassRing ( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
-  : RichRecToolBase   ( type, name, parent ),
+  : ToolBase          ( type, name, parent ),
     m_ckAngle         ( NULL ),
     m_massHypoRings   ( NULL ),
     m_richPartProp    ( NULL ),
@@ -43,7 +40,7 @@ GeomEffCKMassRing::GeomEffCKMassRing ( const std::string& type,
 StatusCode GeomEffCKMassRing::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
