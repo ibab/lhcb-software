@@ -4,9 +4,6 @@
  *
  * Header file for reconstruction tool base class : RichRecToolBase
  *
- * CVS Log :-
- * $Id: RichRecToolBase.h,v 1.20 2007-03-09 18:04:34 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2002-07-26
  */
@@ -57,12 +54,8 @@ namespace Rich
 
     };
 
-  }
-} // RICH
+  } // Rec
 
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::ToolBase RichRecToolBase;
+} // Rich
 
 #endif // RICHRECBASE_RICHRECTOOLBASE_H

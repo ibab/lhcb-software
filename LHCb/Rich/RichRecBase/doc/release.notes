@@ -4,19 +4,23 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecBase v4r3 2011-01-31 =========================
+! 2011-02-07 - Chris Jones
+ - Remove some depreciated typedefs
+
+!========================= RichRecBase v4r3 2011-01-31 =======================
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
-!========================= RichRecBase v4r2 2010-11-27 =========================
+!======================== RichRecBase v4r2 2010-11-27 ========================
 ! 2010-11-21 - Chris Jones
- - Extend Rich::IPIDPlots::Configuration with a new option for expert histograms
+ - Extend Rich::IPIDPlots::Configuration with a new option for expert 
+   histograms.
  - Add a method to the photon creator base class that returns a list of the
    photon creator specific job options
  - Update track selector base class to use new method in RichKernel base class
    to propagate joboptions, instead of own private method.
 
-!========================= RichRecBase v4r1 2010-10-25 =========================
+!======================== RichRecBase v4r1 2010-10-25 ========================
 
 ! 2010-10-15 - Chris Jones
  - Add a new method to the Cherenkov angle tool interface to calculate the

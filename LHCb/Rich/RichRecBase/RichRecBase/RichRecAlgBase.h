@@ -4,9 +4,6 @@
  *
  *  Header file for reconstruction algorithm base class : Rich::Rec::AlgBase
  *
- *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.23 2007-03-09 18:04:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -74,12 +71,8 @@ namespace Rich
 
     };
 
-  }
-} // RICH
+  } // Rec
 
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::AlgBase RichRecAlgBase;
+} // Rich
 
 #endif // RICHRECBASE_RICHRECALGBASE_H
