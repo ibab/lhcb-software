@@ -44,7 +44,7 @@ from Gaudi.Configuration import ToolSvc
 from HltTracking.Hlt1TrackUpgradeConf import ConfiguredForward
 import Hlt1StreamerConf as Conf
 
-ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1100 )
+ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1250 )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 6000, 600 )
 
 ## Strings for users
