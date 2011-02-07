@@ -28,12 +28,13 @@ namespace
   struct __Instantiations
   {
     
-    Hlt::Stage::Vector          m_s_1 ;
-    Hlt::Stage::ConstVector     m_s_2 ;
-    Hlt::Stage::Container       m_s_3 ;
-    Hlt::Stage::Range           m_s_4 ;
-    Hlt::Stage::Selection       m_s_5 ;
-
+    Hlt::Stage::Vector           m_s_1 ;
+    Hlt::Stage::ConstVector      m_s_2 ;
+    Hlt::Stage::Container        m_s_3 ;
+    Hlt::Stage::Range            m_s_4 ;
+    Hlt::Stage::Selection        m_s_5 ;
+    SmartRefVector<Hlt::Stage>   m_s_6 ;
+    
     Hlt::Candidate::Vector       m_c_1 ;
     Hlt::Candidate::ConstVector  m_c_2 ;
     Hlt::Candidate::Container    m_c_3 ;

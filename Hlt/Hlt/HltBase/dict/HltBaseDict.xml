@@ -37,7 +37,8 @@
   <class name   = "Hlt::Stage::Container"   />
   <class name   = "Hlt::Stage::Range"       />
   <class name   = "Hlt::Stage::Lock"        />
-  <class name   = "Hlt::Stage::Selection"   />
+  <class name   = "Hlt::Stage::Selection"      />
+  <class name   = "SmartRefVector<Hlt::Stage>" />
 
   <class name   = "Hlt::MultiTrack::Vector"      />
   <class name   = "Hlt::MultiTrack::ConstVector" />
