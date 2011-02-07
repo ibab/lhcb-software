@@ -286,7 +286,11 @@ StatusCode HltSelReportsMaker::execute() {
             const Hlt::Stage* stage = cand->currentStage();
             // let's first try track...
             candidate = stage->get<LHCb::Track>();
+            if (candidate==0)  candidate = stage->get<LHCb::RecVertex>();
+            if (candidate==0)  Warning("Stage is neither track nor vertex", StatusCode::SUCCESS,10);
+            
         }
+
      } 
      if (candidate==0)      candidate = getFirst<LHCb::Track>(sel);
      if (candidate==0)      candidate = getFirst<LHCb::RecVertex>(sel);
@@ -371,17 +375,24 @@ StatusCode HltSelReportsMaker::execute() {
 
      std::vector<const ContainedObject*> candidates; candidates.reserve( sel->size() );
      
+     //TODO: make it less spaghetti like...
      if( sel->classID() == Hlt::Candidate::classID() ) {
        const Hlt::TSelection<Hlt::Candidate>& csel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);
        for (Hlt::TSelection<Hlt::Candidate>::const_iterator it = csel.begin(); it != csel.end(); ++it) {
          const Hlt::Candidate* cand = *it;
          const Hlt::Stage* stage = cand->currentStage();
          const LHCb::Track *trk = stage->get<LHCb::Track>();
-         if (trk==0) {
-            Warning( " Unsupported data type in stage - skip selection ID=" +selName,StatusCode::SUCCESS, 10 );
-            continue;
+         if (trk!=0) {
+            candidates.push_back( trk );
+         } else {
+            const LHCb::RecVertex *vtx = stage->get<LHCb::RecVertex>();
+            if (vtx!=0) { 
+                candidates.push_back( vtx );
+            } else {
+                Warning( " Unsupported data type in stage - skip selection ID=" +selName,StatusCode::SUCCESS, 10 );
+                continue;
+            }
          }
-         candidates.push_back( trk );
        }
 
      } else if( sel->classID() == LHCb::Track::classID() ) {
