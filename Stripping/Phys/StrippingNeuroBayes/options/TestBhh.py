@@ -108,7 +108,7 @@ DaVinci().EvtMax                     = 5000;
 #DaVinci().EvtMax                     = -1;
 DaVinci().DataType                   = "2010"
 
-DaVinci().Simulation                 = True #False
+DaVinci().Simulation                 = False
 DaVinci().UserAlgorithms             = [ SeqBhh, tupleBhh]
 
 DaVinci().DataType                   = "2010"
@@ -116,16 +116,19 @@ DaVinci().DataType                   = "2010"
 DaVinci().InputType                  = 'DST'
 
 #MC10, Sim01
-DaVinci().DDDBtag                    = "head-20101206"
-DaVinci().CondDBtag                  = "sim-20101210-vc-md100"
-        
+#DaVinci().DDDBtag                    = "head-20101206"
+#DaVinci().CondDBtag                  = "sim-20101210-vc-md100"
 
-#DaVinci().DDDBtag                    = ""
-#DaVinci().CondDBtag                  = ""
+#my own reconstruction        
+DaVinci().DDDBtag                    = "head-20101026"
+DaVinci().CondDBtag                  = "head-20101112"
 
 # MC2010: BsKK
 EventSelector().Input = [
-    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008674/0000/00008674_00000016_1.allstreams.dst' TYP='POOL_ROOT' OPT='READ'"
+    "DATAFILE='PFN:/afs/cern.ch/project/lbcern/vol8/ukerzel/DSTs/Brunel_81349_0x002a_MBNB_L0Phys.dst' TYP='POOL_ROOT' OPT='READ'"
+    , "DATAFILE='PFN:/afs/cern.ch/project/lbcern/vol8/ukerzel/DSTs/Brunel_80881_0x002a_MBNB_L0Phys.dst' TYP='POOL_ROOT' OPT='READ'"
+    , "DATAFILE='PFN:/afs/cern.ch/project/lbcern/vol8/ukerzel/DSTs/Brunel_79646_0x002a_MBNB_L0Phys.dst' TYP='POOL_ROOT' OPT='READ'"
+#    , "DATAFILE='PFN:' TYP='POOL_ROOT' OPT='READ'"
             ]
 
 

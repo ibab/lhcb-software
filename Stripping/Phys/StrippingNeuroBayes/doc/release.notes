@@ -4,6 +4,11 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Ulrich Kerzel
+- change return value of function filling input variables to 'bool',
+  only return true if variables are filled after pre-cuts, then run network
+- Add Expertise for training in ZeroIteration mode 
+
 ! 2011-01-27 - Ulrich Kerzel
 - add working options file to test Bhh network
 

@@ -37,7 +37,7 @@ protected:
 
 private:
 
-  StatusCode getInputVar(const LHCb::Particle& particle);
+  bool       getInputVar(const LHCb::Particle& particle);
 
   double     m_NetworkCut;
   bool       m_PlotHisto;

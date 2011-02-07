@@ -156,9 +156,9 @@ StatusCode StrippingNBBhh::execute() {
 
   for ( ; iCand != iCandEnd; iCand++) {
 
-    sc = StrippingNBBhh::getInputVar(*(*iCand));
+    bool filledInputVar =  StrippingNBBhh::getInputVar(*(*iCand));
 
-    if (sc == StatusCode::SUCCESS) {
+    if (filledInputVar) {
 
       if ( msgLevel(MSG::DEBUG) ) {
         for (int i = 0; i<23; i++) {
@@ -225,9 +225,9 @@ StatusCode StrippingNBBhh::finalize() {
 }
 
 //=============================================================================
-StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
+bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   
-  StatusCode sc = StatusCode::SUCCESS;
+  
 
 #ifdef __GNUC__
   // get daughters
@@ -235,7 +235,7 @@ StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
 
   if (daughters.size() != 2) {
     warning() << "number of daughters at vertex, skip candidate " << daughters.size() << endmsg;
-    return StatusCode::FAILURE;
+    return false;
   }//if #Kaons
 
   const LHCb::Particle* hPlus  = NULL;
@@ -260,27 +260,87 @@ StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   // sanity check
   if (!hPlus || !hMinus) {
         warning() << " Daughters obtained from not valid, skip candidate" << endmsg;
-        return StatusCode::FAILURE;
+        return false;
   }// if
 
 
   //
-  // get input variables
+  // get variables needed for pre-cuts
   //
   double hPlusPt         = hPlus->pt()/Gaudi::Units::GeV;
   double hMinusPt        = hMinus->pt()/Gaudi::Units::GeV;
   double hPlusP          = hPlus->p()/Gaudi::Units::GeV;
   double hMinusP         = hMinus->p()/Gaudi::Units::GeV;
-  double hPlusCaloE      = hPlus ->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
-  double hMinusCaloE     = hMinus->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
   double hPlusDllK       = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLk,-999);
   double hMinusDllK      = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLk,-999);
+  double hPlusTrackChi2  = hPlus ->proto()->track()->probChi2();
+  double hMinusTrackChi2 = hMinus->proto()->track()->probChi2();
+
+
+  bool hPlusAboveThresholdK  = false;
+  bool hMinusAboveThresholdK = false;
+  if (hPlus ->proto()->richPID()) {
+    hPlusAboveThresholdK   = hPlus ->proto()->richPID()->kaonHypoAboveThres();
+  }
+  if (hMinus->proto()->richPID()) {
+    hMinusAboveThresholdK = hMinus ->proto()->richPID()->kaonHypoAboveThres();
+  }
+
+  double mB              = particle.measuredMass()/Gaudi::Units::GeV;
+  double chi2B           = particle.endVertex()->chi2();
+
+  double     docaB    = -999;
+  double     docaChi2 = -999;
+  StatusCode sc2; 
+  sc2 = distanceCalculator()->distance(hPlus, hMinus, docaB, docaChi2);
+  if (sc2 != StatusCode::SUCCESS) {
+    docaB     = -999;
+    docaChi2  = -999;
+  } //if
+
+  double minP            = std::min(hPlusP    , hMinusP);
+  //double maxP            = std::max(hPlusP    , hMinusP);
+
+  double minPt           = std::min(hPlusPt    , hMinusPt);
+  double maxPt           = std::max(hPlusPt    , hMinusPt);
+
+  //double minDllK         = std::min(hPlusDllK  , hMinusDllK);
+  double maxDllK         = std::max(hPlusDllK  , hMinusDllK);
+  
+
+
+
+  //
+  // appply pre-cuts
+  //
+  if (mB               < 5.0      ||
+      mB               > 5.8      ||
+      !hPlusAboveThresholdK       ||
+      !hMinusAboveThresholdK      ||
+      hPlusTrackChi2   >  5       ||
+      hMinusTrackChi2  >  5       ||
+      minP             < 10.0     ||
+      minPt            <  1.5     ||
+      (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
+      (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
+      docaB            > 0.10     ||
+      chi2B            > 25.0     ||
+      maxPt            <  2.0     ||
+      maxDllK          <  0.1)
+    return false;
+
+
+  //
+  // get remaining variables
+  //
+
+
+  double hPlusCaloE      = hPlus ->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
+  double hMinusCaloE     = hMinus->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
   double hPlusDllP       = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLp,-999);
   double hMinusDllP      = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLp,-999);
   double hPlusDllMu      = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLmu,-999);
   double hMinusDllMu     = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLmu,-999);
-  double hPlusTrackChi2  = hPlus ->proto()->track()->probChi2();
-  double hMinusTrackChi2 = hMinus->proto()->track()->probChi2();
   double hPlusGhost      = hPlus ->proto()->track()->ghostProbability();
   double hMinusGhost     = hMinus->proto()->track()->ghostProbability();
 
@@ -293,24 +353,16 @@ StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   if (hMinusMuonPID)
     hMinusIsMuon = hMinusMuonPID->IsMuon();
 
-  //double mB              = particle.measuredMass()/Gaudi::Units::GeV;
+  
   double mErrB           = particle.measuredMassErr()/Gaudi::Units::GeV;
   //double ptB             = particle.pt()/Gaudi::Units::GeV;
   double pB              = particle.p()/Gaudi::Units::GeV;
-  double chi2B           = particle.endVertex()->chi2();
+
 
   double cosTheta        = LoKi::Cuts::LV01(&particle);
   if (lnan(cosTheta))
     cosTheta = -999; 
 
-  double     docaB    = -999;
-  double     docaChi2 = -999;
-  StatusCode sc2; 
-  sc2 = distanceCalculator()->distance(hPlus, hMinus, docaB, docaChi2);
-  if (sc2 != StatusCode::SUCCESS) {
-    docaB     = -999;
-    docaChi2  = -999;
-  } //if
 
 
 
@@ -352,36 +404,6 @@ StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
     hMinusGhost = -999;
 
 
-  double minPt           = std::min(hPlusPt    , hMinusPt);
-  double maxPt           = std::max(hPlusPt    , hMinusPt);
-  
-  //double minP            = std::min(hPlusP     , hMinusP);
-  //double maxP            = std::max(hPlusP     , hMinusP);
-  
-  //double minDllK         = std::min(hPlusDllK  , hMinusDllK);
-  //double maxDllK         = std::max(hPlusDllK  , hMinusDllK);
-  
-
-  //
-  // apply the soft pre-cuts - do in combine-particle step 
-  // 
-///  if (mB               < mMin     ||
-///      mB               > mMax     ||
-///      hPlusTrackChi2   >  5       ||
-///      hMinusTrackChi2  >  5       ||
-///      minP             < 10.0     ||
-///      minPt            <  1.5     ||
-///      (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
-///      (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
-///      docaB            > 0.10     ||
-///      chi2B            > 25.0     ||
-///      maxPt            <  2.0     ||
-///      maxDllK          <  0.1)
-///    continue;
-  
-  
-  
-   
   //
   // fill input array
   //
@@ -412,6 +434,6 @@ StatusCode  StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
    
 #endif  
 
-  return sc;
+  return true;
 } //double getInputVar
 //=============================================================================
