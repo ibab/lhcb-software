@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Gerhard Raven
+ - add SINKs to the 1Track lines
+
 ! 2011-02-07 - Roel Aaij
  - Add a SINK to NewDiMuonLine for the final output selection.
 

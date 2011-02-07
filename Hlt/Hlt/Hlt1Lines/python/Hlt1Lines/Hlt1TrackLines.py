@@ -71,27 +71,25 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
         from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
         lineCode = """ 
             FullPV3D
             >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
                   ( TrNVELOMISS < %(Velo_Qcut)s ) & \
                   ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s ) )
             >>  execute( decodeIT )
-            """ % props
-        if (name.find('Photon') > -1) :
-            lineCode += ">> LooseForward"
-        else :
-            lineCode += ">> TightForward"
-        lineCode += """ 
+            >> %(forward)s
             >>  ( ( TrPT > %(PT)s * MeV ) & \
                   ( TrP  > %(P)s  * MeV ) )
             >>  FitTrack
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
                   ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+            >> SINK( 'Hlt1%(name)sDecision' )
             >> ~TC_EMPTY
             """ % props
         hlt1TrackNonMuon_Unit = HltUnit(
-            name,
+            name+'Unit',
             ##OutputLevel = 1 ,
             Preambulo = self.hlt1Track_Preambulo(),
             Code = lineCode
@@ -101,8 +99,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
         from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
         hlt1TrackMuon_Unit = HltUnit(
-            name,
+            name+'Unit',
             ##OutputLevel = 1 ,
             Preambulo = self.hlt1Track_Preambulo(),
             Code = """ 
@@ -117,6 +116,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             >>  FitTrack
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
                   ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+            >> SINK( 'Hlt1%(name)sDecision' )
             >> ~TC_EMPTY
             """ % props
             )    
@@ -248,18 +248,18 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS" 
-             , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0Unit", self.localise_props( "AllL0" ) )
+             , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
                )
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon','MuonHigh'] ] ) 
-             , algos =  self.hlt1TrackMuon_Streamer( "TrackMuonUnit", self.localise_props( "Muon" ) )
+             , algos =  self.hlt1TrackMuon_Streamer( "TrackMuon", self.localise_props( "Muon" ) )
              )
         Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
-             , algos = self.hlt1TrackNonMuon_Streamer( "TrackPhotonUnit", self.localise_props( "Photon" ) )
+             , algos = self.hlt1TrackNonMuon_Streamer( "TrackPhoton", self.localise_props( "Photon" ) )
              )    
 
