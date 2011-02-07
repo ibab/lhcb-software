@@ -310,12 +310,14 @@ StatusCode CaloPi0Ntp::execute(){
           hTuning("Cluster", spd ,prs1,prs2, ccc1, id1 , ccc2 , id2,nVert);
           hTuning("Corrected", spd , prs1,prs2,v1, id1 , v2 , id2,nVert);
         }
-        if ( m_trend ){
+        if ( m_trend && spd == 0){
           std::string sNpv = "PV" + Gaudi::Utils::toString( nVert ) +"/";
           std::string sRun  =  "r" + Gaudi::Utils::toString( run   ) +"/";
           std::string base = "Trend/";
-          plot1D(pi0m, base+"allPV/"+sRun+"mass","di-photon mass spectrum for run = "+sRun , m_hMin, m_hMax, m_hBin);
+          plot1D(pi0m, base+"allPV/allRun/mass","di-photon mass spectrum for all run & allPV" , m_hMin, m_hMax, m_hBin);
+          plot1D(pi0m, base+"allPV/"+sRun+"mass","di-photon mass spectrum for all PV & run = "+sRun , m_hMin, m_hMax, m_hBin); 
           plot1D(pi0m, base+sNpv+sRun+"mass","di-photon mass spectrum for PV="+sNpv+" (run = "+sRun+")" , m_hMin, m_hMax, m_hBin);
+          plot1D(pi0m, base+sNpv+"allRun/mass","di-photon mass spectrum for PV="+sNpv+" (all run)" , m_hMin, m_hMax, m_hBin);
         }
       }
     }

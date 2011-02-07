@@ -256,9 +256,11 @@ StatusCode CaloElectronNtp::execute() {
       std::string sNpv = "PV" + Gaudi::Utils::toString( nVert ) +"/";
       std::string sRun  =  "r" + Gaudi::Utils::toString( run   ) +"/";
       std::string base = "Trend/";
+      plot1D(eOp, base+"allPV/allRun/eOp","e/p spectrum for all run & allPV", 0. , 2.5, 250);
       plot1D(eOp, base+"allPV/"+sRun+"eOp","e/p spectrum for run = "+sRun , 0. , 2.5, 250);
       plot1D(eOp, base+sNpv+sRun+"eOp","e/p spectrum for PV="+sNpv+" (run = "+sRun+")" , 0., 2.5, 250); 
-    }
+      plot1D(eOp, base+sNpv+"allRun/eOp","e/p spectrum for PV="+sNpv+" (all run)" , 0., 2.5, 250); 
+    } 
     
     
 

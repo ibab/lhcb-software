@@ -44,7 +44,7 @@ CaloNtpBase::CaloNtpBase( const std::string& name,
   declareProperty("nVertices", m_nVtx=std::make_pair(-1.,999999.));
   declareProperty("inAreaAcc", m_inArea = false);
 
-  declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Primary);
+  declareProperty( "VertexLoc", m_vertLoc = "");
   declareProperty( "UsePV3D", m_usePV3D = false);
   declareProperty( "TrackTypes", m_tracks);
   m_tracks.push_back(LHCb::Track::Long);
@@ -95,17 +95,22 @@ StatusCode CaloNtpBase::initialize() {
 
 unsigned int CaloNtpBase::nVertices(){
   int nVert = 0;
-  if( m_usePV3D){
-    if( exist<LHCb::VertexBases>( m_vertLoc ) ){
-      LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
-      if( NULL != verts)nVert = verts->size();
-    }
-  }
-  else{
+
+  if( !m_usePV3D){
     if( exist<LHCb::RecVertices>(m_vertLoc) ){
       LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
-      if( NULL != verts)nVert = verts->size();
+      if( NULL != verts){
+        nVert = verts->size();
+        counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
+        return nVert;
+      }
     }
+  }
+  // try PV3D if explicitely requested or if RecVertices not found
+  if(!m_usePV3D)m_vertLoc = LHCb::RecVertexLocation::Velo3D;
+  if( exist<LHCb::VertexBases>( m_vertLoc ) ){
+    LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
+    if( NULL != verts)nVert = verts->size();
   }
   counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
   return nVert;
