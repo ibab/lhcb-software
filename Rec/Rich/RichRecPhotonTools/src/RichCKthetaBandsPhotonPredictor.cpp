@@ -76,7 +76,7 @@ CKthetaBandsPhotonPredictor( const std::string& type,
 StatusCode CKthetaBandsPhotonPredictor::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools

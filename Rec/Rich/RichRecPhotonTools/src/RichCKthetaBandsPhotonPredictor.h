@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.3 2008-08-15 14:37:39 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
  */
@@ -60,7 +57,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class CKthetaBandsPhotonPredictor : public RichRecToolBase,
+    class CKthetaBandsPhotonPredictor : public ToolBase,
                                         virtual public IPhotonPredictor
     {
 

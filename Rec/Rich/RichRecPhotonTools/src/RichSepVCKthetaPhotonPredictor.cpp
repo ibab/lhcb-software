@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.3 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
  */
@@ -91,7 +88,7 @@ SepVCKthetaPhotonPredictor( const std::string& type,
 StatusCode SepVCKthetaPhotonPredictor::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -148,7 +145,7 @@ StatusCode SepVCKthetaPhotonPredictor::finalize()
   }
 
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return ToolBase::finalize();
 }
 
 // fast decision on whether a photon is possible

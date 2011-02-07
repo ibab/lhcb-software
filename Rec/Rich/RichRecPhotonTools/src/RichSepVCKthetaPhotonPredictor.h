@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.2 2008-05-08 13:21:32 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
  */
@@ -58,7 +55,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class SepVCKthetaPhotonPredictor : public RichRecToolBase,
+    class SepVCKthetaPhotonPredictor : public ToolBase,
                                        virtual public IPhotonPredictor
     {
 

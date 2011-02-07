@@ -4,7 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!========================= RichRecPhotonTools v1r8p1 2010-12-16 =========================
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
+!==================== RichRecPhotonTools v1r8p1 2010-12-16 ===================
 ! 2010-11-21 - Chris Jones
  - Remove use of depreciated photon creator base class typedef
  - remove CVS comments from photon creator

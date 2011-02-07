@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
- *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.5 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -34,7 +31,7 @@ DECLARE_TOOL_FACTORY( PhotonSignalGaussProb );
 PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : RichRecToolBase( type, name, parent )
+  : ToolBase ( type, name, parent )
 {
   // interface
   declareInterface<IPhotonSignal>(this);
@@ -46,7 +43,7 @@ StatusCode PhotonSignalGaussProb::initialize()
 {
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

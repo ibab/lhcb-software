@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::PhotonPredictorUsingRings
  *
- *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -29,10 +26,10 @@ PhotonPredictorUsingRings::
 PhotonPredictorUsingRings( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_geomTool      ( NULL ),
-    m_recRings      ( NULL ),
-    m_ringLoc       ( LHCb::RichRecRingLocation::MarkovRings )
+  : ToolBase   ( type, name, parent ),
+    m_geomTool ( NULL ),
+    m_recRings ( NULL ),
+    m_ringLoc  ( LHCb::RichRecRingLocation::MarkovRings )
 {
 
   declareInterface<IPhotonPredictor>(this);
@@ -55,7 +52,7 @@ PhotonPredictorUsingRings( const std::string& type,
 StatusCode PhotonPredictorUsingRings::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -76,12 +73,6 @@ StatusCode PhotonPredictorUsingRings::initialize()
   InitNewEvent();
 
   return sc;
-}
-
-StatusCode PhotonPredictorUsingRings::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 // fast decision on whether a photon is possible

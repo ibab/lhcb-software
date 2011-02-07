@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::SimplePhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.2 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -30,10 +27,10 @@ SimplePhotonPredictor::
 SimplePhotonPredictor( const std::string& type,
                        const std::string& name,
                        const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_geomTool      ( 0 ),
-    m_Nselected     ( Rich::NRadiatorTypes, 0 ),
-    m_Nreject       ( Rich::NRadiatorTypes, 0 )
+  : ToolBase     ( type, name, parent ),
+    m_geomTool   ( 0 ),
+    m_Nselected  ( Rich::NRadiatorTypes, 0 ),
+    m_Nreject    ( Rich::NRadiatorTypes, 0 )
 {
 
   declareInterface<IPhotonPredictor>(this);
@@ -54,7 +51,7 @@ StatusCode SimplePhotonPredictor::initialize()
 {
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -84,7 +81,6 @@ StatusCode SimplePhotonPredictor::finalize()
        m_Nselected[Rich::Rich1Gas] > 0 ||
        m_Nselected[Rich::Rich2Gas] > 0 )
   {
-
     // statistical tool
     const PoissonEffFunctor occ("%10.2f +-%7.2f");
 
@@ -104,7 +100,7 @@ StatusCode SimplePhotonPredictor::finalize()
   }
 
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return ToolBase::finalize();
 }
 
 // fast decision on whether a photon is possible

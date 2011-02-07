@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonPredictorUsingRings
  *
- *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.h,v 1.2 2009-07-30 11:20:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -66,9 +63,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 
