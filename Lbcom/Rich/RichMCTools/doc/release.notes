@@ -4,7 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
-!========================= RichMCTools v3r14 2010-12-01 =========================
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
+!======================== RichMCTools v3r14 2010-12-01 =======================
 ! 2010-11-12 - Antonis Papanestis
  - Added methods to access easily the MC info on scintillation.
 
@@ -32,11 +35,11 @@
 ! 2008-12-11 - Marco Cattaneo
  - Adapt to IRichCTrackInfoTool interface change to fix gcc 4.3 warnings
 
-!========================== RichMCTools v3r9 2008-03-28 =====================
+!========================== RichMCTools v3r9 2008-03-28 ======================
 ! 2008-03-25 - Chris Jones
  - Add new methods (isHPDReflection and isSiBackScatter) to MCTruthTool
 
-!========================== RichMCTools v3r8 2008-02-01 =====================
+!========================== RichMCTools v3r8 2008-02-01 ======================
 ! 2008-02-01 - Chris Jones
  - Minor tweek to signal / background discrimination logic to work with
    new DC06 data when uses the latest additions to MCEvent, which adds
@@ -45,7 +48,7 @@
    is not 100% ideal, so once DC06 support is no longer needed it should be 
    changed.
 
-!========================== RichMCTools v3r7 2007-09-19 =====================
+!========================== RichMCTools v3r7 2007-09-19 ======================
 ! 2007-08-09 - Chris Jones
  - Update RichMCTrack info tool to correctly perform aerogel refraction
    correction.

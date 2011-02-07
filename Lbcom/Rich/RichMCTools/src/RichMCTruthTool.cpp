@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichMCTruthTool
  *
- * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.39 2009-08-18 12:32:56 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -61,7 +58,7 @@ MCTruthTool::~MCTruthTool() { cleanUpLinkers(); }
 StatusCode MCTruthTool::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Retrieve particle property service
@@ -96,7 +93,7 @@ StatusCode MCTruthTool::finalize()
   cleanUpLinkers();
 
   // Execute base class method
-  return RichToolBase::finalize();
+  return Rich::ToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"

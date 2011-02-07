@@ -3,9 +3,6 @@
  *
  *  Header file for tool : Rich::MC::TrackInfoTool
  *
- *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.15 2008-12-11 13:56:16 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -54,9 +51,6 @@ namespace Rich
 
       // Initialization of the tool after creation
       StatusCode initialize();
-
-      // Finalization of the tool before deletion
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from interface
 

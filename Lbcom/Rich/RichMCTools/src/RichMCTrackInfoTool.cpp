@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichMCTrackInfoTool
  *
- * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.15 2009-07-30 12:12:41 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
  */
@@ -26,7 +23,7 @@ DECLARE_TOOL_FACTORY( MCTrackInfoTool );
 MCTrackInfoTool::MCTrackInfoTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase  ( type, name, parent ),
+  : ToolBase      ( type, name, parent ),
     m_rayTrace    ( NULL ),
     m_smartIDTool ( NULL ),
     m_traceMode   ( LHCb::RichTraceMode::IgnoreHPDAcceptance )
@@ -37,7 +34,7 @@ MCTrackInfoTool::MCTrackInfoTool( const std::string& type,
 StatusCode MCTrackInfoTool::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -49,12 +46,6 @@ StatusCode MCTrackInfoTool::initialize()
   info() << "Track " << m_traceMode << endmsg;
 
   return sc;
-}
-
-StatusCode MCTrackInfoTool::finalize()
-{
-  // Execute base class method
-  return RichToolBase::finalize();
 }
 
 bool MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
