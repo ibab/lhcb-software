@@ -3,6 +3,17 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2011-02-07 - Manuel Tobias Schiller
+ - PatSeedTool/PatSeedTrack: protect against removal of essential layers (at
+   least 2 X and 2 stereo layers have to remain)
+ - PatSeedFit: protect against numerical difficulties when processing very
+   low quality tracks (these exist due to earlyData tuning is now default)
+ - PatSeedingTool: m_momentumScale is set too big, needs multiplication with a
+   factor 0.8 to give the right estimate; since momentum estimates usually
+   come from the FastMomentumEstimate tool, this change is mostly cosmetic and
+   should not influence performance
+
 ! 2011-02-04 - Stephanie Hansmann-Menzemer
  - add check for untested status code
 

@@ -44,7 +44,7 @@ PatSeedFit::PatSeedFit(const std::string& type,
   declareProperty( "PatSeedInitialArrow",       m_initialArrow    = 4.25307e-9 );
   declareProperty( "TrackMaxChi2",              m_maxChi2               = -1.  );
   declareProperty( "zReference",		m_zReference = StateParameters::ZMidT );
-  declareProperty( "MomentumScale",		m_momentumScale		= 44.1416);
+  declareProperty( "MomentumScale",		m_momentumScale		= 35.31328);
 }
 //============================================================================
 // Destructor
@@ -114,53 +114,104 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     }
   }
   // need a fallback for really broken tracks with only u or only v hits
-  // as well...
+  // as well; for these tracks, we try to get z of the hits as far apart
+  // as possible to avoid numerical problems...
   if (!seedhits[0] || !seedhits[1] || !seedhits[2] || !seedhits[3]) {
     seedhits[0] = seedhits[1] = seedhits[2] = seedhits[3] = 0;
     BOOST_FOREACH( PatFwdHit& ihit, hits ) {
       bool isX = ihit.hit()->isX();
       if (isX) {
-	if (!seedhits[0]) {
+	if (!seedhits[0])
 	  seedhits[0] = &ihit;
-	} else {
-	  if (!seedhits[3]) seedhits[3] = &ihit;
-	}
+	else if (seedhits[0]->hit()->zAtYEq0() > ihit.hit()->zAtYEq0())
+	  seedhits[0] = &ihit;
+	if (!seedhits[3])
+	  seedhits[3] = &ihit;
+	else if (seedhits[3]->hit()->zAtYEq0() < ihit.hit()->zAtYEq0())
+	  seedhits[3] = &ihit;
       } else {
-	if (!seedhits[1]) {
+	if (!seedhits[1])
 	  seedhits[1] = &ihit;
-	} else {
-	  if (!seedhits[2]) seedhits[2] = &ihit;
-	}
+	else if (seedhits[1]->hit()->zAtYEq0() > ihit.hit()->zAtYEq0())
+	  seedhits[1] = &ihit;
+	if (!seedhits[2])
+	  seedhits[2] = &ihit;
+	else if (seedhits[2]->hit()->zAtYEq0() < ihit.hit()->zAtYEq0())
+	  seedhits[2] = &ihit;
       }
     }
   }
-
+  // verify if what we have is good enough:
+  // - no 0 pointers
+  // - 4 different hits
+  // - enough separation in z
+  bool goodhits = !(!seedhits[0] || !seedhits[1] || !seedhits[2] || !seedhits[3] ||
+      seedhits[0] == seedhits[3] || seedhits[1] == seedhits[2] ||
+      std::abs(seedhits[1]->hit()->zAtYEq0() - seedhits[2]->hit()->zAtYEq0()) < 5. ||
+      std::abs(seedhits[0]->hit()->zAtYEq0() - seedhits[3]->hit()->zAtYEq0()) < 5.);
+  if (!goodhits) {
+    // not good enough - emit a warning and try to improvise:
+    // assume the track comes from the origin, and synthesize three positions
+    // (see below); work in a similar manner for y
+    Warning("Very bad track, attempting to recover!", StatusCode::FAILURE, 0).ignore();
+    goodhits = false;
+  }
   // construct track
-  PatSeedTrack tr(seedhits[0], seedhits[1], seedhits[2], seedhits[3],
-      StateParameters::ZMidT, m_dRatio, m_initialArrow);
-  tr.setValid(true);
-
-  // save initial track parameters in case, internal fit fails later
+  PatSeedTrack tr = goodhits ?
+    PatSeedTrack(seedhits[0], seedhits[1], seedhits[2], seedhits[3],
+	StateParameters::ZMidT, m_dRatio, m_initialArrow) :
+    PatSeedTrack(
+	seedhits[0]->hit()->xAtYEq0() * StateParameters::ZBegT / seedhits[0]->hit()->zAtYEq0(),
+	StateParameters::ZBegT,
+	seedhits[0]->hit()->xAtYEq0() * StateParameters::ZMidT / seedhits[0]->hit()->zAtYEq0(),
+	StateParameters::ZMidT,
+	seedhits[0]->hit()->xAtYEq0() * StateParameters::ZEndT / seedhits[0]->hit()->zAtYEq0(),
+	StateParameters::ZEndT,
+	StateParameters::ZMidT, m_dRatio);
   double z0, bx, ax, cx, dx, ay, by;
-  tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+  if (goodhits) {
+    tr.setValid(true);
 
-  const bool fitOK = !m_patSeedTool->refitStub(tr, m_dRatio, m_initialArrow);
-  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    // save initial track parameters in case, internal fit fails later
+    double z0, bx, ax, cx, dx, ay, by;
+    tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+
+    const bool fitOK = !m_patSeedTool->refitStub(tr, m_dRatio, m_initialArrow);
+    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
       // if the hit is not on the track, add it
       if (seedhits.end() == 
 	  std::find(seedhits.begin(), seedhits.end(), &ihit))
-	  tr.addCoord( &ihit ) ;
-  }
-  if (!fitOK) {
-    Warning("Stub fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
-    // restore best guess of track parameters in case of fit failure
-    tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+	tr.addCoord( &ihit ) ;
+    }
+    if (!fitOK) {
+      Warning("Stub fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
+      // restore best guess of track parameters in case of fit failure
+      tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+      tr.updateHits();
+      tr.setValid(false);
+      return tr;
+    }
+  } else {
+    tr.setValid(true);
+    // for very bad tracks: set y parameters
+    double ty = (tr.xAtZ(seedhits[1]->hit()->zAtYEq0()) -
+	seedhits[1]->hit()->xAtYEq0()) /
+      seedhits[1]->hit()->dxDy() / seedhits[1]->hit()->zAtYEq0();
+    tr.setYParams(0., ty);
+    BOOST_FOREACH( PatFwdHit& ihit, hits ) tr.addCoord( &ihit );
     tr.updateHits();
-    tr.setValid(false);
-    return tr;
+    tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+    // first full fit for the emergency case
+    if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
+	Warning("First full fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
+	// restore best guess of track parameters in case of fit failure
+	tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+    }
+    // reset ambiguities to make sure next fit starts from scratch
+    BOOST_FOREACH( PatFwdHit& ihit, hits ) ihit.setRlAmb(0);
   }
   tr.updateHits();
-  // new best guess is result from stub fit
+  // new best guess (is typically result from stub fit)
   tr.getParameters( z0, bx, ax, cx, dx, ay, by);
 
   // full refit

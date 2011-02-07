@@ -205,7 +205,7 @@ StatusCode PatSeedingTool::initialize() {
 
   if (m_magFieldSvc->useRealMap()) {
     if (-1e42 == m_initialArrow) m_initialArrow  = 4.25307e-09;
-    if (-1e42 == m_momentumScale) m_momentumScale = 44.1416;
+    if (-1e42 == m_momentumScale) m_momentumScale = 35.31328;
     if (-1e42 == m_dRatio) m_dRatio = -3.2265e-4;
     if (-1e42 == m_zMagnet) m_zMagnet = 5383.17 * Gaudi::Units::mm;
     if (-1e42 == m_yCorrection) m_yCorrection = 4.73385e-15;

@@ -114,6 +114,9 @@ class PatSeedTrack {
     unsigned nPlanes() const ///< return number of planes on the track
     { return m_nbPlanes; }
 
+    unsigned nXPlanes() const; ///< return number of X planes on the track
+    unsigned nStPlanes() const; ///< return number of stereo planes on the track
+
     double cosine() const ///< return cosine of track angle in xz projection
     { return m_cosine; }
 
@@ -359,6 +362,24 @@ inline unsigned PatSeedTrack::nHoles() const
   for ( ; i <= j; ++i)
     if (!m_planeList[i]) ++nHoles;
   return nHoles;
+}
+
+inline unsigned PatSeedTrack::nXPlanes() const
+{
+  unsigned retVal = 0;
+  for (unsigned i = kNPlanes; i--; )
+    if (0 == (i & 3) || 3 == (i & 3))
+      if (m_planeList[i]) ++retVal;
+  return retVal;
+}
+
+inline unsigned PatSeedTrack::nStPlanes() const
+{
+  unsigned retVal = 0;
+  for (unsigned i = kNPlanes; i--; )
+    if (1 == (i & 3) || 2 == (i & 3))
+      if (m_planeList[i]) ++retVal;
+  return retVal;
 }
 
 inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const

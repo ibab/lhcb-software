@@ -69,6 +69,9 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   if (!xOnly)
     if (!fitInitialStereoProjection( track, forceDebug)) return false;
 
+  unsigned nXPlanes = track.nXPlanes();
+  unsigned nStPlanes = track.nPlanes() - nXPlanes;
+
   do {
     if (!xOnly) {
       if (!fitSimultaneousXY(track, forceDebug)) return false;
@@ -106,13 +109,19 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 
     if ( highestChi2 > maxChi2 && maxChi2 > 0. && track.nPlanes() >= minPlanes ) {
       // remove worst outlier if above threshold
-      if ((*worst)->hit()->isX()) --nDoF;
+      const bool isXhit = (*worst)->hit()->isX();
+      if (isXhit) --nDoF;
       else --nDoFS;
       track.removeCoord( worst );
       if ( isDebug ) info() << " Remove hit and try again " << endmsg;
+      if (track.nPlanes() != nXPlanes + nStPlanes) {
+	if (isXhit) --nXPlanes;
+	else --nStPlanes;
+      }
 
       if ( minPlanes > track.nPlanes() ||
-	  0 > nDoF || (!xOnly && 0 > nDoFS)) {
+	  0 > nDoF || (!xOnly && 0 > nDoFS) ||
+	  nXPlanes < 2 || (!xOnly && nStPlanes < 2)) {
 	if ( isDebug ) info() << " Abandon: Only " << track.nPlanes()
 	  << " planes, min " << minPlanes  << " highestChi2 " << highestChi2
 	    << " nDoF " << nDoF << " nDoFS " << nDoFS << endmsg;
