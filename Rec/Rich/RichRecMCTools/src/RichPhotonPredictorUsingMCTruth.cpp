@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCTruth
  *
- *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCTruth.cpp,v 1.2 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -30,8 +27,8 @@ PhotonPredictorUsingMCTruth::
 PhotonPredictorUsingMCTruth( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_mcRecTool     ( NULL )
+  : ToolBase    ( type, name, parent ),
+    m_mcRecTool ( NULL )
 {
   // interface
   declareInterface<IPhotonPredictor>(this);
@@ -46,7 +43,7 @@ PhotonPredictorUsingMCTruth::~PhotonPredictorUsingMCTruth() {}
 StatusCode PhotonPredictorUsingMCTruth::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

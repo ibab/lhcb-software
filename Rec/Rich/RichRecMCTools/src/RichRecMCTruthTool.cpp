@@ -25,7 +25,7 @@ DECLARE_TOOL_FACTORY( MCTruthTool );
 MCTruthTool::MCTruthTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : RichRecToolBase    ( type, name, parent ),
+  : ToolBase           ( type, name, parent ),
     m_truth            ( NULL ),
     m_mcSegToRingLinks ( NULL ),
     m_trLoc            ( "/Event/"+LHCb::TrackLocation::Default ),
@@ -52,7 +52,7 @@ MCTruthTool::~MCTruthTool() { cleanUpLinkers(); }
 StatusCode MCTruthTool::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools

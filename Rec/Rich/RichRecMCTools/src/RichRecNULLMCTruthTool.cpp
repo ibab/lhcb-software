@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MC::NULLMCTruthTool
  *
- *  CVS Log :-
- *  $Id: RichRecNULLMCTruthTool.cpp,v 1.1 2009-07-23 16:16:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -28,7 +25,7 @@ DECLARE_TOOL_FACTORY( NULLMCTruthTool );
 NULLMCTruthTool::NULLMCTruthTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichRecToolBase ( type, name, parent )
+  : ToolBase ( type, name, parent )
 {
   // interface
   declareInterface<Rich::Rec::MC::IMCTruthTool>(this);

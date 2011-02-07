@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
  *
- *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.6 2009-03-27 14:15:50 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -30,8 +27,8 @@ PhotonPredictorUsingMCRichOpticalPhotons::
 PhotonPredictorUsingMCRichOpticalPhotons( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_mcRecTool     ( NULL )
+  : ToolBase    ( type, name, parent ),
+    m_mcRecTool ( NULL )
 {
   declareInterface<IPhotonPredictor>(this);
 }
@@ -42,7 +39,7 @@ PhotonPredictorUsingMCRichOpticalPhotons::~PhotonPredictorUsingMCRichOpticalPhot
 StatusCode PhotonPredictorUsingMCRichOpticalPhotons::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
