@@ -20,19 +20,19 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-from Hlt1Lines.Hlt1LumiLines     import Hlt1LumiLinesConf
-from Hlt1Lines.Hlt1BeamGasLines  import Hlt1BeamGasLinesConf
-from Hlt1Lines.Hlt1L0Lines       import Hlt1L0LinesConf
-from Hlt1Lines.Hlt1VeloLines     import Hlt1VeloLinesConf
-from Hlt1Lines.Hlt1MuonLines     import Hlt1MuonLinesConf
-from Hlt1Lines.Hlt1HadronLines   import Hlt1HadronLinesConf
-from Hlt1Lines.Hlt1HadronViaTLines   import Hlt1HadronViaTLinesConf
-from Hlt1Lines.Hlt1PhotonLines   import Hlt1PhotonLinesConf
-from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
-from Hlt1Lines.Hlt1CosmicLines   import Hlt1CosmicLinesConf
-from Hlt1Lines.Hlt1MBLines import Hlt1MBLinesConf
-from Hlt1Lines.Hlt1TrackLines import Hlt1TrackLinesConf
-
+from Hlt1Lines.Hlt1LumiLines       import Hlt1LumiLinesConf
+from Hlt1Lines.Hlt1BeamGasLines    import Hlt1BeamGasLinesConf
+from Hlt1Lines.Hlt1L0Lines         import Hlt1L0LinesConf
+from Hlt1Lines.Hlt1VeloLines       import Hlt1VeloLinesConf
+from Hlt1Lines.Hlt1MuonLines       import Hlt1MuonLinesConf
+from Hlt1Lines.Hlt1HadronLines     import Hlt1HadronLinesConf
+from Hlt1Lines.Hlt1PhotonLines     import Hlt1PhotonLinesConf
+from Hlt1Lines.Hlt1ElectronLines   import Hlt1ElectronLinesConf
+from Hlt1Lines.Hlt1CosmicLines     import Hlt1CosmicLinesConf
+from Hlt1Lines.Hlt1MBLines         import Hlt1MBLinesConf
+from Hlt1Lines.Hlt1TrackLines      import Hlt1TrackLinesConf
+from Hlt1Lines.Hlt1NewMuonLines    import Hlt1NewMuonLinesConf
+from Hlt1Lines.Hlt1HadronViaTLines import Hlt1HadronViaTLinesConf
 
 class Hlt1Conf(LHCbConfigurableUser):
    __used_configurables__ = [ Hlt1CommissioningLinesConf
@@ -41,6 +41,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1L0LinesConf
                             , Hlt1VeloLinesConf
                             , Hlt1MuonLinesConf
+                            , Hlt1NewMuonLinesConf
                             , Hlt1HadronLinesConf
                             , Hlt1TrackLinesConf
                             , Hlt1HadronViaTLinesConf
@@ -57,7 +58,25 @@ class Hlt1Conf(LHCbConfigurableUser):
 #
 #      
    def __apply_configuration__(self):
-      from Configurables       import GaudiSequencer as Sequence
+      ## New event model
+      import HltTracking.Hlt1Streamers
+      from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+      factory = CoreFactory( "Hlt1Factory" )
+      for m in [ "LoKiCore.decorators"    ,
+                 "LoKiTracks.decorators"  ,
+                 "LoKiTrigger.decorators" ,
+                 "LoKiNumbers.decorators" ,
+                 "LoKiCore.functions"     ,
+                 "LoKiCore.math"          ,
+                 "LoKiHlt.algorithms"     ] :
+         if not m in factory.Modules : factory.Modules.append ( m )
+      factory.Lines += [
+         "from GaudiKernel.SystemOfUnits import GeV, MeV, mm" ,
+         "import HltTracking.Hlt1StreamerConf"
+         ]
+
+      ## Existing stuff
+      from Configurables import GaudiSequencer as Sequence
       from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
       ThresholdSettings = self.getProp("ThresholdSettings")
       

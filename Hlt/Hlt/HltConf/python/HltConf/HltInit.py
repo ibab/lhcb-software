@@ -88,6 +88,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiMuonNoPV2L0Decision"             :  131,
     "Hlt1DiMuonNoPVL0SegDecision"           :  132,
     "Hlt1DiMuonIPCL0GECDecision"            :  133,
+    "Hlt1NewDiMuonDecision"                 :  134,
     # Hlt1MuTrack.*Decision
     "Hlt1MuTrackDecision"                   :  150,
     "Hlt1MuTrack4JPsiDecision"              :  151,
@@ -604,4 +605,7 @@ HltANNSvc().InfoID = {
     "Hlt1SingleMuonNoIPL0TFPT"                   : 6285, 
     "Hlt1SingleMuonNoIPL0TUFitTrack"             : 6286, 
     "Velo"                                       : 6298,
+    "PatForwardTool/LooseForward"                : 6299,
+    "PatForwardTool/TightForward"                : 6300,
+    "MatchVeloMuon"                              : 6301
 }

@@ -5,6 +5,12 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Roel Aaij
+ - Update Hlt1.py for new streamer framework
+ - Update HltInit.py
+   - New and renamed recoIDs
+   - New style Hlt1 DiMuon line added
+
 ! 2011-02-04 - Gerhard Raven
  - migrate HltInit.py from options to python
 
