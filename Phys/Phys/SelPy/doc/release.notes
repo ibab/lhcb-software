@@ -4,6 +4,19 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Juan Palacios
+ - python/SelPy/utils.py
+  . Added NamedObject, UniquelyNamedObject base classes for Selection types.
+  . Moved exceptions, helper funcitons from selection module.
+  . Added helper function connectToRequiredSelections(selection, dataSetter).
+    Connects selection to its requiredSelections via the dataSetter method.
+ - python/SelPy/selection.py
+  . New EventSelection, PassThroughSelection classes. Streamline all classes
+    by inheriting from NamedObject, UniquelyNamedBoject, and using 
+    connectToRequiredSelections method.
+ - Add unit tests for new classes.
+ - Increase to v3r1.
+
 !======================== SelPy v3r0 2011-02-02 ==============================
 
 ! 2011-02-02 - Juan Palacios

@@ -7,7 +7,29 @@ __all__ = ( 'flatSelectionList',
             'treeSelectionList',
             'flattenList',
             'isIterable',
-            'removeDuplicates'   )
+            'removeDuplicates',
+            'update_dict_overlap',
+            'NamedObject',
+            'UniquelyNamedObject',
+            'NameError',
+            'NonEmptyInputLocations',
+            'IncompatibleInputLocations', )
+
+class NamedObject(object) :
+
+    def __init__(self, name) :
+        self._name = name
+
+    def name(self) :
+        return self._name
+
+class UniquelyNamedObject(NamedObject) :
+    __used_names__ = []
+    def __init__(self, name) :
+        if name in UniquelyNamedObject.__used_names__ :
+            raise NameError('Name ' + name + ' has already been used. Pick a new one.')
+        NamedObject.__init__(self, name)
+        UniquelyNamedObject.__used_names__.append(name)
 
 def treeSelectionList(selection) :
     """
@@ -52,6 +74,56 @@ def flatSelectionList(selection) :
     keeping the first one.
     """
     return removeDuplicates(flattenList(treeSelectionList(selection)))
+
+def update_dict_overlap(dict0, dict1) :
+    """
+    Replace entries from dict0 with those from dict1 that have
+    keys present in dict0.
+    """
+    overlap_keys = filter(dict1.has_key, dict0.keys())
+    result = dict(dict0)
+    for key in overlap_keys : result[key] = dict1[key]
+    return result
+
+
+def compatibleSequences( seq0, seq1) :
+    if len(seq0) != len(seq1) :
+        return False
+    for x in seq0 :
+        if x not in seq1 :
+            return False
+    return True
+
+
+def connectToRequiredSelections(selection, inputSetter) :
+    """
+    Make selection get input data from its requiredSelections via an inputSetter method (str).
+    """
+    _outputLocations = [sel.outputLocation() for sel in selection.requiredSelections]
+    _outputLocations = filter(lambda s : s != '', _outputLocations)
+    configurable = selection.algorithm()
+    print 'XXX Testling locations for algo', configurable, 'setter', inputSetter, configurable.InputLocations
+    if inputSetter and hasattr(configurable, inputSetter) :
+        print 'Compare locations'
+        _inputLocations = getattr(configurable, inputSetter)
+        if len(_inputLocations) != 0 :
+            print 'Comparing', _outputLocations, 'and', _inputLocations
+            if not compatibleSequences(_outputLocations,
+                                       _inputLocations) :
+                raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
+                                                 '\nInputLocations: '+str(_inputLocations)+\
+                                                 '\nRequiredSelections: '+str(_outputLocations))
+
+    if inputSetter :
+        configurable.__setattr__(inputSetter, list(_outputLocations))
+
                                                                         
+class NameError(Exception) :
+    pass
+
+class NonEmptyInputLocations(Exception) :
+    pass
+class IncompatibleInputLocations(Exception) :
+    pass
 
                                 

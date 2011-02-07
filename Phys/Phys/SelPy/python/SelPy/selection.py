@@ -11,17 +11,24 @@ are available:
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 __all__ = ('AutomaticData',
-           'AutoData',
+           'UniquelyNamedObject',
            'Selection',
+           'EventSelection',
            'flatAlgorithmList',
            'NameError',
            'NonEmptyInputLocations',
-           'IncompatibleInputLocations',
-           'update_overlap')
+           'IncompatibleInputLocations')
 
-from SelPy.utils import flatSelectionList, removeDuplicates
+from SelPy.utils import (flatSelectionList,
+                         update_dict_overlap,
+                         connectToRequiredSelections,
+                         NamedObject,
+                         UniquelyNamedObject,
+                         NameError,
+                         NonEmptyInputLocations,
+                         IncompatibleInputLocations)
 
-class AutoData(object) :
+class AutomaticData(NamedObject) :
     """
     Simple wrapper for a data location. To be used for locations
     that are guaranteed to be populated. This could be a location
@@ -32,7 +39,7 @@ class AutoData(object) :
 
     Example: wrap StdLoosePions
 
-    >>> SelStdLoosePions = AutoData(Location = 'Phys/StdLoosePions/Particles')
+    >>> SelStdLoosePions = AutomaticData(Location = 'Phys/StdLoosePions/Particles')
     >>> SelStdLoosePions.outputLocation()
     'Phys/StdLoosePions/Particles'
     >>> SelStdLoosePions.name()
@@ -44,12 +51,9 @@ class AutoData(object) :
     def __init__ (self,
                   Location) :
 
-        self._name = Location.replace('/', '_')
+        NamedObject.__init__(self, Location.replace('/', '_'))
         self._location = Location
         self.requiredSelections = []
-
-    def name(self) :
-        return self._name
 
     def algorithm(self) :
         return None
@@ -57,9 +61,7 @@ class AutoData(object) :
     def outputLocation(self) :
         return self._location
 
-AutomaticData = AutoData
-
-class Selection(object) :
+class Selection(UniquelyNamedObject) :
     """
     Wrapper class for offline selection. Takes a top selection
     Configurable Generator plus a list of required selection configurables.
@@ -96,8 +98,6 @@ class Selection(object) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    __used_names = []
-
     def __init__(self,
                  name,
                  ConfGenerator,
@@ -106,47 +106,100 @@ class Selection(object) :
                  InputDataSetter = "InputLocations",
                  Extension='Particles') :
 
-        if name in Selection.__used_names :
-            raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
+        UniquelyNamedObject.__init__(self, name)
+
         self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
         
-        self._name = name
-        self.alg = ConfGenerator(self._name) # get the configurable.
+        self._alg = ConfGenerator( self.name() ) # get the configurable.
         self.requiredSelections = list(RequiredSelections)
-        _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
-        _outputLocations = filter(lambda s : s != '', _outputLocations)
-        if InputDataSetter and hasattr(ConfGenerator, InputDataSetter) :
-            _inputLocations = getattr(ConfGenerator, InputDataSetter)
-            if len(_inputLocations) != 0 :
-                if not compatibleSequences(_outputLocations,
-                                           _inputLocations) :
-                    raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
-                                                     '\nInputLocations: '+str(_inputLocations)+\
-                                                     '\nRequiredSelections: '+str(_outputLocations))
 
-        if InputDataSetter :
-            self.alg.__setattr__(InputDataSetter, list(_outputLocations))
-        self._outputBranch = OutputBranch
-        self._outputLocation = (self._outputBranch + '/' + self.name() + '/' + Extension).replace('//','/')
+        connectToRequiredSelections(self, InputDataSetter)
 
-        Selection.__used_names.append(name)
-        
-    def name(self) :
-        return self._name
-
+        self._outputLocation = self.name()
+        if OutputBranch != '' :            
+            self._outputLocation = OutputBranch + '/' + self.name()
+        if Extension != '' :
+            self._outputLocation = self._outputLocation + '/' + Extension
+        self._outputLocation.replace('//','/')
+        if self._outputLocation.endswith('/') :
+            self._outputLocation = self._outputLocation[:self._outputLocation.rfind('/')]
+            
     def algorithm(self) :
-        return self.alg
+        return self._alg
 
     def outputLocation(self) :
         return self._outputLocation
 
     def clone(self, name, **args) :
-        new_dict = update_overlap(self.__ctor_dict__, args)
+        new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return Selection(name, **new_dict)
 
-class SelSequence(object) :
+class EventSelection(UniquelyNamedObject) :
+    """
+    Selection wrapper class for event selection algorithm configurable
+    generator.
+    Algorithm produces no output data and is assumed to be correctly
+    configured. Only action expected from it is that is selects or
+    rejects an event. Can be used just like a Selection object.
+    Example:
+    from PhysSelPython.Wrappers import EventSelection, SelectionSequence
+    from GaudiConfUtils.ConfigurableGenerators import SomeEventSelectionAlg
+    evtSel = EventSelection('MyEvtSel',
+                            ConfGenerator=SomeEventSelectionAlg(A=1, B=2))
+    help(SelectionSequence)
+    selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
+    """
+    def __init__(self,
+                 name,
+                 ConfGenerator ) :
+
+        UniquelyNamedObject.__init__(self, name)
+        self._alg = ConfGenerator(self.name())
+        self.requiredSelections = []    
+
+    def algorithm(self) :
+        return self._alg
+
+    def outputLocation(self) :
+        return ''
+
+class PassThroughSelection(UniquelyNamedObject) :
+    """
+    Selection wrapper class for event selection algorithm Configurable generator.
+    Algorithm produces no output data and is assumed to be correctly
+    configured. Only action expected from it is that is selects or
+    rejects an event, based on the contents of the outputLocation() of ots
+    RequiredSelection. Can be used just like a Selection object.
+    Example:
+    from PhysSelPython.Wrappers import PassThroughSelection, SelectionSequence
+    from GaudiConfutils.ConfigurableGenerators import SomeEventSelectionAlg
+    evtSel = PassThorughSelection('MyPassThroughSel',
+                                  ConfGenerator=SomeEventSelectionAlg(A=1, B=2, C=3))
+    help(SelectionSequence)
+    selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
+    """
+    def __init__(self,
+                 name,
+                 ConfGenerator ,
+                 RequiredSelection,
+                 InputDataSetter = None ) :
+
+        UniquelyNamedObject.__init__(self, name)
+        self._alg = ConfGenerator(self.name())
+        self.requiredSelection  = RequiredSelection 
+        self.requiredSelections = [RequiredSelection]
+
+        connectToRequiredSelections(self, InputDataSetter)
+
+    def algorithm(self) :
+        return self._alg
+
+    def outputLocation(self) :
+        return self.requiredSelection.outputLocation()
+
+class SelSequence(UniquelyNamedObject) :
     """
     Class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -175,29 +228,22 @@ class SelSequence(object) :
 
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    __used_names = []
-
     def __init__(self,
                  name,
                  TopSelection,
                  EventPreSelector = [],
                  PostSelectionAlgs = []) :
 
-        if name in SelSequence.__used_names :
-            raise NameError('SelSequence name ' + name + ' has already been used. Pick a new one.')
-        SelSequence.__used_names.append(name)
+        UniquelyNamedObject.__init__(self, name)
+
         self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
         self.algos = list(EventPreSelector)
-        self._name = name
         self._topSelection = TopSelection
         self.algos += flatAlgorithmList(TopSelection)
         self.algos += PostSelectionAlgs
-        
-    def name(self) :
-        return self._name
 
     def algorithm(self) :
         return self._topSelection.algorithm()
@@ -209,7 +255,7 @@ class SelSequence(object) :
         return [self.outputLocation()]
 
     def clone(self, name, **args) :
-        new_dict = update_overlap(self.__ctor_dict__, args)
+        new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return SelSequence(name, **new_dict)
 
     def selection(self) :
@@ -230,28 +276,5 @@ def flatAlgorithmList(selection) :
     _selList = flatSelectionList(selection)
     return  [sel.algorithm() for sel in _selList]
 
-def update_overlap(dict0, dict1) :
-    """
-    Replace entries from dict0 with those from dict1 that have
-    keys present in dict0.
-    """
-    overlap_keys = filter(dict1.has_key, dict0.keys())
-    result = dict(dict0)
-    for key in overlap_keys : result[key] = dict1[key]
-    return result
 
-def compatibleSequences( seq0, seq1) :
-    if len(seq0) != len(seq1) :
-        return False
-    for x in seq0 :
-        if x not in seq1 :
-            return False
-    return True
 
-class NameError(Exception) :
-    pass
-
-class NonEmptyInputLocations(Exception) :
-    pass
-class IncompatibleInputLocations(Exception) :
-    pass
