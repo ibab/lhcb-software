@@ -25,12 +25,9 @@ def start() :
 
     if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
 
-    ### pick up requested DB tag 
-    if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
-       tags = OnlineEnv.CondDBTag.split('|')
-       Moore().CondDBtag = tags[0]
-       Moore().DDDBtag   = tags[1]
-       Moore().UseDBSnapshot = True
+    ### pick up requested DB tags
+    if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
+    if hasattr(OnlineEnv,'DDDBTag')   and OnlineEnv.BBDBTag   : Moore().DDDBtag   = OnlineEnv.DDDBTag
 
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
