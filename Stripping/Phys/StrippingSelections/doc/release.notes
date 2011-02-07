@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Greig Cowan
+ - New stripping test sample from Reco08 processing. Sample is from run
+   81430, with mu ~2.7 and TCK 0x2E002C.
+
 ! 2011-02-03 - Juan Palacios
  - StrippingBs2JpsiPhiPrescaledAndDetatched
   . Use StrippingLine's "selection" constructor argument instead of "algos".
