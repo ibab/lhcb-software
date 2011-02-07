@@ -5,17 +5,34 @@ __version__ = '$Revision: 1.3 $'
 """
 B->hh selection, unbiased lifetime
 """
+
+__author__ = ['Ulrich Kerzel']
+__date__ = '04/02/2011'
+__version__ = '$Revision: 1.1 $'
+
+__all__ = ('StrippingB2hhLTUnbiasedConf',
+           'makeB2hh')
+
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
-import GaudiKernel.SystemOfUnits as Units
-from GaudiKernel.PhysicalConstants import c_light
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 
 
+#from Gaudi.Configuration import *
+#from LHCbKernel.Configuration import *
+#from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+#from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
+#import GaudiKernel.SystemOfUnits as Units
+#from GaudiKernel.PhysicalConstants import c_light
 
-class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
+name = "B2hhLTUnbiased"
+
+
+class StrippingB2hhLTUnbiasedConf(LineBuilder):
     """
     Definition of lifetime unbiased B->hh  stripping
     The Stripping is aimed at an unbiased measurement of the Bs->KK lifetme.
@@ -30,127 +47,117 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
     In here, the lifetime is measured in ns (rather than mm) (from the LoKi web-page)
     The speed of light = 299 792 458 m / s
     """
-    __slots__ = { 
-        'TrackChi2'               :    5.0
-        , 'CTauMin'               :   0.1# mm
-        , 'SpdMult'               :  350.0
-        , 'SpdMultLoose'          :  500.0
-        , 'DaughterPtMin'         :    1.8 # GeV
-        , 'DaughterPtMax'         :    2.5 # GeV
-        , 'DaughterPMin'          :   15.0 # GeV
-        , 'DaughterPMinLoose'     :   10.0 # GeV  
-        , 'DaughterPtMinLoose'    :    1.5 # GeV
-        , 'DaughterPtMaxLoose'    :    2.0 # GeV
-        , 'DaughterPIDKMin'       : -999.0
-        , 'DaughterPIDKMax'       :    1.0
-        , 'DaughterPIDKMinLoose'  : -999.0
-        , 'DaughterPIDKMaxLoose'  :    0.1
-        , 'BMassMin'              :    5.0 # GeV
-        , 'BMassMax'              :    5.9 # GeV
-        , 'BMassMinLoose'         :    5.0 # GeV
-        , 'BMassMaxLoose'         :    6.0 # GeV
-        , 'DOCA'                  :    0.07
-        , 'DOCALoose'             :    0.10
-        , 'VertexChi2'            :   25.0
-                   }
+
+    __configuration_keys__ = (
+        #'TrackChi2'               #    5.0
+        #'SpdMult'               # 1000.0
+        #, 'DaughterPtMin'         #    1.5 # GeV
+        #, 'DaughterPtMax'         #    2.0 # GeV
+        #, 'DaughterPMin'          #   10.0 # GeV
+        #, 'DaughterPIDKMax'       #    0.1
+           'BMassMin'              #    5.0 # GeV
+         , 'BMassMax'              #    6.0 # GeV
+        #, 'DOCA'                  #    0.07
+        #, 'VertexChi2'            #   25.0
+        , 'PrescaleLoose'         #    0.005
+        , 'PostscaleLoose'        #    1.0
+        , 'PrescaleNB'
+        , 'PostscaleNB'   
+        , 'NetCut'                 #   -1.0
+        )
+    
 
 
-    #
-    # loose line
-    #
-    def StripB2hhLTUnbiasedLoose( self ) :
+    def __init__(self, name, config) :
 
-        StripB2hhLTUnbiasedLoose                 = CombineParticles("StripB2hhLTUnbiasedLoose")
-        #StripB2hhLTUnbiasedLoose.ReFitPVs        = True
-        #StripB2hhLTUnbiased.OutputLevel    =   1
-        StripB2hhLTUnbiasedLoose.DecayDescriptor = "B_s0 -> K+ K-"
-        StripB2hhLTUnbiasedLoose.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMinLoose)s *GeV) & (P> %(DaughterPMinLoose)s *GeV) & (PIDK > %(DaughterPIDKMinLoose)s) & ((PIDK < -0.1) | (PIDK > 0.1)) "% self.getProps() }
-        StripB2hhLTUnbiasedLoose.CombinationCut  = "((AM > %(BMassMinLoose)s *GeV) & (AM < %(BMassMaxLoose)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCALoose)s))" % self.getProps()
-        StripB2hhLTUnbiasedLoose.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMaxLoose)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMaxLoose)s) " % self.getProps()
+        LineBuilder.__init__(self, name, config)
         
+        loose_name = name+"Loose"
+        NB_name    = name+"NeuroBayes" 
+        
+        self.SelB2hhLoose    = self.B2hhLoose(loose_name,
+                                              BMassMin  = config['BMassMin'],
+                                              BMassMax  = config['BMassMax']
+                                              )
+        
+        self.SelB2hhNB       = self.B2hhNeuroBayes (NB_name,
+                                                    self.SelB2hhLoose,
+                                                    NetCut  = config['NetCut'])
+        
+        self.loose_line      = StrippingLine(loose_name+"Line",
+                                             prescale = config['PrescaleLoose'],
+                                             postscale = config['PostscaleLoose'],
+                                             selection = self.SelB2hhLoose
+                                             )
+        self.NeuroBayesLine  = StrippingLine(NB_name+"Line",
+                                             prescale  = config['PrescaleNB'],
+                                             postscale = config['PostscaleNB'],
+                                             selection = self.SelB2hhNB
+                                             )
+        
+        self.registerLine(self.loose_line)
+        self.registerLine(self.NeuroBayesLine)
+        
+    #
+    # loose line  - also used as input for NeuroBayes based nominal line
+    #
+    def B2hhLoose( self, Name, BMassMin, BMassMax ) :
+        
+        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K) & TRCHI2DOF < 5 & (PT > 1.5 *GeV) & (P> 10.0 *GeV)"
+        combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.1)"         % locals()
+        motherCut = "(VFASPF(VCHI2/VDOF) < 25) & (MAXTREE(('K+'==ABSID) ,PT) > 2.0*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > 0.1)"
+            
+            
+        from StandardParticles import StdNoPIDsKaons
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        kaonFilter = FilterDesktop(Code = kaonCut)
+        myKaons    = Selection(Name+'KaonSel', Algorithm = kaonFilter, RequiredSelections = [StdNoPIDsKaons])
 
-        StripB2hhLTUnbiasedLoose.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiasedLoose', prescale = 0.005,  postscale = 1.0, algos = [ self.SpdMultFilterLoose(), StripB2hhLTUnbiasedLoose ] )
-
-
+        _Bs = CombineParticles (DecayDescriptor = "B_s0 -> K+ K-",
+                                CombinationCut  = combCut,
+                                MotherCut       = motherCut)
+            
+        B2hhLooseSel = Selection(Name, Algorithm = _Bs, RequiredSelections = [myKaons])
+        
+        return B2hhLooseSel
+        
+        
     #
     # default version
     #
-    def StripB2hhLTUnbiased( self ) :
+    def B2hhNeuroBayes (self, Name, BsLooseInputSel, NetCut):
+            
+        from Configurables import StrippingNBBhh
+        BhhNB                    = StrippingNBBhh("BhhNB")
+        #BhhNB.OutputLevel        = 2
+        BhhNB.PlotHisto          = False
+        BhhNB.PlotMassMin        =  5.0
+        BhhNB.PlotMassMax        =  6.0
+        BhhNB.PlotNBins          = 120
+        BhhNB.Expertise          = 'bshhet.nb'
+        BhhNB.NetworkVersion     = "TuneMC10"
+        BhhNB.NetworkCut         = NetCut
 
-        #from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        #from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
-        #import GaudiKernel.SystemOfUnits as Units
-        #from GaudiKernel.PhysicalConstants import c_light
+        BhhNBSel     = Selection(Name     , Algorithm = BhhNB     , RequiredSelections = [ BsLooseInputSel ] )
 
-
-        StripB2hhLTUnbiased                 = CombineParticles("StripB2hhLTUnbiased")
-        StripB2hhLTUnbiased.Preambulo      += [ "from GaudiKernel.PhysicalConstants import c_light "]
-        #StripB2hhLTUnbiased.ReFitPVs        = True
-        #StripB2hhLTUnbiased.OutputLevel    =   1
-        StripB2hhLTUnbiased.DecayDescriptor = "B_s0 -> K+ K-"
-        StripB2hhLTUnbiased.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s * GeV) & (P> %(DaughterPMin)s *GeV) & ((PIDK < -0.1) | (PIDK > 0.1)) & (PIDK > %(DaughterPIDKMin)s)"% self.getProps() }
-        StripB2hhLTUnbiased.CombinationCut  = "((AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s))" % self.getProps()
-        StripB2hhLTUnbiased.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s) & ((BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light)>%(CTauMin)s)" % self.getProps()
-
-
-        # plots
-        #from Configurables import LoKi__Hybrid__PlotTool as PlotTool
-        #StripB2hhLTUnbiased.HistoProduce = TRUE
-        #StripB2hhLTUnbiased.addTool( PlotTool("MotherPlots") )
-        #StripB2hhLTUnbiased.MotherPlots.Preambulo += [ "from GaudiKernel.PhysicalConstants import c_light "]
-        #StripB2hhLTUnbiased.MotherPlots.Histos = { "MM/GeV"                                                             : ('MM'    ,   5.0,   5.9),
-        #                                           "P/GeV"                                                              : ('P'     ,  20  ,  50) ,
-        #                                           "PT/GeV"                                                             : ('Pt'    ,  0   ,  10) ,
-        #                                           "VFASPF(VCHI2/VDOF)"                                                 : ('Chi2'  ,  0   ,  25) ,
-        #                                           "BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light"             : ('tau '  , -0.2 ,   3) ,
-        #                                           "(MAXTREE(('K+'==ABSID) , PIDK))"                                    : ('PidMax', -1   ,  20)}
-        #
-
-        StripB2hhLTUnbiased.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiased', prescale = 1, postscale = 1.0, algos = [ self.SpdMultFilter(), StripB2hhLTUnbiased] )
-
+        return BhhNBSel
+            
+    
+    
+    
+    
+    
+    
+    
+    #def SpdMultFilterLoose(self):
+    #    return LoKi__VoidFilter("SpdMultFilterLoose",
+    #                            Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMultLoose)s )" % self.getProps()
+    #                            )
     #
-    # with Trigger
-    #
-    def StripB2hhLTUnbiasedTrigger( self ) :
-        #from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        #from Configurables import FilterDesktop, CombineParticles
-        #import GaudiKernel.SystemOfUnits as Units
-
-        StripB2hhLTUnbiasedTrigger                 = CombineParticles("StripB2hhLTUnbiasedTrigger")
-        #StripB2hhLTUnbiasedTrigger.ReFitPVs        = True
-        #StripB2hhLTUnbiased.OutputLevel    =   1
-        StripB2hhLTUnbiasedTrigger.DecayDescriptor = "B_s0 -> K+ K-"
-        StripB2hhLTUnbiasedTrigger.DaughtersCuts   = { "K+" : "ISLONG & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMinLoose)s *GeV) & (P> %(DaughterPMinLoose)s *GeV) " % self.getProps() }
-        StripB2hhLTUnbiasedTrigger.CombinationCut  = "((AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s)) " % self.getProps()
-        StripB2hhLTUnbiasedTrigger.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s)" % self.getProps()
-        
-
-        StripB2hhLTUnbiasedTrigger.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiasedTrigger',
-                             prescale = 1.0, postscale = 0.1,
-                             HLT = "HLT_PASS('Hlt1DiHadronLTUnbiasedDecision')" ,
-                             algos = [ StripB2hhLTUnbiasedTrigger ] )
-
-
-    def SpdMultFilterLoose(self):
-        return LoKi__VoidFilter("SpdMultFilterLoose",
-                                Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMultLoose)s )" % self.getProps()
-                                )
-
-    def SpdMultFilter(self):
-        return LoKi__VoidFilter("SpdMultFiltere",
-                                Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
-                                ) 
-        
-
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+    #def SpdMultFilter(self):
+    #    return LoKi__VoidFilter("SpdMultFiltere",
+    #                            Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
+    #                            ) 
+    
+    
+    
