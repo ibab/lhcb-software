@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm base class : Rich::AlgBase
  *
- *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.13 2009-07-07 16:24:53 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -48,10 +45,5 @@ namespace Rich
   };
   
 }
-
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::AlgBase RichAlgBase;
 
 #endif // RICHKERNEL_RICHALGBASE_H

@@ -4,9 +4,6 @@
  *
  *  Header file for tool base class : Rich::ToolBase
  *
- *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.13 2007-03-09 17:58:13 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -49,10 +46,5 @@ namespace Rich
   };
 
 }
-
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::ToolBase RichToolBase;
 
 #endif // RICHKERNEL_RICHTOOLBASE_H

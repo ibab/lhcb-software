@@ -4,7 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!========================= RichKernel v7r41 2011-01-31 =========================
+! 2011-02-07 - Chris Jones
+ - Remove some depreciated typedefs
+
+!===================== RichKernel v7r41 2011-01-31 =====================
 ! 2011-01-20 - Chris Jones
  - Update IRawBufferToSmartIDsTool interface to allow the number of hits
    in RICH1 and RICH2 to be seperately counted.
