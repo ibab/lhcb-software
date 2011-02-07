@@ -103,7 +103,7 @@ GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSe
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc                INFO Writing ROOT histograms to: Gauss-30000000-5ev-20110128-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r3/data/gausscalo.root as GaussCalo
+HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r3/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
 GiGa                       INFO Used  Run Action Object is GiGaRunActionSequence/GiGa.RunSeq
 GiGa                       INFO GiGa User Interface session is not required to be launched
@@ -222,7 +222,7 @@ GiGaGeo                    INFO world():: Global          'Field Manager' is set
 GiGaGeo                    INFO world():: Global        'G4Field Manager' is set to be = G4FieldManager
 GiGaGeo                    INFO world():: Global        'G4MagneticField' is set to be = GiGaMagFieldGlobal
 GiGaGeo                    INFO world():: Global 'G4MagIntegratorStepper' is set to be = G4ClassicalRK4
-RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r3/data/gausscalo.root" for reading
+RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r3/data/gausscalo.root" for reading
 GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
 GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB
 GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB
