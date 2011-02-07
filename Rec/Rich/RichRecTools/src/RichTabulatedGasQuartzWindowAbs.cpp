@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
- *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.14 2008-10-01 14:07:52 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -27,9 +24,9 @@ TabulatedGasQuartzWindowAbs::
 TabulatedGasQuartzWindowAbs ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_riches        ( Rich::NRiches      ),
-    m_qWinZSize     ( Rich::NRiches      )
+  : ToolBase     ( type, name, parent ),
+    m_riches     ( Rich::NRiches      ),
+    m_qWinZSize  ( Rich::NRiches      )
 {
   // interface
   declareInterface<IGasQuartzWindowAbs>(this);
@@ -38,7 +35,7 @@ TabulatedGasQuartzWindowAbs ( const std::string& type,
 StatusCode TabulatedGasQuartzWindowAbs::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Rich1 and Rich2

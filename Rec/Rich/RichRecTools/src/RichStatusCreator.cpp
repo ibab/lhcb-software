@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::StatusCreator
  *
- *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.15 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -26,8 +23,8 @@ DECLARE_TOOL_FACTORY( StatusCreator );
 StatusCreator::StatusCreator( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : RichRecToolBase      ( type, name, parent ),
-    m_status             ( NULL )
+  : ToolBase  ( type, name, parent ),
+    m_status  ( NULL )
 {
   // interface
   declareInterface<IStatusCreator>(this);
@@ -39,7 +36,7 @@ StatusCreator::StatusCreator( const std::string& type,
 StatusCode StatusCreator::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
@@ -51,12 +48,6 @@ StatusCode StatusCreator::initialize()
   }
 
   return sc;
-}
-
-StatusCode StatusCreator::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"

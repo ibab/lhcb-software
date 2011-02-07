@@ -26,10 +26,10 @@ DECLARE_TOOL_FACTORY( GeomTool );
 GeomTool::GeomTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_detParams     ( NULL ),
-    m_ckAngle       ( NULL ),
-    m_radScale      ( Rich::NRadiatorTypes, 0 )
+  : ToolBase      ( type, name, parent ),
+    m_detParams   ( NULL ),
+    m_ckAngle     ( NULL ),
+    m_radScale    ( Rich::NRadiatorTypes, 0 )
 {
   // interface
   declareInterface<IGeomTool>(this);
@@ -44,7 +44,7 @@ GeomTool::GeomTool( const std::string& type,
 StatusCode GeomTool::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

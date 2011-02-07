@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::NominalTabulatedSignalDetectionEff
  *
- *  CVS Log :-
- *  $Id: RichNominalTabulatedSignalDetectionEff.cpp,v 1.3 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -31,9 +28,9 @@ NominalTabulatedSignalDetectionEff::
 NominalTabulatedSignalDetectionEff ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecToolBase  ( type, name, parent ),
-    m_riches         ( Rich::NRiches ),
-    m_qEffPedLoss    ( 0 ) 
+  : ToolBase       ( type, name, parent ),
+    m_riches       ( Rich::NRiches ),
+    m_qEffPedLoss  ( 0 ) 
 {
   // interface
   declareInterface<ISignalDetectionEff>(this);
@@ -42,7 +39,7 @@ NominalTabulatedSignalDetectionEff ( const std::string& type,
 StatusCode NominalTabulatedSignalDetectionEff::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Rich1 and Rich2

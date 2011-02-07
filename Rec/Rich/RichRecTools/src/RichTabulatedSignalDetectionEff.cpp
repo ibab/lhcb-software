@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
- *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.20 2009-07-30 11:23:56 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -31,7 +28,7 @@ TabulatedSignalDetectionEff::
 TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : RichRecToolBase  ( type, name, parent ),
+  : ToolBase         ( type, name, parent ),
     m_coneTrace      ( NULL ),
     m_ckAngle        ( NULL ),
     m_riches         ( Rich::NRiches ),
@@ -52,7 +49,7 @@ TabulatedSignalDetectionEff ( const std::string& type,
 StatusCode TabulatedSignalDetectionEff::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools

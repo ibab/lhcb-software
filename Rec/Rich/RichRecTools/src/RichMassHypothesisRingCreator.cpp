@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
- *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.23 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -27,7 +24,7 @@ MassHypothesisRingCreator::
 MassHypothesisRingCreator( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
+  : ToolBase        ( type, name, parent ),
     m_ckAngle       ( NULL ),
     m_rings         ( NULL ),
     m_coneTrace     ( NULL ),
@@ -67,7 +64,7 @@ MassHypothesisRingCreator( const std::string& type,
 StatusCode MassHypothesisRingCreator::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

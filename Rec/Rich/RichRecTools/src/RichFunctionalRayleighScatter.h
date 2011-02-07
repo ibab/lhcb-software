@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::FunctionalRayleighScatter
  *
- *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.h,v 1.10 2007-03-10 13:19:20 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -59,9 +56,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 

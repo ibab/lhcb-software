@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalRayleighScatter
  *
- *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.16 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -31,7 +28,7 @@ FunctionalRayleighScatter::
 FunctionalRayleighScatter ( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
+  : ToolBase       ( type, name, parent ),
     m_eVToMicron   ( 0 ),
     m_AeroClarity  ( 0 )
 {
@@ -43,7 +40,7 @@ StatusCode FunctionalRayleighScatter::initialize()
 {
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich1 Detector element
@@ -61,12 +58,6 @@ StatusCode FunctionalRayleighScatter::initialize()
           << " Aerogel clarity              = " << m_AeroClarity << endmsg;
 
   return sc;
-}
-
-StatusCode FunctionalRayleighScatter::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }
 
 double
