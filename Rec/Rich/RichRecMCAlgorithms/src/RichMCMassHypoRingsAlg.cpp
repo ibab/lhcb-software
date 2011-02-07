@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
- *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.4 2009-07-30 11:15:15 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -28,13 +25,13 @@ DECLARE_ALGORITHM_FACTORY( MCMassHypoRingsAlg );
 // Standard constructor, initializes variables
 MCMassHypoRingsAlg::MCMassHypoRingsAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ),
-    m_truth        ( 0 ),
-    m_mcTkInfo     ( 0 ),
-    m_rayTrace     ( 0 ),
-    m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
-    m_minCKtheta   ( Rich::NRadiatorTypes, 0   ),
-    m_linker       ( NULL )
+  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+    m_truth            ( 0 ),
+    m_mcTkInfo         ( 0 ),
+    m_rayTrace         ( 0 ),
+    m_maxCKtheta       ( Rich::NRadiatorTypes, 999 ),
+    m_minCKtheta       ( Rich::NRadiatorTypes, 0   ),
+    m_linker           ( NULL )
 {
 
   // Event locations to process
@@ -72,7 +69,7 @@ MCMassHypoRingsAlg::~MCMassHypoRingsAlg() {}
 StatusCode MCMassHypoRingsAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools

@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
 !===================== RichRecMCAlgorithms v1r3p2 2009-09-03 =================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichRecMCAlgorithms_dll.cpp

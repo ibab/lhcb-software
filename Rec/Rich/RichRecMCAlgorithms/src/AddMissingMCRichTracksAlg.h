@@ -3,9 +3,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::AddMissingMCRichTracksAlg
  *
- *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.h,v 1.4 2008-01-25 13:22:36 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   26/10/2007
  */
@@ -51,7 +48,7 @@ namespace Rich
        */
       //-----------------------------------------------------------------------
 
-      class AddMissingMCRichTracksAlg : public RichRecAlgBase
+      class AddMissingMCRichTracksAlg : public Rich::Rec::AlgBase
       {
 
       public:

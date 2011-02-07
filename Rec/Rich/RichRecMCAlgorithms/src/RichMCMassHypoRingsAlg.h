@@ -3,9 +3,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
- *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.2 2008-01-25 13:22:36 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -50,7 +47,7 @@ namespace Rich
        *  @date   10/01/2003
        */
 
-      class MCMassHypoRingsAlg : public RichRecAlgBase
+      class MCMassHypoRingsAlg : public Rich::Rec::AlgBase
       {
 
       private: // definitions
