@@ -76,6 +76,7 @@
   <class name    = "LoKi::Hlt1::HelperTool"          />
   <class name    = "LoKi::Hlt1::MatchTool"           />
   <class name    = "LoKi::Hlt1::UpgradeTool"         />
+  <class name    = "LoKi::Hlt1::TrackTool"           />
   <class name    = "LoKi::Hlt1::UpgradeConf"         />
   <class name    = "LoKi::Hlt1::MatchConf"           />
   <class name    = "LoKi::Hlt1::Tool"                />

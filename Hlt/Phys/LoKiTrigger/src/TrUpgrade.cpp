@@ -102,13 +102,15 @@ LoKi::Hlt1::Upgrade::operator()
   ( LoKi::Hlt1::Upgrade::argument a ) const
 {
   result_type output ;
-  // StatusCode sc = upgrade ( a , output ) ;
-  StatusCode sc = upgradeAll ( a , output ) ;
-  if ( sc.isFailure() ) { Error(" error from upgrade" , sc ) ; }
+  if ( !a.empty() ) 
+  {
+    // StatusCode sc = upgrade ( a , output ) ;
+    StatusCode sc = upgradeAll ( a , output ) ;
+    if ( sc.isFailure() ) { Error(" error from upgrade" , sc ) ; }
+  }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
 }
-
 // ============================================================================
 /*  constructor from all configuration parameters 
  *  @param output  the output selection name 
@@ -158,9 +160,12 @@ LoKi::Hlt1::UpgradeTracks::operator()
   ( LoKi::Hlt1::UpgradeTracks::argument a ) const
 {
   result_type output ;
-  // NB: upgrade tracks only!!!
-  StatusCode sc = upgradeTracks ( a , output ) ;
-  if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+  if ( !a.empty() ) 
+  {
+    // NB: upgrade tracks only!!!
+    StatusCode sc = upgradeTracks ( a , output ) ;
+    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+  }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
 }
@@ -220,12 +225,15 @@ LoKi::Hlt1::UpgradeMultiTracks::operator()
   ( LoKi::Hlt1::UpgradeMultiTracks::argument a ) const
 {
   result_type output ;
-  // NB: upgrade multi tracks only!!!
-  StatusCode sc = 
-    m_index < 0 ?  
-    upgradeMultiTracks ( a ,           output ) : 
-    upgradeMultiTracks ( a , m_index , output ) ;
-  if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+  if ( !a.empty() ) 
+  {
+    // NB: upgrade multi tracks only!!!
+    StatusCode sc = 
+      m_index < 0 ?  
+      upgradeMultiTracks ( a ,           output ) : 
+      upgradeMultiTracks ( a , m_index , output ) ;
+    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+  }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
 }

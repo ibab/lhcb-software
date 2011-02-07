@@ -223,6 +223,8 @@ TC_VXMAKE      = LoKi.Hlt1.VxMaker
 TC_VXMAKE2     = LoKi.Hlt1.VxMaker2
 ## @see LoKi::Cuts::TC_VXMAKE3 
 TC_VXMAKE3     = LoKi.Hlt1.VxMaker3
+## @see LoKi::Cuts::TC_VXMAKE4 
+TC_VXMAKE4     = LoKi.Hlt1.VxMaker4
 
 # =============================================================================
 ## end of new stuff ##

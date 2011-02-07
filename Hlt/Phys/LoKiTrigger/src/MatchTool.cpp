@@ -129,9 +129,12 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
     LHCb::Track* track = track3.release() ;
     storedTracks ( address() )->insert ( track );
     //
-    return track ;
+    // do not put "bad" match into stream 
+    if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
+    //
+    return track ;                                                // RETURN 
   }
-  // ======================================================================
+  //
   return 0 ;
 }
 // ============================================================================

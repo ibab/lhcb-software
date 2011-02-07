@@ -231,7 +231,7 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class VxMaker2 
+    /** @class VxMaker3
      *  the simple "vertex-maker" as source 
      *  @see LoKi::Cuts::TC_VXMAKE3
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
@@ -280,6 +280,40 @@ namespace LoKi
       LoKi::Assignable<Source>::Type  m_source1 ; //           source of tracks 
       /// the actual vertex maker 
       LoKi::Hlt1::VxMaker2            m_vxmaker ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class VxMaker4 
+     *  the simple "vertex-maker" from single tracks 
+     *  @see LoKi::Cuts::TC_VXMAKE4
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     */
+    class GAUDI_API VxMaker4 : public LoKi::Hlt1::VxMaker 
+    {
+    private:
+      // ======================================================================
+      /// the actual type of track source
+      typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Source Source ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor 
+      VxMaker4 
+      ( const std::string&             output  ,   // output selection name/key 
+        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
+      /// MANTATORY: virtual destructor 
+      virtual ~VxMaker4 () ;      
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  VxMaker4* clone() const ; 
+      /// MANDATORY: the only essential method
+      virtual  result_type   operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream&  fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      VxMaker4 () ;                       // the default constructor is disabled 
       // ======================================================================
     };
     // ========================================================================
@@ -351,6 +385,12 @@ namespace LoKi
     /** @typedef TC_VXMAKE 
      *  vertex maker from di-tracks 
      *  
+     *  @code 
+     * 
+     *  " ... >> TC_VXMAKE ( 'output' , conf ) >> ... "
+     *
+     *  @endcode 
+     * 
      *  @see LHCb::Track
      *  @see LHCb::RecVertex 
      *  @see Hlt::MultiTrack
@@ -363,6 +403,12 @@ namespace LoKi
     /** @typedef TC_VXMAKE2
      *  vertex maker from two track selections
      *  
+     *  @code 
+     * 
+     *  " ... >> TC_VXMAKE2 ( 'output' , 'OtherTracks' , conf ) >> ... " 
+     *
+     *  @endcode 
+     * 
      *  @see LHCb::Track
      *  @see LHCb::RecVertex 
      *  
@@ -370,6 +416,40 @@ namespace LoKi
      *  @date 2010-12-04
      */
     typedef LoKi::Hlt1::VxMaker2                                   TC_VXMAKE2 ;
+    // ========================================================================
+    /** @typedef TC_VXMAKE3
+     *  vertex maker as "source"
+     *  
+     *  @see LHCb::Track
+     *  @see LHCb::RecVertex 
+     *  
+     *  @code 
+     * 
+     *   " TC_VXMAKE3 ( 'output' , 'Tracks' ,'OtherTracks' , conf ) >> ... " 
+     *
+     *  @endcode 
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    typedef LoKi::Hlt1::VxMaker3                                   TC_VXMAKE3 ;
+    // ========================================================================
+    /** @typedef TC_VXMAKE4
+     *  vertex maker from all pair of input tracks 
+     *  
+     *  @code 
+     * 
+     *   " TC_VXMAKE4 ( 'output' , conf ) >> ... " 
+     *
+     *  @endcode 
+     * 
+     *  @see LHCb::Track
+     *  @see LHCb::RecVertex 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */
+    typedef LoKi::Hlt1::VxMaker4                                   TC_VXMAKE4 ;
     // ========================================================================
     /** @typedef TC_DITRACKS
      *  di-track maker from two separate track selections 

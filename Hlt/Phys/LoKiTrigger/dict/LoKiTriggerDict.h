@@ -144,6 +144,41 @@ namespace LoKi
        ( const Pipe& fun , const LoKi::Dump& dump  ) 
        { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
        // ======================================================================
+     public: // gate-2
+       // ======================================================================      
+       // __rrshift__  : gate 
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rrshift__ 
+       ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
+       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+       // __rmult__  : gate 
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rmult__ 
+       ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
+       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
+       // ======================================================================
+     public: // timing
+       // ======================================================================
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     ChronoEntity*            t ) 
+       { return LoKi::timer   ( c , t ) ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     IChronoSvc*              s , 
+                     const std::string&       t )
+       { return LoKi::timer   ( c , s , t  ) ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __timer__   ( const Pipe&              c , 
+                     const std::string&       t )
+       { return LoKi::timer   ( c , t  ) ; } 
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rmod__    ( const Pipe&              c , 
+                     const LoKi::Timer&       t ) { return t % c  ; }
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rmod__    ( const Pipe&              c , 
+                     ChronoEntity*            t ) { return t % c  ; }
+       // ======================================================================
      public: // specific for HltCandidates
        // ======================================================================
        // __rshift__
@@ -353,6 +388,28 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __cause__ ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
       { return LoKi::cause ( fun , fun2 ) ; }      
+      // ======================================================================
+    public: // timing
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    ChronoEntity*            t ) 
+      { return LoKi::timer   ( c , t ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    IChronoSvc*              s , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , s , t  ) ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __timer__   ( const Source&            c , 
+                    const std::string&       t )
+      { return LoKi::timer   ( c , t  ) ; } 
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    const LoKi::Timer&       t ) { return t % c  ; }
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmod__    ( const Source&            c , 
+                    ChronoEntity*            t ) { return t % c  ; }
       // ======================================================================
     public: // specific for Hlt::Candidate 
       // ======================================================================

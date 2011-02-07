@@ -405,6 +405,7 @@ std::ostream& LoKi::Hlt1::VxMaker2::fillStream ( std::ostream& s ) const
 // ============================================================================
 
 
+
 // ============================================================================
 // constructor 
 // ============================================================================
@@ -447,6 +448,130 @@ std::ostream& LoKi::Hlt1::VxMaker3::fillStream ( std::ostream& s ) const
       <<        m_vxmaker.config  () << ")" ;  
 }
 // ============================================================================
+
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Hlt1::VxMaker4::VxMaker4 
+( const std::string&                  output  ,   // output selection name/key 
+  const LoKi::Hlt1::VxMakerConf&      config  )   //        tool configuration 
+  : LoKi::Hlt1::VxMaker ( output , config )   
+{}
+// ============================================================================
+// MANDATORY: virtual desctructor 
+// ============================================================================
+LoKi::Hlt1::VxMaker4::~VxMaker4 () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Hlt1::VxMaker4* 
+LoKi::Hlt1::VxMaker4::clone() const 
+{ return new LoKi::Hlt1::VxMaker4 ( *this ) ; }
+// ============================================================================
+// the only one important method 
+// ============================================================================
+LoKi::Hlt1::VxMaker4::result_type 
+LoKi::Hlt1::VxMaker4::operator() 
+  ( LoKi::Hlt1::VxMaker2::argument a ) const 
+{
+  //
+  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  //
+  typedef result_type                CANDIDATES ;
+  typedef CANDIDATES::const_iterator ITERATOR   ;
+  //
+  if ( a.empty()  ) { return result_type () ; } // no action for EMPTY input   
+  // 
+  // input selections:
+  const CANDIDATES* arg = &a ;
+  //
+  // the output selection 
+  CANDIDATES       output ;
+  //
+  for ( ITERATOR icand1 = arg->begin() ; arg->end() != icand1 ; ++icand1 ) 
+  {
+    const Hlt::Candidate* cand1 = *icand1 ;
+    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
+    const LHCb::Track*    trk1  = cand1->get<LHCb::Track> () ;
+    //
+    if ( !track1cut ( trk1 ) ) { continue ; }                     // CONTINUE 
+    //
+    if ( 0 == trk1  ) { continue ; }                              // CONTINUE
+    //
+    for ( ITERATOR icand2 =  icand1 + 1 ; arg -> end() != icand2 ; ++icand2 ) 
+    {
+      const Hlt::Candidate* cand2 = *icand2 ;
+      if ( 0 == cand2 ) { continue ; }                            // CONITNUE 
+      const LHCb::Track*    trk2  = cand2->get<LHCb::Track> () ;
+      if ( 0 == trk2  ) { continue ; }                            // CONTINUE 
+      //
+      if ( !track2cut ( trk2 ) ) { continue ; }                   // CONTINUE 
+      //
+      // make vertex ? 
+      //
+      double doca = 0 ;
+      double chi2 = 0 ;
+      const LHCb::RecVertex* vertex = 
+        makeVertex ( trk1 , trk2 , doca , chi2 , false ) ;
+      //
+      if ( 0 == vertex ) { continue ; }                            // CONTINUE 
+      //
+      // start new candidate:
+      Hlt::Candidate* candidate = newCandidate() ;
+      candidate -> addToWorkers ( alg() ) ;
+      //
+      {
+        //
+        // 1. "initiator" stage - copy the first candidate
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        //
+        lock.addToHistory ( cand1->workers() ) ;
+        // lock.addToHistory ( myName()         ) ;
+        stage -> set ( cand1->currentStage() ) ;
+      }
+      //
+      {
+        //
+        // 2. "regular" stage : vertex 
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , alg() ) ;
+        // lock.addToHistory ( myName()         ) ;
+        stage    -> set ( vertex ) ;
+        stage    -> updateInfo ( s_DOCA , doca ) ;
+        stage    -> updateInfo ( s_CHI2 , chi2 ) ; 
+      }
+      // add new candidate to the output:
+      output.push_back ( candidate ) ;
+    } //                                         end of loop over source_2 
+    // ========================================================================
+  } //                                           end of loop over input data
+  // ==========================================================================
+  //
+  // register the selection in Hlt Data Service 
+  return !m_sink ? output : m_sink ( output ) ;                       // RETURN 
+  // ==========================================================================
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Hlt1::VxMaker4::fillStream ( std::ostream& s ) const 
+{
+  return 
+    s << "TC_VXMAKE4("
+      << "'" << output () << "',"
+      <<        config () << ")" ;  
+}
+// ============================================================================
+
 
 // ============================================================================
 // constructor 

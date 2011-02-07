@@ -7,12 +7,42 @@
 
 ! 2011-02-07 - Vanya Belyaev
 
+ - "re-add" timers
+
+ - allow "right-side" usage of gate with pipes both with ">>" and "*"
+ 
+ - add new symbol TC_VXMAKER4 
+
+     for vertex making via pairing of all tracks form the stream 
+
+ - add possibility to specify "simple" track cust fo rupgrade an dmatch tools:
+
+    xxx = LoKi.Hlt1.UpgradeConf ( 
+            ... , 
+            ( TrPT > 0.5 8 GeV ) & ( TrCHI2NDOF < 3 ) 
+           )
+
+    yyy = LoKi.Hlt1.MatchConf ( 
+            ... , 
+            ( TrPT > 0.5 8 GeV ) & ( TrCHI2NDOF < 3 ) 
+           )
+
+    The cut (if specified) DOES not affect the actual track upgrade
+    all upgraded tracks are properly registered, treated etc, 
+    but only "good" tracks goes to the stream.  This prevents 
+    the double reconstruction...  
+
+ 
+
+ - cmt/requirements
+      version increment to v11r5
+
 !========================== LoKiTrigger v11r4 2011-02-07 ===================
 
  - tag as v11r4 
 
  - cmt/requirements
-      version increment to v11r3
+      version increment to v11r4
 
 ! 2011-02-07 - Roel Aaij
  - UpgradeTool and MatchTool now get public tools.

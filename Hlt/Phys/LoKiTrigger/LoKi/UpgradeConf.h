@@ -17,6 +17,10 @@
 // ============================================================================
 #include  "Event/Track.h"
 // ============================================================================
+// LoKi
+// ============================================================================
+#include  "LoKi/TrackTool.h"
+// ============================================================================
 /** @file  LoKi/UpgradeConf.h
  *  
  *  This file is part of LoKi project: 
@@ -50,22 +54,29 @@ namespace LoKi
      *  TrUpgrade functor
      * 
      *  Essentially it mimics the configuration of tool in 
-     *  HltTrackUpgradeTool. and itis assumed that the 
+     *  HltTrackUpgradeTool and it is assumes that the 
      *  internal dictionary from HltTrackUpgradeTool will 
      *  be implemented in python configurables using this objects
+     *
+     *  This file is part of LoKi project: 
+     *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+     * 
+     *  By usage of this code one clearly states the disagreement 
+     *  with the campain of Dr.O.Callot et al.: 
+     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
      *
      *  @see LoKi::Hlt1::TrUpgrade
      *  @see ITracksFromTrack
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @daet 2008-11-12
      */
-    class GAUDI_API UpgradeConf
+    class GAUDI_API UpgradeConf : public LoKi::Hlt1::TrackTool 
     {
     public:
       // ======================================================================
       /** constructor 
        *  @param trTool the name of ITracksFromTrack tool 
-       *  @param address TES lolcation of the upgdarded tracks 
+       *  @param address TES location of the upgdarded tracks 
        *  @param trType   the track type for upgrade 
        *  @param owner    ownership ? 
        *  @param moveIDs  transfer IDs ?
@@ -82,6 +93,27 @@ namespace LoKi
         const bool                moveAncs ,    //       transfer anscendents ? 
         const bool                moveInfo ,    //        transfer extra info ?
         const bool                ptOrder  ) ;  //                   order pt ?
+      // ======================================================================
+      /** constructor 
+       *  @param trTool the name of ITracksFromTrack tool 
+       *  @param address TES location of the upgdarded tracks 
+       *  @param trType   the track type for upgrade 
+       *  @param owner    ownership ? 
+       *  @param moveIDs  transfer IDs ?
+       *  @param moveAncs transfer anscendents ?
+       *  @param moveInfo transfer Extra Info ?
+       *  @param ptOrder   order in pt ?
+       */
+      UpgradeConf 
+      ( const std::string&        trTool   ,    //   ITrackFromTrack  tool name
+        const std::string&        address  ,    //   TES location of the tracks 
+        const LHCb::Track::Types  trType   ,    //                   track type 
+        const bool                owner    ,    //                      owner ? 
+        const bool                moveIDs  ,    //               transfer IDs ? 
+        const bool                moveAncs ,    //       transfer anscendents ? 
+        const bool                moveInfo ,    //        transfer extra info ?
+        const bool                ptOrder  , 
+        const LoKi::Functor<const LHCb::Track*,bool>& cut ) ;  //       functor
       // ======================================================================
     public:
       // ======================================================================
@@ -133,14 +165,14 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /// output operator to ostream  
+    inline std::ostream& operator<<
+      ( std::ostream&                  s , 
+        const LoKi::Hlt1::UpgradeConf& o ) { return o.fillStream ( s ) ; }
+    // ========================================================================
   } //                                              end of namespace LoKi::Hlt1
   // ==========================================================================
 } //                                                      end of namespace LoKi 
-// ============================================================================
-/// output operator to ostream  
-GAUDI_API
-std::ostream& operator<<( std::ostream&                  s , 
-                          const LoKi::Hlt1::UpgradeConf& o ) ;
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

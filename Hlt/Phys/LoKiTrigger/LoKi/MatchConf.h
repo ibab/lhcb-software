@@ -13,6 +13,10 @@
 // ============================================================================
 #include "Event/Track.h"
 // ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/TrackTool.h"
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -26,7 +30,7 @@ namespace LoKi
      *  @author Vanay BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
-    class GAUDI_API MatchConf 
+    class GAUDI_API MatchConf : public LoKi::Hlt1::TrackTool
     {
     public:
       // ======================================================================
@@ -53,6 +57,56 @@ namespace LoKi
         const std::string&       quality2 ,   //              matching quality2 
         const double             maxQCut  = 1.e6 ,  // max matching quality cut 
         const double             maxQ2Cut = 1.e6 ) ;//max matching quality2 cut  
+      // ======================================================================
+      /** constructor 
+       *  @param mTool ITrackMatch tool name 
+       *  @param address  TES location of "matched" tracks 
+       *  @param trType   track type
+       *  @param moveIDs  transfer IDs ?
+       *  @param moveAncs transfer ancestors ? 
+       *  @param moveInfo transfer extra info ? 
+       *  @param quality  matching quality 
+       *  @param quality2 matching quality2
+       *  @param maxQCut  max matching quality  cut 
+       *  @param maxQ2Cut max matching quality2 cut 
+       */
+      MatchConf 
+      ( const std::string&       mTool    ,   //          ITrackMatch tool name  
+        const std::string&       address  ,   // TES location of matched tracks
+        const LHCb::Track::Types trType   ,   //                     Track type
+        const bool               moveIDs  ,   //                 transfer IDs ? 
+        const bool               moveAncs ,   //           transfer ancestors ? 
+        const bool               moveInfo ,   //          transfer Extra Info ? 
+        const std::string&       quality  ,   //               matching quality 
+        const std::string&       quality2 ,   //              matching quality2 
+        const LoKi::Functor<const LHCb::Track*,bool>& cut ,  //          filter 
+        const double             maxQCut  = 1.e6 ,  // max matching quality cut 
+        const double             maxQ2Cut = 1.e6 ); //max matching quality2 cut  
+      // ======================================================================
+      /** constructor 
+       *  @param mTool ITrackMatch tool name 
+       *  @param address  TES location of "matched" tracks 
+       *  @param trType   track type
+       *  @param moveIDs  transfer IDs ?
+       *  @param moveAncs transfer ancestors ? 
+       *  @param moveInfo transfer extra info ? 
+       *  @param quality  matching quality 
+       *  @param quality2 matching quality2
+       *  @param maxQCut  max matching quality  cut 
+       *  @param maxQ2Cut max matching quality2 cut 
+       */
+      MatchConf 
+      ( const std::string&       mTool    ,   //          ITrackMatch tool name  
+        const std::string&       address  ,   // TES location of matched tracks
+        const LHCb::Track::Types trType   ,   //                     Track type
+        const bool               moveIDs  ,   //                 transfer IDs ? 
+        const bool               moveAncs ,   //           transfer ancestors ? 
+        const bool               moveInfo ,   //          transfer Extra Info ? 
+        const std::string&       quality  ,   //               matching quality 
+        const std::string&       quality2 ,   //              matching quality2 
+        const double             maxQCut  ,   //       max matching quality cut 
+        const double             maxQ2Cut ,   //      max matching quality2 cut  
+        const LoKi::Functor<const LHCb::Track*,bool>& cut ) ; // filter 
       // ======================================================================
     public:
       // ======================================================================

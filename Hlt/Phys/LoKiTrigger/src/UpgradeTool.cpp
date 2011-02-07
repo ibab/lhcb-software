@@ -113,8 +113,6 @@ namespace
   } ;  
   // ==========================================================================
 } //                                                end of anonynmous namespace
-
-
 // ============================================================================
 // find the tracks within the recontructed 
 // ============================================================================
@@ -161,8 +159,14 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
     if ( moveInfo () ) { trk->setExtraInfo ( seed->extraInfo() ) ; }
     trk->addInfo ( recoID() , seed->key() ) ; 
   }
-  // insert the tracks into the container of output tracks 
-  tracks.insert( tracks.end() , out.begin() , out.end() ) ;
+  //
+  // insert only "good" tracks into the stream 
+  //
+  LoKi::Algs::copy_if  
+    ( out.begin () , 
+      out.end   () , 
+      std::back_inserter ( tracks ) ,
+      m_config     ) ;
   //
   if ( owner() ) // register all tracks in TES
   {
