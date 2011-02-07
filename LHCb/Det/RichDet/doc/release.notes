@@ -6,6 +6,7 @@
 
 ! 2011-02-02 - Chris Jones
  - Adapt to removal of depreciated RichRadIntersection typedef.
+ - Remove some obsolete CVS doxygen comments
 
 !========================= RichDet v16r0 2011-01-31 =========================
 
