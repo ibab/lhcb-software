@@ -1,19 +1,13 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
-from Gaudi.Configuration import *
-from Configurables import HltANNSvc, FilterDesktop, CombineParticles
-from Configurables import LoKi__VoidFilter as VoidFilter
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-from HltTracking.HltPVs import PV3D
-from HltLine.HltLine import Hlt1Tool as Tool
-from Configurables import BBDecTreeTool as BBDT
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     '''Class to configure Hlt2 topological lines.'''
+
+
     #
     # Steering variables:
     # NB: these values can be (and most likely are) overridden by those
@@ -62,6 +56,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Updates the HltANNSvc after a new line has been constructed.'''
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
+        from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update({lineName:id})
 
     def __makeLine(self, lineName, algos):
@@ -74,12 +69,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         hltfilter = self.getProp("HLT1FILTER")
         if hltfilter == "" : hltfilter = None
      
+        from HltLine.HltLine import Hlt2Line
         Hlt2Line(lineName, HLT=hltfilter, prescale=self.prescale,
                  postscale=self.postscale,algos=lclAlgos) 
         self.__updateHltANNSvc(lineName)
 
     def __seqGEC(self):  
         '''Defines a global event cut (sets upper limit on n_tracks).'''
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         modules =  CoreFactory('CoreFactory').Modules
         if 'LoKiTrigger.decorators' not in modules:
@@ -92,12 +89,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         if self.getProp('USE_GEC'): max = '< ' + self.getProps()['GEC_MAX']
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') " + max
         
+        from Configurables import LoKi__VoidFilter as VoidFilter
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg',
                                                  Code=filtCode)
+        from HltLine.HltLine import bindMembers
         return bindMembers(None,[tracks, Hlt2TopoKillTooManyInTrkAlg])
     
     def __inPartFilter(self, name, inputSeq):
         '''Filters input particles for topo lines.'''
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         props = self.getProps()        
         cuts = '(PT > %s*MeV) & (P > %s*MeV) ' \
                % (props['ALL_PT_MIN'],props['ALL_P_MIN'])
@@ -107,10 +108,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
+        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[filter])
 
     def __filterNforN(self,n,input):
         '''Filters n-body combos for n-body line'''
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         pid = "('K+'==ABSID)"
         minPtSum = 3000        
         if n > 2: minPtSum = 4000
@@ -123,6 +127,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
     def __filterBDT(self,n,input):
         '''Applies the BDT cut.'''
+        from Configurables import BBDecTreeTool as BBDT
+        from Configurables import FilterDesktop
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
         file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
               % (n,props['BDT_%dBODY_PARAMS'%n])
@@ -135,6 +143,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
     def __filterMuonBDT(self,n,input):
         '''Applies the muon and BDT cuts.'''
+        from Configurables import BBDecTreeTool as BBDT
+        from Configurables import FilterDesktop
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
         file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
               % (n,props['BDT_%dBODY_PARAMS'%n])
@@ -147,6 +159,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
     def __filter2forN(self,n,input):
         '''Filters 2-body combos for 3- and 4-body lines.'''
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         props = self.getProps()
         m = 6000
         if n == 4: m = 5000
@@ -158,6 +172,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
     def __filter3for4(self,input):
         '''Filters 3-body combos for 4-body line.'''
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         cuts = '(M < 6000*MeV)'
         filter = Hlt2Member(FilterDesktop, 'Filter3for4', InputLocations=input,
                             Code=cuts)
@@ -165,6 +181,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     
     def __combine(self, name, input, decay):
         '''Configures common particle combos used by all topo lines.'''        
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
         props = self.getProps() 
         comboCuts = '(AM < 7000*MeV) & (AALLSAMEBPV)' 
         comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)" \

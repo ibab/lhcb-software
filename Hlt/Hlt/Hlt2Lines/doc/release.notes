@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2011-02-08 - Gerhard Raven
+ - Hlt2TopologicalLines: import as late as possible
+
 ! 2011-Feb-03 - Victor Coco
  - Hlt2DisplVerticesLine.py: remove obselete call to unfitted tracks
 
