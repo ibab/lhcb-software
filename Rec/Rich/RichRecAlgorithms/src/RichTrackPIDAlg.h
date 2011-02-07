@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::TrackPIDAlg
  *
- *  CVS Log :-
- *  $Id: RichTrackPIDAlg.h,v 1.2 2008-04-16 17:39:01 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -46,7 +43,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class TrackPIDAlg : public RichRecAlgBase
+    class TrackPIDAlg : public Rich::Rec::AlgBase
     {
 
     public:

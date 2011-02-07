@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichRecInit
  *
- *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.7 2007-12-21 12:19:40 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -40,7 +37,7 @@ Initialise::~Initialise() {}
 
 StatusCode Initialise::initialize()
 {
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // preload tools

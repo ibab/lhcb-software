@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.7 2009-06-10 13:22:21 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -41,7 +38,7 @@ TracklessRingSegmentAssociationAlg::~TracklessRingSegmentAssociationAlg() {}
 
 StatusCode TracklessRingSegmentAssociationAlg::initialize()
 {
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   info() << "Input Rings                 : " << m_inputRings  << endmsg;

@@ -43,7 +43,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class EventSelectionAlg : public RichRecAlgBase
+    class EventSelectionAlg : public Rich::Rec::AlgBase
     {
 
     public:

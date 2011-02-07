@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.9 2009-07-30 11:13:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -42,7 +39,7 @@ TracklessRingFilterAlg::~TracklessRingFilterAlg() {}
 
 StatusCode TracklessRingFilterAlg::initialize()
 {
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   info() << "Input Rings                 : " << m_inputRings  << endmsg;

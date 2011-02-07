@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichRecInit
  *
- *  CVS Log :-
- *  $Id: RichTrackPIDAlg.cpp,v 1.3 2009-07-30 11:13:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -41,7 +38,7 @@ TrackPIDAlg::~TrackPIDAlg() {}
 
 StatusCode TrackPIDAlg::initialize()
 {
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( m_trTracksLocation.empty() )

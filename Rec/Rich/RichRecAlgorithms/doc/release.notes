@@ -4,7 +4,10 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
-!===================== RichRecAlgorithms v2r18p1 2010-05-21 ===================
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
+!===================== RichRecAlgorithms v2r18p1 2010-05-21 ==================
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
 

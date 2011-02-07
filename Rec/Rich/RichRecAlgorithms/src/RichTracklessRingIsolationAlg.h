@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.6 2009-06-03 09:04:15 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -47,7 +44,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class TracklessRingIsolationAlg : public RichRecAlgBase
+    class TracklessRingIsolationAlg : public Rich::Rec::AlgBase
     {
 
     public:

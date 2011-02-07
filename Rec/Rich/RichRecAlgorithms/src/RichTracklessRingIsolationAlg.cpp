@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.14 2009-06-19 22:15:20 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -53,7 +50,7 @@ TracklessRingIsolationAlg::~TracklessRingIsolationAlg() {}
 
 StatusCode TracklessRingIsolationAlg::initialize()
 {
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   info() << "Input Rings                 : " << m_inputRings  << endmsg;

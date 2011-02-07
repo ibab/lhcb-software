@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::SummaryAlg
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.8 2008-07-28 16:08:11 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */

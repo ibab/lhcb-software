@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::TracklessRingSegmentAssociationAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.h,v 1.2 2009-05-24 16:18:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -46,7 +43,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class TracklessRingSegmentAssociationAlg : public RichRecAlgBase
+    class TracklessRingSegmentAssociationAlg : public Rich::Rec::AlgBase
     {
 
     public:

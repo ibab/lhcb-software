@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.10 2009-07-30 11:13:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -26,13 +23,13 @@ DECLARE_ALGORITHM_FACTORY( SummaryAlg );
 // Standard constructor, initializes variables
 SummaryAlg::SummaryAlg( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ),
-    m_ckAngle      ( NULL ),
-    m_ckAngleRes   ( NULL ),
-    m_tkSignal     ( NULL ),
-    m_trSelector   ( NULL ),
-    m_summaryLoc   ( LHCb::RichSummaryTrackLocation::Default ),
-    m_nSigma       ( Rich::NRadiatorTypes, 1 )
+  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+    m_ckAngle          ( NULL ),
+    m_ckAngleRes       ( NULL ),
+    m_tkSignal         ( NULL ),
+    m_trSelector       ( NULL ),
+    m_summaryLoc       ( LHCb::RichSummaryTrackLocation::Default ),
+    m_nSigma           ( Rich::NRadiatorTypes, 1 )
 {
   // job opts
   declareProperty( "SummaryLocation", 
@@ -47,7 +44,7 @@ SummaryAlg::~SummaryAlg() {}
 StatusCode SummaryAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() )
   { return Error( "Failed to initialize base class", sc ); }
 

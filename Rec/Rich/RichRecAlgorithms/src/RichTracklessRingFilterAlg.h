@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::TracklessRingFilterAlg
  *
- *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.h,v 1.5 2009-05-24 16:18:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -47,7 +44,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class TracklessRingFilterAlg : public RichRecAlgBase
+    class TracklessRingFilterAlg : public Rich::Rec::AlgBase
     {
 
     public:

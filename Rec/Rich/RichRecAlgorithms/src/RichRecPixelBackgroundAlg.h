@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::PixelBackgroundAlg
  *
- *  CVS Log :-
- *  $Id: RichRecPixelBackgroundAlg.h,v 1.1 2008-03-25 16:43:41 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -39,7 +36,7 @@ namespace Rich
      */
     //---------------------------------------------------------------------------
 
-    class PixelBackgroundAlg : public RichRecAlgBase
+    class PixelBackgroundAlg : public Rich::Rec::AlgBase
     {
 
     public:
