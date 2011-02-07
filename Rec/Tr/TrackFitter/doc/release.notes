@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v4r1 2011-02-07 =========================
 ! 2011-02-05 - Victor Coco
  - correct ConfiguredMasterFitter default options (FastOutlierIteration set toFalse)
 
