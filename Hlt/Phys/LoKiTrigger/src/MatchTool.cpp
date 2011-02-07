@@ -57,9 +57,7 @@ LoKi::Hlt1::MatchTool::MatchTool
   , m_invert     ( false   )
 {  
   // retrive the tool 
-  m_match = alg()->tool<ITrackMatch> ( mTool() , alg()) ;
-  /// it must be private tool! 
-  Assert ( m_match->parent() == alg() , "ITrackMatch tool must be private!");  
+  m_match = alg()->tool<ITrackMatch> ( mTool() ) ;
   //
   /// get the service 
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;

@@ -46,9 +46,7 @@ LoKi::Hlt1::UpgradeTool::UpgradeTool
 //
 {
   // retrive the tool 
-  m_upgrade = alg()->tool<ITracksFromTrack> ( trTool() , alg() ) ;
-  /// it must be private tool! 
-  Assert ( m_upgrade->parent() == alg() , "ITracksFromTrack tool must be private!");  
+  m_upgrade = alg()->tool<ITracksFromTrack> ( trTool() ) ;
   //
   /// get the service 
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;

@@ -5,6 +5,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Roel Aaij
+ - UpgradeTool and MatchTool now get public tools.
+
 ! 2011-02-06 - Gerhard Raven
  - undo the addition of timers temporarily until the release
    on top of LHCB_v32r0 has been done, as the relevant code
