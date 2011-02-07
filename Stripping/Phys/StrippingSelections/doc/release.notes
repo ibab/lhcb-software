@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Ulrich Kerzel
+ - update B2hh lifetime unbiased lines to new framework, 
+   include NeuroBayes based line   
+
 ! 2011-02-07 - Greig Cowan
  - New stripping test sample from Reco08 processing. Sample is from run
    81430, with mu ~2.7 and TCK 0x2E002C.

@@ -71,9 +71,15 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     def __init__(self, name, config) :
 
         LineBuilder.__init__(self, name, config)
-        
+
+        noCut_name = name+"NoCut"
         loose_name = name+"Loose"
         NB_name    = name+"NeuroBayes" 
+
+        #self.SelB2hhNoCut    = self.B2hhNoCut(noCut_name,
+        #                                      BMassMin  = config['BMassMin'],
+        #                                      BMassMax  = config['BMassMax']
+        #                                      )
         
         self.SelB2hhLoose    = self.B2hhLoose(loose_name,
                                               BMassMin  = config['BMassMin'],
@@ -122,7 +128,25 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         B2hhLooseSel = Selection(Name, Algorithm = _Bs, RequiredSelections = [myKaons])
         
         return B2hhLooseSel
-        
+
+    #def B2hhNoCut(self, Name, BMassMin, BMassMax):
+    #    from StandardParticles import StdNoPIDsKaons
+    #    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+    #
+    #    kaonCut   = "ISLONG"
+    #    combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV)" % locals()
+    #    motherCut = "(VFASPF(VCHI2/VDOF) < 25)"
+    #    
+    #    kaonFilter = FilterDesktop(Code = kaonCut)
+    #    myKaons    = Selection(Name+'KaonSel', Algorithm = kaonFilter, RequiredSelections = [StdNoPIDsKaons])
+    #
+    #    _Bs = CombineParticles (DecayDescriptor = "B_s0 -> K+ K-",
+    #                            CombinationCut  = combCut,
+    #                            MotherCut       = motherCut)
+    #    
+    #    B2hhNoCutSel = Selection(Name, Algorithm = _Bs, RequiredSelections = [myKaons])
+    #                    
+    #    return B2hhNoCutSel
         
     #
     # default version
