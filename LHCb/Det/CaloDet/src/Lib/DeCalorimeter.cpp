@@ -47,6 +47,9 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_subCalos          () 
   ,  m_maxEtInCenter     ()
   ,  m_maxEtSlope        ()
+  ,  m_puMeth( -1 )
+  ,  m_puBin(  0 )
+  ,  m_puMin(  0 )
   ,  m_pinArea           ( -1         ){
 }
 // ============================================================================
@@ -159,6 +162,10 @@ StatusCode DeCalorimeter::initialize()
   // condition : 'Calibration' (FACULTATIF)
   if( loadCondition( m_calib, "Calibration" ) )
     updMgrSvc()->registerCondition(this, m_calib.path(), &DeCalorimeter::updCalib);
+
+  // condition : 'PileUp' (FACULTATIF)
+  if( loadCondition( m_pileUp, "PileUpOffset" ) )
+    updMgrSvc()->registerCondition(this, m_pileUp.path(), &DeCalorimeter::updPileUp);
 
   // condition : 'NumericsGains' (FACULTATIF)
   if( loadCondition( m_numericGains, "NumericGains" ) )
@@ -991,6 +998,56 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   return StatusCode::SUCCESS;
 }
 
+// pileUp subtraction -------------- //
+StatusCode DeCalorimeter::getPileUpOffset( )  {
+  // init
+  MsgStream msg( msgSvc(), m_caloDet + ".PileUpOffset" ); 
+  if ( !hasCondition("PileUpOffset") )return StatusCode::SUCCESS; // calibration not mandatory 
+
+  if ( !m_pileUp->exists( "data" ) 
+       || !m_pileUp->exists( "size") 
+       || !m_pileUp->exists( "Method") 
+       || !m_pileUp->exists( "Bin") 
+       || !m_pileUp->exists( "Min") ) {
+
+    msg << MSG::DEBUG << "No 'data' in 'PileUpOffset' condition : will assume offset = 0." << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
+
+  m_puMeth = m_pileUp->paramAsInt("Method");
+  m_puBin  = m_pileUp->paramAsInt("Bin");
+  m_puMin  = m_pileUp->paramAsInt("Min");
+
+  msg << MSG::VERBOSE << "Pileup offset substraction : method = " << m_puMeth 
+      << " ; Min = " << m_puMin 
+      << " ; Bin = " << m_puBin << endmsg;
+
+
+  int size     = m_pileUp->paramAsInt( "size" );
+  std::vector<double> data = m_pileUp->paramAsDoubleVect( "data" );
+
+  int count = 0;
+  for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
+    int ll = size*kk;
+    double cell   = data[ll];
+    double offs   = data[ll+1];
+    double eoffs  = (size>2) ? data[ll+2] : 0;
+
+    LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+    id.setCalo( CaloCellCode::CaloNumFromName( name() ));
+    if( m_cells[id].valid() ){
+      m_cells[id].setPileUpOffset( offs,eoffs );
+      msg << MSG::VERBOSE << "Added pileup offset for channel " << id 
+          << " : <offset> = " << offs << " ( RMS = " << eoffs << " )" << endmsg;
+    }else
+      msg << MSG::WARNING << "Trying to add pileup offset on non-valid channel : " << id << endmsg;
+    count++;
+  } 
+  msg << MSG::DEBUG << "Pileup offset added for " << count << " channel(s) " << endmsg;
+  return StatusCode::SUCCESS;
+}  
+
 
 // absolute calibration -------------- //
 StatusCode DeCalorimeter::getCalibration( )  {
@@ -1515,6 +1572,14 @@ StatusCode DeCalorimeter::updCalib(){
   msg << MSG::DEBUG << "Updating condition 'Calibration'" << endmsg;
   if( !hasCondition("Calibration") )return StatusCode::SUCCESS; // the calibration condition is NOT mandatory
   StatusCode sc = getCalibration();
+  return sc;
+}
+
+StatusCode DeCalorimeter::updPileUp(){
+  MsgStream msg( msgSvc(), m_caloDet );
+  msg << MSG::DEBUG << "Updating condition 'PileUpOffset'" << endmsg;
+  if( !hasCondition("PileUpOffset") )return StatusCode::SUCCESS; // the pileUpOffset condition is NOT mandatory
+  StatusCode sc = getPileUpOffset();
   return sc;
 }
 

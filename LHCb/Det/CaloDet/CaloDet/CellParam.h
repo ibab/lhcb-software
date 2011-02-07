@@ -95,6 +95,9 @@ public:
   double                gainShift     () const { return ( ledMoniRef() > 0 && ledMoni() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
   double                gain          () const { return nominalGain() * calibration() / gainShift() ;}  
   int                   numericGain   () const { return m_nGain         ; }  // for Prs only
+  double                pileUpOffset  () const { return m_offset;}
+  double                pileUpOffsetRMS() const { return m_eoffset;}
+  
     
 
   const std::vector<LHCb::CaloCellID>& pins() const  { return m_pins ;}
@@ -148,6 +151,10 @@ public:
   void setCalibration  (double calib)          { m_calibration = calib;           }
   void setL0Constant   (int    cte)            { m_l0constant  = cte;             }
   void setNumericGain  (int    ng)             {  m_nGain = ng        ; }  // for Prs only
+  void setPileUpOffset( double off, double eoff=0){
+    m_offset = off;
+    m_eoffset = eoff;
+  }  
 
   std::string cellStatus(){
     if( (CaloCellQuality::Flag) m_quality == CaloCellQuality::OK )return CaloCellQuality::qName(CaloCellQuality::OK);
@@ -194,6 +201,8 @@ private:
   double m_ledDataRMS;
   double m_ledMoniRMS;
   int    m_nGain; // numeric gains (for Prs only)
+  double m_offset;
+  double m_eoffset;
 };
 
 // ============================================================================

@@ -250,6 +250,11 @@ public:
   bool isPinCard (const int card) { return m_feCards[card].isPinCard(); };
   bool isPinTell1(const int tell1) { return m_tell1Boards[tell1].readPin(); };
   bool isPinId(LHCb::CaloCellID id){ return ((unsigned)m_pinArea == id.area()) ? true : false; }
+  // pileUp subtraction parameters
+  int pileUpSubstractionMethod(){return m_puMeth;}
+  int pileUpSubstractionBin(){return m_puBin;}
+  int pileUpSubstractionMin(){return m_puMin;}
+
 
 protected:
   ///  Initialization method for building the cells/cards/tell1/PIN layout
@@ -258,6 +263,7 @@ protected:
   StatusCode     buildTell1s    ();
   StatusCode     buildMonitoring();
   StatusCode     getCalibration ();
+  StatusCode     getPileUpOffset();
   StatusCode     getL0Calibration();
   StatusCode     getLEDReference   ();
   StatusCode     getQuality     ();
@@ -306,6 +312,10 @@ private:
   double   m_l0Thresh;
   std::vector<double> m_phe;
   std::vector<double> m_l0Cor;
+  int m_puMeth;
+  int m_puBin;
+  int m_puMin;
+    
 
   // reconstruction
   double   m_zShowerMax;
@@ -323,6 +333,7 @@ private:
   std::map<int,std::vector<int> > m_valCards;
 
   // conditions
+  SmartRef<Condition> m_pileUp;
   SmartRef<Condition> m_calib;
   SmartRef<Condition> m_l0calib;
   SmartRef<Condition> m_gain;
@@ -347,6 +358,7 @@ private:
   StatusCode updMonitor();
   StatusCode updReco();
   StatusCode updNumGains();
+  StatusCode updPileUp();
 } ;
 
 // ===========================================================================
