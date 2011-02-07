@@ -4,23 +4,25 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
 !==================== RichRecTemplateRings v1r4p1 2010-05-21 =================
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
 
-!==================== RichRecTemplateRings v1r4 2010-03-19 =================
+!==================== RichRecTemplateRings v1r4 2010-03-19 ===================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 
    HLT2.
 
-!==================== RichRecTemplateRings v1r3 2010-02-15 =================
+!==================== RichRecTemplateRings v1r3 2010-02-15 ===================
 ! 2010-01-28   - Sajan Easo
  -  Added a fix to avoid selecting bands around the expected radius.
  -  Added a fix for the cases with zero number of hits in input to avoid crash.
 
-!==================== RichRecTemplateRings v1r2 2010-01-21 =================
-
+!==================== RichRecTemplateRings v1r2 2010-01-21 ===================
 
 !==================== RichRecTemplateRings v1r1p1 2009-10-20 =================
 ! 2009-12-16- Sajan Easo

@@ -34,7 +34,7 @@ namespace Rich
        *  @date   2007-05-14
        */
 
-      class RichRingRecAlgBase: public RichRecAlgBase
+      class RichRingRecAlgBase: public Rich::Rec::AlgBase
       {
 
       public:

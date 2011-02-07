@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( RichRingRecAlgBase );
 //=============================================================================
 RichRingRecAlgBase::RichRingRecAlgBase( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : RichRecAlgBase ( name , pSvcLocator ),
+  : Rich::Rec::AlgBase ( name , pSvcLocator ),
     m_ringtool(NULL)
 {
 
@@ -40,7 +40,7 @@ RichRingRecAlgBase::~RichRingRecAlgBase() {}
 StatusCode RichRingRecAlgBase::initialize() 
 {
 
-  const StatusCode sc = RichRecAlgBase::initialize(); // must be executed first
+  const StatusCode sc = Rich::Rec::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize RichRingRecAlgBase  " << endmsg;
@@ -76,7 +76,7 @@ StatusCode RichRingRecAlgBase::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return RichRecAlgBase::finalize();  // must be called after all other actions
+  return Rich::Rec::AlgBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
