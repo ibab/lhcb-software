@@ -302,9 +302,8 @@ def hlt1Selections() :
     dct = {}
     dct [ 'Input'  ] = hlt1InputSelections ()
     dct [ 'Output' ] = hlt1OutputSelections ()
-    import sets
-    s1 = sets.Set( hlt1InputSelections  () )
-    s2 = sets.Set( hlt1OutputSelections () )
+    s1 = set( hlt1InputSelections  () )
+    s2 = set( hlt1OutputSelections () )
     dct [ 'All' ] = tuple(s1.union(s2) )
     dct [ 'Input&Output' ] = tuple(s1.intersection(s2) )
     dct [ 'Input-Output' ] = tuple(s1.difference(s2))
@@ -581,6 +580,12 @@ class bindMembers (object) :
         elif hasattr ( type(alg) , 'MatchOutput' ) :
             if hasattr ( alg , 'MatchOutput' ) :
                 self._outputsel = alg.MatchOutput 
+        elif hasattr( alg, 'Code' ) :
+            ex = r"SINK\( *'(\w+)' *\)"
+            # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
+            import re
+            s = re.search(ex,getattr(alg,'Code'))
+            if s : self._outputsel =  s.group(1) 
         else :
             self._outputsel = alg.name()
         self._InputOutputLocationMatchMaker(alg)
@@ -932,6 +937,7 @@ class Hlt1Line(object):
             for attr in _input_selection_properties_ :
                 if hasattr ( _m , attr  ) :
                     _add_to_hlt1_input_selections_ ( getattr( _m, attr ) )
+            from Configurables import LoKi__HltUnit
             if hasattr ( type(_m) , 'OutputSelection' ) :
                 if hasattr ( _m , 'OutputSelection' ) :
                     self._outputSelections += [ _m.OutputSelection ]
@@ -939,6 +945,15 @@ class Hlt1Line(object):
                 else :
                     self._outputSelections += [ _m.name() ]
                     _add_to_hlt1_output_selections_ ( _m.name         () )
+            elif hasattr( _m, 'Code') :
+                ex = r"SINK\( *'(\w+)' *\)"
+                # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
+                import re
+                s = re.search(ex,getattr(_m,'Code'))
+                if s :
+                        self._outputSelections +=  [ s.group(1) ]
+                        _add_to_hlt1_output_selections_ ( s.group(1) )
+
 
         if self._outputsel is not None and self._outputsel!= decisionName( line ) :
             log.warning( "Line '%s' has a final output selection named '%s' -- this does not match the rules, TISTOS will not work for this line"%(line,self._outputsel) )

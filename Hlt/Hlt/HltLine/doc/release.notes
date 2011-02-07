@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-02-07 - Gerhard Raven
+ - Do not import obsolete sets
+ - recognize SINK output in units
+
 ! 2010-02-02 - Juan Palacios
  - HltLine
   . Replace obsolete FlatSelectionListBuilder with FlatAlgorithmList.
