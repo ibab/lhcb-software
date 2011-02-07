@@ -14,5 +14,4 @@ from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="unsupported_platforms"><set><text>slc4_ia32_gcc34_dbg.*</text></set></argument>
 </extension>

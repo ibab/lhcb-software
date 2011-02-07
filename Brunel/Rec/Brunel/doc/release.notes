@@ -3,10 +3,18 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v38r1>2011-02-08 Brunel v38r1</A></H1><PRE>
+This version uses projects LCG 60, Gaudi v22r0, LHCb v32r0, Lbcom v10r0,
+ Rec v11r1 and SQLDDDB v6r0, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+Development release in preparation for 2011 production
+
 - Changes to configurable:
   . default DataType is now 2011
+  . Remove support for ETC input
 
 - Changes to example options
+  . Remove options with ETC as input
   . Remove options and catalogs accessing DC06 and MC09 files that no longer
     exist
   . Remove all imports of earlyData.py, since this now the default
@@ -18,6 +26,7 @@ Purpose: LHCb reconstruction program
   . Remove obsolete brunel.brunel-mc09-stripping test
   . Input file for brunel2010magdown test is now taken from 'freezer' castor
     directory, to test rootd access to this pool.
+  . Remove references for slc4_ia32_gcc34(_dbg), no longer supported
 
 - Changes to references to reflect changes in Brunel v38r1 output
   . #114925: all Calo corrections now taken from CondDB
@@ -34,6 +43,8 @@ Purpose: LHCb reconstruction program
   . #116127, 116216: earlyData settings become default in tracking
   . #116130: Switch to new tracking sequence, remove use of earlyData flag
   . #116384, 116383: Major modification of Kalman filter implementation
+  . #116912: Put back DC06 Velo error parameterisation, MC10 one introduced
+             in Brunel v38r0 (#114631) needs more study.
   . Move to a single sqlite file for ONLINE_2010 conditions 
 
 </PRE><H1><A NAME=v38r0>2010-12-21 Brunel v38r0</A></H1><PRE>

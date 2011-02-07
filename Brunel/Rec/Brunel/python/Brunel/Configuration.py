@@ -107,7 +107,7 @@ class Brunel(LHCbConfigurableUser):
        ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
        }
 
-    KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI", "ETC" ]
+    KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
 
     def defineGeometry(self):
@@ -149,8 +149,6 @@ class Brunel(LHCbConfigurableUser):
 
 
         # Flag to handle or not LumiEvents
-        #handleLumi = inputType in ["MDF","ETC"] and not withMC
-        #don't do it for ETC, lumi has no meaning on an ETC, as we can't say you processed everything
         handleLumi = inputType in ["MDF"] and not withMC
         
         self.configureSequences( withMC, handleLumi )
@@ -299,7 +297,7 @@ class Brunel(LHCbConfigurableUser):
         if self.isPropertySet( "RawBanksToKill" ):
             bkKill.BankTypes = self.getProp( "RawBanksToKill" )
         else:
-            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","ETC","RDST","SDST"]):
+            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","RDST","SDST"]):
                 bkKill.BankTypes = ["VeloFull", "L0PUFull"]
         GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
         
@@ -345,7 +343,7 @@ class Brunel(LHCbConfigurableUser):
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
         
-        if inputType in [ "XDST", "DST", "RDST", "SDST", "ETC" ]:
+        if inputType in [ "XDST", "DST", "RDST", "SDST" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
@@ -356,15 +354,11 @@ class Brunel(LHCbConfigurableUser):
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
-        if inputType in [ "RDST", "SDST", "ETC" ]:
+        if inputType in [ "RDST", "SDST" ]:
             # Allow navigation to ancestor file
             IODataManager().AgeLimit += 1
 
-        if inputType == "ETC":
-            from Configurables import  TagCollectionSvc
-            ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
-
-        if inputType in [ "MDF", "RDST", "SDST", "ETC" ]:
+        if inputType in [ "MDF", "RDST", "SDST" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 

@@ -1,5 +1,5 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r0/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,20 +20,20 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r0/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
+# |-DDDBtag     = ''
+# |-OutputLevel = 3
 # |-DataType    = '2009'
 # |-TimeStamp   = False
 # |-SkipEvents  = 0
-# |-OutputLevel = 3
 # |-EvtMax      = 100  (default: -1)
 # |-Simulation  = False
-# |-Monitors    = []  (default: [])
 # |-XMLSummary  = None
 # |-CondDBtag   = ''
-# |-DDDBtag     = ''
+# |-Monitors    = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of LumiAlgsConf
@@ -43,17 +43,18 @@
 # |-DataType          = '2009'  (default: '2010')
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
+# |-MergeFSR          = False
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x1bd0d590>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x1e59c950>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100826 for partition DDDB
-# WARNING: Using default tag head-20100831 for partition LHCBCOND
-# WARNING: Using default tag MC-20100827-vc15mm-md100 for partition SIMCOND
+# WARNING: Using default tag head-20101206 for partition DDDB
+# WARNING: Using default tag head-20101112 for partition LHCBCOND
+# WARNING: Using default tag MC-20101026-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -82,7 +83,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v37r7
-                                          running on volhcb27.cern.ch on Thu Sep 30 11:40:17 2010
+                                          running on volhcb27.cern.ch on Fri Feb  4 15:58:03 2011
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -248,7 +249,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -355,33 +356,33 @@ ApplicationMgr       INFO Application Manager Started successfully
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
-RootDBase.open    SUCCESS 56721-100ev.dst File version:52600
-PoolRootTreeEvt...   INFO Records token:[DB=225D08B8-656A-DF11-89C9-001E4F3DD7AB][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001D-00000000]
+RootDBase.open    SUCCESS 56721-100ev.dst File version:52800
+PoolRootTreeEvt...   INFO Records token:[DB=4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001E-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file 225D08B8-656A-DF11-89C9-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
+FileRecordDataSvc   DEBUG Request to load record for file 4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
 PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObject}{NCOL=3}{CNT=0}{COL={{NAME=DataObject}{CLASS=DataObject}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB
+FileRecordDataSvc VERBOSE Requested object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/TimeSpanFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634C0-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/TimeSpanFSR
+FileRecordDataSvc VERBOSE Requested object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/EventCountFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:LHCb::EventCountFSR
 PoolDbBaseCnv       DEBUG {ID=000034BF-0000-0000-0000-000000000000}{CL=LHCb::EventCountFSR}{NCOL=3}{CNT=0}{COL={{NAME=EventCountFSR}{CLASS=LHCb::EventCountFSR}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
@@ -1147,11 +1148,11 @@ ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.92 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.010 |     0.040 |    0.037       0.1 |      97 |     0.004 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.004 |    0.003       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     0.010 |     0.014 |    0.012       0.0 |      97 |     0.001 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -1164,13 +1165,13 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0656515(+-0.586595)/0/7.999[ms] Total:0.012999[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0454444(+-0.571075)/0/7.999[ms] Total:0.008998[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:225D08B8-656A-DF11-89C9-001E4F3DD7AB[56721-100ev.dst]
+PoolRootTreeEvt...   INFO Disconnected data IO:4C6A95DA-36EE-DF11-8D25-001E4F3DD7AB[56721-100ev.dst]
 PoolRootTreeEvt...  DEBUG POOL conversion service finalized PoolRootTreeEvtCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootKeyEvtCnvSvc
 PoolRootKeyEvtC...  DEBUG POOL conversion service finalized PoolRootKeyEvtCnvSvc successfully

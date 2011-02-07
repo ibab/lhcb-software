@@ -33,14 +33,6 @@ elif inputType == "DST":
     # B->J/Psi(mumu)Ks events
     EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v35r2/" + datasetName + ".dst?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 
-elif inputType == "ETC":
-    # Example ETC
-    import sys
-    print "**************************************"
-    print "   DC06 ETCs are no longer available  "
-    print "**************************************"
-    sys.exit()
-    
 else:
     # Example POOL DIGI
     datasetName =  "00001820_00000001"

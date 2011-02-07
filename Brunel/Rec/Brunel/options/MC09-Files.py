@@ -30,13 +30,6 @@ elif inputType == "DST":
     print "***************************************************"
     sys.exit()
 
-elif inputType == "ETC":
-    import sys
-    print "**************************************"
-    print "   MC09 ETCs are no longer available  "
-    print "**************************************"
-    sys.exit()
-    
 else:
     # Example POOL DIGI (default, MC production)
     # minimum bias events, MC09 default settings, Gauss v17r0 with Boole v18r0
