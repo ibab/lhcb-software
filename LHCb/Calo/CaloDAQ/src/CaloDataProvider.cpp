@@ -65,7 +65,7 @@ StatusCode CaloDataProvider::initialize ( ) {
     m_shortType  = LHCb::RawBank::PrsE;
     m_errorType = LHCb::RawBank::PrsPackedError;
   } else if ( "Spd" == m_detectorName ) {
-    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs ); // Prs FE for SPD
+    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd ); // Prs FE for SPD
     m_packedType = LHCb::RawBank::PrsPacked;
     m_shortType  = LHCb::RawBank::PrsTrig;
     m_errorType = LHCb::RawBank::PrsPackedError;

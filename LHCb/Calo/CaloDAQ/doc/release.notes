@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2011-07-02 - Olivier Deschamps
+	- CaloDigitFilterTool/CaloDigitFilterAlg : new tool/alg for digit masking and energy offset
+	- CaloDataProvided : fix Spd L0Data decoding
+	- requirements : add dpencency on CaloUtils
+
 !========================== CaloDAQ v4r20 2010-04-26 =========================
 ! 2010-03-22 - Olivier Deschamps
  - (I)Calo(L0)DataProvider : implement user-defined default value in adc
