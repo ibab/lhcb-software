@@ -45,7 +45,6 @@ useFastVelo = True
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import PatPV3D
 from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, FastVeloTracking
 from Configurables import PVOfflineTool
 from HltLine.HltLine import bindMembers
@@ -148,7 +147,7 @@ _VeloSelection = 'VeloCandidates'
 _veloTracks = Hlt__Track2Candidate (
     'Velo2Candidates' ,
     Code            = "~TrBACKWARD"    , ## skip backward tracks 
-    InputSelection  = "Hlt/Track/Velo" ,
+    InputSelection  = MinimalVelo.outputSelection(),
     OutputSelection = _VeloSelection,
     )
 _Velo = bindMembers ( None , [ MinimalVelo, _veloTracks ] )
