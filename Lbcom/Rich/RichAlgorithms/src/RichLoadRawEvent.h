@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ algorithm : Rich::DAQ::LoadRawEvent
  *
- *  CVS Log :-
- *  $Id: RichLoadRawEvent.h,v 1.1.1.1 2008-10-15 12:34:57 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
@@ -37,7 +34,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class LoadRawEvent : public RichAlgBase
+    class LoadRawEvent : public Rich::AlgBase
     {
 
     public:

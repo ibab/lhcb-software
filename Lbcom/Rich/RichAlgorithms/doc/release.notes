@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-02-07 - Chris Jones
+ - Adapt to removal of depreciated typedefs
+
 !========================= RichAlgorithms v1r2 2009-10-20 ====================
 ! 2009-10-11 - Christopher Rob Jones
  - Add new algorithm that runs the generic HPD analysis tools on the raw
