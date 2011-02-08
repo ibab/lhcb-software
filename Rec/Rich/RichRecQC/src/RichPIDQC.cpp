@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichPIDQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : 
+ *  Implementation file for RICH reconstruction monitoring algorithm :
  *    Rich::Rec::MC::PIDQC
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
@@ -85,9 +85,9 @@ StatusCode PIDQC::initialize()
   m_plotsConfig.expertPlots = m_expertPlots;
 
   // Initialise summary information
-  for ( int i = 0; i<6; ++i ) 
+  for ( int i = 0; i<6; ++i )
   {
-    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; } 
+    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
   }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
@@ -101,19 +101,19 @@ StatusCode PIDQC::initialize()
   }
 
   // Warn if ignoring threshold information
-  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", 
+  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information",
                                     StatusCode::SUCCESS ).ignore();
-  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information", 
+  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information",
                                     StatusCode::SUCCESS ).ignore();
 
   // Warn if using kaon DLL cut
-  if ( m_dllKaonCut < 9999991 ) 
+  if ( m_dllKaonCut < 9999991 )
     Warning( "Applying kaon selection dll(kaon) < " +
              boost::lexical_cast<std::string>(m_dllKaonCut),
              StatusCode::SUCCESS ).ignore();
 
   // Warn if using pion DLL cut
-  if ( m_dllPionCut < 9999991 ) 
+  if ( m_dllPionCut < 9999991 )
     Warning( "Applying pion selection dll(pion) < " +
              boost::lexical_cast<std::string>(m_dllPionCut),
              StatusCode::SUCCESS ).ignore();
@@ -176,132 +176,130 @@ StatusCode PIDQC::execute()
   int pidCount = 0;
 
   // Loop over all PID results
-  if ( !m_richPIDs.empty() ) 
+  for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
+        iC != m_richPIDs.end(); ++iC )
   {
-    for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
-          iC != m_richPIDs.end(); ++iC ) 
+    LHCb::RichPID * iPID = dynamic_cast<LHCb::RichPID*>(*iC);
+    if ( !iPID ) { Warning("Dynamic Cast to RichPID* failed").ignore(); continue; }
+
+    // Track for this PID
+    const LHCb::Track * track = iPID->track();
+
+    // check rads that must have been used
+    if ( (m_requiredRads[Rich::Aerogel]  && !iPID->usedAerogel())  ||
+         (m_requiredRads[Rich::Rich1Gas] && !iPID->usedRich1Gas()) ||
+         (m_requiredRads[Rich::Rich2Gas] && !iPID->usedRich2Gas()) ) continue;
+
+    // Track selection
+    if ( !selectTracks(track) ) continue;
+
+    // Track type
+    const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
+
+    // Count PIDs and tracks
+    ++m_trackCount[tkType].first;
+    ++pidCount;
+    ++m_pidPerTypeCount[iPID->pidType()].first;
+    ++m_radCount[ Radiators(iPID->usedAerogel(),iPID->usedRich1Gas(),iPID->usedRich2Gas()) ];
+
+    // Get best PID
+    Rich::ParticleIDType pid = iPID->bestParticleID();
+
+    // Apply DLL based selection for kaons
+    if ( m_dllKaonCut < 999999 )
     {
-      LHCb::RichPID * iPID = dynamic_cast<LHCb::RichPID*>(*iC);
-
-      // Track for this PID
-      const LHCb::Track * track = iPID->track();
-
-      // check rads that must have been used
-      if ( (m_requiredRads[Rich::Aerogel]  && !iPID->usedAerogel())  ||
-           (m_requiredRads[Rich::Rich1Gas] && !iPID->usedRich1Gas()) ||
-           (m_requiredRads[Rich::Rich2Gas] && !iPID->usedRich2Gas()) ) continue;
-
-      // Track selection
-      if ( !selectTracks(track) ) continue;
-
-      // Track type
-      const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
-
-      // Count PIDs and tracks
-      ++m_trackCount[tkType].first;
-      ++pidCount;
-      ++m_pidPerTypeCount[iPID->pidType()].first;
-      ++m_radCount[ Radiators(iPID->usedAerogel(),iPID->usedRich1Gas(),iPID->usedRich2Gas()) ];
-
-      // Get best PID
-      Rich::ParticleIDType pid = iPID->bestParticleID();
-
-      // Apply DLL based selection for kaons
-      if ( m_dllKaonCut < 999999 )
+      if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut )
       {
-        if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut )
-        {
-          //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
-          pid = Rich::Kaon;
-        }
-        else
-        {
-          pid = Rich::Pion;
-        }
+        //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
+        pid = Rich::Kaon;
       }
-      if ( m_dllPionCut < 999999 )
+      else
       {
-        if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut )
-        {
-          //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
-          pid = Rich::Pion;
-        }
+        pid = Rich::Pion;
       }
-
-      // MC Truth
-      Rich::ParticleIDType mcpid = Rich::Unknown;
-      if ( m_truth )
+    }
+    if ( m_dllPionCut < 999999 )
+    {
+      if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut )
       {
-        // Get true track type from MC
-        mcpid = m_mcTruth->mcParticleType(track);
-        if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
-        {
-          debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
-          mcpid = Rich::BelowThreshold;
-        } 
-        if ( mcpid != Rich::Unknown &&
-             !m_ignoreMCThres &&
-             !iPID->isAboveThreshold(mcpid) )
-        {
-          //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "MCPID below threshold :-" << endmsg;
-            print ( debug(), iPID, pid, mcpid );
-          }
-          mcpid = Rich::BelowThreshold;
-        }
+        //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
+        pid = Rich::Pion;
       }
+    }
 
-      // Check for threshold
-      if ( !m_ignoreRecoThres && !iPID->isAboveThreshold(pid) )
+    // MC Truth
+    Rich::ParticleIDType mcpid = Rich::Unknown;
+    if ( m_truth )
+    {
+      // Get true track type from MC
+      mcpid = m_mcTruth->mcParticleType(track);
+      if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
       {
-        //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")",
-        //        StatusCode::SUCCESS, 0 );
+        debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
+        mcpid = Rich::BelowThreshold;
+      }
+      if ( mcpid != Rich::Unknown &&
+           !m_ignoreMCThres &&
+           !iPID->isAboveThreshold(mcpid) )
+      {
+        //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
         if ( msgLevel(MSG::DEBUG) )
         {
-          debug() << "RecoPID below threshold :-" << endmsg;
+          debug() << "MCPID below threshold :-" << endmsg;
           print ( debug(), iPID, pid, mcpid );
         }
-        pid = Rich::BelowThreshold;
+        mcpid = Rich::BelowThreshold;
       }
+    }
 
-      // some verbose printout
-      if ( msgLevel(MSG::VERBOSE) ) { print ( verbose(), iPID, pid, mcpid ); }
-
-      // MC Truth
-      if ( m_truth )
+    // Check for threshold
+    if ( !m_ignoreRecoThres && !iPID->isAboveThreshold(pid) )
+    {
+      //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")",
+      //        StatusCode::SUCCESS, 0 );
+      if ( msgLevel(MSG::DEBUG) )
       {
-        if ( msgLevel(MSG::VERBOSE) ) 
-          verbose() << "  MCID        = " << mcpid << endmsg;
-
-        // Fill plots in PID performance tool
-        if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown )
-          plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig );
-        
-        // Count track and PID types
-        if ( Rich::Unknown != mcpid ) 
-        {
-          ++m_trackCount[tkType].second;
-          ++m_pidPerTypeCount[iPID->pidType()].second;
-        }
-
-        // Fill performance tables
-        plot2D( (int)pid, (int)mcpid, 
-                "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
-        if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
-
+        debug() << "RecoPID below threshold :-" << endmsg;
+        print ( debug(), iPID, pid, mcpid );
       }
-      
-      // MC free plots
-      m_allPlotTool->plots( iPID, pid, m_plotsConfig );
+      pid = Rich::BelowThreshold;
+    }
 
-    } // end PID loop
-  } // end empty if
+    // some verbose printout
+    if ( msgLevel(MSG::VERBOSE) ) { print ( verbose(), iPID, pid, mcpid ); }
 
-    // count events and tracks
+    // MC Truth
+    if ( m_truth )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "  MCID        = " << mcpid << endmsg;
+
+      // Fill plots in PID performance tool
+      if ( mcpid != Rich::Unknown &&
+           pid   != Rich::Unknown )
+        plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig );
+
+      // Count track and PID types
+      if ( Rich::Unknown != mcpid )
+      {
+        ++m_trackCount[tkType].second;
+        ++m_pidPerTypeCount[iPID->pidType()].second;
+      }
+
+      // Fill performance tables
+      plot2D( (int)pid, (int)mcpid,
+              "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
+      if ( mcpid != Rich::Unknown &&
+           pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
+
+    }
+
+    // MC free plots
+    m_allPlotTool->plots( iPID, pid, m_plotsConfig );
+
+  } // end PID loop
+
+  // count events and tracks
   ++m_nEvents[0];
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
   m_nTracks[0] += m_totalSelTracks;
@@ -502,13 +500,15 @@ StatusCode PIDQC::loadPIDData()
 {
   // Load PIDs
   DataObject *pObject;
-  if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) ) {
+  if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) )
+  {
     if ( KeyedContainer<LHCb::RichPID, Containers::HashMap> * pids =
          static_cast<KeyedContainer<LHCb::RichPID, Containers::HashMap>*>(pObject) )
     {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
-      debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endmsg;
       return StatusCode::SUCCESS;
     }
   }
@@ -569,5 +569,5 @@ const Rich::Rec::IPIDPlots * PIDQC::plotsTool( const Rich::ParticleIDType mcpid 
   else
   {
     return iTool->second;
-  } 
+  }
 }
