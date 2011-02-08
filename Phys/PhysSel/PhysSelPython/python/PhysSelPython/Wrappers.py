@@ -222,10 +222,10 @@ class MergedSelection(NamedObject, SelectionBase) :
                               RequiredSelections = RequiredSelections,
                               OutputBranch = OutputBranch)
         
-        self.algos = flatAlgorithmList(self._sel)
+        self._algos = flatAlgorithmList(self._sel)
 
         _alg = sequencerType('Seq'+self.name(),
-                             Members = self.algos,
+                             Members = self._algos,
                              ModeOR = True,
                              ShortCircuit = False)
 
@@ -284,10 +284,10 @@ class SelectionSequence(SelSequence) :
                              PostSelectionAlgs)
 
         checkName(self.name())
-        self.gaudiseq = sequencerType(self.name(), Members = self.algos)
+        self._gaudiseq = sequencerType(self.name(), Members = self._algos)
 
     def sequence(self) :
-        return self.gaudiseq
+        return self._gaudiseq
 
     def clone(self, name, **args) :
         new_dict = update_dict_overlap(self.__ctor_dict__, args)
@@ -311,20 +311,23 @@ class MultiSelectionSequence(UniquelyNamedObject) :
                  sequencerType = GaudiSequencer) :
 
         UniquelyNamedObject.__init__(self, name)
-        self.sequences = list(Sequences)
-        self.gaudiseq = None
-        self.algos = []
-        for seq in self.sequences :
-            self.algos += seq.algos
+        self._sequences = list(Sequences)
+        self._gaudiseq = None
+        self._algos = []
+        for seq in self._sequences :
+            self._algos += seq.algorithms()
 
         checkName(self.name())
-        self.gaudiseq = sequencerType(self.name(),
+        self._gaudiseq = sequencerType(self.name(),
                                       ModeOR = True,
                                       ShortCircuit = False,
-                                      Members = [seq.sequence() for seq in self.sequences])
+                                      Members = [seq.sequence() for seq in self._sequences])
+
+    def algorithms(self) :
+        return list(self._algos)
         
     def outputLocations(self) :
-        return [seq.outputLocation() for seq in self.sequences]
+        return [seq.outputLocation() for seq in self._sequences]
 
     def sequence(self) :
-        return self.gaudiseq
+        return self._gaudiseq

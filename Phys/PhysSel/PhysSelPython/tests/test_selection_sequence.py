@@ -40,7 +40,7 @@ class SelectionTree(object) :
                        RequiredSelections = [sel100, sel101])
 
     selSeq = SelectionSequence('Seq06', TopSelection = sel200)
-    algs = selSeq.algos
+    algs = selSeq.algorithms()
     alg_names = [a.name() for a in algs]
 
 def test_instantiate_sequencer() :
@@ -71,7 +71,7 @@ def test_sequencer_algos() :
     seq = SelectionSequence('Seq01',
                             TopSelection = sel03)
 
-    seqAlgos = seq.algos
+    seqAlgos = seq.algorithms()
 
     assert len(seqAlgos) == 7
     for sel in [sel01, sel02, sel03] :
@@ -178,7 +178,7 @@ def test_clone_sequence() :
     for sel in [sel01, sel02]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
-    seqAlgos = seq.algos
+    seqAlgos = seq.algorithms()
 
     assert len(seqAlgos) == len(ref_algos)
     assert presels == seqAlgos[:len(presels)]
@@ -202,7 +202,7 @@ def test_order_line() :
                       RequiredSelections = [sel102])
 
     selSeq = SelectionSequence('Seq04', TopSelection = sel203)
-    algs = selSeq.algos
+    algs = selSeq.algorithms()
     assert [a.name() for a in algs] == ['0.0000', '0.0001', '1.0000', '1.0001', '2.0000']
 
 def test_order_tree() :
@@ -234,7 +234,7 @@ def test_remove_duplicates() :
                        RequiredSelections = [sel100, sel101])
 
     selSeq =  SelectionSequence('Seq07', TopSelection = sel200)
-    algs = selSeq.algos
+    algs = selSeq.algorithms()
     alg_names = [a.name() for a in algs]
 
     assert len(algs) == 7

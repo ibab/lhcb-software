@@ -36,7 +36,7 @@ def test_call_important_methods() :
     seq = MultiSelectionSequence('MultiSeq00y', Sequences = [seq00, seq01])
     assert seq.outputLocations() == ['Phys/Sel00/Particles',
                                      'Phys/Sel01/Particles']
-    algs = seq.algos
+    algs = seq.algorithms()
     seq = seq.sequence()
     
 def test_instantiate_multi_sequencer() :
@@ -107,14 +107,14 @@ def test_multi_sequencer_sequences() :
     assert multiSeq.outputLocations() == [selA.outputLocation(),
                                           selB.outputLocation()]
 
-    print 'algos in seqA', len(seqA.algos)
-    print 'algos in seqB', len(seqB.algos)
+    print 'algos in seqA', len(seqA.algorithms())
+    print 'algos in seqB', len(seqB.algorithms())
     
     seqAlgos = multiSeq.sequence().Members
     seqAlgosA = seqAlgos[0].Members
     seqAlgosB = seqAlgos[1].Members
-    assert len(seqAlgos) == len(multiSeq.sequences)
-    assert len(multiSeq.algos) == len(seqAlgosA)+len(seqAlgosB)
+    assert len(seqAlgos) == len(multiSeq._sequences)
+    assert len(multiSeq.algorithms()) == len(seqAlgosA)+len(seqAlgosB)
     
     ref_algosA = [presel0,
                   presel1,

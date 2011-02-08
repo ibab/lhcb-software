@@ -105,8 +105,8 @@ def test_merged_selection() :
     assert ms.name() == 'Merge00And01'
     assert ms.requiredSelections() == [] # should not export its required selections. Algos contained internally.
     assert ms.outputLocation() == 'Phys/Merge00And01/Particles'
-    assert [alg.name() for alg in ms.algos] == ['SelFilterPhys_Sel00_Particles', 'SelFilterPhys_Sel01_Particles', 'Merge00And01']
-    assert ms.algos == [sel00.algorithm(), sel01.algorithm(), ms._sel.algorithm()]
+    assert [alg.name() for alg in ms._algos] == ['SelFilterPhys_Sel00_Particles', 'SelFilterPhys_Sel01_Particles', 'Merge00And01']
+    assert ms._algos == [sel00.algorithm(), sel01.algorithm(), ms._sel.algorithm()]
 
 def test_clone_merged_selection() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
@@ -116,8 +116,8 @@ def test_clone_merged_selection() :
     assert msClone.name() == 'Merge00And01Clone'
     assert msClone.requiredSelections() == [] # should not export its required selections. Algos contained internally.
     assert msClone.outputLocation() == 'Phys/Merge00And01Clone/Particles'
-    assert [alg.name() for alg in msClone.algos] == ['SelFilterPhys_Sel00_Particles', 'SelFilterPhys_Sel01_Particles', 'Merge00And01Clone']
-    assert msClone.algos == [sel00.algorithm(), sel01.algorithm(), msClone._sel.algorithm()]
+    assert [alg.name() for alg in msClone._algos] == ['SelFilterPhys_Sel00_Particles', 'SelFilterPhys_Sel01_Particles', 'Merge00And01Clone']
+    assert msClone._algos == [sel00.algorithm(), sel01.algorithm(), msClone._sel.algorithm()]
 
 def test_merged_selection_with_existing_selection_name_raises() :
     
