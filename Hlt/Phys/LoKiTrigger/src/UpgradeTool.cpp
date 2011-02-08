@@ -168,13 +168,19 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
       std::back_inserter ( tracks ) ,
       m_config     ) ;
   //
-  if ( owner() ) // register all tracks in TES
-  {
+  for ( OUTPUT::const_iterator itr = out.begin() ; out.end() != itr ; ++itr ) 
+  { 
+    LHCb::Track* track = *itr  ;
+    /// invalid or already registered 
+    if ( 0 == track || 0 != track->parent() ) { continue ; }
+    /// force TES-registration if not done yet
+    if ( !owner()     ) 
+    { Warning ( "reco(): misconfiguration of 'Owner'-property! ignore" ) ; }
     if ( 0 == otracks ) 
-    { return Error ("reco(): LHCb::Track::Container* pointns to NULL!") ; }
-    for ( OUTPUT::const_iterator itr = out.begin() ; out.end() != itr ; ++itr ) 
-    { otracks->insert ( *itr ) ; }  
-  }
+    { return Error ("reco(): LHCb::Track::Container* points to NULL!") ; }
+    // finally: register 
+    otracks->insert ( *itr ) ; 
+  } 
   //
   return StatusCode::SUCCESS ;                                       // RETURN
 }

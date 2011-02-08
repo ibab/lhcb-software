@@ -5,6 +5,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-08 - Vanya Belyaev
+
+ - UpgradeTool:
+
+     force TES-registration of tracks not yer registered 
+
+
 ! 2011-02-08 - Gerhard Raven
  - remove Warning about 'reconstruction causes split candidates' as this
    the expected behaviour

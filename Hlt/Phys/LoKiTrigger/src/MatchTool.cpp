@@ -127,7 +127,8 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
     }        
     ///
     LHCb::Track* track = track3.release() ;
-    storedTracks ( address() )->insert ( track );
+    if ( 0 == track->parent() ) 
+    { storedTracks ( address() )->insert ( track ); }
     //
     // do not put "bad" match into stream 
     if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
