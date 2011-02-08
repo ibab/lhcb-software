@@ -10,6 +10,8 @@
 #define MDF_POSIXIO_H
 
 #include <cstdio>
+#include <cstring>
+
 struct stat;
 struct stat64;
 struct dirent;
@@ -24,7 +26,7 @@ struct DIR;
  */
 namespace LHCb    {
 
-  /**@class PosixIO 
+  /** @class PosixIO 
     *
     *
     * @author:  M.Frank
@@ -33,7 +35,7 @@ namespace LHCb    {
   class PosixIO  {
   public:
     enum { NONE, PARTIAL, COMPLETE };
-    PosixIO() : unbuffered(false), open(0) {}
+    PosixIO()  {  ::memset(this,0,sizeof(PosixIO));   }
 
     int  unbuffered;
     int           (*open)     (const char *filepath, int flags, unsigned int mode);

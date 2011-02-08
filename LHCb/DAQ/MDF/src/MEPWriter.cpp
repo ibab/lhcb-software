@@ -24,7 +24,7 @@ static void* extendBuffer(void* p, size_t len)   {
 
 /// Standard algorithm constructor
 MEPWriter::MEPWriter(const std::string& name, ISvcLocator* pSvcLocator)
-  : MDFWriter(name, pSvcLocator), m_evID(0)
+  : MDFWriter(name, pSvcLocator), m_evID(0), m_halfWindow(0)
 {
   declareProperty("PackingFactor",  m_packingFactor=20);
   declareProperty("MakeTAE",        m_makeTAE=false);

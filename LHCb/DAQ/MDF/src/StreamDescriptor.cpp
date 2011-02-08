@@ -300,33 +300,35 @@ void LHCb::StreamDescriptor::getInetConnection( const std::string& con,
 Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   Access result;
   std::string file, proto;
-  Networking::sockaddr_in sin;
   result.type = char(::toupper(specs[0]));
   switch(result.type) {
     case 'I':          //  DATA='ip://137.138.142.82:8000'
-      /*
-        struct sockaddr_in {
-        short   sin_family;
-        u_short sin_port;
-        struct  in_addr sin_addr;
-        char    sin_zero[8];
-        };
-      */
-      getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-      result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
-      if ( result.ioDesc > 0 )   {        
-        sin.sin_family      = AF_INET;
-        ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
-        int ret = Networking::connect(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin));
-        if ( ret == 0 )  {
-          result.m_write    = ip_send;
-          result.m_read     = ip_recv;
-          result.m_seek     = ip_seek;
-          return result;
-        }
-        Networking::closesocket(result.ioDesc);
-        result.ioDesc = -1;
-        break;
+      {
+	/*
+	  struct sockaddr_in {
+	  short   sin_family;
+	  u_short sin_port;
+	  struct  in_addr sin_addr;
+	  char    sin_zero[8];
+	  };
+	*/
+	Networking::sockaddr_in sin;
+	::memset(&sin,0,sizeof(sin));
+	getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
+	result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
+	if ( result.ioDesc > 0 )   {        
+	  sin.sin_family      = AF_INET;
+	  ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
+	  int ret = Networking::connect(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin));
+	  if ( ret == 0 )  {
+	    result.m_write    = ip_send;
+	    result.m_read     = ip_recv;
+	    result.m_seek     = ip_seek;
+	    return result;
+	  }
+	  Networking::closesocket(result.ioDesc);
+	  result.ioDesc = -1;
+	}
       }
       break;
     case 'F':          //  DATA='file://C:/Data/myfile.dat'

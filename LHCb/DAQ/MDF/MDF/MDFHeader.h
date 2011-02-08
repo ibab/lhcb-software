@@ -165,9 +165,6 @@ namespace LHCb    {
         default:
           throw std::runtime_error("Unknown MDF header type!");
       }
-      if ( (len%sizeof(int)) != 0 )  {
-        throw std::runtime_error("Invalid MDF header length!");
-      }
       return len;
     }
     /// Default constructor

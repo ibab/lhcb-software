@@ -49,7 +49,8 @@ static string RAWDATA_INPUT = "RAW";
 
 // Initializing constructor
 RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
-  : ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
+  : ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam), 
+    m_wrFlag(false), m_dataMgr(0), m_ioMgr(0)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",       m_compress=2);     // File compression
@@ -66,7 +67,8 @@ RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ)
 // Initializing constructor
 RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc) 
   : ConversionSvc(nam, loc, RAWDATA_StorageType), 
-    MDFIO(MDFIO::MDF_RECORDS, nam), m_dataMgr(0)
+    MDFIO(MDFIO::MDF_RECORDS, nam), 
+    m_wrFlag(false), m_dataMgr(0), m_ioMgr(0)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",       m_compress=2);     // File compression
@@ -235,7 +237,8 @@ RawDataCnvSvc::createObj(IOpaqueAddress* pA, DataObject*& refpObj) {
             }
             return error("Failed to access raw data from input:"+pA->par()[0]);
           }
-          return error("No valid object address present:"+pReg->identifier());
+          return error("No valid object address present:"+
+		       (pReg ? pReg->identifier() : pA->par()[0]));
 	}
         catch (exception& e) {
           return error(string("Exception:") + e.what());
@@ -248,8 +251,11 @@ RawDataCnvSvc::createObj(IOpaqueAddress* pA, DataObject*& refpObj) {
     }
     else  {
       RawDataAddress* rawAdd = dynamic_cast<RawDataAddress*>(pA);
-      rawAdd->setSvcType(ROOT_StorageType);
-      return dataProvider()->retrieveObject("/Event",refpObj);
+      if ( rawAdd ) {
+	rawAdd->setSvcType(ROOT_StorageType);
+	return dataProvider()->retrieveObject("/Event",refpObj);
+      }
+      return error("No valid object address present for object \"/Event\"");
     }
   }
   return StatusCode::FAILURE;

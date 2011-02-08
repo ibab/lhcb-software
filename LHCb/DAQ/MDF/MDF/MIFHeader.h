@@ -88,11 +88,13 @@ namespace LHCb    {
 
     /// Default constructor
     MIFHeader() : m_fid(0), m_type(0), m_size(0)    {
+      m_data[0] = 0;
     }
     /// Initializing constructor
     MIFHeader(unsigned int fid, unsigned char typ, unsigned char siz) 
       : m_fid(fid), m_type(typ), m_size(siz) 
     {
+      m_data[0] = 0;
     }
     /// Default destructor
     ~MIFHeader()  {}

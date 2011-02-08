@@ -56,7 +56,7 @@ namespace LHCb {
       /// Fast functions: seek file location
       longlong (*m_seek) (const Access& con, long long offset, int where);
     public:
-      Access() : ioDesc(-1), ioFuncs(0), m_read(0), m_write(0), m_seek(0){}      
+      Access() : ioDesc(-1), type(0), ioFuncs(0), m_read(0), m_write(0), m_seek(0){}      
       bool write(const void* data, int len)  const      
       { return (*m_write)(*this,data, len);               }
       int  read(void* data, int len)  const             

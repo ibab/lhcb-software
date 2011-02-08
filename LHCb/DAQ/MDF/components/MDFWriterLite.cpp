@@ -23,7 +23,7 @@ using namespace Gaudi;
 
 /// Standard algorithm constructor
 MDFWriterLite::MDFWriterLite(const string& nam, ISvcLocator* pSvc)
-: MDFWriter(nam, pSvc)
+  : MDFWriter(nam, pSvc), m_lastOpen(0), m_eventsWritten(0)
 {
   declareProperty("MaxFileSizeKB",  m_maxFileSizeKB=2000000);
   declareProperty("MaxFileEvents",  m_maxFileEvents=1000000);

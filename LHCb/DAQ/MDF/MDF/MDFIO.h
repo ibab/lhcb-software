@@ -108,8 +108,9 @@ namespace LHCb {
 
     /// Initializing constructor
     MDFIO(Writer_t typ, const std::string& nam) 
-      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), m_forceTAE(false),
-      m_writeErrors(0), m_writeActions(0), m_spaceErrors(0), m_spaceActions(0)
+      : m_msgSvc(0), m_evtSvc(0), m_dataType(typ), m_parent(nam), m_catalog(0), 
+      m_ignoreChecksum(false), m_forceTAE(false), m_writeErrors(0), 
+      m_writeActions(0), m_spaceErrors(0), m_spaceActions(0)
       {
       }
 

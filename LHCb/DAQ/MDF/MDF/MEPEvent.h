@@ -38,9 +38,9 @@ namespace LHCb  {
 
   public:
     /// Defautl constructor
-    MEPEvent() : m_size(0)               {                                    }
+    MEPEvent() : m_size(0)               {  m_frags[0]=m_frags[1]=m_frags[2]=m_frags[3]=0; }
     /// Initializing constructor
-    MEPEvent(int siz) : m_size(siz)      {                                    }
+    MEPEvent(int siz) : m_size(siz)      {  m_frags[0]=m_frags[1]=m_frags[2]=m_frags[3]=0; }
     /// Length of the fragment
     size_t               size()    const {  return m_size;                    }
     /// Set event ID of the fragment
