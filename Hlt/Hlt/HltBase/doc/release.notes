@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 !========================== HltBase v10r4 2011-02-07 ===================
+! 2011-02-08 - Gerhard Raven
+ - add SmartRef<Hlt::Stage> to Reflex dictionary 
+
 ! 2011-02-07 - Vanya Belyaev
 
  - add SmartRefVector<Hlt::Stage> to Reflex dictionary 

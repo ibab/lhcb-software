@@ -34,6 +34,7 @@ namespace
     Hlt::Stage::Range            m_s_4 ;
     Hlt::Stage::Selection        m_s_5 ;
     SmartRefVector<Hlt::Stage>   m_s_6 ;
+    SmartRef<Hlt::Stage>         m_s_7 ;
     
     Hlt::Candidate::Vector       m_c_1 ;
     Hlt::Candidate::ConstVector  m_c_2 ;
