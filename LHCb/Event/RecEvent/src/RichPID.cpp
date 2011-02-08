@@ -22,7 +22,7 @@ std::string LHCb::RichPID::pidType() const
 {
   std::string hist;
   int cnt = 0;
-  if ( this->offlineGlobal() ) { hist+=(cnt>0?"+":""); hist+="OfflineGlobal"; ++cnt; }
+  if ( this->offlineGlobal() ) {                       hist+="OfflineGlobal"; ++cnt; }
   if ( this->offlineLocal()  ) { hist+=(cnt>0?"+":""); hist+="OfflineLocal";  ++cnt; }
   if ( this->ringRefit()     ) { hist+=(cnt>0?"+":""); hist+="RingRefit";     ++cnt; }
   if ( this->hltGlobal()     ) { hist+=(cnt>0?"+":""); hist+="HltGlobal";     ++cnt; }
