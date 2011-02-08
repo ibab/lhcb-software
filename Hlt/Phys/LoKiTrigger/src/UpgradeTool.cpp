@@ -496,9 +496,6 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   }
   else 
   {
-    //
-    Warning ( "Reconstruction causes split of candidate" ) ;
-    //
     /// start new candidates 
     for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ;
           out.end() != iout ; ++iout ) 
