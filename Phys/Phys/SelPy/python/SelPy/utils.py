@@ -118,12 +118,10 @@ def connectToRequiredSelections(selection, inputSetter) :
     _outputLocations = [sel.outputLocation() for sel in selection.requiredSelections()]
     _outputLocations = filter(lambda s : s != '', _outputLocations)
     configurable = selection.algorithm()
-    print 'XXX Testling locations for algo', configurable, 'setter', inputSetter, configurable.InputLocations
+
     if inputSetter and hasattr(configurable, inputSetter) :
-        print 'Compare locations'
         _inputLocations = getattr(configurable, inputSetter)
         if len(_inputLocations) != 0 :
-            print 'Comparing', _outputLocations, 'and', _inputLocations
             if not compatibleSequences(_outputLocations,
                                        _inputLocations) :
                 raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
