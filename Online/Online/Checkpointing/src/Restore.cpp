@@ -556,7 +556,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) {
   void* curr_break = mtcp_sys_brk(0);
   // Checkpoint image
-  mtcp_output(MTCP_INFO,"checkpoint: SysInfo:       %p -> %p Size:%d\n",&s,s.sysInfo,sizeof(SysInfo));
+  mtcp_output(MTCP_INFO,"checkpoint: SysInfo:       %p -> %p Size:%d\n",&s,s.sysInfo,int(sizeof(SysInfo)));
   mtcp_output(MTCP_INFO,"checkpoint: Checkpoint[%d]:%s \n",s.checkpointFD,s.checkpointFile);
   mtcp_output(MTCP_INFO,"checkpoint: dto.   begin:  %p end    %p [%X bytes]\n",
 	      s.chkptStart,s.chkptStart+s.chkptSize,s.chkptSize);
