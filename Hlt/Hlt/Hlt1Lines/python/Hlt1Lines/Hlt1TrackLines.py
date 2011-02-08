@@ -118,6 +118,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             >>  FitTrack
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
                   ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+            >>  execute( 'MuonRec' )
             >>  TrFILTER( 'IsMuonTool' )
             >> SINK( 'Hlt1%(name)sDecision' )
             >> ~TC_EMPTY
