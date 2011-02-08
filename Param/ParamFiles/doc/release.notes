@@ -5,6 +5,10 @@
                 simulation and digitization
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
+!======================= ParamFiles v8r4 2011-02-08 ==========================
+! 2011-02-08 - Gerhard Raven for Michael Williams
+ - add Hlt2Topo{2,3,4}Body_BDTParams_v1r0.txt for use in the Hlt2 topological
+   trigger lines
 
 !======================= ParamFiles v8r3 2010-08-26 ==========================
 ! 2010-08-17 - Olivier Deschamps for F. Machefert
