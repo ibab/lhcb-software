@@ -71,7 +71,7 @@ StatusCode CaloDigitFilterAlg::execute() {
     if( !m_filter->cleanDigits("Prs",offset(m_prs),mask(m_prs)))
       Warning("Prs digit filtering failed",StatusCode::SUCCESS).ignore();
   
-  if( mask(m_ecal) || offset(m_ecal) )
+  if( mask(m_spd) || offset(m_spd) )
     if( !m_filter->cleanDigits("Spd",offset(m_spd),mask(m_spd)))
       Warning("Spd digit filtering failed",StatusCode::SUCCESS).ignore();
 

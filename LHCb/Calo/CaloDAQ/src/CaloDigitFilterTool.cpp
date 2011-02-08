@@ -80,6 +80,7 @@ StatusCode CaloDigitFilterTool::initialize() {
 
 //-----------------------
 bool CaloDigitFilterTool::setDet(std::string det){
+  if(m_caloName == det)return true;
   m_caloName = LHCb::CaloAlgUtils::CaloNameFromAlg(det); 
   m_calo = getDet<DeCalorimeter>( LHCb::CaloAlgUtils::DeCaloLocation( m_caloName ) );
   if(NULL == m_calo)return false;
