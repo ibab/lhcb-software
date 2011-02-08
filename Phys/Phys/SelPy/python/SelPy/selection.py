@@ -228,13 +228,16 @@ class SelSequence(UniquelyNamedObject) :
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
-        self.algos = list(EventPreSelector)
+        self._algos = list(EventPreSelector)
         self._topSelection = TopSelection
-        self.algos += flatAlgorithmList(TopSelection)
-        self.algos += PostSelectionAlgs
+        self._algos += flatAlgorithmList(TopSelection)
+        self._algos += PostSelectionAlgs
 
     def algorithm(self) :
         return self._topSelection.algorithm()
+
+    def algorithms(self) :
+        return list(self._algos)
         
     def outputLocation(self) :
         return self._topSelection.outputLocation()
@@ -250,7 +253,7 @@ class SelSequence(UniquelyNamedObject) :
         return self._topSelection
 
     def __getitem__(self, index) :
-        return self.algos[index]
+        return self._algos[index]
     
     
 def flatAlgorithmList(selection) :

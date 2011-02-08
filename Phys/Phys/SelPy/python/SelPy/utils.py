@@ -45,7 +45,7 @@ class SelectionBase(object) :
         return self._outputLocation
 
     def requiredSelections(self) :
-        return self._requiredSelections
+        return list(self._requiredSelections)
     
 def treeSelectionList(selection) :
     """
