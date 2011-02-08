@@ -1,12 +1,6 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
-from Gaudi.Configuration import *
-from Configurables import HltANNSvc, FilterDesktop, CombineParticles
-from Configurables import LoKi__VoidFilter as VoidFilter
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-from HltTracking.HltPVs import PV3D
 
 
 # Basic File: Htl2TopologicalLines in v6r0p1 of Hlt2/Hlt2Lines
@@ -72,6 +66,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
 
     def __updateHltANNSvc(self,line):
         '''Updates the HltANNSvc after a new line has been constructed.'''
+        from Configurables import HltANNSvc
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update({lineName:id})
@@ -87,6 +82,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         if not l0filter:
             l0filter = None
         #create Hlt line
+        from HltLine.HltLine import Hlt2Line
         Hlt2Line(lineName, L0DU=l0filter, HLT=hltfilter, prescale=self.prescale,
                  postscale=self.postscale,algos=Algos) 
         self.__updateHltANNSvc(lineName)
@@ -102,6 +98,8 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
        # loose DIRA for n tracks
         momCuts = "(BPVDIRA > %s)" % (props['DIRA_LOOSE_MIN'])
         momCuts += "& (BPVVDCHI2 > %s)" % (props['BPVVDCHI2_MIN'])
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
         combo = Hlt2Member(CombineParticles, 'Combine',
                            DecayDescriptors=decayDesc,
                            InputLocations=inputSeq, 
@@ -143,6 +141,8 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         if extraCuts and extraCuts.has_key('MotherCut') :
             momCuts = extraCuts['MotherCut'] + ' & ' + momCuts 
         # put it all together
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
         combo = Hlt2Member(CombineParticles, 'Combine',
                            DecayDescriptors=decayDesc,
                            InputLocations=inputSeq, 
@@ -188,6 +188,8 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
                 % (pid,props['MIN_TRCHI2DOF_MAX'])
         if extraCode: cuts = cuts + ' & ' + extraCode
 
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         _filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
                             Code=cuts,Preambulo=preambulo)
         return bindMembers(name, inputSeq+[_filter])
@@ -215,9 +217,12 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
         cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
         #create filter
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
+        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
 
     def __inputMuonHlt1Filter(self, name, inputSeq):
@@ -239,9 +244,12 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
         cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
         #create filter
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
+        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
 
     def __inputParticleFilter(self, name, inputSeq):
@@ -256,9 +264,12 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
         cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
         #create filter
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
+        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[_filter])
 
     def __buildNBodySeqs(self,lineName,_inputMuons,_inputKaons):

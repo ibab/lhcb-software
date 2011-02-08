@@ -9,7 +9,6 @@ __version__ = '$Revision: 1.22 $'
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-from Configurables import HltANNSvc
 from HltLine.HltLine import Hlt2Line
 
 
@@ -76,6 +75,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         Wrapper for updating the HltANNSvc after a new line has been
         constructed.  This should eventually become obsolete.
         """
+        from Configurables import HltANNSvc
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { lineName : id } )
