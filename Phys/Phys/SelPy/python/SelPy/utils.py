@@ -24,18 +24,34 @@ class NamedObject(object) :
         return self._name
 
 class UniquelyNamedObject(NamedObject) :
-    __used_names__ = []
+    __used_names = []
     def __init__(self, name) :
-        if name in UniquelyNamedObject.__used_names__ :
+        if name in UniquelyNamedObject.__used_names :
             raise NameError('Name ' + name + ' has already been used. Pick a new one.')
         NamedObject.__init__(self, name)
-        UniquelyNamedObject.__used_names__.append(name)
+        UniquelyNamedObject.__used_names.append(name)
 
+class SelectionBase(object) :
+
+    def __init__(self, algorithm, outputLocation, requiredSelections) :
+        self._algorithm = algorithm
+        self._outputLocation = outputLocation
+        self._requiredSelections = list(requiredSelections)
+
+    def algorithm(self) :
+        return self._algorithm
+
+    def outputLocation(self) :
+        return self._outputLocation
+
+    def requiredSelections(self) :
+        return self._requiredSelections
+    
 def treeSelectionList(selection) :
     """
     Return a nested list with all the selections needed by a selection, including itself.
     """
-    _selList = [treeSelectionList(sel) for sel in selection.requiredSelections] + [selection]
+    _selList = [treeSelectionList(sel) for sel in selection.requiredSelections()] + [selection]
     return _selList
 
 def isIterable(obj) :
@@ -99,7 +115,7 @@ def connectToRequiredSelections(selection, inputSetter) :
     """
     Make selection get input data from its requiredSelections via an inputSetter method (str).
     """
-    _outputLocations = [sel.outputLocation() for sel in selection.requiredSelections]
+    _outputLocations = [sel.outputLocation() for sel in selection.requiredSelections()]
     _outputLocations = filter(lambda s : s != '', _outputLocations)
     configurable = selection.algorithm()
     print 'XXX Testling locations for algo', configurable, 'setter', inputSetter, configurable.InputLocations

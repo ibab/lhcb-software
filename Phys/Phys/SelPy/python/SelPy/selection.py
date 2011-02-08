@@ -24,11 +24,12 @@ from SelPy.utils import (flatSelectionList,
                          connectToRequiredSelections,
                          NamedObject,
                          UniquelyNamedObject,
+                         SelectionBase,
                          NameError,
                          NonEmptyInputLocations,
                          IncompatibleInputLocations)
 
-class AutomaticData(NamedObject) :
+class AutomaticData(NamedObject, SelectionBase) :
     """
     Simple wrapper for a data location. To be used for locations
     that are guaranteed to be populated. This could be a location
@@ -52,16 +53,13 @@ class AutomaticData(NamedObject) :
                   Location) :
 
         NamedObject.__init__(self, Location.replace('/', '_'))
-        self._location = Location
-        self.requiredSelections = []
+        SelectionBase.__init__(self,
+                               algorithm = None,
+                               outputLocation=Location,
+                               requiredSelections = [] )
 
-    def algorithm(self) :
-        return None
 
-    def outputLocation(self) :
-        return self._location
-
-class Selection(UniquelyNamedObject) :
+class Selection(UniquelyNamedObject, SelectionBase) :
     """
     Wrapper class for offline selection. Takes a top selection
     Configurable Generator plus a list of required selection configurables.
@@ -111,32 +109,30 @@ class Selection(UniquelyNamedObject) :
         self.__ctor_dict__ = dict(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
+
+        _outputLocation = self.name()
+        if OutputBranch != '' :            
+            _outputLocation = OutputBranch + '/' + self.name()
+        if Extension != '' :
+            _outputLocation = _outputLocation + '/' + Extension
+        _outputLocation.replace('//','/')
+        if _outputLocation.endswith('/') :
+            _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
         
-        self._alg = ConfGenerator( self.name() ) # get the configurable.
-        self.requiredSelections = list(RequiredSelections)
+
+        SelectionBase.__init__(self,
+                               algorithm = ConfGenerator( self.name() ) ,
+                               outputLocation = _outputLocation,
+                               requiredSelections = RequiredSelections )
 
         connectToRequiredSelections(self, InputDataSetter)
-
-        self._outputLocation = self.name()
-        if OutputBranch != '' :            
-            self._outputLocation = OutputBranch + '/' + self.name()
-        if Extension != '' :
-            self._outputLocation = self._outputLocation + '/' + Extension
-        self._outputLocation.replace('//','/')
-        if self._outputLocation.endswith('/') :
-            self._outputLocation = self._outputLocation[:self._outputLocation.rfind('/')]
-            
-    def algorithm(self) :
-        return self._alg
-
-    def outputLocation(self) :
-        return self._outputLocation
 
     def clone(self, name, **args) :
         new_dict = update_dict_overlap(self.__ctor_dict__, args)
         return Selection(name, **new_dict)
 
-class EventSelection(UniquelyNamedObject) :
+
+class EventSelection(UniquelyNamedObject, SelectionBase) :
     """
     Selection wrapper class for event selection algorithm configurable
     generator.
@@ -156,16 +152,13 @@ class EventSelection(UniquelyNamedObject) :
                  ConfGenerator ) :
 
         UniquelyNamedObject.__init__(self, name)
-        self._alg = ConfGenerator(self.name())
-        self.requiredSelections = []    
+        SelectionBase.__init__(self,
+                               algorithm =ConfGenerator( self.name() ) ,
+                               outputLocation='',
+                               requiredSelections = [] )
 
-    def algorithm(self) :
-        return self._alg
 
-    def outputLocation(self) :
-        return ''
-
-class PassThroughSelection(UniquelyNamedObject) :
+class PassThroughSelection(UniquelyNamedObject, SelectionBase) :
     """
     Selection wrapper class for event selection algorithm Configurable generator.
     Algorithm produces no output data and is assumed to be correctly
@@ -187,17 +180,12 @@ class PassThroughSelection(UniquelyNamedObject) :
                  InputDataSetter = None ) :
 
         UniquelyNamedObject.__init__(self, name)
-        self._alg = ConfGenerator(self.name())
-        self.requiredSelection  = RequiredSelection 
-        self.requiredSelections = [RequiredSelection]
+        SelectionBase.__init__(self,
+                               algorithm =ConfGenerator( self.name() ) ,
+                               outputLocation=RequiredSelection.outputLocation(),
+                               requiredSelections = [RequiredSelection] )
 
         connectToRequiredSelections(self, InputDataSetter)
-
-    def algorithm(self) :
-        return self._alg
-
-    def outputLocation(self) :
-        return self.requiredSelection.outputLocation()
 
 class SelSequence(UniquelyNamedObject) :
     """

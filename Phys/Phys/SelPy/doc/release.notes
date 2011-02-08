@@ -4,6 +4,12 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-02-08 - Juan Palacios
+ - Introduce utils.SelectionBase class, handling algorithm Configurable,
+   output location and required selection list. All selections in selection
+   module inherit from this.
+ - Increase to v3r2.
+
 !======================== SelPy v3r1 2011-02-07 ==============================
 
 ! 2011-02-07 - Juan Palacios
