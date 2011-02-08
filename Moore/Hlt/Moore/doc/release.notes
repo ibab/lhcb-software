@@ -3,6 +3,10 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+!========================== Moore v11r4 2011-02-08 ===================
+! 2011-02-08 - Gerhard Raven
+ - fix setting of online databases
+
 !========================== Moore v11r3 2011-01-30 ===================
 ! 2011-01-30 - Gerhard Raven
  - tweak online installation procedure
