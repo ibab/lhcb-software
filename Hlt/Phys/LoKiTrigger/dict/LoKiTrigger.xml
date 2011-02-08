@@ -89,7 +89,7 @@
   <class name    = "LoKi::Hlt1::VxMaker"     />
   <class name    = "LoKi::Hlt1::VxMaker2"    />
   <class name    = "LoKi::Hlt1::VxMaker3"    />
-  
+  <class name    = "LoKi::Hlt1::VxMaker4"    />
 
   <class name = "LoKi::Tracks::TrFunction"   />
   <class name = "LoKi::Hlt1::TrackFunction"  />
