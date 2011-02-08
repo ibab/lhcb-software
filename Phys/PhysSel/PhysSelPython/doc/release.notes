@@ -5,6 +5,14 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2011-02-08 - Juan Palacios
+ - AutomaticData, VoidEventSelection, MergedSelection now inherit from
+   SelPy.utils.SelectionBase
+ - Selections now have method requiredSelections() instead of data member
+   of the same name.
+ - Increase to v9r0.
+ - REQUIRES Phys/SelPy v3r2 OR HIGHER!!!
+
 !==================== PhysSel/PhysSelPython v8r0 2011-02-07 ================
 
 ! 2011-02-07 - Juan Palacios
