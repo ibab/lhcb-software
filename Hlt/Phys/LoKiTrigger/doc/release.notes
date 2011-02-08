@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-08 - Roel Aaij
+ - Identified and fixed a flaw in the logic of the use of IsAncestor. Fixed
+   for single track, needs to be checked for multitracks.
+   Looking in the past to be fixed.
+
 ! 2011-02-08 - Vanya Belyaev
 
  - UpgradeTool:

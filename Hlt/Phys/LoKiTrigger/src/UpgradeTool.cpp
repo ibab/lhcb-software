@@ -4,7 +4,12 @@
 // ============================================================================
 // STD & STL 
 // ============================================================================
+#include <iostream>
 #include <climits>
+// ============================================================================
+// boost
+// ============================================================================
+#include <boost/foreach.hpp>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -83,27 +88,27 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-11-13
    */
-  struct IsAncestor : public std::unary_function<const LHCb::Track*,bool>
+  struct ThisOrAncestor : public std::unary_function<const LHCb::Track*,bool>
   {
     // ========================================================================
     /// constructor form the seed 
-    IsAncestor ( const LHCb::Track* seed ) : m_seed ( seed ) {}
+    ThisOrAncestor ( const LHCb::Track* seed ) : m_seed ( seed ) {}
     // ========================================================================
     bool operator() ( const LHCb::Track* track ) 
     { 
       if ( 0 == track ) { return false ; }
       typedef SmartRefVector<LHCb::Track> Ancestors ;
-      const Ancestors& ancestors = track->ancestors() ;
-      return ancestors.end() != std::find_if
-        ( ancestors . begin () , 
-          ancestors . end   () , 
-          std::bind2nd( std::equal_to<const LHCb::Track*>() , m_seed ) )  ;
+      const Ancestors& ancestors = m_seed->ancestors() ;
+      return ( track == m_seed ) || ancestors.end() != std::find_if
+         ( ancestors.begin () , 
+           ancestors.end   () , 
+           std::bind2nd( std::equal_to<const LHCb::Track*>() , track ) )  ;
     }
     // ========================================================================
   private:
     // ========================================================================
     /// the default constructor is disabled 
-    IsAncestor() ;                       // the defautl constructor is disabled 
+    ThisOrAncestor() ;                       // the defautl constructor is disabled 
     // ========================================================================
   private:
     // ========================================================================
@@ -128,10 +133,22 @@ size_t LoKi::Hlt1::UpgradeTool::find
     Error ("find(): LHCb::Track::Container* points to NULL!") ;
     return 0 ;
   }
-  LoKi::Algs::copy_if 
-    ( otracks -> begin () , 
-      otracks -> end   () , 
-      std::back_inserter ( tracks ) , IsAncestor ( seed ) ) ;
+  ThisOrAncestor ancestor( seed );
+  BOOST_FOREACH( const LHCb::Track* track, *otracks ) {
+     if ( ancestor( track ) ) {
+        // std::cout << m_config.trTool() << ", found already upgraded track " << track 
+        //           << " for seed " << seed << std::endl;
+        tracks.push_back( track );
+     }
+  }
+  // if ( tracks.size() == ntracks ) {
+  //    std::cout << m_config.trTool() << ", could not find already upgraded"
+  //       " track for seed " << seed << std::endl;
+  // }
+  // LoKi::Algs::copy_if 
+  //   ( otracks -> begin () , 
+  //     otracks -> end   () , 
+  //     std::back_inserter ( tracks ) , ancestor  ) ;
   // return 
   return tracks.size() - ntracks ;
 }
@@ -179,6 +196,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
     if ( 0 == otracks ) 
     { return Error ("reco(): LHCb::Track::Container* points to NULL!") ; }
     // finally: register 
+    // std::cout << m_config.trTool() << ", upgraded " << seed
+    //           << " to " << *itr << std::endl;
     otracks->insert ( *itr ) ; 
   } 
   //
@@ -256,6 +275,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
   // not reconstructed yet ?
   if ( -1 == seed->info ( recoID () , -1 ) ) 
   {
+    // std::cout << m_config.trTool() << ", upgrading seed " << seed << std::endl;
     // recontruct it!!!
     StatusCode sc = reco ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
@@ -475,11 +495,11 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   { return Error ( "Error from iupgrade, skip track", sc ) ; }     // RETURN 
   //
   if      ( out.empty()     ) {  /* continue */ ; }                // CONTINUE 
-  else if ( 1 == out.size() && out[0] == seed ) 
+  else if ( 1 == out.size() && ThisOrAncestor( seed )( out[0] ) ) 
   {
     // no actual upgrade, just update the history 
-    Hlt::Stage* s = const_cast<Hlt::Stage*> ( stage ) ;
-    Hlt::Stage::Lock lock ( s , upgradeTool() ) ;
+    // Hlt::Stage* s = const_cast<Hlt::Stage*> ( stage ) ;
+    // Hlt::Stage::Lock lock ( s , upgradeTool() ) ;
     // lock.addToHistory ( myName() ) ;
     //
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
