@@ -58,7 +58,8 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type,
    declareProperty( "MagnetPlaneParB", m_zb = 5.203 * Gaudi::Units::m );
 
    declareProperty( "MaxMissedHits", m_maxMissed = 2 );
-
+   setProduceHistos(false); // yes, this indeed changes the default ;-)
+   
    m_order = list_of( 3 )( 4 )( 5 )( 2 );
 }
 
@@ -103,11 +104,11 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
 
    unsigned int seedStation = m_order[ 0 ] - 1;
    findSeeds( veloSeed.get(), seedStation );
-   plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
+   if (produceHistos()) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
    BOOST_FOREACH( Candidate* seed, m_seeds ) {
       findCandidates( seed );
-      plot( m_candidates.size(), "NCandidatesPerSeed", -0.5, 50.5, 51 );
+      if (produceHistos()) plot( m_candidates.size(), "NCandidatesPerSeed", -0.5, 50.5, 51 );
    }
 
    // Find the best candidate and add its hits to the seed.
@@ -256,8 +257,7 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
             c->addHit( *first );
          }         
          // Merge new and existing candidates.
-         std::copy( tmpCandidates.begin(), tmpCandidates.end(),
-                    std::back_inserter( m_candidates ) );
+         m_candidates.insert(m_candidates.end(), tmpCandidates.begin(), tmpCandidates.end() );
       } else {
          ++nMissed ;
       }
@@ -272,7 +272,7 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
    // If a new candidate is good, store it
    BOOST_FOREACH( Candidate* candidate, m_candidates ) {
       fitCandidate( candidate );
-      plot( candidate->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+      if (produceHistos()) plot( candidate->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
       if ( candidate->chi2DoF() < m_maxChi2DoFX ) {
          m_goodCandidates.push_back( candidate );
       } else {

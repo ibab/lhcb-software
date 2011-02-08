@@ -3,11 +3,14 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+!========================== Hlt1Muons v1r0 2011-02-07 ==================
+! 2011-02-08 - Gerhard Raven
+ - use vector.insert instead of std::copy
+ - only use plot if HistoProduce is True, make sure default is False
 
 ! 2011-02-08 - Roel Aaij
  - Added explicit deletes for objects created on the head.
 
-!========================== Hlt1Muons v1r0 2011-02-07 ==================
 
 ! 2011-02-03 - Roel Aaij
  - Removed include and usage of removed OutputTool
