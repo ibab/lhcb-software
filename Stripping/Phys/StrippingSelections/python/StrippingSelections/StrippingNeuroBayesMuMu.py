@@ -5,19 +5,26 @@ __version__ = '$Revision: 1.3 $'
 """
 Mu Mu stripping with NeuroBayes
 """
+
+__author__ = ['Ulrich Kerzel']
+__date__ = '04/02/2011'
+__version__ = '$Revision: 1.1 $'
+
+__all__ = ('StrippingNeuroBayesMuMuConf',
+           'makeMuMu')
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
-import GaudiKernel.SystemOfUnits as Units
-from GaudiKernel.PhysicalConstants import c_light
-from PhysSelPython.Wrappers import SelectionSequence
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
 from Configurables import StrippingNBMuMu
 
 
 
-class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
+class StrippingNeuroBayesMuMuConf(LineBuilder):
     """
     Stripping selection for resonances decaying to two muons based
     on the NeuroBayes neural network package.
@@ -28,118 +35,122 @@ class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
          transform via (-1+cut)*0.5
     """
     
-    __slots__ = { 
-        'TrackChi2'               :    5.0
-        , 'SpdMult'               :99999.0
-        , 'JPsiMassMin'           :    3.04 # GeV
-        , 'JPsiMassMax'           :    3.14 # GeV
-        , 'VertexChi2'            :   25.0
-        , 'NBCutJPsi'             :    0.7
-        , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
-        , 'NBCutMuMu'             :    0.95
-        , 'ExpertiseMuMu'         : 'Muon/mumu_net_full.nb'        
-        , 'NetworkVersion'        : "TuneSep2010"
-        }
+    __configuration_keys__ = ( 
+        'trackChi2'           #    :    5.0
+        , 'MuMuMassMin'
+        , 'MuMuMassMax'
+        , 'JPsiMassMin'       #    :    3.04 # GeV
+        , 'JPsiMassMax'       #    :    3.14 # GeV
+        , 'vertexChi2'        #    :   25.0
+        , 'NBCutJPsi'         #    :    0.7
+        , 'NBCutMuMu'         #    :    0.95
+        , 'ExpertiseJPsi'     #    : 'Muon/mumu_net_noip.nb'
+        , 'ExpertiseMuMu'     #    : 'Muon/mumu_net_full.nb'        
+        , 'NBVersionJPsi'     #    : "TuneSep2010"
+        , 'NBVersionMuMu'
+        , 'PrescaleMuMu'
+        , 'PostscaleMuMu'
+        , 'PrescaleJPsi'
+        , 'PostscaleJPsi'
+        )
 
 
-    def JPsi (self ):
-        jPsiCand = CombineParticles("jPsiCand")
-        jPsiCand.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-        jPsiCand.DaughtersCuts   = {"mu+" : "(TRCHI2DOF< %(TrackChi2)s ) & (ISMUON)" % self.getProps() }
-        jPsiCand.CombinationCut  = "(AM> %(JPsiMassMin)s *GeV) & (AM< %(JPsiMassMax)s*GeV)" % self.getProps() 
-        jPsiCand.MotherCut       = "(VFASPF(VCHI2/VDOF)< %(VertexChi2)s) &(MM > %(JPsiMassMin)s *GeV) & (MM < %(JPsiMassMax)s*GeV)" % self.getProps()
 
-        muons =  DataOnDemand(Location = 'Phys/StdLooseMuons' )
+    def __init__(self, name, config) :
 
-        jPsiSel = Selection("jPsiSel" ,
-                            Algorithm = jPsiCand,
-                            RequiredSelections = [ muons ]
-                            )
+        LineBuilder.__init__(self, name, config)
 
-        return jPsiSel
+        self.SelMuMu           = self.MuMu(name+"MuMu",
+                                           massMin    = config['MuMuMassMin'],
+                                           massMax    = config['MuMuMassMax'],
+                                           trackChi2  = config['trackChi2'],
+                                           vertexChi2 = config['vertexChi2']
+                                           )
+        
+        self.SelJPsi           = self.MuMu(name+"JPsi",
+                                           massMin = config['JPsiMassMin'],
+                                           massMax = config['JPsiMassMax'],
+                                           trackChi2  = config['trackChi2'],
+                                           vertexChi2 = config['vertexChi2']
+                                           )
 
-    def MuMu (self ):
-        mumuCand = CombineParticles("mumuCand")
-        mumuCand.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-        mumuCand.DaughtersCuts   = {"mu+" : "(TRCHI2DOF< %(TrackChi2)s ) & (ISMUON)" % self.getProps() }
-        mumuCand.CombinationCut  = "AM>0"  
-        mumuCand.MotherCut       = "(VFASPF(VCHI2/VDOF)< %(VertexChi2)s)" % self.getProps()
+        self.SelMuMuNB         = self.MuMuNB(name+"MuMuNB",
+                                             self.SelMuMu  ,
+                                             Expertise     = config['ExpertiseMuMu'],
+                                             NBVersion     = config['NBVersionMuMu'],
+                                             NBCut         = config['NBCutMuMu'],
+                                             massMin       = config['MuMuMassMin'],
+                                             massMax       = config['MuMuMassMax'],
+                                             nBins         = 120,
+                                             doPlot        = False)
 
-        muons =  DataOnDemand(Location = 'Phys/StdLooseMuons' )
+        self.SelJPsiNB         = self.MuMuNB(name+"JPsiNB",
+                                             self.SelJPsi  ,
+                                             Expertise     = config['ExpertiseJPsi'],
+                                             NBVersion     = config['NBVersionJPsi'],
+                                             NBCut         = config['NBCutJPsi'],
+                                             massMin       = config['JPsiMassMin'],
+                                             massMax       = config['JPsiMassMax'],
+                                             nBins         = 120,
+                                             doPlot        = False)
 
-        mumuSel = Selection("mumuSel" ,
-                            Algorithm = mumuCand,
-                            RequiredSelections = [ muons ]
-                            )
+        self.mumuLine          = StrippingLine(name+"MuMuNBLine",
+                                               prescale  = config['PrescaleMuMu'],
+                                               postscale = config['PostscaleMuMu'],
+                                               selection = self.SelMuMuNB
+                                               )
+        
+        self.jPsiLine          = StrippingLine(name+"JPsiNBLine",
+                                               prescale  = config['PrescaleJPsi'],
+                                               postscale = config['PostscaleJPsi'],
+                                               selection = self.SelJPsiNB
+                                               )
+                
+        self.registerLine(self.mumuLine)
+        self.registerLine(self.jPsiLine)
 
-        return mumuSel
 
+    #
+    # create candidates
+    #
+    def MuMu( self, Name, massMin, massMax, trackChi2, vertexChi2):
+        from GaudiKernel.SystemOfUnits import GeV
 
-    def NeuroBayesStrip( self, id, RequiredSel, Expertise, NeuroBayesCut, min, max, nBins):
+        muonCut   = "(TRCHI2DOF< %(trackChi2)s ) & (ISMUON)"                                                 % locals()
+        combCut   = "(AM> %(massMin)s *GeV) & (AM< %(massMax)s*GeV)"                                         % locals()
+        motherCut = "(VFASPF(VCHI2/VDOF)< %(vertexChi2)s) &(MM > %(massMin)s *GeV) & (MM < %(massMax)s*GeV)" % locals()
+        
+        from StandardParticles import StdLooseMuons
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        muonFilter = FilterDesktop(Code = muonCut)
+        myMuons    = Selection(Name+'_MuonSel', Algorithm = muonFilter, RequiredSelections = [StdLooseMuons])
+        
+        _DiMu = CombineParticles (DecayDescriptor = "J/psi(1S) -> mu+ mu-" ,
+                                  CombinationCut  = combCut,
+                                  MotherCut       = motherCut)
+        DiMuSel = Selection(Name+"_DiMuonSel", Algorithm = _DiMu, RequiredSelections = [myMuons])
+        
+        return DiMuSel
 
-        mumuNB                    = StrippingNBMuMu("mumuNB"+id)
-        #mumuNB.OutputLevel        = 2
-        mumuNB.PlotHisto          = False
-        mumuNB.PlotMassMin        = min
-        mumuNB.PlotMassMax        = max
+    #
+    # NeuroBayes 
+    #
+    def MuMuNB(self, Name, inputSel, Expertise, NBVersion, NBCut, massMin, massMax, nBins, doPlot):
+        name = "mumuNB"+Name
+        mumuNB                    = StrippingNBMuMu(name)
+        mumuNB.PlotHisto          = doPlot
+        mumuNB.PlotMassMin        = massMin
+        mumuNB.PlotMassMax        = massMax
         mumuNB.PlotNBins          = nBins
         mumuNB.Expertise          = Expertise
-        mumuNB.NetworkVersion     = self.getProp ( 'NetworkVersion')
-        mumuNB.NetworkCut         = NeuroBayesCut
-
-        #print "NeuroBayesStrip %s settings, Expertise %s, cut %lf, mass min %lf, max %lf" %(id, Expertise, NeuroBayesCut, min, max )
-
-        nbSel = Selection("NeuroBayesSel"+id ,
+        mumuNB.NetworkVersion     = NBVersion
+        mumuNB.NetworkCut         = NBCut
+                                                        
+        nbSel = Selection("NeuroBayesSel"+Name ,
                           Algorithm = mumuNB,
-                          RequiredSelections = RequiredSel
+                          RequiredSelections = [inputSel]
                           )
-
+        
         return nbSel
-
-
-    def lines( self ) :
-
-        jPsiSel       = self.JPsi()
-        mumuSel       = self.MuMu()
-
-        expertiseJPsi = self.getProp ( 'ExpertiseJPsi' )
-        nbCutJPsi     = self.getProp ( 'NBCutJPsi')
-        expertiseMuMu = self.getProp ( 'ExpertiseMuMu' )
-        nbCutMuMu     = self.getProp ( 'NBCutMuMu')         
-        jPsiMin       = self.getProp ( 'JPsiMassMin')
-        jPsiMax       = self.getProp ( 'JPsiMassMax')
- 
-        nbJPsiSel = self.NeuroBayesStrip( "JPsi", [ jPsiSel ] , expertiseJPsi, nbCutJPsi, jPsiMin, jPsiMax ,  120)
-        nbMuMuSel = self.NeuroBayesStrip( "MuMu", [ mumuSel ] , expertiseMuMu, nbCutMuMu,     0.0,     12.0, 1000)
-
-
-        jPsiLine = StrippingLine('NeuroBayesJPsiLine',
-                                 prescale = 1.0,  postscale = 1.0,
-                                 algos = [ nbJPsiSel ])
-
-        mumuLine = StrippingLine('NeuroBayesMuMuLine',
-                                 prescale = 1.0,  postscale = 1.0,
-                                 algos = [ nbMuMuSel ])
-        
-                              
-                              
-
-        return [ jPsiLine, mumuLine ]
-        
-        
-
-    def SpdMultFilter(self):
-        return LoKi__VoidFilter("SpdMultFilter",
-                                Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
-                                ) 
-        
-
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+            
+    

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-08 - Ulrich Kerzel
+- update JPsi and MuMu NeuroBayes stripping lines to new framework 
+
 ! 2011-02-07 - Ulrich Kerzel
  - update B2hh lifetime unbiased lines to new framework, 
    include NeuroBayes based line   
