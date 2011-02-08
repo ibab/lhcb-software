@@ -16,7 +16,7 @@ def _getAlgoList(sel) :
     return copy(flatAlgorithmList(sel))
 
 def _cloneSelection(sel, name) :
-    return sel.clone(name)
+    return sel.clone(name=name)
 
 def _mergedSelection(sel, name) :
     return MergedSelection(name, RequiredSelections = [sel])

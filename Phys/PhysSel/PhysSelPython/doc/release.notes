@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-08 - Juan Palacios
+ - VoidEventSelection, MergedSelection, MultiSelectionSequence now inherit 
+   from SelPy.utils.ClonableObject. clone method now takes only key word 
+   arguments!
  - AutomaticData, VoidEventSelection, MergedSelection now inherit from
    SelPy.utils.SelectionBase
  - Selections now have method requiredSelections() instead of data member

@@ -153,7 +153,7 @@ def test_clone_sequence() :
                             PostSelectionAlgs = postsels,
                             sequencerType=DummySequencer)
     
-    clone = seq.clone('clone')
+    clone = seq.clone(name='clone')
 
     seqAlgos = clone.sequence().Members
 

@@ -38,6 +38,7 @@ from Configurables import GaudiSequencer
 from SelPy.selection import ( flatAlgorithmList,
                               NamedObject,
                               UniquelyNamedObject,
+                              ClonableObject,
                               SelectionBase,
                               AutomaticData,
                               NameError,
@@ -138,7 +139,8 @@ class AutomaticData(NamedObject, SelectionBase) :
             _extension = ('/'+Extension).replace('//', '/')
         _location = (Location + _extension).replace(_extension+_extension, _extension)
 
-        NamedObject.__init__(self, _location.replace('/', '_'))
+        NamedObject.__init__(self,
+                             _location.replace('/', '_'))
 
         _alg = VoidFilter('SelFilter'+self.name(),
                           Code = "CONTAINS('"+_location+"')>0")
@@ -151,7 +153,9 @@ class AutomaticData(NamedObject, SelectionBase) :
 DataOnDemand = AutomaticData
 
 
-class VoidEventSelection(UniquelyNamedObject, SelectionBase) :
+class VoidEventSelection(UniquelyNamedObject,
+                         ClonableObject,
+                         SelectionBase) :
     """
     Selection class for event selection based on contents of TES location.
     Can be used just like a Selection object.
@@ -176,7 +180,7 @@ class VoidEventSelection(UniquelyNamedObject, SelectionBase) :
                  RequiredSelection ) :
 
         UniquelyNamedObject.__init__(self, name)
-
+        ClonableObject.__init__(self, locals())
         checkName(self.name())
         
         _code = Code.replace('<Location>',
@@ -190,7 +194,9 @@ class VoidEventSelection(UniquelyNamedObject, SelectionBase) :
                                requiredSelections = [RequiredSelection])
 
     
-class MergedSelection(NamedObject, SelectionBase) :
+class MergedSelection(NamedObject,
+                      ClonableObject,
+                      SelectionBase) :
     """
     Selection wrapper class for merging output of various Selections.
     Can be used just like any Selection object.
@@ -213,9 +219,7 @@ class MergedSelection(NamedObject, SelectionBase) :
                  sequencerType=GaudiSequencer) :
 
         NamedObject.__init__(self, name)
-        self.__ctor_dict__ = dict(locals())
-        del self.__ctor_dict__['self']
-        del self.__ctor_dict__['name']
+        ClonableObject.__init__(self, locals())
 
         self._sel = Selection(name,
                               Algorithm = ConfigurableGenerators.FilterDesktop(Code='ALL'),
@@ -233,10 +237,6 @@ class MergedSelection(NamedObject, SelectionBase) :
                                algorithm = _alg,
                                outputLocation = self._sel.outputLocation(),
                                requiredSelections = [])
-
-    def clone(self, name, **args) :
-        new_dict = update_dict_overlap(self.__ctor_dict__, args)
-        return MergedSelection(name, **new_dict)
 
 class SelectionSequence(SelSequence) :
     """
@@ -289,13 +289,9 @@ class SelectionSequence(SelSequence) :
     def sequence(self) :
         return self._gaudiseq
 
-    def clone(self, name, **args) :
-        new_dict = update_dict_overlap(self.__ctor_dict__, args)
-        return SelectionSequence(name, **new_dict)
-
-
     
-class MultiSelectionSequence(UniquelyNamedObject) :
+class MultiSelectionSequence(UniquelyNamedObject,
+                             ClonableObject) :
     """
     Wrapper class for offline multiple selection sequence creation.
     Takes a list of SelectionSequence objects and produces on demand a
@@ -311,8 +307,8 @@ class MultiSelectionSequence(UniquelyNamedObject) :
                  sequencerType = GaudiSequencer) :
 
         UniquelyNamedObject.__init__(self, name)
+        ClonableObject.__init__(self, locals())
         self._sequences = list(Sequences)
-        self._gaudiseq = None
         self._algos = []
         for seq in self._sequences :
             self._algos += seq.algorithms()

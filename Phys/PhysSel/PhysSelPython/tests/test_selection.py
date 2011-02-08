@@ -112,7 +112,7 @@ def test_clone_merged_selection() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     sel01 = AutomaticData(Location = 'Phys/Sel01')
     ms = MergedSelection('Merge00And01Original', RequiredSelections = [sel00, sel01])
-    msClone = ms.clone('Merge00And01Clone')
+    msClone = ms.clone(name='Merge00And01Clone')
     assert msClone.name() == 'Merge00And01Clone'
     assert msClone.requiredSelections() == [] # should not export its required selections. Algos contained internally.
     assert msClone.outputLocation() == 'Phys/Merge00And01Clone/Particles'
@@ -208,7 +208,7 @@ def test_clone_selection_with_existing_selection_name_raises() :
 def test_clone_selection_with_new_alg() :
     sel0 = test_instantiate_tree('0001')
     alg1 = DummyAlgorithm('Alg1')
-    selClone = sel0.clone('sel0_clone0', Algorithm = alg1)
+    selClone = sel0.clone(name='sel0_clone0', Algorithm = alg1)
 
     assert alg1.name() == 'Alg1'
     assert len(alg1.InputLocations) == 0
@@ -221,7 +221,7 @@ def test_clone_selection_with_new_InputLocations() :
     sel = test_instantiate_tree('0002')
     clone00 = AutomaticData(Location = 'Phys/Clone00')
     clone01 = AutomaticData(Location = 'Phys/Clone01')
-    selClone = sel.clone('sel0_clone1',
+    selClone = sel.clone(name='sel0_clone1',
                          RequiredSelections = [clone00, clone01])
     assert len(selClone.algorithm().InputLocations) == 2
     assert selClone.algorithm().InputLocations.count('Phys/Clone00/Particles') ==1
