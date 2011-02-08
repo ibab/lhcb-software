@@ -43,6 +43,8 @@ public:
 
    virtual StatusCode initialize();
 
+   virtual StatusCode finalize();
+
    virtual void handle ( const Incident& incident );
    
    virtual Hlt1MuonHitRange hits( const double xmin, const unsigned int station,

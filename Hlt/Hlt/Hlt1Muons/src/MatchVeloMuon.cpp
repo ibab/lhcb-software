@@ -80,20 +80,29 @@ StatusCode MatchVeloMuon::initialize()
 }
 
 //=============================================================================
+StatusCode MatchVeloMuon::finalize()
+{
+   clean();
+   bool released = boost::singleton_pool< Candidate, sizeof( Candidate ) >::release_memory();
+   if ( !released ) {
+      Warning( "some candidates still use memory, purging", StatusCode::SUCCESS );
+      boost::singleton_pool< Candidate, sizeof( Candidate ) >::purge_memory();
+   }
+   return GaudiHistoTool::finalize();
+}
+
+//=============================================================================
 StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
                                            std::vector< LHCb::Track* >& tracks )
 {
-   // Clean up
-   m_seeds.clear();
-   m_goodCandidates.clear();
-   boost::singleton_pool< Candidate, sizeof( Candidate ) >::purge_memory();
-   
-   // Make a Candidate from the track
-   Candidate* veloSeed = new Candidate( &seed );
+   // Clean start
+   clean();
 
-   m_seeds.clear();
+   // Make a Candidate from the track
+   std::auto_ptr< Candidate > veloSeed( new Candidate( &seed ) );
+
    unsigned int seedStation = m_order[ 0 ] - 1;
-   findSeeds( veloSeed, seedStation );
+   findSeeds( veloSeed.get(), seedStation );
    plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
    BOOST_FOREACH( Candidate* seed, m_seeds ) {
@@ -131,6 +140,7 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
    Hlt1MuonHit* magnetHit = new Hlt1MuonHit( id, xMagnet, errXMagnet,
                                              yMagnet, errYMagnet,
                                              zMagnet, 0. );
+   m_magnetHits.push_back( magnetHit );
 
    double dSlope = dtx( m_minMomentum );
    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -252,6 +262,9 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
          ++nMissed ;
       }
       if ( nMissed >= m_maxMissed ) {
+         BOOST_FOREACH( Candidate* candidate, m_candidates ) {
+            delete candidate;
+         }
          m_candidates.clear();
          break;
       }
@@ -262,6 +275,8 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
       plot( candidate->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
       if ( candidate->chi2DoF() < m_maxChi2DoFX ) {
          m_goodCandidates.push_back( candidate );
+      } else {
+         delete candidate;
       }
    }
 }
@@ -306,6 +321,24 @@ void MatchVeloMuon::fitCandidate( Candidate* candidate ) const
    candidate->chi2() = chi2;
    candidate->slope() = b;
    candidate->p()     = momentum( b - candidate->tx() );
+}
+
+//=============================================================================
+void MatchVeloMuon::clean()
+{
+   // delete leftover good candidates
+   BOOST_FOREACH( Candidate* candidate, m_goodCandidates ) {
+      delete candidate;
+   }
+   m_goodCandidates.clear();
+   // clear seeds, the cadidates have already been deleted
+   m_seeds.clear();
+
+   // we have to take care of these since we created them
+   BOOST_FOREACH( Hlt1MuonHit* hit, m_magnetHits ) {
+      delete hit;
+   }
+   m_magnetHits.clear();
 }
 
 //=============================================================================

@@ -62,7 +62,8 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, const int station,
 //=============================================================================
 Hlt1MuonStation::~Hlt1MuonStation()
 {
-
+   clearHits();
+   m_hits.clear();
 } 
 
 //=============================================================================
@@ -88,7 +89,12 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( const unsigned int region ) const
 //=============================================================================
 void Hlt1MuonStation::clearHits()
 {
-   BOOST_FOREACH( Hlt1MuonHits& hits, m_hits ) hits.clear();
+   BOOST_FOREACH( Hlt1MuonHits& hits, m_hits ) {
+      BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+         delete hit;
+      }
+      hits.clear();
+   }
 }
 
 //=============================================================================

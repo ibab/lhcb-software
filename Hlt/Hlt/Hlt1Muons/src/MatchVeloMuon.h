@@ -36,6 +36,8 @@ public:
    virtual ~MatchVeloMuon( ); ///< Destructor
 
    virtual StatusCode initialize();
+
+   virtual StatusCode finalize();
    
    virtual StatusCode tracksFromTrack( const LHCb::Track &seed,
                                        std::vector< LHCb::Track * > &tracks );
@@ -71,6 +73,7 @@ private:
    Candidates   m_seeds;
 
    Hlt1MuonHits m_stationHits;
+   Hlt1MuonHits m_magnetHits;
 
    // Helper methods
    void findSeeds( const Candidate* seed, const unsigned int seedStation );
@@ -78,6 +81,8 @@ private:
    void findCandidates( Candidate* seed );
 
    void fitCandidate( Candidate* seed ) const;
+
+   void clean();
 
    inline double dtx( const double p ) const;
 

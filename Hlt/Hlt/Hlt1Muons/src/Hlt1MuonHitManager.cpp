@@ -72,7 +72,6 @@ Hlt1MuonHitManager::Hlt1MuonHitManager(const std::string& type,
 //=============================================================================
 Hlt1MuonHitManager::~Hlt1MuonHitManager()
 {
-   boost::singleton_pool< Hlt1MuonHit, sizeof( Hlt1MuonHit ) >::release_memory();
    BOOST_FOREACH( Hlt1MuonStation* station, m_stations ) {
       delete station;
    }
@@ -99,6 +98,17 @@ StatusCode Hlt1MuonHitManager::initialize()
 } 
 
 //=============================================================================
+StatusCode Hlt1MuonHitManager::finalize()
+{
+   bool released = boost::singleton_pool<Hlt1MuonHit, sizeof(Hlt1MuonHit)>::release_memory();
+   if ( !released ) {
+      Warning( "some hits still use memory, purging", StatusCode::SUCCESS );
+      boost::singleton_pool< Hlt1MuonHit, sizeof( Hlt1MuonHit ) >::purge_memory();
+   }
+   return GaudiTool::finalize();
+}
+
+//=============================================================================
 void Hlt1MuonHitManager::handle( const Incident& incident )
 {
    if ( IncidentType::BeginEvent != incident.type() ) return;
@@ -106,7 +116,6 @@ void Hlt1MuonHitManager::handle( const Incident& incident )
    for ( unsigned int station = 0; station < m_stations.size(); ++station ) {
       if ( m_prepared[ station ] ) m_stations[ station ]->clearHits();
    }
-   boost::singleton_pool<Hlt1MuonHit, sizeof(Hlt1MuonHit)>::purge_memory();
    m_muonCoords = 0;
    m_prepared.assign( 5, false );
    m_nHits.assign( 5, 0 );
@@ -162,11 +171,12 @@ void Hlt1MuonHitManager::prepareHits( const unsigned int station )
       m_hits.push_back( hit );
    }
 
-   // Don't forget to sort the hits...
+   // Sort the hits
    std::sort( m_hits.begin(), m_hits.end(),
               bind( less< double >(), bind< double >( &Hlt1MuonHit::x, _1 ),
                     bind< double >( &Hlt1MuonHit::x, _2 ) ) );
 
+   // Put the hits in the station
    m_stations[ station ]->setHits( m_hits );
    m_prepared[ station ] = true;
 }
