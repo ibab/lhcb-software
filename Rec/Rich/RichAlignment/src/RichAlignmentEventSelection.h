@@ -60,10 +60,7 @@ namespace Rich
       virtual StatusCode execute   ();    // Algorithm execution
       virtual StatusCode finalize  ();    // Algorithm finalization
 
-    private: // methods
-
     private: // data
-
 
       int m_richTemp;    ///< which rich detector to monitor
       Rich::DetectorType m_rich;
@@ -73,12 +70,16 @@ namespace Rich
       // T Hampson
       // declare the arrays and other stuff
       //======================================
-      double combiCountR2[170];
-      double combiCountR1[24];
+      
+      static const unsigned int nRich1Comb = 24;
+      static const unsigned int nRich2Comb = 170;
+
+      double m_combiCountR2[nRich2Comb];
+      double m_combiCountR1[nRich1Comb];
 
       // store the total number of mirror photons for the job/subjob
-      double totalPhotonsR2[170];
-      double totalPhotonsR1[24];
+      double m_totalPhotonsR2[nRich2Comb];
+      double m_totalPhotonsR1[nRich1Comb];
 
       //======================================
 

@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-02-08 - Chris Jones
+ - Fix various coverity warnings
+
 !========================== RichAlignment v1r1 2010-09-24 ====================
 ! 2010-09-23 - Chris Jones
  - Some more improvements to the refractive index calibration scripts. Better

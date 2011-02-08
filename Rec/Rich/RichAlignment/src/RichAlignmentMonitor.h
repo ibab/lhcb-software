@@ -3,9 +3,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
- *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.9 2010-01-24 22:08:05 papanest Exp $
- *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
  */

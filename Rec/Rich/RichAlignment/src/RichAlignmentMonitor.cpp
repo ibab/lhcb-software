@@ -3,9 +3,6 @@
  *
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
- *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.20 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
  */
@@ -31,7 +28,10 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor );
 AlignmentMonitor::AlignmentMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : TupleAlgBase        ( name , pSvcLocator ),
-    m_pTypes            ( 7, 0),
+    m_radiator          ( Rich::InvalidRadiator ),
+    m_deltaThetaHistoRange ( 0 ),
+    m_pType             ( Rich::Unknown ),
+    m_pTypes            ( 7, 0 ),
     m_trSelector        ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_richPartProp      ( NULL ),
