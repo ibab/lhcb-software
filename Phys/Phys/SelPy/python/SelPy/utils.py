@@ -9,17 +9,45 @@ __all__ = ( 'flatSelectionList',
             'isIterable',
             'removeDuplicates',
             'update_dict_overlap',
+            'ClonableObject',
             'NamedObject',
             'UniquelyNamedObject',
             'NameError',
             'NonEmptyInputLocations',
             'IncompatibleInputLocations', )
 
+class ClonableObject(object) :
+    """
+    Base class for objects that are to be cloned with a selection of their
+    constructor argument values. Clonable classes must inherit from this.
+    Example:
+
+    class Dummy(ClonableObject) :
+       def __init__(self, a, b, c) :
+           ClonableObject.__init__(self, locals())
+           self.a = a
+           self.b = b
+           self.c = c
+
+    d0 = Dummy(1,2,3)
+    d1 = d0.clone(b=999)
+    print d0.a, d0.b, d0.c
+    print d1.a, d1.b, d1.c
+    """
+    def __init__(self, kwargs) :
+        self._ctor_dict = dict(kwargs)
+        if 'self' in self._ctor_dict :
+            del self._ctor_dict['self']
+
+    def clone(self, **kwargs) :
+        new_dict = update_dict_overlap(self._ctor_dict, kwargs)
+        return self.__class__(**new_dict)
+
 class NamedObject(object) :
 
     def __init__(self, name) :
         self._name = name
-
+    
     def name(self) :
         return self._name
 

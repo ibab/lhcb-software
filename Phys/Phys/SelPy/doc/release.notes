@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-08 - Juan Palacios
+ - Introduce utils.ClonableObject base class, exporting clone method. 
+   Classes that need cloning may inherit from it, calling it's constructor
+   with a snapshop of their own constructor argument key-value pairs.
+   It is generally OK to pass locals().
+ - Selection, EventSelection, PassThroughSelection, SelSequence inherit from
+   ClonableObject. clone method now needs key works.
  - Introduce utils.SelectionBase class, handling algorithm Configurable,
    output location and required selection list. All selections in selection
    module inherit from this.

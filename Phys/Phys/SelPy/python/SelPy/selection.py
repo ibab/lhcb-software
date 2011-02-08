@@ -12,6 +12,7 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 __all__ = ('AutomaticData',
            'UniquelyNamedObject',
+           'ClonableObject',
            'Selection',
            'EventSelection',
            'flatAlgorithmList',
@@ -24,6 +25,7 @@ from SelPy.utils import (flatSelectionList,
                          connectToRequiredSelections,
                          NamedObject,
                          UniquelyNamedObject,
+                         ClonableObject,
                          SelectionBase,
                          NameError,
                          NonEmptyInputLocations,
@@ -59,7 +61,9 @@ class AutomaticData(NamedObject, SelectionBase) :
                                requiredSelections = [] )
 
 
-class Selection(UniquelyNamedObject, SelectionBase) :
+class Selection(UniquelyNamedObject,
+                ClonableObject,
+                SelectionBase) :
     """
     Wrapper class for offline selection. Takes a top selection
     Configurable Generator plus a list of required selection configurables.
@@ -105,10 +109,7 @@ class Selection(UniquelyNamedObject, SelectionBase) :
                  Extension='Particles') :
 
         UniquelyNamedObject.__init__(self, name)
-
-        self.__ctor_dict__ = dict(locals())
-        del self.__ctor_dict__['self']
-        del self.__ctor_dict__['name']
+        ClonableObject.__init__(self, locals())
 
         _outputLocation = self.name()
         if OutputBranch != '' :            
@@ -127,12 +128,9 @@ class Selection(UniquelyNamedObject, SelectionBase) :
 
         connectToRequiredSelections(self, InputDataSetter)
 
-    def clone(self, name, **args) :
-        new_dict = update_dict_overlap(self.__ctor_dict__, args)
-        return Selection(name, **new_dict)
-
-
-class EventSelection(UniquelyNamedObject, SelectionBase) :
+class EventSelection(UniquelyNamedObject,
+                     ClonableObject,
+                     SelectionBase) :
     """
     Selection wrapper class for event selection algorithm configurable
     generator.
@@ -152,13 +150,16 @@ class EventSelection(UniquelyNamedObject, SelectionBase) :
                  ConfGenerator ) :
 
         UniquelyNamedObject.__init__(self, name)
+        ClonableObject.__init__(self, locals())
         SelectionBase.__init__(self,
                                algorithm =ConfGenerator( self.name() ) ,
                                outputLocation='',
                                requiredSelections = [] )
 
 
-class PassThroughSelection(UniquelyNamedObject, SelectionBase) :
+class PassThroughSelection(UniquelyNamedObject,
+                           ClonableObject,
+                           SelectionBase) :
     """
     Selection wrapper class for event selection algorithm Configurable generator.
     Algorithm produces no output data and is assumed to be correctly
@@ -180,6 +181,7 @@ class PassThroughSelection(UniquelyNamedObject, SelectionBase) :
                  InputDataSetter = None ) :
 
         UniquelyNamedObject.__init__(self, name)
+        ClonableObject.__init__(self, locals())
         SelectionBase.__init__(self,
                                algorithm =ConfGenerator( self.name() ) ,
                                outputLocation=RequiredSelection.outputLocation(),
@@ -187,7 +189,7 @@ class PassThroughSelection(UniquelyNamedObject, SelectionBase) :
 
         connectToRequiredSelections(self, InputDataSetter)
 
-class SelSequence(UniquelyNamedObject) :
+class SelSequence(UniquelyNamedObject, ClonableObject) :
     """
     Class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -223,10 +225,7 @@ class SelSequence(UniquelyNamedObject) :
                  PostSelectionAlgs = []) :
 
         UniquelyNamedObject.__init__(self, name)
-
-        self.__ctor_dict__ = dict(locals())
-        del self.__ctor_dict__['self']
-        del self.__ctor_dict__['name']
+        ClonableObject.__init__(self, locals())
 
         self._algos = list(EventPreSelector)
         self._topSelection = TopSelection
@@ -241,10 +240,6 @@ class SelSequence(UniquelyNamedObject) :
         
     def outputLocation(self) :
         return self._topSelection.outputLocation()
-
-    def clone(self, name, **args) :
-        new_dict = update_dict_overlap(self.__ctor_dict__, args)
-        return SelSequence(name, **new_dict)
 
     def selection(self) :
         """
