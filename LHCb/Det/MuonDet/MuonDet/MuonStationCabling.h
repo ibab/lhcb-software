@@ -22,11 +22,12 @@ public:
   virtual ~MuonStationCabling( ); ///< Destructor
 
 #ifdef __INTEL_COMPILER        // Disable ICC warning
-  #pragma warning(disable:654) // virtual function is hidden, override intended?
+  #pragma warning(disable:1125) // virtual function is hidden, override intended?
   #pragma warning(push)
 #endif
   virtual void update ( Condition& obj );
   virtual void update ( ValidDataObject& obj );
+  StatusCode update(long l1numb);
 #ifdef __INTEL_COMPILER // Re-enable ICC warning
   #pragma warning(pop)
 #endif
@@ -36,10 +37,9 @@ public:
     return CLID_MuonStationCabling;
   }
 
-inline	long getNumberOfL1Board(){return m_numberOfL1Board;};
-inline std::string getL1Name(unsigned int i){return m_listOfL1[i];};  
-inline std::vector<std::string> getAllL1Names(){return m_listOfL1;};  
- StatusCode update(long l1numb);
+  inline long getNumberOfL1Board(){return m_numberOfL1Board;};
+  inline std::string getL1Name(unsigned int i){return m_listOfL1[i];};  
+  inline std::vector<std::string> getAllL1Names(){return m_listOfL1;};  
   StatusCode addL1Name(std::string name);
 
  
