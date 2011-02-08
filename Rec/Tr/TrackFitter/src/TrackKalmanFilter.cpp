@@ -37,7 +37,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "Smooth", m_smooth = true ) ;
-  declareProperty( "ForceBiDirectional" , m_forceBidirectional  = false   );
+  declareProperty( "ForceBiDirectional" , m_forceBidirectional  = true   );
   declareProperty( "ForceSmooth" , m_forceSmooth  = false   );
   declareProperty( "DoF", m_DoF = 5u);
 }

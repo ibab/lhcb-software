@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2011-02-08 - Victor Coco
+ - setback the ForceBiDirectionnal in KalmanFilter to True and reduce info priniting
+   in TrackEventFitter
+
 ! 2011-02-05 - Victor Coco
  - remove TrajFitter and TrackTrajFitter (not functionnal and not compiling under windows)
 

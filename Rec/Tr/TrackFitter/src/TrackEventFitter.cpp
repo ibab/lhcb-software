@@ -66,16 +66,7 @@ StatusCode TrackEventFitter::initialize() {
 
   // Print out the user-defined settings
   // -----------------------------------
-  info()
-    << " " << endmsg
-    << "=========== " << name() << " Settings ============"
-    << endmsg
-    << "  Tracks input container   : " << m_tracksInContainer << endmsg
-    << "  Tracks output container  : " << m_tracksOutContainer << endmsg
-    << "  Fitter name              : " << m_tracksFitter->name() << endmsg
-    << "=================================================="
-    << endmsg
-    << " " << endmsg;
+  info() << m_tracksInContainer << " -> "<< m_tracksOutContainer << " using "<<  m_tracksFitter->name() << endmsg;
 
   return StatusCode::SUCCESS;
 }
