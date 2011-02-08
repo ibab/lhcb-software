@@ -138,7 +138,7 @@ StatusCode PIDQC::execute()
   {
     // create pointer to pid object
     LHCb::RichPID * fPID = dynamic_cast<LHCb::RichPID*>(*iC);
-    if ( !iPID ) { Warning("Dynamic Cast to RichPID* failed").ignore(); continue; }
+    if ( !fPID ) { Warning("Dynamic Cast to RichPID* failed").ignore(); continue; }
 
     // check track is OK
     if ( fPID->track() )
