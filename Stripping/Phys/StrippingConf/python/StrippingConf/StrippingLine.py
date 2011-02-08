@@ -134,8 +134,8 @@ class bindMembers (object) :
 
     def _handle_SelectionSequence(self, line, alg) :
         print 'WARNING: line', line, 'using SelectionSequence', alg.name(), '. This could be unnecessary. Consider using Selection directly.'
-        topSel = alg.selection().clone(line)
-        seq = alg.clone('StrippingSeq'+line, TopSelection = topSel)
+        topSel = alg.selection().clone(name=line)
+        seq = alg.clone(name='StrippingSeq'+line, TopSelection = topSel)
         gaudiSeq = seq.sequence()
         members = gaudiSeq.Members
         self._members += members
@@ -149,7 +149,7 @@ class bindMembers (object) :
         self._outputloc = loc
 
     def _handle_Selection(self, line, alg) :
-        sel = alg.clone(line)
+        sel = alg.clone(name=line)
         self._handleSelectionType( line, sel )
 
     def _handle_EventSelection(self, line, alg) :
@@ -159,7 +159,7 @@ class bindMembers (object) :
         self._handleSelectionType( line, alg )
 
     def _handle_MergedSelection(self, line, alg) :
-        sel = alg.clone(line)
+        sel = alg.clone(name=line)
         self._members += [sel.algorithm()]
         loc = sel.outputLocation()
         self._outputloc = loc

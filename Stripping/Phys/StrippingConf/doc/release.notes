@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2011-02-08 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . Selection types' clone method needs keyowd arguments now.
+
 ! 2011-02-07 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
   . Remove call to SelectionSequence.outputLocations().
