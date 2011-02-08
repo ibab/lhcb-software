@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-08 - Ulrich Kerzel
+- first version of HLT1 line for DiHadron unbiased trigger
+  re-implementation of previously existing line in new streamer framework
+
 !========================== Hlt1Lines v6r2   2011-02-07 ===================
 ! 2011-02-07 - Gerhard Raven
  - add SINKs to the 1Track lines
