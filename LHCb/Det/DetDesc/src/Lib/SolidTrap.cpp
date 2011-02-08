@@ -106,6 +106,8 @@ SolidTrap::SolidTrap( const std::string& Name )
   , m_trap_dxAtPlusZMinusY  ( 100  ) 
   , m_trap_dxAtPlusZPlusY   ( 100  ) 
   , m_trap_alphaAtPlusZ     ( 0    ) 
+  , m_trap_sinAlphaAtPlusZ  ( 0    ) 
+  , m_trap_cosAlphaAtPlusZ  ( 1    ) 
 {}
 
 // ============================================================================

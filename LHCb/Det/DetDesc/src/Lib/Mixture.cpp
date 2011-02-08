@@ -23,6 +23,11 @@ Mixture::Mixture( const std::string&  name    ,
     , m_A       ( a )
     , m_Z       ( z )
     , m_I       ( i )
+    , m_C( 0 )
+    , m_a( 0.)
+    , m_m( 0.) 
+    , m_X0(0.)
+    , m_X1(0.)
    {
    }
 //

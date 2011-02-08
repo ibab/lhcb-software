@@ -241,6 +241,8 @@ SolidSphere::SolidSphere( const std::string& name )
   , m_sphere_coverModel      (       0          ) 
   , m_noPhiGap               ( true )
   , m_noThetaGap             ( true )
+  , m_sphere_outerR          ( 1000000.0        )  
+  , m_sphere_insideR         ( 0.0              ) 
 {}
 
 // ===========================================================================

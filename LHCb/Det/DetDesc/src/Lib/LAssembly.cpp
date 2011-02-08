@@ -31,11 +31,25 @@ LAssembly::LAssembly
                 sensitivity , 
                 magnetic    )
   , m_coverComputed( false )
+  , m_xMin( 1000000.)
+  , m_yMin( 1000000.)
+  , m_zMin( 1000000.)
+  , m_xMax(-1000000.)
+  , m_yMax(-1000000.)
+  , m_zMax(-1000000.)
 {}
 // ============================================================================
 // default constructor
 // ============================================================================
-LAssembly::LAssembly() : LogVolBase() {}
+LAssembly::LAssembly() : LogVolBase()
+  , m_coverComputed( false )
+  , m_xMin( 1000000.)
+  , m_yMin( 1000000.)
+  , m_zMin( 1000000.)
+  , m_xMax(-1000000.)
+  , m_yMax(-1000000.)
+  , m_zMax(-1000000.)
+ {}
 // ============================================================================
 /*  destructor 
  */
@@ -251,15 +265,6 @@ void LAssembly::computeCover()
 {
   
   if ( m_coverComputed ) return;
-  
-  //  MsgStream log ( msgSvc() , "TransportSvc" );
-  
-  m_xMin = 1000000.;
-  m_yMin = 1000000.;
-  m_zMin = 1000000.;
-  m_xMax = -1000000.;
-  m_yMax = -1000000.;
-  m_zMax = -1000000.;
   
   double pointX, pointY, pointZ = 0.;
   Gaudi::XYZPoint motherPt( 0., 0., 0. );

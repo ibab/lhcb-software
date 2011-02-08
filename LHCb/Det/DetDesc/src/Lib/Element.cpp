@@ -35,7 +35,16 @@ Element::Element( const std::string& name    ,
   if( 0 < Z() ) { ComputeCoulombFactor  (); } 
   if( 0 < Z() ) { ComputeLradTsaiFactor (); }
   if( 0 < Z() && fabs(I()) < 1e-20) { ComputeMeanExcitationEnergy (); }
-  if( 0 < Z() && fabs(I()) > 1e-20 ) { ComputeDensityEffect (); }
+  if( 0 < Z() && fabs(I()) > 1e-20 ) { 
+    ComputeDensityEffect ();
+  }
+  else {
+    m_C  = 0.;
+    m_a  = 0.;
+    m_m  = 0.;
+    m_X0 = 0.;
+    m_X1 = 0.;
+  }
 }
 /////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
@@ -225,21 +234,21 @@ void Element::ComputeDensityEffect(){
     double x_a = m_C/4.606;
     
     if ( I() < 100*Gaudi::Units::eV )
-	if ( m_C > 3.681 ){
-	    m_X0 = 0.326*m_C-1.0;
-	    m_X1 = 2.0;
-	} else {
-	    m_X0 = 0.2;
-	    m_X1 = 2.0;
-	}
+      if ( m_C > 3.681 ){
+        m_X0 = 0.326*m_C-1.0;
+        m_X1 = 2.0;
+      } else {
+        m_X0 = 0.2;
+        m_X1 = 2.0;
+      }
     else 
-	if ( m_C > 5.215 ){
-	    m_X0 = 0.326*m_C-1.5;
-	    m_X1 = 3.0;
-	} else {
-	    m_X0 = 0.2;
-	    m_X1 = 3.0;
-	}
+      if ( m_C > 5.215 ){
+        m_X0 = 0.326*m_C-1.5;
+        m_X1 = 3.0;
+      } else {
+        m_X0 = 0.2;
+        m_X1 = 3.0;
+      }
 
     m_a = 4.606*(x_a-m_X0)/pow(m_X1-m_X0,3);
     m_m = 3.0;

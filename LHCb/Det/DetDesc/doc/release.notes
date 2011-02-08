@@ -5,6 +5,16 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2011-02-08 - Marco Cattaneo
+ - Fix UNINIT_CTOR in ConditionInfo.cpp (coverity defect 16159)
+ - Fix UNINIT_CTOR in Element.cpp (coverity defect 16160)
+ - Fix UNINIT_CTOR in Isotope.cpp (coverity defect 16161)
+ - Fix UNINIT_CTORs in LAssembly.cpp (coverity defects 16162,16163)
+ - Fix UNINIT_CTOR in MagneticFieldGrid.cpp (coverity defect 16165)
+ - Fix UNINIT_CTOR in Mixture.cpp (coverity defect 16166)
+ - Fix UNINIT_CTOR in SolidSphere.cpp (coverity defect 16167)
+ - Fix UNINIT_CTOR in SolidTrap.cpp (coverity defect 16168)
+
 !========================= DetDesc v18r22 2011-01-31 =========================
 ! 2011-01-07 - Marco Cattaneo
  - Fix icc warnings and remarks

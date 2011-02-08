@@ -17,6 +17,7 @@ ConditionInfo::ConditionInfo( IDetectorElement* de,
   m_detElem = de;
   m_conditionName = condition;
   m_condition = 0;
+  m_count = 0;
   m_services = DetDesc::services();
 }
 
