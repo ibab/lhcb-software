@@ -1,15 +1,12 @@
 package MooreSys
-version v11r3
+version v11r4
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v11r2   Hlt
-
-use TrackTools          v4r0p1  Tr
-use FastVelo            v1r3p1  Tf
+use  Moore              v11r4   Hlt
 
 # Declare this as a container package
 apply_pattern container_package
