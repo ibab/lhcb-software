@@ -21,8 +21,7 @@ Development release in preparation for 2011 production
 
 - Changes to qmtests:
   . Add a test brunel.brunel2011magdown, for the time being identical to
-    brunel.brunel2010magdown (same input data and same reference) to validate 
-    2011 DataType settings
+    brunel.brunel2010magdown (same input data) to validate 2011 DataType settings
   . Remove obsolete brunel.brunel-mc09-stripping test
   . Input file for brunel2010magdown test is now taken from 'freezer' castor
     directory, to test rootd access to this pool.
