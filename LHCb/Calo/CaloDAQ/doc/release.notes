@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2011-08-02 - Olivier Deschamps
+  - add ICaloDigitFilterTool to the dictionary
+  - reduce statistics verbosity 
+
 ! 2011-07-02 - Olivier Deschamps
 	- CaloDigitFilterTool/CaloDigitFilterAlg : new tool/alg for digit masking and energy offset
 	- CaloDataProvided : fix Spd L0Data decoding

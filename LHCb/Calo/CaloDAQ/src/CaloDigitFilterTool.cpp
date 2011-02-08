@@ -206,9 +206,11 @@ bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask){
     if(NULL != digit)cleanDigit( digit , substr, scale , mask);
     nOffs++;
   }
+
   counter("Masked " + m_caloName + " digits") += m_nMask;
   double ave = (nOffs !=0) ? m_mOffs/double(nOffs) : 0;
-  counter(m_caloName + " average offset in ADC (method = " + Gaudi::Utils::toString(m_scalingMethod)+")" ) -= ave;
+  if(m_scalingMethod < 10 && substr && m_offsets.size() != 0)
+    counter(m_caloName + " average offset in ADC (method = " + Gaudi::Utils::toString(m_scalingMethod)+")" ) -= ave;
   return true;
 }
 

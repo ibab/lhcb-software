@@ -8,5 +8,6 @@
 #include "CaloDAQ/ICaloReadoutTool.h"
 #include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"
 #include "CaloDAQ/ICaloTriggerBitsFromRaw.h"
+#include "CaloDAQ/ICaloDigitFilterTool.h"
 
 #endif // DICT_CALODAQDICT_H

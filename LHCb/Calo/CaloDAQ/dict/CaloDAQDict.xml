@@ -6,5 +6,6 @@
   <class name = "ICaloReadoutTool"        />
   <class name = "ICaloTriggerAdcsFromRaw" />
   <class name = "ICaloTriggerBitsFromRaw" />
+  <class name = "ICaloDigitFilterTool" />
 
 </lcgdict>
