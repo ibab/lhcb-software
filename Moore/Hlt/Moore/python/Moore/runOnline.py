@@ -14,10 +14,10 @@ def start() :
 
     Moore().RunOnline = True
 
-    ### default database setup -- require an explit tag when running in the LHCb partition...
+    ### default database setup -- require an explit tag when running in the LHCb or FEST partitions...
     Moore().Simulation = False
-    Moore().DDDBtag    = 'unknown-please-specify-in-PVSS' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
-    Moore().CondDBtag  = 'unknown-please-specify-in-PVSS' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
+    Moore().DDDBtag    = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
+    Moore().CondDBtag  = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
 
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
@@ -27,7 +27,7 @@ def start() :
 
     ### pick up requested DB tags
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
-    if hasattr(OnlineEnv,'DDDBTag')   and OnlineEnv.BBDBTag   : Moore().DDDBtag   = OnlineEnv.DDDBTag
+    if hasattr(OnlineEnv,'DDDBTag')   and OnlineEnv.DDDBTag   : Moore().DDDBtag   = OnlineEnv.DDDBTag
 
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
