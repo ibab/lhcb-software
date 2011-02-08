@@ -180,6 +180,10 @@ namespace LHCb  {
   #define STDERR_FILENO 3
   #define S_IWUSR       _S_IWRITE 
   #define S_IRUSR       _S_IREAD
+  static const int S_IRWXU = (S_IREAD|S_IWRITE);
+  static const int S_IRWXG = 0;
+  static const int S_IRWXO = 0;
+
 #else
   #include <unistd.h>
   #include <sys/wait.h>
@@ -387,19 +391,23 @@ namespace {
 string CheckpointSvc::buildChildUTGID(int which) const {
   const string& node = RTL::nodeNameShort();
   string n = m_utgid;
-  
-  string_replace(n,"%PP",upper(m_partition));
-  string_replace(n,"%P",m_partition);
-  string_replace(n,"%p",lower(m_partition));
-  string_replace(n,"%NN",upper(node));
-  string_replace(n,"%N",node);
-  string_replace(n,"%n",lower(node));
-  string_replace(n,"%TT",upper(m_taskType));
-  string_replace(n,"%T",m_taskType);
-  string_replace(n,"%t",lower(m_taskType));
-  char txt[1024];
-  ::sprintf(txt,n.c_str(),which);
-  n = txt;
+  if ( !n.empty() ) {
+    string_replace(n,"%PP",upper(m_partition));
+    string_replace(n,"%P",m_partition);
+    string_replace(n,"%p",lower(m_partition));
+    string_replace(n,"%NN",upper(node));
+    string_replace(n,"%N",node);
+    string_replace(n,"%n",lower(node));
+    string_replace(n,"%TT",upper(m_taskType));
+    string_replace(n,"%T",m_taskType);
+    string_replace(n,"%t",lower(m_taskType));
+    char txt[1024];
+    ::sprintf(txt,n.c_str(),which);
+    n = txt;
+  }
+  else {
+    n = RTL::processName();
+  }
   return n;
 }
 
@@ -519,7 +527,7 @@ int CheckpointSvc::saveCheckpoint() {
       MsgStream log(msgSvc(),name());
       log << MSG::ALWAYS << MARKER << " WRITING  CHECKPOINT " << endmsg;
     }
-    int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);
+    int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
     if ( fd > 0 ) {
       CHKPT* chkpt =  CHKPT_get();
       int ret = chkpt->checkpoint(fd);
