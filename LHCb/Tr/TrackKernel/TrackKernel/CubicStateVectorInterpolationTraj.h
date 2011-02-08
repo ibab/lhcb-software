@@ -27,7 +27,12 @@ namespace LHCb
     typedef Gaudi::XYZVector Vector ;
 
     /// Default constructor. Does nothing.
-    CubicStateVectorInterpolationTraj() : ZTrajectory() {}
+    CubicStateVectorInterpolationTraj() : ZTrajectory() 
+    {
+      m_cx[0] = m_cx[1] = m_cx[2] = m_cx[3] = 0 ;
+      m_cy[0] = m_cy[1] = m_cy[2] = m_cy[3] = 0 ;
+      m_qopbegin = m_qopend = 0 ;
+    }
  
     /// Constructor from two states of state-vectors
     template<class StateT>

@@ -28,7 +28,8 @@ namespace LHCb
     CubicStateInterpolationTraj(const LHCb::State& state, const Gaudi::XYZVector& bfield) ; 
 
     /// Default constructor (does nothing)
-    CubicStateInterpolationTraj() : CubicStateVectorInterpolationTraj() {}
+    CubicStateInterpolationTraj() : 
+      CubicStateVectorInterpolationTraj(), m_covbegin(0), m_covend(0) {}
     
     /// Initialize with two states
     void init( const LHCb::State& begin, const LHCb::State& end ) ;
