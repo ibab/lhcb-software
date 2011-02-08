@@ -2,7 +2,7 @@
 #include <cassert>
 
 /*
-    MD5 computation Modified from the original by Stanislav Baranov 
+    MD5 computation Modified from the original by Stanislav Baranov
     by G.Raven for LHCb use... (09/11/2007)
 
     Copyright (C) 2002-2003 Stanislav Baranov. Permission to copy, use,
@@ -44,7 +44,8 @@ using namespace std;
 class Gaudi::Math::MD5::md5_engine
 {
 public:
-    md5_engine() {}
+    md5_engine();
+
     ~md5_engine() {}
 
 
@@ -71,7 +72,7 @@ Gaudi::Math::MD5::compute(const string& s) {
 }
 
 
-string 
+string
 Gaudi::Math::MD5::str() const {
     string s; s.reserve(2*sizeof(value_type));
     for (const boost::uint8_t* i = m_value; i!=m_value+sizeof(value_type); ++i) {
@@ -85,7 +86,7 @@ namespace {
     boost::uint8_t unhex(unsigned char C) {
             unsigned char c=tolower(C);
             boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
-                               ( c >= 'a' && c <='f'  ? 10+(c-'a') 
+                               ( c >= 'a' && c <='f'  ? 10+(c-'a')
                                                       : 255 ) );
             if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
             return x;
@@ -93,7 +94,7 @@ namespace {
 }
 
 Gaudi::Math::MD5
-Gaudi::Math::MD5::createFromStringRep(const std::string& val) { 
+Gaudi::Math::MD5::createFromStringRep(const std::string& val) {
     assert(val.size()==2*sizeof(Gaudi::Math::MD5::value_type) || val.empty());
     if (val.empty()) return createInvalid();
     Gaudi::Math::MD5::value_type d;
@@ -103,7 +104,7 @@ Gaudi::Math::MD5::createFromStringRep(const std::string& val) {
 
 
 ostream& operator<<(ostream& os, const Gaudi::Math::MD5& x) {
-   return os << x.str(); 
+   return os << x.str();
 }
 
 
@@ -206,25 +207,29 @@ namespace
         Transformations for rounds 1, 2, 3, and 4.
     */
 
-    inline void FF(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d, boost::uint32_t x, boost::uint32_t  s, boost::uint32_t ac)
+    inline void FF(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
+                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
     {
         a += F(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void GG(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d, boost::uint32_t x, boost::uint32_t s, boost::uint32_t ac)
+    inline void GG(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
+                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
     {
         a += G(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void HH(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d, boost::uint32_t x, boost::uint32_t s, boost::uint32_t ac)
+    inline void HH(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
+                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
     {
         a += H(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void II(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d, boost::uint32_t x, boost::uint32_t s, boost::uint32_t ac)
+    inline void II(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
+                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
     {
         a += I(b, c, d) + x + ac;
         a = rol(a, s) + b;
@@ -268,8 +273,7 @@ void Gaudi::Math::MD5::md5_engine::update(const void* a_data, boost::uint32_t a_
         const boost::uint8_t*>(a_data)+input_index, a_data_size-input_index);
 }
 
-Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
-{
+Gaudi::Math::MD5::md5_engine::md5_engine() {
     count[0] = 0;
     count[1] = 0;
 
@@ -278,9 +282,15 @@ Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
     state[2] = 0x98badcfe;
     state[3] = 0x10325476;
 
+    memset(buffer, 0u, sizeof(buffer));
+}
+
+Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
+{
+
     if (a_data!=0) update(a_data,strlen(a_data));
 
-    
+
     static const boost::uint8_t padding[64] =
     {
         0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
