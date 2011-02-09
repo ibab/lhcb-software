@@ -96,9 +96,14 @@ static int _real_sigaction(int signum, const struct sigaction *act, struct sigac
 }
 static void _thread_cancel_action(int signum, siginfo_t *si, void *ctx)   {
   if ( s_thrCancel ) {
-    pid_t pid = chkpt_sys.chkptPID;
-    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread CANCEL action. pid:%d original pid:%d\n",
-		signum,si->si_pid,pid);
+    Thread *t = Thread::current();
+    char* tls_base = t->tlsBase();
+    pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
+    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread CANCEL action for pid:%d "
+		"Thread TLS pid:%d tid:[%d-%d] Checkpoint pid:%d Mother pid:%d\n",
+		signum,si->si_pid,pid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,
+		chkpt_sys.motherPID);
+    //si->si_pid = chkpt_sys.chkptPID;
     si->si_pid = pid;
     s_thrCancel(signum,si,ctx);
     return;
@@ -108,9 +113,13 @@ static void _thread_cancel_action(int signum, siginfo_t *si, void *ctx)   {
 
 static void _thread_setxid_action(int signum, siginfo_t *si, void *ctx)   {
   if ( s_thrSetxid ) {
-    pid_t pid = chkpt_sys.chkptPID;
-    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread SETXID action. pid:%d original pid:%d\n",
-		signum,si->si_pid,pid);
+    Thread *t = Thread::current();
+    char* tls_base = t->tlsBase();
+    pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
+    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread SETXID action for pid:%d "
+		"Thread TLS pid:%d tid:[%d-%d] Checkpoint pid:%d Mother pid:%d\n",
+		signum,si->si_pid,pid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,
+		chkpt_sys.motherPID);
     si->si_pid = pid;
     s_thrSetxid(signum,si,ctx);
     return;
@@ -221,7 +230,7 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
 {
   int rc;
   Thread*  mother = chkpt_sys.motherofall;
-  mtcp_output(MTCP_DEBUG,"wrapper clone*: Starting to clone threads: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
+  mtcp_output(MTCP_DEBUG,"wrapper clone: Starting to clone threads: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
 	      fn, arg, parent_tidptr, child_tidptr, newtls, arg==mother ? "MOTHER_OF_ALL" : "",mother);
   if ( mother != 0 ) {
     // Track this thread
@@ -284,7 +293,7 @@ WEAK(void) Thread::initialize(bool /* mother */)  {
   // adding to list and setting up handler
   m_tid = mtcp_sys_kernel_gettid ();
   m_originalTID = (int)syscall(SYS_gettid);
-  m_restartArgs.tid = m_tid;
+  m_restartArgs.tid  = m_tid;
   m_restartArgs.self = this;
   {
     ThreadsLock lock;
@@ -423,8 +432,8 @@ WEAK(int) Thread::Main()  {
   motherpid = chkpt_sys.motherPID;
   pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
   if (pid != motherpid && pid != chkpt_sys.chkptPID && pid != (pid_t)-1) {
-    mtcp_output(MTCP_ERROR,"threadcloned: getpid %X/%d, must match tls pid %X/%d at offset %d\n", 
-		motherpid, motherpid, pid, pid, TLS_PID_OFFSET);
+    mtcp_output(MTCP_ERROR,"threadcloned: tid:%d getpid %X/%d, must match tls pid %X/%d or %X/%d at offset %d\n", 
+		m_tid, motherpid, motherpid, pid, pid, chkpt_sys.chkptPID, chkpt_sys.chkptPID, TLS_PID_OFFSET);
     for (rc = 0; rc < 256; rc += 4) {
       int data = *(pid_t*) (tls_base + rc);
       mtcp_output(MTCP_ERROR|MTCP_NO_HEADER,"   %d: %X", rc, data);
@@ -691,7 +700,7 @@ WEAK(int) Thread::restart(int force_context)     {
   int rip;
   int tid = mtcp_sys_kernel_gettid();
   const char* thr_typ = this==chkpt_sys.motherofall ? "MOTHER" : "CHILD";
-  mtcp_output(MTCP_DEBUG,"restart[%s] thread:%p tid:%d motherOfAll:%p pid:%d ctxt:%p\n",
+  mtcp_output(MTCP_DEBUG,"restart[%s] Pid:%d thread:%p tid:%d motherOfAll:%p ctxt:%p\n",
 	      thr_typ,this,tid,chkpt_sys.motherofall,chkpt_sys.motherPID,m_savctx.SAVEDSP);
   restoreTLS();
   setupSignals();
@@ -729,8 +738,8 @@ WEAK(int) Thread::restart(int force_context)     {
       ++s_restoring;
     } while (!restoreinprog.set(rip+1,rip));
   }
-  mtcp_output(MTCP_DEBUG,"restart[%s] thread:%p tid:%d restoreinprog:%d Start CLONE...\n",
-	      thr_typ,this,tid,restoreinprog.value());
+  mtcp_output(MTCP_INFO,"restart[%s] pid:%d thread:%p tid:%d restoreinprog:%d Start CLONE...\n",
+	      thr_typ,chkpt_sys.motherPID,this,tid,restoreinprog.value());
   // No create the children
   for (child = m_children; child != 0; child = child->m_siblings)     {
     // Create the thread so it can finish restoring itself.
@@ -772,7 +781,8 @@ WEAK(int) Thread::restart(int force_context)     {
 		  errno, child->m_cloneFlags, child->m_savctx.SAVEDSP);
     }
     mtcp_output(MTCP_INFO,"\t--> [%d:%d] CHILD thread Cloned:%d MotherOfAll:%p State:%d Restart:Progress:%d Type:%d\n",
-		cnt,m_tid,tid,chkpt_sys.motherofall,child->state().value(),restoreinprog.value(),chkpt_sys.restart_type);
+		cnt,chkpt_sys.motherPID,m_tid,chkpt_sys.motherofall,child->state().value(),
+		restoreinprog.value(),chkpt_sys.restart_type);
     ++cnt;
   }
 
@@ -788,12 +798,11 @@ WEAK(int) Thread::restart(int force_context)     {
     while(restoreinprog.value()>0)
       usleep(10000);
   }
-  mtcp_output(MTCP_INFO,"restart[%s]: setcontext: m_tid: %d, orgTID:%d Restore:%d\n",
-	      thr_typ, m_tid, m_originalTID, restoreinprog.value());
+  mtcp_output(MTCP_INFO,"restart[%s]: setcontext: pid:%d tid: %d, orgTID:%d Restore:%d\n",
+	      thr_typ, chkpt_sys.motherPID, m_tid, m_originalTID, restoreinprog.value());
   if ( this != chkpt_sys.motherofall || force_context != 0 )  {
     setcontext(&m_savctx); // Shouldn't return if everything works fine.
   }
-
   mtcp_output(MTCP_INFO,"restart: All done: this:%p tid: %d, orgTID:%d\n",
 	      this,m_tid,m_originalTID);
   return 0;
@@ -822,7 +831,7 @@ WEAK(long) Thread::set_tid_address ()   {
   mtcp_output(MTCP_DEBUG,"set_tid_address*: thread %p->tid:%d, tidptr %p\n",this,m_tid,&m_childTID);
   m_pActualTID = &m_childTID;  // save new tidptr so subsequent restore will create with new pointer
   mtcp_sys_set_tid_address(&m_childTID);
-  return (rc);                       // now we tell kernel to change it for the current thread
+  return rc;                       // now we tell kernel to change it for the current thread
 }
 
 ///  Restore the GDT entries that are part of a thread's state
@@ -842,6 +851,6 @@ WEAK(void) Thread::restoreTLS()  {
 		thr_typ,mtcp_sys_errno,m_tls[0].entry_number);
   }
   m_tid = mtcp_sys_kernel_gettid();
-  mtcp_output(MTCP_DEBUG,"restoreTLS[%s]: motherpid:%d tid=%d restoring TLS entry[%d]\n",
+  mtcp_output(MTCP_INFO,"restoreTLS[%s]: motherpid:%d Thread tid=%d restoring TLS entry[%d]\n",
 	      thr_typ,motherpid,m_tid,m_tls[0].entry_number);
 }

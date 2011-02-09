@@ -96,137 +96,7 @@ WEAK(int) MainThread::forkInstance() {
   }
   return pID;
 }
-#if 0
-void MainThread::stop()   {
-  //i_stop();
-  int needrescan;
-  Thread* thread;
-  static struct timespec const enabletimeout = { 10, 0 };
 
-  chkpt_sys.motherofall->saveSignals();
-  chkpt_sys.motherofall->saveTLS();
-
-  if (getcontext (&chkpt_sys.motherofall->m_savctx) < 0)   {
-    mtcp_output(MTCP_FATAL,"stopThreads: failed to retrieve context of motherofall.\n");
-  }
-  while (1) {
-    sigpending (&chkpt_sys.motherofall->m_sigpending);
-    Thread::setupSignals();
-
-    // Halt all other threads - force them to call stopthisthread
-    // If any have blocked checkpointing, wait for them to unblock before signalling
-rescan:
-    needrescan = 0;
-    ThreadsLock::take();
-    for (thread = Thread::threads(); thread != NULL; thread = thread->next) {
-
-again:
-      Thread::setupSignals(); //keep pounding the signal handler in
-      // If thread no longer running, remove it from thread list
-      if (*(thread->m_pActualTID) == 0) {
-        mtcp_output(MTCP_WARNING,"stopThreads: thread %d disappeared\n", thread->m_tid);
-        ThreadsLock::release ();
-        thread->cleanup();
-        goto rescan;
-      }
-      FutexState& st = thread->state();
-      // Do various things based on thread's state
-      switch (thread->state().value() ) {
-      case ST_RUNDISABLED:
-        // Thread is running but has checkpointing disabled
-        // Tell the instrumentStop routine that we are waiting for it
-        // We will need to rescan so we will see it suspended
-	if (!st.set(ST_SIGDISABLED, ST_RUNDISABLED)) goto again;
-	needrescan = 1;
-	break;
-      
-      case ST_RUNENABLED:
-        // Thread is running and has checkpointing enabled
-        // Send it a signal so it will call Thread::stop
-        // We will need to rescan (hopefully it will be suspended by then)
-	if (!st.set(ST_SIGENABLED, ST_RUNENABLED)) goto again;
-	if (mtcp_sys_kernel_tkill (thread->m_tid, STOPSIGNAL) < 0) {
-	  if (mtcp_sys_errno != ESRCH) {
-	    mtcp_output(MTCP_WARNING,"stopThreads: error signalling thread %d: %s\n",
-			thread->m_tid, strerror (mtcp_sys_errno));
-	  }
-	  else {
-	    mtcp_output(MTCP_INFO,"stopThreads: send KILL to thread %d\n",thread->m_tid);
-	  }
-	  ThreadsLock::release ();
-	  thread->cleanup();
-	  goto rescan;
-	}
-	needrescan = 1;
-	break;
-
-        case ST_SIGDISABLED:
-	  // Thread is running, we have signalled it to stop, but it has checkpointing disabled
-	  // So we wait for it to change state
-	  // We have to unlock because it may need lock to change state
-          ThreadsLock::release ();
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SIGDISABLED waiting for thread %d\n",thread->m_tid);
-          st.wait(ST_SIGDISABLED, &enabletimeout);
-          goto rescan;
-
-        /* Thread is running and we have sent signal to stop it
-	 * So we have to wait for it to change state (enter signal handler)
-	 * We have to unlock because it may try to use lock meanwhile
-	 */
-        case ST_SIGENABLED: {
-          ThreadsLock::release ();
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SIGENABLED waiting for thread %d\n",thread->m_tid);
-          st.wait(ST_SIGENABLED, &enabletimeout);
-          goto rescan;
-        }
-
-        /* Thread has entered signal handler and is saving its context
-	 * So we have to wait for it to finish doing so
-         * We don't need to unlock because it won't use lock before changing state
-	 */
-        case ST_SUSPINPROG: {
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SUSPINPROG waiting for thread %d\n",thread->m_tid);
-          st.wait(ST_SUSPINPROG, &enabletimeout);
-          goto again;
-        }
-
-	// Thread is suspended and all ready for us to write checkpoint file
-        case ST_SUSPENDED: {
-          break;
-        }
-
-	// Don't do anything to the stopThreads (this) thread 
-        case ST_CKPNTHREAD: {
-          break;
-        }
-
-	// Who knows?
-        default: {
-	  mtcp_output(MTCP_FATAL,"Fatal inconsistency in MainThread::stop. tid:%d State:%d\n",
-		      thread->m_tid, thread->state().value());
-        }
-      }
-    }
-    ThreadsLock::release();
-
-    // If need to rescan (ie, some thread possibly not in ST_SUSPENDED STATE), check them all again
-    if (needrescan) goto rescan;
-    RMB; // matched by WMB in stopthisthread
-    mtcp_output(MTCP_INFO,"stopThreads: everything suspended\n");
-
-    // If no threads, we're all done
-    if ( 0 == Thread::threads() ) {
-      mtcp_output(MTCP_WARNING,"stopThreads: exiting (no threads)\n");
-      return;
-    }
-    Thread::saveSysInfo();
-    mtcp_output(MTCP_INFO,"stopThreads: finished\n");
-    mtcp_output(MTCP_INFO,"STOP:stopThreads: finished\n");
-    return;
-  }
-  mtcp_output(MTCP_INFO,"STOP:stopThreads: finished\n");
-}
-#endif
 int MainThread::stop()   {
   int needrescan;
   Thread* thread;
@@ -253,7 +123,8 @@ again:
       Thread::setupSignals(); //keep pounding the signal handler in
       // If thread no longer running, remove it from thread list
       if (*(thread->m_pActualTID) == 0) {
-        mtcp_output(MTCP_WARNING,"stopThreads: thread %d disappeared\n", thread->m_tid);
+        mtcp_output(MTCP_WARNING,"stopThreads[pid:%d]: thread %d disappeared\n",
+		    chkpt_sys.motherPID,thread->m_tid);
         ThreadsLock::release ();
         thread->cleanup();
         goto rescan;
@@ -276,11 +147,12 @@ again:
 	if (!st.set(ST_SIGENABLED, ST_RUNENABLED)) goto again;
 	if (mtcp_sys_kernel_tkill (thread->m_tid, STOPSIGNAL) < 0) {
 	  if (mtcp_sys_errno != ESRCH) {
-	    mtcp_output(MTCP_WARNING,"stopThreads: error signalling thread %d: %s\n",
-			thread->m_tid, strerror (mtcp_sys_errno));
+	    mtcp_output(MTCP_WARNING,"stopThreads[pid:%d]: error signalling thread %d: %s\n",
+			chkpt_sys.motherPID,thread->m_tid, strerror (mtcp_sys_errno));
 	  }
 	  else {
-	    mtcp_output(MTCP_INFO,"stopThreads: send KILL to thread %d\n",thread->m_tid);
+	    mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: send KILL to thread %d\n",
+			chkpt_sys.motherPID,thread->m_tid);
 	  }
 	  ThreadsLock::release ();
 	  thread->cleanup();
@@ -294,7 +166,8 @@ again:
 	  // So we wait for it to change state
 	  // We have to unlock because it may need lock to change state
           ThreadsLock::release ();
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SIGDISABLED waiting for thread %d\n",thread->m_tid);
+	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SIGDISABLED waiting for thread %d\n",
+		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SIGDISABLED, &enabletimeout);
           goto rescan;
 
@@ -304,7 +177,8 @@ again:
 	 */
         case ST_SIGENABLED: {
           ThreadsLock::release ();
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SIGENABLED waiting for thread %d\n",thread->m_tid);
+	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SIGENABLED waiting for thread %d\n",
+		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SIGENABLED, &enabletimeout);
           goto rescan;
         }
@@ -314,7 +188,8 @@ again:
          * We don't need to unlock because it won't use lock before changing state
 	 */
         case ST_SUSPINPROG: {
-	  mtcp_output(MTCP_INFO,"stopThreads: ST_SUSPINPROG waiting for thread %d\n",thread->m_tid);
+	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SUSPINPROG waiting for thread %d\n",
+		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SUSPINPROG, &enabletimeout);
           goto again;
         }
@@ -363,12 +238,12 @@ WEAK(int) MainThread::resume()   {
     FutexState& st = thread->state();
     int val = st.value();
     if (val != ST_CKPNTHREAD) {
-      mtcp_output(MTCP_DEBUG,"resume: tid:%d State:%d RUNENABLED:%d SUSPENDED:%d\n",
-		  thread->m_tid, val, ST_RUNENABLED, ST_SUSPENDED);
+      mtcp_output(MTCP_DEBUG,"resume[pid:%d]: tid:%d State:%d RUNENABLED:%d SUSPENDED:%d\n",
+		  chkpt_sys.motherPID, thread->m_tid, val, ST_RUNENABLED, ST_SUSPENDED);
       if (!st.set(ST_RUNENABLED, ST_SUSPENDED))   {
 	mtcp_output(val==ST_RUNENABLED ? MTCP_INFO : MTCP_FATAL,
-		    "Fatal inconsistency in resume: tid:%d State:%d RUNENABLED:%d SUSPENDED:%d\n",
-		    thread->m_tid, val, ST_RUNENABLED, ST_SUSPENDED);
+		    "Fatal inconsistency in resume[pid:%d]: tid:%d State:%d RUNENABLED:%d SUSPENDED:%d\n",
+		    chkpt_sys.motherPID, thread->m_tid, val, ST_RUNENABLED, ST_SUSPENDED);
       }
       st.wake();
     }
