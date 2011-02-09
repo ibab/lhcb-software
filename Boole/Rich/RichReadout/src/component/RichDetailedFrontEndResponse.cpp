@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
- *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.15 2009-10-04 19:58:25 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -25,10 +22,10 @@ DECLARE_ALGORITHM_FACTORY( DetailedFrontEndResponse );
 // Standard constructor, initializes variables
 DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator ),
-    actual_base ( NULL ),
-    theRegistry ( NULL ),
-    m_timeShift ( Rich::NRiches )
+  : Rich::AlgBase ( name, pSvcLocator ),
+    actual_base   ( NULL ),
+    theRegistry   ( NULL ),
+    m_timeShift   ( Rich::NRiches )
 {
 
   // job options
@@ -60,7 +57,7 @@ DetailedFrontEndResponse::~DetailedFrontEndResponse() {}
 StatusCode DetailedFrontEndResponse::initialize()
 {
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
@@ -98,7 +95,7 @@ StatusCode DetailedFrontEndResponse::finalize()
   if ( sc.isFailure() ) { Warning( "Failed to finalise random number generators" ).ignore(); }
 
   // finalize base class
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 
 StatusCode DetailedFrontEndResponse::execute()

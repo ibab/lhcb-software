@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
- *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.7 2007-02-02 10:13:42 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -25,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( SimpleFrontEndResponse );
 // Standard constructor, initializes variables
 SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ) 
+  : Rich::AlgBase ( name, pSvcLocator ) 
 {
 
   // job opts
@@ -45,7 +42,7 @@ SimpleFrontEndResponse::~SimpleFrontEndResponse () { }
 StatusCode SimpleFrontEndResponse::initialize() 
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
@@ -69,7 +66,7 @@ StatusCode SimpleFrontEndResponse::finalize()
   m_gaussRndm.finalize();
 
   // finalize base class
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 
 StatusCode SimpleFrontEndResponse::execute() 

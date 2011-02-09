@@ -4,9 +4,6 @@
  *
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::SummedDeposits
  *
- *  CVS Log :-
- *  $Id: RichSummedDeposits.h,v 1.7 2007-03-20 11:49:39 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -50,7 +47,7 @@ namespace Rich
        *  @date   2003-11-06
        */
 
-      class SummedDeposits : public RichAlgBase
+      class SummedDeposits : public Rich::AlgBase
       {
 
       public:

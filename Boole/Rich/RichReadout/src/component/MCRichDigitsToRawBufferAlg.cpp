@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
- *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.9 2007-02-02 10:13:41 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
  */
@@ -29,8 +26,8 @@ DECLARE_ALGORITHM_FACTORY( MCRichDigitsToRawBufferAlg );
 // Standard constructor
 MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
-  : RichAlgBase   ( name, pSvcLocator ),
-    m_rawFormatT  ( 0 )
+  : Rich::AlgBase ( name, pSvcLocator ),
+    m_rawFormatT  ( NULL )
 {
 
   declareProperty( "MCRichDigitsLocation",
@@ -47,7 +44,7 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
 {
 
   // intialise base lcass
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools

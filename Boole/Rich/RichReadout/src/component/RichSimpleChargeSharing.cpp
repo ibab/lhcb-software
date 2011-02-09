@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( SimpleChargeSharing );
 // Standard constructor, initializes variables
 SimpleChargeSharing::SimpleChargeSharing( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : RichAlgBase        ( name, pSvcLocator )
+  : Rich::AlgBase ( name, pSvcLocator )
 {
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = LHCb::MCRichDepositLocation::Default );
@@ -36,7 +36,7 @@ SimpleChargeSharing::~SimpleChargeSharing() {};
 StatusCode SimpleChargeSharing::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // randomn number generator
@@ -141,9 +141,9 @@ StatusCode SimpleChargeSharing::finalize()
 {
   // finalize random number generator
   const StatusCode sc = m_rndm.finalize();
-  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" );
+  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" ).ignore();
 
   // finalize base class
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 

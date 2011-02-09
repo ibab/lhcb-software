@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
- *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.9 2007-03-20 11:49:39 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
@@ -43,7 +40,7 @@ namespace Rich
        */
       //===============================================================================
 
-      class MCRichDigitsToRawBufferAlg : public RichAlgBase
+      class MCRichDigitsToRawBufferAlg : public Rich::AlgBase
       {
 
       public:

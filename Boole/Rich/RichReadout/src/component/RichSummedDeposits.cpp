@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH digitisation algorithm : SummedDeposits
  *
- *  CVS Log :-
- *  $Id: RichSummedDeposits.cpp,v 1.6 2007-03-20 11:49:39 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -25,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( SummedDeposits );
 // Standard constructor, initializes variables
 SummedDeposits::SummedDeposits( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : RichAlgBase        ( name, pSvcLocator )
+  : Rich::AlgBase ( name, pSvcLocator )
 {
   declareProperty( "SummedDepositLocation",
                    m_RichSummedDepositLocation = LHCb::MCRichSummedDepositLocation::Default );
@@ -38,7 +35,7 @@ SummedDeposits::~SummedDeposits() {}
 StatusCode SummedDeposits::initialize()
 {
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // randomn number generator
@@ -141,9 +138,9 @@ StatusCode SummedDeposits::finalize()
 {
   // finalize random number generator
   const StatusCode sc = m_rndm.finalize();
-  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" );
+  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" ).ignore();
 
   // finalize base class
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 

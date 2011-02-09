@@ -4,9 +4,6 @@
  *
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::Signal
  *
- *  CVS Log :-
- *  $Id: RichSignal.h,v 1.16 2007-09-20 16:36:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -53,7 +50,7 @@ namespace Rich
        *  @date   2003-11-06
        */
 
-      class Signal : public RichAlgBase
+      class Signal : public Rich::AlgBase
       {
 
       public:

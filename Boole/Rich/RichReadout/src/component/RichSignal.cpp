@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
- *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.19 2007-09-20 16:36:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -25,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( Signal );
 // Standard constructor, initializes variables
 Signal::Signal( const std::string& name,
                 ISvcLocator* pSvcLocator )
-  : RichAlgBase        ( name, pSvcLocator ),
+  : Rich::AlgBase      ( name, pSvcLocator ),
     m_mcDeposits       ( 0 ),
     m_testSmartIDs     ( false ),
     m_smartIDTool      ( 0 ),
@@ -63,7 +60,7 @@ Signal::~Signal() {};
 StatusCode Signal::initialize()
 {
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // randomn number generator
@@ -195,9 +192,9 @@ StatusCode Signal::finalize()
 {
   // finalize random number generator
   const StatusCode sc = m_rndm.finalize();
-  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" );
+  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" ).ignore();
 
   // finalize base class
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 

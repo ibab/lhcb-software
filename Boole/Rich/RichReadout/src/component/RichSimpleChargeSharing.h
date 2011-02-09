@@ -4,9 +4,6 @@
  *
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::SimpleChargeSharing
  *
- *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.h,v 1.5 2007-03-20 11:49:39 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
  */
@@ -59,7 +56,7 @@ namespace Rich
        */
       //===============================================================================
 
-      class SimpleChargeSharing : public RichAlgBase
+      class SimpleChargeSharing : public Rich::AlgBase
       {
 
       public:

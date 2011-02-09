@@ -4,9 +4,6 @@
  *
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::DetailedFrontEndResponse
  *
- *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.11 2009-10-04 19:58:25 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
  *  @date   2003-11-06
@@ -67,7 +64,7 @@ namespace Rich
        *  @date   2003-11-06
        */
 
-      class DetailedFrontEndResponse : public RichAlgBase
+      class DetailedFrontEndResponse : public Rich::AlgBase
       {
 
       public:
