@@ -43,12 +43,12 @@ from SelPy.selection import ( flatAlgorithmList,
                               AutomaticData,
                               NameError,
                               NonEmptyInputLocations,
-                              IncompatibleInputLocations,
-                              SelSequence                )
+                              IncompatibleInputLocations)
 
 from SelPy.utils import update_dict_overlap
 
 from SelPy.selection import Selection as Sel
+from SelPy.selection import SelectionSequence as SelSequence
 from SelPy.selection import EventSelection as EvtSel
 from SelPy.selection import PassThroughSelection as PassThroughSel
 from SelPy.selection import AutomaticData as autodata
@@ -59,7 +59,7 @@ from GaudiConfUtils import ConfigurableGenerators
 
 def checkName(name) :
     if configurableExists(name) :
-        raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
+        raise NameError('Could not instantiate Selection '+name+' because Configurable with the same name already exists. Try a different name for your Selection')
 
 def selectionWrapper(selType, name, *args, **kwargs) :
     """
@@ -277,17 +277,15 @@ class SelectionSequence(SelSequence) :
                  EventPreSelector = [],
                  PostSelectionAlgs = [],
                  sequencerType = GaudiSequencer) :
+
+        checkName(name)
         SelSequence.__init__(self,
                              name,
                              TopSelection,
                              EventPreSelector,
-                             PostSelectionAlgs)
+                             PostSelectionAlgs,
+                             sequencerType)
 
-        checkName(self.name())
-        self._gaudiseq = sequencerType(self.name(), Members = self._algos)
-
-    def sequence(self) :
-        return self._gaudiseq
 
     
 class MultiSelectionSequence(UniquelyNamedObject,
