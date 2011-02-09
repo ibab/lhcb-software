@@ -26,7 +26,7 @@ namespace LHCb
     m_Dxyz[2] = 0.0;
     m_Nxyz[0] = 0;
     m_Nxyz[1] = 0;
-    m_Nxyz[3] = 0;
+    m_Nxyz[2] = 0;
     m_min_FL[0] = 0.0;
     m_min_FL[1] = 0.0;
     m_min_FL[2] = 0.0;

@@ -30,25 +30,25 @@ LAssembly::LAssembly
   : LogVolBase( name        , 
                 sensitivity , 
                 magnetic    )
-  , m_coverComputed( false )
   , m_xMin( 1000000.)
-  , m_yMin( 1000000.)
-  , m_zMin( 1000000.)
   , m_xMax(-1000000.)
+  , m_yMin( 1000000.)
   , m_yMax(-1000000.)
+  , m_zMin( 1000000.)
   , m_zMax(-1000000.)
+  , m_coverComputed( false )
 {}
 // ============================================================================
 // default constructor
 // ============================================================================
 LAssembly::LAssembly() : LogVolBase()
-  , m_coverComputed( false )
   , m_xMin( 1000000.)
-  , m_yMin( 1000000.)
-  , m_zMin( 1000000.)
   , m_xMax(-1000000.)
+  , m_yMin( 1000000.)
   , m_yMax(-1000000.)
+  , m_zMin( 1000000.)
   , m_zMax(-1000000.)
+  , m_coverComputed( false )
  {}
 // ============================================================================
 /*  destructor 
