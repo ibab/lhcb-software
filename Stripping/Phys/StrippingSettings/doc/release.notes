@@ -8,7 +8,9 @@
  - Add dbase/stripping11, dbase/stripping12
   . Databases for stripping11, stripping12 configuration dictionaries.
  - Add python/StrippingSettings/Utils.py
-  . Contains helper functions for accessing configuration dictionaries.
+  . Contains helper functions for accessing configuration dictionaries, 
+    for registering dictionaries to a data base, and for creating a new
+    database out of all the dictionaries in a module.
 
 ! 2011-02-09 - Juan Palacios
  - Add python/StrippingSettings/StrippingDev/LineConfigDictionaries.py
