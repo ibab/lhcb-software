@@ -44,7 +44,7 @@ IsMuonTool::IsMuonTool(const string& type,
      m_foiFactor( 1. ),   m_stationZ( m_nStations ),
      m_occupancy( 5, 0 ), m_regionHits( 4 )
 {
-   declareInterface<ITrackSelector>(this);
+   declareInterface< ITracksFromTrack >( this );
 
 }
 
@@ -125,7 +125,8 @@ IsMuonTool::~IsMuonTool()
 } 
 
 //=============================================================================
-bool IsMuonTool::accept( const LHCb::Track& track ) const
+StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track &track,
+                                       std::vector< LHCb::Track * > &tracks )
 {
    // Clear temporary storage
    m_occupancy.assign( 5, 0 );
@@ -136,17 +137,30 @@ bool IsMuonTool::accept( const LHCb::Track& track ) const
    extrapolateTrack( track );
 
    // track is in acceptance? Track has minimum momentum?
-   bool accept = preSelection( track );
-   if ( !accept ) return accept;
+   if ( !preSelection( track ) ) {
+      return StatusCode::SUCCESS;
+   }
 
    // find the coordinates in the fields of interest
    findHits( track );
 
-   return isMuon( track.p() );
+   if ( !isMuon( track.p() ) ) {
+      return StatusCode::SUCCESS;
+   } else {
+      // Add found hits to track
+      LHCb::Track* output = track.clone();
+      tracks.push_back( output  );
+      BOOST_FOREACH( const Hlt1MuonHit* hit, m_hits ) {
+         LHCb::LHCbID id( hit->tile() );
+         output->addToLhcbIDs( id );
+      }
+      return StatusCode::SUCCESS;
+   }
 }
 
 //=============================================================================
-void IsMuonTool::extrapolateTrack(const LHCb::Track& track ) const {
+void IsMuonTool::extrapolateTrack(const LHCb::Track& track )
+{
 
    // get state closest to M1 for extrapolation
    const LHCb::State& state = track.closestState( 9450. );
@@ -193,8 +207,11 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
 }
 
 //=============================================================================
-void IsMuonTool::findHits( const LHCb::Track& track ) const
+void IsMuonTool::findHits( const LHCb::Track& track )
 {
+   // clear previously stored hits
+   m_hits.clear();
+
    // Start from 1 because M1 does not matter for IsMuon
    for ( unsigned int s = 1 ; s < m_nStations; ++s ) {
       const Hlt1MuonStation& station = m_hitManager->station( s );
@@ -229,7 +246,7 @@ void IsMuonTool::findHits( const LHCb::Track& track ) const
             // check if the hit is in the window
             if(  ( fabs( x - m_trackX[ s ] ) < foiXDim ) &&
                  ( fabs( y - m_trackY[ s ] ) < foiYDim )  ) {
-               
+               m_hits.push_back( hit );
                m_occupancy[ s ] += 1;
             }
          } // hits

@@ -9,7 +9,7 @@
 #include <GaudiAlg/GaudiTool.h>
 
 // LHCb
-#include <TrackInterfaces/ITrackSelector.h>            // Interface
+#include <TrackInterfaces/ITracksFromTrack.h>            // Interface
 
 // local
 #include "Hlt1MuonHit.h"
@@ -26,7 +26,7 @@ class DeMuonDetector;
  *  @author Roel Aaij
  *  @date   2011-01-19
  */
-class IsMuonTool : public GaudiTool, virtual public ITrackSelector {
+class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack {
 public: 
    /// Standard constructor
    IsMuonTool( const std::string& type, 
@@ -37,7 +37,8 @@ public:
 
    virtual StatusCode initialize();
 
-   virtual bool accept( const LHCb::Track& track ) const;
+   virtual StatusCode tracksFromTrack( const LHCb::Track &seed,
+                                       std::vector< LHCb::Track * > &tracks );
 
 private:
 
@@ -81,16 +82,17 @@ private:
    std::vector< double > m_momentumCuts; // vector of momentum ranges
 
    // number of hits in the FOI found in the muon stations
-   mutable std::vector< unsigned int > m_occupancy;
+   std::vector< unsigned int > m_occupancy;
 
-   mutable std::vector< Hlt1ConstMuonHits > m_regionHits;
+   Hlt1ConstMuonHits m_hits;
+   std::vector< Hlt1ConstMuonHits > m_regionHits;
 
    // Helper methods
-   void extrapolateTrack( const LHCb::Track& track ) const;
+   void extrapolateTrack( const LHCb::Track& track );
 
    bool preSelection( const LHCb::Track& track ) const;
 
-   void findHits( const LHCb::Track& track ) const;
+   void findHits( const LHCb::Track& track );
 
    bool isMuon( const double p ) const;
 
