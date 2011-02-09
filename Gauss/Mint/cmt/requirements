@@ -1,0 +1,54 @@
+#============================================================================
+# Created    : 2011-02-07
+# Maintainer : Matt Coombes
+#============================================================================
+package           Mint
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+#use ROOT	v*	LCG_Interfaces  -no_auto_imports
+use GaudiPolicy       v*
+use GaudiAlg          v*
+use ROOT              v*  LCG_Interfaces  -no_auto_imports
+use Boost             v*  LCG_Interfaces
+
+include_path      none
+#===========================================================================
+# Component library building rule
+#============================================================================
+library          Mint    ../src/Events/src/*.C           \
+			 ../src/IReturnIntefaces/src/*.C \
+			 ../src/Examples/src/*.C	 \
+			 ../src/FitParameter/src/*.C	 \
+			 ../src/Minimiser/src/*.C	 \
+			 ../src/NamedParameter/src/*.C 	 \
+			 ../src/Pareto/src/*.C		 \
+			 ../src/PdfAndLogL/src/*.C	 \
+			 ../src/Utils/src/*.C		
+#============================================================================
+# define component library link options
+#============================================================================
+
+macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics" WIN32 " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib"
+#===========================================================================
+apply_pattern    component_library library=Mint
+
+include_dirs 	../src/Utils/src
+include_dirs 	../src/Events/src
+include_dirs 	../src/IReturnIntefaces/src
+include_dirs 	../src/Examples/src
+include_dirs 	../src/FitParameter/src
+include_dirs 	../src/Minimiser/src
+include_dirs 	../src/Pareto/src
+include_dirs 	../src/PdfAndLogL/src
+include_dirs    ../src/NamedParameter/src
+#include_dirs    $(ROOTSYS)/lib
