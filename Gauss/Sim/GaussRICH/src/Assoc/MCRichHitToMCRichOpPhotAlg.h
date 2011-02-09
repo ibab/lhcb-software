@@ -3,9 +3,6 @@
  *
  *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
  *
- *  CVS Log :-
- *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.1 2009-01-26 13:45:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
  */
@@ -39,7 +36,7 @@ namespace Rich
      *  @date   2004-02-11
      */
 
-    class MCRichHitToMCRichOpPhotAlg : public RichAlgBase
+    class MCRichHitToMCRichOpPhotAlg : public Rich::AlgBase
     {
 
     public:

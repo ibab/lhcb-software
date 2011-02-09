@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
- *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.1 2009-01-26 13:45:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
  */
@@ -42,7 +39,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class MCPartToMCRichTrackAlg : public RichAlgBase
+    class MCPartToMCRichTrackAlg : public Rich::AlgBase
     {
 
     public:

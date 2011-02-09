@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2011-02-09 - Chris Jones
+ - Adapt to removal of typedef RichAlgBase -> Use Rich::AlgBase
+
 ! 2010-12-15 - Chris Jones
  - Update GetMCRichHitsAlg to specifically check with DeRichSystem if the HPD
    associated to each hit is active, and only to make persistent hits for those

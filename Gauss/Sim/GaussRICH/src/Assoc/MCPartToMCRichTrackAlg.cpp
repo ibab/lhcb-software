@@ -4,9 +4,6 @@
  *
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
- * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.2 2009-10-23 10:47:46 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -28,8 +25,8 @@ DECLARE_ALGORITHM_FACTORY( MCPartToMCRichTrackAlg );
 //=============================================================================
 MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name , pSvcLocator ),
-    m_linker    ( NULL )
+  : Rich::AlgBase ( name , pSvcLocator ),
+    m_linker      ( NULL )
 {
   // Event locations to process
   m_evtLocs.clear();

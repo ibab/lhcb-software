@@ -4,9 +4,6 @@
  *
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
- * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.2 2009-10-23 10:47:46 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
  */
@@ -28,8 +25,8 @@ DECLARE_ALGORITHM_FACTORY( MCRichHitToMCRichOpPhotAlg );
 //=============================================================================
 MCRichHitToMCRichOpPhotAlg::MCRichHitToMCRichOpPhotAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name , pSvcLocator ),
-    m_linker    ( NULL )
+  : Rich::AlgBase ( name , pSvcLocator ),
+    m_linker      ( NULL )
 {
   // Event locations to process
   m_evtLocs.clear();
@@ -48,7 +45,7 @@ MCRichHitToMCRichOpPhotAlg::~MCRichHitToMCRichOpPhotAlg() {};
 StatusCode MCRichHitToMCRichOpPhotAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // add custom initialisations here
