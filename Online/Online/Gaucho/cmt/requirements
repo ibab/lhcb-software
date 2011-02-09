@@ -28,7 +28,12 @@ apply_pattern linker_library library="Gaucho"
 #apply_pattern generate_rootmap library=Gaucho
 apply_pattern   component_library library="Gaucho"
 application Addertst ../src/Test/Addertst.cpp
+macro_append  Addertst_dependencies   " Gaucho "
+
 application RPCTest ../src/Test/RPCTest.cpp
+macro_append  RPCTest_dependencies    " Gaucho "
+
 application HistTest ../src/Test/HistTest.cpp
+macro_append  HistTest_dependencies    " Gaucho "
 
 macro_append Gaucho_shlibflags " -pthread " WIN32 ""
