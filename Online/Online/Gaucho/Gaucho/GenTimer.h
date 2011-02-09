@@ -13,6 +13,7 @@ class GenTimer
 private:
   bool m_periodic;
   bool m_synched;
+  bool m_ForceExit;
 protected:
   void *m_arg;
   unsigned long long  m_period;

@@ -33,6 +33,7 @@ GenTimer::GenTimer(void *arg, int period, int typ)
   m_synched = (typ & TIMER_MODIFYER_SYNCHRONIZED) != 0;
   m_thread = 0;
   m_extlastdelta = 0;
+  m_ForceExit = false;
 
 //  printf("==================GenTimer Constructor.................%llu %d %d\n",m_period, m_periodic, m_synched);
 }
@@ -64,6 +65,7 @@ void GenTimer::Stop()
   if (m_thread != 0)
   {
     void *status;
+    m_ForceExit = true;
     pthread_cancel(m_thread);
     pthread_join(m_thread,&status);
     m_thread = 0;
@@ -185,6 +187,7 @@ void *GenTimer::ThreadRoutine()
       }
       else if (errno == EINTR)
       {
+        //if (m_ForceExit) return 0;
         printf("EINTR in nanosleep \n");
         continue;
       }

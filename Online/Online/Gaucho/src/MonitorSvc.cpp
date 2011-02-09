@@ -30,6 +30,23 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 //extern const InterfaceID IID_IPublish;
 
 // Constructor
+//Query interfaces of Interface
+// @param riid       ID of Interface to be retrieved
+// @param ppvUnknown Pointer to Location for interface pointer
+StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
+  if(IMonitorSvc::interfaceID().versionMatch(riid)) {
+    *ppvIF = dynamic_cast<IMonitorSvc*> (this);
+  }
+  else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
+    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
+  }
+  else {
+    return Service::queryInterface(riid, ppvIF);
+  }
+  addRef();
+  return StatusCode::SUCCESS;
+}
+
 MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
   Service(name, sl)
 {
@@ -94,24 +111,6 @@ MonitorSvc::~MonitorSvc()
     this->m_CntrMgr = 0;
   }
 }
-//Query interfaces of Interface
-// @param riid       ID of Interface to be retrieved
-// @param ppvUnknown Pointer to Location for interface pointer
-StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IMonitorSvc*> (this);
-  }
-  else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
-  }
-  else {
-    return Service::queryInterface(riid, ppvIF);
-  }
-  addRef();
-  return StatusCode::SUCCESS;
-}
-
-
 StatusCode MonitorSvc::initialize()
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
@@ -128,7 +127,80 @@ StatusCode MonitorSvc::initialize()
 
   return StatusCode::SUCCESS;
 }
+StatusCode MonitorSvc::start()
+{
+//  CALLGRIND_START_INSTRUMENTATION
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endreq;
+  Service::start();
+  if (m_CntrSubSys != 0)
+  {
+    m_CntrSubSys->m_expandnames = false;
+  }
 
+  if (this->m_expandCounterServices)
+  {
+    if (m_expandInfix.find("<part>") != std::string::npos)
+    {
+      m_expandInfix.replace(m_expandInfix.find("<part>"),strlen("<part>"),m_partname);
+    }
+    if (m_expandInfix.find("<proc>") != std::string::npos)
+    {
+      m_expandInfix.replace(m_expandInfix.find("<proc>"),strlen("<proc>"),m_ProcName);
+    }
+    if (m_expandInfix.find("<program>") != std::string::npos)
+    {
+      m_expandInfix.replace(m_expandInfix.find("<program>"),strlen("<program>"),m_ProgName);
+    }
+    if (m_CntrSubSys != 0)
+    {
+      m_CntrSubSys->m_expandInfix = m_expandInfix;
+      m_CntrSubSys->m_expandnames = true;
+    }
+  }
+  if (m_CntrMgr != 0)
+  {
+//    printf("In STARTS Method... Counter Manager present... Closing it...\n");
+    this->m_CntrMgr->close();
+  }
+  m_utgid = RTL::processName();
+  if (m_MonSys != 0) m_MonSys->setup((char*)m_utgid.c_str());
+  if (m_CntrSubSys != 0) m_CntrSubSys->setup((char*)"Counter");
+  if (m_HistSubSys != 0) m_HistSubSys->setup((char*)"Histos");
+  if (this->m_HistSubSys != 0)
+  {
+    if (m_CntrMgr != 0)
+    {
+      MonHist *h = (MonHist*)m_HistSubSys->findobj("COUNTERRATE");
+      if (h == 0)
+      {
+        h = new MonHist(msgSvc(),"COUNTERRATE",m_CntrMgr);
+        m_HistSubSys->addObj(h);
+      }
+      h->makeCounters();
+    }
+  }
+  this->m_MonSys->List();
+  this->m_MonSys->start();
+  m_started = true;
+  return StatusCode::SUCCESS;
+}
+StatusCode MonitorSvc::stop()
+{
+//  CALLGRIND_STOP_INSTRUMENTATION
+//  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
+  m_started = false;
+//  updateSvc("",m_runno,0);
+  if (m_CntrMgr != 0)
+  {
+    this->m_CntrMgr->open();
+  }
+  m_MonSys->stop();
+  StatusCode sc = Service::stop();
+ return StatusCode::SUCCESS;
+}
+
+//updateSvc and resetHistos methods are for fast run changes
 
 StatusCode MonitorSvc::finalize()
 {
@@ -136,6 +208,16 @@ StatusCode MonitorSvc::finalize()
   //dim_lock();
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "MonitorSvc Destructor" << endreq;
+  if (m_started)
+  {
+    m_started = false;
+  //  updateSvc("",m_runno,0);
+    if (m_CntrMgr != 0)
+    {
+      this->m_CntrMgr->open();
+    }
+    m_MonSys->stop();
+  }
   if (m_HistSubSys != 0)
   {
     delete m_HistSubSys;
@@ -155,6 +237,13 @@ StatusCode MonitorSvc::finalize()
 
   StatusCode sc = Service::finalize();
   return StatusCode::SUCCESS;
+}
+
+void MonitorSvc::setRunNo(int runno)
+{
+  m_runno = runno;
+  this->m_MonSys->setRunNo(runno);
+  return;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const bool&  ,
@@ -539,86 +628,6 @@ std::string MonitorSvc::infoOwnerName( const IInterface* owner )
   return "";
 }
 
-StatusCode MonitorSvc::start()
-{
-//  CALLGRIND_START_INSTRUMENTATION
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endreq;
-  Service::start();
-  if (m_CntrSubSys != 0)
-  {
-    m_CntrSubSys->m_expandnames = false;
-  }
-
-  if (this->m_expandCounterServices)
-  {
-    if (m_expandInfix.find("<part>") != std::string::npos)
-    {
-      m_expandInfix.replace(m_expandInfix.find("<part>"),strlen("<part>"),m_partname);
-    }
-    if (m_expandInfix.find("<proc>") != std::string::npos)
-    {
-      m_expandInfix.replace(m_expandInfix.find("<proc>"),strlen("<proc>"),m_ProcName);
-    }
-    if (m_expandInfix.find("<program>") != std::string::npos)
-    {
-      m_expandInfix.replace(m_expandInfix.find("<program>"),strlen("<program>"),m_ProgName);
-    }
-    if (m_CntrSubSys != 0)
-    {
-      m_CntrSubSys->m_expandInfix = m_expandInfix;
-      m_CntrSubSys->m_expandnames = true;
-    }
-  }
-  if (m_CntrMgr != 0)
-  {
-//    printf("In STARTS Method... Counter Manager present... Closing it...\n");
-    this->m_CntrMgr->close();
-  }
-  m_utgid = RTL::processName();
-  if (m_MonSys != 0) m_MonSys->setup((char*)m_utgid.c_str());
-  if (m_CntrSubSys != 0) m_CntrSubSys->setup((char*)"Counter");
-  if (m_HistSubSys != 0) m_HistSubSys->setup((char*)"Histos");
-  if (this->m_HistSubSys != 0)
-  {
-    if (m_CntrMgr != 0)
-    {
-      MonHist *h = (MonHist*)m_HistSubSys->findobj("COUNTERRATE");
-      if (h == 0)
-      {
-        h = new MonHist(msgSvc(),"COUNTERRATE",m_CntrMgr);
-        m_HistSubSys->addObj(h);
-      }
-      h->makeCounters();
-    }
-  }
-  this->m_MonSys->List();
-  this->m_MonSys->start();
-  m_started = true;
-  return StatusCode::SUCCESS;
-}
-StatusCode MonitorSvc::stop()
-{
-//  CALLGRIND_STOP_INSTRUMENTATION
-//  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
-  m_started = false;
-//  updateSvc("",m_runno,0);
-  if (m_CntrMgr != 0)
-  {
-    this->m_CntrMgr->open();
-  }
-  m_MonSys->stop();
-  StatusCode sc = Service::stop();
- return StatusCode::SUCCESS;
-}
-
-//updateSvc and resetHistos methods are for fast run changes
-void MonitorSvc::setRunNo(int runno)
-{
-  m_runno = runno;
-  this->m_MonSys->setRunNo(runno);
-  return;
-}
 
 void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
 {

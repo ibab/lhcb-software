@@ -30,3 +30,5 @@ apply_pattern   component_library library="Gaucho"
 application Addertst ../src/Test/Addertst.cpp
 application RPCTest ../src/Test/RPCTest.cpp
 application HistTest ../src/Test/HistTest.cpp
+
+macro_append Gaucho_shlibflags " -pthread " WIN32 ""
