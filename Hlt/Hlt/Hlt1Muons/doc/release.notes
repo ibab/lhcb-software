@@ -8,6 +8,10 @@
  - use vector.insert instead of std::copy
  - only use plot if HistoProduce is True, make sure default is False
 
+! 2011-02-09 - Roel Aaij
+ - Fixed timing by asking closest hit in seach window instead of considering
+   all possible combinations
+
 ! 2011-02-08 - Roel Aaij
  - Added explicit deletes for objects created on the head.
 

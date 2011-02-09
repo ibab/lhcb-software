@@ -68,17 +68,14 @@ private:
    unsigned int m_nRegions;
 
    // Temporary storage
-   Candidates   m_goodCandidates;
+   Hlt1MuonHit* m_magnetHit;
    Candidates   m_candidates;
    Candidates   m_seeds;
-
-   Hlt1MuonHits m_stationHits;
-   Hlt1MuonHits m_magnetHits;
 
    // Helper methods
    void findSeeds( const Candidate* seed, const unsigned int seedStation );
 
-   void findCandidates( Candidate* seed );
+   void addHits( Candidate* seed );
 
    void fitCandidate( Candidate* seed ) const;
 

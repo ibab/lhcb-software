@@ -100,11 +100,7 @@ StatusCode Hlt1MuonHitManager::initialize()
 //=============================================================================
 StatusCode Hlt1MuonHitManager::finalize()
 {
-   bool released = boost::singleton_pool<Hlt1MuonHit, sizeof(Hlt1MuonHit)>::release_memory();
-   if ( !released ) {
-      Warning( "some hits still use memory, purging", StatusCode::SUCCESS );
-      boost::singleton_pool< Hlt1MuonHit, sizeof( Hlt1MuonHit ) >::purge_memory();
-   }
+   // boost::singleton_pool<Hlt1MuonHit, sizeof(Hlt1MuonHit)>::release_memory();
    return GaudiTool::finalize();
 }
 

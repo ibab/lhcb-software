@@ -39,7 +39,8 @@ using std::less;
 MatchVeloMuon::MatchVeloMuon( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-   : GaudiHistoTool ( type, name , parent ), m_nRegions( 0 )
+   : GaudiHistoTool ( type, name , parent ), m_nRegions( 0 ),
+     m_magnetHit( 0 ), m_candidates( 0 ), m_seeds( 0 )
 {
    declareInterface< ITracksFromTrack >(this);
 
@@ -58,7 +59,7 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type,
    declareProperty( "MagnetPlaneParB", m_zb = 5.203 * Gaudi::Units::m );
 
    declareProperty( "MaxMissedHits", m_maxMissed = 2 );
-   setProduceHistos(false); // yes, this indeed changes the default ;-)
+   setProduceHistos( false ); // yes, this indeed changes the default ;-)
    
    m_order = list_of( 3 )( 4 )( 5 )( 2 );
 }
@@ -104,20 +105,19 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
 
    unsigned int seedStation = m_order[ 0 ] - 1;
    findSeeds( veloSeed.get(), seedStation );
-   if (produceHistos()) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
+   if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
    BOOST_FOREACH( Candidate* seed, m_seeds ) {
-      findCandidates( seed );
-      if (produceHistos()) plot( m_candidates.size(), "NCandidatesPerSeed", -0.5, 50.5, 51 );
+      addHits( seed );
    }
 
-   // Find the best candidate and add its hits to the seed.
+   // Find the best candidate.
    Candidates::const_iterator best = std::min_element
-      ( m_goodCandidates.begin(), m_goodCandidates.end(), bind
+      ( m_candidates.begin(), m_candidates.end(), bind
         ( less< double >(), bind< double >( &Candidate::chi2DoF, _1 ),
           bind< double >( &Candidate::chi2DoF, _2 ) ) );
 
-   if ( best == m_goodCandidates.end() ) {
+   if ( best == m_candidates.end() ) {
       // No candidates found, we're done.
       return StatusCode::SUCCESS;
    } else {
@@ -138,10 +138,9 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
    veloSeed->yStraight( zMagnet, yMagnet, errYMagnet );
 
    LHCb::MuonTileID id;
-   Hlt1MuonHit* magnetHit = new Hlt1MuonHit( id, xMagnet, errXMagnet,
-                                             yMagnet, errYMagnet,
-                                             zMagnet, 0. );
-   m_magnetHits.push_back( magnetHit );
+   m_magnetHit = new Hlt1MuonHit( id, xMagnet, errXMagnet,
+                                  yMagnet, errYMagnet,
+                                  zMagnet, 0. );
 
    double dSlope = dtx( m_minMomentum );
    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -178,7 +177,7 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
          if ( hit->x() > xMax ) break;
          if ( hit->y() > yMax || hit->y() < yMin ) continue;
          Candidate* seed = new Candidate( *veloSeed );
-         seed->addHit( magnetHit );
+         seed->addHit( m_magnetHit );
          seed->addHit( hit );
 
          seed->slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
@@ -190,24 +189,16 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
 }
 
 //=============================================================================
-void MatchVeloMuon::findCandidates( Candidate* seed )
+void MatchVeloMuon::addHits( Candidate* seed )
 {
-   vector< Candidate* > tmpCandidates;
-   
-   m_candidates.clear();
-   m_candidates.push_back( seed );
-
    // First hit is in magnet
-   const Hlt1MuonHit* magnetHit = seed->hits()[ 0 ];
-   double zMagnet = magnetHit->z();
-   double xMagnet = magnetHit->x();
+   double zMagnet = m_magnetHit->z();
+   double xMagnet = m_magnetHit->x();
 
    unsigned int nMissed = 0;
    for ( unsigned int i = 1; i < m_order.size(); ++i ) {
       // find candidate hits
       unsigned int s = m_order[ i ] - 1;
-
-      tmpCandidates.clear();
 
       // Get the station we're looking at.
       const Hlt1MuonStation& station = m_hitManager->station( s );
@@ -227,8 +218,9 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
       const double xMin = xMuon - xRange;
       const double xMax = xMuon + xRange;
 
-      // Look for hits inside the search window
-      m_stationHits.clear();
+      // Look for the closest hit inside the search window
+      const Hlt1MuonHit* closest = 0;
+      double minDist = 0;
       for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
          const Hlt1MuonRegion& region = station.region( r );
          if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
@@ -236,47 +228,30 @@ void MatchVeloMuon::findCandidates( Candidate* seed )
          BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
             if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
-            m_stationHits.push_back( hit );
+            double dist = sqrt( ( xMuon - hit->x() ) * ( xMuon - hit->x() )
+                                + ( yMuon - hit->y() ) * ( yMuon - hit->y() ) );
+            if ( !closest || dist < minDist ) {
+               closest = hit;
+               minDist = dist;
+            }
          }
       }
 
-      if ( !m_stationHits.empty() ) {
-         Hlt1MuonHits::const_iterator first = m_stationHits.begin(),
-            second = m_stationHits.begin() + 1, end = m_stationHits.end();
-         // In case there are more than 1 new hits, make a new candidate
-         // for every new hit and every existing candidate.
-         for ( ; second != end; ++second ) {
-            BOOST_FOREACH( Candidate* c, m_candidates ) {
-               Candidate* nc = new Candidate( *c );
-               nc->addHit( *second );
-               tmpCandidates.push_back( nc );
-            }
-         }
-         // Add the first new hit to all existing candidates.
-         BOOST_FOREACH( Candidate* c, m_candidates ) {
-            c->addHit( *first );
-         }         
-         // Merge new and existing candidates.
-         m_candidates.insert(m_candidates.end(), tmpCandidates.begin(), tmpCandidates.end() );
+      if ( closest != 0 ) {
+         seed->addHit( closest );
       } else {
          ++nMissed ;
       }
       if ( nMissed >= m_maxMissed ) {
-         BOOST_FOREACH( Candidate* candidate, m_candidates ) {
-            delete candidate;
-         }
-         m_candidates.clear();
          break;
       }
    }
-   // If a new candidate is good, store it
-   BOOST_FOREACH( Candidate* candidate, m_candidates ) {
-      fitCandidate( candidate );
-      if (produceHistos()) plot( candidate->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-      if ( candidate->chi2DoF() < m_maxChi2DoFX ) {
-         m_goodCandidates.push_back( candidate );
-      } else {
-         delete candidate;
+   // If a new candidate is good, store it.
+   if ( nMissed < m_maxMissed ) {
+      fitCandidate( seed );
+      if ( produceHistos() ) plot( seed->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+      if ( seed->chi2DoF() < m_maxChi2DoFX ) {
+         m_candidates.push_back( seed );
       }
    }
 }
@@ -326,19 +301,16 @@ void MatchVeloMuon::fitCandidate( Candidate* candidate ) const
 //=============================================================================
 void MatchVeloMuon::clean()
 {
-   // delete leftover good candidates
-   BOOST_FOREACH( Candidate* candidate, m_goodCandidates ) {
+   // delete leftover seeds
+   BOOST_FOREACH( Candidate* candidate, m_seeds ) {
       delete candidate;
    }
-   m_goodCandidates.clear();
-   // clear seeds, the cadidates have already been deleted
    m_seeds.clear();
-
-   // we have to take care of these since we created them
-   BOOST_FOREACH( Hlt1MuonHit* hit, m_magnetHits ) {
-      delete hit;
+   m_candidates.clear();
+   if ( m_magnetHit ) {
+      delete m_magnetHit;
+      m_magnetHit = 0;
    }
-   m_magnetHits.clear();
 }
 
 //=============================================================================
