@@ -16,19 +16,26 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
 
     def preambulo( self ):
         from HltTracking.HltReco import VeloCandidates
-        from HltTracking.Hlt1Streamers import MatchVeloMuon, LooseForward, FitTrack
+        from HltTracking.Hlt1Streamers import ( MatchVeloMuon, IsMuon,
+                                                LooseForward, FitTrack )
         ## define some "common" preambulo 
         Preambulo = [ VeloCandidates,
                       MatchVeloMuon,
                       LooseForward,
                       FitTrack,
+                      IsMuon,
                       ## helpers
                       "VertexConf = LoKi.Hlt1.VxMakerConf( %(DiMuon_VxDOCA)f * mm, \
                                       %(DiMuon_VxChi2)f )" % self.getProps(),
-                      "MakeDiMuons =  SINK( 'DiMuonVx' ) >>  TC_VXMAKE2( '', 'DiMuonVx', VertexConf )",
+                      "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
                       "from LoKiPhys.decorators import RV_MASS"
                       ]
         return Preambulo
+
+            ## >>  Dump ( 'Velo Candidates : ' )
+            ## >>  Dump ( 'Matched to Muon Candidates : ' )
+            ## >>  Dump ( 'Forward : ' )
+            ## >>  Dump ( 'Fitted : ' )
 
     def dimuon_streamer( self ):
         from Configurables import LoKi__HltUnit as HltUnit
@@ -51,7 +58,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
             >>  ( TrCHI2PDOF < %(DiMuon_TrChi2)s )
-            >>  TrFILTER( 'IsMuonTool' )
+            >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  MakeDiMuons

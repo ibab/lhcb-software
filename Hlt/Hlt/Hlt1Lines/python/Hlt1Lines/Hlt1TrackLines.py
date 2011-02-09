@@ -59,14 +59,16 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                      [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self ) :
-        from HltTracking.Hlt1Streamers import LooseForward,TightForward, FitTrack
+        from HltTracking.Hlt1Streamers import ( LooseForward, TightForward,
+                                                FitTrack, IsMuon )
         from HltTracking.HltPVs import FullPV3D
         from HltTracking.Hlt1Streamers import MatchVeloMuon
         Preambulo = [ FullPV3D,
                       TightForward,
                       LooseForward,
                       FitTrack ,
-                      MatchVeloMuon]
+                      MatchVeloMuon,
+                      IsMuon ]
         return Preambulo
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
@@ -74,6 +76,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
+
+        ## >>  Dump ( 'Velo Candidates : ' )
+        ## >>  Dump ( 'Forward Candidates : ' )
+        ## >>  Dump ( 'Fitted Candidates : ' )
+
         lineCode = """ 
             FullPV3D
             >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
@@ -102,6 +109,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
+
+        ## >>  Dump ( 'Velo Candidates : ' )
+        ## >>  Dump ( 'Forward Candidates : ' )
+        ## >>  Dump ( 'Fitted Candidates : ' )
+
         hlt1TrackMuon_Unit = HltUnit(
             name+'Unit',
             ##OutputLevel = 1 ,
@@ -119,134 +131,15 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
                   ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
             >>  execute( 'MuonRec' )
-            >>  TrFILTER( 'IsMuonTool' )
-            >> SINK( 'Hlt1%(name)sDecision' )
-            >> ~TC_EMPTY
+            >>  IsMuon
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >>  ~TC_EMPTY
             """ % props
             )    
         return [ Hlt1GECLoose() ,hlt1TrackMuon_Unit ]
     
     def __apply_configuration__(self) : 
-        props = self.getProps()
-        #
-        # Begin imports
-        #
         from HltLine.HltLine import Hlt1Line   as Line
-        from HltLine.HltLine import bindMembers
-        from HltLine.HltLine import Hlt1Member as Member
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
-        from HltTracking.HltReco import Velo
-        from HltTracking.HltPVs  import PV3D
-        from HltLine.HltDecodeRaw import DecodeIT
-        from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack
-        from Configurables import MuonRec, MuonIDAlg
-        from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName
-        from HltTracking.HltTrackNames import HltAllMuonTracksName, HltMuonIDSuffix
-        from MuonID import ConfiguredMuonIDs
-        from Configurables import ChargedProtoParticleMaker
-        from Configurables import ChargedProtoParticleAddMuonInfo
-        from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter
-        from Configurables import LoKi__VoidFilter as VoidFilter
-        from Hlt1Lines.HltL0Candidates import L0Channels
-        #
-        def trackprepare(ip,pt,p):
-            return [ Hlt1GECLoose(),
-                    Velo,PV3D().ignoreOutputSelection(),
-                    Member ( 'TF', 'OTIP'
-                           , InputSelection = Velo.outputSelection()
-                           , FilterDescriptor = [ 'IP_PV3D,||>,%s'%ip]
-                           , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('IP',0.,1.,100) 
-                         ),
-                    Member ( 'TF', 'OTNH'
-                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits')]
-                         ),
-                    Member ( 'TF', 'OTEXH'
-                           , FilterDescriptor = [ 'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut')]
-                         ),
-                    DecodeIT,
-                    Member ( 'TU', 'Forward'
-                           , RecoName = Forward.splitName()[-1]
-                           ),
-                    Member ( 'TF' , 'OTPT' ,
-                            FilterDescriptor = ['PT,>,%s'%pt]
-                            , HistogramUpdatePeriod = 1 
-                            , HistoDescriptor  = histosfilter('PT',0.,8000.,200)
-                            ),
-                    Member ( 'TF' , 'OTMom' ,
-                            FilterDescriptor = ['P,>,%s'%p]
-                            , HistogramUpdatePeriod = 1 
-                            , HistoDescriptor  = histosfilter('P',0.,80000.,200)
-                            )
-                   ]
-
-
-        def afterburn(chi2,ipchi2):
-            return [ PV3D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
-                , Member ( 'TF' , 'TrkChi2'
-                           , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
-                           HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
-                           )
-                , Member ('HltFilterFittedTracks', 'FFT',
-                          OutputSelection = "%Decision",
-                          InputSelection1 = '%TFTrkChi2', 
-                          InputSelection2 = PV3D().outputSelection(),
-                          MinIPCHI2 = ipchi2
-                         )
-                #, Member ('TF','FFT'
-                #         , OutputSelection = "%Decision",
-                #         , FilterDescriptor = [ "FitIPS_PV3D,>,%s"%ipchi2 ] )
-                ]
-
-        def muonAfterburn(chi2,ipchi2) :
-            cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="2010")
-            HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1TrackMuonIDAlg")
-            HltMuonIDAlg.TrackLocation          = FitTrack.TESOutput
-            location = lambda x : '/'.join( [ 'Hlt1','Track','TrackMuon', HltSharedPIDPrefix, x ] ) 
-            HltMuonIDAlg.MuonIDLocation         = location( HltMuonIDSuffix )
-            HltMuonIDAlg.MuonTrackLocation      = location( HltMuonTracksName )
-            HltMuonIDAlg.MuonTrackLocationAll   = location( HltAllMuonTracksName )
-            HltMuonIDAlg.FindQuality            = False
-            after = [ PV3D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
-                , Member ( 'TF' , 'TrkChi2'
-                         , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2]
-                         , HistogramUpdatePeriod = 1
-                         , HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
-                         )
-                , MuonRec() 
-                , HltMuonIDAlg ]
-
-            charged      = ChargedProtoParticleMaker("Hlt1TrackMuonProtoPMaker")
-            charged.InputTrackLocation  = [ HltMuonIDAlg.TrackLocation  ]
-            charged.OutputProtoParticleLocation = "Hlt1/ProtoP/TrackMuon"
-            
-            muon                = ChargedProtoParticleAddMuonInfo("Hlt1TrackChargedProtoPAddMuon")
-            muon.ProtoParticleLocation  = charged.OutputProtoParticleLocation 
-            muon.InputMuonPIDLocation   = HltMuonIDAlg.MuonIDLocation  
-            
-            Hlt1Muons = CombinedParticleMaker("Hlt1TrackMuonCPM")
-            Hlt1Muons.Particle = "muon" 
-            Hlt1Muons.addTool(ProtoParticleMUONFilter,'Muon')
-            Hlt1Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
-            Hlt1Muons.Input =  muon.ProtoParticleLocation
-            Hlt1Muons.WriteP2PVRelations = False 
-
-            after += [charged,muon,Hlt1Muons]
-
-            input = 'Phys/%s/Particles' % Hlt1Muons.getName()
-
-            after += [    VoidFilter('Hlt1_MuonFilter' , Code = " CONTAINS('%s') > 0 "%input)  
-                     ,    Member ('HltFilterFittedParticles', 'FFT'
-                                 , OutputSelection = "%Decision"
-                                 , InputSelection1 = 'TES:/Event/%s' % input
-                                 , InputSelection2 = PV3D().outputSelection()
-                                 , MinIPCHI2 = '%s'%ipchi2
-                                 )   
-                     ]
-            return after
 
         Line ( 'TrackAllL0'
              , prescale = self.prescale
