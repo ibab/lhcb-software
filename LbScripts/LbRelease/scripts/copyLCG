@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import stat
 from subprocess import Popen, PIPE
 import logging
 
@@ -144,12 +145,19 @@ def recursive_copy(src, dst, force = False):
             dirs.remove("InstallArea")
     log.debug("copy done")
 
-def copy_project(src, dst, ignore_missing = True, force = True):
+def _rmtree_onerror(func, path, excinfo):
+    """Used as 'onerror' callback for rmtree, tries to change the write permission
+    and re-try"""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
+def copy_project(src, dst, ignore_missing = True, force = True, replace = False):
     """
     Copy a project (AA or external)from one location to another.
     @param ignore_missing: if True, the project is copied only if there is already
         a version of it in the destination area; if False, the project is copied anyway
     @param force: if True the already existing destination files are overwritten
+    @param replace: if True the already existing destination directory is removed before copying the files
     """
     log = logging.getLogger("copy_project")
     from os.path import dirname, exists, join, basename
@@ -173,15 +181,22 @@ def copy_project(src, dst, ignore_missing = True, force = True):
             proj_dir = dirname(proj_dir)
     # Drop the CMTCONFIG (or the platform directory like "share")
     proj_dir = dirname(proj_dir)
-    # Do the copy if we we do have a version of the project in the dest directory
+    # Do the copy if we do have a version of the project in the dest directory
     # or we are forcing the copy (not ignore_missing)
     if (not ignore_missing) or exists(dirname(proj_dir)):
+        force = replace or force # replace implies force
+        if replace:
+            log.info("removing %s", dst)
+            shutil.rmtree(dst, onerror = _rmtree_onerror)
         recursive_copy(src, dst, force = force)
         # Treat independently the optional include directory, like
         # lcg/app/releases/COOL/COOL_2_8_7/include
         src_inc = join(dirname(src), "include")
         if exists(src_inc):
             dst_inc = join(proj_dir, "include")
+            if replace:
+                log.info("removing %s", dst_inc)
+                shutil.rmtree(dst_inc, onerror = _rmtree_onerror)
             recursive_copy(src_inc, dst_inc, force = force)
 
 #def copy_project(src, dst, force):
@@ -216,9 +231,15 @@ class CopyLCGCMT(Script):
                           help = "cache the list of project directories")
         parser.add_option("--dry-run", action = "store_true",
                           help = "do not copy, just show what would be copied")
+        parser.add_option("-R", "--replace", action = "append",
+                          help = "projects that should be copied replacing the "
+                          "version already present (remove+copy instead of just "
+                          "overwrite), it accepts a comma-separated list and "
+                          "can be used many times in the command line")
         parser.set_defaults(level = logging.WARNING,
                             include = [],
-                            exclude = [])
+                            exclude = [],
+                            replace = [])
 
     def main(self):
         opts, args = self.options, self.args
@@ -227,12 +248,22 @@ class CopyLCGCMT(Script):
 
         vers = args[0]
 
+        # expand the comma-separated lists in self.options
+        replaced = set()
+        for r in opts.replace:
+            if "," in r:
+                replaced.update([p.strip() for p in r.split(",")])
+            else:
+                replaced.add(r)
+
         #logging.basicConfig(level = opts.level)
         projs = get_projects(vers, opts.lcg, opts.mysiteroot, use_cache = opts.cache)
         if opts.dry_run:
             for n in projs:
                 s, d = projs[n]
-                print "Would try to copy '%s'\n  %s -> %s" %(n, s, d)
+                print "Would try to copy '%s'%s\n  %s -> %s" %(n,
+                                                                n in replaced and " (replaced)" or "",
+                                                                s, d)
             return 0
         for n in projs:
             if n in opts.exclude:
@@ -241,7 +272,7 @@ class CopyLCGCMT(Script):
             src, dst = projs[n]
             copy_project(src, dst,
                          ignore_missing = not ("ALL" in opts.include or n in opts.include),
-                         force = opts.force)
+                         force = opts.force, replace = n in replaced)
         return 0
 
 if __name__ == "__main__":

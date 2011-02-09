@@ -1,3 +1,9 @@
+2011-02-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/copyLCG: added the possibility to replace (remove+copy instead of overwrite)
+	externals laready present (mandatory to correctly copy LCG nightlies)
+	* scripts/tag_package: added the --project command line switch (to be tested)
+
 2011-02-01  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: sending data to RSS feed database;
