@@ -15,6 +15,7 @@ __all__ = ('AutomaticData',
            'ClonableObject',
            'Selection',
            'EventSelection',
+           'SelectionSequence',
            'flatAlgorithmList',
            'NameError',
            'NonEmptyInputLocations',
@@ -30,6 +31,8 @@ from SelPy.utils import (flatSelectionList,
                          NameError,
                          NonEmptyInputLocations,
                          IncompatibleInputLocations)
+
+from SelPy.configurabloids import DummySequencer
 
 class AutomaticData(NamedObject, SelectionBase) :
     """
@@ -189,7 +192,7 @@ class PassThroughSelection(UniquelyNamedObject,
 
         connectToRequiredSelections(self, InputDataSetter)
 
-class SelSequence(UniquelyNamedObject, ClonableObject) :
+class SelectionSequence(UniquelyNamedObject, ClonableObject) :
     """
     Class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -204,11 +207,11 @@ class SelSequence(UniquelyNamedObject, ClonableObject) :
     # Assume module A2B2bbC2cc defining a Selection object for the decay
     # A -> B(bb), C(cc)
     from A2B2bbC2cc import SelA2B2bbC2cc
-    from PhysSelPython.Wrappers import SelSequence
-    SeqA2B2bbC2cc = SelSequence('SeqA2B2bbC2cc',
-                                TopSelection = SelA2B2bbC2cc,
-                                EventPreSelector = [alg0, alg1],
-                                PostSelectionAlgs = [counter0])
+    from PhysSelPython.Wrappers import SelectionSequence
+    SeqA2B2bbC2cc = SelectionSequence('SeqA2B2bbC2cc',
+                                      TopSelection = SelA2B2bbC2cc,
+                                      EventPreSelector = [alg0, alg1],
+                                      PostSelectionAlgs = [counter0])
     # use it
     mySelList = SeqA2B2bbC2cc.algos
     print mySelList
@@ -222,7 +225,8 @@ class SelSequence(UniquelyNamedObject, ClonableObject) :
                  name,
                  TopSelection,
                  EventPreSelector = [],
-                 PostSelectionAlgs = []) :
+                 PostSelectionAlgs = [],
+                 sequencerType = DummySequencer) :
 
         UniquelyNamedObject.__init__(self, name)
         ClonableObject.__init__(self, locals())
@@ -231,7 +235,8 @@ class SelSequence(UniquelyNamedObject, ClonableObject) :
         self._topSelection = TopSelection
         self._algos += flatAlgorithmList(TopSelection)
         self._algos += PostSelectionAlgs
-
+        self._gaudiseq = sequencerType(self.name(), Members = self._algos)
+        
     def algorithm(self) :
         return self._topSelection.algorithm()
 
@@ -250,6 +255,8 @@ class SelSequence(UniquelyNamedObject, ClonableObject) :
     def __getitem__(self, index) :
         return self._algos[index]
     
+    def sequence(self) :
+        return self._gaudiseq
     
 def flatAlgorithmList(selection) :
     """
