@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-09 - Roel Aaij
+ - Removed definition of unused TrackFunctions from Hlt1StreamerConf.py
+
 !========================== HltTracking v9r0  2011-02-07 ===================
 ! 2011-02-07 - Roel Aaij
  - Moved Hlt1Units.py from Hlt1Lines to Hlt1StreamerConf.py

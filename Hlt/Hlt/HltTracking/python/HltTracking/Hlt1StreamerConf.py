@@ -89,7 +89,6 @@ TMuonConf = LoKi.Hlt1.UpgradeConf(
     True                         ,                     ##   "TransferAncestor"
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
-
 # =============================================================================
 TightForward = LoKi.Hlt1.UpgradeConf  (
     "PatForwardTool/TightForward",                 ##                   "Tool" 
@@ -130,6 +129,16 @@ MatchVeloMuon=LoKi.Hlt1.UpgradeConf(
     True                         ,                     ##   "TransferAncestor"
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
+# =============================================================================
+IsMuon=LoKi.Hlt1.UpgradeConf(
+    "IsMuonTool"                 ,                     ##               "Tool" 
+    "Hlt1/Track/IsMuon"          ,                     ##          "TESOutput"
+    LHCb.Track.Long              ,                     ##          "TrackType"
+    True                         ,                     ##              "Owner"
+    False                        ,                     ##        "TransferIDs"
+    True                         ,                     ##   "TransferAncestor"
+    True                         ,                     ##  "TransferExtraInfo"
+    True                         )                     ##          "OrderByPt"
 
 _trUpgrader = {}
 _trUpgrader[ 'TMuonConf' ] = TMuonConf
@@ -137,6 +146,7 @@ _trUpgrader[ 'TightForward' ] = TightForward
 _trUpgrader[ 'LooseForward' ] = LooseForward
 _trUpgrader[ 'FitTrack'     ] = FitTrack
 _trUpgrader[ 'MatchVeloMuon' ] = MatchVeloMuon
+_trUpgrader[ 'IsMuon' ] = IsMuon
 
 # =============================================================================
 
@@ -198,30 +208,30 @@ VeloL0Muon = LoKi.Hlt1.MatchConf   (
 # =============================================================================
 ## ITrackFunctionTool interface                       @see   ITrackFunctionTool
 # =============================================================================
-MuonIDDistance = LoKi.Hlt1.TrackFunction  (
-    "HltMuonIDDistance/MuonIDDistance" ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-DeltaP         = LoKi.Hlt1.TrackFunction  (
-    "HltDeltaPTool/DeltaP"             ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-IsMuon         = LoKi.Hlt1.TrackFunction  (
-    "HltIsMuonTool/IsMuon"             ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-IsPhoton       = LoKi.Hlt1.TrackFunction  (
-    "HltIsPhotonTool/IsPhoton"         ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-AntiEleConf    = LoKi.Hlt1.TrackFunction  (
-    "HltAntiEleconf/AntiEleConf"       ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-PtAtOrigin     = LoKi.Hlt1.TrackFunction  (
-    "PtTransporter/PtAtOrigin"         ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
+## MuonIDDistance = LoKi.Hlt1.TrackFunction  (
+##     "HltMuonIDDistance/MuonIDDistance" ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## DeltaP         = LoKi.Hlt1.TrackFunction  (
+##     "HltDeltaPTool/DeltaP"             ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## IsMuon         = LoKi.Hlt1.TrackFunction  (
+##     "HltIsMuonTool/IsMuon"             ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## IsPhoton       = LoKi.Hlt1.TrackFunction  (
+##     "HltIsPhotonTool/IsPhoton"         ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## AntiEleConf    = LoKi.Hlt1.TrackFunction  (
+##     "HltAntiEleconf/AntiEleConf"       ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## PtAtOrigin     = LoKi.Hlt1.TrackFunction  (
+##     "PtTransporter/PtAtOrigin"         ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
 
 # =============================================================================
 # High-level embedded stuff

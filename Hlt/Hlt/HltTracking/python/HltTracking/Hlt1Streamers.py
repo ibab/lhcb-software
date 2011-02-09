@@ -66,3 +66,10 @@ from HltTracking.Hlt1TrackUpgradeConf import ConfiguredMatchVeloMuon
 ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 )
 ## Strings for users
 MatchVeloMuon = "MatchVeloMuon = TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon )"
+
+# =============================================================================
+## IsMuon
+# =============================================================================
+## Strings for users
+IsMuon = "IsMuon = TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon )"
+
