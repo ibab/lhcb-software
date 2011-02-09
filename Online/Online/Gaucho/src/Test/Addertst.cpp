@@ -24,7 +24,7 @@ void CycleFn(void * ,void *,int , HistMap *hm, MonAdder *)
 //      printf("%s ",i->first.c_str());
       DimBuffBase *p=(DimBuffBase*)i->second;
       char *nam =(char*)AddPtr(p,p->nameoff);
-      char *stype = 0;
+      char *stype;
       switch (p->type)
       {
         case H_1DIM:

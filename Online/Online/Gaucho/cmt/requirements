@@ -1,16 +1,16 @@
-package  Gaucho
-version  v7r0
+package Gaucho
+version v2r0
 branches Gaucho src cmt doc
 
 # add "use" statements
-use GaudiKernel  v*
-use AIDA         v* LCG_Interfaces
-use DIM          v* Online
-use GaudiAlg     v*
+use GaudiKernel v*
+use AIDA v* LCG_Interfaces
+use DIM v* Online
+use GaudiAlg v*
 #use Boost v* LCG_Interfaces
-#use ROOT         v* LCG_Interfaces
-use DAQEvent     v* Event
-use MDF          v* DAQ
+use ROOT v* LCG_Interfaces
+use DAQEvent v* Event
+use MDF      v* DAQ
 use OnlineKernel v* Online
 
 #macro_append Boost_linkopts " $(Boost_linkopts_serialization) "
@@ -22,15 +22,10 @@ apply_pattern install_more_includes more=Gaucho
 library Gaucho  ../src/*.cpp
 
 # define component library link options
-apply_pattern linker_library    library=Gaucho
-apply_pattern generate_rootmap  library=Gaucho
-apply_pattern generate_configurables library=Gaucho
-
-#apply_pattern  component_library library="Gaucho"
-
-private
-application   Addertst   ../src/Test/Addertst.cpp
-macro_append  Addertst_dependencies   " Gaucho "
-
-application   RPCTest    ../src/Test/RPCTest.cpp
-macro_append  RPCTest_dependencies    " Gaucho "
+#apply_pattern component_library library="Gaucho"
+apply_pattern linker_library library="Gaucho"
+#apply_pattern generate_rootmap library=Gaucho
+apply_pattern   component_library library="Gaucho"
+application Addertst ../src/Test/Addertst.cpp
+application RPCTest ../src/Test/RPCTest.cpp
+application HistTest ../src/Test/HistTest.cpp

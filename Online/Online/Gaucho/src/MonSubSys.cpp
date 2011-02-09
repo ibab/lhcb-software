@@ -5,6 +5,7 @@
 #include "Gaucho/ObjSerializer.h"
 #include "Gaucho/MonObj.h"
 #include "Gaucho/MonSys.h"
+#include "Gaucho/MonCounter.h"
 //static int mpty;
 typedef std::pair<std::string, MonObj*> SysPair;
 typedef ObjMap::iterator SysIter;
@@ -121,8 +122,9 @@ void *MonSubSys::Allocate(int siz)
   }
   return buffer;
 }
-void MonSubSys::setup(char *n)
+void MonSubSys::setup(char *n, bool expandnames)
 {
+  m_expandnames = expandnames;
   char procname[64];
   lib_rtl_get_process_name(procname,sizeof(procname));
   std::string nam;
@@ -131,8 +133,18 @@ void MonSubSys::setup(char *n)
   std::string nodename;
   nodename = RTL::nodeNameShort();
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/HistCommand";
-  m_ser = new ObjSerializer(&m_Objmap);
-
+  m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
+  if (m_expandnames)
+  {
+    if (m_type == MONSUBSYS_Counter)
+    {
+      for (SysIter i =m_Objmap.begin();i!=m_Objmap.end();i++)
+      {
+        MonCounter *h = (MonCounter*)i->second;
+        h->create_OutputService(m_expandInfix);
+      }
+    }
+  }
   m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
   m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);

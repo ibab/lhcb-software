@@ -20,9 +20,9 @@ HistogramPersistencySvc.Warnings = false;
 //AdderSvc.subfarmname=@OnlineEnv.SubFarms;
 //AdderSvc.partitionname=@OnlineEnv.PartitionName;
 
-AdderSvc.SourceTaskPattern="Moore";
+AdderSvc.SourceTaskPattern="Adder";
 AdderSvc.MyName="Adder";
-AdderSvc.SourceServiceName="Data";
+//AdderSvc.SourceServiceName="Data";
 
 AdderSvc.TopLevel=false;
 AdderSvc.SaveRootDir="/home/beat/Hist/Savesets";

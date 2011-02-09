@@ -1,6 +1,4 @@
-#ifndef ONLINE_GAUCHO_OBJSERIALIZER_H
-#define ONLINE_GAUCHO_OBJSERIALIZER_H
-
+#pragma once
 #include <string>
 #include <vector>
 #include <map>
@@ -15,9 +13,10 @@ protected:
   void *buffer;
 public:
   ObjMap *m_objmap;
+  bool m_expandservices;
   ObjSerializer(void);
-  ObjSerializer(ObjMap *ObjMap);
-  virtual ~ObjSerializer(void);
+  ObjSerializer(ObjMap *ObjMap, bool expand=false);
+  ~ObjSerializer(void);
   void *Allocate(int siz);
   virtual void *SerializeObj(void * &ptr,int &siz, bool clear=false);
   virtual void *SerializeObj(char *name,void * &ptr,int &siz, bool clear=false);
@@ -26,5 +25,5 @@ public:
   virtual void DeSerializeObj(char *name,void *&ptr);
   virtual void DeSerializeObj(std::vector<std::string> &nams,void *&ptr);
   virtual MonObj *findobj(const char *n);
+  virtual void UpdateExpansions(void);
 };
-#endif // ONLINE_GAUCHO_OBJSERIALIZER_H

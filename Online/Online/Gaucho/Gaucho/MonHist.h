@@ -61,7 +61,7 @@ public:
   MonHist(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);
   MonHist(IMessageSvc* msgSvc, const std::string& source, const std::string& desc,const StatEntity *se);
   MonHist(IMessageSvc* msgSvc, const std::string& source, CntrMgr *);
-  virtual ~MonHist();
+	~MonHist();
 	int datasize(){return m_buffersize;};
 	int xmitbuffersize();
 	int hdrlen(){return m_hdrlen;};

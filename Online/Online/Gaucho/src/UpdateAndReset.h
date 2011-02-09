@@ -6,17 +6,19 @@
 #include "GaudiKernel/Property.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 //#include "GauchoTimer.h"
-//#include "dis.hxx"
+#include "dim/dis.hxx"
 #include <map>
 #include <sstream>
 #include "Event/RawEvent.h"
 #include "Gaucho/EoEIncidentListener.h"
+#include "Gaucho/Utilities.h"
 
 static const std::string s_statusNoUpdated("NO_UPDATED");
 static const std::string s_statusProcessingUpdate("PROCESSINGUPDATE");
 static const std::string s_statusUpdated("UPDATED");
 
 class IRegistry;
+//class DimService;
 
 class UpdateAndReset : public GaudiAlgorithm{
 public:
@@ -88,7 +90,7 @@ private:
   bool m_firstExecute;
 
   std::string m_utgid;
-  std::vector<std::string> serviceParts;
+  dyn_string *serviceParts;
   std::string taskName;
   std::string partName;
   std::string instancenumber;
@@ -110,7 +112,7 @@ private:
   int m_timerCycle;
   int m_numCyclesToSave;
   int m_resetHistosAfterSave;
-
+  DimService *m_dimSvcSaveSetLoc;
 
 };
 

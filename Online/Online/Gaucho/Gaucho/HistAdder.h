@@ -8,11 +8,12 @@
 #include "Gaucho/AddSerializer.h"
 #include "Gaucho/MonAdder.h"
 #include "RTL/rtl.h"
+#include "dic.hxx"
 
 class ObjService;
 class MonServer;
 class ObjRPC;
-
+//class HistAdder;
 class HAdderTaskInfoHandler;
 class HAdderServInfoHandler;
 class MyTProfile;
@@ -20,21 +21,22 @@ class MyTProfile;
 class HistAdder : public MonAdder
 {
 public:
+  static DimInfo *gg_DNSInfo;
+  static std::vector<HistAdder*> gg_AdderList;
+  static HAdderTaskInfoHandler gg_TaskHandler;
+  static HAdderServInfoHandler gg_ServHandler;
   DimHistbuff1 *m_RateBuff;
   std::string m_MyName;
   std::string m_NamePrefix;
   std::string m_outsvcname;
-  DimInfo *m_DNSInfo;
   DimHistbuff1 *m_oldProf;
-  HAdderTaskInfoHandler *m_TaskHandler;
-  HAdderServInfoHandler *m_ServHandler;
   bool m_isSaver;
   void add(void *buffer, int siz, MonInfo *h);
   HistAdder(char *taskname, char *myName, char * serviceName/*, bool expand = false*/);
-  virtual ~HistAdder();
+  ~HistAdder();
   void Configure(void);
-  void TaskHandler(void);
-  void ServiceHandler(DimInfo *);
+  void TaskHandler(char*,int);
+  void ServiceHandler(DimInfo *,char*,int);
   void setIsSaver(bool p)
   {
     if (p)
@@ -106,27 +108,11 @@ public:
 class HAdderTaskInfoHandler : public DimInfoHandler
 {
 public:
-  HistAdder *m_Hadder;
-  HAdderTaskInfoHandler(HistAdder *a)
-  {
-    m_Hadder = a;
-  }
-  void infoHandler(void)
-  {
-    m_Hadder->TaskHandler();
-  }
+  void infoHandler(void);
 };
 class HAdderServInfoHandler : public DimInfoHandler
 {
 public:
-  HistAdder *m_Hadder;
-  HAdderServInfoHandler(HistAdder *a)
-  {
-    m_Hadder = a;
-  }
-  void infoHandler(void)
-  {
-    m_Hadder->ServiceHandler(itsService);
-  }
+  void infoHandler(void);
 };
 #endif

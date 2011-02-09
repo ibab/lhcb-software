@@ -1,5 +1,7 @@
 #ifndef MONOBJ_H
 #define MONOBJ_H
+#include "dim/dis.hxx"
+//class DimService;
 class MonObj
 {
   public:
@@ -14,6 +16,7 @@ class MonObj
   virtual void *cpyName(void*)=0;
   virtual void *cpytitle(void *ptr)=0;
   virtual void List()=0;
+  virtual DimService *getDimService() {return 0;};
 //  virtual void *de_serialize(void *ptr, char *nam=0)=0;
 };
 

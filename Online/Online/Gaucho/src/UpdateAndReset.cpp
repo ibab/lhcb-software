@@ -123,30 +123,30 @@ StatusCode UpdateAndReset::start()
   // to make the ODIN object. doesn't work.
   //updMgrSvc();
 
-  serviceParts = Misc::splitString(m_utgid, "_");
+  serviceParts = Strsplit((char*)m_utgid.c_str(), (char*)"_");
 
   taskName = "unknownTask";
   partName = "unknownPartition";
   instancenumber = "1";
 
-  if (3 == serviceParts.size()) {
-    partName = serviceParts[0];
-    taskName = serviceParts[1];
-    instancenumber = serviceParts[2];
+  if (3 == serviceParts->size()) {
+    partName = serviceParts->at(0);
+    taskName = serviceParts->at(1);
+    instancenumber = serviceParts->at(2);
     if (partName=="CALD0701") {
        partName="LHCb";
        if (instancenumber=="1") {taskName = "CaloDAQCalib";}
        else {taskName = "Calib"+taskName+"_"+instancenumber;}
     }
   }
-  else if (4 == serviceParts.size()) {
-    partName = serviceParts[0];
-    taskName = serviceParts[2];
+  else if (4 == serviceParts->size()) {
+    partName = serviceParts->at(0);
+    taskName = serviceParts->at(2);
   }
 
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
-//  if (m_saveHistograms) m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+  if (m_saveHistograms) m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
 
 
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true);
@@ -247,7 +247,6 @@ StatusCode UpdateAndReset::stop() {
   {
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
   }
-
   m_stopdone = true;
   return StatusCode::SUCCESS;
 }
@@ -431,24 +430,30 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
  //   msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
-  if (f!=0) {
-    if(! f->IsZombie()) {
+  if (f!=0)
+  {
+    if(! f->IsZombie())
+    {
       histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
-      if (save) {
+      if (save)
+      {
         f->Close();
         delete f;f=0;
       }
 
     }
-    else {
+    else
+    {
       std::string errorTmpfile = "Error Saving Data => Zombie File..!!!!!";
       m_infoFileStatus.replace(0, m_infoFileStatus.length(), errorTmpfile);
       msg << MSG::DEBUG << "error opening file "<< m_infoFileStatus << ". Closing it." << endreq;
       if (f->IsOpen()) {f->Close();}
       delete f;f=0;
     }
+    m_dimSvcSaveSetLoc->updateService((char*)m_infoFileStatus.c_str());
   }
-  else {
+  else
+  {
      //f=0 because should also be able to reset without saving
      histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
   }
@@ -474,7 +479,8 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
         return;
      }
 
-    for ( it=leaves.begin(); it != leaves.end(); it++ ) {
+    for ( it=leaves.begin(); it != leaves.end(); it++ )
+    {
        const std::string& id = (*it)->identifier();
        if (rootdir !=0) rootdir->cd();
 //       msg << MSG::DEBUG << "    Object found: " << id << endreq;
@@ -487,11 +493,13 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
        }
 
        IHistogram* histogram = dynamic_cast<AIDA::IHistogram*> (dataObject);
-       if ( 0 != histogram) {
-         if (save) {
+       if ( 0 != histogram)
+       {
+         if (save)
+         {
            TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
-           std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
-	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+           dyn_string *HistoFullName = Strsplit((char*)hRoot->GetName(), (char*)"/");
+           hRoot->Write( HistoFullName->at(HistoFullName->size()-1).c_str() );
   //         msg << MSG::INFO << ", saving name=" << hRoot->GetName() << " directory="
   //          << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
 	  // should we reset on the root level?
@@ -510,8 +518,8 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
        if (0 != profile) {
          if (save)  {
            TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
-           std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
-	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+           dyn_string *HistoFullName = Strsplit((char*)hRoot->GetName(), (char*)"/");
+           hRoot->Write( HistoFullName->at(HistoFullName->size()-1).c_str() );
 	   //should we reset at the root level?
 	   //if (reset) hRoot->Reset();
          }
@@ -524,10 +532,10 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
        }
 
        // not an histogram: must be a directory: create corresponding TDirectory
-       std::vector<std::string> rootDirs = Misc::splitString(id, "/");
+       dyn_string *rootDirs = Strsplit((char*)id.c_str(), (char*)"/");
        TDirectory* newdir = rootdir;
        if(NULL != newdir) {
-         newdir = rootdir->mkdir(rootDirs[rootDirs.size()-1].c_str());
+         newdir = rootdir->mkdir(rootDirs->at(rootDirs->size()-1).c_str());
          newdir->cd();
        }
        int newLevel = level + 1;

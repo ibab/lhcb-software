@@ -17,6 +17,11 @@
 //class ObjServer;
 //class MonTimer;
 //class MonObj;
+enum
+{
+  MONSUBSYS_Histogram = 1,
+  MONSUBSYS_Counter
+};
 typedef std::map<std::string,MonObj*> ObjMap;
 
 class MonSubSys
@@ -37,11 +42,13 @@ protected:
   int m_lockcount;
   int m_unlockcount;
 public:
+  int m_type;
+  std::string m_expandInfix;
   MonSubSys(int intv = 10);
   ~MonSubSys();
   MonTimer *m_updateTimer;
   void *Allocate(int);
-  void setup(char *n);
+  void setup(char *n, bool expand=false);
   void start();
   void addObj(MonObj *h);
   void removeObj(MonObj *h);
@@ -59,6 +66,7 @@ public:
   void List();
   void stop();
   int m_runno;
+  bool m_expandnames;
 };
 
 #endif

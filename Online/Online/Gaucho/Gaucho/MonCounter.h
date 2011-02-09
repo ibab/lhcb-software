@@ -3,6 +3,8 @@
 #include "Gaucho/MonTypes.h"
 #include "Gaucho/MonObj.h"
 #include <vector>
+#include <string>
+#include "dim/dis.hxx"
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 
@@ -19,6 +21,7 @@ protected:
   unsigned int m_contsiz;      /* Allocated length in Bytes for the bin contents */
   int m_addoff;
 
+
   // Methods
 
   //void CopyData(int*,int*);
@@ -28,15 +31,20 @@ protected:
 public:
   char* m_name;    /** Name of the histogram **/
   char *name();
+  bool m_expandService;
+  DimService *m_service;
+  std::string m_srvcprefix;
+  std::string m_fmt;
   //HistService *serv;
   int type() {return (int)m_type;};
   MonCounter(char *name, char *title, int *data );
   MonCounter(char *name, char *title, long long *data );
   MonCounter(char *name, char *title, float *data );
   MonCounter(char *name, char *title, double *data );
+  MonCounter(char *name, char *title, std::string fmt, void *data , int size);
   MonCounter();
   void setup(MONTYPE typ, void *ext, char *name, char *title);
-  virtual ~MonCounter();
+  /*virtual*/ ~MonCounter();
   int setname ( char* name);
   void clear(void);
   int titlen();
@@ -56,7 +64,9 @@ public:
   int serialize(void* &ptr);
   void List();
   void *de_serialize(void *, char *nam=0){nam=nam;return 0;};
-
+  void SetExpand(bool expand){this->m_expandService = expand;return;};
+  void create_OutputService(std::string);
+  DimService *getDimService();
 };
 //#ifdef __cplusplus
 //extern "C"{

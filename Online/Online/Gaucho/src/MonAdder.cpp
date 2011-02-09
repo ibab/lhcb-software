@@ -67,20 +67,6 @@ void *MonAdder::ReAllocate(int incsiz)
   }
   return m_buffer;
 }
-dyn_string *Strsplit(char *s, char *del)
-{
-  char *pch;
-  pch = strtok(s,del);
-  dyn_string *v=new dyn_string();
-  int nel=0;
-  while (pch != 0)
-  {
-    v->push_back(std::string(pch));
-    nel++;
-    pch = strtok(0,del);
-  }
-  return v;
-};
 
 void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tgen)
 {

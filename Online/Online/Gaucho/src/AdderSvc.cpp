@@ -27,7 +27,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 //  printf("AdderSvc... Constructing...\n");
   declareProperty("SourceTaskPattern", m_TaskName="");
   declareProperty("MyName",m_MyName="Adder");
-  declareProperty("SourceServiceName",m_ServiceName="Data");
+//  declareProperty("SourceServiceName",m_ServiceName="Data");
   declareProperty("InDNS",m_InputDNS="");
   declareProperty("OutDNS",m_OutputDNS="");
   declareProperty("TopLevel",m_TopLevel=false);
@@ -36,7 +36,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
   declareProperty("SaveInterval", m_SaveInterval = 900);
   declareProperty("PartitionName",m_PartitionName="LHCb");
   declareProperty("SaveSetTaskName",m_SaverTaskName="Moore");
-  declareProperty("IsEOR",m_isEOR=false);
+//  declareProperty("IsEOR",m_isEOR=false);
   declareProperty("ExpandRate",m_ExpandRate=false);
   declareProperty("TaskPattern",m_TaskPattern="");
   declareProperty("ServicePattern",m_ServicePattern="");
@@ -73,12 +73,21 @@ StatusCode AdderSvc::initialize()
 StatusCode AdderSvc::start()
 {
   Service::start();
+  std::string myservicename;
   m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
   toLowerCase(m_ServicePattern);
   toLowerCase(m_AdderType);
   std::string nodename = RTL::nodeNameShort();
   toLowerCase(nodename);
+// Nodeadders:
+// Source task names:
+//  Reconstruction task structure: <Partition>_<Node>_Brunel_xx
+//  HLT Task structure: <node>_GAUCHOJOB_xx
+//
+// subfarm adders:
+// Source task names (all Farms):
+//  <node>_Adder_xx
   if (m_AdderType == "node")
   {
     if (m_TaskPattern == "")
@@ -90,11 +99,12 @@ StatusCode AdderSvc::start()
       m_TaskPattern = nodename+std::string("_")+m_TaskPattern+std::string("(.*)");
     }
 //    m_MyName = nodename+std::string("_Adder");
-    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/")+m_ServiceName;
+    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
     if (m_InputDNS == "")
     {
       m_InputDNS = nodename.substr(0,nodename.size()-2);
     }
+    myservicename = m_MyName;
   }
   else if (m_AdderType == "sf" || m_AdderType == "subfarm")
   {
@@ -107,37 +117,37 @@ StatusCode AdderSvc::start()
       m_TaskPattern = nodename+m_TaskPattern+std::string("(.*)");
     }
 //    m_MyName = nodename+std::string("_Adder");
-    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/")+m_ServiceName;
+    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
     if (m_InputDNS == "")
     {
       m_InputDNS = nodename;
     }
+    myservicename = m_MyName.replace(m_MyName.find("_"),1,std::string("_")+m_PartitionName+std::string("_"));
   }
   else if (m_AdderType == "top" || m_AdderType == "part")
   {
-    m_TaskPattern = std::string("hlt[a-z][0-9][0-9]_Adder(.*)");
+    m_TaskPattern = std::string("_Adder(.*)");
     m_MyName = m_PartitionName+std::string("_Adder");
-    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("_")+m_PartitionName+std::string("/Histos/")+m_ServiceName;
+    m_ServicePattern = std::string("MON_hlt[a-z][0-9][0-9]_")+m_PartitionName+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
     if (m_InputDNS == "")
     {
       m_InputDNS = std::string("hlt01");
     }
+    myservicename = m_PartitionName+std::string("_Adder");
   }
   else
   {
     printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
   }
   DimClient::setDnsNode(m_InputDNS.c_str());
-  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
+//  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
+  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
   m_adder->setOutDNS(m_OutputDNS);
-  m_adder->m_IsEOR = m_isEOR;
+  m_adder->m_IsEOR = false;
   m_adder->m_expandRate = m_ExpandRate;
   m_adder->m_taskPattern = m_TaskPattern;
-  m_adder->m_servicePattern = m_ServicePattern;
-  if (m_isSaver)
-  {
-    m_adder->setIsSaver(true);
-  }
+  m_adder->m_servicePattern = m_ServicePattern+std::string("Data");
+  m_adder->setIsSaver(m_isSaver);
   m_adder->Configure();
   if (m_isSaver)
   {
@@ -145,23 +155,28 @@ StatusCode AdderSvc::start()
     m_SaveTimer->setPartName(m_PartitionName);
     m_SaveTimer->setRootDir(m_SaveRootDir);
     m_SaveTimer->setTaskName(m_SaverTaskName);
+    m_SaveTimer->setEOR(false);
+    m_SaveTimer->Start();
   }
+
+  m_EoRadder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+  m_EoRadder->setOutDNS(m_OutputDNS);
+  m_EoRadder->m_IsEOR = true;
+  m_EoRadder->m_expandRate = false;
+  m_EoRadder->m_taskPattern = m_TaskPattern;
+  m_EoRadder->m_servicePattern = m_ServicePattern+std::string("EOR");
+  m_EoRadder->m_noRPC = true;
+  m_EoRadder->setIsSaver(m_isSaver);
+  m_EoRadder->Configure();
   if (m_isSaver)
   {
-    if (!m_isEOR)
-    {
-      m_SaveTimer->setEOR(false);
-      m_SaveTimer->Start();
-    }
-    else
-    {
-      m_SaveTimer->setEOR(true);
-      m_adder->SetCycleFn(EORSaver,(void*)m_SaveTimer);
-    }
+    m_EoRSaver = new SaveTimer(m_EoRadder,m_SaveInterval);
+    m_EoRSaver->setPartName(m_PartitionName);
+    m_EoRSaver->setRootDir(m_SaveRootDir);
+    m_EoRSaver->setTaskName(m_SaverTaskName);
+    m_EoRSaver->setEOR(true);
+    m_EoRadder->SetCycleFn(EORSaver,(void*)m_SaveTimer);
   }
-//  printf("AdderSvc... Starting...\n");
-//  TBrowser *b=new TBrowser();
-//  app->Run();
   return StatusCode::SUCCESS;
 }
 StatusCode AdderSvc::stop()

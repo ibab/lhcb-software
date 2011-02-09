@@ -2,8 +2,8 @@
 //#include "Gaucho/MonSubSys.h"
 //#include "Gaucho/ObjService.h"
 //#include "RTL/rtl.h"
-#include "stdio.h"
-#include "errno.h"
+#include <cstdio>
+#include <cerrno>
 #ifdef WIN32
 #include "windows.h"
 #define onesec (unsigned long long)(10000000)
@@ -63,7 +63,9 @@ void GenTimer::Stop()
 //  m_Hsys->Lock();
   if (m_thread != 0)
   {
+    void *status;
     pthread_cancel(m_thread);
+    pthread_join(m_thread,&status);
     m_thread = 0;
   }
 //  m_Hsys->unLock();
@@ -181,8 +183,9 @@ void *GenTimer::ThreadRoutine()
         timerHandler();
         break;
       }
-      else if (status == EINTR)
+      else if (errno == EINTR)
       {
+        printf("EINTR in nanosleep \n");
         continue;
       }
       else

@@ -12,6 +12,7 @@ enum MONTYPE
   C_LONGLONG,
   C_FLOAT,
   C_DOUBLE,
-  C_STATENT
+  C_STATENT,
+  C_VOIDSTAR
 };
 #endif

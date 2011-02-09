@@ -75,6 +75,10 @@ void ObjService::Updater()
   }
   updateService(ptr,siz);
 //  setData(ptr,siz);
+  if (this->m_expandservice)
+  {
+    m_ser->UpdateExpansions();
+  }
   return;
 }
 void ObjService::setEORflag(bool val)

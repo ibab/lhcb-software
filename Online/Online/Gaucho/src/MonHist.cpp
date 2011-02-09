@@ -557,13 +557,13 @@ int MonHist::serialize(void* &ptr)
   pp->namelen = naml;
   pp->xlablen = m_xlablen;
   pp->type = m_type;
-  char *tit=0;
-  char *nam=0;
-  char *xtits=0;
-  char *ytits=0;
-  double *ntries=0;
-  double *errp=0;
-//  double *sumbin=0;
+  char *tit;
+  char *nam;
+  char *xtits;
+  char *ytits;
+  double *ntries;
+  double *errp;
+//  double *sumbin;
   switch(m_type)
   {
     case H_2DIM:

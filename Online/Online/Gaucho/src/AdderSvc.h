@@ -41,6 +41,7 @@ private:
 
   std::string m_utgid;
   HistAdder *m_adder;
+  HistAdder *m_EoRadder;
   std::string m_TaskName;
   std::string m_PartitionName;
   std::string m_SaverTaskName;
@@ -56,27 +57,9 @@ private:
   bool m_isSaver;
   bool m_isEOR;
   SaveTimer *m_SaveTimer;
+  SaveTimer *m_EoRSaver;
   std::string m_SaveRootDir;
   int m_SaveInterval; //in seconds
-//  DimPropServer* m_dimpropsvr;
-//  DimCmdServer* m_dimcmdsvr;
-//  DimRpcGaucho* m_dimRpcGaucho;
-  // Map associating to each algorithm name a set with the info
-  // names from this algorithm
-//  typedef std::map<const IInterface*, std::set<std::string> > InfoNamesMap;
-//  typedef InfoNamesMap::iterator InfoNamesMapIt;
-//  InfoNamesMap  m_InfoNamesMap;
-//  InfoNamesMapIt m_InfoNamesMapIt;
-
-//  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
-//  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
-//  DimServiceMonObjectMap    m_dimMonObjects;
-//  DimServiceMonObjectMapIt  m_dimMonObjectsIt;
-
-//  typedef std::map<std::string, DimService*, std::less<std::string> > DimServiceMap;
-//  typedef DimServiceMap::iterator DimServiceMapIt;
-//  DimServiceMap    m_dimSrv;
-//  DimServiceMapIt  m_dimSrvIt;
 
 
   // MonObjetc to convert conters in rates

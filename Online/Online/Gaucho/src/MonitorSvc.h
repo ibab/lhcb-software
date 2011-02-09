@@ -113,16 +113,16 @@ public:
 
 private:
   bool m_started;
+  bool m_expandCounterServices;
   MonSys *m_MonSys;
   MonSubSys *m_HistSubSys;
   MonSubSys *m_CntrSubSys;
   CntrMgr *m_CntrMgr;
   std::string m_utgid;
-//  DimPropServer* m_dimpropsvr;
-//  DimCmdServer* m_dimcmdsvr;
-//  DimRpcGaucho* m_dimRpcGaucho;
-  // Map associating to each algorithm name a set with the info
-  // names from this algorithm
+  std::string m_expandInfix;
+  std::string m_partname;
+  std::string m_ProcName;
+  std::string m_ProgName;
   typedef std::map<const IInterface*, std::set<std::string> > InfoNamesMap;
   typedef InfoNamesMap::iterator InfoNamesMapIt;
   InfoNamesMap  m_InfoNamesMap;

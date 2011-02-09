@@ -9,12 +9,14 @@ ObjSerializer::ObjSerializer(void)
   buffer = 0;
   buffersize = 0;
   m_objmap = 0;
+  this->m_expandservices = false;
 }
-ObjSerializer::ObjSerializer(ObjMap *m)
+ObjSerializer::ObjSerializer(ObjMap *m, bool expand)
 {
   buffer = 0;
   buffersize = 0;
   m_objmap = m;
+  this->m_expandservices = expand;
 }
 
 ObjSerializer::~ObjSerializer(void)
@@ -192,7 +194,22 @@ void ObjSerializer::DeSerializeObj(char *,void *&)
 void ObjSerializer::DeSerializeObj(std::vector<std::string> &,void *&)
 {
 }
-
+void ObjSerializer::UpdateExpansions(void)
+{
+  ObjMap::iterator i;
+  if (this->m_expandservices)
+  {
+    for (i =m_objmap->begin();i!=m_objmap->end();i++)
+    {
+      MonObj *h = (MonObj *)i->second;
+      DimService *d=  h->getDimService();
+      if (d != 0)
+      {
+        h->getDimService()->updateService();
+      }
+    }
+  }
+}
 
 
 

@@ -4,7 +4,7 @@
 #include "stdio.h"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/RPCdefs.h"
-
+#include "Gaucho/Utilities.h"
 int RPCRec::analyseReply()
 {
   void *valin;

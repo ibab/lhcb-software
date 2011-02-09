@@ -10,17 +10,6 @@
 //#include "CCPCSerializer.h"
 //char hist_prefix[]="_HIST_";
 
-class dyn_string : public std::vector<std::string >
-{
-public:
-  dyn_string() {};
-  ~dyn_string()
-  {
-  }
-};
-
-dyn_string *Strsplit(char *s, char *del);
-
 
 typedef std::map<std::string, void*> HistMap;
 typedef HistMap::iterator HistIter;
@@ -137,11 +126,11 @@ public:
   std::string hist_prefix;
   std::string m_outdns;
   bool m_IsEOR;
+  bool m_noRPC;
 
 public:
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
   MonAdder(){CycleFn = 0;m_IsEOR = false;};
-  virtual ~MonAdder() {}
   void *Allocate(int siz);
   void *ReAllocate(int);
   void SetCycleFn(void CycleCB(void*,void*,int, HistMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}

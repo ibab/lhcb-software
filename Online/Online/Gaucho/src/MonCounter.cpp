@@ -17,16 +17,48 @@
 //static DimHistbuff1 dumbuf1;
 //static DimHistbuff2 dumbuf2;
 
-void MonCounter::setup(MONTYPE typ, void *ext,char *name, char *title)
+void MonCounter::setup(MONTYPE typ, void *data,char *name, char *title)
 {
   m_type  = typ;
   m_titlen = 0;
   m_title = 0;
   m_contsiz    = 0;
   m_addoff = 0;
-  m_contents = ext;
+  m_contents = data;
   setname(name);
   Init(title);
+  switch (m_type)
+  {
+  case   C_INT:
+    {
+      m_srvcprefix = std::string("MonI/");
+      break;
+    }
+  case   C_LONGLONG:
+    {
+      m_srvcprefix = std::string("MonL/");
+      break;
+    }
+  case   C_FLOAT:
+    {
+      m_srvcprefix = std::string("MonF/");
+      break;
+    }
+  case   C_DOUBLE:
+    {
+      m_srvcprefix = std::string("MonD/");
+      break;
+    }
+  case   C_VOIDSTAR:
+    {
+      m_srvcprefix = std::string("");
+      break;
+    }
+  default:
+    {
+      break;
+    }
+  }
   return;
 }
 MonCounter::MonCounter()
@@ -48,6 +80,13 @@ MonCounter::MonCounter(char *name, char *title, float *data )
 MonCounter::MonCounter(char *name, char *title, double *data )
 {
   setup(C_DOUBLE,data,name,title);
+}
+MonCounter::MonCounter(char *name, char *title, std::string fmt, void *data , int size)
+{
+  setup(C_VOIDSTAR,data,name,title);
+  m_fmt = fmt;
+  m_contsiz = size;
+  buffersize = 0;
 }
 int MonCounter::Init(char *title)
 {
@@ -88,6 +127,11 @@ MonCounter::~MonCounter()
   {
     free(m_name);
     m_namelen = 0;
+  }
+  if (this->m_service != 0)
+  {
+    delete m_service;
+    m_service = 0;
   }
 }
 int MonCounter::setname ( char* name)
@@ -133,6 +177,10 @@ int MonCounter::hdrlen()
 }
 int MonCounter::xmitbuffersize()
 {
+  if (m_type == C_VOIDSTAR)
+  {
+    return 0;
+  }
   int s;
   s = hdrlen();
   s += datasize();
@@ -155,6 +203,10 @@ void *MonCounter::cpytitle(void *p)
 }
 int MonCounter::serialize(void* &ptr)
 {
+  if (m_type == C_VOIDSTAR)
+  {
+    return 0;
+  }
   int siz;
   int titl = titlen();
   int naml = namelen();
@@ -224,21 +276,31 @@ void MonCounter::List()
   case   C_INT:
     {
       typ = std::string("C_INT");
+      m_srvcprefix = std::string("MonI/");
       break;
     }
   case   C_LONGLONG:
     {
       typ = std::string("C_LONGLONG");
+      m_srvcprefix = std::string("MonL/");
       break;
     }
   case   C_FLOAT:
     {
       typ = std::string("C_FLOAT");
+      m_srvcprefix = std::string("MonF/");
       break;
     }
   case   C_DOUBLE:
     {
       typ = std::string("C_DOUBLE");
+      m_srvcprefix = std::string("MonD/");
+      break;
+    }
+  case   C_VOIDSTAR:
+    {
+      typ = std::string("C_VOIDSTAR");
+      m_srvcprefix = std::string("");
       break;
     }
   default:
@@ -249,5 +311,47 @@ void MonCounter::List()
   }
 //  printf("Counter Type: %s Name %s\n",typ.c_str(),name());
 }
-
+void MonCounter::create_OutputService(std::string infix)
+{
+  std::string nam;
+  nam = m_srvcprefix+infix+std::string(m_name);
+  switch(m_type)
+  {
+    case C_INT:
+    {
+      this->m_service = new DimService(nam.c_str(),(int&)m_contents);
+      break;
+    }
+    case C_LONGLONG:
+    {
+      this->m_service = new DimService(nam.c_str(),(long long&)m_contents);
+      break;
+    }
+    case C_FLOAT:
+    {
+      this->m_service = new DimService(nam.c_str(),(float&)m_contents);
+      break;
+    }
+    case C_DOUBLE:
+    {
+      this->m_service = new DimService(nam.c_str(),(double&)m_contents);
+      break;
+    }
+    case C_VOIDSTAR:
+    {
+      this->m_service = new DimService(nam.c_str(),(char*)m_fmt.c_str(),m_contents, m_contsiz);
+      break;
+    }
+    default:
+    {
+      m_service = 0;
+      break;
+    }
+  }
+  return;
+}
+DimService *MonCounter::getDimService()
+{
+  return this->m_service;
+}
 

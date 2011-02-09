@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
+//#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 typedef  std::vector<char*> NAMEVEC;
 typedef  std::vector<std::string*> STRVEC;
 typedef  std::map<char*,void*> PTRMAP;
