@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r45
+version v4r46
 
 branches cmt doc
  
@@ -18,14 +18,14 @@ use GaudiObjDesc      v11r11
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
 use Camera              v1r19    Online
-use Checkpointing       v0r1     Online
+use Checkpointing       v0r2     Online
 use CondDBServer        v1r4     Online
 use DIM                 v19r15   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r2     Online
-use Gaucho              v7r0     Online
-use GaudiCheckpointing  v0r1     Online
-use GaudiOnline         v2r46    Online
+use Gaucho              v7r1     Online
+use GaudiCheckpointing  v0r2     Online
+use GaudiOnline         v2r47    Online
 use GaudiRootCnvTests   v1r1     Online
 use GaudiSerialize      v0r9     Online
 use GaudiUPI            v1r13    Online
@@ -54,7 +54,7 @@ use Trending            v1r2     Online
 use UPI                 v1r20    Online
 use UPIR                v1r3     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r31    Online
+use Writer              v1r32    Online
 
 # Declare this as a container package
 apply_pattern container_package
