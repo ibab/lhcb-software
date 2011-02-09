@@ -47,9 +47,9 @@ class Muons_draft2011 :
             'Hlt2DiMuonDY4',
 
             # control rate via flight distance chi2, sum IP chi2 cuts - avoid PT cuts
-            'Hlt2Mu1Track',
-            'Hlt2Mu2Track',
-            'Hlt2Mu3Track'
+            'Hlt2MuTrack1',
+            'Hlt2MuTrack2',
+            'Hlt2MuTrack3'
                  
             ]
             
@@ -111,21 +111,21 @@ class Muons_draft2011 :
         
         d.update( { Hlt2MuNTrackLinesConf : {
             'L0FILTER'            : "L0_CHANNEL_RE('.*Muon')"
-            ,'HLT1FILTER'         : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
+            ,'HLT1FILTER'         : ""#"HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
             #mu + n tracks filter cuts
             ,'MCOR_MAX'           : 7000.0  # MeV
             ,'MCOR_MIN'           : 0.0     # MeV 
             ,'MCOR_NTR_MIN'       : 4000.0  # MeV 
-            ,'SUM_PT_1TR_MIN'     : 2000.0  # MeV
-            ,'SUM_PT_2TR_MIN'     : 2000.0  # MeV
+            ,'SUM_PT_1TR_MIN'     : 2500.0  # MeV
+            ,'SUM_PT_2TR_MIN'     : 2500.0  # MeV
             ,'SUM_PT_3TR_MIN'     : 2600.0  # MeV
             ,'MAX_PT_MIN'         : 1500.0  # MeV 
             ,'MAX_PT_NTR_MIN'     : 1500.0  # MeV 
             ,'SUM_IPCHI2_1TR_MIN' : 50      # unitless
             ,'SUM_IPCHI2_2TR_MIN' : 75      # unitless
             ,'SUM_IPCHI2_3TR_MIN' : 100     # unitless
-            ,'BPVVDCHI2_MIN'      : 36.0    # unitless
-            ,'MIN_TRCHI2DOF_MAX'  : 3       # unitless
+            ,'BPVVDCHI2_MIN'      : 150.0    # unitless
+            ,'MIN_TRCHI2DOF_MAX'  : 2       # unitless
             #combination cuts
             ,'AMAXDOCA_MAX'       : 0.12    # mm 
             ,'AMAXDOCA_MIN'       : 0.12    # mm 
@@ -133,17 +133,17 @@ class Muons_draft2011 :
             ,'DIRA_TIGHT_MIN'     : 0.995   # rad
             # mother cuts
             ,'MASS_1TR_VETO'      : 2000.0  # MeV 
-            ,'MASS_2TR_VETO'      : 3000.0  # MeV 
-            ,'MASS_3TR_VETO'      : 4000.0  # MeV 
+            ,'MASS_2TR_VETO'      : 2000.0  # MeV 
+            ,'MASS_3TR_VETO'      : 2000.0  # MeV 
             # cuts on input particles
             ,'ALL_MIPCHI2DV_MIN'  : 16.0    # unitless
-            ,'ALL_TRCHI2DOF_MAX'  : 3.0     # unitless
-            ,'ALL_MU_PT_MIN'      : 800.0   # MeV
+            ,'ALL_TRCHI2DOF_MAX'  : 5.0     # unitless
+            ,'ALL_MU_PT_MIN'      : 1000.0   # MeV
             ,'ALL_TR_PT_MIN'      : 600.0   # MeV
             ,'ALL_P_MIN'          : 5000.0  # MeV
-            ,'Prescale'   : { 'Hlt2Mu1Track'   : 1.0
-                              ,'Hlt2Mu2Track'  : 1.0
-                              ,'Hlt2Mu3Track'  : 0.0
+            ,'Prescale'   : {  'Hlt2MuTrack1'  : 1.0
+                              ,'Hlt2MuTrack2'  : 1.0
+                              ,'Hlt2MuTrack3'  : 0.0
                               }
             }}
                   )
