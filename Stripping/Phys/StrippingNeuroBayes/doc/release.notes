@@ -4,6 +4,9 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-02-09 - Ulrich Kerzel
+- don't apply precuts for B->hh when filling input variables
+
 ! 2011-02-07 - Ulrich Kerzel
 - change return value of function filling input variables to 'bool',
   only return true if variables are filled after pre-cuts, then run network

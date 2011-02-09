@@ -313,21 +313,21 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   //
   // appply pre-cuts
   //
-  if (mB               < 5.0      ||
-      mB               > 5.8      ||
-      !hPlusAboveThresholdK       ||
-      !hMinusAboveThresholdK      ||
-      hPlusTrackChi2   >  5       ||
-      hMinusTrackChi2  >  5       ||
-      minP             < 10.0     ||
-      minPt            <  1.5     ||
-      (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
-      (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
-      docaB            > 0.10     ||
-      chi2B            > 25.0     ||
-      maxPt            <  2.0     ||
-      maxDllK          <  0.1)
-    return false;
+  //if (mB               < 5.0      ||
+  //    mB               > 5.8      ||
+  //    !hPlusAboveThresholdK       ||
+  //    !hMinusAboveThresholdK      ||
+  //    hPlusTrackChi2   >  5       ||
+  //    hMinusTrackChi2  >  5       ||
+  //    minP             < 10.0     ||
+  //    minPt            <  1.5     ||
+  //    (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
+  //    (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
+  //    docaB            > 0.10     ||
+  //    chi2B            > 25.0     ||
+  //    maxPt            <  2.0     ||
+  //    maxDllK          <  0.1)
+  //  return false;
 
 
   //
