@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-09 - Albert Puig
+ - Adapted StrippingB2XGamma to the new StrippingFramework.
+ - Added test for StrippingB2XGamma.
+
 ! 2011-02-09 - Ulrich Kerzel
  - make precuts for Bhh lose line steerable
 

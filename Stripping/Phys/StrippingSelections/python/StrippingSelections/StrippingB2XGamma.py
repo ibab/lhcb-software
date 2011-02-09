@@ -1,222 +1,335 @@
-__author__ = 'Fatima Soomro'
+"""
+Module for construction of Radiative Decays Stripping Selections and StrippingLines.
+Provides functions to build Bd, Bs, K*, Phi selections.
+Provides class StrippingB2XGammaConf, which constructs the Selections and
+StrippingLines given a configuration dictionary.
+Exported selection makers: 'makePhoton', 'makePhi2KK', 'makeKstar', 'makeBs2PhiGamma',
+'makeBd2KstGamma'
+
+"""
+
+__author__ = ['Fatima Soomro', 'Albert Puig']
 __date__ = '18/12/2009'
 __version__ = '$Revision: 1.8 $'
 
+__all__ = ('StrippingB2XGammaConf', 'makePhoton', 'makePhi2KK', 'makeKstar', 'makeBs2PhiGamma', 'makeBd2KstGamma')
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-import GaudiKernel.SystemOfUnits as Units
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember, StrippingTool
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
+name = 'B2XGamma'
 
-class StrippingB2XGammaConf(LHCbConfigurableUser):
+class StrippingB2XGammaConf(LineBuilder):
     """
     Definition of B -> X Gamma stripping
+    
+    Constructs B0 -> K* Gamma and Bs -> Phi Gamma Selections and StrippingLines from
+    a configuration dictionary.
+    Usage:
+    >>> config = { .... }
+    >>> gammaConf = StrippingB2XGammaConf('StrippingB2XGammaTest',config)
+    >>> gammaLines = gammaConf.lines
+    >>> for line in line :
+    >>>  print line.name(), line.outputLocation()
+    The lines can be used directly to build a StrippingStream object.
+
+    Exports as instance data members:
+    selPhoton                    : Photon Selection object
+    selPhi2KK                    : nominal Phi -> K+K- Selection object
+    selKst                       : nominal K* -> K pi Selection object
+    selKstWide                   : K* -> K pi Selection object with wide K* mass window
+    selBs2PhiGammaWideBMass      : Bs -> Phi Gamma Selection object with wide Bs mass window
+    selBs2PhiGammaLooseDira      : Bs -> Phi Gamma Selection object with loose direction angle cut
+    selBs2PhiGamma               : nominal Bs -> Phi Gamma Selection object with wide Bs mass window
+    selBd2KstGammaWideBMass      : B0 -> K* Gamma Selection object with wide Bs mass window
+    selBd2KstGammaWideKstMass    : B0 -> K* Gamma Selection object with wide K* mass window
+    selBd2KstGammaLooseDira      : B0 -> K* Gamma Selection object with loose direction angle cut
+    selBd2KstGammaWide           : B0 -> K* Gamma Selection object with wide mass windows for K* and B
+    selBd2KstGamma               : nominal B0 -> K* Gamma object Object 
+    Bs2PhiGammaWideBMassLine     : Stripping line out of selBs2PhiGammaWideBMass
+    Bs2PhiGammaWideLooseDiraLine : Stripping line out of selBs2PhiGammaLooseDira
+    Bs2PhiGammaLine              : Stripping line out of selBs2PhiGamma
+    Bd2KstGammaWideBMassLine     : Stripping line out of selBd2KstGammaWideBMass
+    Bd2KstGammaWideKstMassLine   : Stripping line out of selBd2KstGammaWideKstMass
+    Bd2KstGammaLooseDiraLine     : Stripping line out of selBd2KstGammaLooseDira
+    Bd2KstGammaWide              : Stripping line out of selBd2KstGammaWide
+    Bd2KstGamma                  : Stripping line out of selBd2KstGamma
+    lines                  : List of lines
+
+    Exports as class data member:
+    StrippingB2XGammaConf.__configuration_keys__ : List of required configuration parameters.    
     """
-    __slots__ = { 
-                   'TrIPchi2Phi'          : 10.       # Dimensionless
-                   ,'TrIPchi2Kst'         : 10.       # Dimensionless
-                   ,'PhiMassWin'          : 15.       # MeV
-                   ,'KstMassWin'          : 100.      # MeV
-                   ,'KstMassWinSB'        : 200.      # MeV
-                   ,'BsMassWin'           : 1000.     # MeV
-                   ,'B0MassWin'           : 1000.     # MeV
-                   ,'BMassWinSB'          : 2000.     # MeV
-                   ,'BsDirAngle'          : 0.02      # radians
-                   ,'B0DirAngle'          : 0.02      # radians
-                   ,'BDirAngleMoni'       : 0.06      # radians
-                   ,'BsPVIPchi2'          : 15.       # Dimensionless
-                   ,'B0PVIPchi2'          : 15.       # Dimensionless
-                   ,'photonPT'            : 2600.     # MeV
-                   ,'PhiVCHI2'            : 15.       # dimensionless
-                   ,'KstVCHI2'            : 15.       # dimensionless
-                   ,'TrChi2'              : 5.        # dimensionless
-                   }
+    __configuration_keys__ = ('TrIPchi2Phi'
+                              ,'TrIPchi2Kst'
+                              ,'PhiMassWin'
+                              ,'KstMassWin'
+                              ,'KstMassWinSB'
+                              ,'BsMassWin'
+                              ,'B0MassWin'
+                              ,'BMassWinSB'
+                              ,'BsDirAngle'
+                              ,'B0DirAngle'
+                              ,'BDirAngleMoni'
+                              ,'BsPVIPchi2'
+                              ,'B0PVIPchi2'
+                              ,'photonPT'
+                              ,'PhiVCHI2'
+                              ,'KstVCHI2'
+                              ,'TrChi2'
+                              # Pre- and postscales
+                              ,'Bs2PhiGammaWideBMassPreScale'
+                              ,'Bs2PhiGammaWideBMassPostScale'
+                              ,'Bs2PhiGammaLooseDiraPreScale'
+                              ,'Bs2PhiGammaLooseDiraPostScale'
+                              ,'Bs2PhiGammaPreScale'
+                              ,'Bs2PhiGammaPostScale'
+                              ,'Bd2KstGammaWideBMassPreScale'
+                              ,'Bd2KstGammaWideBMassPostScale'
+                              ,'Bd2KstGammaLooseDiraPreScale'
+                              ,'Bd2KstGammaLooseDiraPostScale'
+                              ,'Bd2KstGammaWideKstMassPreScale'
+                              ,'Bd2KstGammaWideKstMassPostScale'
+                              ,'Bd2KstGammaWidePreScale'
+                              ,'Bd2KstGammaWidePostScale'
+                              ,'Bd2KstGammaPreScale'
+                              ,'Bd2KstGammaPostScale'
+                              )
     
-    __phiGamma = None
-    __phiGammaBMass = None
-    __phiGammaDira = None
-    __kstGamma = None
-    __kstGammaBMass = None
-    __kstGammaDira = None
-    __kstGammaKMass = None
-    __kstGammaWide = None
-    
-    def phigammaWideBMass( self ) :
-        if StrippingB2XGammaConf.__phiGammaBMass == None:
-            mySelection = self.combineBs(name = "BsMassSideBand") #this is an object of type Selection
-            WideBMassBs = mySelection.algorithm().clone("WideBMassBs", CombinationCut = "(ADAMASS('B_s0')<%(BMassWinSB)s*MeV)"% self.getProps() )
-            WideBMassBs.PropertiesPrint = False
-            SelWideBMassBs = mySelection.clone("SelWideBMassBs", Algorithm = WideBMassBs)
-            StrippingB2XGammaConf.__phiGammaBMass = SelectionSequence('SelSeqBs2PhiGammaWideBMass', SelWideBMassBs)
-        return StrippingLine('Bs2PhiGammaWideBMass',
-                             prescale =0.1,
-                             algos = [SelWideBMassBs] )  
-    
-    def phigammaLooseDira( self ) :
-        if StrippingB2XGammaConf.__phiGammaDira ==None:
-            mySelection = self.combineBs(name = "BsDiraSideBand") #this is an object of type Selection
-            LooseDiraBs  = mySelection.algorithm().clone("LooseDiraBs", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(BsPVIPchi2)s)" % self.getProps() )
-            LooseDiraBs.PropertiesPrint = False
-            SelLooseDiraBs = mySelection.clone("SelLooseDiraBs", Algorithm = LooseDiraBs)
-            StrippingB2XGammaConf.__phiGammaDira = SelectionSequence('SelSeqBs2PhiGammaLooseDira', SelLooseDiraBs)
-        return StrippingLine('Bs2PhiGammaLooseDira',
-                             prescale = 0.1,
-                             algos = [ SelLooseDiraBs ] ) 
-    
-    def phigamma( self ) :
-        if StrippingB2XGammaConf.__phiGamma == None :
-            mySelection = self.combineBs(name = "Bs2PhiGamma")
-            StrippingB2XGammaConf.__phiGamma = SelectionSequence('SeqSelBs2PhiGamma', TopSelection  = mySelection)#self.combineBs(name = "Bs2PhiGamma"))
-        return StrippingLine('Bs2PhiGamma',
-                             prescale = 1,
-                             algos = [ mySelection] )
-    
-    def combineBs(self, name = "MakeBs2PhiGamma" ):
-        """
-        Define the Bs
-        """        
-        _stdPhi4Bs = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
-        _phi4BsFilter = FilterDesktop ("PhiFilterFor"+name)
-        _phi4BsFilter.Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Phi)s) & (MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) & (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % self.getProps()
+    def __init__(self, name, config):
+        LineBuilder.__init__(self, name, config)
+        # Selection of B daughters: photon, phi and kstar
+        self.selPhoton = makePhoton('Gamma for %s' % name,
+                                    config['photonPT'])
+        self.selPhi2KK = makePhi2KK('PhiFor%s' % name,
+                                    config['TrIPchi2Phi'],
+                                    config['TrChi2'],
+                                    config['PhiMassWin'],
+                                    config['PhiVCHI2'])
+        self.selKst = makeKstar('KStarFor%s' % name,
+                                config['TrIPchi2Phi'],
+                                config['TrChi2'],
+                                config['KstMassWin'],
+                                config['KstVCHI2'])
+        self.selKstWide = makeKstar('KStarWideFor%s' % name,
+                                    config['TrIPchi2Phi'],
+                                    config['TrChi2'],
+                                    config['KstMassWinSB'],
+                                    config['KstVCHI2'])
+        # Bs->Phi Gamma selections
+        self.selBs2PhiGammaWideBMass = makeBs2PhiGamma('Bs2PhiGammaWideBMassFor%s' % name,
+                                                       self.selPhi2KK,
+                                                       self.selPhoton,
+                                                       config['BsDirAngle'],
+                                                       config['BsPVIPchi2'],
+                                                       config['BMassWinSB'])
+        self.selBs2PhiGammaLooseDira = makeBs2PhiGamma('Bs2PhiGammaLooseDiraFor%s' % name,
+                                                       self.selPhi2KK,
+                                                       self.selPhoton,
+                                                       config['BDirAngleMoni'],
+                                                       config['BsPVIPchi2'],
+                                                       config['BsMassWin'])
+        self.selBs2PhiGamma = makeBs2PhiGamma('Bs2PhiGammaFor%s' % name,
+                                              self.selPhi2KK,
+                                              self.selPhoton,
+                                              config['BsDirAngle'],
+                                              config['BsPVIPchi2'],
+                                              config['BsMassWin'])
+        # Bd->Kst Gamma selections
+        self.selBd2KstGammaWideBMass = makeBd2KstGamma('Bd2KstGammaWideBMassFor%s' % name,
+                                                       self.selKst,
+                                                       self.selPhoton,
+                                                       config['B0DirAngle'],
+                                                       config['B0PVIPchi2'],
+                                                       config['BMassWinSB']
+                                                       )
+        self.selBd2KstGammaWideKstMass = makeBd2KstGamma('Bd2KstGammaWideKstMassFor%s' % name,
+                                                         self.selKstWide,
+                                                         self.selPhoton,
+                                                         config['B0DirAngle'],
+                                                         config['B0PVIPchi2'],
+                                                         config['B0MassWin']
+                                                         )
+        self.selBd2KstGammaLooseDira = makeBd2KstGamma('Bd2KstGammaLooseDiraFor%s' % name,
+                                                        self.selKst,
+                                                        self.selPhoton,
+                                                        config['BDirAngleMoni'],
+                                                        config['B0PVIPchi2'],
+                                                        config['B0MassWin']
+                                                        )
+        self.selBd2KstGammaWide = makeBd2KstGamma('Bd2KstGammaWideFor%s' % name,
+                                                  self.selKstWide,
+                                                  self.selPhoton,
+                                                  config['BDirAngleMoni'],
+                                                  config['B0PVIPchi2'],
+                                                  config['BMassWinSB']
+                                                  )
+        self.selBd2KstGamma = makeBd2KstGamma('Bd2KstGammaFor%s' % name,
+                                              self.selKst,
+                                              self.selPhoton,
+                                              config['B0DirAngle'],
+                                              config['B0PVIPchi2'],
+                                              config['B0MassWin']
+                                              )
+        # Create and register stripping lines
+        # Phi Gamma lines
+        self.Bs2PhiGammaWideBMassLine = StrippingLine("%sStripping_Bs2PhiGammaWideBMass" % name,
+                                                      prescale=config['Bs2PhiGammaWideBMassPreScale'],
+                                                      postscale=config['Bs2PhiGammaWideBMassPostScale'],
+                                                      selection=self.selBs2PhiGammaWideBMass
+                                                      )
+        self.registerLine(self.Bs2PhiGammaWideBMassLine)
+        self.Bs2PhiGammaLooseDiraLine = StrippingLine("%sStripping_Bs2PhiGammaLooseDira" % name,
+                                                      prescale=config['Bs2PhiGammaLooseDiraPreScale'],
+                                                      postscale=config['Bs2PhiGammaLooseDiraPostScale'],
+                                                      selection=self.selBs2PhiGammaLooseDira
+                                                      )
+        self.registerLine(self.Bs2PhiGammaLooseDiraLine)
+        self.Bs2PhiGammaLine = StrippingLine("%sStripping_Bs2PhiGamma" % name,
+                                             prescale=config['Bs2PhiGammaPreScale'],
+                                             postscale=config['Bs2PhiGammaPostScale'],
+                                             selection=self.selBs2PhiGamma
+                                             )
+        self.registerLine(self.Bs2PhiGammaLine)
+        # K* Gamma lines
+        self.Bd2KstGammaWideBMassLine = StrippingLine("%sStripping_Bd2KstGammaWideBMass" % name,
+                                                      prescale=config['Bd2KstGammaWideBMassPreScale'],
+                                                      postscale=config['Bd2KstGammaWideBMassPostScale'],
+                                                      selection=self.selBd2KstGammaWideBMass
+                                                      )
+        self.registerLine(self.Bd2KstGammaWideBMassLine)
+        self.Bd2KstGammaWideKstMassLine = StrippingLine("%sStripping_Bd2KstGammaWideKstMass" % name,
+                                          prescale=config['Bd2KstGammaWideKstMassPreScale'],
+                                          postscale=config['Bd2KstGammaWideKstMassPostScale'],
+                                          selection=self.selBd2KstGammaWideKstMass
+                                          )
+        self.registerLine(self.Bd2KstGammaWideKstMassLine)
+        self.Bd2KstGammaWideLine = StrippingLine("%sStripping_Bd2KstGammaWide" % name,
+                                                 prescale=config['Bd2KstGammaWidePreScale'],
+                                                 postscale=config['Bd2KstGammaWidePostScale'],
+                                                 selection=self.selBd2KstGammaWide
+                                                 )
+        self.registerLine(self.Bd2KstGammaWideLine)
+        self.Bd2KstGammaLooseDiraLine = StrippingLine("%sStripping_Bd2KstGammaLooseDira" % name,
+                                                      prescale=config['Bd2KstGammaLooseDiraPreScale'],
+                                                      postscale=config['Bd2KstGammaLooseDiraPostScale'],
+                                                      selection=self.selBd2KstGammaLooseDira
+                                                      )
+        self.registerLine(self.Bd2KstGammaLooseDiraLine)
+        self.Bd2KstGammaLine = StrippingLine("%sStripping_Bd2KstGamma" % name,
+                                             prescale=config['Bd2KstGammaPreScale'],
+                                             postscale=config['Bd2KstGammaPostScale'],
+                                             selection=self.selBd2KstGamma
+                                             )
+        self.registerLine(self.Bd2KstGammaLine)
         
-        Phi4Bs =  Selection ("Phi2KKFor"+name
-                             ,Algorithm = _phi4BsFilter
-                             ,RequiredSelections = [_stdPhi4Bs])
-        
-        _stdgamma = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
-        _gammaFilter = FilterDesktop("GammaFilterFor"+name)
-        _gammaFilter.Code =  "(PT> %(photonPT)s*MeV)"  % self.getProps()
-        Gamma =  Selection ("GammaFor"+name
-                            ,Algorithm = _gammaFilter
-                            ,RequiredSelections = [_stdgamma])
-        
-        _Bs2PhiGamma = CombineParticles ( name
-                                          ,DecayDescriptor = "B_s0 -> phi(1020) gamma"
-                                          ,CombinationCut = "(ADAMASS('B_s0')<%(BsMassWin)s*MeV)"  % self.getProps()
-                                          ,MotherCut = "(acos(BPVDIRA) < %(BsDirAngle)s) & (BPVIPCHI2() < %(BsPVIPchi2)s)" % self.getProps()
-                                          ,ReFitPVs = False)#True)
-        _Bs2PhiGamma.addTool( OfflineVertexFitter() )
-        Bs2PhiGamma = Selection ( "Sel"+name
-                                  ,Algorithm = _Bs2PhiGamma
-                                  ,RequiredSelections = [Gamma, Phi4Bs])
-        
-        return Bs2PhiGamma
-    
-    def kstgammaWideBMass( self ) :
-        if StrippingB2XGammaConf.__kstGammaBMass == None :
-            mySelection = self.combineBd(name = "BdMassSideBand" ) 
-            WideBMassBd = mySelection.algorithm().clone("WideBMassBd", CombinationCut = "(ADAMASS('B0')<%(BMassWinSB)s*MeV)"% self.getProps() )
-            WideBMassBd.PropertiesPrint = False
-            SelWideBMassBd = mySelection.clone("SelWideBMassBd", Algorithm =  WideBMassBd )
-            StrippingB2XGammaConf.__kstGammaBMass = SelectionSequence('SelSeqBd2KstGammaWideBMass', SelWideBMassBd)
-        return StrippingLine('Bd2KstGammaWideBMass',
-                             prescale = 0.05,
-                             algos = [ SelWideBMassBd] )  
-    
-    def kstgammaLooseDira( self ) :
-        if StrippingB2XGammaConf.__kstGammaDira == None :
-            mySelection = self.combineBd(name = "BdDiraSideBand") 
-            LooseDiraBd  = mySelection.algorithm().clone("LooseDiraBd", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % self.getProps() )
-            LooseDiraBd.PropertiesPrint = False
-            SelLooseDiraBd = mySelection.clone("SelLooseDiraBd", Algorithm =LooseDiraBd  )
-            StrippingB2XGammaConf.__kstGammaDira = SelectionSequence('SelSeqBsd2KstGammaLooseDira', SelLooseDiraBd)
-        return StrippingLine('Bd2KstGammaLooseDira',
-                             prescale =0.05,
-                             algos = [ SelLooseDiraBd ] )
+def makePhoton(name, photonPT):
+    """Create photon Selection object starting from DataOnDemand 'Phys/StdLooseAllPhotons'.
 
-    def kstgammaWideKstMass( self ) :
-        if StrippingB2XGammaConf.__kstGammaKMass == None :
-            mySelection = self.combineBd(name = "KstMassSideBand") 
-            Sel = mySelection.clone("Sel") 
-            mylist = Sel.requiredSelections 
-            mygamma = mylist[0].clone("myGamma")
-            KstMass =  mylist[1].algorithm().clone("KstMass",
-                                                   Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s) & (MINTREE(ABSID=='pi-', TRCHI2DOF)< %(TrChi2)s) & (VFASPF(VCHI2/VDOF) < %(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps()) # a FilterDesktop
-            
-            KstMass.PropertiesPrint = False
-            myKst = mylist[1].clone("myKst", Algorithm = KstMass)
-            makeB0 = Sel.algorithm().clone("makeB0", InputLocations = [])
-            makeB0.PropertiesPrint = False
-            Bd2KstGammaWideKstMass = Selection ( "Bd2KstGammaWideKMass"
-                                                 ,Algorithm = makeB0
-                                                 ,RequiredSelections = [ mygamma, myKst]) 
-            StrippingB2XGammaConf.__kstGammaKMass = SelectionSequence('SelSeqBsd2KstGammaWideKstMassBd',  Bd2KstGammaWideKstMass )
-        return StrippingLine('Bd2KstGammaWideKstMassBd',
-                             prescale = 0.05,
-                             algos = [Bd2KstGammaWideKstMass ] )
+    @arg name: name of the Selection.
+    @arg photonPT: PT of the photon
+    
+    @return: Selection object
+    
+    """
+    _code = "(PT> %(photonPT)s*MeV)" % locals()
+    _gammaFilter = FilterDesktop(Code=_code)
+    _stdGamma = DataOnDemand(Location="Phys/StdLooseAllPhotons")
+    return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
 
-    def kstgammaWideLine( self ) :
-        if StrippingB2XGammaConf.__kstGammaWide == None :
-            mySelectionWide = self.combineBd(name = "SideBand") 
-            SelWide = mySelectionWide.clone("SelWide") 
-            mylist = SelWide.requiredSelections 
-            myGammaWide = mylist[0].clone("myGammaWide")
-            KstWide =  mylist[1].algorithm().clone("KstWide",
-                                                   Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (VFASPF(VCHI2/VDOF) < %(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps()) # a FilterDesktop
-            myKstWide = mylist[1].clone("myKstWide", Algorithm = KstWide)
-            makeWideB0 = SelWide.algorithm().clone("makeWideB0", InputLocations = [], CombinationCut = "(ADAMASS('B0')<%(BMassWinSB)s*MeV)"% self.getProps(),
-                                                     MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % self.getProps())
-            makeWideB0.PropertiesPrint = False
-            Bd2KstGammaWide = Selection ( "Bd2KstGammaWide"
-                                                 ,Algorithm = makeWideB0
-                                                 ,RequiredSelections = [ myGammaWide, myKstWide]) 
-            StrippingB2XGammaConf.__kstGammaWide = SelectionSequence('SelSeqBsd2KstGammaWide',  Bd2KstGammaWide )
-        return StrippingLine('Bd2KstGammaWideLine',
-                             prescale = 0.05,
-                             algos = [Bd2KstGammaWide] )
+def makePhi2KK(name, TrIPchi2Phi, TrChi2, PhiMassWin, PhiVCHI2) :
+    """
+    Create and return a Phi->KK Selection object, starting from DataOnDemand 'Phys/StdLoosePhi2KK'.
+    
+    @arg name: name of the Selection.
+    @arg TrIPchi2Phi: minimum IP chi2 of the K+ tracks
+    @arg TrChi2: minimum chi2 of the K+ tracks
+    @arg PhiMassWin: selected Phi mass window
+    @arg PhiVCHI2: vertex chi2 of the Phi
+    
+    @return: Selection object
+    
+    """
+    _cuts = ["(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Phi)s)",
+             "(MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s)",
+             "(ADMASS('phi(1020)') < %(PhiMassWin)s*MeV)",
+             "(VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)"]
+    _code = ' & '.join(_cuts) % locals()
+    _phiFilter = FilterDesktop(Code=_code)
+    _stdPhi2KK = DataOnDemand(Location="Phys/StdLoosePhi2KK")
+    return Selection(name, Algorithm=_phiFilter, RequiredSelections=[_stdPhi2KK])
 
+def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
+    """
+    Create and return a K*->Kpi Selection object, starting from DataOnDemand 'Phys/StdVeryLooseDetachedKst2Kpi'.
     
-    def kstgamma( self ) :
-        if   StrippingB2XGammaConf.__kstGamma == None:
-            mySelection = self.combineBd(name = "Bd2KstGamma") 
-            StrippingB2XGammaConf.__kstGamma = SelectionSequence('SeqSelBd2KstGamma',
-                                                                 TopSelection  = mySelection)
-        return StrippingLine('Bd2KstGamma',
-                             prescale = 1,
-                             algos = [mySelection] )
+    @arg name: name of the Selection.
+    @arg TrIPchi2Kst: tracks IP chi2
+    @arg TrChi2: tracks chi2
+    @arg KstMassWin: K* mass window
+    @arg KstVCHI2: vertex chi2 of the K*
     
-    def combineBd(self, name = "Make2KstGamma" ):
-        """
-        Define the Bd
-        """        
-        _stdkst4Bd = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi")
-        _kst4BdFilter = FilterDesktop ("KstFilterFor"+name)
-        _kst4BdFilter.Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s) & (MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s) & (MINTREE(ABSID=='pi-', TRCHI2DOF)< %(TrChi2)s) & (VFASPF(VCHI2/VDOF) < %(KstVCHI2)s) & (ADMASS('K*(892)0') < %(KstMassWin)s*MeV)"% self.getProps()
-        
-        Kst4Bd   =  Selection ("Kst2KPiFor"+name
-                               ,Algorithm =  _kst4BdFilter 
-                               ,RequiredSelections = [ _stdkst4Bd  ] 
-                               )
-        
-        _stdgamma = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
-        _gammaFilter = FilterDesktop("GammaFilterFor"+name)
-        _gammaFilter.Code =  "(PT> %(photonPT)s*MeV)"  % self.getProps()
-        Gamma =  Selection ("GammaFor"+name
-                            ,Algorithm = _gammaFilter
-                            ,RequiredSelections = [_stdgamma])
-        
-        _Bd2KstGamma = CombineParticles(name
-                                        ,DecayDescriptor = "[B0 -> K*(892)0 gamma]cc" 
-                                        ,CombinationCut = "ADAMASS('B0') < %(B0MassWin)s*MeV" % self.getProps()
-                                        ,MotherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % self.getProps()
-                                        ,ReFitPVs = False)#True)
-        _Bd2KstGamma.addTool( OfflineVertexFitter() )
-        _Bd2KstGamma.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-        
-        Bd2KstGamma = Selection ( "Sel"+name
-                                  ,Algorithm = _Bd2KstGamma
-                                  ,RequiredSelections = [Gamma, Kst4Bd])
-        
-        return Bd2KstGamma
+    @return: Selection object
     
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+    """
+    _cuts = ["(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s)",
+             "(MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s)",
+             "(MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s)",
+             "(MINTREE(ABSID=='pi-', TRCHI2DOF)< %(TrChi2)s)",
+             "(VFASPF(VCHI2/VDOF) < %(KstVCHI2)s)",
+             "(ADMASS('K*(892)0') < %(KstMassWin)s*MeV)"]
+    _code = ' & '.join(_cuts) % locals()
+    _kstFilter = FilterDesktop(Code=_code)
+    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi")
+    return Selection(name, Algorithm=_kstFilter, RequiredSelections=[_stdKst2Kpi])
+
+def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):
+    """
+    Create and return a Bs -> Phi Gamma Selection object, starting with the daughters' selections.
+  
+    @arg name: name of the Selection.
+    @arg phiSel: Phi -> K+ K+ selection
+    @arg gammaSel: photon selection
+    @arg BsDirAngle: direction angle of the Bs wrt the PV
+    @arg BsPVIPchi2: IP chi2 of the Bs wrt the PV
+    @arg BsMassWin: Bs mass window
+    
+    @return: Selection object
+    
+    """  
+    _motherCut = "(acos(BPVDIRA) < %(BsDirAngle)s) & (BPVIPCHI2() < %(BsPVIPchi2)s)" % locals()
+    _combinationCut = "(ADAMASS('B_s0')<%(BsMassWin)s*MeV)"  % locals()
+    _Bs = CombineParticles(DecayDescriptor="B_s0 -> phi(1020) gamma",
+                           CombinationCut=_combinationCut,
+                           MotherCut=_motherCut,
+                           ReFitPVs=False)#True)
+    #_Bs.addTool(OfflineVertexFitter())
+    return Selection(name, Algorithm=_Bs, RequiredSelections=[gammaSel, phiSel])
+
+def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
+    """
+    Create and return a Bd -> K* Gamma Selection object, starting with the daughters' selections.
+
+    @arg name: name of the Selection.
+    @arg kstSel: K* -> K pi selection
+    @arg gammaSel: photon selection
+    @arg B0DirAngle: direction angle of the B0 wrt the PV
+    @arg B0PVIPchi2: IP chi2 of the B0 wrt the PV
+    @arg B0MassWin: B0 mass window
+    
+    @return: Selection object
+
+    """  
+    _motherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % locals()
+    _combinationCut = "ADAMASS('B0') < %(B0MassWin)s*MeV" % locals()
+    _Bd = CombineParticles(DecayDescriptor="[B0 -> K*(892)0 gamma]cc",
+                           CombinationCut=_combinationCut,
+                           MotherCut=_motherCut,
+                           ReFitPVs=False)#True)
+    #_Bd.addTool(OfflineVertexFitter())
+    #_Bd.VertexFitters.update({"": "OfflineVertexFitter"})
+    return Selection(name, Algorithm=_Bd, RequiredSelections=[gammaSel, kstSel])
+        
+# EOF
