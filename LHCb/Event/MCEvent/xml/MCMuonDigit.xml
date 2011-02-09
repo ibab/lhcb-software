@@ -26,7 +26,7 @@
       <constructor 
 	desc='description of constructor' 
 	argList="LHCb::MuonTileID tileID" 
-	initList='m_DigitInfo(),m_HitsHistory(),m_firingTime(0.0)'>
+	initList='m_DigitInfo(),m_firingTime(0.0),m_HitsHistory()'>
 	<code> setKey(tileID);   </code>
       </constructor>
       <attribute 
