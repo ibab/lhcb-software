@@ -84,9 +84,11 @@ def Selection(name, *args, **kwargs) :
     ConfigurableGenerator as input and constructs a Configurable 
     with it it's own name, check first whether a configurable
     with that name already exists and raise a NameError if that is the case.
-    If not, construct and return a SelPy.Selection.
+    If not, construct and return a SelPy.selection.Selection.
     """
     return selectionWrapper(Sel, name, *args, **kwargs)
+
+Selection.__doc__ += '\nSelPy.selection.Selection:\n'+Sel.__doc__
 
 def EventSelection(name, *args, **kwargs) :
     """
@@ -94,9 +96,10 @@ def EventSelection(name, *args, **kwargs) :
     ConfigurableGenerator as input and constructs a Configurable 
     with it it's own name, check first whether a configurable
     with that name already exists and raise a NameError if that is the case.
-    If not, construct and return a SelPy.EventSelection.
+    If not, construct and return a SelPy.selection.EventSelection.
     """
     return selectionWrapper(EvtSel, name, *args, **kwargs)
+EventSelection.__doc__ += '\nSelPy.selection.EventSelection:\n'+EvtSel.__doc__
 
 def PassThroughSelection(name, *args, **kwargs) :
     """
@@ -105,9 +108,10 @@ def PassThroughSelection(name, *args, **kwargs) :
     ConfigurableGenerator as input and constructs a Configurable 
     with it it's own name, check first whether a configurable
     with that name already exists and raise a NameError if that is the case.
-    If not, construct and return a SelPy.EventSelection.
+    If not, construct and return a SelPy.selection.PassThroughSelection.
     """
     return selectionWrapper(PassThroughSel, name, *args, **kwargs)    
+PassThroughSelection.__doc__ += '\nSelPy.selection.PassThroughSelection:\n'+PassThroughSel.__doc__
 
 class AutomaticData(NamedObject, SelectionBase) :
     """
