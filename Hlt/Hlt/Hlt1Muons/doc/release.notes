@@ -3,6 +3,10 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+! 2011-02-09 - Roel Aaij
+ - Improved timing by considering only the closest hit in the search window.
+
 !========================== Hlt1Muons v1r0 2011-02-07 ==================
 ! 2011-02-08 - Gerhard Raven
  - use vector.insert instead of std::copy
