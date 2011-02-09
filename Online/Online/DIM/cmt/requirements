@@ -21,7 +21,7 @@ macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
 pattern dim_exe \
     application  <name>  <files> ; \
     macro_append <name>_cflags  " $(<package>_cppflags)" ; \
-    macro_append <name>linkopts " -lpthread " WIN32 "" ; \
+    macro_append <name>linkopts " -pthread " WIN32 "" ; \
     macro_append <name>_dependencies " dim "
 
 apply_pattern install_more_includes more=dim 
@@ -33,7 +33,7 @@ library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             utilities.c diccpp.cxx dimcpp.cxx discpp.cxx tokenstring.cxx
 
 apply_pattern linker_library library=dim 
-macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
+macro_append dim_shlibflags " -pthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=dns files=dns.c 
 apply_pattern dim_exe name=did files="did/make_did.c"
