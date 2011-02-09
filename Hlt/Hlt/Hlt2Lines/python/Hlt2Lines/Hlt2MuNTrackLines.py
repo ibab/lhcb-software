@@ -58,9 +58,9 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         'Prescale' : {},
         'Postscale' : {},
         # HltANNSvc IDs for each line (need to be configurable)
-        'HltANNSvcID' : {'Hlt2Mu1TrackDecision'      : 50734,
-                         'Hlt2Mu2TrackDecision'      : 50774,
-                         'Hlt2Mu3TrackDecision'      : 50814
+        'HltANNSvcID' : {'Hlt2MuTrack1Decision'      : 50734,
+                         'Hlt2MuTrack2Decision'      : 50774,
+                         'Hlt2MuTrack3Decision'      : 50814
                          }
         }
 
@@ -303,7 +303,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
 
     def __makeLines(self,name,seqs):
         for n in [1,2,3]:
-            lineName = name.replace('MuNTr','Mu%dTr' % n)
+            lineName = name.replace('MuNTrack','MuTrack%d' % n)
             self.__makeLine(lineName,algos=[seqs[n-1]])
 
     def __apply_configuration__(self):

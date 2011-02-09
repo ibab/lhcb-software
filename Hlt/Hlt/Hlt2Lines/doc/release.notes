@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-09 - Alex Shires
+ - Hlt2MuNTrackLines: change line name (VG request) to MuTrack1,2,3
+
 ! 2011-02-07 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines: modify DY lines
 
