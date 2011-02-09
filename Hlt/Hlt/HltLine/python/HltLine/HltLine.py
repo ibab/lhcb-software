@@ -565,6 +565,7 @@ class bindMembers (object) :
 #                   if not hasattr( type(alg), attr) : continue
 #                   if hasattr( alg, attr) : return getattr( alg, attr )
 #               return alg.name()
+        from Configurables import LoKi__HltUnit
         if hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputsel = alg.OutputSelection 
@@ -580,7 +581,7 @@ class bindMembers (object) :
         elif hasattr ( type(alg) , 'MatchOutput' ) :
             if hasattr ( alg , 'MatchOutput' ) :
                 self._outputsel = alg.MatchOutput 
-        elif hasattr( alg, 'Code' ) :
+        elif type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
             ex = r"SINK\( *'(\w+)' *\)"
             # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
             import re
@@ -945,7 +946,7 @@ class Hlt1Line(object):
                 else :
                     self._outputSelections += [ _m.name() ]
                     _add_to_hlt1_output_selections_ ( _m.name         () )
-            elif hasattr( _m, 'Code') :
+            elif type(_m) is LoKi__HltUnit and hasattr( _m, 'Code') :
                 ex = r"SINK\( *'(\w+)' *\)"
                 # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
                 import re
