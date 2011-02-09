@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-02-09 - Juan Palacios
+ - Add dbase/stripping11, dbase/stripping12
+  . Databases for stripping11, stripping12 configuration dictionaries.
+
+! 2011-02-09 - Juan Palacios
  - Add python/StrippingSettings/StrippingDev/LineConfigDictionaries.py
   . Place holder for configuration dictionaries under development.
  - Increase to v1r5.
