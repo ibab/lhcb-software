@@ -14,7 +14,7 @@ use               LoKiAlgo         v* Phys
 use               fastjet          v* LCG_Interfaces 
 use               LoKiGenMC        v* Phys
 use               LoKiPhysMC       v* Phys
-use               LoKiAlgoMV       v* Phys
+use               LoKiAlgoMC       v* Phys
 use               LHCbMath         v* Kernel 
 # =============== exported include directories ================================
 include_path      none
