@@ -51,9 +51,9 @@ def registerNewLineBuilderConfiguration(stripping, lineBuilderName, config) :
 def dbaseFromModule(stripping, confModule) :
     """
     Create a database with all the dictionaries in a given module.
-    Writes file to $STRIPPINGSETTINGSROOT/dbase/<stripping>.tmp
+    Writes file to $PWD/<stripping>.tmp
     """
-    db = shelve.open( dbase(stripping)+'.tmp',  'n')
+    db = shelve.open( stripping.lower()+'.tmp',  'n')
 
     goodNames = filter(lambda x : x[0]!='_',
                        confModule.__dict__.keys())
