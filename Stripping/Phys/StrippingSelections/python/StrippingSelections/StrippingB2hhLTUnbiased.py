@@ -49,16 +49,16 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     """
 
     __configuration_keys__ = (
-        #'TrackChi2'               #    5.0
+        'TrackChi2'               #    5.0
         #'SpdMult'               # 1000.0
-        #, 'DaughterPtMin'         #    1.5 # GeV
-        #, 'DaughterPtMax'         #    2.0 # GeV
-        #, 'DaughterPMin'          #   10.0 # GeV
-        #, 'DaughterPIDKMax'       #    0.1
-           'BMassMin'              #    5.0 # GeV
-         , 'BMassMax'              #    6.0 # GeV
-        #, 'DOCA'                  #    0.07
-        #, 'VertexChi2'            #   25.0
+        , 'DaughterPtMin'         #    1.5 # GeV
+        , 'DaughterPtMax'         #    2.0 # GeV
+        , 'DaughterPMin'          #   10.0 # GeV
+        , 'DaughterPIDKMax'       #    0.1
+        , 'BMassMin'              #    5.0 # GeV
+        , 'BMassMax'              #    6.0 # GeV
+        , 'DOCA'                  #    0.07
+        , 'VertexChi2'            #   25.0
         , 'PrescaleLoose'         #    0.005
         , 'PostscaleLoose'        #    1.0
         , 'PrescaleNB'
@@ -76,14 +76,16 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         loose_name = name+"Loose"
         NB_name    = name+"NeuroBayes" 
 
-        #self.SelB2hhNoCut    = self.B2hhNoCut(noCut_name,
-        #                                      BMassMin  = config['BMassMin'],
-        #                                      BMassMax  = config['BMassMax']
-        #                                      )
-        
         self.SelB2hhLoose    = self.B2hhLoose(loose_name,
-                                              BMassMin  = config['BMassMin'],
-                                              BMassMax  = config['BMassMax']
+                                              BMassMin        = config['BMassMin'],
+                                              BMassMax        = config['BMassMax'],
+                                              TrackChi2       = config['TrackChi2'],
+                                              DaughterPtMin   = config['DaughterPtMin'],
+                                              DaughterPtMax   = config['DaughterPtMax'],
+                                              DaughterPMin    = config['DaughterPMin'],
+                                              DaughterPIDKMax = config['DaughterPIDKMax'],
+                                              DOCA            = config['DaughterPIDKMax'],
+                                              VertexChi2      = config['VertexChi2']
                                               )
         
         self.SelB2hhNB       = self.B2hhNeuroBayes (NB_name,
@@ -107,13 +109,15 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     #
     # loose line  - also used as input for NeuroBayes based nominal line
     #
-    def B2hhLoose( self, Name, BMassMin, BMassMax ) :
+    def B2hhLoose( self, Name, BMassMin, BMassMax, TrackChi2,
+                   DaughterPtMin, DaughterPtMax, DaughterPMin, DaughterPIDKMax,
+                   DOCA, VertexChi2 ) :
         from GaudiKernel.SystemOfUnits import GeV
         
         
-        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < 5) & (PT > 1.5*GeV) & (P> 10.0*GeV)"
-        combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.1)"         % locals()
-        motherCut = "(VFASPF(VCHI2/VDOF) < 25) & (MAXTREE(('K+'==ABSID) ,PT) > 2.0*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > 0.1)"
+        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s*GeV) & (P> %(DaughterPMin)s*GeV)"                              % locals()
+        combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s)"                                                % locals()
+        motherCut = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s)"   % locals()
             
             
         from StandardParticles import StdNoPIDsKaons
@@ -129,24 +133,6 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         
         return B2hhLooseSel
 
-    #def B2hhNoCut(self, Name, BMassMin, BMassMax):
-    #    from StandardParticles import StdNoPIDsKaons
-    #    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-    #
-    #    kaonCut   = "ISLONG"
-    #    combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV)" % locals()
-    #    motherCut = "(VFASPF(VCHI2/VDOF) < 25)"
-    #    
-    #    kaonFilter = FilterDesktop(Code = kaonCut)
-    #    myKaons    = Selection(Name+'KaonSel', Algorithm = kaonFilter, RequiredSelections = [StdNoPIDsKaons])
-    #
-    #    _Bs = CombineParticles (DecayDescriptor = "B_s0 -> K+ K-",
-    #                            CombinationCut  = combCut,
-    #                            MotherCut       = motherCut)
-    #    
-    #    B2hhNoCutSel = Selection(Name, Algorithm = _Bs, RequiredSelections = [myKaons])
-    #                    
-    #    return B2hhNoCutSel
         
     #
     # default version
@@ -161,6 +147,7 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         BhhNB.PlotMassMax        =  6.0
         BhhNB.PlotNBins          = 120
         BhhNB.Expertise          = 'bshhet.nb'
+        #BhhNB.Expertise          = 'bshhnet_zeroiter.nb'
         BhhNB.NetworkVersion     = "TuneMC10"
         BhhNB.NetworkCut         = NetCut
 

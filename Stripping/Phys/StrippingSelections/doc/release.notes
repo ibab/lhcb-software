@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-09 - Ulrich Kerzel
+ - make precuts for Bhh lose line steerable
+
 ! 2011-02-08 - Ulrich Kerzel
 - update JPsi and MuMu NeuroBayes stripping lines to new framework 
 
