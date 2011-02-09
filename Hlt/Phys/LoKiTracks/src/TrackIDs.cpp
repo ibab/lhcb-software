@@ -79,6 +79,7 @@ LoKi::Tracks::CountIDs::CountIDs
   else if ( "isVeloPixY"     == m_nick ) { m_pmf = &LHCb::LHCbID::isVeloPixY   ; }
   else if ( "isTT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isTT         ; }
   else if ( "isIT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isIT         ; }
+  else if ( "isOT"           == m_nick ) { m_pmf = &LHCb::LHCbID::isOT         ; }
   else if ( "isST"           == m_nick ) { m_pmf = &LHCb::LHCbID::isST         ; }
   else if ( "isRich"         == m_nick ) { m_pmf = &LHCb::LHCbID::isRich       ; }
   else if ( "isCalo"         == m_nick ) { m_pmf = &LHCb::LHCbID::isCalo       ; }

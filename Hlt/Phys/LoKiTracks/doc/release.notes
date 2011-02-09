@@ -5,6 +5,15 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-09 - Vanya Belyaev
+
+ - LoKi::Tracks::CountIDs
+     fix bug #77979 
+
+ - cmt/requirements 
+     version increment to v1r8 
+
+
 !========================== LoKiTracks v1r7 2011-02-07 ===================
 ! 2011-02-02 - Vanya Belyaev
 
@@ -24,7 +33,6 @@
      new symbol for Vava & Roel 
 
  - cmt/requirements 
-
      version increment to v1r7 
 
 !========================== LoKiTracks v1r6 2011-01-20 ===================
