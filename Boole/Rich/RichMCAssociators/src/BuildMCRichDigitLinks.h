@@ -3,9 +3,6 @@
  *
  *  Header file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
- *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.h,v 1.4 2007-03-01 19:37:22 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
  */
@@ -34,7 +31,7 @@ namespace Rich
      *  @date   2003-11-09
      */
 
-    class BuildMCRichDigitLinks : public RichAlgBase
+    class BuildMCRichDigitLinks : public Rich::AlgBase
     {
 
     public:

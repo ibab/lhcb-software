@@ -3,9 +3,6 @@
  *
  *  Implementation file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
- *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.cpp,v 1.4 2007-02-02 10:13:13 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
  */
@@ -28,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BuildMCRichDigitLinks );
 //=============================================================================
 BuildMCRichDigitLinks::BuildMCRichDigitLinks( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator )
+  : Rich::AlgBase ( name, pSvcLocator )
 {
   // Define Job options for this algorithm
   declareProperty( "MCRichDigitsLocation",

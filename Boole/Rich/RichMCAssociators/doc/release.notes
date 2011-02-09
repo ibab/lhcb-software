@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-02-09 - Chris Jones
+ - Adapt to changes in Rich base classes
+
 !======================= RichMCAssociators v2r7 2009-02-24 ===================
 ! 2009-01-26 - Chris Jones
  - Move extended RICH MC information linkers to GaussRICH.

@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm : MCRichDigitSummaryAlg
  *
- *  CVS Log :-
- *  $Id: MCRichDigitSummaryAlg.h,v 1.7 2007-05-29 15:37:19 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   04/10/2005
  */
@@ -43,7 +40,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class MCRichDigitSummaryAlg : public RichAlgBase
+    class MCRichDigitSummaryAlg : public Rich::AlgBase
     {
 
     public:

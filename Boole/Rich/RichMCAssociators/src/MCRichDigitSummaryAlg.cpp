@@ -4,9 +4,6 @@
  *
  * Implementation file for class : MCRichDigitSummaryAlg
  *
- * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.7 2007-02-02 10:13:13 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
  */
@@ -28,9 +25,9 @@ DECLARE_ALGORITHM_FACTORY( MCRichDigitSummaryAlg );
 //=============================================================================
 MCRichDigitSummaryAlg::MCRichDigitSummaryAlg( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : RichAlgBase  ( name , pSvcLocator ),
-    m_storeSpill ( false ),
-    m_truth      ( 0 )
+  : Rich::AlgBase ( name , pSvcLocator ),
+    m_storeSpill  ( false ),
+    m_truth       ( NULL )
 {
   // job options
   declareProperty( "StoreSpillover", m_storeSpill );
@@ -49,7 +46,7 @@ MCRichDigitSummaryAlg::~MCRichDigitSummaryAlg() { }
 StatusCode MCRichDigitSummaryAlg::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // tool
