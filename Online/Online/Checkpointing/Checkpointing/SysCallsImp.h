@@ -10,10 +10,6 @@ static int s_mtcp_sys_errno = 0;
 static int s_mtcp_debug_syscalls = MTCP_ERROR;
 static char const s_mtcp_hexdigits[] = "0123456789ABCDEF";
 
-WEAK(int&) __mtcp_sys_errno() {
-  return s_mtcp_sys_errno;
-}
-
 STATIC(void) __mtcp_abort(void)    {
   __asm__ volatile (CLEAN_FOR_64_BIT(hlt ; xor %eax,%eax ; mov (%eax),%eax) );
 }
@@ -80,7 +76,7 @@ STATIC(void) mtcp_print_addr(VA n) {
   rwrite (buff + i, sizeof(buff) - i);
 }
 
-WEAK(void) mtcp_output(int lvl,char const *format, ...)  {
+STATIC(void) mtcp_output(int lvl,char const *format, ...)  {
 #if defined(CHECKPOINTING_MUTEXED_WRITE)
   static FutexState printflocked(0);
 #endif
@@ -115,11 +111,11 @@ WEAK(void) mtcp_output(int lvl,char const *format, ...)  {
     else {
       rwrite ("mtcp[",5);
       mtcp_print_int_dec(mtcp_sys_getpid());
-      rwrite ("] ",3);
+      rwrite ("] ",2);
     }
     switch(lvl) {
     case MTCP_DEBUG:   rwrite(" DEBUG   ",10); break;
-    case MTCP_INFO:    rwrite(" INFO    ",10); break;
+    case MTCP_INFO:    rwrite(" INFO    ",9); break;
     case MTCP_WARNING: rwrite(" WARNING ",10); break;
     case MTCP_ERROR:   rwrite(" ERROR   ",10); break;
     case MTCP_FATAL:   rwrite(" FATAL   ",10); break;
@@ -195,7 +191,7 @@ gofish:
   va_end (ap);
 
   // Print whatever comes after the last format spec
-  rwrite(p,helper::stringlen (p));
+  rwrite(p,helper::stringlen(p));
 
 #if defined(CHECKPOINTING_MUTEXED_WRITE)
   printflocked.set(0,1);
@@ -208,16 +204,20 @@ gofish:
   }
 }
 
-WEAK(void) mtcp_abort(void)    {
+STATIC(int&) __mtcp_sys_errno() {
+  return s_mtcp_sys_errno;
+}
+
+STATIC(void) mtcp_abort(void)    {
   mtcp_output(MTCP_ERROR,"Calling abort due to internal errors.\n");
   __mtcp_abort();
 }
 
-WEAK(int) mtcp_get_debug_level() {
+STATIC(int) mtcp_get_debug_level() {
   return s_mtcp_debug_syscalls;
 }
 
-WEAK(void) mtcp_set_debug_level(int lvl)   {
+STATIC(void) mtcp_set_debug_level(int lvl)   {
   if ( (s_mtcp_debug_syscalls&MTCP_MAX_LEVEL) < MTCP_INFO )    {
     mtcp_output(MTCP_ERROR,"Change debug level from %d to:%d\n",s_mtcp_debug_syscalls,lvl);
   }

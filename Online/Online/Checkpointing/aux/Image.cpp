@@ -21,3 +21,9 @@
 #include "src/MainThread.cpp"
 #include "src/FutexState.cpp"
 #include "src/ThreadsLock.cpp"
+
+// The tests
+#include "src/File_test.cpp"
+#include "src/MemMaps_test.cpp"
+#include "src/Process_test.cpp"
+#include "src/Chkpt_test.cpp"

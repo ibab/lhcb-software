@@ -7,7 +7,6 @@
 
 using namespace Checkpointing;
 
-extern void mtcp_output(int lvl,const char* fmt,...);
 #ifdef CHECKPOINTING_HAS_NAMESPACE
 namespace CHECKPOINTING_NAMESPACE {
 #endif

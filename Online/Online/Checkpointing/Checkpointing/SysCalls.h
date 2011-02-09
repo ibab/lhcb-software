@@ -1,6 +1,6 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
-
+#include "Checkpointing/Namespace.h"
 #include "Checkpointing/Namespace.h"
 #include <gnu/libc-version.h>
 #include <sys/syscall.h>
@@ -74,12 +74,12 @@ void mtcp_set_thread_sysinfo(void *sysinfo);
 
 #ifndef CHECKPOINTING_OUTPUT
 #define CHECKPOINTING_OUTPUT
-WEAK(void) mtcp_output(int lvl, const char* fmt,...);
-WEAK(void) mtcp_set_debug_level(int lvl);
-WEAK(int)  mtcp_get_debug_level();
+STATIC(void) mtcp_output(int lvl, const char* fmt,...);
+STATIC(void) mtcp_set_debug_level(int lvl);
+STATIC(int)  mtcp_get_debug_level();
 #ifndef MTCP_ERRNO
 #define MTCP_ERRNO
-WEAK(int&) __mtcp_sys_errno();
+STATIC(int&) __mtcp_sys_errno();
 #define mtcp_sys_errno (__mtcp_sys_errno())
 #endif
 #endif // CHECKPOINTING_OUTPUT
@@ -89,7 +89,7 @@ WEAK(int&) __mtcp_sys_errno();
 // gcc-3.4 issues a warning that noreturn function returns, if declared noreturn
 // static void inline mtcp_abort (void) __attribute__ ((noreturn));
 //static void inline mtcp_abort (void);
-void mtcp_abort (void);
+STATIC(void) mtcp_abort (void);
 
 /* Offset computed (&x.pid - &x) for
  *   struct pthread x;

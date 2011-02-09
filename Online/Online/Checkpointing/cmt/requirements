@@ -25,11 +25,8 @@ macro cppdebugflags            ' -g -O0 ' WIN32 ''
 macro cpplinkflags             ' -static ' WIN32 ''
 
 public
-library Checkpointing 	../aux/Image.cpp         \
-			../src/File_test.cpp     \
-			../src/MemMaps_test.cpp  \
-			../src/Process_test.cpp  \
-			../src/Chkpt_test.cpp
+library Checkpointing 	../aux/Image.cpp
+
 macro_append lib_Checkpointing_cppflags ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '
 

@@ -623,6 +623,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
   int rc = mtcp_sys_lstat(nam,&sb);
   if ( rc < 0 ) {
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to stat checkpoint file:%s\n",mtcp_sys_errno,nam);
+    mtcp_abort();
   }
   if ( fd != fdnum ) {  // Move file to the same descriptor used for writing the checkpoint!
     if ( mtcp_sys_dup2(fd,fdnum) < 0) {
