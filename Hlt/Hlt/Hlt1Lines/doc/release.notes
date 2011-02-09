@@ -5,14 +5,17 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-09 - Gerhard Raven
+ - Hlt1LumiLines: import as last as possible
+
 !========================== Hlt1Lines v6r2   2011-02-07 ===================
 ! 2011-02-08 - V. Gligorov
  - Stream TrackMuon, add option to cut on the number of OT hits to
    TrackAllL0 and TrackPhoton (but not TrackMuon so far).
 
 ! 2011-02-08 - Ulrich Kerzel
-- first version of HLT1 line for DiHadron unbiased trigger
-  re-implementation of previously existing line in new streamer framework
+ - first version of HLT1 line for DiHadron unbiased trigger
+   re-implementation of previously existing line in new streamer framework
 
 ! 2011-02-07 - Gerhard Raven
  - add SINKs to the 1Track lines

@@ -2,23 +2,15 @@
 #     HLT Lumi Line(s)
 ##############################
 
-from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import WARNING,DEBUG
+# from GaudiConf.Configuration import *
+from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-from HltLine.HltLinesConfigurableUser import *
-
-from Configurables import ( LumiCountVertices,
-                            LumiCountTracks,
-                            LumiFromL0DU,
-                            LumiCountHltTracks,
-                            LumiFlagMethod
-                            )
-from Configurables import GaudiSequencer as Sequence
-from Configurables import DeterministicPrescaler as Scaler
 
 
 ####### create binders...
 def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
+    from Configurables import LumiFromL0DU
     if counterKind is LumiFromL0DU:
         def _fun (name, value ) :
           from HltLine.HltDecodeRaw import DecodeL0DU
@@ -47,6 +39,12 @@ def _combine( op, arg ) :
 ############# start building the lumi line(s)...
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
+    from Configurables import ( LumiCountVertices,
+                                LumiCountTracks,
+                                LumiFromL0DU,
+                                LumiCountHltTracks,
+                                LumiFlagMethod
+                                )
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
@@ -81,13 +79,15 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltTracking.HltPVs  import PV3D
+        from HltTracking.HltPVs  import PV3D
         # define reco scaler
+        from Configurables import DeterministicPrescaler as Scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'
 
+        from Configurables import GaudiSequencer as Sequence
         lumiRecoSequence = Sequence(seqRecoName+'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
@@ -98,6 +98,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
         # define empty sequence to collect counters
         seqCountName = 'LumiCount'+postfix
+        from Configurables import GaudiSequencer as Sequence
         lumiCountSequence = Sequence(seqCountName +'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
@@ -106,6 +107,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , MeasureTime = True)
 
         # LumiLow lines must be flagged - traditional and low are flagged explicitely
+        from Configurables import LumiFlagMethod
         if postfix.find('Low') > -1  :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Method'
@@ -145,6 +147,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
         from Configurables import HltTrackFilter
+        from Configurables import GaudiSequencer as Sequence
         lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
         lumiRecoFilterSequence.Members.append( recoScaler )
         lumiRecoFilterSequence.Members.append(
