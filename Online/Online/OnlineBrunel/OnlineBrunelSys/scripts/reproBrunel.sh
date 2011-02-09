@@ -19,6 +19,7 @@ export ONLINETASKS=/group/online/dataflow/templates
 ulimit -d 2097152
 ulimit -m 2097152
 ulimit -v 2097152
+ulimit -c 0
 #
 echo "[INFO] +++ Starting BRUNEL ${UTGID} of class ${TASKCLASS} ${TASK_TYPE} with DNS:${DIM_DNS_NODE} Version:${BRUNELROOT}"
 exec -a ${UTGID} \
@@ -30,4 +31,4 @@ exec -a ${UTGID} \
 import Gaudi,GaudiKernel.ProcessJobOptions;\
 from Gaudi.Configuration import importOptions;\
 GaudiKernel.ProcessJobOptions.printing_level=999;\
-importOptions('../python/BrunelOnline2.py');"
+importOptions('../python/BrunelRepro.py');"

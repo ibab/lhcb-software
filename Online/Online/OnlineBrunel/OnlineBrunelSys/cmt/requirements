@@ -5,8 +5,11 @@ version v4r43
 #
 branches cmt
 #
-use Brunel         v* Rec
-use GaudiOnline    v* Online
-use GaudiSerialize v* Online
+use Brunel              v* Rec
+use GaudiOnline         v* Online
+use GaudiSerialize      v* Online
+use Checkpointing       v* Online
+use GaudiCheckpointing  v* Online
+#
 apply_pattern install_python_modules
 macro strip_script '/group/online/dataflow/cmtuser/dummy_strip_script'

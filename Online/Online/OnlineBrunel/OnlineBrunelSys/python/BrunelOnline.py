@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.25 2010-11-09 12:20:55 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.25 2010/11/09 12:20:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os, sys
@@ -22,6 +22,14 @@ requirement = None
 
 debug = 0
 def dummy(*args,**kwd): pass
+
+MSG_VERBOSE = 1
+MSG_DEBUG   = 2
+MSG_INFO    = 3
+MSG_WARNING = 4
+MSG_ERROR   = 5
+MSG_FATAL   = 6
+MSG_ALWAYS  = 7
 
 #============================================================================================================
 def packDST(self,items):
@@ -68,27 +76,19 @@ def patchBrunel(true_online_version):
   from Configurables import CondDB, DstConf, HistogramPersistencySvc, EventLoopMgr
 
   brunel = Brunel.Configuration.Brunel()
-  EventLoopMgr().OutputLevel = 0
-  """
-  brunel.DDDBtag   = "head-20091120"
-  brunel.CondDBtag = "head-20100303"
-  brunel.CondDBtag = "head-20100222"
-
-  brunel.DDDBtag   = "head-20100407"
-  brunel.CondDBtag = "head-20100509"
-  """
+  EventLoopMgr().OutputLevel = MSG_INFO
 
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
 
   brunel.WriteFSR  = False # This crashes Jaap's stuff
 
-  EventLoopMgr().OutputLevel   = 5
-  EventLoopMgr().Warnings      = False
+  EventLoopMgr().OutputLevel = MSG_ERROR
+  EventLoopMgr().Warnings    = False
   
   if true_online_version:
-    brunel.OutputLevel    = 999
-    brunel.PrintFreq      = -1
+    brunel.OutputLevel       = 999
+    brunel.PrintFreq         = -1
 
   if processingType == 'Reprocessing':
     GaudiConf.DstConf.DstConf._doWriteMDF = packDST
@@ -116,6 +116,7 @@ def patchBrunel(true_online_version):
     Serialisation()._ConfigurableUser__addPassiveUseOf(DstConf())
     
   HistogramPersistencySvc().OutputFile = ""
+  HistogramPersistencySvc().OutputLevel = MSG_ERROR
   return brunel
 
 #============================================================================================================
@@ -131,14 +132,12 @@ def setupOnline():
   if processingType == 'Reprocessing':
     buffs = ['Input','Output']
 
-  ##print '[WARN] Partition:',Online.PartitionName,'id:',Online.PartitionIDName,\
-  ##      'Activity:',Online.Activity
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-  ###print "BUFFERS",buffs
+
   mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
   sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False)
   if requirement:
@@ -151,9 +150,10 @@ def setupOnline():
   app.ExtSvc.append(sel)
   app.AuditAlgorithms = False
   app.TopAlg.insert(0,"UpdateAndReset")
-  Configs.MonitorSvc().OutputLevel = 5
+  Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
-  app.OutputLevel = 4
+  Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
+  app.OutputLevel = MSG_WARNING
 
 #============================================================================================================
 def patchMessages():
@@ -172,7 +172,7 @@ def patchMessages():
   msg.fifoPath      = os.environ['LOGFIFO']
   msg.LoggerOnly    = True
   msg.doPrintAlways = False
-  msg.OutputLevel   = 4
+  msg.OutputLevel   = MSG_WARNING
 
 #============================================================================================================
 def start():

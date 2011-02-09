@@ -1,7 +1,7 @@
 """
       High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.5 2009-12-04 10:24:44 frankb Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009/12/04 10:24:44 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 from Gaudi.Configuration import *
