@@ -4,6 +4,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-02-09 - Patrick Koppenburg
+ - Type in name of a property of OnOfflineTool fixed. Was not used anywhere.
+
 !========================== DaVinciTools v22r2 2011-02-04 ===================
 
 ! 2011-02-01 - Juan Palacios

@@ -68,7 +68,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
       "The tool to be used as On-Line  Vertex Fitter" ) ;
 
   declareProperty
-    ( "OfflinePartricleCombiner",
+    ( "OfflineParticleCombiner",
       m_offlineCombiner         ,
       "The tool to be used as Off-Line creator of composed particles" ) ;
   declareProperty
