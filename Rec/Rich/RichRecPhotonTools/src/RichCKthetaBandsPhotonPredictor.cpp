@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( CKthetaBandsPhotonPredictor );
+DECLARE_TOOL_FACTORY( CKthetaBandsPhotonPredictor )
 
 // Standard constructor
 CKthetaBandsPhotonPredictor::

@@ -54,8 +54,6 @@
 #include "gsl/gsl_poly.h"
 
 // Include the private quartic solving code
-// Eventually this might be in GSL ...
-//#include "zsolve_quartic.h"
 #include "zsolve_quartic_RICH.h"
 
 namespace Rich

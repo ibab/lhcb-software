@@ -19,7 +19,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonPredictorUsingRings );
+DECLARE_TOOL_FACTORY( PhotonPredictorUsingRings )
 
 // Standard constructor
 PhotonPredictorUsingRings::

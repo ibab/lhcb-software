@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::PhotonRecoBase
  *
- * CVS Log :-
- * $Id: RichPhotonRecoBase.cpp,v 1.2 2009-07-30 11:20:00 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-11-14
  */

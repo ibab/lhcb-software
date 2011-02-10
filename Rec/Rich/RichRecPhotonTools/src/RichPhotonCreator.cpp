@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreator );
+DECLARE_TOOL_FACTORY( PhotonCreator )
 
 // Standard constructor
 PhotonCreator::PhotonCreator( const std::string& type,

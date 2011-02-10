@@ -20,12 +20,12 @@ using namespace Rich::Rec;
 
 namespace
 {
-  static const double root_two_pi = sqrt( 2.0 * M_PI );
+  static const double root_two_pi = std::sqrt( 2.0 * M_PI );
 }
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonSignalGaussProb );
+DECLARE_TOOL_FACTORY( PhotonSignalGaussProb )
 
 // Standard constructor
 PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,

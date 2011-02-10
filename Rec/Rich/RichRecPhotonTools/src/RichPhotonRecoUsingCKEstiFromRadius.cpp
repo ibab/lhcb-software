@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
- * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.9 2009-08-05 10:49:38 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
  * @date 2003-11-14
@@ -20,7 +17,7 @@
 using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY ( PhotonRecoUsingCKEstiFromRadius );
+DECLARE_TOOL_FACTORY ( PhotonRecoUsingCKEstiFromRadius )
 
 //=============================================================================
 // Standard constructor, initializes variables

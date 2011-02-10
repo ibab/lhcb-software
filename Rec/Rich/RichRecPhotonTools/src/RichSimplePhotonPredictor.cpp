@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SimplePhotonPredictor );
+DECLARE_TOOL_FACTORY( SimplePhotonPredictor )
 
 // Standard constructor
 SimplePhotonPredictor::

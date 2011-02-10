@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonSignalJeffreysErf );
+DECLARE_TOOL_FACTORY( PhotonSignalJeffreysErf )
 
 // Standard constructor
 PhotonSignalJeffreysErf::PhotonSignalJeffreysErf( const std::string& type,

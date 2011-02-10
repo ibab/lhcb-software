@@ -16,7 +16,7 @@
 using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY ( PhotonRecoUsingRaytracing );
+DECLARE_TOOL_FACTORY ( PhotonRecoUsingRaytracing )
 
 //=============================================================================
 // Standard constructor, initializes variables

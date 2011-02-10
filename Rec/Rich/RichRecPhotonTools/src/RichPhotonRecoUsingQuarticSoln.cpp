@@ -20,7 +20,7 @@
 using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY ( PhotonRecoUsingQuarticSoln );
+DECLARE_TOOL_FACTORY ( PhotonRecoUsingQuarticSoln )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -735,9 +735,9 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   // Fill array for quartic equation
   const double a0 =   4 * e2 * d2;
   const double a1 = - ( 4 * e2 * dy * radius ) / a0;
-  const double a2 =  ( (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a0 ) / a0;
-  const double a3 =  ( 2 * e * dy * (e-dx) * radius ) / a0;
-  const double a4 =  ( ( e2 - r2 ) * dy * dy ) / a0;
+  const double a2 =   ( (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a0 ) / a0;
+  const double a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
+  const double a4 =   ( ( e2 - r2 ) * dy * dy ) / a0;
 
   // -----------------------------------------------------------------------
 
@@ -761,43 +761,6 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   sphReflPoint = CoC + rotn*evec;
 
   // -----------------------------------------------------------------------
-
-  /*
-  // -----------------------------------------------------------------------
-  // use full 'GSL' function
-  // CRJ : Note, not yet updated from CLHEP so will not compile
-
-  gsl_complex solutions[4];
-  if ( 0 == gsl_poly_complex_solve_quartic( a1, // a
-  a2, // b
-  a3, // c
-  a4, // d
-  &solutions[0],
-  &solutions[1],
-  &solutions[2],
-  &solutions[3] ) ) { return false; }
-
-  // normal vector to reflection plane
-  const Gaudi::XYZVector nvec1 = evec.cross(dvec);
-
-  // get the required results
-  Gaudi::XYZVector delta[2];
-  int j = 0;
-  for ( int i = 0; i<4 && j<2; ++i )
-  {
-  if ( 0 == GSL_IMAG(solutions[i]) )
-  {
-  delta[j] = evec;
-  delta[j].setMag(radius);
-  delta[j++].rotate( asin(GSL_REAL(solutions[i])), nvec1);
-  }
-  }
-
-  // Finally, form the reflection point on the spherical mirror
-  sphReflPoint = ( delta[0].z() > delta[1].z() ? CoC + delta[0] : CoC + delta[1] );
-
-  // -----------------------------------------------------------------------
-  */
 
   return true;
 }
