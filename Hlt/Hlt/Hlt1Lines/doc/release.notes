@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r3   2011-02-10 ===================
 ! 2011-02-09 - Roel Aaij
  - Propagated change of IsMuonTool from track filter to upgrade in 
    Hlt1NewMuonLines and Hlt1TrackLines

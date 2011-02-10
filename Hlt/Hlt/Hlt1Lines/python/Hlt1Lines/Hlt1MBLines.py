@@ -3,7 +3,6 @@
 ##############################
 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line as Line
 
 ############# start building the MB  line(s)...
 class Hlt1MBLinesConf(HltLinesConfigurableUser) :
@@ -21,6 +20,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] :
             if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
+        from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
                     , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(%s,LoKi.Scalers.RandomPhasePeriodicLimiter)) ' % ( self.getProp('MaxNoBiasRate') )
@@ -28,6 +28,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     ) 
     def __create_microbias_line__(self, name, tracking) :
         from HltLine.HltLine import Hlt1Member as Member
+        from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBMicroBias%s' % name 
                     , prescale = self.prescale
                     , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
@@ -45,6 +46,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         '''
         returns an Hlt1 "Line" including input and output filter
         '''
+        from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBMiniBias'
                     , prescale = self.prescale
                     , L0DU  = ' | '.join( [ "L0_CHANNEL('%s') "%(x) for x in  self.getProp('MiniBiasL0Channels') ] )
