@@ -5,6 +5,10 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================== BBDecTreeTool v1r0p1 2011-02-10 ==================
+! 2011-02-10 - Gerhard Raven
+ - work around the fact that the Property Parsers substitute environment
+   variables..
 !========================== BBDecTreeTool v1r0 2011-02-07 ==================
 ! 2011-02-02 - Michael Williams
  - initial import

@@ -53,7 +53,9 @@ StatusCode BBDecTreeTool::initialize() {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
  
   // read in parameters
-  std::ifstream inFile(SubstituteEnvVarInPath(m_paramFile).c_str());
+  if (!m_paramFile.empty()&&m_paramFile[0]!='/'&&m_paramFile[0]!='$')  m_paramFile = "$PARAMFILESROOT/data/" + m_paramFile  ;
+  std::string fnam = SubstituteEnvVarInPath(m_paramFile);
+  std::ifstream inFile(fnam.c_str());
   if(!inFile.is_open()) return this->readError("failed to open file");
   unsigned int nvar,index, value;
   double dvalue;
@@ -96,7 +98,7 @@ StatusCode BBDecTreeTool::initialize() {
 
   // print info
   info() << "Initialized w/ NBody = " << m_nbody << ", Threshold = " 
-	 << m_threshold << ", ParamFile = " << m_paramFile << " (" << m_ntrees 
+	 << m_threshold << ", ParamFile = " << m_paramFile << " -> " << fnam  << " (" << m_ntrees 
 	 << " trees," << nvar << " vars," << numSplits << " splits)." <<endmsg;
 
   return StatusCode::SUCCESS ;
