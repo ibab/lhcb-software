@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::StereoProjection
  *
- *  CVS Log :-
- *  $Id: RichStereoProjection.cpp,v 1.2 2009-07-30 11:21:31 jonrob Exp $
- *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   20/06/2007
  */
@@ -25,7 +22,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( StereoProjection );
+DECLARE_TOOL_FACTORY( StereoProjection )
 
 //-----------------------------------------------------------------------------
 

@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Various icc warning fixes.
+
 !======================= RichRecStereoTools v1r7 2010-07-20 ==================
 ! 2010-06-24 - Chris Jones
  - Adapt to change in where the method that returns the S.D. of the observable 

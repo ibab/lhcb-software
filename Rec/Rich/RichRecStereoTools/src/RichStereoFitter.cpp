@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : RichStereoFitter
  *
- *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.18 2009-07-30 11:21:31 jonrob Exp $
- *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
  */
@@ -21,7 +18,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( StereoFitter );
+DECLARE_TOOL_FACTORY( StereoFitter )
 
 // Standard constructor
 StereoFitter::StereoFitter ( const std::string& type,
