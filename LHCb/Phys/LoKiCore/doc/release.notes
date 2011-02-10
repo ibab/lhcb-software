@@ -15,6 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+
+! 2011-02-10 - Gerhard Raven
+ - make sure that algorithms used in AlgFunctors are registered as
+   subAlgorithms with the IAlgManager -- borrow some code from
+   GaudiSequencer...
+
 ! 2011-02-07 - Vanya Belyaev
 
  - add "rigth-side" form of gate for pipes, maps, fun&cut-vals :

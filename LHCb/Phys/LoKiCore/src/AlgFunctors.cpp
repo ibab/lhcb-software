@@ -15,6 +15,12 @@
 #include  "GaudiKernel/SmartIF.h"
 #include  "GaudiKernel/ToStream.h"
 #include  "GaudiKernel/TypeNameString.h"
+#include  "GaudiKernel/IJobOptionsSvc.h"
+// ============================================================================
+// GaudiALg
+// ============================================================================
+#include  "GaudiAlg/GaudiAlgorithm.h"
+#include  "GaudiAlg/GetAlgs.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -22,6 +28,7 @@
 #include "LoKi/AlgFunctors.h"
 #include "LoKi/Report.h"
 #include "LoKi/Services.h"
+#include "LoKi/Assert.h"
 // ============================================================================
 /** @file
  *  Implementation file for functions from namespace LoKi::Algorithms 
@@ -59,16 +66,96 @@ namespace
         ( "AlgFunctors::getAlgorithm: IAlgManager* points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
-    //
-    IAlgorithm* _a =  
-      iam -> algorithm ( Gaudi::Utils::TypeNameString ( name ) , true ) ;
-    if ( 0 == _a ) 
-    {
-      LoKi::Report::Error 
-        ( "AlgFunctors::getAlgorithm: Algorithm '" + name + "' points to NULL" ) ; 
-      return LoKi::Interface<IAlgorithm>()  ; 
+    ///////// start of code copied from GaudiSequencer...
+
+    // get job options svc -- todo: move this one level up, not done 
+    // on this branch to retain binary compatiblity...
+    LoKi::ILoKiSvc *ls = LoKi::Services::instance().lokiSvc ();
+    SmartIF<IJobOptionsSvc> jos( ls );
+    SmartIF<IAlgContextSvc> cntx ( ls ) ;
+    LoKi::Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
+    GaudiAlgorithm *parent = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+    LoKi::Assert ( parent!=0 , "parent not a GaudiAlg!" ) ;
+
+    /////////////////////////////
+    /////////////////////////////
+    const Gaudi::Utils::TypeNameString typeName(name);
+    const std::string &theName = typeName.name();
+    const std::string &theType = typeName.type();
+
+    bool addedContext = false;
+    bool addedRootInTES = false;
+    bool addedGlobalTimeOffset = false;
+    SmartIF<IAlgorithm> myIAlg = iam->algorithm( typeName , false); // do not create it now
+    if ( !myIAlg.isValid() ) {
+      //== Set the Context if not in the jobOptions list
+      if ( ""  != parent->context() ||
+           ""  != parent->rootInTES() ||
+           0.0 != parent->globalTimeOffset() ) {
+        bool foundContext = false;
+        bool foundRootInTES = false;
+        bool foundGlobalTimeOffset = false;
+        const std::vector<const Property*>* properties = jos->getProperties( theName );
+        if ( 0 != properties ) {
+          // Iterate over the list to set the options
+          for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
+               itProp != properties->end();
+               itProp++ )   {
+            const StringProperty* sp = dynamic_cast<const StringProperty*>(*itProp); // is GlobalTimeOffSet really a stringproperty....
+            if ( 0 != sp )    {
+              if ( "Context" == (*itProp)->name() ) foundContext = true;
+              if ( "RootInTES" == (*itProp)->name() ) foundRootInTES = true;
+              if ( "GlobalTimeOffset" == (*itProp)->name() ) foundGlobalTimeOffset = true;
+            }
+          }
+        }
+        if ( !foundContext && "" != parent->context() ) {
+          StringProperty contextProperty( "Context", parent->context() );
+          jos->addPropertyToCatalogue( theName, contextProperty ).ignore();
+          addedContext = true;
+        }
+        if ( !foundRootInTES && "" != parent->rootInTES() ) {
+          StringProperty rootInTESProperty( "RootInTES", parent->rootInTES() );
+          jos->addPropertyToCatalogue( theName, rootInTESProperty ).ignore();
+          addedRootInTES = true;
+        }
+        if ( !foundGlobalTimeOffset && 0.0 != parent->globalTimeOffset() ) {
+          DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", parent->globalTimeOffset() );
+          jos->addPropertyToCatalogue( theName, globalTimeOffsetProperty ).ignore();
+          addedGlobalTimeOffset = true;
+        }
+      }
+
+      Algorithm *myAlg = 0;
+      StatusCode result = parent->createSubAlgorithm( theType, theName, myAlg );
+      // (MCl) this should prevent bug #35199... even if I didn't manage to
+      // reproduce it with a simple test.
+      if (result.isSuccess()) myIAlg = myAlg;
+    } else {
+      Algorithm *myAlg = dynamic_cast<Algorithm*>(myIAlg.get());
+      if (myAlg) {
+        parent->subAlgorithms()->push_back(myAlg);
+        // when the algorithm is not created, the ref count is short by one, so we have to fix it.
+        myAlg->addRef();
+      }
     }
-    //
+
+    //== Remove the property, in case this is not a GaudiAlgorithm...
+    if ( addedContext ) {
+      jos->removePropertyFromCatalogue( theName, "Context" ).ignore();
+      addedContext = false;
+    }
+    if ( addedRootInTES ) {
+      jos->removePropertyFromCatalogue( theName, "RootInTES" ).ignore();
+      addedRootInTES = false;
+    }
+    if ( addedGlobalTimeOffset ) {
+      jos->removePropertyFromCatalogue( theName, "GlobalTimeOffset" ).ignore();
+      addedGlobalTimeOffset = false;
+    }
+    ///////// end of code copied from GaudiSequencer...
+
+    IAlgorithm* _a =  myIAlg;
     if ( !_a->isInitialized() ) 
     {
       StatusCode sc = _a->sysInitialize() ;
