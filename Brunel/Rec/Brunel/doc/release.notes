@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes in Brunel v38r2 output
+  . #117185 Add cluster offset correction (CaloReco)
+  . #117270 Reduce verbosity of TrackEventFitter (TrackFitter)
+  . #116970 FastVeloHitManager prints in finalize, not destructor (FastVelo)
+  . #116954 Add check for untested StatusCodes (PatAlgorithms)
+  . #116963 Set maximum warning to 0 in TrajPoca (LHCbAlgs)
+
 </PRE><H1><A NAME=v38r1>2011-02-08 Brunel v38r1</A></H1><PRE>
 This version uses projects LCG 60, Gaudi v22r0, LHCb v32r0, Lbcom v10r0,
  Rec v11r1 and SQLDDDB v6r0, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
