@@ -4,9 +4,6 @@
  *
  *  Implementation file for monitor : Rich::DAQ::HPDAnalysisAlg
  *
- *  CVS Log :-
- *  $Id: RichHPDAnalysisAlg.cpp,v 1.2 2009-10-11 16:10:08 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */
@@ -23,7 +20,7 @@
 using namespace Rich;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HPDAnalysisAlg );
+DECLARE_ALGORITHM_FACTORY( HPDAnalysisAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

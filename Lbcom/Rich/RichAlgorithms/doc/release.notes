@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Suppress some icc warnings
+
 ! 2011-02-07 - Chris Jones
  - Adapt to removal of depreciated typedefs
 

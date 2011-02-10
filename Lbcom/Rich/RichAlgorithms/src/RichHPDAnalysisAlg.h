@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::HPDAnalysisAlg
  *
- *  CVS Log :-
- *  $Id: RichHPDAnalysisAlg.h,v 1.1 2009-10-11 14:40:33 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */

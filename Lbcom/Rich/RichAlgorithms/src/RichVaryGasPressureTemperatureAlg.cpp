@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::VaryGasPressureTemperatureAlg
  *
- * CVS Log :-
- * $Id: RichVaryGasPressureTemperatureAlg.cpp,v 1.2 2009-05-15 16:04:51 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2008-10-10
  */
@@ -23,7 +20,7 @@
 using namespace Rich;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VaryGasPressureTemperatureAlg );
+DECLARE_ALGORITHM_FACTORY( VaryGasPressureTemperatureAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -4,9 +4,6 @@
  *
  * Header file for class : Rich::VaryGasPressureTemperatureAlg
  *
- * CVS Log :-
- * $Id: RichVaryGasPressureTemperatureAlg.h,v 1.1 2009-04-17 11:04:35 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2009/03/27
  */
