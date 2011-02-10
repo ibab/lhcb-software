@@ -25,6 +25,11 @@ MonSubSys::MonSubSys(int intv)
   m_unlockcount=0;
 //  lib_rtl_create_lock(pid,&m_lockid);
   lib_rtl_create_lock(0,&m_lockid);
+  m_rpc = 0;
+  m_ser = 0;
+  m_genSrv = 0;
+  m_EORsvc = 0;
+
 }
 MonSubSys::~MonSubSys()
 {
@@ -145,12 +150,12 @@ void MonSubSys::setup(char *n, bool expandnames)
       }
     }
   }
-  m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
+  if (m_rpc == 0) m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
-  m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
+  if ( m_genSrv == 0) m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
   nam = m_name;
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/EOR";
-  m_EORsvc = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty,4);
+  if (m_EORsvc == 0) m_EORsvc = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty,4);
   m_EORsvc->setEORflag(true);
   MonSys::m_instance().addSubSys(this);
 //  unLock();

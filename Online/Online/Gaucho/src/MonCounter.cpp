@@ -25,6 +25,7 @@ void MonCounter::setup(MONTYPE typ, void *data,char *name, char *title)
   m_contsiz    = 0;
   m_addoff = 0;
   m_contents = data;
+  m_service = 0;
   setname(name);
   Init(title);
   switch (m_type)
@@ -314,6 +315,7 @@ void MonCounter::List()
 void MonCounter::create_OutputService(std::string infix)
 {
   std::string nam;
+  if (m_service != 0) return;
   nam = m_srvcprefix+infix+std::string(m_name);
   switch(m_type)
   {
