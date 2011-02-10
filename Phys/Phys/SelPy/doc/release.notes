@@ -4,6 +4,10 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Juan Palacios
+ - Split tests into selection type. Add extra coverage for new clonable
+   types. Run py.test directly in QM tests.
+
 ! 2011-02-09 - Juan Palacios
  - selection.SelSequence -> selection.SelectionSequence. It now has it's
    own sequencer, defaulted to configurabloids.DummySequencer.

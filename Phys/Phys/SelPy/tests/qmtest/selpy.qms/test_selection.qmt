@@ -6,7 +6,7 @@
   </argument>
   <argument name="args">
     <set>
-      <text>../test_configurabloids.py</text>
+      <text>../test_selection.py</text>
       <text>--verbose</text>
     </set>
   </argument>
