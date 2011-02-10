@@ -1,0 +1,76 @@
+/*
+
+Magic number in "Checkpointing"
+
+
+__GLIBC__.__GLIBC_MINOR__
+
+
+For explanation of SysCalls.h : TLS_PID_OFFSET
+==============================================
+
+GLIBC 2.5:  See glibc-2.5/nptl/descr.h for details
+Note: This changes in  __GLIBC_PREREQ (2,10) and __GLIBC_PREREQ (2,11) !!!!!
+
+
+typedef struct  {    // X86_64 specific!!
+  void *tcb;		/* Pointer to the TCB.  Not necessary the
+  thread descriptor used by libpthread.  */
+  /* dtv_t */  void* *dtv;
+  void *self;		/* Pointer to the thread descriptor.  */
+  int multiple_threads;
+  uintptr_t sysinfo;
+  uintptr_t stack_guard;
+  uintptr_t pointer_guard;
+} tcbhead_t;
+
+typedef struct list_head   {
+  struct list_head *next;
+  struct list_head *prev;
+} list_t;
+
+/* Thread descriptor data structure.  */
+struct pthread   {
+  union  {
+    /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
+    tcbhead_t header;
+
+    /* This extra padding has no special purpose, but should define the size of the structure. */
+    void *__padding[16];
+  };  
+
+  // --> 16*sizeof(pointer) = offset 128
+  // This descriptor's link on the `stack_used' or `__stack_user' list.
+  list_t list;
+
+  // --> 128 + 2*sizeof(pointer) = offset 144
+  // Thread ID - which is also a 'is this thread descriptor (and therefore stack) used' flag.
+  pid_t tid;
+
+  // --> 128 + 2*sizeof(pointer) + sizeof(pid_t[int]) = offset 148
+  // Process ID - thread group ID in kernel speak.
+  pid_t pid;
+
+};
+
+
+For explanation of Thread.cpp SIG_THREAD_CANCEL SIG_THREAD_SETXID
+=================================================================
+
+#define SIG_THREAD_CANCEL 32
+#define SIG_THREAD_SETXID 33
+
+
+  Normally this should SIGRTMIN and SIGRTMON+1.
+  However at CERN in slc5 it reads:
+
+kill -l:
+29) SIGIO       30) SIGPWR      31) SIGSYS      34) SIGRTMIN
+35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3  38) SIGRTMIN+4
+
+which is also the content of signal.h and clearly wrong.
+
+
+
+*/
+
