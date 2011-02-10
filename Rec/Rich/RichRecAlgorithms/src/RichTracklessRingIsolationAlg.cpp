@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TracklessRingIsolationAlg );
+DECLARE_ALGORITHM_FACTORY( TracklessRingIsolationAlg )
 
 // Standard constructor, initializes variables
 TracklessRingIsolationAlg::

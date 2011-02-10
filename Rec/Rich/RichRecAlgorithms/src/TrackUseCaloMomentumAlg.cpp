@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackUseCaloMomentumAlg );
+DECLARE_ALGORITHM_FACTORY( TrackUseCaloMomentumAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

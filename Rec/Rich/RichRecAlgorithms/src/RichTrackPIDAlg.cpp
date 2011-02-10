@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackPIDAlg );
+DECLARE_ALGORITHM_FACTORY( TrackPIDAlg )
 
 // Standard constructor, initializes variables
 TrackPIDAlg::TrackPIDAlg( const std::string& name,

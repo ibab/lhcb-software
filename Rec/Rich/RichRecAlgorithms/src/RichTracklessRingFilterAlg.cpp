@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TracklessRingFilterAlg );
+DECLARE_ALGORITHM_FACTORY( TracklessRingFilterAlg )
 
 // Standard constructor, initializes variables
 TracklessRingFilterAlg::TracklessRingFilterAlg( const std::string& name,

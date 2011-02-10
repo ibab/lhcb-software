@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EventSelectionAlg );
+DECLARE_ALGORITHM_FACTORY( EventSelectionAlg )
 
 namespace
 {

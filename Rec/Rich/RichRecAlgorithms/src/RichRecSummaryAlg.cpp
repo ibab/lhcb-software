@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SummaryAlg );
+DECLARE_ALGORITHM_FACTORY( SummaryAlg )
 
 // Standard constructor, initializes variables
 SummaryAlg::SummaryAlg( const std::string& name,

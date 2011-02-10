@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TracklessRingSegmentAssociationAlg );
+DECLARE_ALGORITHM_FACTORY( TracklessRingSegmentAssociationAlg )
 
 // Standard constructor, initializes variables
 TracklessRingSegmentAssociationAlg::

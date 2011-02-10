@@ -18,15 +18,13 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PixelBackgroundAlg );
+DECLARE_ALGORITHM_FACTORY( PixelBackgroundAlg )
 
 // Standard constructor, initializes variables
 PixelBackgroundAlg::PixelBackgroundAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator ),
-    m_bkgTool          ( NULL              )
-{
-}
+    m_bkgTool          ( NULL              ) { }
 
 // Destructor
 PixelBackgroundAlg::~PixelBackgroundAlg() {}

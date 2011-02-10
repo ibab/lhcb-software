@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Initialise );
+DECLARE_ALGORITHM_FACTORY( Initialise )
 
 // Standard constructor, initializes variables
 Initialise::Initialise( const std::string& name,
