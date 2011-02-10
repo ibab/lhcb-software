@@ -164,6 +164,11 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloOpen'                              :10104,
     'PV3DOpen'                              :10105,
     'RZVeloBW'                              :10106,
+    'VeloCandidatesDiMuon'                  :10107,
+    'VeloCandidatesTrackAllL0'              :10108,
+    'VeloCandidatesTrackMuon'               :10109,
+    'VeloCandidatesTrackPhoton'             :10110,
+
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2

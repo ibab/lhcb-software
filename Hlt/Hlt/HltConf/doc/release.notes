@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r3p1 2011-02-07 ===================
+! 2011-02-04 - Gerhard Raven
+ - add a few missing selections
+
 !========================== HltConf v9r3 2011-02-07 ===================
 ! 2011-02-07 - Roel Aaij
  - Update Hlt1.py for new streamer framework
