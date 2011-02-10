@@ -159,7 +159,6 @@ namespace LoKi
        // ======================================================================
      public: // timing
        // ======================================================================
-#if 0
        // requires LoKiCore scheduled for LHCb v32r1
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
        __timer__   ( const Pipe&              c , 
@@ -181,7 +180,6 @@ namespace LoKi
        __rmod__    ( const Pipe&              c , 
                      ChronoEntity*            t ) { return t % c  ; }
        // ======================================================================
-#endif
      public: // specific for HltCandidates
        // ======================================================================
        // __rshift__
@@ -394,7 +392,6 @@ namespace LoKi
       // ======================================================================
     public: // timing
       // ======================================================================
-#if 0
        // requires LoKiCore scheduled for LHCb v32r1
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __timer__   ( const Source&            c , 
@@ -416,7 +413,6 @@ namespace LoKi
       __rmod__    ( const Source&            c , 
                     ChronoEntity*            t ) { return t % c  ; }
       // ======================================================================
-#endif
     public: // specific for Hlt::Candidate 
       // ======================================================================
       // __rshift__
