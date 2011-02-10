@@ -24,6 +24,7 @@ from StrippingSelections import StrippingTopo
 from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
+
 from StrippingSelections.StrippingB2DX import B2DXLines
 
 from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf, StrippingB2D3HNominal, StrippingB2D3HLoose
@@ -52,8 +53,8 @@ stream.appendLines( [
                         StrippingBs2KstKstConf().nominall(),
                         StrippingBs2PhiKstConf().nominall(),
                         StrippingBs2PhiKstConf().loosel(),
-                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiased(),
-                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
+#                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiased(),
+#                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
 		    ] )
 
 stream.appendLines( B2DXLines().lines ) # B2DX lines with default cuts

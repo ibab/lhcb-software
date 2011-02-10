@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-10 - Juan Palacios
+ - StreamRadiative
+  . Remove all radiative lines, these no longer instantiate.
+ - StreamBhadron
+  . Remove StrippingB2hhLTUnbiased lines, no longer instantiate.
+
 ! 2011-02-09 - Albert Puig
  - Adapted StrippingB2XGamma to the new StrippingFramework.
  - Added test for StrippingB2XGamma.
