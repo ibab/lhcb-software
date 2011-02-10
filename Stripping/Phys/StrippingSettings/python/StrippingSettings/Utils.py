@@ -12,18 +12,16 @@ def dbaseDir() :
 def dbase(stripping) :
     return dbaseDir() + stripping.lower()
 
-def getStrippingConfiguration(stripping) :
+
+def strippingConfiguration(stripping) :
     """
-    Get all the configuration dictionaries for a given stripping.
+    Get read access to configuration dictionaries for a given stripping
     Usage:
     conf = getConfigurationDicitonary('Stripping12')
     """
-    db = shelve.open( dbase(stripping), 'r' )
-    dbdict = dict( db )
-    db.close()
-    return dbdict
+    return shelve.open( dbase(stripping), 'r' )
 
-def getLineBuilderConfiguration(stripping, lineBuilderName) :
+def lineBuilderConfiguration(stripping, lineBuilderName) :
     """
     Get a copy of a line builder configuration dictionary
     for a given stripping.
