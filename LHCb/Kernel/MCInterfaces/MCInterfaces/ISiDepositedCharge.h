@@ -6,7 +6,7 @@
 
 namespace LHCb{
  class MCHit;
-};
+}
 
 /** @class ISiDepositedCharge ISiDepositedCharge.h Kernel/ISiDepositedCharge.h
  *

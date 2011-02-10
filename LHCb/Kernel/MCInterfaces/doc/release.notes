@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Supress some icc warnings
+
 !========================= MCInterfaces v1r12 2010-11-27 =========================
 ! 2010-11-12 - Antonis Papanestis
  - Added methods to easily access MC info for scintillation in 

@@ -12,7 +12,7 @@ namespace LHCb {
  class State;
  class StateVector;
  class Track ; 
-};
+}
 
 /** @class IIdealStateCreator IIdealStateCreator.h "TrackMCInterfaces/IIdealStateCreator.h"
  *
