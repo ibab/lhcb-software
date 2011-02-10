@@ -13,6 +13,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                             ,'Hlt2SingleElectron'         :  0.01
                                             ,'Hlt2ElectronPlusTrack'      :  0.01
                                             ,'Hlt2SingleTFElectron'       :  1.0
+                                            ,'Hlt2SingleTFHighPtElectron' :  1.0
+                                            ,'Hlt2SingleTFVHighPtElectron':  1.0
                                             ,'Hlt2TFElectronPlusTrack'    :  1.0
                                              }
                                              
@@ -53,6 +55,12 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'SingleTFElectron_L0Req'   :  "L0_CHANNEL('Electron')"
                   ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
                   ,'SingleTFElectron_PT'      :  3000.    # MeV
+                  ,'SingleTFHighPtElectron_PT': 10000.    # MeV
+                  ,'SingleTFHighPtElectron_PrsMin': 50.
+                  ,'SingleTFHighPtElectron_EcalMin': 0.1    
+                  ,'SingleTFHighPtElectron_HcalMax': 0.05
+                  ,'SingleTFHighPtElectron_TkChi2' : 20.
+                  ,'SingleTFVHighPtElectron_PT': 20000.    # MeV
                   ,'SingleTFElectron_IP'      :     0.2   # mm
                   ,'SingleTFElectron_PIDe'    :     4.  
                   ,'SingleTFElectron_IPCHI2'  :    -1.    
@@ -72,6 +80,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                       'SingleElectron'         :  51300
                                      ,'ElectronPlusTrack'      :  51310
                                      ,'SingleTFElectron'       :  51350
+                                     ,'SingleTFHighPtElectron' :  51351
+                                     ,'SingleTFVHighPtElectron':  51352
                                      ,'TFElectronPlusTrack'    :  51360
                                      
                                       }
@@ -369,6 +379,10 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFElectronDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFElectron'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFHighPtElectronDecision" :
+                                              self.getProp('HltANNSvcID')['SingleTFHighPtElectron'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFVHighPtElectronDecision" :
+                                              self.getProp('HltANNSvcID')['SingleTFVHighPtElectron'] } )
 
         """
         #------------------------
@@ -403,8 +417,48 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     , FilterSingleTFElectron ]
                                         , postscale = self.postscale
                                         )
-        
 
+        #
+        # D.R.Ward  Add high PT versions, replacing PIDe cut with direct Calo cuts
+        #
+        FilterSingleTFHighPtElectron = Hlt2Member( FilterDesktop # type
+                                                   , "FilterSingleTFHighPtElectron" 
+                                                   , Code ="(PT > %(SingleTFHighPtElectron_PT)s *MeV)" \
+                                                   " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
+                                                   " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
+                                                   " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
+                                                   " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
+                                                   , InputLocations = [ BiKalmanFittedElectrons ]
+                                                   )
+
+        SingleTFHighPtElectronLine = Hlt2Line("SingleTFHighPtElectron"
+                                              , prescale = self.prescale
+                                              , L0DU = L0Req
+                                              , HLT = Hlt1Req
+                                              , algos = [ BiKalmanFittedElectrons
+                                                          , FilterSingleTFHighPtElectron ]
+                                              , postscale = self.postscale
+                                              )
+        
+        FilterSingleTFVHighPtElectron = Hlt2Member( FilterDesktop # type
+                                                    , "FilterSingleTFVHighPtElectron" 
+                                                    , Code ="(PT > %(SingleTFVHighPtElectron_PT)s *MeV)" \
+                                                    " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
+                                                    " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
+                                                    " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
+                                                    " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
+                                                    , InputLocations = [ BiKalmanFittedElectrons ]
+                                                    )
+
+        SingleTFVHighPtElectronLine = Hlt2Line("SingleTFVHighPtElectron"
+                                               , prescale = self.prescale
+                                               , L0DU = L0Req
+                                               , HLT = Hlt1Req
+                                               , algos = [ BiKalmanFittedElectrons
+                                                           , FilterSingleTFVHighPtElectron ]
+                                               , postscale = self.postscale
+                                               )
+        
         
     def __makeHlt2TFElectronPlusTrackLines(self):
 

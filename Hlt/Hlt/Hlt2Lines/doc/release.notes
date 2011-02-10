@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Jibo He for David Ward
+ - Hlt2InclusiveDiElectronLines & Hlt2InclusiveElectronLines
+   + Added 4 lines for electroweak physics, with special PID cut
+
 ! 2011-02-09 - Alex Shires
  - Hlt2MuNTrackLines: change line name (VG request) to MuTrack1,2,3
 
