@@ -136,30 +136,3 @@ Hlt1Seeding = bindMembers( None, [ DecodeIT,
                                    PatSeeding('Hlt1MBSeeding'
                                               ,OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))
                                    ] )
-
-# ==============================================================================
-# Define & Register symbols for streamer framework
-# ==============================================================================
-from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
-from Configurables import Hlt__Track2Candidate
-_VeloSelection = 'VeloCandidates'
-## append Track->Candidate converter to the end of velo recontruction. tmp?
-_veloTracks = Hlt__Track2Candidate (
-    'Velo2Candidates' ,
-    Code            = "~TrBACKWARD"    , ## skip backward tracks 
-    InputSelection  = MinimalVelo.outputSelection(),
-    OutputSelection = _VeloSelection,
-    )
-_Velo = bindMembers ( None , [ MinimalVelo, _veloTracks ] )
-
-#
-## Create the strings which users will import
-#  
-# Velo candidates
-import HltLine.HltDecodeRaw 
-VeloCandidates = "%s = execute( %s ) * SELECTION( '%s' )" % \
-                ( _Velo.outputSelection(), [ m.getFullName() for m in _Velo.members() ],
-                  _Velo.outputSelection() )
-# ==============================================================================
-# The END 
-# ==============================================================================

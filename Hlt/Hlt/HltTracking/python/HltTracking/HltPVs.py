@@ -88,6 +88,6 @@ RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in _RecoPV3D().
 def to_action( symbol ):
     return symbol.split( '=' )[ 1 ]
 
-from HltReco import VeloCandidates
-FullPV3D = "FullPV3D = %s >> execute( %s )" \
-           % ( to_action( VeloCandidates ), [ m.getFullName() for m in _RecoPV3D().members() ] )
+## from HltReco import VeloCandidates
+## FullPV3D = "FullPV3D = %s >> execute( %s )" \
+##            % ( to_action( VeloCandidates ), [ m.getFullName() for m in _RecoPV3D().members() ] )
