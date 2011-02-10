@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - remove various extraneuous ; from headers. Causes icc warnings in client code
+
 !========================= TrackInterfaces v4r18 2011-01-31 =========================
 ! 2011-01-23 - David Hutchcroft
  - Added ICountVeloTracks which counts the number of VELO tracks in "Best"

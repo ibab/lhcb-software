@@ -10,7 +10,7 @@
 namespace LHCb {
   class Track;
   class OTChannelID;
-};
+}
 
 static const InterfaceID IID_IPitchResTool ( "IPitchResTool", 1, 0 );
 

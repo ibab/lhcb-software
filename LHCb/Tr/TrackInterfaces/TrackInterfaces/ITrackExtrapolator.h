@@ -24,7 +24,7 @@ namespace LHCb {
  class Track;
  class State;
  class StateVector ;
-};
+}
 
 static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 3, 0 );
 

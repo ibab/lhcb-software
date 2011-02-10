@@ -11,7 +11,7 @@
 // Forward declarations
 namespace LHCb {
  class Track;
-};
+}
 
 static const InterfaceID IID_ITrackKalmanFilter ( "ITrackKalmanFilter", 1, 0 );
 

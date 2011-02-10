@@ -18,7 +18,7 @@
 namespace LHCb {
   class Track;
   class RecVertex;
-};
+}
 // ============================================================================
 /** @class IFunctionTool IFunctionTool.h TrackInterfaces/IFunctionTool.h
  *  

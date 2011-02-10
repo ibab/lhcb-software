@@ -17,7 +17,7 @@ static const InterfaceID IID_IVeloExpectation( "IVeloExpectation", 0, 0 );
 
 namespace LHCb{ 
  class Track;
-};
+}
   
 class IVeloExpectation: virtual public IAlgTool{
  

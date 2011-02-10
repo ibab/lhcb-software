@@ -9,7 +9,7 @@
 // forward declarations
 namespace LHCb {
  class TwoProngVertex;
-};
+}
 
 static const InterfaceID IID_IHltV0Upgrade ( "IHltV0Upgrade", 1, 0 );
 

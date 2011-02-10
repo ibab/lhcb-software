@@ -14,7 +14,7 @@
 class Material;
 namespace LHCb {
   class State;
-};
+}
 
 static const InterfaceID IID_IStateCorrectionTool ( "IStateCorrectionTool", 1, 0 );
 

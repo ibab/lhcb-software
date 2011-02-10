@@ -18,7 +18,7 @@ namespace LHCb {
   class Trajectory;
   class Measurement;
   class State;
-};
+}
 
 static const InterfaceID IID_ITrajectoryProvider ( "ITrajectoryProvider", 1, 0 );
 

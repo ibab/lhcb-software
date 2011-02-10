@@ -12,7 +12,7 @@
 // Forward declarations
 namespace LHCb {
  class LHCbID;
-};
+}
 
 static const InterfaceID IID_IPromoteClusters ( "IPromoteClusters", 1, 0 );
 

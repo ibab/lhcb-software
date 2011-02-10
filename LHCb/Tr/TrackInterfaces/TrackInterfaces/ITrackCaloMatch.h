@@ -18,7 +18,7 @@ static const InterfaceID IID_ITrackCaloMatch( "ITrackCaloMatch", 0, 0 );
 
 namespace LHCb{
  class Track;
-};
+}
   
 class ITrackCaloMatch: virtual public IAlgTool{
  

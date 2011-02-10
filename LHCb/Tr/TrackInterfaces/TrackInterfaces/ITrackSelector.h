@@ -16,7 +16,7 @@ static const InterfaceID IID_ITrackSelector( "ITrackSelector", 0, 0 );
 
 namespace LHCb{ 
  class Track;
-};
+}
   
 class ITrackSelector: virtual public IAlgTool{
  

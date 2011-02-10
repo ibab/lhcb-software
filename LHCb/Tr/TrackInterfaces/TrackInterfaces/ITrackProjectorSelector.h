@@ -12,7 +12,7 @@
 class ITrackProjector;
 namespace LHCb {
    class Measurement;
-};
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_ITrackProjectorSelector( "ITrackProjectorSelector" , 1 , 0 );

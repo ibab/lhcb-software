@@ -11,7 +11,7 @@
 namespace LHCb {
   class Track;
   class State;
-};
+}
 
 static const InterfaceID IID_ITrackInterpolator ( "ITrackInterpolator", 1, 0 );
 

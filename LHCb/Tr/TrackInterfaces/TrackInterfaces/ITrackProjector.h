@@ -19,7 +19,7 @@ namespace LHCb {
   class StateVector;
   class Measurement;
   class FitNode;
-};
+}
 
 static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 2, 0 );
 

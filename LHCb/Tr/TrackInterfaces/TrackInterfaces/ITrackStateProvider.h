@@ -12,8 +12,8 @@
 namespace LHCb {
  class Track;
  class State;
- class TrackTraj ;
-};
+ class TrackTraj;
+}
 
 static const InterfaceID IID_ITrackStateProvider( "ITrackStateProvider" , 3, 0 );
 

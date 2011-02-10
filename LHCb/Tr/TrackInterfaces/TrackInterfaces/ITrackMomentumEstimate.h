@@ -9,7 +9,7 @@
 // forward declarations
 namespace LHCb {
  class State;
-};
+}
 
 static const InterfaceID IID_ITrackMomentumEstimate ( "ITrackMomentumEstimate", 1, 0 );
 

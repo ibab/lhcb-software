@@ -12,7 +12,7 @@
 //forward declarations
 namespace LHCb {
   class Track;
-};
+}
 
 static const InterfaceID IID_ITrackMatch ( "ITrackMatch", 1, 0 );
 

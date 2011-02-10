@@ -9,8 +9,7 @@
 
 namespace LHCb {
   class State;
-};
-
+}
 
 static const InterfaceID IID_IPtTransporter ( "IPtTransporter", 1, 0 );
 

@@ -15,7 +15,7 @@
 // Forward declarations
 namespace LHCb {
  class Track;
-};
+}
 
 static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
 

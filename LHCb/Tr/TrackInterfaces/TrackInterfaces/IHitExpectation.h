@@ -17,7 +17,7 @@ static const InterfaceID IID_IHitExpectation( "IHitExpectation", 0, 0 );
 namespace LHCb{ 
  class Track;
  class LHCbID;
-};
+}
   
 #include <vector>
 

@@ -13,7 +13,7 @@ namespace LHCb{
 class STChannelID;
 class STCluster;
 class STDigit;
-};
+}
 
 /** @class ISTClusterPosition TrackInterfaces/ISTClusterPosition.h
  *
