@@ -5,7 +5,7 @@
 !------------------------------------------------------------------------------
 
 ! 2011-02-10 - Chris Jones
- - various icc compilation warning fixes
+ - various icc compilation warning and coverity fixes
 
 ! 2011-02-07 - Chris Jones
  - Adapt to removal of depreciated typedefs

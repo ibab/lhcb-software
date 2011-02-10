@@ -241,7 +241,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     }
 
     // which radiator
-    const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
+    const Rich::RadiatorType rad = ring->richRecSegment()->trackSegment().radiator();
 
     // cos and sin values
     const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
