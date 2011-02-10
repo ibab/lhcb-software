@@ -1,0 +1,25 @@
+#include "$PARTITIONOPTS"
+MessageSvc.OutputLevel            = @OnlineEnv.OutputLevel;
+MessageSvc.doPrintAlways          = True;
+//MessageSvc.OutputLevel            = 1;
+MessageSvc.fifoPath               = "$LOGFIFO";
+
+MEPManager.PartitionID            = @OnlineEnv.PartitionID;
+MEPManager.PartitionName          = @OnlineEnv.PartitionName;
+MEPManager.Buffers                = { "Events", "Output" };
+MEPManager.PartitionBuffers       = true;
+EventSelector.Input               = "Events";
+
+CheckpointSvc.PrintLevel          = 2;
+CheckpointSvc.OutputLevel         = 2;
+//CheckpointSvc.UtgidPattern        = "%P_%NN_%T_%02d";
+CheckpointSvc.UtgidPattern        = "";
+CheckpointSvc.Partition           = @OnlineEnv.PartitionName;
+CheckpointSvc.TaskType            = "RecBrunel";
+CheckpointSvc.ExitAfterCheckpoint = false;
+
+CheckpointSvc.NumberOfInstances   = 0;
+CheckpointSvc.UseCores            = false;
+
+EnvironDumper.PrintLevel          = 2;
+EnvironDumper.OutputLevel         = 4;

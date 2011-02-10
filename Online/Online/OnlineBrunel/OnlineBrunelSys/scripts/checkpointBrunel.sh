@@ -14,7 +14,7 @@ export BASE=`cd ..;dirname $PWD`;
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 #
 #
-export LD_PRELOAD=${BASE}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so
+export LD_PRELOAD=${CHECKPOINTINGROOT}/${CMTCONFIG}/libCheckpointing.so
 echo "LD_PRELOAD=${LD_PRELOAD}"
 export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:${BASE}/InstallArea/python:${PYTHONPATH}
 export PARTITIONOPTS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts;

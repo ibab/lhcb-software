@@ -205,7 +205,7 @@ debug = not true_online
 if not true_online:
   print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
   requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-patchBrunel(true_online)
+br = patchBrunel(true_online)
 setupOnline()
 if true_online: patchMessages()
 start()

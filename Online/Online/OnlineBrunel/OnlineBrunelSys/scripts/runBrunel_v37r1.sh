@@ -29,15 +29,35 @@ ulimit -v 2097152
 #
 exec_restart="restart";
 #
-if test "${exec_restart}" = "restart";
+if test "${GAUDITASK_OPTS}" = "-checkpoint";
+then
+    export CHECKPOINT_FILE;
+    export PYTHONPATH=${CHECKPOINTDIR}:${PYTHONPATH};
+    export LD_PRELOAD=${CHECKPOINTINGROOT}/${CMTCONFIG}/libCheckpointing.so
+    OBS=${ONLINEBRUNELSYSROOT};
+    echo "[INFO] +++ Checkpoint BRUNEL GAUDITASK_OPTS:   ${GAUDITASK_OPTS} "
+    echo "[INFO] +++ Checkpoint BRUNEL CHECKPOINT_FILE:  ${CHECKPOINT_FILE}"
+    echo "[INFO] +++ Checkpoint BRUNEL ${UTGID} with DNS:${DIM_DNS_NODE} Checkpoint:${CHECKPOINT_FILE}";
+    `which GaudiCheckpoint.exe` libGaudiOnline.so OnlineTask \
+	-checkpoint \
+	-msgsvc=LHCb::FmcMessageSvc \
+	-tasktype=LHCb::Class1Task \
+	-main=$GAUDIONLINEROOT/options/Main.opts \
+	-opt=command="\
+import Gaudi,GaudiKernel.ProcessJobOptions;\
+from Gaudi.Configuration import importOptions;\
+GaudiKernel.ProcessJobOptions.printing_level=999;\
+importOptions('../python/BrunelOnline.py');"
+	
+elif test "${exec_restart}" = "restart" || test "${GAUDITASK_OPTS}" = "-restart";
 then
 
     OBS=${ONLINEBRUNELSYSROOT};
-    CHK=${OBS}/cmt/BrunelOnline.${CMTCONFIG};
-    echo "[INFO] +++ Starting BRUNEL ${UTGID} with DNS:${DIM_DNS_NODE} Checkpoint:${CHK}"
+    export CHECKPOINT_FILE;
+    echo "[INFO] +++ Starting BRUNEL ${UTGID} with DNS:${DIM_DNS_NODE} Checkpoint:${CHECKPOINT_FILE}"
     unset LD_PRELOAD;
     unset LD_LIBRARY_PATH;
-    `which python` ${OBS}/python/BrunelOnlineRestart.py | exec -a ${UTGID} `which restore.exe` -p 1 -e -i ${CHK};
+    `which python` ${OBS}/python/BrunelOnlineRestart.py | exec -a ${UTGID} `which restore.exe` -p 3 -e -i ${CHECKPOINT_FILE};
 
 else
 
