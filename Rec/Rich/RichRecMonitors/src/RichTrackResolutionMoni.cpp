@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackResolutionMoni );
+DECLARE_ALGORITHM_FACTORY( TrackResolutionMoni )
 
 // Standard constructor, initializes variables
 TrackResolutionMoni::TrackResolutionMoni( const std::string& name,

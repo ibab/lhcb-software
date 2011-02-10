@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.17 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PhotonGeomMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonGeomMonitor )
 
 // Standard constructor, initializes variables
 PhotonGeomMonitor::PhotonGeomMonitor( const std::string& name,

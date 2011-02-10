@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichPhotonTrajectoryMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonTrajectoryMonitor.cpp,v 1.1 2008-11-26 13:42:38 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PhotonTrajectoryMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonTrajectoryMonitor )
 
 // Standard constructor, initializes variables
 PhotonTrajectoryMonitor::PhotonTrajectoryMonitor( const std::string& name,

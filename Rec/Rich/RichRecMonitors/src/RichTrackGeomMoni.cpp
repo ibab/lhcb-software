@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.22 2010-02-11 19:57:26 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -19,7 +17,7 @@ using namespace Rich::Rec::MC;
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY ( TrackGeomMoni );
+DECLARE_ALGORITHM_FACTORY ( TrackGeomMoni )
 
 // Standard constructor, initializes variables
 TrackGeomMoni::TrackGeomMoni( const std::string& name,

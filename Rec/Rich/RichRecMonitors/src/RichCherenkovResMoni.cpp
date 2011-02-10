@@ -21,7 +21,7 @@ using namespace Gaudi::Units;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CherenkovResMoni );
+DECLARE_ALGORITHM_FACTORY( CherenkovResMoni )
 
 // Standard constructor, initializes variables
 CherenkovResMoni::CherenkovResMoni( const std::string& name,
@@ -36,7 +36,7 @@ CherenkovResMoni::CherenkovResMoni( const std::string& name,
 }
 
 // Destructor
-CherenkovResMoni::~CherenkovResMoni() {};
+CherenkovResMoni::~CherenkovResMoni() {}
 
 //  Initialize
 StatusCode CherenkovResMoni::initialize()

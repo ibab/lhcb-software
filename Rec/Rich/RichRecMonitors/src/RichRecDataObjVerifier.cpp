@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
- *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.7 2010-02-11 19:57:26 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -22,7 +19,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
+DECLARE_ALGORITHM_FACTORY( DataObjVerifier )
 
 // Standard constructor, initializes variables
 DataObjVerifier::DataObjVerifier( const std::string& name,

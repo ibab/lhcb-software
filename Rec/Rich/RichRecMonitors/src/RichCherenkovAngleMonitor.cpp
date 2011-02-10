@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
- *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.20 2009/10/01 15:13:09 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor );
+DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor )
 
 // Standard constructor, initializes variables
 CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,

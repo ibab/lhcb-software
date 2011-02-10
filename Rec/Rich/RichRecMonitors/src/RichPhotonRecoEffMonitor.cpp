@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.14 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PhotonRecoEffMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonRecoEffMonitor )
 
 // Standard constructor, initializes variables
 PhotonRecoEffMonitor::PhotonRecoEffMonitor( const std::string& name,
@@ -39,7 +36,7 @@ PhotonRecoEffMonitor::PhotonRecoEffMonitor( const std::string& name,
 }
 
 // Destructor
-PhotonRecoEffMonitor::~PhotonRecoEffMonitor() {};
+PhotonRecoEffMonitor::~PhotonRecoEffMonitor() {}
 
 //  Initialize
 StatusCode PhotonRecoEffMonitor::initialize()

@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - fix various icc warnings
+
 ! 2011-02-02 - Chris Jones
  - Adapt to removal of depreciated RichRadIntersection typedef.
 

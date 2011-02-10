@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : RichGhostTrackMoni
  *
- *  $Id: RichGhostTrackMoni.cpp,v 1.5 2009-10-01 15:13:09 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -19,7 +17,7 @@ using namespace Rich::Rec::MC;
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GhostTrackMoni );
+DECLARE_ALGORITHM_FACTORY( GhostTrackMoni )
 
 // Standard constructor, initializes variables
 GhostTrackMoni::GhostTrackMoni( const std::string& name,

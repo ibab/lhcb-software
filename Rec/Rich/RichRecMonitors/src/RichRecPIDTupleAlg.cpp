@@ -12,8 +12,7 @@
 using namespace Rich::Rec::MC;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PIDTupleAlg );
-
+DECLARE_ALGORITHM_FACTORY( PIDTupleAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

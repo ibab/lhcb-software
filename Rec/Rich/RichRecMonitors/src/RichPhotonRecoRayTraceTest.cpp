@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.7 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
  */
@@ -21,7 +18,7 @@
 using namespace Rich::Rec::MC;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PhotonRecoRayTraceTest );
+DECLARE_ALGORITHM_FACTORY( PhotonRecoRayTraceTest )
 
 // Standard constructor, initializes variables
 PhotonRecoRayTraceTest::PhotonRecoRayTraceTest( const std::string& name,

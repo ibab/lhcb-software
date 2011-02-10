@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : TrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.8 2009-07-30 11:18:33 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -22,7 +20,7 @@ using namespace Rich::Rec;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackRayTraceTest );
+DECLARE_ALGORITHM_FACTORY( TrackRayTraceTest )
 
 // Standard constructor, initializes variables
 TrackRayTraceTest::TrackRayTraceTest( const std::string& name,
@@ -35,7 +33,7 @@ TrackRayTraceTest::TrackRayTraceTest( const std::string& name,
 }
 
 // Destructor
-TrackRayTraceTest::~TrackRayTraceTest() {};
+TrackRayTraceTest::~TrackRayTraceTest() {}
 
 //  Initialize
 StatusCode TrackRayTraceTest::initialize()

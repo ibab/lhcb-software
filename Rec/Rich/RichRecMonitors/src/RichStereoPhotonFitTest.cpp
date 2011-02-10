@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : StereoPhotonFitTest
  *
- *  $Id: RichStereoPhotonFitTest.cpp,v 1.5 2010-02-11 19:57:26 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -22,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( StereoPhotonFitTest );
+DECLARE_ALGORITHM_FACTORY( StereoPhotonFitTest )
 
 // Standard constructor, initializes variables
 StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,

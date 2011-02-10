@@ -22,7 +22,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor );
+DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor )
 
 // Standard constructor, initializes variables
 PixelPositionMonitor::PixelPositionMonitor( const std::string& name,

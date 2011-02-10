@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TimeMonitor );
+DECLARE_ALGORITHM_FACTORY( TimeMonitor )
 
 // Standard constructor, initializes variables
 TimeMonitor::TimeMonitor( const std::string& name,

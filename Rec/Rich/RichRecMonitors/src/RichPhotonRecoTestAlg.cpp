@@ -22,7 +22,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PhotonRecoTestAlg );
+DECLARE_ALGORITHM_FACTORY( PhotonRecoTestAlg )
 
 // Standard constructor, initializes variables
 PhotonRecoTestAlg::PhotonRecoTestAlg( const std::string& name,
