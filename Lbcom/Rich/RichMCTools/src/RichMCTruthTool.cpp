@@ -23,7 +23,7 @@
 //using namespace boost::lambda;
 using namespace Rich::MC;
 
-DECLARE_TOOL_FACTORY( MCTruthTool );
+DECLARE_TOOL_FACTORY( MCTruthTool )
 
 // Standard constructor
 MCTruthTool::MCTruthTool( const std::string& type,
@@ -34,10 +34,11 @@ MCTruthTool::MCTruthTool( const std::string& type,
     m_mcRichDigitSumsDone  ( false ),
     m_mcRichDigSumMapDone  ( false ),
     m_mcRichHitsDone       ( false ),
-    m_mcRichDigits         ( 0     ),
-    m_mcRichHits           ( 0     ),
-    m_mcTrackLinks         ( 0     ),
-    m_mcPhotonLinks        ( 0     )
+    m_mcRichDigits         ( NULL  ),
+    m_mcRichDigitSums      ( NULL  ),
+    m_mcRichHits           ( NULL  ),
+    m_mcTrackLinks         ( NULL  ),
+    m_mcPhotonLinks        ( NULL  )
 {
 
   // interface

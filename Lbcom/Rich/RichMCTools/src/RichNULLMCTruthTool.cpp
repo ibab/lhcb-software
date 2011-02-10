@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichNULLMCTruthTool
  *
- * CVS Log :-
- * $Id: RichNULLMCTruthTool.cpp,v 1.1 2009-07-23 16:11:59 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -24,7 +21,7 @@
 // namespace
 using namespace Rich::MC;
 
-DECLARE_TOOL_FACTORY( NULLMCTruthTool );
+DECLARE_TOOL_FACTORY( NULLMCTruthTool )
 
 // Standard constructor
 NULLMCTruthTool::NULLMCTruthTool( const std::string& type,

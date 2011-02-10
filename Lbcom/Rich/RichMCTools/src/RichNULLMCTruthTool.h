@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::MC::NULLMCTruthTool
  *
- *  CVS Log :-
- *  $Id: RichNULLMCTruthTool.h,v 1.1 2009-07-23 16:12:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

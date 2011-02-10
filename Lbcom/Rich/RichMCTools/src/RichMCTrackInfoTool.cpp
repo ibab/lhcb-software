@@ -17,7 +17,7 @@
 // namespace
 using namespace Rich::MC;
 
-DECLARE_TOOL_FACTORY( MCTrackInfoTool );
+DECLARE_TOOL_FACTORY( MCTrackInfoTool )
 
 // Standard constructor
 MCTrackInfoTool::MCTrackInfoTool( const std::string& type,
