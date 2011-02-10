@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 Marc Grabalosa
+  - Add options for Moriond
+
 ! 2011-02-03 Marc Grabalosa
   - Remove unuseful and old Trackmatching
   · Raise to v12r4
