@@ -17,16 +17,16 @@ using namespace Rich::Rec::ENNRingFinder;
 
 // Declaration of the Algorithm Factories
 DECLARE_ALGORITHM_FACTORY( Rich1AerogelTopPanel    )
-DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel )
-DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        )
-DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     )
-DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       )
-DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      )
+  DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel )
+  DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        )
+  DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     )
+  DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       )
+  DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-template < class FINDER >
+  template < class FINDER >
 AlgBase<FINDER>::AlgBase( const std::string& name,
                           ISvcLocator* pSvcLocator,
                           const Rich::DetectorType rich,
@@ -58,12 +58,12 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
   }
   else if ( Rich::Rich1Gas == rad )
   {
-    //m_scaleFactor      = 0.047/64.0; 
-    m_scaleFactor      = 0.052/75.0; 
+    //m_scaleFactor      = 0.047/64.0;
+    m_scaleFactor      = 0.052/75.0;
     m_minAssProb       = 0.05;
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
-    m_maxPixelSep      = 150; 
+    m_maxPixelSep      = 150;
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 40.0;
@@ -78,7 +78,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minAssProb       = 0.05;
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
-    m_maxPixelSep      = 150; 
+    m_maxPixelSep      = 150;
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 5;
     m_minRingRadius    = 200.0;
@@ -124,8 +124,8 @@ StatusCode AlgBase<FINDER>::initialize()
 
   // Each instance of this algorithm has its own finder. Must delete when finished
   typename FINDER::Config config ( m_hitSigma,
-                                   m_minHitsPerRing, 
-                                   m_minRingRadius, 
+                                   m_minHitsPerRing,
+                                   m_minRingRadius,
                                    m_maxRingRadius,
                                    m_rejectionFactor,
                                    msgLevel(MSG::VERBOSE) );
@@ -311,7 +311,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Saved " << rings->size() - nRingsBefore 
+    debug() << " -> Saved " << rings->size() - nRingsBefore
             << " rings at " << m_ringLocation << endmsg;
   }
 
@@ -330,13 +330,19 @@ void AlgBase<FINDER>::addRingToPixels( LHCb::RichRecRing * ring ) const
         iP != ring->richRecPixels().end(); ++iP )
   {
     LHCb::RichRecPixel * pix = (*iP).pixel();
-    const double prob        = (*iP).associationProb();
-    LHCb::RichRecPixel::RingsOnPixel* rings
-      = const_cast<LHCb::RichRecPixel::RingsOnPixel*>(&pix->richRecRings());
-    if ( rings )
+    if ( pix )
     {
-      if ( pix ) { rings->push_back( LHCb::RichRecRingOnPixel(ring,prob) ); }
-      else       { Exception( "Null pixel pointer in RichRecRing" ); }
+      LHCb::RichRecPixel::RingsOnPixel* rings
+        = const_cast<LHCb::RichRecPixel::RingsOnPixel*>(&(pix->richRecRings()));
+      if ( rings )
+      {
+        const double prob = (*iP).associationProb();
+        rings->push_back( LHCb::RichRecRingOnPixel(ring,prob) );
+      }
+    }
+    else
+    {
+      Exception( "Null pixel pointer in RichRecRing" ); 
     }
   }
 }
@@ -348,9 +354,9 @@ bool AlgBase<FINDER>::addDataPoints( ) const
 
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
-  
+
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << range.size() << " hits for " << rich() 
+    debug() << "Found " << range.size() << " hits for " << rich()
             << " " << Rich::text(rich(),panel()) << endmsg;
 
   if ( range.size() < 3 )
@@ -407,7 +413,7 @@ bool AlgBase<FINDER>::addDataPoints( ) const
 }
 
 template < class FINDER >
-void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring, 
+void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
                                        const unsigned int nPoints ) const
 {
   if ( nPoints>0 )
