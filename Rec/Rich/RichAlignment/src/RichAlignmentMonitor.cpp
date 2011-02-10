@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( AlignmentMonitor );
+DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -53,7 +53,7 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-AlignmentMonitor::~AlignmentMonitor() {};
+AlignmentMonitor::~AlignmentMonitor() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -467,7 +467,7 @@ StatusCode AlignmentMonitor::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

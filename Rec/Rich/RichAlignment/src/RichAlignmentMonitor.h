@@ -58,7 +58,7 @@ namespace Rich
        *  @date   2004-02-19
        */
 
-      class AlignmentMonitor : public RichRecTupleAlgBase
+      class AlignmentMonitor : public TupleAlgBase
       {
 
       public:
@@ -83,9 +83,7 @@ namespace Rich
         */
         int makePlotForHPD ( LHCb::RichSmartID smartID ) const;
 
-
       private: // data
-
 
         int m_radTemp;    ///< which rich detector to monitor
         Rich::RadiatorType m_radiator;
@@ -132,6 +130,7 @@ namespace Rich
         std::vector<AIDA::IHistogram2D*> m_sideHistos;
         std::vector<AIDA::IHistogram2D*> m_quarterHistos;
         std::vector<AIDA::IHistogram2D*> m_sideIsolatedHistos;
+
       };
 
     }

@@ -43,7 +43,7 @@ namespace Rich
 {
   namespace Rec
   {
-    class EventSelection : public RichRecTupleAlgBase
+    class EventSelection : public TupleAlgBase
     {
 
     public:

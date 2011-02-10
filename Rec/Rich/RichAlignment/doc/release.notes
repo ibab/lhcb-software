@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Fix various icc warnings
+
 ! 2011-02-08 - Chris Jones
  - Fix various coverity warnings
 

@@ -12,7 +12,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( EventSelection );
+DECLARE_ALGORITHM_FACTORY( EventSelection )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -60,7 +60,7 @@ EventSelection::~EventSelection() {}
 StatusCode EventSelection::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecTupleAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   acquireTool( "RichCherenkovAngle",   m_ckAngle  );
@@ -389,7 +389,7 @@ StatusCode EventSelection::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -400,5 +400,5 @@ StatusCode EventSelection::finalize()
   //============================================================================
   //============================================================================
   // Execute base class method
-  return RichRecTupleAlgBase::finalize();
+  return Rich::Rec::TupleAlgBase::finalize();
 }
