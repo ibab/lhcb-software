@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v7r4 2011-02-10 ===================
+! 2011-02-10 - Gerhard Raven
+ - change paramfile specification in topo. Requires BBDecTreeTool v1r0p1 or later
+
 ! 2011-02-10 - Jibo He for David Ward
  - Hlt2InclusiveDiElectronLines & Hlt2InclusiveElectronLines
    + Added 4 lines for electroweak physics, with special PID cut

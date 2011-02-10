@@ -132,8 +132,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
-        file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
-              % (n,props['BDT_%dBODY_PARAMS'%n])
+        file='Hlt2Topo%dBody_BDTParams_%s.txt' % (n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',NBody=n,
                        Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file)
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
@@ -148,8 +147,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
-        file='$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' \
-              % (n,props['BDT_%dBODY_PARAMS'%n])
+        file='Hlt2Topo%dBody_BDTParams_%s.txt' % (n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',NBody=n,
                        Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file)
         cuts = "INTREE(HASPROTO & HASMUON & ISMUON) & FILTER('BBDecTreeTool/TrgBBDT') "
