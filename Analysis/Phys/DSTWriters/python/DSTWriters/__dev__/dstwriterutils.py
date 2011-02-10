@@ -71,7 +71,7 @@ class ConfigurableList(object) :
     Return a list of plain configurables from a SelectionSequence style object.
     Intended to deal with difference in interfaces of SelectionSequence, StrippingStream, etc.
     '''
-    _algos = { 'DEFAULT' :lambda x : x.__getattribute__('algos'),
+    _algos = { 'DEFAULT' :lambda x : x.algorithms(),
                'StrippingStream' : lambda x : x.filterMembers(),
                'StrippingLine' : lambda x : x.filterMembers(),
                'StrippingConf' : lambda x : x.filterMembers()

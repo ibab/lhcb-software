@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Juan Palacios
+ - SelectionSequence.algos -> SelectionSequence.algorithms()
+ - Increase to v2r0.
+ - NEEDS Phys/SelPy v3r2 OR HIGHER!!!!!!
+
 ! 2011-01-28 - Juan Palacios
  - Add code to copy LHCb::RecSummary objects with CopyRecSummary algorithm.
  - Increase to v1r16.
