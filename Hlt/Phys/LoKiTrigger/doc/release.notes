@@ -5,6 +5,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-10 - Roel Aaij
+ - Fixed the UpgradeTool to correctly flag seeds and look for already upgraded 
+   candidates in accordance with the current "model", where the Candidates are
+   unique per line.
+   Please note that the logic for MultiTracks has not been checked and as a 
+   safeguard, calls will always return FAILURE.
+
 ! 2011-02-08 - Roel Aaij
  - Identified and fixed a flaw in the logic of the use of IsAncestor. Fixed
    for single track, needs to be checked for multitracks.
