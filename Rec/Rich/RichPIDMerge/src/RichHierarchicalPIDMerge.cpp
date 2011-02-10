@@ -19,7 +19,7 @@
 using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HierarchicalPIDMerge );
+DECLARE_ALGORITHM_FACTORY( HierarchicalPIDMerge )
 
 // Standard constructor, initializes variables
 HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
@@ -85,7 +85,7 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   // PID version
-  newPIDs->setVersion(m_PIDversion);
+  newPIDs->setVersion( (unsigned char)m_PIDversion );
 
   // Locate the processing status object  
   LHCb::ProcStatus * procStat = ( m_fillProcStat ? 

@@ -3,7 +3,10 @@
 ! Responsible : Chris Jones
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
- 
+
+! 2011-02-10 - Chris Jones
+ - Fix various icc warnings 
+
 !======================= RichPIDMerge v2r9p1 2010-07-20 ========================
 ! 2010-06-24 - Chris Jones
  - Minor fixes to comments
