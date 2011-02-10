@@ -4,9 +4,6 @@
  *
  *  Implementation file for ENN ring finder
  *
- *  CVS Log :-
- *  $Id: ENNRingFinder.cpp,v 1.11 2009-06-19 22:12:53 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
  */
@@ -258,14 +255,14 @@ void Finder::FindRings()
   typedef Ring::Vector::iterator iR;
 
   for ( iH ih = Hits.begin(); ih != Hits.end(); ++ih ) ih->busy = 0;
-  for ( iR i  = Rings.begin(); i != Rings.end(); ++i )
+  for ( iR ii  = Rings.begin(); ii != Rings.end(); ++ii )
   {
-    i->skip = i->on = false;
-    i->NOwn = i->NHits;
-    if ( ( i->NHits < config().minRingHits() ) ||
-         ( i->NHits <= 6 && i->chi2 > 0.3 ) )
+    ii->skip = ii->on = false;
+    ii->NOwn = ii->NHits;
+    if ( ( ii->NHits < config().minRingHits() ) ||
+         ( ii->NHits <= 6 && ii->chi2 > 0.3 ) )
     {
-      i->skip = true;
+      ii->skip = true;
     }
   }
 
@@ -275,40 +272,40 @@ void Finder::FindRings()
     iR best = Rings.end();
     int bestOwn     = 0;
     double bestChi2 = 1.E20;
-    for ( iR i = Rings.begin(); i != Rings.end(); ++i )
+    for ( iR ii = Rings.begin(); ii != Rings.end(); ++ii )
     {
-      if ( i->skip ) continue;
-      if ( ( i->NOwn < config().minRingHits() ) ||
-           ( i->NHits < 10 && i->NOwn < i->NHits ) )
+      if ( ii->skip ) continue;
+      if ( ( ii->NOwn < config().minRingHits() ) ||
+           ( ii->NHits < 10 && ii->NOwn < ii->NHits ) )
       {
-        i->skip = true;
+        ii->skip = true;
         continue;
       }
-      if ( ( (double)i->NOwn > factor_upper*bestOwn ) ||
-           ( (double)i->NOwn >= factor_lower*bestOwn && i->chi2 < bestChi2 ) )
+      if ( ( (double)ii->NOwn >  factor_upper*bestOwn ) ||
+           ( (double)ii->NOwn >= factor_lower*bestOwn && ii->chi2 < bestChi2 ) )
       {
-        bestOwn  = i->NOwn;
-        bestChi2 = i->chi2;
-        best     = i;
+        bestOwn  = ii->NOwn;
+        bestChi2 = ii->chi2;
+        best     = ii;
       }
     }
     if ( best == Rings.end() ) break;
     best->skip = true;
     best->on   = true;
-    for ( iP i = best->Hits.begin(); i != best->Hits.end(); ++i )
+    for ( iP ii = best->Hits.begin(); ii != best->Hits.end(); ++ii )
     {
-      (*i)->busy = 1;
+      (*ii)->busy = 1;
     }
-    for ( iR i = Rings.begin(); i != Rings.end(); ++i )
+    for ( iR ii = Rings.begin(); ii != Rings.end(); ++ii )
     {
-      if ( i->skip ) continue;
-      const double dist = i->r+best->r+2*config().hitSigma();
-      if ( std::fabs(i->x-best->x) > dist ||
-           std::fabs(i->y-best->y) > dist ) continue;
-      i->NOwn = 0;
-      for ( iP j = i->Hits.begin(); j != i->Hits.end(); ++j )
+      if ( ii->skip ) continue;
+      const double dist = ii->r+best->r+2*config().hitSigma();
+      if ( std::fabs( ii->x - best->x ) > dist ||
+           std::fabs( ii->y - best->y ) > dist ) continue;
+      ii->NOwn = 0;
+      for ( iP jj = ii->Hits.begin(); jj != ii->Hits.end(); ++jj )
       {
-        if ( 0 == (*j)->busy ) ++(i->NOwn);
+        if ( 0 == (*jj)->busy ) ++(ii->NOwn);
       }
     }
   }

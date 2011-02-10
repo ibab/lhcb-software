@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm : RichENNRingFinderAlg
  *
- *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.13 2009-06-19 22:12:53 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
  */
@@ -19,12 +16,12 @@
 using namespace Rich::Rec::ENNRingFinder;
 
 // Declaration of the Algorithm Factories
-DECLARE_ALGORITHM_FACTORY( Rich1AerogelTopPanel    );
-DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel );
-DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        );
-DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     );
-DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       );
-DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      );
+DECLARE_ALGORITHM_FACTORY( Rich1AerogelTopPanel    )
+DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel )
+DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        )
+DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     )
+DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       )
+DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      )
 
 //=============================================================================
 // Standard constructor, initializes variables

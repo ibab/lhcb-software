@@ -4,9 +4,6 @@
  *
  *  Header file for ENN Ring finder algorithms
  *
- *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.9 2009-06-27 09:12:02 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
  */

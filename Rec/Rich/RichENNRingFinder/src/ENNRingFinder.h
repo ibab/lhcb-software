@@ -4,9 +4,6 @@
  *
  *  Header file for ENN ring finder
  *
- *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.14 2009-06-19 22:12:53 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
  */
@@ -51,7 +48,7 @@ namespace Rich
           typedef std::vector<Hit*> PtnVector;
         public:
           /// Constructor
-          Hit( const unsigned int _key  = -1,
+          Hit( const int _key  = -1,
                const double _x = 0,
                const double _y = 0 )
             : x(_x), y(_y), busy(0),
@@ -87,7 +84,7 @@ namespace Rich
           double S0, S1, S2, S3, S4; // coefficients for calculation of E
           double C, Cx, Cy;          // coefficients for the parameter space
           bool on_ring;           ///< is the hit close to the current ring
-          unsigned int key;       ///< hit key
+          int key;                ///< hit key
           unsigned int nAssRings; ///< Number of rings associated with
         };
 

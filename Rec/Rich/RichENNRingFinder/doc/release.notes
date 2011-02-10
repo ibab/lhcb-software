@@ -4,6 +4,9 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Fix various icc warnings
+
 !=================== Rich/RichENNRingFinder v1r2 2010-03-18 ====================
 ! 2010-03-05 - Chris Jones
  - Various changes to the python Configurables to support the configuration of
