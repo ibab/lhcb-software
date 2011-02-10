@@ -103,7 +103,7 @@
                 name  = "traversedRadiator"
                 const = "TRUE" 
                 type  = "bool"
-                desc  = "Boolean method to check if the given radiator was used to create this PID result (i.e. if the associated track was found to traverse the radiator in amanner that would have produced detectable Cherenkov photons">
+                desc  = "Boolean method to check if the given radiator was used to create this PID result (i.e. if the associated track was found to traverse the radiator in a manner that would have produced detectable Cherenkov photons">
                 <arg const="TRUE" inout="BYVALUE" name="radiator" type="Rich::RadiatorType"/>
         </method>
 
@@ -133,7 +133,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="lastPart" type="Rich::ParticleIDType"/>
                 <code>
                    const float dLL = m_particleLLValues[lastPart]-m_particleLLValues[firstPart]; 
-                   return static_cast&lt;float&gt;( sqrt( fabs(2.0*dLL) ) * (dLL&gt;0 ? 1 : -1 ) );
+                   return (float) ( std::sqrt( fabs(2.0*dLL) ) * (dLL&gt;0 ? 1.0 : -1.0 ) );
                 </code>
         </method>
 

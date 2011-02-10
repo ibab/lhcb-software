@@ -5,6 +5,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Change cast method in RichPID.h to avoid icc warning
+
 ! 2011-02-08 - Chris Jones
  - Fix coverity warning in RichPID.cpp
 
