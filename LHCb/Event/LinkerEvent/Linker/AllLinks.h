@@ -2,6 +2,9 @@
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
+// STL
+#include <sstream>
+
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
@@ -42,18 +45,16 @@ public:
       //== Check proper template, only if specified. 
       if ( links->sourceClassID() != SOURCE::classID() &&
            CLID_ContainedObject   != SOURCE::classID()  ) {
-        char message[200];
-        sprintf( message, " : Template classID is %4d expected %4d", SOURCE::classID(), links->sourceClassID());
-        std::string added( message );
-        throw GaudiException( "Incompatible SOURCE type for location " + containerName + added,
-                              "LinkedTo", StatusCode::FAILURE);
+        std::ostringstream message;
+        message << "Incompatible SOURCE type for location " << containerName
+                << " : Template classID is " << SOURCE::classID() << " expected " << links->sourceClassID();
+        throw GaudiException( message.str(), "AllLinks", StatusCode::FAILURE );
       }
       if ( links->targetClassID() != TARGET::classID() ) {
-        char message[200];
-        sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->targetClassID());
-        std::string added( message );
-        throw GaudiException( "Incompatible TARGET type for location " + containerName + added,
-                              "LinkedTo", StatusCode::FAILURE);
+        std::ostringstream message;
+        message << "Incompatible TARGET type for location " << containerName
+                << " : Template classID is " << TARGET::classID() << " expected " << links->targetClassID();
+        throw GaudiException( message.str(), "AllLinks", StatusCode::FAILURE );
       }
     }
     m_links = links;

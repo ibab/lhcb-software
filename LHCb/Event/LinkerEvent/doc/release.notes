@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-10 - Chris Jones
- - Fix a warning with the icc compiler in LinkedTo.h - Replace use of sprintf
-   with an std::ostringstream object.
+ - Fix a warning with the icc compiler - Replace use of sprintf with an 
+   std::ostringstream object.
 
 !======================= LinkerEvent v3r6 2009-01-08 =========================
 ! 2008-12-04 - Olivier Callot
@@ -21,8 +21,8 @@
 ! 2008-03-14 - Olivier Callot
  - Fixed in LinkedFrom the test to not test the classID if the first template 
    argument is 'ContainedObject' 
- - New LinkedFromKey class to access LinkedFrom with only two templates, the TARGET
-   and the KEY type, the SOURCE being defaulted to ContainedObject
+ - New LinkedFromKey class to access LinkedFrom with only two templates,  
+   the TARGET and the KEY type, the SOURCE being defaulted to ContainedObject
 
 ! 2008-03-13 - Olivier Callot
  - New header file 'LocalLinkerTool' that is like a LinkerTool, but doesn't store

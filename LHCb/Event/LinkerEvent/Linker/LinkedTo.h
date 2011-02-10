@@ -66,7 +66,7 @@ public:
     m_curReference.setWeight( 0. );
   }; 
             
-  virtual ~LinkedTo( ) {}; ///< Destructor
+  virtual ~LinkedTo( ) {} ///< Destructor
   
   bool notFound() const { return (0 == m_links); }
 
