@@ -17,7 +17,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PixelQC );
+DECLARE_ALGORITHM_FACTORY( PixelQC )
 
 // Standard constructor, initializes variables
 PixelQC::PixelQC( const std::string& name,

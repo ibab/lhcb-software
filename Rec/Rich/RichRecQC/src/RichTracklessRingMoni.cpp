@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.9 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -20,7 +18,7 @@ using namespace Rich::Rec::MC;
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TracklessRingMoni );
+DECLARE_ALGORITHM_FACTORY( TracklessRingMoni )
 
 // Standard constructor, initializes variables
 TracklessRingMoni::TracklessRingMoni( const std::string& name,

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryCKResMoni
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryCKResMoni.cpp,v 1.3 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( SummaryCKResMoni );
+DECLARE_ALGORITHM_FACTORY( SummaryCKResMoni )
 
 // Standard constructor, initializes variables
 SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
@@ -90,7 +87,7 @@ StatusCode SummaryCKResMoni::execute()
     if ( mcTrackOK )
     {
       // True particle type
-      const Rich::ParticleIDType mcType = richRecMCTool()->mcParticleType( (*iTrack)->track() );
+      mcType = richRecMCTool()->mcParticleType( (*iTrack)->track() );
       if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
     }

@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PIDQC );
+DECLARE_ALGORITHM_FACTORY( PIDQC )
 
 // Standard constructor, initializes variables
 PIDQC::PIDQC( const std::string& name,
@@ -319,7 +319,7 @@ StatusCode PIDQC::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //  Finalize
 StatusCode PIDQC::finalize()
@@ -476,10 +476,11 @@ StatusCode PIDQC::finalize()
 
       for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
       {
-        const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
-        const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
+        const double effR = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0]   : 100.0 );
+        const double errR = ( m_nTracks[0]>0 ? std::sqrt(effR*(100.-effR)/m_nTracks[0]) : 100.0 );
         info() << "             |  -> With "
-               << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endmsg;
+               << (*iR).first.radiators() 
+               << boost::format( "   : %6.2f +-%6.2f" ) % effR % errR << endmsg;
       }
 
       info() << "-------------+-------------------------------------------------+------------"

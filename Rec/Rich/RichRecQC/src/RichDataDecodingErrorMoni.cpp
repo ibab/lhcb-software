@@ -17,7 +17,7 @@ using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni );
+DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni )
 
 // Standard constructor, initializes variables
 DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,

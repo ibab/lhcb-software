@@ -20,7 +20,7 @@
 using namespace Rich::DAQ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DataDBCheck );
+DECLARE_ALGORITHM_FACTORY( DataDBCheck )
 
 //=============================================================================
 // Standard constructor, initializes variables

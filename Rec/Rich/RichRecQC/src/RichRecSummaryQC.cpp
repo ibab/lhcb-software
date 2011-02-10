@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.8 2009-07-30 11:02:36 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( SummaryQC );
+DECLARE_ALGORITHM_FACTORY( SummaryQC )
 
 // Standard constructor, initializes variables
 SummaryQC::SummaryQC( const std::string& name,
@@ -45,7 +42,7 @@ SummaryQC::SummaryQC( const std::string& name,
 }
 
 // Destructor
-SummaryQC::~SummaryQC() {};
+SummaryQC::~SummaryQC() {}
 
 // Initialisation
 StatusCode SummaryQC::initialize()

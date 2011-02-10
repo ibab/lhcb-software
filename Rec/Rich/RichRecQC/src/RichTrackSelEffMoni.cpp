@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackSelEff );
+DECLARE_ALGORITHM_FACTORY( TrackSelEff )
 
 // Standard constructor, initializes variables
 TrackSelEff::TrackSelEff( const std::string& name,

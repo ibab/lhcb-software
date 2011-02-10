@@ -20,7 +20,7 @@
 using namespace Rich::DAQ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RawDataSize );
+DECLARE_ALGORITHM_FACTORY( RawDataSize )
 
 //=============================================================================
 // Standard constructor, initializes variables

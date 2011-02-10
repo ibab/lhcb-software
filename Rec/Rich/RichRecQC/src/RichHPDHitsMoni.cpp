@@ -23,7 +23,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( HPDHitsMoni );
+DECLARE_ALGORITHM_FACTORY( HPDHitsMoni )
 
 // Standard constructor, initializes variables
 HPDHitsMoni::HPDHitsMoni( const std::string& name,

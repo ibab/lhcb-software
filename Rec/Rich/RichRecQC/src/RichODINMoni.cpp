@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::DAQ::ODINMoni
  *
- *  $Id: RichODINMoni.cpp,v 1.12 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -19,7 +17,7 @@ using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( ODINMoni );
+DECLARE_ALGORITHM_FACTORY( ODINMoni )
 
 // Standard constructor, initializes variables
 ODINMoni::ODINMoni( const std::string& name,

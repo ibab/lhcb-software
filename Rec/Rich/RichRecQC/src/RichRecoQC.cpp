@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RecoQC );
+DECLARE_ALGORITHM_FACTORY( RecoQC )
 
 // Standard constructor, initializes variables
 RecoQC::RecoQC( const std::string& name,

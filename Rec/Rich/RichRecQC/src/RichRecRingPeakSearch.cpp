@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::RingPeakSearch
  *
- *  CVS Log :-
- *  $Id: RichRecRingPeakSearch.cpp,v 1.2 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */

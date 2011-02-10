@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::PixelClusterMoni
  *
- *  $Id: RichPixelClusterMoni.cpp,v 1.4 2010-02-11 20:01:30 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
  */
@@ -19,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PixelClusterMoni );
+DECLARE_ALGORITHM_FACTORY( PixelClusterMoni )
 
 // Standard constructor, initializes variables
 PixelClusterMoni::PixelClusterMoni( const std::string& name,
