@@ -4,6 +4,8 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Muons v1r1 2011-02-10 ==================
+
 ! 2011-02-09 - Roel Aaij
  - Changed IsMuonTool from ITrackSelector to ITracksFromTrack
 
