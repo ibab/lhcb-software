@@ -8,7 +8,6 @@
 #include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/RichHistoAlgBase.h"
-//#include "RichRecBase/RichRecHistoAlgBase.h"
 #include "Event/ODIN.h"
 
 namespace Rich
@@ -43,8 +42,8 @@ namespace Rich
 
     protected:
 
-        /// Pre-Book all (non-MC) histograms
-        virtual StatusCode prebookHistograms();
+      /// Pre-Book all (non-MC) histograms
+      virtual StatusCode prebookHistograms();
 
     private:
 
@@ -57,23 +56,23 @@ namespace Rich
                       const unsigned int HPDRow, unsigned int ionfeedbackCut,
                       const LHCb::RichSmartID::Vector  &smartIDHits );
       void ExecuteQuickHitmap(const Rich::DetectorType RichNum, const LHCb::RichSmartID::Vector &smartIDHits);
-      
+
       unsigned int m_ionFeedbackCutLHCB;      // Minimum cluster-size to be defined as IFB (LHCb/PHYSICS mode)
       unsigned int m_ionFeedbackCutALICE; // Minimum cluster-size to be defined as IFB (ALICE mode)
       unsigned int m_MonitorRate;       // Defines how often events are monitored (every Xth events)
       unsigned long m_interval;          // Defines event sizes for hitmaps and IFB calculations
-      unsigned long m_nEvts;               // Total number of events 
+      unsigned long m_nEvts;               // Total number of events
       unsigned long m_nMonitoredEvents;    // Monitored number of events
-      unsigned int dataset;                // Index of dataset 
+      unsigned int dataset;                // Index of dataset
       unsigned long r1clustersThisEvent;    // Number of non-zero RICH1 clusters in event
       unsigned long r2clustersThisEvent;    // Number of non-zero RICH2 clusters in event
       unsigned int minX, maxX, minY, maxY, binsX, binsY;   // Hitmap limits
-      
+
       std::map< int, std::string> hidtostring;   // Maps cluster-size histogram title against histogram ID
-    
-      bool m_wantIFB;           // To execute clustering. 
-      bool m_wantHitmaps;       // To execute plotting of "All-cluster" hitmap and "IFB-cluster" hitmap. CPU-time consuming. 
-      bool m_wantQuickHitmap;   // To execute quick plotting of hitmap. If "true" sets m_wantIFB to "false". 
+
+      bool m_wantIFB;           // To execute clustering.
+      bool m_wantHitmaps;       // To execute plotting of "All-cluster" hitmap and "IFB-cluster" hitmap. CPU-time consuming.
+      bool m_wantQuickHitmap;   // To execute quick plotting of hitmap. If "true" sets m_wantIFB to "false".
       bool m_isdark;   // To execute dark count algorithms i.e. suppress corner pixels; check trigger/calibation type
     };
   }
