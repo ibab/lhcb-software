@@ -5,6 +5,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v9r1  2011-02-10 ===================
 ! 2011-02-10 - Roel Aaij
  - Moved VeloCandidates from HltReco to Hlt1Streamers and changed it into 
    a function that provides a cloned set of candidate tracks as input.
