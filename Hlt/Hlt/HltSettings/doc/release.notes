@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Jibo He
+ - Electrons_draft2011 created, with David's electrons inclued
+  * Requires Hlt2Lines 117406. 
+ - Electrons_Physics_draft2011, a copy of Physics_draft2011, 
+   including lines in Electrons_draft2011, for test purpose 
+
 ! 2011-02-09 - Alex Shires
  - Muons_draft2011 updated with latest cuts and line name changes
 
