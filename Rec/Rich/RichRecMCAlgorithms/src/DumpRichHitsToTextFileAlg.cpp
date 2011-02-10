@@ -3,9 +3,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
- *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.5 2009-07-30 11:15:15 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
  */
@@ -22,7 +19,7 @@
 using namespace Rich::Rec::MC;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DumpRichHitsToTextFileAlg );
+DECLARE_ALGORITHM_FACTORY( DumpRichHitsToTextFileAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

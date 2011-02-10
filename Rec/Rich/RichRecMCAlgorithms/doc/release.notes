@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - fix various icc warnings
+
 ! 2011-02-07 - Chris Jones
  - Adapt to removal of depreciated typedefs
 

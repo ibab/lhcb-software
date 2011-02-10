@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : AddMissingMCRichTracksAlg
  *
- *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.5 2009-07-30 11:15:15 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( AddMissingMCRichTracksAlg );
+DECLARE_ALGORITHM_FACTORY( AddMissingMCRichTracksAlg )
 
 // Standard constructor, initializes variables
 AddMissingMCRichTracksAlg::AddMissingMCRichTracksAlg( const std::string& name,
