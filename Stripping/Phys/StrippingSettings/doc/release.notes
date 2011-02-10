@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-10 - Juan Palacios
+ - Add developent dicitonaries for StrippingNeuroBayes, StrippingB2hhLTUnbiased, B2XGamma.
+ - Add verbose more to Utils.dbaseFromModule.
+ - Add development database.
+
 ! 2011-02-09 - Juan Palacios
  - Add dbase/stripping11, dbase/stripping12
   . Databases for stripping11, stripping12 configuration dictionaries.

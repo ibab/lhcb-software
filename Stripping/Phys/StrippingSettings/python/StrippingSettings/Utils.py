@@ -48,17 +48,24 @@ def registerNewLineBuilderConfiguration(stripping, lineBuilderName, config) :
         db.close()
         raise KeyError(lineBuilderName+' is already in '+ dbase(stripping) )
     
-def dbaseFromModule(stripping, confModule) :
+def dbaseFromModule(stripping, confModule, verbose = False) :
     """
     Create a database with all the dictionaries in a given module.
     Writes file to $PWD/<stripping>.tmp
     """
-    db = shelve.open( stripping.lower()+'.tmp',  'n')
+    dbName = stripping.lower()+'.tmp'
+    db = shelve.open( dbName,  'n')
 
+    if verbose :
+        print 'Creating database for module', confModule
+        
     goodNames = filter(lambda x : x[0]!='_',
                        confModule.__dict__.keys())
 
+    if verbose :
+        print 'Storing', goodNames, 'in database',  dbName
     for k in goodNames :
+        if verbose : print 'Store', k
         db[k]=confModule.__dict__[k]
 
     db.close()
