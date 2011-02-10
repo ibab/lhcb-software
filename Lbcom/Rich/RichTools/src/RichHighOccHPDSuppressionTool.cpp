@@ -17,7 +17,7 @@
 // RICH DAQ
 using namespace Rich::DAQ;
 
-DECLARE_TOOL_FACTORY( HighOccHPDSuppressionTool );
+DECLARE_TOOL_FACTORY( HighOccHPDSuppressionTool )
 
 // Standard constructor
 HighOccHPDSuppressionTool::

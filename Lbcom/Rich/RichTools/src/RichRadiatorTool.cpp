@@ -22,7 +22,7 @@
 
 //-----------------------------------------------------------------------------
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

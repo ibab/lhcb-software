@@ -14,7 +14,7 @@
 // local
 #include "RichMirrorSegFinder.h"
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, MirrorSegFinder );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, MirrorSegFinder )
 
 //=============================================================================
 // Standard constructor, initializes variables

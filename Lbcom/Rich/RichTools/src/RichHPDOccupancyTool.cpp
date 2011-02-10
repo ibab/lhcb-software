@@ -17,7 +17,7 @@
 // RICH DAQ
 using namespace Rich;
 
-DECLARE_TOOL_FACTORY( HPDOccupancyTool );
+DECLARE_TOOL_FACTORY( HPDOccupancyTool )
 
 // Standard constructor
 HPDOccupancyTool::HPDOccupancyTool( const std::string& type,
@@ -318,10 +318,9 @@ void HPDOccupancyTool::createHPDBackXML() const
     // Create condition string
     if ( d.fillCount() > m_minFills )
     {
-      const std::string entry =
-        boost::lexical_cast<std::string>( (int)(*iS).first ) + "/" +
-        boost::lexical_cast<std::string>( occ );
-      entries[(*iS).first.rich()].push_back( entry );
+      std::ostringstream entry;
+      entry << (*iS).first.key() << "/" << occ;
+      entries[(*iS).first.rich()].push_back( entry.str() );
     }
   }
 

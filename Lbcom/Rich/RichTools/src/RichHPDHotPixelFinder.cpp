@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::HPDHotPixelFinder
  *
- * CVS Log :-
- * $Id: RichHPDHotPixelFinder.cpp,v 1.5 2010-02-12 16:49:56 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
  */
@@ -20,7 +17,7 @@
 // RICH DAQ
 using namespace Rich;
 
-DECLARE_TOOL_FACTORY( HPDHotPixelFinder );
+DECLARE_TOOL_FACTORY( HPDHotPixelFinder )
 
 // Standard constructor
 HPDHotPixelFinder::HPDHotPixelFinder( const std::string& type,

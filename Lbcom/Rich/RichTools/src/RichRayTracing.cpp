@@ -14,7 +14,7 @@
 #include "RichRayTracing.h"
 
 /// Factory stuff
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RayTracing );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RayTracing )
 
 namespace
 {

@@ -22,7 +22,7 @@
 
 //-----------------------------------------------------------------------------
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ParticleProperties );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ParticleProperties )
 
 // Standard constructor
 Rich::ParticleProperties::ParticleProperties ( const std::string& type,

@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichHPDPixelClusteringTool
  *
- * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
  */
@@ -20,7 +17,7 @@
 // RICH DAQ
 using namespace Rich::DAQ;
 
-DECLARE_TOOL_FACTORY( HPDPixelClusteringTool );
+DECLARE_TOOL_FACTORY( HPDPixelClusteringTool )
 
 // Standard constructor
 HPDPixelClusteringTool::

@@ -1,4 +1,14 @@
-// $Id: RichRandomPixelBackgroundTool.h,v 1.1 2008-10-15 12:30:33 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRandomPixelBackgroundTool.h
+ *
+ *  Header file for tool : Rich::RandomPixelBackgroundTool
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2008-10-10
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRANDOMPIXELBACKGROUNDTOOL_H
 #define RICHRANDOMPIXELBACKGROUNDTOOL_H 1
 

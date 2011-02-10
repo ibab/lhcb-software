@@ -17,7 +17,7 @@
 
 using namespace Rich;
 
-DECLARE_TOOL_FACTORY( SnellsLawRefraction );
+DECLARE_TOOL_FACTORY( SnellsLawRefraction )
 
 //=============================================================================
 // Standard constructor, initializes variables

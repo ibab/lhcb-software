@@ -16,7 +16,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, TabulatedRefractiveIndex );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, TabulatedRefractiveIndex )
 
 // Standard constructor
 Rich::TabulatedRefractiveIndex::

@@ -15,7 +15,7 @@
 // local
 #include "RichDetParameters.h"
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, DetParameters );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, DetParameters )
 
 // General Rich namespace
 namespace Rich

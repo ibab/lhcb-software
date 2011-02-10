@@ -1,5 +1,13 @@
-// $Id: RichRandomPixelBackgroundTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichRandomPixelBackgroundTool.cpp
+ *
+ *  Implementation file for tool : Rich::RandomPixelBackgroundTool
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2008-10-10
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -8,25 +16,21 @@
 #include "RichRandomPixelBackgroundTool.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRandomPixelBackgroundTool
-//
-// 2008-10-10 : Chris Jones
-//-----------------------------------------------------------------------------
 
 using namespace Rich;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RandomPixelBackgroundTool );
+DECLARE_TOOL_FACTORY( RandomPixelBackgroundTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RandomPixelBackgroundTool::RandomPixelBackgroundTool( const std::string& type,
-                                                      const std::string& name,
-                                                      const IInterface* parent )
-  : Rich::ToolBase  ( type, name , parent ),
-    m_richSys       ( NULL                ),
-    m_randSvc       ( NULL                )
+  RandomPixelBackgroundTool::RandomPixelBackgroundTool( const std::string& type,
+                                                        const std::string& name,
+                                                        const IInterface* parent )
+    : Rich::ToolBase  ( type, name , parent ),
+      m_richSys       ( NULL                ),
+      m_randSvc       ( NULL                )
 {
   // tool interface
   declareInterface<Rich::IAddBackground>(this);
