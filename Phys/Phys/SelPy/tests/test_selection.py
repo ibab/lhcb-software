@@ -67,49 +67,27 @@ def test_Selection_outputLocation_with_no_branch_and_no_extension() :
                     OutputBranch='',
                     Extension = '')
     assert sel.outputLocation()=='SelOutputTest4'
-    
-def test_EventSelection_duplicate_name_raises() :
-    alg = DummyAlgorithm('selNameTest')
-    es = EventSelection('EvtUniqueSelNameTest', ConfGenerator = alg)
-    raises (NameError, EventSelection, 'EvtUniqueSelNameTest', ConfGenerator = alg)
 
-def test_EventSelection_name() :
-    alg = DummyAlgorithm('selNameTest')
-    sel = EventSelection('EvtSelNameTest', ConfGenerator=alg)
-    assert sel.name()=='EvtSelNameTest'
+def test_Selection_data_setter() :
+    alg = DummyAlgorithm('selNameTest0')
+    sel0 = AutomaticData('Phys/Hello/World/0')
+    sel1 = AutomaticData('Phys/Hello/World/1')
+    sel = Selection('SelOutputTest5',
+                    ConfGenerator=alg,
+                    RequiredSelections = [sel0,sel1])
+    assert sel.algorithm().InputLocations==[sel0.outputLocation(),
+                                            sel1.outputLocation()]
 
-def test_EventSelection_outputLocaiton() :
-    alg = DummyAlgorithm('selNameTest')
-    sel = EventSelection('EvtSelOutputTest', ConfGenerator=alg)
-    assert sel.outputLocation()==''
-
-def test_PassThroughSelection_duplicate_name_raises() :
-    alg = DummyAlgorithm('selNameTest')
-    reqSel = AutomaticData(Location='PassThroughDOD')
-    es = PassThroughSelection('PTUniqueSelNameTest',
-                              ConfGenerator = alg,
-                              RequiredSelection = reqSel)
-    raises (NameError,
-            PassThroughSelection,
-            'PTUniqueSelNameTest',
-            ConfGenerator = alg,
-            RequiredSelection=reqSel)
-
-def test_PassThroughSelection_name() :
-    alg = DummyAlgorithm('selNameTest')
-    reqSel = AutomaticData(Location='PassThroughDOD')
-    sel = PassThroughSelection('PTSelNameTest',
-                               ConfGenerator=alg,
-                               RequiredSelection=reqSel)
-    assert sel.name()=='PTSelNameTest'
-
-def test_PassThroughSelection_outputLocaiton() :
-    alg = DummyAlgorithm('selNameTest')
-    reqSel = AutomaticData(Location='Pass/Through/DOD')
-    sel = PassThroughSelection('PTSelOutputTest',
-                               ConfGenerator=alg,
-                               RequiredSelection=reqSel)
-    assert sel.outputLocation()=='Pass/Through/DOD'
+def test_Selection_with_user_defined_data_setter() :
+    alg = DummyAlgorithm('selNameTest1')
+    sel0 = AutomaticData('Phys/Hello/World/0')
+    sel1 = AutomaticData('Phys/Hello/World/1')
+    sel = Selection('SelOutputTest6',
+                    ConfGenerator=alg,
+                    RequiredSelections = [sel0,sel1],
+                    InputDataSetter='TESTINPUTS')
+    assert sel.algorithm().TESTINPUTS==[sel0.outputLocation(),
+                                        sel1.outputLocation()]
 
     
 if '__main__' == __name__ :
