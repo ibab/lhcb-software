@@ -10,8 +10,6 @@ if(rootsubdir != "") { fhisto.mkdir(rootsubdir); fhisto.cd(rootsubdir); }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>//create  histograms
 float x1 = 0.5, x2 = 3;
-TH1F* hright = new TH1F("hright","right tags", 50, x1, x2);
-TH1F* hwrong = new TH1F("hwrong","wrong tags", 50, x1, x2);
 TString direction="left2right";
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
@@ -287,6 +285,9 @@ TH1F* hw_ele_tsal = new TH1F("hw_ele_tsal","tsal wrong tags", 50, x1, x2);
 x1=0; x2=100;//N mult
 TH1F* hr_ele_mult = new TH1F("hr_ele_mult","mult right tags", 50, x1, x2);
 TH1F* hw_ele_mult = new TH1F("hw_ele_mult","mult wrong tags", 50, x1, x2);
+x1=0; x2=3;//VeloCharge
+TH1F* hr_ele_veloch = new TH1F("hr_ele_veloch","veloch right tags", 50, x1, x2);
+TH1F* hw_ele_veloch = new TH1F("hw_ele_veloch","veloch wrong tags", 50, x1, x2);
 
 //KAON OPP
 x1=0; x2=5  ; //pt

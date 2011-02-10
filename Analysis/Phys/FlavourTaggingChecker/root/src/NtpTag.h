@@ -291,7 +291,8 @@ NtpTag::NtpTag(TString& filename)
     f = TFile::Open(filename); 
   }
   tree = (TTree*)gDirectory->Get("BTaggingAnalysis/mytagging");
-  
+  //tree = (TTree*)gDirectory->Get("TagAnaBu/mytagging");
+   
   if(!tree) {
     if(!f) return;
     cout<<"\nNo tree found for "<<filename<<" skip!\n"<<endl;

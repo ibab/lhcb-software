@@ -11,7 +11,7 @@
    datafile = .
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
    datafile = /afs/cern.ch/user/m/mgrabalo/public/analysis.root
-
+ 
 #  >>>>>>>>>>>>>>>>>>>>>> CONTROLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    DBGLEVEL    =  3
@@ -42,7 +42,11 @@ EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 ##################################################################
 
 # Will first search in current dir and then in $FLAVOURTAGGINGOPTS:
-#IncludeFile cuts_strip12_v3.py
+#IncludeFile cuts_Moriond.py  #By default
+#IncludeFile cuts_mc2010_nu25_v1.py  #For MC
+
+# Some old configurations
+#IncludeFile cuts_strip12_v3.py #same as Moriond
 #IncludeFile cuts_strip12_v2.py
 #IncludeFile cuts_strip12_v1.py
 #IncludeFile cuts_strip12.py
@@ -51,5 +55,5 @@ EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 #IncludeFile cuts_strip9.py
 #IncludeFile cuts_mc2010.py
 #IncludeFile cuts_mc2010_nu25.py
-#IncludeFile cuts_mc2010_nu25_v1.py
+
 

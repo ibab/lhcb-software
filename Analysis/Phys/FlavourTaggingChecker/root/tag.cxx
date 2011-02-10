@@ -459,6 +459,7 @@ int main () {
           hr_ele_pid->Fill(iele->PIDe()); 
           hr_ele_tsal->Fill(iele->likelihood()); 
           hr_ele_mult->Fill(nparts); 
+          hr_ele_veloch->Fill(iele->VeloCharge()); 
           homphi_ele_r->Fill(iele->distPhi());
         } else {
           hw_ele_p->Fill(iele->p()); 
@@ -469,6 +470,7 @@ int main () {
           hw_ele_pid->Fill(iele->PIDe()); 
           hw_ele_tsal->Fill(iele->likelihood()); 
           hw_ele_mult->Fill(nparts); 
+          hw_ele_veloch->Fill(iele->VeloCharge()); 
           homphi_ele_w->Fill(iele->distPhi());
         }
       }
@@ -519,12 +521,6 @@ int main () {
           homphi_kS_w->Fill(isame->distPhi());
         }
       }
-
-      if(iele) { 
-        double var = iele->VeloCharge();
-        if(tele->decision()==TrueTag) hright->Fill(var); else hwrong->Fill(var);
-      }
-
       if(tvtx){
 	debug()<<"Vdec: "<<tvtx->decision()<<"Vch: "<<tvtx->charge()<<endreq;
 	if(tvtx->decision()==TrueTag) hvtxch_r->Fill(fabs(tvtx->charge())); //abs(Vch)

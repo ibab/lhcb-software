@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Marc Grabalosa
+ - Add some more plots in FTC/root. And few modifiactions
+
 ! 2011-02-04 - Juan Palacios
  - Add missing use of Phys/DaVinciMCKernel to requirements.
 

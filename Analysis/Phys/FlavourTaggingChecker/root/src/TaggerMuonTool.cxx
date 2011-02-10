@@ -23,7 +23,7 @@ TaggerMuonTool::TaggerMuonTool( ) {
   hcut_mu_pt  = new TH1F("hcut_mu_pt", "hcut_mu_pt",  100, 0, 10);
   hcut_mu_p   = new TH1F("hcut_mu_p",  "hcut_mu_p",   100, 0, 100);
   hcut_mu_lcs = new TH1F("hcut_mu_lcs","hcut_mu_lcs", 100, 0, 10);
-
+  hcut_mu_cand = new TH1F("hcut_mu_cand","hcut_mu_cand", 5, 0, 5);
 }
 
 /////////////////////////////////////////////
@@ -83,6 +83,7 @@ Tagger* TaggerMuonTool::tag(Event& event) {
     }
 
   }  
+  hcut_mu_cand   ->Fill(ncand);
   if(!imuon) return tmu;
 
   //calculate omega

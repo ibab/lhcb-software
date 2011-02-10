@@ -48,17 +48,9 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN, good for mc
 tag.BTaggingTool.OutputLevel = 4
 
-#Import cuts for strip12/strip10/strip9/mc2010
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v3.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v2.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12_v1.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip12.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10_v1.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip10.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_strip9.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25.py')
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25_v1.py')
+#Import cuts 
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_Moriond.py') # defalult
+#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25_v1.py') # mc nu=2.5
 
 ########################################################################
 # Flavour tagging Checker:
@@ -112,7 +104,7 @@ DaVinci().Hlt = False
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 300                        # Number of events
+DaVinci().EvtMax     = 500                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "test.root"     # Ntuple

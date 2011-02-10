@@ -27,6 +27,8 @@ SVertexOneSeedTool::SVertexOneSeedTool() {
   hvreson0 = new TH1F("hvreson0","hvreson0", 100, 0, 3);
   hmaxprobf2 = new TH1F("hmaxprobf2","maxprobf", 100, 0, 1.01);
   hmaxprobf0 = new TH1F("hmaxprobf0","maxprobf", 100, 0, 1.01);
+  hvsvpointtheta2 = new TH1F("hvsvpointtheta2","SVpointTheta", 65, 0, 0.5);
+  hvsvpointtheta0 = new TH1F("hvsvpointtheta0","SVpointTheta", 65, 0, 0.5);
 }
 
 //////////////////////////////////////////////////////////
@@ -83,7 +85,10 @@ Vertices SVertexOneSeedTool::buildVertex(Particles& vtags,
   //plots
   bool twofromB = (p1->fromB()==1) && (p2->fromB()==1);
   if(twofromB) hvprobf2->Fill(probf); else hvprobf0->Fill(probf);
-
+  //acceptance
+  //if(SVpoint.Theta()>.350 || SVpoint.Theta()<.010) return vtxvect;//acceptance cut                  
+  if(twofromB) hvsvpointtheta2->Fill(SVpoint.Theta()); else hvsvpointtheta0->Fill(SVpoint.Theta());
+  
   if( probf < m_maxprobf ) return vtxvect; //////////// CUT
 
   //save likelihood

@@ -54,6 +54,7 @@ class TaggerMuonTool : public GenericTool {
   TH1F* hcut_mu_ippu;
   TH1F* hcut_mu_distphi;
   TH1F* hcut_mu_N ;
+  TH1F* hcut_mu_cand ;
  
 };
 

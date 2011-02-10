@@ -4,8 +4,8 @@
 
 CombineTaggersNN::CombineTaggersNN() {
 
-  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.375 );
-  declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
+  declareProperty( "OmegaMaxBin_NN", m_omegamaxbin = 0.375 );
+  declareProperty( "OmegaScale_NN",  m_omegascale  = 0.06 );
   declareProperty( "ProbMin_NN",  m_ProbMin     = 0.53 );
 
   declareProperty( "P0_NN",   m_P0_NN   = 1.01714 );

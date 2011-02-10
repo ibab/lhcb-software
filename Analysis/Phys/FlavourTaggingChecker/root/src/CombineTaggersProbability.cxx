@@ -3,13 +3,13 @@
 
 CombineTaggersProbability::CombineTaggersProbability() {
 
-  declareProperty( "CombineTaggersProb_omegamaxbin", m_omegamaxbin = 0.38);
-  declareProperty( "CombineTaggersProb_omegascale",  m_omegascale  = 0.07);
-  declareProperty( "CombineTaggersProb_ProbMin",     m_ProbMin     = 0.56);
+  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.38);
+  declareProperty( "OmegaScale",  m_omegascale  = 0.07);
+  declareProperty( "ProbMin",     m_ProbMin     = 0.56);
 
-  declareProperty( "CombineTaggersProb_P0_Cal_OS",  m_P0_Cal_OS   = 0.363); 
-  declareProperty( "CombineTaggersProb_P1_Cal_OS",  m_P1_Cal_OS   = 1.09 ); 
-  declareProperty( "CombineTaggersProb_Eta_Cal_OS", m_Eta_Cal_OS  = 0.335); 
+  declareProperty( "P0_Cal_OS",  m_P0_Cal_OS   = 0.363); 
+  declareProperty( "P1_Cal_OS",  m_P1_Cal_OS   = 1.09 ); 
+  declareProperty( "Eta_Cal_OS", m_Eta_Cal_OS  = 0.335); 
 
   theTag = new FlavourTag();
 }

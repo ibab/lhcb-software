@@ -16,48 +16,70 @@
   gStyle->SetTitleFillColor(5);
 
   bool endblock = 1;
-  //  goto taggercandidates;
+  //  goto taggercandidates; //to compare 2 files
   //  goto general;
   //  goto asymm;
-  //  goto nnet;
+  goto nnet;
   //  goto vertex;
   //  goto omegapt;
   //  goto addseed;
-  goto vtxcharge;
+  //  goto vtxcharge;
   //  goto config;  
   //  goto pid;
   //  goto effeff_cut;
   //  goto secondaryvertex;
   //  goto multipleinteraction;
-  goto omegataggers;
+  //  goto omegataggers;
 
 omegataggers:///////////////////////////////////////////////////////
   cout<<"Plot omega for taggers"<<endl;
-  hom_combOSSS->SetTitle("Combination of taggers");
-  hom_combOSSS->GetXaxis()->SetTitle("Omega");
-  hom_combOSSS->GetYaxis()->SetTitle("Events");
-  hom_combOSSS->SetLineWidth(3);   hom_combOSSS->SetLineColor(1);   hom_combOSSS->Draw();  
-  hom_combOS->SetLineWidth(3); hom_combOS->SetLineColor(2); hom_combOS->Draw("same");
+  TCanvas *c = new TCanvas("c", "Tagging",0,0,600,300);
+  gStyle->SetOptFit(1);
+  gStyle->SetOptStat(0);
+  c->Range(0,0,1,1);
+  c->SetFillColor(10);
+  c->SetBorderMode(0);
+  c->SetBorderSize(2);
+  c->SetFrameFillColor(0);
+  c->SetFrameBorderMode(0);
+  c->Divide(2,1);
+  c->cd(1); 
+  hom_vtx->SetTitle("Omega distribution");
+  hom_vtx->GetXaxis()->SetTitle("Omega");
+  hom_vtx->GetYaxis()->SetTitle("Events");
+  hom_vtx->GetYaxis()->SetTitle("Events");
+  hom_vtx->SetLineColor(7);      hom_vtx->Draw();
   hom_ss->SetLineColor(6);       hom_ss->Draw("same");
   hom_k->SetLineColor(5);        hom_k->Draw("same");
   hom_e->SetLineColor(4);        hom_e->Draw("same");
   hom_mu->SetLineColor(3);       hom_mu->Draw("same");
-  hom_vtx->SetLineColor(7);      hom_vtx->Draw("same");
-  //categories
-  l1 = new TLine(0.17,0, 0.17, 3500);
-  l2 = new TLine(0.24,0, 0.24, 3500);
-  l3 = new TLine(0.31,0, 0.31, 3500);
-  l4 = new TLine(0.38,0, 0.38, 3500);
-  l1->Draw("same");  l2->Draw("same");  l3->Draw("same");  l4->Draw("same");
-  TLegend *leg = new TLegend(0.7483221,0.7027972,0.8892617,0.8916084,NULL,"brNDC");
-  TLegendEntry *entry=leg->AddEntry("hom_combOSSS","OS + SS","l");
-  entry=leg->AddEntry("hom_combOS","OS","l");
-  entry=leg->AddEntry("hom_mu","muon","l");
-  entry=leg->AddEntry("hom_e","ele","l");
-  entry=leg->AddEntry("hom_k","kaon","l");
-  entry=leg->AddEntry("hom_ss","sameside","l");
-  entry=leg->AddEntry("hom_vtx","vtx","l");
+  TLegend *leg = new TLegend(0.73,0.699,0.885,0.886,NULL,"brNDC");
+  leg->SetTextSize(0.028);
+  leg->SetShadowColor(0);
+  TLegendEntry *entry=leg->AddEntry("hom_muon"," muon","l");
+  entry=leg->AddEntry("hom_e"," ele","l");
+  entry=leg->AddEntry("hom_k"," kaon","l");
+  entry=leg->AddEntry("hom_ss"," sameside","l");
+  entry=leg->AddEntry("hom_vtx"," vtx","l");
   leg->Draw();
+  c->cd(2); 
+  hom_combOSSS->SetTitle("Omega combined distribution");
+  hom_combOSSS->GetXaxis()->SetTitle("Omega");
+  hom_combOSSS->GetYaxis()->SetTitle("Events");
+  hom_combOSSS->SetLineWidth(3);   hom_combOSSS->SetLineColor(1);   hom_combOSSS->Draw();  
+  hom_combOS->SetLineWidth(3); hom_combOS->SetLineColor(2); hom_combOS->Draw("same");
+  //categories
+  l1 = new TLine(0.17,0, 0.17, 2000);
+  l2 = new TLine(0.24,0, 0.24, 2000);
+  l3 = new TLine(0.31,0, 0.31, 2000);
+  l4 = new TLine(0.38,0, 0.38, 2000);
+  l1->Draw("same");  l2->Draw("same");  l3->Draw("same");  l4->Draw("same");
+  TLegend *leg2 = new TLegend(0.74,0.699,0.882,0.886,NULL,"brNDC");
+  leg2->SetTextSize(0.03);
+  leg2->SetShadowColor(0);
+  TLegendEntry *entry2=leg2->AddEntry("hom_combOSSS"," OS + SS","l");
+  entry2=leg2->AddEntry("hom_combOS"," OS","l");
+  leg2->Draw();
   goto end;
 
 taggercandidates:////////////////////////////////////////////////////
@@ -155,6 +177,8 @@ taggercandidates:////////////////////////////////////////////////////
 
  vertex://///////////////////////////////////////////////////////////
   cout<<"plotting at vertex"<<endl;
+  //hvsvpointtheta0->Draw(); if(wait())return;
+  plot_ratio("hvsvpointtheta", hvsvpointtheta2 , hvsvpointtheta0, hvsvpointtheta0); if(wait())return;
   plot_ratio("hvmass", hvmass2 , hvmass0, hvmass0);    if(wait())return;
   plot_ratio("hvreson", hvreson2 , hvreson0, hvreson0);if(wait())return;   
   plot_ratio("probf",hvprobf2,hvprobf0,hvprobf0 );           if(wait())return;
@@ -202,11 +226,42 @@ taggercandidates:////////////////////////////////////////////////////
   //  plot_omega(hvtx_docamax1, hvtx_docamax0, "hvtx_docamax");  if(wait())return;
   //  plot_omega(hvtx_maxprobf1, hvtx_maxprobf0, "hvtx_maxprobf"); if(wait())return;
   //  plot_omega(hvtx_vflagged1, hvtx_vflagged0, "hvtx_vflagged"); if(wait())return;
+
+  //plot k vs charge
+  Int_t na=6, nb=5, nc=4, err=0.08;
+  Double_t xa[na] = {0.2, 0.25, 0.3, 0.35, 0.4, 0.5};
+  Double_t xb[nb] = {0.25, 0.3, 0.35, 0.4, 0.5};
+  Double_t xc[nc] = {0.3, 0.35, 0.4, 0.5};
+  Double_t va[na] = {0.77, 0.81, 0.86, 0.86, 0.88, 0.88};
+  Double_t vb[nb] = {0.80, 0.83, 0.85, 0.84, 0.85};
+  Double_t vc[nc] = {0.79, 0.82, 0.83, 0.83};
+  gra = new TGraphErrors(na,xa,va);
+  grb = new TGraph(nb,xb,vb);
+  grc = new TGraph(nc,xc,vc);
+  c1= new TCanvas("c","c", 0,0,600,600);
+  c1->SetGrid();
+  c1->SetFillColor(0);
+  gra->SetTitle("Vtx Eff vs k");
+  gra->GetYaxis()->SetTitle("Efficiency"); gra->GetXaxis()->SetTitle("k"); gra->SetLineColor(4); gra->SetMarkerColor(4);
+  gra->Draw("AL*");
+  grb->SetLineColor(3); grb->SetMarkerColor(3);
+  grb->Draw("L*");
+  grc->SetLineColor(6); grc->SetMarkerColor(6);
+  grc->Draw("L*");
+  TLegend *leg = new TLegend(0.15,0.68,0.3,0.85,NULL,"brNDC");
+  leg->SetFillColor(0);
+  TLegendEntry *entry=leg->AddEntry("gra","Vch > 0.17","lep");
+  entry->SetLineColor(4); entry->SetMarkerColor(4);
+  entry=leg->AddEntry("grb","Vch > 0.14","lep");
+  entry->SetLineColor(3); entry->SetMarkerColor(3);
+  entry=leg->AddEntry("grc","Vch > 0.11","lep");
+  entry->SetLineColor(6); entry->SetMarkerColor(6);
+  leg->Draw();
+
   if(endblock) goto end;
 
  config://///////////////////////////////////////////////////////////
   c->Clear(); c->Divide(1,2);
-  plot_omega(hright,       hwrong,  "ip");  if(wait())return;
   plot_omega(homphi_mu_r,  homphi_mu_w,  "mu_distphi"); if(wait())return;
   plot_omega(homphi_kO_r,  homphi_kO_w,  "kO_distphi"); if(wait())return;
   plot_omega(homphi_kS_r,  homphi_kS_w,  "kS_distphi"); if(wait())return;
@@ -238,7 +293,6 @@ taggercandidates:////////////////////////////////////////////////////
   if(wait())return;
 
   c->Clear(); c->Divide(1,2); gPad->SetBorderMode(0);
-  plot_omega(hright,  hwrong, "variable");
   if(wait())return;
   c->cd(2); h4->Draw();
 
@@ -264,9 +318,9 @@ taggercandidates:////////////////////////////////////////////////////
 
  effeff_cut: /////////////////////////////////////////////////////////////
   cout<<"plotting at effeff_cut"<<endl;
-  h1->Draw(); //changes dir (stupid root feature)
-  plotEffectiveEff(hright, hwrong); if(wait())return;
+  //  h1->Draw(); //changes dir (stupid root feature)
 
+  hcut_mu_cand->Draw(); if(wait())return;
   plotEffectiveEff(hr_mu_p, hw_mu_p);                if(wait())return;
   plotEffectiveEff(hr_mu_pt, hw_mu_pt);              if(wait())return;
   plotEffectiveEff(hr_mu_ips, hw_mu_ips);            if(wait())return;
@@ -286,6 +340,8 @@ taggercandidates:////////////////////////////////////////////////////
   plotEffectiveEff(hr_ele_pid, hw_ele_pid);          if(wait())return;
   plotEffectiveEff(hr_ele_tsal, hw_ele_tsal);        if(wait())return;
   plotEffectiveEff(hr_ele_mult, hw_ele_mult,"right2left");if(wait())return;
+  plotEffectiveEff(hr_ele_veloch, hw_ele_veloch);        if(wait())return;
+  plotEffectiveEff(hr_ele_veloch, hw_ele_veloch, "right2left");        if(wait())return;
 
   plotEffectiveEff(hr_k_p, hw_k_p);                if(wait())return;
   plotEffectiveEff(hr_k_pt, hw_k_pt);              if(wait())return;

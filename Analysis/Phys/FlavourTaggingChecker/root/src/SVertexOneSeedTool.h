@@ -58,6 +58,8 @@ class SVertexOneSeedTool  : public GenericTool {
   TH1F* hmaxprobf0 ;
   TH1F* hvreson2 ;
   TH1F* hvreson0 ;
+  TH1F* hvsvpointtheta2 ;
+  TH1F* hvsvpointtheta0 ;
 
 };
 #endif 
