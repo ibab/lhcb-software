@@ -21,7 +21,7 @@ using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackSel );
+DECLARE_ALGORITHM_FACTORY( TrackSel )
 
 // Standard constructor, initializes variables
 TrackSel::TrackSel( const std::string& name,

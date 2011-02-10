@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::MultiStepTool
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDMultiStepTool.cpp,v 1.3 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
  */
@@ -21,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MultiStepTool );
+DECLARE_TOOL_FACTORY( MultiStepTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

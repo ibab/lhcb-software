@@ -3,9 +3,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::MC::Monitor
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDMonitor.cpp,v 1.8 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -22,7 +19,7 @@ using namespace Rich::Rec::GlobalPID::MC;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Monitor );
+DECLARE_ALGORITHM_FACTORY( Monitor )
 
 // Standard constructor, initializes variables
 Monitor::Monitor( const std::string& name,

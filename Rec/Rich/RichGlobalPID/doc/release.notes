@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Fix various icc warnings
+
 !======================= RichGlobalPID v3r14p2 2010-08-25 =====================
 ! 2010-08-02 - Chris Jones
  - Small CPU optimisation suggestion from Marco Ca.

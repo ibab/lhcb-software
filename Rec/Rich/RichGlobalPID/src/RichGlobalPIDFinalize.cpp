@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.23 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -21,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Finalize );
+DECLARE_ALGORITHM_FACTORY( Finalize )
 
 // Standard constructor, initializes variables
 Finalize::Finalize( const std::string& name,

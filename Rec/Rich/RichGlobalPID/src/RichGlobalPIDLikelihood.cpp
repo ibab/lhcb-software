@@ -18,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Likelihood );
+DECLARE_ALGORITHM_FACTORY( Likelihood )
 
 // Standard constructor, initializes variables
 Likelihood::Likelihood( const std::string& name,

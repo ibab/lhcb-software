@@ -18,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackCreator );
+DECLARE_TOOL_FACTORY( TrackCreator )
 
 //=============================================================================
 // Standard constructor, initializes variables

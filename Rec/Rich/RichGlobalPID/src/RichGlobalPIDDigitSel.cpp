@@ -18,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DigitSel );
+DECLARE_ALGORITHM_FACTORY( DigitSel )
 
 // Standard constructor, initializes variables
 DigitSel::DigitSel( const std::string& name,

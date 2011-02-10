@@ -18,7 +18,7 @@ using namespace Rich::Rec::GlobalPID;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( LikelihoodTool );
+DECLARE_TOOL_FACTORY( LikelihoodTool )
 
 // anon namespace for a few constants
 namespace

@@ -3,9 +3,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Initialize
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.15 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -20,7 +17,7 @@ using namespace Rich::Rec::GlobalPID;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Initialize );
+DECLARE_ALGORITHM_FACTORY( Initialize )
 
 // Standard constructor, initializes variables
 Initialize::Initialize( const std::string& name,

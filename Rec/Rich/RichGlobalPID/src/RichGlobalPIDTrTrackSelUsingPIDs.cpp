@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSelUsingPIDs
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSelUsingPIDs.cpp,v 1.2 2009-07-30 11:06:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   10/12/2007
  */
@@ -27,7 +24,7 @@ using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackSelUsingPIDs );
+DECLARE_ALGORITHM_FACTORY( TrackSelUsingPIDs )
 
 // Standard constructor, initializes variables
 TrackSelUsingPIDs::TrackSelUsingPIDs( const std::string& name,
