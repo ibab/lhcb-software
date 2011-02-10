@@ -21,7 +21,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreatorWithGaussianCKSmear );
+DECLARE_TOOL_FACTORY( PhotonCreatorWithGaussianCKSmear )
 
 // Standard constructor
 PhotonCreatorWithGaussianCKSmear::

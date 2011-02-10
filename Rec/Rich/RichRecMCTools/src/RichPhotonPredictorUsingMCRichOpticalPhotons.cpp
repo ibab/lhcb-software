@@ -2,7 +2,8 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingMCRichOpticalPhotons.cpp
  *
- *  Implementation file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
+ *  Implementation file for RICH reconstruction tool : 
+ *        Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,7 +21,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonPredictorUsingMCRichOpticalPhotons );
+DECLARE_TOOL_FACTORY( PhotonPredictorUsingMCRichOpticalPhotons )
 
 // Standard constructor
 PhotonPredictorUsingMCRichOpticalPhotons::

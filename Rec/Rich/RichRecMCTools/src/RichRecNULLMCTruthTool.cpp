@@ -19,7 +19,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( NULLMCTruthTool );
+DECLARE_TOOL_FACTORY( NULLMCTruthTool )
 
 // Standard constructor
 NULLMCTruthTool::NULLMCTruthTool( const std::string& type,

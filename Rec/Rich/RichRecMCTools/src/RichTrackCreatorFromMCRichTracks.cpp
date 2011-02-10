@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.22 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -24,7 +21,7 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackCreatorFromMCRichTracks );
+DECLARE_TOOL_FACTORY( TrackCreatorFromMCRichTracks )
 
 // Standard constructor
 TrackCreatorFromMCRichTracks::

@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::MC::TruePhotonEmissionPoint
  *
- *  CVS Log :-
- *  $Id: RichMCTruePhotonEmissionPoint.cpp,v 1.1 2007-11-26 16:51:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -22,7 +19,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TruePhotonEmissionPoint );
+DECLARE_TOOL_FACTORY( TruePhotonEmissionPoint )
 
 // Standard constructor
 TruePhotonEmissionPoint::TruePhotonEmissionPoint ( const std::string& type,

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.9 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreatorWithMCSignal );
+DECLARE_TOOL_FACTORY( PhotonCreatorWithMCSignal )
 
 // Standard constructor
 PhotonCreatorWithMCSignal::PhotonCreatorWithMCSignal( const std::string& type,

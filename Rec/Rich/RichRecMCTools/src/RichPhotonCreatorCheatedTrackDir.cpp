@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : RichPhotonCreatorCheatedTrackDir
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.5 2008-02-21 16:40:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreatorCheatedTrackDir );
+DECLARE_TOOL_FACTORY( PhotonCreatorCheatedTrackDir )
 
 // Standard constructor
 PhotonCreatorCheatedTrackDir::PhotonCreatorCheatedTrackDir( const std::string& type,

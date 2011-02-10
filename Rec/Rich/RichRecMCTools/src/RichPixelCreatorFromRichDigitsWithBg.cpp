@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.23 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
@@ -24,7 +21,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PixelCreatorFromRichDigitsWithBg );
+DECLARE_TOOL_FACTORY( PixelCreatorFromRichDigitsWithBg )
 
 // Standard constructor
 PixelCreatorFromRichDigitsWithBg::
@@ -32,7 +29,7 @@ PixelCreatorFromRichDigitsWithBg( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : Rich::Rec::PixelCreatorBase ( type, name, parent ),
-    m_numBgTracksToAdd   ( Rich::NRiches, 0 )
+    m_numBgTracksToAdd ( Rich::NRiches, 0 )
 {
   // Define job option parameters
   declareProperty( "RecoDigitsLocation", m_recoDigitsLocation = LHCb::RichDigitLocation::Default );

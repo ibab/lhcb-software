@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.12 2009-07-31 11:57:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PixelCreatorFromCheatedRawBuffer );
+DECLARE_TOOL_FACTORY( PixelCreatorFromCheatedRawBuffer )
 
 // Standard constructor
 PixelCreatorFromCheatedRawBuffer::

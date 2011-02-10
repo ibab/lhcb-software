@@ -20,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonPredictorUsingMCTruth );
+DECLARE_TOOL_FACTORY( PhotonPredictorUsingMCTruth )
 
 // Standard constructor
 PhotonPredictorUsingMCTruth::

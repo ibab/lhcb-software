@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichMCTrueTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.cpp,v 1.4 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -24,7 +21,7 @@ using namespace Rich::Rec::MC;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTrueTrackSelector );
+DECLARE_TOOL_FACTORY( MCTrueTrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

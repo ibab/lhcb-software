@@ -19,7 +19,7 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec::MC;
 
-DECLARE_TOOL_FACTORY( TrSegMakerFromMCRichTracks );
+DECLARE_TOOL_FACTORY( TrSegMakerFromMCRichTracks )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.10 2009-07-30 11:17:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PixelCreatorFromSignalRawBuffer );
+DECLARE_TOOL_FACTORY( PixelCreatorFromSignalRawBuffer )
 
 // Standard constructor
 PixelCreatorFromSignalRawBuffer::

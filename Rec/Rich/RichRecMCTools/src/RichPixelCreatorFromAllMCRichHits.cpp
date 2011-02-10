@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromAllMCRichHits
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.5 2009-08-05 10:48:57 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PixelCreatorFromAllMCRichHits );
+DECLARE_TOOL_FACTORY( PixelCreatorFromAllMCRichHits )
 
 // Standard constructor
 PixelCreatorFromAllMCRichHits::

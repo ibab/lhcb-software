@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCHitPosition
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCHitPosition.cpp,v 1.1 2007-11-26 16:51:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   06/11/2007
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreatorWithMCHitPosition );
+DECLARE_TOOL_FACTORY( PhotonCreatorWithMCHitPosition )
 
 // Standard constructor
 PhotonCreatorWithMCHitPosition::PhotonCreatorWithMCHitPosition( const std::string& type,

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.17 2007-11-26 16:51:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -23,7 +20,7 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreatorFromMCRichOpticalPhotons );
+DECLARE_TOOL_FACTORY( PhotonCreatorFromMCRichOpticalPhotons )
 
 // Standard constructor
 PhotonCreatorFromMCRichOpticalPhotons::
@@ -44,7 +41,7 @@ StatusCode PhotonCreatorFromMCRichOpticalPhotons::initialize()
 
   // Issue a warning, to make sure user knows they are MC cheating
   Warning( "Using cheated photon creator that only uses MC for all photons", 
-           StatusCode::SUCCESS );
+           StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
