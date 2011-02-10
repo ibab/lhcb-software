@@ -11,7 +11,7 @@ __all__ = ('checkConfig',
            'lineFromName'
            )
 
-
+import inspect
 from StrippingConf.Configuration import StrippingLine
 
 def checkConfig(reference_keys, configuration) :
@@ -97,4 +97,16 @@ class LineBuilder(object) :
     def lines(self) :
         return tuple(self._lines)
 
-
+def getLineBuildersFromModule(confModule) :
+    """
+    Extract all the line builders from a given module.
+    Return as a class name : class dictionary.
+    """
+    lbs = [getattr( confModule, x) for x in confModule.__dict__.keys()]
+    lbs = filter(lambda lb : inspect.isclass(lb), lbs)
+    lbs = filter(lambda lb : issubclass(lb, LineBuilder), lbs)
+    lineBuilderDict = {}
+    for lb in lbs :
+        if lb.__name__ != LineBuilder.__name__ :
+            lineBuilderDict[lb.__name__] = lb
+    return lineBuilderDict

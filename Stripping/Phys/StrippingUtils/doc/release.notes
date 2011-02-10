@@ -4,6 +4,13 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Juan Palacios
+ - StrippingUtils.Utils
+  . Add function  getLineBuildersFromModule(confModule).
+    Extracts all the line builders from a given module.
+    Return as a {class name : class} dictionary.
+ - Increase to v1r3
+
 ! ===================== StrippingUtils v1r2 2011-02-02 =======================
 
 ! 2011-01-29 - Juan Palacios
