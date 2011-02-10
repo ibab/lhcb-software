@@ -15,9 +15,6 @@
 
 using namespace Rich::Rec::TemplateRings;
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichRingRecToolBase );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -28,8 +25,8 @@ RichRingRecToolBase::RichRingRecToolBase( const std::string& type,
   : RichRecHistoToolBase ( type, name , parent )
 {
   declareInterface<IRichRingRecToolBase>(this);
-
 }
+
 //=============================================================================
 // Initialization
 //=============================================================================

@@ -17,7 +17,7 @@
 using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichRingRecConstants );
+DECLARE_TOOL_FACTORY( RichRingRecConstants )
 
 
 //=============================================================================

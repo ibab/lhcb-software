@@ -20,7 +20,7 @@
 using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichLocalTargetConfig );
+DECLARE_TOOL_FACTORY( RichLocalTargetConfig )
 
 
 //=============================================================================
@@ -34,8 +34,8 @@ RichLocalTargetConfig::RichLocalTargetConfig( const std::string& type,
     m_HitIsSelected(VB(0)) 
 {
   declareInterface<IRichLocalTargetConfig>(this);
-
 }
+
 StatusCode  RichLocalTargetConfig::InitTargetConfigParam()
 {
 

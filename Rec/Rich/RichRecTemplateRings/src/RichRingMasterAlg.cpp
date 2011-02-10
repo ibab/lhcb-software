@@ -16,15 +16,15 @@
 using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichRingMasterAlg );
+DECLARE_ALGORITHM_FACTORY( RichRingMasterAlg )
 
 //============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichRingMasterAlg::RichRingMasterAlg( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-  : RichRingRecTupleAlgBase ( name , pSvcLocator ),
-    m_trSelector        ( NULL )
+  RichRingMasterAlg::RichRingMasterAlg( const std::string& name,
+                                        ISvcLocator* pSvcLocator)
+    : RichRingRecTupleAlgBase ( name , pSvcLocator ),
+      m_trSelector        ( NULL )
 {
 
   declareProperty( "RingLocation",
@@ -63,7 +63,7 @@ StatusCode RichRingMasterAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RichRingMasterAlg::execute() 
+StatusCode RichRingMasterAlg::execute()
 {
   debug() << "==> Execute RichRingMasterAlg " << endmsg;
 
@@ -73,7 +73,7 @@ StatusCode RichRingMasterAlg::execute()
     sc = sc && ReconstructMassForRings();
   }
   if(  m_activateSavingRingsOnTES ) {
-  
+
     sc = sc && saveRingsInTES();
   }
   if(m_storeNtupRadius) {
@@ -82,7 +82,7 @@ StatusCode RichRingMasterAlg::execute()
     sc = sc && StoreRingInfoInNtup();
 
   }
-  
+
 
   return sc;
 }
@@ -102,7 +102,7 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
 
     // loop through the track segments in each radiator
     VI tkMM = art->Tfm()->getTrackIndexLimits( irad);
-    
+
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
 
       // select and configure the RICH hits in the Field of Interest.
@@ -195,58 +195,58 @@ StatusCode RichRingMasterAlg::ReconstructMassForRings()
 }
 
 StatusCode RichRingMasterAlg::SelectBestMassFromRadiators(){
-  
+
   StatusCode sc= StatusCode::SUCCESS;
 
   rt()->RRslt()->setnumberOfRichRecTrack((int) richTracks()->size());
-                                         
+
   rt()->RRslt()->resetResultTrackArrays();
-  
-    for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
-          track != richTracks()->end(); ++track ){
 
-            int CurrentTrackIndex = track- richTracks()->begin();
-            
-          // apply track selection
-           if ( !m_trSelector->trackSelected(*track) ) continue;
+  for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
+        track != richTracks()->end(); ++track ){
 
-          // get the reco track
-          const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
-          if ( !trtrack ){
-            Warning( "RichRingMasterAlg: SelectMassFromRadiators:Input track type is not Track -> RichRecTrack skipped" 
-                     ).ignore();
-           continue;
-          }
+    int CurrentTrackIndex = track- richTracks()->begin();
 
-          VI SegmentIndex ( (rt()->RConst()->maxNumRadiator()) , -10);
-          LHCb::RichRecSegment* segment0 = (*track)-> segmentInRad(Rich::Aerogel);
-          if( segment0) {
-            SegmentIndex[0] =  find(richSegments()->begin(),richSegments()->end(), 
-                                    segment0)- richSegments()->begin();              
-          }
-          
-          
+    // apply track selection
+    if ( !m_trSelector->trackSelected(*track) ) continue;
 
-          LHCb::RichRecSegment* segment1 = (*track)-> segmentInRad(Rich::Rich1Gas);                
-          if( segment1) {
-             SegmentIndex[1] =  find(richSegments()->begin(),richSegments()->end(), 
-                                    segment1)- richSegments()->begin();           
-          }
-          
-
-
-
-          LHCb::RichRecSegment* segment2 = (*track)-> segmentInRad(Rich::Rich2Gas);
-          if( segment2) {
-             SegmentIndex[2] =  find(richSegments()->begin(),richSegments()->end(), 
-                                    segment2)- richSegments()->begin();           
-          }
-          sc = rt()->RMass()->bestReconstructedMassForRichTrack( SegmentIndex,CurrentTrackIndex);        
+    // get the reco track
+    const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
+    if ( !trtrack ){
+      Warning( "RichRingMasterAlg: SelectMassFromRadiators:Input track type is not Track -> RichRecTrack skipped"
+               ).ignore();
+      continue;
     }
-    
+
+    VI SegmentIndex ( (rt()->RConst()->maxNumRadiator()) , -10);
+    LHCb::RichRecSegment* segment0 = (*track)-> segmentInRad(Rich::Aerogel);
+    if( segment0) {
+      SegmentIndex[0] =  find(richSegments()->begin(),richSegments()->end(),
+                              segment0)- richSegments()->begin();
+    }
+
+
+
+    LHCb::RichRecSegment* segment1 = (*track)-> segmentInRad(Rich::Rich1Gas);
+    if( segment1) {
+      SegmentIndex[1] =  find(richSegments()->begin(),richSegments()->end(),
+                              segment1)- richSegments()->begin();
+    }
+
+
+
+
+    LHCb::RichRecSegment* segment2 = (*track)-> segmentInRad(Rich::Rich2Gas);
+    if( segment2) {
+      SegmentIndex[2] =  find(richSegments()->begin(),richSegments()->end(),
+                              segment2)- richSegments()->begin();
+    }
+    sc = rt()->RMass()->bestReconstructedMassForRichTrack( SegmentIndex,CurrentTrackIndex);
+  }
+
 
   return sc;
-  
+
 }
 StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
 {
@@ -261,20 +261,20 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     int aNumHit = rt()->tgD()->NumHitsTarget(iRich);
     //info()<<" RichMasterAlg Radiator Rich Number of hits "<<irad<<"   "<< iRich<<"  "<<aNumHit<<endmsg;
     // info() <<" RichMasterAlg Number of tracks "<<tkMM[0]<<"  "<< tkMM[1]<<endmsg;
-    
+
     // int aNumTk = rt()->tgD()->NumChRdTrackValue(irad);
     VD tkX; tkX.clear(); tkX.reserve(200);
     VD tkY; tkY.clear(); tkY.reserve(200);
     VD tkRadius; tkRadius.clear(); tkRadius.reserve(200);
     VD tkNumHitsInRing;tkNumHitsInRing.clear();tkNumHitsInRing.reserve(200);
-    
-    
+
+
     VD tkMom; tkMom.clear(); tkMom.reserve(200);
     VD tkMass; tkMass.clear();
     tkMass.reserve(200);
 
-    
-    
+
+
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
       double aRadius =  rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
       double aRecMom =  rt()->tgD()-> TrackRecMomValue(itk,irad);
@@ -282,15 +282,15 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
       double atkY= rt()->tgD()->TrackYcInpValue(itk,irad);
       double aReconMass = rt()->RRslt()->TrackSegReconMassValue(itk, irad);
       double aNumHitsInRing = rt()->RRslt()->TrackFoundMRNumHitsValue(itk,irad);
-      
+
       tkX.push_back(atkX);
       tkY.push_back(atkY);
       tkRadius.push_back(aRadius);
       tkMom.push_back(aRecMom);
       tkMass.push_back(aReconMass);
       tkNumHitsInRing.push_back(aNumHitsInRing);
-      
-      
+
+
     }
 
 
@@ -312,11 +312,11 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     m_RingTuple->farray("TkYHit",tkY,"tkXLength",maxNumTk);
     m_RingTuple->farray("RecRadius",tkRadius,"tkRadiusLength", maxNumTk);
     m_RingTuple->farray("RecMom",tkMom,"tkMomLength",maxNumTk);
-    m_RingTuple->farray("RecMass",tkMass,"tkMassLength",maxNumTk);  
+    m_RingTuple->farray("RecMass",tkMass,"tkMassLength",maxNumTk);
     m_RingTuple ->farray("NumHitsInRing",tkNumHitsInRing,"tkNumHitsInRingLength",maxNumTk);
     m_RingTuple ->farray("XHitCoord",htX,"XLength",maxNumHit);
     m_RingTuple ->farray("YHitCoord",htY,"YLength",maxNumHit);
-    
+
     sc=m_RingTuple ->write();
   }
 
@@ -383,7 +383,7 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       const Gaudi::XYZPoint & centrePointGlobal = segment->pdPanelHitPoint();
       const double aRadius = rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
       const double aAngle = aRadius * rt()->RConst()->radiusScaleFactorToRadiansSingle(irad);
-      
+
 
       newRing->setCentrePointLocal ( centrePointLocal );
       newRing->setCentrePointGlobal( centrePointGlobal );
@@ -410,20 +410,20 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       // Now adding the RichRecPixels associated to each ring.
 
       if( aRadius > 0.0 ) {
-        for(int i=0; i<aNumHitsTarget; ++i){    
+        for(int i=0; i<aNumHitsTarget; ++i){
           if( rt()->RRslt()->HitSelectedInRecRingsValue(i,irad)) {
-            double rhit = rt()->Tfm()->  CartToPolRadFromTHNum(i,itk,irad);  
+            double rhit = rt()->Tfm()->  CartToPolRadFromTHNum(i,itk,irad);
             if( fabs( rhit - aRadius) < aRadiusTightWidth ) {
               LHCb::RichRecPixel * aPix = *( richPixels()->begin() + ( rt()->tgD()->HitInvIndexValue(i,iRich)));
-              newRing->richRecPixels().push_back( LHCb::RichRecPixelOnRing(aPix,aProb) );              
+              newRing->richRecPixels().push_back( LHCb::RichRecPixelOnRing(aPix,aProb) );
 
             } // end test if the hit is selected for current track segment
-            
+
           } // end test if the hit is selected for any track segment
-          
-          
-        }// end loop on hits on a rich det  
-        
+
+
+        }// end loop on hits on a rich det
+
       } // end check on Radius value
 
     } // end loop over RichRecSegments in the current radiator
@@ -438,7 +438,7 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichRingMasterAlg::finalize() 
+StatusCode RichRingMasterAlg::finalize()
 {
   debug() << "==> Finalize" << endmsg;
 

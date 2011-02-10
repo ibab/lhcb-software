@@ -4,6 +4,9 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - fix various icc warnings
+
 ! 2011-02-07 - Chris Jones
  - Adapt to removal of depreciated typedefs
 

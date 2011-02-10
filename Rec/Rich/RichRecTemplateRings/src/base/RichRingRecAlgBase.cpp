@@ -15,10 +15,6 @@
 
 using namespace Rich::Rec::TemplateRings;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichRingRecAlgBase );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -27,8 +23,8 @@ RichRingRecAlgBase::RichRingRecAlgBase( const std::string& name,
   : Rich::Rec::AlgBase ( name , pSvcLocator ),
     m_ringtool(NULL)
 {
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

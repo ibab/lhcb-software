@@ -15,9 +15,6 @@
 
 using namespace Rich::Rec::TemplateRings;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichRingRecTupleAlgBase );
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
