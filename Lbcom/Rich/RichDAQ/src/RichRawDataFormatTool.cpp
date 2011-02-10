@@ -19,7 +19,7 @@ using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RawDataFormatTool );
+DECLARE_TOOL_FACTORY( RawDataFormatTool )
 
 // private namespace
 namespace
@@ -358,8 +358,9 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
   }
   else
   {
-    Warning ( "Unknown RICH Raw Buffer version " +
-              boost::lexical_cast<std::string>(version) + " -> No data bank" ).ignore();
+    std::ostringstream message;
+    message << "Unknown RICH Raw Buffer version " << version << " -> No data bank";
+    Warning ( message.str() );
     return NULL;
   }
 
@@ -518,8 +519,9 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
   }
   else
   {
-    Exception ( "Unknown RICH Raw Buffer version " +
-                boost::lexical_cast<std::string>(version) + " -> No data bank" );
+    std::ostringstream message;
+    message << "Unknown RICH Raw Buffer version " << version << " -> No data bank";
+    Exception ( message.str() );
   }
 
   // Printout this bank
@@ -696,8 +698,9 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
     // Check this is a RICH bank
     if ( bank.type() != LHCb::RawBank::Rich )
     {
-      Exception( "BankType is not RICH : type = " +
-                 boost::lexical_cast<std::string>(bank.type()) );
+      std::ostringstream message;
+      message << "BankType is not RICH : type = " << bank.type();
+      Exception( message.str() );
     }
 
     // Get L1 ID
@@ -1323,7 +1326,9 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
         const unsigned int dataSize = lineLast-lineHeader;
         if ( dataSize < 1 )
         {
-          Exception( "Invalid HPD data block size : " + boost::lexical_cast<std::string>(dataSize) );
+          std::ostringstream message;
+          message << "Invalid HPD data block size : " << dataSize;
+          Exception( message.str() );
         }
 
         // Create data bank and decode into RichSmartIDs

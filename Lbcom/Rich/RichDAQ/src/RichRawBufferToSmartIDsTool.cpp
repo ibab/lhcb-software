@@ -17,7 +17,7 @@
 // RICH DAQ
 using namespace Rich::DAQ;
 
-DECLARE_TOOL_FACTORY( RawBufferToSmartIDsTool );
+DECLARE_TOOL_FACTORY( RawBufferToSmartIDsTool )
 
 // Standard constructor
 RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
@@ -58,9 +58,11 @@ StatusCode RawBufferToSmartIDsTool::initialize()
 }
 
 // Method that handles various Gaudi "software events"
-void RawBufferToSmartIDsTool::handle ( const Incident& incident )
+void RawBufferToSmartIDsTool::handle ( const Incident& /* incident */ )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Only subscribed to BeginEvent incidents, so no need to check type
+  //if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  InitNewEvent();
 }
 
 // ---------------------------------------------------------------------------------------------
