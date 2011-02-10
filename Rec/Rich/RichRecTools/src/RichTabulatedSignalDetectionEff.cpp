@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff );
+DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff )
 
 // Standard constructor
 TabulatedSignalDetectionEff::

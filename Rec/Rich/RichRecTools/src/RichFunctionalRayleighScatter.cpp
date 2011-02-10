@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( FunctionalRayleighScatter );
+DECLARE_TOOL_FACTORY( FunctionalRayleighScatter )
 
 // Standard constructor
 FunctionalRayleighScatter::

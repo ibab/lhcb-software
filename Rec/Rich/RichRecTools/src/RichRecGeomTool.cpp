@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomTool );
+DECLARE_TOOL_FACTORY( GeomTool )
 
 // Standard constructor
 GeomTool::GeomTool( const std::string& type,

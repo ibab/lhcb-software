@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MassHypothesisRingCreator );
+DECLARE_TOOL_FACTORY( MassHypothesisRingCreator )
 
 // Standard constructor
 MassHypothesisRingCreator::

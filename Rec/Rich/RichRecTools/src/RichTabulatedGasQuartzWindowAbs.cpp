@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TabulatedGasQuartzWindowAbs );
+DECLARE_TOOL_FACTORY( TabulatedGasQuartzWindowAbs )
 
 // Standard constructor
 TabulatedGasQuartzWindowAbs::

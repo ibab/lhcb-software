@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiClustering
  *
- *  CVS Log :-
- *  $Id: RichRecBackgroundEstiClustering.cpp,v 1.4 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -21,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( BackgroundEstiClustering );
+DECLARE_TOOL_FACTORY( BackgroundEstiClustering )
 
 // Standard constructor, initializes variables
 BackgroundEstiClustering::BackgroundEstiClustering( const std::string& type,

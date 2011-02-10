@@ -20,7 +20,7 @@
 using namespace Rich::Rec;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PIDPlots );
+DECLARE_TOOL_FACTORY( PIDPlots )
 
 //=============================================================================
 // Standard constructor, initializes variables

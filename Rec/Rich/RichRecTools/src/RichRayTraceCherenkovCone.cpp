@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RayTraceCherenkovCone );
+DECLARE_TOOL_FACTORY( RayTraceCherenkovCone )
 
 // Standard constructor
 RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
@@ -240,8 +240,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       debug() << " -> " << mode << endmsg;
     }
 
-    // which rich and radiator
-    const Rich::DetectorType rich = ring->richRecSegment()->trackSegment().rich();
+    // which radiator
     const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
 
     // cos and sin values

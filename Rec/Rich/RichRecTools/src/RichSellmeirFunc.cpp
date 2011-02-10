@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
- *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.25 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -20,13 +17,13 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SellmeirFunc );
+DECLARE_TOOL_FACTORY( SellmeirFunc )
 
 // Standard constructor
 SellmeirFunc::SellmeirFunc ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : Rich::Rec::ToolBase( type, name, parent ),
+  : ToolBase   ( type, name, parent ),
     m_Rich1DE  ( NULL ),
     m_partProp ( NULL )
 {
@@ -37,7 +34,7 @@ SellmeirFunc::SellmeirFunc ( const std::string& type,
 StatusCode SellmeirFunc::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = Rich::Rec::ToolBase::initialize();
+  StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich1 Detector element

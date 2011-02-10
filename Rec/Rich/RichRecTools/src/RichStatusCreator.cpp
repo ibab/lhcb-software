@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( StatusCreator );
+DECLARE_TOOL_FACTORY( StatusCreator )
 
 // Standard constructor
 StatusCreator::StatusCreator( const std::string& type,

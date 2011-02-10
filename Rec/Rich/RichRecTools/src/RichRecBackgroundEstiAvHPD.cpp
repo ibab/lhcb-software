@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
- *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.3 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -21,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD );
+DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD )
 
 // Standard constructor, initializes variables
 BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,

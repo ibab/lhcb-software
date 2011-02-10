@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //---------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PixelCreatorWithForcedIneffic );
+DECLARE_TOOL_FACTORY( PixelCreatorWithForcedIneffic )
 
 // Standard constructor
 PixelCreatorWithForcedIneffic::

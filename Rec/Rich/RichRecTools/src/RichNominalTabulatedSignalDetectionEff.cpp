@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( NominalTabulatedSignalDetectionEff );
+DECLARE_TOOL_FACTORY( NominalTabulatedSignalDetectionEff )
 
 // Standard constructor
 NominalTabulatedSignalDetectionEff::

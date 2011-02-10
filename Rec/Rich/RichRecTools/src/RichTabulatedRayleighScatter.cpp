@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::TabulatedRayleighScatter
  *
- *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.14 2008-08-18 19:40:59 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -24,7 +21,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TabulatedRayleighScatter );
+DECLARE_TOOL_FACTORY( TabulatedRayleighScatter )
 
 // Standard constructor
 TabulatedRayleighScatter::TabulatedRayleighScatter ( const std::string& type,
