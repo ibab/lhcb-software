@@ -15,11 +15,11 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
         }
 
     def preambulo( self ):
-        from HltTracking.HltReco import VeloCandidates
-        from HltTracking.Hlt1Streamers import ( MatchVeloMuon, IsMuon,
+        from HltTracking.Hlt1Streamers import ( VeloCandidates,
+                                                MatchVeloMuon, IsMuon,
                                                 LooseForward, FitTrack )
         ## define some "common" preambulo 
-        Preambulo = [ VeloCandidates,
+        Preambulo = [ VeloCandidates( "DiMuon" ),
                       MatchVeloMuon,
                       LooseForward,
                       FitTrack,
@@ -31,11 +31,6 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
                       "from LoKiPhys.decorators import RV_MASS"
                       ]
         return Preambulo
-
-            ## >>  Dump ( 'Velo Candidates : ' )
-            ## >>  Dump ( 'Matched to Muon Candidates : ' )
-            ## >>  Dump ( 'Forward : ' )
-            ## >>  Dump ( 'Fitted : ' )
 
     def dimuon_streamer( self ):
         from Configurables import LoKi__HltUnit as HltUnit

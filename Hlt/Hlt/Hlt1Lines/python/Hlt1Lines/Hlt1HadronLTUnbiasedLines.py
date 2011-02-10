@@ -57,16 +57,18 @@ class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
     #
     #
     #
-    def hlt1DiHadronLTUnbiased_Preambulo( self ) :
-        from HltTracking.Hlt1Streamers import LooseForward,TightForward, FitTrack
-        from HltTracking.HltPVs import FullPV3D
-        Preambulo = [ FullPV3D    ,
+    def hlt1DiHadronLTUnbiased_Preambulo( self, prefix ) :
+        from HltTracking.Hlt1Streamers import ( VeloCandidates, LooseForward,
+                                                TightForward, FitTrack )
+        from HltTracking.HltPVs import RecoPV3D
+        Preambulo = [ VeloCandidates( prefix ),
+                      RecoPV3D    ,
                       TightForward,
                       LooseForward,
                       FitTrack    ,
                       "VertexConf    = LoKi.Hlt1.VxMakerConf( %(DiHadron_VxDOCA)f * mm, \
                                                               %(DiHadron_VxChi2)f )" % self.getProps(),
-                      "MakeDiHadrons =  SINK( 'DiHadronVx' ) >>  TC_VXMAKE2( '', 'DiHadronVx', VertexConf )",
+                      "MakeDiHadrons = TC_VXMAKE4( '', VertexConf )",
                       "from LoKiPhys.decorators import RV_MASS"
                       ]
         return Preambulo
@@ -80,7 +82,8 @@ class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
         props['name'] = name
         props['forward'] = 'TightForward'
         lineCode = """
-        FullPV3D
+        VeloCandidates
+        >> RecoPV3D
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s )) 
         >>  execute( decodeIT )
@@ -98,7 +101,7 @@ class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
         hlt1DiHadronLTUnbiased_Unit = HltUnit(
             name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1DiHadronLTUnbiased_Preambulo(),
+            Preambulo = self.hlt1DiHadronLTUnbiased_Preambulo( name ),
             Code = lineCode
             )
         return [ Hlt1GECLoose() ,hlt1DiHadronLTUnbiased_Unit ]

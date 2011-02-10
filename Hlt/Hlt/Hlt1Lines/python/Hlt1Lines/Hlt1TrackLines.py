@@ -58,12 +58,13 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         return dict( [ ( key, ps[ key ] ) for key in gp ] + \
                      [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
-    def hlt1Track_Preambulo( self ) :
-        from HltTracking.Hlt1Streamers import ( LooseForward, TightForward,
+    def hlt1Track_Preambulo( self, prefix ) :
+        from HltTracking.Hlt1Streamers import ( VeloCandidates, MatchVeloMuon,
+                                                LooseForward, TightForward,
                                                 FitTrack, IsMuon )
-        from HltTracking.HltPVs import FullPV3D
-        from HltTracking.Hlt1Streamers import MatchVeloMuon
-        Preambulo = [ FullPV3D,
+        from HltTracking.HltPVs import RecoPV3D
+        Preambulo = [ VeloCandidates( prefix ),
+                      RecoPV3D,
                       TightForward,
                       LooseForward,
                       FitTrack ,
@@ -77,30 +78,27 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
 
-        ## >>  Dump ( 'Velo Candidates : ' )
-        ## >>  Dump ( 'Forward Candidates : ' )
-        ## >>  Dump ( 'Fitted Candidates : ' )
-
         lineCode = """ 
-            FullPV3D
-            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-                  ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
-            >>  execute( decodeIT ) 
-            >>  %(forward)s 
-            >>  (TrTNORMIDC > %(TrNTHits)s ) 
-            >>  ( ( TrPT > %(PT)s * MeV ) & \
-                  ( TrP  > %(P)s  * MeV ) )
-            >>  FitTrack
-            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-                  ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-            >> SINK( 'Hlt1%(name)sDecision' )
-            >> ~TC_EMPTY
-            """ % props
+        VeloCandidates
+        >> RecoPV3D
+        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
+        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
+        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
+        >>  execute( decodeIT ) 
+        >>  %(forward)s 
+        >>  (TrTNORMIDC > %(TrNTHits)s ) 
+        >>  ( ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  FitTrack
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
+        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
         hlt1TrackNonMuon_Unit = HltUnit(
             name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo(),
+            Preambulo = self.hlt1Track_Preambulo( name ),
             Code = lineCode
             )       
         return [ Hlt1GECLoose() ,hlt1TrackNonMuon_Unit ]
@@ -110,31 +108,29 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
 
-        ## >>  Dump ( 'Velo Candidates : ' )
-        ## >>  Dump ( 'Forward Candidates : ' )
-        ## >>  Dump ( 'Fitted Candidates : ' )
-
+        lineCode = """ 
+        VeloCandidates
+        >>  RecoPV3D
+        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
+        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
+        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
+        >>  execute( decodeIT )
+        >>  LooseForward
+        >>  ( ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  FitTrack
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
+        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  execute( 'MuonRec' )
+        >>  IsMuon
+        >>  SINK( 'Hlt1%(name)sDecision' )
+        >>  ~TC_EMPTY
+        """ % props
         hlt1TrackMuon_Unit = HltUnit(
             name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo(),
-            Code = """ 
-            FullPV3D
-            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-                  ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-                  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
-            >>  execute( decodeIT )
-            >>  LooseForward
-            >>  ( ( TrPT > %(PT)s * MeV ) & \
-                  ( TrP  > %(P)s  * MeV ) )
-            >>  FitTrack
-            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-                  ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-            >>  execute( 'MuonRec' )
-            >>  IsMuon
-            >>  SINK( 'Hlt1%(name)sDecision' )
-            >>  ~TC_EMPTY
-            """ % props
+            Preambulo = self.hlt1Track_Preambulo( name ),
+            Code = lineCode
             )    
         return [ Hlt1GECLoose() ,hlt1TrackMuon_Unit ]
     
