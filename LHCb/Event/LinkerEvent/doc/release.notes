@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Fix a warning with the icc compiler in LinkedTo.h - Replace use of sprintf
+   with an std::ostringstream object.
+
 !======================= LinkerEvent v3r6 2009-01-08 =========================
 ! 2008-12-04 - Olivier Callot
  - Make the error message when template doesn't match the stored class ID more
