@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v11r5 2011-02-10 ===================
 ! 2011-02-10 - Roel Aaij
  - Fixed the UpgradeTool to correctly flag seeds and look for already upgraded 
    candidates in accordance with the current "model", where the Candidates are
