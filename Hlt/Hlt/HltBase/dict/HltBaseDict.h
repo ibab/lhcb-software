@@ -22,6 +22,7 @@
 #include "Event/HltMultiTrack.h"
 
 #include "HltBase/HltUtils.h"
+#include "HltBase/ITrack2Candidate.h"
 
 namespace 
 {

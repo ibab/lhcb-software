@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-02-11 - Vanya Belyaev
+ - add new interface 
+   Hlt::ITrack2CandidateMatch 
+
 !========================== HltBase v10r4 2011-02-07 ===================
 ! 2011-02-08 - Gerhard Raven
  - add SmartRef<Hlt::Stage> to Reflex dictionary 
