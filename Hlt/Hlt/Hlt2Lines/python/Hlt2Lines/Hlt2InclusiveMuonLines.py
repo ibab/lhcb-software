@@ -21,6 +21,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2MuonFromHLT1Bs2MuMu'      : 1.0   
                                    ,'Hlt2SingleMuon'                : 1.0
                                    ,'Hlt2SingleHighPTMuon'          : 1.0
+                                   ,'Hlt2SingleMuonLowPT'          : 0.1
                                    ,'Hlt2IncMuTrack'                : 1.0
                                    ,'Hlt2IncMuTrackNoIP'            : 1.0
                                    }
@@ -31,6 +32,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'SingleMuonIP'        : 0.25     # mm
                   ,'SingleMuonIPChi2'    : 100
                   ,'SingleMuonHighPt'    : 10000     # MeV
+                  ,'SingleMuonLowPt'     : 4800     # MeV
                   # Mu+track cuts 
                   ,'MuTrackMuPt'         : 800       # MeV
                   ,'MuTrackTrPt'         : 600       # MeV
@@ -146,7 +148,22 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonHighPTDecision" : 50192 } )
-        
+        #--------------------------------------------
+                
+        Hlt2SelSingleLowPTMuon = Hlt2Member(   FilterDesktop
+                                                , "Filter"
+                                                , Code = "(PT>%(SingleMuonLowPt)s*MeV) & (TRCHI2DOF<%(TrChi2)s) " % self.getProps()
+                                                , InputLocations  = [BiKalmanFittedMuons]
+                                                , InputPrimaryVertices = "None"
+                                                , UseP2PVRelations = False
+                                                )
+        line = Hlt2Line( 'SingleMuonLowPT'
+                         , prescale = self.prescale 
+                         , algos = [ BiKalmanFittedMuons, Hlt2SelSingleLowPTMuon]
+                         , postscale = self.postscale
+                         )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonLowPTDecision" : 50194 } )
+
         #####################################################
         #    Selections for inclusive decays with mu + track 
         #####################################################
