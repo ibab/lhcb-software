@@ -18,7 +18,7 @@ using namespace Rich::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( BuildMCRichDigitLinks );
+DECLARE_ALGORITHM_FACTORY( BuildMCRichDigitLinks )
 
 //=============================================================================
 // Standard constructor
@@ -37,7 +37,7 @@ BuildMCRichDigitLinks::BuildMCRichDigitLinks( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-BuildMCRichDigitLinks::~BuildMCRichDigitLinks() {};
+BuildMCRichDigitLinks::~BuildMCRichDigitLinks() {}
 
 //=============================================================================
 // Main execution

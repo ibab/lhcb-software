@@ -18,7 +18,7 @@
 // namespace
 using namespace Rich::MC;
 
-DECLARE_ALGORITHM_FACTORY( MCRichDigitSummaryAlg );
+DECLARE_ALGORITHM_FACTORY( MCRichDigitSummaryAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
