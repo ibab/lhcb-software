@@ -5,6 +5,18 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Vanya Belyaev
+
+ - add the tretament of track<--->candidate matching for MatchTool.
+
+ - add "match-as-filter" concept and corresponding symbols:
+
+     TC_MATCHFLTR and TC_MATCHFLTR2 
+
+ - cmt/requirements
+
+      version increment to v11r6
+
 !========================== LoKiTrigger v11r5 2011-02-10 ===================
 ! 2011-02-10 - Roel Aaij
  - Fixed the UpgradeTool to correctly flag seeds and look for already upgraded 

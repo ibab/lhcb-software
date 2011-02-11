@@ -46,6 +46,8 @@
 
   <class name = "LoKi::Hlt1::Match"               />
   <class name = "LoKi::Hlt1::Match2"              />
+  <class name = "LoKi::Hlt1::FilterMatch"         />
+  <class name = "LoKi::Hlt1::FilterMatch2"        />
   <class name = "LoKi::Hlt1::Upgrade"             />
   <class name = "LoKi::Hlt1::UpgradeTracks"       />
   <class name = "LoKi::Hlt1::UpgradeMultiTracks"  />
@@ -130,6 +132,7 @@
     </class>
     <class name="LoKi::Hlt1::MatchTool" >
       <field  name = "m_match"      />
+      <field  name = "m_match2"     />
     </class>
 
     <class name ="LoKi::Candidates::Log_<bool>"     />

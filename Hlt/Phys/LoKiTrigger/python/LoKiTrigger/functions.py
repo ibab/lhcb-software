@@ -209,9 +209,13 @@ TC_UPGRADE_MT   = LoKi.Hlt1.UpgradeMultiTracks
 # =============================================================================
 
 ## @see LoKi::Cuts::TC_MATCH
-TC_MATCH    = LoKi.Hlt1.Match
+TC_MATCH      = LoKi.Hlt1.Match
 ## @see LoKi::Cuts::TC_MATCH2
-TC_MATCH2   = LoKi.Hlt1.Match2
+TC_MATCH2     = LoKi.Hlt1.Match2
+## @see LoKi::Cuts::TC_MATCH
+TC_MATCHFLTR  = LoKi.Hlt1.FilterMatch
+## @see LoKi::Cuts::TC_MATCH2
+TC_MATCHFLTR2 = LoKi.Hlt1.FilterMatch2
 
 # =============================================================================
 ## vertex making 

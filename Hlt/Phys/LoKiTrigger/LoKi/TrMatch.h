@@ -55,6 +55,7 @@ namespace LoKi
     /** @class Match LoKi/TrMatch.h
      *  Simple helper which represent the track matching concept  
      *  @see ITrackMatch 
+     *  @see Hlt::ITrack2CandidateMatch
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Cuts::TC_MATCH
      *  @see LoKi::Hlt1::TC_MATCH2
@@ -125,6 +126,7 @@ namespace LoKi
     /** @class Match2 LoKi/TrMatch.h
      *  Simple helper which represent the track matching concept  
      *  @see ITrackMatch 
+     *  @see Hlt::ITrack2CandidateMatch
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Cuts::TC_MATCH
      *  @see LoKi::Hlt1::TC_MATCH2
@@ -150,7 +152,7 @@ namespace LoKi
       ( const std::string&           output  ,   //   output selection name/key 
         const std::string&           tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
-      /// MANDATORY: virtual desctructor 
+      /// MANDATORY: virtual destructor 
       virtual ~Match2() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Match2* clone() const ;
@@ -160,10 +162,105 @@ namespace LoKi
     private:
       // ======================================================================
       /// the default constructor is disabled 
-      Match2() ;                          // the default constructor is disabled 
+      Match2 () ;                        // the default constructor is disabled 
       // ======================================================================
     };
     // ========================================================================
+    /** @class FilterMatch
+     *  "match-as-filter"
+     *  @see ITrack2CandidateMatch
+     *  @see LoKi::Hlt1::MatchConf
+     *  @see LoKi::Cuts::TC_MATCH
+     *  @see LoKi::Hlt1::TC_MATCH2
+     *  @see LoKi::Hlt1::TC_MATCHFLTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-11-14
+     */
+    class GAUDI_API FilterMatch 
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
+      , public LoKi::Hlt1::MatchTool 
+    { 
+    protected:
+      // ======================================================================
+      /// the actual type of track source
+      typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Source Source ;
+      // ======================================================================      
+    public:
+      // ======================================================================
+      /// constructor 
+      FilterMatch
+      ( const Source&                candidates ,   //   candidates for matching 
+        const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
+      /// constructor 
+      FilterMatch 
+      ( const std::string&           candidates ,   //   candidates for matching 
+        const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
+      /// MANDATORY: virtual desctructor 
+      virtual ~FilterMatch() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  FilterMatch* clone() const ;
+      /// MANDATORY: the only essential method
+      virtual  result_type   operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream&  fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      FilterMatch () ;                   // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the second source 
+      const Source&      source () const { return m_source.func() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// souce of tracks to be matched 
+      LoKi::Assignable<Source>::Type m_source  ; //            source of tracks 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class FilterMatch2 LoKi/TrMatch.h
+     *  "match-as-filter"
+     *  @see ITrackMatch 
+     *  @see Hlt::ITrack2CandidateMatch
+     *  @see LoKi::Hlt1::MatchConf
+     *  @see LoKi::Cuts::TC_MATCH
+     *  @see LoKi::Hlt1::TC_MATCH2
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-11-14
+     */
+    class GAUDI_API FilterMatch2 : public FilterMatch  
+    { 
+    protected:
+      // ======================================================================
+      /// the actual type of track source
+      typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Source Source ;
+      // ======================================================================      
+    public:
+      // ======================================================================
+      /// constructor 
+      FilterMatch2 
+      ( const Source&                tracks2 ,   //   tracks to be matched with 
+        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+      /// constructor 
+      FilterMatch2 
+      ( const std::string&           tracks2 ,   //   tracks to be matched with 
+        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+      /// MANDATORY: virtual destructor 
+      virtual ~FilterMatch2() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  FilterMatch2* clone() const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream&  fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      FilterMatch2 () ;                  // the default constructor is disabled 
+      // ======================================================================
+    };
   } //                                              end of namespace LoKi::Hlt1 
   // ==========================================================================
 } //                                                      end of namespace LoKi 

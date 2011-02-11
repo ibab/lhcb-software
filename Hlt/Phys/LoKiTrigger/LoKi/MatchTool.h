@@ -17,6 +17,10 @@
 // ============================================================================
 #include "TrackInterfaces/ITrackMatch.h"
 // ============================================================================
+// HltBase 
+// ============================================================================
+#include "HltBase/ITrack2CandidateMatch.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
@@ -80,6 +84,24 @@ namespace LoKi
       ( const LHCb::Track* tr1 , 
         const LHCb::Track* tr2 ) const ;
       // ======================================================================
+      /** perform the track matching 
+       *  @param tr1 the first  track 
+       *  @param tr2 the second track 
+       *  @return matched track (if any) 
+       */
+      const LHCb::Track* match 
+      ( const LHCb::Track*    tr1 , 
+        const Hlt::Candidate* tr2 ) const ;
+      // ======================================================================
+      /** perform the track matching 
+       *  @param tr1 the first  track 
+       *  @param tr2 the second candidate 
+       *  @return treu in case of good matching 
+       */
+      bool matched 
+      ( const LHCb::Track*    tr1 , 
+        const Hlt::Candidate* tr2 ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
@@ -115,7 +137,11 @@ namespace LoKi
       /// cast to the configuration 
       operator const LoKi::Hlt1::MatchConf& () const { return   config() ; }
       /// the matching tool
-      const LoKi::Interface<ITrackMatch>& match () const { return m_match ; }
+      const LoKi::Interface<ITrackMatch>&                match  () const 
+      { return m_match  ; }
+      /// the matching tool
+      const LoKi::Interface<Hlt::ITrack2CandidateMatch>& match2 () const
+      { return m_match2 ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -145,7 +171,9 @@ namespace LoKi
     private:
       // ======================================================================
       /// the matching tool itself 
-      mutable LoKi::Interface<ITrackMatch> m_match ;  //      the matching tool 
+      mutable LoKi::Interface<ITrackMatch>                m_match    ;
+      /// the matching tool itself 
+      mutable LoKi::Interface<Hlt::ITrack2CandidateMatch> m_match2   ;
       /// "reco ID"
       mutable int  m_recoID ;                         //                reco ID 
       // invert arguments ? 

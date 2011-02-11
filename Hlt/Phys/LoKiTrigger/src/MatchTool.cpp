@@ -52,14 +52,25 @@ LoKi::Hlt1::MatchTool::MatchTool
   , m_qualityID  ( 0       ) 
   , m_qualityID2 ( 0       )
   , m_match      (         )
+  , m_match2     (         )
   , m_recoID     ( 0       )
 // 
   , m_invert     ( false   )
 {  
   // retrive the tool 
-  m_match = alg()->tool<ITrackMatch> ( mTool() ) ;
+  IAlgTool* t = alg()->tool<ITrackMatch> ( mTool() ) ;
   //
-  /// get the service 
+  Assert ( 0 != t , "Can't aquire the tool!" );
+  //
+  SmartIF<ITrackMatch>                i_1 ( t ) ;
+  if ( i_1 ) { m_match  = i_1.get () ; }
+  //
+  SmartIF<Hlt::ITrack2CandidateMatch> i_2 ( t ) ;
+  if ( i_2 ) { m_match2 = i_2.get () ; }
+  //
+  Assert ( !(!m_match)  || !(!m_match2) , "Can't aquire right interface!" ) ; 
+  //
+  // get the service 
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   //
   { // recoID 
@@ -111,14 +122,15 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   double q1 = 0 ;
   double q2 = 0 ;
   StatusCode sc = match() -> match ( *tr1 , *tr2 , *track3 , q1 , q2 ) ;
-  if ( sc.isFailure() ) { return 0 ; }                              // CONTINUE 
-  
+  if ( sc.isFailure() ) { return 0 ; }                               // RETURN
+  //
   // good matching ?
   if ( q1 < maxQualityCut() && 
        q2 < maxQuality2Cut() ) 
   {
     if ( 0 != qualityID  () ) { track3 -> addInfo ( qualityID  () , q1 ) ; }
     if ( 0 != qualityID2 () ) { track3 -> addInfo ( qualityID2 () , q2 ) ; }
+    //
     // move info ? 
     if ( moveInfo () ) 
     {
@@ -138,6 +150,86 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   //
   return 0 ;
 }
+// ============================================================================
+/*  perform the track matching 
+ *  @param tr1 the first  track 
+ *  @param tr2 the second track 
+ *  @return matched track (if any) 
+ */
+// ============================================================================
+const LHCb::Track* LoKi::Hlt1::MatchTool::match 
+( const LHCb::Track*    track , 
+  const Hlt::Candidate* cand  ) const 
+{
+  //
+  if ( 0 == track || 0 == cand ) { return 0 ; }                   // RETURN
+  //
+  // it is track <--> track match! 
+  if ( !m_match2 ) 
+  {
+    const LHCb::Track* track2  = cand->get<LHCb::Track> () ;
+    if ( 0 == track2  ) { return 0 ; }                            // RETURN
+    return match ( track , track2 ) ;                             // RETURN 
+  }
+  //
+  /// get new track 
+  std::auto_ptr<LHCb::Track> track3 ( new LHCb::Track() ) ;
+  // the actual track matching
+  double q1 = 0 ;
+  double q2 = 0 ;
+  StatusCode sc = match2() -> match ( *track , *cand , *track3 , q1 , q2 ) ;
+  if ( sc.isFailure() ) { return 0 ; }                              // RETURN
+  
+  // good matching ?
+  if ( q1 < maxQualityCut() && 
+       q2 < maxQuality2Cut() ) 
+  {
+    if ( 0 != qualityID  () ) { track3 -> addInfo ( qualityID  () , q1 ) ; }
+    if ( 0 != qualityID2 () ) { track3 -> addInfo ( qualityID2 () , q2 ) ; }
+    //
+    // move info ? 
+    if ( moveInfo () ) 
+    {
+      Hlt::MergeInfo ( *track , *track3 ) ;
+    }        
+    ///
+    LHCb::Track* track = track3.release() ;
+    if ( 0 == track->parent() ) 
+    { storedTracks ( address() )->insert ( track ); }
+    //
+    // do not put "bad" match into stream 
+    if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
+    //
+    return track ;                                                // RETURN 
+  }
+  //
+  return 0 ;
+  //
+}
+// ============================================================================
+/*  perform the track matching 
+ *  @param tr1 the first  track 
+ *  @param tr2 the second track 
+ *  @return matched track (if any) 
+ */
+// ============================================================================
+bool LoKi::Hlt1::MatchTool::matched  
+( const LHCb::Track*    track , 
+  const Hlt::Candidate* cand  ) const 
+{
+  //
+  if ( 0 == track || 0 == cand ) { return false  ; }                   // RETURN
+  //
+  Assert ( !(!match2()) , "Invalid setup!" ) ;
+  //
+  // it is track <--> track match! 
+  return match2() -> match ( track             ,
+                             cand              , 
+                             maxQualityCut  () , 
+                             maxQuality2Cut () ) ;
+  //
+}
+
 // ============================================================================
 // The END 
 // ============================================================================
