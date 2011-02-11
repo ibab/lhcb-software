@@ -238,7 +238,8 @@ B2twobody = {
                 'MinDSD0DauIPChi2':   9.0,
                 'MaxDSD0DauTrkChi2':  5.0
                 }
+    }
 
-B2threebody=confdict_2body.copy()
+B2threebody=B2twobody.copy()
 B2threebody['CONFIG']['nbody']=3
 B2threebody['CONFIG']['doKS']=False
