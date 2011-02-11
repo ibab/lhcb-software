@@ -68,10 +68,10 @@ namespace DaVinci
       ROOT::Math::Boost boostToMother1( boostedBmother1.BoostToCM() );
 
       // Do the boost to the mother1 frame
-      const Gaudi::LorentzVector boostedM1mother1 = boostToMother1( boostedBmother1 );
-      const Gaudi::LorentzVector boostedM1mother2 = boostToMother1( boostedBmother2 );
+      //const Gaudi::LorentzVector boostedM1mother1 = boostToMother1( boostedBmother1 );
+      //const Gaudi::LorentzVector boostedM1mother2 = boostToMother1( boostedBmother2 );
       const Gaudi::LorentzVector boostedM1partA   = boostToMother1( boostedBpartA );
-      const Gaudi::LorentzVector boostedM1partB   = boostToMother1( boostedBpartB );
+      //const Gaudi::LorentzVector boostedM1partB   = boostToMother1( boostedBpartB );
       const Gaudi::LorentzVector boostedM1partC   = boostToMother1( boostedBpartC );
       const Gaudi::LorentzVector boostedM1partD   = boostToMother1( boostedBpartD );
       
@@ -109,10 +109,10 @@ namespace DaVinci
       ROOT::Math::Boost boostToMother1( boostedBmother1.BoostToCM() );
 
       // Do the boost to the mother1 frame
-      const Gaudi::LorentzVector boostedM1mother1 = boostToMother1( boostedBmother1 );
+      //const Gaudi::LorentzVector boostedM1mother1 = boostToMother1( boostedBmother1 );
       const Gaudi::LorentzVector boostedM1mother2 = boostToMother1( boostedBmother2 );
       const Gaudi::LorentzVector boostedM1partA   = boostToMother1( boostedBpartA );
-      const Gaudi::LorentzVector boostedM1partB   = boostToMother1( boostedBpartB );
+      //const Gaudi::LorentzVector boostedM1partB   = boostToMother1( boostedBpartB );
       const Gaudi::LorentzVector boostedM1partC   = boostToMother1( boostedBpartC );
       const Gaudi::LorentzVector boostedM1partD   = boostToMother1( boostedBpartD );
 
@@ -162,12 +162,12 @@ namespace DaVinci
       ROOT::Math::Boost boostToMother2( boostedBmother2.BoostToCM() );
 
       // Do the boost to the mother2 frame
-      const Gaudi::LorentzVector boostedM2mother1 = boostToMother2( boostedBmother1 );
-      const Gaudi::LorentzVector boostedM2mother2 = boostToMother2( boostedBmother2 );
-      const Gaudi::LorentzVector boostedM2partA   = boostToMother2( boostedBpartA );
-      const Gaudi::LorentzVector boostedM2partB   = boostToMother2( boostedBpartB );
+      //const Gaudi::LorentzVector boostedM2mother1 = boostToMother2( boostedBmother1 );
+      //const Gaudi::LorentzVector boostedM2mother2 = boostToMother2( boostedBmother2 );
+      //const Gaudi::LorentzVector boostedM2partA   = boostToMother2( boostedBpartA );
+      //const Gaudi::LorentzVector boostedM2partB   = boostToMother2( boostedBpartB );
       const Gaudi::LorentzVector boostedM2partC   = boostToMother2( boostedBpartC );
-      const Gaudi::LorentzVector boostedM2partD   = boostToMother2( boostedBpartD );
+      //const Gaudi::LorentzVector boostedM2partD   = boostToMother2( boostedBpartD );
 
       // Now find the angle between particleC in it's mothers rest frame (mother2) and the 
       // direction of it's mother in the B candidates rest frame. Equivalently, you can take

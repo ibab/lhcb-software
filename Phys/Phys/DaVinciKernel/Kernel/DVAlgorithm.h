@@ -567,7 +567,7 @@ protected:
     toolMap.insert( value ) ;
     //
     return t ;                                               // RETURN 
-  } ;
+  }
 
 
   /// Marks a single particle for saving, ignoring it's decay tree.

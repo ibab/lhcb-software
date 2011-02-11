@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-02-11 - Chris Jones
+ - Fix various icc warnings/remarks
+
 !======================== DaVinciKernel v9r1 2011-01-28 =====================
 
 ! 2011-01-24 - Juan Palacios
