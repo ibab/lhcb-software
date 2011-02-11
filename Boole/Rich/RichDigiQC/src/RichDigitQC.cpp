@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
- *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.39 2008-10-24 12:51:45 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
@@ -22,7 +19,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( DigitQC );
+DECLARE_ALGORITHM_FACTORY( DigitQC )
 
 // Standard constructor, initializes variables
 DigitQC::DigitQC( const std::string& name,

@@ -15,7 +15,7 @@ using namespace Rich::MC::Digi;
 // 2002-11-20 : Andy Presland   (Andrew.Presland@cern.ch)
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
+DECLARE_ALGORITHM_FACTORY( DataObjVerifier )
 
 // Standard constructor, initializes variables
 DataObjVerifier::DataObjVerifier( const std::string& name,
