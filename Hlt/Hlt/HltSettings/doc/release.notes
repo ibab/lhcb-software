@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Roel Aaij
+ - Add additional new muon lines to Physics_draft2011
+
 ! 2011-02-11 - Sam Gregson
  - CharmHadronic_draft2011 updated to link to new D2KS0H line
 

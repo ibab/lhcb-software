@@ -72,15 +72,26 @@ class Physics_draft2011( object ):
                                             ,   'Velo_NHits'    : 9 
                                             ,   'Velo_Qcut'     : 3 
                                                 }
-                     , Hlt1NewMuonLinesConf : {  'L0SingleMuon'    : "Muon"
-                                              ,  'L0SingleMuonGEC' : "Muon"
-                                              ,  'DiMuon_VxDOCA'   :   0.2
-                                              ,  'DiMuon_VxChi2'   :    25
-                                              ,  'DiMuon_P'        :  6000
-                                              ,  'DiMuon_PT'       :   500
-                                              ,  'DiMuon_TrChi2'   :     4
+		     , Hlt1NewMuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
+						,'DiMuonLowMass_VxChi2'     :   25
+						,'DiMuonLowMass_P'          : 6000
+						,'DiMuonLowMass_PT'         :  500
+						,'DiMuonLowMass_TrChi2'     :    4
+						,'DiMuonLowMass_M'          : 1000
+						,'DiMuonHighMass_VxDOCA'    :  0.2
+						,'DiMuonHighMass_VxChi2'    :   25
+						,'DiMuonHighMass_P'         : 6000
+						,'DiMuonHighMass_PT'        :  500
+						,'DiMuonHighMass_TrChi2'    :    4
+						,'DiMuonHighMass_M'         : 2900
+						,'SingleMuonHighPT_P'       : 6000
+						,'SingleMuonHighPT_PT'      :  500
+						,'SingleMuonHighPT_TrChi2'  :    4
+						,'SingleMuonNoIP_P'         : 6000
+						,'SingleMuonNoIP_PT'        :  500
+						,'SingleMuonNoIP_TrChi2'    :    4
                                               }
-                       }
+		       }
 
         from Muons_draft2011 import Muons_draft2011
         __update_conf__(thresholds,  Muons_draft2011().Thresholds() )
@@ -96,11 +107,11 @@ class Physics_draft2011( object ):
         """
         hlt2 = []
 
-        from Muons_draft2011 import Muons_draft2011
-        hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
+        ## from Muons_draft2011 import Muons_draft2011
+        ## hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
 
-        from Hadrons_draft2011 import Hadrons_draft2011
-        hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
+        ## from Hadrons_draft2011 import Hadrons_draft2011
+        ## hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
         
         return hlt2
        
@@ -122,5 +133,8 @@ class Physics_draft2011( object ):
                   'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton',
-                  'Hlt1NewDiMuon' ]
+		  'Hlt1DiMuonLowMass',
+                  'Hlt1DiMuonHighMass',
+		  'Hlt1SingleMuonHighPT',
+		  'Hlt1SingleMuonNoIP' ]
         return lines 
