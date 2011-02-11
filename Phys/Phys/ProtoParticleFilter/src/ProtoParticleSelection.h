@@ -4,9 +4,6 @@
  *
  * Header file for utility class ProtoParticleSelection
  *
- * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.2 2009-08-04 09:02:39 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -342,7 +339,7 @@ public: // Helper classes
         CALO_PRS,        ///< Must be in the CALO PRS acceptance
         CALO_ECAL,       ///< Must be in the CALO ECAL acceptance
         CALO_HCAL,       ///< Must be in the CALO HCAL acceptance
-        CALO_BREM,       ///< Must be in the CALO BREM acceptance
+        CALO_BREM        ///< Must be in the CALO BREM acceptance
       };
     /// Enum describing the various PID detector
     enum Requirement

@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ProtoParticleRICHFilter
  *
- * CVS Log :-
- * $Id: ProtoParticleRICHFilter.cpp,v 1.2 2009-07-20 16:43:19 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -24,7 +21,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ProtoParticleRICHFilter );
+DECLARE_TOOL_FACTORY( ProtoParticleRICHFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

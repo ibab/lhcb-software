@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ProtoParticleMUONFilter
  *
- * CVS Log :-
- * $Id: ProtoParticleMUONFilter.cpp,v 1.5 2009-07-21 14:17:37 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -25,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ProtoParticleMUONFilter );
+DECLARE_TOOL_FACTORY( ProtoParticleMUONFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

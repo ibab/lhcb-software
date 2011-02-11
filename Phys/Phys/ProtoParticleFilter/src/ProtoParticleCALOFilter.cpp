@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ProtoParticleCALOFilter
  *
- * CVS Log :-
- * $Id: ProtoParticleCALOFilter.cpp,v 1.4 2010-09-02 16:53:25 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -25,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ProtoParticleCALOFilter );
+DECLARE_TOOL_FACTORY( ProtoParticleCALOFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

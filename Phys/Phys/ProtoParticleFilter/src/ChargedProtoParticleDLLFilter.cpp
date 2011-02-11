@@ -21,7 +21,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ChargedProtoParticleDLLFilter );
+DECLARE_TOOL_FACTORY( ChargedProtoParticleDLLFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables
