@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoCombineDLLsAlg );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoCombineDLLsAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
