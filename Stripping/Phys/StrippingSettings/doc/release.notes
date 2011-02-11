@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Juan Palacios
+ - Change structure of development dictionaries. Dictionary now is
+   { <builder instance name> : { 'BUILDERTYPE' : <builder type name>, 'CONFIG' : <config name> 
 
 ! 2011-02-10 - Juan Palacios
  - Add developent dicitonaries for StrippingNeuroBayes, StrippingB2hhLTUnbiased, B2XGamma.
