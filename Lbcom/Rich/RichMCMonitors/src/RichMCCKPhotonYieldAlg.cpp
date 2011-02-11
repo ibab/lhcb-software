@@ -4,9 +4,6 @@
  *
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
- * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.11 2010-02-11 19:54:20 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
  */
@@ -25,7 +22,7 @@ using namespace Rich::MC;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCCKPhotonYieldAlg );
+DECLARE_ALGORITHM_FACTORY( MCCKPhotonYieldAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
