@@ -7,9 +7,9 @@
 #define  hijjet4 hijjet4_
 #define  hijcrdn hijcrdn_
 
-extern struct {
+extern struct HIMAIN1 {
   int natt;
-  int eatt;
+  float eatt;
   int jatt;
   int np;
   int nt;
@@ -17,16 +17,18 @@ extern struct {
   int n01;
   int n10;
   int n11;
+  float bb ;
 } himain1;
 
 
-extern struct {
-  int katt[4][130000];
-  float patt[4][130000];
+extern struct HIMAIN2 {
+  int katt[4][200000];
+  float patt[4][200000];
+  float vatt[4][200000];
 } himain2;
 
 
-extern struct {
+extern struct HIJJET1 {
   int npj[300];
   int kfpj[500][300];
   float pjpx[500][300];
@@ -44,7 +46,7 @@ extern struct {
 } hijjet1;
 
 
-extern struct {
+extern struct HIJJET2 {
   int nsg;
   int njsg[900];
   int iasg[3][900];
@@ -57,7 +59,7 @@ extern struct {
   float pmsg[900][100];
 } hijjet2;
 
-extern struct {
+extern struct HIPARNT {
   float hipr1[100];
   int ihpr2[50];
   float hint1[100];

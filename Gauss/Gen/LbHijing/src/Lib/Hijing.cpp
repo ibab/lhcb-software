@@ -19,8 +19,8 @@ extern "C" {
                         const char*, int,  const int*, const int*, const int*,
                         const int*) ;
 #else
-  void hijset_ (const float*, const char*, const char*, const char*, 
-                const int*, const int*, const int*, const int*, int, int, int);
+  void hijset_ (float&, const char*, const char*, const char*, 
+                int&, int&, int&, int&, int, int, int);
 #endif
 }
 
@@ -42,7 +42,7 @@ void Hijing::HijingInit(double l_efrm, const std::string l_frame,
   HIJSET( &efrm, frame, strlen(frame), proj, strlen(proj), targ,
           strlen(targ), &iap, &izp, &iat, &izt);
 #else
-  hijset_ ( &efrm, frame, proj, targ, &iap, &izp, &iat, &izt,
+  hijset_ ( efrm, frame, proj, targ, iap, izp, iat, izt,
             strlen(frame), strlen(proj), strlen(targ));
 #endif
 }
@@ -52,28 +52,28 @@ extern "C" {
 #ifdef WIN32
   void __stdcall HIJING( const char*, int, const float*, const float* ) ;
 #else
-  void hijing_ (const char*, float*, float*, int ) ;
+  void hijing_ (const char*, float&, float&, int ) ;
 #endif
 }
 
-// LUNHEP Fortran function
+// LUHEPC Fortran function
 extern "C" {
 #ifdef WIN32
-  int __stdcall HILUNHEP(int *) ;
+  void __stdcall LUHEPC_HIJING( int * ) ;
 #else
-  int hilunhep_ (int*) ;
-#endif
+  void luhepc_hijing_( int & ) ;
+#endif 
 }
 
-int Hijing::LunHep(int beam) {
+void Hijing::LuHepc( int mcconv ) {
 #ifdef WIN32
-  return HILUNHEP(&beam) ;
+  LUHEPC_HIJING( &mcconv) ;
 #else
-  return hilunhep_ (&beam) ;
+  luhepc_hijing_( mcconv ) ;
 #endif
 }
 
-void Hijing::HijingEvnt( const std::string l_frame, float l_bmin, float l_bmax ) {
+void Hijing::HijingEvnt( const std::string l_frame, double l_bmin, double l_bmax ) {
   char frame[8]; memset(frame,' ',8); strncpy(frame, l_frame.c_str(), strlen(l_frame.c_str()));
   float bmin=l_bmin;
   float bmax=l_bmax;
@@ -81,8 +81,24 @@ void Hijing::HijingEvnt( const std::string l_frame, float l_bmin, float l_bmax )
 #ifdef WIN32
   HIJING( frame, strlen(frame), &bmin, &bmax) ;
 #else
-  hijing_ ( frame, &bmin, &bmax, strlen(frame)) ;
+  hijing_( frame , bmin , bmax , strlen(frame) ) ;
 #endif
 }
 
+// LULIST Function
+extern "C" {
+#ifdef WIN32
+  void __stdcall LULIST_HIJING( int * ) ;
+#else
+  void lulist_hijing_( int & ) ;
+#endif
+}
 
+void Hijing::LuList( int mode ) {
+  int l_mode = mode ;
+#ifdef WIN32
+  LULIST_HIJING( &l_mode ) ;
+#else
+  lulist_hijing_(l_mode );  
+#endif
+}

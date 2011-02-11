@@ -19,7 +19,6 @@ include_dirs  $(LBHIJINGROOT)
 ### NOTE: the order of these use is important, for the wrong order
 ###       GaussHijing.exe complains about vanishing process and stops
 use  GENSER      v*  Gen
-use  hijing      v*  LCG_GeneratorsInterfaces    
 use  LbPythia    v*  Gen
 
 
@@ -34,6 +33,4 @@ library       LbHijing          component/*.cpp
 apply_pattern component_library library=LbHijing 
 apply_pattern linker_library    library=LbHijingLib 
 apply_pattern library_stamps    library=LbHijingLib 
-
-macro_append hijing_linkopts " -lpythia_hijing"
 

@@ -88,7 +88,7 @@ StatusCode HijingProduction::initialize() {
   sc = parseHijingCommands( m_commandVector ) ;
   if ( ! sc.isSuccess( ) )
     return Error( "Unable to read Hijing commands" , sc ) ;
-  
+
   Hijing::HijingInit(m_efrm, m_frame, m_proj, m_targ, m_iap, m_izp, m_iat, m_izt);
   
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
@@ -108,7 +108,7 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
   Hijing::HijingEvnt(m_frame, m_bmin, m_bmax);
   
   // Convert to HepEvt format
-  Hijing::LunHep(m_beam_to_use) ;
+  Hijing::LuHepc( 1 ) ;
   
   // Convert event in HepMC Format
   HepMC::IO_HEPEVT theHepIO ;
@@ -118,6 +118,7 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
+   
     HepMC::FourVector newMom ;
     newMom.setX( (*p) -> momentum() . px() * Gaudi::Units::GeV ) ;
     newMom.setY( (*p) -> momentum() . py() * Gaudi::Units::GeV ) ;
@@ -145,6 +146,7 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
     (*v) -> set_position( newPos ) ;
   }
   
+
   // beam particles in HepMC do not make sense, erase them:
   theEvent -> set_beam_particles( 0 , 0 ) ;
   
