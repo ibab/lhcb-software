@@ -175,14 +175,13 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
   for ( OUTPUT::const_iterator itr = out.begin() ; out.end() != itr ; ++itr ) 
   { 
     LHCb::Track* track = *itr  ;
-    /// invalid or already registered 
-    if ( 0 == track || 0 != track->parent() ) { continue ; }
+    /// invalid or already registered track
+    if ( 0 == track || track->parent() != 0 ) { continue ; }
     /// force TES-registration if not done yet
-    if ( !owner()     ) 
-    { Warning ( "reco(): misconfiguration of 'Owner'-property! ignore" ) ; }
+    if ( !owner() ) { Warning ( "reco(): misconfiguration of 'Owner'-property! ignore" ); }
     if ( 0 == otracks ) 
     { return Error ("reco(): LHCb::Track::Container* points to NULL!") ; }
-    // finally: register 
+     // finally: register 
     otracks->insert ( *itr ) ; 
   } 
   //
@@ -265,6 +264,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
     if ( sc.isFailure () ) 
     { return Error ( "Failure from ITrackFromTrack tool, skip track", sc ) ; }
   }
+  // We don't own the track, so if it's already flagged, just return the seed
+  else if ( !owner() ) { output.push_back( seed ); }
   // find in the list of recontructed 
   else { find ( seed , output , otracks ) ; } // find in the list of recontructed 
   //

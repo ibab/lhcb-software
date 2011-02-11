@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Roel Aaij
+ - Fixed the UpgradeTool for the case when the seed was already flagged as
+   having been upgraded, but no new track was created and registered in the TES.
+   If a tool does not own what it produces and the seed is flagged, return it.
+
 ! 2011-02-11 - Vanya Belyaev
 
  - add the tretament of track<--->candidate matching for MatchTool.
