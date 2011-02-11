@@ -298,8 +298,8 @@ void ST::STClusterMonitor::bookHistograms() {
   // Number of clusters produced by each TELL1
   m_1d_nClustersVsTELL1 = book1D("Number of clusters vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
   m_prof_nClustersVsTELL1 = bookProfile1D("Mean number of clusters per TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
-  m_1d_nClustersVsTELL1Links =  book1D("Number of clusters vs TELL1 links", 0.5, m_nTELL1s+0.5, m_nTELL1s*STDAQ::noptlinks);
-  m_1d_nClustersVsTELL1Sectors =  book1D("Number of clusters vs TELL1 sectors", 0.5, m_nTELL1s+0.5, 
+  m_1d_nClustersVsTELL1Links =  book1D("Number of clusters vs TELL1 links", 1., m_nTELL1s+1., m_nTELL1s*STDAQ::noptlinks);
+  m_1d_nClustersVsTELL1Sectors =  book1D("Number of clusters vs TELL1 sectors", 1., m_nTELL1s+1., 
                                          m_nTELL1s*m_nSectorsPerTELL1);
 
   // filled in fillHistograms
@@ -309,7 +309,7 @@ void ST::STClusterMonitor::bookHistograms() {
   m_2d_ChargeVsTELL1 = book2D("Cluster Charge vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 60., 60);
                               
   if(m_plotByPort) {
-    m_2d_ClustersPerPortVsTELL1 = book2D("Clusters per port vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, -0.5, 95.5, 96);
+    m_2d_ClustersPerPortVsTELL1 = book2D("Clusters per port vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96);
   }
   m_1d_totalCharge = book1D("Cluster ADC Values", 0., 200., 200);
   if(detType() == "TT" || m_plotBySvcBox) {
@@ -416,15 +416,13 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   m_nClustersPerTELL1[TELL1ID-1] += 1;
   m_1d_nClustersVsTELL1->fill(TELL1ID);
   unsigned int tell1Link = cluster->tell1Channel()/128;
-  m_1d_nClustersVsTELL1Links->fill((TELL1ID-0.5)+((0.5+tell1Link)/STDAQ::noptlinks));
+  m_1d_nClustersVsTELL1Links->fill((TELL1ID)+((0.5+tell1Link)/STDAQ::noptlinks));
   unsigned int tell1Sector = cluster->tell1Channel()/(m_nBeetlePortsPerSector*STDAQ::nstrips);
-  //  std::cout << detType() << "TELL" << TELL1ID << ", Sector=" << tell1Sector << ", Link=" << tell1Link << std::endl;
-  m_1d_nClustersVsTELL1Sectors->fill((TELL1ID-0.5)+((0.5+tell1Sector)/m_nSectorsPerTELL1));
-
+  m_1d_nClustersVsTELL1Sectors->fill((TELL1ID)+((0.5+tell1Sector)/m_nSectorsPerTELL1));
 
   m_1d_ClusterSize->fill(clusterSize);
   m_2d_ClusterSizeVsTELL1->fill(TELL1ID, clusterSize);
-  //  const DeSTSector* sector = findSector(cluster->channelID()); 
+
   double noise = sector->noise(cluster->channelID());
   if (noise > 1e-3) {
     const double signalToNoise = cluster->totalCharge()/noise;
