@@ -21,13 +21,19 @@
                         RooAbsReal& _p1,
                         RooAbsReal& _p2,
                         RooAbsReal& _p3,
-                        RooAbsReal& _lambda) :
+		    RooAbsReal& _lambda, 
+                    RooAbsReal& _ap0,
+                    RooAbsReal& _ap1, 
+                  RooAbsReal& _ap2) :
    RooAbsPdf(name,title), 
    x("x","x",this,_x),
     p1("p1"," p1",this,_p1),
     p2("p2"," p2",this,_p2),
     p3("p3"," p3",this,_p3),
-    lambda("lambda"," lambda",this,_lambda)
+   lambda("lambda"," lambda",this,_lambda),
+    ap0("ap0"," ap0",this,_ap0),
+   ap1("ap1"," ap1",this,_ap1),
+   ap2("ap2"," ap2",this,_ap2)
  { 
  } 
 
@@ -38,7 +44,10 @@
     p1("p1",this,other.p1),
     p2("p2",this,other.p2),
     p3("p3",this,other.p3),
-    lambda("lambda",this,other.lambda)
+   lambda("lambda",this,other.lambda),
+  ap0("ap0",this,other.ap0),
+   ap1("ap1",this,other.ap1),
+  ap2("ap2",this,other.ap2)
  { 
  } 
 
@@ -47,7 +56,7 @@
  Double_t RooPsi2m::evaluate() const 
  { 
    // ENTER EXPRESSION IN TERMS OF VARIABLE ARGUMENTS HERE 
-   return formFactor()*PS() ; 
+   return formFactor()*PS() * (ap0 + ap1*x  + x*x*ap2); 
  } 
 
 
@@ -74,6 +83,6 @@ Double_t RooPsi2m::PS() const {
 
   double fact = mpp2 - 4 * mpion2;
   if (fact < 0) fact = 0.0;  
-  return 0.5*sqrt(sum*fact)/mP2;
-  //  return sqrt( sum*fact/(4*mP2) ) ;
+  //  return 0.5*sqrt(sum*fact)/mP2;
+  return sqrt( sum*fact/(4*mP2) ) ;
 }

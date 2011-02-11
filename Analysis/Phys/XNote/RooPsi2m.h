@@ -21,13 +21,19 @@ public:
 	      RooAbsReal& _p1,
 	      RooAbsReal& _p2,
 	      RooAbsReal& _p3,
-	      RooAbsReal& _lambda);
+	   RooAbsReal& _lambda,
+	   RooAbsReal& _ap0,
+           RooAbsReal& _ap1,
+RooAbsReal& _ap2 );
   RooPsi2m(const RooPsi2m& other, const char* name=0) ;
   virtual TObject* clone(const char* newname) const { return new RooPsi2m(*this,newname); }
   inline virtual ~RooPsi2m() { }
 
 protected:
 
+  RooRealProxy ap0 ;
+  RooRealProxy ap1 ;
+  RooRealProxy ap2 ;
   RooRealProxy x ;
   RooRealProxy p1 ;
   RooRealProxy p2 ;
