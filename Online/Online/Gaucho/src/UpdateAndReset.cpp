@@ -228,6 +228,7 @@ StatusCode UpdateAndReset::execute()
   }
   m_gpsTimeLastEvInCycle = (double)gps;
 //  printf("GPS Time %f\n",m_gpsTimeLastEvInCycle);
+  m_pGauchoMonitorSvc->UnLock();
   return StatusCode::SUCCESS;
 }
 
