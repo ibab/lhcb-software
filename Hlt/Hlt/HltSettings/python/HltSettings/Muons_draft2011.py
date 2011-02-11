@@ -49,7 +49,7 @@ class Muons_draft2011 :
             # control rate via flight distance chi2, sum IP chi2 cuts - avoid PT cuts
             'Hlt2MuTrack1',
             'Hlt2MuTrack2',
-            'Hlt2MuTrack3'
+            'Hlt2MuTrack3',
              
             'Hlt2Dst2PiD02MuMu',         
             #'Hlt2Dst2PiD02EMu', 

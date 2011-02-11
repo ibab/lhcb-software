@@ -107,11 +107,11 @@ class Physics_draft2011( object ):
         """
         hlt2 = []
 
-        ## from Muons_draft2011 import Muons_draft2011
-        ## hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
+        from Muons_draft2011 import Muons_draft2011
+        hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
 
-        ## from Hadrons_draft2011 import Hadrons_draft2011
-        ## hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
+        from Hadrons_draft2011 import Hadrons_draft2011
+        hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
         
         return hlt2
        
