@@ -5,6 +5,16 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Vanya Belyaev
+
+ - Hlt::Track2L0CaloMatch.cpp
+
+   palceholder for new Ulrich's tool for track<-->Calo matching 
+
+ - cmt/requirements 
+   
+   version increment top v9r2 
+
 !========================== HltTracking v9r1  2011-02-10 ===================
 ! 2011-02-10 - Roel Aaij
  - Moved VeloCandidates from HltReco to Hlt1Streamers and changed it into 
