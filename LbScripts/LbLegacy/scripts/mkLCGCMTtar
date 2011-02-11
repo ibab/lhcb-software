@@ -30,6 +30,7 @@
 #------------------------------------------------------------------------------
 from LbUtils.Temporary import TempDir
 from LbUtils.Processes import callCommand
+from LbUtils.CMT.Common import CMTCommand as CMT
 
 tmpdir = TempDir(prefix="mkLCGCMTtar")
 
@@ -37,24 +38,6 @@ import sys, os, getopt, time, shutil, commands
 import re
 from LbLegacy.install_project import calculateMD5
 version = '091123'
-
-# _cmt = lambda *args, **kwargs: apply(callCommand, ("cmt",) + args, kwargs)
-
-def _cmt(*args, **kwargs) :
-    oripwd = None
-    if "PWD" in os.environ.keys() :
-        oripwd = os.environ["PWD"]
-    if "cwd" in kwargs.keys() :
-        os.environ["PWD"] = kwargs["cwd"]
-
-    out, err, code = apply(callCommand, ("cmt",) + args, kwargs)
-
-    if oripwd :
-        os.environ["PWD"] = oripwd
-    else :
-        del os.environ["PWD"]
-
-    return out, err, code
 
 
 #---------------------------------------------------------------------------
@@ -216,9 +199,9 @@ def getCMTExtraTags(binary):
     return cmtargs
 
 def getLCGBinary(workdir, extname, binary):
-    ext_home = _cmt(getCMTExtraTags(binary), "show", "macro_value", "%s_home" % extname, cwd = workdir)[0][:-1]
-    nat_version = _cmt(getCMTExtraTags(binary), "show", "macro_value", "%s_native_version" % extname, cwd = workdir)[0][:-1]
-    cfg_version = _cmt(getCMTExtraTags(binary), "show", "macro_value", "%s_config_version" % extname, cwd = workdir)[0][:-1]
+    ext_home, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_home" % extname, cwd = workdir)[0][:-1]
+    nat_version, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_native_version" % extname, cwd = workdir)[0][:-1]
+    cfg_version, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_config_version" % extname, cwd = workdir)[0][:-1]
     if nat_version :
        ext_bin = None
        ext_bin_list = ext_home[ext_home.find(nat_version):].split(os.sep)
