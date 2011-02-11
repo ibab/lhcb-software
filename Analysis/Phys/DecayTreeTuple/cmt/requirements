@@ -23,6 +23,8 @@ use   DAQEvent           v*    Event
 use   L0Event            v*    Event
 use   DecayTreeFitter    v*    Phys
 use Boost        v*   LCG_Interfaces
+use   LoKiPhysMC         v*    Phys
+use   LoKiArrayFunctors  v*    Phys
 
 include_path      none
 #============================================================================
