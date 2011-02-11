@@ -124,8 +124,8 @@ stream.appendLines( [
 
 ### 
 # add three muon-lines: Vanya Belyaev 2010-08-11 & 2010-10-03
-from StrippingSelections.StrippingTriMuons import StrippingTriMuonsConf
-stream.appendLines (  StrippingTriMuonsConf({}).lines() )
+#from StrippingSelections.StrippingTriMuons import StrippingTriMuonsConf
+#stream.appendLines (  StrippingTriMuonsConf({}).lines() )
 
 ###
 # Stripping lines for Bs2MuMu

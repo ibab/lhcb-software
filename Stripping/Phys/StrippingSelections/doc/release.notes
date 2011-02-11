@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Juan Palacios
+ - Add StrippingB2nbody line builder.
+ - Remove StrippingTriMuons from StreamDimuon.
+
 ! 2011-02-10 - Juan Palacios
  - StreamRadiative
   . Remove all radiative lines, these no longer instantiate.
