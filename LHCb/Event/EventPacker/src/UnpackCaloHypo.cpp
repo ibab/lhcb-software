@@ -6,7 +6,6 @@
 #include "Kernel/StandardPacker.h"
 #include "Event/PackedCaloHypo.h"
 #include "Event/CaloHypo.h"
-#include "LHCbMath/LHCbMath.h"
 
 // local
 #include "UnpackCaloHypo.h"
@@ -67,8 +66,7 @@ StatusCode UnpackCaloHypo::execute() {
     newCaloHypos->insert( hypo, src.key );
     hypo->setHypothesis( (LHCb::CaloHypo::Hypothesis) src.hypothesis );
     hypo->setLh( pack.fltPacked( src.lh ) );
-    //if ( 0. != src.z ) 
-    if ( ! LHCb::Math::equal_to_double(src.z,0.0) )
+    if ( 0 != src.z ) 
     {
       LHCb::CaloPosition* pos = new LHCb::CaloPosition();
       hypo->setPosition( pos );
