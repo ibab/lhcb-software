@@ -16,6 +16,12 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/ITransportSvc.h"
 
+#include <VeloDet/DeVeloSensor.h>
+#include <VeloDet/DeVeloRType.h>
+#include "VeloDet/DeVelo.h"
+
+#include "VeloDet/DeVelo.h"
+
 /** @class Hlt2PreSelDV Hlt2PreSelDV.h
  *  @brief Turn a given container of RecVertex if they fulfill some criteria
  *  @author Neal Gauvin
@@ -48,7 +54,8 @@ private:
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   const LHCb::Particle::ConstVector &, 
-			   int & );
+			   int & ,
+			   double );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
   /// Creates a pion with 400 MeV pt from track slopes.
@@ -64,6 +71,11 @@ private:
   ///Is a vertex too close to detector material ?
   bool IsAPointInDet( const LHCb::Particle &, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
+  
+  void InitialiseGeoInfo();///< Store geometry infos
+  bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);///<Point in material region in Left halfbox
+  bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);///<Point in material region in Right halfbox
+
   bool TestMass( const LHCb::Particle * );  ///< Cut on the mass
   bool TestMass( LHCb::Particle & );  ///< Cut on the mass
   /// Cut on the RF-Foil position
@@ -135,6 +147,10 @@ private:
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
+  std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
+  std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
+  /// set to true when geometry is already initialised
+  bool        m_GeoInit;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
 

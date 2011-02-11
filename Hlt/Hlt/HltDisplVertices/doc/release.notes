@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Victor Coco
+ - Introduce Material veto in Hlt2SelDv
+
 !========================== HltDisplVertices v3r1 2011-01-30 ===================
 ! 2011-01-25 - Roel Aaij
  - Update Hlt2SelDV for use with the new DVAlgorithm

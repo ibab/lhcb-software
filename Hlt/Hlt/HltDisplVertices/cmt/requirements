@@ -18,6 +18,7 @@ branches          cmt doc src options
 use DaVinciKernel   v*    Phys
 use DetDesc v* Det
 use CaloDet             v* Det
+use VeloDet             v* Det
 
 include_path      none
 #============================================================================

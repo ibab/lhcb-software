@@ -52,6 +52,8 @@ Hlt2SelDV::Hlt2SelDV( const std::string& name,
   //Unlimited
   declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
   declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
+  declareProperty("PreyMaxSumpt", m_PreyMaxSumPt = 14.*TeV );
+
   declareProperty("MinRecpt", m_MinRecpt = 0*GeV );
   declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
   declareProperty("RMax", m_RMax = 10.*m );
@@ -207,31 +209,12 @@ StatusCode Hlt2SelDV::execute() {
   if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute event "
 				      << m_nbevent  << endmsg;
   setFilterPassed(false);
+  m_GeoInit = false; //be sure the goe is initialised if needed.
 
   //------------------Get the (upstream) Primary Vertex------------------
   GetUpstreamPV();
   if( msgLevel( MSG::DEBUG ) && PV != NULL )
     debug() << "Upstream PV Position : " << PV->position() << endmsg ;
-
-  //------------------Set the beam line------------------
-  if( m_RCut=="FromBeamLine" ){
-    if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
-      const LHCb::Particle* tmp = *(BL.begin());
-      m_BeamLine->setReferencePoint( tmp->referencePoint() );
-      m_BeamLine->setMomentum( tmp->momentum() );
-      if( msgLevel(MSG::DEBUG) )
-        debug()<<"Beam line position "<< m_BeamLine->referencePoint()
-	       <<" direction " << m_BeamLine->momentum() << endmsg;
-    } else {
-      warning()<<"No Beam line found at "<< m_BLLoc << endmsg;
-      return StatusCode::SUCCESS;
-    }
-  } else if( m_RCut=="FromUpstreamPV" ){
-    if(PV == NULL) return StatusCode::SUCCESS;
-    m_BeamLine->setReferencePoint( PV->position() );
-    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
-  }
 
   //------------------The Code---------------------------  
   Particle::Range preys = particles();
@@ -244,8 +227,26 @@ StatusCode Hlt2SelDV::execute() {
   }
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets;
-
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets,masses,minvd,rs;
+  int nPV(0);
+  int nPVSel(0);
+  const RecVertex::Range PVs = this->primaryVertices();
+  nPV =PVs.size();
+  //double tmp = 1000;
+  std::vector<const RecVertex*> SelectedPVs; 
+  for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+        i != PVs.end() ; ++i ){
+    const RecVertex* pv = *i;
+    //Apply some cuts
+    if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
+      continue;
+    double z = pv->position().z();
+    if( abs(z) > 150*mm ) continue;
+    if( !HasBackAndForwardTracks( pv ) ) continue;
+    SelectedPVs.push_back(pv);
+  }
+  nPVSel =SelectedPVs.size();
+ 
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
   //Particle::ConstVector Cands;
@@ -265,7 +266,7 @@ StatusCode Hlt2SelDV::execute() {
     int nbtrks = p->endVertex()->outgoingParticles().size();
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
-    double rho = GetRFromBL( pos );
+    double rho = p->info(52,-1000.);
     double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
@@ -284,6 +285,8 @@ StatusCode Hlt2SelDV::execute() {
         debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
       } else { debug()<< endmsg; }
     }
+    
+    InitialiseGeoInfo();
     //Is the particle close to the detector material ?
     if( IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) ) continue;
 
@@ -293,34 +296,50 @@ StatusCode Hlt2SelDV::execute() {
         debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg; 
       continue; 
     }
-
-    if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
+    if( mass < m_PreyMinMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
         pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
         pos.y() > m_MaxY || pos.z() < m_MinZ || pos.z() > m_MaxZ ||
-        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){  
+        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ || ( mass > m_PreyMaxMass && sumpt > m_PreyMaxSumPt) ){  
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
     }
+    /*if(mass > m_PreyMaxMass &&  sumpt > m_SumPtMax){
+      if( msgLevel( MSG::DEBUG ) )
+        debug()<<"Particle do not pass the maximal kinematic cuts"<< endmsg; 
+      continue; 
+      }*/
 
     //Save infos in tuple !
     if( m_SaveTuple ){
-      nboftracks.push_back( nbtrks ); chindof.push_back( chi );
+         //get distance to closest PV
+      double mindist = 1000000000.;
+      for (std::vector<const RecVertex*>::const_iterator ipv = SelectedPVs.begin(); ipv != SelectedPVs.end(); ipv++){
+	if((p->endVertex()->position()-(*ipv)->position()).R()<mindist)mindist=(p->endVertex()->position()-(*ipv)->position()).R();
+      }
+      minvd.push_back(mindist);
+  
+      nboftracks.push_back( nbtrks ); chindof.push_back( chi );masses.push_back( mass );
       e.push_back(mom.e());
       px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
       x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(zpos);
       errx.push_back(sqrt(err(0,0))); erry.push_back(sqrt(err(1,1)));
       errz.push_back(sqrt(err(2,2)));
       sumpts.push_back(sumpt); muons.push_back(muon);
+      rs.push_back(rho);
       double indet = 0;
+      
+      InitialiseGeoInfo();
       if( IsAPointInDet( p, 2 ) ) indet += 1;
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
+      if( IsAPointInDet( p, 5, 2 ) ) indet += 1000;
       indets.push_back( indet ); 
     }
-
+    // Apply the material cut
+    if (m_RemVtxFromDet !=0 and p->info(51,-1000.)>0) continue;
     //The only way to have the candidates saved in the Stripping is to have 
     //  the latest algo in the sequence put them in the TES.
     //As they are already saved by a preselection algorithm, 
@@ -351,8 +370,8 @@ StatusCode Hlt2SelDV::execute() {
   if( m_SaveTuple ){
     Tuple tuple = nTuple("DisplVertices");
     const int NbPreyMax = 20;
-    if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
-    if( !fillHeader(tuple) ) return StatusCode::FAILURE;
+    //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
+    //if( !fillHeader(tuple) ) return StatusCode::FAILURE;
     //if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
     tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
@@ -366,15 +385,23 @@ StatusCode Hlt2SelDV::execute() {
     tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		   "NbPrey", NbPreyMax );
+    tuple->farray( "PreyR", rs.begin(), rs.end(), 
+		   "NbPrey", NbPreyMax );
+    tuple->farray( "PreyMass", masses.begin(), masses.end(), 
+		   "NbPrey", NbPreyMax );
     tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
     tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
 		   "NbPrey", NbPreyMax );
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
 		   "NbPrey", NbPreyMax );
+    tuple->farray( "MinVD", minvd.begin(), minvd.end(),
+		   "NbPrey", NbPreyMax );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
+    tuple->column( "NPVs", nPV );
+    tuple->column( "NPVsSel", nPVSel );
     //Save number of Velo tracks...
     const Track::Range & VeloTrks = get<Track::Range>( "Hlt/Track/Velo" );
     tuple->column( "NbVelo", VeloTrks.size() );
@@ -527,9 +554,139 @@ bool Hlt2SelDV::IsAPointInDet( const Particle* P, int mode, double range ){
       }
     }
   } // end of 3 cond
+
+  else if( mode == 5 ){
+    const Gaudi::XYZPoint & point = RV->position();
+    Gaudi::XYZPoint posloc;
+    bool inMat = false;
+    //move to local Velo half frame
+    if( point.x() < 2. ){ //right half
+      posloc = m_toVeloRFrame * point;
+      inMat = inMat || IsInMaterialBoxRight(posloc);
+    }
+    if (inMat) return inMat;
+    if( point.x() > -2. ){ //right half
+      posloc = m_toVeloLFrame * point;
+      inMat = inMat || IsInMaterialBoxLeft(posloc);
+    }
+    return inMat;
+  }
   
   return false;
 }
+
+//=============================================================================
+// Check if a point is in a region containing RFFoil and sensors in the Left 
+// halfbox frame
+//=============================================================================
+
+bool Hlt2SelDV::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
+  // First get the z bin
+  int regModIndex(0);
+  double downlimit(-1000.),uplimit(-1000.);
+  if(int(m_LeftSensorsCenter.size())-1<2)return false;
+  for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
+    downlimit=uplimit;
+    uplimit=(m_LeftSensorsCenter[mod].z()+(m_LeftSensorsCenter[mod+1].z()-
+                                           m_LeftSensorsCenter[mod].z())/2);
+    if( point.z()>downlimit && point.z()<uplimit ){
+      regModIndex=mod;
+      continue;
+    }
+  }
+  if(point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
+
+  // Is in vaccum clean cylinder?
+  double r = sqrt(pow(point.x()-m_LeftSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_LeftSensorsCenter[regModIndex].y(),2));
+  
+ 
+  if ( (r<5. && point.z()<370.) || (r<4.3 && point.z()>370.) ){
+    return false;
+  }
+  // Is in the module area
+  double halfModuleBoxThickness(1.75);
+  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
+      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness)
+    return true;
+
+  // depending on z:
+  // in the region of small corrugation
+  if(point.z()<290. && point.x()-m_LeftSensorsCenter[regModIndex].x()>4){
+    // first rather large region, rather small r
+    float smallerCyl = 8.;
+    float RsmallerCyl = 7.;
+    float largerCyl = 11.;
+    float RlargerCyl = 9.;
+    
+    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
+       && r < RsmallerCyl ) return false;
+    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
+       && r < RlargerCyl ) return false;
+  }
+  
+  // Is clearly outside RFFoil part
+  if(r<12.5 && point.z()<440.) return true;
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && 
+     point.z()<440.) return true;
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
+     point.z()>440.) return true;  
+  return false;
+  
+}
+
+//=============================================================================
+// Check if a point is in a region containing RFFoil and sensors in the Right 
+// halfbox frame
+//=============================================================================
+
+bool Hlt2SelDV::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
+  // First get the z bin
+  int regModIndex(0);
+  double downlimit(-1000.),uplimit(-1000.);
+  if(int(m_RightSensorsCenter.size())-1<2)return false;
+  for (int mod = 0 ; mod != int(m_RightSensorsCenter.size())-1; mod++){
+    downlimit=uplimit;
+    uplimit=(m_RightSensorsCenter[mod].z()+(m_RightSensorsCenter[mod+1].z()-m_RightSensorsCenter[mod].z())/2);
+    if( point.z()>downlimit && point.z()<uplimit ){
+      regModIndex=mod;
+      continue;
+    }
+  }
+  if(point.z()<800. && point.z()>uplimit)
+    regModIndex=m_RightSensorsCenter.size()-1;
+  // Is in vaccum clean cylinder?
+  double r = sqrt(pow(point.x()-m_RightSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_RightSensorsCenter[regModIndex].y(),2));
+  
+  // inner cylinder
+  if ( (r<5. && point.z()<390.) || (r<4.3 && point.z()>390.) ){
+    return false;
+  }
+  // is in the module area
+  double halfModuleBoxThickness(1.75);
+  if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
+      && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
+  // depending on z:
+  // in the region of small corrugation
+  if(point.z()<300. && point.x()-m_RightSensorsCenter[regModIndex].x()<-4){
+    // first rather large region, rather small r
+    float smallerCyl = 8.;
+    float RsmallerCyl = 7.;
+    float largerCyl = 11.;
+    float RlargerCyl = 9.;
+    
+    if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>smallerCyl
+        && r < RsmallerCyl ) return false;
+    if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>largerCyl
+        && r < RlargerCyl ) return false;
+  }
+  // Is clearly outside RFFoil part
+  if (r<12.5 && point.z()<450. ) return true;
+  if (point.z()<450. && fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<5.5)return true;
+  if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true; 
+  
+  return false;
+}
+
 
 //=============================================================================
 // Is the point in the RF-Foil ?
@@ -907,3 +1064,61 @@ double Hlt2SelDV::VertDistance( const Gaudi::XYZPoint & v1,
   return sqrt(pow(v1.x()-v2.x(),2)+pow(v1.y()-v2.y(),2)+pow(v1.z()-v2.z(),2));
 }
 //=============================================================================
+
+void Hlt2SelDV::InitialiseGeoInfo(){
+  if( m_GeoInit ) return; //no need to do it more than once per event.
+  
+  //get the Velo geometry
+  string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
+  const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
+  const IDetectorElement* righthalv =  getDet<IDetectorElement>( velo + "Right" );
+  const IGeometryInfo* halflgeominfo = lefthalv->geometry();
+  const IGeometryInfo* halfrgeominfo = righthalv->geometry();
+  Gaudi::XYZPoint localorigin(0,0,0);
+  Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+  Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+  if( msgLevel( MSG::DEBUG ) )
+    debug() <<"Velo global right half center "
+	    << rightcenter <<", left half center "<< lefthalv << endmsg;
+  //matrix to transform to local velo frame
+  m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
+  //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
+  m_toVeloLFrame = halflgeominfo->toLocalMatrix() ;
+  if(m_RemVtxFromDet==5 || m_SaveTuple){
+    m_LeftSensorsCenter.clear();
+    m_RightSensorsCenter.clear();
+    DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
+    std::vector< DeVeloRType * >::const_iterator iLeftR= velo->leftRSensorsBegin() ;
+    for(;iLeftR!=velo->leftRSensorsEnd();iLeftR++){
+      if((*iLeftR)->isPileUp())continue;
+      const Gaudi::XYZPoint localCenter(0.,0.,0.);
+      const Gaudi::XYZPoint halfBoxRCenter = 
+        (*iLeftR)->localToVeloHalfBox (localCenter);
+      const DeVeloPhiType * phisens = (*iLeftR)->associatedPhiSensor () ;
+      if(!(*iLeftR)->isPileUp()){
+        const Gaudi::XYZPoint halfBoxPhiCenter = 
+          phisens->localToVeloHalfBox (localCenter);
+        Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
+				      halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
+				      halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
+        m_LeftSensorsCenter.push_back(halfBoxCenter);
+      }
+    }
+    std::vector< DeVeloRType * >::const_iterator iRightR = 
+      velo->rightRSensorsBegin() ;
+    for(;iRightR!=velo->rightRSensorsEnd();iRightR++){
+      const Gaudi::XYZPoint localCenter(0.,0.,0.);
+      const Gaudi::XYZPoint halfBoxRCenter = 
+        (*iRightR)->localToVeloHalfBox (localCenter);
+      const DeVeloPhiType * phisens = (*iRightR)->associatedPhiSensor () ;
+      if(!(*iRightR)->isPileUp()){
+        const Gaudi::XYZPoint halfBoxPhiCenter = 
+          phisens->localToVeloHalfBox (localCenter);
+        Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
+                                      halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
+                                      halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
+        m_RightSensorsCenter.push_back(halfBoxCenter);
+      }
+    }
+  }
+}

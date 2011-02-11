@@ -14,6 +14,11 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/ITransportSvc.h"
 
+#include <VeloDet/DeVeloSensor.h>
+#include <VeloDet/DeVeloRType.h>
+#include "VeloDet/DeVelo.h"
+
+
 /** @class Hlt2SelDV Hlt2SelDV.h
  *  
  *  @brief Apply a set of cuts on given Particles.
@@ -67,6 +72,11 @@ private:
   Gaudi::XYZPoint Normed( const Gaudi::LorentzVector &, double range = 1 );
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint &);
 
+  
+  void InitialiseGeoInfo();///< Store geometry infos
+  bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);///<Point in material region in Left halfbox
+  bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);///<Point in material region in Right halfbox
+
   /***************************************************************//**
    * the type of R cut to be applied 
    * ""                   : cut with respect to (0,0,z)
@@ -90,6 +100,7 @@ private:
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
   double m_SumPt ;            ///< Sumpt of all daughters tracks
+  double m_PreyMaxSumPt ;      ///< Maximum reconstructed mass
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_MaxChi2OvNDoF;     ///< Max chi2 of a vertex
@@ -118,8 +129,15 @@ private:
   //Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
 
+
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
+  std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
+  std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
+  /// set to true when geometry is already initialised
+  bool        m_GeoInit;
+
+
   const LHCb::RecVertex * PV; //The Primary Vertex !
   std::string m_Prey ;        ///< LHCb Name of the prey
   LHCb::ParticleID m_PreyID;  // PDG ID of this particle
@@ -144,4 +162,4 @@ private:
 
 };
 
-#endif // HLT2SELDV_H
+#endif // HLT2SELDVTUPLE_H
