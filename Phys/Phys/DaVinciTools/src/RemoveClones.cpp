@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RemoveClones );
+DECLARE_ALGORITHM_FACTORY( RemoveClones )
 
 //=============================================================================
 /// Standard constructor, initializes variables
@@ -51,7 +51,7 @@ RemoveClones::RemoveClones( const std::string& name,
 //=============================================================================
 /// Destructor
 //=============================================================================
-RemoveClones::~RemoveClones() {}; 
+RemoveClones::~RemoveClones() {}
 
 //#############################################################################
 /// Initialization
@@ -69,7 +69,7 @@ StatusCode RemoveClones::initialize() {
 
   return sc;
 
-};
+}
 //#############################################################################
 /// Execution
 //#############################################################################
@@ -129,7 +129,7 @@ StatusCode RemoveClones::execute() {
   setFilterPassed(NpartOut>0);  
   return sc;
 
-};
+}
 //#############################################################################
 /// Finalization
 //#############################################################################

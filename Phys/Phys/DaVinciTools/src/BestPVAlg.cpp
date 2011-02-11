@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BestPVAlg );
+DECLARE_ALGORITHM_FACTORY( BestPVAlg )
 
 
 //=============================================================================

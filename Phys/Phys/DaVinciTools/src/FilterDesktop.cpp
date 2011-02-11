@@ -368,9 +368,9 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
   {
-    StatusCode sc = m_outputPlots -> fillPlots ( i_markedParticles()  ) ;
-    if ( sc.isFailure () ) 
-    { return Error ( "Error from Output Plots tool", sc ) ; }
+    const StatusCode scc = m_outputPlots -> fillPlots ( i_markedParticles()  ) ;
+    if ( scc.isFailure () ) 
+    { return Error ( "Error from Output Plots tool", scc ) ; }
   }
   
   // monitor output (if required) 

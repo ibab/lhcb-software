@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ParticleDescendants );
+DECLARE_TOOL_FACTORY( ParticleDescendants )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,7 +30,7 @@ ParticleDescendants::ParticleDescendants( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleDescendants::~ParticleDescendants() {}; 
+ParticleDescendants::~ParticleDescendants() {} 
 
 //=============================================================================
 // Return all descendants of a Particle

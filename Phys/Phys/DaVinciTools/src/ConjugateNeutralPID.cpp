@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ConjugateNeutralPID );
+DECLARE_ALGORITHM_FACTORY( ConjugateNeutralPID )
 
 
 //=============================================================================
@@ -27,9 +27,8 @@ ConjugateNeutralPID::ConjugateNeutralPID( const std::string& name,
   , m_nEvents(0)
   , m_nAccepted(0)
   , m_nCandidates(0)
-{
- 
-}
+{ }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -40,15 +39,14 @@ ConjugateNeutralPID::~ConjugateNeutralPID() {}
 //=============================================================================
 StatusCode ConjugateNeutralPID::initialize()
 {
-  //=== The following two lines should be commented for DC04 algorithms ! ===
-  StatusCode sc = DVAlgorithm::initialize(); 
+  const StatusCode sc = DVAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize" << endmsg;
 
   m_changePIDTool = tool<IChangePIDTool>("NeutralCCChangePIDTool", this);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

@@ -798,7 +798,7 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   sc = updateHistos () ;
   
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 // ============================================================================
 // the standard execution      of the algorithm 
@@ -987,8 +987,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       if ( 0 != m_combinationPlots ) 
       {
-        StatusCode sc = m_combinationPlots->fillPlots ( &mother ) ;
-        if ( sc.isFailure() ) { Warning ( "Error from CombinationPlots" , sc ) ; } 
+        const StatusCode scc = m_combinationPlots->fillPlots ( &mother ) ;
+        if ( scc.isFailure() ) { Warning ( "Error from CombinationPlots" , scc ) ; } 
       }
       
       // apply the cut on "mother" particle
@@ -1000,8 +1000,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       if ( 0 != m_motherPlots ) 
       {
-        StatusCode sc = m_motherPlots->fillPlots ( particle ) ;
-        if ( sc.isFailure() ) { Warning ( "Error from MotherPlots" , sc ) ; } 
+        const StatusCode scc = m_motherPlots->fillPlots ( particle ) ;
+        if ( scc.isFailure() ) { Warning ( "Error from MotherPlots" , scc ) ; } 
       }
       
       // increment number of good decays 
@@ -1016,7 +1016,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   } // the loop over the decays
   
   // the final statistics 
-  counter ( "# selected") += nTotal ;
+  counter ( "# selected" ) += nTotal ;
   
   // monitor mother particles
   if ( monitorMother ) { m_motherMonitor ( saved ) ; }
@@ -1253,7 +1253,7 @@ StatusCode CombineParticles::finalize   ()           //  standard  finalization
 }
 // ============================================================================
 /// The factory (needed for the proper instantiation)
-DECLARE_ALGORITHM_FACTORY(CombineParticles);
+DECLARE_ALGORITHM_FACTORY(CombineParticles)
 // ============================================================================
 // The END 
 // ============================================================================

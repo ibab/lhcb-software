@@ -4,6 +4,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-02-11 - Chris Jones
+ - Various minor icc warnings/remarks fixes
+
 ! 2011-02-09 - Patrick Koppenburg
  - Type in name of a property of OnOfflineTool fixed. Was not used anywhere.
 

@@ -17,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory 
-DECLARE_ALGORITHM_FACTORY( FilterEventList );
-
+DECLARE_ALGORITHM_FACTORY( FilterEventList )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +34,7 @@ FilterEventList::FilterEventList( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-FilterEventList::~FilterEventList() {}; 
+FilterEventList::~FilterEventList() {}
 
 //=============================================================================
 // Initialization
@@ -51,7 +50,7 @@ StatusCode FilterEventList::initialize() {
 	 << ")" << endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -99,7 +98,7 @@ StatusCode FilterEventList::execute() {
   
   return StatusCode::SUCCESS;
   
-};
+}
 
 //=============================================================================
 //  Finalize

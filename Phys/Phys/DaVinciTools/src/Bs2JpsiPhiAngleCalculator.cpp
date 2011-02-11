@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Bs2JpsiPhiAngleCalculator );
+DECLARE_TOOL_FACTORY( Bs2JpsiPhiAngleCalculator )
 // Declaration of the AlgTool Factory
 
 //=============================================================================

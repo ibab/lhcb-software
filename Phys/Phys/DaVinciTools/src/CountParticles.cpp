@@ -76,7 +76,7 @@ private:
 };
 // ============================================================================
 /// declare the factory (needed for instantiation)
-DECLARE_ALGORITHM_FACTORY(CountParticles) ;
+DECLARE_ALGORITHM_FACTORY(CountParticles)
 // ============================================================================
 // The END 
 // ============================================================================

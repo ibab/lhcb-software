@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CheckOverlap );
+DECLARE_TOOL_FACTORY( CheckOverlap )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,8 +46,9 @@ CheckOverlap::CheckOverlap( const std::string& type,
 bool CheckOverlap::foundOverlap( const LHCb::Particle::ConstVector & parts,
                                  std::vector<const LHCb::ProtoParticle* > & proto )
 {
-  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(parts, protos) " << parts.size() << " "
-                                        << proto.size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) 
+    verbose() << "foundOverlap(parts, protos) " << parts.size() << " "
+              << proto.size() << endmsg ;
   const bool sc = addOrigins( parts, proto );
   if (!sc)
   {

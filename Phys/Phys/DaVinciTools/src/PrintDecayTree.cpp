@@ -94,7 +94,7 @@ private:
 };
 // ============================================================================
 /// declare the factory (needed for instantiation)
-DECLARE_ALGORITHM_FACTORY(PrintDecayTree) ;
+DECLARE_ALGORITHM_FACTORY(PrintDecayTree) 
 // ============================================================================
 // The END 
 // ============================================================================
