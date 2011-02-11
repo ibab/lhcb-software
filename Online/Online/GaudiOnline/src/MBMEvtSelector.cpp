@@ -391,6 +391,7 @@ StatusCode MBMEvtSelector::initialize()    {
 /// IService overload: start MEP manager service
 StatusCode MBMEvtSelector::start() {
   StatusCode sc = OnlineService::start();
+  IMEPManager* m = mepMgr();
   setProperties();
   if ( m_currContext ) {
     StatusCode sc = m_currContext->connect(input());
@@ -398,20 +399,24 @@ StatusCode MBMEvtSelector::start() {
       return sc;
     }
   }
+  else if ( m->connectWhen() == "start" ) {
+    error("Attempt to connect MBM buffer "+input()+" with invalid context.");
+  }
   return sc;
 }
 
 /// IService overload: stop MEP manager service
 StatusCode MBMEvtSelector::stop() {
-  if ( m_currContext ) {
-    m_currContext->close();
-    m_currContext = 0;
-  }
   return OnlineBaseEvtSelector::stop();
 }
 
 // IService implementation: Service finalization
 StatusCode MBMEvtSelector::finalize()    {
+  if ( m_currContext ) {
+    m_currContext->close();
+    m_currContext = 0;
+    error("MBMEvtSelector::finalize> MBM buffer context deleted!");
+  }
   if ( m_mepMgr )  {
     m_mepMgr->release();
     m_mepMgr = 0;
@@ -439,6 +444,7 @@ StatusCode MBMEvtSelector::releaseContext(Context*& ctxt) const  {
     delete pCtxt;
     pCtxt = 0;
     m_currContext = 0;
+    error("MBMEvtSelector::releaseContext> MBM buffer context deleted!");
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
