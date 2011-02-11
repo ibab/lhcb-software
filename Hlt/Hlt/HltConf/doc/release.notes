@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Jibo He
+ - Hlt1.py
+   Added Hlt1DiProton line
+
 ! 2011-02-11 - Sam Gregson
  - linked up new D2KS0H HLT2 line in Hlt/HltConf
 
