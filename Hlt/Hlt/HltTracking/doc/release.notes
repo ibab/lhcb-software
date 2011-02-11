@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Sam Gregson
+ - Linked up new Hlt2 D2KS0H line
+
 ! 2011-02-11 - Vanya Belyaev
 
  - Hlt::Track2L0CaloMatch.cpp

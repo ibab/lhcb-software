@@ -60,6 +60,7 @@ from Hlt2Lines.Hlt2B2HHLTUnbiasedLines      import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
+from Hlt2Lines.Hlt2D2KS0HLines             import  Hlt2CharmHadD2KS0HLinesConf
  
 #################################################################################################
 #
@@ -82,6 +83,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2DXLinesConf
                              , Hlt2CharmHadD02HHLinesConf
                              , Hlt2CharmHadD2HHHLinesConf
+                             , Hlt2CharmHadD2KS0HLinesConf 
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
