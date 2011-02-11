@@ -128,7 +128,7 @@ void SaveTimer::SavetoFile(void *buff)
         TH2D *th2;
         char hnam[1024];
         char *tok;
-        char *ptok;
+        char *ptok=0;
         int ntok;
         ntok = 0;
         char *ctxt;

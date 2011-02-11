@@ -112,8 +112,8 @@ int HistTask::Histos(std::vector<std::string> &hists)
 
 int HistTask::Histos(std::vector<std::string> &hists,std::map<std::string,TObject*> &histos)
 {
-  Histos(hists);
   int status;
+  status = Histos(hists);
   if (status == 0)
   {
     PTRMAP::iterator k;

@@ -7,7 +7,7 @@
 
 #include "Gaucho/HistTask.h"
 
-int main(int argc, char *argv[]) // Taskname, DNS Node
+int main(int , char *argv[]) // Taskname, DNS Node
 {
   HistTask *h;
   std::string task;
