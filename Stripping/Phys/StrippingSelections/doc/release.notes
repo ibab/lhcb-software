@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Rob Lambert
+ - Updated StripingB0q2DplusMuX lines to new framework
+ - Relaxed tight cuts onn Tuned B0q2DplusMuX line
+
 ! 2011-02-11 - Juan Palacios
  - Add StrippingB2nbody line builder.
  - Remove StrippingTriMuons from StreamDimuon.

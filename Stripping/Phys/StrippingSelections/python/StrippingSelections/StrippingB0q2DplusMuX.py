@@ -1,5 +1,5 @@
 # $Id: StrippingB0q2DplusMuX.py,v 1.6 2010-09-03 00:05:35 rlambert Exp $
-'''
+"""
 Module for constuction of B0q->DplusMuNuX lines
 
 ==== Description of the lines ====
@@ -22,6 +22,10 @@ The Tuned selection is inbetween Presel and MC09, to achieve the target retentio
 In the first stage, this was tuned on some early preselected data, where it was found the MC09 cuts on kinematic variables could be applied.
 The PID and tracking cuts were optimised on the data itself, and a slightly looser version of the optimal selection is now used here.
 
+It was found that the 12b cuts were too tight in the Tuned selection, so now they have been reduced.
+
+We will soon add an MC10 selection, and prescale away the MC09 selection at that time.
+
 ==== Description of the configuration ====
 
 The selection cuts are stored in the dictionaries: confdict['Presel'] or 'MC09' or 'Tuned'.
@@ -41,7 +45,7 @@ To look at all the configurable cuts, see StrippingB0q2DplusMuX.confdict
 
 To configure all lines, just instantiate the class:
 
-all=B0q2DplusMuXAllLinesConf(confdict)
+all=B0q2DplusMuXAllLinesConf('B0q2DplusMuX', confdict)
 
 Then to print all cuts do:
 
@@ -49,16 +53,13 @@ all.printCuts()
 
 You can configure one line at a time with the B0q2DplusMuXOneLineConf class:
 
-one=B0q2DplusMuXOneLineConf('Tuned',confdict['Tuned'])
-'''
+one=B0q2DplusMuXOneLineConf('B0q2DplusMuX'+'Tuned',confdict['Tuned'])
+"""
 __author__ = [ 'Rob Lambert' ]
 __date__ = '2010-08-11'
 __version = '$Revision: 1.6 $'
 
 #### Which VertexFitter to use? ####
-
-#combiner='LoKi::VertexFitter'
-combiner='OfflineVertexFitter'
 
 #### Next is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
@@ -99,7 +100,7 @@ confdict={
     'Tuned'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
-                 'MuPT'        : 700, #MeV
+                 'MuPT'        : 500, #MeV
                  'MuPidPi'     : -1.,
                  'MuPidK'      : -5,
                  'MuTrChi2'    : 5,
@@ -116,14 +117,14 @@ confdict={
                  'PiIP'        : 0.04, #mm
                  'PiPidMu'     : -5,
                  'PiTrChi2'    : 10,
-                 'PiIPChi2'    : 16,
+                 'PiIPChi2'    : 7,
                  #D-resonance parameters
                  'DPT'         : 1500, #MeV
                  'D_APT'       : 1200, #MeV
-                 'D_VPCHI2'    : 0.0150,
+                 'D_VPCHI2'    : 0.010,
                  'D_BPVVDCHI2' : 144,
                  #B-resonance parameters
-                 'B_VPCHI2'    : 0.0150,
+                 'B_VPCHI2'    : 0.010,
                  'B_BPVDIRA'   : 0.9980
                  },
     
@@ -161,9 +162,11 @@ confdict={
 
 
 
+from StrippingUtils.Utils import LineBuilder
 
+name = "B0q2DplusMuX"
 
-class B0q2DplusMuXAllLinesConf(object):
+class B0q2DplusMuXAllLinesConf(LineBuilder):
     """
     Configuration object for all B0qDplusMuX lines
 
@@ -174,7 +177,7 @@ class B0q2DplusMuXAllLinesConf(object):
     configdict={'LineNameSuffix' : {...},
                 'LineNameSuffix2': {...} }
     
-    B0q2DplusMuXAllLinesConf(config, offLines=[] )
+    B0q2DplusMuXAllLinesConf('B0q2DplusMuX', config, offLines=[] )
     
     To turn off lines which otherwise would be created, add the name
     of the line to offLines.
@@ -190,16 +193,26 @@ class B0q2DplusMuXAllLinesConf(object):
     
     confObjects={}
     
-    def __init__(self, config, offLines=[]):
+    #dummy configuration keys
+    __configuration_keys__=[]
+    
+    def __init__(self, name, config, offLines=[]):
         '''In the constructor we make all the lines, and configure them all
+        name is the initial name of the lines, i.e. B0q2DplusMuX
         config is the dictionary of {LineSuffix : configuration}
         offlines is a list of lines to turn off'''
+        LineBuilder.__init__(self, name, {})
+        
         for aline in config.keys():
             if aline not in offLines:
-                lineconf=B0q2DplusMuXOneLineConf(aline, config[aline])
+                if type(config[aline]) is not type({}):
+                    raise KeyError, "Odd type for key "+aline+" expected a dictionary, got a "+str(type(config[aline]))
+                
+                lineconf=B0q2DplusMuXOneLineConf(name+aline, config[aline])
                 
                 self.confObjects[aline]=lineconf
                 self.Lines.append(lineconf.Line)
+                self.registerLine(lineconf.Line)
                 
     def printCuts(self):
         '''Print out all the configured cuts for the lines you asked for'''
@@ -208,13 +221,13 @@ class B0q2DplusMuXAllLinesConf(object):
             self.confObjects[aline].printCuts()
             
 
-class B0q2DplusMuXOneLineConf(object):
+class B0q2DplusMuXOneLineConf(LineBuilder):
     """
     Configuration object for a B0qDplusMuX line
 
     usage: config={...}
-    B0q2DplusMuXConf(LineSuffix, config)
-    Will make lines ending in LineSuffix with the config configurations
+    B0q2DplusMuXConf(name, config)
+    Will make lines called name with the config configurations
     
     The cuts are configuration parameter only if they are different between the lines,
     common cuts are hardcoded.
@@ -274,18 +287,19 @@ class B0q2DplusMuXOneLineConf(object):
         'B_BPVDIRA'
         ]
     
-    def __init__(self, LineSuffix, config):
+    def __init__(self, name, config):
         '''The constructor of the configuration class.
-        Requires a name which is added to the end of each algorithm name, LineSuffix
+        Requires a name which is added to the end of each algorithm name, stored in self.LineSuffix
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
-
-        from StrippingSelections.Utils import checkConfig
+        LineBuilder.__init__(self, name, config)
         
-        checkConfig(B0q2DplusMuXOneLineConf.__configuration_keys__,
-                    config)
+        #from StrippingSelections.Utils import checkConfig
+        #
+        #checkConfig(B0q2DplusMuXOneLineConf.__configuration_keys__,
+        #            config)
         
-        self.LineSuffix=LineSuffix
+        self.LineSuffix=name
         
         ### first we define the cuts from the configuration ###
         ### it's nice to see all the cuts in one place      ###
@@ -341,16 +355,15 @@ class B0q2DplusMuXOneLineConf(object):
         self.__MakeB0__()
         
         from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import SelectionSequence
         
-        #SeqB0q2DplusMuX = SelectionSequence("SeqB0q2DplusMuX"+self.LineSuffix, TopSelection = self.B0Sel)
         ### Now make a stripping line ###
-        B0qLine=StrippingLine("B0q2DplusMuX"+self.LineSuffix,
+        B0qLine=StrippingLine(self.LineSuffix,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.B0Sel ]
                               )
         
+        self.registerLine(B0qLine)
         ### Collect them all together in a nice way ###
         self.Line=B0qLine
         #self.TopSelectionSeq=SeqB0q2DplusMuX
@@ -373,14 +386,13 @@ class B0q2DplusMuXOneLineConf(object):
         """
         the bachelor muon selection, takes some keyword arguements to make a muon selection
         """
-        from Configurables import FilterDesktop
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseMuons
 
-        MuForB0q = FilterDesktop(self.LineSuffix+"MuForB0q")
-        MuForB0q.Code = self.MuCut
-        MyStdMuons = DataOnDemand(Location = 'Phys/StdLooseMuons')
-        SelMuForB0q = Selection("SelMuForB0q2DplusMuX"+self.LineSuffix,
-                                Algorithm=MuForB0q, RequiredSelections = [MyStdMuons])
+        MuForB0q = FilterDesktop(Code=self.MuCut)
+        SelMuForB0q = Selection("SelMuFor"+self.LineSuffix,
+                                Algorithm=MuForB0q, RequiredSelections = [StdLooseMuons])
         
         self.MuSel=SelMuForB0q
         
@@ -396,28 +408,24 @@ class B0q2DplusMuXOneLineConf(object):
         [(Meson & Charm & Down) ==> K+ K- pi- {pi0} ]
         
         """
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseKaons, StdLoosePions
         
-        Dplus2KKpiForB0q = CombineParticles(self.LineSuffix+"Dplus2KKpiForB0q")
-        Dplus2KKpiForB0q.DecayDescriptor = "[D_s- -> K+ K- pi-]cc" 
-        Dplus2KKpiForB0q.DaughtersCuts = {
+        Dplus2KKpiForB0q = CombineParticles(
+            DecayDescriptor = "[D_s- -> K+ K- pi-]cc", 
+            DaughtersCuts = {
             "K+"  : self.KCut,
             "pi+" : self.PiCut
-            } 
-        Dplus2KKpiForB0q.CombinationCut = self.DCombCut
-        Dplus2KKpiForB0q.MotherCut = self.DCut
+            } ,
+            CombinationCut = self.DCombCut,
+            MotherCut = self.DCut
+            
+            )
         
-        Dplus2KKpiForB0q.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        MyStdLooseKaons = DataOnDemand(Location = 'Phys/StdLooseKaons')
-        MyStdLoosePions = DataOnDemand(Location = 'Phys/StdLoosePions')
-        
-        SelDplus2KKpiForB0q = Selection("SelDplus2KKpiForB0q"+self.LineSuffix,
+        SelDplus2KKpiForB0q = Selection("SelDplus2KKpiFor"+self.LineSuffix,
                                         Algorithm=Dplus2KKpiForB0q,
-                                        RequiredSelections = [MyStdLooseKaons,MyStdLoosePions])
+                                        RequiredSelections = [StdLooseKaons,StdLoosePions])
             
         self.DSel=SelDplus2KKpiForB0q
     
@@ -430,22 +438,16 @@ class B0q2DplusMuXOneLineConf(object):
         or
         [ (Meson & Beauty & Down) => l+ Nu ( (Meson & Charm & Down) ==> K+ K- pi- {pi0} ) {pi0} ]CC
         """
-        from Configurables import CombineParticles
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        CombB0q2DplusMuX = CombineParticles(self.LineSuffix+'CombB0q2DplusMuX')
+        CombB0q2DplusMuX = CombineParticles(
+            DecayDescriptors = ["[B_s0 -> D_s- mu+]cc", "[B_s0 -> D_s+ mu+]cc"], #includes wrong charges
+            CombinationCut = self.BCombCut,
+            MotherCut      = self.BCut
+            )
         
-        CombB0q2DplusMuX.DecayDescriptors = ["[B_s0 -> D_s- mu+]cc", "[B_s0 -> D_s+ mu+]cc"] #includes wrong charges
-        
-        CombB0q2DplusMuX.CombinationCut = self.BCombCut
-        
-        CombB0q2DplusMuX.MotherCut      = self.BCut
-        
-        CombB0q2DplusMuX.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        SelB0q2DplusMuX = Selection("SelB0q2DplusMuX"+self.LineSuffix, Algorithm=CombB0q2DplusMuX,
+        SelB0q2DplusMuX = Selection("Sel"+self.LineSuffix, Algorithm=CombB0q2DplusMuX,
                                     RequiredSelections = [self.MuSel, self.DSel])
         
         self.B0Sel=SelB0q2DplusMuX
