@@ -33,14 +33,18 @@ def lineBuilderConfiguration(stripping, lineBuilderName) :
     db.close()
     return dbdict
 
-def registerNewLineBuilderConfiguration(stripping, lineBuilderName, config) :
+def registerNewLineBuilderConfiguration(stripping,
+                                        lineBuilderName,
+                                        lineBuilderType,
+                                        config) :
     """
     Register a new line builder configuration dictionary for a given stripping.
     Only allows to add new entries, not overwrite existing ones.
     """
     db = shelve.open( dbase(stripping) )
     if not lineBuilderName in db.keys() :
-        db[lineBuilderName] = config
+        db[lineBuilderName] = {'BUILDERTYPE' : str(lineBuilderType),
+                               'CONFIG' : config}
         db.close()
     else :
         db.close()
