@@ -1,6 +1,7 @@
 
 # package import
 from LbUtils.Env import getDefaultEnv
+from LbUtils.Processes import callCommand
 
 # global imports
 import logging
@@ -86,7 +87,7 @@ def addCMTTag(tag, environ):
             environ["CMTEXTRATAGS"] = ",".join(taglist)
     else :
         environ["CMTEXTRATAGS"] = tag
-        
+
 def isCMTMessage(line, extra=None):
     ismsg = False
     msg_prefixes = []
@@ -102,9 +103,9 @@ def isCMTMessage(line, extra=None):
             s += extra
         if line.find(s) != -1 :
             ismsg = True
-            break 
+            break
     return ismsg
-        
+
 def isCMTWarning(line):
     return isCMTMessage(line, " Warning:")
 
@@ -112,5 +113,22 @@ def CMTLog(msg):
     log = logging.getLogger()
     if isCMTWarning(msg) and ( msg.find("not found") != -1 or msg.find("Structuring style") != -1 ) :
         log.debug(msg)
-    else : 
+    else :
         log.warning(msg)
+
+def CMTCommand(*args, **kwargs) :
+    oripwd = None
+    if "PWD" in os.environ.keys() :
+        oripwd = os.environ["PWD"]
+    if "cwd" in kwargs.keys() :
+        os.environ["PWD"] = kwargs["cwd"]
+
+    out, err, code = apply(callCommand, ("cmt",) + args, kwargs)
+
+    if oripwd :
+        os.environ["PWD"] = oripwd
+    else :
+        del os.environ["PWD"]
+
+    return out, err, code
+

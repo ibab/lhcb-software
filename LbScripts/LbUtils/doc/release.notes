@@ -1,3 +1,8 @@
+2011-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/CMT/Common.py: added CMTCommand, a wrapper for the calls to CMT that
+	prevents the PWD problem.
+
 2011-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/volume.py: added check for the volume name length at creation
