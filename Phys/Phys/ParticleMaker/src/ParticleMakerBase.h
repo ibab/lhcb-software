@@ -74,7 +74,9 @@ protected:
     counter("Applying Brem-correction to " + Gaudi::Utils::toString(particle->particleID().pid()) )+=1;
   }
   
-
+private:
+  /// Avoid loading Particles etc.
+  virtual StatusCode loadEventInput();
 
 protected:
 

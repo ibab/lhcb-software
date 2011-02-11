@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2011-02-11 - Juan Palacios
+ - Override DVAlgorithm::loadEventInput to avoid loading Particles and so
+   on.
+ - Increase to v5r11.
+
 ! 2011-02-11 - Chris Jones
  - Fix various icc warnings/remarks
 

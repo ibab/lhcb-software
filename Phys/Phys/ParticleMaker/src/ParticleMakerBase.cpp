@@ -89,3 +89,13 @@ StatusCode ParticleMakerBase::execute()
 
   return sc;
 }
+//=============================================================================
+StatusCode ParticleMakerBase::loadEventInput() {
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << ">>> loadEventInput: do nothing. " << endmsg;
+  }
+  return StatusCode::SUCCESS;
+  
+}
+//=============================================================================
