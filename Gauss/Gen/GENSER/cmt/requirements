@@ -30,10 +30,6 @@ set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/l
 macro herwig_native_version "6.510.3"
 macro jimmy_native_version "4.31.3"
 
-#-- Hijing
-#============================================================================
-macro hijing_native_version "1.36.a.2"
-
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
 macro alpgen_native_version "2.1.3d"
@@ -86,15 +82,19 @@ macro_append GENSER_linkopts " $(photos_linkopts) "
 
 #-- Hijing
 #============================================================================
+macro hijing_native_version "1.36.a.2"
+use  hijing      v*  LCG_GeneratorsInterfaces    
 macro         hijingforgaussSrc    " hijing/*.F "
 macro_append  hijingforgaussSrc   "" \
                       Darwin       "-x=ran.F"
 library      hijingforgauss   $(hijingforgaussSrc)
 
 apply_pattern linker_library library=hijingforgauss
+macro_append hijingforgauss_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pydata_hijing.o $(hijing_home)/lib/ludata_hijing.o"
 
 # force the order of link for hijing
 macro_append GENSER_linkopts " $(hijing_linkopts) "
+macro_append hijing_linkopts " -lpythia_hijing "
 
 private
 macro_remove libraryshr_linkopts "-Wl,--no-undefined"
