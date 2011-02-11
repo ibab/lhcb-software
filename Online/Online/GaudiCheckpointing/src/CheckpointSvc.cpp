@@ -55,6 +55,8 @@ namespace LHCb  {
     int                       m_numInstances;
     /// Property: printout level for the checkpoint/restore mechanism    
     int                       m_printLvl;
+    /// Property: forst child index for fork mechanism
+    int                       m_firstChild;
     /// Property: Exit progam after producing the checkpoint file
     int                       m_exit;
     /// Property: Set to 1 if the child processes should become session leaders
@@ -275,6 +277,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("UtgidPattern",       m_utgid         = "%N_%T_%02d");
   declareProperty("ExitAfterCheckpoint",m_exit          = 1);
   declareProperty("KillChildren",       m_killChildren  = false);
+  declareProperty("FirstChild",         m_firstChild    = 0);
 }
 
 /// IInterface implementation : queryInterface
@@ -404,7 +407,7 @@ string CheckpointSvc::buildChildUTGID(int which) const {
     string_replace(n,"%T",m_taskType);
     string_replace(n,"%t",lower(m_taskType));
     char txt[1024];
-    ::sprintf(txt,n.c_str(),which);
+    ::sprintf(txt,n.c_str(),which+m_firstChild);
     n = txt;
   }
   else {
