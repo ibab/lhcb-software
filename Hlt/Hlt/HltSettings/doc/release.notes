@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Sam Gregson
+ - CharmHadronic_draft2011 updated to link to new D2KS0H line
+
 !========================== HltSettings v5r4   2011-02-10 ===================
 ! 2011-02-10 - Jibo He
  - Electrons_draft2011 created, with David's electrons inclued

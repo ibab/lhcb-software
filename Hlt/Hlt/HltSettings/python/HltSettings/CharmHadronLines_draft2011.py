@@ -31,6 +31,7 @@ class CharmHadronLines :
                   #, 'Hlt2CharmHad2BodyForD2HHH'
                     'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
+                    ,'Hlt2CharmHadD2KS0H' 
              ]
         
         return lines
@@ -44,6 +45,7 @@ class CharmHadronLines :
 
         from Hlt2Lines.Hlt2CharmHadD02HHLines import Hlt2CharmHadD02HHLinesConf
         from Hlt2Lines.Hlt2CharmHadD2HHHLines import Hlt2CharmHadD2HHHLinesConf
+        from Hlt2Lines.Hlt2D2KS0HLines import Hlt2CharmHadD2KS0HLinesConf
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
                           'Trk_PT_MIN'               : 800.0      # MeV
