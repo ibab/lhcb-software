@@ -72,4 +72,17 @@ def dbaseFromModule(stripping, confModule, verbose = False) :
 
     db.close()
 
-    
+def lineBuilder(stripping, lineBuilderName) :
+    """
+    Create a line builder from a stripping version and a line builder
+    instance name.  The instance name must be registered in the database.
+    Usage:
+    lb = lineBuilder('Stripping13', 'B2XGamma')
+    print lb.lines()
+    """
+    from StrippingSelections import lineBuilders
+    _config = lineBuilderConfiguration(stripping, lineBuilderName)
+
+    return lineBuilders()[_config['BUILDERTYPE']](lineBuilderName,
+                                                  _config['CONFIG'])
+

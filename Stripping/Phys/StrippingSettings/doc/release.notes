@@ -5,6 +5,13 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-02-11 - Juan Palacios
+ - Add function Utils.lineBuilder to create a line builder from DB parameters:
+    Create a line builder from a stripping version and a line builder
+    instance name.  The instance name must be registered in the database.
+    Usage:
+    lb = lineBuilder('Stripping13', 'B2XGamma')
+    print lb.lines()
+
  - Change structure of development dictionaries. Dictionary now is
    { <builder instance name> : { 'BUILDERTYPE' : <builder type name>, 'CONFIG' : <config name> 
  - Add configuration for B-> N body stripping.
