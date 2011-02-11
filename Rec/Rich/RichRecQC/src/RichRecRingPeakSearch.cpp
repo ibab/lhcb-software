@@ -18,7 +18,7 @@ using namespace Rich::Rec;
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RingPeakSearch );
+DECLARE_ALGORITHM_FACTORY( RingPeakSearch )
 
 // Standard constructor, initializes variables
 RingPeakSearch::RingPeakSearch( const std::string& name,
