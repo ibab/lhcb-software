@@ -403,7 +403,7 @@ namespace Relations
   inline WEIGHT sumWeight
   ( LINKS  links  , 
     WEIGHT weight ) 
-  { return sumWeight( links.begin() , links.end() , weight ) ; } ;
+  { return sumWeight( links.begin() , links.end() , weight ) ; } 
   // ==========================================================================
   template <class ITERATOR, class COMPARE, class OUTPUT> 
   inline OUTPUT  _getUniqueFrom 
