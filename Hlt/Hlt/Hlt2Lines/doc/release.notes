@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Gerhard Raven
+ - replace acos(BPVDIRA)< 0.045 with BPVDIRA<cos(0.045)
+
 ! 2011-02-11 - Victor Coco
  - Hlt2DisplVerticesLine.py: update the list of Lines
 
