@@ -29,7 +29,7 @@ Exported symbols (use python help!):
 
 """
 
-__author__ = ['Neal Gauvin']
+__author__ = ['Neal Gauvin','Victor Coco']
 __date__ = '12/01/2009'
 __version__ = '$Revision: 1.22 $'
 __all__ = ('Hlt2DisplVerticesLinesConf')
@@ -40,43 +40,45 @@ import GaudiKernel.SystemOfUnits as units
 
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
-    __slots__ = {  "MinNbTracks"  : { 'Hlt2RV2P' : 4
-                                    , 'Hlt2SingleLonglived' : 5
-                                    , 'Hlt2SinglePSLonglived' : 4  
-                                    , 'Hlt2DoubleLonglived' : 4
-                                      }
-                ,  "RCutMethod"   : "FromUpstreamPV"
-                ,  "RMin"         : { 'Hlt2RV2P' : 0.3 * units.mm
-                                    , 'Hlt2SingleLonglived' : 0.3 * units.mm
-                                    , 'Hlt2SinglePSLonglived' : 0.3 * units.mm
-                                    , 'Hlt2DoubleLonglived' : 0.3 * units.mm
-                                      }
-                ,  "MinMass"      : { 'Hlt2RV2P' : 1.5*units.GeV
-                                      , 'Hlt2SingleLonglived' : 6.*units.GeV
-                                      , 'Hlt2SinglePSLonglived' : 4.5*units.GeV
-                                      , 'Hlt2DoubleLonglived' : 1.5*units.GeV
-                                      }
-                ,  "MinSumpt"     :{ 'Hlt2RV2P' : 0*units.GeV
-                                     , 'Hlt2SingleLonglived' : 6*units.GeV
-                                     , 'Hlt2SinglePSLonglived' : 4.5*units.GeV
-                                     , 'Hlt2DoubleLonglived' : 3.*units.GeV
-                                      } 
-                ,  "RemVtxFromDet" : { 'Hlt2RV2P' : 0
-                                   , 'Hlt2SingleLonglived' : 0
-                                   , 'Hlt2SinglePSLonglived' : 0  
-                                   , 'Hlt2DoubleLonglived' : 0
-                                      }
-                , "DetDist"  : { 'Hlt2RV2P' : 1
-                                 , 'Hlt2SingleLonglived' : 1
-                                 , 'Hlt2SinglePSLonglived' : 1
-                                 , 'Hlt2DoubleLonglived' : 1
-                                      }
-                , "PostScale" : { 'Hlt2RV2P' : 1
-                                 , 'Hlt2SingleLonglived' : 1
-                                 , 'Hlt2SinglePSLonglived' : 0.01
-                                 , 'Hlt2DoubleLonglived' : 1
-                                      }
-                }
+    __slots__ = { 
+            "MinNbTracks"  : { 'Hlt2RV2P' : 4
+                               , 'Hlt2SingleLonglivedLowMass' : 6
+                               , 'Hlt2SingleLonglivedHighMass' : 6
+                               , 'Hlt2DoubleLonglived' : 4
+                               , 'Hlt2SinglePSLonglived' : 4
+                               }
+            ,  "RCutMethod"   : "FromUpstreamPV"
+            ,  "RMin"         : { 'Hlt2RV2P' : 0.
+                                  , 'Hlt2SingleLonglivedLowMass' : 0.3
+                                  , 'Hlt2SingleLonglivedHighMass' : 0.3
+                                  , 'Hlt2DoubleLonglived' : 0.3
+                                  , 'Hlt2SinglePSLonglived' : 0.3
+                                  }
+            ,  "MinMass"      : {   'Hlt2RV2P' : 3000.
+                                  , 'Hlt2SingleLonglivedLowMass' : 4500.
+                                  , 'Hlt2SingleLonglivedHighMass' : 8000.
+                                  , 'Hlt2DoubleLonglived' : 3000.
+                                  , 'Hlt2SinglePSLonglived' : 2500.
+                                  }
+            ,  "MinSumpt"     :{ 'Hlt2RV2P' : 3000.
+                                 , 'Hlt2SingleLonglivedLowMass' : 4500.
+                                 , 'Hlt2SingleLonglivedHighMass' : 9000.
+                                 , 'Hlt2DoubleLonglived' : 3000.
+                                 , 'Hlt2SinglePSLonglived' : 2500.
+                                 } 
+            ,  "RemVtxFromDet" : { 'Hlt2RV2P' : 0
+                                 , 'Hlt2SingleLonglivedLowMass' : 5
+                                 , 'Hlt2SingleLonglivedHighMass' : 5
+                                 , 'Hlt2DoubleLonglived' : 0
+                                 , 'Hlt2SinglePSLonglived' : 0
+                                   }
+            , "PostScale" : { 'Hlt2RV2P' : 1
+                              , 'Hlt2SingleLonglivedLowMass' : 1
+                              , 'Hlt2SingleLonglivedHighMass' : 1
+                              , 'Hlt2DoubleLonglived' : 1
+                              , 'Hlt2SinglePSLonglived' : 0.005
+                              }
+            }
     
     
     def __apply_configuration__(self) :
@@ -84,16 +86,15 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import GaudiSequencer, HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
-        #from Hlt2SharedParticles.BasicParticles import NoCutsPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from HltTracking.HltPVs import PV3D
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
+        
         #######################################################################
         # Eventually get primary vertices
         DVSeq = []
-        if( self.getProp('RCutMethod') == "FromUpstreamPV" ):
-            DVSeq.append( PV3D() )
+        DVSeq.append( PV3D() )
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
@@ -114,7 +115,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         #######################################################################
         #Get the pions
-        #DVSeq.append( NoCutsPions )
         DVSeq.append( BiKalmanFittedPions )
         
         #######################################################################
@@ -123,39 +123,75 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
-        #Hlt2RV2P.InputLocations = [NoCutsPions.outputSelection()]
         Hlt2RV2P.InputLocations = [BiKalmanFittedPions.outputSelection()]
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
         Hlt2RV2P.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2P.RMin = self.getProp('RMin')['Hlt2RV2P']
         Hlt2RV2P.PreyMinMass = self.getProp('MinMass')['Hlt2RV2P']
         Hlt2RV2P.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2RV2P']
-        Hlt2RV2P.DetDist = self.getProp('DetDist')['Hlt2RV2P']
         Hlt2RV2P.UseMap = True
 
         #######################################################################
         #Run Single LLP selection
         from Configurables import Hlt2SelDV
-        Hlt2SingleLonglived = Hlt2SelDV("Hlt2SingleLonglived")
-        Hlt2SingleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
-        Hlt2SingleLonglived.MinNBCands = 1
-        Hlt2SingleLonglived.RMin = self.getProp('RMin')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.SigmaR = 0.1*units.mm
-        Hlt2SingleLonglived.SigmaZ = 1*units.mm
-        Hlt2SingleLonglived.SaveOnTES = False
-
-        line = Hlt2Line( 'DisplVerticesSingle'
-                         #, VoidFilter = ''
-                         #, VoidFilter = " CONTAINS( 'Hlt/Track/Velo') > 349"
+        Hlt2SingleLonglivedLowMass = Hlt2SelDV("Hlt2SingleLonglivedLowMass")
+        Hlt2SingleLonglivedLowMass.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedLowMass.MinNBCands = 1
+        Hlt2SingleLonglivedLowMass.RMin = self.getProp('RMin')['Hlt2SingleLonglivedLowMass']
+        Hlt2SingleLonglivedLowMass.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedLowMass']
+        Hlt2SingleLonglivedLowMass.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedLowMass']
+        Hlt2SingleLonglivedLowMass.PreyMaxMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedLowMass.PreyMaxSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedLowMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedLowMass']
+        Hlt2SingleLonglivedLowMass.SaveOnTES = False
+        Hlt2SingleLonglivedLowMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedLowMass']
+        line = Hlt2Line( 'DisplVerticesLowMassSingle'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleLonglived ]
-                        , postscale = self.getProp('PostScale')['Hlt2SingleLonglived']
+                        , algos = DVSeq + [ Hlt2SingleLonglivedLowMass ]
+                        , postscale = self.getProp('PostScale')['Hlt2SingleLonglivedLowMass']
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSingleDecision" : 50280 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesLowMassSingleDecision" : 50280 } )
 
+        from Configurables import Hlt2SelDV
+        Hlt2SingleLonglivedHighMass = Hlt2SelDV("Hlt2SingleLonglivedHighMass")
+        Hlt2SingleLonglivedHighMass.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedHighMass.MinNBCands = 1
+        Hlt2SingleLonglivedHighMass.RMin = self.getProp('RMin')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.SaveOnTES = False
+        Hlt2SingleLonglivedHighMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedHighMass']
+                      
+        line = Hlt2Line( 'DisplVerticesHighMassSingle'
+                        , prescale = self.prescale
+                        , algos = DVSeq + [ Hlt2SingleLonglivedHighMass ]
+                        , postscale = self.getProp('PostScale')['Hlt2SingleLonglivedHighMass']
+                        )
+                                               
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesHighMassSingleDecision" : 50281 } )
+
+        
+        from Configurables import Hlt2SelDV
+        #######################################################################
+        #Run Hlt2LonglivedParts : double LLP selection
+        Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
+        Hlt2DoubleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2DoubleLonglived.MinNBCands = 2
+        Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.SaveOnTES = False
+
+        line = Hlt2Line('DisplVerticesDouble'
+                        , prescale = self.prescale
+                        , algos = DVSeq + [ Hlt2DoubleLonglived ]
+                        , postscale = self.getProp('PostScale')['Hlt2DoubleLonglived']
+                        )
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDoubleDecision" : 50282 } )
+        
         #######################################################################
         #Run Single LLP selection
         from Configurables import Hlt2SelDV
@@ -170,31 +206,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'DisplVerticesSinglePostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleLonglived ]
+                        , algos = DVSeq + [ Hlt2SinglePSLonglived ]
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglived']
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSinglePostScaledDecision" : 50282 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSinglePostScaledDecision" : 50283 } )
 
-        #######################################################################
-        #Run Hlt2LonglivedParts : double LLP selection
-        Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
-        Hlt2DoubleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
-        Hlt2DoubleLonglived.MinNBCands = 2
-        Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
-        Hlt2DoubleLonglived.SaveOnTES = False
-
-        line = Hlt2Line('DisplVerticesDouble'
-                         #, VoidFilter = ''
-                         #, VoidFilter = " CONTAINS( 'Hlt/Track/Velo') > 349"
-                        , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2DoubleLonglived ]
-                        , postscale = self.getProp('PostScale')['Hlt2SingleLonglived']
-                        )
-        
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDoubleDecision" : 50281 } )
 
         #######################################################################
         

@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Victor Coco
+ - Hlt2DisplVerticesLine.py: update the list of Lines
+
 !========================== Hlt2Lines v7r4 2011-02-10 ===================
 ! 2011-02-10 - Gerhard Raven
  - change paramfile specification in topo. Requires BBDecTreeTool v1r0p1 or later
