@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Will Barter
+ - Hlt2SingleMuonLowPT: added new line (for Electroweak Working Group)
+
 ! 2011-02-11 - Gerhard Raven
  - replace acos(BPVDIRA)< 0.045 with BPVDIRA<cos(0.045)
 
