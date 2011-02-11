@@ -5,6 +5,7 @@
  *      Author: beat
  */
 #include "Gaucho/Utilities.h"
+#include <string>
 #include <string.h>
 dyn_string *Strsplit(char *s, char *del)
 {
@@ -21,3 +22,11 @@ dyn_string *Strsplit(char *s, char *del)
   }
   return v;
 };
+void StringReplace(std::string &in, char *patt, std::string &repl)
+{
+  if (in.find(patt) != std::string::npos)
+  {
+    in.replace(in.find(patt),strlen(patt),repl);
+  }
+
+}

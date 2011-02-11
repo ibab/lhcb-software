@@ -247,6 +247,7 @@ void MonHist::resetup(void)
     case C_DOUBLE:
     case C_STATENT:
     case H_ILLEGAL:
+    case C_VOIDSTAR:
     {
       return;
       break;

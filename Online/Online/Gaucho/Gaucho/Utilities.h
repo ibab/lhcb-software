@@ -31,5 +31,6 @@ public:
 };
 
 dyn_string *Strsplit(char *s, char *del);
+void StringReplace(std::string &in, char *patt, std::string &repl);
 
 #endif /* UTILITIES_H_ */

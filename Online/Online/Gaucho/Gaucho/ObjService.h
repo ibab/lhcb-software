@@ -15,9 +15,9 @@ protected:
   ObjSerializer *m_ser;
   bool m_EORservice;
   SerialHeader m_hdr;
-  bool m_expandservice;
 public:
   //void *p;
+  bool m_expandservice;
   long long m_runnr;
   ObjService ();
   virtual ~ObjService();

@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 #include "dim/dis.hxx"
-#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
+#include "Utilities.h"
+//#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 
 class MonCounter : public MonObj

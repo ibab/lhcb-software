@@ -28,26 +28,27 @@ void MonCounter::setup(MONTYPE typ, void *data,char *name, char *title)
   m_service = 0;
   setname(name);
   Init(title);
+  m_srvcprefix = std::string("");
   switch (m_type)
   {
   case   C_INT:
     {
-      m_srvcprefix = std::string("MonI/");
+//      m_srvcprefix = std::string("MonI/");
       break;
     }
   case   C_LONGLONG:
     {
-      m_srvcprefix = std::string("MonL/");
+//      m_srvcprefix = std::string("MonL/");
       break;
     }
   case   C_FLOAT:
     {
-      m_srvcprefix = std::string("MonF/");
+//      m_srvcprefix = std::string("MonF/");
       break;
     }
   case   C_DOUBLE:
     {
-      m_srvcprefix = std::string("MonD/");
+//      m_srvcprefix = std::string("MonD/");
       break;
     }
   case   C_VOIDSTAR:
@@ -271,42 +272,43 @@ bool MonCounter::nameeq(char *nam, int namlen)
 }
 void MonCounter::List()
 {
+  m_srvcprefix = std::string("");
   std::string typ;
   switch (m_type)
   {
   case   C_INT:
     {
       typ = std::string("C_INT");
-      m_srvcprefix = std::string("MonI/");
+//      m_srvcprefix = std::string("MonI/");
       break;
     }
   case   C_LONGLONG:
     {
       typ = std::string("C_LONGLONG");
-      m_srvcprefix = std::string("MonL/");
+//      m_srvcprefix = std::string("MonL/");
       break;
     }
   case   C_FLOAT:
     {
       typ = std::string("C_FLOAT");
-      m_srvcprefix = std::string("MonF/");
+//      m_srvcprefix = std::string("MonF/");
       break;
     }
   case   C_DOUBLE:
     {
       typ = std::string("C_DOUBLE");
-      m_srvcprefix = std::string("MonD/");
+//      m_srvcprefix = std::string("MonD/");
       break;
     }
   case   C_VOIDSTAR:
     {
       typ = std::string("C_VOIDSTAR");
-      m_srvcprefix = std::string("");
+//      m_srvcprefix = std::string("");
       break;
     }
   default:
     {
-      typ = std::string("UNKNOWN");
+//      typ = std::string("UNKNOWN");
       break;
     }
   }
@@ -321,22 +323,22 @@ void MonCounter::create_OutputService(std::string infix)
   {
     case C_INT:
     {
-      this->m_service = new DimService(nam.c_str(),(int&)m_contents);
+      this->m_service = new DimService(nam.c_str(),*(int*)m_contents);
       break;
     }
     case C_LONGLONG:
     {
-      this->m_service = new DimService(nam.c_str(),(long long&)m_contents);
+      this->m_service = new DimService(nam.c_str(),*(long long*)m_contents);
       break;
     }
     case C_FLOAT:
     {
-      this->m_service = new DimService(nam.c_str(),(float&)m_contents);
+      this->m_service = new DimService(nam.c_str(),*(float*)m_contents);
       break;
     }
     case C_DOUBLE:
     {
-      this->m_service = new DimService(nam.c_str(),(double&)m_contents);
+      this->m_service = new DimService(nam.c_str(),*(double*)m_contents);
       break;
     }
     case C_VOIDSTAR:

@@ -26,8 +26,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 //  StatusCode sc = Service::initialize();
 //  printf("AdderSvc... Constructing...\n");
   declareProperty("SourceTaskPattern", m_TaskName="");
-  declareProperty("MyName",m_MyName="Adder");
-//  declareProperty("SourceServiceName",m_ServiceName="Data");
+  declareProperty("MyName",m_MyName="");
   declareProperty("InDNS",m_InputDNS="");
   declareProperty("OutDNS",m_OutputDNS="");
   declareProperty("TopLevel",m_TopLevel=false);
@@ -36,7 +35,6 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
   declareProperty("SaveInterval", m_SaveInterval = 900);
   declareProperty("PartitionName",m_PartitionName="LHCb");
   declareProperty("SaveSetTaskName",m_SaverTaskName="Moore");
-//  declareProperty("IsEOR",m_isEOR=false);
   declareProperty("ExpandRate",m_ExpandRate=false);
   declareProperty("TaskPattern",m_TaskPattern="");
   declareProperty("ServicePattern",m_ServicePattern="");
@@ -84,10 +82,17 @@ StatusCode AdderSvc::start()
 // Source task names:
 //  Reconstruction task structure: <Partition>_<Node>_Brunel_xx
 //  HLT Task structure: <node>_GAUCHOJOB_xx
+//  Nodeadder output name:
+//   Reconstruction: <part>_<node>_RecAdder_xx
+//   HLT: <node>_Adder_xx
 //
 // subfarm adders:
 // Source task names (all Farms):
 //  <node>_Adder_xx
+//  subfarm adder output name:
+//   Reconstruction: <part>_<node>_RecAdder_xx
+//   HLT: <sfnname>_Adder_xx     sfname = hltxyy
+//
   if (m_AdderType == "node")
   {
     if (m_TaskPattern == "")
@@ -99,7 +104,10 @@ StatusCode AdderSvc::start()
       m_TaskPattern = nodename+std::string("_")+m_TaskPattern+std::string("(.*)");
     }
 //    m_MyName = nodename+std::string("_Adder");
-    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    if (m_ServicePattern == "")
+    {
+      m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    }
     if (m_InputDNS == "")
     {
       m_InputDNS = nodename.substr(0,nodename.size()-2);
@@ -108,7 +116,7 @@ StatusCode AdderSvc::start()
   }
   else if (m_AdderType == "sf" || m_AdderType == "subfarm")
   {
-    if (m_TaskPattern == 0)
+    if (m_TaskPattern == "")
     {
       m_TaskPattern = nodename+std::string("[0-9][0-9]_Adder(.*)");
     }
@@ -117,7 +125,10 @@ StatusCode AdderSvc::start()
       m_TaskPattern = nodename+m_TaskPattern+std::string("(.*)");
     }
 //    m_MyName = nodename+std::string("_Adder");
-    m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    if (m_ServicePattern == "")
+    {
+      m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    }
     if (m_InputDNS == "")
     {
       m_InputDNS = nodename;
@@ -126,14 +137,21 @@ StatusCode AdderSvc::start()
   }
   else if (m_AdderType == "top" || m_AdderType == "part")
   {
-    m_TaskPattern = std::string("_Adder(.*)");
-    m_MyName = m_PartitionName+std::string("_Adder");
-    m_ServicePattern = std::string("MON_hlt[a-z][0-9][0-9]_")+m_PartitionName+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    if (m_TaskPattern != "")
+    {
+      StringReplace(m_TaskPattern,(char *)"<part>",m_PartitionName);
+    }
+    else
+    {
+      m_TaskPattern = std::string("hlt[a=z][0-9][0-9]_Adder(.*)");
+    }
+//    m_MyName = m_PartitionName+std::string("_Adder");
+    m_ServicePattern = std::string("MON_(.*)[a-z][0-9][0-9]_")+m_PartitionName+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
     if (m_InputDNS == "")
     {
       m_InputDNS = std::string("hlt01");
     }
-    myservicename = m_PartitionName+std::string("_Adder");
+    myservicename = m_PartitionName+"_"+m_MyName;
   }
   else
   {

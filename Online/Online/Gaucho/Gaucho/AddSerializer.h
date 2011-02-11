@@ -2,7 +2,8 @@
 #include "string.h"
 #include "ObjSerializer.h"
 #include "dimhist.h"
-#define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
+#include "Gaucho/Utilities.h"
+//#define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
 class SerHist : public DimHistbuff1
 {

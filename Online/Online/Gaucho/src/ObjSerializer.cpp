@@ -205,7 +205,7 @@ void ObjSerializer::UpdateExpansions(void)
       DimService *d=  h->getDimService();
       if (d != 0)
       {
-        h->getDimService()->updateService();
+        d->updateService();
       }
     }
   }
