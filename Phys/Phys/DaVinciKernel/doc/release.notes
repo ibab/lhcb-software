@@ -4,6 +4,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-02-11 - Juan Palacios
+ - Add property Output. Allows the user to set the output location
+   of the DVAlgorithm, overwriting the one that gets set automatically. This
+   is really for use with the Seleciton toolkit.
+ - Add property Inputs, mirroring deprecated InputLocations.
+ - Increase to v9r2.
+
 ! 2011-02-11 - Chris Jones
  - Fix various icc warnings/remarks
 

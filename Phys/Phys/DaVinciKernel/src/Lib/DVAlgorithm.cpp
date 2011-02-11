@@ -26,6 +26,7 @@ DVAlgorithm::DVAlgorithm
   ISvcLocator* pSvcLocator ) 
   : base_class    ( name , pSvcLocator )
 //
+  , m_particleOutputLocation        ("")
   , m_vertexFitNames        () 
   , m_vertexFits            () 
   //
@@ -79,12 +80,22 @@ DVAlgorithm::DVAlgorithm
   , m_noPVs                 ( false )
 {
 
-  m_outputLocation = this->name();
+  //  m_outputLocation = this->name();
+
+  declareProperty( "Output", 
+                   m_particleOutputLocation, 
+                   "Output Location of Particles" );
+
+  m_inputLocations_.clear() ;
+  declareProperty( "InputLocations", 
+                   m_inputLocations_, 
+                   "Input Locations forwarded of Particles" );
 
   m_inputLocations.clear() ;
-  declareProperty( "InputLocations", 
+  declareProperty( "Inputs", 
                    m_inputLocations, 
                    "Input Locations forwarded of Particles" );
+
 
   m_p2PVInputLocations.clear() ;
   declareProperty( "P2PVInputLocations", 
@@ -252,6 +263,14 @@ StatusCode DVAlgorithm::initialize () {
 
   m_noPVs = (m_PVLocation=="None"||m_PVLocation=="") ? true : false;
 
+  if ( (!m_inputLocations_.empty()) ) {
+    Info("You are using deprecated InputLocations property. Use Inputs instead.").ignore();
+    if (!m_inputLocations.empty())  {
+      return Error("Both Inputs and InputLocations are set. Choose Inputs!");
+    }
+  }
+  
+
   initializeLocations();
 
   // load PV processing tools.
@@ -276,6 +295,11 @@ StatusCode DVAlgorithm::initialize () {
 }
 // ============================================================================
 void DVAlgorithm::initializeLocations() {
+
+  if (m_inputLocations.empty()) {
+    m_inputLocations = m_inputLocations_;
+    m_inputLocations_.clear();
+  }
 
   DaVinci::StringUtils::expandLocations( m_inputLocations.begin(),
                                          m_inputLocations.end(),
@@ -308,11 +332,17 @@ void DVAlgorithm::initializeLocations() {
     debug() << ">>> Initialised P->PV locations " 
             << m_p2PVInputLocations << endmsg;
   }
-  
-  DaVinci::StringUtils::expandLocation(m_outputLocation,
-                                       onOffline()->trunkOnTES());
-  
-  m_particleOutputLocation = m_outputLocation+"/Particles";
+
+  if (m_particleOutputLocation=="") {
+    m_outputLocation = this->name();
+    DaVinci::StringUtils::expandLocation(m_outputLocation,
+                                         onOffline()->trunkOnTES());
+    m_particleOutputLocation = m_outputLocation+"/Particles";
+  } else {
+    m_outputLocation=m_particleOutputLocation;
+    DaVinci::StringUtils::removeEnding(m_outputLocation,"/");
+  }
+
   m_decayVertexOutputLocation = m_outputLocation+"/decayVertices";
   m_tableOutputLocation = m_outputLocation+"/Particle2VertexRelations";
 

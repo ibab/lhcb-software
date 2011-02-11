@@ -979,6 +979,7 @@ private:
   bool m_preloadTools;
   /// InputLocations
   std::vector<std::string> m_inputLocations ;
+  std::vector<std::string> m_inputLocations_ ;
   /// User-defined Particle->PV relations locations
   std::vector<std::string> m_p2PVInputLocations ;
   /// TES location of input PVs.
