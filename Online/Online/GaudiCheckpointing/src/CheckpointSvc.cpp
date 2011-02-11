@@ -55,14 +55,14 @@ namespace LHCb  {
     int                       m_numInstances;
     /// Property: printout level for the checkpoint/restore mechanism    
     int                       m_printLvl;
+    /// Property: Exit progam after producing the checkpoint file
+    int                       m_exit;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
     /// Property: Set to 1 if the file descriptor table should be dump during child restart
     bool                      m_dumpFD;
     /// Property: Distribute children according to number of cores
     bool                      m_useCores;
-    /// Property: Exit progam after producing the checkpoint file
-    bool                      m_exit;
 
     /// Internal flag to identify the master process with respect to children
     bool                      m_masterProcess;
@@ -262,7 +262,7 @@ namespace  {
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc) 
   : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
 {
-  m_masterProcess = false;
+  m_masterProcess = true;
   m_restartChildren = false;
   declareProperty("NumberOfInstances",  m_numInstances  = 0);
   declareProperty("UseCores",           m_useCores      = false);
@@ -273,7 +273,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("Partition",          m_partition     = "");
   declareProperty("TaskType",           m_taskType      = "Gaudi");
   declareProperty("UtgidPattern",       m_utgid         = "%N_%T_%02d");
-  declareProperty("ExitAfterCheckpoint",m_exit          = true);
+  declareProperty("ExitAfterCheckpoint",m_exit          = 1);
   declareProperty("KillChildren",       m_killChildren  = false);
 }
 
@@ -328,21 +328,23 @@ StatusCode CheckpointSvc::start() {
     log << MSG::FATAL << "Failed to start service base class." << endmsg;
     return sc;
   }
-  if ( m_useCores || (m_numInstances != 0) )   {
-    stopMainInstance();
-    int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
-    for(int i=0; i<n_child; ++i)    {
-      pid_t pid = forkChild(i+1);
-      if ( 0 == pid )   {
-	return execChild();
+  if ( m_masterProcess )    {  // Only the master does anything on start!
+    if ( m_useCores || (m_numInstances != 0) )   {
+      stopMainInstance();
+      int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
+      for(int i=0; i<n_child; ++i)    {
+	pid_t pid = forkChild(i+1);
+	if ( 0 == pid )   {
+	  return execChild();
+	}
       }
+      m_restartChildren = true;
+      m_state = m_targetState; // Update internal Gaudi FSM
+      resumeMainInstance();    // And restore execution
+      m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+      m_fsm->declareState(ITaskFSM::ST_RUNNING);
+      return watchChildren();  // Will never return for the parent's instance!
     }
-    m_restartChildren = true;
-    m_state = m_targetState; // Update internal Gaudi FSM
-    resumeMainInstance();    // And restore execution
-    m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-    m_fsm->declareState(ITaskFSM::ST_RUNNING);
-    return watchChildren();  // Will never return for the parent's instance!
   }
   return sc;
 }
@@ -455,6 +457,7 @@ int CheckpointSvc::finishCheckpoint() {
     ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
     ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
     ::write(STDOUT_FILENO,"\n",2);
+    if ( m_exit > 1 ) ::_exit(0);
     ::exit(0);
   }
   return StatusCode::SUCCESS;
@@ -610,6 +613,8 @@ int CheckpointSvc::forkChild(int which) {
   pid_t pid = chkpt->forkInstance();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
+    m_numInstances = 0;
+    m_useCores = false;
   }
   else if ( pid>0 ) {
     m_masterProcess = true;
