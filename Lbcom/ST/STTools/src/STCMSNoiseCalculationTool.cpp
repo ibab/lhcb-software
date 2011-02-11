@@ -63,13 +63,14 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
   declareProperty("UseIntegers", m_useInts=false );
 
   // Remove outliers
-  declareProperty("RawThreshold",     m_rawThreshold    = 4);
-  declareProperty("RawOutliers",      m_rawOutliers     = true); 
-  declareProperty("RawOutliersCMS",   m_rawOutliersCMS  = false); 
+  declareProperty("SkipOutlierRemoval", m_skipOutliers    = 1000);
+  declareProperty("RawThreshold",       m_rawThreshold    = 4);
+  declareProperty("RawOutliers",        m_rawOutliers     = true); 
+  declareProperty("RawOutliersCMS",     m_rawOutliersCMS  = false); 
 
-  declareProperty("CMSHitDetection",  m_cmsHitDetection = false);
-  declareProperty("CMSThreshold",     m_cmsThreshold    = 13.0);
-  declareProperty("FixedThreshold",   m_fixedThreshold  = false);
+  declareProperty("CMSHitDetection",    m_cmsHitDetection = false);
+  declareProperty("CMSThreshold",       m_cmsThreshold    = 13.0);
+  declareProperty("FixedThreshold",     m_fixedThreshold  = false);
 
   // Set neighbour strips to zero in CMS calculation
   declareProperty("ZeroNeighbours",   m_zeroNeighbours  = true);
@@ -130,7 +131,7 @@ void ST::STCMSNoiseCalculationTool::whichCMSAlg() {
     info() << "Integer ST CMS algorithm selected" << endmsg;
     m_useAlgo = 6;
   } else {
-    warning() << "No CMS substraction algorithm is specified." << endmsg;
+    warning() << "No CMS subtraction algorithm is specified." << endmsg;
   }
   if(m_useInts) info() << "Using integers for pedestal/noise calculations" << endmsg;
 }
@@ -293,11 +294,11 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
 
         std::vector<signed int> pedSubADCs;
         if ( m_pedestalBuildup == 0 ) {
-          substractPCNPedestals(rawADC, pedestals, beetle, pedSubADCs);
+          subtractPCNPedestals(rawADC, pedestals, beetle, pedSubADCs);
         }
 	    
         if (!m_skipCMS) {
-          substractPedestals(pedSubADCs, rawMean->begin(), rawNoise->begin(), beetle, 
+          subtractPedestals(pedSubADCs, rawMean->begin(), rawNoise->begin(), beetle, 
                              tmpADC, meanPerPort );
           
           if (beetle == m_printCMSSteps) {
@@ -339,7 +340,7 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           double valueRaw  = *dataStrip;
           double valueCMS  = tmpStrip->first;
           double valuePed = *rawADCStrip;
-          if ( m_rawOutliers & tmpStrip->second & (m_evtNumber > m_followingPeriod) ) {
+          if ( m_rawOutliers & tmpStrip->second & (m_evtNumber > m_skipOutliers) ) {
             valueRaw = *rawMeanStrip;
             if ( m_rawOutliersCMS ) {
               valueCMS  = *cmsMeanStrip;
@@ -505,9 +506,9 @@ void ST::STCMSNoiseCalculationTool::plotPedestals() {
   }
 }
 
-// Substract pedetals from ADC values..
-/// Calculate the pedestal substracted ADC values for one beetle
-void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed int>& BeetleADCs, 
+// Subtract pedetals from ADC values..
+/// Calculate the pedestal subtracted ADC values for one beetle
+void ST::STCMSNoiseCalculationTool::subtractPedestals(const std::vector<signed int>& BeetleADCs, 
                                                        std::vector<double>::const_iterator rawMeansIt,
                                                        std::vector<double>::const_iterator rawNoiseIt,
                                                        const signed int beetle,
@@ -528,14 +529,14 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
     unsigned int iStrip;
 
     for ( iStrip = 0; iStrip < LHCbConstants::nStripsInPort; iStrip++) {
-      // substract pedestal
+      // subtract pedestal
       if ( m_useInts ) {
         pedSubIt->first = *adcIt - floor(*meanMapIt+0.5);
       } else {
         pedSubIt->first = *adcIt - *meanMapIt;
       }
       
-      // add ADC value to pedestal substracted mean
+      // add ADC value to pedestal subtracted mean
       mean += pedSubIt->first;
       
       // flag outliers
@@ -552,9 +553,9 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
 }
 
 //==============================================================================
-// Substract the PCN dependent pedestals
+// Subtract the PCN dependent pedestals
 //==============================================================================
-void ST::STCMSNoiseCalculationTool::substractPCNPedestals( const std::vector<signed int>& RawADCs,
+void ST::STCMSNoiseCalculationTool::subtractPCNPedestals( const std::vector<signed int>& RawADCs,
                                                            const std::vector< std::vector<std::pair<double, int> > >* pedestals,
                                                            const signed int beetle, 
                                                            std::vector<signed int>& PedSubADCs ) {
@@ -628,7 +629,7 @@ void ST::STCMSNoiseCalculationTool::tell1CMSIteration( std::vector<std::pair <do
   slope /= c_divBy;
     
    
-  // calculate common mode substracted ADCs
+  // calculate common mode subtracted ADCs
   // and prepare mean for next round
   iStrip = c_iMin;
   adcIt  = adcBegin;
@@ -707,7 +708,7 @@ void ST::STCMSNoiseCalculationTool::stIteration( std::vector<std::pair <double, 
   mean /= c_strips;
 
     
-  //-------------------------------substract mean
+  //-------------------------------subtract mean
   //-------------------------------and calc slope
 
   double slope     = 0;
@@ -725,7 +726,7 @@ void ST::STCMSNoiseCalculationTool::stIteration( std::vector<std::pair <double, 
     
   if (m_dump) dumpPortADCs(noHitADCs, 0, "stIteration: s3: ");
    
-  // calculate common mode substracted ADCs
+  // calculate common mode subtracted ADCs
   iStrip = c_iMin;
   adcIt  = adcBegin;
   for ( i = 0 ; i < c_strips; i++) {
@@ -1106,7 +1107,7 @@ void ST::STCMSNoiseCalculationTool::achimIteration( std::vector<std::pair <doubl
     
   //info() << "slope/shift: " << slope << " / " << shift << endmsg;
     
-  // calculate common mode substracted ADCs
+  // calculate common mode subtracted ADCs
   // and prepare mean for next round
   adcIt  = adcBegin;
   if ( m_useInts ) {

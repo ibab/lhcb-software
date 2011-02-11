@@ -74,8 +74,8 @@ namespace ST {
     virtual std::vector<unsigned int> cmsN(const unsigned int TELL) const;
     
   private:
-    /// Calculate the pedestal substracted ADC values for one beetle
-    void substractPedestals(const std::vector<signed int>& BeetleADCs, 
+    /// Calculate the pedestal subtracted ADC values for one beetle
+    void subtractPedestals(const std::vector<signed int>& BeetleADCs, 
                             std::vector<double>::const_iterator rawMeanIt,
                             std::vector<double>::const_iterator rawNoiseIt,
                             const signed int beetle,
@@ -83,7 +83,7 @@ namespace ST {
                             std::vector<double>& BeetleMeans);
     
     /// Remove PCN/Header corrected pedestals from raw adcs
-    void substractPCNPedestals( const std::vector<signed int>& RawADCs, 
+    void subtractPCNPedestals( const std::vector<signed int>& RawADCs, 
                                 const std::vector< std::vector<std::pair<double, int> > >* pedestals, 
                                 const signed int beetle,
                                 std::vector<signed int>& PedSubADCs);
@@ -153,8 +153,9 @@ namespace ST {
     bool m_printAlgError;///< 
 
     /// Threshold value for raw outlier rejection. value  in standard deviations.
-    bool m_rawOutliers; // Remove outliers in RAW
-    bool m_rawOutliersCMS; // Remove outliers in CMS
+    int m_skipOutliers;///< Number of events to skip before starting outlier removal
+    bool m_rawOutliers; // Remove outliers in RAW noise calculation
+    bool m_rawOutliersCMS; // Remove outliers in CMS noise calculation
     int  m_rawThreshold;///< Default value is 4
     
     double m_cmsThreshold;///< Threshold for removal of hits from CMS noise
