@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
- *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.11 2007-03-20 11:49:39 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
  */
@@ -31,7 +28,7 @@ SimpleChargeSharing::SimpleChargeSharing( const std::string& name,
   declareProperty( "ChargeShareFraction", m_shareFrac = 0.025 );
 }
 
-SimpleChargeSharing::~SimpleChargeSharing() {};
+SimpleChargeSharing::~SimpleChargeSharing() {}
 
 StatusCode SimpleChargeSharing::initialize()
 {

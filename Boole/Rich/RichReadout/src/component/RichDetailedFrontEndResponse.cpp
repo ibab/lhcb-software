@@ -17,7 +17,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( DetailedFrontEndResponse );
+DECLARE_ALGORITHM_FACTORY( DetailedFrontEndResponse )
 
 // Standard constructor, initializes variables
 DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,

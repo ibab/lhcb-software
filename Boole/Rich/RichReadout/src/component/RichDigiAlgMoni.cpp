@@ -21,7 +21,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( AlgMoni );
+DECLARE_ALGORITHM_FACTORY( AlgMoni )
 
 // Standard constructor, initializes variables
 AlgMoni::AlgMoni( const std::string& name,
@@ -96,7 +96,6 @@ StatusCode AlgMoni::execute()
   // Initialise mult counts
   std::vector<unsigned int> digMult(Rich::NRiches,0);
   std::vector<unsigned int> hpdCKMult(Rich::NRiches,0);
-  std::vector<unsigned int> nChargedTracks(Rich::NRiches,0);
 
   Rich::Map<const LHCb::RichSmartID,bool> hasHPDQuartzCKBkg;
 
@@ -194,7 +193,6 @@ StatusCode AlgMoni::execute()
       if ( !thisDigCounted && hit->chargedTrack() )
       {
         thisDigCounted = true;
-        ++nChargedTracks[rich];
       }
 
     } // end hits loop

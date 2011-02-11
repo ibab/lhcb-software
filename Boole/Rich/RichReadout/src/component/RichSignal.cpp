@@ -17,7 +17,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( Signal );
+DECLARE_ALGORITHM_FACTORY( Signal )
 
 // Standard constructor, initializes variables
 Signal::Signal( const std::string& name,
@@ -55,7 +55,7 @@ Signal::Signal( const std::string& name,
 
 }
 
-Signal::~Signal() {};
+Signal::~Signal() {}
 
 StatusCode Signal::initialize()
 {
