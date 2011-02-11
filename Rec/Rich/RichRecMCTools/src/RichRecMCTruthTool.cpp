@@ -65,9 +65,11 @@ StatusCode MCTruthTool::initialize()
 }
 
 // Method that handles various Gaudi "software events"
-void MCTruthTool::handle ( const Incident& incident )
+void MCTruthTool::handle ( const Incident& /* incident */ )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Only one Incident type, so skip type check
+  //if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  InitNewEvent();
 }
 
 MCTruthTool::TrackToMCP *
@@ -76,7 +78,7 @@ MCTruthTool::trackToMCPLinks( const LHCb::Track * track ) const
   if ( !track ) return NULL;
 
   // TES location for the container for this track
-  const std::string & loc = ( track ? objectLocation(track->parent()) : m_trLoc );
+  const std::string & loc = ( track->parent() ? objectLocation(track->parent()) : m_trLoc );
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "trackToMCPLinks for Track " << track->key()
               << " at TES '" << loc << "'" << endmsg;
