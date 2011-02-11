@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH DAQ algorithm : RichLoadRawEvent
  *
- *  CVS Log :-
- *  $Id: RichLoadRawEvent.cpp,v 1.1.1.1 2008-10-15 12:34:57 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
  */
@@ -23,8 +20,7 @@ using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( LoadRawEvent );
-
+DECLARE_ALGORITHM_FACTORY( LoadRawEvent )
 
 // Standard constructor, initializes variables
 LoadRawEvent::LoadRawEvent( const std::string& name,
@@ -32,7 +28,7 @@ LoadRawEvent::LoadRawEvent( const std::string& name,
   : Rich::AlgBase ( name , pSvcLocator ) { }
 
 // Destructor
-LoadRawEvent::~LoadRawEvent() {};
+LoadRawEvent::~LoadRawEvent() {}
 
 // Main execution
 StatusCode LoadRawEvent::execute()

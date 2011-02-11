@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::AddBackground
  *
- * CVS Log :-
- * $Id: RichAddBackground.cpp,v 1.3 2009-07-30 12:08:22 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2008-10-10
  */
@@ -23,8 +20,7 @@
 using namespace Rich;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( AddBackground );
-
+DECLARE_ALGORITHM_FACTORY( AddBackground )
 
 //=============================================================================
 // Standard constructor, initializes variables
