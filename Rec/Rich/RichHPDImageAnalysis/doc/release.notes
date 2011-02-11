@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Chris Jones
+ - Fix icc remark
+
 !========================= RichHPDImageAnalysis v1r5 2010-12-16 =========================
 ! 2010-11-05 - Chris Jones
  - Add protection against inhibited HPDs

@@ -11,7 +11,7 @@
 using namespace Rich::Mon;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichHPDImageSummary );
+DECLARE_ALGORITHM_FACTORY( RichHPDImageSummary )
 
 //=============================================================================
 // Standard constructor, initializes variables
