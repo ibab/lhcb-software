@@ -27,8 +27,8 @@ namespace
     std::string  out( in );
     std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
     return out ;
-  };
-};
+  }
+}
 
 class ParticleMakerBase : public DVAlgorithm {
 public:

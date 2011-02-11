@@ -1,6 +1,6 @@
 // $Id: 
 // ============================================================================
-#ifndef PHOTONMAKER_H 
+#ifndef PHOTONMAKER_H
 #define PHOTONMAKER_H 1
 // Include files
 #include "GaudiAlg/GaudiTool.h"
@@ -10,13 +10,13 @@
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 
 namespace LHCb{
-  class ProtoParticle ;  
+  class ProtoParticle ;
   class CaloHypo      ;
-};
+}
 
 /** @class PhotonMaker PhotonMaker.h
- *  
- *  The specialized producer of photons 
+ *
+ *  The specialized producer of photons
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2003-01-19
@@ -26,35 +26,35 @@ class PhotonMaker : public GaudiTool,
                     virtual public ICaloParticleMaker
 {
 public:
-  
-  
-  PhotonMaker( const std::string& type   , 
-                       const std::string& name   ,
-                       const IInterface*  parent ) ;
-   virtual ~PhotonMaker() ;
 
-  // Make the particles 
+
+  PhotonMaker( const std::string& type   ,
+               const std::string& name   ,
+               const IInterface*  parent ) ;
+  virtual ~PhotonMaker() ;
+
+  // Make the particles
   virtual StatusCode makeParticles (LHCb::Particle::Vector & particles ) ;
   virtual void setPoint ( const Gaudi::XYZPoint pos ){ m_point = pos; }
   virtual void setPoint ( const Gaudi::XYZPoint pos, const Gaudi::SymMatrix3x3 cov ){
-    m_point = pos; 
+    m_point = pos;
     m_pointErr = cov;
   }
   virtual void setPoint    ( const LHCb::Vertex* vert ){
-    m_point  = vert->position(); 
+    m_point  = vert->position();
     m_pointErr = vert->covMatrix();
   }
-  
-  virtual StatusCode initialize    () ;   
+
+  virtual StatusCode initialize    () ;
   virtual StatusCode finalize      () ;
 
 
 protected:
-  
+
   // confidence level evaluator
   double confLevel        ( const LHCb::ProtoParticle* pp ) const ;
   // setters
-  
+
 private:
   long m_Id;
   // Input PP container

@@ -10,7 +10,7 @@
 namespace LHCb{
   class ProtoParticle ;  
   class CaloHypo      ;
-};
+}
 
 /** @class Pi0MakerBase Pi0MakerBase.h
  *  

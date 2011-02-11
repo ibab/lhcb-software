@@ -3,18 +3,18 @@
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "CaloUtils/CaloParticle.h" 
+#include "CaloUtils/CaloParticle.h"
 // local
 #include "PhotonMakerAlg.h"
 
-/** @file 
- *  
+/** @file
+ *
  *  Implementation file for class : PhotonMakerAlg
  *
- *  @date 2006-08-25 
+ *  @date 2006-08-25
  *  @author Olivier Deschamps odescham@in2p3.fr
  *
  */
@@ -25,31 +25,29 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( PhotonMakerAlg );
+DECLARE_ALGORITHM_FACTORY( PhotonMakerAlg )
 
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type
- *  @param name   tool name 
+ *  @param name   tool name
  *  @param parent tool parent
  */
 // ============================================================================
-PhotonMakerAlg::PhotonMakerAlg
+  PhotonMakerAlg::PhotonMakerAlg
 ( const std::string& name,ISvcLocator* pSvcLocator  )
-  : ParticleMakerBase           ( name, pSvcLocator ) 
-    , m_photonMakerType  ()
-    , m_photonMaker      ()
+  : ParticleMakerBase           ( name, pSvcLocator )
+  , m_photonMakerType  ()
+  , m_photonMaker      ()
 {
   declareProperty ( "PhotonMakerType"  , m_photonMakerType = "PhotonMaker") ;
-};
+}
 // ============================================================================
-
-
 
 // ============================================================================
 /// destructor
 // ============================================================================
-PhotonMakerAlg::~PhotonMakerAlg() {};
+PhotonMakerAlg::~PhotonMakerAlg() {}
 // ============================================================================
 
 StatusCode PhotonMakerAlg::initialize    ()
@@ -58,16 +56,16 @@ StatusCode PhotonMakerAlg::initialize    ()
   StatusCode sc = ParticleMakerBase::initialize();
   if( sc.isFailure() ) { return Error(" Unable to initialize ParticleMakerBase",sc);}
 
-  m_photonMaker = tool< ICaloParticleMaker>( m_photonMakerType ,  this ) ;  
+  m_photonMaker = tool< ICaloParticleMaker>( m_photonMakerType ,  this ) ;
 
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 StatusCode PhotonMakerAlg::finalize      ()
 {
   return ParticleMakerBase::finalize ();
-};
+}
 
 // ============================================================================
 /** Make the particles
@@ -77,6 +75,5 @@ StatusCode PhotonMakerAlg::finalize      ()
 // ============================================================================
 StatusCode PhotonMakerAlg::makeParticles (LHCb::Particle::Vector & photons )
 {
-  StatusCode sc = m_photonMaker->makeParticles(photons);
-  return sc;
-};
+  return m_photonMaker->makeParticles(photons);
+}

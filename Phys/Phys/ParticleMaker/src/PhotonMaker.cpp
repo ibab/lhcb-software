@@ -28,7 +28,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY(PhotonMaker);
+DECLARE_TOOL_FACTORY(PhotonMaker)
 
 // ============================================================================
 /** Standard constructor
@@ -74,14 +74,14 @@ PhotonMaker::PhotonMaker
 
   // declare new interface
   declareInterface<ICaloParticleMaker> (this);
-};
+}
 // ============================================================================
 
 
 // ============================================================================
 /// destructor
 // ============================================================================
-PhotonMaker::~PhotonMaker() {};
+PhotonMaker::~PhotonMaker() {}
 // ============================================================================
 
  StatusCode PhotonMaker::initialize    ()
@@ -141,7 +141,7 @@ PhotonMaker::~PhotonMaker() {};
   {warning()<<" BOTH converted and unconverted photon are to be skipped !!!" << endreq; }
 
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 StatusCode PhotonMaker::finalize      ()
@@ -155,7 +155,7 @@ StatusCode PhotonMaker::finalize      ()
   info() << " ---------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();
-};
+}
 
 // ============================================================================
 /** Make the particles
@@ -292,7 +292,7 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   }
   
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
@@ -357,4 +357,4 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
   }
 
   return CL ;
-};
+}

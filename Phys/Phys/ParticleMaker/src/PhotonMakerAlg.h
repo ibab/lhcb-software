@@ -11,7 +11,7 @@
 namespace LHCb{
   class ProtoParticle ;  
   class CaloHypo      ;
-};
+}
 
 /** @class PhotonMakerAlg PhotonMakerAlg.h
  *  

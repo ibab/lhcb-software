@@ -7,7 +7,7 @@
 namespace LHCb{
   class ProtoParticle ;  
   class CaloHypo      ;
-};
+}
 
 /** @class MergedPi0Maker MergedPi0Maker.h
  *  

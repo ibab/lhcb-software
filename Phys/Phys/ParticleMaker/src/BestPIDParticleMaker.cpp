@@ -15,9 +15,9 @@ using namespace std ;
  */
 //-----------------------------------------------------------------------------
 
-
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BestPIDParticleMaker );
+DECLARE_ALGORITHM_FACTORY( BestPIDParticleMaker )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -31,7 +31,8 @@ BestPIDParticleMaker::BestPIDParticleMaker( const std::string& name,
   m_ParticleList.push_back("kaon");
   m_ParticleList.push_back("proton");
   m_ParticleList.push_back("pion");
-  declareProperty ( "Particles" , m_ParticleList, "Possible Particles to create : muon, electron, kaon, proton, pion" ) ;
+  declareProperty ( "Particles" , m_ParticleList, 
+                    "Possible Particles to create : muon, electron, kaon, proton, pion" ) ;
 }
 
 //=============================================================================

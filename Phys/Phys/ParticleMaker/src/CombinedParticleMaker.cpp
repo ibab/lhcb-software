@@ -3,9 +3,6 @@
  *
  * Implmentation file for Particle maker CombinedParticleMaker
  *
- * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.37 2010-08-16 16:40:38 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -23,7 +20,7 @@ using namespace LHCb;
 
 // Declaration of the Tool Factory
 
-DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker );
+DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -170,7 +167,6 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
       const bool selected = m_protoTool->isSatisfied( *iProto );
       if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << m_partProp->particle()
                                             << " selected=" << selected << endmsg;
-      bool madeP(false);
       if ( selected )
       {
         // make a new Particle
@@ -188,7 +184,6 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
           parts.push_back(part);
           // increment tally
           tally.addToType( m_partProp->particle() );
-          madeP = true;
         }
       } // ProtoParticle selected
 

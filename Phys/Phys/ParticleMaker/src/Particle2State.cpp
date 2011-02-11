@@ -23,7 +23,7 @@ namespace Gaudi {
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Particle2State );
+DECLARE_TOOL_FACTORY( Particle2State )
 
 //=============================================================================
 // Standard constructor, initializes variables

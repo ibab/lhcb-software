@@ -1,19 +1,19 @@
 // $Id: MergedPi0Maker.cpp,v 1.12 2010-09-01 14:54:00 odescham Exp $
 // ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/ParticleProperty.h"
-#include "CaloUtils/CaloParticle.h" 
+#include "CaloUtils/CaloParticle.h"
 #include "CaloDet/DeCalorimeter.h"
 // local
 #include "MergedPi0Maker.h"
 
-/** @file 
- *  
+/** @file
+ *
  *  Implementation file for class : MergedPi0Maker
  *
- *  @date 2006-08-25 
+ *  @date 2006-08-25
  *  @author Olivier Deschamps odescham@in2p3.fr
  *
  */
@@ -24,23 +24,23 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( MergedPi0Maker );
+DECLARE_ALGORITHM_FACTORY( MergedPi0Maker )
 
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type
- *  @param name   tool name 
+ *  @param name   tool name
  *  @param parent tool parent
  */
 // ============================================================================
-MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator )
-  : Pi0MakerBase           ( name , pSvcLocator ) 
+  MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator )
+    : Pi0MakerBase           ( name , pSvcLocator )
     , m_useCaloTrMatch   ()
     , m_useCaloDepositID ()
     , m_useShowerShape   ()
     , m_useClusterMass   ()
-  // cut
-    , m_clCut        () 
+                                // cut
+    , m_clCut        ()
     , m_gPtCut     ()
     , m_ggDistCut  ()
     , m_parMas()
@@ -51,8 +51,8 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
   declareProperty ( "UseCaloDepositID"           , m_useCaloDepositID = false ) ;
   declareProperty ( "UseShowerShape"             , m_useShowerShape    = false) ;
   declareProperty ( "UseClusterMass"             , m_useClusterMass    = false) ;
-  // Filter 
-  declareProperty ( "ConfLevelCut"     , m_clCut = 0.4 ) ; // Chi2  > 1 
+  // Filter
+  declareProperty ( "ConfLevelCut"     , m_clCut = 0.4 ) ; // Chi2  > 1
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV);
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
   // Mass correction
@@ -60,14 +60,14 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
   m_parMas.push_back(1.00  );
   m_parMas.push_back(0.00  );
   m_parMas.push_back(0.00  );
-};
+}
 // ============================================================================
 
 
 // ============================================================================
 /// destructor
 // ============================================================================
-MergedPi0Maker::~MergedPi0Maker() {};
+MergedPi0Maker::~MergedPi0Maker() {}
 // ============================================================================
 
 StatusCode MergedPi0Maker::initialize    ()
@@ -79,10 +79,10 @@ StatusCode MergedPi0Maker::initialize    ()
   // DeCalorimeter
   m_calo =  getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ) ;
 
-  // check vectors of paramters 
+  // check vectors of paramters
   if( 3 != m_parMas.size() ) {
-    error() << "Invalid number of parameters" << endmsg ; 
-    return StatusCode::FAILURE; 
+    error() << "Invalid number of parameters" << endmsg ;
+    return StatusCode::FAILURE;
   }
   // CL techniques
   if ( msgLevel(MSG::DEBUG)){
@@ -96,12 +96,12 @@ StatusCode MergedPi0Maker::initialize    ()
     if( m_useClusterMass  )
     { debug() << " ClusterMass  : Ecal Cluster  mass              " << endmsg ; }
   }
-  
+
   if( !m_useCaloTrMatch   &&
       !m_useCaloDepositID &&
       !m_useShowerShape   &&
       !m_useClusterMass   )
-    { Warning(" No PID techniques are selected for CL evaluation" ) ; }
+  { Warning(" No PID techniques are selected for CL evaluation" ) ; }
 
   if( m_useCaloTrMatch    ){debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)" << endmsg;}
   if( m_useCaloDepositID  ){debug()<< "      CaloDepositID is not implemented yet " << endmsg ; }
@@ -109,12 +109,12 @@ StatusCode MergedPi0Maker::initialize    ()
   if( m_useClusterMass    ){debug()<< "  For ClusterMass assume exponential distribution (wrong?)"<< endmsg; }
 
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 StatusCode MergedPi0Maker::finalize      ()
 {
   return Pi0MakerBase::finalize ();
-};
+}
 
 // ============================================================================
 /** Make the particles
@@ -127,7 +127,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
   // avoid some long names
 
   if( !particles.empty() ){
-    Warning( "makeParticles(): extend non-empty vector of Particles" ) ; 
+    Warning( "makeParticles(): extend non-empty vector of Particles" ) ;
   }
 
   // locate input data
@@ -145,19 +145,19 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     LHCb::ProtoParticle* pp = *ipp ;
 
     // skip invalid and charged
-    if ( 0 == pp || 0 != pp->track() )   { continue ; }        
+    if ( 0 == pp || 0 != pp->track() )   { continue ; }
 
-    
-    // Check the hypothesis 
+
+    // Check the hypothesis
     const LHCb::CaloHypo*   hypo  = *( (pp->calo()).begin() );
     if(LHCb::CaloHypo::Pi0Merged != hypo->hypothesis() )continue;
-    
+
     ++nPp;
-    
+
 
     // evaluate the Confidence Level
     const double CL = confLevel( pp );
-    if ( CL          < m_clCut                ){continue;}    
+    if ( CL          < m_clCut                ){continue;}
 
     // Filters
     LHCb::CaloMomentum pi0Momentum( pp , m_point , m_pointErr);
@@ -181,14 +181,14 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     if ( m_gPtCut    > g1Momentum.pt()      ){continue;}
     if ( m_gPtCut    > g2Momentum.pt()      ){continue;}
 
-    // Gamma-Gamma Min distance 
+    // Gamma-Gamma Min distance
     // retrieve cellID by position
     // (WARNING USE g1 split photon 'position')
     const LHCb::CaloPosition* hypoPos = g1->position();
     if( 0 == hypoPos){
       Warning("CaloPosition point to null").ignore();
       return StatusCode::FAILURE ;
-    }    
+    }
     const Gaudi::XYZPoint point( hypoPos->x(), hypoPos->y(), hypoPos->z() );
 
     LHCb::CaloCellID     cellID = m_calo->Cell( point );
@@ -201,7 +201,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     ++nSelPp;
 
     // create new particle and fill it
-    LHCb::Particle* particle = new LHCb::Particle( ); 
+    LHCb::Particle* particle = new LHCb::Particle( );
     particle -> setParticleID( LHCb::ParticleID(m_Id) );
     particle -> setProto( pp ) ;
 
@@ -217,12 +217,12 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
       debug() << "CaloParticle status/flag : " << calopart.status() << "/" << calopart.flag();
       debug() << "Unable to fill Merged " << m_pid << " parameters, skip particle [" << nSkip << "]"<< endmsg;
       --nSelPp;
-      continue ;                                                
+      continue ;
     }
 
     // mass and mass uncertainties
     particle -> setMeasuredMass( mass ) ; // corrected mass
-    particle -> setMeasuredMassErr( calopart.emass() ) ; 
+    particle -> setMeasuredMassErr( calopart.emass() ) ;
 
 
     m_count[1] += 1;
@@ -233,7 +233,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
       verbose() << "CL (Chi2)  " << CL   << " ("<<pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << ")"<<endmsg;
       verbose() << "dist(gg)"<< dmin << endmsg;
     }
-    
+
     // add the particle to the container
     particles.push_back( particle );
 
@@ -247,9 +247,9 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     debug() << " Skipped : " << nSkip << endmsg;
     debug() << "--------------------" << endmsg;
   }
-  
+
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
@@ -258,7 +258,7 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
   typedef const std::vector<std::pair<int,double> >  PIDs  ;
 
   if( 0 == pp )
-    { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
+  { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 
   double CL = 1.0 ;
 
@@ -266,9 +266,9 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
   if( m_useCaloTrMatch  ){
     if( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) ){
       // assume gaussian distribution (it is wrong!)
-      CL *= ( 1.0 - exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ; 
+      CL *= ( 1.0 - exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
     }
-    else{ 
+    else{
       Warning("confLevel(): CaloTrMatch is not available" ) ; }
   }
 
@@ -277,10 +277,10 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
     if( pp->hasInfo(LHCb::ProtoParticle::CaloDepositID) ){
       Warning("confLevel(): usage of CaloDepositID is not implemented");
     }   // Update CL
-    else{ 
+    else{
       Warning("confLevel(): CaloDepositID is not available" ) ; }
   }
-  
+
   // ShowerShape
   if( m_useShowerShape ){
     if( pp->hasInfo(LHCb::ProtoParticle::ShowerShape ) ){
@@ -290,7 +290,7 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
       Warning("confLevel(): CaloShowerShape is not available" ) ;
     }
   }
-  
+
 
   // Cluster Mass
   if( m_useClusterMass ){
@@ -299,10 +299,10 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
       CL *= exp( -0.5 * pp->info(LHCb::ProtoParticle::ClusterMass,0.)
                  / ( 25 * Gaudi::Units::MeV ) ) ;
     }  // Update CL
-    else{ 
+    else{
       Warning("confLevel(): ClusterMass is not available" ) ; }
   }
 
 
   return CL ;
-};
+}

@@ -15,7 +15,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_ALGORITHM_FACTORY( NoPIDsParticleMaker );
+DECLARE_ALGORITHM_FACTORY( NoPIDsParticleMaker )
 
 
 //=============================================================================
@@ -70,7 +70,7 @@ StatusCode NoPIDsParticleMaker::finalize()
     << ")/event"       << endmsg ;
   // finalize the base 
   return ChargedParticleMakerBase::finalize ();
-};
+}
 //=============================================================================
 // Dispatch the making of particles 
 //=============================================================================
@@ -176,5 +176,5 @@ StatusCode NoPIDsParticleMaker::fillParticle
   const LHCb::State* state   = usedState( track ) ;
   
   return p2s()->state2Particle(*state,*particle);
-};
+}
 // ============================================================================

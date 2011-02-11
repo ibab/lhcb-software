@@ -38,13 +38,13 @@ Pi0MakerBase::Pi0MakerBase
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
-Pi0MakerBase::~Pi0MakerBase() {};
+Pi0MakerBase::~Pi0MakerBase() {}
 // ============================================================================
 
 StatusCode Pi0MakerBase::initialize    ()
@@ -67,7 +67,7 @@ StatusCode Pi0MakerBase::initialize    ()
   m_count[2]=0;
   
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 StatusCode Pi0MakerBase::finalize      ()
@@ -79,5 +79,5 @@ StatusCode Pi0MakerBase::finalize      ()
   info() << " --------------------------------" << endreq;
   // finalize the base class
   return ParticleMakerBase::finalize ();
-};
+}
 

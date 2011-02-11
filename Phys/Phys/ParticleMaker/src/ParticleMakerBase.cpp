@@ -49,7 +49,7 @@ StatusCode ParticleMakerBase::initialize ( ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleMakerBase::~ParticleMakerBase() {};
+ParticleMakerBase::~ParticleMakerBase() {}
 
 //=============================================================================
 // Main execution

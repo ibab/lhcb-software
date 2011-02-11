@@ -8,7 +8,7 @@
 namespace LHCb{
   class ProtoParticle ;  
   class CaloHypo      ;
-};
+}
 
 /** @class ResolvedPi0Maker ResolvedPi0Maker.h
  *  
