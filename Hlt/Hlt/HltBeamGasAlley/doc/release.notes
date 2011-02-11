@@ -3,6 +3,9 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+! 2011-02-11 Gerhard Raven
+ - add VeloDet to dependencies
+
 !========================== HltBeamGasAlley v2r4   2011-01-20 =================
 ! 2011-01-20 Gerhard Raven
  - migrate to use HltSelectionContainer

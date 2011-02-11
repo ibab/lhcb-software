@@ -3,7 +3,7 @@
 # Maintainer : Plamen Hopchev
 #============================================================================
 package           HltBeamGasAlley
-version           v2r4
+version           v2r4p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,6 +15,7 @@ include_path      none
 #============================================================================
 use	GaudiAlg	v*
 use	HltBase		v*	Hlt
+use VeloDet     v*  Det
 use	AIDA		v*	LCG_Interfaces
 
 # Component library building rule
