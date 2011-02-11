@@ -63,7 +63,7 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 // ============================================================================
 // destructor 
 // ============================================================================
-LoKi::Particles::CosineDirectionAngle::~CosineDirectionAngle(){} ;
+LoKi::Particles::CosineDirectionAngle::~CosineDirectionAngle(){}
 // ============================================================================
 // MANDATORY: clone method ("virtual destructor")
 // ============================================================================

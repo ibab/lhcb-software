@@ -152,8 +152,8 @@ operator==( const LoKi::Particles::Identifier&   id   ,
   for ( std::vector<std::string>::const_iterator ipid = pids.begin() ; 
         pids.end() != ipid ; ++ipid ) 
   {    
-    LHCb::ParticleID id = LoKi::Particles::pidFromName ( *ipid ) ;
-    _pids.push_back ( id.pid() ) ;
+    const LHCb::ParticleID iid = LoKi::Particles::pidFromName ( *ipid ) ;
+    _pids.push_back ( iid.pid() ) ;
   }
   //
   return InList ( id , _pids ) ;
@@ -209,8 +209,8 @@ operator==( const LoKi::Particles::AbsIdentifier&   id   ,
   for ( std::vector<std::string>::const_iterator ipid = pids.begin() ; 
         pids.end() != ipid ; ++ipid ) 
   {    
-    LHCb::ParticleID id = LoKi::Particles::pidFromName ( *ipid ) ;
-    _pids.push_back ( id.abspid() ) ;
+    const LHCb::ParticleID iid = LoKi::Particles::pidFromName ( *ipid ) ;
+    _pids.push_back ( iid.abspid() ) ;
   }
   //
   return InList ( id , _pids ) ;
@@ -257,8 +257,8 @@ operator!=( const LoKi::Particles::Identifier&   id   ,
   for ( std::vector<std::string>::const_iterator ipid = pids.begin() ; 
         pids.end() != ipid ; ++ipid ) 
   {    
-    LHCb::ParticleID id = LoKi::Particles::pidFromName ( *ipid ) ;
-    _pids.push_back ( id.pid() ) ;
+    const LHCb::ParticleID iid = LoKi::Particles::pidFromName ( *ipid ) ;
+    _pids.push_back ( iid.pid() ) ;
   }
   //
   return NotInList ( id , _pids ) ;
@@ -314,8 +314,8 @@ operator!=( const LoKi::Particles::AbsIdentifier&   id   ,
   for ( std::vector<std::string>::const_iterator ipid = pids.begin() ; 
         pids.end() != ipid ; ++ipid ) 
   {    
-    LHCb::ParticleID id = LoKi::Particles::pidFromName ( *ipid ) ;
-    _pids.push_back ( id.abspid() ) ;
+    const LHCb::ParticleID iid = LoKi::Particles::pidFromName ( *ipid ) ;
+    _pids.push_back ( iid.abspid() ) ;
   }
   //
   return NotInList ( id , _pids ) ;

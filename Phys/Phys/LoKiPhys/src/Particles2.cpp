@@ -98,7 +98,7 @@ LoKi::Particles::TimeSignedDistance::time
   const double betagamma   = mom / mass ;
   //
   return distance / betagamma ;
-} ;
+}
 // ============================================================================
 //  the actual computation 
 // ============================================================================

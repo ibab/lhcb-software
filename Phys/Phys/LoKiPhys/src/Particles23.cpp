@@ -382,8 +382,8 @@ LoKi::Particles::WrongMass::wmass
     // extrapolate it! 
     static LHCb::Particle s_particle ;
     //
-    StatusCode sc = m_transporter->transport ( dau , refPoint.Z() , s_particle ) ;
-    if ( sc.isSuccess() ) 
+    const StatusCode ssc = m_transporter->transport ( dau , refPoint.Z() , s_particle ) ;
+    if ( ssc.isSuccess() ) 
     { 
       sum += LoKi::Kinematics::wrongMass ( s_particle.momentum() , newmass ) ; 
     }

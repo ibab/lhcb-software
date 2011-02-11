@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-11 - Chris Jones
+ - Fix a few trivial icc warnings/remarks.
+
 ! ========================== LoKiPhys v9r8 2011-01-28 =========================
 
 ! 2011-01-26 - Vanya Belyaev

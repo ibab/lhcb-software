@@ -57,7 +57,7 @@ LoKi::Particles::VFunAsPFun::operator()
   if ( 0 != p ) { return m_vfun ( p->endVertex() ) ; }      // RETURN 
   Error ( " Invalid Particle, return " + Gaudi::Utils::toString( m_bad ) ) ;
   return m_bad;                                              // RETURN 
-};
+}
 // ===========================================================================
 std::ostream& 
 LoKi::Particles::VFunAsPFun::fillStream

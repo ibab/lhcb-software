@@ -167,7 +167,7 @@ LoKi::Particles::InTES::operator()
   }
   // search for a substring:
   return std::string::npos != path.find( location() ) ;
-} ;
+} 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::InTES::fillStream ( std::ostream& s ) const 
@@ -196,7 +196,7 @@ LoKi::Particles::Identifier::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::Identifier::fillStream ( std::ostream& s ) const 
-{ return s << "ID" ; } ;
+{ return s << "ID" ; } 
 // ============================================================================
 LoKi::Particles::AbsIdentifier*
 LoKi::Particles::AbsIdentifier::clone() const 
@@ -216,7 +216,7 @@ LoKi::Particles::AbsIdentifier::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::AbsIdentifier::fillStream ( std::ostream& s ) const 
-{ return s << "ABSID" ; } ;
+{ return s << "ABSID" ; } 
 // ============================================================================
 LoKi::Particles::Charge*
 LoKi::Particles::Charge::clone() const 
@@ -236,7 +236,7 @@ LoKi::Particles::Charge::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::Charge::fillStream ( std::ostream& s ) const 
-{ return s << "Q" ; } ;
+{ return s << "Q" ; } 
 // ============================================================================
 LoKi::Particles::SumCharge*
 LoKi::Particles::SumCharge::clone() const 
@@ -270,7 +270,7 @@ LoKi::Particles::SumCharge::sumCharge
 // ============================================================================
 std::ostream& 
 LoKi::Particles::SumCharge::fillStream ( std::ostream& s ) const 
-{ return s << "SUMQ" ; } ;
+{ return s << "SUMQ" ; }
 // ============================================================================
 LoKi::Particles::Momentum* 
 LoKi::Particles::Momentum::clone() const 
@@ -756,7 +756,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::operator()
   if ( 0 != p ) { return ::fabs( measuredMass ( p ) - m0 () ) ; } // RETURN 
   Error(" Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                      // RETURN 
-};
+}
 // ============================================================================
 //  specific printout
 // ============================================================================
@@ -842,7 +842,7 @@ LoKi::Particles::Weight::operator()
   if ( 0 != p ) { return p -> weight () ; }              // RETURN 
   Error ( " Invalid Particle, return '-1000'" ) ;
   return -1000 ;                                           // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Particles::Weight::fillStream

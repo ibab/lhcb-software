@@ -180,7 +180,7 @@ LoKi::Particles::DeltaR2::operator()
   const double deta_ = deta ( p ) ;
   //
   return dphi_*dphi_ + deta_*deta_ ;
-} ;
+}
 // ============================================================================
 // OPTIONAL: "SHORT" representation
 // ============================================================================

@@ -68,7 +68,7 @@ namespace LoKi
         { result = _res  ; found = first ; }  
       }
       return found ;
-    };
+    }
     // ========================================================================
     /** Helper function to evaluate minimal value of 
      *  something etc... for 
@@ -107,7 +107,7 @@ namespace LoKi
         { result = _res  ; found = first ; }          
       }
       return found ;
-    };
+    }
     // ========================================================================
     /** Helper function to evaluate maximal value of 
      *  something etc... for 
@@ -144,7 +144,7 @@ namespace LoKi
         { result = _res  ; found = first ; }  
       }
       return found ;
-    };
+    }
     // ========================================================================
     /** Helper function to evaluate maximal value of 
      *  something etc... for 
@@ -182,7 +182,7 @@ namespace LoKi
         { result = _res  ; found = first ; }  
       }
       return found ;
-    };
+    }
     // ========================================================================
     /** Helper function to evaluate minimal value of 
      *  impact parameter, distance, chi2 etc... for 
@@ -217,7 +217,7 @@ namespace LoKi
         { result = _res  ; found = first ; }  
       }
       return found ;
-    };
+    }
     // ========================================================================
     template <class FUNCTOR>
     struct PMFA 

@@ -104,7 +104,7 @@ LoKi::Particles::VertexDistance::distance
   }
   // call for actual evalautor 
   return m_fun.distance( p->endVertex() ) ;
-} ;
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
@@ -285,7 +285,7 @@ LoKi::Particles::VertexDotDistance::distance
   }
   //
   return dist.Dot( direction ) / dirMag ;                   // RETURN 
-} ;
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
@@ -366,7 +366,7 @@ LoKi::Particles::VertexChi2Distance::chi2
   }
   // call for actual evalautor 
   return m_fun.chi2( p->endVertex() ) ;
-} ;
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
@@ -478,7 +478,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 ( const LHCb::RecVertex::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
@@ -513,7 +513,7 @@ LoKi::Particles::MinVertexChi2Distance::operator()
   }
   // use the actual evaluator 
   return m_fun ( p->endVertex() ) ;
-} ;
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================

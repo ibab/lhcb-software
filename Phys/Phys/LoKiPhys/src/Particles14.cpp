@@ -95,8 +95,7 @@ LoKi::Particles::DecayAngle::fillStream ( std::ostream& s ) const
     s << "(" << m_child << ")" ; break ;
   }
   return s ;
-} ;
-
+}
 
 // ============================================================================
 // MANDATORY: the only one essential method 

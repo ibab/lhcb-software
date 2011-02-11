@@ -186,7 +186,7 @@ LoKi::Particles::MultTree::result_type
 LoKi::Particles::MultTree::operator() 
   ( LoKi::Particles::MultTree::argument p ) const 
 { return LoKi::PhysAlgs::accumulate
-    ( p , m_fun , m_cut , m_res , std::multiplies<result_type>() ) ; };
+    ( p , m_fun , m_cut , m_res , std::multiplies<result_type>() ) ; }
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
