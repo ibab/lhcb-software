@@ -255,8 +255,8 @@ Rich::RadiatorType RichG4Hit::radiatorType() const
   // default invalid radiator type
   Rich::RadiatorType rad = Rich::InvalidRadiator;
   // fill if known ID
-  if      ( GetRadiatorNumber() == Rich1C4F10CkvRadiatorNum )          { rad = Rich::C4F10; }
-  else if ( GetRadiatorNumber() == Rich2CF4CkvRadiatorNum   )          { rad = Rich::CF4; }
+  if      ( GetRadiatorNumber() == Rich1GaseousCkvRadiatorNum )          { rad = Rich::Rich1Gas; }
+  else if ( GetRadiatorNumber() == Rich2GaseousCkvRadiatorNum   )          { rad = Rich::Rich2Gas; }
   else if ( Rich1AgelTile0CkvRadiatorNum <= GetRadiatorNumber() &&
             Rich1AgelTile15CkvRadiatorNum >= GetRadiatorNumber() )     { rad = Rich::Aerogel; }
   else if ( RichHpdQuartzWindowCkvRadiatorNum == GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin; }

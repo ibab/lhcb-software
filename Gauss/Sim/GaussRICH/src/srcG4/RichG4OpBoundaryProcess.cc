@@ -747,20 +747,27 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
      //    Material1->GetName() ==   RichHpdQWMatName  )TransCoeff=1.0;
        if(Material1->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
 
-      if((Material1->GetName() == Rich1NitrogenMatName &&
-          Material2->GetName() == Rich1C4F10MatName)  ||
-         (Material1->GetName() ==  Rich1C4F10MatName &&
-          Material2->GetName() == Rich1NitrogenMatName) )TransCoeff=1.0;
+        
+      if((Material1->GetName() == Rich1NitrogenMatName) &&
+          ((Material2->GetName() == Rich1C4F10MatName) || 
+           ( Material2->GetName() == Rich1RadiatorGasMatName))) TransCoeff=1.0;
+      
+      if( ((Material1->GetName() ==  Rich1C4F10MatName) || 
+           (Material1->GetName() ==  Rich1RadiatorGasMatName)) &&
+          (Material2->GetName() == Rich1NitrogenMatName) )TransCoeff=1.0;
 
       if(Material1->GetName() == Rich2NitrogenMatName   &&
          Material2->GetName() == RichHpdVacName   )TransCoeff=1.0;
       if(Material2->GetName() == Rich2NitrogenMatName   &&
          Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;
 
-      if((Material1->GetName() == Rich2NitrogenMatName &&
-          Material2->GetName() == Rich2CF4MatName)  ||
-         (Material1->GetName() ==  Rich2CF4MatName &&
-          Material2->GetName() == Rich2NitrogenMatName) )TransCoeff=1.0;
+      if(( Material1->GetName() == Rich2NitrogenMatName) &&
+          ((Material2->GetName() == Rich2CF4MatName)|| 
+            (Material2->GetName() == Rich2RadiatorGasMatName)) ) TransCoeff=1.0;
+
+      if (  ( (Material1->GetName() ==  Rich2CF4MatName) ||
+               (Material1->GetName() ==  Rich2RadiatorGasMatName)) &&
+               (Material2->GetName() == Rich2NitrogenMatName) )TransCoeff=1.0;
 
       // Now for the modif to comapare with SICBMC for aerogel.
       // avoided to make things more realistic in November 2005.
@@ -775,7 +782,8 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
       //  TransCoeff=1.0;
       // }
       // if(( Material1->GetName() ==  Rich1AerogelMatName ) &&
-      //   (  Material2->GetName() == Rich1C4F10MatName) ){
+      //   ( ( Material2->GetName() == Rich1C4F10MatName) || 
+      //      ( Material2->GetName() == Rich1adiatorGasMatName))){
       //  TransCoeff=1.0;
       // }
 
@@ -859,9 +867,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
               (Material2->GetName() ==  Rich2QuartzMatName)) ||
              ((Material2->GetName() ==  Rich2NitrogenMatName ) &&
               (Material1->GetName() ==  Rich2QuartzMatName))   ||
-             ((Material1->GetName() ==  Rich2CF4MatName )      &&
+             (((Material1->GetName() ==  Rich2CF4MatName ) ||
+               (Material1->GetName() ==  Rich2RadiatorGasMatName )  ) &&
               (Material2->GetName() ==  Rich2QuartzMatName))  ||
-             ((Material2->GetName() ==  Rich2CF4MatName )      &&
+             (((Material2->GetName() ==  Rich2CF4MatName )|| 
+               (Material2->GetName() ==  Rich2RadiatorGasMatName )) &&
               (Material1->GetName() ==  Rich2QuartzMatName)) )
             {
 

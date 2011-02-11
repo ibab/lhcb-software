@@ -387,10 +387,10 @@ void GetMCRichHitsAlg::printStat( std::string name, RMap & a )
   info() << name
          << ": Aero  = " << occ(a[Rich::Aerogel],m_nEvts)
          << " (" << eff(a[Rich::Aerogel],m_hitTally[Rich::Rich1]) << "%)"
-         << " C4F10 = "  << occ(a[Rich::C4F10],m_nEvts)
-         << " (" << eff(a[Rich::C4F10],m_hitTally[Rich::Rich1]) << "%)"
-         << " CF4 = "    << occ(a[Rich::CF4],m_nEvts)
-         << " (" << eff(a[Rich::CF4],m_hitTally[Rich::Rich2]) << "%)"
+         << " Rich1Gas = "  << occ(a[Rich::Rich1Gas],m_nEvts)
+         << " (" << eff(a[Rich::Rich1Gas],m_hitTally[Rich::Rich1]) << "%)"
+         << " Rich2Gas = "    << occ(a[Rich::Rich2Gas],m_nEvts)
+         << " (" << eff(a[Rich::Rich2Gas],m_hitTally[Rich::Rich2]) << "%)"
          << endmsg;
 }
 

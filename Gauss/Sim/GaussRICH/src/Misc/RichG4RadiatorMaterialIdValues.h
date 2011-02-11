@@ -3,8 +3,10 @@
 // For the Cherenkov Photon producing materials assign a radiator number.
 // Keep the generic aerogel as radiator 0 for any backward compatibility.
 static const G4int Rich1AgelGenericCkvRadiatorNum=0;
-static const G4int Rich1C4F10CkvRadiatorNum=1;
-static const G4int Rich2CF4CkvRadiatorNum=2;
+static const G4int Rich1C4F10CkvRadiatorNum=1; //to be phased out
+static const G4int Rich2CF4CkvRadiatorNum=2; // to be phased out
+static const G4int Rich1GaseousCkvRadiatorNum=1;
+static const G4int Rich2GaseousCkvRadiatorNum=2;
 static const G4int RichFilterGenericCkvRadiatorNum= 4;
 static const G4int RichFilterD263CkvRadiatorNum= 5;
 static const G4int Rich1GasQWindowCkvRadiatorNum=6;

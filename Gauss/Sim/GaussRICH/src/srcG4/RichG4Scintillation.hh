@@ -216,6 +216,7 @@ private:
   //modif by SE
         G4bool fRichVerboseInfoTag;
         G4int fMatIndexCf4;
+        G4int fMatIndexRich2GasRad;
 
   //end modif by SE
 };

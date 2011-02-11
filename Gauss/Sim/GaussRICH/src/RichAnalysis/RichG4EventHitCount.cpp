@@ -1586,7 +1586,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             }
 
 
-            if(   aRadiatorNum == Rich1C4F10CkvRadiatorNum ){
+            if(   aRadiatorNum ==  Rich1GaseousCkvRadiatorNum  ){
 
               aRichCounter->bumpNumHitTotRich1Gas();
 
@@ -1626,11 +1626,10 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             }else if(  aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum  &&  aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich1Agel();
-
               if(aPhotonSource == 1   ) aRichCounter->bumpNumHitTotRich1AgelCherenkovProc();
 
               if(aHpdKapDetRefl){
-		aRichCounter->bumpNumHitTotRich1AerogelHpdKaptonRefl();
+            		aRichCounter->bumpNumHitTotRich1AerogelHpdKaptonRefl();
 	      }
               if(  ChtkId <= 1 ) {
 
@@ -1638,7 +1637,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
               }
 
-            } else if (  aRadiatorNum == Rich2CF4CkvRadiatorNum ) {
+            } else if (  aRadiatorNum == Rich2GaseousCkvRadiatorNum ) {
 
               aRichCounter->bumpNumHitTotRich2Gas();
               if(aPhotonSource == 1   ) { 

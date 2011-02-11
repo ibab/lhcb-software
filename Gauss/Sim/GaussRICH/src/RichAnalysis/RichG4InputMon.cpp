@@ -38,7 +38,9 @@ void RichG4InputMon::MonitorRich1GasRadiatorRefIndex()
 //   G4cout<<"G4mat name list "<<(*theMaterialTable)[iMat]->GetName()<<G4endl;
        if( ( C4F10MaterialName == (*theMaterialTable)[iMat]->GetName()) || 
             ( CF4MaterialName == (*theMaterialTable)[iMat]->GetName()) || 
-            ( C3F8MaterialName == (*theMaterialTable)[iMat]->GetName())  ){
+            ( C3F8MaterialName == (*theMaterialTable)[iMat]->GetName()) || 
+            ( R2RadGasMaterialName == (*theMaterialTable)[iMat]->GetName() ) ||
+            ( R1RadGasMaterialName  == (*theMaterialTable)[iMat]->GetName()) ){
          G4cout<<"Current Material Name for refindex verification "<<(*theMaterialTable)[iMat]->GetName()
                <<G4endl;
          

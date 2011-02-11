@@ -91,7 +91,8 @@ RichG4Scintillation::RichG4Scintillation(const G4String& processName,
                                        G4ProcessType type)
   : G4VRestDiscreteProcess(processName, type),
     fRichVerboseInfoTag(false),
-    fMatIndexCf4(0)
+    fMatIndexCf4(0),
+    fMatIndexRich2GasRad(0)
 {
         SetProcessSubType(fScintillation);
 
@@ -114,13 +115,18 @@ RichG4Scintillation::RichG4Scintillation(const G4String& processName,
         // modif by SE
         // get the material index for CF4 in RICH2.
         const G4String cf4MatName = CF4MaterialName;
+        const G4String Rich2GasRadMatName = R2RadGasMaterialName;
         
      static const G4MaterialTable* theMaterialTable =
      G4Material::GetMaterialTable();
      G4int numberOfMat= theMaterialTable->size() ;
      G4int iMat=0;
      G4bool foundCF4=false;
-    
+
+     G4int iMatA=0;
+     G4bool foundRich2GasRad=false;
+     
+     // the name CF4 to be phased out in the future.
      while(iMat < numberOfMat &&  (!foundCF4) ) {
        if(  cf4MatName  == (*theMaterialTable)[iMat]->GetName()) {
          fMatIndexCf4= (*theMaterialTable)[iMat]->GetIndex();
@@ -129,6 +135,19 @@ RichG4Scintillation::RichG4Scintillation(const G4String& processName,
        iMat++;
        
      }
+     
+     while(iMatA < numberOfMat &&  (!foundRich2GasRad) ) {
+       if(  Rich2GasRadMatName  == (*theMaterialTable)[iMatA]->GetName()) {
+         fMatIndexRich2GasRad= (*theMaterialTable)[iMatA]->GetIndex();
+         foundRich2GasRad=true; 
+       }
+       iMatA++;
+       
+     }
+     
+     
+
+
      
     //end modif by SE   
 }
@@ -189,7 +208,7 @@ RichG4Scintillation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
         
         
-        if( aMaterialIndex != fMatIndexCf4 ) {
+        if( (aMaterialIndex != fMatIndexCf4) &&  ( aMaterialIndex != fMatIndexRich2GasRad) ) {
           
            return G4VRestDiscreteProcess::PostStepDoIt(aTrack, aStep);
           

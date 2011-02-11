@@ -155,7 +155,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
 
       // set information
       mcSeg->setRadiator( rad );
-      mcSeg->setRich( Rich::CF4 == rad ? Rich::Rich2 : Rich::Rich1 );
+      mcSeg->setRich( Rich::Rich2Gas == rad ? Rich::Rich2 : Rich::Rich1 );
       mcSeg->setMcParticle( mcPart );
 
       debug() << "Creating MCRichSegment " << mcSeg->key()

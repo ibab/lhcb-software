@@ -66,7 +66,9 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
     G4String pPreVolNameCF4=std::string(pPreVolName,0,29);
     G4String pPreVolMatNameAgel=std::string( prePosMaterialName,0,35);
     G4String pPreVolMatNameC4F10=std::string( prePosMaterialName,0,33);
+    G4String pPreVolMatNameRich1Gas=std::string( prePosMaterialName,0,41);
     G4String pPreVolMatNameCF4=std::string( prePosMaterialName,0,31);
+    G4String pPreVolMatNameRich2Gas=std::string( prePosMaterialName,0,41);
 
     SmartDataPtr<IHistogram1D>hCkvZEmissionPtRich1(CurrentHistoSvc,"RICHG4HISTOSET1/25");
     if(hCkvZEmissionPtRich1) hCkvZEmissionPtRich1->
@@ -93,7 +95,8 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
     }
 
     if(pPreVolNameC4F10 == LogVolC4F10NameAnalysis &&
-       ( ( pPreVolMatNameC4F10 == C4F10MaterialName)||( pPreVolMatNameC4F10 == C3F8MaterialName)  ) &&
+       ( ( pPreVolMatNameC4F10 == C4F10MaterialName)||( pPreVolMatNameC4F10 == C3F8MaterialName) ||
+         ( pPreVolMatNameRich1Gas == R1RadGasMaterialName)   ) &&
        prePos.z() >= C4F10ZBeginAnalysis &&
        prePos.z() <=  C4F10ZEndAnalysis ) {
       SmartDataPtr<IHistogram1D>hCkvC4F10Rich1(CurrentHistoSvc,"RICHG4HISTOSET1/20");
@@ -111,8 +114,8 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
 
     }
     if(pPreVolNameCF4 == LogVolCF4NameAnalysis &&
-       pPreVolMatNameCF4 == CF4MaterialName &&
-       prePos.z() >= CF4ZBeginAnalysis &&  prePos.z() <=  CF4ZEndAnalysis ) {
+       ( (pPreVolMatNameCF4 == CF4MaterialName) || (pPreVolMatNameRich2Gas == R2RadGasMaterialName) ) &&
+       (prePos.z() >= CF4ZBeginAnalysis) &&  (prePos.z() <=  CF4ZEndAnalysis) ) {
       SmartDataPtr<IHistogram1D>hCkvCF4Rich2(CurrentHistoSvc,"RICHG4HISTOSET1/70");
       if(BetaInvChPart < BetaInvCut ) {
         if(( chtken/GeV)  >  energycut) {

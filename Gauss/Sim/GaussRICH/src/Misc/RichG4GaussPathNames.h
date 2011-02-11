@@ -10,6 +10,8 @@ static const G4String RichHpdDemagPathName = "/dd/Materials/RichMaterialTabPrope
 
 static const G4String CF4MaterialName       = "/dd/Materials/RichMaterials/CF4";
 static const G4String C4F10MaterialName     = "/dd/Materials/RichMaterials/C4F10";
+static const G4String R2RadGasMaterialName  = "/dd/Materials/RichMaterials/R2RadiatorGas";
+static const G4String R1RadGasMaterialName  = "/dd/Materials/RichMaterials/R1RadiatorGas";
 static const G4String C3F8MaterialName     = "/dd/Materials/RichMaterials/C3F08";
 static const G4String AgelMaterialName      = "/dd/Materials/RichMaterials/Aerogel";
 static const G4String AgelTile0MaterialName = "/dd/Materials/RichMaterials/AerogelT0";
@@ -123,12 +125,16 @@ static const G4String Rich2NitrogenMatName=
                           "/dd/Materials/RichMaterials/Rich2Nitrogen";
 static const G4String Rich1C4F10MatName=
                           "/dd/Materials/RichMaterials/C4F10";
+static const G4String Rich1RadiatorGasMatName=
+                          "/dd/Materials/RichMaterials/R1RadiatorGas";
 static const G4String Rich1C3F8MatName=
                           "/dd/Materials/RichMaterials/C3F08";
 static const G4String RichHpdVacName=
                        "/dd/Materials/RichMaterials/RichHpdVacuum";
 static const G4String Rich2CF4MatName=
                           "/dd/Materials/RichMaterials/CF4";
+static const G4String Rich2RadiatorGasMatName=
+                          "/dd/Materials/RichMaterials/R2RadiatorGas";
 
 static const G4String Rich1PhysVolGeomName ="/dd/Geometry/LHCb/BeforeMagnetRegion/lvBeforeMagnetRegion#pvRich1Master";
 static const G4String Rich2PhysVolGeomName ="/dd/Geometry/LHCb/AfterMagnetRegion/lvAfterMagnetRegion#pvRich2Master";

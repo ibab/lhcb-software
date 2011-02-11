@@ -61,13 +61,14 @@ void RichG4MatRadIdentifier::InitializeRichG4MatRadIdentifier()
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelGenericCkvRadiatorNum;
 
-    }else if(curMatName == C4F10MaterialName || curMatName == C3F8MaterialName ) {
+    }else if((curMatName == C4F10MaterialName) || 
+             (curMatName == C3F8MaterialName) || (curMatName ==R1RadGasMaterialName)  ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] =  Rich1C4F10CkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = Rich1GaseousCkvRadiatorNum;
     
-    }else if(curMatName == CF4MaterialName) {
+    }else if( (curMatName == CF4MaterialName) || (curMatName == R2RadGasMaterialName) ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich2CF4CkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] =  Rich2GaseousCkvRadiatorNum;
       
     }else if(curMatName ==   FilterGenericMaterialName ) {
       n_mat++;
@@ -245,11 +246,12 @@ void RichG4MatRadIdentifier::InitializeRichCkvMatMaxNumPhot(std::vector<G4int>  
                  (curMatName == AgelTile14MaterialName) ||  
                  (curMatName == AgelTile15MaterialName) ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] =  aAgelLim;
-    }else if ( curMatName == C4F10MaterialName || curMatName == C3F8MaterialName ) {
+    }else if ( (curMatName == C4F10MaterialName) || 
+                (curMatName == C3F8MaterialName) || (curMatName == R1RadGasMaterialName)    ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] = aC4f10Lim;
 
 
-    }else if ( curMatName ==  CF4MaterialName ) {
+    }else if ( (curMatName ==  CF4MaterialName) || (curMatName == R2RadGasMaterialName) ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] = aCf4Lim ;
 
     }else if (( curMatName == FilterGenericMaterialName ) ||
