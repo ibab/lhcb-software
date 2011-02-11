@@ -415,7 +415,7 @@ StatusCode MBMEvtSelector::finalize()    {
   if ( m_currContext ) {
     m_currContext->close();
     m_currContext = 0;
-    error("MBMEvtSelector::finalize> MBM buffer context deleted!");
+    //error("MBMEvtSelector::finalize> MBM buffer context deleted!");
   }
   if ( m_mepMgr )  {
     m_mepMgr->release();
@@ -444,7 +444,7 @@ StatusCode MBMEvtSelector::releaseContext(Context*& ctxt) const  {
     delete pCtxt;
     pCtxt = 0;
     m_currContext = 0;
-    error("MBMEvtSelector::releaseContext> MBM buffer context deleted!");
+    //error("MBMEvtSelector::releaseContext> MBM buffer context deleted!");
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
