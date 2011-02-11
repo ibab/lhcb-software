@@ -24,17 +24,35 @@ FastVeloTrack::FastVeloTrack(  ) :
   m_r0    (-999.),
   m_tr    (-999.),
   m_r0Err2( 999.),
-  m_trErr2( 999.)
+  m_trErr2( 999.),
+  m_nbUsedRHits( 0 ),
+  m_missedSensors( -1 ),
+  m_valid( true ),
+  m_x0( 0. ),
+  m_y0( 0. ),
+  m_tx( 0. ),
+  m_ty( 0. ),
+  m_qFactor( 0. ),
+  m_sumGlobal( 0. ),
+  m_sinDPhi( 0. ),
+  m_sa2( 0. ),
+  m_sa2z( 0. ),
+  m_sa2z2( 0. ),
+  m_sab( 0. ),
+  m_sabz( 0. ),
+  m_sabz2( 0. ),
+  m_sb2( 0. ),
+  m_sb2z( 0. ),
+  m_sb2z2( 0. ),
+  m_sac( 0. ),
+  m_sacz( 0. ),
+  m_sbc( 0. ),
+  m_sbcz( 0. )
 {
   m_rHits.reserve( 20 );
-  m_nbUsedRHits = 0;
-  m_valid = true;
-  m_x0 = 0.;
-  m_y0 = 0.;
-  m_tx = 0.;
-  m_ty = 0.;
-  m_missedSensors = -1;
+  m_phiHits.reserve( 20 );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

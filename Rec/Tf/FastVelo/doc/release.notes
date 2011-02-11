@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-02-11 - Olivier Callot
+ - Fix uninitialized data members in FastVeloTrack, crashing the copy constructor.
+
 ! 2011-02-04 - Olivier Callot
  - Move the final printing from the destructor to the finalize method in FastVeloHitManager
 
