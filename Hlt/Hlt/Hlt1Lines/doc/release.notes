@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-11 - Roel Aaij
+ - Added cut on IPChi2 to DiMuonLowMass
+
+! 2011-02-11 - Roel Aaij
  - Added 3 new muon lines and renamed the existing one:
    - DiMuonLowMass
    - DiMuonHighMass

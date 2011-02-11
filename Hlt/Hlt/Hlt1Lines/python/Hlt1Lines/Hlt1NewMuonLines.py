@@ -11,6 +11,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
         ,'DiMuonLowMass_PT'         :  500
         ,'DiMuonLowMass_TrChi2'     :    4
         ,'DiMuonLowMass_M'          : 1000
+        ,'DiMuonLowMass_IPChi2'     :    9
         ,'DiMuonHighMass_VxDOCA'    :  0.2
         ,'DiMuonHighMass_VxChi2'    :   25
         ,'DiMuonHighMass_P'         : 6000
@@ -35,29 +36,34 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
         props[ 'name' ] = prefix
         return props
 
-    def preambulo( self, properties ):
+    def singleMuon_preambulo( self, properties ):
         from HltTracking.Hlt1Streamers import ( VeloCandidates,
                                                 MatchVeloMuon, IsMuon,
                                                 LooseForward, FitTrack )
         ## define some "common" preambulo 
-        Preambulo = [ VeloCandidates( properties[ 'name' ] ),
+        preambulo = [ VeloCandidates( properties[ 'name' ] ),
                       MatchVeloMuon,
                       LooseForward,
                       FitTrack,
                       IsMuon ]
-        return Preambulo
+        return preambulo
+
+    def diMuon_preambulo( self, properties ):
+        from HltTracking.HltPVs import RecoPV3D
+        ## define some "common" preambulo 
+        preambulo = self.singleMuon_preambulo( properties ) + \
+             [ RecoPV3D,
+               "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
+               "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
+               "from LoKiPhys.decorators import RV_MASS" ]
+        return preambulo
 
     def diMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
-        extra_pre = [
-            "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
-            "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
-            "from LoKiPhys.decorators import RV_MASS" ]
-
-        diMuon_unit = HltUnit(
+        unit = HltUnit(
             '%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
-            Preambulo = self.preambulo( properties ) + extra_pre,
+            Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloCandidates
             >>  execute( 'MuonRec' )
@@ -86,14 +92,52 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return diMuon_unit
+        return unit
+
+    def diMuonDetached_streamer( self, properties ):
+        from Configurables import LoKi__HltUnit as HltUnit
+
+        unit = HltUnit(
+            '%(name)sStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.diMuon_preambulo( properties ),
+            Code = """
+            VeloCandidates
+            >>  execute( 'MuonRec' )
+            >>  MatchVeloMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  execute( decodeIT )
+            >>  LooseForward
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  RecoPV3D
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
+            >>  MakeDiMuons
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV ) 
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        return unit
 
     def singleMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
-        singleMuon_unit = HltUnit(
+        unit = HltUnit(
             '%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
-            Preambulo = self.preambulo( properties ),
+            Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloCandidates
             >>  execute( 'MuonRec' )
@@ -116,7 +160,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return singleMuon_unit
+        return unit
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
@@ -130,7 +174,7 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
 
     def __apply_configuration__( self ) : 
          ## Create the lines
-        to_build = [ ( 'DiMuonLowMass',    self.diMuon_streamer ),
+        to_build = [ ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
                      ( 'SingleMuonHighPT', self.singleMuon_streamer ),
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ) ]
