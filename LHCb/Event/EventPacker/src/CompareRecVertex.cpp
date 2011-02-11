@@ -15,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CompareRecVertex );
-
+DECLARE_ALGORITHM_FACTORY( CompareRecVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables

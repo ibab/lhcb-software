@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CompareTwoProngVertex );
-
+DECLARE_ALGORITHM_FACTORY( CompareTwoProngVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables

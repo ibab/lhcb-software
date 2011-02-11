@@ -17,7 +17,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CompareMCVertex );
+DECLARE_ALGORITHM_FACTORY( CompareMCVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -32,7 +32,7 @@ CompareMCVertex::CompareMCVertex( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CompareMCVertex::~CompareMCVertex() {}; 
+CompareMCVertex::~CompareMCVertex() {}
 
 //=============================================================================
 // Main execution
@@ -128,5 +128,5 @@ StatusCode CompareMCVertex::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 //=============================================================================

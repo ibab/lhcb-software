@@ -16,7 +16,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( UnpackMCVertex );
+DECLARE_ALGORITHM_FACTORY( UnpackMCVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -32,7 +32,7 @@ UnpackMCVertex::UnpackMCVertex( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-UnpackMCVertex::~UnpackMCVertex() {}; 
+UnpackMCVertex::~UnpackMCVertex() {}
 
 //=============================================================================
 // Main execution
@@ -83,6 +83,6 @@ StatusCode UnpackMCVertex::execute() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

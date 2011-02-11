@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( UnpackProtoParticle );
+DECLARE_ALGORITHM_FACTORY( UnpackProtoParticle )
 
 //=============================================================================
 // Standard constructor, initializes variables

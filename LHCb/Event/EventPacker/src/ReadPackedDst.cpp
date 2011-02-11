@@ -41,8 +41,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ReadPackedDst );
-
+DECLARE_ALGORITHM_FACTORY( ReadPackedDst )
 
 //=============================================================================
 // Standard constructor, initializes variables

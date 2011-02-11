@@ -19,7 +19,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PackMCVertex );
+DECLARE_ALGORITHM_FACTORY( PackMCVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +35,7 @@ PackMCVertex::PackMCVertex( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PackMCVertex::~PackMCVertex() {}; 
+PackMCVertex::~PackMCVertex() {}
 
 //=============================================================================
 // Main execution
@@ -125,6 +125,6 @@ StatusCode PackMCVertex::execute() {
   verts->registry()->setAddress( 0 );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

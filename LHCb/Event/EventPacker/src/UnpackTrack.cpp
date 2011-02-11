@@ -15,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( UnpackTrack );
-
+DECLARE_ALGORITHM_FACTORY( UnpackTrack )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,9 +26,9 @@ UnpackTrack::UnpackTrack( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedTrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::TrackLocation::Default );
-  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
-  declareProperty( "AncestorFor",                m_ancestorFor    = LHCb::PackedTrackLocation::Muon    );
-  declareProperty( "AncestorSource",             m_ancestorSource = LHCb::TrackLocation::Default );
+  declareProperty( "AlwaysCreateOutput",      m_alwaysOutput = false     );
+  declareProperty( "AncestorFor",             m_ancestorFor    = LHCb::PackedTrackLocation::Muon );
+  declareProperty( "AncestorSource",          m_ancestorSource = LHCb::TrackLocation::Default );
 }
 //=============================================================================
 // Destructor

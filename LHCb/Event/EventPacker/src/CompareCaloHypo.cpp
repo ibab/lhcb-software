@@ -15,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CompareCaloHypo );
-
+DECLARE_ALGORITHM_FACTORY( CompareCaloHypo )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -57,7 +56,7 @@ StatusCode CompareCaloHypo::execute() {
     if ( oHypo->key() != tHypo->key() ) {
       warning() << "Wrong key : old " <<  oHypo->key() << " test " << tHypo->key() << endmsg;
     }
-    unsigned int kk;
+
     bool isOK = true;
 
     if ( oHypo->hypothesis() != tHypo->hypothesis() ) isOK = false;
@@ -104,8 +103,7 @@ StatusCode CompareCaloHypo::execute() {
       tFrac.push_back(  tPos->covariance()(2,1) / tDiag[2] / tDiag[1] );
       tFrac.push_back(  tPos->spread()(1,0)     / tDiag[3] / tDiag[4] );
       
-      unsigned int kk;
-      for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
+      for ( unsigned int kk = 0 ; oFrac.size() > kk ; ++kk ) {
         if ( 2.e-5 < fabs( oFrac[kk] - tFrac[kk] ) ) isOK = false;
       }
       
@@ -113,7 +111,7 @@ StatusCode CompareCaloHypo::execute() {
     if ( oHypo->digits().size()   != tHypo->digits().size()   ) {
       isOK = false;
     } else {
-      for ( kk = 0; oHypo->digits().size() > kk; kk++ ) {
+      for ( unsigned int kk = 0; oHypo->digits().size() > kk; kk++ ) {
         const LHCb::CaloDigit* dum  = oHypo->digits()[kk];  // convert smartref to pointers
         const LHCb::CaloDigit* dum1 = tHypo->digits()[kk];
         if ( dum != dum1 ) isOK = false;
@@ -123,7 +121,7 @@ StatusCode CompareCaloHypo::execute() {
     if ( oHypo->clusters().size() != tHypo->clusters().size() ) {
       isOK = false;
     } else {
-      for ( kk = 0; oHypo->clusters().size() > kk; kk++ ) {
+      for ( unsigned int kk = 0; oHypo->clusters().size() > kk; kk++ ) {
         const LHCb::CaloCluster* dum  = oHypo->clusters()[kk];  // convert smartref to pointers
         const LHCb::CaloCluster* dum1 = tHypo->clusters()[kk];
         if ( dum != dum1 ) isOK = false;
@@ -133,7 +131,7 @@ StatusCode CompareCaloHypo::execute() {
     if ( oHypo->hypos().size()    != tHypo->hypos().size()    ) {
       isOK = false;
     } else {
-      for ( kk = 0; oHypo->hypos().size() > kk; kk++ ) {
+      for ( unsigned int kk = 0; oHypo->hypos().size() > kk; kk++ ) {
         const LHCb::CaloHypo* dum  = oHypo->hypos()[kk];  // convert smartref to pointers
         const LHCb::CaloHypo* dum1 = tHypo->hypos()[kk];
         if ( dum != dum1 ) isOK = false;
@@ -151,23 +149,23 @@ StatusCode CompareCaloHypo::execute() {
 
       if ( oHypo->digits().size() == tHypo->digits().size()   ) {
         info() << "Old  digits ";
-        for ( kk = 0; oHypo->digits().size() > kk; kk++ ) info() << " " << oHypo->digits()[kk];
+        for ( unsigned int kk = 0; oHypo->digits().size() > kk; kk++ ) info() << " " << oHypo->digits()[kk];
         info() << endmsg << "Test digits ";
-        for ( kk = 0; tHypo->digits().size() > kk; kk++ ) info() << " " << tHypo->digits()[kk];
+        for ( unsigned int kk = 0; tHypo->digits().size() > kk; kk++ ) info() << " " << tHypo->digits()[kk];
         info() << endmsg;
       }
       if ( oHypo->clusters().size() == tHypo->clusters().size()   ) {
         info() << "Old  clusters ";
-        for ( kk = 0; oHypo->clusters().size() > kk; kk++ ) info() << " " << oHypo->clusters()[kk];
+        for ( unsigned int kk = 0; oHypo->clusters().size() > kk; kk++ ) info() << " " << oHypo->clusters()[kk];
         info() << endmsg << "Test clusters ";
-        for ( kk = 0; tHypo->clusters().size() > kk; kk++ ) info() << " " << tHypo->clusters()[kk];
+        for ( unsigned int kk = 0; tHypo->clusters().size() > kk; kk++ ) info() << " " << tHypo->clusters()[kk];
         info() << endmsg;
       }
       if ( oHypo->hypos().size() == tHypo->hypos().size()   ) {
         info() << "Old  hypos ";
-        for ( kk = 0; oHypo->hypos().size() > kk; kk++ ) info() << " " << oHypo->hypos()[kk];
+        for ( unsigned int kk = 0; oHypo->hypos().size() > kk; kk++ ) info() << " " << oHypo->hypos()[kk];
         info() << endmsg << "Test hypos ";
-        for ( kk = 0; tHypo->hypos().size() > kk; kk++ ) info() << " " << tHypo->hypos()[kk];
+        for ( unsigned int kk = 0; tHypo->hypos().size() > kk; kk++ ) info() << " " << tHypo->hypos()[kk];
         info() << endmsg;
       }
       // position
@@ -186,11 +184,11 @@ StatusCode CompareCaloHypo::execute() {
                           tDiag[0], tDiag[1], tDiag[2], tDiag[3], tDiag[4] )
              << endmsg;
         info() << " old Frac ";
-        for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
+        for ( unsigned int kk = 0 ; oFrac.size() > kk ; ++kk ) {
           info () << format( " %8.5f", oFrac[kk] );
         }
         info() << endmsg << "test Frac ";
-        for ( kk = 0 ; tFrac.size() > kk ; ++kk ) {
+        for ( unsigned int kk = 0 ; tFrac.size() > kk ; ++kk ) {
           info () << format( " %8.5f", tFrac[kk] );
         }
         info() << endmsg;

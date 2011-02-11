@@ -15,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CompareTrack );
-
+DECLARE_ALGORITHM_FACTORY( CompareTrack )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -16,7 +16,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PackMCParticle );
+DECLARE_ALGORITHM_FACTORY( PackMCParticle )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -33,7 +33,7 @@ PackMCParticle::PackMCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PackMCParticle::~PackMCParticle() {}; 
+PackMCParticle::~PackMCParticle() {}
 
 //=============================================================================
 // Main execution
@@ -96,6 +96,6 @@ StatusCode PackMCParticle::execute() {
   parts->registry()->setAddress( 0 );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

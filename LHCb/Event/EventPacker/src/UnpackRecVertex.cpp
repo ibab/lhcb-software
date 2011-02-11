@@ -16,8 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( UnpackRecVertex );
-
+DECLARE_ALGORITHM_FACTORY( UnpackRecVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -83,11 +82,10 @@ StatusCode UnpackRecVertex::execute() {
     vert->setCovMatrix( cov );
 
     //== Store the Tracks
-    int kk;
     int hintID;
     int key;
-    for ( kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
-      int trk = *(dst->beginRefs()+kk);
+    for ( int kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
+      const int trk = *(dst->beginRefs()+kk);
       pack.hintAndKey( trk, dst, newRecVertices, hintID, key );
       SmartRef<LHCb::Track> ref( newRecVertices, hintID, key );
       vert->addToTracks( ref );
@@ -95,7 +93,7 @@ StatusCode UnpackRecVertex::execute() {
 
     //== Handles the ExtraInfo
     for ( int kEx = src.firstInfo; src.lastInfo > kEx; ++kEx ) {
-      std::pair<int,int> info = *(dst->beginExtra()+kEx);
+      const std::pair<int,int>& info = *(dst->beginExtra()+kEx);
       vert->addInfo( info.first, pack.fltPacked( info.second ) );
     }
   }

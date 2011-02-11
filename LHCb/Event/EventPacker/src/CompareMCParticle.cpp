@@ -14,7 +14,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CompareMCParticle );
+DECLARE_ALGORITHM_FACTORY( CompareMCParticle )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,7 +29,7 @@ CompareMCParticle::CompareMCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CompareMCParticle::~CompareMCParticle() {}; 
+CompareMCParticle::~CompareMCParticle() {} 
 
 //=============================================================================
 // Main execution
@@ -105,4 +105,4 @@ StatusCode CompareMCParticle::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}

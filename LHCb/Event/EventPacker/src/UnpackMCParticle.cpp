@@ -1,8 +1,8 @@
 // $Id: UnpackMCParticle.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/MCParticle.h"
 #include "Kernel/StandardPacker.h"
@@ -16,7 +16,7 @@
 // 2005-03-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( UnpackMCParticle );
+DECLARE_ALGORITHM_FACTORY( UnpackMCParticle )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -32,19 +32,19 @@ UnpackMCParticle::UnpackMCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-UnpackMCParticle::~UnpackMCParticle() {}; 
+UnpackMCParticle::~UnpackMCParticle() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode UnpackMCParticle::execute() {
 
-  // CRJ : If packed data does not exist just return. Needed for packing of 
+  // CRJ : If packed data does not exist just return. Needed for packing of
   //     : spillover which is not neccessarily available for each event
-  if ( !m_alwaysOutput && !exist<LHCb::PackedMCParticles>(m_inputName) ) 
+  if ( !m_alwaysOutput && !exist<LHCb::PackedMCParticles>(m_inputName) )
     return StatusCode::SUCCESS;
 
-  LHCb::PackedMCParticles* dst = 
+  LHCb::PackedMCParticles* dst =
     getOrCreate<LHCb::PackedMCParticles,LHCb::PackedMCParticles>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
@@ -54,10 +54,11 @@ StatusCode UnpackMCParticle::execute() {
   put( newMCParticles, m_outputName );
 
   StandardPacker pack;
-  
+
   newMCParticles->reserve( dst->size() );
   for ( std::vector<LHCb::PackedMCParticle>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS ) {
+        dst->end() != itS; ++itS )
+  {
     const LHCb::PackedMCParticle& src = (*itS);
 
     LHCb::MCParticle* part = new LHCb::MCParticle( );
@@ -71,23 +72,23 @@ StatusCode UnpackMCParticle::execute() {
     const Gaudi::LorentzVector p( px, py, pz , E );
     part->setMomentum( p );
 
-    const LHCb::ParticleID PID(src.PID);    
+    const LHCb::ParticleID PID(src.PID);
     part->setParticleID( PID );
-    
-    int hintID;
-    int key;
+
+    int hintID(0), key(0);
     pack.hintAndKey( src.originVertex, dst, newMCParticles, hintID, key );
     SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
     part->setOriginVertex( ref );
 
-    std::vector<int>::const_iterator itI;
-    for ( itI = src.endVertices.begin() ; src.endVertices.end() != itI ; ++itI ) {
+    for ( std::vector<int>::const_iterator itI = src.endVertices.begin(); 
+          src.endVertices.end() != itI ; ++itI ) 
+    {
       pack.hintAndKey( *itI, dst, newMCParticles, hintID, key );
-      SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
-      part->addToEndVertices( ref );
+      SmartRef<LHCb::MCVertex> refV( newMCParticles, hintID, key );
+      part->addToEndVertices( refV );
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

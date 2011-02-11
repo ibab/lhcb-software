@@ -39,7 +39,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( WritePackedDst );
+DECLARE_ALGORITHM_FACTORY( WritePackedDst )
 
 //=============================================================================
 // Standard constructor, initializes variables
