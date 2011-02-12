@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-02-12 - Chris Jones
+ - Fix minor coverity defect
+
 ! 2011-02-10 - Chris Jones
  - Various icc warning fixes (some from BOOST still remain).
 

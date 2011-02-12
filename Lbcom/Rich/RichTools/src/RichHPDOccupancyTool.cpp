@@ -163,7 +163,7 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
         iS != values.end(); ++iS )
   {
     // extract numbers from string
-    const int slash       = (*iS).find_first_of( "/" );
+    const unsigned int slash = (*iS).find_first_of( "/" );
     if ( slash == 0 ) return Error( "Badly formed data value = " + *iS );
     const LHCb::RichSmartID HPD ( boost::lexical_cast<int>    ( (*iS).substr(0,slash) ) );
     const double            occ ( boost::lexical_cast<double> ( (*iS).substr(slash+1) ) );
