@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SimplePlots );
+DECLARE_ALGORITHM_FACTORY( SimplePlots )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,7 +29,7 @@ SimplePlots::SimplePlots( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-SimplePlots::~SimplePlots() {}; 
+SimplePlots::~SimplePlots() {}
 
 //=============================================================================
 // Initialization
@@ -45,7 +45,7 @@ StatusCode SimplePlots::initialize() {
   }
   return m_plots->setPath(name());
 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -64,7 +64,7 @@ StatusCode SimplePlots::execute() {
   
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

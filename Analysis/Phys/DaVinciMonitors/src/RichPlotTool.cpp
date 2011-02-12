@@ -13,7 +13,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichPlotTool ) ;
+DECLARE_TOOL_FACTORY( RichPlotTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -24,14 +24,14 @@ RichPlotTool::RichPlotTool( const std::string& type,
   : BasePlotTool ( type, name , parent ),
     m_jos        ( NULL )
 {
-  declareProperty( "ExtraHistos", m_extraHistos = true ); 
+  declareProperty( "ExtraHistos", m_extraHistos = true );
 }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
 RichPlotTool::~RichPlotTool( ) {}
- 
+
 //=============================================================================
 // initialize
 //=============================================================================
@@ -62,24 +62,24 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
                                    const std::string& trailer )
 {
   // skip composite particles
-  if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS; 
+  if ( p->isBasicParticle() )
+  {
 
-  // Get the info for this particle
-  const LHCb::ParticleProperty * prop = particleProperty( p->particleID() );
-  // If not available, just abort
-  if ( !prop ) { return StatusCode::SUCCESS; }
+    // Get the info for this particle
+    const LHCb::ParticleProperty * prop = particleProperty( p->particleID() );
+    if ( prop )
+    {
+      // fill the plots
+      pidTool(trailer)->plots( p->proto(), pidType(prop), m_pidConfig );
+    }
 
-  // stable RICH particle type
-  const Rich::ParticleIDType pid = pidType(prop);
-  
-  // fill the plots 
-  pidTool(trailer)->plots( p->proto(), pid, m_pidConfig );
-  
+  }
+
   // return
   return StatusCode::SUCCESS;
 }
 
-Rich::ParticleIDType 
+Rich::ParticleIDType
 RichPlotTool::pidType( const LHCb::ParticleProperty * prop ) const
 {
   Rich::ParticleIDType type = Rich::Unknown;
@@ -104,13 +104,13 @@ IJobOptionsSvc* RichPlotTool::joSvc() const
   return m_jos;
 }
 
-const Rich::Rec::IPIDPlots * 
+const Rich::Rec::IPIDPlots *
 RichPlotTool::pidTool( const std::string & toolname ) const
 {
   PIDToolMap::const_iterator iT = m_pidTools.find(toolname);
   if ( iT == m_pidTools.end() )
   {
-    const std::string fullname = name()+"."+toolname; 
+    const std::string fullname = name()+"."+toolname;
     // refine the histogram path
     StringProperty sp1( "HistoTopDir", "" );
     StringProperty sp2( "HistoDir", '"'+name()+"/"+toolname+'"' );

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-02-12 - Chris Jones
+ - Fixes for icc warnings and remarks
+
 !========================== DaVinciMonitors v1r14 2011-01-19 =================
 
 ! 2011-01-05 - Juan Palacios

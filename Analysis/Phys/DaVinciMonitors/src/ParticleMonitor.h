@@ -25,7 +25,7 @@ public:
 private:
 
   /// Configure cut tools. That should go to DVAlgorithm
-  StatusCode configure( LoKi::IHybridFactory* f, std::string & s, LoKi::Types::Cut& c);
+  StatusCode configureCut( LoKi::IHybridFactory* f, std::string & s, LoKi::Types::Cut& c);
 
   /// Fill plots
   StatusCode fillPlots(const LHCb::Particle* d, const std::string & where);

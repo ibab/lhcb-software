@@ -13,7 +13,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloPlotTool ) ;
+DECLARE_TOOL_FACTORY( CaloPlotTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -13,7 +13,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MassPlotTool ) ;
+DECLARE_TOOL_FACTORY( MassPlotTool ) 
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

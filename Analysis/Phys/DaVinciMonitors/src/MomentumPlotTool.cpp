@@ -13,7 +13,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MomentumPlotTool ) ;
+DECLARE_TOOL_FACTORY( MomentumPlotTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

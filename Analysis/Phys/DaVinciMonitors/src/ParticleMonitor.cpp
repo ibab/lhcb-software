@@ -17,18 +17,18 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ParticleMonitor );
+DECLARE_ALGORITHM_FACTORY( ParticleMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ParticleMonitor::ParticleMonitor( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-  ,   m_mother(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
-  ,   m_peak(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
-  ,   m_sideband(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ))
-  ,   m_massPlotToolName("MassPlotTool")
+  ParticleMonitor::ParticleMonitor( const std::string& name,
+                                    ISvcLocator* pSvcLocator)
+    : DVAlgorithm ( name , pSvcLocator )
+    ,   m_mother(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
+    ,   m_peak(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
+    ,   m_sideband(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ))
+    ,   m_massPlotToolName("MassPlotTool")
 {
   declareProperty( "MotherCut", m_motherCut = "ALL",
                    "The cut to be applied to all mother particle (default all)." )  ;
@@ -50,7 +50,7 @@ ParticleMonitor::~ParticleMonitor() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ParticleMonitor::initialize() 
+StatusCode ParticleMonitor::initialize()
 {
   const StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
@@ -58,10 +58,10 @@ StatusCode ParticleMonitor::initialize()
   LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory>
     ("LoKi::Hybrid::Tool/HybridFactory:PUBLIC" , this ) ;
 
-  if (! configure ( factory, m_motherCut , m_mother  )) return StatusCode::FAILURE ;
+  if (! configureCut( factory, m_motherCut , m_mother  )) return StatusCode::FAILURE ;
   //  if (! configure ( factory, m_finalCut , m_final  )) return StatusCode::FAILURE ;
-  if (! configure ( factory, m_peakCut , m_peak  )) return StatusCode::FAILURE ;
-  if (! configure ( factory, m_sidebandCut , m_sideband  )) return StatusCode::FAILURE ;
+  if (! configureCut ( factory, m_peakCut , m_peak  )) return StatusCode::FAILURE ;
+  if (! configureCut ( factory, m_sidebandCut , m_sideband  )) return StatusCode::FAILURE ;
 
   release(factory);
 
@@ -79,7 +79,7 @@ StatusCode ParticleMonitor::initialize()
           s != m_plotToolNames.end() ; ++s)
     {
       if ( *s == m_massPlotToolName ) {
-        // CRJ : No need to print this 
+        // CRJ : No need to print this
         // warning() <<  *s << " is mandatory. Is already added to list." << endmsg ;
         continue ; // already done
       }
@@ -95,7 +95,7 @@ StatusCode ParticleMonitor::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ParticleMonitor::execute() 
+StatusCode ParticleMonitor::execute()
 {
 
   // code goes here
@@ -145,9 +145,9 @@ StatusCode ParticleMonitor::fillPlots( const LHCb::Particle* d,
   return StatusCode::SUCCESS;
 }
 
-StatusCode ParticleMonitor::configure( LoKi::IHybridFactory* f,
-                                       std::string & s,
-                                       LoKi::Types::Cut& c )
+StatusCode ParticleMonitor::configureCut( LoKi::IHybridFactory* f,
+                                          std::string & s,
+                                          LoKi::Types::Cut& c )
 {
   const StatusCode sc = f -> get ( s , c  ) ;
   if ( sc.isFailure () ) { return Error ( "Unable to  decode cut: " + s  , sc ) ; }

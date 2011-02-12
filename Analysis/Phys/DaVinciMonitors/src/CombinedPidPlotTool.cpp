@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CombinedPidPlotTool ) ;
+DECLARE_TOOL_FACTORY( CombinedPidPlotTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
