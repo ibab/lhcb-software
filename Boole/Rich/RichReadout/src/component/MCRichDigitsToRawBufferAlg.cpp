@@ -21,7 +21,7 @@ using namespace Rich::MC::Digi;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCRichDigitsToRawBufferAlg );
+DECLARE_ALGORITHM_FACTORY( MCRichDigitsToRawBufferAlg )
 
 // Standard constructor
 MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
@@ -37,7 +37,7 @@ MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
 }
 
 // Destructor
-MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {};
+MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {}
 
 // Initialisation.
 StatusCode MCRichDigitsToRawBufferAlg::initialize()

@@ -17,7 +17,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( SummedDeposits );
+DECLARE_ALGORITHM_FACTORY( SummedDeposits )
 
 // Standard constructor, initializes variables
 SummedDeposits::SummedDeposits( const std::string& name,

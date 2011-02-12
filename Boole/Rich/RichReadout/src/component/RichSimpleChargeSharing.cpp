@@ -16,7 +16,7 @@
 
 using namespace Rich::MC::Digi;
 
-DECLARE_ALGORITHM_FACTORY( SimpleChargeSharing );
+DECLARE_ALGORITHM_FACTORY( SimpleChargeSharing )
 
 // Standard constructor, initializes variables
 SimpleChargeSharing::SimpleChargeSharing( const std::string& name,
