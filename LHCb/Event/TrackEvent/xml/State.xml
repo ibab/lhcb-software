@@ -81,7 +81,7 @@
 
       <constructor
         desc    = 'Default constructor'
-        initList = "m_flags(0),m_z(0.0)">
+        initList = "m_flags(0), m_stateVector(), m_covariance(), m_z(0.0)">
         <code>
         setLocation( State::LocationUnknown );
         </code>
@@ -95,15 +95,15 @@
 	initList = "m_flags(0), m_stateVector(stateVec), m_covariance(cov), m_z(z)">
        <code>
        setLocation(location);
-      </code>
+       </code>
       </constructor>
 
       <constructor 
 	desc     = "Constructor from a StateVector" 
 	argList  = " const LHCb::StateVector&amp; stateVec"
-	initList = "m_flags(0), m_stateVector(stateVec.parameters()), m_z(stateVec.z())">
+	initList = "m_flags(0), m_stateVector(stateVec.parameters()), m_covariance(), m_z(stateVec.z())">
 	<code>
-      </code>
+       </code>
       </constructor>
 
       <constructor 
@@ -114,18 +114,17 @@
 	initList = "m_flags(0), m_stateVector(stateVec), m_covariance(), m_z(z)">
        <code>
        setLocation(location);
-      </code>
+       </code>
       </constructor>
 
      <constructor 
 	desc     = "Constructor with location" 
 	argList  = "const LHCb::State::Location&amp; location"
-	initList = "m_flags(0), m_z(0)">
+	initList = "m_flags(0), m_stateVector(), m_covariance(), m_z(0)">
        <code>
        setLocation(location);
-      </code>
+       </code>
       </constructor>
-
 
      <attribute
        type    = 'bitfield'
