@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni );
+DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -826,7 +826,7 @@ void ParticleEffPurMoni::printStats() const
                   const long nBkgTrue =
                     ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];
                   //const long nBkg = nBkgTrue + nClones;
-                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];;
+                  const long nTotalMCC = (m_rawMCMap[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];;
                   always() << mcTC
                            << "|" << eff( nTotal, (*iSum).second.nReco );
                   if ( primaryPart )
@@ -836,8 +836,8 @@ void ParticleEffPurMoni::printStats() const
                                    protoTally.histos_detailed[(*iC).first],
                                    mcTally.histos_detailed[(*iC).first] );
                     always() << " | " << eff( nNotClones, nBkgTrue )
-                             << " |"  << eff( nNotClones, nTotalMC )
-                             << " |"  << eff( nClones, nTotalMC );
+                             << " |"  << eff( nNotClones, nTotalMCC )
+                             << " |"  << eff( nClones, nTotalMCC );
                     // correlations
                     if ( !m_correlations.empty() )
                     {
