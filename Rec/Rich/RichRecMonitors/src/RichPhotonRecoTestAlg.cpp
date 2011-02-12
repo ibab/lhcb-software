@@ -32,6 +32,7 @@ PhotonRecoTestAlg::PhotonRecoTestAlg( const std::string& name,
     m_photonRecoName      ( "RichDetPhotonReco" )
 {
   declareProperty( "PhotonRecoTool", m_photonRecoName );
+  m_radiators.assign(NULL);
 }
 
 // Destructor

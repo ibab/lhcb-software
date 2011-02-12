@@ -124,8 +124,8 @@ StatusCode PIDTupleAlg::fillTrackTable()
   {
     // try and load this location
     const LHCb::RichPIDs* pids = get<LHCb::RichPIDs>( *iLoc );
-    verbose() << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endmsg;
-    if ( !pids ) continue;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endmsg;
     // loop over RichPIDs
     for ( LHCb::RichPIDs::const_iterator iPID = pids->begin();
           iPID != pids->end(); ++iPID )

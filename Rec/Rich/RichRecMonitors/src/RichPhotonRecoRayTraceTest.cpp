@@ -165,7 +165,7 @@ void PhotonRecoRayTraceTest::makePlots( const std::string & type,
   // compare ray traced photon to original ...
 
   // acceptance type
-  if ( result < LHCb::RichTraceMode::InHPDTube ) return;
+  //if ( result < LHCb::RichTraceMode::InHPDTube ) return;
   const std::string tag = ( result >= LHCb::RichTraceMode::InHPDTube ? "InHPD" : "OutHPD" );
 
   // Detector region
