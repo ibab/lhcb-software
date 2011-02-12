@@ -29,6 +29,12 @@ def test_automatic_data() :
     assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x_Particles'
     assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
 
+def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
+    raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
+
+def test_automatic_data_with_no_location_raises() :
+    raises(Exception, AutomaticData)
+
 
 def test_VoidEventSelection() :
      sel00 = AutomaticData(Location = 'Phys/Sel00x')
@@ -78,8 +84,7 @@ def test_VoidEventSelection_with_existing_configurable_name_raises() :
            Code = '<Location>',
            RequiredSelection = sel)
     
-def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
-    raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
+
 
 def test_selection_with_existing_configurable_name_raises() :
     _fd0 = FilterDesktop('_fd0')
@@ -95,8 +100,6 @@ def test_mergedselection_with_existing_configurable_name_raises() :
     raises(NameError, MergedSelection, 'MergeFilter',
            RequiredSelections = [sel00, sel01, sel02, sel03] )
 
-def test_automatic_data_with_no_location_raises() :
-    raises(Exception, AutomaticData)
 
 def test_merged_selection() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
@@ -203,7 +206,7 @@ def test_clone_selection_with_existing_selection_name_raises() :
     raises( NameError, sel0.clone, name = 'Sel004', Algorithm = alg0,
             RequiredSelections = [sel02, sel03])
     assert sel0.algorithm().InputLocations == ['Phys/Sel02/Particles',
-                                       'Phys/Sel03/Particles']
+                                               'Phys/Sel03/Particles']
         
 def test_clone_selection_with_new_alg() :
     sel0 = test_instantiate_tree('0001')

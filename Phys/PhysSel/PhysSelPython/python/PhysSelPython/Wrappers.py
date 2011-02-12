@@ -290,7 +290,8 @@ class SelectionSequence(SelSequence) :
                              PostSelectionAlgs,
                              sequencerType)
 
-
+    def outputLocations(self) :
+        return [self.outputLocation()]
     
 class MultiSelectionSequence(UniquelyNamedObject,
                              ClonableObject) :
