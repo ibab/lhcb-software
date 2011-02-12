@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::SmartIDTool
  *
- * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.41 2009-07-30 12:14:16 jonrob Exp $
- *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-10-28
@@ -18,7 +15,7 @@
 // local
 #include "RichSmartIDTool.h"
 
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
