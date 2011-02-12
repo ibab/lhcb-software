@@ -39,14 +39,13 @@ NeutralProtoPAlg::NeutralProtoPAlg
   declareProperty ( "HyposLocations"        , m_hyposLocations   ) ;
   declareProperty ( "ProtoParticleLocation" ,  m_protoLocation   ) ;
   declareProperty ( "LightMode"      , m_light_mode , 
-                    "Use 'light' mode and donto colelct all information, useful for Calibration" ) ;  
+                    "Use 'light' mode and do not collect all information. Useful for Calibration." ) ;  
   
   // default location from context()
-  std::string flag = context();
   using namespace LHCb::CaloHypoLocation;
-  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , Photons      ) ) ;
-  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , MergedPi0s   ) ) ;
-  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , SplitPhotons ) ) ;
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Photons      ) ) ;
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , MergedPi0s   ) ) ;
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , SplitPhotons ) ) ;
   //  m_protoLocation = LHCb::CaloAlgUtils::PathFromContext( flag , LHCb::ProtoParticleLocation::Neutrals );
   m_protoLocation = LHCb::ProtoParticleLocation::Neutrals ;
 }
