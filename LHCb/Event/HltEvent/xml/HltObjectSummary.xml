@@ -185,34 +185,7 @@
         type='std::ostream&amp;'
         desc='intelligent printout'
         const='TRUE' >
-        <arg name="s" type="std::ostream" const="FALSE"/>
-        <code>
-         std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-
-         ss &lt;&lt; "{ " &lt;&lt; " summarizedObjectCLID : " &lt;&lt; summarizedObjectCLID() ;
-
-         ss &lt;&lt; " numericalInfo : { ";
-	 for( Info::const_iterator i=numericalInfo().begin();i!=numericalInfo().end();++i){
-	     ss &lt;&lt; i-&gt;first &lt;&lt; ":" &lt;&lt; i-&gt;second &lt;&lt; " , ";
-         }
-         ss &lt;&lt; " } ";
-
-         ss &lt;&lt; " substructure : { ";
-	 for( SmartRefVector &lt; LHCb::HltObjectSummary &gt;::const_iterator j=substructure().begin();j!=substructure().end();++j){
-	     ss &lt;&lt;  (*j)-&gt;index() &lt;&lt; ":" &lt;&lt; (*j)-&gt;summarizedObjectCLID() &lt;&lt; " , ";
-         }
-         ss &lt;&lt; " } ";
-
-         ss &lt;&lt; " lhcbIDs : { ";
-	 for( std::vector &lt; LHCb::LHCbID  &gt;::const_iterator k=lhcbIDs().begin();k!=lhcbIDs().end();++k){
-	     ss &lt;&lt;  k-&gt;lhcbID() &lt;&lt; " , ";
-         }
-         ss &lt;&lt; " } ";
-
-         ss &lt;&lt; " } ";
-
-         return ss;
-        </code>
+        <arg name="ss" type="std::ostream"/>
       </method>
 
     </class>
@@ -471,19 +444,7 @@
         type='std::ostream&amp;'
         desc='intelligent printout' 
         const='TRUE' >
-        <arg name="s" type="std::ostream" const="FALSE"/>
-        <code>
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelReports : { "  &lt;&lt; std::endl;
-          for(Container::const_iterator i=m_selReports.begin();
-                                        i!=m_selReports.end(); ++i){
-           ss &lt;&lt; " selectionName :	" &lt;&lt; i-&gt;first
-              &lt;&lt; " HltObjectSummary :	" &lt;&lt; i-&gt;second 
-              &lt;&lt; std::endl;
-          }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
-        </code>
+        <arg name="ss" type="std::ostream"/>
       </method>
 
     </class>

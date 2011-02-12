@@ -209,18 +209,7 @@
         type='std::ostream&amp;'
         desc='intelligent printout'
         const='TRUE' >
-        <arg name="s" type="std::ostream" const="FALSE"/>
-        <code>
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; "{ " 
-             &lt;&lt; " decision : " &lt;&lt; decision() 
-             &lt;&lt; " errorBits : " &lt;&lt; errorBits() 
-             &lt;&lt; " numberOfCandidates : " &lt;&lt; numberOfCandidates() 
-	         &lt;&lt; " executionStage : " &lt;&lt; executionStage() 
-             &lt;&lt; " intDecisionID : " &lt;&lt; intDecisionID() 
-             &lt;&lt; " }" ;
-          return ss;
-        </code>
+        <arg name="s" type="std::ostream"/>
       </method>
 
     </class>
@@ -381,24 +370,10 @@
         type='std::ostream&amp;'
         desc='intelligent printout' 
         const='TRUE' >
-        <arg name="s" type="std::ostream" const="FALSE"/>
-        <code>
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltDecReports : configuredTCK=" &lt;&lt; m_configuredTCK 
-             &lt;&lt; " {\n" ;
-          for(Container::const_iterator i=m_decReports.begin();
-                                        i!=m_decReports.end(); ++i){
-           ss &lt;&lt; " decisionName :	" &lt;&lt; i->first
-              &lt;&lt; " HltDecReport :	" &lt;&lt; i->second 
-              &lt;&lt; "\n";
-          }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
-        </code>
+        <arg name="s" type="std::ostream"/>
       </method>
 
     </class>
-
 
   </package>
 

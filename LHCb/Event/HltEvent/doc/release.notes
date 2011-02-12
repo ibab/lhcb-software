@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2011-02-12 - Chris Jones
+ - Fix coverity defects with fillstream methods + move them to a linker 
+   library (since they are too big to realistically get inlined anyway).
+
 !========================= HltEvent v9r1 2011-01-31 =========================
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC warnings

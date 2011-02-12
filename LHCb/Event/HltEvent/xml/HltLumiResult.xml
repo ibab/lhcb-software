@@ -116,9 +116,7 @@
 	<code>
 	  return m_extraInfo.erase( key ) ; 
 	</code>
-      </method>
-
-      
+      </method>      
 
     </class>
 

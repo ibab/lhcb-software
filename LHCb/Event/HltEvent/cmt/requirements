@@ -30,3 +30,8 @@ macro_append HltEventObj2Dict_dependencies HltEventCustomDict
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+
+# Make the linker library
+#============================================================================
+library       HltEvent        *.cpp
+apply_pattern linker_library  library=HltEvent

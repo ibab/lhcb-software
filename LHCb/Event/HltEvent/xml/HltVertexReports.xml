@@ -160,36 +160,7 @@
         type='std::ostream&amp;'
         desc='intelligent printout' 
         const='TRUE' >
-        <arg name="s" type="std::ostream" const="FALSE"/>
-         <code>
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltVertexReports : { "  &lt;&lt; std::endl;
-          for(Container::const_iterator i=m_vertexReports.begin();
-                                        i!=m_vertexReports.end(); ++i){
-           ss &lt;&lt; " selectionName : " &lt;&lt; i->first;
-	   ss &lt;&lt; " HltVertexReport : size " &lt;&lt; i->second.size() 
-	      &lt;&lt; std::endl;
-	      for( HltVertexReport::const_iterator iv=i->second.begin();
-		   iv!=i->second.end();++iv ){
-		   const VertexBase &amp; v = **iv; 	      
-              ss &lt;&lt; " x " &lt;&lt; v.position().x();
-              ss &lt;&lt; " y " &lt;&lt; v.position().y();
-              ss &lt;&lt; " z " &lt;&lt; v.position().z();
-              ss &lt;&lt; " chi2 " &lt;&lt; v.chi2();
-              ss &lt;&lt; " ndf " &lt;&lt; v.nDoF();
-              const Gaudi::SymMatrix3x3 &amp; cov = v.covMatrix();   
-              ss &lt;&lt; " cov xx " &lt;&lt; cov[0][0];
-              ss &lt;&lt; " yy " &lt;&lt; cov[1][1];
-              ss &lt;&lt; " zz " &lt;&lt; cov[2][2];
-              ss &lt;&lt; " xy " &lt;&lt; cov[0][1];
-              ss &lt;&lt; " xz " &lt;&lt; cov[0][2];
-              ss &lt;&lt; " yz " &lt;&lt; cov[1][2];
-              ss &lt;&lt; std::endl;
-	      }	      
-          }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
-        </code>
+        <arg name="ss" type="std::ostream"/>
       </method>
 
     </class>
