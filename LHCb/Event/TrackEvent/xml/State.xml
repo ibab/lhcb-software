@@ -80,14 +80,19 @@
         />
 
       <constructor
-        desc    = 'Default constructor' />
+        desc    = 'Default constructor'
+        initList = "m_flags(0),m_z(0.0)">
+        <code>
+        setLocation( State::LocationUnknown );
+        </code>
+      </constructor>
 
       <constructor 
 	desc     = "Constructor with arguments" 
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
                      const Gaudi::TrackSymMatrix&amp; cov, double z, 
                      const LHCb::State::Location&amp; location"
-	initList = "m_stateVector(stateVec), m_covariance(cov), m_z(z)">
+	initList = "m_flags(0), m_stateVector(stateVec), m_covariance(cov), m_z(z)">
        <code>
        setLocation(location);
       </code>
@@ -96,7 +101,7 @@
       <constructor 
 	desc     = "Constructor from a StateVector" 
 	argList  = " const LHCb::StateVector&amp; stateVec"
-	initList = "m_stateVector(stateVec.parameters()), m_z(stateVec.z())">
+	initList = "m_flags(0), m_stateVector(stateVec.parameters()), m_z(stateVec.z())">
 	<code>
       </code>
       </constructor>
@@ -106,7 +111,7 @@
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
                      double z, 
                      const LHCb::State::Location&amp; location"
-	initList = "m_stateVector(stateVec), m_covariance(), m_z(z)">
+	initList = "m_flags(0), m_stateVector(stateVec), m_covariance(), m_z(z)">
        <code>
        setLocation(location);
       </code>
@@ -115,7 +120,7 @@
      <constructor 
 	desc     = "Constructor with location" 
 	argList  = "const LHCb::State::Location&amp; location"
-	initList = "m_z(0)">
+	initList = "m_flags(0), m_z(0)">
        <code>
        setLocation(location);
       </code>
