@@ -8,6 +8,7 @@
 
 #include "Event/Particle.h"
 #include "Event/Track.h"
+#include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltCopySelection
 //
@@ -23,6 +24,11 @@ DECLARE_ALGORITHM_FACTORY( HltCopyParticleSelection );
 template class HltCopySelection<LHCb::Track>;
 typedef HltCopySelection<LHCb::Track> HltCopyTrackSelection;
 DECLARE_ALGORITHM_FACTORY( HltCopyTrackSelection );
+
+template class HltCopySelection<LHCb::RecVertex>;
+typedef HltCopySelection<LHCb::RecVertex> HltCopyRecVertexSelection;
+DECLARE_ALGORITHM_FACTORY( HltCopyRecVertexSelection );
+
 
 //=============================================================================
 // Standard constructor, initializes variables

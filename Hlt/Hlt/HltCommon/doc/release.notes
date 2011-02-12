@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2011-02-12 - Gerhard Raven
+ - instantiate HltCopySelection also for LHCb::RecVertex
 
 !========================== HltCommon v7r2 2011-01-30 ==================
 ! 2011-01-27 - Gerhard Raven
