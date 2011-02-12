@@ -17,7 +17,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( CheckSelResult );
+DECLARE_ALGORITHM_FACTORY( CheckSelResult )
 
 using namespace LHCb;
 
@@ -37,14 +37,15 @@ CheckSelResult::CheckSelResult( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CheckSelResult::~CheckSelResult() {}; 
+CheckSelResult::~CheckSelResult() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode CheckSelResult::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode CheckSelResult::initialize() 
+{
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc; 
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Initialize" << endmsg;
   if (m_algorithms.empty()){
@@ -58,27 +59,26 @@ StatusCode CheckSelResult::initialize() {
 
   m_readTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CheckSelResult::execute() {
-
+StatusCode CheckSelResult::execute() 
+{
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
-  StatusCode sc = StatusCode::SUCCESS ;
   bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
   if (m_NOTmode) pass = !pass ;
   if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
-  if (!sc) return sc;
-  
+
   setFilterPassed(pass);
   
   counter("Passed") += pass;
 
   return StatusCode::SUCCESS;
-};
+}
+
 //=============================================================================
 //  Finalize
 //=============================================================================
