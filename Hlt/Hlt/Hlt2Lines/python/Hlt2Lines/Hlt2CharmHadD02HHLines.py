@@ -9,7 +9,6 @@ __version__ = '$Revision: 1.22 $'
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-from HltLine.HltLine import Hlt2Line
 
 
 class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
@@ -92,6 +91,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
+        from HltLine.HltLine import Hlt2Line
         line = Hlt2Line(lineName
                         , prescale = self.prescale
                         , postscale = self.postscale
