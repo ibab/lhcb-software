@@ -4,9 +4,6 @@
  *
  *  Header file for utility class : RichHypoData
  *
- *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.19 2008-02-15 14:11:03 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
@@ -52,7 +49,7 @@ namespace Rich
     /// Definition of internal validity array type
     typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
 
-  public: // methods
+  public: // constructors and destructors
 
     /** Default Constructor
      *  @attention The data values are un-initialised using this constructor
@@ -68,6 +65,8 @@ namespace Rich
 
     /// Destructor
     ~HypoData() { }
+
+  public: // methods
 
     /** Read access operator
      *
@@ -126,12 +125,14 @@ namespace Rich
      *
      *  @return boolean indicating the status of the data
      *  @retval true  Data field has been explicitly set
-     *  @retval false Data field has not been set. Value will be the initialisation (or reset) value
+     *  @retval false Data field has not been set. 
+     *                Value will be the initialisation (or reset) value
      */
     bool dataIsValid( const Rich::ParticleIDType type ) const;
 
     /// Implement textual ostream << method
-    friend inline std::ostream& operator << ( std::ostream& ost, const HypoData<TYPE>& data )
+    friend inline std::ostream& operator << ( std::ostream& ost, 
+                                              const HypoData<TYPE>& data )
     {
       for ( int i = 0; i < Rich::NParticleTypes; ++i )
       {
@@ -151,7 +152,8 @@ namespace Rich
   };
 
   template <class TYPE>
-  inline const TYPE & HypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
+  inline const TYPE & 
+  HypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
   {
     return m_data[type];
   }
@@ -160,40 +162,37 @@ namespace Rich
   inline void HypoData<TYPE>::setData( const Rich::ParticleIDType type,
                                        const TYPE & value )
   {
-    m_valid[type] = true; m_data[type]  = value;
+    m_valid[type] = true; 
+    m_data[type]  = value;
   }
 
   template <class TYPE>
   inline void HypoData<TYPE>::resetData( const TYPE & value )
   {
-    resetData( Rich::Electron, value );
-    resetData( Rich::Muon,     value );
-    resetData( Rich::Pion,     value );
-    resetData( Rich::Kaon,     value );
-    resetData( Rich::Proton,   value );
+    m_valid.assign ( true  );
+    m_data.assign  ( value );
   }
 
   template <class TYPE>
   inline void HypoData<TYPE>::resetData( const Rich::ParticleIDType type,
                                          const TYPE & value )
   {
-    m_valid[type] = false; m_data[type]  = value;
+    m_valid[type] = false; 
+    m_data[type]  = value;
   }
 
   template <class TYPE>
   inline void HypoData<TYPE>::resetData()
   {
-    resetData( Rich::Electron );
-    resetData( Rich::Muon     );
-    resetData( Rich::Pion     );
-    resetData( Rich::Kaon     );
-    resetData( Rich::Proton   );
+    m_valid.assign ( false );
+    m_data.assign  ( 0     );
   }
 
   template <class TYPE>
   inline void HypoData<TYPE>::resetData( const Rich::ParticleIDType type )
   {
     m_valid[type] = false;
+    m_data[type]  = 0;
   }
 
   template <class TYPE>

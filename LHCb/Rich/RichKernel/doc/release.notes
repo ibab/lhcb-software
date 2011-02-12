@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Various fixes for icc warnings
+ - Initialise all data members in Rich::HypoData constructors.
+
 ! 2011-02-07 - Chris Jones
  - Remove some depreciated typedefs
 

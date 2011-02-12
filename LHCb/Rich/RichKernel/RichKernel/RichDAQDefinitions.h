@@ -24,9 +24,6 @@
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichSmartIDHashFuncs.h"
 
-// Boost
-#include "boost/lexical_cast.hpp"
-
 namespace Rich
 {
   namespace DAQ
@@ -105,7 +102,11 @@ namespace Rich
     public:
       /// Operator std::string
       inline operator std::string() const
-      { return boost::lexical_cast<std::string>(data()); }
+      {
+        std::ostringstream s;
+        s << data();
+        return s.str();
+      }
       /// Overload output to ostream
       friend inline std::ostream& operator << ( std::ostream& os1, const NumericType<TYPE> & id )
       { return os1 << id.data() ; }
@@ -273,13 +274,13 @@ namespace Rich
       inline operator ulonglong() const { return data(); }
     public:
       /// Overloaded output to ostream
-      friend inline std::ostream & operator << ( std::ostream & os, const EventID & id )
-      { 
-        os << "[ ID=" << id.data();
-        os << " Hex="; id.hexDump(os);
-        os << " Bits("<< id.activeBits() <<")="; 
-        id.bitsDump(os,id.activeBits(),"");
-        return os << " ]"; 
+      friend inline std::ostream & operator << ( std::ostream & evtID_os, const EventID & id )
+      {
+        evtID_os << "[ ID=" << id.data();
+        evtID_os << " Hex="; id.hexDump(evtID_os);
+        evtID_os << " Bits("<< id.activeBits() <<")="; 
+        id.bitsDump(evtID_os,id.activeBits(),"");
+        return evtID_os << " ]"; 
       }
     public:
       /// Operator == that takes into account the correct number of bits

@@ -4,8 +4,6 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV1::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V1.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
@@ -65,14 +63,14 @@ namespace Rich
         static const ShortType ShiftStartPD  = ShiftZS + BitsZS;
 
         // Create the Masks
-        static const LongType MaskHitCount   = ((1 << BitsHitCount)-1) << ShiftHitCount;
-        static const LongType MaskL0ID       = ((1 << BitsL0ID)-1)     << ShiftL0ID;
-        static const LongType MaskZS         = ((1 << BitsZS)-1)       << ShiftZS;
-        static const LongType MaskStartPD    = ((1 << BitsStartPD)-1)  << ShiftStartPD;
+        static const LongType MaskHitCount   = (LongType) (((1 << BitsHitCount)-1) << ShiftHitCount);
+        static const LongType MaskL0ID       = (LongType) (((1 << BitsL0ID)-1)     << ShiftL0ID);
+        static const LongType MaskZS         = (LongType) (((1 << BitsZS)-1)       << ShiftZS);
+        static const LongType MaskStartPD    = (LongType) (((1 << BitsStartPD)-1)  << ShiftStartPD);
 
         // Create the max values that can be stored in each field
-        static const ShortType MaxHitCount   = ( 1 << BitsHitCount ) - 1; ///< Max number of hits
-        static const ShortType MaxL0ID       = ( 1 << BitsL0ID  ) - 1;    ///< Max L0 ID
+        static const ShortType MaxHitCount   = (ShortType) ( (1 << BitsHitCount) - 1 ); ///< Max number of hits
+        static const ShortType MaxL0ID       = (ShortType) ( (1 << BitsL0ID)     - 1 ); ///< Max L0 ID
 
       }
 

@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichToolRegistry
  *
- * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.7 2009-10-10 18:22:50 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::RichDAQL0Header
  *
- *  CVS Log :-
- *  $Id: RichDAQL0Header.h,v 1.3 2008-06-24 10:34:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2007
  */
@@ -258,19 +255,19 @@ namespace Rich
      public:
 
         /// overloaded output to std::ostream
-        friend inline std::ostream & operator << ( std::ostream & os,
+        friend inline std::ostream & operator << ( std::ostream & l0head_os,
                                                    const L0Header::Word1 & word )
         {
-          return os << "L0Header::Word1 [ " << word.l0ID() 
-                    << " nWordsBIDFIF=" << word.nWordsBIDFIF() 
-                    << " BIDFIFEmpty=" << word.BIDFIFEmpty() 
-                    << " BIDFIFFull=" << word.BIDFIFFull()
-                    << " testPattern=" << word.testPattern()
-                    << " calibrationEvent=" << word.calibrationEvent()
-                    << " aliceRunMode=" << word.aliceRunMode()
-                    << " otherGOLReady=" << word.otherGOLReady()
-                    << " parityBit=" << word.parityBit() 
-                    << " ]";
+          return l0head_os << "L0Header::Word1 [ " << word.l0ID() 
+                           << " nWordsBIDFIF=" << word.nWordsBIDFIF() 
+                           << " BIDFIFEmpty=" << word.BIDFIFEmpty() 
+                           << " BIDFIFFull=" << word.BIDFIFFull()
+                           << " testPattern=" << word.testPattern()
+                           << " calibrationEvent=" << word.calibrationEvent()
+                           << " aliceRunMode=" << word.aliceRunMode()
+                           << " otherGOLReady=" << word.otherGOLReady()
+                           << " parityBit=" << word.parityBit() 
+                           << " ]";
         }
 
       private:
