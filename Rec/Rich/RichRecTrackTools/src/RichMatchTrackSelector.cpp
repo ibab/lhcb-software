@@ -29,7 +29,8 @@ DECLARE_TOOL_FACTORY( MatchTrackSelector );
 MatchTrackSelector::MatchTrackSelector( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : BaseTrackSelector ( type, name , parent )
+  : BaseTrackSelector ( type, name , parent ),
+    m_disabled        ( true )
 {
   // Effectively disable these cuts, but keep the possibility to re-enable them later on.
   declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  );

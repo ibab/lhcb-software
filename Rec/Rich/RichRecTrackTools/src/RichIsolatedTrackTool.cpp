@@ -150,7 +150,6 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   if ( Rich::BelowThreshold == pid ) return false;
 
   LHCb::RichRecSegment * nonc_seg = const_cast<LHCb::RichRecSegment*>(segment);
-  if ( !nonc_seg ) return false;
 
   bool trackIsIsolated(true);
 

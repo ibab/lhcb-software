@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-02-10 - Chris Jones
+ - Fix coverity warnings in isolation and match track selector tools
+
 ! 2011-02-07 - Chris Jones
  - Adapt to removal of depreciated typedefs
 
