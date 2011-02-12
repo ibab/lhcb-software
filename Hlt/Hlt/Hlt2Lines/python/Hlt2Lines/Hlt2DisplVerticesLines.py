@@ -36,7 +36,6 @@ __all__ = ('Hlt2DisplVerticesLinesConf')
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-import GaudiKernel.SystemOfUnits as units
 
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
@@ -98,6 +97,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
+        import GaudiKernel.SystemOfUnits as units
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
