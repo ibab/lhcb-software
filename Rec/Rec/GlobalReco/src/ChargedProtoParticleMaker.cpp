@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleMaker
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleMaker.cpp,v 1.6 2010-04-02 10:50:09 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */
