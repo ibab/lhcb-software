@@ -5,6 +5,11 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/StatEntity.h"
+// ============================================================================
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -29,7 +34,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class Exists : public LoKi::Functor<void,bool>
+    class GAUDI_API Exists : public LoKi::Functor<void,bool>
     {
     public:
       // ======================================================================
@@ -66,6 +71,7 @@ namespace LoKi
       std::string                     m_location ; // TES location to be tested 
       /// Use 'RootInTes' ?
       bool                            m_useRootInTes ; //     Use 'RootInTes' ?
+      // ======================================================================
       /// the algorithm to be used 
       mutable LoKi::Interface<GaudiAlgorithm> m_algorithm ;  // the algorithm 
       // ======================================================================
@@ -82,7 +88,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class Contains : public LoKi::Functor<void,double>
+    class GAUDI_API Contains : public LoKi::Functor<void,double>
     {
     public:
       // ======================================================================
@@ -122,12 +128,129 @@ namespace LoKi
       std::string                     m_location ; // TES location to be tested 
       /// Use 'RootInTes' ?
       bool                            m_useRootInTes ; //     Use 'RootInTes' ?
+      // ======================================================================
+    protected:
+      // ======================================================================
       /// the algorithm to be used 
       mutable LoKi::Interface<GaudiAlgorithm> m_algorithm ; // the algorithm
       // ======================================================================
     } ;
     // ========================================================================
-  } //                                          end of namespace LoKi::Functors 
+    /** @class Counter 
+     *  Simple accessor for counters in TES 
+     *  @see Gaudi::Numbers 
+     *
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2011-02-12
+     */
+    class GAUDI_API Counter : public Contains 
+    {
+    public:
+      // ======================================================================
+      /** constructor from TES location, counter name, 
+       *  bad value and root-intes flag 
+       */
+      Counter ( const std::string& location              , 
+                const std::string& counter               , 
+                const double       bad                   , 
+                const bool         useRootInTes = true   ) ;
+      /** constructor from TES location, counter name, 
+       *  bad value and root-intes flag 
+       */
+      Counter ( const std::string& location              , 
+                const std::string& counter               ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Counter () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Counter* clone() const ;
+      /** MANDATORY: the only one essential method 
+       *  @return numebr of element in continer, -1 for non-existing container
+       */
+      virtual  result_type operator() ( /* argument v */ ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the counter name 
+      const std::string& counter () const { return m_counter ; }
+      double             bad     () const { return m_bad     ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Counter () ;                       // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the counter name 
+      std::string m_counter ;                               // the counter name 
+      /// the 'bad'-value 
+      double      m_bad     ;                                // the 'bad'-value 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Stat
+     *  Simple accessor for counters in TES 
+     *  @see Gaudi::Counters 
+     *
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2011-02-12
+     */
+    class GAUDI_API Stat : public Counter 
+    {
+    public:
+      // ======================================================================
+      // the actual type of pointer to member function
+      typedef double (StatEntity::*PMF)() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from TES location, counter name, 
+       *  bad value and root-intes flag 
+       */
+      Stat ( const std::string& location              , 
+             const std::string& counter               , 
+             const std::string& function              , 
+             const double       bad                   , 
+             const bool         useRootInTes = true   ) ;
+      Stat ( const std::string& location              , 
+             const std::string& counter               , 
+             PMF                function              , 
+             const double       bad                   , 
+             const bool         useRootInTes = true   ) ;
+      Stat ( const std::string& location              , 
+             const std::string& counter               , 
+             const std::string& function              ) ;
+      Stat ( const std::string& location              , 
+             const std::string& counter               , 
+             PMF                function              ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Stat () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Stat* clone() const ;
+      /** MANDATORY: the only one essential method 
+       *  @return numebr of element in continer, -1 for non-existing container
+       */
+      virtual  result_type operator() ( /* argument v */ ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Stat () ;                          // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      PMF m_fun ;                                        // the actual function 
+      /// flag for nEntries-case 
+      bool m_entries ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                               end of namespace LoKi::TES
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
@@ -138,7 +261,14 @@ namespace LoKi
   {
     // ========================================================================
     /** @typedef CONTAINS
-     *  Trivial checker/function for existence &size of Container in TES 
+     *  Trivial checker/function for existence & size of Container in TES 
+     * 
+     *  @code 
+     *
+     *    400 > CONTAINS ( "/Raw/Spd/Digis") 
+     *
+     *  @endcode 
+     *
      *  @see LoKi::TES::Contains
      *  @see GaudiCommon<TYPE>::exists 
      *  @see GaudiCommon<TYPE>::get 
@@ -151,6 +281,13 @@ namespace LoKi
     // ========================================================================
     /** @typedef EXISTS 
      *  Trivial checker/predicate for existence of object in TES 
+     *
+     *  @code 
+     *
+     *     EXISTS ("Phys/StdJpsi2MuMu/Particles") 
+     *
+     *  @endcode 
+     *
      *  @see LoKi::Cuts::EXISTS 
      *  @see GaudiCommon<TYPE>::exists 
      *  The concept belong to Gerhard The Great Raven 
@@ -158,6 +295,40 @@ namespace LoKi
      *  @date 2010-02-13
      */
     typedef LoKi::TES::Exists                                          EXISTS ;
+    // ========================================================================
+    /** @typedef COUNTER 
+     *  Trivial accessor to the counter in TES 
+     *
+     *  @code 
+     *
+     *     COUNTER ("Phys/MyCounters" , "nSPD" , -1 ) ; 
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::COUNTER
+     *  @see Gaudi::Numbers 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2011-02-12
+     */
+    typedef LoKi::TES::Counter                                        COUNTER ;
+    // ========================================================================
+    /** @typedef STAT
+     *  Trivial accessor to the counter in TES 
+     *
+     *  @code 
+     *
+     *     STAT ("Phys/MyCounters" , "nXX"  , "mean" , -1 ) ; 
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::STAT
+     *  @see Gaudi::Counters
+     *  @see Gaudi::Counter
+     *  @see StatEntity
+     *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+     *  @date 2011-02-12
+     */
+    typedef LoKi::TES::Stat                                              STAT ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

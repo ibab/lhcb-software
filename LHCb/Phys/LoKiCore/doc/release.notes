@@ -15,6 +15,29 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-12 - Vanya Belyaev
+
+ - add new algorithm LoKi::CounterAlg 
+
+    it allows to evaluate certains funtions and store results in TES
+    
+   *  @code 
+   * 
+   *    myCnt.Variables = {
+   *       'nSpd'           : "CONTAINS('Raw/Spd/Digits')" , 
+   *       'nVelo'          : "TrSOURCE('Rec/Track/Best', TrVELO) >> TrSIZE " , 
+   *       'hasTrueMCDecay' : "MCSOURCE('MC/Particles','[B_s0 -> J/psi(1S) phi(1020)]CC') >> MCSIZE" , 
+   *       'GEC-loose'      : "ACCEPT('Hlt::GEC/AcceptGESLoose')"     
+   *     }
+   *
+   *    ## use non-standard location: 
+   *    myCnt.Location = "/Event/MyCounters"
+   *
+   *  @endcode 
+
+   In particular it could be very useful for storing some event 
+   information on microDST 
+
 
 ! 2011-02-10 - Gerhard Raven
  - make sure that algorithms used in AlgFunctors are registered as
