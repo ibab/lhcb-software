@@ -23,7 +23,7 @@ using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RawBufferToRichDigitsAlg );
+DECLARE_ALGORITHM_FACTORY( RawBufferToRichDigitsAlg )
 
 // Standard constructor, initializes variables
 RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,
@@ -36,7 +36,7 @@ RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,
 }
 
 // Destructor
-RawBufferToRichDigitsAlg::~RawBufferToRichDigitsAlg() {};
+RawBufferToRichDigitsAlg::~RawBufferToRichDigitsAlg() {}
 
 // Initialisation.
 StatusCode RawBufferToRichDigitsAlg::initialize()// RICH software
