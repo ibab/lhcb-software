@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace LHCb {
+namespace LHCb
+{
 
   /** @class PackedProtoParticle PackedProtoParticle.h Event/PackedProtoParticle.h
    *  This is the packed version of the ProtoParticle
@@ -15,16 +16,22 @@ namespace LHCb {
    *  @author Olivier Callot
    *  @date   2008-11-13
    */
-  struct PackedProtoParticle {
+  struct PackedProtoParticle 
+  {
 
     /// Standard constructor
-    PackedProtoParticle( ) {}; 
+    PackedProtoParticle( ) :
+      key(0), track(0), richPID(0), muonPID(0),
+      firstHypo(0), lastHypo(0),
+      firstExtra(0), lastExtra(0)
+    {}
 
+    /// Copy Constructor
     PackedProtoParticle( const PackedProtoParticle& c ) :
       key( c.key ), track( c.track ), richPID( c.richPID ), muonPID( c.muonPID ),
       firstHypo( c.firstHypo ), lastHypo( c.lastHypo ),
       firstExtra( c.firstExtra ), lastExtra( c.lastExtra )
-    {};
+    {}
 
     int  key;
     int  track;
@@ -34,23 +41,29 @@ namespace LHCb {
     unsigned short int lastHypo;
     unsigned short int firstExtra;
     unsigned short int lastExtra;
+
   };
   
   static const CLID CLID_PackedProtoParticles = 1552;
 
   // Namespace for locations in TDS
-  namespace PackedProtoParticleLocation {
+  namespace PackedProtoParticleLocation
+  {
     static const std::string& Charged = "pRec/ProtoP/Charged";
     static const std::string& Neutral = "pRec/Protop/Neutral";
   }
 
-  class PackedProtoParticles : public DataObject {
+  class PackedProtoParticles : public DataObject 
+  {
+  
   public: 
+  
     /// Standard constructor
-    PackedProtoParticles( ) { 
+    PackedProtoParticles( ) 
+    { 
       m_vect.reserve(500);
       m_extra.reserve(5000);
-    }; 
+    }
 
     virtual ~PackedProtoParticles( ) {}; ///< Destructor
     virtual const CLID& clID()  const { return PackedProtoParticles::classID(); }
@@ -75,9 +88,13 @@ namespace LHCb {
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
   private:
+
     std::vector<PackedProtoParticle> m_vect;
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
+
   };
+
 }
+
 #endif // EVENT_PACKEDPROTOPARTICLE_H

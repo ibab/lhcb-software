@@ -1,5 +1,5 @@
 // $Id: PackedRecVertex.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
-#ifndef EVENT_PACKEDRECVERTEX_H 
+#ifndef EVENT_PACKEDRECVERTEX_H
 #define EVENT_PACKEDRECVERTEX_H 1
 
 // Include files
@@ -7,27 +7,39 @@
 #include <string>
 #include <vector>
 
-namespace LHCb {
-  
+namespace LHCb
+{
+
   /** @class PackedRecVertex PackedRecVertex.h Event/PackedRecVertex.h
+   *
    *  Structure to describe a reconstructed vertex
    *
    *  @author Olivier Callot
    *  @date   2008-11-14
    */
-  struct PackedRecVertex {
-    /// Standard constructor
-    PackedRecVertex( ) {}; 
+  struct PackedRecVertex
+  {
 
-    PackedRecVertex( const PackedRecVertex& c ) : // copy constructor
+    /// Standard constructor
+    PackedRecVertex( ) :
+      key(0), technique(0), chi2(0), nDoF(0),
+      x(0), y(0), z(0),
+      cov00(0), cov11(0), cov22(0),
+      cov10(0), cov20(0), cov21(0),
+      firstTrack(0), lastTrack(0),
+      firstInfo(0), lastInfo(0)
+    {}
+
+    /// Copy constructor
+    PackedRecVertex( const PackedRecVertex& c ) :
       key( c.key ), technique( c.technique ), chi2( c.chi2 ), nDoF( c.nDoF ),
       x( c.x ), y( c.y ), z( c.z ),
-      cov00( c.cov00 ), cov11( c.cov11 ), cov22( c.cov22 ), 
+      cov00( c.cov00 ), cov11( c.cov11 ), cov22( c.cov22 ),
       cov10( c.cov10 ), cov20( c.cov20 ), cov21( c.cov21 ),
       firstTrack( c.firstTrack ), lastTrack( c.lastTrack ),
       firstInfo( c.firstInfo ), lastInfo( c.lastInfo )
-    {};
-      
+    {}
+
     int key;
     int technique;
     int chi2;
@@ -46,23 +58,29 @@ namespace LHCb {
     unsigned short int lastTrack;
     unsigned short int firstInfo;
     unsigned short int lastInfo;
+
   };
-  
+
   static const CLID CLID_PackedRecVertices = 1553;
 
   // Namespace for locations in TDS
-  namespace PackedRecVertexLocation {
+  namespace PackedRecVertexLocation
+  {
     static const std::string& Primary = "pRec/Vertex/Primary";
   }
 
-  class PackedRecVertices : public DataObject {
-  public: 
+  class PackedRecVertices : public DataObject 
+  {
+  
+  public:
+  
     /// Standard constructor
-    PackedRecVertices( ) { 
+    PackedRecVertices( ) 
+    {
       m_vect.reserve(10);
       m_refs.reserve(200);
       m_extra.reserve(500);
-    }; 
+    }
 
     virtual ~PackedRecVertices( ) {}; ///< Destructor
     virtual const CLID& clID()  const { return PackedRecVertices::classID(); }
@@ -89,9 +107,13 @@ namespace LHCb {
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
   private:
+
     std::vector<PackedRecVertex>     m_vect;
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
+
   };
+
 }
+
 #endif // EVENT_PACKEDRECVERTEX_H

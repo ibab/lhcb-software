@@ -1,5 +1,5 @@
 // $Id: PackedTrack.h,v 1.8 2009-11-07 12:20:26 jonrob Exp $
-#ifndef EVENT_PACKEDTRACK_H 
+#ifndef EVENT_PACKEDTRACK_H
 #define EVENT_PACHEDTRACK_H 1
 
 // Include files
@@ -7,8 +7,9 @@
 #include <string>
 #include <vector>
 
-namespace LHCb {
-  
+namespace LHCb
+{
+
   /** @class PackedTrack PackedTrack.h Event/PackedTrack.h
    *  Packed description of a track
    *
@@ -17,18 +18,27 @@ namespace LHCb {
    *  @author Olivier Callot
    *  @date   2009-08-26
    */
-  struct PackedTrack {
+  struct PackedTrack
+  {
 
-    PackedTrack()   {};
+    /// Default Constructor
+    PackedTrack() :
+      key(0), chi2PerDoF(0), nDoF(0), flags(0),
+      firstId(0), lastId(0),
+      firstState(0), lastState(0),
+      firstExtra(0), lastExtra(0),
+      likelihood(0), ghostProba(0)
+    { }
 
-    PackedTrack( const PackedTrack& c ) : // copy constructor
-      key( c.key), chi2PerDoF( c.chi2PerDoF), nDoF( c.nDoF ), flags( c.flags ),
+    /// Copy Constructor
+    PackedTrack( const PackedTrack& c ) :
+      key( c.key ), chi2PerDoF( c.chi2PerDoF ), nDoF( c.nDoF ), flags( c.flags ),
       firstId( c.firstId ), lastId (c.lastId ),
       firstState( c.firstState ), lastState( c.lastState ),
       firstExtra( c.firstExtra ), lastExtra( c.lastExtra ),
       likelihood( c.likelihood ), ghostProba( c.ghostProba )
-      {};
-  
+    { }
+
     int key;
     int chi2PerDoF;
     int nDoF;
@@ -54,9 +64,11 @@ namespace LHCb {
    *  @date   2008-11-07
    */
 
-  struct PackedState {
+  struct PackedState
+  {
+
     /// Standard constructor
-    PackedState( ) {};
+    PackedState( ) {}
 
     int flags;
 
@@ -82,26 +94,31 @@ namespace LHCb {
     short int cov_41;
     short int cov_42;
     short int cov_43;
-  };
 
+  };
 
   static const CLID CLID_PackedTracks = 1550;
 
   // Namespace for locations in TDS
-  namespace PackedTrackLocation {
+  namespace PackedTrackLocation
+  {
     static const std::string& Default = "pRec/Track/Best";
     static const std::string& Muon    = "pRec/Track/Muon";
   }
 
-  class PackedTracks : public DataObject {
-  public: 
+  class PackedTracks : public DataObject
+  {
+
+  public:
+
     /// Standard constructor
-    PackedTracks( ) { 
+    PackedTracks( )
+    {
       m_vect.reserve(500);
       m_state.reserve(2000);
       m_ids.reserve(2000);
       m_extra.reserve(5000);
-    }; 
+    }
 
     virtual ~PackedTracks( ) {}; ///< Destructor
     virtual const CLID& clID()  const { return PackedTracks::classID(); }
@@ -132,10 +149,14 @@ namespace LHCb {
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
   private:
+
     std::vector<PackedTrack> m_vect;
     std::vector<PackedState> m_state;
     std::vector<int>    m_ids;
     std::vector<std::pair<int,int> > m_extra;
+
   };
+
 }  // End of LHCb namespace
+
 #endif // EVENT_PACKEDTRACK_H

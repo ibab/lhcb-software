@@ -4,7 +4,11 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
-!========================= PackedEvent v4r4 2011-01-31 =========================
+! 2011-02-12 - Chris Jones
+ - Initialise all data members of packed structs in default constructors. 
+   Fixes various coverity defects.
+
+!======================= PackedEvent v4r4 2011-01-31 =========================
 ! 2011-01-14 - Marco Cattaneo
  - Fix ICC warnings and remarks
 
