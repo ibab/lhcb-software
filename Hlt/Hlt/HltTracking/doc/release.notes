@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-12 - Gerhard Raven
+ - replace HltVertexFilter by HltCopySelection<LHCb::RecVertex>
+
 ! 2011-02-11 - Sam Gregson
  - Linked up new Hlt2 D2KS0H line
 

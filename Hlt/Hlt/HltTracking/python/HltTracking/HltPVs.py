@@ -65,16 +65,10 @@ def _RecoPV3D():
     recoPV3D.OutputVerticesName = output3DVertices
     recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
 
-    from Configurables import HltVertexFilter   
-    preparePV3D = HltVertexFilter( 'Hlt1PreparePV3D'
+    from Configurables import HltCopySelection_LHCb__RecVertex_ as HltCopyVertexSelection
+    preparePV3D = HltCopyVertexSelection( 'Hlt1PreparePV3D'
                                    , InputSelection = "TES:" + recoPV3D.OutputVerticesName
                                    , RequirePositiveInputs = False
-                                   , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
-                                   , HistoDescriptor = {'VertexZPosition': ( 'PV3D: VertexZPosition',-200.,200.,200),
-                                                        'VertexZPositionBest': ( 'PV3D: Highest VertexZPosition',-200,200.,100),
-                                                        'VertexTransversePosition': ( 'PV3D: VertexTransversePosition',0,1,50),
-                                                        'VertexTransversePositionBest': ( 'PV3D: Highest VertexTransversePosition',0,1,50)
-                                                        }
                                    , OutputSelection   = PV3DSelection )
 
     return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D ] )
