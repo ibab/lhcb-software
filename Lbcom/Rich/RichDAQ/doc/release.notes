@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-02-12 - Chris Jones
+ - Fix coverity defect
+
 ! 2011-02-10 - Chris Jones
  - Various icc warning fixes
 

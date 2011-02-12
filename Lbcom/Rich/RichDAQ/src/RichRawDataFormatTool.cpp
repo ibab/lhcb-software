@@ -525,7 +525,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
   }
 
   // Printout this bank
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( dataBank && msgLevel(MSG::VERBOSE) )
   {
     verbose() << endmsg
               << "Created HPD Data Bank for Decoding :-" << endmsg;
