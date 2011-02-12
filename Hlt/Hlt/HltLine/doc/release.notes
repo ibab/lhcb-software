@@ -7,6 +7,7 @@
 
 ! 2010-02-12 - Gerhard Raven
  - add muon and rich decoding symbols
+ - skip sequencer if it only has one member
 
 !========================== HltLine v4r7p2  2011-02-10 ===================
 ! 2010-02-09 - Gerhard Raven

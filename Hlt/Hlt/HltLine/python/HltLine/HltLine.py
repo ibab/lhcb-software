@@ -976,7 +976,10 @@ class Hlt1Line(object):
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
         if _members : 
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
+            if len(_members)==1 :
+                mdict.update( { 'Filter1' : _members[0] } )
+            else :
+                mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )
