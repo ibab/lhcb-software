@@ -207,6 +207,10 @@ StatusCode MuonTTTrack::execute() {
     put( tracks, m_outputLoc );
     filterPassed = true;
   }
+  else
+  {
+    delete tracks;
+  }
 
 
   // -- Only go on if MuonTT tracks have been reconstructed
