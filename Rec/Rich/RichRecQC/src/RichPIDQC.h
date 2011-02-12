@@ -63,6 +63,33 @@ namespace Rich
       class PIDQC : public Rich::Rec::HistoAlgBase
       {
 
+      private:
+
+        /** @class TkTally RichPIDQC.h
+         * Class to store track count tallies
+         */
+        class TkTally
+        {
+        public:
+          TkTally() : nTracks(0), multiplicity(0) { }
+        public:
+          /// Operator +=
+          inline TkTally& operator+=(const TkTally& c)
+          {
+            this->nTracks      += c.nTracks;
+            this->multiplicity += c.multiplicity;
+            return *this;
+          } 
+          /// Overload output to ostream
+          friend inline std::ostream& operator << ( std::ostream& ost, 
+                                                    const TkTally& id )
+          { return ost << "[ nTracks=" << id.nTracks 
+                       << " multiplicity=" << id.multiplicity << " ]"; }
+        public:
+          unsigned int nTracks;
+          unsigned int multiplicity;
+        };
+
       public:
 
         /// Standard constructor
@@ -80,7 +107,7 @@ namespace Rich
         StatusCode loadPIDData();
 
         /// Count all Tracks in given location passing the selection criteria
-        void countTracks( const std::string & location );
+        TkTally countTracks( const std::string & location );
 
         /// Print out the given PID
         void print( MsgStream & msg, 
@@ -114,11 +141,10 @@ namespace Rich
 
         // job options
         std::string m_pidTDS;          ///< Location of target RichPIDs in TDS
-        int m_minMultCut;              ///< Minimum track multiplicity
-        int m_maxMultCut;              ///< Maximum track multiplicity
+        unsigned int m_minMultCut;     ///< Minimum track multiplicity
+        unsigned int m_maxMultCut;     ///< Maximum track multiplicity
         bool m_truth;                  ///< MCTruth available
-        bool m_doHistos;               ///< Flag controlling the creation of histograms
-        int m_bins;                    ///< Number of bins
+        unsigned int m_bins;           ///< Number of bins
         bool m_finalPrintOut;          ///< Perform final prinout of PID tables
         bool m_ignoreRecoThres;        ///< Flag to turn on/off the setting of Reco-PIDs as "below threshold"
         bool m_ignoreMCThres;          ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
@@ -134,9 +160,6 @@ namespace Rich
         double m_sumTab[6][6];
         int m_nEvents[2];
         int m_nTracks[2];
-
-        int m_multiplicity;
-        int m_totalSelTracks;
 
         typedef Rich::Map<Rich::Rec::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
         /// Count the number of PID objects by track type

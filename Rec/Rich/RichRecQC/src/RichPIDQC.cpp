@@ -23,16 +23,16 @@ using namespace Rich::Rec::MC;
 DECLARE_ALGORITHM_FACTORY( PIDQC )
 
 // Standard constructor, initializes variables
-PIDQC::PIDQC( const std::string& name,
-              ISvcLocator* pSvcLocator )
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-    m_pidTDS           ( "" ),
-    m_trSelector       ( NULL ),
-    m_mcTruth          ( NULL ),
-    m_mcPselector      ( NULL ),
-    m_requiredRads     ( Rich::NRadiatorTypes ),
-    m_sF               ( "%7.3f" ),
-    m_allPlotTool      ( NULL )
+  PIDQC::PIDQC( const std::string& name,
+                ISvcLocator* pSvcLocator )
+    : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+      m_pidTDS           ( "" ),
+      m_trSelector       ( NULL ),
+      m_mcTruth          ( NULL ),
+      m_mcPselector      ( NULL ),
+      m_requiredRads     ( Rich::NRadiatorTypes ),
+      m_sF               ( "%7.3f" ),
+      m_allPlotTool      ( NULL )
 {
 
   // Declare job options
@@ -52,6 +52,16 @@ PIDQC::PIDQC( const std::string& name,
   declareProperty( "RequiredRads", m_requiredRads );
   declareProperty( "ApplyMCPSel", m_mcPsel = false );
   declareProperty( "ExpertPlots", m_expertPlots = false );
+
+  // Initialise summary information
+  for ( int i = 0; i<6; ++i )
+  {
+    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
+  }
+  m_nEvents[0] = 0;
+  m_nEvents[1] = 0;
+  m_nTracks[0] = 0;
+  m_nTracks[1] = 0;
 
 }
 
@@ -83,16 +93,6 @@ StatusCode PIDQC::initialize()
   m_plotsConfig.minPt = m_trSelector->minPtCut() * Gaudi::Units::GeV;
   m_plotsConfig.maxPt = m_trSelector->maxPtCut() * Gaudi::Units::GeV;
   m_plotsConfig.expertPlots = m_expertPlots;
-
-  // Initialise summary information
-  for ( int i = 0; i<6; ++i )
-  {
-    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
-  }
-  m_nEvents[0] = 0;
-  m_nEvents[1] = 0;
-  m_nTracks[0] = 0;
-  m_nTracks[1] = 0;
 
   if ( m_mcPsel )
   {
@@ -130,8 +130,7 @@ StatusCode PIDQC::execute()
   if ( !loadPIDData() || m_richPIDs.empty() ) return StatusCode::SUCCESS;
 
   // Count tracks
-  m_totalSelTracks = 0;
-  m_multiplicity = 0;
+  TkTally tkTally;
   Rich::Map<std::string,bool> locs;
   for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
         iC != m_richPIDs.end(); ++iC )
@@ -153,7 +152,7 @@ StatusCode PIDQC::execute()
         locs[contLoc] = true;
         try
         {
-          countTracks(contLoc);
+          tkTally += countTracks(contLoc);
         }
         catch ( const GaudiException & exp )
         {
@@ -170,8 +169,8 @@ StatusCode PIDQC::execute()
   }
 
   // apply track multiplicity cuts
-  if ( m_multiplicity < m_minMultCut ||
-       m_multiplicity > m_maxMultCut ) return StatusCode::SUCCESS;
+  if ( tkTally.multiplicity < m_minMultCut ||
+       tkTally.multiplicity > m_maxMultCut ) return StatusCode::SUCCESS;
 
   // count pids per track type
   int pidCount = 0;
@@ -303,19 +302,19 @@ StatusCode PIDQC::execute()
   // count events and tracks
   ++m_nEvents[0];
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
-  m_nTracks[0] += m_totalSelTracks;
+  m_nTracks[0] += tkTally.nTracks;
   m_nTracks[1] += pidCount;
   plot1D( pidCount, "# PIDs per event", -0.5, 200.5, 201 );
   plot1D( (m_richPIDs.empty() ? 0 : 1), "Event Success V Failures", -0.5, 1.5, 2 );
-  if ( m_totalSelTracks>0 )
+  if ( tkTally.nTracks>0 )
   {
-    plot1D(  static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks),
+    plot1D(  static_cast<double>(pidCount) / static_cast<double>(tkTally.nTracks),
              "Fraction of Tracks with PIDs", 0, 1, m_bins );
   }
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endmsg;
+    debug() << "Total Tracks = " << tkTally.nTracks << " : tracks PIDed = " << pidCount << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -479,7 +478,7 @@ StatusCode PIDQC::finalize()
         const double effR = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0]   : 100.0 );
         const double errR = ( m_nTracks[0]>0 ? std::sqrt(effR*(100.-effR)/m_nTracks[0]) : 100.0 );
         info() << "             |  -> With "
-               << (*iR).first.radiators() 
+               << (*iR).first.radiators()
                << boost::format( "   : %6.2f +-%6.2f" ) % effR % errR << endmsg;
       }
 
@@ -519,19 +518,21 @@ StatusCode PIDQC::loadPIDData()
   return Warning( "Failed to locate RichPIDs at " + m_pidTDS );
 }
 
-void PIDQC::countTracks( const std::string & location )
+PIDQC::TkTally PIDQC::countTracks( const std::string & location )
 {
+  TkTally tally;
   LHCb::Tracks * tracks = get<LHCb::Tracks>( location );
   debug() << "Found " << tracks->size() << " Tracks at " << location << endmsg;
   for ( LHCb::Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
-    if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++m_multiplicity; }
+    if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++tally.multiplicity; }
     if ( selectTracks(*iTrk) )
     {
-      ++m_totalSelTracks;
+      ++tally.nTracks;
     }
   }
+  return tally;
 }
 
 bool PIDQC::selectTracks( const LHCb::Track * track )
