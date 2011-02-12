@@ -35,6 +35,9 @@ VaryGasPressureTemperatureAlg( const std::string& name,
   m_firstEvent[Rich::Aerogel]  = true;
   m_firstEvent[Rich::Rich1Gas] = true;
   m_firstEvent[Rich::Rich2Gas] = true;
+  m_nomPressure.assign    ( 0.0  );
+  m_nomTemperature.assign ( 0.0  );
+  m_radiators.assign      ( NULL );
   // JOs
   declareProperty( "PresVariationAmplitude", m_presVaryAmp    = 200   ); // in Pa (2 mbar)
   declareProperty( "PresVariationPeriod",    m_presVaryPeriod = 100   ); // # events
