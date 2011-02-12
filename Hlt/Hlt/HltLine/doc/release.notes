@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-02-12 - Gerhard Raven
+ - add muon and rich decoding symbols
+
 !========================== HltLine v4r7p2  2011-02-10 ===================
 ! 2010-02-09 - Gerhard Raven
  - fix bug in SINK recognition...

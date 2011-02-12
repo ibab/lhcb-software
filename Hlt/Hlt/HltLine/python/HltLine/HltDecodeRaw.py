@@ -13,7 +13,7 @@ def _convert(map, name) :
         (t,n) = a
     elif len(a) == 1 :
         (t,n) = (a[0],a[0])
-    cls = getattr( __import__('Configurables'),t )
+    cls = getattr( __import__('Configurables'),t.replace(':','_') )  # TODO: deaul with Rich::DAQ::[
     return bindMembers( None, [ cls(n) ]).ignoreOutputSelection()
 
 # bind __convert to _convert
@@ -31,8 +31,8 @@ DecodeVELO   = __convert( 'Raw/Velo/LiteClusters' )
 DecodeTT     = __convert( 'Raw/TT/LiteClusters' )
 DecodeIT     = __convert( 'Raw/IT/LiteClusters' )
 DecodeOT     = __convert( 'Raw/OT/Times' )
-#decodeMUON  = __convert( 'Raw/Muon/Coords' )  # How can we access the MUON data if this is commented out??? (and Dod is not running!)
-#decodeRICH  = __convert( 'Raw/Rich/Digits' )  # How can we access the RICH data if this is commented out??? (and Dod is not running!)
+DecodeMUON   = __convert( 'Raw/Muon/Coords' )
+DecodeRICH   = __convert( 'Raw/Rich/Digits' )
 DecodeECAL   = __convert( 'Raw/Ecal/Digits' )
 DecodeSPD    = __convert( 'Raw/Spd/Digits' )
 DecodePRS    = __convert( 'Raw/Prs/Digits' )
@@ -42,7 +42,8 @@ DecodeHCAL   = __convert( 'Raw/Hcal/Digits' )
 #and export explicit (configured!) decoders:
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
           , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
-          , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL' )
+          , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL'
+          , 'DecodeMUON', 'DecodeRICH' )
 
 # ==============================================================================
 # Register symbols for streamer framework:
@@ -64,7 +65,9 @@ _factory.Lines += [
     "decodeECAL   = %s " % _names ( DecodeECAL   ) ,
     "decodeHCAL   = %s " % _names ( DecodeHCAL   ) ,
     "decodeSPD    = %s " % _names ( DecodeSPD    ) ,
-    "decodePRS    = %s " % _names ( DecodePRS    )
+    "decodePRS    = %s " % _names ( DecodePRS    ) ,
+    "decodeMUON   = %s " % _names ( DecodeMUON   ) ,
+    "decodeRICH   = %s " % _names ( DecodeRICH   )
     ]
 
 # ==============================================================================
