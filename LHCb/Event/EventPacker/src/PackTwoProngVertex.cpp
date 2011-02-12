@@ -1,8 +1,8 @@
 // $Id: PackTwoProngVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/TwoProngVertex.h"
 #include "Event/PackedTwoProngVertex.h"
 #include "Kernel/StandardPacker.h"
@@ -16,15 +16,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PackTwoProngVertex );
-
+DECLARE_ALGORITHM_FACTORY( PackTwoProngVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackTwoProngVertex::PackTwoProngVertex( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackTwoProngVertex::PackTwoProngVertex( const std::string& name,
+                                          ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName",  m_inputName  = LHCb::TwoProngVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedTwoProngVertexLocation::Default );
@@ -33,7 +32,7 @@ PackTwoProngVertex::PackTwoProngVertex( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PackTwoProngVertex::~PackTwoProngVertex() {} 
+PackTwoProngVertex::~PackTwoProngVertex() {}
 
 //=============================================================================
 // Main execution
@@ -52,7 +51,9 @@ StatusCode PackTwoProngVertex::execute() {
   out->setVersion( 1 );
 
   StandardPacker pack;
-  for (  LHCb::TwoProngVertices::const_iterator itV = verts->begin(); verts->end() != itV ; ++itV ) {
+  for (  LHCb::TwoProngVertices::const_iterator itV = verts->begin();
+         verts->end() != itV ; ++itV )
+  {
     LHCb::TwoProngVertex*      vert = *itV;
     LHCb::PackedTwoProngVertex pVert;
     debug() << "Found vertex key " << (*itV)->key() << endmsg;
@@ -66,26 +67,26 @@ StatusCode PackTwoProngVertex::execute() {
 
     double pA = 1./vert->momA()(2);
     double pB = 1./vert->momB()(2);
-    
+
     pVert.txA        = pack.slope( vert->momA()(0) );
     pVert.tyA        = pack.slope( vert->momA()(1) );
     pVert.pA         = pack.energy( pA );
-    
+
     pVert.txB        = pack.slope( vert->momB()(0) );
     pVert.tyB        = pack.slope( vert->momB()(1) );
     pVert.pB         = pack.energy( pB );
 
     // convariance Matrix
-    double err0 = sqrt( vert->covMatrix()(0,0) );
-    double err1 = sqrt( vert->covMatrix()(1,1) );
-    double err2 = sqrt( vert->covMatrix()(2,2) );
-    double err3 = sqrt( vert->momcovA()(0,0) );
-    double err4 = sqrt( vert->momcovA()(1,1) );
-    double err5 = sqrt( vert->momcovA()(2,2) );
-    double err6 = sqrt( vert->momcovB()(0,0) );
-    double err7 = sqrt( vert->momcovB()(1,1) );
-    double err8 = sqrt( vert->momcovB()(2,2) );    
-    
+    double err0 = std::sqrt( vert->covMatrix()(0,0) );
+    double err1 = std::sqrt( vert->covMatrix()(1,1) );
+    double err2 = std::sqrt( vert->covMatrix()(2,2) );
+    double err3 = std::sqrt( vert->momcovA()(0,0) );
+    double err4 = std::sqrt( vert->momcovA()(1,1) );
+    double err5 = std::sqrt( vert->momcovA()(2,2) );
+    double err6 = std::sqrt( vert->momcovB()(0,0) );
+    double err7 = std::sqrt( vert->momcovB()(1,1) );
+    double err8 = std::sqrt( vert->momcovB()(2,2) );
+
     pVert.cov00 = pack.position(  err0 );
     pVert.cov11 = pack.position(  err1 );
     pVert.cov22 = pack.position(  err2 );
@@ -141,22 +142,22 @@ StatusCode PackTwoProngVertex::execute() {
     pVert.cov87 = pack.fraction( vert->momcovB()   (2,1)/err8/err7 );
 
     /*
-    info() << format( "cov %6d", pVert.cov00 ) << endmsg;
-    info() << format( "cov %6d %6d", pVert.cov10, pVert.cov11 ) << endmsg;
-    info() << format( "cov %6d %6d %6d", pVert.cov20, pVert.cov21, pVert.cov22 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d", pVert.cov30, pVert.cov31, pVert.cov32, pVert.cov33 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d %6d", 
-                      pVert.cov40, pVert.cov41, pVert.cov42, pVert.cov43, pVert.cov44 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d %6d %6d", 
-                      pVert.cov50, pVert.cov51, pVert.cov52, pVert.cov53, pVert.cov54, pVert.cov55 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d %6d %6d %6d",
-                      pVert.cov60, pVert.cov61, pVert.cov62, pVert.cov63, pVert.cov64, pVert.cov65, pVert.cov66 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d",
-                      pVert.cov70, pVert.cov71, pVert.cov72, pVert.cov73, pVert.cov74, pVert.cov75, 
-                      pVert.cov76, pVert.cov77 ) << endmsg;
-    info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d %6d",
-                      pVert.cov80, pVert.cov81, pVert.cov82, pVert.cov83, pVert.cov84, pVert.cov85, 
-                      pVert.cov86, pVert.cov87, pVert.cov88 ) << endmsg;
+      info() << format( "cov %6d", pVert.cov00 ) << endmsg;
+      info() << format( "cov %6d %6d", pVert.cov10, pVert.cov11 ) << endmsg;
+      info() << format( "cov %6d %6d %6d", pVert.cov20, pVert.cov21, pVert.cov22 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d", pVert.cov30, pVert.cov31, pVert.cov32, pVert.cov33 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d %6d",
+      pVert.cov40, pVert.cov41, pVert.cov42, pVert.cov43, pVert.cov44 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d %6d %6d",
+      pVert.cov50, pVert.cov51, pVert.cov52, pVert.cov53, pVert.cov54, pVert.cov55 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d",
+      pVert.cov60, pVert.cov61, pVert.cov62, pVert.cov63, pVert.cov64, pVert.cov65, pVert.cov66 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d",
+      pVert.cov70, pVert.cov71, pVert.cov72, pVert.cov73, pVert.cov74, pVert.cov75,
+      pVert.cov76, pVert.cov77 ) << endmsg;
+      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d %6d",
+      pVert.cov80, pVert.cov81, pVert.cov82, pVert.cov83, pVert.cov84, pVert.cov85,
+      pVert.cov86, pVert.cov87, pVert.cov88 ) << endmsg;
     */
 
     //== Store the Tracks
@@ -178,7 +179,7 @@ StatusCode PackTwoProngVertex::execute() {
 
     //== Handles the ExtraInfo
     pVert.firstInfo = out->sizeExtra();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin(); 
+    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin();
           vert->extraInfo().end() != itE; ++itE ) {
       out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
     }

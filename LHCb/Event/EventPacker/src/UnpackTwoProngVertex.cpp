@@ -58,7 +58,8 @@ StatusCode UnpackTwoProngVertex::execute() {
   StandardPacker pack;
   
   for ( std::vector<LHCb::PackedTwoProngVertex>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS ) {
+        dst->end() != itS; ++itS ) 
+  {
     const LHCb::PackedTwoProngVertex& src = (*itS);
 
     LHCb::TwoProngVertex* vert = new LHCb::TwoProngVertex( );
@@ -70,10 +71,9 @@ StatusCode UnpackTwoProngVertex::execute() {
     vert->setPosition( pos );
 
     //== Store the Tracks
-    int kk;
     int hintID;
     int key;
-    for ( kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
+    for ( int kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
       int trk = *(dst->beginRefs()+kk);
       pack.hintAndKey( trk, dst, newTwoProngVertices, hintID, key );
       SmartRef<LHCb::Track> ref( newTwoProngVertices, hintID, key );
@@ -167,9 +167,9 @@ StatusCode UnpackTwoProngVertex::execute() {
 
     //== Unpack the ParticleID
     std::vector<LHCb::ParticleID> pids;
-    for ( kk = src.firstPid; src.lastPid > kk; ++kk ) {
-      LHCb::ParticleID myPid(  *(dst->beginRefs()+kk) );
-      pids.push_back( myPid );
+    for ( int kk = src.firstPid; src.lastPid > kk; ++kk )
+    {
+      pids.push_back( LHCb::ParticleID(*(dst->beginRefs()+kk)) );
     }
     vert->setCompatiblePIDs( pids );
 
