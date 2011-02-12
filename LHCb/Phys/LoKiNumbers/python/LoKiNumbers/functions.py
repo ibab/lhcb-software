@@ -111,6 +111,11 @@ XVector   = std.vector(_d)
 EXISTS    = LoKi.TES.Exists
 ## @see LoKi::Cuts::CONTAINS 
 CONTAINS  = LoKi.TES.Contains
+## @see LoKi::Cuts::COUNTER
+COUNTER   = LoKi.TES.Counter 
+## @see LoKi::Cuts::STAT
+STAT      = LoKi.TES.Stat 
+
 ## @see LoKi::Cuts::CHECK
 CHECK     = LoKi.Status.Check
 ## @see LoKi::Cuts::ACCEPT 
