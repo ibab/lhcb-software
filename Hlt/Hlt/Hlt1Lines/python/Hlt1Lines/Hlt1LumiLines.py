@@ -146,7 +146,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
-        from Configurables import HltTrackFilter
+        from Configurables import Hlt__TrackFilter as HltTrackFilter
         from Configurables import GaudiSequencer as Sequence
         lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
         lumiRecoFilterSequence.Members.append( recoScaler )
@@ -154,8 +154,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             Sequence('HltRZVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
                                                    , InputSelection   = 'TES:Hlt/Track/RZVelo'
-                                                   , AddInfo = False
-                                                   , FilterDescriptor = ['IsBackward,>,0.5']
+                                                   , Code = [ 'TrBACKWARD' ]
                                                    , OutputSelection     = 'RZVeloBW'
                                                    , RequirePositiveInputs = False
                                                    ) ]
