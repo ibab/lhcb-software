@@ -15,6 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-13 - Vanya Belyaev
+
+   - LoKi/FunOps.h
+      Fix wrong name/typo for python's "right-side-multiplication"
+
+
 ! 2011-02-12 - Vanya Belyaev
 
  - add new algorithm LoKi::CounterAlg 

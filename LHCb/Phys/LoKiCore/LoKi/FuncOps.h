@@ -712,9 +712,9 @@ namespace LoKi
       __rrshift__ 
       ( const Map& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
-      // __rmult__  : gate 
+      // __rmul__  : gate 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
-      __rmult__ 
+      __rmul__ 
       ( const Map& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
@@ -879,9 +879,9 @@ namespace LoKi
       __rrshift__ 
       ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
-      // __rmult__  : gate 
+      // __rmul__  : gate 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rmult__ 
+      __rmul__ 
       ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
@@ -1047,9 +1047,9 @@ namespace LoKi
       __rrshift__ 
       ( const FunVal& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
-      // __rmult__  : gate 
+      // __rmul__  : gate 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
-      __rmult__ 
+      __rmul__ 
       ( const FunVal& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
@@ -1333,9 +1333,9 @@ namespace LoKi
       __rrshift__ 
       ( const CutVal& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
-      // __rmult__  : gate 
+      // __rmul__  : gate 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-      __rmult__ 
+      __rmul__ 
       ( const CutVal& fun , const LoKi::Functor<void,bool>& gate )  
       { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
       // ======================================================================
