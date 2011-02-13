@@ -59,7 +59,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                      [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
-        from HltTracking.Hlt1Streamers import ( VeloCandidates, MatchVeloMuon,
+        from HltTracking.Hlt1Streamers import ( VeloCandidates,
                                                 LooseForward, TightForward,
                                                 FitTrack, IsMuon )
         from HltTracking.HltPVs import RecoPV3D
@@ -68,26 +68,27 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                       TightForward,
                       LooseForward,
                       FitTrack ,
-                      MatchVeloMuon,
                       IsMuon ]
         return Preambulo
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
 
+        gec = Hlt1GECLooseStreamer()
+        props['gec'] = gec.split('=',1)[0]
+
         lineCode = """ 
-        VeloCandidates
+        %(gec)s * VeloCandidates
         >> RecoPV3D
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
-        >>  execute( decodeIT ) 
         >>  %(forward)s 
-        >>  (TrTNORMIDC > %(TrNTHits)s ) 
-        >>  ( ( TrPT > %(PT)s * MeV ) & \
+        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
+        ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  FitTrack
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
@@ -96,43 +97,44 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >> ~TC_EMPTY
         """ % props
         hlt1TrackNonMuon_Unit = HltUnit(
-            name+'Unit',
+            'Hlt1'+name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
+            Preambulo = self.hlt1Track_Preambulo( name )+[gec],
             Code = lineCode
             )       
-        return [ Hlt1GECLoose() ,hlt1TrackNonMuon_Unit ]
+        return [ hlt1TrackNonMuon_Unit ]
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
+        gec = Hlt1GECLooseStreamer()
+        props['gec'] = gec.split('=',1)[0]
+
 
         lineCode = """ 
-        VeloCandidates
+        %(gec)s * VeloCandidates
         >>  RecoPV3D
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
-        >>  execute( decodeIT )
         >>  LooseForward
         >>  ( ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  FitTrack
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-        >>  execute( 'MuonRec' )
         >>  IsMuon
         >>  SINK( 'Hlt1%(name)sDecision' )
         >>  ~TC_EMPTY
         """ % props
         hlt1TrackMuon_Unit = HltUnit(
-            name+'Unit',
+            'Hlt1'+name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
+            Preambulo = self.hlt1Track_Preambulo( name ) + [ gec ],
             Code = lineCode
             )    
-        return [ Hlt1GECLoose() ,hlt1TrackMuon_Unit ]
+        return [ hlt1TrackMuon_Unit ]
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line
