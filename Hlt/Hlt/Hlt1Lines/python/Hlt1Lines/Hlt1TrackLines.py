@@ -62,12 +62,13 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1Streamers import ( VeloCandidates,
                                                 LooseForward, TightForward,
-                                                FitTrack, IsMuon )
+                                                FitTrack, MatchVeloMuon, IsMuon )
         from HltTracking.HltPVs import RecoPV3D
         Preambulo = [ VeloCandidates( prefix ),
                       RecoPV3D,
                       TightForward,
                       LooseForward,
+                      MatchVeloMuon,
                       FitTrack ,
                       IsMuon ]
         return Preambulo
