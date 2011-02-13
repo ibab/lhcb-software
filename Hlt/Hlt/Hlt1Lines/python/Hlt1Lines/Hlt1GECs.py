@@ -17,7 +17,13 @@ def Hlt1GEC( reject = True ):
 
     return bindMembers(None, [ DecodeIT, DecodeVELO, rej if reject else acc  ] )
 
-
+def HLT1GECStreamer( reject = True ) :
+    bm = Hlt1GEC(reject)
+    # TODO: automate....
+    d1 = bm.members()[0].getFullName()
+    d2 = bm.members()[1].getFullName()
+    code = bm.members()[2].Code.replace('ACCEPT','LoKi.Status.Accept')
+    return "GEC%s  = ( execute([ '%s', '%s']) & %s ) " % ( { True : 'Reject', False : 'Accept'}[reject] , d1, d2, code )
     
 def Hlt1GECLoose( reject = True ):
     from Configurables import Hlt__GEC
@@ -38,3 +44,10 @@ def Hlt1GECLoose( reject = True ):
     return bindMembers(None, [ DecodeIT, DecodeVELO, rej if reject else acc  ] )
     
 
+def Hlt1GECLooseStreamer( reject = True ) :
+    bm = Hlt1GECLoose(reject)
+    # TODO: automate....
+    d1 = bm.members()[0].getFullName()
+    d2 = bm.members()[1].getFullName()
+    code = bm.members()[2].Code.replace('ACCEPT','LoKi.Status.Accept')
+    return "GEC%sLoose  = ( execute([ '%s', '%s']) & %s ) " % ( { True : 'Reject', False : 'Accept'}[reject] , d1, d2, code )

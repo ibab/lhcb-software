@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-13 - Gerhard Raven
+ - add streamer versions of GEC
+
 ! 2011-02-12 - Gerhard Raven
  - in Hlt1LumiLines, replace HltTrackFilter by Hlt::TrackFilter
 
