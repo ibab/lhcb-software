@@ -151,9 +151,9 @@ namespace LoKi
        __rrshift__ 
        ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
        { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
-       // __rmult__  : gate 
+       // __rmul__  : gate 
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       __rmult__ 
+       __rmul__ 
        ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
        { return LoKi::gate<TYPE> ( gate ) >> fun ; }      
        // ======================================================================

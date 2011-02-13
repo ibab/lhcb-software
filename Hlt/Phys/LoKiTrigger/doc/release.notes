@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-02-13 - Vanya Belyaev
+ - dict/LoKiTriggerDict.h
+   fix wrong name/typo for python's "right-side-multiplication" operator
+
 ! 2011-02-11 - Roel Aaij
  - Fixed the UpgradeTool for the case when the seed was already flagged as
    having been upgraded, but no new track was created and registered in the TES.
