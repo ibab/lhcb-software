@@ -17,21 +17,20 @@ class CharmHadronLines :
         """
 
         lines = [ ### from Hlt2CharmHadD02HHLines
-                  #'Hlt2CharmHadD02KK'
-                  #, 'Hlt2CharmHadD02KPi'
-                  #, 'Hlt2CharmHadD02PiPi'
+                  'Hlt2CharmHadD02KK'
+                  , 'Hlt2CharmHadD02KPi'
+                  , 'Hlt2CharmHadD02PiPi'
                   ## Inclusive lines
                   #, 'Hlt2CharmHad2BodyInc'
                   ## Wide mass lines
-                  #, 'Hlt2CharmHadD02KKWideMass'
-                  #, 'Hlt2CharmHadD02KPiWideMass'
-                  #, 'Hlt2CharmHadD02PiPiWideMass'
+                  , 'Hlt2CharmHadD02KKWideMass'
+                  , 'Hlt2CharmHadD02KPiWideMass'
+                  , 'Hlt2CharmHadD02PiPiWideMass'
 
                   ### from Hlt2CharmHadD2HHHLines
                   #, 'Hlt2CharmHad2BodyForD2HHH'
-                    'Hlt2CharmHadD2HHH'
+                  , 'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
-                    ,'Hlt2CharmHadD2KS0H' 
              ]
         
         return lines
