@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : RichMonitorTemplate
  *
- *  CVS Log :-
- *  $Id: RichMonitorTemplate.cpp,v 1.2 2006-02-16 16:07:48 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -24,9 +21,9 @@ const        IAlgFactory& RichMonitorTemplateFactory = s_factory ;
 // Standard constructor, initializes variables
 RichMonitorTemplate::RichMonitorTemplate( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_ckAngle           ( 0 )
+  : HistoAlgBase        ( name, pSvcLocator ),
+    m_richRecMCTruth    ( NULL ),
+    m_ckAngle           ( NULL )
 {
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
@@ -39,7 +36,7 @@ RichMonitorTemplate::~RichMonitorTemplate() {};
 StatusCode RichMonitorTemplate::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -89,5 +86,5 @@ StatusCode RichMonitorTemplate::execute()
 StatusCode RichMonitorTemplate::finalize()
 {
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }

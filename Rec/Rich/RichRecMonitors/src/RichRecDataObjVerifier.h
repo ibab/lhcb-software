@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::DataObjVerifier
  *
- *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.h,v 1.5 2007-08-13 12:38:49 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

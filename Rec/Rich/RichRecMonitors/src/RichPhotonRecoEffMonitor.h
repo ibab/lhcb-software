@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoEffMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.h,v 1.7 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -50,7 +47,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class PhotonRecoEffMonitor : public RichRecHistoAlgBase
+      class PhotonRecoEffMonitor : public Rich::Rec::HistoAlgBase
       {
 
       public:

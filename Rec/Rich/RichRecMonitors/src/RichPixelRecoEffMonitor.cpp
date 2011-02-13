@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( PixelRecoEffMonitor )
 // Standard constructor, initializes variables
 PixelRecoEffMonitor::PixelRecoEffMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( 0 ),
     m_truth             ( 0 ),
     m_richSys           ( 0 ) { }

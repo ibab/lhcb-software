@@ -37,7 +37,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class TimeMonitor : public RichRecHistoAlgBase
+    class TimeMonitor : public Rich::Rec::HistoAlgBase
     {
 
     public:

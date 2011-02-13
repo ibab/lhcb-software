@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PixelPositionMonitor
  *
- *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.12 2008-02-07 17:58:34 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -67,7 +64,7 @@ namespace Rich
        */
       //-----------------------------------------------------------------------------
 
-      class PixelPositionMonitor : public RichRecHistoAlgBase
+      class PixelPositionMonitor : public Rich::Rec::HistoAlgBase
       {
 
       public:

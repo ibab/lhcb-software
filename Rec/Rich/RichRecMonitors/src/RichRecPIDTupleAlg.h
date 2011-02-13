@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PIDTupleAlg
  *
- *  CVS Log :-
- *  $Id: RichRecPIDTupleAlg.h,v 1.1 2007-08-09 16:17:58 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

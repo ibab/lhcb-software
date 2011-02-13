@@ -63,7 +63,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class TrackGeomMoni : public RichRecHistoAlgBase
+      class TrackGeomMoni : public Rich::Rec::HistoAlgBase
       {
 
       public:

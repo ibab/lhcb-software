@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( TrackRayTraceTest )
 // Standard constructor, initializes variables
 TrackRayTraceTest::TrackRayTraceTest( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
     m_rayTrace          ( NULL ),
     m_idTool            ( NULL )
 {
@@ -39,7 +39,7 @@ TrackRayTraceTest::~TrackRayTraceTest() {}
 StatusCode TrackRayTraceTest::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

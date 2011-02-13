@@ -27,9 +27,9 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoTestAlg )
 // Standard constructor, initializes variables
 PhotonRecoTestAlg::PhotonRecoTestAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase   ( name, pSvcLocator ),
-    m_photonReco          ( NULL ),
-    m_photonRecoName      ( "RichDetPhotonReco" )
+  : HistoAlgBase      ( name, pSvcLocator ),
+    m_photonReco      ( NULL ),
+    m_photonRecoName  ( "RichDetPhotonReco" )
 {
   declareProperty( "PhotonRecoTool", m_photonRecoName );
   m_radiators.assign(NULL);
@@ -42,7 +42,7 @@ PhotonRecoTestAlg::~PhotonRecoTestAlg() { }
 StatusCode PhotonRecoTestAlg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get the radiators

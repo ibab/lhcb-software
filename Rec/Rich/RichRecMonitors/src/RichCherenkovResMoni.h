@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovResMoni
  *
- *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.9 2010-02-11 19:57:25 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -51,7 +48,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class CherenkovResMoni : public RichRecHistoAlgBase
+      class CherenkovResMoni : public Rich::Rec::HistoAlgBase
       {
 
       public:

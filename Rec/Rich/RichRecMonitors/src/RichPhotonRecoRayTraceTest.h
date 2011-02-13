@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.h,v 1.4 2009-06-10 13:23:57 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
  */

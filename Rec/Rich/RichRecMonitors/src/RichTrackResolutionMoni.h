@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::TrackResolutionMoni
  *
- *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.h,v 1.9 2007-06-01 09:03:05 cattanem Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -55,7 +52,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class TrackResolutionMoni : public RichRecTupleAlgBase
+      class TrackResolutionMoni : public Rich::Rec::TupleAlgBase
       {
 
       public:

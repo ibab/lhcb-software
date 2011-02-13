@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : RichMonitorTemplate
  *
- *  CVS Log :-
- *  $Id: RichMonitorTemplate.h,v 1.1 2005-11-07 09:37:20 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -42,7 +39,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichMonitorTemplate : public RichRecHistoAlgBase 
+class RichMonitorTemplate : public Rich::Rec::HistoAlgBase 
 {
 
 public:

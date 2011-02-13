@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PhotonSignalMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.10 2008-11-30 10:48:12 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

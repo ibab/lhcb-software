@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
- *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.14 2009-06-10 13:23:57 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -60,7 +57,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class CherenkovAngleMonitor : public RichRecTupleAlgBase
+      class CherenkovAngleMonitor : public Rich::Rec::TupleAlgBase
       {
 
       public:

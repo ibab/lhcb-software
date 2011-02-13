@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PhotonTrajectoryMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonTrajectoryMonitor.h,v 1.1 2008-11-26 13:42:38 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -48,7 +45,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class PhotonTrajectoryMonitor : public RichRecTupleAlgBase
+      class PhotonTrajectoryMonitor : public Rich::Rec::TupleAlgBase
       {
 
       public:

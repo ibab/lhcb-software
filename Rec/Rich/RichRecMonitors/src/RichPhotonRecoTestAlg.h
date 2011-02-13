@@ -42,7 +42,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class PhotonRecoTestAlg : public RichRecHistoAlgBase
+    class PhotonRecoTestAlg : public Rich::Rec::HistoAlgBase
     {
 
     public:

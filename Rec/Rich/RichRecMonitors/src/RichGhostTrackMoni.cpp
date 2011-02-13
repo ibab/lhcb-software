@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( GhostTrackMoni )
 // Standard constructor, initializes variables
 GhostTrackMoni::GhostTrackMoni( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : RichRecTupleAlgBase ( name, pSvcLocator ),
+  : TupleAlgBase        ( name, pSvcLocator ),
     m_trSelector        ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_tkSignal          ( NULL ),
@@ -40,7 +40,7 @@ GhostTrackMoni::~GhostTrackMoni() {}
 StatusCode GhostTrackMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecTupleAlgBase::initialize();
+  const StatusCode sc = TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // tools
@@ -150,5 +150,5 @@ StatusCode GhostTrackMoni::execute()
 StatusCode GhostTrackMoni::finalize()
 {
   // Execute base class method
-  return RichRecTupleAlgBase::finalize();
+  return TupleAlgBase::finalize();
 }

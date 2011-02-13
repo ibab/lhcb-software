@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::rec::MC::PhotonGeomMonitor
  *
- *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.h,v 1.8 2008-01-25 13:27:00 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -47,7 +44,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------
 
-      class PhotonGeomMonitor : public RichRecHistoAlgBase
+      class PhotonGeomMonitor : public Rich::Rec::HistoAlgBase
       {
 
       public:
