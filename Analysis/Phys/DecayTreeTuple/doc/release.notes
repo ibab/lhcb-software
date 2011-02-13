@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2011-02-13 - Chris Jones
+ - Add missing use statement in requirements file for HltEvent
+
 ! 2011-02-11 - Albert Bursche
  - New tool TypleToolWZJets that adds jets to particles and writes
    jets infos in the tuple (and jets to TES)
