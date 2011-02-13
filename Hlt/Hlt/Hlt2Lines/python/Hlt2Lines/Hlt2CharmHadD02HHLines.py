@@ -256,8 +256,8 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
 
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
         if self.getProp('GEC_Filter_NTRACK') : # {

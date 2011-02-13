@@ -11,6 +11,7 @@
 
 ! 2011-02-13 - Gerhard Raven
  - fix some spurious imports in commit of Hlt2D2KS0H
+ - do not use unfitted tracks in Hlt2CharmHadD02HHLines 'GEC' 
 
 ! 2011-02-11 - Sam Gregson
  - Hlt2D2KS0H: added new line (for Charm Working Group)
