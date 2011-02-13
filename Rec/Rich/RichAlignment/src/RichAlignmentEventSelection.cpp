@@ -19,7 +19,7 @@ DECLARE_ALGORITHM_FACTORY( EventSelection )
 //=============================================================================
 EventSelection::EventSelection( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : RichRecTupleAlgBase ( name , pSvcLocator ),
+  : TupleAlgBase        ( name , pSvcLocator ),
     m_rich              ( Rich::InvalidDetector ),
     m_pType             ( Rich::Unknown ),
     m_pTypes            ( 7, 0 ),
