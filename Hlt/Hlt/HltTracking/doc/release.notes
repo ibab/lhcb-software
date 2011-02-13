@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-13 - Gerhard Raven
+ - in streamer definition of forward, velo-muon match, include the required
+   decoding
+
 ! 2011-02-12 - Gerhard Raven
  - replace HltVertexFilter by HltCopySelection<LHCb::RecVertex>
 

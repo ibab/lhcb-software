@@ -47,8 +47,8 @@ ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1250 )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 6000, 600 )
 
 ## Strings for users
-TightForward  = "TightForward  = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  )"
-LooseForward  = "LooseForward  = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  )"
+TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
+LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"
 
 # =============================================================================
 ## Hlt trackfit upgrade configuration
@@ -64,13 +64,13 @@ FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerCon
 from HltTracking.Hlt1TrackUpgradeConf import ConfiguredMatchVeloMuon
 ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 )
 ## Strings for users
-MatchVeloMuon = "MatchVeloMuon = TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon )"
+MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon ) )"
 
 # =============================================================================
 ## IsMuon
 # =============================================================================
 ## Strings for users
-IsMuon = "IsMuon = TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon )"
+IsMuon = "IsMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon ) )"
 
 # ==============================================================================
 # Velo candidates
