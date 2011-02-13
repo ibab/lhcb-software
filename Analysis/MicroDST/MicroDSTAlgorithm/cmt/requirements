@@ -18,6 +18,7 @@ use PhysEvent          v*  Event
 use LinkerEvent        v*  Event
 use RecEvent           v*  Event
 use DAQEvent           v*  Event
+use HltEvent           v*  Event
 
 use MicroDSTInterfaces v*  MicroDST
 use MicroDSTTools      v*  MicroDST
