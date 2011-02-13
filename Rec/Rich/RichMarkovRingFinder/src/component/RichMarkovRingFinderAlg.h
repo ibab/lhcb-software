@@ -4,9 +4,6 @@
  *
  *  Header file for Markov Ring finder algorithms
  *
- *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.44 2009-05-22 15:35:45 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
  */
@@ -66,7 +63,7 @@ namespace Rich
       //-----------------------------------------------------------------------
 
       template < class SAMPLER >
-      class AlgBase : public RichRecHistoAlgBase,
+      class AlgBase : public Rich::Rec::HistoAlgBase,
                       virtual public Lester::IMessageHandler
       {
 

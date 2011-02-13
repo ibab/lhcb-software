@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
- *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.77 2009-07-30 11:10:05 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
  */
@@ -33,7 +30,7 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
                            const Rich::DetectorType rich,
                            const Rich::Side         panel,
                            const Rich::RadiatorType rad )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
     m_smartIDTool       ( NULL  ),
     m_rich              ( rich  ),
     m_panel             ( panel ),
@@ -102,7 +99,7 @@ AlgBase<SAMPLER>::~AlgBase() { }
 template < class SAMPLER >
 StatusCode AlgBase<SAMPLER>::initialize()
 {
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools
@@ -149,7 +146,7 @@ StatusCode AlgBase<SAMPLER>::finalize()
   // No longer want messages
   Lester::messHandle().declare(NULL);
   // return
-  return RichRecHistoAlgBase::finalize();
+  return Rich::Rec::HistoAlgBase::finalize();
 }
 
 //=============================================================================
