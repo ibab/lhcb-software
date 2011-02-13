@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-13 - Chris Jones
- - Add missing us statement in requirements file for HltEvent
+ - Add missing use statement in requirements file for HltEvent
 
 !======================== HltMonitors v1r1p1 2010-10-28 ======================
 ! 2010-10-15 - Roel Aaij
