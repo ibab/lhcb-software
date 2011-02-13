@@ -28,35 +28,36 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {       'AllL0_PT'      : 1800.
-                    ,   'AllL0_P'       : 10000.
-                    ,   'AllL0_IP'      : 0.100
-                    ,   'AllL0_IPChi2'  : 16
-                    ,   'AllL0_TrChi2'  : 3
-                    ,   'Muon_PT'       : 800.
-                    ,   'Muon_P'        : 8000.
-                    ,   'Muon_IP'       : 0.100
-                    ,   'Muon_IPChi2'   : 9
-                    ,   'Muon_TrChi2'   : 5
-                    ,   'Photon_PT'     : 800.
-                    ,   'Photon_P'      : 8000.
-                    ,   'Photon_IP'     : 0.100
-                    ,   'Photon_IPChi2' : 25
-                    ,   'Photon_TrChi2' : 5
-                    ,   'TrNTHits'      : 15
-                    ,   'Velo_NHits'    : 9 # Minimum number of hits on a Velo track - 1
-                    ,   'Velo_Qcut'     : 3 # This - 1 is the maximum allowed difference between
-                                            # the number of hits on a velo track and the 
-                                            # expected number of hits from the track's angle
-                                            # and first measured point on the track        
+    __slots__ = {       'AllL0_PT'          : 1800.
+                    ,   'AllL0_P'           : 10000.
+                    ,   'AllL0_IP'          : 0.100
+                    ,   'AllL0_IPChi2'      : 16
+                    ,   'AllL0_TrChi2'      : 3
+                    ,   'AllL0_TrNTHits'    : 16
+                    ,   'AllL0_Velo_NHits'  : 9
+                    ,   'AllL0_Velo_Qcut'   : 3
+                    ,   'Muon_PT'           : 800.
+                    ,   'Muon_P'            : 8000.
+                    ,   'Muon_IP'           : 0.100
+                    ,   'Muon_IPChi2'       : 9
+                    ,   'Muon_TrChi2'       : 3
+                    ,   'Muon_TrNTHits'     : 0 #OFF
+                    ,   'Muon_Velo_NHits'   : 0 #OFF
+                    ,   'Muon_Velo_Qcut'    : 999 #OFF
+                    ,   'Photon_PT'         : 1200.
+                    ,   'Photon_P'          : 10000.
+                    ,   'Photon_IP'         : 0.100
+                    ,   'Photon_IPChi2'     : 16
+                    ,   'Photon_TrChi2'     : 3
+                    ,   'Photon_TrNTHits'   : 15
+                    ,   'Photon_Velo_NHits' : 9 
+                    ,   'Photon_Velo_Qcut'  : 4 
                 }
 
     def localise_props( self, prefix ):
         ps = self.getProps()
-        gp = set( ( "Velo_NHits", "Velo_Qcut", "TrNTHits" ) )
-        lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2" ) )
-        return dict( [ ( key, ps[ key ] ) for key in gp ] + \
-                     [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
+        lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", "Velo_NHits", "Velo_Qcut", "TrNTHits" ) )
+        return dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1Streamers import ( VeloCandidates,
@@ -114,11 +115,14 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
         lineCode = """ 
         %(gec)s * VeloCandidates
+        >>  execute( 'MuonRec' )
+        >>  MatchVeloMuon
         >>  RecoPV3D
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
         >>  LooseForward
+        >>  (TrTNORMIDC > %(TrNTHits)s )
         >>  ( ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  FitTrack
@@ -138,7 +142,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line
-
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
