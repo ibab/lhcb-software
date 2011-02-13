@@ -28,9 +28,9 @@ DECLARE_ALGORITHM_FACTORY( HPDHitsMoni )
 // Standard constructor, initializes variables
 HPDHitsMoni::HPDHitsMoni( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_decoder           ( NULL ),
-    m_richSys           ( NULL ) { }
+  : HistoAlgBase ( name, pSvcLocator ),
+    m_decoder    ( NULL ),
+    m_richSys    ( NULL ) { }
 
 // Destructor
 HPDHitsMoni::~HPDHitsMoni() { }
@@ -39,7 +39,7 @@ HPDHitsMoni::~HPDHitsMoni() { }
 StatusCode HPDHitsMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

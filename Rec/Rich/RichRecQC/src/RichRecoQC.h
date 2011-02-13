@@ -56,7 +56,7 @@ namespace Rich
        */
       //---------------------------------------------------------------------------------
 
-      class RecoQC : public RichRecHistoAlgBase
+      class RecoQC : public Rich::Rec::HistoAlgBase
       {
 
       public:

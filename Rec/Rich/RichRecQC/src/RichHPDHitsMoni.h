@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::HPDHitsMoni
  *
- *  CVS Log :-
- *  $Id: RichHPDHitsMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

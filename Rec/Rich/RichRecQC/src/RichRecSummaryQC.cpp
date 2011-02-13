@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( SummaryQC )
 // Standard constructor, initializes variables
 SummaryQC::SummaryQC( const std::string& name,
                       ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
     m_nEvts             ( 0 ),
@@ -48,7 +48,7 @@ SummaryQC::~SummaryQC() {}
 StatusCode SummaryQC::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -223,5 +223,5 @@ StatusCode SummaryQC::finalize()
   }
 
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }
