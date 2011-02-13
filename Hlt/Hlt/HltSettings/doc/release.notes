@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-13 - V. Gligorov
+ - Activate the 2 body charm lines, and reoptimize the 1Track cuts
+   in Physics_draft2011 "by hand" to give more realistic retentions for
+   2011 running.  
+
 ! 2011-02-11 - Johannes Albrecht
  - add D02mm line
 
