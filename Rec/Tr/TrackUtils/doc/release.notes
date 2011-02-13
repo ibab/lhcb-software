@@ -4,11 +4,14 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
-!========================= TrackUtils v1r40 2011-02-02 =========================
+! 2011-02-13 - Chris Jones
+ - Add missing use statement in requirements file for HltEvent
+
+!========================= TrackUtils v1r40 2011-02-02 =======================
 ! 2010-10-27 - Stephanie Hansmann-Menzemer
   Make TrackAddLikelkhood and TrackFromDST algorithm aware of new track histories
 
-!========================= TrackUtils v1r39p1 2010-10-28 =========================
+!========================= TrackUtils v1r39p1 2010-10-28 =====================
 ! 2010-10-20 - Gerhard Raven
  - replace include of ANNSvc with IANNSvc
 
