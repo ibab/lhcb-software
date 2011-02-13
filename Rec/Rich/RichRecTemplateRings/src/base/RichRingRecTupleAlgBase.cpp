@@ -20,7 +20,7 @@ using namespace Rich::Rec::TemplateRings;
 //=============================================================================
 RichRingRecTupleAlgBase::RichRingRecTupleAlgBase( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : RichRecTupleAlgBase ( name , pSvcLocator ),
+  : Rich::Rec::TupleAlgBase ( name , pSvcLocator ),
     m_ringtool(NULL)
 {
 
@@ -35,7 +35,7 @@ RichRingRecTupleAlgBase::~RichRingRecTupleAlgBase() {}
 //=============================================================================
 StatusCode RichRingRecTupleAlgBase::initialize() 
 {
-  const StatusCode sc = RichRecTupleAlgBase::initialize(); // must be executed first
+  const StatusCode sc = TupleAlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize  RichRingRecTupleAlgBase " << endmsg;
@@ -62,7 +62,7 @@ StatusCode RichRingRecTupleAlgBase::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return RichRecTupleAlgBase::finalize();   // must be called after all other actions
+  return TupleAlgBase::finalize();   // must be called after all other actions
 }
 
 //=============================================================================

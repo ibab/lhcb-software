@@ -22,7 +22,7 @@ using namespace Rich::Rec::TemplateRings;
 RichRingRecToolBase::RichRingRecToolBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : RichRecHistoToolBase ( type, name , parent )
+  : Rich::Rec::HistoToolBase ( type, name , parent )
 {
   declareInterface<IRichRingRecToolBase>(this);
 }
@@ -32,7 +32,7 @@ RichRingRecToolBase::RichRingRecToolBase( const std::string& type,
 //=============================================================================
 StatusCode RichRingRecToolBase::initialize() {
 
-  const StatusCode sc = RichRecHistoToolBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoToolBase::initialize();
 
 
   m_RichRingRecConstants = tool<IRichRingRecConstants>("Rich::Rec::TemplateRings::RichRingRecConstants");
@@ -68,7 +68,7 @@ StatusCode RichRingRecToolBase::initialize() {
 //=============================================================================
 StatusCode RichRingRecToolBase::finalize() 
 {
-  return RichRecHistoToolBase::finalize();  
+  return Rich::Rec::HistoToolBase::finalize();  
 }
 //=============================================================================
 // tools access 

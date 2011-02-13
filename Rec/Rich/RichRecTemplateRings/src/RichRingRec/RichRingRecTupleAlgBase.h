@@ -25,7 +25,7 @@ namespace Rich
        *  @author Sajan EASO
        *  @date   2007-06-29
        */
-      class RichRingRecTupleAlgBase : public RichRecTupleAlgBase {
+      class RichRingRecTupleAlgBase : public Rich::Rec::TupleAlgBase {
       public:
         /// Standard constructor
         RichRingRecTupleAlgBase( const std::string& name, ISvcLocator* pSvcLocator );

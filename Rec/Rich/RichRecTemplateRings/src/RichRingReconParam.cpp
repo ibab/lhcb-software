@@ -59,7 +59,7 @@ RichRingReconParam::RichRingReconParam( const std::string& type,
 }
 StatusCode RichRingReconParam::initialize() {
 
-  const StatusCode sc = RichRecHistoToolBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoToolBase::initialize();
   
   return sc;
   

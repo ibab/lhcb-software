@@ -21,7 +21,7 @@ namespace Rich
        *  @author Sajan EASO
        *  @date   2007-05-17
        */
-      class RichRingRecToolBase : public RichRecHistoToolBase,
+      class RichRingRecToolBase : public Rich::Rec::HistoToolBase,
                                   virtual public IRichRingRecToolBase{
       public:
         /// Standard constructor
