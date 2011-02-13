@@ -27,6 +27,8 @@
   
   <class name = "LoKi::Interface<LoKi::AlgoMC>"    />
   
+  <class name = "LoKi::Dicts::MCTupleArray" />
+  
   <exclusion>
     
     <class name="LoKi::AlgoMC">

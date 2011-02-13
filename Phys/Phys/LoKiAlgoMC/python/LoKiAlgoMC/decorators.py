@@ -16,6 +16,7 @@ import LoKiCore.decorators   as _LoKiCore
 import LoKiPhysMC.decorators as _LoKiPhysMC
 from   LoKiAlgoMC.functions  import *
 import LoKiAlgo.decorators   as _LoKiAlgo
+import LoKiAlgoMC.fArrayMCP
 
 LoKi = _LoKiCore.LoKi
 LHCb = _LoKiCore.LHCb
