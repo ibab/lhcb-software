@@ -3,7 +3,7 @@
 /** @file RichRecHistoAlgBase.cpp
  *
  *  Implementation file for RICH reconstruction monitor
- *  algorithm base class : RichRecHistoAlgBase
+ *  algorithm base class : Rich::Rec::HistoAlgBase
  *
  *  CVS Log :-
  *  $Id: RichRecHistoAlgBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
