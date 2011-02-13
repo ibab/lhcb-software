@@ -1,9 +1,4 @@
-# Import some useful modules
-from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 ## Create a python class that inherits from HltLinesConfigurableUser
 class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
@@ -67,7 +62,6 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers           
         from Configurables import FilterDesktop, CombineParticles      
         from HltTracking.HltPVs import PV3D
-        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
         incuts = "CHILDCUT((PIDK < %(KS0DaugPIDK)s),1) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),2) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (ADMASS('KS0') < %(KS0MassWindow)s*MeV) & (PT > %(KS0PT)s*MeV) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)"   % self.getProps()
 
