@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-13 - V. Gligorov
+ - Allow different 1Track lines to use different VELO
+   track quality cuts.
+
 ! 2011-02-13 - Gerhard Raven
  - add streamer versions of GEC
  - use streamer versions of GEC in Hlt1Track
