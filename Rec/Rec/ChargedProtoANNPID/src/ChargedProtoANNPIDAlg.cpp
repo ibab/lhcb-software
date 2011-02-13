@@ -17,16 +17,16 @@
 using namespace ANNGlobalPID;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : ChargedProtoANNPIDBase ( name , pSvcLocator ),
-    m_trSel                ( NULL               ),
-    m_netHelper            ( NULL               )
+  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
+    m_trSel                   ( NULL               ),
+    m_netHelper               ( NULL               )
 {
   // JOs
   declareProperty( "Configuration",     m_configFile );
@@ -48,7 +48,7 @@ ChargedProtoANNPIDAlg::~ChargedProtoANNPIDAlg() { }
 //=============================================================================
 StatusCode ChargedProtoANNPIDAlg::initialize()
 {
-  StatusCode sc = ChargedProtoANNPIDBase::initialize();
+  StatusCode sc = ChargedProtoANNPIDAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
 #ifdef __GNUC__
@@ -281,7 +281,7 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
 {
   // Fill the array of network inputs
   unsigned int input = 0;
-  for ( ChargedProtoANNPIDBase::IntInputs::const_iterator iIn = m_inputs.begin();
+  for ( ChargedProtoANNPIDAlgBase::IntInputs::const_iterator iIn = m_inputs.begin();
         iIn != m_inputs.end(); ++iIn, ++input )
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
@@ -307,7 +307,7 @@ StatusCode ChargedProtoANNPIDAlg::finalize()
   delete m_netHelper;
   m_netHelper = NULL;
   // return
-  return ChargedProtoANNPIDBase::finalize();
+  return ChargedProtoANNPIDAlgBase::finalize();
 }
 
 //=============================================================================

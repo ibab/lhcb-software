@@ -16,6 +16,7 @@ branches          cmt doc src python
 use  GaudiAlg                  v*
 use  RecEvent                  v*   Event
 use  ChargedProtoANNPIDParam   v* 
+use  RecInterfaces             v*   Rec
 # NB is currently only supported on linux GCC (WIN32 libs in preparation)
 macro use_NB_expert "neurobayes_expert v* LCG_Interfaces" WIN32 ""
 use $(use_NB_expert)

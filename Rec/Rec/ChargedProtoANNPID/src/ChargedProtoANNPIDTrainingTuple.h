@@ -1,6 +1,6 @@
 
 //-----------------------------------------------------------------------------
-/** @file ChargedProtoANNPIDBase.h
+/** @file ChargedProtoANNPIDTrainingTuple.h
  *
  * Header file for algorithm ChargedProtoANNPIDTrainingTuple
  *
@@ -12,21 +12,14 @@
 #ifndef ChargedProtoANNPID_ChargedProtoANNPIDTrainingTuple_H
 #define ChargedProtoANNPID_ChargedProtoANNPIDTrainingTuple_H 1
 
-// STL
-#include <sstream>
-
 // local
-#include "ChargedProtoANNPIDBase.h"
-
-// Tool interfaces
-#include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "ChargedProtoANNPIDAlgBase.h"
 
 // Event Model
 #include "Event/ProtoParticle.h"
-#include "Event/MCParticle.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
+// Interfaces
+#include "RecInterfaces/IChargedProtoANNPIDTupleTool.h"
 
 namespace ANNGlobalPID
 {
@@ -41,13 +34,14 @@ namespace ANNGlobalPID
    */
   //-----------------------------------------------------------------------------
 
-  class ChargedProtoANNPIDTrainingTuple : public ChargedProtoANNPIDBase
+  class ChargedProtoANNPIDTrainingTuple : public ChargedProtoANNPIDAlgBase
   {
 
   public:
 
     /// Standard constructor
-    ChargedProtoANNPIDTrainingTuple( const std::string& name, ISvcLocator* pSvcLocator );
+    ChargedProtoANNPIDTrainingTuple( const std::string& name, 
+                                     ISvcLocator* pSvcLocator );
 
     virtual ~ChargedProtoANNPIDTrainingTuple( ); ///< Destructor
 
@@ -56,11 +50,8 @@ namespace ANNGlobalPID
 
   private:
 
-    StringInputs m_variablesS;  ///< ProtoParticle variables as strings to add to the ntuple
-    IntInputs    m_variablesI;  ///< ProtoParticle variables as ints to add to the ntuple
-
-    /// Use RICH tool to get MCParticle associations for Tracks (To avoid Linker details)
-    const Rich::Rec::MC::IMCTruthTool * m_truth;
+    /// Pointer to the tuple tool
+    const IChargedProtoANNPIDTupleTool * m_tuple;
 
   };
 

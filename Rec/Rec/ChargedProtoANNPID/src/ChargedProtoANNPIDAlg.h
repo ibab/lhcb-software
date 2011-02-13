@@ -2,7 +2,7 @@
 //-------------------------------------------------------------------------------
 /** @file ChargedProtoANNPIDAlg.h
  *
- *  Declaration file for ANN Combined PID algorithm ChargedProtoANNPIDAlg
+ *  Declaration file for ANN Combined PID algorithm ANNGlobalPID::ChargedProtoANNPIDAlg
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/09/2010
@@ -21,7 +21,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // local
-#include "ChargedProtoANNPIDBase.h"
+#include "ChargedProtoANNPIDAlgBase.h"
 
 // Event Model
 #include "Event/ProtoParticle.h"
@@ -53,7 +53,7 @@ namespace ANNGlobalPID
    */
   //-----------------------------------------------------------------------------
 
-  class ChargedProtoANNPIDAlg : public ChargedProtoANNPIDBase
+  class ChargedProtoANNPIDAlg : public ChargedProtoANNPIDAlgBase
   {
 
   public:
@@ -86,8 +86,8 @@ namespace ANNGlobalPID
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      ANNHelper( const ChargedProtoANNPIDBase::IntInputs& inputs,
-                 const ChargedProtoANNPIDBase *           parent )
+      ANNHelper( const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
+                 const ChargedProtoANNPIDAlgBase *           parent )
         : m_inputs ( inputs ),
           m_parent ( parent ) { }
       /// Destructor
@@ -98,8 +98,8 @@ namespace ANNGlobalPID
       /// Number of inputs to the ANN
       inline unsigned int nInputs() const { return m_inputs.size(); }
     protected:
-      ChargedProtoANNPIDBase::IntInputs m_inputs; ///< The list of inputs for this network
-      const ChargedProtoANNPIDBase    * m_parent; ///< Pointer to parent algorithm
+      ChargedProtoANNPIDAlgBase::IntInputs m_inputs; ///< The list of inputs for this network
+      const ChargedProtoANNPIDAlgBase *    m_parent; ///< Pointer to parent algorithm
     };
 
 #ifdef __GNUC__
@@ -122,8 +122,8 @@ namespace ANNGlobalPID
        *  @param parent Point to parent algorithm
        */
       NeuroBayesANN( const std::string &              paramFileName,
-                     const ChargedProtoANNPIDBase::IntInputs inputs,
-                     const ChargedProtoANNPIDBase *          parent )
+                     const ChargedProtoANNPIDAlgBase::IntInputs inputs,
+                     const ChargedProtoANNPIDAlgBase *          parent )
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str()) ),
           m_inArray ( new float[inputs.size()]          )

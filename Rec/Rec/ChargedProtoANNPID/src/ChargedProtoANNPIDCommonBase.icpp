@@ -1,33 +1,15 @@
 
-//-----------------------------------------------------------------------------
-/** @file ChargedProtoANNPIDBase.cpp
- *
- * Implementation file for algorithm ChargedProtoANNPIDBase
- *
- * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 2010-03-09
- */
-//-----------------------------------------------------------------------------
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
-#include "ChargedProtoANNPIDBase.h"
-
-//-----------------------------------------------------------------------------
-
-using namespace ANNGlobalPID;
+#include "ChargedProtoANNPIDCommonBase.h"
 
 //=============================================================================
-// Standard constructor, initializes variables
+// Constructor initialisation
 //=============================================================================
-ChargedProtoANNPIDBase::ChargedProtoANNPIDBase( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
-  : GaudiTupleAlg ( name , pSvcLocator )
+template <class PBASE>
+void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
 {
   // context specific locations
-  if ( context() == "HLT" || context() == "Hlt" )
+  if ( this->context() == "HLT" || this->context() == "Hlt" )
   {
     m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
   }
@@ -36,17 +18,51 @@ ChargedProtoANNPIDBase::ChargedProtoANNPIDBase( const std::string& name,
     m_protoPath = LHCb::ProtoParticleLocation::Charged;
   }
   // Job Options
-  declareProperty( "ProtoParticleLocation", m_protoPath );
+  this->declareProperty( "ProtoParticleLocation", m_protoPath );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ChargedProtoANNPIDBase::~ChargedProtoANNPIDBase() { }
+template <class PBASE>
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::~ChargedProtoANNPIDCommonBase() {}
 
 //=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() )
+  { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
 
-int ChargedProtoANNPIDBase::variableID( const std::string & name ) const
+  // Printout from initialize
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Initialize" << endmsg;
+
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
+{
+  // Printout from finalization
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Finalize" << endmsg;
+
+  // Finalise base class and return
+  return PBASE::finalize();
+}
+//=============================================================================
+
+template <class PBASE>
+int ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
 {
   int id(0);
   // special cases
@@ -71,8 +87,9 @@ int ChargedProtoANNPIDBase::variableID( const std::string & name ) const
 
 //=============================================================================
 
-ChargedProtoANNPIDBase::IntInputs
-ChargedProtoANNPIDBase::variableIDs( const StringInputs & names ) const
+template <class PBASE>
+typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::IntInputs
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableIDs( const StringInputs & names ) const
 {
   IntInputs inputs;
   inputs.reserve(names.size());
@@ -86,8 +103,10 @@ ChargedProtoANNPIDBase::variableIDs( const StringInputs & names ) const
 
 //=============================================================================
 
-double ChargedProtoANNPIDBase::getInput( const LHCb::ProtoParticle * proto,
-                                         const int input ) const
+template <class PBASE>
+double
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoParticle * proto,
+                                                             const int input ) const
 {
   double var(0);
 
@@ -125,7 +144,7 @@ double ChargedProtoANNPIDBase::getInput( const LHCb::ProtoParticle * proto,
   else if ( (int)LHCb::ProtoParticle::LastGlobal+11 == input )
   {
     var = proto->track()->likelihood();
-    if ( var < -120.0 ) var = -999.0; // Strange distribution 
+    if ( var < -120.0 ) var = -999.0; // Strange distribution
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+12 == input )
   {

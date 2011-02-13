@@ -2,9 +2,13 @@
 ! Package     : Rec/ChargedProtoANNPID
 ! Responsible : Chris Jones
 ! Purpose     : 
-!-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------\
 
-!========================= ChargedProtoANNPID v1r2 2011-02-02 =========================
+! 2013-02-13 - Chris Jones
+ - Rework things a bit to provide a common tool and algorithm base class
+ - Add a new tool to make the PID training ntuple.
+
+!===================== ChargedProtoANNPID v1r2 2011-02-02 ====================
 ! 2011-01-28 - Chris Jones
  - Add new track pre-selections
 
