@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2011-02-13 - Chris Jones
+ - Add missing use statement in requirements file for HltEvent
+
 ! ======================= DisplVerticesMC v1r3 2011-01-19 ====================
 
 ! 2011-01-16 - Victor Coco
