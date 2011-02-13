@@ -9,6 +9,7 @@ use RecEvent           v* Event
 use TrackEvent         v* Event
 use MCEvent            v* Event
 use LinkerEvent        v* Event
+use HltEvent           v* Event
 use MuonDet            v* Det
 use AIDA               v* LCG_Interfaces
 

@@ -2,7 +2,10 @@
 ! Package     : Muon/MuonTrackMonitor
 ! Responsible : Giacomo GRAZIANI
 ! Purpose     : High level Muon Monitoring after reconstruction
-!------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
+
+! 2011-02-13 - Chris Jones
+ - Add missing use statement in requirements file for HltEvent
 
 !====================== MuonTrackMonitor v2r1 2010-07-20 ======================
 ! 2010-07-13 - Marco Cattaneo
