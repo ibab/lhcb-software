@@ -54,23 +54,21 @@ class Physics_draft2011( object ):
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1NewMuonLines        import Hlt1NewMuonLinesConf
 
-        thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
-                                            ,   'AllL0_P'       : 13300
-                                            ,   'AllL0_IP'      : 0.110
-                                            ,   'AllL0_IPChi2'  : 34
-                                            ,   'AllL0_TrChi2'  : 3
-                                            ,   'Muon_PT'       : 800 
+        thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
+                                            ,   'AllL0_P'       : 10000
+                                            ,   'AllL0_IP'      : 0.100
+                                            ,   'AllL0_IPChi2'  : 16
+                                            ,   'AllL0_TrChi2'  : 2.5
+                                            ,   'Muon_PT'       : 1000 
                                             ,   'Muon_P'        : 8000 
-                                            ,   'Muon_IP'       : 0.110
-                                            ,   'Muon_IPChi2'   : 25
-                                            ,   'Muon_TrChi2'   : 10                    
-                                            ,   'Photon_PT'     : 800
-                                            ,   'Photon_P'      : 8000
-                                            ,   'Photon_IP'     : 0.110
-                                            ,   'Photon_IPChi2' : 50
-                                            ,   'Photon_TrChi2' : 5
-                                            ,   'Velo_NHits'    : 9 
-                                            ,   'Velo_Qcut'     : 3 
+                                            ,   'Muon_IP'       : 0.100
+                                            ,   'Muon_IPChi2'   : 16
+                                            ,   'Muon_TrChi2'   : 2.5 
+                                            ,   'Photon_PT'     : 1200
+                                            ,   'Photon_P'      : 6000
+                                            ,   'Photon_IP'     : 0.100
+                                            ,   'Photon_IPChi2' : 16
+                                            ,   'Photon_TrChi2' : 2.5
                                                 }
 		     , Hlt1NewMuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
 						,'DiMuonLowMass_VxChi2'     :   25
@@ -133,8 +131,8 @@ class Physics_draft2011( object ):
                   'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton',
-		  'Hlt1DiMuonLowMass',
+		          'Hlt1DiMuonLowMass',
                   'Hlt1DiMuonHighMass',
-		  'Hlt1SingleMuonHighPT',
-		  'Hlt1SingleMuonNoIP' ]
+		          'Hlt1SingleMuonHighPT',
+		          'Hlt1SingleMuonNoIP' ]
         return lines 
