@@ -4,12 +4,15 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
-!========================= HltMonitors v1r1p1 2010-10-28 =========================
+! 2011-02-13 - Chris Jones
+ - Add missing us statement in requirements file for HltEvent
+
+!======================== HltMonitors v1r1p1 2010-10-28 ======================
 ! 2010-10-15 - Roel Aaij
  - Fill rate histograms with correct weight such that the y-axis scale is
    always seconds.
 
-!========================== HltMonitors v1r0  2010-09-30 =======================
+!======================== HltMonitors v1r0  2010-09-30 =======================
 ! 2010-09-30 - Rob Lambert
  - fix warning about converting double to int
 

@@ -19,6 +19,7 @@ use     GaudiAlg     v*
 use     DetDesc      v*      Det
 use     GaudiUtils   v*
 use     AIDA         v*      LCG_Interfaces -no_auto_imports
+use     HltEvent     v*      Event
 
 include_path      none
 #============================================================================
