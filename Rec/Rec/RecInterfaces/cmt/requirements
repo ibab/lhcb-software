@@ -1,0 +1,29 @@
+#============================================================================
+# Created    : 2011-02-04
+# Maintainer : Chris Jones
+#============================================================================
+package           RecInterfaces
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc RecInterfaces dict
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   GaudiPolicy    v*
+use   RecEvent       v*   Event
+use   PhysEvent      v*   Event
+
+# =============== include directories =======================================
+apply_pattern install_more_includes more=RecInterfaces
+
+# =============== LCG Dictionaries ==========================================
+apply_pattern reflex_dictionary                                             \
+              dictionary=RecInterfaces                                      \
+              headerfiles=$(RECINTERFACESROOT)/dict/RecInterfacesDict.h     \
+              selectionfile=$(RECINTERFACESROOT)/dict/RecInterfacesDict.xml \
+              options="-U__MINGW32__"

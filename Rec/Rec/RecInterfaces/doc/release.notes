@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/RecInterfaces
+! Responsible : Chris Jones
+! Purpose     : Reconstruction interfaces
+!-----------------------------------------------------------------------------
+
+! 2011-02-13 - Chris Jones
+ - New package for sub-det non-specific reconstruction interfaces.
+ - Add interface IChargedProtoANNPIDTupleTool
