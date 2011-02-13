@@ -25,6 +25,7 @@ use L0Event         v*  Event
 use LinkerEvent     v*  Event
 use MCEvent         v*  Event
 use RecEvent        v*  Event
+use HltEvent        v*  Event
 use GaudiKernel     v*
 
 # Component library building rule
