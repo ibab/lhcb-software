@@ -81,22 +81,9 @@ from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable , log
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-from Configurables import HltTrackUpgrade   as TrackUpgrade 
-from Configurables import HltTrackMatch     as TrackMatch   
-from Configurables import HltTrackFilter    as TrackFilter 
 from Configurables import Hlt__TrackFilter, Hlt__TrackPipe
-from Configurables import HltVertexMaker1   as VertexMaker1 
-from Configurables import HltVertexMaker2   as VertexMaker2 
-from Configurables import HltVertexFilter   as VertexFilter 
-from Configurables import HltVertexUpgrade  as VertexUpgrade
 from Configurables import HltMoveVerticesForSwimming as MoveVerticesForSwimming  
 from Configurables import HltSelectTracksForSwimming as SelectTracksForSwimming
-from Configurables import HltFilterFittedVertices
-from Configurables import HltFilterFittedTracks
-from Configurables import HltFilterFittedParticles
-from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
-from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
-from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
@@ -329,22 +316,8 @@ def _add_to_hlt2_lines_( line ) :
         
 # =============================================================================
 ## the list of possible Hlt1Members types of an Hlt1Line
-_types_ = { TrackUpgrade  : 'TU'  
-          , TrackMatch    : 'TM'  
-          , TrackFilter   : 'TF'  
-          , VertexMaker1  : 'VM1' 
-          , VertexMaker2  : 'VM2'
-          , VertexFilter  : 'VF'
-          , VertexToTracks: 'VT'
-          , VertexUpgrade : 'VU'
-          , L0CaloCandidates : 'L0Calo'
-          , L0MuonCandidates : 'L0Muon'
-          , AddPhotonToVertex : 'AddPhotonToVertex'
-          , MoveVerticesForSwimming : 'MoveVerticesForSwimming'
+_types_ = { MoveVerticesForSwimming : 'MoveVerticesForSwimming'
           , SelectTracksForSwimming : 'SelectTracksForSwimming'   
-          , HltFilterFittedVertices : 'HltFilterFittedVertices'
-          , HltFilterFittedTracks : 'HltFilterFittedTracks'
-          , HltFilterFittedParticles : 'HltFilterFittedParticles'
           , Hlt__TrackFilter : 'Hlt::TrackFilter'
           , Hlt__TrackPipe : 'Hlt::TrackPipe'
           } 
