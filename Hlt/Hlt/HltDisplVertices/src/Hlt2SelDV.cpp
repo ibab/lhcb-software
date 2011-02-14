@@ -51,8 +51,10 @@ Hlt2SelDV::Hlt2SelDV( const std::string& name,
   declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
   //Unlimited
   declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
-  declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
   declareProperty("PreyMaxSumpt", m_PreyMaxSumPt = 14.*TeV );
+  declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
+  declareProperty("PreyMinAngle", m_PreyMinAngle = 0. );
+  declareProperty("PreyMinFD", m_PreyMinFD = 0. );
 
   declareProperty("MinRecpt", m_MinRecpt = 0*GeV );
   declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
@@ -227,7 +229,7 @@ StatusCode Hlt2SelDV::execute() {
   }
 
   vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets,masses,minvd,rs;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets,masses,minvd,rs,massCorrs,massCorrsIP,thetas;
   int nPV(0);
   int nPVSel(0);
   const RecVertex::Range PVs = this->primaryVertices();
@@ -306,20 +308,82 @@ StatusCode Hlt2SelDV::execute() {
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
     }
-    /*if(mass > m_PreyMaxMass &&  sumpt > m_SumPtMax){
+    double theta = 0.;
+    double mindist = 1000000000.;
+    double minip = 1000000000.;
+    for (std::vector<const RecVertex*>::const_iterator ipv = SelectedPVs.begin(); ipv != SelectedPVs.end(); ipv++){
+      //Check that we are forward
+      if ((p->endVertex()->position().z()-(*ipv)->position().z())<0.)continue;
+      // Get BestIP...
+      Gaudi::XYZPoint vertex = (*ipv)->position();
+      Gaudi::XYZPoint point = pos;
+      Gaudi::XYZVector direction (mom.Px(),mom.Py(),mom.Pz()); 
+      Gaudi::XYZVector d = direction.unit();
+      Gaudi::XYZVector ipV = d.Cross((pos-vertex).Cross(d));
+      double ip = (ipV.z() < 0) ? -ipV.R() : ipV.R();
+      if (ip< minip ){
+	theta = fabs(atan(sqrt(pow(pos.x()-(*ipv)->position().x(),2)+pow(pos.y()-(*ipv)->position().y(),2))/(pos.z()-(*ipv)->position().z())));
+	minip = ip;
+      }
+      if((p->endVertex()->position()-(*ipv)->position()).R()<mindist){
+	mindist=(p->endVertex()->position()-(*ipv)->position()).R();
+      }
+    }
+    if( theta< m_PreyMinAngle || mindist < m_PreyMinFD ){
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Particle do not pass the maximal kinematic cuts"<< endmsg; 
+        debug()<<"Particle do not pass the min angle/ FD cut"<< endmsg; 
       continue; 
-      }*/
+    }
 
     //Save infos in tuple !
     if( m_SaveTuple ){
-         //get distance to closest PV
-      double mindist = 1000000000.;
+      double massCorr = 0.;
+      double theta1 = 0.;
+      double massCorrMinIP = 0.;
+      const double m2 = mom.M2() ;
+      double mindist1 = 1000000000.;
+      double minip1 = 1000000000.;
       for (std::vector<const RecVertex*>::const_iterator ipv = SelectedPVs.begin(); ipv != SelectedPVs.end(); ipv++){
-	if((p->endVertex()->position()-(*ipv)->position()).R()<mindist)mindist=(p->endVertex()->position()-(*ipv)->position()).R();
+	//Check that we are forward
+	if ((p->endVertex()->position().z()-(*ipv)->position().z())<0.)continue;
+	// Get BestIP...
+	  Gaudi::XYZPoint vertex = (*ipv)->position();
+	  Gaudi::XYZPoint point = pos;
+	  Gaudi::XYZVector direction (mom.Px(),mom.Py(),mom.Pz()); 
+	  Gaudi::XYZVector d = direction.unit();
+	  Gaudi::XYZVector ipV = d.Cross((pos-vertex).Cross(d));
+	  double ip = (ipV.z() < 0) ? -ipV.R() : ipV.R();
+	  if (ip< minip1 ){
+	    theta1 = fabs(atan(sqrt(pow(pos.x()-(*ipv)->position().x(),2)+pow(pos.y()-(*ipv)->position().y(),2))/(pos.z()-(*ipv)->position().z())));
+	    minip1 = ip;
+	    const Gaudi::XYZVector dir(pos.x()-(*ipv)->position().x(),pos.y()-(*ipv)->position().y(),pos.z()-(*ipv)->position().z());
+	    const double dmag2 = dir.Mag2() ;
+	    Gaudi::XYZVector momV (mom.Px(),mom.Py(),mom.Pz()); 
+	    if ( 0 == dmag2 ) { massCorrMinIP = momV.R();}
+	    else{
+	      const Gaudi::XYZVector perp = momV - dir * ( momV.Dot( dir ) / dmag2 ) ;
+	      const double pt =  perp.R() ;
+	      massCorrMinIP = std::sqrt ( m2 + pt*pt ) + pt ;
+	    }
+	  }
+
+
+	  if((p->endVertex()->position()-(*ipv)->position()).R()<mindist1){
+	    mindist1=(p->endVertex()->position()-(*ipv)->position()).R();
+	    const Gaudi::XYZVector dir(pos.x()-(*ipv)->position().x(),pos.y()-(*ipv)->position().y(),pos.z()-(*ipv)->position().z());
+	    const double dmag2 = dir.Mag2() ;
+	    Gaudi::XYZVector momV (mom.Px(),mom.Py(),mom.Pz()); 
+	    if ( 0 == dmag2 ) { massCorr = momV.R();}
+	    else{
+	      const Gaudi::XYZVector perp = momV - dir * ( momV.Dot( dir ) / dmag2 ) ;
+	      const double pt =  perp.R() ;
+	      massCorr = std::sqrt ( m2 + pt*pt ) + pt ;}
+	  }
       }
-      minvd.push_back(mindist);
+      minvd.push_back(mindist1);
+      massCorrs.push_back(massCorr);
+      massCorrsIP.push_back(massCorrMinIP);
+      thetas.push_back(theta1);
   
       nboftracks.push_back( nbtrks ); chindof.push_back( chi );masses.push_back( mass );
       e.push_back(mom.e());
@@ -351,8 +415,6 @@ StatusCode Hlt2SelDV::execute() {
     clone.setParticleID( m_PreyID );
     this->markTree( &clone );
     nbCands++;
-    //Cands.push_back( desktop()->keep( clone ) );
-    //Cands.push_back( desktop()->keep( &clone ) );
 
   }//  <--- end of Prey loop
   if( (unsigned int)nbCands < m_NbCands ){
@@ -370,9 +432,6 @@ StatusCode Hlt2SelDV::execute() {
   if( m_SaveTuple ){
     Tuple tuple = nTuple("DisplVertices");
     const int NbPreyMax = 20;
-    //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
-    //if( !fillHeader(tuple) ) return StatusCode::FAILURE;
-    //if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
     tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyPZ", pz.begin(), pz.end(), "NbPrey", NbPreyMax );
@@ -400,6 +459,12 @@ StatusCode Hlt2SelDV::execute() {
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
+    tuple->farray( "MassCorrs", massCorrs.begin(), massCorrs.end(),
+		   "NbPrey", NbPreyMax );
+    tuple->farray( "ThetasMinIP", thetas.begin(), thetas.end(),
+		   "NbPrey", NbPreyMax );
+    tuple->farray( "MassCorrsMinIP", massCorrsIP.begin(), massCorrsIP.end(),
+		   "NbPrey", NbPreyMax );
     tuple->column( "NPVs", nPV );
     tuple->column( "NPVsSel", nPVSel );
     //Save number of Velo tracks...
@@ -408,8 +473,6 @@ StatusCode Hlt2SelDV::execute() {
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
-  //Save Preys from Desktop to the TES.
-  //if( m_SaveonTES ) desktop()->saveDesktop();
 
   return StatusCode::SUCCESS;
 }
