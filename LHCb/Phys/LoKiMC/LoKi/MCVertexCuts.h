@@ -318,6 +318,33 @@ namespace LoKi
      *  @date   2004-03-01 
      */
     typedef LoKi::MCVertices::MCVFunAsMCFun MCVXFUN ;
+    // ========================================================================
+    /** the adaptor for MC vertex function to be interpreted as 
+     *  MC particle function
+     *  it acts using the rule 
+     *  
+     *  @code 
+     *
+     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() ) 
+     *  
+     *  @endcode 
+     * 
+     *  Usage:
+     * 
+     *  @code 
+     *
+     *  const MCParticle* p = ... ;
+     *  // z-coordinate of particle origin:
+     *  MCFun fun = MCVXFUN ( MCVZ ) ;
+     *  const double z = fun ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Adapters::VFuncAsFun
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2004-03-01 
+     */
+    typedef LoKi::MCVertices::MCVPFunAsMCFun                       MCVPXFUN ;
     // ========================================================================    
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVTRUE   ( true  )  ;
     // ========================================================================    
@@ -331,8 +358,16 @@ namespace LoKi
     // ========================================================================    
     const LoKi::Constant<const LHCb::MCVertex*,double> MCVZERO   ( 0.0   )  ;
     // ========================================================================    
-  } // end of namespace LoKi::Cuts 
-} // end of namespace LoKi
+    /** @var MCVKEY 
+     *  get the key for the MC-vertex
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-02-14
+     */
+    const LoKi::MCVertices::Key                                        MCVKEY ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

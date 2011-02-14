@@ -254,8 +254,6 @@ namespace LoKi
       // ======================================================================
       /// conclassor from MC Vertex fuction
       MCVFunAsMCFun ( const LoKi::MCTypes::MCVFunc& func   ) ;
-      /// copy conclassor 
-      MCVFunAsMCFun ( const MCVFunAsMCFun&          right  ) ;
       /// virtual descructor 
       virtual ~MCVFunAsMCFun() ;
       /// clone method (mandatory!)
@@ -267,11 +265,65 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      MCVFunAsMCFun () ;
+      // ======================================================================
+    private:
+      // ======================================================================
       LoKi::MCTypes::MCVFun m_fun ;
       // ======================================================================
     };
     // ========================================================================
-  } //                                        end of namespace LoKi::MCVertices 
+    /** @class Key
+     *  get the key of MC-vertex 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-02-14
+     */
+    class GAUDI_API Key
+      : public LoKi::BasicFunctors<const LHCb::MCVertex*>::Function
+    {
+    public:
+      // ======================================================================
+      /// clone method (mandatory)
+      virtual Key* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class MCVPFunAsMCFun
+     *  simple adapter function which allows to use MC Veretx function as 
+     *  MC particle function
+     *  Adapter makes use of MCParticle::primaryVertex function 
+     *  @see MCParticle
+     *  @see MCVertex 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    class GAUDI_API MCVPFunAsMCFun : public MCVFunAsMCFun 
+    {
+    public:
+      // ======================================================================
+      /// conclassor from MC Vertex fuction
+      MCVPFunAsMCFun ( const LoKi::MCTypes::MCVFunc& func   ) ;
+      /// copy conclassor 
+      MCVPFunAsMCFun ( const MCVFunAsMCFun&          right  ) ;
+      /// virtual descructor 
+      virtual ~MCVPFunAsMCFun() ;
+      /// clone method (mandatory!)
+      virtual  MCVPFunAsMCFun* clone() const ;
+      /// the only one essential method 
+      virtual  result_type    operator() ( argument p ) const ;      
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+      // ======================================================================
+    private:
+      // ======================================================================
+      MCVPFunAsMCFun () ;
+      // ======================================================================
+    };
+  } //                                        end of namespace LoKi::MCVertices
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

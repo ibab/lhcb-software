@@ -277,9 +277,14 @@ MCPRIMARY   = LoKi.MCVertices.Primary        ()
 MCISDECAY   = LoKi.MCVertices.Decay          ()
 ## @see LoKi::Cuts::MCCDIST
 MCVDIST     = LoKi.MCVertices.MCVertexDistance
+
 ## @see LoKi::Cuts::MCVXFUN
 MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
+## @see LoKi::Cuts::MCVPXFUN
+MCVPXFUN    = LoKi.MCVertices.MCVPFunAsMCFun
 
+## @see LoKi::Cuts::MCVKEY
+MCVKEY      = LoKi.MCVertices.Key () 
 
 ## @see LoKi::Cuts::MCDECNODE
 MCDECNODE   = LoKi.MCParticles.DecNode

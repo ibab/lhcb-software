@@ -265,13 +265,6 @@ LoKi::MCVertices::MCVFunAsMCFun::MCVFunAsMCFun
   , m_fun ( fun ) 
 {}
 // ============================================================================
-LoKi::MCVertices::MCVFunAsMCFun::MCVFunAsMCFun
-( const LoKi::MCVertices::MCVFunAsMCFun& right ) 
-  : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ( right )
-  , m_fun ( right.m_fun ) 
-{}
-// ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun::~MCVFunAsMCFun(){}
 // ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun*
@@ -297,6 +290,66 @@ std::ostream& LoKi::MCVertices::MCVFunAsMCFun::fillStream
 ( std::ostream& s ) const
 { return s << "MCVXFUN" ; } 
 // ============================================================================
+
+
+// ============================================================================
+LoKi::MCVertices::Key* 
+LoKi::MCVertices::Key::clone() const 
+{ return new Key(*this) ; }
+// ============================================================================
+LoKi::MCVertices::Key::result_type
+LoKi::MCVertices::Key::operator() 
+  ( LoKi::MCVertices::Key::argument v ) const
+{
+  if ( 0 == v ) 
+  { 
+    Error (  " MCVertex* points to NULL, return -1000 " ) ;
+    return -1000 ;
+  }
+  return v -> key () ;
+}
+// ============================================================================
+std::ostream& LoKi::MCVertices::Key::fillStream
+( std::ostream& s ) const
+{ return s << "MCVKEY" ; } 
+// ============================================================================
+
+
+// ============================================================================
+LoKi::MCVertices::MCVPFunAsMCFun::MCVPFunAsMCFun
+( const LoKi::MCTypes::MCVFunc& fun ) 
+  : LoKi::MCVertices::MCVPFunAsMCFun ( fun ) 
+{}
+// ============================================================================
+LoKi::MCVertices::MCVPFunAsMCFun::~MCVPFunAsMCFun(){}
+// ============================================================================
+LoKi::MCVertices::MCVPFunAsMCFun*
+LoKi::MCVertices::MCVPFunAsMCFun::clone() const 
+{ return new MCVPFunAsMCFun ( *this ) ; }
+// ============================================================================
+LoKi::MCVertices::MCVPFunAsMCFun::result_type 
+LoKi::MCVertices::MCVPFunAsMCFun::operator() 
+  ( LoKi::MCVertices::MCVPFunAsMCFun::argument p ) const 
+{
+  // 
+  if ( 0 == p ) 
+  {
+    Error ( "MCParticle* points to NULL, return -1000000.");
+    return -1000000 ;
+  }
+  //
+  const LHCb::MCVertex* vertex = p->primaryVertex() ;
+  if ( 0 == vertex ) { Warning ( "'primary' MCVertex* points to NULL") ;}
+  //
+  return m_fun( vertex ) ;
+}
+// ============================================================================
+std::ostream& LoKi::MCVertices::MCVFunAsMCFun::fillStream
+( std::ostream& s ) const
+{ return s << "MCVPXFUN" ; } 
+// ============================================================================
+
+
 
 // ============================================================================
 // The END 
