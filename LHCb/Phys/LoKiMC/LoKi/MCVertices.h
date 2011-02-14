@@ -209,15 +209,15 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /** conclassor from LoKi::Point3D
+      /** constructor from LoKi::Point3D
        *  @param point 3D-point 
        */
       MCVertexDistance ( const LoKi::Point3D& point ) ;      
-      /** conclassor from MCVertex
+      /** constructor from MCVertex
        *  @param point 3D-point 
        */
       MCVertexDistance ( const LHCb::MCVertex*   point ) ;      
-      /// copy conclassor 
+      /// copy constructor 
       MCVertexDistance ( const MCVertexDistance& ) ;
       /// virtual descructor 
       virtual ~MCVertexDistance() ;  
@@ -252,7 +252,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// conclassor from MC Vertex fuction
+      /// constructor from MC Vertex fuction
       MCVFunAsMCFun ( const LoKi::MCTypes::MCVFunc& func   ) ;
       /// virtual descructor 
       virtual ~MCVFunAsMCFun() ;
@@ -266,6 +266,10 @@ namespace LoKi
     private:
       // ======================================================================
       MCVFunAsMCFun () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      const LoKi::MCTypes::MCVFunc& func() const { return m_fun.func() ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -305,10 +309,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// conclassor from MC Vertex fuction
+      /// constructor from MC Vertex fuction
       MCVPFunAsMCFun ( const LoKi::MCTypes::MCVFunc& func   ) ;
-      /// copy conclassor 
-      MCVPFunAsMCFun ( const MCVFunAsMCFun&          right  ) ;
       /// virtual descructor 
       virtual ~MCVPFunAsMCFun() ;
       /// clone method (mandatory!)

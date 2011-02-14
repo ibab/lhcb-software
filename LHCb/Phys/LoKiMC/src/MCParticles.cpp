@@ -1135,7 +1135,8 @@ LoKi::MCParticles::MCVertexFunAdapter::operator()
   {
     Error ( " MCParticle* points to NULL, return 'm_err'") ;
     return m_err ;
-  };
+  }
+  //
   return m_fun ( p->originVertex() ) ;
 }
 // ============================================================================

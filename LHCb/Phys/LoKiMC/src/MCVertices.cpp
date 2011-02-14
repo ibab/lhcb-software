@@ -288,7 +288,7 @@ LoKi::MCVertices::MCVFunAsMCFun::operator()
 // ============================================================================
 std::ostream& LoKi::MCVertices::MCVFunAsMCFun::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVXFUN" ; } 
+{ return s << "MCVXFUN(" << m_fun << ")" ; } 
 // ============================================================================
 
 
@@ -318,7 +318,7 @@ std::ostream& LoKi::MCVertices::Key::fillStream
 // ============================================================================
 LoKi::MCVertices::MCVPFunAsMCFun::MCVPFunAsMCFun
 ( const LoKi::MCTypes::MCVFunc& fun ) 
-  : LoKi::MCVertices::MCVPFunAsMCFun ( fun ) 
+  : LoKi::MCVertices::MCVFunAsMCFun ( fun ) 
 {}
 // ============================================================================
 LoKi::MCVertices::MCVPFunAsMCFun::~MCVPFunAsMCFun(){}
@@ -341,12 +341,12 @@ LoKi::MCVertices::MCVPFunAsMCFun::operator()
   const LHCb::MCVertex* vertex = p->primaryVertex() ;
   if ( 0 == vertex ) { Warning ( "'primary' MCVertex* points to NULL") ;}
   //
-  return m_fun( vertex ) ;
+  return func()( vertex ) ;
 }
 // ============================================================================
-std::ostream& LoKi::MCVertices::MCVFunAsMCFun::fillStream
+std::ostream& LoKi::MCVertices::MCVPFunAsMCFun::fillStream
 ( std::ostream& s ) const
-{ return s << "MCVPXFUN" ; } 
+{ return s << "MCVPXFUN("<< func() << ")" ; } 
 // ============================================================================
 
 
