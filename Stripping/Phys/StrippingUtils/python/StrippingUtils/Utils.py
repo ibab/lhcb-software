@@ -98,6 +98,78 @@ class LineBuilder(object) :
     def lines(self) :
         return tuple(self._lines)
 
+class MasterLineBuilder(LineBuilder):
+    """
+    Configure more than one line builder from the same class at once
+    """
+    
+    __slave_builders__ = {}
+    
+    def __init__(self,
+                 name,
+                 config,
+                 SlaveBuilderClass):
+        """
+        config should be a dictionary or a map {SlaveSuffix: config_slave}
+        """
+        self._config = config
+        self._name = name
+        
+        if not issubclass(SlaveBuilderClass, LineBuilder):
+            raise TypeError, "The slave class must inherit from a LineBuilder"
+        
+        self.__configuration_keys__=SlaveBuilderClass.__configuration_keys__
+
+        #check all the configs
+        for slaveLine in config.keys():
+            try:
+                config[slaveLine].keys()
+            except AttributeError:
+                raise KeyError, "config key "+slaveLine+" does not hold a correctly formed config for the slave"
+            
+            checkConfig(self.configKeys(),
+                        config[slaveLine])
+        
+        #then build all slaves
+        for slaveLine in config.keys():
+            self.__slave_builders__[slaveLine]=SlaveBuilderClass(name+slaveLine,config[slaveLine])
+        
+    
+    def lines(self):
+        """
+        Return a tuple of the lines from all slaves
+        """
+        _lines=[]
+        for slave in self.__slave_builders__:
+            _lines+=list(self.__slave_builders__[slave].lines())
+        return tuple(_lines)
+    
+    #add slave helper functions
+    def slaves(self):
+        """
+        Return a tuple of the LineBuilders which are slaves of this builder
+        """
+        _slaves=[]
+        for slave in self.__slave_builders__:
+            _slaves.append(self.__slave_builders__[slave])
+        return tuple(_slaves)
+    
+    def slave(self,name):
+        """
+        Return a reference to the Builder which is a slave to this with Suffix=name
+        """
+        return self.__slave_builders__[name]
+    
+    #remove certain methods which should not be called
+    def registerLine(self, line):
+        raise Exception("Only the LineBuilders should register lines, not the masters ", self.name)
+    
+    def configurationParameter(self, key) :
+        raise Exception("Only the LineBuilders have configuration parameters, not the masters ", self.name)
+
+
+
+
 def getLineBuildersFromModule(confModule) :
     """
     Extract all the line builders from a given module.

@@ -4,6 +4,10 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - Rob Lambert
+ - StrippingUtils.Utils
+	. Add class MasterLineBuilder which configures several slave line builders
+
 ! 2011-02-14 - Juan Palacios
  - StrippingUtils.LineBuilderTests
   . Add test_configuration_not_dictlike_raises, to test that passing an object 
