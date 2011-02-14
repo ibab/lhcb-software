@@ -151,11 +151,11 @@ def fidPrintAlg(name='FidPrint',location='/Event/DAQ/RawEvent',datatype=MDF_NONE
 #------------------------------------------------------------------------------------------------
 def serialWriter(name='DstWriter',location='/Event/GaudiSerialize'):
   svc    = CFG.EventPersistencySvc()
-  ser    = Configs.SerializeCnvSvc('SerializeCnvSvc')
+  ser    = Configs.Gaudi__SerializeCnvSvc('Gaudi::SerializeCnvSvc')
   serial = CFG.OutputStream(name)
   ser.Banks = location
-  svc.CnvServices.append('SerializeCnvSvc/SerializeCnvSvc')
-  serial.Output = "DATAFILE='root.buffers' SVC='SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'"
+  svc.CnvServices.append('Gaudi::SerializeCnvSvc/SerializeCnvSvc')
+  serial.Output = "DATAFILE='root.buffers' SVC='Gaudi::SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'"
   return serial
 
 #------------------------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ def end_config_checkpoint(print_config, checkpoint):
   forker.Checkpoint          = checkpoint
   forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
   forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
-  forker.ExitAfterCheckpoint = True
+  forker.ExitAfterCheckpoint = 2
   ApplicationMgr().ExtSvc.append(forker)
   if CFG.allConfigurables.has_key('MEPManager'):
     mep = CFG.allConfigurables['MEPManager']
