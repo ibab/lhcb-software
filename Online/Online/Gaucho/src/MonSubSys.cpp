@@ -42,6 +42,25 @@ MonSubSys::~MonSubSys()
     MonObj *h = i->second;
     delete h;
   }
+
+
+  if (m_ser == 0) delete m_ser;
+//  if (m_expandnames)
+//  {
+//    if (m_type == MONSUBSYS_Counter)
+//    {
+//      for (SysIter i =m_Objmap.begin();i!=m_Objmap.end();i++)
+//      {
+//        MonCounter *h = (MonCounter*)i->second;
+//        h->create_OutputService(m_expandInfix);
+//      }
+//    }
+//  }
+  if (m_rpc == 0) delete m_rpc;
+  if ( m_genSrv == 0) delete m_genSrv;
+  if (m_EORsvc == 0) delete m_EORsvc;
+
+
   m_Objmap.clear();
   this->unLock();
   MonSys::m_instance().remSubSys(this);
