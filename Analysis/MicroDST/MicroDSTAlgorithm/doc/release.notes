@@ -4,6 +4,10 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2011-02-14 - Juan Palacios
+ - CopyGaudiNumbers
+  . New MicroDSTAlgorithm to clone Gaudi::Numbers objects.
+
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
 
