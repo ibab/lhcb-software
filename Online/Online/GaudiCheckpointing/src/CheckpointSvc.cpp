@@ -59,6 +59,8 @@ namespace LHCb  {
     int                       m_firstChild;
     /// Property: Exit progam after producing the checkpoint file
     int                       m_exit;
+    /// Property: Wait for children with debugger for n seconds
+    int                       m_childWait;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
     /// Property: Set to 1 if the file descriptor table should be dump during child restart
@@ -278,6 +280,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("ExitAfterCheckpoint",m_exit          = 1);
   declareProperty("KillChildren",       m_killChildren  = false);
   declareProperty("FirstChild",         m_firstChild    = 0);
+  declareProperty("ChildWait",          m_childWait     = 0);
 }
 
 /// IInterface implementation : queryInterface
@@ -618,6 +621,14 @@ int CheckpointSvc::forkChild(int which) {
     m_masterProcess = false;    // Flag child locally
     m_numInstances = 0;
     m_useCores = false;
+    if ( m_childWait>0 ) {
+      bool r = true;
+      int cnt = m_childWait;
+      while( r && cnt>0 ) {
+	--cnt;
+	::lib_rtl_sleep(1000);
+      }
+    }
   }
   else if ( pid>0 ) {
     m_masterProcess = true;
