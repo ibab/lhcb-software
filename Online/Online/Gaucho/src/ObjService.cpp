@@ -25,14 +25,14 @@ ObjService::ObjService (ObjSerializer *s,const char *name, char *format, void *b
   //m_EORservice = false;
 }
 
-ObjService::ObjService (const char *name, char *format, void *buff, int siz, void **extbuff, int *extbuffs)
-:DimService(name, format, buff, siz)
-{
-  setup();
-  m_extBuffer = true;
-  m_buffer = extbuff;
-  m_buffersize = extbuffs;
-}
+//ObjService::ObjService (const char *name, char *format, void *buff, int siz, void **extbuff, int *extbuffs)
+//:DimService(name, format, buff, siz)
+//{
+//  setup();
+//  m_extBuffer = true;
+//  m_buffer = extbuff;
+//  m_buffersize = extbuffs;
+//}
 
 ObjService::ObjService (ObjSerializer *s,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbuffs)
 :DimService(name, format, buff, siz)

@@ -25,20 +25,20 @@ AdderSvc.MyName="Adder";
 //AdderSvc.SourceServiceName="Data";
 
 
-AdderSvc::AdderType="subfarm"; //Possible values are "node", "sf" or "subfarm" and "top" or "part"
-AdderSvc::SourceTaskPattern="GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+AdderSvc.AdderType="subfarm"; //Possible values are "node", "sf" or "subfarm" and "top" or "part"
+AdderSvc.SourceTaskPattern="GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
                                          // e.g. "Gauchojob" or "RecBrunel"
-AdderSvc::InDNS"=""; //name of the DNS node from which the adder should retrieve it's services
+AdderSvc.InDNS"=""; //name of the DNS node from which the adder should retrieve it's services
                      // for node adders the default is current nodename -last two digits
                      // e.g. if nodename is hltc0406 InDns will become hltc04
                      // for subfarm adders the default is the current hostname
-AdderSvc::OutDNS"=""; // currently ignored
-AdderSvc::TopLevel"=false;
-AdderSvc::SaveRootDir = "/home/beat/Hist/Savesets";
-AdderSvc::IsSaver" = false;
-AdderSvc::SaveInterval = 900;
-AdderSvc::PartitionName="Beat";
-AdderSvc::SaveSetTaskName="Moore"; // name under which the histograms should be saved (only used when IsSaver is true
-AdderSvc::ExpandRate=false; // should MonRates be expanded into individual services
-AdderSvc::TaskPattern=AdderSvc.TaskPattern="[0-9][0-9]_Adder";
-AdderSvc::ServicePattern="";
+AdderSvc.OutDNS"=""; // currently ignored
+AdderSvc.TopLevel"=false;
+AdderSvc.SaveRootDir = "/home/beat/Hist/Savesets";
+AdderSvc.IsSaver" = false;
+AdderSvc.SaveInterval = 900;
+AdderSvc.PartitionName="Beat";
+AdderSvc.SaveSetTaskName="Moore"; // name under which the histograms should be saved (only used when IsSaver is true
+AdderSvc.ExpandRate=false; // should MonRates be expanded into individual services
+AdderSvc.TaskPattern=AdderSvc.TaskPattern="[0-9][0-9]_Adder";
+AdderSvc.ServicePattern="";

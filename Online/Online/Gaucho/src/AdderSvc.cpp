@@ -147,7 +147,15 @@ StatusCode AdderSvc::start()
       m_TaskPattern = std::string("hlt[a=z][0-9][0-9]_Adder(.*)");
     }
 //    m_MyName = m_PartitionName+std::string("_Adder");
-    m_ServicePattern = std::string("MON_(.*)[a-z][0-9][0-9]_")+m_PartitionName+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+    if (m_ServicePattern != "")
+    {
+      StringReplace(m_ServicePattern, (char*)"<part>", m_PartitionName);
+      m_ServicePattern +="/Histos/";
+    }
+    else
+    {
+      m_ServicePattern = "MON_(.*)[a-z][0-9][0-9]_"+ m_PartitionName+ "_Adder(.*)/Histos/";
+    }
     if (m_InputDNS == "")
     {
       m_InputDNS = std::string("hlt01");
@@ -160,10 +168,11 @@ StatusCode AdderSvc::start()
   }
   if (m_started) return StatusCode::SUCCESS;
   printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
+  DimServer::autoStartOn();
   DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
   m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
-  m_adder->setOutDNS(m_OutputDNS);
+//  m_adder->setOutDNS(m_OutputDNS);
   m_adder->m_IsEOR = false;
   m_adder->m_expandRate = m_ExpandRate;
   m_adder->m_taskPattern = m_TaskPattern;

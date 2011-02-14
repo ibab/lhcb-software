@@ -25,7 +25,7 @@ extern "C"
 {
   void BufferAdder(void *tis, void *buff, int siz, MonInfo *h);
 }
-void HistAdder::add(void *buff, int siz, MonInfo *)
+void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
   void *p;
   int n1d,n2d,nprof,nrate;
@@ -54,7 +54,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *)
   {
     current = cltime;
   }
-//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
   m_RateBuff = 0;
   if (m_reference < current)
   {
@@ -247,7 +247,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *)
   }
   if (m_received >= m_expected)
   {
-//    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
+    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
     if (m_isSaver)
     {
       UnLock();
@@ -457,7 +457,7 @@ void HistAdder::Configure()
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
   if (gg_DNSInfo ==0) gg_DNSInfo = new DimInfo((char*)"DIS_DNS/SERVER_LIST",(char*)"DEAD", &gg_TaskHandler);
-  DimServer::setDnsNode(m_outdns.c_str());
+//  DimServer::setDnsNode(m_outdns.c_str());
   m_outsvcname = m_name+m_serviceName;
   lib_rtl_create_lock(0,&m_maplock);
 //  printf("================Out Service Name %s %s %s\n",m_name.c_str(),m_taskname.c_str(),m_outsvcname.c_str());
@@ -478,12 +478,16 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
   }
 //  printf("New Message from Service List Service %s data:\n%s\n",myInfo->getName(),input);
   bool Newe;
-  Newe = true;
+  Newe = false;
   char *sinput=input;
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
     Newe = (input[0] == '+');
     sinput = &input[1];
+  }
+  else
+  {
+    Newe = true;
   }
   dyn_string *service_list = Strsplit(sinput,(char*)"\n");
 
@@ -521,12 +525,13 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
           if (m_inputServicemap.size() == 1)
           {
               printf ("First client for adding... Creating our output service...\n");
-            m_outservice = new ObjService(m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
+            m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
+            DimServer::start();
           }
         }
         else
         {
-  //          printf("Duplicate service %s. DNS restart? \n",servc.c_str());
+            printf("Duplicate service %s. DNS restart? \n",service->at(0).c_str());
         }
       }
       else
@@ -548,7 +553,7 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
     //      printf("%s: Removing service %s\n",m_name.c_str(),servc.c_str());
           if (m_inputServicemap.empty())
           {
-    //        printf ("No more client... Deleteing our output service...\n");
+            printf ("No more client... Deleteing our output service...\n");
             delete m_outservice;
             m_outservice = 0;
           }
@@ -681,7 +686,7 @@ void HAdderServInfoHandler::infoHandler(void)
   int siz;
   input = (char*)this->itsService->getData();
   siz = this->itsService->getSize();
-  printf("Service Info Handler %s. Input :\n%s\n",this->itsService->getName(),input);
+//  printf("Service Info Handler %s. Input :\n%s\n",this->itsService->getName(),input);
   std::vector<HistAdder*>::iterator i;
   for (i=HistAdder::gg_AdderList.begin();i!=HistAdder::gg_AdderList.end();i++)
   {
