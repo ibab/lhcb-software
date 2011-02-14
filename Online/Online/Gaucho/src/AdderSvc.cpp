@@ -158,7 +158,8 @@ StatusCode AdderSvc::start()
   {
     printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
   }
-  if (m_started) return StatusCode::SUCCESS;;
+  if (m_started) return StatusCode::SUCCESS;
+  printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
   DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
   m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
