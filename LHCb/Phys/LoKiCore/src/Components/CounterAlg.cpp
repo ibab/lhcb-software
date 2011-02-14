@@ -316,6 +316,9 @@ StatusCode LoKi::CounterAlg::finalize   ()
 // ============================================================================ 
 StatusCode LoKi::CounterAlg::execute () 
 {
+
+  setFilterPassed(true);
+
   //
   Gaudi::Numbers* numbers = 0 ;
   //

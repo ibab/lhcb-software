@@ -15,6 +15,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-14 - Juan Palacios
+ - setFilterPassed(true) in LoKi::CounterAlg::execute().
+
 ! 2011-02-13 - Vanya Belyaev
 
    - LoKi/FunOps.h
