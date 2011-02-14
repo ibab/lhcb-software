@@ -52,6 +52,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_TrNTHits'   : 15
                     ,   'Photon_Velo_NHits' : 9 
                     ,   'Photon_Velo_Qcut'  : 4 
+                    ,   'Photon_L0Channels' : "Photon,Electron"
                 }
 
     def localise_props( self, prefix ):
@@ -143,6 +144,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line
+        ps = self.getProps()
+        PhotonTrackL0Channels = ps['Photon_L0Channels'].split(",")
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
@@ -158,7 +161,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = "L0_CHANNEL('Photon')"
+             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in PhotonTrackL0Channels ] )
              , algos = self.hlt1TrackNonMuon_Streamer( "TrackPhoton", self.localise_props( "Photon" ) )
              )    
 
