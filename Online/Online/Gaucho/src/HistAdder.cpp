@@ -515,12 +515,12 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
           }
           INServiceDescr *sd = new INServiceDescr((char*)(service->at(0).c_str()),
           new MonInfo((char*)(service->at(0).c_str()),&BufferAdder,this));
-  //          printf("Service: %s\n",svc->at(0).c_str());
+            printf("Service: %s\n",svc->at(0).c_str());
           m_inputServicemap.insert(INServicePair(service->at(0).c_str(),sd));
-  //          printf("%s: Adding service @%s@\n",m_name.c_str(),servc.c_str());
+            printf("%s: Adding service @%s@\n",m_name.c_str(),servc.c_str());
           if (m_inputServicemap.size() == 1)
           {
-  //            printf ("First client for adding... Creating our output service...\n");
+              printf ("First client for adding... Creating our output service...\n");
             m_outservice = new ObjService(m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
           }
         }
