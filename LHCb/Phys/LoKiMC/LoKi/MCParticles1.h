@@ -87,7 +87,9 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the actual node
-      DecTree ( const iTree& node ) ;
+      DecTree ( const iTree&       node ) ;
+      /// constructor from the actual node
+      DecTree ( const std::string& node ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecTree() {}
       /// MANDATORY: clone method ("virtual constructor")

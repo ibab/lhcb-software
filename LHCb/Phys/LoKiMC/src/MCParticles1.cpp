@@ -5,6 +5,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/IToolSvc.h"
 // ============================================================================
 // PartProp
 // ============================================================================
@@ -14,6 +15,7 @@
 // LoKi 
 // ============================================================================
 #include "LoKi/iTree.h"
+#include "LoKi/Trees.h"
 #include "LoKi/MCTypes.h"
 // ============================================================================
 // local
@@ -21,9 +23,17 @@
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/Services.h"
 #include "LoKi/MCParticles1.h"
+#include "LoKi/IMCDecay.h"
 // ============================================================================
-
-
+namespace 
+{ 
+  // ==========================================================================
+  /// invalid decay
+  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid     s_TREE ;
+  /// "Factory"
+  const std::string  s_FACTORY = "LoKi::MCDecay" ;
+  // ==========================================================================
+}
 // ============================================================================
 // constructor from the actual node
 // ============================================================================
@@ -76,6 +86,28 @@ LoKi::MCParticles::DecTree::DecTree
   : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate()
   , m_tree ( tree )
 {}
+// ============================================================================
+// constructor from the actual tree
+// ============================================================================
+LoKi::MCParticles::DecTree::DecTree
+( const std::string& tree )
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate()
+  , m_tree ( s_TREE )
+{   
+  LoKi::ILoKiSvc* ls = lokiSvc() ;
+  SmartIF<IToolSvc> toolSvc ( ls ) ;
+  Assert ( !(!toolSvc) , "Unable to aquire IToolSvc tool" ) ;
+  
+  Decays::IMCDecay* tool = 0 ;
+  StatusCode sc = toolSvc -> retrieveTool ( s_FACTORY , tool ) ;
+  Assert ( sc.isSuccess () , "Unable to retrieve '" + s_FACTORY + "'" , sc ) ; 
+  Assert ( 0 != tool  , "Decays::IDecay* points to NULL" ) ; 
+  //                                            
+  m_tree   = tool -> tree ( tree ) ;
+  toolSvc -> releaseTool ( tool ) ; // do not need the tool anymore 
+  //
+  Assert ( !(!m_tree)       , "The tree is invalid : '" + tree + "'" ) ;   
+}
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
