@@ -36,11 +36,13 @@ __all__ = ('Hlt2DisplVerticesLinesConf')
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+import GaudiKernel.SystemOfUnits as units
 
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = { 
             "MinNbTracks"  : { 'Hlt2RV2P' : 4
+                               , 'Hlt2SingleLonglivedHighFD' : 5
                                , 'Hlt2SingleLonglivedLowMass' : 6
                                , 'Hlt2SingleLonglivedHighMass' : 6
                                , 'Hlt2DoubleLonglived' : 4
@@ -48,37 +50,57 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                }
             ,  "RCutMethod"   : "FromUpstreamPV"
             ,  "RMin"         : { 'Hlt2RV2P' : 0.
+                                  , 'Hlt2SingleLonglivedHighFD' : 0.7
                                   , 'Hlt2SingleLonglivedLowMass' : 0.3
                                   , 'Hlt2SingleLonglivedHighMass' : 0.3
                                   , 'Hlt2DoubleLonglived' : 0.3
                                   , 'Hlt2SinglePSLonglived' : 0.3
                                   }
-            ,  "MinMass"      : {   'Hlt2RV2P' : 3000.
+            ,  "MinMass"      : {   'Hlt2RV2P' : 2000.
+                                  , 'Hlt2SingleLonglivedHighFD' : 4500.
                                   , 'Hlt2SingleLonglivedLowMass' : 4500.
-                                  , 'Hlt2SingleLonglivedHighMass' : 8000.
-                                  , 'Hlt2DoubleLonglived' : 3000.
-                                  , 'Hlt2SinglePSLonglived' : 2500.
+                                  , 'Hlt2SingleLonglivedHighMass' : 9000.
+                                  , 'Hlt2DoubleLonglived' : 2000.
+                                  , 'Hlt2SinglePSLonglived' : 2000.
                                   }
             ,  "MinSumpt"     :{ 'Hlt2RV2P' : 3000.
+                                 , 'Hlt2SingleLonglivedHighFD' : 4500.
                                  , 'Hlt2SingleLonglivedLowMass' : 4500.
-                                 , 'Hlt2SingleLonglivedHighMass' : 9000.
+                                 , 'Hlt2SingleLonglivedHighMass' : 10000.
                                  , 'Hlt2DoubleLonglived' : 3000.
-                                 , 'Hlt2SinglePSLonglived' : 2500.
+                                 , 'Hlt2SinglePSLonglived' : 3000.
                                  } 
             ,  "RemVtxFromDet" : { 'Hlt2RV2P' : 0
+                                 , 'Hlt2SingleLonglivedHighFD' : 5
                                  , 'Hlt2SingleLonglivedLowMass' : 5
                                  , 'Hlt2SingleLonglivedHighMass' : 5
                                  , 'Hlt2DoubleLonglived' : 0
                                  , 'Hlt2SinglePSLonglived' : 0
                                    }
+            ,  "MinAngle" : { 'Hlt2RV2P' : 0.
+                                 , 'Hlt2SingleLonglivedHighFD' : 0.035
+                                 , 'Hlt2SingleLonglivedLowMass' : 0.0
+                                 , 'Hlt2SingleLonglivedHighMass' : 0.
+                                 , 'Hlt2DoubleLonglived' : 0.0
+                                 , 'Hlt2SinglePSLonglived' : 0.0
+                                   }
+            ,  "MinFD" : {  'Hlt2SingleLonglivedHighFD' : 15.
+                                   }
             , "PostScale" : { 'Hlt2RV2P' : 1
+                              , 'Hlt2SingleLonglivedHighFD' : 1
                               , 'Hlt2SingleLonglivedLowMass' : 1
                               , 'Hlt2SingleLonglivedHighMass' : 1
                               , 'Hlt2DoubleLonglived' : 1
-                              , 'Hlt2SinglePSLonglived' : 0.005
+                              , 'Hlt2SinglePSLonglived' : 0.0006
                               }
             }
     
+    ##
+    ## Tighter solution is:
+    ##    for Hlt2SingleLonglivedLowMass:  MinAngle can go until 0.035
+    ##    for Hlt2SingleLonglivedHighMass:  RMin can go until 0.5
+    ##    for Hlt2DoubleLonglived:  MinAngle can go until 0.02
+    ##    for Hlt2SingleLonglivedHighFD:  MinFD can go until 20.
     
     def __apply_configuration__(self) :
         
@@ -97,7 +119,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
-        import GaudiKernel.SystemOfUnits as units
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
@@ -143,6 +164,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglivedLowMass.PreyMaxMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedLowMass.PreyMaxSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedLowMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedLowMass']
+        Hlt2SingleLonglivedLowMass.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedLowMass']
         Hlt2SingleLonglivedLowMass.SaveOnTES = False
         Hlt2SingleLonglivedLowMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedLowMass']
         line = Hlt2Line( 'DisplVerticesLowMassSingle'
@@ -160,8 +182,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglivedHighMass.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighMass']
-        Hlt2SingleLonglivedHighMass.SaveOnTES = False
+        Hlt2SingleLonglivedHighMass.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.SaveOnTES = False
                       
         line = Hlt2Line( 'DisplVerticesHighMassSingle'
                         , prescale = self.prescale
@@ -182,6 +205,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinAngle = self.getProp('MinAngle')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.SaveOnTES = False
 
         line = Hlt2Line('DisplVerticesDouble'
@@ -210,6 +234,26 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglived']
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSinglePostScaledDecision" : 50283 } )
+        
+        from Configurables import Hlt2SelDV
+        Hlt2SingleLonglivedHighFD = Hlt2SelDV("Hlt2SingleLonglivedHighFD")
+        Hlt2SingleLonglivedHighFD.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedHighFD.MinNBCands = 1
+        Hlt2SingleLonglivedHighFD.RMin = self.getProp('RMin')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.PreyMinFD = self.getProp('MinFD')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedHighFD']
+        Hlt2SingleLonglivedHighFD.SaveOnTES = False
+
+        line = Hlt2Line( 'DisplVerticesHighFDSingle'
+                        , prescale = self.prescale
+                        , algos = DVSeq + [ Hlt2SingleLonglivedHighFD ]
+                        , postscale = self.getProp('PostScale')['Hlt2SingleLonglivedHighFD']
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesHighFDSingleDecision" : 50284 } )
 
 
         #######################################################################

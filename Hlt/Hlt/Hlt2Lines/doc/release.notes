@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - Victor Coco
+ - Hlt2DisplVerticesLine.py: update the list of Lines (added high flight distance line)
 
 ! 2011-02-13 - Gerhard Raven
  - fix some spurious imports in commit of Hlt2D2KS0H
