@@ -147,6 +147,7 @@ namespace TarFileAccess_details {
         {
                 m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
         }
+        bool good() const { return m_file.good(); }
         bool fillStream(const std::string& name,ostream& os) {
             const map<Gaudi::StringKey,Info>& myIndex = getIndex();
             map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
@@ -521,7 +522,6 @@ std::auto_ptr<std::istream>
 TarFileAccess::open(const std::string &url) {
     std::auto_ptr<std::istream> stream;
 
-
     std::pair<TarFileAccess_details::TarFile*, std::string> resolved = resolve(url);
     if (resolved.first==0) return stream;
 
@@ -529,7 +529,8 @@ TarFileAccess::open(const std::string &url) {
     // TODO: use io::slice to implement zero-copy.. but beware of parent lifetime!
     //        i.e. must keep track of 'open' files somehow... inherit from istream,
     //        forward to 'internal' istream, and, in destructor notify that we closed
-    //        using a call-back???
+    //        using a call-back??? -- not needed! we can use ios_base::register_callback
+    //        to implement this!!
     // TODO: support automated ungzipping ...
     std::stringstream *ss = new std::stringstream(std::stringstream::in|std::stringstream::out);
     stream.reset(ss);

@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2011-02-14 - Gerhard Raven
+ - remove old event model algorithms
+
 ! 2011-02-12 - Gerhard Raven
  - instantiate HltCopySelection also for LHCb::RecVertex
 

@@ -6,7 +6,6 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "HltBase/HltSelectionContainer.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltFilters.h"
 #include "Event/Particle.h"
 #include "Event/RecVertex.h"
 #include "Event/VertexBase.h"
