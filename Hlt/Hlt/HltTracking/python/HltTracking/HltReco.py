@@ -101,12 +101,12 @@ else :
    recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
 
 ##### Hlt selections
-from Configurables import HltTrackFilter
+from Configurables import Hlt__TrackFilter as HltTrackFilter
 prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , InputSelection   = "TES:" + recoVelo.OutputTracksName
                               , RequirePositiveInputs = False
                               , AddInfo = False
-                              , FilterDescriptor = ["IsBackward,<,0.5"]
+                              , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
 
 #############################################################################################

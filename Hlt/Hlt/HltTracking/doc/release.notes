@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - Gerhard Raven
+ - replace HltTrackFilter with Hlt::TrackFilter
+
 ! 2011-02-13 - Gerhard Raven
  - in streamer definition of forward, velo-muon match, include the required
    decoding
