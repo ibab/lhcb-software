@@ -50,7 +50,7 @@ class CharmHadronLines :
                           'Trk_PT_MIN'               : 800.0      # MeV
                         , 'Trk_P_MIN'                : 5000.0     # MeV
                         , 'Trk_MIPCHI2DV_MIN'        : 2.0        # neuter
-                        , 'Trk_TRCHI2DOF_MAX'        : 5.0        # neuter
+                        , 'Trk_TRCHI2DOF_MAX'        : 3.0        # neuter
                         , 'Pair_AMINDOCA_MAX'        : 0.10       # mm
                         , 'Trk_Max_APT_MIN'          : 1500.0     # MeV
                         , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
@@ -78,9 +78,9 @@ class CharmHadronLines :
                         , 'GEC_Filter_NTRACK'        : True       # 
                         , 'GEC_NTRACK_MAX'           : 120        # 
                         , 'Postscale' : { 
-                                          'Hlt2CharmHadD02KKWideMass'    : 0.05
-                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.05
-                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.05
+                                          'Hlt2CharmHadD02KKWideMass'    : 0.1
+                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.1
+                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.1
                                         }
                     }
 
