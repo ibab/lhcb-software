@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - V. Gligorov
+ - Tighten track chi2 cut in 2 body charm lines to 3 and
+   relax wide mass prescaling to 10% (was 5%). 
+
 ! 2011-02-13 - V. Gligorov
  - Activate the 2 body charm lines, and reoptimize the 1Track cuts
    in Physics_draft2011 "by hand" to give more realistic retentions for
