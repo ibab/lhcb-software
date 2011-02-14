@@ -7,6 +7,7 @@
 ! 2011-02-14 - Juan Palacios
  - Temporarily add LoKi::CounterAlg.
  - Increase to v22r3.
+ - setFilterPassed(true) in LoKi::CounterAlg::execute().
 
 ! 2011-02-11 - Chris Jones
  - Various minor icc warnings/remarks fixes
