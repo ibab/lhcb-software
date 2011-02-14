@@ -11,9 +11,11 @@ __all__ = ('test_line_builder',
            'test_line',
            'test_line_location',
            'test_duplicate_name_raises',
+           'test_configuration_not_dictlike_raises',
            'test_bad_configuration_raises')
 
 from py.test import raises
+from copy import deepcopy
 from StrippingConf.Configuration import StrippingLine
 
 def test_line_builder(builderType, conf_dict) :
@@ -26,6 +28,7 @@ def test_line_builder(builderType, conf_dict) :
     test_single_constructor_argument_raises(builderType, conf_dict)
     test_duplicate_name_raises(builderType, conf_dict)
     test_many_instances(builderType, conf_dict)
+    test_configuration_not_dictlike_raises(builderType, 0)
     test_bad_configuration_raises(builderType, conf_dict)
         
 def test_many_instances(builderType, conf_dict) :
@@ -62,10 +65,15 @@ def test_single_constructor_argument_raises(builderType, conf_dict) :
     raises(Exception, builderType, conf_dict)
     raises(Exception, builderType, 'SomeCrazyName')
 
+def test_configuration_not_dictlike_raises(builderType, conf_dict) :
+    raises(AttributeError, builderType, 'TestBadConfDict', conf_dict)
+
 def test_bad_configuration_raises(builderType, good_conf_dict) :
-    bad_conf_dict = dict(good_conf_dict)
+    assert hasattr(good_conf_dict, 'keys')
+    assert hasattr(good_conf_dict, '__getitem__')
+    bad_conf_dict = deepcopy(good_conf_dict)
     bad_conf_dict['BAD_KEY'] = 0.
-    raises(KeyError, builderType, 'TestBadConf', bad_conf_dict)
+    raises(KeyError, builderType, 'TestBadConfKeys', bad_conf_dict)
            
 def test_line(line) :
     assert type(line) == StrippingLine

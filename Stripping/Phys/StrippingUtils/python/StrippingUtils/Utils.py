@@ -21,6 +21,7 @@ def checkConfig(reference_keys, configuration) :
     are as expected.
     """
     absentKeys = []
+
     for key in reference_keys :
         if key not in configuration.keys():
             absentKeys.append(key)
@@ -110,3 +111,4 @@ def getLineBuildersFromModule(confModule) :
         if lb.__name__ != LineBuilder.__name__ :
             lineBuilderDict[lb.__name__] = lb
     return lineBuilderDict
+
