@@ -5,7 +5,7 @@
 from Gaudi.Configuration import WARNING,DEBUG
 # from GaudiConf.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-
+from HltTracking.HltReco import MinimalVelo
 
 
 ####### create binders...
@@ -45,6 +45,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiCountHltTracks,
                                 LumiFlagMethod
                                 )
+    fastVeloContainer = MinimalVelo.outputSelection()
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
@@ -57,12 +58,12 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                              , 'NoBeam'       : 'RATE( 5)'
                                              }
                 , 'Postscale'              : { 'Hlt1LumiLow.*RateLimited' : 1.0 }
-                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    , 'Hlt/Track/RZVelo',   5,  200]
+                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    ,  fastVeloContainer,   5,  200]
                                         , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200]
                                         , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100]
                                         , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100]
                                         , 'PV3D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV3D' ,   1,   20]
-                                        , 'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200]
+                                        , 'RZVeloBW' : [LumiCountHltTracks, True    , 'VeloBW'          ,   5,  200]
                                         , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500]
                                         , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200]
                                         , 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000]
@@ -150,12 +151,13 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from Configurables import GaudiSequencer as Sequence
         lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
         lumiRecoFilterSequence.Members.append( recoScaler )
+        fastVeloContainer = MinimalVelo.outputSelection()
         lumiRecoFilterSequence.Members.append(
             Sequence('HltRZVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
-                                                   , InputSelection   = 'TES:Hlt/Track/RZVelo'
+                                                   , InputSelection   = fastVeloContainer
                                                    , Code = [ 'TrBACKWARD' ]
-                                                   , OutputSelection     = 'RZVeloBW'
+                                                   , OutputSelection     = 'VeloBW'
                                                    , RequirePositiveInputs = False
                                                    ) ]
                      , MeasureTime = True
