@@ -5,8 +5,10 @@
 #  The file is a part of LoKi and Bender projects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The set of basic decorators for obejcts from LoKiAlgoMC library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+The set of basic decorators for objects from LoKiAlgoMC library
+"""
+__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
 # =============================================================================

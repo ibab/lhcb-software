@@ -1,10 +1,10 @@
 <!-- 
      * $Id: LoKiAlgoMC.xml,v 1.5 2009-01-10 20:05:17 jonrob Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+     * Version $Revision: 1.5 $ 
      * ======================================================================== 
      * @file
-     * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
+     * The selectiton file to build Reflex dictionaries for Phys/LoKiAlgo package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
      * ========================================================================
@@ -27,7 +27,8 @@
   
   <class name = "LoKi::Interface<LoKi::AlgoMC>"    />
   
-  <class name = "LoKi::Dicts::MCTupleArray" />
+  <class name = "LoKi::Dicts::MCTupleArray"  />
+  <class name = "LoKi::Dicts::GenTupleArray" />
   
   <exclusion>
     

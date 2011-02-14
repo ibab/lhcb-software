@@ -10,6 +10,7 @@
 #include "LoKi/LoKiAlgoMC.h"
 #include "LoKi/MCMatchAlgoDicts.h"
 #include "LoKi/MCTupleDicts.h"
+#include "LoKi/GenTupleDicts.h"
 // ============================================================================
 // Trick to suppress _POSIX_C_SOURCE redefinition warning
 #ifdef __GNUC__

@@ -5,6 +5,10 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-14 - Vanya Belyaev
+  
+ - add the proper decoration of farray-methods for HepMC-particles 
+
 ! 2011-02-13 - Vanya Belyaev
 
  - add the proper decoration of farray-methods for MC-particles 
