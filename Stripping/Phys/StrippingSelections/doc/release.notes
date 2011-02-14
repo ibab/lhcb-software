@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-14 - Rob Lambert
+ - Updated StripingB0q2DplusMuX lines to use MasterLineBuilder class
+ - requires StrippingUtils >=r117807
+
 ! 2011-02-14 - Stefano Perazzini
  - Updated StrippingHb2Charged2Body lines to new framework
 

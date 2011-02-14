@@ -162,11 +162,11 @@ confdict={
 
 
 
-from StrippingUtils.Utils import LineBuilder
+from StrippingUtils.Utils import LineBuilder, MasterLineBuilder
 
 name = "B0q2DplusMuX"
 
-class B0q2DplusMuXAllLinesConf(LineBuilder):
+class B0q2DplusMuXAllLinesConf(MasterLineBuilder):
     """
     Configuration object for all B0qDplusMuX lines
 
@@ -184,41 +184,23 @@ class B0q2DplusMuXAllLinesConf(LineBuilder):
     
     To only configure/run one line, it's better to use the B0q2DplusMuXOneLineConf class.
     
-    The created lines appear as a list in the Lines object, member variable
+    The created lines appear as a tuple from the lines() method
     
     To print out all the cuts, use the printCuts method
-    """
+    """    
     
-    Lines=[]
-    
-    confObjects={}
-    
-    #dummy configuration keys
-    __configuration_keys__=[]
-    
-    def __init__(self, name, config, offLines=[]):
+    def __init__(self, name, config):
         '''In the constructor we make all the lines, and configure them all
         name is the initial name of the lines, i.e. B0q2DplusMuX
         config is the dictionary of {LineSuffix : configuration}
         offlines is a list of lines to turn off'''
-        LineBuilder.__init__(self, name, {})
+        MasterLineBuilder.__init__(self, name, config, B0q2DplusMuXOneLineConf)
         
-        for aline in config.keys():
-            if aline not in offLines:
-                if type(config[aline]) is not type({}):
-                    raise KeyError, "Odd type for key "+aline+" expected a dictionary, got a "+str(type(config[aline]))
-                
-                lineconf=B0q2DplusMuXOneLineConf(name+aline, config[aline])
-                
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                self.registerLine(lineconf.Line)
-                
     def printCuts(self):
         '''Print out all the configured cuts for the lines you asked for'''
-        for aline in self.confObjects.keys():
+        for aline in self.slaves():
             print '===='
-            self.confObjects[aline].printCuts()
+            aline.printCuts()
             
 
 class B0q2DplusMuXOneLineConf(LineBuilder):
@@ -252,9 +234,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
     MuSel=None
     DSel=None
     B0Sel=None
-    
-    LineSuffix=''
-    
+        
     __configuration_keys__=[
         'Prescale',
         'Postscale',
@@ -289,7 +269,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
     
     def __init__(self, name, config):
         '''The constructor of the configuration class.
-        Requires a name which is added to the end of each algorithm name, stored in self.LineSuffix
+        Requires a name which is added to the end of each algorithm name
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
         LineBuilder.__init__(self, name, config)
@@ -298,8 +278,6 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         #
         #checkConfig(B0q2DplusMuXOneLineConf.__configuration_keys__,
         #            config)
-        
-        self.LineSuffix=name
         
         ### first we define the cuts from the configuration ###
         ### it's nice to see all the cuts in one place      ###
@@ -357,7 +335,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
         
         ### Now make a stripping line ###
-        B0qLine=StrippingLine(self.LineSuffix,
+        B0qLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.B0Sel ]
@@ -371,7 +349,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         
     def printCuts(self):
         '''Print the compiled cut values'''
-        print 'name', self.LineSuffix
+        print 'name', self._name
         print 'MuCut', self.MuCut
         print 'KCut', self.KCut
         print 'PiCut', self.PiCut
@@ -391,7 +369,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         from StandardParticles import StdLooseMuons
 
         MuForB0q = FilterDesktop(Code=self.MuCut)
-        SelMuForB0q = Selection("SelMuFor"+self.LineSuffix,
+        SelMuForB0q = Selection("SelMuFor"+self._name,
                                 Algorithm=MuForB0q, RequiredSelections = [StdLooseMuons])
         
         self.MuSel=SelMuForB0q
@@ -423,7 +401,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
             
             )
         
-        SelDplus2KKpiForB0q = Selection("SelDplus2KKpiFor"+self.LineSuffix,
+        SelDplus2KKpiForB0q = Selection("SelDplus2KKpiFor"+self._name,
                                         Algorithm=Dplus2KKpiForB0q,
                                         RequiredSelections = [StdLooseKaons,StdLoosePions])
             
@@ -447,7 +425,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
             MotherCut      = self.BCut
             )
         
-        SelB0q2DplusMuX = Selection("Sel"+self.LineSuffix, Algorithm=CombB0q2DplusMuX,
+        SelB0q2DplusMuX = Selection("Sel"+self._name, Algorithm=CombB0q2DplusMuX,
                                     RequiredSelections = [self.MuSel, self.DSel])
         
         self.B0Sel=SelB0q2DplusMuX
