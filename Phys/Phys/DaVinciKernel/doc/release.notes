@@ -8,6 +8,7 @@
  - Add property Output. Allows the user to set the output location
    of the DVAlgorithm, overwriting the one that gets set automatically. This
    is really for use with the Seleciton toolkit.
+ - Make DVAlgorithm::loadEventInput virtual.
  - Add property Inputs, mirroring deprecated InputLocations.
  - Increase to v9r2.
 

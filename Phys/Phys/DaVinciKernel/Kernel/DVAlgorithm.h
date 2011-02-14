@@ -739,7 +739,7 @@ private:
   StatusCode loadTools() ;
 
   /// Load particles, primary vertices, relations tables. 
-  StatusCode loadEventInput();
+  virtual StatusCode loadEventInput();
 
   /// Load particles from InputLocations
   StatusCode loadParticles();
