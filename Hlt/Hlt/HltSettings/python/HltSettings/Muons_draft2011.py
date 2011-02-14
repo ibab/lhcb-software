@@ -21,6 +21,7 @@ class Muons_draft2011 :
             #'Hlt2MuonFromHLT1',
             'Hlt2SingleMuon',
             'Hlt2SingleMuonHighPT',
+            'Hlt2SingleMuonLowPT',
 
             'Hlt2DiMuon',  
             'Hlt2DiMuonLowMass',
