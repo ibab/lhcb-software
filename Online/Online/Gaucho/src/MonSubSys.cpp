@@ -138,7 +138,7 @@ void MonSubSys::setup(char *n, bool expandnames)
   std::string nodename;
   nodename = RTL::nodeNameShort();
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/HistCommand";
-  m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
+  if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
   if (m_expandnames)
   {
     if (m_type == MONSUBSYS_Counter)

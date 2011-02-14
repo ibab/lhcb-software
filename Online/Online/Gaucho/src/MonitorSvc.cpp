@@ -153,6 +153,12 @@ StatusCode MonitorSvc::start()
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endreq;
   Service::start();
+  if (m_CntrMgr != 0)
+  {
+//    printf("In STARTS Method... Counter Manager present... Closing it...\n");
+    this->m_CntrMgr->close();
+  }
+  if (m_started) return StatusCode::SUCCESS;
   if (m_CntrSubSys != 0)
   {
     m_CntrSubSys->m_expandnames = m_expandCounterServices;
@@ -215,7 +221,7 @@ StatusCode MonitorSvc::stop()
 {
 //  CALLGRIND_STOP_INSTRUMENTATION
 //  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
-  m_started = false;
+//  m_started = false;
 //  updateSvc("",m_runno,0);
   if (m_CntrMgr != 0)
   {

@@ -43,6 +43,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 //  'sf' or 'subfarm' for subfarm adder
 //  'top' or 'part' for top or partition adder
   m_SaveTimer = 0;
+  m_started = false;
 }
 AdderSvc::~AdderSvc()
 {
@@ -157,6 +158,7 @@ StatusCode AdderSvc::start()
   {
     printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
   }
+  if (m_started) return StatusCode::SUCCESS;;
   DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
   m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
@@ -195,6 +197,7 @@ StatusCode AdderSvc::start()
     m_EoRSaver->setEOR(true);
     m_EoRadder->SetCycleFn(EORSaver,(void*)m_SaveTimer);
   }
+  m_started = true;
   return StatusCode::SUCCESS;
 }
 StatusCode AdderSvc::stop()

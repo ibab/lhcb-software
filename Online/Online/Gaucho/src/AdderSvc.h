@@ -56,6 +56,7 @@ private:
   bool m_ExpandRate;
   bool m_isSaver;
   bool m_isEOR;
+  bool m_started;
   SaveTimer *m_SaveTimer;
   SaveTimer *m_EoRSaver;
   std::string m_SaveRootDir;
