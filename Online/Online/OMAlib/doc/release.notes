@@ -3,6 +3,11 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20110214
+- add new algorithm OMASubtractReference by Mark Tobin
+
+! ======== v3r4 ===============
+
 ! 20101126 
  - two other fixes from Markus to suppress windoz compilation messages
 

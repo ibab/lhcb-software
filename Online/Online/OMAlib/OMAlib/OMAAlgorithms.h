@@ -321,5 +321,16 @@ public:
                      TH1* existingHisto=0,
                      TH1* Ref=0);  
 };
+class OMASubtractReference: public OMAHcreatorAlg
+{
+public:
+  OMASubtractReference(OMAlib* Env);
+  virtual TH1* exec( const std::vector<TH1*> *sources,
+                     const std::vector<float> *params,
+                     std::string &outName,
+                     std::string &outTitle,
+                     TH1* existingHisto=0,
+                     TH1* Ref=0);  
+};
 
 #endif // OMALIB_OMAALGORITHMS_H

@@ -240,6 +240,7 @@ void OMAlib::doAlgList() {
   m_algorithms["Project"] =  new OMAProject(this);
   m_algorithms["Rebin"] =  new OMARebin(this);
   m_algorithms["DivideByReference"] = new OMADivideByReference(this);
+  m_algorithms["SubtractReference"] = new OMASubtractReference(this);
 
   if (m_histDB) {
     if (m_histDB->canwrite() && false == m_listSynced)
