@@ -1,4 +1,9 @@
+# Import some useful modules
+from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from LHCbKernel.Configuration import *
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 ## Create a python class that inherits from HltLinesConfigurableUser
 class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
@@ -7,52 +12,54 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
 
    # KS0 daughter pion cuts
-      'KS0DaugP'         : 1500
+      'KS0DaugP'         : 1800
 ,     'KS0DaugPT'        : 100
 ,     'KS0DaugTrackChi2' : 5  
-,     'KS0DaugMIPChi2'   : 30
-,     'KS0DaugPIDK'      : 20
+,     'KS0DaugMIPChi2'   : 50
+#,     'KS0DaugPIDK'      : 20
 
    # KS0 mother cuts
 ,     'KS0MassWindow'    : 50
 ,     'KS0MIPChi2'       : 0
-,     'KS0VertexChi2'    : 30
-,     'KS0PT'            : 500
+,     'KS0VertexChi2'    : 20
+,     'KS0PT'            : 700
 
       # Bachelor pion cuts
-,     'BachPionP'         : 2000       
-,     'BachPionPT'        : 200 
+,     'BachPionP'         : 4000       
+,     'BachPionPT'        : 400 
 ,     'BachPionTrackChi2' : 5
 ,     'BachPionMIPChi2'   : 30
-,     'BachPionPIDK'      : 10
+#,     'BachPionPIDK'      : 10
 
       # Bachelor kaon cuts
-,     'BachKaonP'         : 2000       
-,     'BachKaonPT'        : 200
+,     'BachKaonP'         : 4000       
+,     'BachKaonPT'        : 400
 ,     'BachKaonTrackChi2' : 5
 ,     'BachKaonMIPChi2'   : 30
-,     'BachKaonPIDK'      : -30
+#,     'BachKaonPIDK'      : -30
 
       # D meson cuts
       # Combo cuts
-,     'DMesonComboLowMass'   : 1500       
-,     'DMesonComboHighMass'  : 2200 
-,     'DMesonComboDOCA'      : 1
+,     'DMesonComboLowMass'   : 1790       
+,     'DMesonComboHighMass'  : 2040 
+,     'DMesonComboDOCA'      : 0.6
       # Mother cuts
-,     'DMesonMotherLowMass'    : 1600         
-,     'DMesonMotherHighMass'   : 2200
-,     'DMesonMotherVertexChi2' : 30
-,     'DMesonMotherMIPChi2'    : 50
-,     'DMesonMotherPT'         : 0
+,     'DMesonMotherLowMass'    : 1800         
+,     'DMesonMotherHighMass'   : 2030
+,     'DMesonMotherVertexChi2' : 20
+,     'DMesonMotherMIPChi2'    : 25
+,     'DMesonMotherPT'         : 1800
 
 # Extra stuff
         
 # prescales
                   , 'Prescale'                  : {
-                        'Hlt2CharmHadD2KS0H'    : 1.0
+                        'Hlt2CharmHadD2KS0Pi'    : 1.0
+                       , 'Hlt2CharmHadD2KS0K'    : 1.0 
                         }
                   , 'HltANNSvcID'  : {
-                       'Hlt2CharmHadD2KS0HDecision' : 50913
+                       'Hlt2CharmHadD2KS0PiDecision' : 50913
+                       ,'Hlt2CharmHadD2KS0KDecision' : 50914
                         }
                 }
 
@@ -62,8 +69,12 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers           
         from Configurables import FilterDesktop, CombineParticles      
         from HltTracking.HltPVs import PV3D
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-        incuts = "CHILDCUT((PIDK < %(KS0DaugPIDK)s),1) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),2) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (ADMASS('KS0') < %(KS0MassWindow)s*MeV) & (PT > %(KS0PT)s*MeV) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)"   % self.getProps()
+        incuts = "CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (ADMASS('KS0') < %(KS0MassWindow)s*MeV) & (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)"   % self.getProps()
+
+  # CHILDCUT((PIDK < %(KS0DaugPIDK)s),1) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),2)
+  # & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)
 
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop	
@@ -84,8 +95,9 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles      
         from HltTracking.HltPVs import PV3D                           
 
-        Bachelor_Cuts_Pion = "(PIDK < %(BachPionPIDK)s) & (P > %(BachPionP)s*MeV) & (PT > %(BachPionPT)s*MeV) & (TRCHI2DOF < %(BachPionTrackChi2)s) & (MIPCHI2DV(PRIMARY) > %(BachPionMIPChi2)s)"  % self.getProps()
+        Bachelor_Cuts_Pion = "(P > %(BachPionP)s*MeV) & (PT > %(BachPionPT)s*MeV) & (TRCHI2DOF < %(BachPionTrackChi2)s) & (MIPCHI2DV(PRIMARY) > %(BachPionMIPChi2)s)"  % self.getProps()
 
+#(PIDK < %(BachPionPIDK)s) & 
 
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop
@@ -104,7 +116,9 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles      
         from HltTracking.HltPVs import PV3D                           
 
-        Bachelor_Cuts_Kaon =  "(PIDK > %(BachKaonPIDK)s) & (P > %(BachKaonP)s*MeV) & (PT > %(BachKaonPT)s*MeV) & (TRCHI2DOF < %(BachKaonTrackChi2)s) & (MIPCHI2DV(PRIMARY) > %(BachKaonMIPChi2)s)"  % self.getProps()
+        Bachelor_Cuts_Kaon =  "(P > %(BachKaonP)s*MeV) & (PT > %(BachKaonPT)s*MeV) & (TRCHI2DOF < %(BachKaonTrackChi2)s) & (MIPCHI2DV(PRIMARY) > %(BachKaonMIPChi2)s)"  % self.getProps()
+
+#(PIDK > %(BachKaonPIDK)s) & 
 
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop
@@ -158,43 +172,66 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         ## Start applying the member functions we have been defining above
 
         # Stage 1
+        # Filter the KS0s and the bachelor pions and kaons
        
-        # Filter the StdLooseDD KS0s
+        # Filter the StdLooseLL KS0s
         KS0LLForD2KS0h = self.__KS0LLFilter('CharmInputKS0sForD2KS0h', [ KsData ] )
-       
-        # Stage 2
-        # Create the D(s)
 
         # Filter the bachelor pions and kaons 
 
         pionsBachelorForD2KS0h = self.__BachelorPionFilter('CharmInputBachelorPionsD2KS0h', [ BiKalmanFittedPions] )
         kaonsBachelorForD2KS0h = self.__BachelorKaonFilter('CharmInputBachelorKaonsD2KS0h', [ BiKalmanFittedKaons] )
+       
+        # Stage 2
+        # Stage 2a - bachelor hadron = pion
 
         # Build the D(s)
 
-        # Make D2KS0h
-        CharmD2KS0hCombine = self.__D2KS0hCombine(  name = 'CharmHadD2KS0H'  
-                                                  , inputSeq = [ KS0LLForD2KS0h, pionsBachelorForD2KS0h , kaonsBachelorForD2KS0h]           
-                                                  , decayDesc =  ['[D+ -> KS0 pi+]cc' , '[D+ -> KS0 K+]cc'] 
+        # Make D2KS0Pi
+        CharmD2KS0hCombinePion = self.__D2KS0hCombine(  name = 'CharmHadD2KS0Pi'  
+                                                  , inputSeq = [ KS0LLForD2KS0h, pionsBachelorForD2KS0h]           
+                                                  , decayDesc =  ['[D+ -> KS0 pi+]cc'] 
                                                  )   
-        # D2KS0h line
+        # D2KS0Pi line
         
-	Hlt2CharmD2KS0h = bindMembers('CharmHadD2KS0H', [CharmD2KS0hCombine] )
+	Hlt2CharmD2KS0Pi = bindMembers('CharmHadD2KS0Pi', [CharmD2KS0hCombinePion] )
 
-        #return Hlt2CharmD2KS0h
+        # Stage 2b - bachelor hadron = kaon
+
+        # Build the D(s)
+
+        # Make D2KS0K
+        CharmD2KS0hCombineKaon = self.__D2KS0hCombine(  name = 'CharmHadD2KS0K'  
+                                                  , inputSeq = [ KS0LLForD2KS0h, kaonsBachelorForD2KS0h]           
+                                                  , decayDesc =  ['[D+ -> KS0 K+]cc'] 
+                                                 )   
+        # D2KS0K line
+        
+	Hlt2CharmD2KS0K = bindMembers('CharmHadD2KS0K', [CharmD2KS0hCombineKaon] )
 
 
         ###########################################################################
-        # Define the Hlt2 Lines for D(s)->KS0h
+        # Define the Hlt2 Lines for D(s)->KS0h - seperate pion and kaon lines
         ##########################################################################
 
-        line = Hlt2Line('CharmHadD2KS0H', prescale = self.prescale
-                        , algos = [ PV3D(), KS0LLForD2KS0h, pionsBachelorForD2KS0h, kaonsBachelorForD2KS0h, Hlt2CharmD2KS0h]
+        ### D(s)->KS0Pi line
+
+        line = Hlt2Line('CharmHadD2KS0Pi', prescale = self.prescale
+                        , algos = [ PV3D(), KS0LLForD2KS0h, pionsBachelorForD2KS0h, Hlt2CharmD2KS0Pi]
                         # All the necessary algorithms
 			, postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2KS0HDecision"
+        decName = "Hlt2CharmHadD2KS0PiDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
-
 	
+        ### D(s)->KS0K line
+
+        line2 = Hlt2Line('CharmHadD2KS0K', prescale = self.prescale
+                        , algos = [ PV3D(), KS0LLForD2KS0h, kaonsBachelorForD2KS0h, Hlt2CharmD2KS0K]
+                        # All the necessary algorithms
+			, postscale = self.postscale
+                        )
+        decName2 = "Hlt2CharmHadD2KS0KDecision"
+        annSvcID2 = self._scale(decName2,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName2 : annSvcID2 } )
