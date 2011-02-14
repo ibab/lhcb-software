@@ -34,7 +34,6 @@ MonSubSys::MonSubSys(int intv)
 MonSubSys::~MonSubSys()
 {
   delete m_updateTimer;
-  delete m_ser;
   SysIter i;
   this->Lock();
   for (i =m_Objmap.begin();i!=m_Objmap.end();i++)
@@ -42,26 +41,13 @@ MonSubSys::~MonSubSys()
     MonObj *h = i->second;
     delete h;
   }
-
-
-  if (m_ser == 0) delete m_ser;
-//  if (m_expandnames)
-//  {
-//    if (m_type == MONSUBSYS_Counter)
-//    {
-//      for (SysIter i =m_Objmap.begin();i!=m_Objmap.end();i++)
-//      {
-//        MonCounter *h = (MonCounter*)i->second;
-//        h->create_OutputService(m_expandInfix);
-//      }
-//    }
-//  }
-  if (m_rpc == 0) delete m_rpc;
-  if ( m_genSrv == 0) delete m_genSrv;
-  if (m_EORsvc == 0) delete m_EORsvc;
-
-
   m_Objmap.clear();
+  if (m_rpc != 0) {delete m_rpc;m_rpc=0;}
+  if ( m_genSrv != 0) {delete m_genSrv;m_genSrv=0;}
+  if (m_EORsvc != 0) {delete m_EORsvc;m_EORsvc=0;}
+
+  if (m_ser != 0) {delete m_ser;m_ser=0;}
+
   this->unLock();
   MonSys::m_instance().remSubSys(this);
   lib_rtl_delete_lock (m_lockid);
