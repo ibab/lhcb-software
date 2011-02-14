@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - Gerhard Raven
+ - replace 'old-event model' Hlt1 lines with empty Configurable stubs
+
 ! 2011-02-14 - V. Gligorov
  - Add a slot to control which L0 Photon channel TrackPhoton
    connects to.

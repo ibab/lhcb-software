@@ -109,22 +109,23 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
             pv3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 3 # default is 5
  
             from HltLine.HltDecodeRaw import DecodeVELO
-            Line( 'Velo' + side
-                , ODIN = self.getProp('ODIN')
-                , L0DU = self.getProp('L0DU')
-                , prescale = self.prescale
-                , algos =
-                [ DecodeVELO, cf, rt, st, gt, pv3D  
-                , Member( 'VF' , 'Decision'
-                        , OutputSelection = '%Decision'
-                        , InputSelection  = 'TES:%s' % pv3D.OutputVerticesName
-                        , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,%s' %self.getProp('MinTrksPerVtx')]
-                        , HistogramUpdatePeriod = 1
-                        , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
-                        )
-                ]
-                , postscale = self.postscale
-                )
+            if False :
+                Line( 'Velo' + side
+                    , ODIN = self.getProp('ODIN')
+                    , L0DU = self.getProp('L0DU')
+                    , prescale = self.prescale
+                    , algos =
+                    [ DecodeVELO, cf, rt, st, gt, pv3D  
+                    , Member( 'VF' , 'Decision'
+                            , OutputSelection = '%Decision'
+                            , InputSelection  = 'TES:%s' % pv3D.OutputVerticesName
+                            , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,%s' %self.getProp('MinTrksPerVtx')]
+                            , HistogramUpdatePeriod = 1
+                            , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
+                            )
+                    ]
+                    , postscale = self.postscale
+                    )
 
             # The following code leaks memory, and is NOT yet ready for inclusion
             if False :
