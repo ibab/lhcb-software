@@ -354,6 +354,14 @@ void MonCounter::create_OutputService(std::string infix)
   }
   return;
 }
+void MonCounter::delete_OutputService()
+{
+  if (m_service != 0)
+  {
+    delete m_service;
+    m_service = 0;
+  }
+}
 DimService *MonCounter::getDimService()
 {
   return this->m_service;

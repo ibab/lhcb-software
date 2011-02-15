@@ -67,6 +67,7 @@ public:
   void *de_serialize(void *, char *nam=0){nam=nam;return 0;};
   void SetExpand(bool expand){this->m_expandService = expand;return;};
   void create_OutputService(std::string);
+  void delete_OutputService();
   DimService *getDimService();
 };
 //#ifdef __cplusplus

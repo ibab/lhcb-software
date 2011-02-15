@@ -36,6 +36,17 @@ MonSubSys::~MonSubSys()
   delete m_updateTimer;
   SysIter i;
   this->Lock();
+  if (m_expandnames)
+  {
+    if (m_type == MONSUBSYS_Counter)
+    {
+      for (SysIter i =m_Objmap.begin();i!=m_Objmap.end();i++)
+      {
+        MonCounter *h = (MonCounter*)i->second;
+        h->delete_OutputService();
+      }
+    }
+  }
   for (i =m_Objmap.begin();i!=m_Objmap.end();i++)
   {
     MonObj *h = i->second;
