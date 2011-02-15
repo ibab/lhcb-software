@@ -5,7 +5,6 @@
 from Gaudi.Configuration import WARNING,DEBUG
 # from GaudiConf.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltTracking.HltReco import MinimalVelo
 
 
 ####### create binders...
@@ -45,6 +44,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiCountHltTracks,
                                 LumiFlagMethod
                                 )
+    from HltTracking.HltReco import MinimalVelo
     fastVeloContainer = MinimalVelo.outputSelection()
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
@@ -153,8 +153,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiRecoFilterSequence.Members.append( recoScaler )
         fastVeloContainer = MinimalVelo.outputSelection()
         lumiRecoFilterSequence.Members.append(
-            Sequence('HltRZVeloBWSequence'
-                     , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
+            Sequence('HltVeloBWSequence'
+                     , Members  = [ HltTrackFilter('HltPrepareVeloBW'
                                                    , InputSelection   = fastVeloContainer
                                                    , Code = [ 'TrBACKWARD' ]
                                                    , OutputSelection     = 'VeloBW'
