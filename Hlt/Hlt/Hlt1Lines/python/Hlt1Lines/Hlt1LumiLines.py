@@ -151,6 +151,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from Configurables import GaudiSequencer as Sequence
         lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
         lumiRecoFilterSequence.Members.append( recoScaler )
+        from HltTracking.HltReco import MinimalVelo
         fastVeloContainer = MinimalVelo.outputSelection()
         lumiRecoFilterSequence.Members.append(
             Sequence('HltVeloBWSequence'
