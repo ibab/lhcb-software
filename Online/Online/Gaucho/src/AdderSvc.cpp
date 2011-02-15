@@ -97,11 +97,11 @@ StatusCode AdderSvc::start()
   StringReplace(m_TaskPattern,"<node>",nodename);
   StringReplace(m_TaskPattern,"<part>", m_PartitionName);
   m_TaskPattern += "(.*)";
+  StringReplace(m_ServicePattern,"<node>",nodename);
+  StringReplace(m_ServicePattern,"<part>", m_PartitionName);
   if (m_AdderType == "node")
   {
 //    m_MyName = nodename+std::string("_Adder");
-    StringReplace(m_ServicePattern,"<node>",nodename);
-    StringReplace(m_ServicePattern,"<part>", m_PartitionName);
     if (m_ServicePattern == "")
     {
       m_ServicePattern = "MON_"+m_TaskPattern+"/Histos/";
@@ -124,15 +124,13 @@ StatusCode AdderSvc::start()
       m_InputDNS = nodename;
     }
     myservicename = m_MyName;
-    std::string repl = "_"+m_PartitionName+"_";
-    StringReplace(myservicename, (char*)"_", repl);
+    StringReplace(myservicename, "<part>", m_PartitionName);
+    StringReplace(myservicename, "<node>", nodename);
   }
   else if (m_AdderType == "top" || m_AdderType == "part")
   {
-//    m_MyName = m_PartitionName+std::string("_Adder");
     if (m_ServicePattern != "")
     {
-      StringReplace(m_ServicePattern, (char*)"<part>", m_PartitionName);
       m_ServicePattern +="/Histos/";
     }
     else
@@ -143,7 +141,9 @@ StatusCode AdderSvc::start()
     {
       m_InputDNS = std::string("hlt01");
     }
-    myservicename = m_PartitionName+"_"+m_MyName;
+    myservicename = m_MyName;
+    StringReplace(myservicename, "<part>", m_PartitionName);
+    StringReplace(myservicename, "<node>", nodename);
   }
   else
   {
