@@ -26,6 +26,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "OutputTracksName" , m_outputLocation = LHCb::TrackLocation::Velo );
+  declareProperty( "HitManagerName"   , m_hitManagerName = "FastVeloHitManager" );
 
   declareProperty( "OnlyForward"     , m_onlyForward    = false );
   declareProperty( "OnlyBackward"    , m_onlyBackward   = false );
@@ -79,7 +80,7 @@ StatusCode FastVeloTracking::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_hitManager  = tool<FastVeloHitManager>( "FastVeloHitManager", "FastVeloHitManager" );
+  m_hitManager  = tool<FastVeloHitManager>( "FastVeloHitManager", m_hitManagerName );
   m_debugTool   = 0;
   if ( "" != m_debugToolName ) m_debugTool = tool<IPatDebugTool>( m_debugToolName );
 

@@ -74,6 +74,8 @@ protected:
 
 private:
   std::string m_outputLocation;
+  std::string m_hitManagerName;
+  
   //== Overall control parameters
 
   bool   m_onlyForward;
