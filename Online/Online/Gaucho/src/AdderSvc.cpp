@@ -36,7 +36,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
   declareProperty("PartitionName",m_PartitionName="LHCb");
   declareProperty("SaveSetTaskName",m_SaverTaskName="Moore");
   declareProperty("ExpandRate",m_ExpandRate=false);
-  declareProperty("TaskPattern",m_TaskPattern="");
+  declareProperty("TaskPattern",m_TaskPattern);
   declareProperty("ServicePattern",m_ServicePattern="");
   declareProperty("AdderType",m_AdderType="node"); //Possible values are
 //  'node' for a node adder,
@@ -81,7 +81,7 @@ StatusCode AdderSvc::start()
   toLowerCase(nodename);
 // Nodeadders:
 // Source task names:
-//  Reconstruction task structure: <Partition>_<Node>_Brunel_xx
+//  Reconstruction task structure: <Partition>_<Node>_RecBrunel_xx
 //  HLT Task structure: <node>_GAUCHOJOB_xx
 //  Nodeadder output name:
 //   Reconstruction: <part>_<node>_RecAdder_xx
@@ -94,20 +94,17 @@ StatusCode AdderSvc::start()
 //   Reconstruction: <part>_<node>_RecAdder_xx
 //   HLT: <sfnname>_Adder_xx     sfname = hltxyy
 //
+  StringReplace(m_TaskPattern,"<node>",nodename);
+  StringReplace(m_TaskPattern,"<part>", m_PartitionName);
+  m_TaskPattern += "(.*)";
   if (m_AdderType == "node")
   {
-    if (m_TaskPattern == "")
-    {
-      m_TaskPattern = nodename+std::string("_")+m_TaskName+std::string("(.*)");
-    }
-    else
-    {
-      m_TaskPattern = nodename+std::string("_")+m_TaskPattern+std::string("(.*)");
-    }
 //    m_MyName = nodename+std::string("_Adder");
+    StringReplace(m_ServicePattern,"<node>",nodename);
+    StringReplace(m_ServicePattern,"<part>", m_PartitionName);
     if (m_ServicePattern == "")
     {
-      m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+      m_ServicePattern = "MON_"+m_TaskPattern+"/Histos/";
     }
     if (m_InputDNS == "")
     {
@@ -117,35 +114,21 @@ StatusCode AdderSvc::start()
   }
   else if (m_AdderType == "sf" || m_AdderType == "subfarm")
   {
-    if (m_TaskPattern == "")
-    {
-      m_TaskPattern = nodename+std::string("[0-9][0-9]_Adder(.*)");
-    }
-    else
-    {
-      m_TaskPattern = nodename+m_TaskPattern+std::string("(.*)");
-    }
 //    m_MyName = nodename+std::string("_Adder");
     if (m_ServicePattern == "")
     {
-      m_ServicePattern = std::string("MON_")+m_TaskPattern+std::string("/Histos/");//+m_ServiceName;
+      m_ServicePattern = "MON_"+m_TaskPattern+"/Histos/";//+m_ServiceName;
     }
     if (m_InputDNS == "")
     {
       m_InputDNS = nodename;
     }
-    myservicename = m_MyName.replace(m_MyName.find("_"),1,std::string("_")+m_PartitionName+std::string("_"));
+    myservicename = m_MyName;
+    std::string repl = "_"+m_PartitionName+"_";
+    StringReplace(myservicename, (char*)"_", repl);
   }
   else if (m_AdderType == "top" || m_AdderType == "part")
   {
-    if (m_TaskPattern != "")
-    {
-      StringReplace(m_TaskPattern,(char *)"<part>",m_PartitionName);
-    }
-    else
-    {
-      m_TaskPattern = std::string("hlt[a=z][0-9][0-9]_Adder(.*)");
-    }
 //    m_MyName = m_PartitionName+std::string("_Adder");
     if (m_ServicePattern != "")
     {

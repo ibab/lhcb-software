@@ -22,7 +22,7 @@ dyn_string *Strsplit(char *s, char *del)
   }
   return v;
 };
-void StringReplace(std::string &in, char *patt, std::string &repl)
+void StringReplace(std::string &in, const char *patt, std::string &repl)
 {
   if (in.find(patt) != std::string::npos)
   {
