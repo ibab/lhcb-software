@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - Chris Jones
+ - Initialise m_ppSvc in TupleToolWZJets during initialize() method and
+   not the Constructor.
+
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
 
