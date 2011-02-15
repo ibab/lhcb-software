@@ -8,6 +8,23 @@
 # It is equivalent to a "cmt broadcast make", or, if invoked with "-j" to a
 # "tbroadcast make -j", but better. 
 #
+# Targets:
+#   all: build all the packages (default)
+#   clean: clean all the packages
+#   purge: clean and remove the files by the Makefile
+#   <packagename>: build the package and all the packages it depends on
+#
+# Arguments:
+#   PKG_ONLY : if set, build only the the package specified as target
+#   no_all_groups : if set, build only the main cmt group (all) and not all the
+#                   available ones
+#   LOG_LOCATION : optional directory for the build log files, dependencies etc.
+#                  if not specified, the current directory is used for the
+#                  dependencies and build logs are put in the cmt directory
+#   Package_failure_policy : can be set to stop, skip or ignore (see later
+#                            comment for details)
+#   logging : enabled (default on unix) or disabled (only possibility on windows)
+#
 # This makefile works on Windows as long as you install some Unix standard
 # commands (apart from a standard LHCb environment):
 #
@@ -36,20 +53,36 @@
 platform := $(if $(findstring windows,$(shell uname)),windows,unix)
 
 # --- List of Packages in the current directory
-packages := $(strip $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements)))
+packages := $(strip $(subst /cmt/requirements,,$(shell find . -name requirements | grep cmt/requirements | sed 's/.\///') )) 
 
-# --- Utility functions 
+# --- Utility functions
 escape_slash = $(subst /,_slash_,$(1))
 unescape_slash = $(subst _slash_,/,$(1))
+full_name = $(subst /,_,$(1))
 
 #  Note: The command "cmt show groups" does not work in old versions of CMT
 cmt_version := $(shell cmt version)
 cmt2008 = $(findstring v1r20p2008, $(cmt_version))
 
-ifeq (,$(cmt2008))
-  groups = all $(shell cd $(1)/cmt ; cmt show groups)
+# ATLAS cmt tag implies no_all_groups and the use of LOG_LOCATION
+ifeq ($(findstring ATLAS,$(CMTEXTRATAGS)),ATLAS)
+  no_all_groups = yes
+  ifndef LOG_LOCATION
+    LOG_LOCATION := LOG_$(CMTCONFIG)
+  endif
+  make_extra_flags += --no-print-directory
+endif
+
+
+ifeq ($(no_all_groups),)
+  ifeq (,$(cmt2008))
+    groups = all $(shell cd $(1)/cmt ; cmt show groups)
+  else
+    groups = all all_groups
+  endif
 else
-  groups = all all_groups
+  # build only the main group
+  groups = all
 endif
 
 # --- Common configuration variables
@@ -75,8 +108,13 @@ endif
 # Banners to be printed for the targets.
 define build_banner
 echo "#==============================================================================="
-echo "# Building package $(1)"
+echo "# Building package $(1) ["`ls $(dependency_dir) | grep -c ".*\.pack\.build"`"/$(words $(packages))]"
 echo "#==============================================================================="
+endef
+define build_banner_in_file
+echo "#===============================================================================" > $(2)
+echo "# Building package $(1) ["`ls $(dependency_dir) | grep -c ".*\.pack\.build"`"/$(words $(packages))]" >> $(2)
+echo "#===============================================================================" >> $(2)
 endef
 define clean_banner
 echo "#==== Cleaning package $(1)"
@@ -140,21 +178,36 @@ endif
 # --- Declare the variables that have to be exported
 export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEXT
 
+# --- Declare directories for dependencies, stamp files and log files
+dependency_dir = .$(CMTCONFIG).d
+logfile = $(1)/cmt/build.$(CMTCONFIG).log
+ifdef LOG_LOCATION
+  dependency_dir = $(LOG_LOCATION)/.$(CMTCONFIG).d
+  logfile = $(LOG_LOCATION)/$(call full_name,$(1)).log
+endif
+pkg_build_flag = $(dependency_dir)/$(call full_name,$(1)).pack.build
+
 # --- Main targets
 all: $(packages:=_build)
 
 clean: $(packages:=_clean)
 	$(RM) -r InstallArea/$(CMTCONFIG)
+ifdef LOG_LOCATION
+	$(RM) -r $(LOG_LOCATION)
+endif
 
 # This hack is needed because the stand-alone bash implementation on Windows is very limited (short command line)
-purge: clean $(foreach dep,$(wildcard .$(CMTCONFIG).d/*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
-	$(RM) -r .$(CMTCONFIG).d
+purge: clean $(foreach dep,$(wildcard $(dependency_dir)/*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
+	$(RM) -r $(dependency_dir)
 %_do_purge: clean
 	$(RM) $*
 
 # This should be the actual implementation
 #purge: clean
-#	$(RM) .$(CMTCONFIG).d/*.pack.d $(packages:=/cmt/$(Makefile))
+#	$(RM) $(dependency_dir)/*.pack.d $(packages:=/cmt/$(Makefile))
+
+remove_build_flags:
+	@$(RM) -r $(dependency_dir)/*.pack.build
 
 # --- Add rules to build packages (e.g. "make MyHat/MyPackage")
 $(foreach pack,$(packages),$(eval $(pack): $(pack)_build))
@@ -175,24 +228,28 @@ ifeq (,$(cmt2008))
 %/cmt/version.cmt: %/cmt/requirements
 	@echo Generate $@
 	@awk 'BEGIN{version="v*"}/^ *version/{version = $$2}END{print version}' $< > $@
-%_build: %/cmt/$(Makefile) %/cmt/version.cmt
+%_build: remove_build_flags %/cmt/$(Makefile) %/cmt/version.cmt
 else
-%_build: %/cmt/$(Makefile)
+%_build: remove_build_flags %/cmt/$(Makefile)
 endif
+	@touch $(call pkg_build_flag,$*)
 	@$(call build_banner,$*)
 ifeq ($(logging),enabled)
-	@date > $*/cmt/build.$(CMTCONFIG).log
+	@$(call build_banner_in_file,$*,$(call logfile,$*))
+	@date >> $(call logfile,$*)
+	@echo `cat $*/cmt/version.cmt`" "$* >> $(call logfile,$*)
+	@PWD=`pwd`
 	@+cd $*/cmt ; $(strip_makeflags) \
 	for group in $(call groups,$*) ; do \
-		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
-		cmt make $(make_extra_flags) $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS ; \
-		date >> build.$(CMTCONFIG).log ; \
+	    $(if $(no_all_groups),,echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ;) \
+		cmt make $(make_extra_flags) $$group 2>&1 | tee -a $(PWD)/$(call logfile,$*) ; export BUILD_RESULT=$$PIPESTATUS ; \
+		date >> $(PWD)/$(call logfile,$*) ; \
 		$(Package_failure_handler) \
 	done
 else
 	@+cd $*/cmt ; $(strip_makeflags) \
 	for group in $(call groups,$*) ; do \
-		echo "# Building group $$group"; \
+	    $(if $(no_all_groups),,echo "# Building group $$group";) \
 		cmt make $(make_extra_flags) $$group ; export BUILD_RESULT=$$? ; \
 		$(Package_failure_handler) \
 	done
@@ -212,22 +269,22 @@ endif
 # dependencies between packages.
 ifndef PKG_ONLY
 MKDEPCMD := cmt show uses | sed 's/^\# */\# /' | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print $$5"/"$$3}else{print $$3}}'
-.$(CMTCONFIG).d/%.pack.d: pack=$(call unescape_slash,$*)
-.$(CMTCONFIG).d/%.pack.d:
+$(dependency_dir)/%.pack.d: pack=$(call unescape_slash,$*)
+$(dependency_dir)/%.pack.d:
 	@echo Computing dependencies for package $(pack)
-	@$(MKDIR) -p .$(CMTCONFIG).d
+	@$(MKDIR) -p $(dependency_dir)
 	@echo $(pack)_build: $(patsubst %,%_build,$(filter $(packages),$(shell cd $(pack)/cmt; $(MKDEPCMD)))) > $@
 	@echo $@: $(pack)/cmt/requirements >> $@
 
 ifneq ($(MAKECMDGOALS),purge)
--include $(patsubst %,.$(CMTCONFIG).d/%.pack.d,$(call escape_slash, $(packages)))
+-include $(patsubst %,$(dependency_dir)/%.pack.d,$(call escape_slash, $(packages)))
 endif
 deps:
 	@#fake target to force the build of the dependencies (implied by the include)
 endif
 
 # --- List of phony targets
-.PHONY: all clean purge deps
+.PHONY: all clean purge deps remove_build_flags
 # This makes the package targets PHONY (.PHONY does not work with implicit rules)
 $(foreach pack,$(packages),$(eval $(pack)_config $(pack)_build $(pack)_clean: FORCE))
 FORCE:

@@ -33,7 +33,7 @@ endif
 endif
 endif
 ifeq ($(_building_container),true)
-$(warning Adding "no-pyzip" to the CMTEXTRATAGS)
+$(info Adding "no-pyzip" to the CMTEXTRATAGS)
 override CMTEXTRATAGS := no-pyzip,$(CMTEXTRATAGS)
 ifeq ($(platform),windows)
 ifeq ($(find CMTEXTRATAGS,$(make_extra_flags)),)
