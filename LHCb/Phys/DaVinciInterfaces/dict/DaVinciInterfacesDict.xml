@@ -49,5 +49,7 @@
   <class name = "ISetInputParticles"/>
   <class name = "IJets2Jets"/>
   <class name = "IDecayTreeFit"/>
+  
+  <class pattern = "extend_interfaces*"/>
 
 </lcgdict>
