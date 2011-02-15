@@ -106,9 +106,6 @@ StatusCode ParticleMakerBase::loadEventInput() {
               << this->inputLocations() << endmsg;
   }
 
-  always() << ">>> ProtoParticleMakerBase::loadEventInput: load ProtoParticles from "
-           << this->inputLocations() << endmsg;
-
   m_protos.clear();
 
   std::vector<std::string>::const_iterator iLoc = this->inputLocations().begin();
@@ -117,6 +114,10 @@ StatusCode ParticleMakerBase::loadEventInput() {
   for ( ; iLoc != iLocEnd ; ++iLoc ) {
     if ( exist<LHCb::ProtoParticle::Container>( *iLoc )){
       const LHCb::ProtoParticle::Container* pp = get< LHCb::ProtoParticle::Container > ( *iLoc) ;
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "load " << pp->size() << " ProtoParticles from "
+                  << *iLoc << endmsg;
+      }
       LHCb::ProtoParticle::Container::const_iterator iPP = pp->begin();
       LHCb::ProtoParticle::Container::const_iterator iPPEnd = pp->end();
       for ( ; iPP!=iPPEnd; ++iPP) m_protos.push_back(*iPP);
