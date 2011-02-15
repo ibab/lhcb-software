@@ -92,11 +92,5 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
     
 
     def __apply_configuration__(self) : 
-        from HltLine.HltLine import Hlt1Line   as Line
-
-        # First the pass-through NoPV line
-        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
-                                        , prescale = self.prescale
-                                        , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon,lowMult','DiMuon,lowMult'] ] )
-                                        , postscale = self.postscale)  
+        pass
 

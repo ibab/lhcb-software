@@ -61,16 +61,14 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
     def diMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
-            '%(name)sStreamer' % properties,
+            'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  execute( 'MuonRec' )
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
-            >>  execute( decodeIT )
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
@@ -98,16 +96,15 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
         from Configurables import LoKi__HltUnit as HltUnit
 
         unit = HltUnit(
-            '%(name)sStreamer' % properties,
+            'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  execute( 'MuonRec' )
+            >>  RecoPV3D
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
-            >>  execute( decodeIT )
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
@@ -115,7 +112,6 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  RecoPV3D
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
             >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
@@ -135,16 +131,14 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
     def singleMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
-            '%(name)sStreamer' % properties,
+            'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  execute( 'MuonRec' )
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
-            >>  execute( decodeIT )
             >>  TightForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
@@ -180,3 +174,12 @@ class Hlt1NewMuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
+
+        from HltLine.HltLine import Hlt1Line   as Line
+
+        # First the pass-through NoPV line
+        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
+                                        , prescale = self.prescale
+                                        , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon,lowMult','DiMuon,lowMult'] ] )
+                                        , postscale = self.postscale)  
+
