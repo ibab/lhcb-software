@@ -514,10 +514,22 @@ protected:
    *
    * @return vector or strings with TES input locations
    */
-  inline const std::vector<std::string>& inputLocations() {
+  inline const std::vector<std::string>& inputLocations() const {
     return m_inputLocations;
   }
   
+  /**
+   * Access to the list of TES input locations given by the InputLocations
+   * property
+   *
+   * @return vector or strings with TES input locations
+   */
+  inline std::vector<std::string>& inputLocations() {
+    return m_inputLocations;
+  }
+  
+
+
   /// the actual tyep for mapping "tool nickname -> the actual type/name"
   typedef std::map<std::string,std::string> ToolMap     ;
   // typedef SimpleProperty<ToolMap>           ToolMapProp ;
