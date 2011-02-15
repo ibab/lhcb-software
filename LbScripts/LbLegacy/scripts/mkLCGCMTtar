@@ -184,6 +184,30 @@ def get_lcg_version(cmtpath):
         pos = p.find('LCGCMT_')
         if pos != -1 :
             return p[pos:]
+
+def getPackPrefix(pak, packages_versions, with_version=True):
+    lcg_ext_loc = os.environ["LCG_external_area"]
+    bin_dir = packages_versions[pak][2]
+    nat_version = packages_versions[pak][0]
+    pack_path = ""
+    if len(packages_versions[pak]) > 3 :
+        full_pack_path = packages_versions[pak][3]
+        if full_pack_path.startswith(lcg_ext_loc + os.sep) :
+            pack_path = full_pack_path.replace(lcg_ext_loc + os.sep, "")
+    else :
+        # special case for LCGCMT
+        pack_path = os.sep.join([pak, nat_version])
+
+    if bin_dir in pack_path :
+        pack_path = pack_path[:pack_path.find(bin_dir)]
+
+    if (not with_version) and nat_version :
+        pack_path = pack_path[:pack_path.find(nat_version)]
+
+    if pack_path.endswith(os.sep) :
+        pack_path = pack_path[:-1]
+
+    return pack_path
 #----------------------------------------------------------------------------
 #  get native versions ==============================================
 #----------------------------------------------------------------------------
@@ -391,29 +415,28 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 # loop over external packages
     missing = []
     tarko   = []
-    for key in packages_versions.keys():
-        value = packages_versions[key][0]
-        ext_bin_dir = packages_versions[key][2]
+    for pack in packages_versions.keys():
+        value = packages_versions[pack][0]
+        ext_bin_dir = packages_versions[pack][2]
         tar_dir = lcg_tar_dir
-        file, dirlist = get_tar_name(tar_dir,key, value, ext_bin_dir)
+        file, dirlist = get_tar_name(tar_dir,pack, value, ext_bin_dir)
         if file == None:
             tar_dir = lhcbtar
-            file, dirlist = get_tar_name(tar_dir, key, value, ext_bin_dir)
+            file, dirlist = get_tar_name(tar_dir, pack, value, ext_bin_dir)
         if debug_flag == 1: print 'get_tar_files %s %s ' % (file, dirlist)
         if file != None:
             Ffile = os.path.join(tar_dir,file)
-            pack = file.split('_')[0]
             if debug_flag == 1: print Ffile
 
-            packpath = os.path.join(pack,value)
+            packpath = getPackPrefix(pack, packages_versions)
             if debug_flag == 1: print 'get_tar_file packpath= ',packpath
 
             str = 'tar --extract --ungzip --file '+Ffile
             rc = os.system(str)
 
             if rc != 0:
-                print "Wrong %s %s %s tar file" % (key, value, ext_bin_dir)
-                tarko.append(os.path.join(key,value, ext_bin_dir))
+                print "Wrong %s %s %s tar file" % (pack, value, ext_bin_dir)
+                tarko.append(os.path.join(pack,value, ext_bin_dir))
             elif len(dirlist) != 0:
                 # if binary = slc4_ia32_gcc345 rename it to slc4_ia32_gcc34
                 if not os.path.isdir(os.path.join(packpath,ext_bin_dir)):
@@ -429,6 +452,11 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
                         str = 'mv '+po+' '+pn
                         rc = os.system(str)
                         print ' move %s/%s to %s/%s' %(packpath,po,packpath,pn)
+                # if the external binary directory is not the same as the
+                # one for the name of the tarball: create a link.
+                if ext_bin_dir != binary_dir :
+                    if not os.path.exists(os.path.join(packpath, binary_dir)):
+                        os.symlink(ext_bin_dir, os.path.join(packpath, binary_dir))
                 # remove doc, test and tests directories if any
                 for dir in ['doc', 'test', 'tests', 'examples', 'tutorial']:
                     if os.path.isdir(os.path.join(packpath,dirlist[0],dir)):
@@ -441,9 +469,9 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
                         os.remove(os.path.join(packpath,dirlist[0],lnk))
                         print 'remove %s '%(os.path.join(packpath,dirlist[0],lnk))
         else:
-            if not (key == 'CASTOR' and ((ext_bin_dir.find('win32') != -1) or (ext_bin_dir.find("winxp") != -1) )):
-                print "%s %s %s is missing" % (key, value, ext_bin_dir)
-                missing.append(os.path.join(key,value,ext_bin_dir))
+            if not (pack == 'CASTOR' and ((ext_bin_dir.find('win32') != -1) or (ext_bin_dir.find("winxp") != -1) )):
+                print "%s %s %s is missing" % (pack, value, ext_bin_dir)
+                missing.append(os.path.join(pack,value,ext_bin_dir))
 
 # clean CLHEP directory
     if os.path.isdir('clhep'):

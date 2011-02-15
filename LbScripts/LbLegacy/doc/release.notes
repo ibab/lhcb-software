@@ -1,3 +1,8 @@
+2011-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: added cross linking for the icc11 CMTCONFIG which is using gcc43 for
+	the LCG externals.
+
 2011-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: use the CMTCommand function from the LbUtils.CMT.Common module.
