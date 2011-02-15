@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - David Hutchcroft
+ - Changed interface to CountVeloTracks, now using ICountContainedObjects
+ - Removed Tr/TrackInterfaces from requirements
+
 !========================= RecAlgs v2r0 2011-02-02 =========================
 ! 2011-02-02 - Rob Lambert
  - New major version because this changes what's in the DST

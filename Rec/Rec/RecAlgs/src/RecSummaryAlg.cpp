@@ -57,7 +57,7 @@ StatusCode RecSummaryAlg::initialize()
     ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
   m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
-  m_countVeloTracks = tool<ICountVeloTracks>("CountVeloTracks");
+  m_countVeloTracks = tool<ICountContainedObjects>("CountVeloTracks");
 
   return sc;
 }
@@ -91,7 +91,7 @@ StatusCode RecSummaryAlg::execute()
       else if ( (*iTk)->type() == LHCb::Track::Velo &&
                 (*iTk)->checkFlag(LHCb::Track::Backward)  ) { ++nBack; }
     }
-    const int nVelo = m_countVeloTracks->nVeloTracks(*tracks);
+    const int nVelo = m_countVeloTracks->nObj(tracks);
 
     // Save track info to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
