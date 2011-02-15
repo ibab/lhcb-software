@@ -15,12 +15,13 @@
 //-----------------------------------------------------------------------------
 
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/ICountVeloTracks.h"
+#include "Kernel/ICountContainedObjects.h"
 #include "LoKi/select.h"
 #include "boost/bind.hpp"
+#include "Event/Track.h"
 
 class CountVeloTracks : public GaudiTool,
-  virtual public ICountVeloTracks {
+  virtual public ICountContainedObjects {
 
 public:
 
@@ -38,16 +39,8 @@ public:
   *
   *  @return number of distinct VELO tracks
   */
-  virtual unsigned int nVeloTracks ( const LHCb::Tracks& tracks ) const;
+  virtual unsigned int nObj ( const ObjectContainerBase * cont ) const;
                                                                            
-  /** Returns number of distinct VELO tracks contributing to the container
-  *
-  *  @param tracksLocation TES location of the Tracks container
-  *
-  *  @return number of distinct VELO tracks
-  */
-  virtual unsigned int nVeloTracks ( const std::string& tracksLocation ) const;
-
  private:
 
   /// get a vector of LHCbID for VELO only from a track pointer

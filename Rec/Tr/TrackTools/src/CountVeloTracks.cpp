@@ -25,11 +25,17 @@ CountVeloTracks::CountVeloTracks( const std::string& type,
   GaudiTool ( type, name, parent ) {
 
   // interface
-  declareInterface<ICountVeloTracks>(this);
+  declareInterface<ICountContainedObjects>(this);
 }
 
 
-unsigned int CountVeloTracks::nVeloTracks( const LHCb::Tracks& tracks ) const{
+unsigned int CountVeloTracks::nObj( const ObjectContainerBase * cont ) const{
+
+  const LHCb::Tracks * tracks = dynamic_cast<const LHCb::Tracks*>(cont);
+  if(!tracks){
+    error() << "Input is not an LHCb::Tracks container" <<endmsg;
+    return 0;
+  }
 
   // to save some run on lines later define a type for a container
   // first is the first VELO LHCbID on the track, second a track pointer
@@ -37,8 +43,8 @@ unsigned int CountVeloTracks::nVeloTracks( const LHCb::Tracks& tracks ) const{
   // somewhere to put tracks with VELO parts
   LocalMM localCont;
 
-  for (LHCb::Tracks::const_iterator iterT = tracks.begin();
-       iterT != tracks.end(); ++iterT ){
+  for (LHCb::Tracks::const_iterator iterT = tracks->begin();
+       iterT != tracks->end(); ++iterT ){
     if( !(*iterT)->hasVelo() ) continue; //skip tracks without VELO components
 
     std::vector<LHCb::LHCbID> cvids;
@@ -64,7 +70,3 @@ unsigned int CountVeloTracks::nVeloTracks( const LHCb::Tracks& tracks ) const{
   return localCont.size();
 }
 
-unsigned int CountVeloTracks::nVeloTracks( const std::string& tracksLocation ) const{
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>(tracksLocation);
-  return this->nVeloTracks(*tracks);
-}

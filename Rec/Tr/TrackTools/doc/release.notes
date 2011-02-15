@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - David Hutchcroft
+ - Change interface for CountVeloTracks to ICountContainedObjects
+
 ! 2011-02-12 - Chris Jones
  - Fix memory leak in MuonTTrack.cpp
 
