@@ -286,7 +286,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
 /// IInterface implementation : queryInterface
 StatusCode CheckpointSvc::queryInterface(const InterfaceID& riid, void** ppIf)   {
   if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
-    *ppIf = (IRunable*)this;
+    *ppIf = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;
   }
@@ -320,7 +320,7 @@ StatusCode CheckpointSvc::initialize() {
       return sc;
     }
     m_incidentSvc->addListener(this,"APP_INITIALIZED");
-    m_incidentSvc->addListener(this,"APP_STARTED");
+    m_incidentSvc->addListener(this,"APP_RUNNING");
     m_incidentSvc->addListener(this,"APP_STOPPED");
   }
   return sc;
@@ -762,6 +762,12 @@ void CheckpointSvc::handle(const Incident& inc) {
       }
       resumeMainInstance();
     }
+  }
+  else if ( inc.type() == "APP_RUNNING" ) {
+    string proc  = RTL::processName();
+    ::dis_start_serving((char*)proc.c_str());
+    MsgStream log(msgSvc(),name());
+    log << MSG::WARNING << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   }
   else if ( inc.type() == "APP_STOPPED" ) {
   }
