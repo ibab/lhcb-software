@@ -2,6 +2,16 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+! 2011-02-14 - Tomasz Szumlak
+ - considerably large changes in the VeloFull decoding software to cope
+   with the nzs data that are sent together with the VeloError banks.
+   PrepareVeloFullRawBuffer has been redesigned and rewritten. At the 
+   moment, if an ErrorBank is detected it will automatically divide the
+   nzs data stream. The normal data will be prepared, decoded and put at
+   the default location whilst the data associated with an error bank will
+   end up in the container that will be stored at 'Raw/Velo/DecodedPartialADCs'
+   'Partial' here means that the nzs bank that was sent together with an
+   error bank may not be complete.    
 
 !========================= VeloDAQ v6r1 2011-02-01 =========================
 ! 2011-01-31 - Eduardo Rodrigues

@@ -8,6 +8,8 @@
 
 // STL
 #include <vector>
+#include <map>
+#include <utility>
 
 // data model
 #include "Kernel/VeloChannelID.h"
@@ -44,6 +46,8 @@ using namespace LHCb;
 class PrepareVeloFullRawBuffer : public GaudiTupleAlg {
 public: 
 
+  typedef std::map<unsigned int, std::pair<unsigned int, unsigned int* > > DATA_REPO;
+  
   enum parameters{
     ERROR_HEADER_1=1,
     ERROR_HEADER_2=2,
@@ -63,6 +67,14 @@ public:
     ADCShift=10
   };  
 
+  enum BANKS_SIZES{
+    WORD2BYTE=4,
+    EB_FPGAx1=6,
+    COMPLETE_EB=52,
+    FPGAx1=224,
+    FPGAx4=896
+  };
+
   //
   /// Standard constructor
   PrepareVeloFullRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
@@ -76,24 +88,14 @@ public:
   StatusCode getRawEvent();
   // extract vector of the RawBanks of the type VeloFull (non-zero supp.)
   StatusCode getRawBanks();
-  // get the number of the read-out sensors == number of TELL1s
-  void setNumberOfSensors(int sensors);
-  int numberOfSensors();
-  // separate the data stream 
-  void createOrderedSections(int noOfBank);
+  void createOrderedSections();
   // write-out the Gaudi model of the RawBank (with digit objects,
   // header infos and Beetle headers)
   StatusCode writeVeloFull();
-  // return number of TELL1 source (sensor) ID
-  int sourceID(int noOfBank);
   // run after decoding each event
   void resetMemory();
   // use only as emergency checker!
   void dumpADCs(const dataVec& inADCs);
-  // return pointer to the data bank 
-  unsigned int* data(int noOfSensor);
-  // return pointer to the pedestal bank
-  unsigned int* pedestals(int noOfSensor);
   // find object function
   bool findObject(const dataVec& inCont, const unsigned int obj) const;
 
@@ -105,24 +107,28 @@ protected:
   void unsetPedBankFlag();
   bool adcBankFlag();
   bool pedBankFlag();
+  void setDecodeWithErrorBank();
+  bool getDecodeWithErrorBank() const;
 
 private:
 
   LHCb::RawEvent* m_rawEvent;          /// pointer to RawEvent container
   std::string m_rawEventLoc;           /// location of RawEvent container
-  rawVec m_data;                       /// pointers to non-zero suppressed data body
-  rawVec m_ped;                        /// pointers to pedestal bank body
-  int m_numberOfSensors;               /// number of read-out sensors
-  std::vector<int> m_sensors;          /// vector to keep sensors number
+  DATA_REPO m_fullData2Decode;         /// source id and ptr to the bank body - full
+  DATA_REPO m_partialData2Decode;      /// source id and ptr to the bank body - partial
+  DATA_REPO m_pedestalData2Decode;     /// src id and ptr to the bank body - pedestals
+  DATA_REPO m_errorBanks2Check;        /// the same for the error banks
   VeloFullBanks* m_veloADCData;        /// container to store ordered data
+  VeloFullBanks* m_veloADCPartialData;
   VeloFullBanks* m_veloPedestals;      /// container to store ordered pedestals
-  std::string m_veloADCDataContainer;  /// TES locations of decoded data
-  std::string m_veloPedestalsContainer;
+  std::string m_veloADCDataLoc;        /// TES locations of decoded data
+  std::string m_veloPedestalsLoc;
+  std::string m_veloADCPartialDataLoc;
   bool m_adcBankPresent;               /// flag to check if data is sent out
   bool m_pedBankPresent;               /// flag to check if ped is sent out
   bool m_runWithODIN;
-  bool m_roundRobin;
-  bool m_decodeErrorStream;
+  bool m_isDebug;
+  bool m_roundRobin;  
   
 };
 #endif // DECODEVELOFULLRAWBUFFER_H

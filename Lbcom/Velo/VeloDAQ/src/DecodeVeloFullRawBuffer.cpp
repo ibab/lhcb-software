@@ -30,12 +30,15 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
     ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
   m_veloADCLocation ( VeloFullBankLocation::Default ),
+  m_veloPartialADCLocation ( "Raw/Velo/PreparedPartialADC" ),
   m_veloPedLocation ( VeloFullBankLocation::Pedestals ),
   m_decodedADCLocation ( LHCb::VeloTELL1DataLocation::ADCs ),
+  m_decodedPartialADCLocation ( "Raw/Velo/PartialADCs" ),
   m_decodedPedLocation ( LHCb::VeloTELL1DataLocation::Pedestals ),
   m_decodedHeaderLocation ( LHCb::VeloTELL1DataLocation::Headers ),
   m_evtInfoLocation ( EvtInfoLocation::Default ),
   m_veloADCs ( 0 ),
+  m_veloPartialADCs ( 0 ),
   m_veloPeds ( 0 ),
   m_decodedADC ( 0 ),
   m_decodedPed ( 0 ),
@@ -43,15 +46,18 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
   m_evtInfo ( 0 ),
   m_adcDataPresent ( false ),
   m_pedDataPresent ( false ),
-  m_signADC(VeloTELL1::SENSOR_CHANNELS),
-  m_signADCReordered(VeloTELL1::SENSOR_CHANNELS),
-  m_signHeader(256),
-  m_signHeaderReordered(256),
-  m_signPed(VeloTELL1::SENSOR_CHANNELS),
-  m_signPedReordered(VeloTELL1::SENSOR_CHANNELS),
-  m_ADCDecoder(VeloFull),
-  m_HeaderDecoder(VeloHeader),
-  m_PedDecoder(VeloPedestal)
+  m_signADC ( VeloTELL1::SENSOR_CHANNELS ),
+  m_signPartialADC ( VeloTELL1::SENSOR_CHANNELS ),
+  m_signADCReordered ( VeloTELL1::SENSOR_CHANNELS ),
+  m_signPartialADCReordered ( VeloTELL1::SENSOR_CHANNELS ),
+  m_signHeader ( 256 ),
+  m_signHeaderReordered ( 256 ),
+  m_signPed ( VeloTELL1::SENSOR_CHANNELS ),
+  m_signPedReordered ( VeloTELL1::SENSOR_CHANNELS ),
+  m_ADCDecoder ( VeloFull ),
+  m_ADCPartialDecoder ( VeloFull ),
+  m_HeaderDecoder ( VeloHeader ),
+  m_PedDecoder ( VeloPedestal )
 { 
   declareProperty("ADCLocation",
                   m_veloADCLocation=VeloFullBankLocation::Default );
@@ -59,6 +65,8 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
                   m_veloPedLocation=VeloFullBankLocation::Pedestals );
   declareProperty("DecodedADCLocation",
                   m_decodedADCLocation=LHCb::VeloTELL1DataLocation::ADCs );
+  declareProperty("DecodedPartialADCLocation",
+                  m_decodedPartialADCLocation="Raw/Velo/PartialADCs" );
   declareProperty("DecodedPedestalLocation",
                   m_decodedPedLocation=LHCb::VeloTELL1DataLocation::Pedestals );
   declareProperty("DecodedHeaderLocation",
@@ -143,7 +151,7 @@ StatusCode DecodeVeloFullRawBuffer::getData()
     if (m_isDebug) debug() << " ==> There is no data banks at: "
       << adcContName() <<endmsg;
   }else{  
-    // get data banks from default TES location
+    // get the data banks from default TES location
     m_veloADCs=get<VeloFullBanks>(adcContName());
     if (m_isDebug) debug() << " ==> The data banks have been read-in from location: "
         << adcContName()
@@ -156,6 +164,26 @@ StatusCode DecodeVeloFullRawBuffer::getData()
     //
     setADCDataFlag();
   }
+
+  if(!exist<VeloFullBanks>(m_veloPartialADCLocation)){
+
+    if (m_isDebug) debug() << " ==> There is no data banks at: "
+      << "Raw/Velo/PreparedADCs" <<endmsg;
+
+  }else{  
+
+    // get the partial data banks from default TES location
+    m_veloPartialADCs=get<VeloFullBanks>(m_veloPartialADCLocation);
+    if (m_isDebug) debug() << " ==> The data banks have been read-in from location: "
+        << "Raw/Velo/PreparedPartialADCs"
+        << ", size of data container (number of read-out TELL1s): "
+        << m_veloPartialADCs->size() <<endmsg;  
+
+    // --> create container for decoded data
+    m_decodedPartialADC=new LHCb::VeloTELL1Datas();
+
+  }
+
   //
   if(!exist<VeloFullBanks>(pedContName())){
     if (m_isDebug) debug()<< " ==> There is no Pedestals at: "
@@ -234,7 +262,7 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
         int counter=0;
         for(scdatIt iT=m_signADC.begin(); iT!=m_signADC.end(); ++iT){ 
           int channelposition=counter;
-          channelposition = m_cableOrder[channelposition/512]*512 + channelposition % 512;
+          channelposition=m_cableOrder[channelposition/512]*512 + channelposition % 512;
 
           if (m_isDebug) debug() << "ADCbanks: "<< channelposition << " "  <<(*iT) << endmsg;
 
@@ -266,6 +294,46 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
       m_evtInfo->insert(anInfo);
     }
   }
+
+  if(NULL!=m_veloPartialADCs){
+    // --> this part is responsible for the decoding of the partial data
+    //     associated with an error bank
+
+    VeloFullBanks::const_iterator partIt=m_veloPartialADCs->begin();
+    
+    for( ; partIt!=m_veloPartialADCs->end(); ++partIt){
+
+      m_ADCPartialDecoder.decode(*partIt, m_signPartialADC);
+      LHCb::VeloTELL1Data* partData=new LHCb::VeloTELL1Data((*partIt)->key(), VeloFull);
+
+      if(m_sectorCorrection){ // need to correct for wrong cabling 
+
+        int counter=0;
+        scdatIt pIT=m_signPartialADC.begin();
+        
+        for( ; pIT!=m_signPartialADC.end(); ++pIT){ 
+
+          int channelposition=counter;
+          channelposition=m_cableOrder[channelposition/512]*512 + channelposition % 512;
+          m_signPartialADCReordered[channelposition]=static_cast<signed int>(*pIT);
+          counter++;
+
+        }
+
+        partData->setDecodedData(m_signPartialADCReordered);
+
+      }else{ // --> no cable reordering requested
+
+        partData->setDecodedData(m_signPartialADC);
+
+      }
+
+      m_decodedPartialADC->insert(partData);
+
+    }
+
+  }
+
   //
   if(pedDataFlag()){
     for(sensIt=m_veloPeds->begin(); sensIt!=m_veloPeds->end(); sensIt++){
@@ -314,6 +382,15 @@ void DecodeVeloFullRawBuffer::sortAndWriteDecodedData()
     put(m_decodedHeader, decHeaderName());
     put(m_evtInfo, evtInfoName());
   }
+
+  if(NULL!=m_decodedPartialADC)
+  {
+    if(!m_decodedPartialADC->empty()) if (m_isDebug) debug()<< " --> Write some data " <<endmsg;
+    
+    put(m_decodedPartialADC, m_decodedPartialADCLocation);
+
+  }
+
   if(pedDataFlag()){
     // sort decoded pedestals
     std::stable_sort(m_decodedPed->begin(), m_decodedPed->end(),

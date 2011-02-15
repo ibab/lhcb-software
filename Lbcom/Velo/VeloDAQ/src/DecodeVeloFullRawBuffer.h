@@ -57,16 +57,20 @@ protected:
 private:
   // location paths
   std::string m_veloADCLocation;
+  std::string m_veloPartialADCLocation;
   std::string m_veloPedLocation;
   std::string m_decodedADCLocation;
+  std::string m_decodedPartialADCLocation;
   std::string m_decodedPedLocation;
   std::string m_decodedHeaderLocation;
   std::string m_evtInfoLocation;
   // input data
   VeloFullBanks* m_veloADCs;
+  VeloFullBanks* m_veloPartialADCs;
   VeloFullBanks* m_veloPeds;
   // decoded data for futher processing
   LHCb::VeloTELL1Datas* m_decodedADC;
+  LHCb::VeloTELL1Datas* m_decodedPartialADC;
   LHCb::VeloTELL1Datas* m_decodedPed;
   LHCb::VeloTELL1Datas* m_decodedHeader;
   EvtInfos* m_evtInfo;
@@ -77,13 +81,16 @@ private:
   bool m_isDebug;
   // data buffers
   sdataVec m_signADC;
+  sdataVec m_signPartialADC;
   sdataVec m_signADCReordered;
+  sdataVec m_signPartialADCReordered;
   sdataVec m_signHeader;
   sdataVec m_signHeaderReordered;
   sdataVec m_signPed;
   sdataVec m_signPedReordered;
   // decoders
   VeloFullDecoder m_ADCDecoder;
+  VeloFullDecoder m_ADCPartialDecoder;
   VeloFullDecoder m_HeaderDecoder;
   VeloFullDecoder m_PedDecoder;
   // cable order
