@@ -18,12 +18,15 @@ class Hadrons_draft2011 :
 
         lines = [
             # The topological 
-            'Hlt2Topo2Body',
-            'Hlt2Topo3Body',
-            'Hlt2Topo4Body',
-            'Hlt2TopoMu2Body',
-            'Hlt2TopoMu3Body',
-            'Hlt2TopoMu4Body',
+            'Hlt2Topo2BodySimple',
+            'Hlt2Topo3BodySimple',
+            'Hlt2Topo4BodySimple',
+            'Hlt2Topo2BodyBBDT',
+            'Hlt2Topo3BodyBBDT',
+            'Hlt2Topo4BodyBBDT',
+            'Hlt2TopoMu2BodyBBDT',
+            'Hlt2TopoMu3BodyBBDT',
+            'Hlt2TopoMu4BodyBBDT',
             # XGamma
             'Hlt2Bs2PhiGamma',
             'Hlt2Bs2PhiGammaWideBMass',

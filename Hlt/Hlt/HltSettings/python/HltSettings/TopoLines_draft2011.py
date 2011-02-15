@@ -11,12 +11,15 @@ class TopoLines :
     def ActiveHlt2Lines(self) :
         """Returns a list of active lines."""
 
-        lines = ['Hlt2Topo2Body',
-                 'Hlt2Topo3Body',
-                 'Hlt2Topo4Body',
-                 'Hlt2TopoMu2Body',
-                 'Hlt2TopoMu3Body',
-                 'Hlt2TopoMu4Body',
+        lines = ['Hlt2Topo2BodySimple',
+                 'Hlt2Topo3BodySimple',
+                 'Hlt2Topo4BodySimple',
+                 'Hlt2Topo2BodyBBDT',
+                 'Hlt2Topo3BodyBBDT',
+                 'Hlt2Topo4BodyBBDT',
+                 'Hlt2TopoMu2BodyBBDT',
+                 'Hlt2TopoMu3BodyBBDT',
+                 'Hlt2TopoMu4BodyBBDT',
                  ]
         
         return lines
@@ -36,6 +39,10 @@ class TopoLines :
             'ALL_P_MIN'         : 5000.0, # MeV
             'ALL_MIPCHI2DV_MIN' : 4.0,    # unitless
             'ALL_TRCHI2DOF_MAX' : 4.0,    # unitless
+            'KS_MASS_WINDOW'    : 30.0,   # MeV
+            'KSPI_MIPCHI2DV_MIN': 16.0,    # unitless
+            'KS_BPVVDCHI2_MIN'  : 1000.0,  # unitless 
+            'USE_KS'            : True,
             # upfront combo cuts
             'AMAXDOCA_MAX'      : 0.2,    # mm        
             'BPVVDCHI2_MIN'     : 100.0,  # unitless
