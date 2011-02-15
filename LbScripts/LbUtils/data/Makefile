@@ -53,7 +53,12 @@
 platform := $(if $(findstring windows,$(shell uname)),windows,unix)
 
 # --- List of Packages in the current directory
+ifeq ($(platform),windows)
+# we do not have 'find' on Windows, so we stick to at most one level of hats
+packages := $(strip $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements)))
+else
 packages := $(strip $(subst /cmt/requirements,,$(shell find . -name requirements | grep cmt/requirements | sed 's/.\///') )) 
+endif
 
 # --- Utility functions
 escape_slash = $(subst /,_slash_,$(1))
