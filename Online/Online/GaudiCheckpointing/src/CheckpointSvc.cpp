@@ -766,8 +766,6 @@ void CheckpointSvc::handle(const Incident& inc) {
   else if ( inc.type() == "APP_RUNNING" ) {
     string proc  = RTL::processName();
     ::dis_start_serving((char*)proc.c_str());
-    MsgStream log(msgSvc(),name());
-    log << MSG::WARNING << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   }
   else if ( inc.type() == "APP_STOPPED" ) {
   }
