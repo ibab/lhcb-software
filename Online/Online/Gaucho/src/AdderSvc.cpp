@@ -73,7 +73,7 @@ StatusCode AdderSvc::start()
 {
   Service::start();
   std::string myservicename;
-  m_MyName = RTL::processName();
+//  m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
   toLowerCase(m_ServicePattern);
   toLowerCase(m_AdderType);
