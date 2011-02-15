@@ -13,24 +13,9 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
-
 from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
-    #--------------------------------
-    #
-    # (V. Gligorov 15/09/09)
-
-    # steering variables
-    #------------------------
-    #   Single Hadron Line
-    #     SingleHadronViaT_PtCut
-    #   DiHadron Line
-    #     HadViaTMain_IPCut
-    #     HadViaTMain_PtCut
-    #     HadViaTCompanion_IPCut
-    #     HadViaTCompanion_PtCut
-    #
     __slots__ = { 'L0Channel'                   : "Hadron" 
                 , 'HadViaTSingle_IPCut'         : 0.1
                 , 'HadViaTDi_IPCut'             : 0.1

@@ -1,9 +1,5 @@
-
 from Gaudi.Configuration import * 
-
-
 from HltLine.HltLinesConfigurableUser import *
-
 
 class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
@@ -22,11 +18,4 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
     #
     def __apply_configuration__(self) :
-        from HltLine.HltLine import Hlt1Line   as Line
-        from HltLine.HltLine import Hlt1Member as Member
-        from HltLine.HltLine import bindMembers
-        from HltLine.HltLine import Hlt1Tool   as Tool
-        from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
-        from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack, RadCor
-        from HltTracking.Hlt1TrackMatchConf import MatchCallback
-              
+        pass

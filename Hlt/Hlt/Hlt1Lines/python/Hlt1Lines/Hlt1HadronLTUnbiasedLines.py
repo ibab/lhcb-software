@@ -122,7 +122,6 @@ class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
         from HltTracking.HltPVs  import PV3D
         from HltLine.HltDecodeRaw import DecodeIT
         from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack
-        from Configurables import MuonRec, MuonIDAlg
         from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName
         from HltTracking.HltTrackNames import HltAllMuonTracksName, HltMuonIDSuffix
         from MuonID import ConfiguredMuonIDs
