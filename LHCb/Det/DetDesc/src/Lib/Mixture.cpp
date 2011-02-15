@@ -76,7 +76,7 @@ void Mixture::addElement( const SmartRef<Element>& e,
                           const int nOfAtoms ,
                           const bool comp )
 {
-  std::cout << name() << ":: Called addElement(nOfAtoms)" << std::endl;
+  //std::cout << name() << ":: Called addElement(nOfAtoms)" << std::endl;
   //
   if( m_own )
   { throw MaterialException( "Mixture::could not add element!",this);}
@@ -96,7 +96,7 @@ void Mixture::addElement( const SmartRef<Element>& e,
                           const double fraction     ,
                           const bool comp )
 {
-  std::cout << name() << ":: Called addElement(fraction)" << std::endl;
+  //std::cout << name() << ":: Called addElement(fraction)" << std::endl;
   if( m_own            )
   { throw MaterialException("Mixture::could not add element!",this);}
   if( !e               )
@@ -123,7 +123,7 @@ void Mixture::addMixture( const SmartRef<Mixture>& mx,
                           const double fraction, 
                           const bool comp )
 {
-  std::cout << name() << ":: Called addMixture()" << std::endl;
+  //std::cout << name() << ":: Called addMixture()" << std::endl;
   if( !mx ) { throw MaterialException("Mixture::non valid pointer!");}
   //
   for( Elements::const_iterator it = mx->elements().begin() ;
@@ -137,7 +137,7 @@ void Mixture::addMixture( const SmartRef<Mixture>& mx,
 //
 StatusCode Mixture::compute()
 {
-  std::cout << name() << ":: Called compute()" << std::endl;
+  //std::cout << name() << ":: Called compute()" << std::endl;
   if      ( m_atoms.empty()                      )
   { 
     return computeByFraction() ; 
@@ -155,7 +155,7 @@ StatusCode Mixture::compute()
 //
 StatusCode Mixture::computeByAtoms()
 {
-  std::cout << name() << ":: Called computeByAtoms()" << std::endl;
+  //std::cout << name() << ":: Called computeByAtoms()" << std::endl;
   //
   if( m_elements.empty() ) { addMyself() ;}
   //
@@ -187,7 +187,7 @@ StatusCode Mixture::computeByAtoms()
 //
 StatusCode Mixture::computeByFraction()
 {
-  std::cout << name() << ":: Called computeByFraction()" << std::endl;
+  //std::cout << name() << ":: Called computeByFraction()" << std::endl;
   //
   if( !m_atoms.empty() )
   { throw MaterialException(std::string("Mixture::computeByFraciton!")
@@ -311,7 +311,7 @@ StatusCode Mixture::computeByFraction()
 //
 StatusCode Mixture::addMyself()
 {
-  std::cout << name() << ":: Called addMyself()" << std::endl;
+  //std::cout << name() << ":: Called addMyself()" << std::endl;
   if( 0 != m_own         )
   { throw MaterialException(std::string("Mixture::addMyself: ")
                             + "could not add myself twice! ",this); }
