@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - Gerhard Raven
+ - remove any reference to old Hlt1 lines
+
 ! 2011-02-15 - Victor Coco
  - Add a file for displaced vertices line configurations: DV_draft2011.py
 
