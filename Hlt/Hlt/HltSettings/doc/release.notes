@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - V. Gligorov for J.A. and R.A.
+ - Update thresholds and prescales of single muon HLT1 lines to
+   more "realistic" values.
+
 ! 2011-02-14 - Johannes Albrecht
  - add Hlt2SingleMuonLowPT
 
