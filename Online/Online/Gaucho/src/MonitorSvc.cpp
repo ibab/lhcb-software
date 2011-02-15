@@ -182,7 +182,11 @@ StatusCode MonitorSvc::i_start()
 //    printf("In STARTS Method... Counter Manager present... Closing it...\n");
     this->m_CntrMgr->close();
   }
-  if (m_started) return StatusCode::SUCCESS;
+  if (m_started)
+  {
+    this->m_MonSys->start();
+    return StatusCode::SUCCESS;
+  }
   if (m_CntrSubSys != 0)
   {
     m_CntrSubSys->m_expandnames = m_expandCounterServices;
