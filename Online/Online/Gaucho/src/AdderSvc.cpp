@@ -99,6 +99,9 @@ StatusCode AdderSvc::start()
   m_TaskPattern += "(.*)";
   StringReplace(m_ServicePattern,"<node>",nodename);
   StringReplace(m_ServicePattern,"<part>", m_PartitionName);
+  myservicename = m_MyName;
+  StringReplace(myservicename, "<part>", m_PartitionName);
+  StringReplace(myservicename, "<node>", nodename);
   if (m_AdderType == "node")
   {
 //    m_MyName = nodename+std::string("_Adder");
@@ -110,7 +113,6 @@ StatusCode AdderSvc::start()
     {
       m_InputDNS = nodename.substr(0,nodename.size()-2);
     }
-    myservicename = m_MyName;
   }
   else if (m_AdderType == "sf" || m_AdderType == "subfarm")
   {
@@ -123,9 +125,6 @@ StatusCode AdderSvc::start()
     {
       m_InputDNS = nodename;
     }
-    myservicename = m_MyName;
-    StringReplace(myservicename, "<part>", m_PartitionName);
-    StringReplace(myservicename, "<node>", nodename);
   }
   else if (m_AdderType == "top" || m_AdderType == "part")
   {
@@ -141,9 +140,6 @@ StatusCode AdderSvc::start()
     {
       m_InputDNS = std::string("hlt01");
     }
-    myservicename = m_MyName;
-    StringReplace(myservicename, "<part>", m_PartitionName);
-    StringReplace(myservicename, "<node>", nodename);
   }
   else
   {
