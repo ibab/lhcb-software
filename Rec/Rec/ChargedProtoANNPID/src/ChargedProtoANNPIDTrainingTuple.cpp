@@ -45,7 +45,7 @@ StatusCode ChargedProtoANNPIDTrainingTuple::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_tuple = 
-    tool<IChargedProtoANNPIDTupleTool>( "ANNGlobalPID::IChargedProtoANNPIDTupleTool", 
+    tool<IChargedProtoANNPIDTupleTool>( "ANNGlobalPID::ChargedProtoANNPIDTupleTool", 
                                         "Tuple", this );
   
   return sc;
