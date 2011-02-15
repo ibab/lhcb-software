@@ -282,7 +282,7 @@ double DeSTSector::portNoise(const unsigned int& beetle,
   }
 
   const std::vector<DeSTSector::Status> statusVector = stripStatus();
-
+  
   double sum(0.), number(0.);
 
   for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle +
@@ -310,6 +310,22 @@ double DeSTSector::portNoise(const unsigned int& beetle,
   }
 }
 
+void DeSTSector::setNoise(const unsigned int& strip, const double& value)
+{
+  Condition* aCon = condition(m_noiseString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  } 
+  else
+  {
+    std::vector<double>& reference =
+      aCon -> param< std::vector< double > >( "SectorNoise" );
+    reference[strip-1] = value;
+    m_noiseValues[strip-1] = value;
+  }
+} 
+
 void DeSTSector::setNoise(const std::vector<double>& values)
 {
   Condition* aCon( condition(m_noiseString) );
@@ -327,8 +343,23 @@ void DeSTSector::setNoise(const std::vector<double>& values)
   }
 } 
 
+void DeSTSector::setCMNoise(const unsigned int& strip, const double& value)
+{
+  Condition* aCon = condition(m_noiseString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  } 
+  else
+  {
+    std::vector<double>& reference =
+      aCon -> param< std::vector< double > >( "cmNoise" );
+    reference[strip-1] = value;
+    m_noiseValues[strip-1] = value;
+  }
+} 
 
- void DeSTSector::setCMNoise(const std::vector<double>& values)
+void DeSTSector::setCMNoise(const std::vector<double>& values)
 {
   Condition* aCon( condition(m_noiseString) );
   if (aCon == 0)
@@ -345,7 +376,7 @@ void DeSTSector::setNoise(const std::vector<double>& values)
   }
 } 
 
- void DeSTSector::setADCConversion(const std::vector<double>& values)
+void DeSTSector::setADCConversion(const std::vector<double>& values)
 {
   Condition* aCon( condition(m_noiseString) );
   if (aCon == 0)
@@ -361,8 +392,6 @@ void DeSTSector::setNoise(const std::vector<double>& values)
     m_electronsPerADC = values;
   }
 } 
-
-
 
 double DeSTSector::cmNoise(const LHCb::STChannelID& aChannel) const
 {

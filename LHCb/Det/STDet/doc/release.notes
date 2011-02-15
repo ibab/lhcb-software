@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2011-02-15 - Frederic Dupertuis
+- Add setNoise and setCMNoise in DeSTSector using a strip or STChannelID
+
 !========================= STDet v4r23 2011-01-31 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong

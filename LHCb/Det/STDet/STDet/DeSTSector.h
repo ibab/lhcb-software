@@ -103,19 +103,24 @@ public:
    */
   double portNoise(const unsigned int& beetle, const unsigned int& port) const;
 
-  /** get the ADC count from the electron number
-   * @param e electron number
-   * @param aChannel channel
-   * @return ADC count
+  /** set the Noise of the corresponding strip 
+   * @param strip strip number
+   * @param value Noise value
    */
-
-  /** set the noise vector 
-  * @param noise
-  */
+  void setNoise(const unsigned int& strip, const double& value);
+  
+  /** set the Noise of the corresponding channel 
+   * @param chan channel
+   * @param value Noise value
+   */
+  void setNoise(const LHCb::STChannelID &chan, const double& value);
+  
+  /** set the Noise vector 
+   * @param values Noise vector
+   */
   void setNoise(const std::vector<double>& values);
-
-
- /** get the noise of the corresponding strip
+  
+  /** get the Noise of the corresponding strip
    * @param aChannel channel
    * @return double noise of the strip
    */
@@ -163,16 +168,33 @@ public:
    */
   double cmPortNoise(const unsigned int& beetle, const unsigned int& port) const;
 
-  /** set the cmMode vector
-  * @param cm noise
-  */
+  /** set the cmNoise of the corresponding strip 
+   * @param strip strip number
+   * @param value cmNoise value
+   */
+  void setCMNoise(const unsigned int& strip, const double& value);
+  
+  /** set the cmNoise of the corresponding channel 
+   * @param chan channel
+   * @param value cmNoise value
+   */
+  void setCMNoise(const LHCb::STChannelID &chan, const double& value);
+  
+  /** set the cmNoise vector
+   * @param values cmNoise vector
+   */
   void setCMNoise(const std::vector<double>& values);
- 
-  /** set the noise vector 
-  * @param noise
-  */
+  
+  /** set the ACD count from the electron number vector 
+   * @param values 
+   */
   void setADCConversion(const std::vector<double>& values);
-
+  
+  /** get the ADC count from the electron number
+   * @param e electron number
+   * @param aChannel channel
+   * @return ADC count
+   */
   double toADC(const double& e, const LHCb::STChannelID& aChannel) const;
 
   /** get the ADC count from the electron number
@@ -227,7 +249,7 @@ public:
    */
   bool isStrip(const unsigned int strip) const;
 
-
+  
   /** trajectory
    * @return trajectory for the fit
    */
@@ -606,6 +628,18 @@ inline unsigned int DeSTSector::beetle(const unsigned int strip) const{
 
 inline unsigned int DeSTSector::nBeetle() const{
   return nStrip()/LHCbConstants::nStripsInBeetle;
+}
+
+inline void DeSTSector::setNoise(const LHCb::STChannelID &chan, const double& value)
+{
+  // just delegate
+  setNoise(chan.strip(),value);
+}
+
+inline void DeSTSector::setCMNoise(const LHCb::STChannelID &chan, const double& value)
+{
+  // just delegate
+  setCMNoise(chan.strip(),value);
 }
 
 inline DeSTSector::Status DeSTSector::sectorStatus() const{
