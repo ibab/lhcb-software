@@ -1,5 +1,5 @@
 // Include files
-//#include "/usr/include/valgrind/callgrind.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/Service.h"
@@ -55,10 +55,13 @@ static std::string makeoname(const IInterface *owner)
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   if(IMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IMonitorSvc*> (this);
+    *ppvIF = (IMonitorSvc*)this;
   }
   else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
+    *ppvIF = (IGauchoMonitorSvc*)this;
+  }
+  else if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
+    *ppvIF = (IIncidentListener*)this;
   }
   else {
     return Service::queryInterface(riid, ppvIF);
@@ -136,23 +139,44 @@ StatusCode MonitorSvc::initialize()
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
 
- // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
-  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
+ // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
+  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endmsg;
 
 
   if ( 0 == m_disableMonRate) {
   }
-  else  msg << MSG::DEBUG << "MonRate process is disabled." << endreq;
+  else  msg << MSG::DEBUG << "MonRate process is disabled." << endmsg;
 
+  sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
+  if( !sc.isSuccess() ) {
+    msg << MSG::FATAL << "Service [IncidentSvc] not found" << endmsg;
+    return sc;
+  }
+  m_incidentSvc->addListener(this,"APP_RUNNING");
+  m_incidentSvc->addListener(this,"APP_STOPPED");
 
   return StatusCode::SUCCESS;
 }
+
+/// Incident handler implemenentation: Inform that a new incident has occured
+void MonitorSvc::handle(const Incident& inc) {
+  MsgStream log(msgSvc(),name());
+  log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  if ( inc.type() == "APP_RUNNING" ) {
+    i_start();
+  }
+}
+
 StatusCode MonitorSvc::start()
+{
+  return Service::start();
+}
+
+StatusCode MonitorSvc::i_start()
 {
 //  CALLGRIND_START_INSTRUMENTATION
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endreq;
-  Service::start();
+  msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
   if (m_CntrMgr != 0)
   {
 //    printf("In STARTS Method... Counter Manager present... Closing it...\n");
@@ -239,7 +263,14 @@ StatusCode MonitorSvc::finalize()
 
   //dim_lock();
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "MonitorSvc Destructor" << endreq;
+  msg << MSG::DEBUG << "MonitorSvc Destructor" << endmsg;
+
+  if ( m_incidentSvc ) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+    m_incidentSvc = 0;
+  }
+
   if (m_started)
   {
     m_started = false;
@@ -265,7 +296,7 @@ StatusCode MonitorSvc::finalize()
     delete m_CntrMgr;
     this->m_CntrMgr = 0;
   }
-  msg << MSG::DEBUG << "finalized successfully" << endreq;
+  msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
   StatusCode sc = Service::finalize();
   return StatusCode::SUCCESS;
@@ -283,7 +314,7 @@ void MonitorSvc::declareInfo(const std::string& name, const bool&  ,
 {
   std::string oname = makeoname(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "declareInfo bool not implemented " << name << endreq;
+  msg << MSG::ERROR << "declareInfo bool not implemented " << name << endmsg;
   return;
 }
 //
@@ -319,7 +350,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq;
+      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -368,7 +399,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq;
+      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -416,7 +447,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq;
+      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -447,7 +478,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& ,
 {
   std::string oname = makeoname(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "declareInfo for strings not implemented" + name << endreq;
+  msg << MSG::ERROR << "declareInfo for strings not implemented" + name << endmsg;
   return;
 }
 void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,double>& ,
@@ -461,7 +492,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,dou
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring pairs " << name << endreq;
+  msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring pairs " << name << endmsg;
   return;
 }
 //
@@ -499,7 +530,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
-   msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endreq;
+   msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
   if (name.find("COUNTER_TO_RATE") != std::string::npos)
   {
     std::string newName = extract("COUNTER_TO_RATE", name);
@@ -523,7 +554,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq;
+      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -549,7 +580,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 {
 	  std::string oname = makeoname(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
- // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+ // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
 
   if (m_started)
   {
@@ -557,7 +588,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   }
   if (0 != m_disableDeclareInfoHistos)
   {
-    msg << MSG::INFO << "m_disableDeclareInfoHistos DISABLED " << endreq;
+    msg << MSG::INFO << "m_disableDeclareInfoHistos DISABLED " << endmsg;
     return;
   }
   if( 0 != dynamic_cast<const AIDA::IProfile1D* >(var) )
@@ -571,7 +602,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   }
   else
   {
-    msg << MSG::ERROR << "Unknown histogram type. Source " << name << endreq;
+    msg << MSG::ERROR << "Unknown histogram type. Source " << name << endmsg;
     return;
   }
   if (m_HistSubSys == 0)
@@ -589,7 +620,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   }
   else
   {
-    msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring histograms/profiles without using MonObjects " << endreq;
+    msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring histograms/profiles without using MonObjects " << endmsg;
     return;
   }
 
@@ -598,7 +629,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "Inside declareMonRateComplement" << endreq;
+  msg << MSG::DEBUG << "Inside declareMonRateComplement" << endmsg;
 
   if ( 0 == m_disableMonRate)
   {
@@ -614,7 +645,7 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, in
     }
     m_HistSubSys->m_updateTimer->setExtLastDelta((unsigned long long *)&deltaT);
   }
-  else  msg << MSG::INFO << "Complement of MonRate was not declared because MonRate process is disabled." << endreq;
+  else  msg << MSG::INFO << "Complement of MonRate was not declared because MonRate process is disabled." << endmsg;
 
 }
 
@@ -631,22 +662,22 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
 
-  msg << MSG::DEBUG << "registerName: " << name << endreq;
+  msg << MSG::DEBUG << "registerName: " << name << endmsg;
   m_InfoNamesMapIt = m_InfoNamesMap.find(owner);
   std::string ownerName = infoOwnerName(owner);
   if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
     std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
     if( p.second) {
-      msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+      msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endmsg;
     }
     else
     { // Insertion failed: Name already exists
-      msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
+      msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endmsg;
       return false;
     }
   }
   else { // Create a new set for this algo and insert name
-    msg << MSG::DEBUG << "registerName: creating new map for owner: "<< ownerName << " name: " << name << endreq;
+    msg << MSG::DEBUG << "registerName: creating new map for owner: "<< ownerName << " name: " << name << endmsg;
     m_InfoNamesMap[owner]=std::set<std::string>();
     m_InfoNamesMap[owner].insert(name);
   }

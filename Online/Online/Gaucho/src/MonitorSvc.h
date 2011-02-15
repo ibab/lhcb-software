@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/StatEntity.h"
 #include <string>
@@ -11,6 +12,7 @@
 
 // Forward declarations
 class ISvcLocator;
+class IIncidentSvc;
 class MonObject;
 class MonSys;
 class MonSubSys;
@@ -32,20 +34,27 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service, virtual public IMonitorSvc, virtual public IGauchoMonitorSvc
+class MonitorSvc : public Service, 
+  virtual public IMonitorSvc, 
+  virtual public IGauchoMonitorSvc,
+  virtual public IIncidentListener
 {
+  StatusCode i_start();
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
   virtual ~MonitorSvc();
   //IInterface pure virtual member functions
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   // Service pure virtual member functions
-  StatusCode initialize();
-  StatusCode start();
-  StatusCode stop();
-  StatusCode finalize();
+  virtual StatusCode initialize();
+  virtual StatusCode start();
+  virtual StatusCode stop();
+  virtual StatusCode finalize();
   void Lock(void);
   void UnLock(void);
+
+  /// Incident handler implemenentation: Inform that a new incident has occured
+  virtual void handle(const Incident& inc);
 
   /** Declare monitoring information
       @param name Monitoring information name knwon to the external system
@@ -127,6 +136,9 @@ private:
   typedef InfoNamesMap::iterator InfoNamesMapIt;
   InfoNamesMap  m_InfoNamesMap;
   InfoNamesMapIt m_InfoNamesMapIt;
+  /// Reference to the IncidentSvc instance
+  IIncidentSvc             *m_incidentSvc;
+
 
 //  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
 //  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
