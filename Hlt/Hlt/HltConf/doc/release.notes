@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-15 - Gerhard Raven
+ - remove references to old-style Hlt1 lines
+
 ! 2011-02-11 - Jibo He
  - Hlt1.py
    Added Hlt1DiProton line
