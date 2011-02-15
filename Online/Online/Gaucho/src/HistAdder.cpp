@@ -383,7 +383,7 @@ HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
   m_buffersize = 0;
   m_buffer = 0;
   m_usedSize = 0;
-  m_reference =0;
+  m_reference =-1;
   m_serviceName = svc_prefix +std::string(serviceName);
   m_expandRate = false;
   m_srcnode = "";
