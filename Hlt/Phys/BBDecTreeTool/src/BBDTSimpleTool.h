@@ -1,37 +1,34 @@
 // $Id: $  -*- C++ -*-
-#ifndef BBDecTreeTool_H
-#define BBDecTreeTool_H
+#ifndef BBDTSimpleTool_H
+#define BBDTSimpleTool_H
 // ============================================================================
 // Include files 
-#include <string>
-#include <fstream>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "BBDTVarHandler.h"
 // ============================================================================
-/** @class BBDecTreeTool
- *  This tool performs BBDT cuts for the HLT2 topological lines.
+/** @class BBDTSimpleTool
+ *  This tool performs "easy" BBDT cuts for the HLT2 topological lines.
  *  
  *  The tool can be used with LoKi/Bender functors :
  *
  *  @code 
- *     xxx.Code = " ... & FILTER('BBDecTreeTool') "
+ *     xxx.Code = " ... & FILTER('BBDTSimpleTool') "
  *  @endcode
  *
  *  @see LoKi::Cuts::FILTER 
  *  @see IParticleFilter
- *  @author Mike Williams (w/ help from Vanya of course!)
- *  @date 2011-01-19
+ *  @author Mike Williams 
+ *  @date 2011-02-15
  *  
  *                    $Revision:$
  *  Last modification $Date:$
  *                 by $Author:$
  * 
  */ 
-class BBDecTreeTool : public extends1<GaudiTool,IParticleFilter>{
+class BBDTSimpleTool : public extends1<GaudiTool,IParticleFilter>{
 
-  friend class ToolFactory<BBDecTreeTool>; ///< friend factory 
-
+  friend class ToolFactory<BBDTSimpleTool>; ///< friend factory 
   public:
 
   /** initialize tool */
@@ -40,7 +37,7 @@ class BBDecTreeTool : public extends1<GaudiTool,IParticleFilter>{
   /** finalize tool */
   virtual StatusCode finalize() {return GaudiTool::finalize();}
   
-  /** performs the filtering based on the BBDecTreeTool response
+  /** performs the filtering based on the BBDT "easy" cuts
    *  @see IParticleFilter 
    */
   virtual bool operator()(const LHCb::Particle* p) const ;
@@ -52,43 +49,31 @@ protected:
    *  @param name the tool instance name 
    *  @param parent the tool parent 
    */
-  BBDecTreeTool(const std::string& type, const std::string& name, 
+  BBDTSimpleTool(const std::string& type, const std::string& name, 
 		const IInterface* parent);  
   
   /// virtual & protected destructor 
-  virtual ~BBDecTreeTool(){};
+  virtual ~BBDTSimpleTool(){};
   
 private:
 
   /// default constructor is disabled 
-  BBDecTreeTool();
+  BBDTSimpleTool();
   
   /// copy constructor is disabled 
-  BBDecTreeTool(const BBDecTreeTool&);
+  BBDTSimpleTool(const BBDTSimpleTool&);
   
   /// assignemet operator is disabled 
-  BBDecTreeTool& operator=(const BBDecTreeTool&);
-  
-  /// utility method for file read errors
-  StatusCode readError(const std::string &msg) const;
-
-  /// utility method to obtain index to m_values
-  int getIndex() const;
-  
-  /// utility method to obtain split index for single variable
-  int getVarIndex(int varIndex, double value) const; 
+  BBDTSimpleTool& operator=(const BBDTSimpleTool&);
   
   // properties
-  double m_threshold; ///< response threshold (cut) value
-  std::string m_paramFile; ///< parameter file (full path)
+  int m_nbody; ///< 2,3 or 4-body?
   
   // attributes
-  int m_ntrees; ///< number of trees used in training
-  std::vector<std::vector<double> > m_splits; ///< variable split points
-  std::vector<unsigned short int> m_values; ///< response values 
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
   const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
   mutable BBDTVarHandler m_vars; ///< variables
 }; 
 // ============================================================================
-#endif /* BBDecTreeTool_H */
+#endif /* BBDTSimpleTool_H */
+
