@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - Chris Jones
+ - Update Expert histogram python options to adapt to changes in ANN training
+   tool algorithm configuration
+
 !========================= GlobalReco v6r34 2011-01-17 =========================
 ! 2011-01-14 - Chris Jones
  - Add new ANN PID Probabilities to the ProtoParticle Tuple
