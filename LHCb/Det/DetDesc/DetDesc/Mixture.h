@@ -1,7 +1,7 @@
 // $Id: Mixture.h,v 1.15 2008-10-28 12:04:37 cattanem Exp $ 
-// ============================================================================ 
+// ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================ 
+// ============================================================================
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
 // detDesc
@@ -22,77 +22,80 @@
  *
  *  @author Radovan Chytracek
  */
-class Mixture : public  Material  
+class Mixture : public  Material
 {
-  ///  
+
 public:
-  ///
+
   typedef std::pair<double,SmartRef<Element> >  Entry    ;
   typedef std::vector<Entry>                    Elements ;
   typedef std::vector<int>                      Atoms    ;
-  ///
+
   /// Constructors for simple materials
-  Mixture( const std::string&  name    = ""               , 
-           const double        a       = 0                , 
-           const double        z       = 0                , 
-	   const double        i       = 0                ,
+  Mixture( const std::string&  name    = ""               ,
+           const double        a       = 0                ,
+           const double        z       = 0                ,
+           const double        i       = 0                ,
            const double        density = 0                ,
-           const double        rl      = 0                , 
+           const double        rl      = 0                ,
            const double        al      = 0                ,
            const double        temp    = Gaudi::Units::STP_Temperature,
            const double        press   = Gaudi::Units::STP_Pressure,
            const eState        s       = stateUndefined   );
-  
+
   /// Destructor
   virtual ~Mixture();
-  
+
   /// Number of components in the material mixture
   inline int nOfItems() const;
-  
-  /** Add an element into the mixture by specifying:
-   *   a) the fraction of the mass ( material mixture )
-   *  b) the number of the atoms  ( material compund )
+
+  /** Add an element into the mixture by specifying
+   *  the number of the atoms  ( material compuund )
    */
-  void addElement( const SmartRef<Element>& e  , 
-                   const int    nOfAtoms , 
+  void addElement( const SmartRef<Element>& e  ,
+                   const int    nOfAtoms ,
                    const bool comp = false );
-  void addElement( const SmartRef<Element>& e  , 
-                   const double fraction , 
+
+  /** Add an element into the mixture by specifying
+   * the fraction of the mass ( material mixture )
+   */
+  void addElement( const SmartRef<Element>& e  ,
+                   const double fraction ,
                    const bool comp = false );
-  
+
   /** Add another mixture into this mixture by specifying its fraction
       of the mass
   */
-  void addMixture( const SmartRef<Mixture>& mx , 
-                   const double fraction , 
+  void addMixture( const SmartRef<Mixture>& mx ,
+                   const double fraction ,
                    const bool comp = false);
-  
-  /// Return i-th element's pointer
-  const SmartRef<Element>&  element ( const unsigned int i ) const ;  
-        SmartRef<Element>&  element ( const unsigned int i )       ;  
 
-  /// return all elements 
+  /// Return i-th element's pointer
+  const SmartRef<Element>&  element ( const unsigned int i ) const ;
+  SmartRef<Element>&  element ( const unsigned int i )       ;
+
+  /// return all elements
   inline const Elements&           elements() const ;
   inline       Elements&           elements()       ;
-  
-  /// compute all quantities 
+
+  /// compute all quantities
   StatusCode compute();
-  
+
   /// Return fraction of mass of the i-th element
   double   elementFraction( const unsigned int i ) const ;
-  
-  /// Obligatory implementation of Material interface
-  
-  ///        Atomic mass [g/mole]
+
+  // Obligatory implementation of Material interface
+
+  //       Atomic mass [g/mole]
   virtual inline double    A() const;
   virtual inline void   setA( const double value );
-  ///        Atomic number
+  //       Atomic number
   virtual inline double    Z() const;
-  virtual inline void   setZ( const double value );  
-  ///        Mean excitation energy
+  virtual inline void   setZ( const double value );
+  //       Mean excitation energy
   virtual inline double    I() const;
-  virtual inline void   setI( const double value ); 
-  ///       Parameters for Density Effect Correction
+  virtual inline void   setI( const double value );
+  //       Parameters for Density Effect Correction
   virtual inline double    C() const;
   virtual inline void   setC( const double value );
   virtual inline double    a() const;
@@ -104,39 +107,45 @@ public:
   virtual inline double    X1() const;
   virtual inline void   setX1( const double value );
 
- 
 
- ///        Number of nucleons
+
+  ///        Number of nucleons
   virtual inline double    N() const;
-  ///
+  
   virtual inline const CLID& clID    () const { return Mixture::classID(); }
-  static         const CLID& classID ()       { return CLID_Mixture      ; } 
+  static         const CLID& classID ()       { return CLID_Mixture      ; }
 
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)
   virtual MsgStream&    fillStream ( MsgStream&    s ) const ;
-  ///
+
+public:
+
+  /// Reset the properties back to defaults
+  virtual void reset();
+
 protected:
-  ///
+
+  /// Add Myself ...
   StatusCode addMyself();
   /// Compute effective A,Z,I and fractions for compounds
-  StatusCode computeByAtoms();  
+  StatusCode computeByAtoms();
   /// Compute effective A,Z,I and number of atoms per volume for each element
   StatusCode computeByFraction () ;
-  ///  
+
 private:
-  
+
   /// Vector of elements
   Elements       m_elements ;
-  
+
   /// Corresponding number of atoms for each element
   Atoms          m_atoms    ;
 
   /// own element (if needed)
-  Element*       m_own      ;  
+  Element*       m_own      ;
 
-  ///
+  
   double         m_A ;
   double         m_Z ;
   double         m_I ;
@@ -145,11 +154,9 @@ private:
   double         m_C ;
   double         m_X0;
   double         m_X1;
-  ///
+  
 };
 
-///
 #include "DetDesc/Mixture.icpp"
-///
-   
+
 #endif // DETDESC_MIXTURE_H

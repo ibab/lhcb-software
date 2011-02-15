@@ -26,13 +26,11 @@ inline bool Material::operator==( const Material* right ) const { return right =
 /////////////////////////////////////////////////////////////////////////////////
 inline bool Material::operator!=( const Material* right ) const { return right != this ; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const std::string& Material::name      () const {
-  if (m_name.empty()) {
-    IRegistry* pReg = registry();
-    return (0!=pReg) ? pReg->identifier() : m_name;    
-  } else {
-    return  m_name ;
-  }
+inline const std::string& Material::name      () const 
+{
+  return ( !m_name.empty() ? m_name                     :
+           0 != registry() ? registry()->identifier()   :
+           m_name );
 }
 
 /////////////////////////////////////////////////////////////////////////////////
