@@ -47,16 +47,10 @@ protected:
   virtual StatusCode makeParticles(LHCb::Particle::Vector& ) = 0 ;
 
   /// protoparticles
-  const LHCb::ProtoParticles* protos(){
-    const LHCb::ProtoParticles* pp = 0 ;
-    if ( exist<LHCb::ProtoParticles>( m_input )){
-      pp = get< LHCb::ProtoParticles > (m_input);
-    } else {
-      Exception("No ProtoParticles at "+m_input);
-    }
-    return pp ;
+  const LHCb::ProtoParticle::ConstVector& protos() const {
+    return m_protos;
   }
-
+  
   // BremStrahlung correction for electron
   void addBrem(LHCb::Particle* particle){
     bool ok = false;
@@ -97,6 +91,9 @@ protected:
   std::vector<std::string> m_addBremPhoton;
 
 private:
+
+  /// Local ProtoParticle container.
+  LHCb::ProtoParticle::ConstVector m_protos;
   /// Track selector tool
   IBremAdder* m_brem;
 

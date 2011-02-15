@@ -132,13 +132,13 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
 
   
   // Load the ProtoParticles
-  const ProtoParticles * pps = protos() ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps->size() 
+  const LHCb::ProtoParticle::ConstVector& pps = protos() ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps.size() 
                                     << " ProtoParticles at "<< m_input << endmsg;
   
   // loop over ProtoParticles
-  for ( ProtoParticles::const_iterator iProto = pps->begin();
-        pps->end() != iProto; ++iProto )
+  for ( LHCb::ProtoParticle::ConstVector::const_iterator iProto = pps.begin();
+        pps.end() != iProto; ++iProto )
   {
     // get point to track (should always exist for charged tracks)
     const Track * track = (*iProto)->track();

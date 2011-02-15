@@ -27,7 +27,8 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
   , m_app    ( 0 )
   , m_brem    ( NULL )
 {
-  declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ; 
+  declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ;
+  
   declareProperty ( "Particle" , m_pid = "UNDEFINED" , "Particle to create : pion, kaon, muon..."   ) ;
   declareProperty( "AddBremPhotonTo",  m_addBremPhoton, "particleIDs to be Brem-corrected (default : electrons only)");
   m_addBremPhoton.push_back( "e+" );
@@ -42,6 +43,14 @@ StatusCode ParticleMakerBase::initialize ( ) {
   if ( getDecayDescriptor() == "" ) setDecayDescriptor(m_pid) ;
   // BremStrahlung correction
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
+
+  if (this->inputLocations().empty()) {
+    this->inputLocations().push_back(m_input);
+  } else {
+    m_input="";
+  }
+  
+  
 
   return sc;
 }
@@ -93,8 +102,31 @@ StatusCode ParticleMakerBase::execute()
 StatusCode ParticleMakerBase::loadEventInput() {
 
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << ">>> loadEventInput: do nothing. " << endmsg;
+    verbose() << ">>> ProtoParticleMakerBase::loadEventInput: load ProtoParticles from "
+              << this->inputLocations() << endmsg;
   }
+
+  always() << ">>> ProtoParticleMakerBase::loadEventInput: load ProtoParticles from "
+           << this->inputLocations() << endmsg;
+
+  m_protos.clear();
+
+  std::vector<std::string>::const_iterator iLoc = this->inputLocations().begin();
+  std::vector<std::string>::const_iterator iLocEnd = this->inputLocations().end();
+  
+  for ( ; iLoc != iLocEnd ; ++iLoc ) {
+    if ( exist<LHCb::ProtoParticle::Container>( *iLoc )){
+      const LHCb::ProtoParticle::Container* pp = get< LHCb::ProtoParticle::Container > ( *iLoc) ;
+      LHCb::ProtoParticle::Container::const_iterator iPP = pp->begin();
+      LHCb::ProtoParticle::Container::const_iterator iPPEnd = pp->end();
+      for ( ; iPP!=iPPEnd; ++iPP) m_protos.push_back(*iPP);
+    } else {
+      Info("No ProtoParticles at " + *iLoc);
+      continue;
+    }
+  }
+  
+
   return StatusCode::SUCCESS;
   
 }

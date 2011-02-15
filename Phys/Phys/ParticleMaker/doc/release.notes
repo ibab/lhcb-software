@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2011-02-15 - Juan Palacios
+ - ParticleMakerBase::loadEventInput loads ProtoParticles from various locations,
+   specified by Inputs.
+ - ParticleMakerBase::protos() now returns const LHCb::ProtoParticle::ConstVector&
+
 ! 2011-02-11 - Juan Palacios
  - Override DVAlgorithm::loadEventInput to avoid loading Particles and so
    on.

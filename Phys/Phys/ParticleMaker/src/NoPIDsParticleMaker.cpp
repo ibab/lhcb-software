@@ -82,10 +82,10 @@ StatusCode NoPIDsParticleMaker::makeParticles
   
   size_t number = 0 ;
   // get all input data
-  const LHCb::ProtoParticles* pps = protos() ;
+  const LHCb::ProtoParticle::ConstVector& pps = protos() ;
   // loop over all protoparticles 
-  for(LHCb:: ProtoParticles::const_iterator ipp = pps->begin() ; 
-      pps->end() != ipp ; ++ipp ) 
+  for(LHCb:: ProtoParticle::ConstVector::const_iterator ipp = pps.begin() ; 
+      pps.end() != ipp ; ++ipp ) 
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Trying PP " << *ipp << endmsg;
     const LHCb::ProtoParticle* pp = *ipp ;

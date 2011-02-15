@@ -131,7 +131,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
   }
 
   // locate input data
-  const LHCb::ProtoParticles* pps = protos() ;
+  const LHCb::ProtoParticle::ConstVector& pps = protos() ;
 
   unsigned long nPp    = 0 ;
   unsigned long nSelPp = 0 ;
@@ -139,10 +139,10 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
   m_count[0] += 1;
 
   // Loop over PP
-  for( LHCb::ProtoParticles::const_iterator ipp = pps->begin() ;
-       pps->end() != ipp ; ++ipp ){
+  for( LHCb::ProtoParticle::ConstVector::const_iterator ipp = pps.begin() ;
+       pps.end() != ipp ; ++ipp ){
 
-    LHCb::ProtoParticle* pp = *ipp ;
+    const LHCb::ProtoParticle* pp = *ipp ;
 
     // skip invalid and charged
     if ( 0 == pp || 0 != pp->track() )   { continue ; }
