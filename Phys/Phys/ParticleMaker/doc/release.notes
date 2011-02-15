@@ -7,6 +7,7 @@
  - ParticleMakerBase::loadEventInput loads ProtoParticles from various locations,
    specified by Inputs.
  - ParticleMakerBase::protos() now returns const LHCb::ProtoParticle::ConstVector&
+ - Increase to v6r0.
 
 ! 2011-02-11 - Juan Palacios
  - Override DVAlgorithm::loadEventInput to avoid loading Particles and so
