@@ -26,7 +26,7 @@ public:
   ObjService (ObjSerializer *,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
 //  ObjService (const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
   void Updater();
-  void setHeader(SerialHeader &hdr){m_hdr=hdr;};
+//  void setHeader(SerialHeader &hdr){m_hdr=hdr;};
   void setRunNo(int runno){m_hdr.run_number=runno;};
   void setTime(long long tim){m_hdr.ser_tim=tim;};
   void setEORflag(bool val);

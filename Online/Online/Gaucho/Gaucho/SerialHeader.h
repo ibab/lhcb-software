@@ -10,10 +10,12 @@
 
 #define SERHEADER_Compress 1<<0
 #define SERHEADER_Version 1
+#define SERIAL_MAGIC 0xfeedbabe
 
 class SerialHeader
 {
 public:
+  unsigned int m_magic;
   int flags;
   int version;
   int comp_version;

@@ -64,6 +64,7 @@ void ObjService::Updater()
     int bs=sizeof(m_hdr);
     //CCPCHSys &s=CCPCHSys::m_instance();
     ptr = m_ser->SerializeObj(pp,bs);
+    m_hdr.m_magic = SERIAL_MAGIC;
     m_hdr.buffersize = bs-sizeof(m_hdr);
     memcpy(ptr,&m_hdr,sizeof(m_hdr));
     siz = bs;

@@ -39,6 +39,12 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     m_received++;
     return;
   }
+  if (((SerialHeader*)buff)->m_magic != SERIAL_MAGIC)
+  {
+    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+    m_received++;
+    return;
+  }
   m_expected = m_inputServicemap.size();
   long long cltime;
   SerialHeader* header= ((SerialHeader*)buff);
