@@ -325,46 +325,38 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   double inSiliconY = inSilicon.y();
 
   // for points too close to the silicon edge subtarct 1/1000 of a mm
-  if ( (fabs(inSiliconX)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthX ) {
+  if ( (fabs(inSiliconX)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthX ) 
+  {
     const int signX = ( inSiliconX > 0.0 ? 1 : -1 );
     inSiliconX -= signX*0.001*Gaudi::Units::mm;
   }
 
-  if ( (fabs(inSiliconY)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthY ) {
+  if ( (fabs(inSiliconY)+0.001*Gaudi::Units::mm) > m_siliconHalfLengthY ) 
+  {
     const int signY = ( inSiliconY > 0.0 ? 1 : -1 );
     inSiliconY -= signY*0.001*Gaudi::Units::mm;
   }
 
   // if point still outside silicon flag an error
-  if ( (fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*Gaudi::Units::mm) ||
-       (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm)   )
+  if ( ( fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*Gaudi::Units::mm ) ||
+       ( fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm )  )
   {
     error() << "Point " << inSilicon << " is outside the silicon box "
             << DeHPD(HPDNumber)->name() << endmsg;
     return StatusCode::FAILURE;
   }
-
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-#pragma warning(disable:2259) // non-pointer conversion from "double" to "unsigned int" may lose significant bits
-#pragma warning(push)
-#endif
+  
   // pixel 0,0 is at min x and max y (top left corner)
-  const unsigned int pixelColumn = static_cast<unsigned int>
-    ((m_siliconHalfLengthX + inSiliconX) / m_pixelSize);
-  const unsigned int pixelRow    = static_cast<unsigned int>
-    ((m_siliconHalfLengthY - inSiliconY) / m_pixelSize);
+  const unsigned int pixelColumn = (unsigned int)((m_siliconHalfLengthX+inSiliconX)/m_pixelSize);
+  const unsigned int pixelRow    = (unsigned int)((m_siliconHalfLengthY-inSiliconY)/m_pixelSize);
 
-  id.setPixelRow(pixelRow);
-  id.setPixelCol(pixelColumn);
+  id.setPixelRow ( pixelRow    );
+  id.setPixelCol ( pixelColumn );
 
   // find subpixel (Alice mode)
-  const unsigned int subPixel = static_cast<unsigned int>
-    ((m_siliconHalfLengthY-inSiliconY-pixelRow*m_pixelSize) / m_subPixelSize);
-  id.setPixelSubRow( subPixel );
-
-#ifdef __INTEL_COMPILER // Re-enable ICC remarks
-#pragma warning(pop)
-#endif
+  const unsigned int subPixel = (unsigned int)
+    ((m_siliconHalfLengthY-inSiliconY-pixelRow*m_pixelSize)/m_subPixelSize);
+  id.setPixelSubRow ( subPixel );
 
   return StatusCode::SUCCESS;
 }

@@ -18,9 +18,6 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSmartID.h"
 
-// boost
-#include "boost/array.hpp"
-
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
 #include "RichKernel/RichMap.h"
@@ -330,10 +327,10 @@ private: // data
   L1HIDToCopyN m_l1H2CopyN;
 
   /// Rich1 & Rich2 detector elements
-  mutable boost::array<DetectorElement*, Rich::NRiches> m_deRich;
+  mutable std::vector<DetectorElement*> m_deRich;
 
   /// Location of RICH Numbering schemes in Conditions DB
-  boost::array<std::string, Rich::NRiches> m_condBDLocs;
+  std::vector<std::string> m_condDBLocs;
 
   /// Logical to hardware L1 ID map
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1LogicalID, Rich::DAQ::Level1HardwareID > L1LogToHard;

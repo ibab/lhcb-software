@@ -28,9 +28,6 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
 
-// Boost
-#include "boost/lexical_cast.hpp"
-
 //=============================================================================
 
 const CLID CLID_DERichHPD = 12015;  // User defined
@@ -475,7 +472,7 @@ StatusCode DeRichHPD::updateDemagProperties()
     if (sc.isFailure()) 
     {
       fatal() << "Could not initialise magnification table for HPD:" 
-              << m_number <<endmsg;
+              << m_number << endmsg;
       return sc;
     }
   }
@@ -489,18 +486,12 @@ StatusCode DeRichHPD::updateDemagProperties()
 StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 {
 
-#ifdef __INTEL_COMPILER       // Disable ICC remark
-#pragma warning(disable:2259) // Conversion from may lose significant bits
-#pragma warning(push)
-#endif
-  const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_sim";
-  const std::vector<double> & coeff_sim = m_demagConds[field]->paramVect<double>(paraLoc);
-  SmartDataPtr<TabulatedProperty> dem ( dataSvc(), 
-                                        XmlHpdDemagPath+"Sim_"+
-                                        boost::lexical_cast<std::string>(m_number) );
-#ifdef __INTEL_COMPILER         // Re-enable ICC remark
-#pragma warning(pop)
-#endif
+  std::ostringstream paraLoc, detLoc;
+  paraLoc << "hpd" << m_number << "_sim";
+  const std::vector<double> & coeff_sim = 
+    m_demagConds[field]->paramVect<double>(paraLoc.str());
+  detLoc << XmlHpdDemagPath << "Sim_" << m_number;
+  SmartDataPtr<TabulatedProperty> dem ( dataSvc(), detLoc.str() );
 
   if (!dem) 
   {
@@ -589,24 +580,15 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 //=========================================================================
 StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 {
-
-#ifdef __INTEL_COMPILER       // Disable ICC remark
-#pragma warning(disable:2259) // Conversion from may lose significant bits
-#pragma warning(push)
-#endif
-  const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_rec";
-#ifdef __INTEL_COMPILER         // Re-enable ICC remark
-#pragma warning(pop)
-#endif
-
-  const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc);
+  
+  std::ostringstream paraLoc;
+  paraLoc << "hpd" << m_number << "_rec";
+  const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
   m_MDMS_version = ( m_demagConds[field]->exists("version") ?
                      m_demagConds[field]->param<int>("version") : 0 );
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
-  //tableR.clear();
-  //tablePhi.clear();
 
   if ( coeff_rec.size() < 8 )
   {

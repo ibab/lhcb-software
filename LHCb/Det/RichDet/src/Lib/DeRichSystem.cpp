@@ -36,21 +36,14 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 //=============================================================================
 DeRichSystem::DeRichSystem( const std::string & name )
   : DeRichBase     ( name ),
+    m_deRich       ( Rich::NRiches ),
+    m_condDBLocs   ( Rich::NRiches ),
     m_firstL1CopyN ( 0    )
 {
-
-  m_deRich.assign(NULL);
-
-#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
-  #pragma warning(disable:279) // Controlling expression is constant
-  #pragma warning(push)
-#endif
-  m_condBDLocs[Rich::Rich1] = "Rich1DetectorNumbers";
-  m_condBDLocs[Rich::Rich2] = "Rich2DetectorNumbers";
-#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
-  #pragma warning(pop)
-#endif
-
+  m_deRich[Rich::Rich1] = NULL;
+  m_deRich[Rich::Rich2] = NULL;
+  m_condDBLocs[Rich::Rich1] = "Rich1DetectorNumbers";
+  m_condDBLocs[Rich::Rich2] = "Rich2DetectorNumbers";
 }
 
 //=============================================================================
@@ -74,8 +67,8 @@ StatusCode DeRichSystem::initialize ( )
   debug() << "Initialize " << name() << endmsg;
 
   // register condition for updates
-  SmartRef<Condition> rich1numbers = condition( m_condBDLocs[Rich::Rich1] );
-  SmartRef<Condition> rich2numbers = condition( m_condBDLocs[Rich::Rich2] );
+  SmartRef<Condition> rich1numbers = condition( m_condDBLocs[Rich::Rich1] );
+  SmartRef<Condition> rich2numbers = condition( m_condDBLocs[Rich::Rich2] );
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
   updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
   if ( updMgrSvc()->update(this).isFailure() )
@@ -166,7 +159,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 {
 
   // load conditions
-  SmartRef<Condition> numbers = condition(m_condBDLocs[rich]);
+  SmartRef<Condition> numbers = condition(m_condDBLocs[rich]);
 
   // local typedefs for vector from Conditions
   typedef std::vector<int> CondData;
@@ -355,9 +348,10 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   std::stable_sort( m_allHPDSmartIDs.begin(),      m_allHPDSmartIDs.end() );
 
   // L1 mapping
-  if ( numbers->exists("Level1LogicalToHardwareIDMap") )
+  const std::string L1LogToHardMapName("Level1LogicalToHardwareIDMap");
+  if ( numbers->exists(L1LogToHardMapName) )
   {
-    const L1Mapping & l1Mapping = numbers->paramVect<std::string>("Level1LogicalToHardwareIDMap");
+    const L1Mapping & l1Mapping = numbers->paramVect<std::string>(L1LogToHardMapName);
     for ( L1Mapping::const_iterator iM = l1Mapping.begin();
           iM != l1Mapping.end(); ++iM )
     {
@@ -367,16 +361,14 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       if ( data[0]             == '"' ) data = data.substr(1,data.size());
       if ( data[data.size()-1] == '"' ) data = data.substr(0,data.size()-1);
       // Format of string is 'LogicalID/HardwareID'
-      const int slash = data.find_first_of( "/" );
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(disable:2259) // Conversion from may lose significant bits
-  #pragma warning(push)
-#endif
+      const unsigned int slash = data.find_first_of( "/" );
+      if ( slash == 0 )
+      { 
+        error() << "Badly formed " << L1LogToHardMapName << " for " << rich << endmsg;
+        return StatusCode::FAILURE;
+      }
       const Rich::DAQ::Level1LogicalID  logID  ( boost::lexical_cast<int>(data.substr(0,slash)) );
       const Rich::DAQ::Level1HardwareID hardID ( boost::lexical_cast<int>(data.substr(slash+1)) );
-#ifdef __INTEL_COMPILER         // Re-enable ICC remark
-  #pragma warning(pop)
-#endif
       const Rich::DetectorType richTmp = this->richDetector(hardID);
       debug() << richTmp << " L1 ID mapping : Logical=" << logID
               << " Hardware=" << hardID << endmsg;

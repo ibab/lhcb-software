@@ -37,24 +37,24 @@ DeRich::DeRich(const std::string & name)
     m_nominalSphMirrorRefl  ( 0 ),
     m_nominalSecMirrorRefl  ( 0 ),
     m_sphMirAlignCond       (   ),
-    m_secMirAlignCond       (   )
+    m_secMirAlignCond       (   ),
+    m_HPDPanels             ( Rich::NRiches )           
 {
-  m_HPDPanels.assign(NULL);
+  m_HPDPanels[Rich::Rich1] = NULL;
+  m_HPDPanels[Rich::Rich2] = NULL;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich() {
-
+DeRich::~DeRich() 
+{
   if ( m_gasWinRefIndex )       delete m_gasWinRefIndex;
   if ( m_gasWinAbsLength )      delete m_gasWinAbsLength;
   if ( m_nominalHPDQuantumEff ) delete m_nominalHPDQuantumEff;
   if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
   if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
-
 }
-
 
 //=========================================================================
 //  initialize
@@ -70,10 +70,13 @@ StatusCode DeRich::initialize ( )
     m_positionInfo      = true;
   }
 
-  if ( exists( "SecMirrorSegRows" ) ) {
+  if ( exists( "SecMirrorSegRows" ) )
+  {
     m_secMirrorSegRows = param<int>( "SecMirrorSegRows" );
     m_secMirrorSegCols = param<int>( "SecMirrorSegColumns" );
-  } else if ( exists( "FlatMirrorSegRows" ) ){
+  }
+  else if ( exists( "FlatMirrorSegRows" ) )
+  {
     m_secMirrorSegRows = param<int>( "FlatMirrorSegRows" );
     m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
   }
@@ -81,7 +84,9 @@ StatusCode DeRich::initialize ( )
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
   if ( exists( "RichHpdQETableName" ) )
+  {
     HPD_QETabPropLoc = param<std::string>( "RichHpdQETableName" );
+  }
   else
   {
     if ( exists( "RichNominalHpdQuantumEffTableName" ) )
@@ -141,13 +146,15 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 
   RichMirrorSegPosition mirrorPos;
 
-  if ( m_positionInfo ) {
+  if ( m_positionInfo )
+  {
     int row = mirrorNumber / m_secMirrorSegCols;
     if ( row >= m_secMirrorSegRows ) row -= m_secMirrorSegRows;
     mirrorPos.setRow( row );
     mirrorPos.setColumn( mirrorNumber % m_secMirrorSegCols );
   }
-  else {
+  else 
+  {
     error() << "No position information for mirrors" << endmsg;
   }
 
@@ -170,16 +177,19 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   std::vector<const ILVolume*>::const_iterator contIter;
   for (contIter = mirrorContainers.begin(); contIter != mirrorContainers.end();
        ++contIter) {
-    for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i) {
+    for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i) 
+    {
       cpvMirror = (*contIter)->pvolume(i);
       IPVolume* pvMirror = const_cast<IPVolume*>(cpvMirror);
 
       // find mirrors that match mirrorID
       std::string mirrorName = pvMirror->name();
-      if (mirrorName.find(mirrorID) != std::string::npos ) {
+      if (mirrorName.find(mirrorID) != std::string::npos ) 
+      {
         //msg << MSG::VERBOSE << "Matched mirror " << mirrorName << endmsg;
         const std::string::size_type mpos = mirrorName.find(':');
-        if ( std::string::npos == mpos ) {
+        if ( std::string::npos == mpos ) 
+        {
           fatal() << "A mirror without a number!" << endmsg;
           return StatusCode::FAILURE;
         }
@@ -194,26 +204,29 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
-  if ( rotX.size() != rotY.size() ) {
+  if ( rotX.size() != rotY.size() ) 
+  {
     fatal() << "Mismatch in X and Y rotations in Condition:"
             << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
-  if ( rotX.size() != mirrors.size() ) {
+  if ( rotX.size() != mirrors.size() ) 
+  {
     fatal() << "Number of parameters does not match mirrors in:"
             << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
   std::vector<double> Rs = paramVect<double>(Rvector);
-  if ( rotX.size() != Rs.size() ) {
+  if ( rotX.size() != Rs.size() ) 
+  {
     fatal() << "Number of Rs does not match mirrors in:"
             << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
-  for (unsigned int mNum=0; mNum<rotX.size(); ++mNum) {
-
+  for (unsigned int mNum=0; mNum<rotX.size(); ++mNum) 
+  {
     // create transformation matrix to rotate the mirrors around their centre
     Gaudi::TranslationXYZ pivot( -Rs[mNum], 0.0, 0.0 );
     Gaudi::Transform3D transl( pivot );
@@ -235,14 +248,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 //=========================================================================
 int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
-#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
-#pragma warning(disable:279) // Controlling expression is constant
-#pragma warning(push)
-#endif
   return ( hpdPanel(side(globalPoint))->sensitiveVolumeID( globalPoint ) );
-#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
-#pragma warning(pop)
-#endif
 }
 
 //=========================================================================
@@ -261,8 +267,7 @@ DeRichHPDPanel * DeRich::hpdPanel( const Rich::Side panel ) const
 {
   if ( !m_HPDPanels[panel] )
   {
-    const std::string& pName = panelName(panel);
-
+    const std::string pName = panelName(panel);
     SmartDataPtr<DeRichHPDPanel> dePanel( dataSvc(), pName );
     if ( !dePanel )
     {
@@ -270,14 +275,7 @@ DeRichHPDPanel * DeRich::hpdPanel( const Rich::Side panel ) const
       mess << "Failed to load DeRichHPDPanel at " << pName;
       throw GaudiException( mess.str(), "DeRich::hpdPanel", StatusCode::FAILURE );
     }
-#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
-  #pragma warning(disable:279) // Controlling expression is constant
-  #pragma warning(push)
-#endif
     m_HPDPanels[panel] = dePanel;
-#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
-  #pragma warning(pop)
-#endif
   }
   return m_HPDPanels[panel];
 }

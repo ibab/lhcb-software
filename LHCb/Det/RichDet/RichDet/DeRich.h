@@ -13,6 +13,9 @@
 #ifndef RICHDET_DERICH_H
 #define RICHDET_DERICH_H 1
 
+// STL
+#include <vector>
+
 // DetDesc
 #include "RichDet/Rich1DTabProperty.h"
 
@@ -28,9 +31,6 @@
 #include "RichDet/DeRichBase.h"
 #include "RichDet/RichMirrorSegPosition.h"
 #include "RichDet/DeRichLocations.h"
-
-// boost
-#include "boost/array.hpp"
 
 class DeRichHPDPanel;
 
@@ -235,7 +235,7 @@ protected:
   SmartRef<Condition> m_secMirAlignCond;
 
   /// Pointers to the HPD panels of this Rich detector
-  mutable boost::array<DeRichHPDPanel*,Rich::NRiches> m_HPDPanels;
+  mutable std::vector<DeRichHPDPanel*> m_HPDPanels;
 
 };
 
