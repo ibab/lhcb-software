@@ -1,3 +1,7 @@
+2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v4r0
+
 2011-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: added cross linking for the icc11 CMTCONFIG which is using gcc43 for

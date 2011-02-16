@@ -1,3 +1,102 @@
+2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r0
+
+	LbConfiguration:
+	* python/LbConfiguration/LbLogin.py: use the new version of the SourceScript class. Please have
+	  a look to the modification of LbUtils.Script for further informations.
+	* data/Makefile: downgraded the message about no-pyzip from warning to info (Marco Cl.)
+	* python/LbConfiguration/LbLogin.py: added the "--ignore-not-ready" flag for the call to SetupProject.
+	  This will allow the cache files to be generated at build time with mkproject.
+	* python/LbConfiguration/Platform.py: added raw support for slc6
+	* scripts/generateLogin: removed limitation on LCG 5[0-8] for windows because of python 2.6
+	* python/LbConfiguration/Platform.py: added method to extract the number of CPU and the lsb_release
+	  informations from the native machine.
+	* scripts/generateLogin: added post setup script to the LbLogin.{sh,csh,bat} wrappers. This is
+	  intended for platform specific customization (like the icc compiler or the Visual C++ location).
+	* python/LbConfiguration/External.py: moved to doxygen 1.7.2
+	* python/LbConfiguration/Platform.py: added support for icc11 and winxp
+	* python/LbConfiguration/Repository.py: commented out CVS repositories
+	* python/LbConfiguration/SetupProject.py: fixed bug #75480 <https://savannah.cern.ch/bugs/?75480> (Marco Cl.)
+	* data/.rootauthrc: New file. Template for .rootrc file
+	* python/LbConfiguration/LbLogin.py:
+	  - takes the .rootauthrc file from the LbConfiguration/data folder
+	  - copy /etc/skel/.bash{rc,_profile} if they don't exist in the home directory (bash shell only)
+	* scripts/generateLogin: added LHCb pre-configuration and post setup script treatment to group_login
+	  and group_shell.
+	* python/LbConfiguration/LbLogin.py: Disabled the cache if an explicit version of python is requested.
+	* data/eclipse/cdt_cproject_template.xml: exclude _dict.cpp files from indexing (Marco Cl.)
+	* python/LbConfiguration/SetupProject.py: removed the TempDir class. Replaced by the LbUtils.Temporary.TempDir
+	  class.
+	* python/LbConfiguration/External.py: moved to CMT v1r22
+	* python/LbConfiguration/SetupProject.py: added option to ignore the NOT_READY flag in a project directory (Marco Cl.)
+	* data/Makefile: fixed a problem with the automatic addition of no-pyzip when building the target all (Marco Cl.).
+	* python/LbConfiguration/Platform.py: added support for icc11 on slc5.
+	* python/LbConfiguration/__init__.py: fixed a crash when the Eclipse setting are already present (Marco Cl.)
+
+	LbLegacy:
+	* scripts/mkLCGCMTtar: added cross linking for the icc11 CMTCONFIG which is using gcc43 for
+	  the LCG externals.
+	* scripts/mkLCGCMTtar: use the CMTCommand function from the LbUtils.CMT.Common module.
+	* scripts/mkproject: use LbConfiguration.Platform.NativeMachine to extract the number of
+	  CPUs.
+	* python/LbLegacy/install_project.py: fixes for unknow binary
+	* scripts/mkLCGCMTtar: added support for icc11 and winxp
+	* python/LbLegacy/install_project.py: introduce a way to use a custom location
+	  for LScripts as boot scripts (-B, --boot-scripts)
+	* scripts/mkexternaltar: fixed the exclusion list for CMT and the Darwin platforms
+	* tests/InstallProjectTest.py: added a test test for regression tests.
+	* scripts/mkLCGCMTtar: replaced /tmp directory by a LbUtils.Temporary.TempDir class.
+	* scripts/mkMCGentar: replaced /tmp directory by a LbUtils.Temporary.TempDir class.
+	* scripts/mkLHCbtar: replace the temporary directory used by a good random-seeded one.
+	* python/LbLegacy/install_project.py: if --overwrite flag is used the .html file containing
+	  the dependencies is removed anyway.
+        * scripts/archive_project : change groupe and case for the grid part (Joel)
+	* python/LbLegacy/install_project.py: moved to CMT v1r22
+	* scripts/archive_project: added creation of the "NOT_READY" file at the start of the process.
+	* python/LbLegacy/install_project.py: removed superfluous "/" in the messages.
+
+	LbRelease:
+	* scripts/copyLCG: added the possibility to replace (remove+copy instead of overwrite)
+	  externals laready present (mandatory to correctly copy LCG nightlies) (Marco Cl.)
+	* scripts/tag_package: added the --project command line switch (to be tested) (Marco Cl.)
+	* python/LbRelease/LHCbNightlies.py: sending data to RSS feed database;
+	  i686-slc5-gcc43-opt and i686-slc5-gcc43-dbg platforms added to the table of build order (Karol)
+	* python/LbRelease/LHCbNightliesWebpage.py: new file. Moved from LCG Nightlies repository (Karol)
+	* data/nightlies.crontab: backup of the Nightlies crontab (Karol)
+	* python/LbRelease/SvnChecker/StdCheckers.py: improved tag checking to allow tag cloning from tags and branches (Marco Cl.)
+	* python/LbRelease/SvnChecker/_test.py: improved tests to cover more use cases (Marco Cl.)
+	* python/LbRelease/GetPack.py: added support for branches and project global tags (Marco Cl.)
+	* python/LbRelease/rcs.py: added support for branches and project global tags (Marco Cl.)
+	* scripts/svnpath: added support for branches (Marco Cl.)
+	* python/LbRelease/LHCbNightlies.py: "disabled" parameter for projects (Karol)
+	* python/LbRelease/LHCbNightlies.py: handling Coverity run - fix (Karol)
+	* python/LbRelease/LHCbNightlies.py: modified to be able to use Coverity in the Nightlies (Karol)
+	* python/LbRelease/SvnChecker: Python framework for Subversion hooks (Marco Cl.).
+	* python/LbRelease/LHCbNightlies.py: fix for symbolic links to project directories on Linux (Karol)
+	* python/LbRelease/Nightlies: directory removed (previous version of LHCb Nightlies system) (Karol)
+	* python/LbRelease/LHCbDoc.py: add lock permission on AFS. (Marco Cl.)
+	* python/LbRelease/_LHCbDocResources.py: enable locking when accessing the classes database from PHP
+	  (required on SLC5), and fixed an issue with URL arguments on SLC5. (Marco Cl.)
+	* python/LbRelease/GetPack.py: added a protection to the cases where the terminal doesn't
+	  support the invisible cursor (MacOSX). (Marco Cl.)
+	* python/LbRelease/rcs.py: fixed a bug in the implementation of the option
+	  --eclipse preventing the checkout from CVS. (Marco Cl.)
+
+	LbUtils:
+	* python/LbUtils/Script.py: Move the defineOpts call to the constructor of the Script class
+	  in order to simplify the call to run()
+	* data/Makefile: improved after feedback from Atlas (Emil + Marco Cl.)
+	* python/LbUtils/CMT/Common.py: added CMTCommand, a wrapper for the calls to CMT that
+	  prevents the PWD problem.
+	* python/LbUtils/afs/volume.py: added check for the volume name length at creation
+	  time in createVolume.
+	* python/LbUtils/Processes.py: removed getNumberOfCores. Please use LbConfiguration.Platform.NativeMachine
+	  instead.
+	* python/LbUtils/xdg.py: initial implementation of the XDG (freedesktop.org)
+	  directory base specifications.
+	* data/Makefile: fixed conditional statement on CMT version prior to 2009.
+
 2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r6
@@ -6,55 +105,55 @@
 	* python/LbConfiguration/__init__.py: added functions to generate the Eclipse configuration (Marco Cl.)
 	* python/LbConfiguration/SetupProject.py: create Eclipse project configuration when called with --build-env (Marco Cl.)
 	* python/LbConfiguration/Repository.py: added the getRepositories function
-      fitered against a protocol string (Marco Cl.).
-    * python/LbConfiguration/SetupProject.py: fixed the setting of the prompt in batch mode (where there is
-      no prompt whatsoever).
+	  fitered against a protocol string (Marco Cl.).
+	* python/LbConfiguration/SetupProject.py: fixed the setting of the prompt in batch mode (where there is
+	  no prompt whatsoever).
 	* python/LbConfiguration/LbLogin.py: set the default ACL for the User_release_area to be "system:anyuser l"
 	  and "cern:z5 rl" in order to enforce the CERN policy about public areas.
 	* python/LbConfiguration/LbLogin.py: added support for new component in the CMTPROJECTPATH:
-      $MYSITEROOT/lcg/app/releases. It will be added only if the directory exists.
+	  $MYSITEROOT/lcg/app/releases. It will be added only if the directory exists.
 	* python/LbConfiguration/Package.py: added ChargedProtoANNPIDParam to the list of PARAM packages.
 	* python/LbConfiguration/Version.py: added generic version sorting. This relies on the splitting of
-      the string holding the version into alphabetic and numeric token which then are placed in a tuple. This
-      works for any version type (LHCb, LCG, ROOT) except for the extended LHCb version with the "-pre" suffix.
+	  the string holding the version into alphabetic and numeric token which then are placed in a tuple. This
+	  works for any version type (LHCb, LCG, ROOT) except for the extended LHCb version with the "-pre" suffix.
 	* python/LbConfiguration/Platform.py: added support for win64 and vc9.
 	* scripts/generateLogin: fixed the test for the login shell in the main wrapper.
 
 	* python/LbLegacy/install_project.py: added security when removing html files.
 	* python/LbLegacy/install_project.py: enhanced the message about link creation.
 	* python/LbLegacy/install_project.py: created the $MYSITEROOT/etc directory. This is holding links
-      to the current setup wrappers.
+	  to the current setup wrappers.
 	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the
-      HTML file. At that moment it didn't exist anymore and os.getcwd() was crashing.
+	  HTML file. At that moment it didn't exist anymore and os.getcwd() was crashing.
 	* scripts/mkproject: fixed the location of the initialisation of the not_ready_file variable.
 
 	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out.
-      Fixed some 'fake' PyDev errors. (Marco Cl.)
+	  Fixed some 'fake' PyDev errors. (Marco Cl.)
 	* python/LbRelease/rcs.py: modified to add package-specific configurations to the Eclipse
-      project and to create an Eclipse project whenthe option --project is used. (Marco Cl.)
+	  project and to create an Eclipse project whenthe option --project is used. (Marco Cl.)
 	* scripts/move_package:
 	* python/LbRelease/rcs.py: finished the implementation of the move_package utility.
 	* python/LbRelease/GetPack.py: Use the same version as the one already used by a project
-      as default choice for a package. (Marco Cl.)
+	  as default choice for a package. (Marco Cl.)
 	* python/LbRelease/rcs.py: added getPackageRepo and getProjectRepo functions to get the
-      repositories containing the package/project.
+	  repositories containing the package/project.
 	* scripts/move_package: added skeleton of the script
 	* python/LbRelease/rcs.py: factored out the callCommand and RetryCommand utilities to the
-      LbUtils.Processes module.
+	  LbUtils.Processes module.
 	* python/LbRelease/LHCbNightlies.py: client must be started with CMTCONFIG as a parameter,
-      and now it can build only platforms that have not only the same platform type (slc4/sl5)
-      but also matching architecture (32b/64b) (already in production) (Karol)
+	  and now it can build only platforms that have not only the same platform type (slc4/sl5)
+	  but also matching architecture (32b/64b) (already in production) (Karol)
 
 	* data/Makefile: removed the export of CCACHE_PREFIX, which doesn't seem to be needed and causes problems
-      if distcc is not used when using ccache. (Marco Cl.)
+	  if distcc is not used when using ccache. (Marco Cl.)
 	* python/LbUtils/Log.py: added NullHandler to be used in libraries. This is usefull when the
-      main application calling the library is not defining any logger.
+	  main application calling the library is not defining any logger.
 	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the
-      LbRelease.rcs module.
+	  LbRelease.rcs module.
 	* python/LbUtils/Terminal.py: new file. Added the function to get the size of the terminal. It
-      works both on Linux and windows.
+	  works both on Linux and windows.
 	* python/LbUtils/afs/directory.py: added a check when removing ACL. The new ACL settings is cleaned of
-      groups with empty ACL
+	  groups with empty ACL
 	* python/LbUtils/Path.py: added check for existence in the path manipulation functions.
 	* data/Makefile: avoid removing the whole InstallArea on 'clean' (just InstallArea/$CMTCONFIG)
 

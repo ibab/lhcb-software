@@ -1,5 +1,9 @@
 2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v6r0
+
+2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/generateLogin: remove obsolete code.
 	* python/LbConfiguration/LbLogin.py: use the new version of the SourceScript class. Please have
 	a look to the modification of LbUtils.Script for further informations.
