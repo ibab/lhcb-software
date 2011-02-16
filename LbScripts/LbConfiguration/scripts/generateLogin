@@ -130,68 +130,6 @@ def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", 
     wrapped_data = getNativeWrap(data, shell, offset=offset)
     return wrapped_data
 
-#def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
-#    content = ""
-#    dotbat = False
-#    if shell == "bat" :
-#        dotbat = True
-#
-#    native_tarloc = getNativeString(targetlocation, dotbat)
-#    native_prodloc = getNativeString(prodlocation, dotbat)
-#
-#    if (native_tarloc != targetlocation) or (native_prodloc != prodlocation) :
-#        for v in _native_varlist :
-#            if native_tarloc.find(v) != -1 :
-#                vartotest = v
-#                break
-#        if shell == "sh" :
-#            content += """
-#if [[ -n "$%s" ]]; then""" % vartotest
-#            content += ShellFileSnippet(base, shell,
-#                                        native_tarloc, args, postargs,
-#                                        native_prodloc, offset=1)
-#            content += """
-#else"""
-#            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs,
-#                                        prodlocation, offset=1)
-#            content += """
-#fi"""
-#        elif shell == "csh" :
-#            content += """
-#if ( $?%s ) then""" % vartotest
-#            content += ShellFileSnippet(base, shell,
-#                                        native_tarloc, args, postargs,
-#                                        native_prodloc, offset=1)
-#            content += """
-#else"""
-#            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs,
-#                                        prodlocation, offset=1)
-#            content += """
-#endif"""
-#
-#        elif shell == "bat" :
-#            content += """
-#IF DEFINED %s (""" % vartotest
-#            content += ShellFileSnippet(base, shell,
-#                                        native_tarloc, args, postargs,
-#                                        native_prodloc, offset=1)
-#            content += """
-#ELSE ("""
-#            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs,
-#                                        prodlocation, offset=1)
-#            content += """
-#)"""
-#
-#    else :
-#        content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset=0)
-#
-#
-#    content = offSetString(content, offset)
-#
-#    return content
 
 def ShellFileSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
     content = ""

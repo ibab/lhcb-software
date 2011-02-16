@@ -78,10 +78,7 @@ def getLbLoginEnv(optionlist=None):
     if not optionlist :
         optionlist = []
     s = LbLoginScript()
-    s.addSourceOpts()
-    s.defineOpts()
     s.parseOpts(optionlist)
-
     return s.setEnv()[0]
 
 def _setCMTVersion_cb(option, opt_str, value, parser):
