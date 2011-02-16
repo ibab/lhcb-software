@@ -321,8 +321,8 @@ void DeSTSector::setNoise(const unsigned int& strip, const double& value)
   {
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "SectorNoise" );
-    reference[strip-1] = value;
-    m_noiseValues[strip-1] = value;
+    reference[strip-1u] = value;
+    m_noiseValues[strip-1u] = value;
   }
 } 
 
@@ -354,8 +354,8 @@ void DeSTSector::setCMNoise(const unsigned int& strip, const double& value)
   {
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "cmNoise" );
-    reference[strip-1] = value;
-    m_noiseValues[strip-1] = value;
+    reference[strip-1u] = value;
+    m_cmModeValues[strip-1u] = value;
   }
 } 
 
