@@ -185,7 +185,7 @@ def copy_project(src, dst, ignore_missing = True, force = True, replace = False)
     # or we are forcing the copy (not ignore_missing)
     if (not ignore_missing) or exists(dirname(proj_dir)):
         force = replace or force # replace implies force
-        if replace:
+        if replace and exists(dst):
             log.info("removing %s", dst)
             shutil.rmtree(dst, onerror = _rmtree_onerror)
         recursive_copy(src, dst, force = force)
@@ -194,7 +194,7 @@ def copy_project(src, dst, ignore_missing = True, force = True, replace = False)
         src_inc = join(dirname(src), "include")
         if exists(src_inc):
             dst_inc = join(proj_dir, "include")
-            if replace:
+            if replace and exists(dst_inc):
                 log.info("removing %s", dst_inc)
                 shutil.rmtree(dst_inc, onerror = _rmtree_onerror)
             recursive_copy(src_inc, dst_inc, force = force)

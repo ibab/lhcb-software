@@ -1,3 +1,7 @@
+2011-02-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/copyLCG: firxed a small bug when using --replace
+
 2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r0
