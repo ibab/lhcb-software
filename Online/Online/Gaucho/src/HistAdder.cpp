@@ -408,6 +408,19 @@ HistAdder::~HistAdder()
     delete gg_DNSInfo;
     gg_DNSInfo = 0;
   }
+  for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
+  {
+    delete i->second->m_diminfo;
+    delete i->second;
+  }
+  m_TaskServiceMap.clear();
+  for (INServIter i = m_inputServicemap.begin();i!= m_inputServicemap.end();i++)
+  {
+    delete i->second->m_Info;
+    delete i->second;
+  }
+  m_inputServicemap.clear();
+
   if (m_outservice  != 0)
   {
     delete m_outservice;
@@ -421,18 +434,6 @@ HistAdder::~HistAdder()
     delete m_rpc;
   }
 
-  for (INServIter i = m_inputServicemap.begin();i!= m_inputServicemap.end();i++)
-  {
-    delete i->second->m_Info;
-    delete i->second;
-  }
-  m_inputServicemap.clear();
-  for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
-  {
-    delete i->second->m_diminfo;
-    delete i->second;
-  }
-  m_inputServicemap.clear();
 }
 void HistAdder::Configure()
 {
