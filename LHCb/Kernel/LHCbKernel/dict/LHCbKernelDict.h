@@ -29,6 +29,7 @@
 #include "Kernel/IBIntegrator.h"
 #include "Kernel/ICheckTool.h"
 #include "Kernel/ICondDBInfo.h"
+#include "Kernel/ICountContainedObjects.h"
 #include "Kernel/IEvtTypeSvc.h"
 #include "Kernel/IInAcceptance.h"
 #include "Kernel/ILHCbMagnetSvc.h"
