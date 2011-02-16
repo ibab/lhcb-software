@@ -15,16 +15,16 @@ import os
 class PlainScript:
     _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     _description = ""
-    def __init__(self, usage=None, version=None, parser=Parser, 
+    def __init__(self, usage=None, version=None, parser=Parser,
                  help_output=sys.stdout, description=None):
-        """ constructor of the Script. provides default options parser 
+        """ constructor of the Script. provides default options parser
         and logger """
         if version is None:
             if hasattr(self, "__version__"):
                 version = self.__version__ #IGNORE:E1101
             else:
                 version = self._version
-            
+
         if description is None :
             if self._description:
                 description = self._description
@@ -33,12 +33,13 @@ class PlainScript:
         if usage is None :
             if hasattr(self, "__usage__"):
                 usage = self.__usage__ #IGNORE:E1101
-        self.parser = parser(usage=usage, version=version, 
+        self.parser = parser(usage=usage, version=version,
                              help_output=help_output, description=description)
         self.env = getDefaultEnv()
         self.log = logging.getLogger()
         self.options = None
         self.args = None
+        self.defineOpts()
     def defineOpts(self):
         """ User options -- has to be overridden """
         # self.parser.add_options(...)
@@ -51,21 +52,22 @@ class PlainScript:
         self.options, self.args = self.parser.parse_args(args)
     def run(self, args=sys.argv[1:]):
         """ main function to be called by the user """
-        self.defineOpts()
         self.parseOpts(args)
         return self.main()
-        
+
 class ConfigScript(PlainScript):
     _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     _description = ""
-    def __init__(self, usage=None, version=None, parser=Parser, 
+    def __init__(self, usage=None, version=None, parser=Parser,
                  help_output=sys.stdout, description=None, use_config_file=False):
-        """ constructor of the Script. provides default options parser 
+        """ constructor of the Script. provides default options parser
         and logger """
         PlainScript.__init__(self, usage, version, parser, help_output, description)
         self.use_config_file = use_config_file
         self._config = None
-    def setConfigFile(self, config_file=None, config_dir=None, 
+        if self.use_config_file :
+            self.readDefaultConfig()
+    def setConfigFile(self, config_file=None, config_dir=None,
                       config_name=None, config_ext=None):
         self.use_config_file = True
         if config_file :
@@ -78,7 +80,7 @@ class ConfigScript(PlainScript):
         else :
             if not config_dir :
                 config_dir = []
-            home_cfg = os.environ.get("XDG_CONFIG_HOME", 
+            home_cfg = os.environ.get("XDG_CONFIG_HOME",
                                       os.path.join(os.environ.get("HOME", "."), ".config"))
             if home_cfg not in config_dir :
                 config_dir.append(home_cfg)
@@ -138,13 +140,6 @@ class ConfigScript(PlainScript):
         if self.use_config_file :
             args = self.parseConfigArgs(args)
         PlainScript.parseOpts(self, args)
-    def run(self, args=sys.argv[1:]):
-        """ main function to be called by the user """
-        self.defineOpts()
-        if self.use_config_file :
-            self.readDefaultConfig()
-        self.parseOpts(args)
-        return self.main()
 
 # backward compatibility for old clients
 Script = PlainScript
@@ -163,13 +158,14 @@ class SourceScript(Script):
     _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     _description = ""
     def __init__(self, usage=None, version=None, parser=Parser, description=None):
-        Script.__init__(self, usage=usage, version=version, parser=parser, 
+        Script.__init__(self, usage=usage, version=version, parser=parser,
                         help_output=sys.stderr, description=description)
         self.output_file = None
         self.output_name = None
         self._env = Environment()
         self._aliases = Aliases()
         self._extra = ""
+        self.addSourceOpts()
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         log = logging.getLogger()
@@ -234,10 +230,4 @@ class SourceScript(Script):
         return self._extra
     def addExtra(self, line):
         self._extra += line
-
-    def run(self, args=sys.argv[1:]):
-        """ main function to be called by the user """
-        self.addSourceOpts()
-        output = Script.run(self, args)
-        return output
 

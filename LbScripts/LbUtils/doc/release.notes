@@ -1,3 +1,8 @@
+2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Script.py: Move the defineOpts call to the constructor of the Script class
+	in order to simplify the call to run()
+
 2011-02-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: improved after feedback from Atlas (Emil)
