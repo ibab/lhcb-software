@@ -3,11 +3,15 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-02-16 - Illya Shapoval
+ - 'DQFLAGStag' property added to the LHCbApp configurable. Default one is
+   picked up from DDDB package.
+
 !========================= GaudiConf v13r8 2011-01-31 =========================
 ! 2011-01-21 - Patrick Robbe
  - SimConf: add new phases (GenToMCTree) used in Gauss to save generator
-   level information into MCParticles (skipping the full simulation 
-   phase). 
+   level information into MCParticles (skipping the full simulation
+   phase).
 
 ! 2011-01-20 - Chris Jones
  - Add the new reconstruction summary object to the DST content.
@@ -27,14 +31,14 @@
 
 !======================== GaudiConf v13r6 2010-09-21 ========================
 ! 2010-09-14 - Vanya Belyaev
- - fix the typo: remove extra comma 
+ - fix the typo: remove extra comma
 
 ! 2010-09-07 - Marco Cattaneo
  - Remove prints from previous commit, use log.debug instead.
 
 ! 2010-08-30 - Vanya Belyaev
- - Enable calodst unpacking only if the property has not been set explicitly. 
-   It is useful to force calorimeter reconstruction on-flight 
+ - Enable calodst unpacking only if the property has not been set explicitly.
+   It is useful to force calorimeter reconstruction on-flight
 
 !======================== GaudiConf v13r5 2010-04-26 ========================
 ! 2010-04-21 - Marco Cattaneo
@@ -60,7 +64,7 @@
 
 ! 2009-12-17 - Marco Cattaneo
 e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
-   SimConf does not add spillover Gen info to output file. Fixes bug 60636   
+   SimConf does not add spillover Gen info to output file. Fixes bug 60636
 
 ! 2009-12-14 - Marcin Kucharczyk
  - Change the structure of DigiConf.py according to the requirements of upgrade
@@ -96,7 +100,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
    "AlwaysCreateOutput" property of the packers
 
 ! 2009-11-06 - Marco Cattaneo
- - Bug fix in DstConf: set up unpacking even if no DST output requested 
+ - Bug fix in DstConf: set up unpacking even if no DST output requested
 
 ! 2009-11-05 - Silvia Miglioranzi
  - In SimConf.py changed the name of the "SimPhases" configurable to "Phases".
@@ -130,21 +134,21 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 ! 2009-10-16 - Marco Cattaneo
  - In DstConf.py, fix genConf warnings due to import path of new CaloPacking
-   configurables 
+   configurables
 
 ! 2009-10-15 - Marco Cattaneo
  - In CaloPackingConf.py, add helper functions previously in CaloReco.CaloPacking
 
-! 2009-10-12 - Vanya Belyaev 
- - cmt/requirements : change order of configurables 
+! 2009-10-12 - Vanya Belyaev
+ - cmt/requirements : change order of configurables
 
 ! 2009-10-10 - Vanya Belyaev
  - Add CaloPackingConf.py:
      two small configurables to pack/unpack Calo-objects on DST:
-     1. CaloDstPackConf 
-     2. CaloDstUnPackConf 
+     1. CaloDstPackConf
+     2. CaloDstUnPackConf
 
- - DstConf.py: make usage of new CaloDst configurables 
+ - DstConf.py: make usage of new CaloDst configurables
 
 ! 2009-10-08 - Marco Cattaneo
  - In DigiConf.py:
@@ -154,7 +158,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 ! 2009-10-06 - Marco Cattaneo
  - In DstConf.py, do not set up DataOnDemand unpacking of Muon tracks if
-   DstType is RDST 
+   DstType is RDST
 
 ! 2009-09-18 - Rob Lambert
  - Edited Configurable.py to avoid circular dependency on XMLSummarySvc
@@ -196,7 +200,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 ! 2009-06-23 - Marco Cattaneo
  - In DstConf.py:
    . Add pRec/RawEvent to RDST (contains copy of HLT and L0 raw banks)
-   . Force RDST to be packed 
+   . Force RDST to be packed
 
 !======================== GaudiConf v12r5 2009-06-18 ========================
 ! 2009-06-18 - Marco Cattaneo
@@ -206,12 +210,12 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - In Configuration.py:
    . add LHCbApp().Quiet option to suppress all except most useful INFO messages
    . add LHCbApp().TimeStamp option to add a time stamp to all messages
-   
+
 !======================== GaudiConf v12r4 2009-05-29 ========================
 ! 2009-05-29 - Marco Cattaneo
  - Add LHCbKernel dependency, to pick up LHCbConfigurableUser used by
    Configuration.py
-   
+
 ! 2009-05-28 - Marco Cattaneo
  - Remove obsolete options files SimDicts.opts, SimContents.opts,
    DigiContent.opts, DstContent.opts
@@ -234,7 +238,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
    values are
 	 . "None" (same as Simulation=False)
    . "Full" (same as Simulation=True)
-   . "Minimal" (same as "None" plus Gen/Header, MC/Header, pSim/Vertices) 
+   . "Minimal" (same as "None" plus Gen/Header, MC/Header, pSim/Vertices)
 
 ! 2009-04-03 - Marco Cattaneo
  - Add DigiConf() configurable, to set up Boole output
@@ -267,7 +271,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 ! 2009-01-21 - Marco Cattaneo
  - In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
    KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
-   If given as a Monitor, the auditor is enabled (assumes AuditorSvc is loaded) 
+   If given as a Monitor, the auditor is enabled (assumes AuditorSvc is loaded)
 
 !======================== GaudiConf v12r0 2009-01-13 ========================
 ! 2009-01-13 - Marco Cattaneo
@@ -282,7 +286,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - Add a configurable DstConf to set up DST content. Replaces DstContent.opts,
    MCDstContent.opts, rDstContent.opts, which have been removed. Also allows
    to enable packed DST (default) and to set up DataOnDemand service for
-   unpacking 
+   unpacking
 
 !======================== GaudiConf v11r0 2008-11-19 ========================
 ! 2008-11-19 - Marco Cattaneo
@@ -305,7 +309,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - added option file to write out muon-long tracks for alignment
 
 ! 2008-09-26 - Marco Cattaneo
- - LHCbApp() now automatically includes $DDDBROOT/options/DDDB.py 
+ - LHCbApp() now automatically includes $DDDBROOT/options/DDDB.py
 
 ! 2008-09-23 - Thomas Ruf
  - Added Tae_ondemand.py : decoding (except for Rich and L0) for time align
@@ -321,7 +325,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - Remove obsolete explicit loading of Reflex dictionaries from SimDicts.opts.
    This renders this file obsolete, use
    $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts directly
- - In Configurable: 
+ - In Configurable:
    . Remove handling of MagneticFieldSvc fieldmap file, will be done via CondDB
    . Add function to return knownMonitors and use it to test monitors option
 
@@ -405,7 +409,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 !======================== GaudiConf v10r0 2006-12-20 ========================
 ! 2006-12-20 - Marco Cattaneo
- - Remove explicit loading of DLLs in job options, uses Reflex plugin 
+ - Remove explicit loading of DLLs in job options, uses Reflex plugin
    mechanism since Gaudi v19r0
 
 !======================== GaudiConf v9r12 2006-11-16 ========================
@@ -427,7 +431,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 ! 2006-10-19 - Marco Cattaneo
  - in DecodeRawEvent.opts: update algorithm for decoding Muon raw banks
                            add algorithm to decode L0DU banks
- - Add DC06Conditions.opts, defining standard conditions for DC06 data 
+ - Add DC06Conditions.opts, defining standard conditions for DC06 data
 
 !======================== GaudiConf v9r9 2006-09-28 ========================
 ! 2006-09-28 - Marco Cattaneo
@@ -481,7 +485,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - Add LHCbApplication.opts to bootstrap standard LHCb applications
 
 ! 2006-02-06 - Marco Cattaneo
- - In DetDesc.opts, create DetDataSvc as ExtSvc, to ensure it is finalized 
+ - In DetDesc.opts, create DetDataSvc as ExtSvc, to ensure it is finalized
    after ToolSvc
 
 ! 2005-12-20 M. Needham
@@ -505,7 +509,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 !======================== GaudiConf v9r0 2005-01-19 ========================
 ! 2005-01-19 - Marco Cattaneo
- - Remove path append to ROOT_native_version, for move to Gaudi v16 
+ - Remove path append to ROOT_native_version, for move to Gaudi v16
 
 ! 2004-12-17 - Marco Cattaneo
  - Gaudi.supp updated for LHCb v17r2
@@ -545,7 +549,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 !======================== GaudiConf v7r6 2004-03-02 ========================
 ! 2004-03-02 - Marco Cattaneo
  - Remove SicbTestDataFile.opts, .py
- - Add options/Gaudi.supp: valgrind errors suppression file 
+ - Add options/Gaudi.supp: valgrind errors suppression file
 
 !======================== GaudiConf v7r5 2004-01-15 ========================
 ! 2004-01-15 - Marco Cattaneo
@@ -573,7 +577,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 !======================== GaudiConf v7r1 2003-10-01 ========================
 ! 2003-10-01 - Marco Cattaneo
- - RawhContent.opts renamed SimContent.opts, to describe SicbToOORawh output 
+ - RawhContent.opts renamed SimContent.opts, to describe SicbToOORawh output
    compatible with Gauss
  - DigiContent.opts: add DAQ/L1Buffer, DAQ/HLTBuffer for raw data buffers
 
@@ -590,7 +594,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
  - RawhContent.opts: replace MC/Rich/Hits with MC/Rich/HitsSICB, to highlight
                      incompatibility between hits produced by SICBMC and by Gauss
  - DstContent.opts: removed Rich and Calorimeter digits, and all L1 clusters, as
-                    these were only needed for special studies. It is now 
+                    these were only needed for special studies. It is now
                     possible to navigate to the oodigi tape if necessary
 
 !======================== GaudiConf v6r10 2003-07-08 =======================
@@ -599,14 +603,14 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 
 !======================== GaudiConf v6r9 2003-07-01 ========================
 ! 2003-07-01 - Marco Cattaneo
- - DstContent.opts: remove optional Rec/Rich/OOPIDs, 
+ - DstContent.opts: remove optional Rec/Rich/OOPIDs,
                     add optional LHCBackground/Header
  - DetDesc.opt, .py - Add XmlCnv and DetDescCnv to DLLs list
 
 !======================== GaudiConf v6r8 2003-05-19 ========================
 ! 2003-04-30 - Marco Cattaneo
  - Make L1/TTClusters, L1/ITClusters, L1/OTClusters optional in DstContent.opts
-   This is because DSTs can exist both with (evtype 61) and without (other 
+   This is because DSTs can exist both with (evtype 61) and without (other
    evtypes) these containers
 
 !========================== GaudiConf v6r7 2003-04-16 ======================
@@ -659,30 +663,30 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
 ! 20010703 - GaudiConf v5 (Pere)
   Remove LHCbEvent from standard DLLs
   New version of GaudiMain that supports Python scripts instead of JobOptions files
- 
+
 ! 20010319 - GaudiConf v4 (MC)
-  options/Dlls.opts     - Remove HbookCnv from standard DLLs. This is because 
+  options/Dlls.opts     - Remove HbookCnv from standard DLLs. This is because
                           user should choose between Hbook and Root
-          DetDesc.opts  - Options now property of DetectorDataSvc, 
+          DetDesc.opts  - Options now property of DetectorDataSvc,
                           not of ApplicationMgr
           Hbook.opts    - new: Standard options for HBOOK persistency
           RootHist.opts - new: Standard options for ROOT histogram persistency
 
 ! 20010306 - GaudiConf v4 (MC)
   options/ - All files renamed with extension .opts
-  src/     - GaudiMain.cpp: Generic main program for Gaudi applications 
+  src/     - GaudiMain.cpp: Generic main program for Gaudi applications
 
-!============================================================================= 
+!=============================================================================
 ! 20010110 - GaudiConf v3r2 (Flr)
   Services.txt - add ParticlePropertySvc in the EXTSvc list.
 
 ! 20001212 - GaudiConf v3r1 -Flr
   DetDesc.txt - remove DetDbLocation, use the default location instead.
 
-!============================================================================= 
+!=============================================================================
 ! 20001117 - Pere Mato
   options/ - Changed Dlls.txt and Services.txt to add the ChronoAuditor as default
-    
+
 ! 20001030 - GaudiConf v3 - changes by M.Cattaneo
   options/ - New files Dlls.txt, Services.txt included by Common.txt, to allow
              possibility to include only Services.txt by static linked programs
@@ -693,7 +697,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
              Common.txt:           removed SicbEventSelector
              DetDesc.txt:          additional options to use XML database
              SicbTestDataFile.txt: EventSelector.Input for test jobs
-           
+
 ! 20000726 - GaudiConf v2
 	   - StandardOptions.txt: remove TapesDatabase option, not needed
              with GaudiSys v5
@@ -703,7 +707,7 @@ e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
              for TapesDatabase path, and remove #ifdef WIN32
            - requirements: change version to v2
              (use of AFSROOT requires GaudiSvc v3)
- 
+
 ! 20000413 - GaudiConf v1
              this package must be used by any application, it contains:
   mgr/     - requirements to set STDOPTIONS environment variable
