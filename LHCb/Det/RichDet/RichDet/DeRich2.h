@@ -24,7 +24,7 @@ extern const CLID CLID_DERich2;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
 
-class DeRich2: public DeRich 
+class DeRich2: public DeRich
 {
 
 public:
@@ -90,8 +90,16 @@ public:
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point ) const;
 
+  /// Align the primary mirrors
   virtual StatusCode alignSphMirrors();
+
+  /// Align the secondary mirrors
   virtual StatusCode alignSecMirrors();
+
+private:
+
+  /// Access the name for a given panel
+  virtual const std::string panelName( const Rich::Side panel ) const;
 
 private:
 

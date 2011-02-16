@@ -34,8 +34,6 @@
 // Boost
 //#include "boost/array.hpp"
 
-class DeRichSystem;
-
 /** @class DeRichHPDPanel RichDet/DeRichHPDPanel.h
  *
  * DeRichHPDPanel provides geometry information for the HPD panels, converts
@@ -55,7 +53,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRichHPDPanel(const std::string & name = "");
+  DeRichHPDPanel( const std::string & name = "" );
 
   /**
    * Default destructor
@@ -307,8 +305,6 @@ private: // data
 
   Gaudi::Transform3D m_globalToPDPanelTransform;  ///< global to PD plane (local) transform
   Gaudi::Transform3D m_PDPanelToGlobalTransform;  ///< local (PD plane) to global transform
-
-  DeRichSystem* m_deRichS;         ///< Pointer to the overall RICH system object
 
   Rich::DetectorType m_rich;       ///< The RICH detector type
   Rich::Side m_side;               ///< The RICH HPD panel (up, down, left or right)

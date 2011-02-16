@@ -84,12 +84,15 @@ StatusCode DeRich1::initialize()
     pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->
       lvolume()->pvolume("pvRich1GQuartzWH0:0");
   }
-  if ( pvGasWindow ) {
+  if ( pvGasWindow ) 
+  {
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
     Material::Tables::const_iterator matIter;
-    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
-      if( (*matIter) ){
+    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) 
+    {
+      if( (*matIter) )
+      {
         if ( (*matIter)->type() == "RINDEX" )
         {
           debug() << "Loaded gas window refIndex from: " << (*matIter)->name()
@@ -112,22 +115,24 @@ StatusCode DeRich1::initialize()
         }
       }
     }
-  } else {
+  } 
+  else
+  {
     error() << "Could not find gas window properties" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // get the nominal reflectivity of the spherical mirror
-  std::string sphMirrorReflLoc;
-  if ( exists("NominalSphericalMirrorReflectivityLoc" ) )
-    sphMirrorReflLoc = param<std::string>( "NominalSphericalMirrorReflectivityLoc" );
-  else
-    sphMirrorReflLoc = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
+  const std::string sphCondname("NominalSphericalMirrorReflectivityLoc");
+  const std::string sphMirrorReflLoc = 
+    ( exists             ( sphCondname ) ?
+      param<std::string> ( sphCondname ) :
+      "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT" );
 
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
   {
-    error() <<"No info on spherical mirror reflectivity at "<<sphMirrorReflLoc<<endmsg;
+    error() <<"No info on spherical mirror reflectivity at " << sphMirrorReflLoc << endmsg;
     return StatusCode::FAILURE;
   }
   else
@@ -137,21 +142,24 @@ StatusCode DeRich1::initialize()
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      error() <<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
+      error() <<"Invalid RichTabulatedProperty1D for " << sphMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
   // get the nominal reflectivity of the secondary mirror
-  std::string secMirrorReflLoc;
-  if ( exists("NominalSecondaryMirrorReflectivityLoc" ) )
-    secMirrorReflLoc = param<std::string>( "NominalSecondaryMirrorReflectivityLoc" );
-  else
-    secMirrorReflLoc = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+  const std::string secCondName("NominalSecondaryMirrorReflectivityLoc");
+  const std::string secMirrorReflLoc = 
+    ( exists             ( secCondName ) ?
+      param<std::string> ( secCondName ) :
+      "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT" );
 
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
-    error() << "No info on secondary mirror reflectivity" << endmsg;
+  {
+    error() << "No info on secondary mirror reflectivity at " << secMirrorReflLoc << endmsg;
+    return StatusCode::FAILURE;
+  }
   else
   {
     debug() <<"Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
@@ -163,36 +171,9 @@ StatusCode DeRich1::initialize()
     }
   }
 
-  // get pointers to HPD panels. Check for the new locations.
-  std::string panel0Location = DeRichLocations::Rich1Panel0;
-  std::string panel1Location = DeRichLocations::Rich1Panel1;
-
-  if ( exists("HPDPanelDetElemLocations") )
-  {
-    std::vector<std::string> panelLoc= paramVect<std::string>("HPDPanelDetElemLocations");
-    panel0Location = panelLoc[0];
-    panel1Location = panelLoc[1];
-  }
-
-  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),panel0Location);
-  if ( !panel0 ) {
-    fatal() << "Cannot load " << panel0Location << endmsg;
-    return StatusCode::FAILURE;
-  }
-  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),panel1Location);
-  if ( !panel1 ) {
-    fatal() << "Cannot load " << panel1Location << endmsg;
-    return StatusCode::FAILURE;
-  }
-#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
-  #pragma warning(disable:279) // Controlling expression is constant
-  #pragma warning(push)
-#endif
-  m_HPDPanels[panel0->side()] = panel0;
-  m_HPDPanels[panel1->side()] = panel1;
-#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
-  #pragma warning(pop)
-#endif
+  // Load HPD panels
+  hpdPanel(Rich::top);
+  hpdPanel(Rich::bottom);
 
   // DC06 compatible mirror (mis)alignment
   bool alignMirros( false );
@@ -202,8 +183,9 @@ StatusCode DeRich1::initialize()
     alignMirros = true;
     updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   }
-  else {
-    m_sphMirAlignCond = 0;
+  else 
+  {
+    m_sphMirAlignCond = NULL;
   }
 
   if ( hasCondition( "Rich1Mirror2Align" ) )
@@ -213,17 +195,16 @@ StatusCode DeRich1::initialize()
     updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   }
   else {
-    m_secMirAlignCond = 0;
+    m_secMirAlignCond = NULL;
   }
 
-  StatusCode upsc = StatusCode::SUCCESS;
-  if ( alignMirros ) upsc = updMgrSvc()->update(this);
+  const StatusCode upsc = 
+    ( alignMirros ? updMgrSvc()->update(this) : StatusCode::SUCCESS );
 
   // initialize all child detector elements. This triggers the update
   // of the radiator properties
   childIDetectorElements();
 
-  debug() << "Initialisation Complete" << endmsg;
   return upsc;
 }
 
@@ -296,4 +277,21 @@ const Gaudi::Plane3D& DeRich1::nominalPlane(const Rich::Side side) const
 Rich::Side DeRich1::side( const Gaudi::XYZPoint & point) const
 {
   return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
+}
+
+//=========================================================================
+// Access the name for a given panel
+//=========================================================================
+const std::string DeRich1::panelName( const Rich::Side panel ) const
+{
+  std::string pname = ( Rich::top == panel ?
+                        DeRichLocations::Rich1Panel0 :
+                        DeRichLocations::Rich1Panel1 );
+  if ( exists("HPDPanelDetElemLocations") )
+  {
+    const std::vector<std::string>& panelLoc 
+      = paramVect<std::string>("HPDPanelDetElemLocations");
+    pname = panelLoc[panel];
+  }
+  return pname;
 }

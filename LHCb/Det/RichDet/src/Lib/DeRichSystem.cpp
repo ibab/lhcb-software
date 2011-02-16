@@ -35,8 +35,23 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichSystem::DeRichSystem( const std::string & name )
-  : DeRichBase(name)
-{ }
+  : DeRichBase     ( name ),
+    m_firstL1CopyN ( 0    )
+{
+
+  m_deRich.assign(NULL);
+
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+  #pragma warning(disable:279) // Controlling expression is constant
+  #pragma warning(push)
+#endif
+  m_condBDLocs[Rich::Rich1] = "Rich1DetectorNumbers";
+  m_condBDLocs[Rich::Rich2] = "Rich2DetectorNumbers";
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+  #pragma warning(pop)
+#endif
+
+}
 
 //=============================================================================
 // Destructor
@@ -58,45 +73,44 @@ StatusCode DeRichSystem::initialize ( )
 
   debug() << "Initialize " << name() << endmsg;
 
-#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
-  #pragma warning(disable:279) // Controlling expression is constant
-  #pragma warning(push)
-#endif
-  m_condBDLocs[Rich::Rich1] = "Rich1DetectorNumbers";
-  m_condBDLocs[Rich::Rich2] = "Rich2DetectorNumbers";
-#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
-  #pragma warning(pop)
-#endif
+  // register condition for updates
   SmartRef<Condition> rich1numbers = condition( m_condBDLocs[Rich::Rich1] );
   SmartRef<Condition> rich2numbers = condition( m_condBDLocs[Rich::Rich2] );
-
-  SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-  if ( !deRich1 ) {
-    error() << "Could not load DeRich1" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  m_rich1NumberHpds = deRich1->param<int>("Rich1TotNumHpd");
-
-  SmartDataPtr<DetectorElement> deRich2(dataSvc(),DeRichLocations::Rich2 );
-  if ( !deRich2 ) {
-    error() << "Could not load DeRich2" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  m_deRich[0] = deRich1;
-  m_deRich[1] = deRich2;
-
-  m_useOldCopyNumber = ( exists("HpdQuantumEffCommonLoc") ? false : true);  //DC06 compatibility
-
-  // register condition for updates
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
   updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
-  const StatusCode up = updMgrSvc()->update(this);
-  if ( up.isFailure() )
+  if ( updMgrSvc()->update(this).isFailure() )
     error() << "Failed to update mappings" << endmsg;
 
-  m_firstL1CopyN = 0;
+  return StatusCode::SUCCESS;
+}
 
-  return up;
+//=========================================================================
+// Access on demand the Detector Elements for Rich1 and Rich2
+//=========================================================================
+DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
+{
+  if ( !m_deRich[rich] )
+  {
+    if      ( Rich::Rich1 == rich )
+    {
+      SmartDataPtr<DetectorElement> deR(dataSvc(),DeRichLocations::Rich1);
+      m_deRich[rich] = deR;
+    }
+    else if ( Rich::Rich2 == rich )
+    {
+      SmartDataPtr<DetectorElement> deR(dataSvc(),DeRichLocations::Rich2);
+      m_deRich[rich] = deR;
+    }
+    else
+    {
+      std::ostringstream mess;
+      mess << "Cannot load detector element for RICH " << rich;
+      throw GaudiException( mess.str(),
+                            "DeRichSystem::deRich",
+                            StatusCode::FAILURE );
+    }
+  }
+  return m_deRich[rich];
 }
 
 //=========================================================================
@@ -190,13 +204,19 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     debug() << "Inactive HPDs are taken from the smartID list" << endmsg;
     const CondData& inactsHuman = numbers->paramVect<int>("InactiveHPDListInSmartIDs");
     inactiveHPDListInSmartIDs = true;
-    for (unsigned int inHpd=0; inHpd<inactsHuman.size(); ++inHpd)
+    inacts.reserve(inactsHuman.size());
+    for ( unsigned int inHpd=0; inHpd<inactsHuman.size(); ++inHpd )
     {
       LHCb::RichSmartID myID( Rich::DAQ::HPDIdentifier(inactsHuman[inHpd]).smartID() );
-      if ( myID.isValid() ) inacts.push_back( myID );
+      if ( myID.isValid() ) 
+      {
+        inacts.push_back( myID );
+      }
       else
+      {
         error() << "Invalid smartID in the list of inactive HPDs "
                 << inactsHuman[inHpd] << endmsg;
+      }
     }
   }
   else
@@ -606,7 +626,9 @@ DeRichSystem::richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const
 const Rich::DAQ::HPDCopyNumber
 DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
 {
-  if ( !m_useOldCopyNumber )  // use the copy number vector
+  // DC06 compatibility
+  static const bool useNewCopyNumber = exists("HpdQuantumEffCommonLoc"); 
+  if ( useNewCopyNumber )  // use the copy number vector
   {
     // See if this RichSmartID is known
     SmartIDToCopyN::const_iterator id = m_smartid2copyNumber.find( smartID.hpdID() );
@@ -623,10 +645,12 @@ DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
   }
   else // do it the DC06 way
   {
+    static const int rich1NumberHpds = 
+      deRich(Rich::Rich1)->param<int>("Rich1TotNumHpd");
     const unsigned int cn =
       ( smartID.rich() == Rich::Rich1 ?
         smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
-        m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
+        rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
     return Rich::DAQ::HPDCopyNumber( cn );
   }
 }
@@ -754,16 +778,16 @@ DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
 }
 
 //=========================================================================
-//  getDeHPDLocation
+// getDeHPDLocation
 //=========================================================================
 std::string DeRichSystem::getDeHPDLocation ( const LHCb::RichSmartID smartID ) const
 {
   const Rich::DAQ::HPDCopyNumber cNumber = copyNumber( smartID );
   std::string loc;
 
-  if ( m_deRich[smartID.rich()]->exists("HPDPanelDetElemLocations") )
+  if ( deRich(smartID.rich())->exists("HPDPanelDetElemLocations") )
   {
-    const std::vector<std::string>& panelLoc = m_deRich[smartID.rich()]->
+    const std::vector<std::string>& panelLoc = deRich(smartID.rich())->
       paramVect<std::string>("HPDPanelDetElemLocations");
     loc = panelLoc[smartID.panel()];
   }

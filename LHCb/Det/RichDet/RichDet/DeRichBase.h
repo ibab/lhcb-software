@@ -21,6 +21,8 @@
 // RichDet
 #include "RichDet/DeRichLocations.h"
 
+class DeRichSystem;
+
 /** @class DeRichBase RichDet/DeRichBase.h
  *
  *  Base class for all Rich DetectorElements
@@ -36,7 +38,8 @@ public:
   /// Standard constructor
   DeRichBase( const std::string & name = "" ) 
     : DetectorElement ( name ),
-      m_msgStream     ( NULL )  { }
+      m_msgStream     ( NULL ),
+      m_deRichS       ( NULL ) { }
 
   /// Destructor
   virtual ~DeRichBase( ) { delete m_msgStream; } 
@@ -100,10 +103,20 @@ protected:
     return MsgStream( msgSvc(), name );
   }
 
+protected:
+
+  /// Access DeRichSystem on demand
+  DeRichSystem * deRichSys() const;
+
+  /// Access Service locator
+  
+
 private:
 
   mutable std::string m_myname;    ///< The name of this detector element
   mutable MsgStream * m_msgStream; ///< Message Stream Object
+
+  mutable DeRichSystem* m_deRichS; ///< Pointer to the overall RICH system object
 
 };
 

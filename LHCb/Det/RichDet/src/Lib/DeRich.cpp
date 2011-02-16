@@ -7,6 +7,8 @@
  *  @date   2004-06-18
  */
 
+#include <sstream>
+
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -27,15 +29,18 @@
 // Standard constructor, initializes variables
 //=============================================================================
 DeRich::DeRich(const std::string & name)
-  : DeRichBase             (name),
+  : DeRichBase              ( name ),
+    m_sphMirrorRadius       ( 0 ),
     m_gasWinRefIndex        ( 0 ),
     m_gasWinAbsLength       ( 0 ),
     m_nominalHPDQuantumEff  ( 0 ),
     m_nominalSphMirrorRefl  ( 0 ),
     m_nominalSecMirrorRefl  ( 0 ),
-    m_sphMirAlignCond       (),
-    m_secMirAlignCond       ()
-{ }
+    m_sphMirAlignCond       (   ),
+    m_secMirAlignCond       (   )
+{
+  m_HPDPanels.assign(NULL);
+}
 
 //=============================================================================
 // Destructor
@@ -231,13 +236,50 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
 #ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
+#pragma warning(disable:279) // Controlling expression is constant
+#pragma warning(push)
+#endif
+  return ( hpdPanel(side(globalPoint))->sensitiveVolumeID( globalPoint ) );
+#ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
+#pragma warning(pop)
+#endif
+}
+
+//=========================================================================
+// Access the name for a given panel
+//=========================================================================
+const std::string DeRich::panelName( const Rich::Side /* panel */ ) const
+{
+  throw GaudiException( "Not implemented for DeRich class"+myName(), 
+                        "DeRich::panelName", StatusCode::FAILURE );
+}
+
+//=========================================================================
+// Access HPD Panels on demand
+//=========================================================================
+DeRichHPDPanel * DeRich::hpdPanel( const Rich::Side panel ) const
+{
+  if ( !m_HPDPanels[panel] )
+  {
+    const std::string& pName = panelName(panel);
+
+    SmartDataPtr<DeRichHPDPanel> dePanel( dataSvc(), pName );
+    if ( !dePanel )
+    {
+      std::ostringstream mess;
+      mess << "Failed to load DeRichHPDPanel at " << pName;
+      throw GaudiException( mess.str(), "DeRich::hpdPanel", StatusCode::FAILURE );
+    }
+#ifdef __INTEL_COMPILER        // Disable ICC remark from boost/array
   #pragma warning(disable:279) // Controlling expression is constant
   #pragma warning(push)
 #endif
-  return ( m_HPDPanels[side(globalPoint)]->sensitiveVolumeID( globalPoint ) );
+    m_HPDPanels[panel] = dePanel;
 #ifdef __INTEL_COMPILER        // Re-enable ICC remark 279
   #pragma warning(pop)
 #endif
+  }
+  return m_HPDPanels[panel];
 }
 
 //=============================================================================

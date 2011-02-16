@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Chris Jones
+ - Rework the way the various DeRich objects initialise, moving as much as
+   possible to happen on demand, instead of always being done by default.
+
 ! 2011-02-02 - Chris Jones
  - Adapt to removal of depreciated RichRadIntersection typedef.
  - Remove some obsolete CVS doxygen comments

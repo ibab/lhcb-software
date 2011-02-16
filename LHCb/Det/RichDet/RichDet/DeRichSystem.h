@@ -242,6 +242,9 @@ private: // methods
   /// Fill the maps for the given RICH detector
   StatusCode fillMaps( const Rich::DetectorType rich );
 
+  /// Access on demand the Detector Elements for Rich1 and Rich2
+  DetectorElement * deRich( const Rich::DetectorType rich ) const;
+
 private: // data
 
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
@@ -327,16 +330,10 @@ private: // data
   L1HIDToCopyN m_l1H2CopyN;
 
   /// Rich1 & Rich2 detector elements
-  boost::array<DetectorElement*, Rich::NRiches> m_deRich;
+  mutable boost::array<DetectorElement*, Rich::NRiches> m_deRich;
 
   /// Location of RICH Numbering schemes in Conditions DB
   boost::array<std::string, Rich::NRiches> m_condBDLocs;
-
-  /// The total number of HPDs in Rich1.
-  int m_rich1NumberHpds;
-
-  /// DC06 copy number compatibility
-  bool m_useOldCopyNumber;
 
   /// Logical to hardware L1 ID map
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1LogicalID, Rich::DAQ::Level1HardwareID > L1LogToHard;

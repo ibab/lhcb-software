@@ -192,6 +192,16 @@ protected:
                            SmartRef<Condition> cond,
                            const std::string& Rvector ) const;
 
+  /// Access HPD Panels on demand
+  DeRichHPDPanel * hpdPanel( const Rich::Side panel ) const;
+
+private:
+
+  /// Access the name for a given panel
+  virtual const std::string panelName( const Rich::Side panel ) const;
+
+protected:
+
   double m_sphMirrorRadius; ///< The nominal radius of the spherical mirror
 
   /// The nominal centre of curvature of the spherical mirror (positive side)
@@ -225,7 +235,7 @@ protected:
   SmartRef<Condition> m_secMirAlignCond;
 
   /// Pointers to the HPD panels of this Rich detector
-  boost::array<DeRichHPDPanel*, 2> m_HPDPanels;
+  mutable boost::array<DeRichHPDPanel*,Rich::NRiches> m_HPDPanels;
 
 };
 
