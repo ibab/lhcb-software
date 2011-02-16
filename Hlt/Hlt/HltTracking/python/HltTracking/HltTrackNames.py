@@ -25,6 +25,7 @@ Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 # and _protosLocation)
 #
 HltSharedRZVeloTracksName               = "RZVelo"
+HltSharedVeloTracksName               = "Velo"
 #
 Hlt1SeedingTracksName                   = "Seeding"
 #

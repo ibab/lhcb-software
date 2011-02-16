@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Gerhard Raven
+ - remove reference to RZ velo tracking
+ - add HltSharedVeloTracksName
+
 ! 2011-02-16 - V. Gligorov
  - linked Charm KsHH lines.
 

@@ -39,7 +39,6 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
 ############################################################################################
 # Option to decide which pattern to use
 ############################################################################################
-useFastVelo = True
 #############################################################################################
 # Import Configurables
 #############################################################################################
@@ -82,23 +81,15 @@ STOfflinePosition().APE = 0.197
 
 #This is the one unavoidable piece of hardcoding since this is the piece
 #shared between Hlt1 and Hlt2
-from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix 
+from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, HltSharedTracksPrefix 
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
-
-if useFastVelo :
-    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = "Hlt/Track/Velo" )
-    recoVelo.HLT1Only = True   
-else :
-   recoVelo         = Tf__PatVeloSpaceTracking('Hlt1And2RecoVelo'
-                                               , InputTracksName  = "Hlt/Track/RZVelo" 
-                                               , OutputTracksName = "Hlt/Track/Velo" )
-   recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-   recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
+recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName))
+recoVelo.HLT1Only = True   
 
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter
@@ -118,10 +109,7 @@ from Configurables import DecodeVeloRawBuffer
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
 
-if useFastVelo :
-    MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
-else :
-    MinimalVelo = bindMembers( None, [MinimalRZVelo, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 
 Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 
