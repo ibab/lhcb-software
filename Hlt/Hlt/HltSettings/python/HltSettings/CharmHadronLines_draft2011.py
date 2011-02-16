@@ -32,7 +32,6 @@ class CharmHadronLines :
                   , 'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
                   , 'Hlt2CharmHadD02HHKsLL'
-                  , 'Hlt2CharmHadD02HHKsDD'
                   , 'Hlt2CharmHadD2KS0Pi'
                   , 'Hlt2CharmHadD2KS0K'
              ]
