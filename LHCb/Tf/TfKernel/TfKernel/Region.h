@@ -4,9 +4,6 @@
  *
  *  Header file for track finding 'Region' objects
  *
- *  CVS Log :-
- *  $Id: Region.h,v 1.6 2010-04-07 05:17:03 wouter Exp $
- *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
  */
@@ -36,7 +33,16 @@ namespace Tf
   {
   public:
     /// Default Constructor
-    EnvelopeBase() : m_numelements(0), m_xmin(1), m_xmax(0), m_cosT(1), m_sinT(0) {}
+    EnvelopeBase() : 
+      m_numelements(0), 
+      m_xmin(1),  m_xmax(0), 
+      m_ymin(1),  m_ymax(0), 
+      m_zmin(1),  m_zmax(0), 
+      m_xminT(1), m_xmaxT(0), 
+      m_yminT(1), m_ymaxT(0), 
+      m_cosT(1),  m_sinT(0) 
+    { }
+  public:
     /// The minimum value of x (in global coordinates) for the region
     inline double xmin() const { return m_xmin ; }
     /// The minimum value of y (in global coordinates) for the region
