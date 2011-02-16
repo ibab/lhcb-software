@@ -187,7 +187,7 @@ StatusCode AdderSvc::start()
     m_EoRSaver->setRootDir(m_SaveRootDir);
     m_EoRSaver->setTaskName(m_SaverTaskName);
     m_EoRSaver->setEOR(true);
-    m_EoRadder->SetCycleFn(EORSaver,(void*)m_SaveTimer);
+    m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
   }
   m_started = true;
   return StatusCode::SUCCESS;
