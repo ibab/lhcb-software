@@ -62,7 +62,8 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 //=============================================================================
 
 template <class PBASE>
-int ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
+int 
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
 {
   int id(0);
   // special cases

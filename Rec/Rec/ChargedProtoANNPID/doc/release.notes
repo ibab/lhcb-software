@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Chris Jones
+ - Work around for crash during finalisation of GaudiTupleTool -> Disable the
+   final printing of the PID tuple.
+
 ! 2011-02-15 - Chris Jones
  - Fix typo in Tuple Tool name in ChargedProtoANNPIDTrainingTuple
 

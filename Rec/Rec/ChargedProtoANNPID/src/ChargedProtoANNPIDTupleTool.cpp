@@ -25,13 +25,13 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
   : ChargedProtoANNPIDToolBase ( type, name, parent ),
     m_truth                    ( NULL )
 {
+
   // interface
   declareInterface<IChargedProtoANNPIDTupleTool>(this);
 
   // Job options
-  using namespace boost::assign;
   declareProperty( "Variables",
-                   m_variablesS = list_of
+                   m_variablesS = boost::assign::list_of
                    // General event variables
                    ("NumProtoParticles")("NumCaloHypos")
                    // Tracking
@@ -63,6 +63,9 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    // VELO
                    ("VeloCharge")
                    );
+
+  // Turn off Tuple printing during finalize
+  setProperty( "NTuplePrint", false );
 
 }
 
