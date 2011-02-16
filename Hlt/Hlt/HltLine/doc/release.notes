@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v4r8  2011-02-16 ===================
 ! 2010-02-12 - Gerhard Raven
  - add muon and rich decoding symbols
  - skip sequencer if it only has one member
