@@ -54,6 +54,8 @@ class Muons_draft2011 :
              
             'Hlt2Dst2PiD02MuMu',         
             #'Hlt2Dst2PiD02EMu', 
+            'Hlt2CharmRareDecayD02MuMu',
+            'Hlt2CharmRareDecayD02PiPiForD02MuMu'
     
             ]
             
@@ -71,6 +73,7 @@ class Muons_draft2011 :
         from Hlt2Lines.Hlt2InclusiveMuonLines  import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
         from Hlt2Lines.Hlt2MuNTrackLines  import Hlt2MuNTrackLinesConf
+        from Hlt2Lines.Hlt2CharmRareDecayLines  import Hlt2CharmRareDecayLinesConf
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
             'UnbiasedDiMuonMinMass'    : 2900      # MeV
@@ -149,10 +152,17 @@ class Muons_draft2011 :
                               ,'Hlt2MuTrack2'  : 1.0
                               ,'Hlt2MuTrack3'  : 0.0
                               }
-            }}
-                  )
-
-
+            }})
+        d.update({Hlt2CharmRareDecayLinesConf : { 
+                          'D02MuMuMinDaughterPt'            : 1.0 # GeV
+                        , 'D02MuMuMinLifeTime'              : 0.1 # ps
+                        , 'D02PiPiForD02MuMuMinLifeTime'    : 0.3 # ps
+                        , 'Prescale'                        : { 
+                            'Hlt2CharmRareDecayD02MuMu'           : 1.0 
+                          , 'Hlt2CharmRareDecayD02PiPiForD02MuMu' : 0.1 
+                          }
+            }})
+        
         return d
     
 
