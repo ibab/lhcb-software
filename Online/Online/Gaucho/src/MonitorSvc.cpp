@@ -619,7 +619,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   if (m_disableMonObjectsForHistos == 0)
   {
 //    isMonObject = true;
-    mhist = new MonHist(msgSvc(),oname+"/"+name,var);
+    mhist = new MonHist(msgSvc(),name,var);
     m_HistSubSys->addObj(mhist);
   }
   else
