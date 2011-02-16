@@ -26,6 +26,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Cuts 
   {
     // ========================================================================
@@ -42,7 +43,7 @@ namespace LoKi
      *  
      *  @see LoKi::Min
      */
-    typedef LoKi::Min<const LHCb::MCVertex*>  MCVMIN ;
+    typedef LoKi::Min<const LHCb::MCVertex*>                           MCVMIN ;
     // ========================================================================
     /** Maxumum from 2 functions 
      *  
@@ -57,7 +58,7 @@ namespace LoKi
      *  
      *  @see LoKi::Max
      */
-    typedef LoKi::Max<const LHCb::MCVertex*> MCVMAX ;
+    typedef LoKi::Max<const LHCb::MCVertex*>                           MCVMAX ;
     // ========================================================================
     /** Simple "switch"
      *  The function evaluated the predicate and returns 
@@ -70,7 +71,7 @@ namespace LoKi
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
-    typedef LoKi::SimpleSwitch<const LHCb::MCVertex*> MCVSSWITCH ;
+    typedef LoKi::SimpleSwitch<const LHCb::MCVertex*>              MCVSSWITCH ;
     // ========================================================================    
     /** switch"
      *  The function evaluates the predicate and returns 
@@ -82,7 +83,7 @@ namespace LoKi
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
-    typedef LoKi::Switch<const LHCb::MCVertex*> MCVSWITCH ;
+    typedef LoKi::Switch<const LHCb::MCVertex*>                     MCVSWITCH ;
     // ========================================================================
     /** @var MCVTYPE
      *  the type of MC vertex ( MCVertex::type )
@@ -99,7 +100,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    const LoKi::MCVertices::TypeOfMCVertex MCVTYPE ;
+    const LoKi::MCVertices::TypeOfMCVertex                         MCVTYPE () ;
     // ========================================================================
     /** @var MCVVALID 
      *
@@ -117,7 +118,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-01-21
      */
-    const LoKi::Valid<const LHCb::MCVertex*>                    MCVVALID ;
+    const LoKi::Valid<const LHCb::MCVertex*>                      MCVVALID () ;
     // ========================================================================
     /** @var MCVTOF
      *  the time of flight for  MC vertex ( MCVertex::timeOfFlight )
@@ -134,7 +135,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    const LoKi::MCVertices::TimeOfFlight MCVTOF  ;
+    const LoKi::MCVertices::TimeOfFlight                            MCVTOF () ;
     // ========================================================================
     /** @var MCVX
      *  the x-position of       MC vertex 
@@ -151,7 +152,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    const LoKi::MCVertices::VertexPositionX MCVX ;
+    const LoKi::MCVertices::VertexPositionX                           MCVX () ;
     // ========================================================================
     /** @var MCVY
      *  the y-position of       MC vertex 
@@ -168,7 +169,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    const LoKi::MCVertices::VertexPositionY MCVY ;
+    const LoKi::MCVertices::VertexPositionY                           MCVY () ;
     // ========================================================================
     /** @var MCVZ
      *  the z-position of       MC vertex 
@@ -185,7 +186,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    const LoKi::MCVertices::VertexPositionZ MCVZ ;
+    const LoKi::MCVertices::VertexPositionZ                           MCVZ () ;
     // ========================================================================
     /** @var MCVTIME
      *  the "time" of MC vertex 
@@ -203,7 +204,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    const LoKi::MCVertices::VertexTime      MCVTIME ;
+    const LoKi::MCVertices::VertexTime                             MCVTIME () ;
     // ========================================================================
     /** @var MCPRIMARY
      *  evaluates to "true" for  primary vertices 
@@ -221,7 +222,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    const LoKi::MCVertices::Primary      MCPRIMARY ;
+    const LoKi::MCVertices::Primary                              MCPRIMARY () ;
     // ========================================================================    
     /** @var MCISPRIMARY
      *  evaluates to "true" for  primary vertices 
@@ -239,7 +240,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    const LoKi::MCVertices::Primary      MCISPRIMARY ;
+    const LoKi::MCVertices::Primary                            MCISPRIMARY () ;
     // ========================================================================
     /** @var MCISDECAY
      *  evaluates to "true" for 'decay' vertices 
@@ -257,7 +258,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      */
-    const LoKi::MCVertices::Decay      MCISDECAY  ;
+    const LoKi::MCVertices::Decay                                MCISDECAY () ;
     // ========================================================================    
     /** the distance for MC vertex from given point, 
      *  given (MC)Vertex or collision
@@ -290,7 +291,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-07-07
      */
-    typedef LoKi::MCVertices::MCVertexDistance MCVDIST ;
+    typedef LoKi::MCVertices::MCVertexDistance                     MCVDIST () ;
     // ========================================================================
     /** the adaptor for MC vertex function to be interpreted as 
      *  MC particle function
@@ -317,7 +318,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-03-01 
      */
-    typedef LoKi::MCVertices::MCVFunAsMCFun MCVXFUN ;
+    typedef LoKi::MCVertices::MCVFunAsMCFun                        MCVXFUN () ;
     // ========================================================================
     /** the adaptor for MC vertex function to be interpreted as 
      *  MC particle function
@@ -363,7 +364,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-02-14
      */
-    const LoKi::MCVertices::Key                                        MCVKEY ;
+    const LoKi::MCVertices::Key                                     MCVKEY () ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================
