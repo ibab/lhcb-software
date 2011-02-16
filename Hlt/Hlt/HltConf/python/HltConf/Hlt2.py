@@ -42,6 +42,7 @@ from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2BeamGasLines import Hlt2BeamGasLinesConf
 from Hlt2Lines.Hlt2MuNTrackLines import Hlt2MuNTrackLinesConf
 from Hlt2Lines.Hlt2D2KS0HLines             import  Hlt2CharmHadD2KS0HLinesConf
+from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
 #
 # The tracking configurations
 #
@@ -68,6 +69,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmHadD02HHLinesConf
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf  
+                             , Hlt2CharmHadD02HHKsLinesConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf 
