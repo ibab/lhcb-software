@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Alexandr Kozlinskiy
+ - linked new CharmRareDecay HLT2 lines
+
 ! 2011-02-14 - Gerhard Raven
  - replace HltTrackFilter with Hlt::TrackFilter
 

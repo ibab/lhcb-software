@@ -47,6 +47,7 @@ from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
+from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
@@ -84,6 +85,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmHadD02HHLinesConf
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf 
+                             , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
