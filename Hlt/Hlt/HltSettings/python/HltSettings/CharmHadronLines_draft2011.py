@@ -31,8 +31,10 @@ class CharmHadronLines :
                   #, 'Hlt2CharmHad2BodyForD2HHH'
                   , 'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
-                  , 'Hlt2CharmRareDecayD02MuMu'
-                  , 'Hlt2CharmRareDecayD02PiPiForD02MuMu'
+                  , 'Hlt2CharmHadD02HHKsLL'
+                  , 'Hlt2CharmHadD02HHKsDD'
+                  , 'Hlt2CharmHadD2KS0Pi'
+                  , 'Hlt2CharmHadD2KS0K'
              ]
         
         return lines
@@ -48,7 +50,6 @@ class CharmHadronLines :
         from Hlt2Lines.Hlt2CharmHadD2HHHLines   import Hlt2CharmHadD2HHHLinesConf
         from Hlt2Lines.Hlt2D2KS0HLines          import Hlt2CharmHadD2KS0HLinesConf
         from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
-        from Hlt2Lines.Hlt2CharmRareDecayLines  import Hlt2CharmRareDecayLinesConf 
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
                           'Trk_PT_MIN'               : 800.0      # MeV
@@ -156,17 +157,7 @@ class CharmHadronLines :
                         , 'Prescale'                : { }
                         , 'Postscale'               : { }
                     }
-
-                    , Hlt2CharmRareDecayLinesConf : {
-                          'D02MuMuMinDaughterPt'            : 1.0 # GeV
-                        , 'D02MuMuMinLifeTime'              : 0.1 # ps
-                        , 'D02PiPiForD02MuMuMinLifeTime'    : 0.3 # ps
-                        , 'Prescale'                        : {
-                            'Hlt2CharmRareDecayD02MuMu'           : 1.0
-                          , 'Hlt2CharmRareDecayD02PiPiForD02MuMu' : 0.1
-                          }
-                    }
-
+                    
                   } )
 
         return d
