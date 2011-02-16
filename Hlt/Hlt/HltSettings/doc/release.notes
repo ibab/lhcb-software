@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - V. Gligorov
+ - Move Hlt2CharmRareDecayD02MuMu and Hlt2CharmRareDecayD02PiPiForD02MuMu
+   to Muons_draft2011. Add KsHH and KsH lines to CharmHadronLines_draft2011
+   pending review of performance. 
+
 ! 2011-02-16 - Alexandr Kozlinskiy
  - Added lines Hlt2CharmRareDecayD02MuMu and Hlt2CharmRareDecayD02PiPiForD02MuMu
    to CharmHadronLines_draft2011.py
