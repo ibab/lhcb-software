@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v9r4 2011-02-16 ===================
+! 2011-02-16 - Gerhard Raven
+ - follow rename Hlt1NewMuonLines into Hlt1MuonLines
+
 ! 2011-02-16 - V. Gligorov
  - linked Charm KsHH lines.
 

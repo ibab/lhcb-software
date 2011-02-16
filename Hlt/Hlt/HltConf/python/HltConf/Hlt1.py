@@ -27,7 +27,7 @@ from Hlt1Lines.Hlt1VeloLines       import Hlt1VeloLinesConf
 from Hlt1Lines.Hlt1CosmicLines     import Hlt1CosmicLinesConf
 from Hlt1Lines.Hlt1MBLines         import Hlt1MBLinesConf
 from Hlt1Lines.Hlt1TrackLines      import Hlt1TrackLinesConf
-from Hlt1Lines.Hlt1NewMuonLines    import Hlt1NewMuonLinesConf
+from Hlt1Lines.Hlt1MuonLines       import Hlt1MuonLinesConf
 from Hlt1Lines.Hlt1ProtonLines     import Hlt1ProtonLinesConf
 
 class Hlt1Conf(LHCbConfigurableUser):
@@ -36,7 +36,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1BeamGasLinesConf
                             , Hlt1L0LinesConf
                             , Hlt1VeloLinesConf
-                            , Hlt1NewMuonLinesConf
+                            , Hlt1MuonLinesConf
                             , Hlt1TrackLinesConf
                             , Hlt1CosmicLinesConf
                             , Hlt1MBLinesConf
