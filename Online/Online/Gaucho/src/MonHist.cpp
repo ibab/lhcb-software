@@ -474,6 +474,7 @@ void *MonHist::cpytitle(void *ptr)
 
 void MonHist::clear()
 {
+  if (m_rootobj == 0) return;
 	switch(m_type)
 	{
 		case H_1DIM:
