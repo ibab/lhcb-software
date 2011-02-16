@@ -68,7 +68,27 @@ namespace LHCb
   {
 
     /// Standard constructor
-    PackedState( ) {}
+    PackedState( ) :
+      flags(0),
+      //
+      x(0),y(0),z(0),tx(0),ty(0),p(0),
+      //
+      cov_00(0),
+      cov_11(0),
+      cov_22(0),
+      cov_33(0),
+      cov_44(0),
+      cov_10(0),
+      cov_20(0),
+      cov_21(0),
+      cov_30(0),
+      cov_31(0),
+      cov_32(0),
+      cov_40(0),
+      cov_41(0),
+      cov_42(0),
+      cov_43(0)
+    { }
 
     int flags;
 
