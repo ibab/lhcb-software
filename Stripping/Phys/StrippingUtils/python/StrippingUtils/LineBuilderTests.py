@@ -2,7 +2,8 @@
 """
 
 __all__ = ('test_line_builder',
-           'test__many_instances',
+           'test__build_many_instances',
+           'test_second_instance_does_not_overwrite_lines',
            'test_default_raises',
            'test_single_constructor_argument_raises',
            'test_lines',
@@ -27,11 +28,12 @@ def test_line_builder(builderType, conf_dict) :
     test_default_raises(builderType)
     test_single_constructor_argument_raises(builderType, conf_dict)
     test_duplicate_name_raises(builderType, conf_dict)
-    test_many_instances(builderType, conf_dict)
+    test_build_many_instances(builderType, conf_dict)
+    test_second_instance_does_not_overwrite_lines(builderType, conf_dict)
     test_configuration_not_dictlike_raises(builderType, 0)
     test_bad_configuration_raises(builderType, conf_dict)
         
-def test_many_instances(builderType, conf_dict) :
+def test_build_many_instances(builderType, conf_dict) :
     print 'test_make_many_instances', builderType.__name__, '...'
     """
     Test that an arbitrary number of instances can be instantiated with different names.
@@ -43,6 +45,13 @@ def test_many_instances(builderType, conf_dict) :
         lines = b.lines()
         test_linebuilder_instance(b)
 
+def test_second_instance_does_not_overwrite_lines(builderType, conf_dict) :
+    print 'test_second_instance_does_not_overwrite_lines', builderType.__name__, '...'    
+    b0 = builderType('FirstBuilder', conf_dict)
+    b0lines = b0.lines()
+    b1 = builderType('SecondBuilder', conf_dict)
+    assert b0.lines() == b0lines
+    
 def test_linebuilder_instance(b) :
     test_lines(b)
     test_cannot_modify_lines(b)
