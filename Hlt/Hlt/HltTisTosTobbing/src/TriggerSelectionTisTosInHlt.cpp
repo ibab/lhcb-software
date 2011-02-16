@@ -218,8 +218,8 @@ unsigned int TriggerSelectionTisTosInHlt::tisTosSelection( const std::string & s
       const Hlt::TSelection<Hlt::Candidate>& tsel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);   
       if (tsel.size() >0) {
           // grab the first one, and pray for a uniform list...
-         const Hlt::Candidate *cand = tsel.front();
-         const Hlt::Stage* stage = cand->currentStage();
+          const Hlt::Candidate *cand = tsel.front();
+          const Hlt::Stage* stage = cand->currentStage();
           if ( stage->get<LHCb::Track>() != 0 ) {
             result = IParticleTisTos::tisTos<Track>( convertCandidate<Track>( tsel.begin(), tsel.end() ));
           } else if (stage->get<LHCb::RecVertex>()!=0) {
@@ -382,7 +382,23 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection( const std::str
   if( !sel )return false;\
   if( !(sel->decision()) )return false;\
   if( !(sel->size()) )return false;\
-  if( sel->classID() == LHCb::Track::classID() ) {\
+  if( sel->classID() == Hlt::Candidate::classID() ) {\
+    const Hlt::TSelection<Hlt::Candidate>& tsel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);   \
+    if (tsel.size() >0) {\
+          const Hlt::Candidate *cand = tsel.front(); \
+          const Hlt::Stage* stage = cand->currentStage(); \
+          if ( stage->get<LHCb::Track>() != 0 ) { \
+            std::vector<Track*> tracks = convertCandidate<Track>(tsel.begin(),tsel.end());\
+            return IParticleTisTos::FUN<LHCb::Track>(tracks);\
+          } else if (stage->get<LHCb::RecVertex>()!=0) {\
+            std::vector<RecVertex*> vertices = convertCandidate<RecVertex>(tsel.begin(),tsel.end());\
+            return IParticleTisTos::FUN<RecVertex>(vertices);\
+          } else {\
+            error() << " got a candidate which is neither Track nor RecVertex... " << endmsg;\
+            return false;\
+          }\
+    }      \
+  } else if( sel->classID() == LHCb::Track::classID() ) {\
     const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   \
     if (tsel.size() >0) {\
       std::vector<Track*> tracks = convert<Track>(tsel.begin(),tsel.end());\
