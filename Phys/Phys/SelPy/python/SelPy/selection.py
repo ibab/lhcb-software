@@ -125,10 +125,10 @@ class Selection(UniquelyNamedObject,
         if _outputLocation.endswith('/') :
             _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
         
-        cg = copy(ConfGenerator)
-        cg.Output=_outputLocation
+        alg = ConfGenerator(self.name())
+        alg.Output=_outputLocation
         SelectionBase.__init__(self,
-                               algorithm = cg( self.name() ) ,
+                               algorithm = alg,
                                outputLocation = _outputLocation,
                                requiredSelections = RequiredSelections )
 
