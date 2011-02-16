@@ -4,10 +4,14 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Illya Shapoval
+ - Defaults for DQFLAGS db tag are added to DDDBConf configurable for 2011,
+   2010, 2009 and 2008 datatypes.
+
 !========================= DDDB v1r40 2011-01-31 =========================
 ! 2011-01-31 - Illya Shapoval
  - SQLDDDB dependecy is changed to pickup the one with major version
-   increased to v6. 
+   increased to v6.
 
 ! 2010-12-20 - Marco Cattaneo
  - Update database tags for SQLDDDB v5r44:
@@ -30,8 +34,8 @@
  - Update database tags:
    . LHCBCOND, 2010, 2009: head-20101026
    . DDDB, 2010, 2009: head-20101026
-   . SIMCOND, 2010: sim-20101026-vc-md100 
-   . SIMCOND, 2009: MC-20101026-vc15mm-md100 
+   . SIMCOND, 2010: sim-20101026-vc-md100
+   . SIMCOND, 2009: MC-20101026-vc15mm-md100
 
 !========================= DDDB v1r37 2010-10-25 =========================
 
@@ -180,8 +184,8 @@
 
 !========================== DDDB v1r22 2009-09-22 ============================
 ! 2009-09-16 - Tomasz Skwarnicki
- - Introduce "Upgrade" DataType 
-   . set DDDB tag for the first Minimal Upgrade Layout release (mul-20091917) 
+ - Introduce "Upgrade" DataType
+   . set DDDB tag for the first Minimal Upgrade Layout release (mul-20091917)
 
 !========================== DDDB v1r21 2009-09-04 ============================
 ! 2009-09-03 - Marco Clemencic
@@ -230,7 +234,7 @@
    . head-20090508         for LHCBCOND
    . sim-20090508-vc-md100 for SIMCOND
 
- - Add default tags for MC09: 
+ - Add default tags for MC09:
    . MC09-20090526         for DDDB
    . sim-20090402-vc-md100 for SIMCOND
 
@@ -298,7 +302,7 @@
 ! 2008-10-02 - Marco Cattaneo
  - New default tag for 2008 (head-20081002).
  - New default tag for DC06 (DC06-20081002).
- - Force positive magnet polarity for DC06 (i.e. don't take default from ONLINE) 
+ - Force positive magnet polarity for DC06 (i.e. don't take default from ONLINE)
 
 ! 2008-09-30 - Marco Cattaneo
  - Change requirements to look for SQLDDDB v5r*, due to incompatibility between
@@ -345,7 +349,7 @@
  - In LHCb-2008.py   change default 2008 tag to head-20080725
  - Remove Magnetic field options from DC06.py, LHCb-2008.py, now taken
    from ONLINE condDB partition
- - Fix DDDB.py to make ONLINE a CondDBTimeSwitchSvc 
+ - Fix DDDB.py to make ONLINE a CondDBTimeSwitchSvc
 
 ! 2008-07-23 - Marco Clemencic
  - Modified DDDB.py to avoid conflicts with the next version of SQLDDDB, where
@@ -365,12 +369,12 @@
 ! 2008-07-03 - Marco Cattaneo
  - In DDDB.py, LHCb-2008.py: add support for SIMCOND
  - In LHCb-2008.py: get fieldMap options from UserRealMap.py
-                    (needs Det/Magnet v3r10) 
+                    (needs Det/Magnet v3r10)
                     change default tag to head-20080702 (from SQLDDDB v4r5)
 
 ! 2008-06-30 - Marco Cattaneo
  - In DDDB.py, DDDB.opts: suppress pointless warning from COOL_2_5_0
- - In DC06.py, LHCb-2008.py: Do not expand environment variable in options, 
+ - In DC06.py, LHCb-2008.py: Do not expand environment variable in options,
                              breaks on grid. Needs Gaudi v20r1
 
 ! 2008-06-12 - Marco Clemencic
@@ -385,7 +389,7 @@
 
 !========================== DDDB v1r6 2008-05-16 =============================
 ! 2008-05-09 - Marco Cattaneo
- - Add LHCb-2008.py to describe default tags for real 2008 detector. Current 
+ - Add LHCb-2008.py to describe default tags for real 2008 detector. Current
    default tag is head-20080516, requires SQLDDDB >= v4r3
 
 ! 2008-04-23 - Marco Cattaneo
@@ -395,7 +399,7 @@
 !========================== DDDB v1r5 2008-04-11 =============================
 ! 2008-04-11 - Marco Cattaneo
  - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080407, for use
-   with new Muon and Velo detector elements in LHCb v23r5. 
+   with new Muon and Velo detector elements in LHCb v23r5.
    Requires SQLDDDB >= v4r2
 
 !========================== DDDB v1r4 2008-03-03 =============================
@@ -427,6 +431,6 @@
                         read it.
    . options/DDDB.opts: options for setting up CondDb access.
                         Replaces $STDOPTS/DetDesc.opts
-   . options/DC06.opts: options to select DC06 tags 
+   . options/DC06.opts: options to select DC06 tags
                         Replaces $STDOPTS/DC06Conditions.opts
 !========================= DDDB v1r40 2010-11-27 =========================
