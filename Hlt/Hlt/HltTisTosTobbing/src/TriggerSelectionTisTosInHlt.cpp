@@ -14,12 +14,15 @@
 #include "TriggerSelectionTisTosInHlt.h"
 
 #include "Event/HltDecReports.h"
+#include "Event/HltCandidate.h"
 
 #include "HltBase/HltSelection.h"
 
 using namespace LHCb;
 
 namespace {
+
+    // TODO: use transform instead of explicit loop...
     
     template<typename T, typename I>
     std::vector<T*> convert(I i,I end) {
@@ -27,6 +30,15 @@ namespace {
            while (i!=end)  v.push_back( const_cast<T*>( *i++ ) );
            return v;
     }
+
+    template<typename T, typename I>
+    std::vector<T*> convertCandidate(I i,I end) {
+           std::vector<T*> v; v.reserve( end-i );
+           while (i!=end)  v.push_back( const_cast<T*>( (*i++)->currentStage()->template get<T>() ) );
+           return v;
+    }
+    
+
 };
 
 //-----------------------------------------------------------------------------
@@ -202,7 +214,23 @@ unsigned int TriggerSelectionTisTosInHlt::tisTosSelection( const std::string & s
   // classify the decision
   if( sel->size() > 0 ){
 
-    if( sel->classID() == LHCb::Track::classID() ) {
+    if( sel->classID() == Hlt::Candidate::classID() ) {
+      const Hlt::TSelection<Hlt::Candidate>& tsel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);   
+      if (tsel.size() >0) {
+          // grab the first one, and pray for a uniform list...
+         const Hlt::Candidate *cand = tsel.front();
+         const Hlt::Stage* stage = cand->currentStage();
+          if ( stage->get<LHCb::Track>() != 0 ) {
+            result = IParticleTisTos::tisTos<Track>( convertCandidate<Track>( tsel.begin(), tsel.end() ));
+          } else if (stage->get<LHCb::RecVertex>()!=0) {
+            result = IParticleTisTos::tisTos<RecVertex>( convertCandidate<RecVertex>( tsel.begin(), tsel.end() ));
+          } else {
+            error() << " got a candidate which is neither Track nor RecVertex... " << endmsg;
+          }
+
+      }
+
+    } else if( sel->classID() == LHCb::Track::classID() ) {
 
       const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
       if (tsel.size() >0) {
