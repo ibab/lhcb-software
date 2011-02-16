@@ -123,6 +123,11 @@ TrackCheckerBase::LinkInfo TrackCheckerBase::reconstructed(const LHCb::MCParticl
     info.clone = range.size() - 1u;
     info.purity = range.begin()->weight();
   }
+  else{
+    info.track = NULL;
+    info.clone = 0;
+    info.purity = -1.;
+  }
   return info; 
 }
 
@@ -135,6 +140,11 @@ TrackCheckerBase::LinkInfo TrackCheckerBase::reconstructedInRefContainer(const L
     info.track = range.begin()->to();
     info.clone = range.size() - 1u;
     info.purity = range.begin()->weight();
+  } 
+  else{
+    info.track = NULL;
+    info.clone = 0;
+    info.purity = -1.;
   }
   return info; 
 }
