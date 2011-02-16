@@ -93,6 +93,8 @@ void SaveTimer::SavetoFile(void *buff)
   {
     sprintf(fdir,"%s",m_rootdir.c_str());
     mkdir(fdir,01777);
+    sprintf(fdir,"%s/%s",fdir,"ByRun");
+    mkdir(fdir,01777);
     sprintf(fdir,"%s/%s",fdir,m_taskname.c_str());
     mkdir(fdir,01777);
     sprintf(fdir,"%s/%d",fdir,(runo/10000)*10000);
