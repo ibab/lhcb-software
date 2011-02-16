@@ -10,6 +10,7 @@ import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
 import StrippingB2nbody
+import StrippingHb2Charged2Body
 
 from sys import modules as _modules
 _this = _modules[__name__]
