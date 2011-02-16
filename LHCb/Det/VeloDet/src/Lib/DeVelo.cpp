@@ -64,11 +64,11 @@ StatusCode DeVelo::initialize() {
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
   if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVelo", pmgr);
-  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVelo", outputLevel);
   }
   delete pmgr;
+  if( !sc ) return sc;
 
   msg() << MSG::DEBUG << "Initialising DeVelo " << endreq;
   // Initialise the detector element

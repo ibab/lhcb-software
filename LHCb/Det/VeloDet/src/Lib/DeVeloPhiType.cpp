@@ -102,11 +102,11 @@ StatusCode DeVeloPhiType::initialize()
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
   if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPhiType", pmgr);
-  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
   }
   delete pmgr;
+  if( !sc ) return sc;
 
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
