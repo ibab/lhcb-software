@@ -52,7 +52,7 @@ class Electrons_Physics_draft2011( object ):
         Returns a dictionary of cuts
 	"""
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
-        from Hlt1Lines.Hlt1NewMuonLines        import Hlt1NewMuonLinesConf
+        from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
                                             ,   'AllL0_P'       : 13300
@@ -72,7 +72,7 @@ class Electrons_Physics_draft2011( object ):
                                             ,   'Velo_NHits'    : 9 
                                             ,   'Velo_Qcut'     : 3 
                                                 }
-                     , Hlt1NewMuonLinesConf : {  'L0SingleMuon'    : "Muon"
+                     , Hlt1MuonLinesConf    : {  'L0SingleMuon'    : "Muon"
                                               ,  'L0SingleMuonGEC' : "Muon"
                                               ,  'DiMuon_VxDOCA'   :   0.2
                                               ,  'DiMuon_VxChi2'   :    25
@@ -125,5 +125,5 @@ class Electrons_Physics_draft2011( object ):
                   'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton',
-                  'Hlt1NewDiMuon' ]
+                  'Hlt1DiMuon' ]
         return lines 

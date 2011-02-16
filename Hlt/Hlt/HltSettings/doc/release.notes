@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v5r5   2011-02-16 ===================
+! 2011-02-16 - Gerhard Raven
+ - follow rename of Hlt1NewMuonLines into Hlt1MuonLines
+
 ! 2011-02-16 - V. Gligorov
  - Move Hlt2CharmRareDecayD02MuMu and Hlt2CharmRareDecayD02PiPiForD02MuMu
    to Muons_draft2011. Add KsHH and KsH lines to CharmHadronLines_draft2011

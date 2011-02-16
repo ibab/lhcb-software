@@ -52,7 +52,7 @@ class Physics_draft2011( object ):
         Returns a dictionary of cuts
 	"""
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
-        from Hlt1Lines.Hlt1NewMuonLines        import Hlt1NewMuonLinesConf
+        from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -70,7 +70,7 @@ class Physics_draft2011( object ):
                                             ,   'Photon_IPChi2' : 16
                                             ,   'Photon_TrChi2' : 2.5
                                                 }
-		     , Hlt1NewMuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
+		     , Hlt1MuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
 						,'DiMuonLowMass_VxChi2'     :   25
 						,'DiMuonLowMass_P'          : 6000
 						,'DiMuonLowMass_PT'         :  500
