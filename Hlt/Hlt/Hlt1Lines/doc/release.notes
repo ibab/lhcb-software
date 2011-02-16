@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v6r4   2011-02-16 ===================
+! 2011-02-16 - Gerhard Raven
+ - rename Hlt1NewMuonLines into Hlt1MuonLines
+
 ! 2011-02-15 - Gerhard Raven
  - remove Hlt1ElectronLines Hlt1PhotonLines Hlt1HadronViaTLines Hlt1HadronLines
 
