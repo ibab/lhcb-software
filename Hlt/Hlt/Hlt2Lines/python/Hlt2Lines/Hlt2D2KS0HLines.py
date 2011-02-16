@@ -7,41 +7,41 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
 
    # KS0 daughter pion cuts
-      'KS0DaugP'         : 1800
-,     'KS0DaugPT'        : 100
-,     'KS0DaugTrackChi2' : 5  
-,     'KS0DaugMIPChi2'   : 50
+#      'KS0DaugP'         : 1800
+#,     'KS0DaugPT'        : 100
+      'KS0DaugTrackChi2' : 5  
+,     'KS0DaugMIPChi2'   : 90
 #,     'KS0DaugPIDK'      : 20
 
    # KS0 mother cuts
-,     'KS0MassWindow'    : 50
-,     'KS0MIPChi2'       : 0
-,     'KS0VertexChi2'    : 20
-,     'KS0PT'            : 700
+#,     'KS0MassWindow'    : 50
+#,     'KS0MIPChi2'       : 0
+,     'KS0VertexChi2'    : 15
+,     'KS0PT'            : 800
 
       # Bachelor pion cuts
-,     'BachPionP'         : 4000       
-,     'BachPionPT'        : 400 
+,     'BachPionP'         : 4500       
+,     'BachPionPT'        : 450 
 ,     'BachPionTrackChi2' : 5
 ,     'BachPionMIPChi2'   : 30
 #,     'BachPionPIDK'      : 10
 
       # Bachelor kaon cuts
-,     'BachKaonP'         : 4000       
-,     'BachKaonPT'        : 400
+,     'BachKaonP'         : 4500       
+,     'BachKaonPT'        : 450
 ,     'BachKaonTrackChi2' : 5
 ,     'BachKaonMIPChi2'   : 30
 #,     'BachKaonPIDK'      : -30
 
       # D meson cuts
       # Combo cuts
-,     'DMesonComboLowMass'   : 1790       
-,     'DMesonComboHighMass'  : 2040 
-,     'DMesonComboDOCA'      : 0.6
+,     'DMesonComboLowMass'   : 1760       
+,     'DMesonComboHighMass'  : 2080 
+#,     'DMesonComboDOCA'      : 0.6
       # Mother cuts
-,     'DMesonMotherLowMass'    : 1800         
-,     'DMesonMotherHighMass'   : 2030
-,     'DMesonMotherVertexChi2' : 20
+,     'DMesonMotherLowMass'    : 1770         
+,     'DMesonMotherHighMass'   : 2070
+,     'DMesonMotherVertexChi2' : 15
 ,     'DMesonMotherMIPChi2'    : 25
 ,     'DMesonMotherPT'         : 1800
 
@@ -65,8 +65,10 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles      
         from HltTracking.HltPVs import PV3D
 
-        incuts = "CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (ADMASS('KS0') < %(KS0MassWindow)s*MeV) & (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)"   % self.getProps()
+        incuts = "CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2)  & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)"   % self.getProps()
 
+# & (ADMASS('KS0') < %(KS0MassWindow)s*MeV)
+#& CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2)
   # CHILDCUT((PIDK < %(KS0DaugPIDK)s),1) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),2)
   # & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)
 

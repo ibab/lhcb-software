@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Sam Gregson
+ - Hlt2D2KS0HLines.py: updated cuts in prototype lines for central testing
+
 ! 2011-02-16 - Alexandr Kozlinskiy
  - Added new file Hlt2CharmRareDecayLines with 2 new lines (D02MuMu, D02PiPi):
      CharmRareDecayD0MuMu: D0 -> mu+ mu-
