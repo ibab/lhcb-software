@@ -195,7 +195,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         return bindMembers(name, inputSeq+[_filter])
 
 
-    def __inputMuonL0Filter(self, name, inputSeq):
+    def __inputMuonsL0Filter(self, name, inputSeq):
         '''Filters input muons and requires l0 TOS.'''
         props = self.getProps()     
         #configure tistostool
@@ -206,9 +206,9 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter") 
         TOSInputMuonsFilter.TriggerTisTosName= "L0TriggerTisTos"
         TOSInputMuonsFilter.TisTosSpecs = { "L0.*Muon.*Decision%TOS":0 }
-        TOSInputMuonsFilter.ProjectTracksToCalo = FALSE
-        TOSInputMuonsFilter.CaloClustForCharged = FALSE
-        TOSInputMuonsFilter.CaloClustForNeutral = FALSE
+        TOSInputMuonsFilter.ProjectTracksToCalo = False
+        TOSInputMuonsFilter.CaloClustForCharged = False
+        TOSInputMuonsFilter.CaloClustForNeutral = False
         TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
         TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
         #cuts
@@ -225,16 +225,16 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
 
-    def __inputMuonHlt1Filter(self, name, inputSeq):
+    def __inputMuonsHlt1Filter(self, name, inputSeq):
         '''Filters input muons and requires htl1 TOS.'''
         props = self.getProps()     
         #configure tistostool
         from Configurables import TisTosParticleTagger
         TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter")
         TOSInputMuonsFilter.TisTosSpecs = { "Hlt1Track.*Decision%TOS":0 }
-        TOSInputMuonsFilter.ProjectTracksToCalo = FALSE
-        TOSInputMuonsFilter.CaloClustForCharged = FALSE
-        TOSInputMuonsFilter.CaloClustForNeutral = FALSE
+        TOSInputMuonsFilter.ProjectTracksToCalo = False
+        TOSInputMuonsFilter.CaloClustForCharged = False
+        TOSInputMuonsFilter.CaloClustForNeutral = False
         TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
         TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
         #cuts
