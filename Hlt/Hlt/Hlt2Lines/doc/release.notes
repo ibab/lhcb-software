@@ -7,6 +7,10 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2011-02-16 - Mat Charles
+ - Added Hlt2CharmHadD02HHKsLines.py, first draft of a line for D0 -> KS h+ h-. Uses way too much cpu right now.
+
 ! 2011-02-15 - Gerhard Raven
  - again fix some spurious imports in commit of Hlt2D2KS0H
 
