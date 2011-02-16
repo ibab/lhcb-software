@@ -71,6 +71,7 @@ tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P1_Cal   = 1.
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Eta_Cal  = 0.
 
 tag.BTaggingTool.addTool ( TaggerKaonSameTool )
+
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 450
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut   = 2000
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_IP_cut  = 3.5

@@ -18,9 +18,9 @@ tag.BTaggingTool.IPPU_cut = 3.0
 tag.BTaggingTool.distphi_cut = 0.005
 
 tag.BTaggingTool.addTool ( CombineTaggersProbability )
-tag.BTaggingTool.CombineTaggersProbability.P0_Cal_OS = 0.364
-tag.BTaggingTool.CombineTaggersProbability.P1_Cal_OS = 1.08
-tag.BTaggingTool.CombineTaggersProbability.Eta_Cal_OS = 0.338
+tag.BTaggingTool.CombineTaggersProbability.P0_Cal_OS = 0.363
+tag.BTaggingTool.CombineTaggersProbability.P1_Cal_OS = 1.09
+tag.BTaggingTool.CombineTaggersProbability.Eta_Cal_OS = 0.335
 #For tagging categories another ProbMin and categories can be better
 #tag.BTaggingTool.CombineTaggersProbability.OmegaMaxBin = 0.38
 #tag.BTaggingTool.CombineTaggersProbability.OmegaScale = 0.07
@@ -76,15 +76,15 @@ tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P1_Cal   = 0.89
 tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Eta_Cal  = 0.359
 
 tag.BTaggingTool.addTool ( TaggerKaonSameTool )
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 450
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut   = 2000
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 550
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_P_cut   = 4200
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_IP_cut  = 3.5
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Phi_cut = 1.3
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Eta_cut = 1.1
-tag.BTaggingTool.TaggerKaonSameTool.KaonSame_dQ_cut  = 1900
-tag.BTaggingTool.TaggerKaonSameTool.KaonS_LCS_cut    = 4.
-tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kS_cut  = 7.0
-tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kpS_cut = -5.
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Phi_cut = 0.8
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Eta_cut = 0.8
+tag.BTaggingTool.TaggerKaonSameTool.KaonSame_dQ_cut  = 2000
+tag.BTaggingTool.TaggerKaonSameTool.KaonS_LCS_cut    = 2.75
+tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kS_cut  = 6.5
+tag.BTaggingTool.TaggerKaonSameTool.KaonSPID_kpS_cut = -1.
 tag.BTaggingTool.TaggerKaonSameTool.KaonS_ipPU_cut   = 3.0
 tag.BTaggingTool.TaggerKaonSameTool.KaonS_distPhi_cut   = 0.005
 tag.BTaggingTool.TaggerKaonSameTool.ProbMin_kaonS    = 0.0
@@ -118,7 +118,7 @@ tag.BTaggingTool.TaggerVertexChargeTool.P1            =-3.251661e-01
 tag.BTaggingTool.TaggerVertexChargeTool.Gt075         = 0.35
 tag.BTaggingTool.TaggerVertexChargeTool.TracksEq2     = 0.4141
 tag.BTaggingTool.TaggerVertexChargeTool.TracksGt2     = 0.3250
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P0_Cal    = 0.45
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P1_Cal    = 0.38
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_Eta_Cal   = 0.394
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P0_Cal    = 0.451
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P1_Cal    = 0.358
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_Eta_Cal   = 0.398
 
