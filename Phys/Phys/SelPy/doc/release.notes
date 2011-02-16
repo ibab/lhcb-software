@@ -4,6 +4,22 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Juan Palacios
+ - SelPy.selection.Selection
+  . Selection now sets "Output" attribute of ConfigurableGenerator to
+    <OutputBranch>/<name>/<Extension>. Default is Phys/<name>/Particles.
+    Default InputDataSetter is now "Inputs". This requires that configurable
+    generator have attributes Output, setting the output TES location, and
+    Inputs, with a list of input TES locations. For DVAlgorithms, this means
+    Phys/DaVinciKernel >= v9r2.
+
+ - SelPy.configurabloids
+  . Add MockConfGenerator class. Takes any kind of properties in construction
+    or via setting.
+ - Tests use MockConfGenerator.
+
+ - REQUIRES Phys/DaVinciKernel v9r2 OR HIGHER!!!
+
 !======================== SelPy v3r2 2011-02-16 ==============================
 
 ! 2011-02-16 - Juan Palacios

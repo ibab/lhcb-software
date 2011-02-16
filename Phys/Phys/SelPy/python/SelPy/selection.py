@@ -21,6 +21,8 @@ __all__ = ('AutomaticData',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations')
 
+from copy import copy
+
 from SelPy.utils import (flatSelectionList,
                          update_dict_overlap,
                          connectToRequiredSelections,
@@ -108,7 +110,7 @@ class Selection(UniquelyNamedObject,
                  ConfGenerator,
                  RequiredSelections = [],
                  OutputBranch = "Phys",
-                 InputDataSetter = "InputLocations",
+                 InputDataSetter = "Inputs",
                  Extension='Particles') :
 
         UniquelyNamedObject.__init__(self, name)
@@ -123,9 +125,10 @@ class Selection(UniquelyNamedObject,
         if _outputLocation.endswith('/') :
             _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
         
-
+        cg = copy(ConfGenerator)
+        cg.Output=_outputLocation
         SelectionBase.__init__(self,
-                               algorithm = ConfGenerator( self.name() ) ,
+                               algorithm = cg( self.name() ) ,
                                outputLocation = _outputLocation,
                                requiredSelections = RequiredSelections )
 

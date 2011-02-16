@@ -10,12 +10,12 @@ import sys
 sys.path.append('../python')
 
 from py.test import raises
-from SelPy.configurabloids import DummyAlgorithm
+from SelPy.configurabloids import MockConfGenerator
 from SelPy.selection import PassThroughSelection, AutomaticData, NameError
 
 
 def test_PassThroughSelection_duplicate_name_raises() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='PassThroughDOD')
     es = PassThroughSelection('PTUniqueSelNameTest',
                               ConfGenerator = alg,
@@ -27,7 +27,7 @@ def test_PassThroughSelection_duplicate_name_raises() :
             RequiredSelection=reqSel)
 
 def test_PassThroughSelection_name() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='PassThroughDOD')
     sel = PassThroughSelection('PTSelNameTest',
                                ConfGenerator=alg,
@@ -35,7 +35,7 @@ def test_PassThroughSelection_name() :
     assert sel.name()=='PTSelNameTest'
 
 def test_PassThroughSelection_outputLocation() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='Pass/Through/DOD')
     sel = PassThroughSelection('PTSelOutputTest',
                                ConfGenerator=alg,
@@ -43,7 +43,7 @@ def test_PassThroughSelection_outputLocation() :
     assert sel.outputLocation()=='Pass/Through/DOD'
 
 def test_PassThroughSelection_outputLocation_with_user_defined_datasetter() :
-    alg = DummyAlgorithm('selDataSetterTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='Pass/Through/DOD')
     sel = PassThroughSelection('PTSelInputTest',
                                ConfGenerator=alg,
@@ -52,7 +52,7 @@ def test_PassThroughSelection_outputLocation_with_user_defined_datasetter() :
     assert sel.algorithm().TESTINPUTS==[reqSel.outputLocation()]
 
 def test_clone_PassThroughSelection() :
-    alg = DummyAlgorithm('selCloneTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='Pass/Through/DOD')
     sel = PassThroughSelection('PTSelCloneTest',
                                ConfGenerator=alg,
@@ -65,7 +65,7 @@ def test_clone_PassThroughSelection() :
     assert selClone.algorithm() != sel.algorithm()
     
 def test_clone_PassThroughSelection_with_used_name_raises():
-    alg = DummyAlgorithm('selCloneTest')
+    alg = MockConfGenerator()
     reqSel = AutomaticData(Location='Pass/Through/DOD')
     sel = PassThroughSelection('PTSelCloneTest2',
                                ConfGenerator=alg,

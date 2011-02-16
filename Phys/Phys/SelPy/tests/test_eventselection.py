@@ -10,22 +10,22 @@ import sys
 sys.path.append('../python')
 
 from py.test import raises
-from SelPy.configurabloids import DummyAlgorithm
+from SelPy.configurabloids import MockConfGenerator
 from SelPy.selection import EventSelection, NameError
 
     
 def test_EventSelection_duplicate_name_raises() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     es = EventSelection('EvtUniqueSelNameTest', ConfGenerator = alg)
     raises (NameError, EventSelection, 'EvtUniqueSelNameTest', ConfGenerator = alg)
 
 def test_EventSelection_name() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = EventSelection('EvtSelNameTest', ConfGenerator=alg)
     assert sel.name()=='EvtSelNameTest'
 
 def test_EventSelection_outputLocaiton() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = EventSelection('EvtSelOutputTest', ConfGenerator=alg)
     assert sel.outputLocation()==''
 

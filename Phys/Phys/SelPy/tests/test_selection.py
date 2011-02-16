@@ -10,7 +10,7 @@ import sys
 sys.path.append('../python')
 
 from py.test import raises
-from SelPy.configurabloids import DummyAlgorithm
+from SelPy.configurabloids import DummyAlgorithm, MockConfGenerator
 from SelPy.selection import (flatAlgorithmList,
                              Selection,
                              EventSelection,
@@ -22,64 +22,69 @@ from SelPy.selection import (flatAlgorithmList,
 
 
 def test_Selection_duplicate_name_raises() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelUniqueNameTest', ConfGenerator=alg)
     raises (NameError, Selection, 'SelUniqueNameTest', ConfGenerator=alg)
 
 def test_Selection_name() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelNameTest', ConfGenerator=alg)
     assert sel.name()=='SelNameTest'
 
 def test_Selection_outputLocation() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelOutputTest0', ConfGenerator=alg)
     assert sel.outputLocation()=='Phys/SelOutputTest0/Particles'
+    assert sel.outputLocation()==sel.algorithm().Output
 
 def test_Selection_outputLocation_with_user_defined_branch_and_extension() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelOutputTest1',
                     ConfGenerator=alg,
                     OutputBranch='Rec',
                     Extension = 'Tracks')
     assert sel.outputLocation()=='Rec/SelOutputTest1/Tracks'
-
+    assert sel.outputLocation()==sel.algorithm().Output
+    
 def test_Selection_outputLocation_with_user_defined_branch_and_no_extension() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelOutputTest2',
                     ConfGenerator=alg,
                     OutputBranch='Rec',
                     Extension = '')
     assert sel.outputLocation()=='Rec/SelOutputTest2'
-
+    assert sel.outputLocation()==sel.algorithm().Output
+    
 def test_Selection_outputLocation_with_user_defined_extension_and_no_branch() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelOutputTest3',
                     ConfGenerator=alg,
                     OutputBranch='',
                     Extension = 'Tracks')
     assert sel.outputLocation()=='SelOutputTest3/Tracks'
-
+    assert sel.outputLocation()==sel.algorithm().Output
+    
 def test_Selection_outputLocation_with_no_branch_and_no_extension() :
-    alg = DummyAlgorithm('selNameTest')
+    alg = MockConfGenerator()
     sel = Selection('SelOutputTest4',
                     ConfGenerator=alg,
                     OutputBranch='',
                     Extension = '')
     assert sel.outputLocation()=='SelOutputTest4'
-
+    assert sel.outputLocation()==sel.algorithm().Output
+    
 def test_Selection_data_setter() :
-    alg = DummyAlgorithm('selNameTest0')
+    alg = MockConfGenerator()
     sel0 = AutomaticData('Phys/Hello/World/0')
     sel1 = AutomaticData('Phys/Hello/World/1')
     sel = Selection('SelOutputTest5',
                     ConfGenerator=alg,
                     RequiredSelections = [sel0,sel1])
-    assert sel.algorithm().InputLocations==[sel0.outputLocation(),
-                                            sel1.outputLocation()]
+    assert sel.algorithm().Inputs==[sel0.outputLocation(),
+                                    sel1.outputLocation()]
 
 def test_Selection_with_user_defined_data_setter() :
-    alg = DummyAlgorithm('selNameTest1')
+    alg = MockConfGenerator()
     sel0 = AutomaticData('Phys/Hello/World/0')
     sel1 = AutomaticData('Phys/Hello/World/1')
     sel = Selection('SelOutputTest6',
@@ -89,6 +94,17 @@ def test_Selection_with_user_defined_data_setter() :
     assert sel.algorithm().TESTINPUTS==[sel0.outputLocation(),
                                         sel1.outputLocation()]
 
+
+def test_Selection_does_not_modify_generator() :
+    alg = MockConfGenerator()
+    sel0 = AutomaticData('Phys/Hello/World/0')
+    sel1 = AutomaticData('Phys/Hello/World/1')
+    sel = Selection('SelGenTest',
+                    ConfGenerator=alg,
+                    RequiredSelections = [sel0,sel1])
+    assert sel.algorithm().Inputs==[sel0.outputLocation(),
+                                    sel1.outputLocation()]
+    assert hasattr(alg, 'Output') == False
     
 if '__main__' == __name__ :
 

@@ -10,7 +10,7 @@ import sys
 sys.path.append('../python')
 
 from py.test import raises
-from SelPy.configurabloids import DummyAlgorithm
+from SelPy.configurabloids import MockConfGenerator
 from SelPy.selection import (flatAlgorithmList,
                              Selection,
                              EventSelection,
@@ -21,22 +21,22 @@ from SelPy.selection import (flatAlgorithmList,
                              NameError)
 
 class SelectionTree(object) :
-    sel000 = Selection('0.00000', ConfGenerator = DummyAlgorithm('Alg0.00000'),
+    sel000 = Selection('0.00000', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [])
-    sel001 = Selection('0.00001', ConfGenerator = DummyAlgorithm('Alg0.00001'),
+    sel001 = Selection('0.00001', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [])
-    sel002 = Selection('0.00002', ConfGenerator = DummyAlgorithm('Alg0.00002'),
+    sel002 = Selection('0.00002', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [])
-    sel003 = Selection('0.00003', ConfGenerator = DummyAlgorithm('Alg0.00003'),
+    sel003 = Selection('0.00003', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [])
     
-    sel100 = Selection('1.00000', ConfGenerator = DummyAlgorithm('Alg1.00000'),
+    sel100 = Selection('1.00000', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel000, sel001])
     
-    sel101 = Selection('1.00001', ConfGenerator = DummyAlgorithm('Alg1.00001'),
+    sel101 = Selection('1.00001', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel002, sel003])
     
-    sel200 = Selection('2.00000', ConfGenerator = DummyAlgorithm('Alg2.00000'),
+    sel200 = Selection('2.00000', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel100, sel101])
 
     algos = flatAlgorithmList(sel200)
@@ -61,15 +61,15 @@ def test_UniquelyNamedObject_name() :
 def test_flatAlgorithmList_order_line() :
 
     
-    sel000 = Selection('0.0000', ConfGenerator = DummyAlgorithm('Alg0.0000'),
+    sel000 = Selection('0.0000', ConfGenerator = MockConfGenerator(),
                       RequiredSelections = [])
-    sel001 = Selection('0.0001', ConfGenerator = DummyAlgorithm('Alg0.0001'),
+    sel001 = Selection('0.0001', ConfGenerator = MockConfGenerator(),
                       RequiredSelections = [sel000])
-    sel101 = Selection('1.0000', ConfGenerator = DummyAlgorithm('Alg1.0000'),
+    sel101 = Selection('1.0000', ConfGenerator = MockConfGenerator(),
                       RequiredSelections = [sel001])
-    sel102 = Selection('1.0001', ConfGenerator = DummyAlgorithm('Alg1.0001'),
+    sel102 = Selection('1.0001', ConfGenerator = MockConfGenerator(),
                       RequiredSelections = [sel101])
-    sel203 = Selection('2.0000', ConfGenerator = DummyAlgorithm('Alg2.000'),
+    sel203 = Selection('2.0000', ConfGenerator = MockConfGenerator(),
                       RequiredSelections = [sel102])
 
     algos = flatAlgorithmList(sel203)
@@ -93,13 +93,13 @@ def test_flatAlgorithmList_removes_duplicates() :
     sel002 = SelectionTree.sel002
     sel003 = SelectionTree.sel003
 
-    sel100 = Selection('1.10000', ConfGenerator = DummyAlgorithm('Alg1.10000'),
+    sel100 = Selection('1.10000', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel000, sel001, sel002])
     
-    sel101 = Selection('1.10001', ConfGenerator = DummyAlgorithm('Alg1.10001'),
+    sel101 = Selection('1.10001', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel001, sel002, sel003])
     
-    sel200 = Selection('2.10000', ConfGenerator = DummyAlgorithm('Alg2.10000'),
+    sel200 = Selection('2.10000', ConfGenerator = MockConfGenerator(),
                        RequiredSelections = [sel100, sel101])
 
     algos = flatAlgorithmList(sel200)
