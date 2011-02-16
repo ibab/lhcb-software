@@ -391,7 +391,6 @@ StatusCode MBMEvtSelector::initialize()    {
 /// IService overload: start MEP manager service
 StatusCode MBMEvtSelector::start() {
   StatusCode sc = OnlineService::start();
-  IMEPManager* m = mepMgr();
   setProperties();
   if ( m_currContext ) {
     StatusCode sc = m_currContext->connect(input());
@@ -399,7 +398,7 @@ StatusCode MBMEvtSelector::start() {
       return sc;
     }
   }
-  else if ( m->connectWhen() == "start" ) {
+  else if ( mepMgr()->connectWhen() == "start" ) {
     error("Attempt to connect MBM buffer "+input()+" with invalid context.");
   }
   return sc;
@@ -407,6 +406,9 @@ StatusCode MBMEvtSelector::start() {
 
 /// IService overload: stop MEP manager service
 StatusCode MBMEvtSelector::stop() {
+  if ( mepMgr()->connectWhen() == "start" ) {
+    m_currContext->close();
+  }
   return OnlineBaseEvtSelector::stop();
 }
 
@@ -415,7 +417,6 @@ StatusCode MBMEvtSelector::finalize()    {
   if ( m_currContext ) {
     m_currContext->close();
     m_currContext = 0;
-    //error("MBMEvtSelector::finalize> MBM buffer context deleted!");
   }
   if ( m_mepMgr )  {
     m_mepMgr->release();
@@ -427,10 +428,9 @@ StatusCode MBMEvtSelector::finalize()    {
 // Create event selector iteration context
 StatusCode MBMEvtSelector::createContext(Context*& refpCtxt) const  {
   MBMContext* ctxt = new MBMContext(const_cast<MBMEvtSelector*>(this));
-  IMEPManager* m = mepMgr();
   m_currContext = ctxt;
   refpCtxt = ctxt;
-  if ( m->connectWhen() == "initialize" ) {
+  if ( mepMgr()->connectWhen() == "initialize" ) {
     return ctxt->connect(m_input);
   }
   return StatusCode::SUCCESS;
@@ -455,8 +455,7 @@ MBMEvtSelector::resetCriteria(const string& crit,Context& ct) const {
   MBMContext* ctxt = dynamic_cast<MBMContext*>(&ct);
   if ( ctxt )  {
     ctxt->close();
-    IMEPManager* m = mepMgr();
-    if ( m->connectWhen() == "initialize" ) {
+    if ( mepMgr()->connectWhen() == "initialize" ) {
       if ( ctxt->connect(m_input).isSuccess() )  {
 	return StatusCode::SUCCESS;
       }
