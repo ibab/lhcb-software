@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-16 - Anton Poluektov 
+ - Updated StrippingB2DX to match the new requirements. 
+   New lines for LambdaB->Dph (h=K,pi, D->hh), Bd->D-rho+, 
+   wrong-sign D->Kshh, D->KPiPi0 and D->hhhh lines. 
+   Selections still to be revised for lower retention. 
+
 ! 2011-02-16 - Juan Palacios
  - Add StrippingHb2Charged2Body to __init__.py.
 
