@@ -65,6 +65,9 @@ StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 TApplication *app;
 StatusCode AdderSvc::initialize()
 {
+  m_adder = 0;
+  m_EoRadder = 0;
+  m_SaveTimer = 0;
   Service::initialize();
   return StatusCode::SUCCESS;
 }
@@ -189,19 +192,21 @@ StatusCode AdderSvc::start()
   m_started = true;
   return StatusCode::SUCCESS;
 }
+
 StatusCode AdderSvc::stop()
 {
-  Service::stop();
+
   if (m_isSaver)
   {
     m_SaveTimer->Stop();
   }
-  return StatusCode::SUCCESS;
+  return Service::stop();
 }
+
 StatusCode AdderSvc::finalize()
 {
-  delete m_SaveTimer;
-  delete m_adder;
-  Service::finalize();
-  return StatusCode::SUCCESS;
+  if (m_SaveTimer != 0) {delete m_SaveTimer;m_SaveTimer=0;}
+  if (m_adder != 0) {delete m_adder;m_adder=0;}
+  if (m_EoRadder != 0) {delete m_EoRadder;m_EoRadder=0;}
+  return Service::finalize();
 }

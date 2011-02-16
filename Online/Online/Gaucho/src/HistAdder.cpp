@@ -420,6 +420,19 @@ HistAdder::~HistAdder()
   {
     delete m_rpc;
   }
+
+  for (INServIter i = m_inputServicemap.begin();i!= m_inputServicemap.end();i++)
+  {
+    delete i->second->m_Info;
+    delete i->second;
+  }
+  m_inputServicemap.clear();
+  for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
+  {
+    delete i->second->m_diminfo;
+    delete i->second;
+  }
+  m_inputServicemap.clear();
 }
 void HistAdder::Configure()
 {
