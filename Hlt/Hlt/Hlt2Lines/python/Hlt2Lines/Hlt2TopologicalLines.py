@@ -143,7 +143,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         minPtSum = 3000        
         if n > 2: minPtSum = 4000
         cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
-        cuts += '& (MINTREE(%s,TRCHI2DOF) < %s)' \
+        cuts += '& (MINTREE(HASPROTO & %s,TRCHI2DOF) < %s)' \
                 % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
         filter = Hlt2Member(FilterDesktop, 'FilterNforN',
                             InputLocations=input,Code=cuts)
