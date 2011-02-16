@@ -264,7 +264,7 @@ def flatAlgorithmList(selection) :
     the selection to run.
     """
     _selList = flatSelectionList(selection)
-    return  [sel.algorithm() for sel in _selList]
+    return  filter(lambda a : a!=None, [sel.algorithm() for sel in _selList])
 
 
 

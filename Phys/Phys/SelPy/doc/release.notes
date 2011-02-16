@@ -4,6 +4,11 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Juan Palacios
+ - SelPy.selection.SelectionSequence
+  . Filter out NoneType algorithms.
+ - Add test for the above.
+
 ! 2011-02-10 - Juan Palacios
  - Split tests into selection type. Add extra coverage for new clonable
    types. Run py.test directly in QM tests.
