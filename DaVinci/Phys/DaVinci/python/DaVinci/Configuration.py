@@ -8,10 +8,12 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf,
-                            HltConf, DstConf, L0Conf, LumiAlgsConf )
+                            DstConf, L0Conf, LumiAlgsConf )
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
 
+class HltConf(object) :
+    pass
 
 def isNewCondDBTag(tag, reference_date = '20100414') :
     tag = tag.upper()
@@ -93,7 +95,6 @@ class DaVinci(LHCbConfigurableUser) :
     __used_configurables__ = [
         PhysConf          ,
         AnalysisConf      ,
-        HltConf           ,
         DstConf           ,
         L0Conf            ,
         LumiAlgsConf      ,
