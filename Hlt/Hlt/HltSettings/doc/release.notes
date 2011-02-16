@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Mat Charles
+ - Added Vava Gligorov and Patrick Spradlin to authors list on CharmHadronLines_draft2011.py at Vava's request
+ - Added settings for Hlt2CharmHadD02HHKsLinesConf to CharmHadronLines_draft2011.py
+
 ! 2011-02-15 - Gerhard Raven
  - remove any reference to old Hlt1 lines
 

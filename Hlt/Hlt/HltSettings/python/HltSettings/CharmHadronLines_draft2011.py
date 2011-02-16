@@ -4,7 +4,7 @@ class CharmHadronLines :
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
-    @author P.Koppenburg, M. Gandelman, G. Raven
+    @author P.Koppenburg, M. Gandelman, G. Raven, V. Gligorov, P. Spradlin
     @date 2009-08-05
     """
     
@@ -45,6 +45,7 @@ class CharmHadronLines :
         from Hlt2Lines.Hlt2CharmHadD02HHLines import Hlt2CharmHadD02HHLinesConf
         from Hlt2Lines.Hlt2CharmHadD2HHHLines import Hlt2CharmHadD2HHHLinesConf
         from Hlt2Lines.Hlt2D2KS0HLines import Hlt2CharmHadD2KS0HLinesConf
+        from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
                           'Trk_PT_MIN'               : 800.0      # MeV
@@ -110,6 +111,47 @@ class CharmHadronLines :
                         , 'Prescale'                    : {
                                 'Hlt2CharmHadD2HHHWideMass'    : 0.1
                            }
+                    }
+
+                    , Hlt2CharmHadD02HHKsLinesConf : {
+                        ## Slots for K_S h h' lines
+                          'KshhTFHHTrkPLL'          : 1500.0     # in MeV
+                        , 'KshhTFHHTrkChi2UL'       : 5.0        # unitless
+                        , 'KshhTFHHTrkMaxPVIPLL'    : 0.1        # in mm
+                        , 'KshhTFHHVtxChi2UL'       : 10.0       # unitless
+                        , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
+                        , 'KshhTFHHPtLL'            : 500.0      # in MeV
+                        , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
+                        , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
+                        , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
+                        , 'KshhTFKsLLCombSymMassWin': 50.0       # in MeV
+                        , 'KshhTFKsLLMothSymMassWin': 11.4       # in MeV
+                        , 'KshhTFKsLLVtxChi2UL'     : 30.0       # unitless
+                        , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0    # in mm
+                        , 'KshhTFKsLLVtxPVDispZUL'  : 650.0      # in mm
+                        , 'KshhTFKsLLVtxPVDispChi2LL' : 100.0    # unitless
+                        , 'KshhTFKsLLDiraLL'        : 0.9997     # unitless
+                        , 'KshhTFKsDDTrkPLL'        : 2000.0     # in MeV
+                        , 'KshhTFKsDDTrkPVIPChi2LL' : 4.0        # unitless
+                        , 'KshhTFKsDDTrkChi2UL'     : 10.0       # unitless
+                        , 'KshhTFKsDDCombSymMassWin': 80.0       # in MeV
+                        , 'KshhTFKsDDMothSymMassWin': 24.9       # in MeV
+                        , 'KshhTFKsDDVtxChi2UL'     : 30.0       # unitless
+                        , 'KshhTFKsDDVtxPVDispZLL'  : 0.0        # in mm
+                        , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0     # in mm
+                        , 'KshhTFKsDDVtxPVDispChi2LL' : 100.0    # unitless
+                        , 'KshhTFKsDDDiraLL'        : 0.9999     # unitless
+                        , 'KshhTFDVtxChi2UL'        : 20.0       # unitless
+                        , 'KshhTFDVtxPVDispLL'      : -1.0       # in mm
+                        , 'KshhTFDPtLL'             : 2000.0     # in MeV
+                        , 'KshhTFDDiraLL'           : 0.0        # unitless
+                        , 'KshhTFDwKsLLSymMassWin'  : 100.0      # in MeV
+                        , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
+                        , 'ComRobUseGEC'            : True       # do or do not 
+                        , 'ComRobGEC'               : 120        # max number of tracks
+                        , 'HLT1FILTER'               : None
+                        , 'Prescale'                : { }
+                        , 'Postscale'               : { }
                     }
 
                   } )
