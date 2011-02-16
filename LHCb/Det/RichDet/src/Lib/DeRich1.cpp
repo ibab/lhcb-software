@@ -171,9 +171,9 @@ StatusCode DeRich1::initialize()
     }
   }
 
-  // Load HPD panels
-  hpdPanel(Rich::top);
-  hpdPanel(Rich::bottom);
+  // Force loading of the HPD panels now
+  //hpdPanel(Rich::top);
+  //hpdPanel(Rich::bottom);
 
   // DC06 compatible mirror (mis)alignment
   bool alignMirros( false );

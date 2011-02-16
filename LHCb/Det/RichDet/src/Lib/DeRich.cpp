@@ -231,7 +231,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 }
 
 //=========================================================================
-//  return a RichSmartID for a particular point in the LHCb coord system
+// Return a RichSmartID for a particular point in the LHCb coord system
 //=========================================================================
 int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {

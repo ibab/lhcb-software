@@ -164,9 +164,9 @@ StatusCode DeRich2::initialize()
     }
   }
 
-  // Load HPD panels
-  hpdPanel(Rich::left);
-  hpdPanel(Rich::right);
+  // Force loading of the HPD panels now
+  //hpdPanel(Rich::left);
+  //hpdPanel(Rich::right);
 
   // initialize Rich2Gas
   SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(),DeRichLocations::Rich2Gas);

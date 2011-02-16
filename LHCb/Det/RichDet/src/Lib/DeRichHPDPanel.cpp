@@ -82,17 +82,25 @@ StatusCode DeRichHPDPanel::initialize()
   {
     m_rich = Rich::Rich1;
     if ( centreGlobal.y() > 0.0 )
+    {
       m_side = Rich::top;
+    }
     else
+    {
       m_side = Rich::bottom;
+    }
   }
   else if ( name().find("Rich2") != std::string::npos )
   {
     m_rich = Rich::Rich2;
     if ( centreGlobal.x() > 0.0 )
+    {
       m_side = Rich::left;
+    }
     else
+    {
       m_side = Rich::right;
+    }
   }
   if ( m_rich == Rich::InvalidDetector ||
        m_side == Rich::InvalidSide )
