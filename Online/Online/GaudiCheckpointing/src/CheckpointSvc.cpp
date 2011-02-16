@@ -483,6 +483,14 @@ int CheckpointSvc::finishRestore() {
   }
   MsgStream log(msgSvc(),name());
   log << MSG::INFO;
+  if ( ::getenv("TEST_CHECKPOINT") )  {
+    log << MARKER << MARKER << endmsg;
+    log << "=  RESTORE TEST WAS SUCCESSFUL." << endmsg;
+    log << "=  Looks like this checkpoint is working" << endmsg;
+    log << "=  The process will now exit." << endmsg;
+    log << MARKER << MARKER << endmsg;
+    ::_exit(0);
+  }
   log << "Update process environment and restart options." << endmsg;
   log << "Stop threads after restart from checkpoint. " << endmsg;
   chkpt->stop();
@@ -542,8 +550,15 @@ int CheckpointSvc::saveCheckpoint() {
       int ret = chkpt->checkpoint(fd);
       ::close(fd);
       MsgStream log(msgSvc(),name());
-      log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
-      log << MSG::INFO << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+      log << MSG::INFO << MARKER;
+      if ( ret == 1 )   {
+	log << " FINISHED loading process from checkpoint..."
+	    << "Continue processing... " << endmsg;
+      }
+      else {
+	log << " FINISHED CHECKPOINT " << endmsg
+	    << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+      }
       return StatusCode::SUCCESS;
     }
     else {
