@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v11r0 2011-02-16 ===================
+! 2011-02-14 - Gerhard Raven
+ - remove unused interfaces: IFunctions, IFunctionFactory
+
 ! 2011-02-11 - Vanya Belyaev
  - add new interface 
    Hlt::ITrack2CandidateMatch 
