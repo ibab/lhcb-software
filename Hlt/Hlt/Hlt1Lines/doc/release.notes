@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r4   2011-02-16 ===================
 ! 2011-02-15 - Gerhard Raven
  - remove Hlt1ElectronLines Hlt1PhotonLines Hlt1HadronViaTLines Hlt1HadronLines
 

@@ -44,8 +44,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiCountHltTracks,
                                 LumiFlagMethod
                                 )
-    from HltTracking.HltReco import MinimalVelo
-    fastVeloContainer = MinimalVelo.outputSelection()
+    from HltTracking.HltTrackNames import HltSharedVeloTracksName,HltSharedTracksPrefix,_baseTrackLocation
+    veloContainer = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
@@ -58,7 +58,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                              , 'NoBeam'       : 'RATE( 5)'
                                              }
                 , 'Postscale'              : { 'Hlt1LumiLow.*RateLimited' : 1.0 }
-                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    ,  fastVeloContainer,   5,  200]
+                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    ,  veloContainer,   5,  200]
                                         , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200]
                                         , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100]
                                         , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100]

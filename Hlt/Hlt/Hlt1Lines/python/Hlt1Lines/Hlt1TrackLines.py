@@ -117,9 +117,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
         lineCode = """ 
         %(gec)s * VeloCandidates
-        >>  execute( 'MuonRec' )
-        >>  MatchVeloMuon
         >>  RecoPV3D
+        >>  MatchVeloMuon
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
