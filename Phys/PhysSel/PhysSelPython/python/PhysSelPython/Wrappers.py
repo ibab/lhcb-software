@@ -72,7 +72,7 @@ def selectionWrapper(selType, name, *args, **kwargs) :
 
     algorithm = kwargs.pop('Algorithm')
     if isConfigurable( algorithm )  :
-        algGen = getattr(ConfigurableGenerators, algorithm.__class__.__name__)(**algorithm.getValuedProperties())
+        algGen = algorithm.clone
         kwargs['ConfGenerator'] = algGen
     else :
         kwargs['ConfGenerator'] = algorithm
@@ -135,23 +135,17 @@ class AutomaticData(NamedObject, SelectionBase) :
     """
 
     def __init__(self,
-                 Location,
-                 Extension='Particles') :
-
-        _extension = ''
-        if Extension != '' :
-            _extension = ('/'+Extension).replace('//', '/')
-        _location = (Location + _extension).replace(_extension+_extension, _extension)
+                 Location) :
 
         NamedObject.__init__(self,
-                             _location.replace('/', '_'))
+                             Location.replace('/', '_'))
 
         _alg = VoidFilter('SelFilter'+self.name(),
-                          Code = "CONTAINS('"+_location+"')>0")
+                          Code = "CONTAINS('"+Location+"')>0")
 
         SelectionBase.__init__(self,
                                algorithm = _alg,
-                               outputLocation=_location,
+                               outputLocation=Location,
                                requiredSelections = [] )
 
 DataOnDemand = AutomaticData

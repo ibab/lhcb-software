@@ -15,28 +15,28 @@ from PhysSelPython.Wrappers import ( Selection,
                                      SelectionSequence,
                                      AutomaticData,
                                      NameError         )
-from SelPy.configurabloids import ( DummyAlgorithm,
+from SelPy.configurabloids import ( MockConfGenerator,
                                     DummySequencer  )
 
 from Configurables import FilterDesktop
 
 class SelectionTree(object) :
-    sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),
+    sel000 = Selection('0.00000', Algorithm = MockConfGenerator(),
                        RequiredSelections = [])
-    sel001 = Selection('0.00001', Algorithm = DummyAlgorithm('Alg0.00001'),
+    sel001 = Selection('0.00001', Algorithm = MockConfGenerator(),
                        RequiredSelections = [])
-    sel002 = Selection('0.00002', Algorithm = DummyAlgorithm('Alg0.00002'),
+    sel002 = Selection('0.00002', Algorithm = MockConfGenerator(),
                        RequiredSelections = [])
-    sel003 = Selection('0.00003', Algorithm = DummyAlgorithm('Alg0.00003'),
+    sel003 = Selection('0.00003', Algorithm = MockConfGenerator(),
                        RequiredSelections = [])
     
-    sel100 = Selection('1.00000', Algorithm = DummyAlgorithm('Alg1.00000'),
+    sel100 = Selection('1.00000', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel000, sel001])
     
-    sel101 = Selection('1.00001', Algorithm = DummyAlgorithm('Alg1.00001'),
+    sel101 = Selection('1.00001', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel002, sel003])
     
-    sel200 = Selection('2.00000', Algorithm = DummyAlgorithm('Alg2.00000'),
+    sel200 = Selection('2.00000', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel100, sel101])
 
     selSeq = SelectionSequence('Seq06', TopSelection = sel200)
@@ -46,13 +46,13 @@ class SelectionTree(object) :
 def test_instantiate_sequencer() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     sel01 = AutomaticData(Location = 'Phys/Sel01')
-    alg0 = DummyAlgorithm('Alg000')
+    alg0 = MockConfGenerator()
     sel = Selection('00011', Algorithm = alg0,
                     RequiredSelections = [sel00, sel01])
     seq = SelectionSequence('Seq00', TopSelection = sel)
 
 def test_instantiate_dataondemand_sequencer() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
     seq = SelectionSequence('Seq00DOD', TopSelection = sel00)
     assert seq.outputLocation() == 'Phys/Sel00/Particles'
     
@@ -62,11 +62,11 @@ def test_sequencer_algos() :
     _sel02 = AutomaticData(Location = 'Phys/Sel02')
     _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
-    sel01 = Selection('00100', Algorithm = DummyAlgorithm('Alg000'),
+    sel01 = Selection('00100', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel00, _sel01])
-    sel02 = Selection('00101', Algorithm = DummyAlgorithm('Alg001'),
+    sel02 = Selection('00101', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel02, _sel03])
-    sel03 = Selection('00102', Algorithm = DummyAlgorithm('Alg003'),
+    sel03 = Selection('00102', Algorithm = MockConfGenerator(),
                       RequiredSelections = [ sel01, sel02])
     seq = SelectionSequence('Seq01',
                             TopSelection = sel03)
@@ -83,17 +83,17 @@ def test_sequencer_sequence() :
     _sel02 = AutomaticData(Location = 'Phys/Sel02')
     _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
-    sel01 = Selection('000110', Algorithm = DummyAlgorithm('Alg000'),
+    sel01 = Selection('000110', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel00, _sel01])
-    sel02 = Selection('000111', Algorithm = DummyAlgorithm('Alg001'),
+    sel02 = Selection('000111', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel02, _sel03])
-    sel03 = Selection('000112', Algorithm = DummyAlgorithm('Alg003'),
+    sel03 = Selection('000112', Algorithm = MockConfGenerator(),
                       RequiredSelections = [ sel01, sel02])
 
-    presel0 = DummyAlgorithm('Presel0')
-    presel1 = DummyAlgorithm('Presel1')
-    postsel0 = DummyAlgorithm('Postsel0')
-    postsel1 = DummyAlgorithm('Postsel1')
+    presel0 = MockConfGenerator()
+    presel1 = MockConfGenerator()
+    postsel0 = MockConfGenerator()
+    postsel1 = MockConfGenerator()
 
     presels =  [presel0, presel1]
     postsels = [postsel0, postsel1]
@@ -132,17 +132,17 @@ def test_clone_sequence() :
     _sel02 = AutomaticData(Location = 'Phys/Sel02')
     _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
-    sel01 = Selection('00120', Algorithm = DummyAlgorithm('Alg000'),
+    sel01 = Selection('00120', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel00, _sel01])
-    sel02 = Selection('00121', Algorithm = DummyAlgorithm('Alg001'),
+    sel02 = Selection('00121', Algorithm = MockConfGenerator(),
                       RequiredSelections = [_sel02, _sel03])
-    sel03 = Selection('00122', Algorithm = DummyAlgorithm('Alg003'),
+    sel03 = Selection('00122', Algorithm = MockConfGenerator(),
                       RequiredSelections = [ sel01, sel02])
 
-    presel0 = DummyAlgorithm('Presel00')
-    presel1 = DummyAlgorithm('Presel01')
-    postsel0 = DummyAlgorithm('Postsel00')
-    postsel1 = DummyAlgorithm('Postsel01')
+    presel0 = MockConfGenerator()
+    presel1 = MockConfGenerator()
+    postsel0 = MockConfGenerator()
+    postsel1 = MockConfGenerator()
 
     presels =  [presel0, presel1]
     postsels = [postsel0, postsel1]
@@ -190,15 +190,15 @@ def test_clone_sequence() :
 def test_order_line() :
 
     
-    sel000 = Selection('0.0000', Algorithm = DummyAlgorithm('Alg0.0000'),
+    sel000 = Selection('0.0000', Algorithm = MockConfGenerator(),
                       RequiredSelections = [])
-    sel001 = Selection('0.0001', Algorithm = DummyAlgorithm('Alg0.0001'),
+    sel001 = Selection('0.0001', Algorithm = MockConfGenerator(),
                       RequiredSelections = [sel000])
-    sel101 = Selection('1.0000', Algorithm = DummyAlgorithm('Alg1.0000'),
+    sel101 = Selection('1.0000', Algorithm = MockConfGenerator(),
                       RequiredSelections = [sel001])
-    sel102 = Selection('1.0001', Algorithm = DummyAlgorithm('Alg1.0001'),
+    sel102 = Selection('1.0001', Algorithm = MockConfGenerator(),
                       RequiredSelections = [sel101])
-    sel203 = Selection('2.0000', Algorithm = DummyAlgorithm('Alg2.000'),
+    sel203 = Selection('2.0000', Algorithm = MockConfGenerator(),
                       RequiredSelections = [sel102])
 
     selSeq = SelectionSequence('Seq04', TopSelection = sel203)
@@ -224,13 +224,13 @@ def test_remove_duplicates() :
     sel002 = SelectionTree.sel002
     sel003 = SelectionTree.sel003
 
-    sel100 = Selection('1.10000', Algorithm = DummyAlgorithm('Alg1.10000'),
+    sel100 = Selection('1.10000', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel000, sel001, sel002])
     
-    sel101 = Selection('1.10001', Algorithm = DummyAlgorithm('Alg1.10001'),
+    sel101 = Selection('1.10001', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel001, sel002, sel003])
     
-    sel200 = Selection('2.10000', Algorithm = DummyAlgorithm('Alg2.10000'),
+    sel200 = Selection('2.10000', Algorithm = MockConfGenerator(),
                        RequiredSelections = [sel100, sel101])
 
     selSeq =  SelectionSequence('Seq07', TopSelection = sel200)

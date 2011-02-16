@@ -15,7 +15,7 @@ from PhysSelPython.Wrappers import ( Selection,
                                      IncompatibleInputLocations )
 from PhysSelPython.MockStrippingLine import MockStrippingLine as dummy
 
-from SelPy.configurabloids import DummyAlgorithm, DummySequencer
+from SelPy.configurabloids import MockConfGenerator, DummySequencer
 
 def test_dummy_automaticdata() :
     data = AutomaticData(Location='Phys/Data0')
@@ -39,7 +39,7 @@ def test_dummy_mergedselection() :
 def test_dummy_selection() :
     data0 = AutomaticData(Location='Phys/Data0')
     data1 = AutomaticData(Location='Phys/Data1')
-    algo = DummyAlgorithm('_sel01')
+    algo = MockConfGenerator()
     sel = Selection('Sel01', Algorithm = algo, RequiredSelections = [data0, data1])
     newData = dummy('NewSel01', sel)
     assert newData.selection().name() == 'NewSel01'
@@ -47,7 +47,7 @@ def test_dummy_selection() :
     assert len(newData.members()) == 3
 
 def test_EventSelection():
-    alg = DummyAlgorithm('evtSel')
+    alg = MockConfGenerator()
     evtSel = EventSelection('DummyEvtSel', Algorithm=alg)
     newSel = dummy('NewEvtSel', evtSel)
     assert newSel.selection().name() == 'DummyEvtSel'
@@ -55,7 +55,7 @@ def test_EventSelection():
     assert len(newSel.members()) == 1
 
 def test_PassThroughSelection():
-    alg = DummyAlgorithm('evtSel')
+    alg = MockConfGenerator()
     data0 = AutomaticData(Location='Phys/Data0')
     evtSel = PassThroughSelection('TestPassThrough',
                                   Algorithm=alg,

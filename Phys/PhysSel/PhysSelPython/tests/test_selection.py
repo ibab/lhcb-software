@@ -13,18 +13,16 @@ from PhysSelPython.Wrappers import ( Selection,
                                      NameError,
                                      NonEmptyInputLocations,
                                      IncompatibleInputLocations )
-from SelPy.configurabloids import DummyAlgorithm, DummySequencer
+from SelPy.configurabloids import MockConfGenerator, DummySequencer
 from Configurables import FilterDesktop
 
 def test_automatic_data() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00x',
-                          Extension='')
+    sel00 = AutomaticData(Location = 'Phys/Sel00x')
     assert sel00.name() == 'Phys_Sel00x'
     assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x'
     assert sel00.outputLocation() == 'Phys/Sel00x'
 
-    sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles',
-                          Extension='Particles')
+    sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles')
     assert sel00.name() == 'Phys_Sel00x_Particles'
     assert sel00.algorithm().name() == 'SelFilterPhys_Sel00x_Particles'
     assert sel00.outputLocation() == 'Phys/Sel00x/Particles'
@@ -37,7 +35,7 @@ def test_automatic_data_with_no_location_raises() :
 
 
 def test_VoidEventSelection() :
-     sel00 = AutomaticData(Location = 'Phys/Sel00x')
+     sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles')
      ves00 = VoidEventSelection('VES00',
                                 Code = 'Test (<Location>) > X',
                                 RequiredSelection = sel00)
@@ -47,7 +45,7 @@ def test_VoidEventSelection() :
 
 def test_VoidEventSelection_code_integrity() :
 
-    sel00 = AutomaticData(Location = 'Phys/Sel00x')
+    sel00 = AutomaticData(Location = 'Phys/Sel00x/Particles')
 
     ves01 = VoidEventSelection('VES01',
                                Code = 'Test (<Location>) > X',
@@ -102,8 +100,8 @@ def test_mergedselection_with_existing_configurable_name_raises() :
 
 
 def test_merged_selection() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
-    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
+    sel01 = AutomaticData(Location = 'Phys/Sel01/Particles')
     ms = MergedSelection('Merge00And01', RequiredSelections = [sel00, sel01])
     assert ms.name() == 'Merge00And01'
     assert ms.requiredSelections() == [] # should not export its required selections. Algos contained internally.
@@ -112,8 +110,8 @@ def test_merged_selection() :
     assert ms._algos == [sel00.algorithm(), sel01.algorithm(), ms._sel.algorithm()]
 
 def test_clone_merged_selection() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
-    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
+    sel01 = AutomaticData(Location = 'Phys/Sel01/Particles')
     ms = MergedSelection('Merge00And01Original', RequiredSelections = [sel00, sel01])
     msClone = ms.clone(name='Merge00And01Clone')
     assert msClone.name() == 'Merge00And01Clone'
@@ -136,34 +134,34 @@ def test_merged_selection_with_existing_selection_name_raises() :
 
     
 def test_instantiate_tree(selID='0000') :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
-    sel01 = AutomaticData(Location = 'Phys/Sel01')
-    alg0 = DummyAlgorithm('Alg000')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
+    sel01 = AutomaticData(Location = 'Phys/Sel01/Particles')
+    alg0 = MockConfGenerator()
     sel0 = Selection(selID, Algorithm = alg0,
                      RequiredSelections = [sel00, sel01])
     return sel0
 
 def test_outputLocation() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
     assert sel00.outputLocation() == 'Phys/Sel00/Particles'
-    alg0 = DummyAlgorithm('Alg0001')
+    alg0 = MockConfGenerator()
     sel0 = Selection('SomeName001', Algorithm = alg0)
     assert sel0.outputLocation() == 'Phys/SomeName001/Particles'
     sel1 = Selection('SomeName002', OutputBranch = 'HLT2', Algorithm = alg0,
                      Extension='HltParticles')
     assert sel1.outputLocation() == 'HLT2/SomeName002/HltParticles'
     
-def test_tree_InputLocations_propagated() :
+def test_tree_Inputs_propagated() :
     
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
-    sel01 = AutomaticData(Location = 'Phys/Sel01')
-    alg0 = DummyAlgorithm('Alg001')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
+    sel01 = AutomaticData(Location = 'Phys/Sel01/Particles')
+    alg0 = MockConfGenerator(Inputs=[])
     sel0 = Selection('Sel001', Algorithm = alg0,
                      RequiredSelections = [sel00, sel01])
-    assert len(alg0.InputLocations) == 0
-    assert len(sel0.algorithm().InputLocations) == 2
-    assert sel0.algorithm().InputLocations.count('Phys/Sel00/Particles') ==1
-    assert sel0.algorithm().InputLocations.count('Phys/Sel01/Particles') ==1
+    assert len(alg0.Inputs) == 0
+    assert len(sel0.algorithm().Inputs) == 2
+    assert sel0.algorithm().Inputs.count('Phys/Sel00/Particles') ==1
+    assert sel0.algorithm().Inputs.count('Phys/Sel01/Particles') ==1
 
 
 '''
@@ -172,87 +170,83 @@ def test_selection_with_existing_algo_name_raises() :
     
     sel02 = AutomaticData(Location = 'Phys/Sel02')
     sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg003', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = MockConfGenerator(Inputs = ['Phys/Sel00', 'Phys/Sel01'])
     try :
         sel0 = Selection('Alg003', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
-        assert alg0.InputLocations == ['Phys/Sel00', 'Phys/Sel01']
+        assert alg0.Inputs == ['Phys/Sel00', 'Phys/Sel01']
     except NameError :
         print "NameError caught"
 '''
 def test_selection_with_existing_selection_name_raises() :
     
-    sel02 = AutomaticData(Location = 'Phys/Sel02')
-    sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg003')
+    sel02 = AutomaticData(Location = 'Phys/Sel02/Particles')
+    sel03 = AutomaticData(Location = 'Phys/Sel03/Particles')
+    alg0 = MockConfGenerator()
 
     sel0 = Selection('Sel003', Algorithm = alg0,
                      RequiredSelections = [sel02, sel03])
     raises(NameError, Selection, 'Sel003', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
 
-    assert sel0.algorithm().InputLocations == ['Phys/Sel02/Particles',
-                                               'Phys/Sel03/Particles']
+    assert sel0.algorithm().Inputs == ['Phys/Sel02/Particles',
+                                       'Phys/Sel03/Particles']
 
 def test_clone_selection_with_existing_selection_name_raises() :
     
     sel02 = AutomaticData(Location = 'Phys/Sel02')
     sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg004')
+    alg0 = MockConfGenerator()
     sel0 = Selection('Sel004', Algorithm = alg0,
                      RequiredSelections = [sel02, sel03])
     
 
     raises( NameError, sel0.clone, name = 'Sel004', Algorithm = alg0,
             RequiredSelections = [sel02, sel03])
-    assert sel0.algorithm().InputLocations == ['Phys/Sel02/Particles',
-                                               'Phys/Sel03/Particles']
+    assert sel0.algorithm().Inputs == ['Phys/Sel02',
+                                       'Phys/Sel03']
         
 def test_clone_selection_with_new_alg() :
     sel0 = test_instantiate_tree('0001')
-    alg1 = DummyAlgorithm('Alg1')
+    alg1 = MockConfGenerator(Inputs=[])
     selClone = sel0.clone(name='sel0_clone0', Algorithm = alg1)
+    assert len(alg1.Inputs) == 0
 
-    assert alg1.name() == 'Alg1'
-    assert len(alg1.InputLocations) == 0
+    assert len(sel0.algorithm().Inputs) == 2
+    assert sel0.algorithm().Inputs.count('Phys/Sel00/Particles') ==1
+    assert sel0.algorithm().Inputs.count('Phys/Sel01/Particles') ==1
 
-    assert len(sel0.algorithm().InputLocations) == 2
-    assert sel0.algorithm().InputLocations.count('Phys/Sel00/Particles') ==1
-    assert sel0.algorithm().InputLocations.count('Phys/Sel01/Particles') ==1
-
-def test_clone_selection_with_new_InputLocations() :
+def test_clone_selection_with_new_Inputs() :
     sel = test_instantiate_tree('0002')
-    clone00 = AutomaticData(Location = 'Phys/Clone00')
-    clone01 = AutomaticData(Location = 'Phys/Clone01')
+    clone00 = AutomaticData(Location = 'Phys/Clone00/Particles')
+    clone01 = AutomaticData(Location = 'Phys/Clone01/Particles')
     selClone = sel.clone(name='sel0_clone1',
                          RequiredSelections = [clone00, clone01])
-    assert len(selClone.algorithm().InputLocations) == 2
-    assert selClone.algorithm().InputLocations.count('Phys/Clone00/Particles') ==1
-    assert selClone.algorithm().InputLocations.count('Phys/Clone01/Particles') ==1
+    assert len(selClone.algorithm().Inputs) == 2
+    assert selClone.algorithm().Inputs.count('Phys/Clone00/Particles') ==1
+    assert selClone.algorithm().Inputs.count('Phys/Clone01/Particles') ==1
 
 def test_selection_with_name_overlap_doesnt_raise() :
-    sel02 = AutomaticData(Location = 'Phys/Sel02')
-    sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg005')
+    sel02 = AutomaticData(Location = 'Phys/Sel02/Particles')
+    sel03 = AutomaticData(Location = 'Phys/Sel03/Particles')
+    alg0 = MockConfGenerator()
     sel0 = Selection('Sel005', Algorithm = alg0)
     sel1 = Selection('Sel005Loose', Algorithm = alg0)
     assert sel0.outputLocation() == 'Phys/Sel005/Particles'
     assert sel1.outputLocation() == 'Phys/Sel005Loose/Particles'
 
-def test_selection_with_different_InputLocations_set_in_algo_raises() :
+def test_selection_with_different_Inputs_set_in_algo_raises() :
     sel02 = AutomaticData(Location = 'Phys/Sel02')
     sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg006',
-                          InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = MockConfGenerator(Inputs = ['Phys/Sel00', 'Phys/Sel01'])
     raises(IncompatibleInputLocations, Selection, 'Sel006', Algorithm = alg0,
            RequiredSelections = [sel02, sel03])
 
-def test_selection_with_same_InputLocations_set_in_algo() :
-    sel02 = AutomaticData(Location = 'Phys/Sel02')
-    sel03 = AutomaticData(Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg007',
-                          InputLocations = ['Phys/Sel02/Particles',
-                                            'Phys/Sel03/Particles'])
+def test_selection_with_same_Inputs_set_in_algo() :
+    sel02 = AutomaticData(Location = 'Phys/Sel02/Particles')
+    sel03 = AutomaticData(Location = 'Phys/Sel03/Particles')
+    alg0 = MockConfGenerator(Inputs = ['Phys/Sel02/Particles',
+                                       'Phys/Sel03/Particles'])
     sel0 = Selection('Sel007', Algorithm = alg0,
                      RequiredSelections = [sel02, sel03])
         

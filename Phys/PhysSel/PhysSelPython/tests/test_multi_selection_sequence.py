@@ -16,7 +16,7 @@ from PhysSelPython.Wrappers import ( Selection,
                                      AutomaticData,
                                      NameError)
 
-from SelPy.configurabloids import ( DummyAlgorithm,
+from SelPy.configurabloids import ( MockConfGenerator,
                                     DummySequencer  )
 
 from Configurables import FilterDesktop
@@ -29,8 +29,8 @@ def test_instantiate_dataondemand_multi_sequencer() :
     seq = MultiSelectionSequence('MultiSeq00x', Sequences = [seq00, seq01])
 
 def test_call_important_methods() :
-    sel00 = AutomaticData(Location = 'Phys/Sel00')
-    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    sel00 = AutomaticData(Location = 'Phys/Sel00/Particles')
+    sel01 = AutomaticData(Location = 'Phys/Sel01/Particles')
     seq00 = SelectionSequence('Seq00y', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01y', TopSelection = sel01)
     seq = MultiSelectionSequence('MultiSeq00y', Sequences = [seq00, seq01])
@@ -42,8 +42,8 @@ def test_call_important_methods() :
 def test_instantiate_multi_sequencer() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     sel01 = AutomaticData(Location = 'Phys/Sel01')
-    alg00 = DummyAlgorithm('Alg000')
-    alg01 = DummyAlgorithm('Alg001')
+    alg00 = MockConfGenerator()
+    alg01 = MockConfGenerator()
     sel00 = Selection('100011', Algorithm = alg00,
                      RequiredSelections = [sel00])
     sel01 = Selection('100012', Algorithm = alg01,
@@ -58,33 +58,33 @@ def test_multi_sequencer_sequences() :
     _sel02 = AutomaticData(Location = 'Phys/Sel02')
     _sel03 = AutomaticData(Location = 'Phys/Sel03')
 
-    sel00_01 = Selection('0000110', Algorithm = DummyAlgorithm('Alg00_01'),
+    sel00_01 = Selection('0000110', Algorithm = MockConfGenerator(),
                          RequiredSelections = [_sel00, _sel01])
-    sel02_03 = Selection('0000111', Algorithm = DummyAlgorithm('Alg02_03'),
+    sel02_03 = Selection('0000111', Algorithm = MockConfGenerator(),
                          RequiredSelections = [_sel02, _sel03])
-    selA = Selection('000112A', Algorithm = DummyAlgorithm('Alg001A'),
+    selA = Selection('000112A', Algorithm = MockConfGenerator(),
                      RequiredSelections = [ sel00_01, sel02_03])
 
     _sel04 = AutomaticData(Location = 'Phys/Sel04')
     _sel05 = AutomaticData(Location = 'Phys/Sel05')
     _sel06 = AutomaticData(Location = 'Phys/Sel06')
     _sel07 = AutomaticData(Location = 'Phys/Sel07')    
-    sel04_05 = Selection('0000112', Algorithm = DummyAlgorithm('Alg04_05'),
+    sel04_05 = Selection('0000112', Algorithm = MockConfGenerator(),
                          RequiredSelections = [_sel04, _sel05])
-    sel06_07 = Selection('0000113', Algorithm = DummyAlgorithm('Alg06_07'),
+    sel06_07 = Selection('0000113', Algorithm = MockConfGenerator(),
                          RequiredSelections = [_sel06, _sel07])
-    selB = Selection('000112B', Algorithm = DummyAlgorithm('Alg001B'),
+    selB = Selection('000112B', Algorithm = MockConfGenerator(),
                      RequiredSelections = [ sel04_05, sel06_07])
 
-    presel0 = DummyAlgorithm('Presel0')
-    presel1 = DummyAlgorithm('Presel1')
-    presel2 = DummyAlgorithm('Presel2')
-    presel3 = DummyAlgorithm('Presel3')
+    presel0 = MockConfGenerator()
+    presel1 = MockConfGenerator()
+    presel2 = MockConfGenerator()
+    presel3 = MockConfGenerator()
     
-    postsel0 = DummyAlgorithm('Postsel0')
-    postsel1 = DummyAlgorithm('Postsel1')
-    postsel2 = DummyAlgorithm('Postsel2')
-    postsel3 = DummyAlgorithm('Postsel3')
+    postsel0 = MockConfGenerator()
+    postsel1 = MockConfGenerator()
+    postsel2 = MockConfGenerator()
+    postsel3 = MockConfGenerator()
 
     preselsA =  [presel0, presel1]
     postselsA = [postsel0, postsel1]

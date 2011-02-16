@@ -6,6 +6,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-11 - Juan Palacios
+ - PhysSelPython.Wrappers.selectionWrapper
+  . Pass Configurable.clone instead of Configurable. Makes ConfigurableGenerators
+    and Configurables look the same.
+ - InputDataSetter now set to Inputs. Modify all tests.
+ - Use SelPy.configurabloids.MockConfGenerator instead of SelPy.configurabloids.DummyAlgorithm in tests.
+ - AutomaticData
+  . No longer use extension. Location must now branch and include leaf!!!
+
+! 2011-02-11 - Juan Palacios
  - Added outputLocations() to SelectionSequence. Needed for DST writers.
 
 ! 2011-02-09 - Juan Palacios
