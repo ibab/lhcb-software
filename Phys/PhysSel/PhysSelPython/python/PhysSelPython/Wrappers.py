@@ -45,7 +45,7 @@ from SelPy.selection import ( flatAlgorithmList,
                               NonEmptyInputLocations,
                               IncompatibleInputLocations)
 
-from SelPy.utils import update_dict_overlap
+from SelPy.utils import update_dict_overlap, CloneCallable
 
 from SelPy.selection import Selection as Sel
 from SelPy.selection import SelectionSequence as SelSequence
@@ -72,7 +72,7 @@ def selectionWrapper(selType, name, *args, **kwargs) :
 
     algorithm = kwargs.pop('Algorithm')
     if isConfigurable( algorithm )  :
-        algGen = algorithm.clone
+        algGen=CloneCallable(algorithm)
         kwargs['ConfGenerator'] = algGen
     else :
         kwargs['ConfGenerator'] = algorithm
