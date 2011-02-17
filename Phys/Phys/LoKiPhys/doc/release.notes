@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Vanya Belyaev
+ - remove LoKi::Cuts::COUNTER typedef 
+
 ! 2011-02-11 - Chris Jones
  - Fix a few trivial icc warnings/remarks.
 
