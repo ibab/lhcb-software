@@ -146,7 +146,7 @@ std::string ROShifter::getProduction( ) {
 }
 
 //=========================================================================
-//  
+//  Has the time slot changed for shift ?
 //=========================================================================
 bool ROShifter::hasChanged ( ) {
 
