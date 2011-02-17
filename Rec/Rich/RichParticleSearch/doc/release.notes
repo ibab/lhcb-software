@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichParticleSearch
+! Responsible : Matt Coombes
+! Purpose     : Find exotic particles with the RICHes. Get Noble price.
+!-----------------------------------------------------------------------------
+
+! 2011-02-17 - Chris Jones
+ - Add missing release notes.
+ - Various minor fixes for clean compilation with gcc43 and icc11
+ - Various minor improvements I spotted along the way.
+

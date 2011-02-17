@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef RICHPARTICLESEARCHMAIN_H 
+#ifndef RICHPARTICLESEARCHMAIN_H
 #define RICHPARTICLESEARCHMAIN_H 1
 
 // Include files
@@ -66,104 +66,107 @@
 
 
 /** @class RichParticleSearchMain RichParticleSearchMain.h
- *  
+ *
  *
  *  @author Matt Coombes
- *  @date   2010-09-22 
+ *  @date   2010-09-22
  */
- 
- 
- namespace Rich
+
+
+namespace Rich
 {
   namespace Rec
   {
     namespace MC
     {
-    class RichParticleSearchMain : public RichRecTupleAlgBase {
-    public:
-    	
-      /// Standard constructor
-      RichParticleSearchMain( const std::string& name, ISvcLocator* pSvcLocator );
+      class RichParticleSearchMain : public RichRecTupleAlgBase {
+      public:
 
-      virtual ~RichParticleSearchMain( ); ///< Destructor
+        /// Standard constructor
+        RichParticleSearchMain( const std::string& name, ISvcLocator* pSvcLocator );
 
-      virtual StatusCode initialize();    ///< Algorithm initialization
-      virtual StatusCode execute   ();    ///< Algorithm execution
-      virtual StatusCode finalize  ();    ///< Algorithm finalization
+        virtual ~RichParticleSearchMain( ); ///< Destructor
 
-      double MinimumTrackSeparation(LHCb::RichRecSegment*);
-      int GetRichInt();
+        virtual StatusCode initialize();    ///< Algorithm initialization
+        virtual StatusCode execute   ();    ///< Algorithm execution
 
+        double MinimumTrackSeparation(LHCb::RichRecSegment*);
+        int GetRichInt();
 
+      private:
 
-    private:
-    
-      int m_radTemp;    ///< which rich detector to monitor
-      Rich::RadiatorType m_radiator;
+        int m_radTemp;    ///< which rich detector to monitor
+        Rich::RadiatorType m_radiator;
 
-      //std::vector<int> m_IsoCuts;
-      int m_maxUsedTracks;
+        //std::vector<int> m_IsoCuts;
+        int m_maxUsedTracks;
 
         // set to know to stop all MC Truth
-      bool m_useMCTruth;
+        bool m_useMCTruth;
 
         // particle type when fixed
-      int m_particleType;
-      Rich::ParticleIDType m_pType;
+        int m_particleType;
+        Rich::ParticleIDType m_pType;
 
         // keep totals of particle types
-     // std::vector<int> m_pTypes;
+        // std::vector<int> m_pTypes;
 
         // histogram output level
-      int m_histoOutputLevel;
+        int m_histoOutputLevel;
 
-      // tools
-      const ITrackSelector* m_trSelector;        ///< Track selector
-      const IMCTruthTool* m_richRecMCTruth;
-      const IParticleProperties* m_richPartProp; ///< Rich Particle properties
-      const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-      const IIsolatedTrack * m_isoTrack; ///< Pointer to isolated track tool
-      const IRefractiveIndex* m_refractiveIndex;
-      const IGeomTool* m_geomTool;
-      const ITrackEffectiveRefractiveIndex * m_tkIndex;
-      IMuonInformation* m_MuonInformation;
+        // tools
+        const ITrackSelector* m_trSelector;        ///< Track selector
+        const IMCTruthTool* m_richRecMCTruth;
+        const IParticleProperties* m_richPartProp; ///< Rich Particle properties
+        const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+        const IIsolatedTrack * m_isoTrack; ///< Pointer to isolated track tool
+        const IRefractiveIndex* m_refractiveIndex;
+        const IGeomTool* m_geomTool;
+        const ITrackEffectiveRefractiveIndex * m_tkIndex;
+        IMuonInformation* m_MuonInformation;
 
-    		//Isolation cuts for each radiator
-      std::vector<double> m_IsoCut;
+        //Isolation cuts for each radiator
+        std::vector<double> m_IsoCut;
 
-    		//Beta cuts
-      std::vector<double> m_maxBetaCut;
+        //Beta cuts
+        std::vector<double> m_maxBetaCut;
 
-      //Mass Deviation from mean cut
-      std::vector<double> m_massDevCut;
+        //Mass Deviation from mean cut
+        std::vector<double> m_massDevCut;
 
-      //CK Deviation from mean Cut
-      std::vector<double> m_CKDevCut;
+        //CK Deviation from mean Cut
+        std::vector<double> m_CKDevCut;
 
-      //Minimum cut on CK angle
-      std::vector<double> m_minCK;
+        //Minimum cut on CK angle
+        std::vector<double> m_minCK;
 
-      //Plot Per Photon
-      bool m_plotPerPhoton;
-      //whether to use Muon information
-      bool m_useMuonInfo;
+        //Plot Per Photon
+        bool m_plotPerPhoton;
+        //whether to use Muon information
+        bool m_useMuonInfo;
 
-	  std::string m_tracksInContainer;
-      mutable LHCb::MuonPID m_pid;
-        
-      // mcoombes event counter
-      int EvtNum;
-    //  IOnOffline* m_onOfflineTool;
-   //   IOnOffline* m_OnOffline;
+        std::string m_tracksInContainer;
+        mutable LHCb::MuonPID m_pid;
 
-      int m_tkTotal;
+        // mcoombes event counter
+        int EvtNum;
+        //  IOnOffline* m_onOfflineTool;
+        //   IOnOffline* m_OnOffline;
 
-      double m_avNPV;
+        int m_tkTotal;
 
-      int m_PVSum;
-      //std::string m_PVContainer;
+        double m_avNPV;
 
-    };
+        int m_PVSum;
+        //std::string m_PVContainer;
+
+      };
+
+      // Get an interger value for each RICH radiator
+      // 0 Aerogel; 1 Rich1Gas; 2 Rich2Gas
+      inline int RichParticleSearchMain::GetRichInt(){
+        return (int) m_radiator;
+      }
 
     }
   }
