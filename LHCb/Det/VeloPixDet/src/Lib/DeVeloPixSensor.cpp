@@ -57,11 +57,11 @@ StatusCode DeVeloPixSensor::initialize()
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
   if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPixSensor", pmgr);
-  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloPixSensor", outputLevel);
   }
   delete pmgr;
+  if( !sc ) return sc;
   MsgStream msg(msgSvc(), "DeVeloPixSensor");
   sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {

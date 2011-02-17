@@ -211,11 +211,11 @@ StatusCode DeVeloPixSquareType::initialize()
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
   if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPixSquareType", pmgr);
-  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloPixSquareType", outputLevel);
   }
   delete pmgr;
+  if( !sc ) return sc;
 
   sc = DeVeloPixSensor::initialize();
   if(!sc.isSuccess()) {

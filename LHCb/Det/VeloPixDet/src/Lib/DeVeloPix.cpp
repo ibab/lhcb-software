@@ -59,11 +59,12 @@ StatusCode DeVeloPix::initialize() {
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
   if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPix", pmgr);
-  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloPix", outputLevel);
   }
   delete pmgr;
+  if( !sc ) return sc;
+
   MsgStream msg( msgSvc(), "DeVeloPix" );
   msg << MSG::DEBUG << "Initialising DeVeloPix " << endreq;
 
