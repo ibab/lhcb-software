@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+! 2011-02-17 - Chris Jones
+ - Add Rich/RichParticleSearch
+
 ! 2011-02-13 - Chris Jones
  - Add Rec/RecInterfaces
 
