@@ -1,3 +1,7 @@
+2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r0p1
+
 2011-02-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: fixed a problem with the build logs and improved the check for ATLAS tag
