@@ -21,7 +21,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'ALL_TRCHI2DOF_MAX' : 4.0,    # unitless
         'KS_MASS_WINDOW'    : 30.0,   # MeV
         'KSPI_MIPCHI2DV_MIN': 16.0,    # unitless
-        'KS_BPVVDCHI2_MIN'   : 1000.0,  # unitless 
+        'KS_BPVVDCHI2_MIN'  : 1000.0,  # unitless 
         'USE_KS'            : True,
         # upfront combo cuts
         'AMAXDOCA_MAX'      : 0.2,    # mm        
@@ -281,9 +281,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #TOSParticleTagger.CompositeTPSviaPartialTOSonly = True
         TOSParticleTagger.InputLocations = [input.outputSelection()]
         filter = bindMembers(name+'ParticleFilter',[input,TOSParticleTagger])
-        dummy = Hlt2Member(FilterDesktop, name+'DummyFilter',
-                           InputLocations=[filter], Code="ALL")
-        return bindMembers(name+'FullFilter',[filter,dummy])
+        return filter
+        #dummy = Hlt2Member(FilterDesktop, name+'DummyFilter',
+        #                   InputLocations=[filter], Code="ALL")
+        #return bindMembers(name+'FullFilter',[filter,dummy])
 
     def __makeLines(self,name,seqs):
         '''Makes the lines.'''
@@ -310,26 +311,26 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         all2 = self.__allNBody(2,[input])
         topo2_all = self.__filterNforN(2,[all2])
         topo2_tos = self.__TOSFilter('Topo2BodyTOS',topo2_all)
-        topo2_simple = self.__filterSimple(2,[topo2_all])
-        topo2_bdt = self.__filterBDT(2,[topo2_all])
-        topo2_mu = self.__filterMuonBDT(2,[topo2_all]) 
+        topo2_simple = self.__filterSimple(2,[topo2_tos])
+        topo2_bdt = self.__filterBDT(2,[topo2_tos])
+        topo2_mu = self.__filterMuonBDT(2,[topo2_tos]) 
         # make 3-body line
         filt23 = self.__filter2forN(3,[all2])
         all3 = self.__allNBody(3,[input,filt23])
         topo3_all = self.__filterNforN(3,[all3])
         topo3_tos = self.__TOSFilter('Topo3BodyTOS',topo3_all)
-        topo3_simple = self.__filterSimple(3,[topo3_all])
-        topo3_bdt = self.__filterBDT(3,[topo3_all])
-        topo3_mu = self.__filterMuonBDT(3,[topo3_all]) 
+        topo3_simple = self.__filterSimple(3,[topo3_tos])
+        topo3_bdt = self.__filterBDT(3,[topo3_tos])
+        topo3_mu = self.__filterMuonBDT(3,[topo3_tos]) 
         # make 4-body line
         filt24 = self.__filter2forN(4,[filt23])
         filt3 = self.__filter3for4([all3])
         all4 = self.__allNBody(4,[input,filt3])
         topo4_all = self.__filterNforN(4,[all4])
         topo4_tos = self.__TOSFilter('Topo4BodyTOS',topo4_all)
-        topo4_simple = self.__filterSimple(4,[topo4_all])
-        topo4_bdt = self.__filterBDT(4,[topo4_all])
-        topo4_mu = self.__filterMuonBDT(4,[topo4_all]) 
+        topo4_simple = self.__filterSimple(4,[topo4_tos])
+        topo4_bdt = self.__filterBDT(4,[topo4_tos])
+        topo4_mu = self.__filterMuonBDT(4,[topo4_tos]) 
 
         # make the lines
         self.__makeLines('TopoNBodySimple',
