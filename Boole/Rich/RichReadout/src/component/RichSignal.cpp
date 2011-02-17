@@ -142,9 +142,9 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
       LHCb::RichSmartID tempID;
       const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
       if      (!ok)
-      { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ); }
+      { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ).ignore(); }
       else if (id != tempID.pixelID())
-      { Warning( "RichSmartID mis-match" ); }
+      { Warning( "RichSmartID mis-match" ).ignore(); }
     }
 
     // Create a new deposit
