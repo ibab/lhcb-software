@@ -4,6 +4,10 @@
 
 2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/External.py: revert back to CMT v1r20p20090520
+
+2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/generateLogin: added "--ignore-not-ready" to the SetupProject call in order
 	to generate the cache files.
 	* python/LbConfiguration/LbLogin.py: few cosmetic changes.
