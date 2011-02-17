@@ -236,16 +236,16 @@ StatusCode UpdateAndReset::execute()
   if (runno != m_runNumber)
   {
 //    printf("+_+_+_+_+_+_+_+_+_+_+_++_+_+_ Different Run!!! \n");
-    m_triggerConfigurationKey = tck;
     m_pGauchoMonitorSvc->updateSvc("this",m_runNumber,this);
-    m_pGauchoMonitorSvc->resetHistos( this  );
-    m_pGauchoMonitorSvc->setRunNo(runno);
     if ( 1 == m_saveHistograms )
     {
        //calling finalize - don't need to reset, they probably don't exist anymore
        m_eorNumber=m_runNumber;
        manageTESHistos(false, true, true, true);
     }
+    m_triggerConfigurationKey = tck;
+    m_pGauchoMonitorSvc->resetHistos( this  );
+    m_pGauchoMonitorSvc->setRunNo(runno);
     m_runNumber = runno;
   }
   m_gpsTimeLastEvInCycle = (double)gps;
