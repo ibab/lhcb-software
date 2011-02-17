@@ -60,7 +60,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     current = cltime;
   }
-  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
   m_RateBuff = 0;
   if (m_reference < current)
   {
@@ -253,7 +253,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   }
   if (m_received >= m_expected)
   {
-    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
+//    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
     if (m_isSaver)
     {
       UnLock();
@@ -539,12 +539,12 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
           }
           INServiceDescr *sd = new INServiceDescr((char*)(service->at(0).c_str()),
           new MonInfo((char*)(service->at(0).c_str()),&BufferAdder,this));
-            printf("Service: %s\n",service->at(0).c_str());
+//            printf("Service: %s\n",service->at(0).c_str());
           m_inputServicemap.insert(INServicePair(service->at(0).c_str(),sd));
-            printf("%s: Adding service @%s@\n",m_name.c_str(),service->at(0).c_str());
+//            printf("%s: Adding service @%s@\n",m_name.c_str(),service->at(0).c_str());
           if (m_inputServicemap.size() == 1)
           {
-              printf ("First client for adding... Creating our output service...\n");
+//              printf ("First client for adding... Creating our output service...\n");
             m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
             DimServer::start();
           }
@@ -573,7 +573,7 @@ void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
     //      printf("%s: Removing service %s\n",m_name.c_str(),servc.c_str());
           if (m_inputServicemap.empty())
           {
-            printf ("No more client... Deleteing our output service...\n");
+//            printf ("No more client... Deleteing our output service...\n");
             delete m_outservice;
             m_outservice = 0;
           }

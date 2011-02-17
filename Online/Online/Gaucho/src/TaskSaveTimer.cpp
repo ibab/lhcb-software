@@ -62,7 +62,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   char fdir[1024];
   void *bend = AddPtr(buff,hd->buffersize);
   int runo = (int)hd->run_number;
-  if (m_EOR && (runo == 0))
+  if (runo == 0)
   {
     printf("Run Number == 0. No attempt to save....\n");
     return;
