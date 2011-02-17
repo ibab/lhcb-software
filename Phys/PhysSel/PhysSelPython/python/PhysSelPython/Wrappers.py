@@ -22,6 +22,7 @@ __all__ = ('DataOnDemand',
            'MergedSelection',
            'EventSelection',
            'PassThroughSelection',
+           'ChargedProtoParticleSelection',
            'SelectionSequence',
            'MultiSelectionSequence',
            'SelSequence',
@@ -31,9 +32,6 @@ __all__ = ('DataOnDemand',
            )
 
 from copy import copy
-
-
-from Configurables import GaudiSequencer
 
 from SelPy.selection import ( flatAlgorithmList,
                               NamedObject,
@@ -45,7 +43,9 @@ from SelPy.selection import ( flatAlgorithmList,
                               NonEmptyInputLocations,
                               IncompatibleInputLocations)
 
-from SelPy.utils import update_dict_overlap, CloneCallable
+from SelPy.utils import update_dict_overlap
+from SelPy.utils import CloneCallable
+from SelPy.utils import connectToRequiredSelections
 
 from SelPy.selection import Selection as Sel
 from SelPy.selection import SelectionSequence as SelSequence
@@ -56,6 +56,7 @@ from SelPy.selection import AutomaticData as autodata
 from Configurables import LoKi__VoidFilter as VoidFilter
 from GaudiConfUtils import configurableExists, isConfigurable
 from GaudiConfUtils import ConfigurableGenerators
+import Configurables
 
 def checkName(name) :
     if configurableExists(name) :
@@ -214,7 +215,7 @@ class MergedSelection(NamedObject,
                  name,
                  RequiredSelections = [],
                  OutputBranch = "Phys",
-                 sequencerType=GaudiSequencer) :
+                 sequencerType=Configurables.GaudiSequencer) :
 
         NamedObject.__init__(self, name)
         ClonableObject.__init__(self, locals())
@@ -274,7 +275,7 @@ class SelectionSequence(SelSequence) :
                  TopSelection,
                  EventPreSelector = [],
                  PostSelectionAlgs = [],
-                 sequencerType = GaudiSequencer) :
+                 sequencerType = Configurables.GaudiSequencer) :
 
         checkName(name)
         SelSequence.__init__(self,
@@ -301,7 +302,7 @@ class MultiSelectionSequence(UniquelyNamedObject,
     def __init__(self,
                  name,
                  Sequences = [],
-                 sequencerType = GaudiSequencer) :
+                 sequencerType = Configurables.GaudiSequencer) :
 
         UniquelyNamedObject.__init__(self, name)
         ClonableObject.__init__(self, locals())
@@ -324,3 +325,68 @@ class MultiSelectionSequence(UniquelyNamedObject,
 
     def sequence(self) :
         return self._gaudiseq
+
+class ChargedProtoParticleSelection(UniquelyNamedObject,
+                                    ClonableObject,
+                                    SelectionBase) :
+
+    """
+    Simple wrapper class to construct charged ProtoParticles.
+    """
+    __allowedPIDs = ('Rich',
+                     'Muon',
+                     'Ecal',
+                     'Brem',
+                     'Hcal',
+                     'Prs',
+                     'Spd',
+                     'Velo')
+
+    def __init__(self,
+                 name,
+                 RequiredSelections = [],
+                 OutputBranch="Rec",
+                 Extension="ProtoParticles",
+                 InputDataSetter="InputTrackLocation",
+                 PIDElements= []) :
+
+        checkName(name)
+        checkName(name+'PPMaker')
+        self.checkPIDElements(PIDElements)
+        UniquelyNamedObject.__init__(self, name)
+        ClonableObject.__init__(self, locals())
+
+        _outputLocation = self.name()
+        if OutputBranch != '' :            
+            _outputLocation = OutputBranch + '/' + self.name()
+        if Extension != '' :
+            _outputLocation = _outputLocation + '/' + Extension
+        _outputLocation.replace('//','/')
+        if _outputLocation.endswith('/') :
+            _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
+
+        _ppMaker = Configurables.ChargedProtoParticleMaker(name+'PPMaker')
+        _ppMaker.OutputProtoParticleLocation=_outputLocation
+        _inputs =  [sel.outputLocation() for sel in RequiredSelections]
+        _ppMaker.__setattr__(InputDataSetter, _inputs)
+
+        alg = ConfigurableGenerators.GaudiSequencer(Members=[_ppMaker])
+        
+        for pid in PIDElements :
+            _pidAlgName='ChargedProtoParticleAdd'+pid+'Info'
+            _conf = getattr(Configurables, _pidAlgName)(name+pid+'Info')
+            alg.Members+= [_conf]
+        _dll = Configurables.ChargedProtoCombineDLLsAlg(name+'CombDLLs')
+        alg.Members+=[_dll]
+        
+        SelectionBase.__init__(self,
+                               algorithm =alg( self.name() ) ,
+                               outputLocation=_outputLocation,
+                               requiredSelections = RequiredSelections )
+
+        
+
+    def checkPIDElements(self, pids) :
+        for pid in pids :
+            if pid not in ProtoParticleSelection.__allowedPIDs :
+                raise Exception(pid+" not in allowed set of PID infos")

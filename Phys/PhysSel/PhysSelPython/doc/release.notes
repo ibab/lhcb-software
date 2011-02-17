@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-17 - Juan Palacios
+ - PhysSelPython.Wrappers
+  . Add ChargedProtoParticle selection class. Needs tests and documentation.
  - PhysSelPython.Wrappers.selectionWrapper
   . Pass CloneCallable(Configurable) instead of Configurable.clone. The latter
     was causing problems with deepcopy.
