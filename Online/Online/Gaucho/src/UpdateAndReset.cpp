@@ -90,6 +90,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetTimeLastEvInCycle=0;
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
+  m_dimSvcSaveSetLoc = 0;
 }
 
 
@@ -157,7 +158,13 @@ StatusCode UpdateAndReset::start()
   }
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
-  if (m_saveHistograms) m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+  if (m_saveHistograms)
+  {
+    if (m_dimSvcSaveSetLoc == 0)
+    {
+      m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+    }
+  }
 
 
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true);
@@ -281,6 +288,11 @@ StatusCode UpdateAndReset::finalize() {
   else
   {
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+  }
+  if (m_dimSvcSaveSetLoc != 0)
+  {
+    delete m_dimSvcSaveSetLoc;
+    m_dimSvcSaveSetLoc = 0;
   }
 
 
