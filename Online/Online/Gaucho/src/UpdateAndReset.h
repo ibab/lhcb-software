@@ -82,7 +82,6 @@ private:
 
   // For Testing RunNumber generator
   int m_deltaTRunTest;
-  int m_countExecutes;
   int m_runNumberTest;
 
   int m_teste;
