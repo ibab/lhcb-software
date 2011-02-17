@@ -3,9 +3,10 @@
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
-
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Chris Jones
+ - Some trivial coverity and icc fixes
 
 ! 2011-07-02 - Olivier Deschamps
 	- CaloECorrection : cluster energy offset via CaloDAQ/ICaloDigitFilterTool

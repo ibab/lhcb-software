@@ -26,7 +26,7 @@
  */ 
 // ============================================================================
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CellularAutomaton );
+DECLARE_ALGORITHM_FACTORY( CellularAutomaton )
 
 // ============================================================================
 inline bool CellularAutomaton::isLocMax
@@ -126,8 +126,14 @@ CellularAutomaton::CellularAutomaton
 ( const std::string& name,
   ISvcLocator* pSvcLocator )
   : GaudiAlgorithm      ( name, pSvcLocator )
-  , m_sort             ( true  )
-  , m_sortByET         ( false )
+  , m_sort             ( true   )
+  , m_sortByET         ( false  )
+  , m_release          ( false  )
+  , m_passMin          ( 999999 )
+  , m_passMax          ( 0      )
+  , m_pass             ( 0      )
+  , m_clus             ( 0      )
+  , m_event            ( 0      )
 {
   declareProperty("InputData" , m_inputData  = LHCb::CaloDigitLocation::Ecal);
   declareProperty("OutputData", m_outputData = LHCb::CaloClusterLocation::Ecal);  
@@ -140,13 +146,13 @@ CellularAutomaton::CellularAutomaton
   m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData  = LHCb::CaloAlgUtils::CaloDigitLocation( name , context() );
   m_outputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-CellularAutomaton::~CellularAutomaton(){};
+CellularAutomaton::~CellularAutomaton(){}
 // ============================================================================
 
 // ============================================================================
@@ -181,7 +187,7 @@ StatusCode CellularAutomaton::initialize()
   m_cellSelector.setSelector(m_used);
   
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -353,7 +359,7 @@ StatusCode CellularAutomaton::execute()
                           clustersSeq->end  ()            ,
                           LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
     }
-  };
+  }
   
   // clear local storages 
   taggedCellsSeq    .clear () ;

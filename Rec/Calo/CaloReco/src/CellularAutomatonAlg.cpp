@@ -39,7 +39,7 @@
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( CellularAutomatonAlg );
+DECLARE_ALGORITHM_FACTORY( CellularAutomatonAlg )
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
@@ -65,6 +65,12 @@ CellularAutomatonAlg::CellularAutomatonAlg
   m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData  = LHCb::CaloAlgUtils::CaloDigitLocation( name , context() );
   m_outputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
+  // init counters
+  m_pass = 0.;
+  m_clus = 0.;
+  m_event= 0.;
+  m_passMin= 999999;
+  m_passMax = 0;
 }
 // ============================================================================
 // Destructor
@@ -90,13 +96,6 @@ StatusCode CellularAutomatonAlg::initialize()
   
   // Tool Interface
   m_tool = tool<ICaloClusterization>(m_toolName, this);
-  
-  // init counters
-  m_pass = 0.;
-  m_clus = 0.;
-  m_event= 0.;
-  m_passMin= 999999;
-  m_passMax = 0;
   
   return StatusCode::SUCCESS;
 }
