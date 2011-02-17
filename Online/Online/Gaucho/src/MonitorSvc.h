@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include "Gaucho/TaskSaveTimer.h"
 
 // Forward declarations
 class ISvcLocator;
@@ -34,8 +35,8 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service, 
-  virtual public IMonitorSvc, 
+class MonitorSvc : public Service,
+  virtual public IMonitorSvc,
   virtual public IGauchoMonitorSvc,
   virtual public IIncidentListener
 {
@@ -123,6 +124,7 @@ public:
 private:
   bool m_started;
   bool m_expandCounterServices;
+  bool m_saveInter;
   MonSys *m_MonSys;
   MonSubSys *m_HistSubSys;
   MonSubSys *m_CntrSubSys;
@@ -192,6 +194,7 @@ public:
   int m_disableDeclareInfoPair;
   int m_disableDeclareInfoFormat;
   int m_disableDeclareInfoHistos;
+  TaskSaveTimer *m_savetimer;
 
   void enableMonObjectsForBool() {m_disableMonObjectsForBool = 0;}
   void enableMonObjectsForInt() {m_disableMonObjectsForInt = 0;}
@@ -209,6 +212,8 @@ public:
   void disableMonObjectsForString() {m_disableMonObjectsForString = 1;}
   void disableMonObjectsForPairs() {m_disableMonObjectsForPairs = 1;}
   void disableMonObjectsForHistos() {m_disableMonObjectsForHistos = 1;}
+  virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period);
+  virtual void StopSaving();
 
   int m_updateInterval;
   int m_runno;

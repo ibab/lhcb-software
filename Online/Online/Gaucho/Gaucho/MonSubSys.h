@@ -26,7 +26,7 @@ typedef std::map<std::string,MonObj*> ObjMap;
 
 class MonSubSys
 {
-protected:
+public:
   std::string m_name;
   std::string m_pname;
   int bufsiz;

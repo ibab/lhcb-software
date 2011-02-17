@@ -76,6 +76,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
   m_started = false;
   m_MonSys =   &MonSys::m_instance();
   m_HistSubSys = 0;
+  m_savetimer = 0;
   this->m_CntrSubSys = 0;
   m_CntrMgr = 0;
   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
@@ -299,6 +300,11 @@ StatusCode MonitorSvc::finalize()
   {
     delete m_CntrMgr;
     this->m_CntrMgr = 0;
+  }
+  if (m_savetimer != 0)
+  {
+    delete m_savetimer;
+    m_savetimer = 0;
   }
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
@@ -728,3 +734,21 @@ void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
 //   printf("Monitor System Un-Locking\n");
     this->m_MonSys->unLock();
   }
+ void MonitorSvc::StartSaving(std::string &dir, std::string &part, std::string &task, int period)
+ {
+   if (m_savetimer == 0)
+   {
+     m_savetimer = new TaskSaveTimer(this->m_HistSubSys,period);
+     m_savetimer->setPartName(part);
+     m_savetimer->setRootDir(dir);
+     m_savetimer->setTaskName(task);
+   }
+   m_savetimer->Start();
+ }
+ void MonitorSvc::StopSaving()
+ {
+   if (m_savetimer!= 0)
+   {
+     m_savetimer->Stop();
+   }
+ }

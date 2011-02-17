@@ -74,6 +74,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
 
   declareProperty("teste", m_teste = 100000);
+  declareProperty("MyName",m_MyName=""); //partition_TaskName
 
   EoEInc = new EoEIncidentListener("",ploc,-1);
   m_timerCycle = m_desiredDeltaTCycle - 1;
@@ -123,27 +124,37 @@ StatusCode UpdateAndReset::start()
   // to make the ODIN object. doesn't work.
   //updMgrSvc();
 
-  serviceParts = Strsplit((char*)m_utgid.c_str(), (char*)"_");
 
   taskName = "unknownTask";
   partName = "unknownPartition";
   instancenumber = "1";
-
-  if (3 == serviceParts->size()) {
-    partName = serviceParts->at(0);
-    taskName = serviceParts->at(1);
-    instancenumber = serviceParts->at(2);
-    if (partName=="CALD0701") {
-       partName="LHCb";
-       if (instancenumber=="1") {taskName = "CaloDAQCalib";}
-       else {taskName = "Calib"+taskName+"_"+instancenumber;}
+  if (m_MyName.empty())
+  {
+    serviceParts = Strsplit((char*)m_utgid.c_str(), (char*)"_");
+    if (3 == serviceParts->size())
+    {
+      partName = serviceParts->at(0);
+      taskName = serviceParts->at(1);
+      instancenumber = serviceParts->at(2);
+      if (partName=="CALD0701")
+      {
+         partName="LHCb";
+         if (instancenumber=="1") {taskName = "CaloDAQCalib";}
+         else {taskName = "Calib"+taskName+"_"+instancenumber;}
+      }
+    }
+    else if (4 == serviceParts->size())
+    {
+      partName = serviceParts->at(0);
+      taskName = serviceParts->at(2);
     }
   }
-  else if (4 == serviceParts->size()) {
+  else
+  {
+    serviceParts = Strsplit((char*)m_utgid.c_str(), (char*)"_");
     partName = serviceParts->at(0);
-    taskName = serviceParts->at(2);
+    taskName = serviceParts->at(1);
   }
-
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
   if (m_saveHistograms) m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
@@ -188,6 +199,10 @@ StatusCode UpdateAndReset::start()
    EoEInc->setMonitorSvc(m_pGauchoMonitorSvc);
   if (0==m_disableMonRate)  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber,
       m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_gpsTimeLastEvInCycle);
+  if (this->m_saveHistograms != 0)
+  {
+    m_pGauchoMonitorSvc->StartSaving(this->m_saveSetDir,partName,taskName,this->m_saverCycle);
+  }
   return StatusCode::SUCCESS;
 }
 //------------------------------------------------------------------------------
@@ -243,6 +258,7 @@ StatusCode UpdateAndReset::stop() {
      //calling finalize - don't need to reset, they probably don't exist anymore
      m_eorNumber=m_runNumber;
      manageTESHistos(false, false, true, true);
+     m_pGauchoMonitorSvc->StopSaving();
   }
   else
   {

@@ -99,6 +99,7 @@ private:
   std::string m_cycleStatus;
   std::string m_runStatus;
   std::string m_infoFileStatus;
+  std::string m_MyName;
 
   int m_disableMonRate;
   int m_disableReadOdin;
