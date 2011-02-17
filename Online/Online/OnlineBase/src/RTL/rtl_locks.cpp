@@ -37,6 +37,7 @@ extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
   return 0;
 }
 
+/// Create named lock. if the lock_name is 0 the lock is priovate to the currect process.
 int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   std::auto_ptr<rtl_lock> h(new rtl_lock); 
   ::memset(h->name,0,sizeof(h->name));
@@ -119,6 +120,7 @@ int lib_rtl_create_lock2 (sem_t* handle, lib_rtl_lock_t* lock_handle, bool initi
 
 #endif
 
+/// Delete lock
 int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
   if ( handle )  {
     std::auto_ptr<rtl_lock> h(handle);
@@ -153,6 +155,7 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
   return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot delete lock [INVALID HANDLE].");
 }
 
+/// Cancel lock
 int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)
@@ -174,6 +177,7 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
   return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot cancel lock [INVALID HANDLE].");
 }
 
+/// Aquire lock
 int lib_rtl_lock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)
@@ -220,6 +224,7 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
   return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
 }
 
+/// Try to aquire lock; returns immediately with return code 2 if unsuccessful.
 int lib_rtl_trylock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)
@@ -239,6 +244,30 @@ int lib_rtl_trylock(lib_rtl_lock_t h) {
   return 0;
 }
 
+/// Wait for lock flag with timeout given in milliseconds
+int lib_rtl_lock_timedwait(lib_rtl_lock_t h, int milliseconds)    {
+  if ( h )  {
+#if defined(USE_PTHREADS)
+    timespec sp;
+    ::clock_gettime(CLOCK_REALTIME, &sp);    
+    milliseconds += sp.tv_nsec/1000000;
+    sp.tv_sec  += milliseconds/1000;
+    sp.tv_nsec  = (milliseconds%1000)*1000000;
+    int sc = milliseconds==LIB_RTL_INFINITE 
+      ? ::i_sem_wait(h->handle) 
+      : ::i_sem_timedwait(h->handle, &sp);
+    if ( sc != 0 && errno == ETIMEDOUT ) sc = 2;
+    if ( sc == 0 )
+#elif defined(_WIN32)
+    DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
+    if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
+#endif
+      return 1;
+  }
+  return 0;
+}
+
+/// Release lock
 int lib_rtl_unlock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)

@@ -146,3 +146,16 @@ extern "C" int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig)  {
   return 0;
 }
 
+/// Cancel thread execution
+extern "C" int lib_rtl_cancel_thread(lib_rtl_thread_t handle)  {
+  if ( handle )  {
+#ifdef USE_PTHREADS
+    ::pthread_cancel(handle->handle);
+#elif defined(_WIN32)
+#endif
+    return 1;
+  }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_cancel_thread failed [Invalid Handle]");
+  return 0;
+}
+

@@ -204,12 +204,12 @@ int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
     timespec sp;
     ::clock_gettime(CLOCK_REALTIME, &sp);    
     milliseconds += sp.tv_nsec/1000000;
-    sp.tv_sec  += milliseconds/1000;
-    sp.tv_nsec  = (milliseconds%1000)*1000000;
+    sp.tv_sec    += milliseconds/1000;
+    sp.tv_nsec    = (milliseconds%1000)*1000000;
     int sc = milliseconds==LIB_RTL_INFINITE 
       ? ::i_sem_wait(h->handle) 
       : ::i_sem_timedwait(h->handle, &sp);
-    if ( sc != 0 && errno == ETIMEDOUT ) sc = 0;
+    if ( sc != 0 && errno == ETIMEDOUT ) sc = 2;
     if ( sc == 0 )
 #elif defined(_WIN32)
     DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;

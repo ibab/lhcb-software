@@ -132,6 +132,8 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   int lib_rtl_join_thread(lib_rtl_thread_t handle);
   /// Suspend executing thread from execution
   int lib_rtl_suspend_thread(lib_rtl_thread_t handle);
+  /// Cancel thread execution
+  int lib_rtl_cancel_thread(lib_rtl_thread_t handle);
   /// Send signal to thread
   int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig);
 
@@ -149,6 +151,8 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   int lib_rtl_lock        (lib_rtl_lock_t lock_handle);
   /// Try to aquire lock; returns immediately with return code 2 if unsuccessful.
   int lib_rtl_trylock     (lib_rtl_lock_t lock_handle);
+  /// Wait for lock flag with timeout given in milliseconds
+  int lib_rtl_lock_timedwait(lib_rtl_lock_t lock_handle, int milliseconds);
   /// Release lock
   int lib_rtl_unlock      (lib_rtl_lock_t lock_handle);
   /// Access lock count (linux only)
