@@ -16,15 +16,15 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RawBankReadoutStatusMonitor );
-
+DECLARE_ALGORITHM_FACTORY( RawBankReadoutStatusMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RawBankReadoutStatusMonitor::RawBankReadoutStatusMonitor( const std::string& name,
                                                           ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator ),
+    m_first       ( true )
 {
 
   declareProperty( "bankNames", m_bankTypes );

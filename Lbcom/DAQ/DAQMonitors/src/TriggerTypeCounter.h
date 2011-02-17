@@ -28,7 +28,7 @@ public:
 protected:
 
 private:
-  void hbook(std::string name, std::vector<std::string> names);
+  void hbook(const std::string& name, const std::vector<std::string>& names);
   IEventTimeDecoder* m_odin;
   
 };
