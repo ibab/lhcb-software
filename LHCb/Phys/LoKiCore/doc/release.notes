@@ -15,6 +15,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Vanya Belyaev
+
+ - TES.cpp 
+    fix thettypo, causing the compilation problem for VC9
+
 ! 2011-02-14 - Juan Palacios
  - setFilterPassed(true) in LoKi::CounterAlg::execute().
 

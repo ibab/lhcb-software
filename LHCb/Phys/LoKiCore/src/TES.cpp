@@ -279,7 +279,7 @@ LoKi::TES::Counter::fillStream ( std::ostream& s ) const
 LoKi::TES::Stat::Stat 
 ( const std::string&            location     , 
   const std::string&            counter      , 
-  LoKi::TES::Stat::Stat::PMF    function     ,
+  LoKi::TES::Stat::PMF          function     ,
   const double                  bad          ,
   const bool                    useRootInTes ) 
   : LoKi::TES::Counter ( location , counter , bad , useRootInTes ) 
@@ -294,7 +294,7 @@ LoKi::TES::Stat::Stat
 LoKi::TES::Stat::Stat 
 ( const std::string&            location     , 
   const std::string&            counter      , 
-  LoKi::TES::Stat::Stat::PMF    function     )
+  LoKi::TES::Stat::PMF          function     )
   : LoKi::TES::Counter ( location , counter ) 
   , m_fun     ( function ) 
   , m_entries ( false    ) 
