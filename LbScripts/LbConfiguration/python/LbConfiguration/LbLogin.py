@@ -62,7 +62,8 @@ import logging
 import shutil
 
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.75 $")
-
+#-----------------------------------------------------------------------------------
+# Helper functions
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
     name = ".LbLoginCache"
@@ -80,6 +81,9 @@ def getLbLoginEnv(optionlist=None):
     s = LbLoginScript()
     s.parseOpts(optionlist)
     return s.setEnv()[0]
+
+#-----------------------------------------------------------------------------------
+# Option callbacks
 
 def _setCMTVersion_cb(option, opt_str, value, parser):
     if parser.values.cmtvers != value :
@@ -102,6 +106,7 @@ def _pythonVer_cb(option, opt_str, value, parser):
     parser.values.pythonvers = value
     parser.values.use_cache = False
 
+#-----------------------------------------------------------------------------------
 
 class LbLoginScript(SourceScript):
     _version = __version__
@@ -115,6 +120,10 @@ class LbLoginScript(SourceScript):
         self._currentcmtroot = os.environ.get("CMTROOT", None)
         self._triedlocalsetup = False
         self._triedAFSsetup = False
+
+#-----------------------------------------------------------------------------------
+# Option definition
+
     def defineOpts(self):
         """ define commandline options """
         parser = self.parser
@@ -384,7 +393,8 @@ class LbLoginScript(SourceScript):
     def setCMTBin(self):
         log = logging.getLogger()
         ev = self.Environment()
-        self._nativemachine = NativeMachine()
+        if not self._nativemachine :
+            self._nativemachine = NativeMachine()
         ev["CMTBIN"] = self._nativemachine.CMTSystem()
         log.debug("CMTBIN is set to %s" % ev["CMTBIN"])
 
@@ -946,7 +956,6 @@ class LbLoginScript(SourceScript):
                     self.addEcho(" --- CMTPROJECTPATH is set to $LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
                 self.addEcho(" --- projects will be searched in $CMTPROJECTPATH ")
             self.addEcho("-" * 80)
-
 
 
     def main(self):

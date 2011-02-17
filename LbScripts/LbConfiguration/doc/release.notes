@@ -1,3 +1,7 @@
+2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: few cosmetic changes.
+
 2011-02-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed fix to bug #75480 <https://savannah.cern.ch/bugs/?75480>
