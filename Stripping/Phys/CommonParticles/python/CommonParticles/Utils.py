@@ -55,13 +55,12 @@ def updateDoD ( alg , hat = 'Phys/' ) :
     """
     Update Data-On-Demand service
     """
-    _parts = { hat+alg.name() : alg } 
+    _parts = { hat+alg.name()+'/Particles' : alg } 
     _particles.update ( _parts ) 
     
     dod = DataOnDemandSvc()
     dod.AlgMap.update(
-        { hat + alg.name() + '/Particles' : alg.getFullName() , 
-          hat + alg.name() + '/Vertices'  : alg.getFullName() }
+        { hat + alg.name() + '/Particles' : alg.getFullName() }
         )
     return _parts 
     
