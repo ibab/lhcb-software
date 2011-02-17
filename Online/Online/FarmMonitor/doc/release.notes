@@ -4,6 +4,9 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2011-02-17 - Olivier Callot
+ - Produce also the name of the Production shifter
+
 ! 2010-11-02 - Olivier Callot
  - Add a boost header file for new LCG version
 

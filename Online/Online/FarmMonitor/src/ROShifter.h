@@ -27,8 +27,11 @@ class ROShifter {
   /// Name of the data manager on shift now
   std::string getDataManager() ;
 
-  /// Name of the data manager on shift now
+  /// Name of the shift leader on shift now
   std::string getShiftLeader() ;
+
+  /// Name of the Production manager on shift now
+  std::string getProduction() ;
 
   /// Return true if the shift crew has changed
   bool hasChanged();

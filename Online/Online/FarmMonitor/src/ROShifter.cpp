@@ -130,11 +130,19 @@ std::string ROShifter::getDataManager( ) {
 }
 
 //=============================================================================
-// Name of data manager on shift
+// Name of shift leader on shift
 //=============================================================================
 std::string ROShifter::getShiftLeader( ) {
 
   return getShifter( "Shift Leader" ) ;
+}
+
+//=============================================================================
+// Name of production manager on shift
+//=============================================================================
+std::string ROShifter::getProduction( ) {
+
+  return getShifter( "Production" ) ;
 }
 
 //=========================================================================

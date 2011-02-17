@@ -76,7 +76,7 @@ void ROFarmMonitor::initialize ( ) {
   char fmt[10] = "C";
   m_dimShiftLeader = new DimService( "FarmMonitor/Shifter/ShiftLeader", fmt, m_shiftLeader, 80 );
   m_dimDataManager = new DimService( "FarmMonitor/Shifter/DataManager", fmt, m_dataManager, 80 );
-  
+  m_dimProduction  = new DimService( "FarmMonitor/Shifter/Production",  fmt, m_production,  80 ); 
   
   dbr.getServices( "/RO/*/ROpublish" );
   while ( dbr.getNextService( service, format ) ) {
@@ -275,11 +275,14 @@ void ROFarmMonitor::update( )   {
   if ( m_shifter->hasChanged() ) {
     strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
     strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
+    strcpy( m_production,  m_shifter->getProduction().c_str() );
     m_dimShiftLeader->updateService();
     m_dimDataManager->updateService();
+    m_dimProduction->updateService();
     
-    std::cout << "Shift Leader " << m_shiftLeader << std::endl;
-    std::cout << "DataManager " << m_dataManager << std::endl;
+    std::cout << "Shift Leader: " << m_shiftLeader << std::endl;
+    std::cout << "DataManager: " << m_dataManager << std::endl;
+    std::cout << "Production: " << m_dataManager << std::endl;
   }
 
   longlong now = System::currentTime( System::microSec );

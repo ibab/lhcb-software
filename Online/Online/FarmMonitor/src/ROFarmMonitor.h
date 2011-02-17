@@ -89,7 +89,9 @@ private:
   ROShifter*               m_shifter;   /// tool to get the shifter name
   char                     m_shiftLeader[80];
   char                     m_dataManager[80];
+  char                     m_production[80];
   DimService*              m_dimShiftLeader;
   DimService*              m_dimDataManager;
+  DimService*              m_dimProduction;
 };
 #endif // ROFARMMONITOR_H
