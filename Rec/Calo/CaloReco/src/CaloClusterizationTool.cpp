@@ -1,8 +1,8 @@
 // $Id: CaloClusterizationTool.cpp,v 1.10 2010-03-12 23:44:24 odescham Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 #include "DetDesc/IGeometryInfo.h"
@@ -19,7 +19,7 @@
 #include "CaloClusterizationTool.h"
 #include "TaggedCellFunctor.h"
 // ============================================================================
-// Boost 
+// Boost
 // ============================================================================
 #include "boost/lexical_cast.hpp"
 
@@ -36,47 +36,47 @@ DECLARE_TOOL_FACTORY( CaloClusterizationTool );
 inline bool CaloClusterizationTool::isLocMax
 ( const LHCb::CaloDigit*                     digit ,
   const CaloClusterizationTool::DirVector&   hits  ,
-  const DeCalorimeter*                       det   ) 
+  const DeCalorimeter*                       det   )
 {
- 
+
   const CaloNeighbors& ns = det->neighborCells( digit -> cellID() ) ;
   double e = digit -> e() ;
-  
+
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloDigit*,const DeCalorimeter*> et ( det ) ;
 
   double eT = 0 ;
 
   if ( m_withET ) { eT = et ( digit ) ; }
-  
+
   for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ){
     const CelAutoTaggedCell* cell = hits[*iN];
-    if ( 0 == cell   ) { continue     ; }  
+    if ( 0 == cell   ) { continue     ; }
     const LHCb::CaloDigit* nd = cell->digit() ;
     if ( 0 == nd     ) { continue     ; }
-    
+
     if ( nd->e() > e ) { return false ; }
-    
+
     if ( m_withET ) { eT += et ( nd ) ; }
   }
 
   if ( m_withET && eT < m_ETcut ) { return false ; }
-  
+
   return true ;
 }
 // ============================================================================
 /* Application of rules of tagging on one cell
- *   - No action if no clustered neighbor 
+ *   - No action if no clustered neighbor
  *   - Clustered if only one clustered neighbor
- *   - Edge if more then one clustered neighbor 
+ *   - Edge if more then one clustered neighbor
  */
 // ============================================================================
-inline void 
+inline void
 CaloClusterizationTool::appliRulesTagger
 ( CelAutoTaggedCell*             cell ,
   CaloClusterizationTool::DirVector&  hits ,
   const DeCalorimeter*           det  )
 {
-  
+
   // Find in the neighbors cells tagged before, the clustered neighbors cells
   const LHCb::CaloCellID&    cellID = cell->cellID() ;
   const CaloNeighbors& ns     = det->neighborCells ( cellID ) ;
@@ -86,7 +86,7 @@ CaloClusterizationTool::appliRulesTagger
   for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ){
     const CelAutoTaggedCell* nei = hits[ *iN ] ;
     if ( 0 == nei                 ) { continue ; }
-    // 
+    //
     if( nei->isEdge() && m_release ){
       hasEdgeNeighbor = true;
       for( std::vector<LHCb::CaloCellID>::const_iterator id = nei->seeds().begin();id != nei->seeds().end();id++){
@@ -106,9 +106,9 @@ CaloClusterizationTool::appliRulesTagger
     if ( cell->isWithSeed( seed ) ) { continue ; }
     cell->addSeed ( seed ) ;
   }
-  
+
   // Tag or or not the cell
-  
+
   switch ( cell -> numberSeeds() ) {
   case 0:
     if( !m_release)break;
@@ -116,16 +116,16 @@ CaloClusterizationTool::appliRulesTagger
       cell->setEdge();
       for(std::vector<LHCb::CaloCellID>::iterator iid = neighborSeeds.begin();iid != neighborSeeds.end();iid++){
         cell->addSeed( *iid );
-      }      
+      }
     }
     break;
-  case 1: 
+  case 1:
     cell->setClustered();
     break;
-  default: 
+  default:
     cell->setEdge();
     break;
-  } 
+  }
 };
 
 // ============================================================================
@@ -144,7 +144,7 @@ inline StatusCode CaloClusterizationTool::setEXYCluster( LHCb::CaloCluster* clus
     cluster->position().parameters()( LHCb::CaloPosition::X ) = X ;
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
   }
-  else 
+  else
   { Error( " E,X and Y of cluster could not be evaluated!",sc).ignore(); }
   ///
   return sc;
@@ -155,7 +155,7 @@ inline StatusCode CaloClusterizationTool::setEXYCluster( LHCb::CaloCluster* clus
 CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )  
+  : GaudiTool ( type, name , parent )
   , m_withET           ( false )
   , m_ETcut            ( -10. * Gaudi::Units::GeV)
   , m_release (false)
@@ -171,29 +171,29 @@ CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
 // ============================================================================
 // initialization
 // ============================================================================
-StatusCode CaloClusterizationTool::initialize() 
+StatusCode CaloClusterizationTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize() ;
-  if( sc.isFailure() ) 
+  if( sc.isFailure() )
     { return Error("Could not initialize base class CaloAlgorithm",sc);}
-  
+
   return StatusCode::SUCCESS;
 }
 
 template <class TYPE>
 StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&       clusters     ,
-                                                const TYPE& hits, 
-                                                const DeCalorimeter* m_detector   , 
-                                                const std::vector<LHCb::CaloCellID>&   _cell_list   , 
+                                                const TYPE& hits,
+                                                const DeCalorimeter* m_detector   ,
+                                                const std::vector<LHCb::CaloCellID>&   _cell_list   ,
                                                 const unsigned int                     m_neig_level ){
-  
+
   //
-  m_cellSelector.setSelector(m_used);  
+  m_cellSelector.setSelector(m_used);
   m_cellSelector.setDet(m_detector);
   m_release = false;
   bool useData = false;
   //
-  LHCb::CaloCellID::Set out_cells; 
+  LHCb::CaloCellID::Set out_cells;
   std::vector<LHCb::CaloCellID> cell_list;
 
   // fill with data if level >0 and no predefined seed list
@@ -212,40 +212,40 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
         if( dig->e() > e){
           loc = false;
           break;
-        }  
+        }
       }
       if(loc)cell_list.push_back( (*it)->cellID() );
-    }      
+    }
   }
   else{
     cell_list = _cell_list;
   }
-  
+
 
   // if list of "seed" is not empty
   if( !cell_list.empty() ){
     out_cells.insert( cell_list.begin(), cell_list.end() );
 
-    /** find all neighbours for the given set of cells for the givel level 
-     *  @param cells    (UPDATE) list of cells 
+    /** find all neighbours for the given set of cells for the givel level
+     *  @param cells    (UPDATE) list of cells
      *  @param level    (INPUT)  level
      *  @param detector (INPUT) the detector
-     *  @return true if neighbours are added 
+     *  @return true if neighbours are added
      */
     LHCb::CaloFunctors::neighbours(out_cells, m_neig_level, m_detector);
   }
- 
-  // z-position of cluster 
+
+  // z-position of cluster
   LHCb::ClusterFunctors::ZPosition zPosition( m_detector );
 
-  // Create access direct and sequential on the tagged cells  
+  // Create access direct and sequential on the tagged cells
   DirVector taggedCellsDirect( (CelAutoTaggedCell*) 0 ) ;
   SeqVector taggedCellsSeq                              ;
   typedef std::vector<CelAutoTaggedCell> _Local ;
 
   size_t local_size = cell_list.empty() ? hits.size() : out_cells.size();
-  const CelAutoTaggedCell cell0_ = CelAutoTaggedCell () ; 
-  _Local local_cells ( local_size  , cell0_ ) ;  
+  const CelAutoTaggedCell cell0_ = CelAutoTaggedCell () ;
+  _Local local_cells ( local_size  , cell0_ ) ;
 
   if( cell_list.empty() ){
     taggedCellsDirect.reserve ( hits.size() ) ;
@@ -258,79 +258,79 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     taggedCellsSeq.reserve    ( out_cells.size() ) ;
   }
 
-  if( cell_list.empty() ){ 
+  if( cell_list.empty() ){
     // fill with the data
     size_t index = 0 ;
 
     for( LHCb::CaloDigits::const_iterator ihit =hits.begin() ; hits.end() != ihit ; ++ihit , ++index ){
       const LHCb::CaloDigit* digit   = *ihit ;
-      if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
+      if ( 0 == digit ) { continue ; }  // CONTINUE !!!
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
       taggedCell = digit ;
 
       taggedCellsDirect.addEntry ( &taggedCell , digit->cellID() ) ;
       taggedCellsSeq.push_back   ( &taggedCell                   ) ;
 
-    }    
-  }else{//fill for HLT    
+    }
+  }else{//fill for HLT
     size_t index = 0 ;
 
     for(std::set<LHCb::CaloCellID>::const_iterator icell = out_cells.begin();
         out_cells.end() != icell; ++icell , ++index){
 
       const LHCb::CaloDigit* digit   = hits(*icell);
-      if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
-      
+      if ( 0 == digit ) { continue ; }  // CONTINUE !!!
+
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
       taggedCell = digit ;
 
       taggedCellsDirect.addEntry ( &taggedCell , digit->cellID() ) ;
       taggedCellsSeq.push_back   ( &taggedCell                   ) ;
     }
-    
+
   }
 
 
-   // Find and mark the seeds (local maxima) 
+   // Find and mark the seeds (local maxima)
   if(useData){
     for(std::vector<LHCb::CaloCellID>::iterator seed = cell_list.begin();seed!=cell_list.end();seed++){
       taggedCellsDirect[*seed]->setIsSeed();
-    }    
-  }
-  else{
-    for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag ){ 
-      if ( isLocMax ( (*itTag)->digit() ,taggedCellsDirect ,m_detector)       ) { 
-        (*itTag)->setIsSeed(); 
-      } 
     }
   }
-  
+  else{
+    for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag ){
+      if ( isLocMax ( (*itTag)->digit() ,taggedCellsDirect ,m_detector)       ) {
+        (*itTag)->setIsSeed();
+      }
+    }
+  }
+
   /// Tag the cells which are not seeds
   SeqVector::iterator itTagLastSeed = std::stable_partition( taggedCellsSeq.begin () ,
                                                              taggedCellsSeq.end   () ,
                                                              TaggedCellFunctor::isClustered() );
 
-  SeqVector::iterator itTagLastClustered = itTagLastSeed      ;     
+  SeqVector::iterator itTagLastClustered = itTagLastSeed      ;
   SeqVector::iterator itTagFirst         = itTagLastClustered ;
   m_pass = 0;
   while ( itTagLastClustered != taggedCellsSeq.end() ) {
 
     // Apply rules tagger for all not tagged cells
     for ( SeqVector::iterator itTag = itTagLastClustered ; taggedCellsSeq.end() != itTag ; ++itTag ){
-      appliRulesTagger( (*itTag),  taggedCellsDirect , m_detector ); 
+      appliRulesTagger( (*itTag),  taggedCellsDirect , m_detector );
     }
-    
+
     // Valid result
     std::for_each ( itTagFirst, taggedCellsSeq.end(), TaggedCellFunctor::setStatus() );
-    
+
     itTagLastClustered = std::stable_partition( itTagFirst,
                                                 taggedCellsSeq.end(),
                                                 TaggedCellFunctor::isClusteredOrEdge() );
 
-    // Test if cells are tagged in this pass    
+    // Test if cells are tagged in this pass
     if ( itTagLastClustered == itTagFirst && m_release ){
       const long number = taggedCellsSeq.end() - itTagLastClustered ;
-      debug() << " TAGGING NOT FULL - Remain " 
+      debug() << " TAGGING NOT FULL - Remain "
               << boost::lexical_cast<std::string> ( number  )
               << " not clustered cells" << endmsg ;
       itTagLastClustered = taggedCellsSeq.end();
@@ -338,35 +338,39 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     if( itTagLastClustered == itTagFirst )m_release = true; // try additional passes releasing appliRulesTagger criteria
     m_pass++;
     itTagFirst = itTagLastClustered;
-  }  
+  }
 
 
-  
+
   LHCb::CaloDigitStatus::Status used   = LHCb::CaloDigitStatus::UseForEnergy  | LHCb::CaloDigitStatus::UseForPosition |
     LHCb::CaloDigitStatus::UseForCovariance  ;
   LHCb::CaloDigitStatus::Status seed   = LHCb::CaloDigitStatus::SeedCell | LHCb::CaloDigitStatus::LocalMaximum | used ;
-  
-  
+
+
   itTagLastClustered = std::stable_partition( itTagLastSeed                    ,
                                               taggedCellsSeq.end()             ,
-                                              TaggedCellFunctor::isClustered() ) ;  
+                                              TaggedCellFunctor::isClustered() ) ;
   SeqVector::iterator itTagSeed = taggedCellsSeq.begin();
   SeqVector::iterator itTagClustered1;
   SeqVector::iterator itTagClustered2;
   itTagClustered1 = itTagLastSeed;
   while ( itTagSeed != itTagLastSeed ){
-    LHCb::CaloCellID seedID = (*itTagSeed)->cellID();
-    LHCb::CaloCluster* cluster = new  LHCb::CaloCluster();
     const LHCb::CaloDigit* digit = (*itTagSeed)->digit() ;
 
-    if( digit->e() <0 )continue; // does not keep cluster with seed.energy = 0
+    if( digit->e() < 0 ) {
+      itTagSeed++;
+      continue; // does not keep cluster with seed.energy = 0
+    }
+
+    LHCb::CaloCellID seedID = (*itTagSeed)->cellID();
+    LHCb::CaloCluster* cluster = new  LHCb::CaloCluster();
 
     cluster->entries().push_back( LHCb::CaloClusterEntry( digit , seed ) );
     cluster->setSeed( digit->cellID() );
-    
-    itTagClustered2 = std::stable_partition( itTagClustered1                                        ,
-                                             itTagLastClustered                                     ,
-                                             TaggedCellFunctor::isWithSeed( (*itTagSeed)->cellID()) ) ;
+
+    itTagClustered2 = std::stable_partition( itTagClustered1                       ,
+                                             itTagLastClustered                    ,
+                                             TaggedCellFunctor::isWithSeed(seedID) ) ;
     // Owned cells
     for (  ; itTagClustered1 != itTagClustered2 ; ++itTagClustered1 ){
       LHCb::CaloCellID  cellID = (*itTagClustered1)->cellID();
@@ -375,36 +379,36 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
       if( m_cellSelector( seedID, cellID) > 0.)owned |= used;
       cluster->entries().push_back( LHCb::CaloClusterEntry( digit , owned ) );
     }
-    // Shared cells 
+    // Shared cells
     SeqVector::iterator itTagFirstEdge = itTagLastClustered ;
-    SeqVector::iterator itTagLastEdge  = std::stable_partition( itTagLastClustered                                       ,
-                                                                taggedCellsSeq.end()                                     ,
-                                                                TaggedCellFunctor::isWithSeed ( (*itTagSeed)->cellID() ) ) ;
+    SeqVector::iterator itTagLastEdge  = std::stable_partition( itTagLastClustered                     ,
+                                                                taggedCellsSeq.end()                   ,
+                                                                TaggedCellFunctor::isWithSeed (seedID) ) ;
     for(  ; itTagFirstEdge != itTagLastEdge ; ++itTagFirstEdge  ){
       const LHCb::CaloDigit* digit = (*itTagFirstEdge)->digit() ;
       LHCb::CaloCellID  cellID = (*itTagFirstEdge)->cellID();
       LHCb::CaloDigitStatus::Status shared = LHCb::CaloDigitStatus::SharedCell;
-      if( m_cellSelector( seedID, cellID) > 0.)shared |= used;     
+      if( m_cellSelector( seedID, cellID) > 0.)shared |= used;
       cluster->entries().push_back( LHCb::CaloClusterEntry( digit , shared ) );
     };
 
     if( setEXYCluster ( cluster, m_detector ).isSuccess() ){
-    
+
       cluster->setType( LHCb::CaloCluster::CellularAutomaton ) ;
       cluster->position().setZ( zPosition( cluster )  );
-    
+
       //  put cluster to the output
       clusters.push_back( cluster );
     }else{
       delete cluster;
     }
-    
-    
+
+
     itTagClustered1 = itTagClustered2;
     itTagSeed++;
   }
-  
-  // clear local storages 
+
+  // clear local storages
   taggedCellsSeq    .clear () ;
   taggedCellsDirect .clear () ;
   local_cells       .clear () ;
