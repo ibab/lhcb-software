@@ -198,6 +198,30 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Any probability
             creator.MinPhotonProbability     = [ 0,     0,     0     ]
             # ================================================================
+
+        elif selMode == "ParticleSearch" :
+
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [ 0,     0,     0     ]
+            creator.Predictor.MaxTrackROI    = [ 99999, 99999, 99999 ]
+            # No # sigma cut
+            creator.Predictor.NSigma         = [ 99999, 99999, 99999 ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
+            creator.MinAllowedCherenkovTheta = [ 0.02,  0,     0     ]
+            creator.MaxAllowedCherenkovTheta = [ 0.40,  0.070,  0.045]
+            # No # sigma cut
+            creator.NSigma                   = [ 99999, 99999, 99999 ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 0,     0,     0     ]
+            # ================================================================
                       
         else:
             
