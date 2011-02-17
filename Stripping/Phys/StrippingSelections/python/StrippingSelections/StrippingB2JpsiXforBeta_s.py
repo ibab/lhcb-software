@@ -64,6 +64,26 @@ def createCombinationSel( OutputList,
                        Algorithm = combiner,
                        RequiredSelections = DaughterLists)
 
+# create a selection using a ParticleCombiner
+def createCombinationsSel( OutputList,
+                          DecayDescriptors,
+                          DaughterLists,
+                          DaughterCuts = {} ,
+                          PreVertexCuts = "ALL",
+                          PostVertexCuts = "ALL" ) :
+    combinerName = "CombinerParticlesFor" + OutputList
+    if allConfigurables.get( combinerName ) :
+        raise ValueError, 'CombineParticles instance with name '+ combinerName+' already exists'
+    combiner = CombineParticles( combinerName,
+                                 DecayDescriptors = DecayDescriptors,
+                                 DaughtersCuts = DaughterCuts,
+                                 MotherCut = PostVertexCuts,
+                                 CombinationCut = PreVertexCuts,
+                                 ReFitPVs = False)#True)
+    return Selection ( OutputList,
+                       Algorithm = combiner,
+                       RequiredSelections = DaughterLists)
+
 
 # define input daughter lists for various B -> J/psi X selections
 JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
@@ -108,11 +128,13 @@ KsListLoose = MergedSelection("StdLooseKsMerged",
 KsList = createSubSel(OutputList = "KsForBetaS",
                       InputList = KsListLoose, Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
 
-f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
-                               DaughterLists = [ DataOnDemand(Location = "Phys/StdLoosePions") ],
-                               DecayDescriptor = "f_0(980) -> pi+ pi-",
-                               DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 10)"},
-                               PreVertexCuts = "(APT>900*MeV) & (ADAMASS('f_0(980)') < 500*MeV) & (AMAXDOCA('') < 0.5*mm)",
+f0List = createCombinationsSel( OutputList = "f02PiPiForBetaS",
+                               DaughterLists = [ KaonList,
+                                                 DataOnDemand(Location = "Phys/StdLoosePions") ],
+                               DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-", "f_0(980) -> K- K-", "f_0(980) -> K+ K+"],
+                               DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>6) & (TRCHI2DOF < 5)", 
+                                                "K+"  : " (MIPCHI2DV(PRIMARY)>6) & (TRCHI2DOF < 5)" },
+                               PreVertexCuts = "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 2700 *MeV) & (ADOCACHI2CUT(20., ''))",
                                PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
 
 LambdaListLoose = MergedSelection("StdLooseLambdaMerged",
@@ -262,15 +284,15 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 ### Bs->Jpsif0 ##
 ### Note: the input list is already heavily lifetime biased.
 ##################
-#Bs2Jpsif0 = createCombinationSel( OutputList = "Bs2Jpsif0",
-#                                  DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)",
-#                                  DaughterLists  = [ JpsiList, f0List ],
-#                                  PreVertexCuts = "ADAMASS('B_s0') < 300",
-#                                  PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10)" )
-#
-#Bs2Jpsif0Line = StrippingLine("Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ])
-#
-#B2JpsiXLines += [ Bs2Jpsif0Line ]
+Bs2Jpsif0 = createCombinationSel( OutputList = "Bs2Jpsif0",
+                                  DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)",
+                                  DaughterLists  = [ JpsiList, f0List ],
+                                  PreVertexCuts = "ADAMASS('B_s0') < 300",
+                                  PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
+
+Bs2Jpsif0Line = StrippingLine("Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ])
+
+B2JpsiXLines += [ Bs2Jpsif0Line ]
 
 ###############################
 ### Lambdab->JpsiLambda ###

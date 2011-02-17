@@ -17,19 +17,18 @@ from StrippingConf.StrippingStream import StrippingStream
 #superceded by B0q2DplusMuX
 
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
-from StrippingSelections.StrippingB2DMuNuX import StrippingB2DMuNuXConf
 
 stream = StrippingStream("Semileptonic")
 stream.appendLines( [ 
 		        #StrippingBd2DstarMuNu.line, 
 		        #StrippingBd2DstarMuNuLooseConf().line(), 
 		        #StrippingBsDsMuNu.line, 
-                        StrippingB2DMuNuXConf().b2D0MuXLine(),
-                        StrippingB2DMuNuXConf().b2DpMuXLine(),
-                        StrippingB2DMuNuXConf().b2DsMuXLine(),
-                	StrippingB2DMuNuXConf().b2LcMuXLine()                                                  
+                        #StrippingB2DMuNuXConf().b2D0MuXLine(),
+                        #StrippingB2DMuNuXConf().b2DpMuXLine(),
+                        #StrippingB2DMuNuXConf().b2DsMuXLine(),
+                	#StrippingB2DMuNuXConf().b2LcMuXLine()                                                  
                         # Lines from P. Urquijo, 23-05-10
-                        , StrippingB2XuMuNuConf().K_line()
+                         StrippingB2XuMuNuConf().K_line()
                         , StrippingB2XuMuNuConf().Pi_line()
                         , StrippingB2XuMuNuConf().PiSS_line()
                         , StrippingB2XuMuNuConf().Rho_line()
@@ -50,3 +49,9 @@ stream.appendLines( confB0q2DplusMuX.Lines ) #StrippingB0q2DplusMuX.B0q2DplusMuX
 from StrippingSelections import StrippingBd2DstarMuNu 
 confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
 stream.appendLines( confBd2DstarMuNu.Lines ) 
+
+# Lines for B->DMuX inclusive semileptonic
+from StrippingSelections import StrippingB2DMuNuX
+confB2DMuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("confB2DMuX",StrippingB2DMuNuX.confdict)
+stream.appendLines( confB2DMuX.lines() )
+

@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Liming Zhang
+ - Updated StrippingB2DMuNuX.py to the new framework
+ - Moved Bs->J/psi f0 line into StrippingB2JpsiXforBeta_s.py
+   includes f0->pi+ pi- and K+ K- and their Same-Sign combinations without
+   mass windows for f0.
+
 ! 2011-02-17 - Patrick Koppenburg
  - Translated Bu2LLK for Stripping13. Some changes of cuts to reflect observation
    of B->mmK :
