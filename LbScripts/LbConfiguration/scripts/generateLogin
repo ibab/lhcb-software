@@ -363,6 +363,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
 
     setupprojargs = []
     setupprojargs.append("--silent")
+    setupprojargs.append("--ignore-not-ready")
     if not building :
         setupprojargs.append("--no-user-area")
     setupprojargs.append("--disable-CASTOR")
