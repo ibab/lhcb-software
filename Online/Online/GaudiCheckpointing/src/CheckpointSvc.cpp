@@ -252,7 +252,7 @@ namespace  {
 	// Sleep for 1 second, then exit
 	::lib_rtl_sleep(1000);
 	m_check->releaseChildren();
-	::exit(0);
+	::_exit(EXIT_SUCCESS);
       }
       else {
 	m_fsm->declareState(ITaskFSM::ST_ERROR);
@@ -292,7 +292,6 @@ StatusCode CheckpointSvc::queryInterface(const InterfaceID& riid, void** ppIf)  
   }
   return Service::queryInterface(riid, ppIf);
 }
-
 
 /// Service overload: Initialize the service
 StatusCode CheckpointSvc::initialize() {
@@ -463,8 +462,8 @@ int CheckpointSvc::finishCheckpoint() {
     ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
     ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
     ::write(STDOUT_FILENO,"\n",2);
-    if ( m_exit > 1 ) ::_exit(0);
-    ::exit(0);
+    if ( m_exit > 1 ) ::_exit(EXIT_SUCCESS);
+    ::exit(EXIT_SUCCESS);
   }
   return StatusCode::SUCCESS;
 }
@@ -489,7 +488,7 @@ int CheckpointSvc::finishRestore() {
     log << "=  Looks like this checkpoint is working" << endmsg;
     log << "=  The process will now exit." << endmsg;
     log << MARKER << MARKER << endmsg;
-    ::_exit(0);
+    ::_exit(EXIT_SUCCESS);
   }
   log << "Update process environment and restart options." << endmsg;
   log << "Stop threads after restart from checkpoint. " << endmsg;
@@ -653,7 +652,7 @@ int CheckpointSvc::forkChild(int which) {
   else if (pid < 0)    {        // failed to fork
     MsgStream log(msgSvc(),name());
     log << MSG::FATAL << "Failed to fork child:" << ::strerror(errno) << endmsg;
-    ::exit(1);
+    ::_exit(1);
   }
   return pid;
 }
@@ -672,7 +671,7 @@ int CheckpointSvc::execChild() {
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
     if (sid < 0) {
-      exit(EXIT_FAILURE);
+      ::_exit(EXIT_FAILURE);
     }
   }
   /// Need to reset RTL to get proper processnames etc.
