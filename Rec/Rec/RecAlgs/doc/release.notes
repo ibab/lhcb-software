@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-02-17 - Chris Jones
+ - Fix various compilation warnings.
+ - Update timing tuple to use new Velo tool to count tracks
+
 ! 2011-02-15 - David Hutchcroft
  - Changed interface to CountVeloTracks, now using ICountContainedObjects
  - Removed Tr/TrackInterfaces from requirements

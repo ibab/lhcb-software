@@ -9,41 +9,44 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TimingTuple );
-
+DECLARE_ALGORITHM_FACTORY( TimingTuple )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TimingTuple::TimingTuple( const std::string& name,
-                          ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator ), 
-    m_timerTool(0),
-    m_timer(0),
-    m_fromRawTool(),
-    m_l0BankDecoder(),
-    m_evtCounter(0),
-    m_richTool()
-{
+  TimingTuple::TimingTuple( const std::string& name,
+                            ISvcLocator* pSvcLocator )
+    : GaudiTupleAlg     ( name , pSvcLocator ),
+      m_timerTool       ( NULL ),
+      m_timer           ( 0    ),
+      m_rawBankDecoder  ( NULL ),
+      m_fromRawTool     ( ""   ),
+      m_l0BankDecoder   ( NULL ),
+      m_evtCounter      ( 0    ),
+      m_richTool        ( NULL ),
+      m_countVeloTracks ( NULL )
+{ }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
-TimingTuple::~TimingTuple() {} 
+TimingTuple::~TimingTuple() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TimingTuple::initialize() {
-  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
+StatusCode TimingTuple::initialize()
+{
+  const StatusCode sc = GaudiTupleAlg::initialize(); 
+  if ( sc.isFailure() ) return sc;  
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
   m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");
-  m_richTool = 
-    tool<Rich::DAQ::IRawBufferToSmartIDsTool>("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
+  m_richTool =
+    tool<Rich::DAQ::IRawBufferToSmartIDsTool>
+    ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
+  m_countVeloTracks = tool<ICountContainedObjects>("CountVeloTracks");
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" ); //global tool
   m_timer = m_timerTool->addTimer( name() );
   m_timerTool->start(m_timer) ; /// start it now
@@ -53,10 +56,11 @@ StatusCode TimingTuple::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TimingTuple::execute() {
+StatusCode TimingTuple::execute()
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  m_evtCounter++;
+  ++m_evtCounter;
 
   double t =  m_timerTool->stop(m_timer) ; /// stop
   if (msgLevel(MSG::DEBUG)) debug() << "Time is " << t  << endmsg ;
@@ -70,8 +74,8 @@ StatusCode TimingTuple::execute() {
   fillTuple(tuple,  "Memory", (double)System::virtualMemory());
   fillTuple(tuple,  "Time", t);
 
-  fillTuple(tuple, "VeloClusters",number<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default));  
-  fillTuple(tuple, "ITClusters",number<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters));  
+  fillTuple(tuple, "VeloClusters",number<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default));
+  fillTuple(tuple, "ITClusters",number<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters));
   const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
   fillTuple(tuple, "OTClusters", nHitsInOT);
   m_l0BankDecoder->fillDataMap();
@@ -82,61 +86,28 @@ StatusCode TimingTuple::execute() {
   }
   int nSpd = m_l0BankDecoder->data("Spd(Mult)");
   fillTuple(tuple, "spdMult", nSpd);
-  
+
   const LHCb::Track::Container* tracks =  get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
-  
+
   unsigned int nBack = 0;
   int veloTracks = 0;
-  
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Tracks " << tracks->size() << endmsg ;
-  
-  // Protection from empty track container 
+
+  // Protection from empty track container
   if( tracks!=0 && !tracks->empty() ) {
     LHCb::Tracks::const_iterator iterT = tracks->begin();
     for(; iterT != tracks->end() ;++iterT) {
       if ((*iterT)->checkFlag( LHCb::Track::Backward) == true) ++nBack;
-    } 
-    veloTracks = nVelo(tracks);
+    }
+    veloTracks = m_countVeloTracks->nObj(tracks);
   }
-    
+
   fillTuple(tuple, "backwardTracks", nBack);
   fillTuple(tuple, "veloTracks", veloTracks);
   fillTuple(tuple, "BestTracks",number<LHCb::Tracks>(LHCb::TrackLocation::Default));
   fillTuple(tuple, "HPDHits", m_richTool->nTotalHits());
-  
+
   return tuple->write();
 
-}
-
-//=============================================================================
-// nVelo by Matt, with a protection by PK
-//============================================================================
-unsigned TimingTuple::nVelo(const LHCb::Tracks* tracks) {
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "nVelo" << endmsg ;
-    std::vector<LHCb::Track*> tmpCont;
-    LHCb::Tracks::const_iterator iterT = tracks->begin();
-    for(; iterT != tracks->end() ;++iterT) {
-      if ((*iterT)->hasVelo() == true) tmpCont.push_back(*iterT); 
-    }
-    if (msgLevel(MSG::VERBOSE)) verbose() << "tmpCont " << tmpCont.size() << endmsg ;
-    if (tmpCont.empty()) return 0;
-    std::vector<LHCb::Track*> keepCont;
-    keepCont.push_back(tmpCont.front());
-    
-    std::vector<LHCb::Track*>::const_iterator iterT2 = tmpCont.begin();
-    for (;iterT2 != tmpCont.end(); ++iterT2 ){
-      const std::vector<LHCb::LHCbID>& vids = (*iterT2)->lhcbIDs();
-      std::vector<LHCb::LHCbID> veloHits; veloHits.reserve(vids.size());
-      LoKi::select(vids.begin(), vids.end(), std::back_inserter(veloHits), boost::bind(&LHCb::LHCbID::isVelo,_1));
-      
-      if (inCloneContainer(keepCont,veloHits) == false){
-        // nothing
-      } 
-      else {
-        keepCont.push_back(*iterT2);   
-      }
-    } // iterT2
-    if (msgLevel(MSG::VERBOSE)) verbose() << "keepCont " << keepCont.size() << endmsg ;
-    return keepCont.size();
 }

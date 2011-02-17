@@ -14,16 +14,17 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RecSummaryAlg );
+DECLARE_ALGORITHM_FACTORY( RecSummaryAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RecSummaryAlg::RecSummaryAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_richTool     ( NULL ),
-    m_otTool       ( NULL )
+  : GaudiAlgorithm    ( name , pSvcLocator ),
+    m_richTool        ( NULL ),
+    m_otTool          ( NULL ),
+    m_countVeloTracks ( NULL )
 {
   declareProperty( "SummaryLocation",
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
@@ -55,6 +56,7 @@ StatusCode RecSummaryAlg::initialize()
   m_richTool = 
     tool<Rich::DAQ::IRawBufferToSmartIDsTool>
     ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
+
   m_otTool = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
   m_countVeloTracks = tool<ICountContainedObjects>("CountVeloTracks");

@@ -30,8 +30,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RecInit );
-
+DECLARE_ALGORITHM_FACTORY( RecInit )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,8 +39,8 @@ RecInit::RecInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator )
 {
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -116,7 +115,7 @@ StatusCode RecInit::execute()
   put( header, LHCb::RecHeaderLocation::Default );
 
   // Create a ProcStatus if it does not already exist
-  if( !exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) 
+  if( !exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) )
   {
     LHCb::ProcStatus* procStat = new LHCb::ProcStatus();
     put( procStat, LHCb::ProcStatusLocation::Default );
