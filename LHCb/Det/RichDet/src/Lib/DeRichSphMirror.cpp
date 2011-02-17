@@ -36,8 +36,10 @@ const CLID CLID_DeRichSphMirror = 12030;  // User defined
 DeRichSphMirror::DeRichSphMirror(const std::string & name) :
   DeRichBase     ( name ),
   m_reflectivity ( NULL ),
+  m_solid        ( NULL ),
+  m_radius       ( 0    ),
   m_mirrorNumber ( -1   )
-{}
+{ }
 
 // Standard Destructor
 DeRichSphMirror::~DeRichSphMirror()
@@ -63,26 +65,33 @@ StatusCode DeRichSphMirror::initialize()
 
   Rich::DetectorType rich;
   const std::string::size_type pos = name().find("Rich");
-  if ( std::string::npos != pos ) {
+  if ( std::string::npos != pos ) 
+  {
     setMyName( name().substr(pos) );
     std::string richNum = myName().substr(4,1);
-    if ( richNum == "1" ) {
+    if ( richNum == "1" ) 
+    {
       rich = Rich::Rich1;
       const std::string::size_type secPos = name().find("Mirror2");
       if ( std::string::npos != secPos ) secondary = true;
     }
     else
-      if ( richNum == "2") {
+    {
+      if ( richNum == "2") 
+      {
         rich = Rich::Rich2;
         const std::string::size_type secPos = name().find("SecMirror");
         if ( std::string::npos != secPos ) secondary = true;
       }
-
-      else {
+      else 
+      {
         msgStart << MSG::FATAL<<"Could not identify Rich (1/2=="<<richNum<<" )"<<endmsg;
         return StatusCode::FAILURE;
       }
-  } else {
+    }
+  } 
+  else
+  {
     setMyName("DeRichSphMirror_NO_NAME");
     msgStart << MSG::FATAL << "Cannot identify Rich number!" << endmsg;
     return StatusCode::FAILURE;
@@ -93,7 +102,8 @@ StatusCode DeRichSphMirror::initialize()
 
   // extract mirror number from detector element name
   const std::string::size_type pos2 = name().rfind(':');
-  if ( std::string::npos == pos2 ) {
+  if ( std::string::npos == pos2 ) 
+  {
     msg << MSG::FATAL << "A spherical mirror without a number!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -116,24 +126,32 @@ StatusCode DeRichSphMirror::initialize()
 
   const SolidSphere* sphereSolid = 0;
   // find the sphere of the spherical mirror
-  if ( type == "SolidSphere" ) {
+  if ( type == "SolidSphere" ) 
+  {
     sphereSolid = dynamic_cast<const SolidSphere*>(m_solid);
-  } else {
+  }
+  else
+  {
     //assume bollean solid
     const SolidBoolean* compSolid = dynamic_cast<const SolidBoolean*>(m_solid);
     //compSolid->printOut();
 
-    if ( compSolid->first()->typeName() == "SolidSphere") {
+    if ( compSolid->first()->typeName() == "SolidSphere") 
+    {
       sphereSolid = dynamic_cast<const SolidSphere*>(compSolid->first());
-    }  else {
+    }
+    else
+    {
       SolidBoolean::SolidChildrens components;
-      SolidBoolean::SolidChildrens::const_iterator iter;
-      for (iter=compSolid->childBegin(); iter!=compSolid->childEnd(); ++iter) {
+      for ( SolidBoolean::SolidChildrens::const_iterator iter = compSolid->childBegin(); 
+            iter != compSolid->childEnd(); ++iter )
+      {
         if ( (*iter)->solid()->typeName() == "SolidSphere")
           sphereSolid = dynamic_cast<const SolidSphere*>((*iter)->solid());
       }
     }
-    if ( !sphereSolid) {
+    if ( !sphereSolid ) 
+    {
       msg << MSG::FATAL << "Problem finding a sphere solid in :- " << endmsg;
       compSolid->printOut();
       return StatusCode::FAILURE;
@@ -161,7 +179,8 @@ StatusCode DeRichSphMirror::initialize()
   ISolid::Ticks sphTicks;
   const unsigned int sphTicksSize = sphereSolid->
     intersectionTicks(m_localOrigin, toSphCentreXYZ, sphTicks);
-  if (sphTicksSize != 2) {
+  if (sphTicksSize != 2) 
+  {
     msg << MSG::FATAL << "Problem getting mirror radius, noTicks: "
         << sphTicksSize << endmsg;
     return StatusCode::FAILURE;
@@ -206,12 +225,14 @@ StatusCode DeRichSphMirror::initialize()
   {
     // find surface properties the old way
     std::string surfLocation, sphMirrorName, surfName;
-    if ( rich == Rich::Rich1 ) {
+    if ( rich == Rich::Rich1 ) 
+    {
       surfLocation = "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces";
       sphMirrorName = ( secondary  ? "Mirror2" : "Mirror1");
       surfName = ":"+mirNumString;
     }
-    else{
+    else
+    {
       surfLocation = "/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces";
       sphMirrorName = ( secondary  ? "SecMirror" : "SphMirror");
       surfName = "Seg"+mirNumString;
@@ -221,7 +242,8 @@ StatusCode DeRichSphMirror::initialize()
 
     // get the surface catalog
     SmartDataPtr<DataObject> rich2SurfCat(dataSvc(),surfLocation);
-    if (!rich2SurfCat) {
+    if (!rich2SurfCat) 
+    {
       msg << MSG::FATAL << "Cannot locate suface for mirror " + name() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -232,12 +254,15 @@ StatusCode DeRichSphMirror::initialize()
 
     // find the surface in the registry
     for (DataSvcHelpers::RegistryEntry::Iterator child = rich2Reg->begin();
-         (child != rich2Reg->end() && !foundSurface); ++child){
+         (child != rich2Reg->end() && !foundSurface); ++child)
+    {
       // child is a const_iterator of vector<IRegistry*>
       const std::string::size_type pos3 = (*child)->name().find(sphMirrorName);
-      if ( std::string::npos != pos3 ) {
+      if ( std::string::npos != pos3 ) 
+      {
         const std::string::size_type pos4 = (*child)->name().find(surfName);
-        if ( std::string::npos != pos4 ) {
+        if ( std::string::npos != pos4 )
+        {
           storeReg = (*child);
           foundSurface = true;
         }
@@ -245,13 +270,15 @@ StatusCode DeRichSphMirror::initialize()
     }
 
     // get the surface, get the tabulated properties and find REFLECTIVITY
-    if ( foundSurface ) {
+    if ( foundSurface ) 
+    {
       SmartDataPtr<DataObject> obj (dataSvc(), storeReg->identifier());
       DataObject* pObj = obj;
       msg << MSG::VERBOSE << "Dynamic cast to surface " << obj->name() << endmsg;
       surf = dynamic_cast<Surface*> (pObj);
     }
-    else {
+    else 
+    {
       msg << MSG::FATAL <<"Could not find surface for mirror "<< myName() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -271,15 +298,18 @@ StatusCode DeRichSphMirror::initialize()
 
   bool foundRefl( false );
   const Surface::Tables surfTabProp = surf->tabulatedProperties();
-  for (Surface::Tables::const_iterator table_iter = surfTabProp.begin();
-       table_iter != surfTabProp.end(); ++table_iter) {
-    if ( (*table_iter)->type() == "REFLECTIVITY" ) {
+  for ( Surface::Tables::const_iterator table_iter = surfTabProp.begin();
+        table_iter != surfTabProp.end(); ++table_iter ) 
+  {
+    if ( (*table_iter)->type() == "REFLECTIVITY" ) 
+    {
       m_reflectivity = new Rich::TabulatedProperty1D( (*table_iter) );
       foundRefl = true;
       break;
     }
   }
-  if ( !foundRefl ) {
+  if ( !foundRefl ) 
+  {
     msg << MSG::FATAL <<"Could not find REFLECTIVITY "<< surf->name() << endmsg;
     return StatusCode::FAILURE;
   }
@@ -291,10 +321,9 @@ StatusCode DeRichSphMirror::initialize()
   // update localy cashed geometry info
   updMgrSvc()->registerCondition(this, geometry(),
                                  &DeRichSphMirror::updateGeometry );
-  StatusCode update = updMgrSvc()->update(this);
+  const StatusCode update = updMgrSvc()->update(this);
   if ( !update ) return update;
 
-  msg << MSG::VERBOSE << "Completed initialize" << endmsg;
   return StatusCode::SUCCESS;
 }
 

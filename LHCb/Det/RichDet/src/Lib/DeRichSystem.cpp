@@ -35,10 +35,10 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichSystem::DeRichSystem( const std::string & name )
-  : DeRichBase     ( name ),
+  : DeRichBase     ( name          ),
     m_deRich       ( Rich::NRiches ),
     m_condDBLocs   ( Rich::NRiches ),
-    m_firstL1CopyN ( 0    )
+    m_firstL1CopyN ( 0             )
 {
   m_deRich[Rich::Rich1] = NULL;
   m_deRich[Rich::Rich2] = NULL;
@@ -361,7 +361,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       if ( data[0]             == '"' ) data = data.substr(1,data.size());
       if ( data[data.size()-1] == '"' ) data = data.substr(0,data.size()-1);
       // Format of string is 'LogicalID/HardwareID'
-      const unsigned int slash = data.find_first_of( "/" );
+      const std::string::size_type slash = data.find_first_of( "/" );
       if ( slash == 0 )
       { 
         error() << "Badly formed " << L1LogToHardMapName << " for " << rich << endmsg;

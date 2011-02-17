@@ -68,6 +68,8 @@ DeRichHPD::DeRichHPD ( const std::string & name ) :
   m_MDMS_version         ( 0     ),
   m_magFieldSvc          ( NULL  )
 {
+  m_deMagFactor[0] = 0;
+  m_deMagFactor[1] = 0;
   for ( unsigned int field = 0; field < 2; ++field )
   {
     m_demagMapR.push_back   ( new Rich::TabulatedFunction1D() );

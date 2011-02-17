@@ -354,7 +354,7 @@ private: // functions
 
 private: // data
 
-  const IDetectorElement* m_deSiSensor;  ///< The silicon sensor detector element
+  const IDetectorElement* m_deSiSensor; ///< The silicon sensor detector element
 
   const IPVolume* m_pvWindow;      ///< The pv for the HPD quartz window
   const ISolid* m_windowSolid;     ///< The HPD window solid

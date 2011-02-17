@@ -20,7 +20,9 @@ const CLID CLID_DERichBeamPipe = 12050;  // User defined
 //=============================================================================
 DeRichBeamPipe::DeRichBeamPipe(const std::string & name) :
   DeRichBase  ( name ),
-  m_localCone ( NULL )
+  m_solid     ( NULL ),
+  m_localCone ( NULL ),
+  m_zHalfLength  ( 0 )
 {
   setMyName("DeRichBeamPipe");
 }
@@ -46,7 +48,8 @@ StatusCode DeRichBeamPipe::initialize ( )
 
   m_solid = geometry()->lvolume()->solid();
 
-  if ( m_solid->typeName() == "SolidCons" ) {
+  if ( m_solid->typeName() == "SolidCons" ) 
+  {
     const SolidCons* coneSolid = dynamic_cast<const SolidCons*>(m_solid);
     m_zHalfLength = coneSolid->zHalfLength();
     m_localCone = new SolidCons( "LocalRichCone",
@@ -55,7 +58,8 @@ StatusCode DeRichBeamPipe::initialize ( )
                                  coneSolid->outerRadiusAtPlusZ()
                                  );
   }
-  else {
+  else
+  {
     fatal() << "Beam pipe solid is not a cone" << endmsg;
     return StatusCode::FAILURE;
   }

@@ -34,7 +34,6 @@
 
 class DeRichHPDPanel;
 
-
 /** @class DeRich DeRich.h
  *
  * Class for generic info about the Rich(1/2) system.
@@ -50,7 +49,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRich(const std::string & name = "");
+  DeRich( const std::string & name = "" );
 
   /**
    * Default destructor
