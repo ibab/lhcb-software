@@ -4,6 +4,18 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Patrick Koppenburg
+ - Translated Bu2LLK for Stripping13. Some changes of cuts to reflect observation
+   of B->mmK :
+   LeptonIPCHI2 : None -> 16
+   KaonIPCHI2   : 4 -> 16
+   KaonPT       : 1400 -> 800
+   acos(BDIRA)  : 0.047 -> 0.02
+ - A test has been added
+
+   python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py :
+   . Small typo fixed (Juan knows)
+
 ! 2011-02-16 - Anton Poluektov 
  - Updated StrippingB2DX to match the new requirements. 
    New lines for LambdaB->Dph (h=K,pi, D->hh), Bd->D-rho+, 

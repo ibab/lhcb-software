@@ -113,7 +113,7 @@ def makePhi2KK(name, PhiPT) :
     name             : name of the Selection.
     PhiPT            : Minimum transverse momentum of Phi (MeV).
     """
-    _code = "(PT> (PhiPT)s *MeV)" % locals()
+    _code = "(PT> %(PhiPT)s *MeV)" % locals()
     _phiFilter = FilterDesktop(Code = _code)
     _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
 

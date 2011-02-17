@@ -1,169 +1,194 @@
 __author__ = 'Patrick Koppenburg'
 __date__ = '08/12/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 2 $'
 
 """
 B->llK selections for B->eeK versus B->MuMuK
 """
+
+config_params =  {    'BFlightCHI2'         : 100       # adimentional 
+                      ,  'BDIRA'               : 0.9995     # adimentional    TIGHTENED
+                      ,  'BIPCHI2'             : 25        # adimentional  
+                      ,  'BVertexCHI2'         : 16        # adimentional
+                      ,  'DiLeptonPT'          : 0         # MeV (not used)
+                      ,  'DiLeptonFDCHI2'      : 16        # adimentional
+                      ,  'DiLeptonIPCHI2'      : 9         # adimentional
+                      ,  'LeptonIPCHI2'        : 16        # adimentional      TIGHTENED
+                      ,  'LeptonPT'            : 800       # MeV               
+                      ,  'KaonIPCHI2'          : 16        # adimentional      TIGHTENED
+                      ,  'KaonPT'              : 800       # MeV               LOOSENED
+                      ,  'UpperMass'           : 5500      # MeV (Higher bound of signal box)
+                      ,  'Bu2eeKLinePrescale'  : 1
+                      ,  'Bu2eeKLinePostscale' : 1
+                      ,  'Bu2mmKLinePrescale'  : 1
+                      ,  'Bu2mmKLinePostscale' : 1 }
+
+__all__ = ('Bu2LLKConf', 'makeDiLepton', 'makeBu2LLK' )
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from StrippingSelections.Utils import checkConfig
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
-from Configurables import FilterDesktop, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
-defaultConfig = {
-                   'BFlightCHI2'        : 100       # adimentional 
-                ,  'BDIRA'              : 0.999     # adimentional
-                ,  'BIPCHI2'            : 25        # adimentional  
-                ,  'BVertexCHI2'        : 16        # adimentional
-                ,  'DiLeptonPT'         : 0         # MeV (not used)
-                ,  'DiLeptonFDCHI2'     : 16        # adimentional
-                ,  'DiLeptonIPCHI2'     : 9         # adimentional
-                ,  'LeptonPT'           : 800       # MeV 
-                ,  'KaonIPCHI2'         : 4         # adimentional
-                ,  'KaonPT'             : 1400      # MeV 
-                ,  'JpsiMassWindow'     : 500       # MeV (J/psi box mass window)
-                ,  'HighMassBLowerMass' : 5400      # MeV (Lower bound of high-mass box)
-                ,  'SignalBUpperMass'   : 5500      # MeV (Higher bound of signal box)
-                   }
+name = "Bu2LLK"
 
-class StrippingBu2LLKConf(object):
+class Bu2LLKConf(LineBuilder) :
     """
-    Definition of B->LLK
-    
-    To use this in the stripping do:
-    
-    from StrippingSelections.StrippingBu2LLK import StrippingBu2LLKConf
-    from StrippingSelections.StrippingBu2LLK import defaultConfig
-    
-    Bu2LLKConf = StrippingBu2LLKConf( config=defaultConfig )
-    lines = Bu2LLKConf.lines()
-
-    Warning : gives you a eeK (fisrt) and a mmK line (second). Do not append to same stream!
-    you cana also use the _eeKLine() and _mmKLine() methods
-    
-    author : P. Koppenburg
-    data   : 03/09/2011
+    Builder for Bu2LLK_mm and Bu2LL_ee lines with dimuon and dielectron.
     """
-    
-    __configuration_keys__ = (
-                   'BFlightCHI2'        
-                ,  'BDIRA'              
-                ,  'BIPCHI2'            
-                ,  'BVertexCHI2'        
-                ,  'DiLeptonPT'         
-                ,  'DiLeptonFDCHI2'     
-                ,  'DiLeptonIPCHI2'     
-                ,  'LeptonPT'           
-                ,  'KaonIPCHI2'         
-                ,  'KaonPT'
-                ,  'JpsiMassWindow'
-                ,  'HighMassBLowerMass'
-                ,  'SignalBUpperMass'
-                   )
-    
-    def __init__(self,name="Bu2LLK",config=None):
-        """
-        Constructor makes the selection objects but doesn't make the lines
-        """
-        checkConfig(StrippingBu2LLKConf.__configuration_keys__,config)
-        
-        self.name = name
-        self.__Bu_ee__  = self._combineBu( config, '_ee')
-        self.__Bu_mm__  = self._combineBu( config, '_mm' )
-        self.__eeK__ = self._eeK()
-        self.__mmK__ = self._mmK()
-        
-        self.eeKLine = None
-        self.mmKLine = None
-        
-    def _eeK( self ) :
-        """
-        EEK 
-        """
-        _dielectron = DataOnDemand( Location="Phys/StdLooseDiElectron" )
-        _kaons = DataOnDemand( Location="Phys/StdLooseKaons" )
-        _sel = Selection( "Sel"+self.name+"_ee", RequiredSelections = [ _kaons, _dielectron ], Algorithm = self.__Bu_ee__ )
-        return _sel
-    
-    def _mmK( self ) :
-        """
-        mumuK
-        """
-        _dimuon = DataOnDemand( Location="Phys/StdLooseDiMuon" )
-        _kaons = DataOnDemand( Location="Phys/StdLooseKaons" )
-        _sel = Selection( "Sel"+self.name+"_mm", RequiredSelections = [ _kaons, _dimuon ], Algorithm = self.__Bu_mm__ )
-        return _sel
 
-    def _combineBu(self, conf = None, trail=None):
-        """
-        The thing that defines The B
-        """        
-        from Configurables import FilterDesktop, CombineParticles
-        import GaudiKernel.SystemOfUnits as Units
-        ################################
-        #
-        # All cuts
-        #
-        # Kaon cut : (PT>1400*MeV) & (MIPCHI2DV(PRIMARY)>4)
-        kaoncut = "(PT> %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s )" % conf
-        #
-        # lepton cut :(PT>1000*MeV)
-        # leptoncut = "(PT> %(LeptonPT)s *MeV)" % self.getProps()
-        #
-        # dilepton mass cut 
-        # llcombcut   = "(AM < %(SignalBUpperMass)s *MeV) & (APT < %(DiLeptonPT)s) & (MINTREE(ABSID<14,PT)>%(LeptonPT)s *MeV)" % self.getProps()
-        #
-        # dilepton cut (VFASPF(VCHI2/VDOF)<9)
-        llcut   = "(MM>100*MeV) & " \
-                  "(MM < %(SignalBUpperMass)s *MeV) & " \
-                  "(PT > %(DiLeptonPT)s) & " \
-                  "(MINTREE(ABSID<14,PT)>%(LeptonPT)s *MeV) & " \
-                  "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s ) & "\
-                  "(BPVIPCHI2() > %(DiLeptonIPCHI2)s )"  % conf
-        # 
-        # B mass cuts : Hard-coded as we _need_ the full B mass window for the final fit. Nobody dare touch that!
-        combcut = "(ADAMASS('B0')<600*MeV)"
-        # 
-        # B candidate cuts : ((VFASPF(VCHI2/VDOF)<3) & (BPVIPCHI2()<25) & (BPVDIRA>0.9998) & (BPVVDCHI2>50))
-        bcut   = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2> %(BFlightCHI2)s ))" % conf
-        
-        ################################
-        #
-        # B -> J/psi K
-        #
-        StripBu2MuMuK = CombineParticles("StripBu2MuMuK"+trail)
-        StripBu2MuMuK.DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc" 
-        StripBu2MuMuK.DaughtersCuts = { "J/psi(1S)" : llcut , "K+" : kaoncut }
-        StripBu2MuMuK.CombinationCut = combcut
-        StripBu2MuMuK.MotherCut = bcut
-        return StripBu2MuMuK
-
-    def lines( self ):
-        """
-        Creates and returns the line list for the default stripping
-        
-        @author P. Koppenburg
-        @date 03/09/2010
-        """
-        return [ self._eeKLine(), self._mmKLine() ]
-        
-    def _eeKLine( self ):
-        
-        if self.eeKLine == None :
-            self.eeKLine = StrippingLine ( self.name+"_ee",
-                                           prescale = 1,
-                                           algos = [ self.__eeK__ ] )
-        return self.eeKLine
-
-    def _mmKLine( self ):
-        if self.mmKLine == None :
-            self.mmKLine = StrippingLine ( self.name+"_mm",
-                                           prescale = 1,
-                                           algos = [ self.__mmK__ ] )
-            
-        return self.mmKLine
+    mmLine = None
+    eeLine = None
     
-
+    __configuration_keys__ = ( # now just define keys. Default values are fixed later
+        'BFlightCHI2'        
+        ,  'BDIRA'             
+        ,  'BIPCHI2'           
+        ,  'BVertexCHI2'       
+        ,  'DiLeptonPT'        
+        ,  'DiLeptonFDCHI2'     
+        ,  'DiLeptonIPCHI2'     
+        ,  'LeptonIPCHI2'       
+        ,  'LeptonPT'          
+        ,  'KaonIPCHI2'        
+        ,  'KaonPT'             
+        ,  'UpperMass'           
+        ,  'Bu2eeKLinePrescale'
+        ,  'Bu2eeKLinePostscale'
+        ,  'Bu2mmKLinePrescale'
+        ,  'Bu2mmKLinePostscale'
+       )
     
+    def __init__(self, name, config):
+        LineBuilder.__init__(self, name, config)
+        mmLine_name = name+"_mm"
+        eeLine_name = name+"_ee"
+        
+        # 1 : Make high IP, Pt kaons
+        Kaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        selKaons = makeKaons(name="KaonsFor"+name
+                             , KaonIPCHI2 = config['KaonIPCHI2']
+                             , KaonPT = config['KaonPT'])
+        # 2 : Dileptons
+        Electrons = DataOnDemand(Location = "Phys/StdLooseDiElectron")
+        Muons = DataOnDemand(Location = "Phys/StdLooseDiMuon")
+        selDiElectron = self._makeDiLepton(name='Dilepton_For'+eeLine_name,
+                                           leptonSel = Electrons,
+                                           config=config)
+        selDiMuon = self._makeDiLepton(name='Dilepton_For'+mmLine_name,
+                                       leptonSel = Muons,
+                                       config=config)
+        # 3 : Combine
+        selBu2LLK_ee = self._makeBu2LLK(name=eeLine_name,
+                                        dileptonSel = selDiElectron,
+                                        kaonSel = selKaons,
+                                        config=config)
+        
+        selBu2LLK_mm = self._makeBu2LLK(name=mmLine_name,
+                                        dileptonSel = selDiMuon,
+                                        kaonSel = selKaons,
+                                        config=config)
+        
+        # 4 : Declare Lines
+        self.eeLine = StrippingLine(eeLine_name+"Line",
+                                    prescale = config['Bu2eeKLinePrescale'],
+                                    postscale = config['Bu2eeKLinePostscale'],
+                                    selection = selBu2LLK_ee
+                                    )
+        self.mmLine = StrippingLine(mmLine_name+"Line",
+                                    prescale = config['Bu2mmKLinePrescale'],
+                                    postscale = config['Bu2mmKLinePostscale'],
+                                    selection = selBu2LLK_mm
+                                    )
+        # 5 : register Line
+        self.registerLine( self.eeLine )
+        self.registerLine( self.mmLine )
+
+        print "Created lines"
+        
+#####################################################
+    def _makeBu2LLK(self, name, dileptonSel, kaonSel, config):
+        """
+        Handy interface for Bu2LLK
+        """
+        return makeBu2LLK(name
+                          , dileptonSel
+                          , kaonSel
+                          , BFlightCHI2 = config['BFlightCHI2']
+                          , BDIRA = config['BDIRA']
+                          , BIPCHI2 = config['BIPCHI2']
+                          , BVertexCHI2 = config['BVertexCHI2'])
+    
+#####################################################
+    def _makeDiLepton(self, name,leptonSel, config) :
+        """
+        Handy interface for dileptons
+        """
+        return makeDiLepton(name
+                            ,leptonSel
+                            ,DiLeptonPT = config['DiLeptonPT']
+                            ,DiLeptonFDCHI2 = config['DiLeptonFDCHI2']
+                            ,DiLeptonIPCHI2 = config['DiLeptonIPCHI2']
+                            ,LeptonPT = config['LeptonPT']
+                            ,LeptonIPCHI2 = config['LeptonIPCHI2']
+                            ,UpperMass = config['UpperMass'])
+    
+#
+# Out of class
+#####################################################
+def makeBu2LLK(name, dileptonSel, kaonSel, BFlightCHI2,BDIRA,BIPCHI2,BVertexCHI2):
+    """
+    Makes the Bd
+    """
+    # 
+    # B mass cuts : Hard-coded as we _need_ the full B mass window for the final fit. Nobody dare touch that!
+    _combcut = "(ADAMASS('B0')<600*MeV)"
+    # 
+    # B candidate cuts : ((VFASPF(VCHI2/VDOF)<3) & (BPVIPCHI2()<25) & (BPVDIRA>0.9998) & (BPVVDCHI2>50))
+    _bcut   = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) "\
+              "& (BPVIPCHI2()< %(BIPCHI2)s ) "\
+              "& (BPVDIRA> %(BDIRA)s ) "\
+              "& (BPVVDCHI2> %(BFlightCHI2)s ))" % locals()
+    
+    _Combine = CombineParticles(DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, dileptonSel ] )
+
+#####################################################
+def makeKaons(name, KaonIPCHI2, KaonPT):
+    """
+    Kaon selection
+    """
+    _code = "(PT > %(KaonPT)s *MeV) & "\
+            "(MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)" % locals()
+    _Filter = FilterDesktop(Code = _code)
+    _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons" )
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ _stdKaons ] )
+
+
+#####################################################
+def makeDiLepton(name,leptonSel,DiLeptonPT,DiLeptonFDCHI2,DiLeptonIPCHI2,LeptonPT,LeptonIPCHI2,UpperMass):
+    """
+    makes the dilepton
+    """
+    _code = "(PT > %(DiLeptonPT)s *MeV) & "\
+            "(MM >100*MeV) & "\
+            "(MM < %(UpperMass)s *MeV) & "\
+            "(MINTREE(ABSID<14,PT)>%(LeptonPT)s *MeV) & "\
+            "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY))>%(LeptonIPCHI2)s) & "\
+            "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s) & "\
+            "(MIPCHI2DV(PRIMARY) > %(DiLeptonIPCHI2)s )" % locals()
+    
+    _dilFilter = FilterDesktop(Code = _code)
+    
+    return Selection(name,
+                     Algorithm = _dilFilter,
+                     RequiredSelections = [ leptonSel ] )
+
