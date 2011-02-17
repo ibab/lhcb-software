@@ -46,7 +46,7 @@ namespace bl = boost::lambda;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_SERVICE_FACTORY( PropertyConfigSvc );
+DECLARE_SERVICE_FACTORY( PropertyConfigSvc )
 
 
 namespace {

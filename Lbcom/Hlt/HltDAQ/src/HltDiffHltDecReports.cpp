@@ -27,7 +27,7 @@ private:
 
 // explicit instantiation of class, and the corresponding
 // declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltDiffHltDecReports );
+DECLARE_ALGORITHM_FACTORY( HltDiffHltDecReports )
 
 //=============================================================================
 // Standard constructor, initializes variables

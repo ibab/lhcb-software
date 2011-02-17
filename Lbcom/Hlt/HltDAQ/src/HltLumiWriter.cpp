@@ -1,7 +1,7 @@
 // $Id: HltLumiWriter.cpp,v 1.4 2010-04-07 16:59:08 jpalac Exp $
-// Include files 
+// Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "Event/HltLumiSummary.h"
@@ -15,15 +15,18 @@
 // 2008-07-22 : Jaap Panman (using the calo as template)
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( HltLumiWriter );
+DECLARE_ALGORITHM_FACTORY( HltLumiWriter )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltLumiWriter::HltLumiWriter( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation("")
+  HltLumiWriter::HltLumiWriter( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator ),
+      m_totDataSize(0),
+      m_nbEvents(0),
+      m_bankType(LHCb::RawBank::HltLumiSummary),
+      m_inputRawEventLocation("")
 {
   declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
   declareProperty("RawEventLocation",m_inputRawEventLocation );
@@ -31,12 +34,12 @@ HltLumiWriter::HltLumiWriter( const std::string& name,
   m_rawEventLocations.push_back(m_inputRawEventLocation);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-HltLumiWriter::~HltLumiWriter() {}; 
+HltLumiWriter::~HltLumiWriter() {}
 
 //=============================================================================
 // Initialization
@@ -53,7 +56,7 @@ StatusCode HltLumiWriter::initialize() {
   m_bankType  = LHCb::RawBank::HltLumiSummary;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Restart
@@ -69,12 +72,12 @@ StatusCode HltLumiWriter::restart() {
 StatusCode HltLumiWriter::execute() {
 
   debug() << "==> Execute" << endmsg;
-  
+
   m_bank.clear( );
 
   //== Build the data banks
   fillDataBankShort( );
-  
+
   int totDataSize = 0;
 
   LHCb::RawEvent* rawEvent = 0;
@@ -85,8 +88,8 @@ StatusCode HltLumiWriter::execute() {
     }
   }
 
-  // set source, type, version 
-  rawEvent->addBank( 0, m_bankType, 0, m_bank );   
+  // set source, type, version
+  rawEvent->addBank( 0, m_bankType, 0, m_bank );
   totDataSize += m_bank.size();
 
   m_totDataSize += totDataSize;
@@ -94,38 +97,38 @@ StatusCode HltLumiWriter::execute() {
 
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << "Bank size: ";
-    debug() << format( "%4d ", m_bank.size() ) 
-		       << "Total Data bank size " << totDataSize << endreq;
+    debug() << format( "%4d ", m_bank.size() )
+            << "Total Data bank size " << totDataSize << endreq;
   }
 
   if ( MSG::VERBOSE >= msgLevel() ) {
     verbose() << "DATA bank : " << endreq;
     int kl = 0;
     std::vector<unsigned int>::const_iterator itW;
-    
+
     for ( itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
       verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
       kl++;
       if ( 0 == kl%4 ) verbose() << endreq;
     }
-      verbose() << endreq ;
+    verbose() << endreq ;
   }
- 
+
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode HltLumiWriter::finalize() {
-  
+
   if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
-    info() << "Average event size : " << format( "%7.1f words", m_totDataSize ) 
-	   << endreq;
+    info() << "Average event size : " << format( "%7.1f words", m_totDataSize )
+           << endreq;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}
 
 //=========================================================================
 //  Fill the data bank, structure: Key (upper 16 bits) + value
@@ -154,7 +157,6 @@ void HltLumiWriter::fillDataBankShort ( ) {
       verbose() << format ( " %8x %11d %11d %11d ", word, word, key, i_value ) << endreq;
     }
   }
-  
-  
-};
+
+}
 //=============================================================================

@@ -43,7 +43,7 @@ using boost::lexical_cast;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Service Factory
-DECLARE_SERVICE_FACTORY( HltConfigSvc );
+DECLARE_SERVICE_FACTORY( HltConfigSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables

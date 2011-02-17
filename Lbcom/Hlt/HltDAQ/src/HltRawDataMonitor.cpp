@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltRawDataMonitor );
+DECLARE_ALGORITHM_FACTORY( HltRawDataMonitor )
 
 using namespace LHCb;
 

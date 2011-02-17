@@ -83,7 +83,7 @@ Info can only be read and stored sequencially.'
 
      <constructor
         argList='unsigned int* pBankBody'
-        initList='m_location(pBankBody),m_iterator(0),m_infoLoc(0),m_floatLoc(0)'
+        initList='m_location(pBankBody),m_iterator(0),m_iteratorInfo(0),m_infoLoc(0),m_floatLoc(0)'
         desc='takes pointer to the memory location of the subbank body as input'
 	>
 	<code>

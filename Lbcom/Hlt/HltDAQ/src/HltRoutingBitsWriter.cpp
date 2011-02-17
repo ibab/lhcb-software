@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltRoutingBitsWriter );
+DECLARE_ALGORITHM_FACTORY( HltRoutingBitsWriter )
 
 StatusCode HltRoutingBitsWriter::decode() {
     zeroEvaluators();

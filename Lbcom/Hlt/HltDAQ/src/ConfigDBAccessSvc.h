@@ -20,7 +20,7 @@
 
 namespace coral {
    class ISessionProxy;
-};
+}
 
 /** @class ConfigDBAccessSvc ConfigDBAccessSvc.h
  *  

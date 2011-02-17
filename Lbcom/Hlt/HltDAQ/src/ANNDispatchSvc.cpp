@@ -69,7 +69,7 @@ private:
 };
 
 #include "GaudiKernel/SvcFactory.h"
-DECLARE_SERVICE_FACTORY( ANNDispatchSvc );
+DECLARE_SERVICE_FACTORY( ANNDispatchSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -82,6 +82,7 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_propertyConfigSvc(0)
   , m_uptodate(false)
   , m_inputRawEventLocation("")
+  , m_currentTCK(0)
 {
   declareProperty("IANNSvcInstance", m_instanceName = "HltANNSvc");
   declareProperty("IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
