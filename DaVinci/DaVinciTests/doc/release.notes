@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-02-17 - Juan Palacios
+ - tests/options 
+  . Options involving DataOnDemand or AutomaticData. These classes now need 
+    the "/Particles" ending explicitly in the Location.
+ - Increase to v2r2.
+
 !=========================== DaVinciTests v2r1 2011-02-02 ====================
 
 ! 2011-01-27 - Juan Palacios

@@ -29,7 +29,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 from DSTWriters.__dev__.Configuration import SelDSTWriter
 from DSTWriters.__dev__.microdstelements import CloneMCInfo
 
-MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu')
+MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu/Particles')
 
 #
 # Loop over three overlapping mass zones

@@ -13,12 +13,12 @@ import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, DaVinci
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
+from StandardParticles import StdLooseMuons as MyStdMuons
 
 MuForTests = FilterDesktop("_bachelorMu")
 MuForTests.Code = "((ISLONG) & (PT > 250.*MeV))"
 
-from PhysSelPython.Wrappers import Selection, DataOnDemand
-MyStdMuons = DataOnDemand(Location = 'Phys/StdLooseMuons')
+
 
 SelMuForTests = Selection("BachelorMuForTests",
                           Algorithm=MuForTests,
