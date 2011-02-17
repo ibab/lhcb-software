@@ -643,8 +643,8 @@ int CheckpointSvc::forkChild(int which) {
 	::lib_rtl_sleep(1000);
       }
     }
-    // int w = which%10;
-    // ::lib_rtl_sleep(500*w);
+    int w = which%10;
+    ::lib_rtl_sleep(200*w);
   }
   else if ( pid>0 ) {
     m_masterProcess = true;
