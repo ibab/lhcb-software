@@ -7,6 +7,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-02-17 - Albert Puig
+ - Changed references from GaudiPython.Parallel to GaudiMP.Parallel.
+
 ! 2011-01-27 - Juan Palacios
  - KaliCalo.Configuration
   . Remove PhysDesktop imports.

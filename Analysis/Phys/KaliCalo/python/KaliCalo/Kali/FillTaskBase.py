@@ -6,7 +6,7 @@
 # @date 2010-11-11
 # =============================================================================
 """
-The helper class for parallel filling of historgams using GaudiPython.Parallel
+The helper class for parallel filling of historgams using GaudiMP.Parallel
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
@@ -20,14 +20,14 @@ import os
 import tempfile
 import sets
 
-import GaudiPython.Parallel      as     Parallel
+import GaudiMP.Parallel          as     Parallel
 from   GaudiKernel.SystemOfUnits import MeV
 
 from KaliCalo.FakeCells           import SameCell
 # =============================================================================
 
 ## @class FillTask 
-#  The helper class for parallel filling of histograms using GaudiPython.Parallel
+#  The helper class for parallel filling of histograms using GaudiMP.Parallel
 #  @see GaudiPyhon.Parallel
 #  @see GaudiPyhon.Parallel.Task
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -35,7 +35,7 @@ from KaliCalo.FakeCells           import SameCell
 class FillTask ( Parallel.Task ) :
     """
     The helper class for parallel filling of historgams
-    using GaudiPython.Parallel
+    using GaudiMP.Parallel
     
     @author Vanya BELYAEV Ivan.Belyaev@itep.ru
     @date 2010-03-28

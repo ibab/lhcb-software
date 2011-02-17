@@ -13,7 +13,7 @@ __date__ = "$Date$"
 __version__ = "$Revision$"
 
 """
-The helper class for parallel fitting using GaudiPython.Parallel
+The helper class for parallel fitting using GaudiMP.Parallel
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
@@ -24,18 +24,18 @@ __all__     = (
     "fitHistos"
     )
 # =============================================================================
-import GaudiPython.Parallel as Parallel
-import KaliCalo.Cells       as Cells
+import GaudiMP.Parallel as Parallel
+import KaliCalo.Cells   as Cells
 # =============================================================================
 ## @class FitTask 
-#  The helper class for parallel fitting using GaudiPython.Parallel
-#  @see GaudiPyhon.Parallel
-#  @see GaudiPyhon.Parallel.Task
+#  The helper class for parallel fitting using GaudiMP.Parallel
+#  @see GaudiMP.Parallel
+#  @see GaudiMP.Parallel.Task
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2010-03-27
 class FitTask ( Parallel.Task ) :
     """
-    The helper class for parallel fitting using GaudiPython.Parallel
+    The helper class for parallel fitting using GaudiMP.Parallel
 
     
     @author Vanya BELYAEV Ivan.Belyaev@itep.ru
