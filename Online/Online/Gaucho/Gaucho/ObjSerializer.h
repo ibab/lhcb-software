@@ -8,10 +8,9 @@ typedef std::pair<std::string, MonObj*> ObjPair;
 typedef ObjMap::iterator SysIter;
 class ObjSerializer
 {
-protected:
+public:
   int buffersize;
   void *buffer;
-public:
   ObjMap *m_objmap;
   bool m_expandservices;
   ObjSerializer(void);

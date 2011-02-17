@@ -29,8 +29,8 @@ class MonSubSys
 public:
   std::string m_name;
   std::string m_pname;
-  int bufsiz;
-  int buffersize;
+//  int bufsiz;
+//  int buffersize;
   void *buffer;
   int m_numObjs;
   lib_rtl_lock_t m_lockid;
@@ -47,16 +47,16 @@ public:
   MonSubSys(int intv = 10);
   ~MonSubSys();
   MonTimer *m_updateTimer;
-  void *Allocate(int);
+//  void *Allocate(int);
   void setup(char *n, bool expand=false);
   void start();
   void addObj(MonObj *h);
   void removeObj(MonObj *h);
-  void calcBufferSize();
+//  void calcBufferSize();
   MonObj *findobj(const char *name);
   ObjService *m_genSrv;
   ObjService *m_EORsvc;
-  int serBufferSize(){return bufsiz;};
+//  int serBufferSize(){return bufsiz;};
   void setRunNo(int runno);
   void Clear(char *name);
   void Clear();

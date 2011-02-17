@@ -13,8 +13,8 @@ static long mpty;
 MonSubSys::MonSubSys(int intv)
 {
   //m_serv = new ObjServer();
-  bufsiz = 0;
-  buffersize = 0;
+//  bufsiz = 0;
+//  buffersize = 0;
   m_numObjs = 0;
   start_done = false;
   m_updateTimer = new MonTimer(this,intv);
@@ -89,7 +89,7 @@ void MonSubSys::addObj(MonObj* h)
   m_Objmap.insert(SysPair(n,h));
   m_numObjs++;
 //  m_Objmap.push_back(h);
-  calcBufferSize();
+//  calcBufferSize();
 //  this->unLock();
 }
 void MonSubSys::removeObj(MonObj* h)
@@ -97,21 +97,23 @@ void MonSubSys::removeObj(MonObj* h)
   std::string n(h->name());
 //  this->Lock();
   m_Objmap.erase(n);
-  calcBufferSize();
+//  calcBufferSize();
   m_numObjs--;
 //  this->unLock();
 }
+/*
 void MonSubSys::calcBufferSize()
 {
 //  std::vector <int>::size_type i;
   SysIter i;
-  bufsiz = 0;
+//  bufsiz = 0;
   for (i =m_Objmap.begin();i!=m_Objmap.end();i++)
   {
     MonObj *h = i->second;//m_Objmap[i];
     bufsiz += h->xmitbuffersize();
   }
 }
+*/
 MonObj *MonSubSys::findobj(const char *nam)
 {
   SysIter i;
@@ -132,7 +134,8 @@ MonObj *MonSubSys::findobj(const char *nam)
     return h;
   }
 }
-void *MonSubSys::Allocate(int siz)
+/*
+ void *MonSubSys::Allocate(int siz)
 {
   if (buffersize < siz)
   {
@@ -143,6 +146,7 @@ void *MonSubSys::Allocate(int siz)
   }
   return buffer;
 }
+*/
 void MonSubSys::setup(char *n, bool expandnames)
 {
   m_expandnames = expandnames;
