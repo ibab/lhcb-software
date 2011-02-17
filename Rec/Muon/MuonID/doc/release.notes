@@ -2,6 +2,14 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v8r0 2011-02-17 =========================
+! 2011-02-17 - Helder Lopes
+ - Implement muon probability tuned on 2010 data and using cumulative histograms 
+   of the hyperbolic tangent of the distances. NonMuon prob still from Landau fits.
+   This corresponds to DLL_Flag = 4 and is used with 2011 and 2010 data if configured 
+   from options.  DLL_Flag = 3 should not be used for 2011 and 2010 data anymore
+   The default continues to be DLL_Flag = 1 with parameters from the database. 
+
 !========================= MuonID v7r10 2011-02-02 =========================
 ! 2011-02-01 - Erica Polycarpo 
  - remove lines which set options according to "earlyData" flag in the configurable 

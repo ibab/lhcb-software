@@ -24,7 +24,7 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "# CONFIGUREDMUONIDs v7r8"
+    if self.debug: print "# CONFIGUREDMUONIDs v7r10"
     if self.debug: print "# INITIALIZING"
 
     self.specialData=specialData
@@ -43,6 +43,7 @@ class ConfiguredMuonIDs():
       try: exec("from MuonID import "+mod[1]+" as info")
       except: 
         exec("from MuonID import "+mod[2]+" as info")
+
 
     GaudiKernel.ProcessJobOptions.PrintOn()
     log.info("ConfiguredMuonIDs: Loaded configuration info %s"%info.FILENAME)

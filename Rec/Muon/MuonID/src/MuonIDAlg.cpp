@@ -163,7 +163,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   // 1 -- binned distance with closest hit + integral
   // 3 -- binned tanh(distance) with closest hit + integral. Flag 2 used by MuonPIDChecker for monitoring Prob Mu
   //-----------------------------
-  declareProperty("DLL_flag",m_dllFlag = 0);
+  declareProperty("DLL_flag",m_dllFlag = 1);
 
   // Muons - Region1:
   declareProperty( "MupbinsR1", m_MupBinsR1 );
@@ -219,8 +219,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "MupBinsR4", m_MupBinsR4);
 
   // hyperbolic tangent mapping of distances:
-  // Number of bins in the tanh(dist) histos
-  declareProperty( "nDistBins", m_nDistBins = 50);
 
   // tanh scale factors
   declareProperty( "tanhScaleFactorsR1", m_tanhScaleFactorsR1);
@@ -710,9 +708,12 @@ StatusCode MuonIDAlg::initialize() {
   if (m_dllFlag==0) info() << " dllFlag=0 -----> DLL standard (old method) " << endmsg;
   if (m_dllFlag==1) info() << " dllFlag=1 -----> DLL  new (binned-integrated method) " << endmsg;
   if (m_dllFlag==3) info() << " dllFlag=3 -----> DLL  new (hyperbolic tangent mapping) " << endmsg;
+  if (m_dllFlag==4) info() << " dllFlag=4 -----> DLL with muLL tuned on 2010 data (hyperbolic tangent mapping) and previous nonMuLL (Landau fittings 2009)" << endmsg;
 
-  if (m_dllFlag<0 || m_dllFlag>3 || m_dllFlag==2)
+  if (m_dllFlag<0 || m_dllFlag>4 || m_dllFlag==2)
     return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated, 3=hyperbolic tangent mapping");
+    
+  if(3 == m_dllFlag) warning() << "dllFlag = 3 cannot be used with datatype 2010 or 2011. Check that this is not the case." << endmsg;
 
   // GL&SF: Check that parameters of the integral are fine
   if ((int)(m_x*m_nMax) !=800) return Error(format("DLL integral cannot be calculated, parameters are wrong: x, N %8.3f, %8.3f",
@@ -723,7 +724,7 @@ StatusCode MuonIDAlg::initialize() {
   if ( sc2.isFailure() ) return Error(" Normalizations of Landaus not properly set ",sc2);
 
   // Print tanh(dist2) parameters
-  if(3 == m_dllFlag && msgLevel(MSG::DEBUG)){
+  if((4 == m_dllFlag || 3 == m_dllFlag) && msgLevel(MSG::DEBUG)){
     debug() << "Initialize: tahn(dist2) parameters set by options:" << endmsg;
     debug() << "Initialize: m_nMupBinsR1: " << m_nMupBinsR1 << endmsg;
     for(int iR=0;iR<4;++iR){
@@ -733,12 +734,15 @@ StatusCode MuonIDAlg::initialize() {
         debug() << "    ipBin+1:  " << ipBin+1 << " tanhScaleFactor: "
                 << (*m_tanhScaleFactors[iR])[ipBin] << " tanh(dist2) bin contents:" << endmsg;
         debug() << "\tMuons: ";
-        for(int idBin=0;idBin<m_nDistBins;++idBin){
+	int nDistBins = (*(*m_tanhCumulHistoMuon[iR])[ipBin]).size();
+        for(int idBin=0;idBin<nDistBins;++idBin){
           debug() << (*(*m_tanhCumulHistoMuon[iR])[ipBin])[idBin] << " ";
         }
         debug() << endmsg;
+	if(4 == m_dllFlag) continue;
         debug() << "\tNonMuons: ";
-        for(int idBin=0;idBin<m_nDistBins;++idBin){
+	nDistBins = (*(*m_tanhCumulHistoNonMuon[iR])[ipBin]).size();
+        for(int idBin=0;idBin<nDistBins;++idBin){
           debug() << (*(*m_tanhCumulHistoNonMuon[iR])[ipBin])[idBin] << " ";
         }
         debug() << endmsg;
@@ -1065,6 +1069,12 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
       if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL(tanh mapping) failed (P<0) to MuonPID object " << pMuid << endmsg;
       if (myIsMuonLoose) m_mullfail++;
     }
+  } else  if(m_dllFlag == 4){ // DLL with tanh(dist2) 2010 data histograms for muons and 2009 landau fittings for non-muons
+    sc = calcMuonLL_tanhdist_landau(pMuid,m_MomentumPre);
+    if(sc.isFailure()){
+      if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL (dllFlag == 4) failed (P<0) to MuonPID object " << pMuid << endmsg;
+      if (myIsMuonLoose) m_mullfail++;    
+    }
   }
 
 
@@ -1375,10 +1385,6 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   double myDist=-1.;
   double ProbMu=-1.;
   double ProbNonMu = -1.;
-  double parMu[6];
-  double parNonMu[3];
-  for(int i=0;i<6;i++){parMu[i]=0;}
-  for(int i=0;i<3;i++){parNonMu[i]=0;}
   std::vector<int> trackRegion(m_NStation,-1);
 
   // Calculate Distance using the closest hit:
@@ -1419,6 +1425,85 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
 
   if (msgLevel(MSG::DEBUG) ) {
     debug() << "calcMuonLL_tanhdist: region: " << region << " momentum: " << p
+            << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): "
+            << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu
+            <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const double& p){
+  //=============================================================================
+  // comment: Calculate the muon DLL using cumulative histos of the hyperbolic
+  //          tangent of the closest distance tuned on 2010 data for muon hypothesis 
+  //          and previous landau fittings to 2009 MC for non-muon hypothesis, 
+  //          per region and momentum bins:
+  // authors: J. Helder Lopes
+  // date:    16/02/2011
+  //=============================================================================
+
+  pMuid->setMuonLLMu(-10000.);
+  pMuid->setMuonLLBg(-10000.);
+
+  // calculate dll only for IsMuonLoose:
+  if ( !pMuid->IsMuonLoose() ) return StatusCode::SUCCESS;
+
+  // Initialize some variables:
+  double myDist=-1.;
+  double ProbMu=-1.;
+  double ProbNonMu = -1.;
+  double parMu[6];  // These won't be used here... Only parNonMu
+  double parNonMu[3];
+  for(int i=0;i<6;i++){parMu[i]=0;}
+  for(int i=0;i<3;i++){parNonMu[i]=0;}
+  std::vector<int> trackRegion(m_NStation,-1);
+
+  // Calculate Distance using the closest hit:
+  myDist = calc_closestDist(pMuid,p,closest_region);
+  if (myDist<=0) return Error(" Closest Distance < 0 ");
+
+  //EP: Store dist to fill Muon Track extra info
+  m_dist_out=myDist;
+
+  // Region of the track extrapolated:
+  for (int sta=0;sta<m_NStation; sta++){
+    trackRegion[sta] = findTrackRegion(sta);
+    if (trackRegion[sta]<0 && msgLevel(MSG::DEBUG) )
+      debug() << format(" Track extrapolation in station %d gives not-existent region ",sta)
+              << endmsg;
+  }
+
+  int region=trackRegion[1]; // M2
+  if (region<0) region=trackRegion[2]; // M3
+
+  // Find Landau's parameters for a given track:
+  StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
+  if (sc.isFailure()) {
+    return Error(" Find Landau Parameters: no valid region",sc,1);
+  }
+
+  // Determine the momentum bin for this region
+  int pBin=GetPbin(p, region);
+  double tanhdist;
+  // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
+  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*gsl_atanh(0.5));
+
+  // Calculate Prob(mu)  for a given track using tanh(dist);
+  ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
+  if (ProbMu<0) return Error("ProbMu <0", StatusCode::FAILURE);
+
+  // Calculate ProbNonMu using Landau fits 
+  ProbNonMu = calc_ProbNonMu(myDist, parNonMu);
+  if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
+
+
+  // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
+  pMuid->setMuonLLMu(log(ProbMu));
+  pMuid->setMuonLLBg(log(ProbNonMu));
+
+  if (msgLevel(MSG::DEBUG) ) {
+    debug() << "calcMuonLL_tanhdist_landau: region: " << region << " momentum: " << p
             << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): "
             << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu
             <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
@@ -1939,7 +2024,7 @@ int MuonIDAlg::GetPbin(double p, int region){
   case 3:{ pBins = &m_MupBinsR3; break;}
   case 4:{ pBins = &m_MupBinsR4; break;}
   }
-  debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins address: " << pBins << endmsg;
+  debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " << pBins << endmsg;
   if(0 == pBins)
     Warning("GetPbin: No match to a pBins vector. Null pBins pointer",StatusCode::SUCCESS).ignore();
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
@@ -1951,8 +2036,9 @@ int MuonIDAlg::GetPbin(double p, int region){
 
 //=====================================================================
 double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region){
-  int itanhdist=int(tanhdist0*m_nDistBins)+1;
-  if(itanhdist>=m_nDistBins)itanhdist--;
+  int nDistBins = (*(*m_tanhCumulHistoMuon[region])[pBin]).size();
+  int itanhdist=int(tanhdist0*nDistBins)+1;
+  if(itanhdist>=nDistBins)itanhdist--;
   debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
           << " itanhdist " << itanhdist << " ProbMu " << (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist];
@@ -1960,8 +2046,9 @@ double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region
 
 //=====================================================================
 double MuonIDAlg::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region){
-  int itanhdist=int(tanhdist0*m_nDistBins)+1;
-  if(itanhdist>=m_nDistBins)itanhdist--;
+  int nDistBins = (*(*m_tanhCumulHistoNonMuon[region])[pBin]).size();
+  int itanhdist=int(tanhdist0*nDistBins)+1;
+  if(itanhdist>=nDistBins)itanhdist--;
   debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
           << " itanhdist " << itanhdist << " ProbNonMu " << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist];

@@ -179,6 +179,9 @@ private:
   double     calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region);
   double     calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region);
 
+  /// Determine probabilities for DLL_flag=4 
+  StatusCode calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const double& p);
+  
   double Fdist[5];
   double small_dist[5];
   double closest_region[5];
@@ -232,9 +235,6 @@ private:
   int m_nMax;// number of steps
 
   // hyperbolic tangent mapping of distances:
-
-  // Number of bins for tanh(dist) histos
-  int m_nDistBins;
 
   // tanh scale factors
   std::vector< double >  m_tanhScaleFactorsR1;
