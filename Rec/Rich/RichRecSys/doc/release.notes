@@ -4,16 +4,19 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecSys v3r35p1 2011-01-17 =========================
+! 2011-02-17 - Chris Jones
+ - Add new package - Rich/RichParticleSearch
+
+!========================= RichRecSys v3r35p1 2011-01-17 =====================
 ! 2011-01-03 - Chris Jones
  - Remove the check in RichRecSysConf for the DataType, which is no longer used
 
-!========================= RichRecSys v3r35 2010-12-16 =========================
+!========================= RichRecSys v3r35 2010-12-16 =======================
 ! 2010-12-03 - Chris Jones
  - Retire the package Rich/RichMarkovRingFinder.
  - Remove the 2010 MC smearing options. Will be done by Gauss instead.
 
-!========================= RichRecSys v3r34 2010-11-23 =========================
+!========================= RichRecSys v3r34 2010-11-23 =======================
 ! 2010-11-21 - Chris Jones
  - Add 'DataType' slot to python Configurable.
  - Add 2010 MC tuning to smear the reconstructed CK theta values to match
