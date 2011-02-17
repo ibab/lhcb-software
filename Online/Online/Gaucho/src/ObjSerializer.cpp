@@ -1,6 +1,8 @@
 #include "stdlib.h"
 #include "Gaucho/ObjSerializer.h"
 #include "Gaucho/MonObj.h"
+#include "Gaucho/dimhist.h"
+#include "Gaucho/MonTypes.h"
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 //#include "iCCPCHist.h"
 
@@ -95,6 +97,10 @@ void *ObjSerializer::SerializeObj(std::vector<std::string> &nams,void * &ptr,int
     {
       bs += h->xmitbuffersize();
     }
+    else
+    {
+      bs += sizeof(DimBuffBase);
+    }
   }
   pp=ptr = Allocate(bs);
   pp = AddPtr(pp,siz);
@@ -110,6 +116,13 @@ void *ObjSerializer::SerializeObj(std::vector<std::string> &nams,void * &ptr,int
       {
         h->clear();
       }
+    }
+    else
+    {
+      DimBuffBase hh;
+      hh.type = H_ILLEGAL;
+      memcpy (pp,&hh,sizeof(hh));
+      pp = AddPtr(pp,sizeof(DimBuffBase));
     }
   }
   return ptr;

@@ -83,5 +83,4 @@ public:
 	int BlockSize(void){return m_blocksize;};
 
 };
-
 #endif /* MONHIST_H_ */

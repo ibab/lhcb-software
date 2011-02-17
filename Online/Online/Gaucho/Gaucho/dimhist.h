@@ -8,6 +8,16 @@
 class DimBuffBase
 {
 public:
+  DimBuffBase()
+  {
+    reclen = sizeof(DimBuffBase);
+    nameoff = 0;
+    titoff = 0;
+    namelen = 0;
+    titlen = 0;
+    dataoff = 0;
+    flags = 0;
+  }
   int reclen;
   int type;
   int flags;

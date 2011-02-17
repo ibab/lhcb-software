@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonSubSys.h"
+#include "Gaucho/Utilities.h"
 //#include "iCCPCHist.h"
 #include <vector>
-#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 ObjRPC::~ObjRPC()
 {
   if (buffersize >0)
@@ -57,23 +57,16 @@ void ObjRPC::rpcHandler()
   {
   case RPCCRead:
     {
-      std::vector<std::string> nams;
       void *pp;
       char *hlist=(char *)AddPtr(comm,sizeof(comm->c));
-      char *nam;
-      nams.reserve(100);
-      nam =strtok(hlist,"\n");
       int bs = siz;
-      while(nam!=0)
-      {
-        nams.push_back(nam);
-        nam = strtok(0,"\n");
-      }
+      dyn_string *nams;
+      nams = Strsplit(hlist,(char*)"\n");
       if (m_objlockid != 0)
       {
         lib_rtl_lock(m_objlockid);
       }
-      ptr = s->SerializeObj(nams,pp,bs);
+      ptr = s->SerializeObj(*nams,pp,bs);
       if (m_objlockid != 0)
       {
         lib_rtl_unlock(m_objlockid);
@@ -84,20 +77,13 @@ void ObjRPC::rpcHandler()
     }
   case RPCCClear:
     {
-      std::vector<std::string> nams;
       void *pp;
       char *hlist=(char *)AddPtr(comm,sizeof(comm->c));
-      char *nam;
-      nams.reserve(100);
-      nam =strtok(hlist,"\n");
       int bs = siz;
-      while(nam!=0)
-      {
-        nams.push_back(nam);
-        nam = strtok(0,"\n");
-      }
+      dyn_string *nams;
+      nams = Strsplit(hlist,(char*)"\n");
       if (m_objlockid != 0) lib_rtl_lock(m_objlockid);
-      ptr = s->SerializeObj(nams,pp,bs,true);
+      ptr = s->SerializeObj(*nams,pp,bs,true);
       if (m_objlockid != 0) lib_rtl_unlock(m_objlockid);
       siz = bs;
       status = 0;

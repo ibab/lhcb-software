@@ -24,6 +24,7 @@
 #include "Gaucho/CntrMgr.h"
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
+
 //#include "AIDA/IProfile1D.h"
 MonHist::MonHist()
 {
@@ -34,7 +35,7 @@ MonHist::MonHist()
   m_rootobj = 0;
   m_rootdeser = 0;
   m_name = 0;
-  m_xmitbuffersize = 0;
+  m_xmitbuffersize = sizeof(DimBuffBase);
   m_Xlabels = 0;
   m_Ylabels = 0;
   m_title = 0;
@@ -543,6 +544,20 @@ int MonHist::serialize(void* &ptr)
     ptr = (void*)((char*)ptr+siz);
     return siz;
   }
+  DimBuffBase *pill = (DimBuffBase*)ptr;
+  if(m_type == H_ILLEGAL)
+  {
+    pill->type = H_ILLEGAL;
+    pill->reclen = sizeof(*pill);
+    pill->nameoff=sizeof(*pill);
+    pill->namelen = 0;
+    pill->titoff = sizeof(*pill);
+    pill->titlen = 0;
+    pill->flags = 0;
+    siz = m_xmitbuffersize;
+    return siz;
+  }
+
   DimHistbuff1 *pp = (DimHistbuff1*)ptr;
   DimHistbuff2 *pp2 = (DimHistbuff2*)ptr;
   pp->nxbin = m_nx;
