@@ -185,7 +185,7 @@ export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEX
 
 # --- Declare directories for dependencies, stamp files and log files
 dependency_dir = .$(CMTCONFIG).d
-logfile = $(1)/cmt/build.$(CMTCONFIG).log
+logfile = $(CURDIR)/$(1)/cmt/build.$(CMTCONFIG).log
 ifdef LOG_LOCATION
   dependency_dir = $(LOG_LOCATION)/.$(CMTCONFIG).d
   logfile = $(LOG_LOCATION)/$(call full_name,$(1)).log
@@ -246,9 +246,9 @@ ifeq ($(logging),enabled)
 	@PWD=`pwd`
 	@+cd $*/cmt ; $(strip_makeflags) \
 	for group in $(call groups,$*) ; do \
-	    $(if $(no_all_groups),,echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ;) \
-		cmt make $(make_extra_flags) $$group 2>&1 | tee -a $(PWD)/$(call logfile,$*) ; export BUILD_RESULT=$$PIPESTATUS ; \
-		date >> $(PWD)/$(call logfile,$*) ; \
+	    $(if $(no_all_groups),,echo "# Building group $$group" | tee -a $(call logfile,$*) ;) \
+		cmt make $(make_extra_flags) $$group 2>&1 | tee -a $(call logfile,$*) ; export BUILD_RESULT=$$PIPESTATUS ; \
+		date >> $(call logfile,$*) ; \
 		$(Package_failure_handler) \
 	done
 else
