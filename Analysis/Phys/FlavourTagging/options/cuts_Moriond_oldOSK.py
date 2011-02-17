@@ -114,7 +114,7 @@ tag.BTaggingTool.TaggerVertexChargeTool.P1            =-3.251661e-01
 tag.BTaggingTool.TaggerVertexChargeTool.Gt075         = 0.35
 tag.BTaggingTool.TaggerVertexChargeTool.TracksEq2     = 0.4141
 tag.BTaggingTool.TaggerVertexChargeTool.TracksGt2     = 0.3250
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P0_Cal    = 0.45
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P1_Cal    = 0.38
-tag.BTaggingTool.TaggerVertexChargeTool.Vtx_Eta_Cal   = 0.394
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P0_Cal    = 0.451
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_P1_Cal    = 0.358
+tag.BTaggingTool.TaggerVertexChargeTool.Vtx_Eta_Cal   = 0.398
 
