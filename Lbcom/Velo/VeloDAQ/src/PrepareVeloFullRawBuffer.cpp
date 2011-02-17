@@ -54,6 +54,7 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
   declareProperty("ADCPartialLoc",
                   m_veloADCPartialDataLoc="Raw/Velo/PreparedPartialADC");
   declareProperty("RoundRobin", m_roundRobin=false);
+  declareProperty("IgnoreErrorBanks", m_ignoreErrorBanks=true);
 
 }
 //=============================================================================
@@ -173,22 +174,33 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
       // get the sensor number == sourceID
       int sensor=aBank->sourceID();
 
-      // handle the data sent out together with an error bank properly
-      isError=find_if(errorBanks.begin(), errorBanks.end(), errorBankFinder(sensor));
-      if(isError!=errorBanks.end())
+      if(!m_ignoreErrorBanks)
       {
         
-        DATA_PAIR data_info=std::make_pair(aBank->size(), aBank->data());
-        m_partialData2Decode[(aBank->sourceID())]=data_info;
+        // handle the data sent out together with an error bank properly
+        isError=find_if(errorBanks.begin(), errorBanks.end(), errorBankFinder(sensor));
+        if(isError!=errorBanks.end())
+        {
+        
+          DATA_PAIR data_info=std::make_pair(aBank->size(), aBank->data());
+          m_partialData2Decode[(aBank->sourceID())]=data_info;
 
-        DATA_PAIR eb_info=std::make_pair((*isError)->size(), (*isError)->data());
-        m_errorBanks2Check[(aBank->sourceID())]=eb_info;
+          DATA_PAIR eb_info=std::make_pair((*isError)->size(), (*isError)->data());
+          m_errorBanks2Check[(aBank->sourceID())]=eb_info;
+
+        }else{
+        
+          DATA_PAIR full_info=std::make_pair(aBank->size(), aBank->data());
+          m_fullData2Decode[(aBank->sourceID())]=full_info;
+        
+        }
 
       }else{
         
+        // put all the nzs data in one container
         DATA_PAIR full_info=std::make_pair(aBank->size(), aBank->data());
         m_fullData2Decode[(aBank->sourceID())]=full_info;
-        
+
       }
         
     }
@@ -279,8 +291,10 @@ void PrepareVeloFullRawBuffer::createOrderedSections()
 
       if(WORD2BYTE*FPGAx4==(*part_IT).second.first)
       {
-        if (m_isDebug) debug()<< " --> Will write partial data! " <<endmsg;
-        if (m_isDebug) debug()<< " --> source id: " << ((*part_IT).first) <<endmsg;
+        //if (m_isDebug) debug()<< " --> Will write partial data! " <<endmsg;
+        //if (m_isDebug) debug()<< " --> source id: " << ((*part_IT).first) <<endmsg;
+        info()<< " --> Will write partial data! " <<endmsg;
+        info()<< " --> source id: " << ((*part_IT).first) <<endmsg;
         
         VeloFullBank* aBank=new VeloFullBank((*part_IT).first,
                                              (*part_IT).second.second, type_1);

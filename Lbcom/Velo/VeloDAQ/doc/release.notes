@@ -2,6 +2,10 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+! 2011-02-17 - Tomasz Szumlak
+ - a minor modification of the decoder code - add option IgnoreErrorBanks
+   that makes using the TAE scan in VETRA more convinient
+
 ! 2011-02-14 - Tomasz Szumlak
  - considerably large changes in the VeloFull decoding software to cope
    with the nzs data that are sent together with the VeloError banks.

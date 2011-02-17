@@ -129,6 +129,7 @@ private:
   bool m_runWithODIN;
   bool m_isDebug;
   bool m_roundRobin;  
+  bool m_ignoreErrorBanks;
   
 };
 #endif // DECODEVELOFULLRAWBUFFER_H
