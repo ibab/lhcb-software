@@ -578,8 +578,7 @@ class GetNightlyCMTPROJECTPATH(ContentHandler):
         today = days[self._day]
         yesterday = days[self._day-1]
         d = [ s.replace("%DAY%",today).replace("%YESTERDAY%",yesterday)
-              for s in self._path
-              if os.path.exists(s) ] # drop entries that do not exist (bug #75480)
+              for s in self._path ]
         return d
     def value(self):
         """Return the CMTPROJECTPATH.
@@ -1534,6 +1533,8 @@ class SetupProject:
 
         # remove duplicates
         self.search_path = uniq(self.search_path)
+        # remove entries that do not exist (bug #75480)
+        self.search_path = filter(os.path.exists, self.search_path)
 
         #------------- discover all project versions
         # debug printout: print project, search path and, optionally, user area
