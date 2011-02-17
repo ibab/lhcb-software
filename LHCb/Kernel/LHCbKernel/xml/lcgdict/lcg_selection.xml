@@ -46,6 +46,7 @@
   <class name = "LHCb::Inspector" />
   <class name = "IAccept"                      />
   <class name = "extend_interfaces1<IAlgTool>" />
+  <class name = "ICountContainedObjects" />
 
   <variable pattern="Rich::NRadiatorTypes"  />
   <enum name = "Rich::RadiatorType" />
