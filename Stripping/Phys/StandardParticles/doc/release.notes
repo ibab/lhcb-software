@@ -4,6 +4,12 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+! 2011-02-17 - Juan Palacios
+ - CommonParticles now include "/Particles" location ending. Adapt standard
+   particles to that. Transparent to users.
+ - Increase to v2r0.
+ - REQUIRES Phys/CommonParticles v8r0 OR HIGHER!!!
+
 !====================== StandardParticles v1r0 2010-12-20 ====================
 
 ! 2010-12-14 - Juan Palacios

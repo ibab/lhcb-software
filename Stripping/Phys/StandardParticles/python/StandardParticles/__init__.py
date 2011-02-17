@@ -18,13 +18,10 @@ def addParticleModule(particleModule) :
     Add all the common particles in particleModule so Selections module.
     """
     for loc in particleModule.locations.keys() :
-        name = loc.split('/')[-1]
+        name = loc.split('/')[-2]
         global __all__
         __all__ += [name]
         global selections
-        _loc = (loc+'/Particles').replace('/Particles/Particles',
-                                          '/Particles')
-        _loc = _loc.replace('//', '/')
         sel =  AutomaticData(Location =  loc)
         selections += [sel]
         setattr(_this,  name, sel)
