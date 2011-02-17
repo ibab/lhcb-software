@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CameraTool );
+DECLARE_TOOL_FACTORY( CameraTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -51,14 +51,14 @@ CameraTool::CameraTool( const std::string& type,
   , m_ErrorPVSS(ICameraTool::ERROR)
   , m_skipCameraToPVSSFlag(false)
   , m_message("")
-  , m_HistoToEntries(2500) 
+  , m_HistoToEntries(2500)
                       // A message with 2 histograms fills 639 KB.
-  , m_MaxTextEntries(500) 
-                      // m_MaxTextEntries would be: 
-                      // archiving_space / ( ( n_archiving_days_in_sec * 
+  , m_MaxTextEntries(500)
+                      // m_MaxTextEntries would be:
+                      // archiving_space / ( ( n_archiving_days_in_sec *
                       // * average_n_messages * n_bytes_per_entry ) / m_messagePeriod)
                       // archiving_space = 30 Gb, average_n_messages = 5,
-                      // where n_bytes_per_entry = 130 and m_messagePeriod = 5 
+                      // where n_bytes_per_entry = 130 and m_messagePeriod = 5
                       // The actual result is 890, arbitrarely rescaled to 500.
   , m_MaxNMessagesPerAlg(10000)
                       // The maximum size for a map is way bigger (18446744073709551615)
@@ -89,8 +89,8 @@ StatusCode CameraTool::initialize()
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Reinitialize the variables m_WarningPVSS and m_ErrorPVSS, 
-  // we can't do it directly in declareProperty since they are 
+  // Reinitialize the variables m_WarningPVSS and m_ErrorPVSS,
+  // we can't do it directly in declareProperty since they are
   // of type MessageLevel.
   if(m_WARNING_PVSS == "INFO")m_WarningPVSS = ICameraTool::INFO;
   else if(m_WARNING_PVSS == "WARNING")m_WarningPVSS = ICameraTool::WARNING;
@@ -108,12 +108,13 @@ StatusCode CameraTool::initialize()
               <<", should be either INFO or WARNING or ERROR."
               <<" The default value (" << m_ErrorPVSS << ") will be used."
               <<endmsg;
- 
-  if (m_dosend) {
+
+  if (m_dosend) 
+  {
     if (m_servernames.size() > 0){
       unsigned int num = m_servernames.size();
       if (m_servports.size()<num) num = m_servports.size();
-      
+
       for (unsigned int i = 0;i<num;++i){
         client * c = new client(m_servernames[i].c_str(), m_servports[i]);
         if (c->m_healthy==0) {
@@ -125,40 +126,44 @@ StatusCode CameraTool::initialize()
           m_clients.push_back(c);
         }
       }
-      
+
     }
-    else{
+    else
+    {
       m_camc = new client(m_servername.c_str(),m_servport);
-      if (m_camc->m_healthy==0) {
+      if (m_camc->m_healthy==0) 
+      {
         Warning( "Failed to setup CAMERA client" ).ignore();
         delete m_camc;
         m_camc = NULL;
 
       }
-    
-      info() << "Made CAMERA client to "<<m_servername.c_str()<<":"<<m_servport<<endmsg;
+
+      if ( msgLevel(MSG::INFO) )
+        info() << "Made CAMERA client to "<< m_servername << ":" << m_servport << endmsg;
+
       m_clients.push_back(m_camc);
-      
+
     }
   }// if(m_dosend)
-  else
+  else if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Camera set to NOT SEND." << endreq;
   }
-  
+
   //
   // private DIM Services
   //
-  
+
   if ( getenv("DIM_DNS_NODE") )
   {
     const std::string& utgid   = RTL::processName();
     std::string  utgidNew      = utgid;
-    // now format the UTGID such that the name of the monitoring node is 
+    // now format the UTGID such that the name of the monitoring node is
     // replaced by x (such that the name published to DIM is always the
     // same and can be "guessed" without querying the DNS server)
     // Only if there are 3 "_" in the UTGID to be consistent with the MonitorSvc
-    
+
     std::size_t pos1 = std::string::npos; // position of first underscore
     std::size_t pos2 = std::string::npos;
     std::size_t pos3 = std::string::npos;
@@ -180,12 +185,12 @@ StatusCode CameraTool::initialize()
       utgidNew = utgidNew.replace(pos1+1, pos2-pos1-1, "x");
     }//if
 
-    std::string  serviceName = utgidNew + "/RICH_MONITORING/MESSAGES";
+    const std::string serviceName = utgidNew + "/RICH_MONITORING/MESSAGES";
     info() << "Publish to DIM " << serviceName << endmsg;
-    std::string additionalString("");
+    const std::string additionalString("");
     m_DIMService = new DimService(serviceName.c_str(),(char*)additionalString.c_str());
   }
-  else
+  else if ( msgLevel(MSG::INFO) )
   {
     info()<<"DIM_DNS_NODE undefined"
           << "- No Message will be sent from CameraTool to PVSS"
@@ -193,7 +198,9 @@ StatusCode CameraTool::initialize()
   }
   // END of private DIM Services creation
 
-  debug() << "Setup of CameraTool is done"<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Setup of CameraTool is done"<<endreq;
+
   return sc;
 }
 
@@ -205,7 +212,7 @@ StatusCode CameraTool::finalize()
     delete m_camc;
     m_camc = NULL;
   }// if(NULL!=m_camc)
-  
+
   return GaudiTool::finalize();
 }
 
@@ -253,7 +260,7 @@ void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::
 
 //=============================================================================
 
-void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::string what, 
+void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::string what,
                                           MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat){
   m_msgLev = l;
   m_who = who;
@@ -289,7 +296,7 @@ int CameraTool::CameraToPVSS(MessageLevel l, std::string who, std::string what,
   if( (l != ICameraTool::WARNING_PVSS) && (l != ICameraTool::ERROR_PVSS) ){
     ReplaceMessageParameters(l, who, what);
     // Check if messages must be sent also to PVSS
-    if(!m_SendMessagesToPVSS)return 1; 
+    if(!m_SendMessagesToPVSS)return 1;
     // Check correspondence between Camera message level and PVSS message level.
     else if(CameraToPVSSMessageLevel(l) != 0){
       ReplacePVSSMessageParameters(ICameraTool::MessageLevel(CameraToPVSSMessageLevel(l)), who, what);
@@ -334,8 +341,8 @@ int CameraTool::SendToPVSS(int messagePeriod){
   // (it could also have been only m_PVSSwhat)
   time_t t = time(NULL);
   std::ostringstream stream_message;
-  stream_message << NumToTextMessage(m_PVSSmsgLev) 
-                 << "/" << t 
+  stream_message << NumToTextMessage(m_PVSSmsgLev)
+                 << "/" << t
                  << "/"<<m_PVSSwho <<": " << m_PVSSwhat;
   m_message = stream_message.str();
   if (m_DIMService){
@@ -349,9 +356,9 @@ int CameraTool::SendToPVSS(int messagePeriod){
 
 //=============================================================================
 
-int CameraTool::SetCameraToPVSSConfig(bool sendMessagesToPVSS, 
-                                       MessageLevel warning_PVSS, 
-                                       MessageLevel error_PVSS){
+int CameraTool::SetCameraToPVSSConfig(bool sendMessagesToPVSS,
+                                      MessageLevel warning_PVSS,
+                                      MessageLevel error_PVSS){
   m_SendMessagesToPVSS = sendMessagesToPVSS;
   m_WarningPVSS = warning_PVSS;
   m_ErrorPVSS = error_PVSS;
@@ -367,11 +374,11 @@ std::string CameraTool::StripMessage(std::string what){
 
 //=============================================================================
 
-bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string what, 
+bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string what,
                                   int messagePeriod, bool IsPVSSMessageFlag){
   // The following string(s) include the algorithms for which camera must not perform any rate check:
   std::string SafeAlgo1 = "ToolSvc.RichUKL1Disable";
-  if(who.find(SafeAlgo1) != std::string::npos)return true; 
+  if(who.find(SafeAlgo1) != std::string::npos)return true;
   time_t currentTime  = time(NULL);
   // Keys setting
   std::string key1;
@@ -381,8 +388,8 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
   if((int)m_MessageOwnerLevelMap[key1][key2].size() == 0){ // First time the message has been sent.
     // Check on map size:
     // Check if the size of the map is getting near the maximum allowed size = m_MaxNMessagesPerAlg.
-    // If this is the case it means there are a lot of messages that are almost identical 
-    // except for a small change in the text. 
+    // If this is the case it means there are a lot of messages that are almost identical
+    // except for a small change in the text.
     // The message period of all messages in m_MessageOwnerLevelMap[key1] will be m_messagePeriod.
     if( (int)m_MessageOwnerLevelMap[key1].size()  < m_MaxNMessagesPerAlg){
       m_MessageOwnerLevelMap[key1][key2].push_back((int)currentTime); // Time of arrival.
@@ -392,11 +399,11 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
         m_MessageOwnerLevelMap[key1]["LAST MESSAGE"].push_back((int)currentTime);
       return true;
     }
-    else if( (currentTime - m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] ) 
+    else if( (currentTime - m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] )
              > (m_messagePeriod - 1)){ // The message must be sent at the m_messagePeriod period.
       if(!IsPVSSMessageFlag){
         std::ostringstream attachMsg;
-        attachMsg << "CAMERA INFORMATION: Some of the messages from " 
+        attachMsg << "CAMERA INFORMATION: Some of the messages from "
                   << who
                   << " will be sent at a rate of 1 every "
                   << m_messagePeriod <<" seconds. "
@@ -420,8 +427,8 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
     if((currentTime - oldTime) > messagePeriod){  // The message must be sent.
       if(oldMessages>0 && !IsPVSSMessageFlag){
         std::ostringstream attachMsg;
-        attachMsg << "CAMERA INFORMATION: due to the high rate " 
-                  << oldMessages 
+        attachMsg << "CAMERA INFORMATION: due to the high rate "
+                  << oldMessages
                   << " messages of the same type have been suppressed "
                   << "in the last " << messagePeriod + 1 <<" seconds.";
         Append("TEXT",attachMsg.str().c_str());
@@ -444,12 +451,12 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
 }
 
 //=============================================================================
-int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
                              MessageLevel p_l,const std::string& p_who,const std::string& p_what){
   return SendAndClear(c_l, c_who, c_what, p_l, p_who, p_what,0);
 }
 
-int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
                              MessageLevel p_l,const std::string& p_who,const std::string& p_what,
                              int messagePeriod){
 
@@ -462,16 +469,16 @@ int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std
 }
 
 //=============================================================================
-int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
-                             MessageLevel p_l,const std::string& p_who,const std::string& p_what){
+int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
+                               MessageLevel p_l,const std::string& p_who,const std::string& p_what){
   return SendAndClearTS(c_l, c_who, c_what, p_l, p_who, p_what,0);
 }
 
 
-int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
                                MessageLevel p_l,const std::string& p_who,const std::string& p_what,
                                int messagePeriod){
-  
+
   ReplaceMessageParameters(c_l, c_who, c_what, p_l, p_who, p_what);
   m_skipCameraToPVSSFlag = true;
   SendAndClearTS(c_l, c_who, c_what, messagePeriod);
@@ -487,7 +494,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
 }
 
 
-int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what, 
+int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what,
                              int messagePeriod)
 {
   // Message periods setting:
@@ -507,7 +514,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   int SizewiseMessagePeriod = (int) ( (( m_out.entries() + m_lastHistoNum * m_HistoToEntries)  * 5) / m_MaxTextEntries);
   if ( SizewiseMessagePeriod > messagePeriod ){
     std::ostringstream attachMsg;
-    attachMsg << "CAMERA INFORMATION: the message period has been scaled from " 
+    attachMsg << "CAMERA INFORMATION: the message period has been scaled from "
               << messagePeriod <<" to "<<SizewiseMessagePeriod
               << " seconds, since the message size is too large.";
     Append("TEXT",attachMsg.str().c_str());
@@ -518,7 +525,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
     if(!MessageRateCheck(o_l, o_who, o_what,(messagePeriod - 1) ) )return 0;
   }
 
-  // The hold parameters where const, to change them without changing their type I renamed 
+  // The hold parameters where const, to change them without changing their type I renamed
   // them as o_... where o stands for old.
   if(!m_skipCameraToPVSSFlag){
     CameraToPVSS(o_l, o_who, o_what,messagePeriod);
@@ -530,21 +537,21 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   const std::string what = m_what;
   std::stringstream ss;
   std::stringstream s;
-  
+
   ss << who<<"/"<<l<<"/"<<what<<"\n";
-  
+
   bool success = false;
   //Loop over m_camc[] entries
   //for () {
   std::vector<client *>::iterator itc;
-  
-  
+
+
   if (m_dosend) {
     // loop over clients
     for (itc = m_clients.begin(); itc!= m_clients.end(); itc++){
       m_camc = (*itc);
       if (m_camc==NULL) continue;
-      
+
       //put attached message into the stream s
       if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0) m_out.tostream(s);
       if (m_camc->Connect()>0) {
@@ -572,27 +579,27 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
             numErrBZ++;
           }
           if (numErrBZ==5){
-            
+
             warning() << "All threads of camserv are busy!  -> Aborting message '" << ss.str()<<endmsg;
             warning() << "Above message repeated "<<numErrBZ<<" times. Aborting further messaging of this type."<<endmsg;
             numErrBZ++;
-            
+
           }
         }
-        
+
         m_camc->new_sock();
         // if (success) break; // break from the for loop over possible servers.
         if (success) break;
       }
     }    // end the for loop
-    
+
     if (!success) {
       if (numErrCN < 5){
         warning() << "Could not connect to any camera server! -> Aborting message '" << ss.str() << endmsg;
         numErrCN++;
       }
       else if (numErrCN==5) {
-        warning() << "Could not connect to any camera server!  -> Aborting message '" << ss.str()<<endmsg;
+        warning() << "Could not connect to any camera server!  -> Aborting message '" << ss.str() <<endmsg;
         warning() << "Above message repeated 5 times. Aborting further messaging of this type. "
                   << "An issue with the PC hist01 is possible."<<endmsg;
         numErrCN++;
@@ -600,8 +607,8 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
       // No else, just silently not print the message, after the error.
     }
   }// if(m_dosend&&m_camc)
-  
-  
+
+
   else {
     if (msgLevel(MSG::DEBUG))
       debug() << "Sending to CAMERA disabled. Message " << ss.str() << endmsg;
@@ -609,7 +616,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
 
   m_out.reset();
   m_lastHistoNum = 0;
-  
+
   return 1;
 }
 
@@ -619,9 +626,9 @@ int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::
   return  SendAndClearTS(l,who,what,0);
 }
 
-int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what, 
+int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what,
                                int messagePeriod)
-{ 
+{
   m_out.add("TEXT","Time of report: ");
   time_t t = time(NULL);
   m_out.add("CTIME",ctime(&t));
@@ -673,14 +680,14 @@ int CameraTool::Append(TH1D * H, const char * opts)
     for (int ixBin=1; ixBin<=nXBins; ixBin++)
       data[iData++]=  float(H->GetBinContent(ixBin));
     data[iData++]= float(H->GetBinContent(nXBins+1));
-    
+
     for (int ixBin=0; ixBin<=nXBins+1; ixBin++)
       data[iData++]= float(H->GetBinError(ixBin));
-    
+
     m_out.add("DIM1D"+s,data,size*sizeof(float));
-    
+
     delete data;
-    
+
     // CRJ : Title hack
     // should go away when MonObjects are used
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
@@ -701,7 +708,7 @@ int CameraTool::Append(TH2D * H, const char * opts)
     int nYBins = H->GetNbinsY();
     int size = (8+2*(nXBins+2)*(nYBins+2));
     float * data = new float[size];
-    
+
     data[0]=2.f;
     data[1]=float(nXBins);
     data[2]=float(H->GetBinLowEdge(1));
@@ -711,17 +718,17 @@ int CameraTool::Append(TH2D * H, const char * opts)
     data[6]=float(H->GetYaxis()->GetXmax());
     data[7]=float(H->GetEntries());
     for (int i=8; i<2*(nXBins+2)*(nYBins+2); i++) data[i]=0.0f;
-    
+
     int iData = 8;
-    
-    
+
+
     data[iData++]= float(H->GetBinContent(0,0));
-    
+
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
       data[iData++]= float(H->GetBinContent(0,iyBin));
     }
     data[iData++]= float(H->GetBinContent(0, nYBins+1));
-    
+
     for (int ixBin=1; ixBin<=nXBins; ixBin++){
       data[iData++]= float(H->GetBinContent(ixBin,0));
       for (int iyBin=1; iyBin<=nYBins; iyBin++){
@@ -729,24 +736,24 @@ int CameraTool::Append(TH2D * H, const char * opts)
       }
       data[iData++]= float(H->GetBinContent(ixBin,nYBins+1));
     }
-    
+
     data[iData++]= (float)H->GetBinContent(nXBins+1,0);
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
       data[iData++]= (float)H->GetBinContent(nXBins+1,iyBin);
     }
     data[iData++]= (float)H->GetBinContent(nXBins+1,nYBins+1);
-    
-    
+
+
     //===== ERRORS======
-    
-    
+
+
     data[iData++]= (float)H->GetBinError(0,0);
-    
+
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
       data[iData++]= (float)H->GetBinError(0,iyBin);
     }
     data[iData++]= (float)H->GetBinError(0, nYBins+1);
-    
+
     for (int ixBin=1; ixBin<=nXBins; ixBin++){
       data[iData++]= (float)H->GetBinError(ixBin,0);
       for (int iyBin=1; iyBin<=nYBins; iyBin++){
@@ -754,18 +761,18 @@ int CameraTool::Append(TH2D * H, const char * opts)
       }
       data[iData++]= (float)H->GetBinError(ixBin,nYBins+1);
     }
-    
+
     data[iData++]= (float)H->GetBinError(nXBins+1,0);
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
       data[iData++]= (float)H->GetBinError(nXBins+1,iyBin);
     }
     data[iData++]= (float)H->GetBinError(nXBins+1,nYBins+1);
-    
+
     m_out.add("DIM2D"+s,(void *)data,size*sizeof(float));
-    
+
     delete data;
-    
-    // CRJ : Title hack 
+
+    // CRJ : Title hack
     // should go away when MonObjects are used
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
     const std::string& title = rootH+"->SetTitle(\"" + std::string(H->GetTitle()) + "\");";
