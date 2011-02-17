@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-16 - Juan Palacios
+ - SelPy.utils
+  . Add simple adapter class CloneCallable. Adds a call method executing
+    the clone method of a clonable class.
  - SelPy.selection.Selection
   . Selection now sets "Output" attribute of ConfigurableGenerator to
     <OutputBranch>/<name>/<Extension>. Default is Phys/<name>/Particles.

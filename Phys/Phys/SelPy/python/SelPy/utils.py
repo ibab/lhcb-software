@@ -74,6 +74,16 @@ class SelectionBase(object) :
 
     def requiredSelections(self) :
         return list(self._requiredSelections)
+
+class CloneCallable(object) :
+    """
+    Simple wrapper class to make an object's call method equivalent to
+    its clone method
+    """
+    def __init__(self, clonable) :
+        self._clonable = clonable
+    def __call__(self, *args, **kwargs) :
+        return self._clonable.clone(*args, **kwargs)
     
 def treeSelectionList(selection) :
     """
