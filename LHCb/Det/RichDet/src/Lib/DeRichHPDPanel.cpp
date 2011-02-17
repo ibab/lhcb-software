@@ -144,19 +144,17 @@ StatusCode DeRichHPDPanel::initialize()
   // read the position of the 1st HPD in columns 0 and 1
   std::vector<double> startColPos = param<std::vector<double> >("StartColumnPosition");
   // work in u,v coordinates: u is across a column, v is along
-  double HPD00u(0.0), HPD00v(0.0), HPD10u(0.0), HPD10v(0.0);
+  double HPD00u(0.0), HPD00v(0.0),  HPD10v(0.0);
   if ( m_rich == Rich::Rich1 ) 
   {
     HPD00u = startColPos[1];
     HPD00v = startColPos[0];
-    HPD10u = startColPos[3];
     HPD10v = startColPos[2];
   }
   else 
   {
     HPD00u = startColPos[0];
     HPD00v = startColPos[1];
-    HPD10u = startColPos[2];
     HPD10v = startColPos[3];
   }
 
