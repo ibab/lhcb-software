@@ -60,17 +60,18 @@ else
 packages := $(strip $(subst /cmt/requirements,,$(shell find . -name requirements | grep cmt/requirements | sed 's/.\///') )) 
 endif
 
-# --- Utility functions
+# --- Utility functions and variables
 escape_slash = $(subst /,_slash_,$(1))
 unescape_slash = $(subst _slash_,/,$(1))
 full_name = $(subst /,_,$(1))
+COMMA := ,
 
 #  Note: The command "cmt show groups" does not work in old versions of CMT
 cmt_version := $(shell cmt version)
 cmt2008 = $(findstring v1r20p2008, $(cmt_version))
 
 # ATLAS cmt tag implies no_all_groups and the use of LOG_LOCATION
-ifeq ($(findstring ATLAS,$(CMTEXTRATAGS)),ATLAS)
+ifeq ($(filter ATLAS,$(subst $(COMMA), ,$(CMTEXTRATAGS))),ATLAS)
   no_all_groups = yes
   ifndef LOG_LOCATION
     LOG_LOCATION := LOG_$(CMTCONFIG)
@@ -174,7 +175,6 @@ endif
 
 # Fix the separator for environment variables
 # (needed if the variables are specified as lists in Eclipse)
-COMMA := ,
 override CMTEXTRATAGS := $(subst ;,$(COMMA),$(CMTEXTRATAGS))
 ifneq ($(platform),windows)
 override CMTPROJECTPATH := $(subst ;,:,$(CMTPROJECTPATH))

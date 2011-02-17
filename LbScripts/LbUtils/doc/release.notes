@@ -1,6 +1,6 @@
 2011-02-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
-	* data/Makefile: fixed a problem with the build logs
+	* data/Makefile: fixed a problem with the build logs and improved the check for ATLAS tag
 
 2011-02-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
