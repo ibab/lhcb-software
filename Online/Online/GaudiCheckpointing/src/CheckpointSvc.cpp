@@ -713,7 +713,7 @@ int CheckpointSvc::watchChildren() {
     }
     else {
       MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "watchChildren:";
+      log << MSG::DEBUG << "watchChildren:";
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
 	if ( (*i).second != -1 )
 	  log << (*i).second << " ";
