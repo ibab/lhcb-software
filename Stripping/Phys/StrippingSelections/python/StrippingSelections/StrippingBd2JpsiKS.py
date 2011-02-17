@@ -23,18 +23,18 @@ name = "Bd2JpsiKS"
 ##################
 # J/Psi -> mu mu #
 ##################
-SelJPsi2MuMu = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
+SelJPsi2MuMu = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
 ################
 # KS long long #
 ################
-_stdKSLL = DataOnDemand(Location = "Phys/StdLooseKsLL")
+_stdKSLL = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
 
 
 ############################
 # KS downstream downstream #
 ############################
-_stdKSDD = DataOnDemand(Location = "Phys/StdLooseKsDD")
+_stdKSDD = DataOnDemand(Location = "Phys/StdLooseKsDD/Particles")
 
 
 ##############################
