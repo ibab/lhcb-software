@@ -65,7 +65,7 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
   for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
         iP != protos->end(); ++iP )
   {
-    m_tuple->fill( *iP );
+    sc = sc && m_tuple->fill( *iP );
   }
 
   return sc;
