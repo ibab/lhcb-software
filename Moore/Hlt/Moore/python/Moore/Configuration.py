@@ -138,10 +138,19 @@ class Moore(LHCbConfigurableUser):
             del allConfigurables['EventSelector']
 
         if not self.getProp('RunMonitoringFarm') :
+            ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
+            ## It will not work if these are created before.
+            if not self.getProp('RunMonitoringFarm'):
+                if OnlineEnv.MooreStartupMode == 1:
+                    self._configureOnlineForking()
+                elif OnlineEnv.MooreStartupMode == 2:
+                    self._configureOnlineCheckpointing()
+
             TAE = OnlineEnv.TAE != 0
             input   = 'EVENT' if not TAE else 'MEP'
             output  = 'SEND'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
+            mepMgr.ConnectWhen = 'start'
             app.Runable = OnlineEnv.evtRunable(mepMgr)
             app.ExtSvc.append(mepMgr)
             evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
@@ -169,7 +178,35 @@ class Moore(LHCbConfigurableUser):
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
+        # Now setup the message service
         self._configureOnlineMessageSvc()
+
+    def _configureOnlineForking(self):
+        import os, socket, OnlineEnv
+        from Configurables import LHCb__CheckpointSvc
+        numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
+        host = socket.gethostname().split('.')[0].upper()
+        if host[:3]=='HLT':
+            if len(host)==8:
+                id = int(host[6:])
+                if id < 5: numChildren=7
+                elif id < 12: numChildren=17
+                elif id < 23: numChildren=19
+
+        forker = LHCb__CheckpointSvc("CheckpointSvc")
+        forker.NumberOfInstances   = numChildren
+        forker.Partition           = OnlineEnv.PartitionName
+        forker.TaskType            = 'GauchoJob'
+        forker.UseCores            = False
+        forker.ChildSessions       = False
+        forker.FirstChild          = 1
+        forker.UtgidPattern        = "%NN_%T_%d";
+        forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
+        forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
+        ApplicationMgr().ExtSvc.append(forker)
+        
+    def _configureOnlineCheckpointing(self):
+        pass
 
     def _configureOnlineMessageSvc(self):
         # setup the message service
@@ -188,8 +225,6 @@ class Moore(LHCbConfigurableUser):
         import OnlineEnv 
         msg.OutputLevel = OnlineEnv.OutputLevel
         msg.doPrintAlways = False
-
-
 
     def _configureDBSnapshot(self):
         tag = { "DDDB":     self.getProp('DDDBtag')
