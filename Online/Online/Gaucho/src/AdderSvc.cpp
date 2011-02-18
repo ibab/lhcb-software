@@ -76,7 +76,7 @@ StatusCode AdderSvc::initialize()
 StatusCode AdderSvc::start()
 {
   Service::start();
-  if (m_errh == 0) new MyErrh();
+  if (m_errh == 0) m_errh = new MyErrh();
   std::string myservicename;
 //  m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
