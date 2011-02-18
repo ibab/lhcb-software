@@ -67,18 +67,15 @@ class genClasses(genSrcUtils.genSrcUtils):
     s2 = ''
     classAtt = godClass['attrs']
     if classAtt.has_key('location'):                                             # add class attribute location
-      s2 += '  static const std::string& Default = "%s";\n' % classAtt['location']
+      s2 += '  static const std::string Default = "%s";\n' % classAtt['location']
     if godClass.has_key('location'):                                             # add elements location
       for loc in godClass['location']:
         locAtt = loc['attrs']
         place = locAtt['place']
         if locAtt['noQuote'] == 'FALSE': place = '"' + place + '"'
-        s2 += '  static const std::string& %s = %s;\n' % ( locAtt['name'], place )
+        s2 += '  static const std::string %s = %s;\n' % ( locAtt['name'], place )
     if len(s2):                                                                  # if found something put namespace around it
       s =  '// Namespace for locations in TDS\n'
-      s += '#ifdef __INTEL_COMPILER        // Disable ICC remark\n'
-      s += '  #pragma warning(disable:177) // variable was declared but never referenced\n'
-      s += '#endif\n'
       s += 'namespace %sLocation {\n%s}\n' % ( classAtt['name'], s2 )
     return s
 #--------------------------------------------------------------------------------
