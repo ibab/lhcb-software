@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : Rich::Converter_Imp
  *
- *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.3 2009-09-30 08:25:59 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
  */
@@ -97,7 +94,6 @@ StatusCode Rich::Converter_Imp::initialize()
   const StatusCode sc = ::Converter::initialize();
   if ( sc.isFailure() )
   { return Error( "Could not initialize base class Converter", sc); }
-
   return sc;
 }
 

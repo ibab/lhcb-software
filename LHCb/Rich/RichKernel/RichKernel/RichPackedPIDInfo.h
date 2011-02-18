@@ -4,9 +4,6 @@
  *
  *  Header file for RICH utility class : Rich::PackedPIDInfo
  *
- *  CVS Log :-
- *  $Id: RichPackedPIDInfo.h,v 1.3 2010-02-13 15:10:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/02/2010
  */
@@ -23,11 +20,6 @@
 
 // boost
 #include "boost/cstdint.hpp"
-
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(disable:2259) // Non-pointer conversion may lose significant bits
-  #pragma warning(push)
-#endif
 
 namespace Rich
 {
@@ -71,25 +63,25 @@ namespace Rich
     /// Set the detector type
     inline void setDet( const Rich::DetectorType det )
     {
-      data.packed.rich = static_cast<Pack8_t>(det);
+      data.packed.rich = (Pack8_t)(det);
     }
 
     /// Set the radiator type
     inline void setRad( const Rich::RadiatorType rad )
     {
-      data.packed.rad = static_cast<Pack8_t>(rad);
+      data.packed.rad = (Pack8_t)(rad);
     }
 
     /// Set the detector side type
     inline void setSide( const Rich::Side side )
     {
-      data.packed.side = static_cast<Pack8_t>(side);
+      data.packed.side = (Pack8_t)(side);
     }
 
     /// Set the particle mass hypothesis
     inline void setPid( const Rich::ParticleIDType pid )
     {
-      data.packed.pid = static_cast<Pack8_t>(pid);
+      data.packed.pid = (Pack8_t)(pid);
     }
 
   public:
@@ -97,25 +89,25 @@ namespace Rich
     /// Get the detector type
     inline Rich::DetectorType det() const
     {
-      return static_cast<Rich::DetectorType>(data.packed.rich);
+      return (Rich::DetectorType)(data.packed.rich);
     }
 
     /// Get the radiator type
     inline Rich::RadiatorType rad() const
     {
-      return static_cast<Rich::RadiatorType>(data.packed.rad);
+      return (Rich::RadiatorType)(data.packed.rad);
     }
 
     /// Get the side type
     inline Rich::Side side() const
     {
-      return static_cast<Rich::Side>(data.packed.side);
+      return (Rich::Side)(data.packed.side);
     }
 
     /// Get the particle mass hypothesis
     inline Rich::ParticleIDType pid() const
     {
-      return static_cast<Rich::ParticleIDType>(data.packed.pid);
+      return (Rich::ParticleIDType)(data.packed.pid);
     }
 
   public:
@@ -155,8 +147,5 @@ namespace Rich
   };
 
 }
-#ifdef __INTEL_COMPILER         // End disable ICC remark
-  #pragma warning(pop)
-#endif
 
 #endif // RICHKERNEL_RICHPACKEDPIDINFO_H

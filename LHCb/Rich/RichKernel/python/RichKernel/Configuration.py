@@ -324,10 +324,13 @@ class RichTools(RichConfigurableUser):
             tool = self.__makeRichTool( Rich__Rec__MC__PixelCreatorFromSignalRawBuffer, nickname, private )
         elif pixtype == "RawBufferWithIneffic":
             from Configurables import Rich__Rec__PixelCreatorWithForcedIneffic
-            tool = self.__makeRichTool(Rich__Rec__PixelCreatorWithForcedIneffic,nickname, private )
+            tool = self.__makeRichTool( Rich__Rec__PixelCreatorWithForcedIneffic, nickname, private )
+        elif pixtype == "RawBufferWithPanelFlip":
+            from Configurables import Rich__Rec__PixelCreatorWithPanelFlip
+            tool = self.__makeRichTool( Rich__Rec__PixelCreatorWithPanelFlip, nickname, private )
         elif pixtype == "AllMCRichHits":
             from Configurables import Rich__Rec__MC__PixelCreatorFromAllMCRichHits
-            tool = self.__makeRichTool(Rich__Rec__MC__PixelCreatorFromAllMCRichHits,nickname, private ) 
+            tool = self.__makeRichTool( Rich__Rec__MC__PixelCreatorFromAllMCRichHits, nickname, private ) 
         else:
             raise RuntimeError("Unknown Pixel Creator '%s'"%pixtype)
         return tool

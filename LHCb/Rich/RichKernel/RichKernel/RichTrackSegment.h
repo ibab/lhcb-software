@@ -22,9 +22,6 @@
 #include "Kernel/RichRadIntersection.h"
 
 // geometry
-#ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
-  #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
-#endif
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
@@ -116,11 +113,6 @@ namespace LHCb
           m_errTY2 ( fabsf(errTY2) ),
           m_errP2  ( fabsf(errP2)  ) { }
 
-  #ifdef __INTEL_COMPILER         // Disable ICC remark
-    #pragma warning(disable:2259) // Non-pointer conversion may lose significant bits
-    #pragma warning(push)
-  #endif
-
       /// Constructor with explicit double values
       StateErrors( const double errX2,  ///< error on x squared
                    const double errY2,  ///< error on y squared
@@ -128,15 +120,11 @@ namespace LHCb
                    const double errTY2, ///< error on y slope squared
                    const double errP2   ///< error on momentum squared
                    )
-        : m_errX2  ( fabsf(static_cast<float>(errX2))  ),
-          m_errY2  ( fabsf(static_cast<float>(errY2))  ),
-          m_errTX2 ( fabsf(static_cast<float>(errTX2)) ),
-          m_errTY2 ( fabsf(static_cast<float>(errTY2)) ),
-          m_errP2  ( fabsf(static_cast<float>(errP2))  ) { }
-
-  #ifdef __INTEL_COMPILER         // End disable ICC remark
-    #pragma warning(pop)
-  #endif
+        : m_errX2  ( fabsf((float)(errX2))  ),
+          m_errY2  ( fabsf((float)(errY2))  ),
+          m_errTX2 ( fabsf((float)(errTX2)) ),
+          m_errTY2 ( fabsf((float)(errTY2)) ),
+          m_errP2  ( fabsf((float)(errP2))  ) { }
 
       inline float errX2()  const { return m_errX2;  }  ///< Access the x error squared
       inline float errY2()  const { return m_errY2;  }  ///< Access the y error squared
@@ -604,8 +592,15 @@ LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
                                           double & theta,
                                           double & phi ) const
 {
+#ifdef __INTEL_COMPILER        // Disable ICC remark from ROOT
+ #pragma warning(push)
+ #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
+#endif
   // create vector in track reference frame
-  const Gaudi::XYZVector rotDirection = rotationMatrix() * direction;
+  const Gaudi::XYZVector rotDirection ( rotationMatrix() * direction );
+#ifdef __INTEL_COMPILER        // End disable ICC remark
+ #pragma warning(pop)
+#endif
   // get the angles
   theta = rotDirection.theta();
   phi   = rotDirection.phi();

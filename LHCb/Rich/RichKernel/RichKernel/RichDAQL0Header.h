@@ -79,16 +79,9 @@ namespace Rich
         static const ShortType ShiftParityBit     = ShiftBxID + BitsBxID + ShiftUnusedBits2;
 
         // Create the Masks
-        static const LongType MaskEventID         = ((1 << BitsEventID)-1)   << ShiftEventID;
-        static const LongType MaskBxID            = ((1 << BitsBxID)-1)      << ShiftBxID;
-  #ifdef __INTEL_COMPILER       // Disable ICC remark
-    #pragma warning(disable:68) // Integer conversion resulted in a change of sign
-    #pragma warning(push)
-  #endif
-        static const LongType MaskParityBit       = ((1 << BitsParityBit)-1) << ShiftParityBit;
-  #ifdef __INTEL_COMPILER       // End disable ICC remark
-    #pragma warning(pop)
-  #endif
+        static const LongType MaskEventID         = (LongType) ((1 << BitsEventID)-1)   << ShiftEventID;
+        static const LongType MaskBxID            = (LongType) ((1 << BitsBxID)-1)      << ShiftBxID;
+        static const LongType MaskParityBit       = (LongType) ((1 << BitsParityBit)-1) << ShiftParityBit;
 
         //-----------------------------------------------------------------------------------------
 
@@ -177,22 +170,15 @@ namespace Rich
         static const ShortType ShiftParityBit      = ShiftOtherGOLStatus + BitsOtherGOLStatus + ShiftUnusedBits1;
 
         // Create the Masks
-        static const LongType MaskL0ID             = ((1 << BitsL0ID)-1)           << ShiftL0ID;
-  #ifdef __INTEL_COMPILER       // Disable ICC remark
-    #pragma warning(disable:68) // Integer conversion resulted in a change of sign
-    #pragma warning(push)
-  #endif
-        static const LongType MaskNWordsBIDFIF     = ((1 << BitsNWordsBIDFIF)-1)   << ShiftNWordsBIDFIF;
-  #ifdef __INTEL_COMPILER       // End disable ICC remark
-    #pragma warning(pop)
-  #endif
-        static const LongType MaskBIDFIFEmpty      = ((1 << BitsBIDFIFEmpty)-1)    << ShiftBIDFIFEmpty;
-        static const LongType MaskBIDFIFFull       = ((1 << BitsBIDFIFFull)-1)     << ShiftBIDFIFFull;
-        static const LongType MaskTestPat          = ((1 << BitsTestPat)-1)        << ShiftTestPat;
-        static const LongType MaskCalibEvent       = ((1 << BitsCalibEvent)-1)     << ShiftCalibEvent;
-        static const LongType MaskRunMode          = ((1 << BitsRunMode)-1)        << ShiftRunMode;
-        static const LongType MaskOtherGOLStatus   = ((1 << BitsOtherGOLStatus)-1) << ShiftOtherGOLStatus;
-        static const LongType MaskParityBit        = ((1 << BitsParityBit)-1)      << ShiftParityBit;
+        static const LongType MaskL0ID             = (LongType) ((1 << BitsL0ID)-1)           << ShiftL0ID;
+        static const LongType MaskNWordsBIDFIF     = (LongType) ((1 << BitsNWordsBIDFIF)-1)   << ShiftNWordsBIDFIF;
+        static const LongType MaskBIDFIFEmpty      = (LongType) ((1 << BitsBIDFIFEmpty)-1)    << ShiftBIDFIFEmpty;
+        static const LongType MaskBIDFIFFull       = (LongType) ((1 << BitsBIDFIFFull)-1)     << ShiftBIDFIFFull;
+        static const LongType MaskTestPat          = (LongType) ((1 << BitsTestPat)-1)        << ShiftTestPat;
+        static const LongType MaskCalibEvent       = (LongType) ((1 << BitsCalibEvent)-1)     << ShiftCalibEvent;
+        static const LongType MaskRunMode          = (LongType) ((1 << BitsRunMode)-1)        << ShiftRunMode;
+        static const LongType MaskOtherGOLStatus   = (LongType) ((1 << BitsOtherGOLStatus)-1) << ShiftOtherGOLStatus;
+        static const LongType MaskParityBit        = (LongType) ((1 << BitsParityBit)-1)      << ShiftParityBit;
 
         //------------------------------------------------------------------------------------------------------
 
