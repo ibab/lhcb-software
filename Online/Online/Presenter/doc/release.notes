@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-02-18 - Olivier Callot
+ - Major cleanup to use the new Monitoring Service publishing per task
+ - Depreciate teh DbRootHist class, and add PresenterPage and DisplayHistogram
+   classes
+ - Option to hide the editing facilities, not working with teh new service.
+
 ! 2011-02-03 - Olivier Callot
  - Add a new button to set the TCK and the reference run number. This is used
    to access the reference file for histograms:

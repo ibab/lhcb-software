@@ -16,6 +16,8 @@
 #pragma link C++ class ElogDialog;
 #pragma link C++ class ReferenceDialog;
 #pragma link C++ class CreateTrendingHistogramDialog;
+#pragma link C++ class PresenterPage;
+#pragma link C++ class DisplayHistogram;
 //#pragma link C++ class Offline;
 
 #endif

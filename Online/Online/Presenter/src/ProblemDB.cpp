@@ -1,6 +1,6 @@
 // $Id: ProblemDB.cpp,v 1.7 2010-10-18 07:37:58 marcocle Exp $
 
-// Include files 
+// Include files
 // This file
 #include "ProblemDB.h"
 
@@ -28,19 +28,20 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ProblemDB::ProblemDB( std::string address ) {
+ProblemDB::ProblemDB( std::string address, std::string rundbAddress ) {
   m_address = address;
+  m_rundbAddress = rundbAddress;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-ProblemDB::~ProblemDB() {} 
+ProblemDB::~ProblemDB() {}
 
 
 //=========================================================================
-//  
+//
 //=========================================================================
-int ProblemDB::post( std::string system, std::string username, std::string title, 
+int ProblemDB::post( std::string system, std::string username, std::string title,
                      std::string message, std::string logReference ) {
 
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
@@ -59,38 +60,38 @@ int ProblemDB::post( std::string system, std::string username, std::string title
   if ( !logReference.empty() ) postArg = postArg + "&link=" + urlEncode( logReference );
   char argLen[20];
   sprintf( argLen, "%d", (int)postArg.size() );
-  
+
   std::string posting;
   posting = "POST /api/problems/ HTTP/1.0\r\nHost: " + m_address + "\r\nContent-Length: " + argLen + "\r\n\r\n" + postArg;
 
   std::cout << "Sending '" << posting << "'" << std::endl;
 
   webStream << posting << std::flush;
-  
+
   std::string line ;
 
   int status = 0;
   std::getline( webStream , line );
   std::cout << line << std::endl;
   if ( line.find( "201 Created") != std::string::npos ) {
-    status = 1; 
+    status = 1;
     while( std::getline( webStream , line )  ) {
       std::cout << line << std::endl;
       if ( line.find( "Location: " ) == 0 ) {
         m_reference = line.substr( 10 );
       }
     }
-  } 
+  }
   // Check that the web server answers correctly
   while( std::getline( webStream , line )  ) {
     std::cout << line << std::endl;
   }
   std::cout << "--- end ---" << std::endl;
-  
+
   return status;
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 std::string  ProblemDB::urlEncode ( std::string src) {
   unsigned char *pd, *p;
@@ -119,18 +120,19 @@ std::string  ProblemDB::urlEncode ( std::string src) {
 //
 //=============================================================================
 void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &problems ,
-				   const std::string & systemName , 
-				   int runNumber ) {
+                                   const std::string & systemName ,
+                                   int runNumber ) {
   problems.clear() ;
 
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+  std::cout << "Accessing the Problem Database" << std::endl;
   
+  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+
   if ( ! webStream ) {
     std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
     return ;
   }
-  
-  
+
   webStream << "GET /api/search/?_inline=True&system_visible=True" ;
 
   if ( 0 == runNumber ) {
@@ -138,27 +140,27 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
     boost::posix_time::ptime now =
       boost::posix_time::second_clock::local_time() ;
     boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
-    
+
     webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
- 	      << " HTTP/1.0\r\n"
-  	      << "Host:" << m_address << "\r\n"
-  	      << "\r\n" << std::flush ;
+              << " HTTP/1.0\r\n"
+              << "Host:" << m_address << "\r\n"
+              << "\r\n" << std::flush ;
   } else {
-    RunDB runDb( "lbrundb.cern.ch" ) ;
+    RunDB runDb( m_rundbAddress ) ;
     if ( ! runDb.checkRun( runNumber ) ) {
-      std::cerr << "Run number " << runNumber << "was not found in db" 
-		<< std::endl ;
+      std::cerr << "Run number " << runNumber << "was not found in db"
+                << std::endl ;
       return ;
     }
     std::string st( runDb.getCurrentStartTime() ) ;
     std::string et( runDb.getCurrentEndTime() ) ;
-    boost::algorithm::erase_all( st , " " ) ; 
+    boost::algorithm::erase_all( st , " " ) ;
     boost::algorithm::erase_all( et , " " ) ;
     webStream << "&open_or_closed_gte=" << st
-      	      << "&started_lte=" << et
-	      << " HTTP/1.0\r\n"
-	      << "Host:" << m_address << "\r\n"
-	      << "\r\n" << std::flush ;
+              << "&started_lte=" << et
+              << " HTTP/1.0\r\n"
+              << "Host:" << m_address << "\r\n"
+              << "\r\n" << std::flush ;
   }
 
   std::string line ;
@@ -169,18 +171,17 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
     std::cerr << "ProblemDB server does not reply" << std::endl ;
     return ;
   }
-  
 
   // Parse the web server answers
   std::string pattern ;
   pattern = "\\N{left-square-bracket}\\N{left-curly-bracket}(.*)" ;
   pattern += "\\N{right-curly-bracket}\\N{right-square-bracket}" ;
-  
+
   const boost::regex e( pattern ) ;
 
   std::vector< std::string > single_line ;
   boost::property_tree::ptree problem_tree ;
-  
+
   while ( std::getline( webStream , line ) ) {
     // Check that the answer has the correct format (JSON format)
     if ( boost::regex_match( line , e ) ) {
@@ -189,25 +190,25 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
       std::istringstream is( "{\"problem\":" + line + "}" ) ;
 
       try {
-	boost::property_tree::json_parser::read_json( is , problem_tree ) ;
-	
-	BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
-		       problem_tree.get_child("problem")) {
-	  single_line.clear() ;
-	  std::string systn = v.second.get< std::string >( "system" ) ;
-	  if ( "" != systemName ) 
-	    if ( systemName.find( systn ) == std::string::npos ) 
-	      continue ;
-	  single_line.push_back( systn ) ;
-	  single_line.push_back( v.second.get< std::string >( "severity" ) ) ;
-	  single_line.push_back( v.second.get< std::string >( "started_at" ) ) ;
-	  single_line.push_back( v.second.get< std::string >( "id" ) ) ;
-	  single_line.push_back( v.second.get< std::string >( "title" ) ) ;
-	  problems.push_back( single_line ) ;
-	}
-      } 
+        boost::property_tree::json_parser::read_json( is , problem_tree ) ;
+
+        BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
+                       problem_tree.get_child("problem")) {
+          single_line.clear() ;
+          std::string systn = v.second.get< std::string >( "system" ) ;
+          if ( "" != systemName )
+            if ( systemName.find( systn ) == std::string::npos )
+              continue ;
+          single_line.push_back( systn ) ;
+          single_line.push_back( v.second.get< std::string >( "severity" ) ) ;
+          single_line.push_back( v.second.get< std::string >( "started_at" ) ) ;
+          single_line.push_back( v.second.get< std::string >( "id" ) ) ;
+          single_line.push_back( v.second.get< std::string >( "title" ) ) ;
+          problems.push_back( single_line ) ;
+        }
+      }
       catch (...) {
-	std::cerr << "Error in the problem db server response" << std::endl ;
+        std::cerr << "Error in the problem db server response" << std::endl ;
       }
     }
   }

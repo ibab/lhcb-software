@@ -25,7 +25,8 @@ class PageDescriptionTextView: public TGHtml {
  public:
   /// Standard constructor
   PageDescriptionTextView( const TGWindow * p , UInt_t w, UInt_t h,
-			   const std::string & address ) ;
+                           const std::string & address,
+                           const std::string& rundbAddress ) ;
 
   virtual ~PageDescriptionTextView( ); ///< Destructor
 
@@ -48,5 +49,6 @@ protected:
 private:
   /// name of problem db web server
   std::string m_problemDbServerAddress ;
+  std::string m_rundbServerAddress;
 };
 #endif // PRESENTER_PAGEDESCRIPTIONTEXTVIEW_H

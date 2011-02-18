@@ -15,7 +15,7 @@
 class ProblemDB {
 public: 
   /// Standard constructor
-  ProblemDB( std::string address );
+  ProblemDB( std::string address, std::string rundbAddress );
 
   virtual ~ProblemDB( ); ///< Destructor
 
@@ -32,6 +32,7 @@ protected:
   
 private:
   std::string m_address;
+  std::string m_rundbAddress;
   std::string m_reference;
 };
 #endif // PROBLEMDB_H

@@ -15,6 +15,7 @@ class OMAlib;
 class OnlineHistogram;
 class TH1;
 class PresenterInformation;
+class DisplayHistogram;
 
 /** @class Archive Archive.h
  *
@@ -68,6 +69,14 @@ public:
   /// Get task name from a file
   std::string taskNameFromFile(const std::string & fileName) const ;
 
+  /// Set the file list fo rteh sepcified task
+  void setFiles(  const std::string& task,  
+                  const std::string& timePoint,
+                  const std::string& pastDuration  );
+
+  /// Fill an histogram form the files previously found.
+  void fillHistogramFromFiles ( DisplayHistogram* dispHist);
+  
   /// Utility function to create ISO time string  
   static std::string createIsoTimeString(const int& year, const int& month, 
                                          const int& day, const int& hour, 
@@ -131,5 +140,6 @@ private:
   std::vector<boost::filesystem::path> m_foundSavesets; ///< List of save sets
   /// List of references
   std::vector<boost::filesystem::path> m_foundReferences; 
+  std::vector< boost::filesystem::path > m_rootFiles ;
 };
 #endif /*PRESENTER_ARCHIVE_H*/

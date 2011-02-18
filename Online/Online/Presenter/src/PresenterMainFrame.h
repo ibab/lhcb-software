@@ -18,6 +18,8 @@
 #include "PresenterInformation.h"
 #include "presenter.h"
 
+#include "PresenterPage.h"
+
 class ParallelWait;
 class TObject;
 class TGDockableFrame;
@@ -214,9 +216,6 @@ public:
   /// Link to interval picker object
   IntervalPicker* intervalPicker() const { return m_intervalPicker; }
 
-  void setReferencePath(const std::string & referencePath);
-  void setSavesetPath(const std::string & savesetPath);
-
   /// return the saveset file name
   std::string& savesetFileName() {return m_savesetFileName;}
 
@@ -342,6 +341,8 @@ public:
 
   DbRootHist* selectedDbRootHistogram();
 
+  DisplayHistogram* selectedDisplayHistogram();
+
   void clickedHistoSvcTreeItem(TGListTreeItem* node,
                                EMouseButton btn,
                                int x, int y);
@@ -381,6 +382,7 @@ public:
   void saveSelectedHistogramAsReference();
   void toggleReferenceOverlay();
   void enableAlarmDisplay(bool mode);
+  void enableEditing( bool mode ) { m_editingAllowed = mode; }
   void toggleShowAlarmList();
 
   /// Show panel with list of known problems
@@ -468,6 +470,8 @@ public:
   int               m_msgBoxReturnCode;
   std::string       m_dbName;
   std::string       m_message;
+
+  bool m_editingAllowed;
 
   void cleanHistogramDB();
 
@@ -710,9 +714,10 @@ public:
   /// Presenter Information to transfer to other objects
   PresenterInformation m_presenterInfo ;
 
+  PresenterPage m_presenterPage;  ///< Contains the current page description and contents
+
   /// Display page name in status bar and load comments
-  void displayStatusAndComments( const std::string & pageName , 
-				 OnlineHistPage * page ) ;
+  void displayStatusAndComments( OnlineHistPage * page ) ;
 
   /// Change main window for run navigation
   void switchToRunNavigation( bool on ) ;
@@ -733,7 +738,7 @@ public:
   bool isBatch( ) const { return ( pres::Batch == presenterMode() ) ; } ;
 
   ClassDef(PresenterMainFrame, 0) // main editor window
-    };
+};
 
 extern PresenterMainFrame* gPresenter;
 

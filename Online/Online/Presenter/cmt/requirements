@@ -23,12 +23,12 @@ use CLHEP         v*  LCG_Interfaces
 
 # Application building rule
 #============================================================================
-application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp *.cpp "
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp $(PRESENTERROOT)/Gaucho/*.cpp *.cpp "
 
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" \
-  WIN32               " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
+macro_append includes " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src" \
+  WIN32               " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src"
 
 macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed -lGuiHtml" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libGuiHtml.lib libHist.lib libGraf.lib \

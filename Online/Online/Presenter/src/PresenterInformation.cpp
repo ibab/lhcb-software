@@ -8,7 +8,8 @@
 PresenterInformation::PresenterInformation( ) : 
   m_presenterMode( pres::History ) , 
   m_globalHistoryByRun( false ) , 
-  m_currentTCK( "" ) ,
+  m_currentTCK( "default" ),
+  m_referenceRun( 1 ),
   m_historyTrendPlots( true ) , 
   m_currentPartition( "" ) , 
   m_rwTimePoint( "" ) , 

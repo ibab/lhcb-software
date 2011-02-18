@@ -25,7 +25,8 @@
 class KnownProblemList: public TGListBox {
  public:
   /// Standard constructor
-  KnownProblemList( const TGWindow * p , const std::string & address ) ;
+  KnownProblemList( const TGWindow * p , const std::string & address,
+                    const std::string& rundbAddress ) ;
 
   virtual ~KnownProblemList( ); ///< Destructor
 
@@ -35,5 +36,6 @@ protected:
 
 private:
   std::string m_problemDbServerAddress ;
+  std::string m_rundbServerAddress;
 };
 #endif // PRESENTER_KNOWNPROBLEMLIST_H

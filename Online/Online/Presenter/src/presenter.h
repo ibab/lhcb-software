@@ -68,7 +68,6 @@ namespace pres
   enum DatabaseMode {
     ReadOnly = 0,
     ReadWrite = 1,
-
     LoggedOut = 2,
     UserSelected = 3
   };
@@ -118,11 +117,6 @@ namespace pres
   static const bool s_runInterval       = false;
 
   // Conventions (see HistogramIdentifier for parsing)
-  static const std::string s_H1D("H1D");
-  static const std::string s_H2D("H2D");
-  static const std::string s_P1D("P1D");
-  static const std::string s_HPD("HPD"); // legacy compat == P1D
-  static const std::string s_P2D("P2D");
   static const std::string s_CNT("CNT");  
 
   static const std::string s_FILE_URI("file://");
@@ -201,15 +195,8 @@ namespace pres
 //  Partition_Adder_1/GauchoJob/MonitorSvc/monRate/Hlt1Hlt1L0GlobalPi0DecisionLineAccepts
 
 // I guess TPRegexp wrapper is buggy: other pcre-s can match the pattern below (-1 match is OK):
-//  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately: ^([^_/]+)_([^_/]+)_([^_/]+)_?([^_/]+)?$
 // OK
-//  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-//  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-//  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
-//  static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
-
-  // static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");                                                                                                    
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^/]+)/?(.*))$");
   
 //  RICH1_Adder_1

@@ -26,11 +26,14 @@
 // Standard constructor, initializes variables
 //=============================================================================
 PageDescriptionTextView::PageDescriptionTextView( const TGWindow * p ,
-						  UInt_t w , 
-						  UInt_t h ,
-						  const std::string & address ) : 
+                                                  UInt_t w ,
+                                                  UInt_t h ,
+                                                  const std::string & address,
+                                                  const std::string& rundbAddress) :
   TGHtml( p , w , h ) ,
-  m_problemDbServerAddress( address ) { }
+  m_problemDbServerAddress( address ),
+  m_rundbServerAddress( rundbAddress )
+{ }
 
 //=============================================================================
 // Destructor
@@ -40,9 +43,9 @@ PageDescriptionTextView::~PageDescriptionTextView() { }
 //=============================================================================
 // Retrieve current problems in problem DB
 //=============================================================================
-bool PageDescriptionTextView::retrieveListOfProblems( const std::string& 
+bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
                                                       pageName ,
-                                                      const std::string& 
+                                                      const std::string&
                                                       fileName ) {
 
   // Extract the run number from the file name, where the convention is
@@ -53,12 +56,12 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
   if ( ! fileName.empty() ) {
     boost::filesystem::path fp( fileName ) ;
     boost::xpressive::mark_tag rn( 1 ) ;
-    boost::xpressive::sregex rnbrx = 
+    boost::xpressive::sregex rnbrx =
       ( boost::xpressive::as_xpr(std::string("Brunel"))|
-      boost::xpressive::as_xpr(std::string("DaVinci"))|
-      boost::xpressive::as_xpr(std::string("Boole"))|
-      boost::xpressive::as_xpr(std::string("Gauss")) ) 
-      >> +boost::xpressive::_w >> "_" 
+        boost::xpressive::as_xpr(std::string("DaVinci"))|
+        boost::xpressive::as_xpr(std::string("Boole"))|
+        boost::xpressive::as_xpr(std::string("Gauss")) )
+      >> +boost::xpressive::_w >> "_"
       >> (rn=+boost::xpressive::_d) >> "_"
       >> +boost::xpressive::_w >> ".root" ;
     boost::xpressive::smatch whrn ;
@@ -71,31 +74,31 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
   // Get system name from page name
   // but first erase all spaces
   std::string pname( pageName ) ;
-  boost::algorithm::erase_all(pname , " "); 
+  boost::algorithm::erase_all(pname , " ");
   boost::xpressive::mark_tag system( 1 ) ;
 
-  boost::xpressive::sregex pb = 
+  boost::xpressive::sregex pb =
     (boost::xpressive::as_xpr(std::string("/OfflineDataQuality/"))|
-    boost::xpressive::as_xpr(std::string("/Shift/")))
+     boost::xpressive::as_xpr(std::string("/Shift/")))
     >> (system=*~(boost::xpressive::set =':')) >> ":"  ;
   boost::xpressive::smatch what ;
   std::string systemName ;
   if ( boost::xpressive::regex_search( pname , what , pb ) ) {
     systemName = what[ system ] ;
-    if ( systemName.find( "L0" ) != std::string::npos ) 
-      systemName = "L0" ; 
-    else if ( systemName.find( "ALIGNMENT" ) != std::string::npos ) 
+    if ( systemName.find( "L0" ) != std::string::npos )
+      systemName = "L0" ;
+    else if ( systemName.find( "ALIGNMENT" ) != std::string::npos )
       systemName = "Alignment" ;
-    else if ( systemName.find( "CALO" ) != std::string::npos ) 
+    else if ( systemName.find( "CALO" ) != std::string::npos )
       systemName = "ECAL HCAL PRS SPD" ;
     else if ( systemName.find( "RICH1" ) != std::string::npos ||
-	      systemName.find( "RICH2" ) != std::string::npos )
+              systemName.find( "RICH2" ) != std::string::npos )
       systemName = systemName ;
     else if ( systemName.find( "RICH" ) != std::string::npos )
       systemName = "RICH1 RICH2" ;
   } else return false ;
-  
-  ProblemDB pbdb( m_problemDbServerAddress ) ;
+
+  ProblemDB pbdb( m_problemDbServerAddress, m_rundbServerAddress ) ;
   std::vector< std::vector< std::string > > problems ;
   pbdb.getListOfProblems( problems , systemName , runNumber ) ;
 
@@ -106,34 +109,34 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
 
   std::ostringstream theStr ;
 
-  if ( 0 == runNumber ) 
-    theStr << "Open problems reported in the problem database for the " 
+  if ( 0 == runNumber )
+    theStr << "Open problems reported in the problem database for the "
            << systemName << " subsystem: <br />" << std::endl ;
-  else 
+  else
     theStr << "Problems reported in the problem database for the " << systemName
-	   << " subsystem and run " << runNumber << ": <br />" << std::endl ;
+           << " subsystem and run " << runNumber << ": <br />" << std::endl ;
 
   theStr << "<table border=0 cellspacing=0 width=100%>" << std::endl ;
-  for ( std::vector< std::vector< std::string > >::iterator 
+  for ( std::vector< std::vector< std::string > >::iterator
           it = problems.begin() ; it != problems.end() ; ++it ) {
     std::vector< std::string > vec = (*it) ;
     id = atoi( vec[ 3 ].c_str() ) ;
 
     std::string cellColor ;
-    if ( vec[ 1 ] == "Ok") 
+    if ( vec[ 1 ] == "Ok")
       cellColor = "green" ;
-    else if ( vec[ 1 ] == "Minor" ) 
+    else if ( vec[ 1 ] == "Minor" )
       cellColor = "orange" ;
-    else if ( vec[ 1 ] == "Severe" ) 
+    else if ( vec[ 1 ] == "Severe" )
       cellColor = "red" ;
-    else 
+    else
       cellColor = "white" ;
 
-    theStr << "<tr><td class=\"links\" bgcolor=\"" << cellColor << "\">" 
-           << "<a href=\"http://" << m_problemDbServerAddress 
+    theStr << "<tr><td class=\"links\" bgcolor=\"" << cellColor << "\">"
+           << "<a href=\"http://" << m_problemDbServerAddress
            << "/problems/" << vec[ 3 ] << "/\" STYLE=\"text-decoration: none\">"
-           << "<font color=\"#000000\">" 
-           << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
+           << "<font color=\"#000000\">"
+           << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() )
            << "</font>" << "</a>" << "</td></tr>" << std::endl ;
   }
   theStr << "</table>" << std::endl ;
@@ -141,7 +144,7 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
 
   ParseText( const_cast< char * >( theStr.str().c_str() ) ) ;
 
-  return true ; 
+  return true ;
 }
 
 //=============================================================================
@@ -157,7 +160,7 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
 
   // Replace html links with corresponding HTML code
   boost::xpressive::mark_tag link( 1 ) ;
-  boost::xpressive::sregex html = "http://" >> 
+  boost::xpressive::sregex html = "http://" >>
     ( link = *~boost::xpressive::_s ) ;
   boost::xpressive::smatch what ;
   std::string linkName ;
@@ -167,11 +170,11 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
 
   // Replace offline names by online names
   std::string linkNameOnline( linkName ) ;
-  boost::algorithm::replace_all( linkNameOnline , "lbtwiki.cern.ch" , 
-				 "twiki.lbdaq.cern.ch" ) ;
+  boost::algorithm::replace_all( linkNameOnline , "lbtwiki.cern.ch" ,
+                                 "twiki.lbdaq.cern.ch" ) ;
 
-  std::string 
-    newLink = "<a href=\"" + linkNameOnline + "\">" + linkName + "</a>" ; 
+  std::string
+    newLink = "<a href=\"" + linkNameOnline + "\">" + linkName + "</a>" ;
   boost::algorithm::replace_all( theBuffer , linkName , newLink ) ;
 
   boost::algorithm::replace_all( theBuffer , "\n" , "<br />\n" ) ;
@@ -203,28 +206,28 @@ Bool_t PageDescriptionTextView::HandleButton( Event_t * event ) {
       bool running = false ;
       FILE * fp ;
       fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
-      if ( fp == NULL ) 
-	std::cerr << "Could not launch firefox" << std::endl ;
+      if ( fp == NULL )
+        std::cerr << "Could not launch firefox" << std::endl ;
       else {
-	char line[256] ;
-	while ( fgets( line , sizeof(line) , fp ) ) { 
-	  running = true ;
-	}
+        char line[256] ;
+        while ( fgets( line , sizeof(line) , fp ) ) {
+          running = true ;
+        }
       }
       pclose( fp ) ;
-      
+
       if ( ! running ) {
-	if ( 0 == fork() ) {
-	  execlp( "firefox" , "firefox" , link , NULL ) ;
-	}
+        if ( 0 == fork() ) {
+          execlp( "firefox" , "firefox" , link , NULL ) ;
+        }
       }
       else
-	if ( 0 == fork() ) {
-	  std::string foxargs( link ) ;
-	  foxargs = "openURL(" + foxargs + ")" ;
-	  execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()  
-		  , NULL ) ;
-	}
+        if ( 0 == fork() ) {
+          std::string foxargs( link ) ;
+          foxargs = "openURL(" + foxargs + ")" ;
+          execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()
+                  , NULL ) ;
+        }
     }
   }
 #endif

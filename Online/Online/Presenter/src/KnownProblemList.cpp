@@ -20,9 +20,12 @@
 // Standard constructor, initializes variables
 //=============================================================================
 KnownProblemList::KnownProblemList( const TGWindow * p ,
-				    const std::string & address ) : 
+                                    const std::string & address,
+                                    const std::string&  rundbAddress ) : 
   TGListBox( p ) ,
-  m_problemDbServerAddress( address ) { }
+  m_problemDbServerAddress( address ),
+  m_rundbServerAddress( rundbAddress ) 
+{ }
 
 //=============================================================================
 // Destructor
@@ -33,7 +36,7 @@ KnownProblemList::~KnownProblemList() { }
 // Retrieve current problems in problem DB
 //=============================================================================
 bool KnownProblemList::retrieveListOfProblems( const std::string& system ) {
-  ProblemDB pbdb( m_problemDbServerAddress ) ;
+  ProblemDB pbdb( m_problemDbServerAddress, m_rundbServerAddress ) ;
   std::vector< std::vector< std::string > > problems ;
   pbdb.getListOfProblems( problems , system , 0 ) ;
 

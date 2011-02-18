@@ -49,14 +49,11 @@ HistoPropDialog::~HistoPropDialog()
 void HistoPropDialog::ok()
 {
   m_mainFrame->bulkHistoOptions.m_1DRootDrawOption =
-    dynamic_cast<TGTextLBEntry*>(m_1DRootDrawOptionComboBox->
-    GetSelectedEntry())->GetText()->GetString();
+    dynamic_cast<TGTextLBEntry*>(m_1DRootDrawOptionComboBox->GetSelectedEntry())->GetText()->GetString();
   m_mainFrame->bulkHistoOptions.m_2DRootDrawOption =
-    dynamic_cast<TGTextLBEntry*>(m_2DRootDrawOptionComboBox->
-    GetSelectedEntry())->GetText()->GetString();
+    dynamic_cast<TGTextLBEntry*>(m_2DRootDrawOptionComboBox->GetSelectedEntry())->GetText()->GetString();
   m_mainFrame->bulkHistoOptions.m_genericRootDrawOption =
-    dynamic_cast<TGTextLBEntry*>(m_genericRootDrawOptionComboBox->
-    GetSelectedEntry())->GetText()->GetString();
+    dynamic_cast<TGTextLBEntry*>(m_genericRootDrawOptionComboBox->GetSelectedEntry())->GetText()->GetString();
   
   m_mainFrame->bulkHistoOptions.m_description =  
     dynamic_cast<TGText*>(m_histogramDescriptionField->GetText())->AsString();  
@@ -68,44 +65,30 @@ void HistoPropDialog::ok()
     } else {
       m_mainFrame->bulkHistoOptions.m_statsOption = 0;      
     }
-  m_mainFrame->bulkHistoOptions.m_xLabel =
-    m_xAxisLabelTextEntry->GetDisplayText();
-  m_mainFrame->bulkHistoOptions.m_yLabel =
-    m_yAxisLabelTextEntry->GetDisplayText();
-  m_mainFrame->bulkHistoOptions.m_fillStyle =
-    (int) m_fillStylePatternSelector->GetPattern();
-  m_mainFrame->bulkHistoOptions.m_fillColour =
-    (int) TColor::GetColor(m_fillColourSelector->GetColor());
-  m_mainFrame->bulkHistoOptions.m_lineWidth =
-    (int) m_lineWidthComboBox->GetSelected();
-  m_mainFrame->bulkHistoOptions.m_lineStyle =
-    (int) m_lineStyleComboBox->GetSelected();
-  m_mainFrame->bulkHistoOptions.m_lineColour =
-    (int) TColor::GetColor(m_lineColourSelector->GetColor());
+  m_mainFrame->bulkHistoOptions.m_xLabel     = m_xAxisLabelTextEntry->GetDisplayText();
+  m_mainFrame->bulkHistoOptions.m_yLabel     = m_yAxisLabelTextEntry->GetDisplayText();
+  m_mainFrame->bulkHistoOptions.m_fillStyle  = (int) m_fillStylePatternSelector->GetPattern();
+  m_mainFrame->bulkHistoOptions.m_fillColour = (int) TColor::GetColor(m_fillColourSelector->GetColor());
+  m_mainFrame->bulkHistoOptions.m_lineWidth  = (int) m_lineWidthComboBox->GetSelected();
+  m_mainFrame->bulkHistoOptions.m_lineStyle  = (int) m_lineStyleComboBox->GetSelected();
+  m_mainFrame->bulkHistoOptions.m_lineColour = (int) TColor::GetColor(m_lineColourSelector->GetColor());
 
-  m_mainFrame->bulkHistoOptions.m_drawPatternTextEntry =
-        m_drawPatternTextEntry->GetDisplayText();    
+  m_mainFrame->bulkHistoOptions.m_drawPatternTextEntry = m_drawPatternTextEntry->GetDisplayText();    
 
-
-  // m_bulkHistoOptions = new obsolete_BulkHistoOptions;
-  // return m_bulkHistoOptions;
   CloseWindow();
 }
-void HistoPropDialog::build()
-{
+void HistoPropDialog::build() {
 
   // main frame
   //   TGMainFrame *fMainFrame916 = new TGMainFrame(gClient->GetRoot(), 10, w0, kMainFrame | kVerticalFrame);
   SetLayoutBroken(true);
 
   // composite frame
-  TGCompositeFrame *fMainFrame648 = new TGCompositeFrame(this, 646, 435,
-    kVerticalFrame);
+  TGCompositeFrame *fMainFrame648 = new TGCompositeFrame(this, 646, 435, kVerticalFrame);
   fMainFrame648->SetLayoutBroken(true);
 
   // composite frame
-  TGCompositeFrame *fCompositeFrame649 = new TGCompositeFrame(fMainFrame648,
-    664, 448, kVerticalFrame);
+  TGCompositeFrame *fCompositeFrame649 = new TGCompositeFrame(fMainFrame648, 664, 448, kVerticalFrame);
   fCompositeFrame649->SetLayoutBroken(true);
   m_cancelButton = new TGTextButton(fCompositeFrame649,"Default");
   m_cancelButton->SetTextJustify(36);

@@ -44,7 +44,9 @@ RunDB::~RunDB() {}
 int RunDB::getLastRun( ) {
 
   int lastRun = 0 ;
-
+  
+  std::cout << "getLastRun in run database: Open webstream at " << m_address << std::endl;
+  
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
   if ( ! webStream ) {
@@ -126,6 +128,8 @@ int RunDB::getNextRun( ) {
 
   int nextRun = 0 ;
 
+  std::cout << "getNextRun in run database: Open webstream at " << m_address << std::endl;
+  
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
   if ( ! webStream ) {
@@ -188,6 +192,8 @@ int RunDB::getNextRun( ) {
   }
   webStream.close() ;
 
+  std::cout << "getNextRun2 in run database: Open webstream at " << m_address << std::endl;
+  
   boost::asio::ip::tcp::iostream webStream2( m_address , "http" ) ;
 
   if ( ! webStream2 ) {
@@ -263,6 +269,8 @@ int RunDB::getPreviousRun( ) {
 
   int previousRun = 0 ;
 
+  std::cout << "getPreviousRun in run database: Open webstream at " << m_address << std::endl;
+  
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
   if ( ! webStream ) {
@@ -356,6 +364,8 @@ std::vector< int > RunDB::getListOfRuns( int /*runNumber*/ ) {
 bool RunDB::checkRun( int runNumber ) {
   if ( runNumber == getCurrentRunNumber() ) return true ;
 
+  std::cout << "checkRun in run database: Open webstream at " << m_address << std::endl;
+  
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
   if ( ! webStream ) {

@@ -170,6 +170,7 @@ int main(int argc, char* argv[]) {
        "partition name")
       ("dump-format,F", value<std::string>()->default_value("png"), "dump format")
       ("startup-page,p" , value<std::string>()->default_value(""), "page to display at startup" )
+      ("editing-allowed,E", value<bool>()->default_value( true ), "Allow editing of database" )
       ;
 
     // program argument -> histo list
@@ -349,6 +350,9 @@ int main(int argc, char* argv[]) {
 
     if (startupSettings.count("enable-alarm-display") )
       presenterMainFrame.enableAlarmDisplay(startupSettings["enable-alarm-display"].as<bool>());
+
+    if (startupSettings.count("editing-allowed") )
+      presenterMainFrame.enableEditing(startupSettings["editing-allowed"].as<bool>());
 
     if (startupSettings.count("hide-problem-list") &&
 	( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) 

@@ -35,4 +35,5 @@
 //#include "../icons/applications-system16.xpm" // task
 //#include "../icons/algorithm16.xpm" // algo
 #include "../icons/reference.xpm"
+#include "../icons/tree_t.xpm"
 #endif /*ICONS_H_*/
