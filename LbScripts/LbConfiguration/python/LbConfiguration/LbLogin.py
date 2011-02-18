@@ -627,16 +627,35 @@ class LbLoginScript(SourceScript):
             ev["User_release_area"] = opts.userarea
             log.debug("User_release_area is set to %s" % ev["User_release_area"])
 
-            if os.path.exists(opts.userarea) :
-                if not os.path.isdir(opts.userarea) :
-                    os.rename(opts.userarea, opts.userarea + "_bak")
-                    log.warning("Renamed file %s into %s" % (opts.userarea, opts.userarea + "_bak"))
-                    os.mkdir(opts.userarea)
+            rename_cmtuser = False
+            if os.path.exists(opts.userarea) : # is a file, a directory or a valid link
+                if os.path.isfile(opts.userarea) :
+                    log.warning("%s is a file"  % opts.userarea)
+                    rename_cmtuser = True
                     newdir = True
-                    self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
-            else :
-                os.makedirs(opts.userarea)
+                elif os.path.islink(opts.userarea) :
+                    log.debug("%s is a link" % opts.userarea)
+                else :
+                    log.debug("%s is a directory" % opts.userarea)
+            else : # doesn't exist or is an invalid link
+                if os.path.islink(opts.userarea) :
+                    log.warning("%s is a broken link"  % opts.userarea)
+                    rename_cmtuser = True
                 newdir = True
+            if rename_cmtuser :
+                bak_userarea = opts.userarea + "_bak"
+                if not os.path.exists(bak_userarea) :
+                    if os.path.islink(bak_userarea) :
+                        os.remove(bak_userarea) # remove broken link
+                    os.rename(opts.userarea, opts.userarea + "_bak")
+                    log.warning("Renamed %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+                else :
+                    log.warning("Can't backup %s because %s is in the way" % (opts.userarea, bak_userarea))
+                    log.warning("No %s directory created" % opts.userarea)
+                    newdir = False
+            if newdir :
+                os.makedirs(opts.userarea)
+                self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
                     os.system("fs setacl %s system:anyuser l" % opts.userarea)

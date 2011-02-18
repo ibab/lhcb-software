@@ -1,3 +1,9 @@
+2011-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: treat the case of ~/cmtuser being a valid or a broken link. If
+	it is a valid link or a directory, then it goes unmolested. If it is a broken link or a file, it is
+	renamed with the "_bak" extension and a directory is created.
+
 2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of v6r0p1
