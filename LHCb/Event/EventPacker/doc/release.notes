@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2011-02-16 - Chris Jones
+ - Fix various coverity warnings
+
 ! 2011-02-11 - Chris Jones
  - Fix various icc warnings and remarks
 
