@@ -25,7 +25,7 @@ use Gaudi              v*                   -no_auto_imports
 use GaudiPoolDb        v*                   -no_auto_imports
 
 # For multi-core processing:
-use processing          v*      LCG_Interfaces
+use   pytools     v*  LCG_Interfaces
 
 # From LHCbSys
 use EventPacker        v*    Event          -no_auto_imports
