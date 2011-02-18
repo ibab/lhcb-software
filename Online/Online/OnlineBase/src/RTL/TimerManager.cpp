@@ -13,19 +13,19 @@ RTL::TimerManager& RTL::TimerManager::instance() {
 RTL::TimerManager::TimerManager() 
 : m_head(new qentry_t(0,0)), m_active(false) 
 {
-  int sc = lib_rtl_create_lock(0,&m_lock);
+  int sc = ::lib_rtl_create_lock(0,&m_lock);
   if ( !lib_rtl_is_success(sc) )  {
-    lib_rtl_signal_message(0,"Failed to create timer lock");
+    ::lib_rtl_signal_message(0,"Failed to create timer lock");
     return;
   }
-  sc = lib_rtl_create_event(0,&m_flag);
+  sc = ::lib_rtl_create_event(0,&m_flag);
   if ( !lib_rtl_is_success(sc) )  {
-    lib_rtl_signal_message(0,"Failed to create event timer flag");
+    ::lib_rtl_signal_message(0,"Failed to create event timer flag");
     return;
   }
-  sc = lib_rtl_declare_exit(exit_timers,this);
+  sc = ::lib_rtl_declare_exit(exit_timers,this);
   if ( !lib_rtl_is_success(sc) )  {
-    lib_rtl_signal_message(0,"Failed to declare the timer exit handler");
+    ::lib_rtl_signal_message(0,"Failed to declare the timer exit handler");
     return;
   }
 }
@@ -33,25 +33,25 @@ RTL::TimerManager::TimerManager()
 /// Standard Destructor
 RTL::TimerManager::~TimerManager() {
   stop();
-  lib_rtl_delete_lock(m_lock);
-  lib_rtl_delete_event(m_flag);
-  lib_rtl_remove_exit(exit_timers,this);
+  ::lib_rtl_delete_lock(m_lock);
+  ::lib_rtl_delete_event(m_flag);
+  ::lib_rtl_remove_exit(exit_timers,this);
 }
 
 /// Add new timer entry to thread
 int RTL::TimerManager::add(timer_entry_t* entry) {
-  lib_rtl_lock(m_lock);
+  ::lib_rtl_lock(m_lock);
   insqti(entry, m_head.get());
-  lib_rtl_unlock(m_lock);
-  lib_rtl_clear_event(m_flag);
-  lib_rtl_set_event(m_flag);
+  ::lib_rtl_unlock(m_lock);
+  ::lib_rtl_clear_event(m_flag);
+  ::lib_rtl_set_event(m_flag);
   return isActive() ? 1 : start();
 }
 
 /// Remove timer entry from thread
 int RTL::TimerManager::remove(timer_entry_t* entry) {
   timer_entry_t* e, *fnd = 0;
-  lib_rtl_lock(m_lock);
+  ::lib_rtl_lock(m_lock);
   {
     DoubleLinkedQueue<timer_entry_t> que(m_head.get());
     for(e=que.get(); e; e = que.get()) {
@@ -66,7 +66,7 @@ int RTL::TimerManager::remove(timer_entry_t* entry) {
     remqent(fnd);
     delete fnd;
   }
-  return lib_rtl_unlock(m_lock);
+  return ::lib_rtl_unlock(m_lock);
 }
 
 /// Exit handler for timer thread
@@ -80,13 +80,13 @@ int RTL::TimerManager::timer_call(void* param)  {
   unsigned int millisec = 10;
   TimerManager* thr = (TimerManager*)param;
   while( thr->isActive() )  {
-    int sc = lib_rtl_timedwait_for_event(thr->m_flag, millisec);
+    int sc = ::lib_rtl_timedwait_for_event(thr->m_flag, millisec);
     if ( sc != 1 && sc != 2 ) {
-      lib_rtl_signal_message(LIB_RTL_OS,"Timer thread failed to get event!");
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Timer thread failed to get event! sc=%d",sc);
       // return 0;
     }
     if ( thr->isActive() ) {
-      lib_rtl_clear_event(thr->m_flag);
+      ::lib_rtl_clear_event(thr->m_flag);
     }
     if ( thr->isActive() ) {
       millisec = thr->check();
@@ -103,7 +103,7 @@ int RTL::TimerManager::cleanup() {
     delete e;
   }
   m_active = false;
-  lib_rtl_set_event(m_flag);
+  ::lib_rtl_set_event(m_flag);
   return 1;
 }
 
@@ -114,7 +114,7 @@ unsigned int RTL::TimerManager::check() {
   unsigned int now = SysTime::uptime();
   timer_entry_t* e;
   int nent=0;
-  lib_rtl_lock(m_lock);
+  ::lib_rtl_lock(m_lock);
   {
     DoubleLinkedQueue<timer_entry_t> que(m_head.get());
     for(e=que.get(); e; e = que.get()) {
@@ -133,8 +133,8 @@ unsigned int RTL::TimerManager::check() {
           if ( next > (e->expire-now) ) next = e->expire-now;
         }
         else {  
-          lib_rtl_output(LIB_RTL_ERROR,"FATAL ERROR: BAD timer entry: %p\n",(void*)e);
-          lib_rtl_sleep(10000);
+          ::lib_rtl_output(LIB_RTL_ERROR,"FATAL ERROR: BAD timer entry: %p\n",(void*)e);
+          ::lib_rtl_sleep(10000);
         }
       }
       catch(...) {
@@ -150,29 +150,29 @@ unsigned int RTL::TimerManager::check() {
     e->magic = 0;
     delete e;
   }
-  lib_rtl_unlock(m_lock);
+  ::lib_rtl_unlock(m_lock);
   return next;
 }
 
 /// Start the timer thread
 int RTL::TimerManager::start() {
-  lib_rtl_lock(m_lock);
+  ::lib_rtl_lock(m_lock);
   m_active = true;
-  int sc = lib_rtl_start_thread(timer_call, this, &m_thread);
+  int sc = ::lib_rtl_start_thread(timer_call, this, &m_thread);
   if ( !lib_rtl_is_success(sc) )  {
-    lib_rtl_signal_message(0,"Failed to start timer thread");
+    ::lib_rtl_signal_message(0,"Failed to start timer thread");
   }
-  return lib_rtl_unlock(m_lock);
+  return ::lib_rtl_unlock(m_lock);
 }
 
 /// Stop the timer thread
 int RTL::TimerManager::stop() {
-  lib_rtl_lock(m_lock);
+  ::lib_rtl_lock(m_lock);
   if ( m_thread && isActive() ) {
     lib_rtl_thread_t t = m_thread;
     m_thread = 0;
     m_active = false;
-    lib_rtl_delete_thread(t);
+    ::lib_rtl_delete_thread(t);
   }
-  return lib_rtl_unlock(m_lock);
+  return ::lib_rtl_unlock(m_lock);
 }

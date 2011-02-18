@@ -209,8 +209,9 @@ int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
     int sc = milliseconds==LIB_RTL_INFINITE 
       ? ::i_sem_wait(h->handle) 
       : ::i_sem_timedwait(h->handle, &sp);
-    if ( sc != 0 && errno == ETIMEDOUT ) sc = 2;
-    if ( sc == 0 )
+    if ( sc != 0 && errno == ETIMEDOUT )
+      return 2;
+    else if ( sc == 0 )
 #elif defined(_WIN32)
     DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
     if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
