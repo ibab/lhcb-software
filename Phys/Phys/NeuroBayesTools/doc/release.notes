@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/NeuroBayesTool
+! Responsible : Ulrich Kerzel
+! Purpose     : Collection of Tools for identifying various decays using
+!               the NeuroBayes neural network package
+!-----------------------------------------------------------------------------
+
+! 2011-02-16 - Ulrich Kerzel
+ - create cmt package
+ - First version of network
+   - trained on MC10 MC, Bd->KPi, BsKK for signal incl B for BG
+   - trained on offine quantities (via DaVinci)
+
