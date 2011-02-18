@@ -18,11 +18,11 @@ extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
       ::fflush(stdout);
       {
         RTL::Lock lck(id);
-        ::printf("%d >> Process %s holds       lock %s for   %d milliseconds....\n",
+        ::printf("0x%08X >> Process %s holds       lock %s for   %d milliseconds....\n",
 		 i,proc.c_str(),name.c_str(),msecs);
 	::fflush(stdout);
         lib_rtl_sleep(msecs);
-        ::printf("%d >> Process %s released    lock %s after %d milliseconds....\n",
+        ::printf("0x%08X >> Process %s released    lock %s after %d milliseconds....\n",
 		 i,proc.c_str(),name.c_str(),msecs);
 	::fflush(stdout);
       }
@@ -34,11 +34,11 @@ extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
 
 extern "C" int rtl_testsemaphore(int,char**) {
   char text[256];
-  ::snprintf(text,sizeof(text),"gentest.exe libOnlineKernel.so %s  Process__%d Sem_test_0x%08X&",
+  ::snprintf(text,sizeof(text),"gentest.exe libOnlineKernel.so %s  Process_0x%08X Sem_test_0x%08X&",
 	    "rtl_testSemaphoreSubProcess",1,::lib_rtl_pid());
   system(text);
   lib_rtl_sleep(1500);
-  ::snprintf(text,sizeof(text),"gentest.exe libOnlineKernel.so %s  Process__%d Sem_test_0x%08X&",
+  ::snprintf(text,sizeof(text),"gentest.exe libOnlineKernel.so %s  Process_0x%08X Sem_test_0x%08X&",
 	    "rtl_testSemaphoreSubProcess",2,::lib_rtl_pid());
   int ret = system(text);
   lib_rtl_sleep(1500);
