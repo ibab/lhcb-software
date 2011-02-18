@@ -81,7 +81,7 @@ int RTL::TimerManager::timer_call(void* param)  {
   TimerManager* thr = (TimerManager*)param;
   while( thr->isActive() )  {
     int sc = lib_rtl_timedwait_for_event(thr->m_flag, millisec);
-    if ( !lib_rtl_is_success(sc) ) {
+    if ( sc != 1 && sc != 2 ) {
       lib_rtl_signal_message(LIB_RTL_OS,"Timer thread failed to get event!");
       // return 0;
     }
