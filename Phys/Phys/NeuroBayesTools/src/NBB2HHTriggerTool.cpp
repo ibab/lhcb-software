@@ -54,14 +54,12 @@ StatusCode NBB2HHTriggerTool::initialize() {
   // get tools and algs
   m_DistCalc   = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   if (!m_DistCalc) {
-    Error("Could not get DistanceCalculator");
-    return StatusCode::FAILURE;
+    return Error("Could not get DistanceCalculator");
   }
 
   m_HistoTool = tool<IHistoTool>("HistoTool", this); 
   if (!m_HistoTool){
-    Error("Could not get Histogramming tool");
-    return StatusCode::FAILURE;
+    return Error("Could not get Histogramming tool");
   }
 
   //
@@ -92,7 +90,7 @@ StatusCode NBB2HHTriggerTool::initialize() {
 bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
 
   if(0 == p) {
-    Error("LHCb::Particle* points to NULL, return false");
+    Error("LHCb::Particle* points to NULL, return false").ignore();
     return false ;
   } // null
 
