@@ -50,15 +50,7 @@ __all__ = (
     'VeloT'          , ## the 'track-match'-configuration   for VeloT
     'VeloL0Muon'     , ## the 'track-match'-configuration   for VeloL0Muon
     ## bi-functions
-    'Calo3DChi2'     , ## track-bi-function configuration for Calo3DChi2 
-    'Ecal3DChi2'     , ## track-bi-function configuration for Ecal3DChi2
     ## track functions
-    'MuonIDDistance' , ## track-function configuration for    MuonIDDistance
-    'DeltaP'         , ## track-function configuration for    DeltaP
-    'IsMuon'         , ## track-function configuration for    IsMuon
-    'IsPhoton'       , ## track-function configuration for    IsPhoton
-    'AntiEleConf'    , ## track-function configuration for    AntiEleConf
-    'PtAtOrigin'       ## track-function configuration for    PtAtOrigin
     )
 # =============================================================================
 
@@ -190,48 +182,8 @@ VeloL0Muon = LoKi.Hlt1.MatchConf   (
     ""                             )                   ##           "Quality2"
 # =============================================================================
 
-# =============================================================================
-# Other wrapper tools 
-# =============================================================================
-## ITrackBiFunctionTool interface                     @see ITrackBiFunctionTool
-# =============================================================================
-## Calo3DChi2    = LoKi.Hlt1.TrackBiFunction (
-##     "HltVeloTCaloMatch/Calo3DChi2"    ,                       ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## Ecal3DChi2    = LoKi.Hlt1.TrackBiFunction (
-##     "HltVeloEcalMatch/Ecal3DChi2"     ,                       ## tool type-name
-##     False                                                     ##   public tool?
-##     )
 
 
-# =============================================================================
-## ITrackFunctionTool interface                       @see   ITrackFunctionTool
-# =============================================================================
-## MuonIDDistance = LoKi.Hlt1.TrackFunction  (
-##     "HltMuonIDDistance/MuonIDDistance" ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## DeltaP         = LoKi.Hlt1.TrackFunction  (
-##     "HltDeltaPTool/DeltaP"             ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## IsMuon         = LoKi.Hlt1.TrackFunction  (
-##     "HltIsMuonTool/IsMuon"             ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## IsPhoton       = LoKi.Hlt1.TrackFunction  (
-##     "HltIsPhotonTool/IsPhoton"         ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## AntiEleConf    = LoKi.Hlt1.TrackFunction  (
-##     "HltAntiEleconf/AntiEleConf"       ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
-## PtAtOrigin     = LoKi.Hlt1.TrackFunction  (
-##     "PtTransporter/PtAtOrigin"         ,                      ## tool type-name
-##     False                                                     ##   public tool?
-##     )
 
 # =============================================================================
 # High-level embedded stuff
