@@ -22,7 +22,13 @@ class ISvcLocator;
 //namespace LHCb
 //{
 
-
+class MyErrh : public DimErrorHandler
+{
+  void errorHandler(int , int , char *)
+  {
+    return;
+  }
+};
 class AdderSvc : public Service
 {
 public:
@@ -61,6 +67,7 @@ private:
   SaveTimer *m_EoRSaver;
   std::string m_SaveRootDir;
   int m_SaveInterval; //in seconds
+  DimErrorHandler *m_errh;
 
 
   // MonObjetc to convert conters in rates

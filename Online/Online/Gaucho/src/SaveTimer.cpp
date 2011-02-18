@@ -9,6 +9,7 @@
 #include "sys/stat.h"
 #include "sys/types.h"
 #include "Gaucho/RootHists.h"
+#include "Gaucho/Utilities.h"
 
 SaveTimer::SaveTimer(HistAdder *add, int period) : GenTimer((void*)add,period*1000,TIMER_TYPE_PERIODIC)
 {
@@ -125,6 +126,7 @@ void SaveTimer::SavetoFile(void *buff)
       case H_PROFILE:
       case H_RATE:
       {
+        dyn_string *hname;
         m_Adder->Lock();
         r = (TH1*)(h.de_serialize(buff));
         m_Adder->UnLock();
@@ -134,33 +136,21 @@ void SaveTimer::SavetoFile(void *buff)
         TProfile *tp;
         TH1D *th1;
         TH2D *th2;
-        char hnam[1024];
-        char *tok;
-        char *ptok=0;
+        char hnam[4096];
         int ntok;
         ntok = 0;
-        char *ctxt;
+        hname = Strsplit(r->GetName(),"/");
         strcpy(hnam,r->GetName());
-        tok = strtok_r(hnam,"/",&ctxt);
-        while (tok != 0)
-        {
-          ptok = tok;
-          ntok++;
-          tok = strtok_r(0,"/",&ctxt);
-        }
-        strcpy(hnam,r->GetName());
-        tok = strtok_r(hnam,"/",&ctxt);
         gDirectory->Cd("/");
-        for (int i=0;i<ntok-1;i++)
+        for (unsigned int i=0;i<hname->size()-1;i++)
         {
           TKey *k;
-          k = gDirectory->GetKey(tok);
+          k = gDirectory->GetKey(hname->at(i).c_str());
           if (k == 0)
           {
-            gDirectory->mkdir(tok);
+            gDirectory->mkdir(hname->at(i).c_str());
           }
-          gDirectory->Cd(tok);
-          tok = strtok_r(0,"/",&ctxt);
+          gDirectory->Cd(hname->at(i).c_str());
         }
 //        r->SetName(ptok);
         switch(b->type)
@@ -168,16 +158,16 @@ void SaveTimer::SavetoFile(void *buff)
           case H_1DIM:
           {
             m_Adder->Lock();
-            th1 = (TH1D*)r->Clone(ptok);
-            th1->Write(ptok);
+            th1 = (TH1D*)r->Clone(hname->at(hname->size()-1).c_str());
+            th1->Write(hname->at(hname->size()-1).c_str());
             m_Adder->UnLock();
             break;
           }
           case H_2DIM:
           {
             m_Adder->Lock();
-            th2=(TH2D*)r->Clone(ptok);
-            th2->Write(ptok);
+            th2=(TH2D*)r->Clone(hname->at(hname->size()-1).c_str());
+            th2->Write(hname->at(hname->size()-1).c_str());
             m_Adder->UnLock();
             break;
           }
@@ -185,8 +175,8 @@ void SaveTimer::SavetoFile(void *buff)
           case H_RATE:
           {
             m_Adder->Lock();
-            tp = (TProfile*)r->Clone(ptok);
-            tp->Write(ptok);
+            tp = (TProfile*)r->Clone(hname->at(hname->size()-1).c_str());
+            tp->Write(hname->at(hname->size()-1).c_str());
             m_Adder->UnLock();
             break;
           }

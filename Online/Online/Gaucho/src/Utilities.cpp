@@ -7,6 +7,18 @@
 #include "Gaucho/Utilities.h"
 #include <string>
 #include <string.h>
+dyn_string *Strsplit(const char *s, const char *del)
+{
+  return Strsplit((char*)s, (char*)del);
+}
+dyn_string *Strsplit(const char *s, char *del)
+{
+  return Strsplit((char*)s,del);
+}
+dyn_string *Strsplit(char *s, const char *del)
+{
+  return Strsplit(s,(char*)del);
+}
 dyn_string *Strsplit(char *s, char *del)
 {
   char *pch;

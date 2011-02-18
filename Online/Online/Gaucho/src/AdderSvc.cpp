@@ -44,6 +44,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 //  'top' or 'part' for top or partition adder
   m_SaveTimer = 0;
   m_started = false;
+  m_errh =0;
 }
 AdderSvc::~AdderSvc()
 {
@@ -75,6 +76,7 @@ StatusCode AdderSvc::initialize()
 StatusCode AdderSvc::start()
 {
   Service::start();
+  if (m_errh == 0) new MyErrh();
   std::string myservicename;
 //  m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
@@ -149,6 +151,7 @@ StatusCode AdderSvc::start()
     printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
   }
   if (m_started) return StatusCode::SUCCESS;
+  if (m_errh != 0) DimClient::addErrorHandler(m_errh);
   printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
   DimServer::autoStartOn();
   DimClient::setDnsNode(m_InputDNS.c_str());
