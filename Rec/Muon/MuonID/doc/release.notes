@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v8r0p1 2011-02-17 =========================
+! 2011-02-18 - Helder Lopes
+ - Added 2010 and 2011 python files for chi2s, chi2b, gamoms, gaprobs, dists, distb algs
+
 !========================= MuonID v8r0 2011-02-17 =========================
 ! 2011-02-17 - Helder Lopes
  - Implement muon probability tuned on 2010 data and using cumulative histograms 
