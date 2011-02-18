@@ -4,6 +4,16 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-02-18 - Juan Palacios
+ - ChargedParticleMaker
+  . Added new properties Inputs and Output, mirroring InputTrackLocation and
+    OutputProtoParticleLocation respectively. If InputTrackLocation or 
+    OutputProtoParticleLocation are set, issue warning. If both old and new mirror
+    properties are set, return ERROR in initializaiton.
+ - Add QM test suite
+  . Single test to check configuration above.
+ - Increase to v6r35.
+
 ! 2011-02-15 - Chris Jones
  - Update Expert histogram python options to adapt to changes in ANN training
    tool algorithm configuration

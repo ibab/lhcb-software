@@ -1,0 +1,34 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>../options/ChargedPPMakerConfigTest.py</text>
+  </set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+CPP0              VERBOSE Inputs = [Rec/Track/Special0]
+CPP0              VERBOSE Output = Rec/ChargedPP/ProtoParticles0
+""", stdout, result, causes, signature_offset = 0, id = "CPP0_Params")
+findReferenceBlock("""
+CPP1              VERBOSE Inputs = [Rec/Track/Best]
+CPP1              VERBOSE Output = Rec/ChargedPP/ProtoParticles1
+""", stdout, result, causes, signature_offset = 0, id = "CPP1_Params")
+findReferenceBlock("""
+CPP2              VERBOSE Inputs = [Rec/Track/Special2]
+CPP2              VERBOSE Output = Rec/ProtoP/Charged
+""", stdout, result, causes, signature_offset = 0, id = "CPP2_Params")
+findReferenceBlock("""
+CPP3              VERBOSE Inputs = [Rec/Track/Special3]
+CPP3              VERBOSE Output = Rec/ChargedPP/ProtoParticles3
+""", stdout, result, causes, signature_offset = 0, id = "CPP3_Params")
+findReferenceBlock("""
+CPP4              VERBOSE Inputs = [Rec/Track/Special4]
+CPP4              VERBOSE Output = 
+""", stdout, result, causes, signature_offset = 0, id = "CPP4_Params")
+findReferenceBlock("""
+CPP5              VERBOSE Inputs = []
+CPP5              VERBOSE Output = Rec/ChargedPP/ProtoParticles1
+""", stdout, result, causes, signature_offset = 0, id = "CPP5_Params")
+countErrorLines({"FATAL":0})
+</text></argument>
+</extension>

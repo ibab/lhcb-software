@@ -4,7 +4,7 @@
 #============================================================================
 
 package           GlobalReco
-version           v6r34
+version           v6r35
 
 branches          cmt doc src python root
 include_path none
@@ -31,3 +31,7 @@ apply_pattern    component_library library=GlobalReco
 # Setup Python Configurables
 #============================================================================
 apply_pattern install_python_modules
+
+# Allow the generation of the SAM QMTest
+#============================================================================
+apply_pattern QMTest

@@ -52,10 +52,17 @@ public:
 private: // data
 
   /// Location of the ProtoParticles in the TES
+  std::string m_protoPath_;
+
+  /// Location of the ProtoParticles in the TES
   std::string m_protoPath;
 
   /// Locations in TES of input Tracks
   std::vector<std::string> m_tracksPath;
+
+  /// Locations in TES of input Tracks
+  std::vector<std::string> m_tracksPath_;
+
 
   /// Track selector type
   std::string m_trSelType;
