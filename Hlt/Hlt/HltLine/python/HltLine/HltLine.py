@@ -84,7 +84,6 @@ from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import Hlt__TrackFilter, Hlt__TrackPipe
 from Configurables import HltMoveVerticesForSwimming as MoveVerticesForSwimming  
 from Configurables import HltSelectTracksForSwimming as SelectTracksForSwimming
-from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 from SelPy.selection import flatAlgorithmList
