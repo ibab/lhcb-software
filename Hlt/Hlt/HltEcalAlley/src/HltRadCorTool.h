@@ -30,8 +30,6 @@ public:
                                       std::vector<LHCb::Track*>& tracks );
   virtual StatusCode initialize();
 
-protected:
-
 private:
 
   void getRadiationFromClusters(const LHCb::Track& tra, double & enerad);
@@ -40,9 +38,6 @@ private:
 
   IL0Calo2Calo* m_tool;
 
-  // temporaray fix
-  ICaloClusterization* m_tool1;
-  bool m_temporaryFix;
 
 };
 #endif // TOOL_HLTRADCORTOOL_H

@@ -32,9 +32,7 @@ HltRadCorTool::HltRadCorTool( const std::string& type,
   : GaudiTool ( type, name , parent )
     , m_detector(0)
     , m_tool(0)
-    , m_tool1(0)
 {
-  declareProperty("temporaryFix", m_temporaryFix = false);
   declareInterface<ITracksFromTrack>(this);
  
 }
@@ -53,13 +51,6 @@ StatusCode HltRadCorTool::initialize() {
   m_tool = tool<IL0Calo2Calo>("L0Calo2CaloTool");
   if(!m_tool)debug()<<"error retrieving the clasterization tool "<<endreq;
 
-  // Temporary fix
-  m_tool1 = tool<ICaloClusterization>("CaloClusterizationTool", this);
-  if(!m_tool1)debug()<<"error retrieving the clasterization tool 1 "<<endreq;
-
-  if (m_temporaryFix) {
-    info() << " Fix in HltRadCorTool is active !!!!!!!!!!!!!!!!!!" << endreq;
-  }
   return StatusCode::SUCCESS;
 }
 
@@ -79,24 +70,12 @@ StatusCode HltRadCorTool::tracksFromTrack(
    if ( ! ptrack_rad->hasInfo(401) ) {
      double enerad = 0.;
      getRadiationFromClusters(seed, enerad);
-     //     std::cout << " iii-enerad: " << enerad << std::endl;
      // put 401 info track.h 
      ptrack_rad->addInfo(401, enerad);
    }
    tracks.push_back(ptrack_rad); 
 
-   // debug only
-//   if (ptrack_rad->hasInfo(401) ) {
-//     double edef =0;
-//     double enerad = ptrack_rad->info(401, edef);
-//     info() << " has info: " << enerad << endreq;
-//   } else {
-//     info() << " does not have info: " << endreq;
-//   }
-   // end debug
-
    return StatusCode::SUCCESS;
-
 }
 
 
@@ -161,21 +140,9 @@ void HltRadCorTool::getRadiationFromClusters(const LHCb::Track& tra, double & en
 
   unsigned int level = 1; // level 1:3x3, 2:5x5, 3:7x7, strong timing dependence on level
 
-  if (m_temporaryFix) {
-    if ( !exist<LHCb::CaloDigits>(LHCb::CaloDigitLocation::Ecal) ) {
-      warning() << "ECAL not decoded. CaloDigits do not exists." << endreq;
-      return;
-    }
-    // get input data (sequential and simultaneously direct access!)  
-    LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
-    // remember to delete cluster
-    m_tool1->clusterize(clusters, digits, m_detector, idcell_from_velo, level);
-    if (clusters.empty()) return;
-  } else {
-    // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
-    m_tool->clusterize(clusters, idcell_from_velo, level);
-    if (clusters.empty()) return;
-  }
+  // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
+  m_tool->clusterize(clusters, idcell_from_velo, level);
+  if (clusters.empty()) return;
 
   // look for Ecal cluster compatible with T extrapolation to avoid double counting
   // namely not to correct for ecal deposit which belongs to the deflected track
@@ -246,13 +213,5 @@ void HltRadCorTool::getRadiationFromClusters(const LHCb::Track& tra, double & en
     }
   }
 
-  if (m_temporaryFix) {
-    // delete reconstructed clusters
-    for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
-	 clusters.end() != cluster; ++cluster ) { 
-      CaloCluster* cl = *cluster;
-      if ( cl ) delete cl;
-    }
-  }
 
 }
