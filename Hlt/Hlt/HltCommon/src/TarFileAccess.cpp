@@ -197,7 +197,7 @@ namespace TarFileAccess_details {
         }
     private:
         struct Info {
-            Info() : size(0),type( TarFileType(0) ),offset(0) {}
+            Info(size_t offset) : size(0),type( TarFileType(0) ),offset(offset) {}
             std::string      name;
             size_t           size;
             TarFileType      type;
@@ -391,7 +391,6 @@ namespace TarFileAccess_details {
                     std::string prefix = convert(header.prefix);
                     info.name = prefix + "/" + info.name;
                 }
-                info.offset = m_file.tellg();
 
                 if ( info.type == GNUTYPE_LONGNAME ) { 
                     // current header is a dummy 'flag', followed by data blocks 
@@ -417,14 +416,13 @@ namespace TarFileAccess_details {
             if (offset==0) m_index.clear();
             m_file.seekg(offset,ios::beg);
             while (m_file.read( (char*) &header, sizeof(header) )) {
-                std::streamoff offset = m_file.tellg()-std::streamoff(sizeof(header));
-                Info info;
+                Info info(m_file.tellg());
                 if (!interpretHeader( header, info))  {
                     // check whether we're at the end of the file: (at least) two all-zero headers)
                     if (isZero(header)) {
                         m_file.read( (char*) &header, sizeof(header) ) ;
                         if (isZero(header)){
-                            m_leof = offset;
+                            m_leof = m_file.tellg()-std::streamoff(sizeof(header));
                             m_file.seekg(0,std::ios::beg);
                             return true;
                         }
