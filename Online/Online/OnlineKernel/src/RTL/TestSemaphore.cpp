@@ -14,7 +14,7 @@ extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
   int status = RTL::Lock::create(name.c_str(), id);
   if ( lib_rtl_is_success(status) )  {
     for( int i=0; i <turns; ++i )  {
-      ::printf(  "%d >> Process %s waiting for lock %s....\n",i,proc.c_str(),name.c_str());
+      ::printf(  "0x%08X >> Process %s waiting for lock %s....\n",i,proc.c_str(),name.c_str());
       ::fflush(stdout);
       {
         RTL::Lock lck(id);
