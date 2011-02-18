@@ -16,7 +16,7 @@ using namespace Checkpointing;
 WEAK(int) FileDesc::setup(int fdnum) {
   char procfdname[PATH_MAX];
   struct stat f_link;
-
+  int is_sock = 0, is_pipe = 0;
   fd = -1;
   name[0] = 0;
   isdel   = 0;
@@ -52,7 +52,10 @@ WEAK(int) FileDesc::setup(int fdnum) {
     }
     istmp = (*(int*)name == *(int*)"/tmp/") == 0 ? 0 : 'y';
     isdel = m_strfind(name,"(deleted)") == 0 ? 0 : 'y';
-    hasData = ((istmp || isdel) && !S_ISFIFO(statbuf.st_mode)) ? 'y' : 0;
+    is_sock = S_ISFIFO(statbuf.st_mode);
+    is_pipe = m_strncmp(name,"pipe:[",6)==0;
+
+    hasData = ((istmp || isdel) && !is_sock && !is_pipe) ? 'y' : 0;
     // Replace file's permissions with current access flags so restore will know how to open it
     offset = 0;
     if (S_ISREG (statbuf.st_mode)) offset = mtcp_sys_lseek(fdnum, 0, SEEK_CUR);

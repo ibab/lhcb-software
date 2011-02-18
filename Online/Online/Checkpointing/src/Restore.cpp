@@ -102,11 +102,14 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const void* addr, bool restore) {
   unsigned char* in = (unsigned char*)addr;
   if ( in > 0 ) {
+    int  is_sock = 0, is_pipe = 0;
     long len = sizeof(FileDesc)-sizeof(d->name);
     in += checkMarker(in,FILE_BEGIN_MARKER);
     in += m_memcpy(d,in,len);
     in += m_memcpy(d->name,in,d->name_len+1);
-    restore = !S_ISSOCK(d->statbuf.st_mode);
+    is_sock = S_ISSOCK(d->statbuf.st_mode);
+    is_pipe = m_strncmp(d->name,"pipe:[",6)==0;
+    restore = !is_sock && !is_pipe;
     if ( d->fd == chkpt_sys.checkpointFD ) restore = false;
     restore = restore ? (checkpoint_file_reopen(d) == 1) : restore;
     if ( d->hasData ) {
@@ -132,15 +135,16 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const voi
 
 /// Read file descriptor information from file
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, bool restore) {
-  int is_sock=0, in = 0;
+  int is_pipe=0, is_sock=0, in = 0;
   if ( fd > 0 ) {
     long len = sizeof(FileDesc)-sizeof(d->name);
     in += readMarker(fd,FILE_BEGIN_MARKER);
     in += m_fread(fd,d,len);
     in += m_fread(fd,d->name,d->name_len+1);
     is_sock = S_ISSOCK(d->statbuf.st_mode);
+    is_pipe = m_strncmp(d->name,"pipe:[",6)==0;
     //Debug: checkpoint_file_print(MTCP_WARNING,this);
-    restore = !is_sock;
+    restore = !is_sock && !is_pipe;
     if ( d->fd == chkpt_sys.checkpointFD ) restore = false;
     restore = restore ? (checkpoint_file_reopen(d) == 1) : restore;
     if ( d->hasData ) {

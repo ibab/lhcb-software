@@ -25,7 +25,7 @@ HIDDEN(int) m_strcmp(const char* t, const char* s) {
 
 HIDDEN(int) m_strncmp(const char* t, const char* s, size_t len) {
   if ( t && s ) {
-    for(size_t i=0; i<len && *t && *s && *t==*s; ++s, ++t, ++i) ;
+    for(size_t i=1; i<len && *t && *s && *t==*s; ++s, ++t, ++i) ;
     if ( *t == *s ) return 0;
   }
   return 1;
