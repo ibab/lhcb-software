@@ -8,17 +8,17 @@ ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-HistogramPersistencySvc.Warnings     = false;
 
+MessageSvc.OutputLevel  = 3;
+HistogramPersistencySvc.Warnings = false;
 
-AdderSvc.AdderType          = "top";
-AdderSvc.SourceTaskPattern  = "Adder";
-AdderSvc.MyName             = "<part>_Adder";
-AdderSvc.InDNS              = "hlt01";
+AdderSvc.AdderType          = "subfarm";
+AdderSvc.SourceTaskPattern  = "<node>[0-9][0-9]_Adder";
+AdderSvc.MyName             = "<part>_<node>_Adder";
 
-AdderSvc.TopLevel           = false;
+AdderSvc.SaveInterval       = 120;
 AdderSvc.PartitionName      = @OnlineEnv.PartitionName;
+AdderSvc.SaveSetTaskName    = "Moore";
 AdderSvc.ExpandRate         = false;
-AdderSvc.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder(.*)";
-AdderSvc.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_Adder(.*)";
+AdderSvc.TaskPattern        = "<node>[0-9][0-9]_Adder";
+AdderSvc.ServicePattern     = "";

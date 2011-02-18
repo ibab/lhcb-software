@@ -94,9 +94,18 @@ if test -z "${TOP}" ; then
          then exec -a ${UTGID} ${debug_exe} -options=../options/AdderRecFarm.opts  &
 	#in the rec farm, we need to run without loggeronly option else we can't stop it
 	#then exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderRecFarm.opts  &
-      else exec -a ${UTGID} ${CLASS1_TASK} -options=../options/AdderSubfarm.opts &
+      else 
+	if test -n "${PARENT:7}";
+	  then
+	    ##echo "Exec Node adder..."
+	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/nodeAdder.opts &
+	    ###exec -a ${UTGID} ${CLASS0_TASK} -main=../options/nodeAdder.opts &
+          else 
+	    ##echo "Exec subfarm adder..."
+	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/SubfarmAdder.opts &
+	fi;
 #         else exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderSubfarm.opts &
 #        else /usr/bin/valgrind --tool=callgrind ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
-       fi
+      fi
    fi
 fi

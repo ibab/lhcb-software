@@ -1,0 +1,24 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFOOPTIONS"
+
+ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+//Runable.Wait                         = 1;  // 1 of running as daemon (Class0 task)
+
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+
+
+AdderSvc.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
+AdderSvc.SourceTaskPattern  = "GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                         // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc.MyName             = "<node>_Adder";
+AdderSvc.TopLevel           = false;
+AdderSvc.ExpandRate         = false; // should MonRates be expanded into individual services
+AdderSvc.TaskPattern        = "<node>_GauchoJob_";
+AdderSvc.ServicePattern     = "";
