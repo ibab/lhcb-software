@@ -163,9 +163,7 @@ StatusCode TrackProjector::projectReference( LHCb::FitNode& node ) const
   if( node.hasMeasurement() ) {
     sc = me -> project(node.refVector(), node.measurement() );
     if( sc.isSuccess() ) {
-      node.setProjectionMatrix( m_H );
-      node.setRefResidual( m_residual ) ;
-      node.setErrMeasure( m_errMeasure ) ;
+      node.updateProjection( m_H, m_residual, m_errMeasure ) ;
       node.setPocaVector( m_unitPocaVector ) ;
       node.setDoca( m_doca ) ;
     }
