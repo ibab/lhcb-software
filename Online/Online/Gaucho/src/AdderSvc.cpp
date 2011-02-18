@@ -150,6 +150,7 @@ StatusCode AdderSvc::start()
   {
     printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
   }
+  m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);
   printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
@@ -203,6 +204,7 @@ StatusCode AdderSvc::stop()
   {
     m_SaveTimer->Stop();
   }
+  m_errh->stop();
   return Service::stop();
 }
 
