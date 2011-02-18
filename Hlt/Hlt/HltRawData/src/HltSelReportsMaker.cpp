@@ -64,6 +64,12 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   , m_hltSvc(0)
   , m_regSvc(0)
   , m_inspectionSvc(0)
+  , m_intPVSelID(0)
+  , m_presentInfoLevelTrack(kMaxInfoLevel)
+  , m_presentInfoLevelRecVertex(kMaxInfoLevel)
+  , m_presentInfoLevelParticle(kMaxInfoLevel)
+  , m_presentInfoLevelCaloCluster(kMaxInfoLevel)
+  , m_presentInfoLevelSelection(kMaxInfoLevel)
 {
 
   declareProperty("OutputHltSelReportsLocation",

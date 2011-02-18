@@ -4,6 +4,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2011-02-18 - Gerhard Raven
+ - fix some coverity warnings
+
 !========================== HltRawData v2r10 2010-02-07 ===================
 ! 2011-02-07 - Gerhard Raven
  - support Tracks which are wrapped in HltStage/HltCandidate. Other types
