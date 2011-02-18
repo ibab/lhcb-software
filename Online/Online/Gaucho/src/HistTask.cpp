@@ -68,8 +68,10 @@ int HistTask::Histos(std::vector<std::string> &hists,std::vector<TObject*> &hist
   {
     int clen;
     clen = strlen(hists[i].c_str());
-    memcpy(dst,hists[i].c_str(),clen+1);
-    dst += clen+1;
+    memcpy(dst,hists[i].c_str(),clen);
+    dst += clen;
+    *dst = '\n';
+    dst++;
   }
   m_RPC->setData((void*)rrd,rdlen);
   status  = m_RPC->analyseReply();

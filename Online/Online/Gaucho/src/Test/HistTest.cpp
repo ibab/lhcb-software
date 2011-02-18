@@ -6,9 +6,15 @@
  */
 
 #include "Gaucho/HistTask.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TProfile.h"
 
 int main(int , char *argv[]) // Taskname, DNS Node
 {
+  TH1D::SetDefaultSumw2();
+  TH2D::SetDefaultSumw2();
+  TProfile::SetDefaultSumw2();
   HistTask *h;
   std::string task;
   std::string dns;
@@ -33,6 +39,20 @@ int main(int , char *argv[]) // Taskname, DNS Node
   for (unsigned int i=0;i<hists.size();i++)
   {
     printf ("%s\n",hists[i].c_str());
+  }
+  std::vector<std::string> hsts;
+  printf("Trying to retrieve the following histograms\n ");
+  for (unsigned int i=0;i<3;i++)
+  {
+    hsts.push_back(hists[i]);
+    printf("%s\n",hsts[i].c_str());
+  }
+  std::vector<TObject*> robjs;
+  h->Histos(hsts,robjs);
+  printf ("Retrieved %d Histograms\n", (int)robjs.size());
+  for (unsigned int i=0;i<robjs.size();i++)
+  {
+    printf ("Histogram %s at address %llx\n",hsts[i].c_str(), (long long unsigned int)robjs[i]);
   }
   return 0;
 }
