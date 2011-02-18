@@ -150,15 +150,8 @@ namespace Rich
 
         // mcoombes event counter
         int EvtNum;
-        //  IOnOffline* m_onOfflineTool;
-        //   IOnOffline* m_OnOffline;
 
         int m_tkTotal;
-
-        double m_avNPV;
-
-        int m_PVSum;
-        //std::string m_PVContainer;
 
       };
 

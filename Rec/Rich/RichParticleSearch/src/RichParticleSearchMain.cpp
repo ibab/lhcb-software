@@ -19,10 +19,7 @@
 //namespaces
 
 using namespace Rich::Rec::MC;
-//using namespace LHCb;
-//using namespace Rich;
-//using namespace Rich::Rec;
-//using namespace boost::assign;
+
 
 using std::vector;
 //-----------------------------------------------------------------------------
@@ -40,15 +37,13 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   RichParticleSearchMain::RichParticleSearchMain( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
     : TupleAlgBase ( name , pSvcLocator ),
-      //m_pTypes            ( 7, 0),
       m_trSelector        ( NULL ),
       m_richRecMCTruth    ( NULL ),
       m_richPartProp      ( NULL ),
       m_ckAngle           ( NULL ),
       m_isoTrack          ( NULL ),
-      //m_OnOffline    (0),
       m_refractiveIndex   ( NULL )
-                                                // m_PVContainer    ( NULL )
+
 {
 
   // Maximum number of tracks
@@ -64,7 +59,7 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   //Cut on Histograms and NTuples
   declareProperty( "MassDevCut",    m_massDevCut = boost::assign::list_of (0.6) (0.6) (0.6),"MassDevCut");
   declareProperty( "CKDevCut",    m_CKDevCut = boost::assign::list_of (0.5) (0.5) (0.5), "CK Standard Deviation Cut" );
-  declareProperty( "MinCK",     m_minCK = boost::assign::list_of (0.054)(0.0)(0.0), "Minimum Ck agnle for each radiator");
+  declareProperty( "MinCK",     m_minCK = boost::assign::list_of (0.054)(0.0)(0.0), "Minimum CK agnle for each radiator");
   declareProperty("PlotPhotons",    m_plotPerPhoton =false, "Enter second photon loop");
   //Use Muon Information
   declareProperty("UseMuonInfo",   m_useMuonInfo = false, "Use Muon PID information");
@@ -90,18 +85,7 @@ StatusCode RichParticleSearchMain::initialize() {
   acquireTool( "RichRefractiveIndex", m_refractiveIndex    );
   acquireTool( "RichRecGeometry",         m_geomTool    );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
-  //acquireTool( "RichRingRecResult",   m_RichRingRecResult   );
 
-  //acquireTool( "OnOffline", m_onOfflineTool);
-  //  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool",this);
-  // m_OnOffline = tool<IOnOffline>("OnOfflineTool");
-  // const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
-  /*
-    if( !m_onOfflineTool ){
-    err() << " Unable to retrieve PV Locator tool" << endreq;
-    return StatusCode::FAILURE;
-    }
-  */
   if ( m_useMCTruth ) {
     info()<<"Use MC in ParticleSearch"<<endmsg;
     acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
@@ -110,8 +94,6 @@ StatusCode RichParticleSearchMain::initialize() {
 
   m_MuonInformation = tool<IMuonInformation> ("MuonInformation");
   EvtNum =0;
-  m_avNPV = 0;
-  m_PVSum = 0;
   m_tkTotal = 0;
 
 
@@ -126,11 +108,6 @@ StatusCode RichParticleSearchMain::initialize() {
   m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
   debug() << "Fixed particle type:" << m_pType << endmsg;
 
-  //Rich::DetectorType rich;
-  //if ( m_radiator == Rich::Rich1Gas || m_radiator  == Rich::Aerogel )
-  //  rich = Rich::Rich1;
-  //else
-  //  rich = Rich::Rich2;
 
   const std::string RAD = Rich::text(m_radiator);
 
@@ -186,25 +163,9 @@ StatusCode RichParticleSearchMain::execute() {
   int trackCounter =0;
   // info()<< "Event "<<EvtNum<<endmsg;
 
-  // const std::string m_PVContainer = m_onOfflineTool->primaryVertexLocation() ;
-  int nPV = 0;
-  //bool ok = 0;
-
-  //info() << "Getting PV from " << m_PVContainer << endreq ;
-
-  //LHCb::RecVertices* PV = get<LHCb::RecVertices>(m_PVContainer);
-  /*if ( !PV ) {
-    info() << "Could not find primary vertex location "
-    <<  m_PVContainer << endreq;
-    return StatusCode::FAILURE ;
-    } */
-  //nPV =  PV->size() ;
-  // info() << "There are " << nPV << " primary vertices." << endmsg ;
-
   //Get int for RICH; 0 Aerogel; 1 RICH1Gas; 2 Rich2Gas
   const int RICHint = GetRichInt();
 
-  m_PVSum = nPV + m_PVSum;
   EvtNum++;
   // =========================================================================//
   // Iterate over segments
@@ -214,7 +175,6 @@ StatusCode RichParticleSearchMain::execute() {
     debug()<< "Event "<<EvtNum<<endmsg;
     debug()<< "trackCounter "<<trackCounter<<endmsg;
 
-    //const Rich::DetectorType rich = segment->trackSegment().rich();
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -265,13 +225,6 @@ StatusCode RichParticleSearchMain::execute() {
 
     const double trChi2 = track->chi2();
 
-
-    //  MuonInformation::MuonInformation MuonInfo;
-    //int hasMuonPID = 0;
-    // if (m_useMuonInfo){
-    //   hasMuonPID = m_MuonInformation->HasMuonInformation(track);
-    // }
-
     const int TrackType = (int) track->type();
 
 
@@ -281,26 +234,18 @@ StatusCode RichParticleSearchMain::execute() {
     pt = std::sqrt( std::pow(trackSegment.bestMomentum().x(),2) +
                     std::pow(trackSegment.bestMomentum().y(),2) );
 
-    //Z momentum along beam line
-    //double tkMomz = trackSegment.bestMomentum().z();
+
 
     // Get refractive index of radiator required for mass calculations
     // double refIndx = m_refractiveIndex->refractiveIndex(rad);
     double refIndx = m_tkIndex->refractiveIndex(segment);
 
-    //  info()<<"m_tkIndex: "<<tkRefIndx<<"  refIndx: "<<refIndx<<endmsg;
+
 
     // Separation or isolation of tracks
     double MinimumTrackSeperation = this->MinimumTrackSeparation(segment);
     if (MinimumTrackSeperation>m_IsoCut[RICHint]){
-      /*
-      // test for isolation
-      const bool RICHisolated = m_isoTrack->isIsolated( segment, m_pType );
-      if ( RICHisolated)
-      {
-      IsolatedrichTrack = 1;
-      }
-      */
+
       // Loop over photons to make photon Cut of maximum number of photons per track
       // ============================================================================================//
 
@@ -396,7 +341,6 @@ StatusCode RichParticleSearchMain::execute() {
               {
                 Tuple TrackTuple = nTuple( "TrackTuple", "Rich Alignment" );
                 TrackTuple->column( "avThetaRec"      ,    AvThetaRec     );
-                //      TrackTuple->column( "tkMomz",tkMomz);
                 TrackTuple->column( "tkNum",trackCounter);
                 TrackTuple->column( "pt"         , pt             );
                 TrackTuple->column( "refIndx"       , refIndx        );
@@ -409,15 +353,11 @@ StatusCode RichParticleSearchMain::execute() {
                 //TrackTuple->column( "stdDevMass", stdDevMass);
                 TrackTuple->column( "stdDevCK", stdDevCK);
                 TrackTuple->column( "TrackType", TrackType);
-                //  if (m_useMCTruth){
-                //   TrackTuple->column( "TrueParent", trueParent);
                 if ( m_useMCTruth ) {
                   TrackTuple->column( "MCParticleType", MCtype);
                   TrackTuple->column( "TruePhotonsPerTrack", TruePhotonCounter);
                 }
-                TrackTuple->column( "nPV", nPV);
                 TrackTuple->column( "trChi2", trChi2);
-                //   }
                 if(m_useMuonInfo){
                   TrackTuple->column( "hasMuonPID"    , hasMuonPID   );
                 }
@@ -458,24 +398,10 @@ StatusCode RichParticleSearchMain::execute() {
                     {
                       Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
                       photonTuple->column( "CKangle"      , thetaRec        );
-                      //        photonTuple->column( "tkMomz",tkMomz);
                       photonTuple->column( "tkNum",trackCounter);
-                      //    photonTuple->column( "pt"            , pt             );
-                      //    photonTuple->column( "refIndx"       , refIndx        );
-                      //    photonTuple->column( "momentum"      , std::sqrt(segment->trackSegment().bestMomentum().Mag2()));
                       photonTuple->column( "mass"          , mass           );
-                      //    photonTuple->column( "nTracks"          ,  numberOfUsedTracks  );
-                      //    photonTuple->column( "MinimumTrackSeperation" , MinimumTrackSeperation );
                       photonTuple->column( "TrueParent", trueParent );
                       photonTuple->column( "EvtNum", EvtNum);
-                      //         photonTuple->column( "PhotonsPerTrack", PhotonCounter);
-                      //        photonTuple->column( "avThetaRec"      ,    AvThetaRec     );
-                      //       photonTuple->column( "averageTrackMass", avTrackMass);
-                      //       photonTuple->column( "stdDevMass", stdDevMass);
-                      //      photonTuple->column( "stdDevCK", stdDevCK);
-                      //      photonTuple->column( "TrackType", TrackType);
-                      //  if (m_useMCTruth){
-                      //      photonTuple->column( "trChi2", trChi2);
 
                       /*
                         if (m_useMCTruth){
