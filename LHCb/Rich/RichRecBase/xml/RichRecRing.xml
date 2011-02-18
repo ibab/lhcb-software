@@ -150,7 +150,7 @@
   if ( nPoints&gt;0 )
   {
     const unsigned int iPoint 
-      = static_cast&lt;unsigned int&gt;( (angle*static_cast&lt;double&gt;(nPoints)/Gaudi::Units::twopi) - 0.5 );
+      = (unsigned int) ( (angle*((double)(nPoints))/Gaudi::Units::twopi) - 0.5 );
     point = &amp;ringPoints()[ iPoint &lt; nPoints ? iPoint : nPoints-1 ];
   }
   return point;

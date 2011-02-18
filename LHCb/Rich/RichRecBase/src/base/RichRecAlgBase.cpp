@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
  *
- *  CVS Log :-
- *  $Id: RichRecAlgBase.cpp,v 1.24 2007-02-01 17:26:23 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
  */

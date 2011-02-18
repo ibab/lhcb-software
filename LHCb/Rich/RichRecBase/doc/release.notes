@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2011-02-18 - Chris Jones
+ - Change some static_cast to C style castes, to avoid ICC remarks
+
 ! 2011-02-12 - Chris Jones
  - Fix some coverity defects
 

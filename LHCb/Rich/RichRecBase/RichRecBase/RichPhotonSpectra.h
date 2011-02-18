@@ -255,19 +255,19 @@ namespace Rich
   template <class TYPE>
   inline TYPE PhotonSpectra<TYPE>::binEnergyLowerEdge( const unsigned int bin ) const
   {
-    return ( minEnergy() + static_cast<TYPE>(bin)*binSize() );
+    return ( minEnergy() + ((TYPE)(bin))*binSize() );
   }
 
   template <class TYPE>
   inline TYPE PhotonSpectra<TYPE>::binEnergyUpperEdge( const unsigned int bin ) const
   {
-    return ( minEnergy() + static_cast<TYPE>(1+bin)*binSize() );
+    return ( minEnergy() + ((TYPE)(1+bin))*binSize() );
   }
 
   template <class TYPE>
   inline TYPE PhotonSpectra<TYPE>::binEnergy( const unsigned int bin ) const
   {
-    return ( minEnergy() + static_cast<TYPE>(0.5+bin)*binSize() );
+    return ( minEnergy() + ((TYPE)(0.5+bin))*binSize() );
   }
 
   template <class TYPE>
