@@ -110,7 +110,6 @@
         type = "std::vector &lt; std::string &gt;"
         desc = "vector of string names for all layers"> 
    </method>
- 
 
   <method
         name = "stations"
@@ -126,7 +125,7 @@
 
   <method
         name = "layers"
-        type = "std::vector &lt; std::string &gt;"
+        type = "const std::vector &lt; std::string &gt; &amp;"
         desc = "vector of string names for layers"> 
   </method>
  

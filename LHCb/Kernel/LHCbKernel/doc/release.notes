@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-02-18 - Chris Jones
+ - Various minor changes for icc11, removes some #pragma statements
+
 ! 2011-02-15 - David Hutchcroft
  - Add ICountContainedObjects to LHCbKernelDict.h
 

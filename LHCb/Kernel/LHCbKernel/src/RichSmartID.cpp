@@ -15,12 +15,6 @@
 // Gaudi
 #include "GaudiKernel/GaudiException.h"
 
-// boost
-#ifdef __INTEL_COMPILER         // Disable ICC remark from Boost
-  #pragma warning(disable:2259) // non-pointer conversion from "int" to "char" may lose significant bits
-#endif
-#include "boost/lexical_cast.hpp"
-
 // local
 #include "Kernel/RichSmartID.h"
 
@@ -61,9 +55,9 @@ void LHCb::RichSmartID::rangeError(const int value,
                                    const int max,
                                    const std::string& message) const
 {
-  throw GaudiException ( message+" value "+boost::lexical_cast<std::string>(value)
-                         +" exceeds field maximum "+boost::lexical_cast<std::string>(max),
-                         "*RichSmartID*", StatusCode::FAILURE );
+  std::ostringstream mess;
+  mess << message << " value " << value << " exceeds field maximum " << max;
+  throw GaudiException ( mess.str(), "*RichSmartID*", StatusCode::FAILURE );
 }
 
 std::string LHCb::RichSmartID::toString() const

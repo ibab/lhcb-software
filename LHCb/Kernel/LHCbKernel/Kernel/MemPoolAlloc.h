@@ -4,9 +4,6 @@
  *
  *  Header file for class LHCb::MemPoolAlloc
  *
- *  CVS Log :-
- *  $Id: MemPoolAlloc.h,v 1.6 2009-05-29 13:26:55 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
@@ -18,9 +15,9 @@
 // boost stuff from Gaudi
 #ifdef _WIN32
 // Avoid conflict of Windows macro with std::max
-  #ifndef NOMINMAX
-    #define NOMINMAX
-  #endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #endif
 #include "GaudiKernel/boost_allocator.h"
 
@@ -44,6 +41,8 @@ namespace LHCb
    *
    *  @endcode
    *
+   *  @todo Figure out how to avoid the need to disable an ICC remark with #pragma
+   *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   07/11/2005
    */
@@ -57,9 +56,10 @@ namespace LHCb
 
     /// If GOD_NOALLOC flag set, do nothing
 #ifndef GOD_NOALLOC
+
 #ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(disable:1720) // Operator new has no corresponding member operator delete (to be called if an exception is thrown during initialization of an allocated object)
-  #pragma warning(push)
+#pragma warning(disable:1720) // Operator new has no corresponding member operator delete (to be called if an exception is thrown during initialization of an allocated object)
+#pragma warning(push)
 #endif
 
     /// operator new
@@ -86,17 +86,24 @@ namespace LHCb
     inline static void operator delete ( void* pObj )
     {
       boost::singleton_pool<T, sizeof(T)>::is_from(pObj)
-        ? boost::singleton_pool<T, sizeof(T)>::free(pObj) 
+        ? boost::singleton_pool<T, sizeof(T)>::free(pObj)
         : ::operator delete ( pObj );
     }
-    
+
     /// placement operator delete
     inline static void operator delete ( void* p, void* pObj )
     {
       ::operator delete ( p, pObj );
     }
+
+    /// placement operator delete
+    inline static void operator delete ( void* p, T* pObj )
+    {
+      ::operator delete ( p, pObj );
+    }
+
 #ifdef __INTEL_COMPILER // Re-enable ICC remark
-  #pragma warning(pop)
+#pragma warning(pop)
 #endif
 
 #endif

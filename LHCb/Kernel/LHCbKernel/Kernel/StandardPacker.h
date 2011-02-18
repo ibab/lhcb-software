@@ -15,7 +15,8 @@
  *  @date   2005-03-15
  */
 
-namespace Packer {
+namespace Packer 
+{
   const double ENERGY_SCALE     = 1.0e2;  ///< .01 MeV steps
   const double POSITION_SCALE   = 1.0e4;  ///< 0.1 micron steps
   const double SLOPE_SCALE      = 1.0e8;  ///< full scale +- 20 radians
@@ -24,7 +25,9 @@ namespace Packer {
   const double DELTALL_SCALE    = 1.0e4;  ///< 0.0001 precision
 }
 
-class StandardPacker {
+class StandardPacker 
+{
+
 public:
 
   /// Standard constructor
@@ -33,37 +36,44 @@ public:
   ~StandardPacker( ) {}; ///< Destructor
 
   /** returns an int for a double energy */
-  int energy( const double e ) const {
+  int energy( const double e ) const 
+  {
     return packDouble( e * Packer::ENERGY_SCALE );
   }
 
   /** returns an int for a double position */
-  int position( const double x ) const {
+  int position( const double x ) const 
+  {
     return packDouble( x * Packer::POSITION_SCALE );
   }
 
   /** returns an int for a double slope */
-  int slope( const double x ) const {
+  int slope( const double x ) const 
+  {
     return packDouble( x * Packer::SLOPE_SCALE );
   }
 
   /** returns an short int for a double fraction */
-  short int fraction( const double f ) const {
+  short int fraction( const double f ) const 
+  {
     return shortPackDouble( f * Packer::FRACTION_SCALE );
   }
 
   /** returns an int for a double time (TOF) value */
-  int time( const double x ) const {
+  int time( const double x ) const 
+  {
     return packDouble( x * Packer::TIME_SCALE );
   }
 
   /** returns an int for a double delta log likelihood value */
-  int deltaLL( const double x ) const {
+  int deltaLL( const double x ) const 
+  {
     return packDouble( x * Packer::DELTALL_SCALE );
   }
 
   /** returns an int containing the float value of the double */
-  int fltPacked( const double x  ) const {
+  int fltPacked( const double x  ) const 
+  {
     union fltInt { int i; float f; } convert;
     convert.f = (float)x;
     return convert.i;
@@ -77,11 +87,13 @@ public:
   int reference( DataObject* out, const DataObject* parent, const int key ) const 
   {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink ) {
+    if ( NULL == myLink ) 
+    {
       out->linkMgr()->addLink( parent->registry()->identifier(),
                                parent );
     }
-    if ( key != (key & 0x0FFFFFFF ) ) {
+    if ( key != (key & 0x0FFFFFFF ) )
+    {
       std::cout << "************************* Key over 28 bits in StandardPacker ***********************" << std::endl;
     }
     int myLinkID = out->linkMgr()->link( parent )->ID() << 28;
@@ -91,7 +103,8 @@ public:
   void hintAndKey( const int data, 
                    const DataObject* source, 
                    DataObject* target, 
-                   int& hint, int& key ) const {
+                   int& hint, int& key ) const 
+  {
     const int indx = data >> 28;
     key = data & 0x0FFFFFFF;
     hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
@@ -116,7 +129,8 @@ public:
   double deltaLL( const int k )        const { return double(k) / Packer::DELTALL_SCALE; }
 
   /** returns an double from a int containing in fact a float */
-  double fltPacked( const int k  ) const {
+  double fltPacked( const int k  ) const 
+  {
     union fltInt { int i; float f; } convert;
     convert.i = k;
     return double(convert.f);
@@ -124,27 +138,24 @@ public:
 
 protected:
 
+  /// Pack a double to an int
   int packDouble ( double val ) const 
   {
-    if (  2.e9 < val ) return  2000000000;  // saturate 31 bits
-    if ( -2.e9 > val ) return -2000000000;  // idem
-    if ( 0 < val ) return int( val + 0.5 ); // proper rounding
-    return int( val - 0.5 );
+    return ( 2.e9  < val ?  2000000000         : // saturate 31 bits
+             -2.e9 > val ? -2000000000         : // idem
+             0     < val ? (int) ( val + 0.5 ) : // proper rounding
+             (int) ( val - 0.5 )               );
   }
 
-  short int shortPackDouble ( double val ) const {
-    if (  3.e4 < val ) return  30000;  // saturate 15 bits
-    if ( -3.e4 > val ) return -30000;  // idem
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(disable:2259) // non-pointer conversion from "int" to "short" may lose significant bits
-  #pragma warning(push)
-#endif
-    if ( 0 < val ) return int( val + 0.5 ); // proper rounding
-    return int( val - 0.5 );
-#ifdef __INTEL_COMPILER         // Re-enable ICC remark 2259
-  #pragma warning(pop)
-#endif
+  /// Pack a double to a short int
+  short int shortPackDouble ( double val ) const
+  {
+    return ( 3.e4  < val ?  30000                    : // saturate 15 bits
+             -3.e4 > val ? -30000                    : // idem
+             0     < val ? (short int) ( val + 0.5 ) : // proper rounding
+             (short int) ( val - 0.5 )               );
   }
 
 };
+
 #endif // KERNEL_STANDARDPACKER_H
