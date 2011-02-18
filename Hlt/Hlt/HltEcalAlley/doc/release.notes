@@ -5,9 +5,12 @@
 !----------------------------------------------------------------------------
 
 
+! 2011-02-18 - Gerhard Raven
+ - HltRadCorTool: remove support for temporary fix which was obsolete for a long time...
+
 !========================== HltEcalAlley v3r1 2011-01-30 ===================
 ! 2011-01-28 - Gerhard Raven
- - remove support for temporary fix which was obsolete for a long time...
+ - HltIsPhotonTool: remove support for temporary fix which was obsolete for a long time...
 
 
 !========================== HltEcalAlley v3r0 2010-03-28 ===================
