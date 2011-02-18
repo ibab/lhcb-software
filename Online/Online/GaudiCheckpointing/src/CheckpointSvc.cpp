@@ -61,6 +61,8 @@ namespace LHCb  {
     int                       m_exit;
     /// Property: Wait for children with debugger for n seconds
     int                       m_childWait;
+    /// Property to make children sleep after fork
+    int                       m_childSleep;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
     /// Property: Set to 1 if the file descriptor table should be dump during child restart
@@ -281,6 +283,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("KillChildren",       m_killChildren  = false);
   declareProperty("FirstChild",         m_firstChild    = 0);
   declareProperty("ChildWait",          m_childWait     = 0);
+  declareProperty("ChildSleep",         m_childSleep    = 250);
 }
 
 /// IInterface implementation : queryInterface
@@ -551,8 +554,9 @@ int CheckpointSvc::saveCheckpoint() {
       MsgStream log(msgSvc(),name());
       log << MSG::INFO << MARKER;
       if ( ret == 1 )   {
-	log << " FINISHED loading process from checkpoint..."
-	    << "Continue processing... " << endmsg;
+	//!!!!!!! No printing here! other threads may lock output!!!!!!!
+	//log << " FINISHED loading process from checkpoint..."
+	//    << "Continue processing... " << endmsg;
       }
       else {
 	log << " FINISHED CHECKPOINT " << endmsg
@@ -643,8 +647,10 @@ int CheckpointSvc::forkChild(int which) {
 	::lib_rtl_sleep(1000);
       }
     }
-    int w = which%10;
-    ::lib_rtl_sleep(200*w);
+    if ( m_childSleep>0 ) {
+      int w = which%10;
+      ::lib_rtl_sleep(m_childSleep*w);
+    }
   }
   else if ( pid>0 ) {
     m_masterProcess = true;
