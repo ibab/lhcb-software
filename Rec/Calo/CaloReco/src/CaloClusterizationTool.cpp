@@ -82,7 +82,6 @@ CaloClusterizationTool::appliRulesTagger
   const CaloNeighbors& ns     = det->neighborCells ( cellID ) ;
   bool hasEdgeNeighbor = false;
   bool hasClusteredNeighbor = false;
-  std::vector<LHCb::CaloCellID> neighborSeeds;
   for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ){
     const CelAutoTaggedCell* nei = hits[ *iN ] ;
     if ( 0 == nei                 ) { continue ; }
@@ -90,34 +89,24 @@ CaloClusterizationTool::appliRulesTagger
     if( nei->isEdge() && m_release ){
       hasEdgeNeighbor = true;
       for( std::vector<LHCb::CaloCellID>::const_iterator id = nei->seeds().begin();id != nei->seeds().end();id++){
-        bool ok = true;
-        for(std::vector<LHCb::CaloCellID>::iterator iid = neighborSeeds.begin();iid != neighborSeeds.end();iid++){
-          if( *id == *iid ){
-            ok = false;
-            break;
-          }
-        }
-        if( ok )cell->addSeed( *id );
+        if( !cell->isWithSeed( *id ) )cell->addSeed( *id );
       }
     }
+    //
     if ( !nei->isClustered()      ) { continue ; }
     hasClusteredNeighbor = true;
     const LHCb::CaloCellID& seed = nei->seedForClustered() ;
     if ( cell->isWithSeed( seed ) ) { continue ; }
     cell->addSeed ( seed ) ;
   }
+  
 
   // Tag or or not the cell
 
   switch ( cell -> numberSeeds() ) {
   case 0:
     if( !m_release)break;
-    if( hasEdgeNeighbor && !hasClusteredNeighbor){
-      cell->setEdge();
-      for(std::vector<LHCb::CaloCellID>::iterator iid = neighborSeeds.begin();iid != neighborSeeds.end();iid++){
-        cell->addSeed( *iid );
-      }
-    }
+    if( hasEdgeNeighbor && !hasClusteredNeighbor)cell->setEdge(); // 
     break;
   case 1:
     cell->setClustered();
@@ -357,9 +346,10 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
   while ( itTagSeed != itTagLastSeed ){
     const LHCb::CaloDigit* digit = (*itTagSeed)->digit() ;
 
-    if( digit->e() < 0 ) {
+    if( digit->e() <= 0 ) {
       itTagSeed++;
-      continue; // does not keep cluster with seed.energy = 0
+      counter("Negative seed energy") += digit->e();
+      continue; // does not keep cluster with seed.energy <= 0
     }
 
     LHCb::CaloCellID seedID = (*itTagSeed)->cellID();

@@ -177,7 +177,8 @@ StatusCode CellularAutomatonAlg::execute()
   if(m_tool->iterations() > m_passMax)m_passMax = m_tool->iterations();
   
   counter ( "#clusters => '" + m_outputData + "'" ) += output->size() ;
-  
+  counter ( "Clusterisation pass") += m_tool->iterations();
+ 
   if ( msgLevel( MSG::DEBUG) ){
     debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
             << m_tool->iterations() << " iterations" <<endmsg;
@@ -205,9 +206,9 @@ StatusCode CellularAutomatonAlg::finalize()
     avePass = m_pass/m_event;
     aveClus = m_clus/m_event;
   }
-  info() << "Built " << aveClus 
-         <<" cellular automaton clusters/event  with " 
-         << avePass  << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endmsg;
+  info() << "Built <" << aveClus 
+         <<"> cellular automaton clusters/event  with <" 
+         << avePass  << "> iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

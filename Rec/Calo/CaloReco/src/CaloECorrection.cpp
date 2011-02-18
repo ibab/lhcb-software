@@ -169,11 +169,13 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
   // Pileup subtraction at the cluster level
   if( m_pileup->method("Ecal") >= 10 ){
-    //info() << m_pileup->getScale() << " " << m_pileup->offset( cellID ) << " " << eEcal <<endmsg;    
     double offset = m_pileup->offset( cellID );
     if(offset < eEcal){
+      double eee=eEcal;
       eEcal -= offset;
-      counter("Pileup offset") -= offset;
+      counter("Pileup offset") += offset;
+      counter("Pileup subtracted ratio")+=eEcal/eee;
+      counter("Pileup scale") += m_pileup->getScale();
     }
   }
   
