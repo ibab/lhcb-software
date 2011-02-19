@@ -151,11 +151,11 @@ StatusCode RecSummaryAlg::execute()
           iC != coords->end(); ++iC ) { ++mCount[(*iC)->key().station()]; }
 
     // Save to summary
-    summary->addInfo( LHCb::RecSummary::nMuonCoordsS0, mCount[0] );
-    summary->addInfo( LHCb::RecSummary::nMuonCoordsS1, mCount[1] );
-    summary->addInfo( LHCb::RecSummary::nMuonCoordsS2, mCount[2] );
-    summary->addInfo( LHCb::RecSummary::nMuonCoordsS3, mCount[3] );
-    summary->addInfo( LHCb::RecSummary::nMuonCoordsS4, mCount[4] );
+    if ( mCount[0]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS0, mCount[0] ); }
+    if ( mCount[1]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS1, mCount[1] ); }
+    if ( mCount[2]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS2, mCount[2] ); }
+    if ( mCount[3]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS3, mCount[3] ); }
+    if ( mCount[4]>0 ) { summary->addInfo( LHCb::RecSummary::nMuonCoordsS4, mCount[4] ); }
 
   }
   else
