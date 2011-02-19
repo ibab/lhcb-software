@@ -1,5 +1,5 @@
 package HltSys
-version v12r7
+version v12r6p1
 
 branches cmt doc 
 
@@ -25,7 +25,7 @@ use HltSettings         v5r5    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r2    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r7    Hlt   # Gerhard Raven
-use LoKiTrigger         v11r5p1 Phys  # Vanya Belyaev
+use LoKiTrigger         v11r6   Phys  # Vanya Belyaev
 use LoKiTracks          v1r8    Phys  # Vanya Belyaev
 use BBDecTreeTool       v1r1    Phys  # Mike Williams
 
