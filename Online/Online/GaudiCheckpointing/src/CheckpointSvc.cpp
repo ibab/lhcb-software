@@ -475,6 +475,11 @@ int CheckpointSvc::finishCheckpoint() {
 int CheckpointSvc::finishRestore() {
   CHKPT* chkpt =  CHKPT_get();
   chkpt->resume();
+
+  // %%HACK%% Sleep 3 secs to let threads pass immediate actions before we modify the
+  // environment.
+  ::lib_rtl_sleep(3000);
+
   chkpt->updateEnv();
   RTL::RTL_reset();
   StatusCode sc = parseRestartOptions();
@@ -483,16 +488,16 @@ int CheckpointSvc::finishRestore() {
     err << MSG::FATAL << "Failed to parse job options after checkpoint restart." << endmsg;
     return sc.getCode();
   }
-  MsgStream log(msgSvc(),name());
-  log << MSG::INFO;
   if ( ::getenv("TEST_CHECKPOINT") )  {
-    log << MARKER << MARKER << endmsg;
-    log << "=  RESTORE TEST WAS SUCCESSFUL." << endmsg;
-    log << "=  Looks like this checkpoint is working" << endmsg;
-    log << "=  The process will now exit." << endmsg;
-    log << MARKER << MARKER << endmsg;
+    ::printf(" [ALWAYS] %s%s\n",MARKER,MARKER);
+    ::printf(" [ALWAYS] =  RESTORE TEST WAS SUCCESSFUL.\n");
+    ::printf(" [ALWAYS] =  Looks like this checkpoint is working.\n");
+    ::printf(" [ALWAYS] =  The process will now exit.\n");
+    ::printf(" [ALWAYS] %s%s\n",MARKER,MARKER);
     ::_exit(EXIT_SUCCESS);
   }
+  MsgStream log(msgSvc(),name());
+  log << MSG::INFO;
   log << "Update process environment and restart options." << endmsg;
   log << "Stop threads after restart from checkpoint. " << endmsg;
   chkpt->stop();
@@ -668,11 +673,11 @@ int CheckpointSvc::forkChild(int which) {
 /// Execute child process
 int CheckpointSvc::execChild() {
   CHKPT* chkpt =  CHKPT_get();
-  MsgStream log(msgSvc(),name());
-  log << MSG::ALWAYS;
   for(int j=0; j<3; ++j) {
     if (dup2(j,j) < 0) {
-      log << "Error dup fd:" << j << " " << ::strerror(errno) << endmsg;
+      char text[256];
+      ::sprintf(text,"[ERROR] Severe error dup fd:%d %s\n",j,::strerror(errno));
+      ::write(STDOUT_FILENO,text,strlen(text));
     }
   }
   chkpt->setFileDescriptors(m_files);
@@ -682,6 +687,9 @@ int CheckpointSvc::execChild() {
       ::_exit(EXIT_FAILURE);
     }
   }
+  // Now it should be save to restart the children
+  chkpt->startChild();
+
   /// Need to reset RTL to get proper processnames etc.
   RTL::RTL_reset();
   const char* dns = ::getenv("DIM_DNS_NODE");
@@ -690,7 +698,7 @@ int CheckpointSvc::execChild() {
     ::dic_set_dns_node((char*)dns);
   }
   // Now it should be save to restart the children
-  chkpt->startChild();
+  //chkpt->startChild();
   string proc = RTL::processName();
   ::dim_init();
   ::dis_start_serving((char*)proc.c_str());
