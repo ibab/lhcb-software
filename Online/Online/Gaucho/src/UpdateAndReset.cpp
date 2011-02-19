@@ -91,6 +91,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
   m_dimSvcSaveSetLoc = 0;
+  m_pGauchoMonitorSvc = 0;  
 }
 
 
@@ -260,40 +261,44 @@ StatusCode UpdateAndReset::stop() {
   msg << MSG::DEBUG << "finalizing...." << endreq;
   if ( 1 == m_saveHistograms )
   {
-     //calling finalize - don't need to reset, they probably don't exist anymore
      m_eorNumber=m_runNumber;
      manageTESHistos(false, false, true, true);
      m_pGauchoMonitorSvc->StopSaving();
   }
-  else
+  else if ( 0 != m_pGauchoMonitorSvc )
   {
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+    m_pGauchoMonitorSvc->release();
+    m_pGauchoMonitorSvc = 0;
   }
   m_stopdone = true;
   return StatusCode::SUCCESS;
 }
+
 StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
-  if (m_stopdone) return StatusCode::SUCCESS;
-  if ( 1 == m_saveHistograms )
+  if (m_stopdone)   
   {
-     //calling finalize - don't need to reset, they probably don't exist anymore
+    return StatusCode::SUCCESS;
+  }
+  else if ( 1 == m_saveHistograms )
+  {
      m_eorNumber=m_runNumber;
      manageTESHistos(false, false, true, true);
   }
-  else
+  else if ( 0 != m_pGauchoMonitorSvc )
   {
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+    m_pGauchoMonitorSvc->release();
+    m_pGauchoMonitorSvc = 0;
   }
   if (m_dimSvcSaveSetLoc != 0)
   {
     delete m_dimSvcSaveSetLoc;
     m_dimSvcSaveSetLoc = 0;
   }
-
-
   return StatusCode::SUCCESS;
 }
 
