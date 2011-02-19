@@ -93,7 +93,6 @@ namespace Rich
 
         double m_Sigma;
         double m_Calibration;
-        double m_Threshold;
 
         Rndm::Numbers m_gaussRndm;
 

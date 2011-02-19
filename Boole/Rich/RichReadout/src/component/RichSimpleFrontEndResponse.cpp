@@ -22,7 +22,8 @@ DECLARE_ALGORITHM_FACTORY( SimpleFrontEndResponse )
 // Standard constructor, initializes variables
 SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
-  : Rich::AlgBase ( name, pSvcLocator ) 
+  : Rich::AlgBase ( name, pSvcLocator ),
+    m_AdcCut      ( 85 )
 {
 
   // job opts
@@ -51,8 +52,6 @@ StatusCode SimpleFrontEndResponse::initialize()
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
-
-  m_AdcCut = 85;
 
   // Gauss randomn dist
   m_gaussRndm.initialize( randSvc(), Rndm::Gauss(0.0,0.9) );
