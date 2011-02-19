@@ -3,6 +3,9 @@
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITORNT_H 1
 
 // Include files
+
+#include <cmath>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 
@@ -66,7 +69,7 @@ namespace Velo
 
     StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, 
                              double&, double&, double&, double&, double&, double&, LHCb::State&, LHCb::State& );
-    void distance( const LHCb::RecVertex*, LHCb::State, double&, double&, int );
+    void distance( const LHCb::RecVertex*, const LHCb::State&, double&, double&, int );
     
     StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
     
