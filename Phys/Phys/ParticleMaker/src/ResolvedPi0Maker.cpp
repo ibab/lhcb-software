@@ -38,7 +38,7 @@ DECLARE_ALGORITHM_FACTORY( ResolvedPi0Maker )
 ( const std::string& name,ISvcLocator* pSvcLocator  )
   : Pi0MakerBase           ( name, pSvcLocator )
   , m_photonMakerType  ()
-  , m_photonMaker      ()
+  , m_photonMaker      (NULL)
   , m_singlePhotonUse  ()
   , m_independantPhotons()
 {
@@ -117,8 +117,8 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
         part=ip;
       }
     }
-    const LHCb::CaloParticle photonMax( *part ,m_point , m_pointErr);
-    orderedPhotons.push_back( std::pair< LHCb::CaloParticle , bool > (photonMax,false) );
+    orderedPhotons.push_back( std::pair< LHCb::CaloParticle , bool > 
+                              (LHCb::CaloParticle( *part ,m_point , m_pointErr), false) );
     photons.erase(part);
   }
   if ( 0 != photons.size() ) {
@@ -194,7 +194,8 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     debug() << "-----------------------" << endreq;
     debug() << " Filtered and created :" << endreq;
     debug() << " --> " << nPi0 << " Resolved " << m_pid <<"s " << endreq;
-    debug() << " --> " << nGamma-nDel <<" photons have been used among the " << nGamma << " selected " << endreq;
+    debug() << " --> " << nGamma-nDel <<" photons have been used among the "
+            << nGamma << " selected " << endreq;
     debug() << " Skipped " << m_pid <<" : " << nSkip << endreq;
     debug() << "-----------------------" << endreq;
   }
@@ -203,7 +204,8 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 //=========================================================================
 //  make Pi0
 //=========================================================================
-StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle g2,
+StatusCode ResolvedPi0Maker::makePi0(const LHCb::CaloParticle& g1,
+                                     const LHCb::CaloParticle& g2,
                                      LHCb::Particle* pi0){
   pi0->setParticleID( LHCb::ParticleID (m_Id) );
 
@@ -212,6 +214,7 @@ StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle 
   if(m_independantPhotons ){
     gg1 = (g1.particle())->clone();
     gg2 = (g2.particle())->clone();
+    // CRJ : Are these saved or deleted later on ? Looks to me like they aren't ...
   }else{
     gg1= g1.particle();
     gg2= g2.particle();
@@ -236,7 +239,8 @@ StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle 
 
 // ============================================================================
 
-bool ResolvedPi0Maker::selPi0(LHCb::CaloParticle g1, LHCb::CaloParticle g2){
+bool ResolvedPi0Maker::selPi0(const LHCb::CaloParticle& g1,
+                              const LHCb::CaloParticle& g2){
   //
   bool isGood=false;
 

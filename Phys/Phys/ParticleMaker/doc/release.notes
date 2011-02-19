@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2011-02-11 - Chris Jones
+ - Various coverity fixes
+
 ! 2011-02-15 - Juan Palacios
  - ParticleMakerBase::loadEventInput loads ProtoParticles from various locations,
    specified by Inputs.

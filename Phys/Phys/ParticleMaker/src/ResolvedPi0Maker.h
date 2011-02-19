@@ -37,9 +37,11 @@ private :
   /** accessor to the specialized tool for estimation of
    *  photon parameters 
    */
-  bool   selPi0(LHCb::CaloParticle g1 ,LHCb::CaloParticle g2);
-  StatusCode makePi0(LHCb::CaloParticle g1 , LHCb::CaloParticle g2, LHCb::Particle* pi0);
-  // setters
+  bool   selPi0(const LHCb::CaloParticle& g1 , 
+                const LHCb::CaloParticle& g2);
+  StatusCode makePi0(const LHCb::CaloParticle& g1, 
+                     const LHCb::CaloParticle& g2, 
+                     LHCb::Particle* pi0);
 
 private:
   std::string m_photonMakerType;
@@ -47,6 +49,5 @@ private:
 
   bool m_singlePhotonUse;
   bool m_independantPhotons;
-  unsigned long  m_count[3];
 };
 #endif // RESOLVEDPI0MAKER_H

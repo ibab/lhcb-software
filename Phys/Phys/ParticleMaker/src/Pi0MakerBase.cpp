@@ -3,15 +3,15 @@
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
-#include "CaloUtils/CaloParticle.h" 
+#include "CaloUtils/CaloParticle.h"
 // local
 #include "Pi0MakerBase.h"
 
-/** @file 
- *  
+/** @file
+ *
  *  Implementation file for class : Pi0MakerBase
  *
  *  @author P.Koppenburg 2009-03-23
@@ -20,17 +20,19 @@
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type
- *  @param name   tool name 
+ *  @param name   tool name
  *  @param parent tool parent
  */
 // ============================================================================
 Pi0MakerBase::Pi0MakerBase
 ( const std::string& name,ISvcLocator* pSvcLocator  )
-  : ParticleMakerBase           ( name, pSvcLocator ) 
-    , m_point            () 
-    , m_pointErr         ()
+  : ParticleMakerBase           ( name, pSvcLocator )
+  , m_Id              (0)
+  , m_Mass            (0)
+  , m_point            ()
+  , m_pointErr         ()
 {
-  // Filter 
+  // Filter
   declareProperty( "MassWindow"     , m_MassWin = 30. * Gaudi::Units::MeV);
   declareProperty( "PtCut"          , m_PtCut = 0. * Gaudi::Units::MeV);
   // new default
@@ -38,6 +40,10 @@ Pi0MakerBase::Pi0MakerBase
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
+  //
+  m_count[0]=0;
+  m_count[1]=0;
+  m_count[2]=0;
 }
 // ============================================================================
 
@@ -59,13 +65,9 @@ StatusCode Pi0MakerBase::initialize    ()
     Error("Requested particle '" + m_pid + "' is unknown").ignore();
     return StatusCode::FAILURE;
   }
-  m_Id      = (*partProp).particleID().pid();
+  m_Id   = (*partProp).particleID().pid();
   m_Mass = (*partProp).mass();
-  //
-  m_count[0]=0;
-  m_count[1]=0;
-  m_count[2]=0;
-  
+
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
