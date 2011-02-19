@@ -17,23 +17,24 @@
 
 namespace DecayTreeFitter
 {
-  
+
   extern int vtxverbose ;
   // ==========================================================================
-  // constructor from the particle (decay head) 
+  // constructor from the particle (decay head)
   // ==========================================================================
-  Fitter::Fitter 
-  ( const LHCb::Particle& bc           , 
-    const bool            forceFitAll  , 
-    ITrackExtrapolator*   extrapolator ) 
+  Fitter::Fitter
+  ( const LHCb::Particle& bc           ,
+    const bool            forceFitAll  ,
+    ITrackExtrapolator*   extrapolator )
     : m_particle   (&bc)
-    , m_decaychain (0)  
+    , m_decaychain (0)
     , m_fitparams  (0)
     , m_status     (UnFitted)
     , m_chiSquare  (-1)
     , m_niter      (-1)
+    , m_errCode    (0)
   //
-    , m_extrapolator ( extrapolator ) 
+    , m_extrapolator ( extrapolator )
   //
   {
     Configuration config(forceFitAll,extrapolator) ;
@@ -43,22 +44,23 @@ namespace DecayTreeFitter
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
   // ==========================================================================
-  // constructor from the particle (decay head) 
-  // ==========================================================================  
-  Fitter::Fitter 
-  ( const LHCb::Particle& bc           , 
+  // constructor from the particle (decay head)
+  // ==========================================================================
+  Fitter::Fitter
+  ( const LHCb::Particle& bc           ,
     ITrackExtrapolator*   extrapolator ,
-    const bool            forceFitAll  ) 
+    const bool            forceFitAll  )
     : m_particle   (&bc)
-    , m_decaychain (0)  
+    , m_decaychain (0)
     , m_fitparams  (0)
     , m_status     (UnFitted)
     , m_chiSquare  (-1)
     , m_niter      (-1)
+    , m_errCode    (0)
   //
-    , m_extrapolator ( extrapolator ) 
+    , m_extrapolator ( extrapolator )
   //
-  { 
+  {
     Configuration config(forceFitAll,extrapolator) ;
     // build the tree
     m_decaychain = new DecayChain(bc,config) ;
@@ -68,21 +70,22 @@ namespace DecayTreeFitter
   // ==========================================================================
   // constructor from the particle (decay head) and primary vertex
   // ==========================================================================
-  Fitter::Fitter 
-  ( const LHCb::Particle&   bc           , 
-    const LHCb::VertexBase& pv           , 
+  Fitter::Fitter
+  ( const LHCb::Particle&   bc           ,
+    const LHCb::VertexBase& pv           ,
     const bool              forceFitAll  ,
-    ITrackExtrapolator*     extrapolator ) 
+    ITrackExtrapolator*     extrapolator )
     : m_particle   ( &bc )
     , m_decaychain ( 0   )
     , m_fitparams  ( 0   )
     , m_status     ( UnFitted )
     , m_chiSquare  ( -1  )
     , m_niter      ( -1  )
+    , m_errCode    (  0  )
   //
-    , m_extrapolator ( extrapolator ) 
+    , m_extrapolator ( extrapolator )
   //
-  {    
+  {
     Configuration config(forceFitAll,extrapolator) ;
     m_decaychain = new DecayChain(bc,pv,config) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
@@ -90,9 +93,9 @@ namespace DecayTreeFitter
   // ==========================================================================
   // constructor from the particle (decay head) and primary vertex
   // ==========================================================================
-  Fitter::Fitter 
-  ( const LHCb::Particle&   bc           , 
-    const LHCb::VertexBase& pv           , 
+  Fitter::Fitter
+  ( const LHCb::Particle&   bc           ,
+    const LHCb::VertexBase& pv           ,
     ITrackExtrapolator*     extrapolator ,
     const bool              forceFitAll  )
     : m_particle   ( &bc )
@@ -101,34 +104,35 @@ namespace DecayTreeFitter
     , m_status     ( UnFitted )
     , m_chiSquare  ( -1  )
     , m_niter      ( -1  )
+    , m_errCode    (  0  )
   //
-    , m_extrapolator ( extrapolator ) 
+    , m_extrapolator ( extrapolator )
   //
-  {    
+  {
     Configuration config(forceFitAll,extrapolator) ;
     m_decaychain = new DecayChain(bc,pv,config) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
   // ==========================================================================
-  // set the track extrapolator 
+  // set the track extrapolator
   // ==========================================================================
-  void Fitter::setExtrapolator ( ITrackExtrapolator* extrapolator ) 
+  void Fitter::setExtrapolator ( ITrackExtrapolator* extrapolator )
   { m_extrapolator = extrapolator ; }
-  
-  
+
+
   void Fitter::setVerbose(int i) { vtxverbose = i ; }
-  
+
   Fitter::~Fitter()
   {
     delete m_decaychain ;
     delete m_fitparams ;
   }
-   
+
   void
   Fitter::fit(int nitermax, double dChisqConv)
   {
     m_map.clear() ;
-    
+
     const int maxndiverging=3 ;
     //const double dChisqQuit = nDof() ; // if chi2 increases by more than this --> fit failed
 
@@ -136,23 +140,23 @@ namespace DecayTreeFitter
     m_chiSquare = -1 ;
     // m_errCode.reset() ;
     m_errCode = 0 ;
-    
+
     if( m_status == UnFitted )
     { m_errCode = m_decaychain->init(*m_fitparams).flag() ; }
-    
+
     // if(m_errCode.failure()) {
     if ( 0 != m_errCode )
     {
       // the input tracks are too far apart
       m_status = BadInput ;
-      
+
     } else {
       // reset the status flag
       m_status = UnFitted ;
 
       int ndiverging=0 ;
       bool finished = false ;
-   
+
       for(m_niter=0; m_niter<nitermax && !finished; ++m_niter) {
         HepVector prevpar = m_fitparams->par() ;
         bool firstpass = m_niter==0 ;
@@ -161,7 +165,7 @@ namespace DecayTreeFitter
         double deltachisq = chisq - m_chiSquare ;
         // if chi2 increases by more than this --> fit failed
         const double dChisqQuit = std::max(double(2*nDof()),2*m_chiSquare) ;
-        
+
         // if(m_errCode.failure()) {
         if( 0 != m_errCode ) {
           finished = true ;
@@ -171,7 +175,7 @@ namespace DecayTreeFitter
             if( fabs( deltachisq ) < dChisqConv ) {
               m_chiSquare = chisq ;
               m_status = Success ;
-              finished = true ; 
+              finished = true ;
             } else if( m_niter>1 && deltachisq > dChisqQuit ) {
               m_fitparams->par() = prevpar ;
               m_status  = Failed ;
@@ -187,48 +191,48 @@ namespace DecayTreeFitter
               m_fitparams->par()   += prevpar ;
               m_fitparams->par()   *= 0.5 ;
               //if( m_niter>10) m_fitparams->scale() *= 0.5 ;
-            } 
+            }
           }
           if ( deltachisq < 0 ) ndiverging=0 ; // start over with counting
           if(!finished) m_chiSquare = chisq ;
-        } 
-    	
+        }
+
         if(vtxverbose>=1) {
           std::cout << "step, chiSquare: "
-                    << std::setw(3) << m_niter 
+                    << std::setw(3) << m_niter
                     << std::setw(3) << m_status
                     << std::setw(3) << nDof()
-                    << std::setprecision(6) 
+                    << std::setprecision(6)
                     << std::setw(12) << chisq
                     << std::setw(12) << deltachisq << std::endl ;
         }
-	
+
         if(vtxverbose>=4) {
           std::cout << print()            << std::endl;
           std::cout << "press a key ...." << std::endl ;
           getchar() ;
         }
       }
-      
+
       if( m_niter == nitermax && m_status != Success )
       { m_status = NonConverged ; }
 
       //m_decaychain->mother()->forceP4Sum(*m_fitparams) ;
 
       if( !(m_fitparams->testCov() ) ) {
-	static int counter(10) ;
-	if( --counter>=0)
-	  std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
-		    << "Changing status to failed." << std::endl ;
+        static int counter(10) ;
+        if( --counter>=0)
+          std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
+                    << "Changing status to failed." << std::endl ;
         m_status = Failed ;
         //print() ;
       }
     }
   }
-  
+
   void
   Fitter::fitOneStep()
-  {   
+  {
     bool firstpass = m_status==UnFitted ;
     if( firstpass ) m_decaychain->init(*m_fitparams) ;
     m_decaychain->filter(*m_fitparams,firstpass) ;
@@ -243,13 +247,13 @@ namespace DecayTreeFitter
   {
     std::ostringstream s ;
     m_decaychain->mother()->print(m_fitparams) ;
-    s << "chisq,ndof,ncontr,niter,status: " 
+    s << "chisq,ndof,ncontr,niter,status: "
       << chiSquare() << " "
       << nDof() << " " << m_fitparams->nConstraints() << " "
       << nIter() << " " << status() << " " << m_errCode << std::endl ;
     return s.str() ;
-  } 
-  
+  }
+
   int
   Fitter::nDof() const {
     return m_fitparams->nDof() ;
@@ -265,9 +269,9 @@ namespace DecayTreeFitter
 
     ParticleBase* bp = m_decaychain->mother()->addDaughter(cand, Configuration()) ;
     int offset = m_fitparams->dim() ;
-    bp->updateIndex(offset) ;
     double deltachisq(999) ;
     if( bp ) {
+      bp->updateIndex(offset) ;
       // reassign indices
       //int offset(0) ;
       //m_decaychain->mother()->updIndex(offset) ;
@@ -294,7 +298,7 @@ namespace DecayTreeFitter
 
       //    print() ;
     } else {
-      std::cout << "cannot add track to this vertex ..." 
+      std::cout << "cannot add track to this vertex ..."
                 << m_decaychain->mother()->type() << std::endl ;
     }
     return deltachisq ;
@@ -327,12 +331,12 @@ namespace DecayTreeFitter
   {
     m_decaychain->setMassConstraint(bc,add) ;
   }
-  
+
   void Fitter::setMassConstraint( const LHCb::ParticleID& pid, bool add)
   {
     m_decaychain->setMassConstraint(pid,add) ;
   }
-  
+
   void Fitter::updateIndex()
   {
     int offset=0 ;
@@ -340,11 +344,11 @@ namespace DecayTreeFitter
     m_fitparams->resize(offset) ;
   }
 
-  double Fitter::globalChiSquare() const 
+  double Fitter::globalChiSquare() const
   {
     return m_decaychain->chiSquare(m_fitparams) ;
   }
-  
+
   Gaudi::Math::ParticleParams
   Fitter::fitParams(const ParticleBase& pb) const
   {
@@ -385,7 +389,7 @@ namespace DecayTreeFitter
       for(int row=0; row<maxrow; ++row)
         for(int col=0; col<=row; ++col)
           cov7(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
-   
+
       // now fill the jacobian
       double mass = pb.pdtMass() ;
       double energy2 = mass*mass ;
@@ -394,7 +398,7 @@ namespace DecayTreeFitter
         energy2 += px*px ;
       }
       double energy = std::sqrt(energy2) ;
-      
+
       ROOT::Math::SMatrix<double,8,7> jacobian ;
       for(int col=0; col<7; ++col)
         jacobian(col,col) = 1;
@@ -409,22 +413,22 @@ namespace DecayTreeFitter
     // return vtxfitparams ;
     return Gaudi::Math::ParticleParams ( pos , p4 , decaylength , cov8 ) ;
   }
-  
+
   const Gaudi::Math::ParticleParams*
-  Fitter::fitParams ( const LHCb::Particle* cand ) const 
+  Fitter::fitParams ( const LHCb::Particle* cand ) const
   {
     Map::const_iterator ifind = m_map.find ( cand ) ;
-    if ( m_map.end() != ifind ) { return &ifind->second ; } // RETURN 
+    if ( m_map.end() != ifind ) { return &ifind->second ; } // RETURN
     //
     const ParticleBase* pb =
       0 != cand ? m_decaychain->locate(*cand) : m_decaychain->cand() ;
     //
     if ( 0 == pb ) { return NULL ; }                       // RETURN
     //
-    return &(m_map.insert( Map::value_type ( cand , fitParams ( *pb ) ) ).first->second) ;  
+    return &(m_map.insert( Map::value_type ( cand , fitParams ( *pb ) ) ).first->second) ;
   }
-  
-  Gaudi::Math::ValueWithError 
+
+  Gaudi::Math::ValueWithError
   Fitter::decayLengthSum(const LHCb::Particle& candA, const LHCb::Particle& candB) const
   {
     // returns the decaylengthsum of two particles (use ful for e.g. B->DD)
@@ -437,20 +441,20 @@ namespace DecayTreeFitter
       if( lenindexA>=0 && lenindexB>=0) {
         double lenA    = m_fitparams->par()(lenindexA+1) ;
         double lenB    = m_fitparams->par()(lenindexB+1) ;
-        double cov = 
+        double cov =
           m_fitparams->cov().fast(lenindexA+1, lenindexA+1) +
           m_fitparams->cov().fast(lenindexB+1, lenindexB+1) +
           2*m_fitparams->cov().fast(lenindexA+1, lenindexB+1) ;
-        
+
         // rc = VtxDoubleErr(lenA+lenB,std::sqrt(cov)) ;
         rc = Gaudi::Math::ValueWithError( lenA+lenB , cov) ;
       }
     }
     return rc ;
-  }  
+  }
 
   std::string
-  Fitter::name(const LHCb::Particle& cand) const 
+  Fitter::name(const LHCb::Particle& cand) const
   {
     const ParticleBase* pb = m_decaychain->locate(cand) ;
     return pb ? pb->name() : "Not found" ;
@@ -479,17 +483,17 @@ namespace DecayTreeFitter
     return thecand ;
   }
 
-//   LHCb::Particle
-//   Fitter::getFitted(const LHCb::Particle& cand) const
-//   {
-//     LHCb::Particle thecand = cand ;
-//     updateCand(thecand) ;
-//     return thecand ;
-//   }
+  //   LHCb::Particle
+  //   Fitter::getFitted(const LHCb::Particle& cand) const
+  //   {
+  //     LHCb::Particle thecand = cand ;
+  //     updateCand(thecand) ;
+  //     return thecand ;
+  //   }
 
-  LHCb::Particle* 
-  Fitter::fittedCand(const LHCb::Particle& /*cand*/, 
-                     LHCb::Particle* /*headOfTree*/) const 
+  LHCb::Particle*
+  Fitter::fittedCand(const LHCb::Particle& /*cand*/,
+                     LHCb::Particle* /*headOfTree*/) const
   {
     std::cout << "Fitter::fittedCand: not yet implemented" << std::endl ;
     return 0 ;
@@ -504,14 +508,14 @@ namespace DecayTreeFitter
   {
     // clone the decay tree
     LHCb::DecayTree tree(*m_particle) ;
-    // update the tree. 
+    // update the tree.
     // the easy version will only work once we have a proper 'isCloneOf'.
     // updateTree( *tree.head() ) ;
     for ( LHCb::DecayTree::CloneMap::const_iterator it = tree.cloneMap().begin();
           it != tree.cloneMap().end(); ++it ) {
       const ParticleBase* pb = m_decaychain->locate(*(it->first)) ;
       if(pb!=0) updateCand( *pb, *(it->second) ) ;
-    } 
+    }
     return tree ;
   }
 
@@ -522,7 +526,7 @@ namespace DecayTreeFitter
     const PdtEntry * pdtEntry = cand.pdtEntry();
     if (0 != pdtEntry){
     stream << pdtEntry->name();
-    if(!cand.isComposite()) 
+    if(!cand.isComposite())
     stream << "(" << cand.uid() << ")" ;
     stream << std::ends;
     }
@@ -539,7 +543,7 @@ namespace DecayTreeFitter
     // assigns fitted parameters to a candidate
     // VtxFitParams vtxpar = fitParams(pb) ;
     Gaudi::Math::ParticleParams vtxpar = fitParams(pb) ;
-    
+
     // update everything inside the particle. don't update the vertex, for now.
     particle.setMomentum        ( vtxpar.momentum() ) ;
     particle.setReferencePoint  ( vtxpar.position() ) ;
@@ -547,11 +551,11 @@ namespace DecayTreeFitter
     particle.setPosCovMatrix    ( vtxpar.posCovMatrix () ) ;
     particle.setPosMomCovMatrix ( vtxpar.momPosCov    () ) ;
     //
-    // update the chi2 of global fit if this is the head of the tree 
+    // update the chi2 of global fit if this is the head of the tree
     if( &pb == m_decaychain->cand() )
     {
       particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ;
-      particle.addInfo   ( LHCb::Particle::Chi2OfParticleReFitter , 
+      particle.addInfo   ( LHCb::Particle::Chi2OfParticleReFitter ,
                            chiSquare() ) ;
     }
     // update the vertex as well, if this is the head of the tree
@@ -570,22 +574,22 @@ namespace DecayTreeFitter
       vertex -> setPosition   ( vtxpar.position()        ) ;
       vertex -> setCovMatrix  ( vtxpar.posCovMatrix()    ) ;
     }
-    
-    // 	if( pb ==m_decaychain->cand() ) {
-    // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-    // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
-    // 	  vtx->setType(FitStatus::Geometric) ;
-    // 	} else {
-    // 	  // all updated daughters are reset to unfitted, but leave the chisquare
-    // 	  double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
-    // 	  int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
-    // 	  vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-    // 	  vtx->setStatus(FitStatus::UnFitted) ;
-    // 	}
+
+    //  if( pb ==m_decaychain->cand() ) {
+    //    vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+    //    vtx->setStatus(FitStatus::VtxStatus(status())) ;
+    //    vtx->setType(FitStatus::Geometric) ;
+    //  } else {
+    //    // all updated daughters are reset to unfitted, but leave the chisquare
+    //    double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
+    //    int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
+    //    vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+    //    vtx->setStatus(FitStatus::UnFitted) ;
+    //  }
     //       }
     //      cand.setTrajectory(vtxpar,vtx) ;
   }
-  
+
 
   bool
   Fitter::updateCand(LHCb::Particle& particle) const
@@ -599,13 +603,13 @@ namespace DecayTreeFitter
     // have to do something about that.
     //       VtxPrintTree printer(&myvtxprint) ;
     //       ErrMsg(error) << "cann't find candidate " << std::endl
-    // 		    << printer.print(cand)
-    // 		    << "in tree " << std::endl
-    // 		    << printer.print(*_bc)
-    // 		    << endmsg;
+    //       << printer.print(cand)
+    //       << "in tree " << std::endl
+    //       << printer.print(*_bc)
+    //       << endmsg;
     return pb != 0 ;
   }
-  
+
   bool
   Fitter::updateTree(LHCb::Particle& p) const
   {
@@ -617,9 +621,9 @@ namespace DecayTreeFitter
     }
     return rc ;
   }
-  
+
   // Print the result of the fit
-  std::ostream& Fitter::fillStream ( std::ostream& s ) const 
+  std::ostream& Fitter::fillStream ( std::ostream& s ) const
   { return s << print() ; }
 
   // Get the chisquare of a particular particle in the decay chain
@@ -629,7 +633,7 @@ namespace DecayTreeFitter
   }
 }
 
-  
+
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

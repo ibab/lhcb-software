@@ -2,7 +2,7 @@
 #define __VTX_PARTICLEBASE_HH__
 
 #include <string>
-#include <vector> 
+#include <vector>
 #include "Constraint.h"
 #include "Projection.h"
 #include "DecayTreeFitter/ChiSquare.h"
@@ -19,17 +19,17 @@ namespace DecayTreeFitter
 {
   class FitParams ;
   class Configuration ;
-  
+
   class ParticleBase
   {
   public:
     enum ParticleType {kInteractionPoint,
-		       kRecoComposite,kRecoResonance,
-		       kInternalParticle,kRecoTrack,
-		       kResonance,kRecoPhoton,
-		       kMissingParticle} ;
+                       kRecoComposite,kRecoResonance,
+                       kInternalParticle,kRecoTrack,
+                       kResonance,kRecoPhoton,
+                       kMissingParticle} ;
     typedef std::vector<ParticleBase*> ParticleContainer ;
-    
+
     // 'default' constructor
     ParticleBase(const LHCb::Particle& bc, const ParticleBase* mother) ;
 
@@ -38,9 +38,9 @@ namespace DecayTreeFitter
 
     virtual ~ParticleBase() ;
 
-    static ParticleBase* createParticle(const LHCb::Particle& bc, 
-					const ParticleBase* mother,
-					const Configuration& config) ;
+    static ParticleBase* createParticle(const LHCb::Particle& bc,
+                                        const ParticleBase* mother,
+                                        const Configuration& config) ;
 
     virtual int dim() const = 0 ;
     virtual void updateIndex(int& offset) ;
@@ -53,11 +53,11 @@ namespace DecayTreeFitter
     const ParticleBase* locate(const LHCb::Particle& bc) const ;
     void locate(const LHCb::ParticleID& pid, ParticleContainer& result ) ;
     const LHCb::Particle& particle() const { return *m_particle ; }
-    
+
     int index() const { return m_index ; }
     const ParticleBase* mother() const { return m_mother ; }
     const std::string& name() const { return m_name ; }
-    
+
     virtual ErrCode projectGeoConstraint(const FitParams&, Projection&) const ;
     virtual ErrCode projectMassConstraint(const FitParams&, Projection&) const ;
     virtual ErrCode projectConstraint(Constraint::Type, const FitParams&, Projection&) const ;
@@ -67,7 +67,7 @@ namespace DecayTreeFitter
     virtual int posIndex() const { return -1 ; }
     virtual int lenIndex() const { return -1 ; }
     virtual int momIndex() const { return -1 ; }
-    
+
     // does the particle have a 3-momentum or a 4-momentum ?
     virtual bool hasEnergy() const { return false ; }
 
@@ -76,15 +76,15 @@ namespace DecayTreeFitter
     virtual bool hasPosition() const { return false ; }
 
     int eneIndex() const { return hasEnergy() ? momIndex()+3 : -1 ; }
-    
+
     // calculates the global chisquare (pretty useless)
     virtual double chiSquare(const FitParams*) const ;
-    
+
     // access to particle PDT parameters
     double pdtMass() const { return m_pdtMass ; }
     double pdtWidth() const { return m_pdtWidth ; }
     double pdtCLifeTime() const { return m_pdtCLifeTime ; }
-    double pdtTau() const { return m_pdtMass >0 ? m_pdtCLifeTime/m_pdtMass : 0 ; } 
+    double pdtTau() const { return m_pdtMass >0 ? m_pdtCLifeTime/m_pdtMass : 0 ; }
     int charge() const { return m_charge ; }
 
     // return a trajectory
@@ -93,18 +93,18 @@ namespace DecayTreeFitter
     // access to daughters
     typedef std::vector<ParticleBase*> daucontainer ;
     typedef daucontainer::const_iterator const_iterator ;
-    
+
     const daucontainer& daughters() const { return m_daughters ; }
     const_iterator begin() const { return m_daughters.begin() ; }
     const_iterator end()   const { return m_daughters.end() ; }
     ParticleBase* addDaughter(const LHCb::Particle&, const Configuration& config) ;
     void removeDaughter(const ParticleBase* pb) ;
-    
+
     typedef std::vector< std::pair<const ParticleBase*,int> > indexmap ;
     virtual void retrieveIndexMap(indexmap& anindexmap) const ;
 
-    void setMother(const ParticleBase* m) { m_mother = m ; } 
-    
+    void setMother(const ParticleBase* m) { m_mother = m ; }
+
     typedef std::vector<DecayTreeFitter::Constraint> constraintlist ;
     virtual void addToConstraintList(constraintlist& alist, int depth) const = 0 ;
     virtual int nFinalChargedCandidates() const ;
@@ -117,14 +117,14 @@ namespace DecayTreeFitter
       std::swap(add,m_hasMassConstraint) ;
       return add != m_hasMassConstraint ;
     }
-    
+
     ChiSquare chiSquare( const FitParams& params ) const ;
-    
+
   protected:
     static double pdtCLifeTime(const LHCb::Particle& bc)  ;
     static bool isAResonance(const LHCb::ParticleProperty& bc) ;
     static double bFieldOverC() { return 0 ; } // Bz/c
-    ErrCode initTau(FitParams* par) const ; 
+    ErrCode initTau(FitParams* par) const ;
     void makeName(const LHCb::Particle& bc)  ;
     daucontainer& daughters() { return m_daughters ; }
     bool hasMassConstraint() const { return m_hasMassConstraint ; }
@@ -143,7 +143,7 @@ namespace DecayTreeFitter
     int m_charge ;      // charge
     std::string m_name ;
     bool m_hasMassConstraint ;
- } ;
+  } ;
 
 }
 
