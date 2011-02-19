@@ -24,7 +24,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( DirectionFitter );
+DECLARE_TOOL_FACTORY( DirectionFitter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -45,7 +45,7 @@ DirectionFitter::DirectionFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-DirectionFitter::~DirectionFitter() {};
+DirectionFitter::~DirectionFitter() {}
 
 //=============================================================================
 // Initialize
@@ -57,7 +57,7 @@ StatusCode DirectionFitter::initialize(){
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
  
   return sc;
-};
+}
 
 //=============================================================================
 // inputs: Vertex corresponding to the assumed production point

@@ -25,8 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PVReFitterAlg );
-
+DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -254,10 +253,10 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
     // check output.
     if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )
     {  
-      const LHCb::RecVertex::Container* vertices = 
+      const LHCb::RecVertex::Container* _vertices = 
         get<LHCb::RecVertex::Container>(vertexOutputLocation);
       verbose() << "CHECK: stored " 
-                << vertices->size()
+                << _vertices->size()
                 << " re-fitted vertices in " 
                 << m_vertexOutputLocation << endmsg;
     } else {

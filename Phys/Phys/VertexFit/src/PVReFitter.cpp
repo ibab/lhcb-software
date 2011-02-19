@@ -24,7 +24,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY(PVReFitter);
+DECLARE_TOOL_FACTORY(PVReFitter)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -49,7 +49,7 @@ PVReFitter::PVReFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PVReFitter::~PVReFitter() {};
+PVReFitter::~PVReFitter() {}
 
 //=============================================================================
 // Initialize
@@ -62,7 +62,7 @@ StatusCode PVReFitter::initialize(){
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
 
   return sc;
-};
+}
 
 //=============================================================================
 // refit PV

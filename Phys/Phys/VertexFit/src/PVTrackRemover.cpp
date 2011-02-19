@@ -19,8 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PVTrackRemover );
-
+DECLARE_TOOL_FACTORY( PVTrackRemover )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -76,7 +75,7 @@ StatusCode PVTrackRemover::remove(const LHCb::Particle* particle,
                                          tracks,
                                          *outPV);
   
-  return (0!=outPV) ? StatusCode::SUCCESS : StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 
 }
 //=============================================================================

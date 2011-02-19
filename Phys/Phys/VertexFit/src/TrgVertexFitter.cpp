@@ -35,7 +35,7 @@ using namespace LHCb ;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY(TrgVertexFitter);
+DECLARE_TOOL_FACTORY(TrgVertexFitter)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -57,7 +57,7 @@ TrgVertexFitter::TrgVertexFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrgVertexFitter::~TrgVertexFitter() {};
+TrgVertexFitter::~TrgVertexFitter() {}
 //=============================================================================
 // Initialize
 //=============================================================================
@@ -66,7 +66,7 @@ StatusCode TrgVertexFitter::initialize(){
   if (!sc) return sc;
   m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
   return sc;
-};
+}
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================

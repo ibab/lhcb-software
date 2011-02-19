@@ -22,8 +22,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY(ParticleAdder);
-
+DECLARE_TOOL_FACTORY(ParticleAdder)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +39,7 @@ ParticleAdder::ParticleAdder( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleAdder::~ParticleAdder() {};
+ParticleAdder::~ParticleAdder() {}
 
 //=============================================================================
 // Fit the vertex from a vector of Particles

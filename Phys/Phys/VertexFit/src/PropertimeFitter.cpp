@@ -25,7 +25,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( PropertimeFitter );
+DECLARE_TOOL_FACTORY( PropertimeFitter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,7 +46,7 @@ PropertimeFitter::PropertimeFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PropertimeFitter::~PropertimeFitter() {};
+PropertimeFitter::~PropertimeFitter() {}
 
 //=============================================================================
 // Initialize
@@ -58,7 +58,7 @@ StatusCode PropertimeFitter::initialize(){
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
  
   return sc;
-};
+}
 
 //=============================================================================
 // Get propertime

@@ -28,7 +28,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( OfflineVertexFitter );
+DECLARE_TOOL_FACTORY( OfflineVertexFitter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -60,7 +60,7 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-OfflineVertexFitter::~OfflineVertexFitter() {};
+OfflineVertexFitter::~OfflineVertexFitter() {}
 
 //=============================================================================
 // Initialize
