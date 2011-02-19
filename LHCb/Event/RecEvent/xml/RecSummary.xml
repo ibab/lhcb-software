@@ -41,6 +41,12 @@
          <enumval name="nITClusters"        value="40"   desc="Number of IT clusters"/>
          <enumval name="nOTClusters"        value="50"   desc="Number of OT clusters"/>
          <enumval name="nSPDhits"           value="60"   desc="Number of SPD hits"/>
+         <enumval name="nMuonCoordsS0"      value="70"   desc="Number of Coords in Muon Station 0"/>
+	 <enumval name="nMuonCoordsS1"      value="71"   desc="Number of Coords in Muon Station 1"/>
+	 <enumval name="nMuonCoordsS2"      value="72"   desc="Number of Coords in Muon Station 2"/>
+	 <enumval name="nMuonCoordsS3"      value="73"   desc="Number of Coords in Muon Station 3"/>
+	 <enumval name="nMuonCoordsS4"      value="74"   desc="Number of Coords in Muon Station 4"/>
+	 <enumval name="nMuonTracks"        value="75"   desc="Number of Muon Tracks"/>
        </enum>
 
        <attribute

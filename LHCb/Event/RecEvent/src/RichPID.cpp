@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichPID.cpp
  *
- *  Implementation file for class : RichPID
+ *  Implementation file for class : LHCb::RichPID
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10

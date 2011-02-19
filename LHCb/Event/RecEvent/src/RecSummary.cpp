@@ -1,4 +1,13 @@
-// $Id: $
+
+//-----------------------------------------------------------------------------
+/** @file RecSummary.cpp
+ *
+ *  Implementation file for class : LHCb::RecSummary
+ *
+ *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date    19/02/2011
+ */
+//-----------------------------------------------------------------------------
 
 #include "Event/RecSummary.h"
 
@@ -40,6 +49,19 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
 
   if ( hasInfo(LHCb::RecSummary::nSPDhits) )
     s << " nSPDhits = " << info( LHCb::RecSummary::nSPDhits, 0 );
+
+  if ( hasInfo(LHCb::RecSummary::nMuonCoordsS0) )
+    s << " nMuonCoordsS0 = " << info( LHCb::RecSummary::nMuonCoordsS0, 0 );
+  if ( hasInfo(LHCb::RecSummary::nMuonCoordsS1) )
+    s << " nMuonCoordsS1 = " << info( LHCb::RecSummary::nMuonCoordsS1, 0 );
+  if ( hasInfo(LHCb::RecSummary::nMuonCoordsS2) )
+    s << " nMuonCoordsS2 = " << info( LHCb::RecSummary::nMuonCoordsS2, 0 );
+  if ( hasInfo(LHCb::RecSummary::nMuonCoordsS3) )
+    s << " nMuonCoordsS3 = " << info( LHCb::RecSummary::nMuonCoordsS3, 0 );
+  if ( hasInfo(LHCb::RecSummary::nMuonCoordsS4) )
+    s << " nMuonCoordsS4 = " << info( LHCb::RecSummary::nMuonCoordsS4, 0 );
+  if ( hasInfo(LHCb::RecSummary::nMuonTracks) )
+    s << " nMuonTracks = "   << info( LHCb::RecSummary::nMuonTracks, 0 );
 
   return s << " }";
 }

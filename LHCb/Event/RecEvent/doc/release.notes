@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-02-19 - Chris Jones
+ - Add Muon information (# Muon Coords in each station and # Muon tracks) to 
+   RecSummary object
+
 ! 2011-02-10 - Chris Jones
  - Change cast method in RichPID.h to avoid icc warning
 
