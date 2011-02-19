@@ -32,12 +32,16 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_trackLoc   = LHCb::TrackLocation::Default );
   declareProperty( "PVsLocation",
                    m_pvLoc      = LHCb::RecVertexLocation::Primary );
-  declareProperty( "VeloClusterLocation", 
+  declareProperty( "VeloClustersLocation", 
                    m_veloLoc    = LHCb::VeloClusterLocation::Default );
-  declareProperty( "ITClusterLocation", 
+  declareProperty( "ITClustersLocation", 
                    m_itLoc      = LHCb::STClusterLocation::ITClusters );
-  declareProperty( "SpdDigitLocation",
+  declareProperty( "SpdDigitsLocation",
                    m_spdLoc     = LHCb::CaloDigitLocation::Spd );
+  declareProperty( "MuonCoordsLocation", 
+                   m_muonCoordsLoc = LHCb::MuonCoordLocation::MuonCoords );
+  declareProperty( "MuonTracksLocation",
+                   m_muonTracksLoc = LHCb::TrackLocation::Muon );
 }
 
 //=============================================================================
@@ -81,7 +85,7 @@ StatusCode RecSummaryAlg::execute()
     // Load the reconstructed tracks
     const LHCb::Tracks * tracks = get<LHCb::Tracks>(m_trackLoc);
 
-    // Count each track type (Is there a more elegant way to do this ?)
+    // Count each track type
     int nLong(0), nDownstream(0), nUpstream(0), nT(0), nBack(0);
     for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
           iTk != tracks->end(); ++iTk )
@@ -131,8 +135,36 @@ StatusCode RecSummaryAlg::execute()
   // SPD
   addSizeSummary<LHCb::CaloDigits>( summary, LHCb::RecSummary::nSPDhits, m_spdLoc );
 
-  if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
+  // Muon Tracks
+  addSizeSummary<LHCb::Tracks>( summary, LHCb::RecSummary::nMuonTracks, m_muonTracksLoc );
 
+  // Muon Coords
+  if ( exist<LHCb::MuonCoords>(m_muonCoordsLoc) )
+  {
+
+    // Load the Muon Coords
+    const LHCb::MuonCoords * coords = get<LHCb::MuonCoords>(m_muonCoordsLoc);
+
+    // Count by stations
+    std::map<int,unsigned int> mCount;
+    for ( LHCb::MuonCoords::const_iterator iC = coords->begin();
+          iC != coords->end(); ++iC ) { ++mCount[(*iC)->key().station()]; }
+
+    // Save to summary
+    summary->addInfo( LHCb::RecSummary::nMuonCoordsS0, mCount[0] );
+    summary->addInfo( LHCb::RecSummary::nMuonCoordsS1, mCount[1] );
+    summary->addInfo( LHCb::RecSummary::nMuonCoordsS2, mCount[2] );
+    summary->addInfo( LHCb::RecSummary::nMuonCoordsS3, mCount[3] );
+    summary->addInfo( LHCb::RecSummary::nMuonCoordsS4, mCount[4] );
+
+  }
+  else
+  {
+    Warning( "No MuonCoords available at '"+m_muonCoordsLoc+"'" ).ignore();
+  }
+
+  if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
+ 
   return StatusCode::SUCCESS;
 }
 

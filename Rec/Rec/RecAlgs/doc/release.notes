@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-02-19 - Chris Jones
+ - Add Muon information to RecSummary object in RecSummaryAlg
+
 ! 2011-02-17 - Chris Jones
  - Fix various compilation warnings.
  - Update timing tuple to use new Velo tool to count tracks

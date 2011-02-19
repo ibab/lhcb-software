@@ -4,6 +4,7 @@
 
 // STL
 #include <string>
+#include <map>
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -15,6 +16,7 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/CaloDigit.h"
+#include "Event/MuonCoord.h"
 
 // tool interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
@@ -83,6 +85,12 @@ private:
 
   /// TES location of CaloDigits
   std::string m_spdLoc;
+
+  /// TES location of Muon Coords
+  std::string m_muonCoordsLoc;
+
+  /// TES location of Muon Tracks
+  std::string m_muonTracksLoc;
 
   /// Pointer to RICH DAQ decoding tool
   Rich::DAQ::IRawBufferToSmartIDsTool* m_richTool;
