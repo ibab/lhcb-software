@@ -33,26 +33,32 @@ namespace {
 #include <netdb.h>
 #include <arpa/inet.h>
 #endif
+
+
 #include "RTL/strdef.h"
 
 namespace RTL  {
+  static int exit_status;
+  static bool s_RTL_exit_handler_print = true;
+  static size_t (*s_rtl_printer)(void*, int, const char*, va_list args) = 0;
+  static void*    s_rtl_printer_arg = 0;
+  static bool s_exitHandlerRunning = false;
+
   struct EXHDEF   {
     int   flink;
     int  (*exit_handler)(void*);
     void *exit_param;
     int  *exit_status;
   };
+
   struct ExitHandler : public vector<EXHDEF>  {
     ExitHandler();
     ~ExitHandler();
     static void execute();
     static vector<EXHDEF>& exitHandlers();
+    static bool isActive() {  return s_exitHandlerRunning; }
   };
-
-  static bool s_RTL_exit_handler_print = true;
 }
-
-static int exit_status;
 
 #ifdef USE_PTHREADS
 #include <unistd.h>
@@ -210,9 +216,10 @@ extern "C" int lib_rtl_event_exithandler();
 extern "C" int lib_rtl_lock_exithandler();
 extern "C" int lib_rtl_gbl_exithandler();
 void RTL::ExitHandler::execute()  {
-  static bool executing = false;
-  if ( !executing )  {
-    executing = true;
+  if ( !s_exitHandlerRunning )  {
+    s_exitHandlerRunning = true;
+    s_rtl_printer = 0;
+
     const vector<EXHDEF>& v = exitHandlers();
     for (vector<EXHDEF>::const_reverse_iterator i=v.rbegin(); i != v.rend(); ++i)  {
       const EXHDEF& hdlr = *i;
@@ -224,7 +231,6 @@ void RTL::ExitHandler::execute()  {
     lib_rtl_event_exithandler();
     lib_rtl_lock_exithandler();
     lib_rtl_gbl_exithandler();
-    executing = false;
   }
 }
 
@@ -268,7 +274,7 @@ int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
   RTL::EXHDEF h;
   h.exit_handler = hdlr;
   h.exit_param   = param;
-  h.exit_status  = &exit_status;
+  h.exit_status  = &RTL::exit_status;
   RTL::ExitHandler::exitHandlers().push_back(h);
   return 1;
 #endif
@@ -437,18 +443,15 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   return 1;
 }
 
-static size_t (*s_rtl_printer)(void*, int, const char*, va_list args) = 0;
-static void*    s_rtl_printer_arg = 0;
-
 /// Printout redirection
 size_t lib_rtl_output(int level, const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
-  result = (s_rtl_printer != 0)
-    ? (*s_rtl_printer)(s_rtl_printer_arg, level, format, args)
+  result = (RTL::s_rtl_printer != 0)
+    ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, level, format, args)
     : ::vfprintf(stdout, format, args);
-  if ( !s_rtl_printer ) ::fflush(stdout);
+  if ( !RTL::s_rtl_printer ) ::fflush(stdout);
   va_end(args);
   return result;
 }
@@ -458,18 +461,18 @@ size_t lib_rtl_printf(const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
-  result = (s_rtl_printer != 0)
-    ? (*s_rtl_printer)(s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args)
+  result = (RTL::s_rtl_printer != 0)
+    ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args)
     : ::vfprintf(stdout, format, args);
-  if ( !s_rtl_printer ) ::fflush(stdout);
+  if ( !RTL::s_rtl_printer ) ::fflush(stdout);
   va_end(args);
   return result;
 }
 
 /// Install RTL printer 
 void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list args), void* param)  {
-  s_rtl_printer = func;
-  s_rtl_printer_arg = param;
+  RTL::s_rtl_printer = func;
+  RTL::s_rtl_printer_arg = param;
 }
 
 /// Creates a pipe and executes a command.
