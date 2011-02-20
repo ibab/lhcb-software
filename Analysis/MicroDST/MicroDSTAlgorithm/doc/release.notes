@@ -4,6 +4,8 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+!========================== MicroDSTAlgorithm v5r2 2011-02-20 ===============
+
 ! 2011-02-14 - Juan Palacios
  - CopyGaudiNumbers
   . New MicroDSTAlgorithm to clone Gaudi::Numbers objects.
