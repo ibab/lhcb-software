@@ -8,6 +8,7 @@
 ! 2011-02-18 - Gerhard Raven
  - remove commented out configurations
  - move HltTrackFit from HltL0Conf to HltTracking
+ - remove reference to RadCor
 
 !========================== HltTracking v9r2  2011-02-16 ===================
 ! 2011-02-16 - Gerhard Raven

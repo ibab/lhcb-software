@@ -146,11 +146,11 @@ StatusCode Hlt::Track2L0CaloMatch::finalize   ()
  */ 
 // ============================================================================
 StatusCode Hlt::Track2L0CaloMatch::match 
-( const LHCb::Track&    track     , 
-  const Hlt::Candidate& candidate ,
-  LHCb::Track&          matched   , 
-  double&               quality   ,
-  double&               quality2  ) const 
+( const LHCb::Track&    /*track  */   , 
+  const Hlt::Candidate& candidate     ,
+  LHCb::Track&          /*matched */  , 
+  double&               /*quality */  ,
+  double&               /*quality2*/  ) const 
 {
   // ==========================================================================
   // get L0Calo from Hlt-candidate 
@@ -184,8 +184,8 @@ StatusCode Hlt::Track2L0CaloMatch::match
 bool Hlt::Track2L0CaloMatch::match 
 ( const LHCb::Track*    track      , 
   const Hlt::Candidate* candidate  ,
-  const double          quality    , 
-  const double          quality2   ) const 
+  const double         /* quality  */  , 
+  const double         /* quality2 */  ) const 
 {
   // 
   if ( 0 == track     ) 
