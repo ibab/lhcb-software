@@ -150,75 +150,6 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class TTrMatchTVelo
-     *  Simple wrapper for IMatchTVeloTrack
-     *  @see IMatchTVeloTrack
-     *  @see LoKi::Cuts::TTrTVELOMATCH
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2009-03-31
-     */
-    class TTrMatchTVelo : public LoKi::TrackTypes::TTrFunc 
-    {
-    public:
-      // ======================================================================
-      /// construct from the configuration tool 
-      TTrMatchTVelo ( const LoKi::Hlt1::MatchTVelo& tool ) ;
-      /// MANDATORY: virtual destructor 
-      virtual ~TTrMatchTVelo() {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  TTrMatchTVelo* clone() const ;
-      /// MANDATORY: the only one essential method 
-      virtual  result_type operator() ( argument a ) const ;
-      /// OPTIONAL: nice printout 
-      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      TTrMatchTVelo() ;                 // the default constructor is disabled      
-      // ======================================================================
-    private:
-      // ======================================================================
-      void init() ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// tool configuration 
-      LoKi::Hlt1::MatchTVelo                 m_config ;   // tool configuration 
-      /// the actual tool 
-      LoKi::Interface<IMatchTVeloTracks>     m_tool   ;      // the actual tool 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class TTrMatchTVelo2
-     *  Simple wrapper for IMatchTVeloTrack
-     *  @see IMatchTVeloTrack
-     *  @see LoKi::Cuts::TTrTVELOMATCH
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2009-03-31
-     */
-    class TTrMatchTVelo2 : public LoKi::Tracks::TTrMatchTVelo 
-    {
-    public:
-      // ======================================================================
-      /// construct from the configuration tool 
-      TTrMatchTVelo2 ( const LoKi::Hlt1::MatchTVelo& tool ) ;
-      /// MANDATORY: virtual destructor 
-      virtual ~TTrMatchTVelo2() {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  TTrMatchTVelo2* clone() const ;
-      /// MANDATORY: the only one essential method 
-      virtual  result_type operator() ( argument a ) const ;
-      /// OPTIONAL: nice printout 
-      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      TTrMatchTVelo2() ;                 // the default constructor is disabled      
-      // ======================================================================
-    } ;
-    // ========================================================================
     /** @class TrVFunction
      *  Simple wrapper for ITrackVertexBiFunctionTool
      *  @see ITrackVertexBiFunctionTool 
@@ -292,22 +223,6 @@ namespace LoKi
      *  @date   2009-03-31
      */
     typedef LoKi::Tracks::TTrFunction2                                TTrFUN2 ;
-    // ========================================================================
-    /** @typedef TTrTVELOMATCH
-     *  Simple wrapper over IMatchTVeloTracks
-     *  @see IMatchTVeloTracks
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2009-03-31
-     */
-    typedef LoKi::Tracks::TTrMatchTVelo                         TTrTVELOMATCH ;
-    // ========================================================================
-    /** @typedef TTrTVELOMATCH2
-     *  Simple wrapper over IMatchTVeloTracks
-     *  @see IMatchTVeloTracks
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2009-03-31
-     */
-    typedef LoKi::Tracks::TTrMatchTVelo2                       TTrTVELOMATCH2 ;
     // ========================================================================
     /** @typedef TrTFUN
      *  Simple wrapper over ITrackVertexBiFunctionTool
