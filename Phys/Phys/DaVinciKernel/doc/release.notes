@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v9r2 2011-02-20 =====================
+
 ! 2011-02-11 - Juan Palacios
  - Add property Output. Allows the user to set the output location
    of the DVAlgorithm, overwriting the one that gets set automatically. This
