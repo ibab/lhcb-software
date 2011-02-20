@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-02-20 - Gerhard Raven
+ - remove match2dVelo from  IMatchTVeloTracks
+
 !========================== HltBase v11r0 2011-02-16 ===================
 ! 2011-02-14 - Gerhard Raven
  - remove unused interfaces: IFunctions, IFunctionFactory
