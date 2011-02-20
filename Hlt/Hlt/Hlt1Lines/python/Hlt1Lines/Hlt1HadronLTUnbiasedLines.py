@@ -7,22 +7,8 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 import Gaudi.Configuration
-
-
-
-#####################################################################################
-#####################################################################################
-def histosfilter(name,xlower=0.,xup=100.,nbins=100):
-    """ return the dictonary with the booking of the histograms associated to a filter
-    @@param filter name i.e 'PT
-                """
-    histosfs = { name : ( name,xlower,xup,nbins),
-                 name+"Best" : (name+"Best",xlower,xup,nbins) }
-    return histosfs
-
-#####################################################################################
-#####################################################################################
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+
 class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
     
 
@@ -115,58 +101,6 @@ class Hlt1HadronLTUnbiasedLinesConf( HltLinesConfigurableUser ) :
         # Begin imports
         #
         from HltLine.HltLine import Hlt1Line   as Line
-        from HltLine.HltLine import bindMembers
-        from HltLine.HltLine import Hlt1Member as Member
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLoose
-        from HltTracking.HltReco import Velo
-        from HltTracking.HltPVs  import PV3D
-        from HltLine.HltDecodeRaw import DecodeIT
-        from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack
-        from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName
-        from HltTracking.HltTrackNames import HltAllMuonTracksName, HltMuonIDSuffix
-        from MuonID import ConfiguredMuonIDs
-        from Configurables import ChargedProtoParticleMaker
-        from Configurables import ChargedProtoParticleAddMuonInfo
-        from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter
-        from Configurables import LoKi__VoidFilter as VoidFilter
-        from Hlt1Lines.HltL0Candidates import L0Channels
-        #
-        
-        def trackprepare(pt,p):
-            return [ Hlt1GECLoose(),
-                     Velo,PV3D().ignoreOutputSelection(),
-                     Member ( 'TF', 'OTNH'
-                              , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits')]
-                              ),
-                     Member ( 'TF', 'OTEXH'
-                              , FilterDescriptor = [ 'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut')]
-                              ),
-                     DecodeIT,
-                     Member ( 'TU', 'Forward'
-                              , RecoName = Forward.splitName()[-1]
-                              ),
-                     Member ( 'TF' , 'OTPT' ,
-                              FilterDescriptor = ['PT,>,%s'%pt]
-                              , HistogramUpdatePeriod = 1 
-                              , HistoDescriptor  = histosfilter('PT',0.,8000.,200)
-                              ),
-                     Member ( 'TF' , 'OTMom' ,
-                              FilterDescriptor = ['P,>,%s'%p]
-                              , HistogramUpdatePeriod = 1 
-                              , HistoDescriptor  = histosfilter('P',0.,80000.,200)
-                              )
-                     ]
-        
-        
-        def afterburn(chi2):
-            return [ PV3D().ignoreOutputSelection()
-                     , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
-                     , Member ( 'TF' , 'TrkChi2'
-                                , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
-                                HistogramUpdatePeriod = 1,
-                                HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
-                               )
-                     ]
         
         Line ( 'DiHadronLTUnbiasedAllL0'
                , prescale = self.prescale

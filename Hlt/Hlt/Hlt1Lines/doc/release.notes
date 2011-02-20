@@ -8,6 +8,7 @@
 ! 2011-02-20 - Gerhard Raven
  - remove Hlt1NewMuonLines from SVN... (as intended in the previous commit!)
  - remove obsolete Hlt1HadronForSwimmingLines
+ - remove unused parts of Hlt1HadronLTUnbiasedLines
 
 !========================== Hlt1Lines v6r4   2011-02-16 ===================
 ! 2011-02-16 - Gerhard Raven
