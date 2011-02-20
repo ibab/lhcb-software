@@ -300,10 +300,6 @@ void DVAlgorithm::initializeLocations() {
     m_inputLocations = m_inputLocations_;
     m_inputLocations_.clear();
   }
-
-  DaVinci::StringUtils::expandLocations( m_inputLocations.begin(),
-                                         m_inputLocations.end(),
-                                         onOffline()->trunkOnTES() );
  
   if (msgLevel(MSG::DEBUG)) {
     debug() << ">>> Initialised locations " << m_inputLocations 
@@ -323,11 +319,6 @@ void DVAlgorithm::initializeLocations() {
     }
   }
 
-  // load user-defined P->PV locations.
-  DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
-                                         m_p2PVInputLocations.end(),
-                                         onOffline()->trunkOnTES()     );
-
   if (msgLevel(MSG::DEBUG)) {
     debug() << ">>> Initialised P->PV locations " 
             << m_p2PVInputLocations << endmsg;
@@ -336,7 +327,7 @@ void DVAlgorithm::initializeLocations() {
   if (m_particleOutputLocation=="") {
     m_outputLocation = this->name();
     DaVinci::StringUtils::expandLocation(m_outputLocation,
-                                         onOffline()->trunkOnTES());
+                                         "Phys");
     m_particleOutputLocation = m_outputLocation+"/Particles";
   } else {
     m_outputLocation=m_particleOutputLocation;

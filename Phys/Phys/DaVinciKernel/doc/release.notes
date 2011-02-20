@@ -4,6 +4,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v10r0 2011-02-20 ====================
+
+! 2011-02-11 - Juan Palacios
+ - DVAlgorithm
+  . No longer expand InputLocations (Inputs) according to context. Trunks
+    ('Phys', Hlt', 'Hlt2') must be set via Inputs property.
+  . Defauly output location "Phys"/<alg name>/"Particles". Set output location
+    via "Output" property. This must include ending, e.g. "/Particles"
+
 !======================== DaVinciKernel v9r2 2011-02-20 =====================
 
 ! 2011-02-11 - Juan Palacios

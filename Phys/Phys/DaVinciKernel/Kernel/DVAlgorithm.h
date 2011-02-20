@@ -57,7 +57,9 @@
  *
  *  The specific configuration properties of the base class: 
  *
- *  - <b>InputLocations</b> : from where to take the particles? 
+ *  - <b>Inputs</b> : TES location of input data container.
+ *
+ *  - <b>Output</b> : TES location of output data container.
  *
  *  - <b>VertexFitters</b> : the map for possible vertex fitters.
  *      @see IVertexFit 
@@ -100,7 +102,7 @@
  * particles, including relations for input particles. Does not write anything
  * Default: true.
  * 
- *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <InputLocations>"/Particle2VertexRelations". 
+ *  - <b>IgnoreP2PVFromInputLocations</b> : Do not pick up <Inpus>"/Particle2VertexRelations". 
  * Forces to calculate best PV on the fly. To be used specially if you want 
  * to use ReFitPVs when the input algorithms didn't or vice versa. 
  * Or to be sure that you are re-calculating the best PV in your own algorithm.
@@ -509,7 +511,7 @@ protected:
   } 
 
   /**
-   * Access to the list of TES input locations given by the InputLocations
+   * Access to the list of TES input locations given by the Inputs
    * property
    *
    * @return vector or strings with TES input locations
@@ -519,7 +521,7 @@ protected:
   }
   
   /**
-   * Access to the list of TES input locations given by the InputLocations
+   * Access to the list of TES input locations given by the Inputs
    * property
    *
    * @return vector or strings with TES input locations
@@ -742,8 +744,8 @@ protected:
 
 private:
 
-  /// Initialise relative InputLocations to account for RootInTES
-  /// and context. Initialise Particle->PV relations input locations.
+  /// Initialise relative Inputs to account for RootInTES
+  /// Initialise Particle->PV relations input locations.
   void initializeLocations();
 
   /// Load all tools. 
@@ -753,7 +755,7 @@ private:
   /// Load particles, primary vertices, relations tables. 
   virtual StatusCode loadEventInput();
 
-  /// Load particles from InputLocations
+  /// Load particles from Inputs
   StatusCode loadParticles();
 
   /// Load Particle->PV relations for loaded particles.
@@ -980,7 +982,7 @@ private:
   /// Takes existing relations and adds missing ones.
   bool m_forceP2PVBuild;
 
-  /// Ignore Particle->PV relations from InputLocations?
+  /// Ignore Particle->PV relations from Inputs?
   /// User-defined ones are kept.
   bool m_ignoreP2PVFromInputLocations;
 
