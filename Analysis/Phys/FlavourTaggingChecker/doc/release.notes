@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r6 2011-02-20 ============
+
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
 
