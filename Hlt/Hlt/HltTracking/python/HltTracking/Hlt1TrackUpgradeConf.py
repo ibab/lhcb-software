@@ -24,8 +24,7 @@ __all__ = ( 'ConfiguredPatSeeding',
             'THadronConf',
             'TEleConf',
             'Velo',
-            'FitTrack',
-            'RadCor' )
+            'FitTrack')
             
 def ConfiguredPatSeeding( minPSeed = 3000):
     # Add the option to define a minimum PT/P 
