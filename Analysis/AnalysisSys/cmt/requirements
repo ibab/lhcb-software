@@ -1,36 +1,36 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v5r1
+version v6r0
 
 branches doc cmt
 
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r15    Phys   # Juan Palacios
+use  DSTWriters                 v2r0     Phys   # Juan Palacios
 use  DSTWriterTests             v2r2     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  FlavourTagging             v12r2    Phys   # Marc Grabalosa
+use  FlavourTagging             v12r4    Phys   # Marc Grabalosa
 
-use  DaVinciMonitors            v1r14    Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r5p1   Rich   # Chris Jones
-use  KaliCalo                   v4r8     Phys   # Vanya Belyaev
+use  DaVinciMonitors            v1r14p1  Phys   # Patrick Koppenburg
+use  RichPIDQC                  v1r5p2   Rich   # Chris Jones
+use  KaliCalo                   v4r8p1   Phys   # Vanya Belyaev
 ####################################################################
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
-use  DaVinciMCTools     	v9r27p1  Phys   # Juan Palacios
-use  LoKiAlgoMC                 v9r1     Phys   # Vanya Belyaev
+use  DaVinciMCTools     	v9r28    Phys   # Juan Palacios
+use  LoKiAlgoMC                 v9r2     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r0     Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r1     Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r4     Phys   # Marco Musy
-use  ParticleMakerChecker       v1r4     Phys   # Chris Jones
-use  DisplVerticesMC            v1r3     Phys   # Neal Gueissaz
-use  DecayTreeTuple             v3r11    Phys   # Rob Lambert
-use  LoKiJets                   v5r2p2   Phys   # Victor Coco
+use  FlavourTaggingChecker      v6r6     Phys   # Marco Musy
+use  ParticleMakerChecker       v1r4p1   Phys   # Chris Jones
+use  DisplVerticesMC            v1r3p1   Phys   # Neal Gueissaz
+use  DecayTreeTuple             v3r12    Phys   # Rob Lambert
+use  LoKiJets                   v5r4     Phys   # Victor Coco
 ####################################################################
 #
 use AnalysisPython              v1r6     Phys
@@ -40,12 +40,12 @@ use PyAna                       v1r3     Analysis
 use  MicroDSTBase        	v3r1p1  MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r6    MicroDST # Juan Palacios
 use  MicroDSTTools      	v2r1p1  MicroDST # Juan Palacios
-use  MicroDSTAlgorithm   	v5r1    MicroDST # Juan Palacios
+use  MicroDSTAlgorithm   	v5r2    MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
 use Analysis            	v9r0    Tutorial          # P. Koppenburg
-use LoKiExample         	v8r7    Ex                # Vanya Belyaev
+use LoKiExample         	v8r8    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r13p2 Ex                # Juan Palacios
 
 # Declare this as a container package
