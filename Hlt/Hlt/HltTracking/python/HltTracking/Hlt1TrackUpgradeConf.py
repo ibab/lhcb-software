@@ -178,11 +178,3 @@ FitTrack.OTrackType = LHCb.Track.Long
 FitTrack.TESOutput = "Hlt1/Track/FitTrack"
 FitTrack.Tool = "HltTrackFit"
 ConfiguredFastKalman( FitTrack )
-
-####################################################
-RadCor = HltTrackUpgradeTool("RadCor")
-RadCor.Tool = "HltRadCorTool"
-RadCor.View = False
-RadCor.ITrackType = LHCb.Track.Long
-RadCor.OTrackType = LHCb.Track.Long
-RadCor.TESOutput = "Hlt1/Track/RadCor"
