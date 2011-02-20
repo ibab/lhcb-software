@@ -10,6 +10,7 @@
  - move HltTrackFit from HltL0Conf to HltTracking
  - remove reference to RadCor
  - remove HltTrackMatch, HltVertexUpgrade, HltTrackUpgradeTool, HltTrackUpgrade
+ - remove 2d velo-t match
 
 !========================== HltTracking v9r2  2011-02-16 ===================
 ! 2011-02-16 - Gerhard Raven

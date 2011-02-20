@@ -9,7 +9,6 @@
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Event/StateParameters.h"
 #include "HltBase/IMatchTVeloTracks.h"            // Interface
-#include "HltBase/IBiFunctionTool.h"            // Interface
 
 
 
@@ -22,8 +21,7 @@
  */
 class HltMatchTVeloTracks : public GaudiTool, 
                          virtual public IMatchTVeloTracks,
-                         virtual public ITrackMatch,
-                         virtual public ITrackBiFunctionTool
+                         virtual public ITrackMatch
 {
 public: 
   /// Standard constructor
@@ -35,21 +33,10 @@ public:
 
   StatusCode initialize();
 
-
-  StatusCode match2dVelo(const LHCb::Track& veloTrack,
-                         const LHCb::Track& Ttrack, 
-                         double &x_dist);
-
   StatusCode match3dVelo(const LHCb::Track& veloTrack,
                          const LHCb::Track& Ttrack,
                          LHCb::Track& matchedTrack, 
                          double &x_dist, double &y_dist);
-  
-  double function(const LHCb::Track& velo, const LHCb::Track& ttrack) {
-    double quality = 1e6;
-    match2dVelo(velo,ttrack,quality).ignore();
-    return quality;
-  }
   
   StatusCode match(const LHCb::Track& velotrack,
                    const LHCb::Track& ttrack,
