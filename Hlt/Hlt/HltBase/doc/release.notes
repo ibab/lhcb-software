@@ -6,6 +6,7 @@
 
 ! 2011-02-20 - Gerhard Raven
  - remove match2dVelo from  IMatchTVeloTracks
+ - clean up HltUtils
 
 !========================== HltBase v11r0 2011-02-16 ===================
 ! 2011-02-14 - Gerhard Raven

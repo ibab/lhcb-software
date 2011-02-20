@@ -8,11 +8,28 @@
 using namespace Gaudi;
 using namespace LHCb;
 
+  //! retun the closest point between the 2 tracks (first State)
+XYZPoint closestPoint(const Track& track1, 
+                                const Track& track2) {
+  const State& state1 = track1.firstState();
+  const State& state2 = track2.firstState();
+  XYZPoint pos1(0.,0.,0.);
+  XYZPoint pos2(0.,0.,0.);
+  Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
+                            , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
+                            , pos1, pos2);
+
+  return XYZPoint(0.5*(pos1.x()+pos2.x()),
+                  0.5*(pos1.y()+pos2.y()),
+                  0.5*(pos1.z()+pos2.z()));
+}
+
+
 void Hlt::VertexCreator::operator() (const LHCb::Track& track1, 
                                      const LHCb::Track& track2,
                                      LHCb::RecVertex& ver) const 
 {
-  ver.setPosition(HltUtils::closestPoint(track1,track2));
+  ver.setPosition(closestPoint(track1,track2));
   ver.addToTracks(const_cast<Track*>(&track1));
   ver.addToTracks(const_cast<Track*>(&track2));
 }
@@ -30,20 +47,6 @@ XYZVector HltUtils::closestDistance(const Track& track1,
   return ok ? (pos1 - pos2) : XYZVector(0.,0.,1.e6);
 }
 
-XYZPoint HltUtils::closestPoint(const Track& track1, 
-                                const Track& track2) {
-  const State& state1 = track1.firstState();
-  const State& state2 = track2.firstState();
-  XYZPoint pos1(0.,0.,0.);
-  XYZPoint pos2(0.,0.,0.);
-  Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
-                            , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
-                            , pos1, pos2);
-
-  return XYZPoint(0.5*(pos1.x()+pos2.x()),
-                  0.5*(pos1.y()+pos2.y()),
-                  0.5*(pos1.z()+pos2.z()));
-}
 
   //! return the impact parameter significance
 double HltUtils::impactParameterSignificance(const LHCb::RecVertex& vertex,
@@ -97,42 +100,6 @@ double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
   return     f11>f12? f11 : f12;
 }
 
-
-namespace {
-struct maxPT {
-    double operator()(double init,const LHCb::Track* t) { return std::max(init, t->pt()); }
-};
-struct minPT {
-    double operator()(double init,const LHCb::Track* t) { return std::min(init, t->pt()); }
-};
-
-struct maxP {
-  double operator()(double init,const LHCb::Track* t) { return std::max(init, t->p()); }
-};
-struct minP {
-  double operator()(double init,const LHCb::Track* t) { return std::min(init, t->p()); }
-};
-};
-
-double HltUtils::VertexMinPT(const LHCb::RecVertex& vertex) {
-  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  return std::accumulate(tracks.begin(),tracks.end(),1e12,minPT());
-}
-
-double HltUtils::VertexMaxPT(const LHCb::RecVertex& vertex) {
-  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  return std::accumulate(tracks.begin(),tracks.end(),-1e12,maxPT());
-}
-
-double HltUtils::VertexMinP(const LHCb::RecVertex& vertex) {
-  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  return std::accumulate(tracks.begin(),tracks.end(),1e12,minP());
-}
-
-double HltUtils::VertexMaxP(const LHCb::RecVertex& vertex) {
-  const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
-  return std::accumulate(tracks.begin(),tracks.end(),-1e12,maxP());
-}
 
 
 namespace {

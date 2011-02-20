@@ -77,17 +77,6 @@ namespace HltUtils
   double impactParameterSignificance(const LHCb::RecVertex& vertex,
                                      const LHCb::Track& track) ;
 
-  inline double invariantMass(const LHCb::Track& track1, const LHCb::Track& track2,
-                      double mass1, double mass2) {
-      //TODO: is this the numerically most stable way of computing 
-      //      invariant masses?? (esp. if mass^2 << mom.mag2 ! )
-      double e = sqrt(mass1*mass1+track1.momentum().mag2())
-               + sqrt(mass2*mass2+track2.momentum().mag2());
-      return sqrt(e*e-(track1.momentum()+track2.momentum()).mag2());
-  }
-
- 
-
 
   //! return the closest distance between the 2 tracks (first State)
   Gaudi::XYZVector closestDistance(const LHCb::Track& track1, 
@@ -97,41 +86,12 @@ namespace HltUtils
     return acos( track1.slopes().Unit().Dot(  track2.slopes().Unit()  ) );
   }
 
-  //! retun the closest point between the 2 tracks (first State)
-  Gaudi::XYZPoint closestPoint(const LHCb::Track& track1,
-                      const LHCb::Track& track2);
-
-  inline double FC(const LHCb::RecVertex& svtx, 
-                   const LHCb::RecVertex& pvtx )
-  {
-    const LHCb::Track& t1 = *(svtx.tracks()[0]);
-    const LHCb::Track& t2 = *(svtx.tracks()[1]);
-
-    double pperp =     (  t1.momentum()+t2.momentum()         )
-                 .Cross( (svtx.position()-pvtx.position()).Unit() )
-                 .R();
-
-    return pperp/(pperp+t1.pt() + t2.pt());
-  }
-
-  double VertexMinPT(const LHCb::RecVertex& vertex);
-
-  double VertexMaxPT(const LHCb::RecVertex& vertex);
-
-  double VertexMinP(const LHCb::RecVertex& vertex);
-
-  double VertexMaxP(const LHCb::RecVertex& vertex);
-
-
   inline double matchIDsFraction(const LHCb::Track& tref, 
                                  const LHCb::Track& track) {
       return (tref.lhcbIDs().empty()) ? 0. :
                  double(tref.nCommonLhcbIDs( track) )/
                  double(tref.lhcbIDs().size());
   }
-
-  double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
-                                const LHCb::RecVertex& vertex);
 
   inline bool matchIDs(const LHCb::Track& treference, 
                        const LHCb::Track& track) {
@@ -145,8 +105,12 @@ namespace HltUtils
   } 
 
 
+
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
   
+
+  double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
+                                const LHCb::RecVertex& vertex);
 
   double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
                                 const LHCb::RecVertex& vertex);
