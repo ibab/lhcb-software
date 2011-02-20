@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r12 2011-02-20 =================
+
 ! 2011-02-15 - Chris Jones
  - Initialise m_ppSvc in TupleToolWZJets during initialize() method and
    not the Constructor.
