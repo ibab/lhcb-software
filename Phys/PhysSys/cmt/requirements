@@ -1,32 +1,32 @@
 package PhysSys
-version v11r0
+version v12r0
 
 branches doc cmt
 
 ####################################################################
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
-use  DaVinciKernel              v9r1     Phys    # Juan Palacios
+use  DaVinciKernel              v10r0    Phys    # Juan Palacios
 use  DaVinciMaps                v2r0     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v3r1     Phys    # Juan Palacios
-use  PhysSelPython              v8r0     PhysSel # Juan Palacios
+use  SelPy                      v4r0     Phys    # Juan Palacios
+use  PhysSelPython              v9r0     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
-use  ProtoParticleFilter        v1r6     Phys    # Chris Jones
-use  DaVinciTools       	v22r2    Phys    # Juan Palacios
+use  ProtoParticleFilter        v1r6p1   Phys    # Chris Jones
+use  DaVinciTools       	v22r3    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
-use  ParticleMaker      	v5r10 	 Phys    # Chris Jones
-use  VertexFit			v6r7     Phys    # Yuehong Xie
+use  ParticleMaker      	v6r0 	 Phys    # Chris Jones
+use  VertexFit			v6r7p1   Phys    # Yuehong Xie
 use  LoKiFitters                v4r1p1   Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r11    Phys    # Wouter Hulsbergen
+use  DecayTreeFitter            v1r11p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
 use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
-use LoKiPhys                    v9r8     Phys    # Vanya Belyaev
+use LoKiPhys                    v9r9     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
 use LoKi                        v9r0     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev

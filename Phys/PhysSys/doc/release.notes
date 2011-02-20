@@ -3,6 +3,30 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v12r0>2011-02-20 Phys v12r0 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v12r0                                  #
+###############################################################################
+
+- Based on LHCb v32r0 and Gaudi v22r0. For Stripping13 development.
+
+  * DVAlgorithm: 
+   - InputLocaitons -> Inputs
+   - Add property Output controllong TES location of main output container.
+   - No longer use context to define trunk of Inputs, Output. Set explicitly
+     via Inputs, Output properties.
+  * ParticleMakers:
+   - Understand Inputs, Output properties: unified with DVAlgorithm behaviour.
+  * Selection toolkit.
+   - AutomaticData/DataOnDemand needs complete location (except for RootInTES).
+     "ALgName" -> "Phys/AlgName/Particles".
+   - New selection PhysSelPython.Wrappers.ChargedProtoParticleSelection
+   - New selection PhysSelPython.Wrappers.PassThroughSelection, takes single
+     RequiredSelection, keeps it's outputLocation().
+   - EventSelection requires name, config generator. Produces no output.
+
+
 </PRE><H1><A NAME=v11r0>2011-02-07 Phys v11r0 </A></H1><PRE>
 
 ###############################################################################
