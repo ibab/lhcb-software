@@ -38,7 +38,6 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.preambulo(),
             Code = """
             VeloCandidates
-            >>  execute( decodeIT )
             >>  TightForward
             >>  ( ( TrPT > %(Proton_PT)s * GeV ) & ( TrP  > %(Proton_P)s * GeV ) )
             >>  FitTrack
