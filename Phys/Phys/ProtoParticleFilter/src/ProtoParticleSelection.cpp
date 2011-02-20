@@ -4,9 +4,6 @@
  *
  * Implementation file for utility class ProtoParticleSelection
  *
- * CVS Log :-
- * $Id: ProtoParticleSelection.cpp,v 1.2 2009-08-04 09:02:39 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
  */
@@ -180,7 +177,7 @@ ProtoParticleSelection::cloneCuts() const
 ProtoParticleSelection::DetectorRequirements::Detector 
 ProtoParticleSelection::DetectorRequirements::detector( const std::string & det )
 {
-  const DetectorRequirements::Detector Det =
+  const DetectorRequirements::Detector _Det =
     ( "RICH"          == det ? DetectorRequirements::RICH :
       "CALO"          == det ? DetectorRequirements::CALO :
       "MUON"          == det ? DetectorRequirements::MUON :
@@ -192,14 +189,14 @@ ProtoParticleSelection::DetectorRequirements::detector( const std::string & det 
       "CALO_ECAL"     == det ? DetectorRequirements::CALO_ECAL :
       "CALO_HCAL"     == det ? DetectorRequirements::CALO_HCAL :
       "CALO_BREM"     == det ? DetectorRequirements::CALO_BREM :
-      ProtoParticleSelection::DetectorRequirements::UndefinedDet );
-  if ( Det == ProtoParticleSelection::DetectorRequirements::UndefinedDet )
+      DetectorRequirements::UndefinedDet );
+  if ( DetectorRequirements::UndefinedDet == _Det )
   {
     throw GaudiException( "Unknown detector "+det,
                           "*ProtoParticleSelection::DetectorRequirements::detector*",
                           StatusCode::FAILURE );
   }
-  return Det;
+  return _Det;
 }
 
 //=============================================================================

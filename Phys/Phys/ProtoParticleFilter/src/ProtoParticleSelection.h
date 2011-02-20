@@ -128,18 +128,18 @@ public: // Helper classes
     /// Returns the cut delimiter type for a given string descriptor
     static Delim delimiter( const std::string & delim )
     {
-      const ProtoParticleSelection::Cut::Delim Delim =
+      const ProtoParticleSelection::Cut::Delim _Delim =
         ( delim == "<" ? ProtoParticleSelection::Cut::LT :
           delim == ">" ? ProtoParticleSelection::Cut::GT :
           delim == "=" ? ProtoParticleSelection::Cut::EQ :
           ProtoParticleSelection::Cut::UndefinedDelim );
-      if ( Delim == ProtoParticleSelection::Cut::UndefinedDelim )
+      if ( ProtoParticleSelection::Cut::UndefinedDelim == _Delim )
       {
         throw GaudiException( "Unknown delimiter "+delim,
                               "*ProtoParticleSelection::Cut::delimiter*",
                               StatusCode::FAILURE );
       }
-      return Delim;
+      return _Delim;
     }
 
   protected:
