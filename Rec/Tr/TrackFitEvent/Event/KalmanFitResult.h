@@ -43,7 +43,10 @@ namespace LHCb
 
     // set links between nodes and to parent
     void establishNodeLinks() ;
-    
+
+    // reset the kalman filter in all the nodes to 'initialized'
+    void resetFilterStatus() ;
+
     // get the seed covariance
     const Gaudi::TrackSymMatrix& seedCovariance() const {
       return m_seedCovariance ;
@@ -111,22 +114,23 @@ namespace LHCb
     }
 
     // return (chisq,dof) for the forward direction fit
-    ChiSquare computeChiSquareForwardFit() ;
+    ChiSquare computeChiSquareForwardFit() const ;
 
     // set the error flag
     void setErrorFlag(unsigned short extrainfo ,unsigned short algnum , unsigned short errnum);
     
     // check if there is an error
-    bool inError( );
-
+    bool inError() const ;
+    
     // check the type of error
-    std::string getError( );
+    std::string getError() const ;
 
     // check if the fit is bidirectionnal or classical(false)
-    bool biDirectionnalSmoother( ){return m_bidirectionalSmoother;};
+    bool biDirectionnalSmoother() const {return m_bidirectionalSmoother;};
 
     // set the type of fit: bidirectionnal or classical(false)
     void setBiDirectionnalSmoother( bool bidir ){ m_bidirectionalSmoother=bidir;};
+
 
   private:
     void computeChiSquares() const ;

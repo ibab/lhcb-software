@@ -39,13 +39,13 @@ namespace LHCb
   }
 
   // check the global error status of the node
-  bool KalmanFitResult::inError(){
+  bool KalmanFitResult::inError() const {
     if ( m_errorFlag == 0 ) return false;
     else return true;
   }
 
   // get the error description
-  std::string KalmanFitResult::getError(){
+  std::string KalmanFitResult::getError() const {
     unsigned short direction = ( m_errorFlag & dirMask ) >> dirBits ;
     unsigned short algnum = ( m_errorFlag & algMask ) >> algBits ;
     unsigned short errnum = ( m_errorFlag & typeMask ) ;
@@ -194,13 +194,13 @@ namespace LHCb
   } 
 
   // return (chisq,dof) for the forward direction fit
-  ChiSquare KalmanFitResult::computeChiSquareForwardFit()
+  ChiSquare KalmanFitResult::computeChiSquareForwardFit() const 
   {
-    LHCb::FitNode* lastnode(0) ;
+    const LHCb::FitNode* lastnode(0) ;
     double chisq(0) ; int ndof(0) ;
     BOOST_FOREACH( LHCb::Node* node, nodes()) {
       if( node->type()==LHCb::Node::HitOnTrack ) {
-	LHCb::FitNode* fitnode = static_cast<FitNode*>(node) ;
+	const LHCb::FitNode* fitnode = static_cast<const FitNode*>(node) ;
 	chisq   += fitnode->deltaChi2Forward() ;
 	lastnode = fitnode ;
 	++ndof ;
@@ -211,7 +211,7 @@ namespace LHCb
       const double threshold = 0.1 ;
       size_t npar = (lastnode->filteredState(LHCb::FitNode::Forward).covariance()(4,4) 
 		     / m_seedCovariance(4,4) < threshold ? 5 : 4) ;
-      setNTrackParameters( npar ) ;
+      //setNTrackParameters( npar ) ;
       ndof -= npar ;
     }
     return ChiSquare( chisq, ndof ) ;
