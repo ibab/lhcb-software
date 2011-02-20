@@ -42,12 +42,13 @@ __version__ = "version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
-    'TMuonConf'      , ## the 'track-upgrade'-configuration for TMuonConf
-    'Forward'        , ## the 'track-upgrade'-configuration for Forward
+    'TightForward'        , ## the 'track-upgrade'-configuration for Forward
+    'LooseForward'        , ## the 'track-upgrade'-configuration for Forward
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
     'MatchVeloMuon'  , ## the 'track-upgrade'-configuration for MatchVeloMuon
+    'IsMuon'  , ## the 'track-upgrade'-configuration for IsMuon
     ## match 
-    'VeloT'          , ## the 'track-match'-configuration   for VeloT
+    #'VeloT'          , ## the 'track-match'-configuration   for VeloT
     'VeloL0Muon'     , ## the 'track-match'-configuration   for VeloL0Muon
     ## bi-functions
     ## track functions
@@ -71,16 +72,6 @@ from LoKiCore.basic import LoKi, LHCb
 #      const bool                ptOrder  ) ;  //                   order pt ?
 # =============================================================================
 #                                                      ##           "Old name" 
-# =============================================================================
-TMuonConf = LoKi.Hlt1.UpgradeConf(
-    "L0ConfirmWithT/TMuonConf"   ,                     ##               "Tool" 
-    "Hlt1/Track/TMuonConf"       ,                     ##          "TESOutput"
-    LHCb.Track.Ttrack            ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
 # =============================================================================
 TightForward = LoKi.Hlt1.UpgradeConf  (
     "PatForwardTool/TightForward",                 ##                   "Tool" 
@@ -133,7 +124,6 @@ IsMuon=LoKi.Hlt1.UpgradeConf(
     True                         )                     ##          "OrderByPt"
 
 _trUpgrader = {}
-_trUpgrader[ 'TMuonConf' ] = TMuonConf
 _trUpgrader[ 'TightForward' ] = TightForward
 _trUpgrader[ 'LooseForward' ] = LooseForward
 _trUpgrader[ 'FitTrack'     ] = FitTrack
@@ -161,15 +151,16 @@ _trUpgrader[ 'IsMuon' ] = IsMuon
 # =============================================================================
 #                                                      ##           "Old name"
 # =============================================================================
-VeloT = LoKi.Hlt1.MatchConf        (
-    "PatMatchTool"                 ,                   ##               "Tool"
-    "Hlt1/Track/VeloT"             ,                   ##          "TESOutput"
-    LHCb.Track.Long                ,                   ##          "TrackType"
-    True                           ,                   ##        "TransferIDs"
-    True                           ,                   ##  "TransferAncestors"
-    True                           ,                   ##       "TransferInfo"
-    "chi2_PatMatch"                ,                   ##            "Quality"
-    ""                             )                   ##           "Quality2"
+# Where is PatMatchTool configured???
+#VeloT = LoKi.Hlt1.MatchConf        (
+#    "PatMatchTool"                 ,                   ##               "Tool"
+#    "Hlt1/Track/VeloT"             ,                   ##          "TESOutput"
+#    LHCb.Track.Long                ,                   ##          "TrackType"
+#    True                           ,                   ##        "TransferIDs"
+#    True                           ,                   ##  "TransferAncestors"
+#    True                           ,                   ##       "TransferInfo"
+#    "chi2_PatMatch"                ,                   ##            "Quality"
+#    ""                             )                   ##           "Quality2"
 # =============================================================================
 VeloL0Muon = LoKi.Hlt1.MatchConf   (
     "PatMatchL0MuonTool"           ,                   ##               "Tool"

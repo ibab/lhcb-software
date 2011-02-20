@@ -13,6 +13,13 @@ __all__ = ( 'MatchVeloL0Muon',
 def to_name( conf ):
     return conf.trTool().split( ':' )[ 0 ].split( '/' )[ -1 ]
 
+# skip any of the next three lines, and we crash trying to instantiate the AppMgr.... ?!?!!!???
+# probably this is needed before Hlt1StreamerConf is imported...
+import PyCintex
+cpp      = PyCintex.makeNamespace('')
+LHCb     = cpp.LHCb
+xyz = LHCb.Track.Long
+
 # Match Velo to L0 Muons
 from Configurables import ( GaudiSequencer,
                             Hlt__L0Muon2Candidate,
@@ -54,7 +61,7 @@ LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTr
 ## Hlt trackfit upgrade configuration
 # =============================================================================
 from HltTracking.Hlt1TrackUpgradeConf import ConfiguredFastKalman
-ConfiguredFastKalman( ToolSvc(), to_name( Conf.FitTrack ) )
+ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
 FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
 
