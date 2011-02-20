@@ -4,6 +4,8 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+!===================== ProtoParticleFilter v1r6p1 2011-02-20 ===============
+
 ! 2011-02-11 - Chris Jones
  - Fix various icc warnings/remarks
 
