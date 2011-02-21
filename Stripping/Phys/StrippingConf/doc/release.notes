@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v3r13 2011-02-21 ===================
+
 ! 2011-02-21 - Juan Palacios
  - tests/test_strippingline.py
   . Add complete locations to AutomaticData instances.
