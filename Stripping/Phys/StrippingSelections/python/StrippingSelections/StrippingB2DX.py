@@ -37,6 +37,13 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
+from StandardParticles import ( StdNoPIDsPions,
+                                StdNoPIDsKaons,
+                                StdNoPIDsDownPions,
+                                StdNoPIDsProtons,
+                                StdLooseMergedPi0,
+                                StdLooseResolvedPi0 )
+
 from copy import copy
 
 moduleName = "B2DX"
@@ -321,14 +328,14 @@ class B2DXConf(LineBuilder) :
         D2hhhWS = makeD2hhhWS(moduleName, config["D2hhhCuts"])
         D2hhhhWS = makeD2hhhhWS(moduleName, config["D2hhhhCuts"])
         D2KPiPi0Merged = makeD2KPiPi0(moduleName, "Merged", config["D2KPiPi0Cuts"],
-                                      Pi0Location = "Phys/StdLooseMergedPi0")
+                                      Pi0Location = "Phys/StdLooseMergedPi0/Particles")
         D2KPiPi0Resolved = makeD2KPiPi0(moduleName, "Resolved", config["D2KPiPi0Cuts"],
-                                        Pi0Location = "Phys/StdLooseResolvedPi0")
+                                        Pi0Location = "Phys/StdLooseResolvedPi0/Particles")
         D2Kshh = makeD2Kshh(moduleName, config["D2KshhCuts"])
         D2KPiPi0MergedWS = makeD2KPiPi0WS(moduleName, "Merged", config["D2KPiPi0Cuts"],
-                                      Pi0Location = "Phys/StdLooseMergedPi0")
+                                      Pi0Location = "Phys/StdLooseMergedPi0/Particles")
         D2KPiPi0ResolvedWS = makeD2KPiPi0WS(moduleName, "Resolved", config["D2KPiPi0Cuts"],
-                                        Pi0Location = "Phys/StdLooseResolvedPi0")
+                                        Pi0Location = "Phys/StdLooseResolvedPi0/Particles")
         D2KshhWS = makeD2KshhWS(moduleName, config["D2KshhCuts"])
         LambdaC = makeLambdaC(moduleName, config["LambdaCCuts"])
 
@@ -463,8 +470,8 @@ def makeD2hh(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -504,8 +511,8 @@ def makeD2hhWS(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -548,8 +555,8 @@ def makeD2hhh(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -601,8 +608,8 @@ def makeD2hhhWS(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -647,9 +654,9 @@ def makeD2Kshh(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi          = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK           = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    StdDownPi      = DataOnDemand(Location = "Phys/StdNoPIDsDownPions")
+    StdPi          = StdNoPIDsPions
+    StdK           = StdNoPIDsKaons
+    StdDownPi      = StdNoPIDsDownPions
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -704,9 +711,9 @@ def makeD2KshhWS(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi          = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK           = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    StdDownPi      = DataOnDemand(Location = "Phys/StdNoPIDsDownPions")
+    StdPi          = StdNoPIDsPions
+    StdK           = StdNoPIDsKaons
+    StdDownPi      = StdNoPIDsDownPions
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -781,8 +788,8 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Location) :
 
     checkConfig(__configuration_keys__, config)
 
-    _Kaon = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    _Pion = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    _Kaon = StdNoPIDsKaons
+    _Pion = StdNoPIDsPions
     _Pi0  = DataOnDemand(Location = Pi0Location )
 
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
@@ -819,8 +826,8 @@ def makeD2KPiPi0WS(moduleName, pi0name, config, Pi0Location) :
 
     checkConfig(__configuration_keys__, config)
 
-    _Kaon = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    _Pion = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    _Kaon = StdNoPIDsKaons
+    _Pion = StdNoPIDsPions
     _Pi0  = DataOnDemand(Location = Pi0Location )
 
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
@@ -858,8 +865,8 @@ def makeD2hhhh(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK  = StdNoPIDsKaons
 
     DaughtercutPion = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(PionPtMin)s*MeV) & (P > %(PionPMin)s*MeV) & " \
@@ -903,8 +910,8 @@ def makeD2hhhhWS(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK  = StdNoPIDsKaons
 
     DaughtercutPion = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(PionPtMin)s*MeV) & (P > %(PionPMin)s*MeV) & " \
@@ -945,9 +952,9 @@ def makeLambdaC(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    Stdp  = DataOnDemand(Location = "Phys/StdNoPIDsProtons")
+    StdPi = StdNoPIDsPions
+    StdK  = StdNoPIDsKaons
+    Stdp  = StdNoPIDsProtons
 
     Lccut = "(VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & "\
     "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV)) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -973,8 +980,8 @@ def makeKstarNoMW(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdPi = StdNoPIDsPions
+    StdK  = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & " \
@@ -1008,7 +1015,7 @@ def makePhiNoMW(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdK  = StdNoPIDsKaons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -1039,7 +1046,7 @@ def makeRhoNoMW(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
@@ -1072,9 +1079,9 @@ def makeRhoCharged(moduleName, config) :
 
     from Configurables import CombineParticles
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdPi0Merged = DataOnDemand(Location = "Phys/StdLooseMergedPi0")
-    StdPi0Resolved = DataOnDemand(Location = "Phys/StdLooseResolvedPi0")
+    StdPi  = StdNoPIDsPions
+    StdPi0Merged = StdLooseMergedPi0
+    StdPi0Resolved = StdLooseResolvedPi0
 
     SelPi0 = MergedSelection("Pi0For" + moduleName, RequiredSelections = [ StdPi0Merged, StdPi0Resolved ] )
 
@@ -1099,7 +1106,7 @@ def makeRhoCharged(moduleName, config) :
 
 def makeB2D0Pi(moduleName, DName, D0Sel, config ) :
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1120,7 +1127,7 @@ def makeB2D0Pi(moduleName, DName, D0Sel, config ) :
 
 def makeB2D0K(moduleName, DName, D0Sel, config) :
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdK  = StdNoPIDsKaons
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1140,7 +1147,7 @@ def makeB2D0K(moduleName, DName, D0Sel, config) :
 
 def makeB02DPi(moduleName, DName, DSel, config ) :
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1181,7 +1188,7 @@ def makeB02DRhoCharged(moduleName, DName, DSel, RhoChargedSel, config ) :
 
 def makeB02DPiWS(moduleName, DName, DSel, DWSSel, config ) :
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1212,7 +1219,7 @@ def makeB02DPiWS(moduleName, DName, DSel, DWSSel, config ) :
 
 def makeUnbiasedB2DPi(moduleName, DName, DSel, config ) :
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1233,7 +1240,7 @@ def makeUnbiasedB2DPi(moduleName, DName, DSel, config ) :
 
 def makeB02DK(moduleName, DName, DSel, config) :
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdK  = StdNoPIDsKaons
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1254,7 +1261,7 @@ def makeB02DK(moduleName, DName, DSel, config) :
 
 def makeB02DKWS(moduleName, DName, DSel, DWSSel, config) :
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdK  = StdNoPIDsKaons
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1374,7 +1381,7 @@ def makeB02D0Rho(moduleName, DName, RhoSel, D0Sel, config) :
 
 def makeLambdaB2LambdaCPi(moduleName, LambdaCSel, config ) :
 
-    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdPi  = StdNoPIDsPions
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1395,7 +1402,7 @@ def makeLambdaB2LambdaCPi(moduleName, LambdaCSel, config ) :
 
 def makeLambdaB2LambdaCK(moduleName, LambdaCSel, config ) :
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+    StdK  = StdNoPIDsKaons
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
@@ -1433,8 +1440,8 @@ def makeLambda02ppi(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-    StdP  = DataOnDemand(Location = "Phys/StdNoPIDsProtons")
+    StdPi = StdNoPIDsPions
+    StdP  = StdNoPIDsProtons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & " \
@@ -1460,8 +1467,8 @@ def makeLambda02pK(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-    StdP  = DataOnDemand(Location = "Phys/StdNoPIDsProtons")
+    StdK  = StdNoPIDsKaons
+    StdP  = StdNoPIDsProtons
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & " \

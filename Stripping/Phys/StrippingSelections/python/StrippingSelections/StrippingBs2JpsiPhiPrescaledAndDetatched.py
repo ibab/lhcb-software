@@ -27,8 +27,6 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-name = "Bs2JpsiPhiPrescaled"
-
 class Bs2JpsiPhiPrescaledAndDetatchedConf(LineBuilder) :
     """
     Builder of pre-scaled Bs->JpsiPhi stripping Selection and StrippingLine.
@@ -71,7 +69,7 @@ class Bs2JpsiPhiPrescaledAndDetatchedConf(LineBuilder) :
 
         prescaled_name = name+'Prescaled'
         detatched_name = name+'Detatched'
-        self.selJpsi2MuMu = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu")
+        self.selJpsi2MuMu = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu/Particles")
         self.selPhi2KK = makePhi2KK( 'PhiFor'+prescaled_name, 
                                      PhiPT = config['PhiPT'] )
         self.selBs2JpsiPhi = makeBs2JpsiPhi(prescaled_name,  
@@ -115,7 +113,7 @@ def makePhi2KK(name, PhiPT) :
     """
     _code = "(PT> %(PhiPT)s *MeV)" % locals()
     _phiFilter = FilterDesktop(Code = _code)
-    _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
+    _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")
 
     return Selection (name,
                       Algorithm = _phiFilter,

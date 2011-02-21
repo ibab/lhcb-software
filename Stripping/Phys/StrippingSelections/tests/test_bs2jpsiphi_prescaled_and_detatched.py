@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from StrippingConf.StrippingStream import StrippingStream
-
+from StrippingUtils import LineBuilderTests
 from StrippingSelections.StrippingBs2JpsiPhiPrescaledAndDetatched import Bs2JpsiPhiPrescaledAndDetatchedConf as builder
 
 config_params = {'PhiPT' : 500.,
@@ -13,8 +12,6 @@ config_params = {'PhiPT' : 500.,
                  'PrescaledLinePostscale' : 0.1,
                  'DetatchedLinePrescale' : 1.0,
                  'DetatchedLinePostscale' : 1.0}
-
-from StrippingUtils import LineBuilderTests
 
 def test_line_builder() :
     LineBuilderTests.test_line_builder(builder, config_params)

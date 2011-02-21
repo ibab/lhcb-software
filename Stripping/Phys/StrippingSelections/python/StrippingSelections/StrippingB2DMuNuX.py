@@ -9,10 +9,10 @@ __version__ = '$Revision: 1.4 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons
 
 __all__ = ('B2DMuNuXAllLinesConf',
            'makeb2DMuX',
@@ -140,7 +140,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         from Configurables import FilterDesktop
         _mu = FilterDesktop("FilterMu_forb2DMuX")
         _mu.Code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
-        return Selection( "Mu_forb2DMuX", Algorithm = _mu, RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseMuons")])
+        return Selection( "Mu_forb2DMuX", Algorithm = _mu, RequiredSelections = [StdLooseMuons])
         
 
     def _pionFilter( self ):
@@ -148,14 +148,14 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _pi = FilterDesktop("FilterPi_forb2DMuX")
         _pi.Code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
-        return Selection( "Pi_forb2DMuX", Algorithm = _pi, RequiredSelections = [DataOnDemand(Location = "Phys/StdLoosePions")])
+        return Selection( "Pi_forb2DMuX", Algorithm = _pi, RequiredSelections = [StdLoosePions])
 
     def _kaonFilter( self ):
         from Configurables import FilterDesktop
         _ka = FilterDesktop("FilterK_forb2DMuX")
         _ka.Code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
-        return Selection( "K_forb2DMuX", Algorithm = _ka, RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKaons")])
+        return Selection( "K_forb2DMuX", Algorithm = _ka, RequiredSelections = [StdLooseKaons])
         
                    
   
@@ -197,7 +197,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _lambdac.MotherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
-        return Selection( "Lc2PKPi_forb2DMuX", Algorithm = _lambdac, RequiredSelections = [self.selKaon, self.selPion, DataOnDemand(Location = "Phys/StdLooseProtons") ] )
+        return Selection( "Lc2PKPi_forb2DMuX", Algorithm = _lambdac, RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
         
 
 

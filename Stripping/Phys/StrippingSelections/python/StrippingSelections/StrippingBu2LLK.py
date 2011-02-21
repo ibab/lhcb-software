@@ -30,6 +30,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLooseKaons
 
 name = "Bu2LLK"
 
@@ -66,13 +67,13 @@ class Bu2LLKConf(LineBuilder) :
         eeLine_name = name+"_ee"
         
         # 1 : Make high IP, Pt kaons
-        Kaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        Kaons = StdLooseKaons
         selKaons = makeKaons(name="KaonsFor"+name
                              , KaonIPCHI2 = config['KaonIPCHI2']
                              , KaonPT = config['KaonPT'])
         # 2 : Dileptons
-        Electrons = DataOnDemand(Location = "Phys/StdLooseDiElectron")
-        Muons = DataOnDemand(Location = "Phys/StdLooseDiMuon")
+        Electrons = DataOnDemand(Location = "Phys/StdLooseDiElectron/Particles")
+        Muons = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
         selDiElectron = self._makeDiLepton(name='Dilepton_For'+eeLine_name,
                                            leptonSel = Electrons,
                                            config=config)
@@ -166,7 +167,7 @@ def makeKaons(name, KaonIPCHI2, KaonPT):
     _code = "(PT > %(KaonPT)s *MeV) & "\
             "(MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)" % locals()
     _Filter = FilterDesktop(Code = _code)
-    _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons" )
+    _stdKaons = StdLooseKaons
     
     return Selection(name,
                      Algorithm = _Filter,

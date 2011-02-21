@@ -19,6 +19,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLooseAllPhotons
 
 name = 'B2XGamma'
 
@@ -236,7 +237,7 @@ def makePhoton(name, photonPT):
     """
     _code = "(PT> %(photonPT)s*MeV)" % locals()
     _gammaFilter = FilterDesktop(Code=_code)
-    _stdGamma = DataOnDemand(Location="Phys/StdLooseAllPhotons")
+    _stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
 
 def makePhi2KK(name, TrIPchi2Phi, TrChi2, PhiMassWin, PhiVCHI2) :
@@ -258,7 +259,7 @@ def makePhi2KK(name, TrIPchi2Phi, TrChi2, PhiMassWin, PhiVCHI2) :
              "(VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)"]
     _code = ' & '.join(_cuts) % locals()
     _phiFilter = FilterDesktop(Code=_code)
-    _stdPhi2KK = DataOnDemand(Location="Phys/StdLoosePhi2KK")
+    _stdPhi2KK = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
     return Selection(name, Algorithm=_phiFilter, RequiredSelections=[_stdPhi2KK])
 
 def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
@@ -282,7 +283,7 @@ def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
              "(ADMASS('K*(892)0') < %(KstMassWin)s*MeV)"]
     _code = ' & '.join(_cuts) % locals()
     _kstFilter = FilterDesktop(Code=_code)
-    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi")
+    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
     return Selection(name, Algorithm=_kstFilter, RequiredSelections=[_stdKst2Kpi])
 
 def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):

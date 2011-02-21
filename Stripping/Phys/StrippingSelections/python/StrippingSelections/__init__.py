@@ -5,12 +5,15 @@ All line builders available via function lineBuilders().
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
+import StrippingB2DX
 import StrippingB2XGamma
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
 import StrippingB2nbody
 import StrippingHb2Charged2Body
+import StrippingBu2LLK
+import StrippingB0q2DplusMuX
 
 from sys import modules as _modules
 _this = _modules[__name__]

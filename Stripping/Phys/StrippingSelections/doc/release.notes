@@ -5,6 +5,15 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-02-21 - Juan Palacios
+ - python/StrippingSelections/StrippingBu2LLK.py
+ - python/StrippingSelections/StrippingB2DMuNuX.py
+ - python/StrippingSelections/StrippingB2DX.py
+ - python/StrippingSelections/StrippingB2XGamma.py
+  . Use StandardParticles where possible.
+  . Complete DataOnDemand locations with "/Particles".
+
+ - Update tests.
+
  - python/StrippingSelections/StreamSemileptonic.py
  - python/StrippingSelections/StreamBhadron.py
   . Remove new stripping13 compliant lines, as these don't build by default.
