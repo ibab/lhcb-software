@@ -98,6 +98,7 @@ protected:
                       Gaudi::XYZVector& parallel2Track) const;
   Direction localTrackDirection(const Gaudi::XYZVector& globalTrackDir,
                                 const DeVeloSensor* sensor) const;
+  StatusCode i_cacheConditions();
   
 private:
 
@@ -119,7 +120,8 @@ private:
   mutable Gaudi::XYZPoint m_gloPoint;       /// point on sensor global ref. frame
   double m_fracPos;                         /// fractional position
   double m_corrFactor;                      /// correct difference between sigma RMS
-  std::string m_paraClass;                  /// use it to specify the data that wereused to tune the error parametrisations
+  std::string m_paraClass;                  /// decide if correction factor is needed
+  std::string m_condPath;
     
 };
 #endif // VELOCLUSTERPOS_H

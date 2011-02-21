@@ -3,6 +3,24 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2011-02-20 - Tomasz Szumlak
+ - change in VeloClusterPosition tool, now it is possible to configure
+   the tool using the LHCBCOND/SIMCOND db this change comes in concert
+   with the change to the mentioned data bases. This update should be
+   backward compatible since if no condition is found the default values
+   are used for all various parametrisations.
+
+   NOTE! New messages:
+
+   1) in case there is no condition in the db tool will use the default values
+ 
+   UpdateManagerSv...  ERROR Cannot retrieve Conditions/Calibration/Velo from data provider!
+   ToolSvc.VeloClu...   INFO  --> Error para condition not found!
+   ToolSvc.VeloClu...   INFO  --> The tool Will use the default values!    
+
+   2) if the condition is there one will see:
+
+   ToolSvc.VeloClu...   INFO  --> Tool configured using the Cond DB 
 
 ! 2011-02-15 - David Hutchcroft
  - Change interface for CountVeloTracks to ICountContainedObjects

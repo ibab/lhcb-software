@@ -48,6 +48,9 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const IInterface* parent)
   : GaudiTool(type, name, parent),
     m_veloDet ( 0 ),
+    m_defaultResolution ( ),
+    m_p0Values ( ),
+    m_p1Values ( ),
     m_projAngles ( 24, 0. ),
     m_p0( 0 ),
     m_p1( 0 ),
@@ -56,29 +59,14 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
     m_trackDir ( ),
     m_gloPoint ( ),
     m_fracPos ( 0. ),
-    m_corrFactor ( 1.0 )
+    m_corrFactor ( 1.0 ),
+    m_condPath ( "Conditions/Calibration/Velo" )
 {
   declareInterface<IVeloClusterPosition>(this);
-  // default paramertrizations are of form error=slope*pitch+const
-  // the first value represents const and is given in um
-  // the second value is slope and is dimensionless
-  // we use the same parametrizations for both R and Phi sensors
-  // default error parametrization is meant to be used in function
-  // where only cluster is passed in
-  m_defaultResolution.push_back(-6.301);
-  m_defaultResolution.push_back(0.27);
-
-  // parameters determined for different pitch bins error type 2
-  m_errAnglePara+=0.038, 0.00033, -25.52, 0.167, 1.447, 0.0069, 0.121, 0.00032;
-
   //
-  declareProperty("DefaultResolution", m_defaultResolution);
   declareProperty("CalculateExactProjAngle", m_calculateExactProjAngle=false);
   declareProperty("ErrorParaType", m_errorParaType=PITCH_PARA);
-  declareProperty("P0Values", m_p0Values);
-  declareProperty("P1Values", m_p1Values);
   declareProperty("SplineType", m_splineType="Cspline");
-  declareProperty("ParaClass", m_paraClass="DC06");
 }
 //=============================================================================
 // Destructor
@@ -95,45 +83,32 @@ StatusCode VeloClusterPosition::initialize()
   // get Velo detector
   m_veloDet=getDet<DeVelo>( DeVeloLocation::Default );
 
-  if("DC06"==m_paraClass){
+  IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  mgrSvc->registerCondition(this, m_condPath,
+                            &VeloClusterPosition::i_cacheConditions);
+  StatusCode mgrSvcStatus=mgrSvc->update(this);
 
-    info()<< " --> Using DC06 tuning of the error parametrisation " <<endmsg;
-    //parameters for calculation error determined in projected angle bins
-    m_p0Values.clear();
+  if(mgrSvcStatus.isFailure())
+  {
+    
+    info()<< " --> Error para condition not found! "<<endmsg;
+    info()<< " --> The tool Will use the default values! " <<endmsg;
+
+    
     m_p0Values+=-2.5, -3.591, -3.430, -4.112, -4.964, -5.705, -6.301, -7.065,
       -7.353, -7.055, -6.168, -4.814, -3.075, -1.067, 0.798, 2.753,
       4.446, 5.116, 6.411, 7.124, 7.683, 7.573, 9.946, 10.97;
-    m_p1Values.clear();
+    
     m_p1Values+=0.29, 0.29, 0.28, 0.28, 0.28, 0.27, 0.27, 0.269,
-      0.239, 0.23, 0.215, 0.18, 0.15, 0.11, 0.09, 0.06, 
+      0.239, 0.23, 0.215, 0.18, 0.15, 0.11, 0.09, 0.06,
       0.04, 0.03, 0.0226, 0.0154, 0.0154, 0.0235, 0.0008, -0.0079;
 
-  }else if("MC10"==m_paraClass){
+    m_errAnglePara+=0.038, 0.00033, -25.52, 0.167, 1.447, 0.0069, 0.121, 0.00032;
 
-    info()<< " --> Using 2010 tuning of the error parametrisation " <<endmsg;    
-    //parameters determined for different pitch bins error type 3
-    // m_p0Values+=-1.81, -0.478, -1.68, -2.35, -3.85, -4.65, -5.09, -5.81, -6.18,
-    //             -5.29, -4.01, -2.91, -1.09, 1.17, 2.98, 4.61, 6.16 , 8.57, 9.91,
-    //             10.4, 11.4, 13.3, 14.1, 14.2;;
-    // m_p1Values.clear();
-    // m_p1Values+=0.322, 0.271, 0.284, 0.284, 0.294, 0.291, 0.286, 0.275, 0.262,
-    //             0.243, 0.213, 0.187, 0.15, 0.118, 0.0915, 0.0694, 0.0504, 0.0296, 
-    //             0.0175, 0.0191, 0.0133, -0.00502, -0.00776, -0.00654;
-    m_p0Values.clear();
-    m_p0Values+=3.17, -0.641, -1.8, -2.56, -3.64, -4.15, -4.4, -4.94, -5.18, -4.53,
-                -3.14, -0.777, 0.796, 2.98, 4.99, 6.23, 6.62, 8.06, 9.3, 10.5, 10.3,
-                12.6, 14.6, 7.73;
-    m_p1Values.clear();
-    m_p1Values+=0.211, 0.273, 0.282, 0.281, 0.283, 0.274, 0.265, 0.253, 0.241, 0.224,
-                0.195, 0.155, 0.123, 0.0898, 0.0619, 0.0407, 0.0361, 0.0219, 0.0078,
-                0.00155, 0.0134, -0.0105, -0.027, 0.0784;
-
-  }else{
-
-     return ( Error(" --> Unknows parametrisation! ", StatusCode::FAILURE) );
+    m_defaultResolution+=-6.301, 0.27;
 
   }
-
+  
   // assign angles in rad from 0 to 400 mrad
   std::vector<double>::iterator it=m_projAngles.begin();
   int value=0;
@@ -377,11 +352,7 @@ double VeloClusterPosition::errorEstimate(const double projAngle,
     if(angle>m_maxAngle){ angle=m_maxAngle; }
     double p0=m_p0->eval(angle);
     double p1=m_p1->eval(angle);
-    if("DC06"==m_paraClass){
-      error=p0+p1*pitch;
-    }else if("MC10"==m_paraClass){
-      error=m_corrFactor*(p0+p1*pitch);
-    }
+    error=m_corrFactor*(p0+p1*pitch);
     error/=pitch;
   }
   //-- this set of parametrizations use angle projection
@@ -564,5 +535,28 @@ Direction VeloClusterPosition::localTrackDirection(
     locTrackDir=make_pair((-1)*gloTrackDir.x(), (-1)*gloTrackDir.y());
   }
   return ( locTrackDir );
+}
+//============================================================================
+StatusCode VeloClusterPosition::i_cacheConditions()
+{
+  if(msgLevel(MSG::DEBUG)) debug()<< " --> i_cacheCoditions() " <<endmsg;
+  
+  // connect to the LHCBCOND/SIMCOND and fetch the error param conditions
+  std::string condName=m_condPath+"/VeloErrorParam";
+  Condition* cond=getDet<Condition>(condName);
+  if(NULL!=cond)
+  {
+    
+    m_p0Values=cond->param<std::vector<double> >("ConstParams");
+    m_p1Values=cond->param<std::vector<double> >("DirectionParams");
+    std::vector<double>::iterator it=m_p1Values.begin();
+    m_errAnglePara=cond->param<std::vector<double> >("AngleErrorParams");
+    m_defaultResolution=cond->param<std::vector<double> >("AverageVeloError");
+
+    info()<< " --> Tool configured using the Cond DB " <<endmsg;
+
+  }
+
+  return ( StatusCode::SUCCESS );
 }
 //
