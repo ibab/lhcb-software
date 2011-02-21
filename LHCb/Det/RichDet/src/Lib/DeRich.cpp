@@ -29,21 +29,19 @@
 // Standard constructor, initializes variables
 //=============================================================================
 DeRich::DeRich(const std::string & name)
-  : DeRichBase              ( name ),
-    m_sphMirrorRadius       ( 0 ),
-    m_sphMirrorSegRows      ( 0 ),
-    m_sphMirrorSegCols      ( 0 ),
-    m_secMirrorSegRows      ( 0 ),
-    m_secMirrorSegCols      ( 0 ),
+  : DeRichBase              ( name  ),
+    m_sphMirrorRadius       ( 0     ),
+    m_gasWinRefIndex        ( NULL  ),
+    m_gasWinAbsLength       ( NULL  ),
+    m_nominalSphMirrorRefl  ( NULL  ),
+    m_nominalSecMirrorRefl  ( NULL  ),
+    m_HPDPanels             ( Rich::NRiches ),
     m_positionInfo          ( false ),
-    m_gasWinRefIndex        ( NULL ),
-    m_gasWinAbsLength       ( NULL ),
-    m_nominalHPDQuantumEff  ( NULL ),
-    m_nominalSphMirrorRefl  ( NULL ),
-    m_nominalSecMirrorRefl  ( NULL ),
-    m_sphMirAlignCond       (   ),
-    m_secMirAlignCond       (   ),
-    m_HPDPanels             ( Rich::NRiches )           
+    m_sphMirrorSegRows      ( 0     ),
+    m_sphMirrorSegCols      ( 0     ),
+    m_secMirrorSegRows      ( 0     ),
+    m_secMirrorSegCols      ( 0     ),
+    m_nominalHPDQuantumEff  ( NULL  )
 {
   m_HPDPanels[Rich::Rich1] = NULL;
   m_HPDPanels[Rich::Rich2] = NULL;
@@ -52,7 +50,7 @@ DeRich::DeRich(const std::string & name)
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich() 
+DeRich::~DeRich()
 {
   if ( m_gasWinRefIndex )       delete m_gasWinRefIndex;
   if ( m_gasWinAbsLength )      delete m_gasWinAbsLength;
@@ -86,6 +84,15 @@ StatusCode DeRich::initialize ( )
     m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
   }
 
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+void DeRich::loadNominalHPDQuantumEff() const
+{
+  // Delete current, if present, just to be safe
+  delete m_nominalHPDQuantumEff;
+
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
   if ( exists( "RichHpdQETableName" ) )
@@ -100,29 +107,29 @@ StatusCode DeRich::initialize ( )
     }
     else
     {
-      fatal() << "Cannot find HPD QE location" << endmsg;
-      return StatusCode::FAILURE;
+      throw GaudiException( "Cannot find HPD QE location RichNominalHpdQuantumEffTableName",
+                            "DeRich", StatusCode::FAILURE );
     }
   }
 
-  SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
+  SmartDataPtr<TabulatedProperty> tabQE ( dataSvc(), HPD_QETabPropLoc );
   if ( !tabQE )
+  {
     error() << "No info on HPD Quantum Efficiency" << endmsg;
-  else {
+  }
+  else
+  {
     debug() << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
     m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
     if ( !m_nominalHPDQuantumEff->valid() )
     {
-      error() << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endmsg;
-      return StatusCode::FAILURE;
+      throw GaudiException( "Invalid HPD QE RichTabulatedProperty1D for " + tabQE->name(),
+                            "DeRich", StatusCode::FAILURE );
     }
   }
 
-  return StatusCode::SUCCESS;
 }
 
-//=========================================================================
-//
 //=========================================================================
 RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 {
@@ -158,7 +165,7 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
     mirrorPos.setRow( row );
     mirrorPos.setColumn( mirrorNumber % m_secMirrorSegCols );
   }
-  else 
+  else
   {
     error() << "No position information for mirrors" << endmsg;
   }
@@ -182,18 +189,18 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   std::vector<const ILVolume*>::const_iterator contIter;
   for (contIter = mirrorContainers.begin(); contIter != mirrorContainers.end();
        ++contIter) {
-    for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i) 
+    for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i)
     {
       cpvMirror = (*contIter)->pvolume(i);
       IPVolume* pvMirror = const_cast<IPVolume*>(cpvMirror);
 
       // find mirrors that match mirrorID
       std::string mirrorName = pvMirror->name();
-      if (mirrorName.find(mirrorID) != std::string::npos ) 
+      if (mirrorName.find(mirrorID) != std::string::npos )
       {
         //msg << MSG::VERBOSE << "Matched mirror " << mirrorName << endmsg;
         const std::string::size_type mpos = mirrorName.find(':');
-        if ( std::string::npos == mpos ) 
+        if ( std::string::npos == mpos )
         {
           fatal() << "A mirror without a number!" << endmsg;
           return StatusCode::FAILURE;
@@ -209,13 +216,13 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
-  if ( rotX.size() != rotY.size() ) 
+  if ( rotX.size() != rotY.size() )
   {
     fatal() << "Mismatch in X and Y rotations in Condition:"
             << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
-  if ( rotX.size() != mirrors.size() ) 
+  if ( rotX.size() != mirrors.size() )
   {
     fatal() << "Number of parameters does not match mirrors in:"
             << mirrorAlignCond->name() << endmsg;
@@ -223,14 +230,14 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   }
 
   std::vector<double> Rs = paramVect<double>(Rvector);
-  if ( rotX.size() != Rs.size() ) 
+  if ( rotX.size() != Rs.size() )
   {
     fatal() << "Number of Rs does not match mirrors in:"
             << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
-  for (unsigned int mNum=0; mNum<rotX.size(); ++mNum) 
+  for (unsigned int mNum=0; mNum<rotX.size(); ++mNum)
   {
     // create transformation matrix to rotate the mirrors around their centre
     Gaudi::TranslationXYZ pivot( -Rs[mNum], 0.0, 0.0 );
@@ -261,7 +268,7 @@ int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 //=========================================================================
 const std::string DeRich::panelName( const Rich::Side /* panel */ ) const
 {
-  throw GaudiException( "Not implemented for DeRich class"+myName(), 
+  throw GaudiException( "Not implemented for DeRich class"+myName(),
                         "DeRich::panelName", StatusCode::FAILURE );
 }
 

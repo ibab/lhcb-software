@@ -15,7 +15,8 @@ DeRichSystem * DeRichBase::deRichSys() const
     SmartDataPtr<DeRichSystem> deRichS( dataSvc(), DeRichLocations::RichSystem );
     if ( !deRichS )
     {
-      throw GaudiException( "Could not load DeRichSystem at "+DeRichLocations::RichSystem,
+      throw GaudiException( "Could not load DeRichSystem at " + 
+                            DeRichLocations::RichSystem,
                             "DeRichBase::deRichSys()", StatusCode::FAILURE );
     }
     m_deRichS = deRichS;

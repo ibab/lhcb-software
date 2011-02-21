@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Chris Jones
+ - A few more miscellaneous tidy ups
+
 ! 2011-02-17 - Chris Jones
  - Fix various coverity UNINT_CTOR defects
 

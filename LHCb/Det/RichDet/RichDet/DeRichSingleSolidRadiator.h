@@ -91,31 +91,29 @@ public:
                                       Rich::RadIntersection::Vector& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
-  virtual double refractiveIndex( const double energy, bool hlt = false ) const;
+  virtual double refractiveIndex( const double energy, const bool hlt = false ) const;
 
   /**
    * Returns a pointer to the material of this radiator
    *
    * @return Pointer to the material
    */
-  inline const Material* material() const
-  {
-    return m_material;
-  }
+  inline const Material* material() const { return m_material; }
 
 protected:
 
   /// prepare the momentum vector for the calculation of the
   /// refractive index
   StatusCode prepareMomentumVector( std::vector<double>& photonMomentumVect,
-                                    double min,
-                                    double max,
-                                    unsigned int nbins ) const;
+                                    const double min,
+                                    const double max,
+                                    const unsigned int nbins ) const;
 
 private:
 
-  const ISolid* m_solid;  ///< topmost solid of the radiator
+  const ISolid* m_solid;      ///< topmost solid of the radiator
   const Material* m_material; ///< pointer to the radiator material
+
 };
 
 #endif    // RICHDET_DERICHSINGLESOLIDRADIATOR_H

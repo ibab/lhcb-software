@@ -88,7 +88,7 @@ public:
                                       Rich::RadIntersection::Vector& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
-  virtual double refractiveIndex( const double energy, bool hlt = false ) const;
+  virtual double refractiveIndex( const double energy, const bool hlt = false ) const;
 
 public:
 

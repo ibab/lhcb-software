@@ -81,10 +81,13 @@ private:
   StatusCode calcAbsorption(const std::vector<double>& momVect,
                             const TabulatedProperty* tabProp);
 
+  /// Access on demand the DeRich1 detector element
+  DetectorElement* deRich1() const;
+
 private:
 
   /// access to DeRich1 for user parameters
-  DetectorElement* m_deRich1;
+  mutable DetectorElement* m_deRich1;
 
   /// Condition holding the aerogel parameters
   SmartRef<Condition> m_AerogelCond;

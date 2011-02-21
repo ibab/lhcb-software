@@ -69,7 +69,7 @@ StatusCode DeRichSphMirror::initialize()
   {
     setMyName( name().substr(pos) );
     std::string richNum = myName().substr(4,1);
-    if ( richNum == "1" ) 
+    if ( "1" == richNum ) 
     {
       rich = Rich::Rich1;
       const std::string::size_type secPos = name().find("Mirror2");
@@ -77,7 +77,7 @@ StatusCode DeRichSphMirror::initialize()
     }
     else
     {
-      if ( richNum == "2") 
+      if ( "2" == richNum ) 
       {
         rich = Rich::Rich2;
         const std::string::size_type secPos = name().find("SecMirror");
@@ -314,8 +314,9 @@ StatusCode DeRichSphMirror::initialize()
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG<< "Reflectivity is from TabProp " << m_reflectivity->tabProperty()->name() << endmsg;
-  msg << MSG::DEBUG<< "Second volume is " << surf->secondVol() << endmsg;
+  msg << MSG::DEBUG << "Reflectivity is from TabProp " 
+      << m_reflectivity->tabProperty()->name() << endmsg;
+  msg << MSG::DEBUG << "Second volume is " << surf->secondVol() << endmsg;
   msg << MSG::VERBOSE << m_reflectivity->tabProperty() << endmsg;
 
   // update localy cashed geometry info

@@ -208,7 +208,8 @@ public:
    *  @param hlt Return the HLT refractive index if true
    *  @return The refractive index at that energy
    */
-  virtual double refractiveIndex( const double energy, bool hlt = false ) const = 0;
+  virtual double refractiveIndex( const double energy, 
+                                  const bool hlt = false ) const = 0;
 
 protected:
 
@@ -231,7 +232,8 @@ protected:
   {
     if ( !m_refIndex )
     {
-      throw GaudiException( "Invalid refractive index", "DeRichRadiator", StatusCode::FAILURE );
+      throw GaudiException( "Invalid refractive index", 
+                            "DeRichRadiator", StatusCode::FAILURE );
     }
     return m_refIndex;
   }

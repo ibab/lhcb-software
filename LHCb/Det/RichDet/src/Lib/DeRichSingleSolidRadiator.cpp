@@ -1,4 +1,5 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRichSingleSolidRadiator.cpp
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
@@ -6,6 +7,7 @@
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 // Include files
 #include "RichDet/DeRichSingleSolidRadiator.h"
@@ -26,7 +28,10 @@ const CLID CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator(const std::string & name)
-  : DeRichRadiator(name) {}
+  : DeRichRadiator ( name ),
+    m_solid        ( NULL ),
+    m_material     ( NULL )
+{}
 
 // Standard Destructor
 DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() { }
@@ -45,12 +50,16 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   debug() << "Starting initialisation for DeRichSingleSolidRadiator "
           << name() << endmsg;
 
-  m_solid = geometry()->lvolume()->solid();
-
+  m_solid    = geometry()->lvolume()->solid();
+  if ( !m_solid ) 
+  { error() << "Failed to load solid" << endmsg; return StatusCode::FAILURE; }
   m_material = geometry()->lvolume()->material();
+  if ( !m_material ) 
+  { error() << "Failed to load material" << endmsg; return StatusCode::FAILURE; }
+
   const Material::Tables& myTabProp = m_material->tabulatedProperties();
-  Material::Tables::const_iterator matIter;
-  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter )
+  for ( Material::Tables::const_iterator matIter = myTabProp.begin(); 
+        matIter != myTabProp.end(); ++matIter )
   {
     if ( (*matIter) )
     {
@@ -88,8 +97,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     return StatusCode::FAILURE;
   }
 
-  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  debug() <<" Centre " << geometry()->toGlobal(zero) << endmsg;
+  debug() <<" Centre " << geometry()->toGlobal(Gaudi::XYZPoint(0,0,0)) << endmsg;
 
   return initSC;
 }
@@ -99,18 +107,20 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 //=========================================================================
 StatusCode DeRichSingleSolidRadiator::
 prepareMomentumVector ( std::vector<double>& photonMomentumVect,
-                        double min,
-                        double max,
-                        unsigned int nbins) const
+                        const double min,
+                        const double max,
+                        const unsigned int nbins ) const
 {
 
   // check parameters are sane
-  if( max <= min ) {
+  if( max <= min )
+  {
     error() << "Inadmissible photon energy limits "
             << max << " " << min << endmsg;
     return StatusCode::FAILURE;
   }
-  if ( nbins <= 0  ) {
+  if ( nbins <= 0  ) 
+  {
     error() << "Inadimissible photon energy num bins "
             << nbins << endmsg;
     return StatusCode::FAILURE;
@@ -119,7 +129,7 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
   photonMomentumVect.reserve( nbins );
 
   // fill momentum vector
-  double photonEnergyStep = ( max - min )/ nbins;
+  const double photonEnergyStep = ( max - min ) / (double)nbins;
   for ( unsigned int ibin = 0; ibin<nbins; ++ibin )
   {
     photonMomentumVect.push_back( min + photonEnergyStep*ibin );
@@ -142,9 +152,7 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (0 == noTicks) {
-    return StatusCode::FAILURE;
-  }
+  if ( 0 == noTicks ) { return StatusCode::FAILURE; }
 
   returnPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
   return StatusCode::SUCCESS;
@@ -165,22 +173,21 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (0 == noTicks)  return StatusCode::FAILURE;
+  if ( 0 == noTicks ) { return StatusCode::FAILURE; }
 
   entryPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
   exitPoint  = geometry()->toGlobal( pLocal + ticks[noTicks-1] * vLocal );
   return StatusCode::SUCCESS;
 }
 
-
 //=========================================================================
 //
 //=========================================================================
 unsigned int
-DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
-                                               const Gaudi::XYZVector& vGlobal,
-                                               std::vector<Gaudi::XYZPoint>&
-                                               points) const
+DeRichSingleSolidRadiator::
+intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                    const Gaudi::XYZVector& vGlobal,
+                    std::vector<Gaudi::XYZPoint>& points ) const
 {
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
   Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
@@ -188,13 +195,16 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (noTicks != 0) {
-    for (ISolid::Ticks::iterator tick_it = ticks.begin();
-         tick_it != ticks.end();
-         ++tick_it) {
+  if ( 0 != noTicks ) 
+  {
+    points.reserve( ticks.size() );
+    for ( ISolid::Ticks::iterator tick_it = ticks.begin();
+          tick_it != ticks.end(); ++tick_it ) 
+    {
       points.push_back( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) );
     }
   }
+
   return noTicks;
 }
 
@@ -211,10 +221,13 @@ intersections( const Gaudi::XYZPoint& pGlobal,
   const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (noTicks != 0) {
-    for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
+  if ( 0 != noTicks )
+  {
+    intersections.reserve(noTicks/2);
+    for ( unsigned int tick=0; tick<noTicks; tick += 2 ) 
+    {
       intersections.push_back(Rich::RadIntersection
                               (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
                                vGlobal,
@@ -230,7 +243,8 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 // Refractive Index
 //=========================================================================
 double
-DeRichSingleSolidRadiator::refractiveIndex( const double energy, bool hlt ) const
+DeRichSingleSolidRadiator::refractiveIndex( const double energy, 
+                                            const bool hlt ) const
 {
   return (*(this->refIndex(hlt)))[energy*Gaudi::Units::eV];
 }

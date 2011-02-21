@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRich
  *
- *  CVS Log :-
- *  $Id: DeRich.h,v 1.27 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -138,6 +135,7 @@ public:
    */
   inline const RichTabulatedProperty1D* nominalHPDQuantumEff() const
   {
+    if (!m_nominalHPDQuantumEff) { loadNominalHPDQuantumEff(); }
     return m_nominalHPDQuantumEff;
   }
 
@@ -199,42 +197,41 @@ private:
   /// Access the name for a given panel
   virtual const std::string panelName( const Rich::Side panel ) const;
 
+  /// Load on demand the nominal HPD Q.E.
+  void loadNominalHPDQuantumEff() const;
+
 protected:
 
-  double m_sphMirrorRadius; ///< The nominal radius of the spherical mirror
+  /// The nominal radius of the spherical mirror
+  double m_sphMirrorRadius; 
 
-  /// The nominal centre of curvature of the spherical mirror (positive side)
-  Gaudi::XYZPoint  m_nominalCentreOfCurvature;
+  /// refractive index of the quartz gas window
+  const Rich::TabulatedProperty1D* m_gasWinRefIndex;
 
-  /// The nominal normal vector of the flat mirror plane (positive side)
-  Gaudi::XYZVector m_nominalNormal;
+  /// absorption length of the quartz gas window
+  const Rich::TabulatedProperty1D* m_gasWinAbsLength;
+
+  /// spherical mirror reflectivity
+  const Rich::TabulatedProperty1D* m_nominalSphMirrorRefl;
+
+  /// flat mirror reflectivity
+  const Rich::TabulatedProperty1D* m_nominalSecMirrorRefl;
+
+private: // data
+
+  /// Pointers to the HPD panels of this Rich detector
+  mutable std::vector<DeRichHPDPanel*> m_HPDPanels;
+
+  /// flag to test if the xml supports mirror position info
+  bool m_positionInfo;
 
   int m_sphMirrorSegRows;  ///< number of spherical mirror rows
   int m_sphMirrorSegCols;  ///< number of spherical mirror columns
   int m_secMirrorSegRows;  ///< number of secondary mirror rows
   int m_secMirrorSegCols;  ///< number of secondary mirror columns
 
-  /// flag to test if the xml supports mirror position info
-  bool m_positionInfo;
-
-  /// refractive index of the quartz gas window
-  const Rich::TabulatedProperty1D* m_gasWinRefIndex;
-  /// absorption length of the quartz gas window
-  const Rich::TabulatedProperty1D* m_gasWinAbsLength;
   /// HPD quantum efficiency
-  const Rich::TabulatedProperty1D* m_nominalHPDQuantumEff;
-  /// spherical mirror reflectivity
-  const Rich::TabulatedProperty1D* m_nominalSphMirrorRefl;
-  /// flat mirror reflectivity
-  const Rich::TabulatedProperty1D* m_nominalSecMirrorRefl;
-
-  /// Condition for the alignment of the spherical mirrors
-  SmartRef<Condition> m_sphMirAlignCond;
-  /// Condition for the alignment of the secondary mirrors
-  SmartRef<Condition> m_secMirAlignCond;
-
-  /// Pointers to the HPD panels of this Rich detector
-  mutable std::vector<DeRichHPDPanel*> m_HPDPanels;
+  mutable const Rich::TabulatedProperty1D* m_nominalHPDQuantumEff;
 
 };
 

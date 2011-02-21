@@ -49,14 +49,14 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  const std::vector<double> nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
-  m_nominalCentreOfCurvature =
-    Gaudi::XYZPoint( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
+  const std::vector<double>& nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
+  m_nominalCentreOfCurvatureTop    =
+    Gaudi::XYZPoint( nominalCoC[0],  nominalCoC[1], nominalCoC[2] );
   m_nominalCentreOfCurvatureBottom =
-    Gaudi::XYZPoint( nominalCoC[0], -nominalCoC[1], nominalCoC[2]);
+    Gaudi::XYZPoint( nominalCoC[0], -nominalCoC[1], nominalCoC[2] );
 
   debug() << "Nominal centre of curvature"
-          << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
+          << m_nominalCentreOfCurvatureTop << " , " << m_nominalCentreOfCurvatureBottom
           << endmsg;
 
   m_sphMirrorRadius = param<double>("SphMirrorRadius");
@@ -71,10 +71,10 @@ StatusCode DeRich1::initialize()
   m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
                                         nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
 
-  m_nominalNormal = m_nominalPlaneTop.Normal();
+  m_nominalNormalTop    = m_nominalPlaneTop.Normal();
   m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
 
-  debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormal )
+  debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalTop ) << " "
           << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
 
   const IPVolume* pvGasWindow( 0 );
@@ -249,10 +249,12 @@ StatusCode DeRich1::alignSecMirrors()
 //=========================================================================
 //  nominalCentreOfCurvature
 //=========================================================================
-const Gaudi::XYZPoint& DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
+const Gaudi::XYZPoint& 
+DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
 {
-  return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
-           m_nominalCentreOfCurvature );
+  return ( Rich::bottom == side ? 
+           m_nominalCentreOfCurvatureBottom :
+           m_nominalCentreOfCurvatureTop   );
 }
 
 //=========================================================================
@@ -260,7 +262,7 @@ const Gaudi::XYZPoint& DeRich1::nominalCentreOfCurvature(const Rich::Side side) 
 //=========================================================================
 const Gaudi::XYZVector& DeRich1::nominalNormal(const Rich::Side side) const
 {
-  return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
+  return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormalTop );
 }
 
 //=========================================================================

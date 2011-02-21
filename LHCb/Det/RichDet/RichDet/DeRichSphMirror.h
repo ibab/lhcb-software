@@ -176,8 +176,10 @@ private: // data
 
   /// The normal vector at the centre of the mirror
   Gaudi::XYZVector m_centreNormal;
+
   /// The plane normal to the normal vector at the centre of the mirror
   Gaudi::Plane3D m_centreNormalPlane;
+
 };
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

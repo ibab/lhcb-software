@@ -52,16 +52,19 @@ StatusCode DeRichMultiSolidRadiator::initialize()
   // look for Aerogel container left
   const IPVolume* contR = topLV->pvolume("pvRich1AerogelContainerRight:0");
   if ( contR )
-    if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix() ) ) return StatusCode::FAILURE;
+    if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix() ) ) 
+      return StatusCode::FAILURE;
 
   // look for Aerogel container right
   const IPVolume* contL = topLV->pvolume("pvRich1AerogelContainerLeft:1");
   if ( contL ) {
-    if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix() ) ) return StatusCode::FAILURE;
+    if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix() ) ) 
+      return StatusCode::FAILURE;
   }
   // old geometry with aerogel quarters
   else
-    if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) return StatusCode::FAILURE;
+    if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) 
+      return StatusCode::FAILURE;
 
   return sc;
 }
@@ -132,12 +135,14 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal
   //Gaudi::XYZVector solidLocalVector;
   bool foundTick(false);
 
-  for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
+  for ( unsigned int solid=0; solid<m_solids.size(); ++solid ) 
+  {
     Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
     Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal );
 
     if ( m_solids[solid]->
-         intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
+         intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) 
+    {
       Gaudi::XYZPoint localNext( solidLocalPoint+solidLocalVector*ticks[0] );
       localNextTempPoint = m_toTopLevel[solid]*localNext;
       if ( localNextTempPoint.z() < localNextPoint.z() )
@@ -171,7 +176,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
   Gaudi::XYZPoint localEntryTempPoint;
   Gaudi::XYZPoint localExitPoint(0.0, 0.0, -1e6);
   Gaudi::XYZPoint localExitTempPoint;
-  //Gaudi::XYZVector solidLocalVector;
+
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid)
@@ -208,10 +213,10 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
 //  return a vector with all intersection points with solid
 //=========================================================================
 unsigned int
-DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
-                                              const Gaudi::XYZVector& vGlobal,
-                                              std::vector<Gaudi::XYZPoint>&
-                                              points) const
+DeRichMultiSolidRadiator::
+intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                    const Gaudi::XYZVector& vGlobal,
+                    std::vector<Gaudi::XYZPoint>& points ) const
 {
 
   const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
@@ -221,19 +226,22 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
   unsigned int noTicks;
   unsigned int totalTicks(0);
 
-  for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
+  points.reserve( m_solids.size() * 2 );
+
+  for ( unsigned int solid = 0; solid < m_solids.size(); ++solid ) 
+  {
+  
     Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
     Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
     noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
                                                  solidLocalVector,
                                                  ticks);
-    if (noTicks != 0)
+    if ( 0 != noTicks )
     {
       totalTicks += noTicks;
       for ( ISolid::Ticks::iterator tick_it = ticks.begin();
-            tick_it != ticks.end(); ++tick_it)
+            tick_it != ticks.end(); ++tick_it )
       {
-        //Gaudi::XYZPoint intersect(  );
         points.push_back( geometry()->toGlobal
                           (m_toTopLevel[solid]*(solidLocalPoint+solidLocalVector*(*tick_it))));
       }
@@ -265,7 +273,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
     noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
                                                  solidLocalVector,
                                                  ticks);
-    if (noTicks != 0)
+    if ( 0 != noTicks )
     {
       totalTicks += noTicks;
       for ( unsigned int tick = 0; tick < noTicks; tick += 2 )
@@ -288,7 +296,8 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 // Refractive Index
 //=========================================================================
 double
-DeRichMultiSolidRadiator::refractiveIndex( const double energy, bool hlt ) const
+DeRichMultiSolidRadiator::refractiveIndex( const double energy, 
+                                           const bool hlt ) const
 {
   double refIn(0);
   // Loop over all tiles and form an average

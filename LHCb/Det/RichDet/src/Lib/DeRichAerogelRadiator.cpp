@@ -74,14 +74,6 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 
   m_photMomWaveConv = 1243.125*Gaudi::Units::nanometer*Gaudi::Units::eV;
 
-  SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
-  m_deRich1 = deRich1;
-  if ( !m_deRich1 )
-  {
-    fatal() << "Failed to load DeRich1 detector element" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
   // configure refractive index updates
 
   // aerogel parameters from cond DB
@@ -113,6 +105,26 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 }
 
 //=========================================================================
+// Access on demand the DeRich1 detector element
+//=========================================================================
+DetectorElement* DeRichAerogelRadiator::deRich1() const
+{
+  if ( !m_deRich1 )
+  {
+    SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
+    m_deRich1 = deRich1;
+    if ( !m_deRich1 )
+    {
+      throw GaudiException( "Failed to load DeRich1 detector element at " + 
+                            DeRichLocations::Rich1,
+                            "DeRichAerogelRadiator::deRich1()", 
+                            StatusCode::FAILURE );
+    }
+  }
+  return m_deRich1;
+}
+
+//=========================================================================
 // updateRefIndex
 //=========================================================================
 StatusCode DeRichAerogelRadiator::updateProperties ( )
@@ -121,12 +133,12 @@ StatusCode DeRichAerogelRadiator::updateProperties ( )
     debug() << "Refractive index update triggered" << endmsg;
 
   // load various parameters
-  const double photonEnergyLowLimit     = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");
-  const double photonEnergyHighLimit    = m_deRich1->param<double>("PhotonMaximumEnergyAerogel");
-  const double ckvPhotonEnergyLowLimit  = m_deRich1->param<double>("PhotonCkvMinimumEnergyAerogel");
-  const double ckvPhotonEnergyHighLimit = m_deRich1->param<double>("PhotonCkvMaximumEnergyAerogel");
-  const unsigned int photonEnergyNumBins  = m_deRich1->param<int>("PhotonEnergyNumBins");
-  const unsigned int ckvPhotonEnergyNumBins = m_deRich1->param<int>("CkvPhotonEnergyNumBins");
+  const double photonEnergyLowLimit     = deRich1()->param<double>("PhotonMinimumEnergyAerogel");
+  const double photonEnergyHighLimit    = deRich1()->param<double>("PhotonMaximumEnergyAerogel");
+  const double ckvPhotonEnergyLowLimit  = deRich1()->param<double>("PhotonCkvMinimumEnergyAerogel");
+  const double ckvPhotonEnergyHighLimit = deRich1()->param<double>("PhotonCkvMaximumEnergyAerogel");
+  const unsigned int photonEnergyNumBins  = deRich1()->param<int>("PhotonEnergyNumBins");
+  const unsigned int ckvPhotonEnergyNumBins = deRich1()->param<int>("CkvPhotonEnergyNumBins");
 
   if ( photonEnergyHighLimit    <  ckvPhotonEnergyHighLimit ||
        ckvPhotonEnergyLowLimit  <  photonEnergyLowLimit  )
@@ -164,7 +176,7 @@ StatusCode DeRichAerogelRadiator::updateProperties ( )
   sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
   if ( !sc ) return sc;
 
-  // Hack - Update interpolators in base class after first update
+  // Update interpolators in base class
   sc = initTabPropInterpolators();
 
   return sc;
@@ -191,7 +203,7 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
   aTable.clear();
   aTable.reserve( momVect.size() );
 
-  const double fixedLambdaValue = m_deRich1->param<double>("FixedLambdaValueForAerogel");
+  const double fixedLambdaValue = deRich1()->param<double>("FixedLambdaValueForAerogel");
 
   const double SellE1 = m_AerogelCond->param<double>("CurrentAerogel_SellE1");
   const double SellE2 = m_AerogelCond->param<double>("CurrentAerogel_SellE2");
@@ -270,12 +282,13 @@ calcAbsorption (const std::vector<double>& momVect,
 {
 
   // test the tab property pointer
-  if ( !tabProp ) {
+  if ( !tabProp ) 
+  {
     error() << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  const double thickness = m_deRich1->param<double>("AerogelThickness");
+  const double thickness = deRich1()->param<double>("AerogelThickness");
 
   // get A constant
   const double constA = m_AerogelCond->param<double>("CurrentAerogel_Aconst");

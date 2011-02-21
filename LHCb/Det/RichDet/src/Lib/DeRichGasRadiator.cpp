@@ -191,10 +191,12 @@ StatusCode DeRichGasRadiator::updateProperties ( )
                               ckvPhotonEnergyHighLimit, ckvPhotonEnergyNumBins );
   if ( !sc ) return sc;
 
-  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp, m_gasParametersCond );
+  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, 
+                             m_chkvRefIndexTabProp, 
+                             m_gasParametersCond );
   if ( !sc ) return sc;
 
-  // Hack - Update interpolators in base class after first update
+  // Update interpolators in base class
   sc = initTabPropInterpolators();
 
   return sc;
@@ -441,7 +443,7 @@ const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
 
     updMgrSvc()->registerCondition(nonConstSelf, m_hltGasParametersCond.path(),
                                    &DeRichGasRadiator::updateHltProperties );
-    StatusCode sc = updMgrSvc()->update(nonConstSelf);
+    const StatusCode sc = updMgrSvc()->update(nonConstSelf);
     if ( sc.isFailure() )
     {
       error() << "First UMS update failed for HLT properties" << endmsg;
@@ -449,8 +451,9 @@ const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
     }
   }
   else
+  {
     nonConstSelf->updateHltProperties();
-
+  }
 
   return m_hltRefIndex;
 }

@@ -30,15 +30,15 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
   DeRichBase            ( name ),
   m_radiatorID          ( Rich::InvalidRadiator ),
   m_rich                ( Rich::InvalidDetector ),
-  m_refIndex            ( 0                     ),
-  m_hltRefIndex         ( 0                     ),
-  m_refIndexTabProp     ( 0                     ),
-  m_hltRefIndexTabProp  ( 0                     ),
-  m_chkvRefIndexTabProp ( 0                     ),
-  m_rayleigh            ( 0                     ),
-  m_rayleighTabProp     ( 0                     ),
-  m_absorption          ( 0                     ),
-  m_absorptionTabProp   ( 0                     ),
+  m_refIndex            ( NULL                  ),
+  m_hltRefIndex         ( NULL                  ),
+  m_refIndexTabProp     ( NULL                  ),
+  m_hltRefIndexTabProp  ( NULL                  ),
+  m_chkvRefIndexTabProp ( NULL                  ),
+  m_rayleigh            ( NULL                  ),
+  m_rayleighTabProp     ( NULL                  ),
+  m_absorption          ( NULL                  ),
+  m_absorptionTabProp   ( NULL                  ),
   m_firstUpdate         ( true                  )
 { }
 
@@ -60,21 +60,27 @@ StatusCode DeRichRadiator::initialize()
 
   debug() << "Starting initialisation" << endmsg;
 
-  if ( std::string::npos != name().find("Rich2") ) {
+  if ( std::string::npos != name().find("Rich2") ) 
+  {
     m_radiatorID = Rich::Rich2Gas;
     m_rich = Rich::Rich2;
   }
-  else {
-    if ( std::string::npos != name().find("Aerogel") ) {
+  else 
+  {
+    if ( std::string::npos != name().find("Aerogel") ) 
+    {
       m_radiatorID = Rich::Aerogel;
       m_rich = Rich::Rich1;
     }
-    else {
-      if ( std::string::npos != name().find("Rich1Gas") ) {
+    else 
+    {
+      if ( std::string::npos != name().find("Rich1Gas") ) 
+      {
         m_radiatorID = Rich::Rich1Gas;
         m_rich = Rich::Rich1;
       }
-      else {
+      else 
+      {
         error() << "Cannot find radiator type for " << name() << endmsg;
         return StatusCode::FAILURE;
       }
@@ -87,7 +93,7 @@ StatusCode DeRichRadiator::initialize()
 }
 
 //=========================================================================
-//  initTabPropInterpolators
+// initTabPropInterpolators
 //=========================================================================
 StatusCode DeRichRadiator::initTabPropInterpolators()
 {
@@ -143,13 +149,12 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
 }
 
 //=========================================================================
-//  generateHltRefIndex
+// generateHltRefIndex
 //=========================================================================
 const Rich::TabulatedProperty1D* DeRichRadiator::generateHltRefIndex() const
 {
   // return normal refractive index
   m_hltRefIndex = m_refIndex;
-
   return m_hltRefIndex;
 }
 

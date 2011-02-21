@@ -109,8 +109,20 @@ private:
   /// The nominal centre of curvature of the spherical mirror (negative side)
   Gaudi::XYZPoint  m_nominalCentreOfCurvatureRight;
 
+  /// The nominal centre of curvature of the spherical mirror (positive side)
+  Gaudi::XYZPoint  m_nominalCentreOfCurvatureLeft;
+
   /// The nominal normal vector of the flat mirror plane (negative side)
   Gaudi::XYZVector m_nominalNormalRight;
+
+  /// The nominal normal vector of the flat mirror plane (positive side)
+  Gaudi::XYZVector m_nominalNormalLeft;
+
+  /// Condition for the alignment of the spherical mirrors
+  SmartRef<Condition> m_sphMirAlignCond;
+
+  /// Condition for the alignment of the secondary mirrors
+  SmartRef<Condition> m_secMirAlignCond;
 
 };
 
