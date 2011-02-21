@@ -38,6 +38,14 @@ namespace LoKi
 {
   namespace Cuts 
   {
+
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be intialised
+    #ifdef __INTEL_COMPILER
+      #pragma warning(disable:854) //
+      #pragma warning(push)
+    #endif
     // ========================================================================
     /** @var GVTRUE
      *  trivial predicate which always returns "true"
@@ -245,6 +253,10 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     typedef LoKi::GenVertices::SumIF                     GVSUM ;
+
+    #ifdef __INTEL_COMPILER
+      #pragma warning(pop) // End disable ICC warning #854
+    #endif
     // ========================================================================
   } // end of namespace LoKi::Cuts
 } // end of namespace LoKi
@@ -253,7 +265,3 @@ namespace LoKi
 // ============================================================================
 #endif // LOKI_GENVERTEXCUTS_H
 // ============================================================================
-
-
-
-

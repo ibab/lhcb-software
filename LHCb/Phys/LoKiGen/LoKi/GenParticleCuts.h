@@ -36,6 +36,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be intialised
+    #ifdef __INTEL_COMPILER
+      #pragma warning(disable:854)
+      #pragma warning(push)
+    #endif
+
     // ========================================================================
     /** @var G3Q
      *  The trivial evaluator of 3*chareg of the particle 
@@ -1426,6 +1434,9 @@ namespace LoKi
      *  @date 2005-03-27
      */
     const LoKi::BasicFunctors<const HepMC::GenParticle*>::Constant GZERO ( 0 ) ;    
+    #ifdef __INTEL_COMPILER
+      #pragma warning(pop) // End disable ICC warning #854
+    #endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts  
   // ==========================================================================

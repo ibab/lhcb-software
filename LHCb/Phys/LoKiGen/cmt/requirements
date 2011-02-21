@@ -31,7 +31,7 @@ apply_pattern      reflex_dictionary                                   \
                    options=" -U__MINGW32__ "
 # Disable some compiler warnings in the automatically generated dict code
 macro_append LoKiGenDict_cppflags "" \
-                       target-icc " -wd191"
+                       target-icc " -wd191 -wd177"
         
 macro_append       LoKiGen_dependencies             " LoKiGenLib " 
 macro_append       LoKiGenDict_dependencies         " LoKiGenLib " 

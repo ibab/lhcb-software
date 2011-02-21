@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-02-21 - Marco Cattaneo
+ - Suppress Intel compiler warnings about missing default constructor
+   In this case the compiler generated constructor is fine, since there are
+   no member data to be intialised 
+
 !========================= LoKiGen v9r5 2011-01-31 =========================
 ! 2011-01-13 - Marco Cattaneo
  - Fix most ICC warnings and remarks
