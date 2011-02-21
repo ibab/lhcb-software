@@ -29,7 +29,8 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseD02KPi = CombineParticles ( 'StdLooseD02KPi' )
 
-StdLooseD02KPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
+StdLooseD02KPi.InputLocations = [ "Phys/StdNoPIDsKaons/Particles",
+                                  "Phys/StdNoPIDsPions/Particles" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
 StdLooseD02KPi.DaughtersCuts = { "K+" : "(PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
@@ -48,28 +49,29 @@ locations = updateDoD ( StdLooseD02KPi )
 ## PiPi
 StdLooseD02PiPi = StdLooseD02KPi.clone("StdLooseD02PiPi")
 StdLooseD02PiPi.DecayDescriptor = "[D0 -> pi- pi+]cc"
-StdLooseD02PiPi.InputLocations = [ "StdNoPIDsPions" ]
+StdLooseD02PiPi.InputLocations = [ "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseD02PiPi )
+locations.update( updateDoD ( StdLooseD02PiPi ) )
 
 ## ============================================================================
 ## KK
 StdLooseD02KK = StdLooseD02KPi.clone("StdLooseD02KK")
 StdLooseD02KK.DecayDescriptor = "[D0 -> K- K+]cc"
-StdLooseD02KK.InputLocations = [ "StdNoPIDsKaons" ]
+StdLooseD02KK.InputLocations = [ "Phys/StdNoPIDsKaons/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseD02KK )
+locations.update( updateDoD ( StdLooseD02KK ) )
 
 ## ============================================================================
 ## Doubly Cabibbo suppressed
 StdLooseD02KPiDCS = StdLooseD02KPi.clone("StdLooseD02KPiDCS")
 StdLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
-StdLooseD02KPiDCS.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
+StdLooseD02KPiDCS.InputLocations = [ "Phys/StdNoPIDsKaons/Particles",
+                                     "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseD02KPiDCS )
+locations.update( updateDoD ( StdLooseD02KPiDCS ) )
 
 ## ============================================================================
 if '__main__' == __name__ :

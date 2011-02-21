@@ -24,7 +24,7 @@ from CommonParticles.Utils import *
 
 ## ============================================================================
 StdMassConstrainedJpsi2MuMu = FilterDesktop("StdMassConstrainedJpsi2MuMu")
-StdMassConstrainedJpsi2MuMu.InputLocations =["StdLooseJpsi2MuMu"]
+StdMassConstrainedJpsi2MuMu.InputLocations =["Phys/StdLooseJpsi2MuMu/Particles"]
 StdMassConstrainedJpsi2MuMu.Code = "  (ADMASS('J/psi(1S)') < 80.*MeV)" \
                               	   "& (VFASPF(VCHI2) < 16.)" \
                                    "& (MINTREE('mu+'==ABSID, PIDmu) > 0)" \

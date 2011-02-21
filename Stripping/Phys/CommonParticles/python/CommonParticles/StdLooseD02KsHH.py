@@ -30,7 +30,9 @@ from CommonParticles.Utils import *
 #
 StdLooseD02KsPiPi = CombineParticles("StdLooseD02KsPiPi")
 
-StdLooseD02KsPiPi.InputLocations = [ "StdLoosePions", "StdLooseKsLL" ]
+StdLooseD02KsPiPi.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                     "Phys/StdLooseKsLL/Particles" ]
+
 StdLooseD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc" 
 
 StdLooseD02KsPiPi.DaughtersCuts = { "pi+" : "(PT>400*MeV)",
@@ -47,7 +49,8 @@ locations = updateDoD ( StdLooseD02KsPiPi )
 #
 StdLooseD02KsKK = StdLooseD02KsPiPi.clone("StdLooseD02KsKK")
 
-StdLooseD02KsKK.InputLocations = [ "StdLooseKaons", "StdLooseKsLL" ]
+StdLooseD02KsKK.InputLocations = [ "Phys/StdLooseKaons/Particles",
+                                   "Phys/StdLooseKsLL/Particles" ]
 StdLooseD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc" 
 
 StdLooseD02KsKK.DaughtersCuts = { "K+" : "(PT>300*MeV)",

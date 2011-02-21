@@ -29,7 +29,8 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseDstarWithD02KPi = CombineParticles ( 'StdLooseDstarWithD02KPi' )
 
-StdLooseDstarWithD02KPi.InputLocations = [ "StdLoosePions", "StdLooseD02KPi" ]
+StdLooseDstarWithD02KPi.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                           "Phys/StdLooseD02KPi/Particles" ]
 StdLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc" 
 
 StdLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
@@ -43,27 +44,30 @@ locations = updateDoD ( StdLooseDstarWithD02KPi )
 #
 StdLooseDstarWithD02KPiDCS = StdLooseDstarWithD02KPi.clone("StdLooseDstarWithD02KPiDCS")
 GaudiSequencer("SeqStdLooseDstarWithD02KPiDCS").Members += [ StdLooseDstarWithD02KPiDCS ] 
-StdLooseDstarWithD02KPiDCS.InputLocations = [ "StdLoosePions", "StdLooseD02KPiDCS" ]
+StdLooseDstarWithD02KPiDCS.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                              "Phys/StdLooseD02KPiDCS/Particles" ]
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseDstarWithD02KPiDCS )
+locations.update( updateDoD ( StdLooseDstarWithD02KPiDCS ) )
 
 ################################################################################
 # D* with D0->KK is a clone of D* with D0->Kpi
 #
 StdLooseDstarWithD02KK = StdLooseDstarWithD02KPi.clone("StdLooseDstarWithD02KK")
 StdLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
-StdLooseDstarWithD02KK.InputLocations = [ "StdLoosePions", "StdLooseD02KK" ]
+StdLooseDstarWithD02KK.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                          "Phys/StdLooseD02KK/Particles" ]
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseDstarWithD02KK )
+locations.update( updateDoD ( StdLooseDstarWithD02KK ) )
 
 ################################################################################
 # D* with D0->PiPi is a clone of D* with D0->KK
 #
 StdLooseDstarWithD02PiPi = StdLooseDstarWithD02KK.clone("StdLooseDstarWithD02PiPi")
 GaudiSequencer("SeqStdLooseDstarWithD02PiPi").Members += [ StdLooseDstarWithD02PiPi ] 
-StdLooseDstarWithD02PiPi.InputLocations = [ "StdLoosePions", "StdLooseD02PiPi" ]
+StdLooseDstarWithD02PiPi.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                            "Phys/StdLooseD02PiPi/Particles" ]
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseDstarWithD02PiPi )
+locations.update( updateDoD ( StdLooseDstarWithD02PiPi ) )
 
 ## ============================================================================
 if '__main__' == __name__ :

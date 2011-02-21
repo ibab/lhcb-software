@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseKsLL = CombineParticles ( 'StdLooseKsLL' )
 
-StdLooseKsLL.InputLocations = [ "StdLoosePions" ]
+StdLooseKsLL.InputLocations = [ "Phys/StdLoosePions/Particles" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsLL.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 9.)" } 
@@ -44,7 +44,7 @@ locations = updateDoD ( StdLooseKsLL )
 # ============================================================================= 
 StdLooseKsDD = CombineParticles ( 'StdLooseKsDD' )
 
-StdLooseKsDD.InputLocations = [ "StdNoPIDsDownPions" ]
+StdLooseKsDD.InputLocations = [ "Phys/StdNoPIDsDownPions/Particles" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)" } 
@@ -52,7 +52,7 @@ StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV) & (ADOCACHI2CUT(30., '
 StdLooseKsDD.MotherCut = "(ADMASS('KS0') < 64.*MeV) & (VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseKsDD )
+locations.update( updateDoD ( StdLooseKsDD ))
 
 ## ============================================================================
 if '__main__' == __name__ :

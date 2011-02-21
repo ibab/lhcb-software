@@ -21,7 +21,8 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdVeryLooseDplus2KPiPi = CombineParticles ( 'StdVeryLooseDplus2KPiPi' )
 
-StdVeryLooseDplus2KPiPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
+StdVeryLooseDplus2KPiPi.InputLocations = [ "Phys/StdNoPIDsKaons/Particles",
+                                           "Phys/StdNoPIDsPions/Particles" ]
 StdVeryLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
 StdVeryLooseDplus2KPiPi.DaughtersCuts = {
     "K+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))",
@@ -47,7 +48,7 @@ locations = updateDoD ( StdVeryLooseDplus2KKPi )
 # D+ -> 3 pi is a clone of D+ -> K Pi Pi 
 #
 StdVeryLooseDplus2PiPiPi = StdVeryLooseDplus2KPiPi.clone("StdVeryLooseDplus2PiPiPi")
-StdVeryLooseDplus2PiPiPi.InputLocations = [ "StdNoPIDsPions" ]
+StdVeryLooseDplus2PiPiPi.InputLocations = [ "Phys/StdNoPIDsPions/Particles" ]
 StdVeryLooseDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDplus2PiPiPi )

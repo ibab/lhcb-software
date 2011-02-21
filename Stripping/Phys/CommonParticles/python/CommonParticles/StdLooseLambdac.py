@@ -18,7 +18,9 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseLambdac2PKPi = CombineParticles ( 'StdLooseLambdac2PKPi' )
 
-StdLooseLambdac2PKPi.InputLocations = [ "StdLooseKaons", "StdLoosePions", "StdLooseProtons" ]
+StdLooseLambdac2PKPi.InputLocations = [ "Phys/StdLooseKaons/Particles",
+                                        "Phys/StdLoosePions/Particles",
+                                        "Phys/StdLooseProtons/Particles" ]
 
 StdLooseLambdac2PKPi.DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc" 
 StdLooseLambdac2PKPi.DaughtersCuts = {

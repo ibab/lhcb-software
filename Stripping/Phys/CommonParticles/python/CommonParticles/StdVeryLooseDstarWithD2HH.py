@@ -31,7 +31,8 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdVeryLooseDstarWithD02KPi = CombineParticles ( 'StdVeryLooseDstarWithD02KPi' )
 
-StdVeryLooseDstarWithD02KPi.InputLocations = [ "StdNoPIDsPions", "StdVeryLooseD02KPi" ]
+StdVeryLooseDstarWithD02KPi.InputLocations = [ "Phys/StdNoPIDsPions/Particles",
+                                               "Phys/StdVeryLooseD02KPi/Particles" ]
 StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc" 
 
 StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<80*MeV) & (APT>1250*MeV)"
@@ -47,7 +48,8 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KPi )
 StdVeryLooseDstarWithD02KPiDCS = StdVeryLooseDstarWithD02KPi.clone("StdVeryLooseDstarWithD02KPiDCS")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02KPiDCS").Members += [ StdVeryLooseDstarWithD02KPiDCS ] 
 StdVeryLooseDstarWithD02KPiDCS.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
-StdVeryLooseDstarWithD02KPiDCS.InputLocations = [ "StdNoPIDsPions", "StdVeryLooseD02KPiDCS" ]
+StdVeryLooseDstarWithD02KPiDCS.InputLocations = [ "Phys/StdNoPIDsPions/Particles",
+                                                  "Phys/StdVeryLooseD02KPiDCS/Particles" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02KPiDCS )
 
@@ -57,7 +59,8 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KPiDCS )
 StdVeryLooseDstarWithD02KK = StdVeryLooseDstarWithD02KPi.clone("StdVeryLooseDstarWithD02KK")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02KK").Members += [ StdVeryLooseDstarWithD02KK ] 
 StdVeryLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
-StdVeryLooseDstarWithD02KK.InputLocations = [  "StdNoPIDsPions", "StdVeryLooseD02KK" ]
+StdVeryLooseDstarWithD02KK.InputLocations = [  "Phys/StdNoPIDsPions/Particles",
+                                               "Phys/StdVeryLooseD02KK/Particles" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02KK )
 
@@ -67,7 +70,8 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KK )
 StdVeryLooseDstarWithD02PiPi = StdVeryLooseDstarWithD02KK.clone("StdVeryLooseDstarWithD02PiPi")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02PiPi").Members += [ StdVeryLooseDstarWithD02PiPi ] 
 StdVeryLooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
-StdVeryLooseDstarWithD02PiPi.InputLocations = [  "StdNoPIDsPions", "StdVeryLooseD02PiPi" ]
+StdVeryLooseDstarWithD02PiPi.InputLocations = [  "Phys/StdNoPIDsPions/Particles",
+                                                 "Phys/StdVeryLooseD02PiPi/Particles" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02PiPi )
 

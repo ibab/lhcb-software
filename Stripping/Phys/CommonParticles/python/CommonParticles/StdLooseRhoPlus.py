@@ -27,10 +27,10 @@ from CommonParticles.Utils import *
 StdLooseRhoPlus = CombineParticles ( 'StdLooseRhoPlus' )
 
 StdLooseRhoPlus = CombineParticles("StdLooseRhoPlus")
-StdLooseRhoPlus.InputLocations = [ "StdLooseMergedPi0",
-                                   "StdLooseResolvedPi0",
-                                   "StdLoosePions",
-                                   "StdLooseKaons"]		 
+StdLooseRhoPlus.InputLocations = [ "Phys/StdLooseMergedPi0/Particles",
+                                   "Phys/StdLooseResolvedPi0/Particles",
+                                   "Phys/StdLoosePions/Particles",
+                                   "Phys/StdLooseKaons/Particles"]		 
 StdLooseRhoPlus.DecayDescriptor = "[rho(770)- -> pi- pi0]cc"
 StdLooseRhoPlus.DaughtersCuts = {"pi+" : "ALL", "K+" : "ALL",
                                  "pi0" :  "(PT>1000*MeV)  & (P> 1500*MeV)"}

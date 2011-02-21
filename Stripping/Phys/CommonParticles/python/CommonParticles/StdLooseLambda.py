@@ -27,7 +27,8 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseLambdaLL = CombineParticles ( 'StdLooseLambdaLL' )
 
-StdLooseLambdaLL.InputLocations = [ "StdLoosePions", "StdLooseProtons" ]
+StdLooseLambdaLL.InputLocations = [ "Phys/StdLoosePions/Particles",
+                                    "Phys/StdLooseProtons/Particles" ]
 StdLooseLambdaLL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc" 
 
 StdLooseLambdaLL.DaughtersCuts = {
@@ -48,7 +49,8 @@ locations = updateDoD ( StdLooseLambdaLL )
 # ============================================================================= 
 StdLooseLambdaDD = StdLooseLambdaLL.clone( 'StdLooseLambdaDD' )
 
-StdLooseLambdaDD.InputLocations = [ "StdNoPIDsDownPions", "StdNoPIDsDownProtons" ]
+StdLooseLambdaDD.InputLocations = [ "Phys/StdNoPIDsDownPions/Particles",
+                                    "Phys/StdNoPIDsDownProtons/Particles" ]
 
 StdLooseLambdaDD.DaughtersCuts = {
     "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",

@@ -25,7 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLooseJpsi2MuMu = CombineParticles ("StdLooseJpsi2MuMu")
-StdLooseJpsi2MuMu.InputLocations = ["StdLooseMuons"]
+StdLooseJpsi2MuMu.InputLocations = ["Phys/StdLooseMuons/Particles"]
 StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
 StdLooseJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 100.*MeV) & (ADOCACHI2CUT(30., ''))"
 StdLooseJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 25.)"

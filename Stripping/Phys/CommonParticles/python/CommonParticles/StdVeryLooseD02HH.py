@@ -21,7 +21,9 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdVeryLooseD02KPi = CombineParticles ( 'StdVeryLooseD02KPi' )
 
-StdVeryLooseD02KPi.InputLocations = [ "StdLooseKaons", "StdNoPIDsPions" ]
+StdVeryLooseD02KPi.InputLocations = [ "Phys/StdLooseKaons/Particles",
+                                      "Phys/StdNoPIDsPions/Particles" ]
+
 StdVeryLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
 StdVeryLooseD02KPi.DaughtersCuts = {
@@ -41,28 +43,29 @@ locations = updateDoD ( StdVeryLooseD02KPi )
 ## PiPi
 StdVeryLooseD02PiPi = StdVeryLooseD02KPi.clone("StdVeryLooseD02PiPi")
 StdVeryLooseD02PiPi.DecayDescriptor = "[D0 -> pi- pi+]cc"
-StdVeryLooseD02PiPi.InputLocations = [ "StdNoPIDsPions" ]
+StdVeryLooseD02PiPi.InputLocations = [ "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdVeryLooseD02PiPi )
+locations.update( updateDoD ( StdVeryLooseD02PiPi ) )
 
 ## ============================================================================
 ## KK
 StdVeryLooseD02KK = StdVeryLooseD02KPi.clone("StdVeryLooseD02KK")
 StdVeryLooseD02KK.DecayDescriptor = "[D0 -> K- K+]cc"
-StdVeryLooseD02KK.InputLocations = [ "StdNoPIDsKaons" ]
+StdVeryLooseD02KK.InputLocations = [ "Phys/StdNoPIDsKaons/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdVeryLooseD02KK )
+locations.update( updateDoD ( StdVeryLooseD02KK ) )
 
 ## ============================================================================
 ## Doubly Cabibbo suppressed
 StdVeryLooseD02KPiDCS = StdVeryLooseD02KPi.clone("StdVeryLooseD02KPiDCS")
 StdVeryLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
-StdVeryLooseD02KPiDCS.InputLocations = [ "StdLooseKaons", "StdNoPIDsPions" ]
+StdVeryLooseD02KPiDCS.InputLocations = [ "Phys/StdLooseKaons/Particles",
+                                         "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdVeryLooseD02KPiDCS )
+locations.update( updateDoD ( StdVeryLooseD02KPiDCS ) )
 
 ## ============================================================================
 if '__main__' == __name__ :
