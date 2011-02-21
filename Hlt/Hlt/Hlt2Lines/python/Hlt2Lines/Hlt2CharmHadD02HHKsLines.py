@@ -119,7 +119,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
         # }
             
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmKillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD02HHKsKillTooManyInTrkAlg'
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -146,8 +146,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         #  * Chi2/NDF of the track
 
         ## 14 Jan: Mat removes hard-coded cut on track p(chi2)
-        incuts = """(P> %(KshhTFHHTrkPLL)s *MeV)
-                    & (TRCHI2DOF< %(KshhTFHHTrkChi2UL)s )""" % self.getProps()
+        incuts = "(TRCHI2DOF< %(KshhTFHHTrkChi2UL)s )" \
+                 "& (P> %(KshhTFHHTrkPLL)s *MeV)" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -199,10 +199,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFDVtxChi2UL)s )
-                          & (BPVLTIME() > 0.2*ps)
-                          & (PT> %(KshhTFDPtLL)s *MeV)
-                          & (BPVDIRA > %(KshhTFDDiraLL)s )""" % self.getProps()
+        parentcuts = "(VFASPF(VCHI2PDOF)< %(KshhTFDVtxChi2UL)s )" \
+                     "& (PT> %(KshhTFDPtLL)s *MeV)" \
+                     "& (BPVLTIME() > 0.2*ps)" \
+                     "& (BPVDIRA > %(KshhTFDDiraLL)s )" % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
@@ -244,8 +244,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ###################################################################
 
         KshhHHcombcuts = """(AM<1450*MeV) 
-                            & (AALLSAMEBPV)
-                            & (APT > %(KshhTFHHPtLL)s *MeV)""" % self.getProps()
+                            & (APT > %(KshhTFHHPtLL)s *MeV)
+                            & (AALLSAMEBPV)""" % self.getProps()
         KshhHHparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFHHVtxChi2UL)s )
                               & (BPVVD > 1.0*mm)""" % self.getProps()
 
@@ -281,13 +281,15 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ##    * Mass within KshhTFKsLLMothSymMassWin = 11.4
         ##    * BPVVDCHI2 > KshhTFKsLLVtxPVDispChi2LL = 100.0
 
-        KshhKsLLdaugcuts = { "pi+" : "(P> %(KshhTFKsLLTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" % self.getProps() }
+        KshhKsLLdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" \
+                                     "& (P> %(KshhTFKsLLTrkPLL)s *MeV)" \
+                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s )" % self.getProps() }
         KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsLLparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) 
-                        & in_range( %(KshhTFKsLLVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s *mm) 
-                        & (BPVDIRA > %(KshhTFKsLLDiraLL)s ) 
-                        & (ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV) 
-                        & (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )""" % self.getProps()
+        KshhKsLLparentcuts = "(ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV)" \
+                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) " \
+                        "& in_range( %(KshhTFKsLLVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s *mm)" \
+                        "& (BPVDIRA > %(KshhTFKsLLDiraLL)s )" \
+                        "& (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsLL = Hlt2Member( CombineParticles
                                       , "KsLL"
                                       , DecayDescriptor = "KS0 -> pi+ pi-"
@@ -318,13 +320,15 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ##    * ADMASS within KshhTFKsDDMothSymMassWin = 24.9
         ##    * BPVVDCHI2 > KshhTFKsDDVtxPVDispChi2LL = 100.0
 
-        KshhKsDDdaugcuts = { "pi+" : "(P> %(KshhTFKsDDTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)" % self.getProps() }
+        KshhKsDDdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)"
+                                     "& (P> %(KshhTFKsDDTrkPLL)s *MeV)" \
+                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s )" % self.getProps() }
         KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsDDparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s ) 
-                        & in_range(%(KshhTFKsDDVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s *mm) 
-                        & (BPVDIRA > %(KshhTFKsDDDiraLL)s ) 
-                        & (ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV) 
-                        & (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )""" % self.getProps()
+        KshhKsDDparentcuts = "(ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV)" \
+                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s )" \
+                        "& in_range(%(KshhTFKsDDVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s *mm)" \
+                        "& (BPVDIRA > %(KshhTFKsDDDiraLL)s )" \
+                        "& (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsDD = Hlt2Member( CombineParticles
                                       , "KsDD"
                                       , DecayDescriptor = "KS0 -> pi+ pi-"

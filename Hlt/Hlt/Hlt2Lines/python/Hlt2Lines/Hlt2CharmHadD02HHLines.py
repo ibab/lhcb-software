@@ -8,6 +8,7 @@ __version__ = '$Revision: 1.22 $'
 ## ######################################################################
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 
 
@@ -18,40 +19,40 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
     # Don't touch my variables!
     __slots__ = {
                 ## Cut values for basic D0 -> hh signal lines
-                  'Trk_PT_MIN'               : 800.0      # MeV
-                , 'Trk_P_MIN'                : 5000.0     # MeV
+                  'Trk_PT_MIN'               : 800.0 * MeV
+                , 'Trk_P_MIN'                : 5.0  * GeV
                 , 'Trk_MIPCHI2DV_MIN'        : 2.0        # neuter
-                , 'Trk_TRCHI2DOF_MAX'        : 5.0        # neuter
-                , 'Pair_AMINDOCA_MAX'        : 0.10       # mm
-                , 'Trk_Max_APT_MIN'          : 1500.0     # MeV
+                , 'Trk_TRCHI2DOF_MAX'        : 3.0        # neuter
+                , 'Pair_AMINDOCA_MAX'        : 0.10 * mm
+                , 'Trk_Max_APT_MIN'          : 1500.0 * MeV
                 , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
                 , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
                 , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
-                , 'D0_PT_MIN'                : 2000.0     # MeV
-                , 'Sig_M_MIN'                : 1839.0     # MeV
-                , 'Sig_M_MAX'                : 1889.0     # MeV
-                , 'WideMass_M_MIN'           : 1700.0     # MeV
-                , 'WideMass_M_MAX'           : 2100.0     # MeV
+                , 'D0_PT_MIN'                : 2000.0 * MeV
+                , 'Sig_M_MIN'                : 1815.0 * MeV
+                , 'Sig_M_MAX'                : 1915.0 * MeV
+                , 'WideMass_M_MIN'           : 1715.0 * MeV
+                , 'WideMass_M_MAX'           : 2015.0 * MeV
                 ## 2-body inclusive!
-                , 'Inc_Trk_PT_MIN'           : 500.0      # MeV
-                , 'Inc_Trk_P_MIN'            : 5000.0     # MeV
+                , 'Inc_Trk_PT_MIN'           : 500.0 * MeV
+                , 'Inc_Trk_P_MIN'            : 5.0 * GeV
                 , 'Inc_Trk_MIPCHI2DV_MIN'    : 16.0       # neuter
                 , 'Inc_Trk_TRCHI2DOF_MAX'    : 3.0        # neuter
-                , 'Inc_Pair_AMINDOCA_MAX'    : 0.15       # in mm
+                , 'Inc_Pair_AMINDOCA_MAX'    : 0.15 * mm
                 , 'Inc_D0_BPVVDCHI2_MIN'     : 100.0      # neuter
-                , 'Inc_Trk_Max_APT_MIN'      : 1000.0     # MeV
-                , 'Inc_D0_PT_MIN'            : 1500.0     # MeV
-                , 'Inc_D0_SUMPT_MIN'         : 1800.0     # MeV
+                , 'Inc_Trk_Max_APT_MIN'      : 1000.0 * MeV
+                , 'Inc_D0_PT_MIN'            : 1500.0 * MeV
+                , 'Inc_D0_SUMPT_MIN'         : 1800.0 * MeV
                 , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
-                , 'Inc_D0_MCOR_MIN'          : 300.       # MeV
-                , 'Inc_D0_MCOR_MAX'          : 3200.      # MeV
+                , 'Inc_D0_MCOR_MIN'          : 300.0 * MeV
+                , 'Inc_D0_MCOR_MAX'          : 3200.0 * MeV
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : True       # do or do not
                 , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
                 , 'Prescale'         : { }
-                , 'Postscale'        : { 'Hlt2CharmHadD02KKWideMass'     : 0.05
-                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.05
-                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.05
+                , 'Postscale'        : { 'Hlt2CharmHadD02KKWideMass'     : 0.10
+                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.10
+                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.10
                                        }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : { ## Signal lines
@@ -110,7 +111,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         massmin = min(self.getProp('Sig_M_MIN'), self.getProp('WideMass_M_MIN'))
         massmax = max(self.getProp('Sig_M_MAX'), self.getProp('WideMass_M_MAX'))
 
-        masscut = "(%s*MeV < AM) & (AM < %s*MeV)" % (massmin, massmax)
+        masscut = "in_range(%s,  AM, %s)" % (massmin, massmax)
 
         combcuts = masscut + \
                    "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
@@ -181,9 +182,10 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
 
         # Construct a cut string for the combination.
-        combcuts = "(AM<2000*MeV) & (AALLSAMEBPV) " \
+        combcuts = "(AM<2000*MeV)" \
                    "& ((APT1 > %(Inc_Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Inc_Trk_Max_APT_MIN)s))" \
+                   "& (AALLSAMEBPV) " \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
                         "< %(Inc_Pair_AMINDOCA_MAX)s )" % self.getProps()
 
@@ -219,12 +221,9 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
-
         codestr = "(PT > %(Inc_D0_PT_MIN)s)" \
                   "& (SUMTREE(PT,('pi+'==ABSID),0.0) > %(Inc_D0_SUMPT_MIN)s)" \
-                  "& (in_range(%(Inc_D0_MCOR_MIN)s*MeV,MCOR,%(Inc_D0_MCOR_MAX)s*MeV))" \
+                  "& (in_range(%(Inc_D0_MCOR_MIN)s,BPVCORRM,%(Inc_D0_MCOR_MAX)s))" \
                   "& (BPVIPCHI2() > %(Inc_D0_BPVIPCHI2_MIN)s)" \
                   % self.getProps()
         if extracode :
@@ -233,7 +232,6 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                              , 'Filter'
                              , InputLocations = inputSeq
                              , Code = codestr
-                             , Preambulo=preambulo 
                            )    
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
@@ -264,7 +262,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
             
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmKillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD02HHKillTooManyInTrkAlg'
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -278,11 +276,10 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        incuts = "(PT> %(Trk_PT_MIN)s *MeV)" \
-                 "& (P> %(Trk_P_MIN)s *MeV)" \
-                 "& (TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
-                 "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" \
-                 % self.getProps()
+        incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+                 "& (PT> %(Trk_PT_MIN)s)" \
+                 "& (P> %(Trk_P_MIN)s)" \
+                 "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -301,10 +298,10 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D 
 
-        incuts = """(PT> %(Inc_Trk_PT_MIN)s *MeV)
-                    & (P> %(Inc_Trk_P_MIN)s *MeV)
-                    & (MIPCHI2DV(PRIMARY)> %(Inc_Trk_MIPCHI2DV_MIN)s )
-                    & (TRCHI2DOF< %(Inc_Trk_TRCHI2DOF_MAX)s )""" % self.getProps()
+        incuts = "(TRCHI2DOF< %(Inc_Trk_TRCHI2DOF_MAX)s)" \
+                 "& (PT> %(Inc_Trk_PT_MIN)s)" \
+                 "& (P> %(Inc_Trk_P_MIN)s)" \
+                 "& (MIPCHI2DV(PRIMARY)> %(Inc_Trk_MIPCHI2DV_MIN)s)" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -337,10 +334,10 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                        , 'CharmHadD02PiPi' : "D0 -> pi- pi+"
                      }
 
-        sigMassCut  = "in_range(%s*MeV, M, %s*MeV)" \
+        sigMassCut  = "in_range(%s, M, %s)" \
                       % (self.getProp('Sig_M_MIN'), self.getProp('Sig_M_MAX'))
 
-        wideMassCut = "in_range(%s*MeV, M, %s*MeV)" \
+        wideMassCut = "in_range(%s, M, %s)" \
                       % (self.getProp('WideMass_M_MIN'), \
                          self.getProp('WideMass_M_MAX'))
 
