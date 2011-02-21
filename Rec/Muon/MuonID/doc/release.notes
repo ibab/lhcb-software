@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v8r0p2 2011-02-17 =========================
+! 2011-02-21 - Helder Lopes
+ - Made running new tuning (DLL_Flag = 4) from options file (OverrideDB = True) the default
+
 !========================= MuonID v8r0p1 2011-02-17 =========================
 ! 2011-02-18 - Helder Lopes
  - Added 2010 and 2011 python files for chi2s, chi2b, gamoms, gaprobs, dists, distb algs

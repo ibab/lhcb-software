@@ -85,6 +85,14 @@
 // 02/02/2010: J. Helder Lopes
 // Replace Landau fits by histograms. The closest distance is mapped into [0,1]
 // by hyperbolic tangent, with a conversion factor per region/momentum bin.
+//
+//=====================
+// 21/02/2011: J. Helder Lopes
+// Implement muon probability tuned on 2010 data and using cumulative histograms
+// of the hyperbolic tangent of the distances. NonMuon prob still from Landau fits.
+// This corresponds to DLL_Flag = 4 and is used with 2011 and 2010 data if configured
+// from options.  DLL_Flag = 3 should not be used for 2011 and 2010 data anymore
+
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MuonIDAlg );

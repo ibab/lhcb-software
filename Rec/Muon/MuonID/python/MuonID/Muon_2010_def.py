@@ -26,10 +26,10 @@ AllMuonTracks = False
 FindQuality = True
 
 ## Override data from conditions database, keeping the values from this option file
-OverrideDB = False;
+OverrideDB = True;
 
 ## Set which DLL is input to MuonPID
-DLL_flag = 1  #0=old; 1=DLL new; 3=hyperbolic tangent mapping (Do not use it for data type 2010 and 2011)
+DLL_flag = 4  #0=old; 1=DLL new; 3=hyperbolic tangent mapping (Do not use it for data type 2010 and 2011)
               #4==hyperbolic tangent for Muon prob form 2010 data + Landau fits MC2009 for NonMuon prob 
 
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
