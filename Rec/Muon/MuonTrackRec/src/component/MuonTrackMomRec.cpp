@@ -65,6 +65,9 @@ StatusCode MuonTrackMomRec::initialize()
 
   m_bIntegrator = tool<IBIntegrator>( "BIntegrator" );
   if(!m_bIntegrator) return StatusCode::FAILURE;
+
+  m_BdlwasInit = false;
+
   return sc;
 }
 
@@ -98,11 +101,12 @@ StatusCode MuonTrackMomRec::finalize  ()
 StatusCode MuonTrackMomRec::recMomentum(MuonTrack* track, 
                                         LHCb::Track* lbtrack)
 {
-  static bool BdlwasInit=false;
-  if (!BdlwasInit) {
+
+  if (!m_BdlwasInit) {
     initBdl();
-    BdlwasInit=true;
+    m_BdlwasInit=true;
   }
+
   StatusCode sc =  StatusCode::SUCCESS;
   double Zfirst = m_muonDetector->getStationZ(0);
   // create a state at the Z of M1

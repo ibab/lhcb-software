@@ -53,5 +53,6 @@ protected:
   double m_zCenter; // Bx field center position in z
   double m_bdlX;    // integrated Bx field
   int m_FieldPolarity;
+  bool m_BdlwasInit; // flag to see if B field was initialized
 };
 #endif // COMPONENT_MUONTRACKMOMREC_H

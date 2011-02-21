@@ -9,6 +9,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Michel De Cian
+ - Changed static variable to member variable in MuonTrackMomRec, to allow multiple instances of the tool to work independently
+
 !======================== MuonTrackRec v3r4 2010-06-21 ======================
 
 ! 2010-06-15 - GG
