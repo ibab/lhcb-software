@@ -12,16 +12,22 @@ __date__ = '02/10/2009'
 __version__ = '$Revision: 1.4 $'
 
 # limit what we get with from Bs2JpsiPhi import *
-__all__ = ('name', 'Phi2KK', 'LooseJpsi2MuMu', 'Jpsi2MuMu', 'Bs2Jpsi', 'SeqBs2JpsiPhi')
+__all__ = ('name',
+           'Phi2KK',
+           'LooseJpsi2MuMu',
+           'Jpsi2MuMu',
+           'Bs2Jpsi',
+           'SeqBs2JpsiPhi')
+
 import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from GaudiConfUtils import ConfigurableGenerators
+from Configurables import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, SelectionSequence
+from StandardParticles import StdLooseMuons, StdLooseKaons
 
-# loose muons Selection
-_muons = DataOnDemand(Location = 'Phys/StdLooseMuons')
 # J/Psi configurable
-_jpsi2mumu = CombineParticles("Jpsi2MuMu")
+_jpsi2mumu = ConfigurableGenerators.CombineParticles()
 _jpsi2mumu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
 _jpsi2mumu.CombinationCut = "ADAMASS('J/psi(1S)')<30*MeV"
 _jpsi2mumu.MotherCut = "(VFASPF(VCHI2/VDOF)<10)"
@@ -29,29 +35,27 @@ _jpsi2mumu.MotherCut = "(VFASPF(VCHI2/VDOF)<10)"
 # J/Psi -> MuMu Selection
 LooseJpsi2MuMu = Selection("SelLooseJpsi2MuMu", 
                            Algorithm = _jpsi2mumu, 
-                           RequiredSelections = [_muons])
+                           RequiredSelections = [StdLooseMuons])
 
 # Tighter J/Psi -> MuMu filter
-_jpsifilter = FilterDesktop("_JsiFilter",
-                            Code = "(PT>1*GeV) & (P>3*GeV)")
+_jpsifilter = ConfigurableGenerators.FilterDesktop()
+_jpsifilter.Code = "(PT>1*GeV) & (P>3*GeV)"
 
 # Tighter J/Psi -> MuMu Selection
 Jpsi2MuMu = Selection("SelJpsi2MuMu",
                       Algorithm = _jpsifilter,
                       RequiredSelections = [LooseJpsi2MuMu])
 
-# loose kaons
-_stdPhi2KK = DataOnDemand(Location = "Phys/StdLooseKaons")
-
 # Phi configurable
-_phi2kk = CombineParticles("Phi2KK",
-                           DecayDescriptor  =  "phi(1020) -> K+ K-", 
-                           CombinationCut = "ADAMASS('phi(1020)')<50" ,
-                           MotherCut = "(VFASPF(VCHI2/VDOF)<100)")
+_phi2kk = ConfigurableGenerators.CombineParticles()
+_phi2kk.DecayDescriptor  =  "phi(1020) -> K+ K-"
+_phi2kk.CombinationCut = "ADAMASS('phi(1020)')<50"
+_phi2kk.MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
+
 # Phi -> KK Selection
 Phi2KK = Selection("SelPhi2KK",
                    Algorithm = _phi2kk,
-                   RequiredSelections = [_stdPhi2KK])
+                   RequiredSelections = [StdLooseKaons])
 
 # Bs configurable
 _bs2jpsiphi = CombineParticles("Bs2JpsiPhi",
