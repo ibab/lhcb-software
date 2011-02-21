@@ -31,6 +31,8 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
 
   s << " nVeloClusters = " << info( LHCb::RecSummary::nVeloClusters, 0 );
 
+  s << " nTTClusters = " << info( LHCb::RecSummary::nTTClusters, 0 );
+
   s << " nITClusters = " << info( LHCb::RecSummary::nITClusters, 0 );
 
   s << " nOTClusters = " << info( LHCb::RecSummary::nOTClusters, 0 );
