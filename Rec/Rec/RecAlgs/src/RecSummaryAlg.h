@@ -83,6 +83,9 @@ private:
   /// TES location of IT clusters
   std::string m_itLoc;
 
+  /// TES location of TT clusters
+  std::string m_ttLoc;
+
   /// TES location of CaloDigits
   std::string m_spdLoc;
 

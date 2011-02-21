@@ -36,6 +36,8 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_veloLoc    = LHCb::VeloClusterLocation::Default );
   declareProperty( "ITClustersLocation", 
                    m_itLoc      = LHCb::STClusterLocation::ITClusters );
+  declareProperty( "TTClustersLocation", 
+                   m_ttLoc      = LHCb::STClusterLocation::TTClusters );
   declareProperty( "SpdDigitsLocation",
                    m_spdLoc     = LHCb::CaloDigitLocation::Spd );
   declareProperty( "MuonCoordsLocation", 
@@ -125,6 +127,9 @@ StatusCode RecSummaryAlg::execute()
   // Velo
   addSizeSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc ); 
 
+  // TT
+  addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nTTClusters, m_ttLoc ); 
+
   // IT
   addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc ); 
 
@@ -164,7 +169,8 @@ StatusCode RecSummaryAlg::execute()
   }
 
   if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
- 
+  info() << *summary << endmsg; 
+  
   return StatusCode::SUCCESS;
 }
 
