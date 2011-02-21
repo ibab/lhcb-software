@@ -169,8 +169,7 @@ StatusCode RecSummaryAlg::execute()
   }
 
   if ( msgLevel(MSG::DEBUG) ) { debug() << *summary << endmsg; }
-  info() << *summary << endmsg; 
-  
+
   return StatusCode::SUCCESS;
 }
 
