@@ -16,7 +16,7 @@ __all__ = ('StrippingB2hhLTUnbiasedConf',
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 

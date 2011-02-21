@@ -8,6 +8,7 @@
  - Changed cut structure in StrippingB2XGamma.
 
 ! 2011-02-21 - Juan Palacios
+ - python/StrippingSelections/StrippingB2nbody.py
  - python/StrippingSelections/StrippingBu2LLK.py
  - python/StrippingSelections/StrippingB2DMuNuX.py
  - python/StrippingSelections/StrippingB2DX.py
