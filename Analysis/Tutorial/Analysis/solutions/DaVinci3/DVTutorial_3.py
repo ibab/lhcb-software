@@ -31,7 +31,7 @@ tutorialseq.Members += [ jpsi2mumu ]
 # 2) Add the Phi
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
-phi2kk.InputLocations = [ "Phys/StdLooseKaons/Particles" ]
+phi2kk.Inputs = [ "Phys/StdLooseKaons/Particles" ]
 phi2kk.MassWindow = 50*MeV 
 phi2kk.Particle =  "phi(1020)" 
 phi2kk.MaxChi2 = 20 
