@@ -288,7 +288,7 @@ def make_tar(pname, pversion, binary=''):
 # DBASE and PARAM package dependencies are found using 'cmt show uses'
 
     tmpdir = TempDir(prefix="mkLHCbtar")
-    dephtml = os.path.join(tmpdir, PACK + '_' + pversion + '.html')
+    dephtml = os.path.join(tmpdir.getName(), PACK + '_' + pversion + '.html')
     dep = open(dephtml, 'w')
 
     dep.write('<MENU><LI>\n')

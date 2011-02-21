@@ -1,3 +1,7 @@
+2011-02-21  hubert  <hubert@hphub>
+
+	* scripts/mkLHCbtar: fixed usage of the TempDir class.
+
 2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of v4r0p1
