@@ -25,7 +25,7 @@ from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
 from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedConf
 
-from StrippingSelections.StrippingB2DX import B2DXLines
+#from StrippingSelections.StrippingB2DX import B2DXLines
 
 from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf, StrippingB2D3HNominal, StrippingB2D3HLoose
 
@@ -36,7 +36,7 @@ stream = StrippingStream("Bhadron")
 MyStrippingBs2PhiPhiConf =  StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiPhiConf.config_default )
 stream.appendLines( MyStrippingBs2PhiPhiConf.lines )
 
-stream.appendLines( Hb2Charged2BodyLines().lines() )
+#stream.appendLines( Hb2Charged2BodyLines().lines() )
 
 
 stream.appendLines( [ 
@@ -57,7 +57,7 @@ stream.appendLines( [
 #                        StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
 		    ] )
 
-stream.appendLines( B2DXLines().lines ) # B2DX lines with default cuts
+#stream.appendLines( B2DXLines().lines ) # B2DX lines with default cuts
 #stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
 #stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
 #stream.appendLines( B2twobody_promptLine() )

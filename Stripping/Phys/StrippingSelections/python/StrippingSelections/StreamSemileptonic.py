@@ -41,9 +41,9 @@ stream.appendLines( [
 
 from StrippingSelections import StrippingB0q2DplusMuX #B0q2DplusMuXAllLinesConf, confdict
 
-confB0q2DplusMuX = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict)
+#confB0q2DplusMuX = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict)
 
-stream.appendLines( confB0q2DplusMuX.Lines ) #StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
+#stream.appendLines( confB0q2DplusMuX.Lines ) #StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
 
 # Lines from S.Vecchi # 04-10-2010
 from StrippingSelections import StrippingBd2DstarMuNu 

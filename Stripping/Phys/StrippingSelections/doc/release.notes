@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-21 - Juan Palacios
+ - python/StrippingSelections/StreamSemileptonic.py
+ - python/StrippingSelections/StreamBhadron.py
+  . Remove new stripping13 compliant lines, as these don't build by default.
+    Need to fully update the tests once there's a configuration that works.
+
 ! 2011-02-17 - Liming Zhang
  - Updated StrippingB2DMuNuX.py to the new framework
  - Moved Bs->J/psi f0 line into StrippingB2JpsiXforBeta_s.py
