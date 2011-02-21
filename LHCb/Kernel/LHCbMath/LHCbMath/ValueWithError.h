@@ -53,6 +53,12 @@ namespace Gaudi
        *  @param pair_  (value,error)-pair 
        */
       ValueWithError ( const std::pair<double,double>& pair_ ) ;
+      /** constructor from string representation 
+       *  - ( value +- error ) 
+       *  - ( value  , error ) 
+       *  - ( value  ; error ) 
+       */
+      ValueWithError ( const std::string& value ) ;
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================

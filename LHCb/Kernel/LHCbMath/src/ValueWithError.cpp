@@ -13,6 +13,7 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Parsers.h"
 #include "GaudiKernel/Lomont.h"
+#include "GaudiKernel/GaudiException.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -45,6 +46,19 @@ Gaudi::Math::ValueWithError::ValueWithError
   , m_cov2  () 
 {
   setError ( value.second ) ;
+}
+// ============================================================================
+// constructor from textual representation 
+// ============================================================================
+Gaudi::Math::ValueWithError::ValueWithError
+( const std::string& value ) 
+  : m_value () 
+  , m_cov2  () 
+{
+  StatusCode sc = Gaudi::Parsers::parse ( *this , value ) ;
+  if ( sc.isFailure() ) 
+  { throw GaudiException ( "Unable to parse ValueWithError: '" + value + "'" ,
+                           "Gaudi::Math" , sc ) ; }
 }
 // ============================================================================
 // set the error 
