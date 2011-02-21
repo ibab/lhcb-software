@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v8r0 2011-02-21 ==================
+
 ! 2011-02-21 - Juan Palacios
  - StdLooseKs, StdVeryLooseD02HH, StdLooseDstarWithD2HH, StdLooseD02HH
   . Bug fix: locations map was being over-written, keeping info for last 
