@@ -2,7 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
-!========================== Moore v11r6p1 2011-02-19 ===================
+!========================== Moore v11r6p1 2011-02-21 ===================
+! 2011-02-21 - Gerhard Raven
+ - pick up Online v4r47 when Online
+
 !========================== Moore v11r6 2011-02-17 ===================
 ! 2011-02-17 - Gerhard Raven
  - add Markus changes to support CheckPointing
