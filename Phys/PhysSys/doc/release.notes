@@ -5,8 +5,6 @@ Purpose             : LHCb physics packages
 
 </PRE><H1><A NAME=v12r0>2011-02-20 Phys v12r0 </A></H1><PRE>
 
-- add Phys/NeuroBayesTools for using NeuroBayes Networks in Trigger and offline
-
 ###############################################################################
 #                                 PHYS v12r0                                  #
 ###############################################################################
@@ -27,7 +25,8 @@ Purpose             : LHCb physics packages
    - New selection PhysSelPython.Wrappers.PassThroughSelection, takes single
      RequiredSelection, keeps it's outputLocation().
    - EventSelection requires name, config generator. Produces no output.
-
+  * New package Phys/NeuroBayesTools 
+   - For using NeuroBayes Networks in Trigger and offline
 
 </PRE><H1><A NAME=v11r0>2011-02-07 Phys v11r0 </A></H1><PRE>
 
