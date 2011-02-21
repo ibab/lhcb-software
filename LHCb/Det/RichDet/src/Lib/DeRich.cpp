@@ -92,6 +92,7 @@ void DeRich::loadNominalHPDQuantumEff() const
 {
   // Delete current, if present, just to be safe
   delete m_nominalHPDQuantumEff;
+  m_nominalHPDQuantumEff = NULL;
 
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
@@ -115,7 +116,8 @@ void DeRich::loadNominalHPDQuantumEff() const
   SmartDataPtr<TabulatedProperty> tabQE ( dataSvc(), HPD_QETabPropLoc );
   if ( !tabQE )
   {
-    error() << "No info on HPD Quantum Efficiency" << endmsg;
+    throw GaudiException( "No information on HPD Quantum Efficiency",
+                          "DeRich", StatusCode::FAILURE );
   }
   else
   {
