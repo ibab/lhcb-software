@@ -403,7 +403,7 @@ StatusCode Hlt2SelDV::execute() {
       indets.push_back( indet ); 
     }
     // Apply the material cut
-    if (m_RemVtxFromDet !=0 and p->info(51,-1000.)>0) continue;
+    if (m_RemVtxFromDet !=0 && p->info(51,-1000.)>0) continue;
     //The only way to have the candidates saved in the Stripping is to have 
     //  the latest algo in the sequence put them in the TES.
     //As they are already saved by a preselection algorithm, 

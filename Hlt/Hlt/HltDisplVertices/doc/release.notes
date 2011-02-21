@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Gerhard Raven
+ - windows does not like 'and' as a keyword
+
 !========================== HltDisplVertices v3r2 2011-02-16 ===================
 ! 2011-02-14 - Victor Coco
  - Min angle and min Flight distance in Hlt2SelDv
