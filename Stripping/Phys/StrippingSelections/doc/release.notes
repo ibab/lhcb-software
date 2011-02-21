@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-21 - Albert Puig
+ - Changed cut structure in StrippingB2XGamma.
+
 ! 2011-02-21 - Juan Palacios
  - python/StrippingSelections/StrippingBu2LLK.py
  - python/StrippingSelections/StrippingB2DMuNuX.py

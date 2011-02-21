@@ -102,7 +102,7 @@ class StrippingB2XGammaConf(LineBuilder):
     def __init__(self, name, config):
         LineBuilder.__init__(self, name, config)
         # Selection of B daughters: photon, phi and kstar
-        self.selPhoton = makePhoton('Gamma for %s' % name,
+        self.selPhoton = makePhoton('GammaFor%s' % name,
                                     config['photonPT'])
         self.selPhi2KK = makePhi2KK('PhiFor%s' % name,
                                     config['TrIPchi2Phi'],
@@ -120,6 +120,12 @@ class StrippingB2XGammaConf(LineBuilder):
                                     config['KstMassWinSB'],
                                     config['KstVCHI2'])
         # Bs->Phi Gamma selections
+        self.selBs2PhiGamma = makeBs2PhiGamma('Bs2PhiGammaFor%s' % name,
+                                              self.selPhi2KK,
+                                              self.selPhoton,
+                                              config['BsDirAngle'],
+                                              config['BsPVIPchi2'],
+                                              config['BsMassWin'])
         self.selBs2PhiGammaWideBMass = makeBs2PhiGamma('Bs2PhiGammaWideBMassFor%s' % name,
                                                        self.selPhi2KK,
                                                        self.selPhoton,
@@ -132,99 +138,80 @@ class StrippingB2XGammaConf(LineBuilder):
                                                        config['BDirAngleMoni'],
                                                        config['BsPVIPchi2'],
                                                        config['BsMassWin'])
-        self.selBs2PhiGamma = makeBs2PhiGamma('Bs2PhiGammaFor%s' % name,
-                                              self.selPhi2KK,
-                                              self.selPhoton,
-                                              config['BsDirAngle'],
-                                              config['BsPVIPchi2'],
-                                              config['BsMassWin'])
         # Bd->Kst Gamma selections
-        self.selBd2KstGammaWideBMass = makeBd2KstGamma('Bd2KstGammaWideBMassFor%s' % name,
-                                                       self.selKst,
-                                                       self.selPhoton,
-                                                       config['B0DirAngle'],
-                                                       config['B0PVIPchi2'],
-                                                       config['BMassWinSB']
-                                                       )
-        self.selBd2KstGammaWideKstMass = makeBd2KstGamma('Bd2KstGammaWideKstMassFor%s' % name,
-                                                         self.selKstWide,
-                                                         self.selPhoton,
-                                                         config['B0DirAngle'],
-                                                         config['B0PVIPchi2'],
-                                                         config['B0MassWin']
-                                                         )
-        self.selBd2KstGammaLooseDira = makeBd2KstGamma('Bd2KstGammaLooseDiraFor%s' % name,
-                                                        self.selKst,
-                                                        self.selPhoton,
-                                                        config['BDirAngleMoni'],
-                                                        config['B0PVIPchi2'],
-                                                        config['B0MassWin']
-                                                        )
-        self.selBd2KstGammaWide = makeBd2KstGamma('Bd2KstGammaWideFor%s' % name,
-                                                  self.selKstWide,
-                                                  self.selPhoton,
-                                                  config['BDirAngleMoni'],
-                                                  config['B0PVIPchi2'],
-                                                  config['BMassWinSB']
-                                                  )
         self.selBd2KstGamma = makeBd2KstGamma('Bd2KstGammaFor%s' % name,
                                               self.selKst,
                                               self.selPhoton,
                                               config['B0DirAngle'],
                                               config['B0PVIPchi2'],
-                                              config['B0MassWin']
-                                              )
+                                              config['B0MassWin'])
+        self.selBd2KstGammaWideBMass = makeBd2KstGamma('Bd2KstGammaWideBMassFor%s' % name,
+                                                       self.selKst,
+                                                       self.selPhoton,
+                                                       config['B0DirAngle'],
+                                                       config['B0PVIPchi2'],
+                                                       config['BMassWinSB'])
+        self.selBd2KstGammaWideKstMass = makeBd2KstGamma('Bd2KstGammaWideKstMassFor%s' % name,
+                                                         self.selKstWide,
+                                                         self.selPhoton,
+                                                         config['B0DirAngle'],
+                                                         config['B0PVIPchi2'],
+                                                         config['B0MassWin'])
+        self.selBd2KstGammaLooseDira = makeBd2KstGamma('Bd2KstGammaLooseDiraFor%s' % name,
+                                                        self.selKst,
+                                                        self.selPhoton,
+                                                        config['BDirAngleMoni'],
+                                                        config['B0PVIPchi2'],
+                                                        config['B0MassWin'])
+        self.selBd2KstGammaWide = makeBd2KstGamma('Bd2KstGammaWideFor%s' % name,
+                                                  self.selKstWide,
+                                                  self.selPhoton,
+                                                  config['BDirAngleMoni'],
+                                                  config['B0PVIPchi2'],
+                                                  config['BMassWinSB'])
         # Create and register stripping lines
         # Phi Gamma lines
+        self.Bs2PhiGammaLine = StrippingLine("%sStripping_Bs2PhiGamma" % name,
+                                             prescale=config['Bs2PhiGammaPreScale'],
+                                             postscale=config['Bs2PhiGammaPostScale'],
+                                             selection=self.selBs2PhiGamma)
+        self.registerLine(self.Bs2PhiGammaLine)
         self.Bs2PhiGammaWideBMassLine = StrippingLine("%sStripping_Bs2PhiGammaWideBMass" % name,
                                                       prescale=config['Bs2PhiGammaWideBMassPreScale'],
                                                       postscale=config['Bs2PhiGammaWideBMassPostScale'],
-                                                      selection=self.selBs2PhiGammaWideBMass
-                                                      )
+                                                      selection=self.selBs2PhiGammaWideBMass)
         self.registerLine(self.Bs2PhiGammaWideBMassLine)
         self.Bs2PhiGammaLooseDiraLine = StrippingLine("%sStripping_Bs2PhiGammaLooseDira" % name,
                                                       prescale=config['Bs2PhiGammaLooseDiraPreScale'],
                                                       postscale=config['Bs2PhiGammaLooseDiraPostScale'],
-                                                      selection=self.selBs2PhiGammaLooseDira
-                                                      )
+                                                      selection=self.selBs2PhiGammaLooseDira)
         self.registerLine(self.Bs2PhiGammaLooseDiraLine)
-        self.Bs2PhiGammaLine = StrippingLine("%sStripping_Bs2PhiGamma" % name,
-                                             prescale=config['Bs2PhiGammaPreScale'],
-                                             postscale=config['Bs2PhiGammaPostScale'],
-                                             selection=self.selBs2PhiGamma
-                                             )
-        self.registerLine(self.Bs2PhiGammaLine)
         # K* Gamma lines
+        self.Bd2KstGammaLine = StrippingLine("%sStripping_Bd2KstGamma" % name,
+                                             prescale=config['Bd2KstGammaPreScale'],
+                                             postscale=config['Bd2KstGammaPostScale'],
+                                             selection=self.selBd2KstGamma)
+        self.registerLine(self.Bd2KstGammaLine)
         self.Bd2KstGammaWideBMassLine = StrippingLine("%sStripping_Bd2KstGammaWideBMass" % name,
                                                       prescale=config['Bd2KstGammaWideBMassPreScale'],
                                                       postscale=config['Bd2KstGammaWideBMassPostScale'],
-                                                      selection=self.selBd2KstGammaWideBMass
-                                                      )
+                                                      selection=self.selBd2KstGammaWideBMass)
         self.registerLine(self.Bd2KstGammaWideBMassLine)
         self.Bd2KstGammaWideKstMassLine = StrippingLine("%sStripping_Bd2KstGammaWideKstMass" % name,
                                           prescale=config['Bd2KstGammaWideKstMassPreScale'],
                                           postscale=config['Bd2KstGammaWideKstMassPostScale'],
-                                          selection=self.selBd2KstGammaWideKstMass
-                                          )
+                                          selection=self.selBd2KstGammaWideKstMass)
         self.registerLine(self.Bd2KstGammaWideKstMassLine)
         self.Bd2KstGammaWideLine = StrippingLine("%sStripping_Bd2KstGammaWide" % name,
                                                  prescale=config['Bd2KstGammaWidePreScale'],
                                                  postscale=config['Bd2KstGammaWidePostScale'],
-                                                 selection=self.selBd2KstGammaWide
-                                                 )
+                                                 selection=self.selBd2KstGammaWide)
         self.registerLine(self.Bd2KstGammaWideLine)
         self.Bd2KstGammaLooseDiraLine = StrippingLine("%sStripping_Bd2KstGammaLooseDira" % name,
                                                       prescale=config['Bd2KstGammaLooseDiraPreScale'],
                                                       postscale=config['Bd2KstGammaLooseDiraPostScale'],
-                                                      selection=self.selBd2KstGammaLooseDira
-                                                      )
+                                                      selection=self.selBd2KstGammaLooseDira)
         self.registerLine(self.Bd2KstGammaLooseDiraLine)
-        self.Bd2KstGammaLine = StrippingLine("%sStripping_Bd2KstGamma" % name,
-                                             prescale=config['Bd2KstGammaPreScale'],
-                                             postscale=config['Bd2KstGammaPostScale'],
-                                             selection=self.selBd2KstGamma
-                                             )
-        self.registerLine(self.Bd2KstGammaLine)
         
 def makePhoton(name, photonPT):
     """Create photon Selection object starting from DataOnDemand 'Phys/StdLooseAllPhotons'.
@@ -253,12 +240,10 @@ def makePhi2KK(name, TrIPchi2Phi, TrChi2, PhiMassWin, PhiVCHI2) :
     @return: Selection object
     
     """
-    _cuts = ["(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Phi)s)",
-             "(MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s)",
-             "(ADMASS('phi(1020)') < %(PhiMassWin)s*MeV)",
-             "(VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)"]
-    _code = ' & '.join(_cuts) % locals()
-    _phiFilter = FilterDesktop(Code=_code)
+    _preambulo = ["goodKaon = ((MIPCHI2DV(PRIMARY) > %(TrIPchi2Phi)s) & (TRCHI2DOF < %(TrChi2)s))" % locals(),
+                  "goodPhi = (((VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV))" % locals()]
+    _code = 'goodPhi & CHILDCUT( goodKaon, 1 ) & CHILDCUT( goodKaon, 2 )'
+    _phiFilter = FilterDesktop(Preambulo=_preambulo, Code=_code)
     _stdPhi2KK = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
     return Selection(name, Algorithm=_phiFilter, RequiredSelections=[_stdPhi2KK])
 
@@ -275,14 +260,14 @@ def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
     @return: Selection object
     
     """
-    _cuts = ["(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s)",
-             "(MINTREE(ABSID=='pi-', MIPCHI2DV(PRIMARY))> %(TrIPchi2Kst)s)",
-             "(MINTREE(ABSID=='K+', TRCHI2DOF)< %(TrChi2)s)",
-             "(MINTREE(ABSID=='pi-', TRCHI2DOF)< %(TrChi2)s)",
-             "(VFASPF(VCHI2/VDOF) < %(KstVCHI2)s)",
-             "(ADMASS('K*(892)0') < %(KstMassWin)s*MeV)"]
-    _code = ' & '.join(_cuts) % locals()
-    _kstFilter = FilterDesktop(Code=_code)
+    _preambulo = ["goodTrack = ((MIPCHI2DV(PRIMARY) > %(TrIPchi2Kst)s) & (TRCHI2DOF < %(TrChi2)s))" % locals(),
+                  "goodKstar = (((VFASPF(VCHI2/VDOF) < %(KstVCHI2)s)) & (ADMASS('K*(892)0') < %(KstMassWin)s*MeV))" % locals()]
+    _code = """
+    goodKstar
+    & CHILDCUT('[K*(892)0 -> K+ ^pi-]CC' , goodTrack)
+    & CHILDCUT('[K*(892)0 -> ^K+ pi-]CC' , goodTrack)
+    """
+    _kstFilter = FilterDesktop(Preambulo=_preambulo, Code=_code)
     _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
     return Selection(name, Algorithm=_kstFilter, RequiredSelections=[_stdKst2Kpi])
 
