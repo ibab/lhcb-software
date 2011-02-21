@@ -1,3 +1,10 @@
+2011-02-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py:
+	  - cured a few pylint warnings.
+      - speed up the start of the script by using "/usr/bin/python" instead of "/usr/bin/env python".
+      this prevent the loading of the distributed python.
+
 2011-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: treat the case of ~/cmtuser being a valid or a broken link. If

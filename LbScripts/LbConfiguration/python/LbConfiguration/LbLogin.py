@@ -1,6 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 """ Main script to setup the basic LHCb environment """
-
 
 import sys
 import os
@@ -20,7 +19,6 @@ except NameError :
         _this_file = _filename
     finally :
         _ff.close()
-
 
 _pyconf_dir = os.path.dirname(_this_file)
 _py_dir = os.path.dirname(_pyconf_dir)
@@ -85,24 +83,24 @@ def getLbLoginEnv(optionlist=None):
 #-----------------------------------------------------------------------------------
 # Option callbacks
 
-def _setCMTVersion_cb(option, opt_str, value, parser):
+def _setCMTVersionCb(_option, _opt_str, value, parser):
     if parser.values.cmtvers != value :
         parser.values.use_cache = False
         parser.values.cmtvers = value
 
-def _noPython_cb(option, opt_str, value, parser):
+def _noPythonCb(_option, _opt_str, _value, parser):
     parser.values.get_python = False
     parser.values.use_cache = False
 
-def _userAreaScripts_cb(option, opt_str, value, parser):
+def _userAreaScriptsCb(_option, _opt_str, _value, parser):
     parser.values.user_area_scripts = True
     parser.values.use_cache = False
 
-def _useDev_cb(option, opt_str, value, parser):
+def _useDevCb(_option, _opt_str, _value, parser):
     parser.values.usedevarea = True
     parser.values.use_cache = False
 
-def _pythonVer_cb(option, opt_str, value, parser):
+def _pythonVerCb(_option, _opt_str, value, parser):
     parser.values.pythonvers = value
     parser.values.use_cache = False
 
@@ -164,7 +162,7 @@ class LbLoginScript(SourceScript):
         parser.set_defaults(cmtvers=CMT_version)
         parser.add_option("--cmtvers",
                           action="callback",
-                          callback=_setCMTVersion_cb,
+                          callback=_setCMTVersionCb,
                           type="string",
                           help="set CMT version")
         parser.set_defaults(scriptsvers=None)
@@ -175,18 +173,18 @@ class LbLoginScript(SourceScript):
         parser.add_option("--dev",
                           dest="usedevarea",
                           action="callback",
-                          callback=_useDev_cb,
+                          callback=_useDevCb,
                           help="add the LHCBDEV area for the LbScripts setup [default: %default]")
         parser.set_defaults(pythonvers=None)
         parser.add_option("--python-version",
                           dest="pythonvers",
                           action="callback",
-                          callback=_pythonVer_cb,
+                          callback=_pythonVerCb,
                           help="version of python to be setup [default: %default]")
         parser.set_defaults(get_python=True)
         parser.add_option("--no-python",
                           action="callback",
-                          callback=_noPython_cb,
+                          callback=_noPythonCb,
                           help="prevents the python setup")
         parser.set_defaults(sharedarea=None)
         parser.add_option("-s", "--shared",
@@ -227,7 +225,7 @@ class LbLoginScript(SourceScript):
         parser.set_defaults(user_area_scripts=False)
         parser.add_option("--user-area-scripts",
                           action="callback",
-                          callback=_userAreaScripts_cb,
+                          callback=_userAreaScriptsCb,
                           help="Enable the usage of the user release area for the setup of the scripts. Use with care. [default: %default]")
         parser.set_defaults(use_cmtextratags=False)
         parser.add_option("--dont-use-cmtextratags",
@@ -589,7 +587,7 @@ class LbLoginScript(SourceScript):
 
         if sys.platform != "win32" and self.targetShell() == "sh" and ev.has_key("HOME"):
             hprof = os.path.join(ev["HOME"], ".bash_profile")
-            sprof = os.path.join("/etc","skel",".bash_profile")
+            sprof = os.path.join("/etc", "skel", ".bash_profile")
             hlist = []
             hlist.append(hprof)
             hlist.append(os.path.join(ev["HOME"], ".bash_login"))
@@ -599,7 +597,7 @@ class LbLoginScript(SourceScript):
                     shutil.copy(sprof, hprof)
                     log.warning("Copying %s to %s" % (sprof, hprof))
             hbrc = os.path.join(ev["HOME"], ".bashrc")
-            sbrc = os.path.join("/etc","skel",".bashrc")
+            sbrc = os.path.join("/etc", "skel", ".bashrc")
             if not os.path.exists(hbrc) :
                 if os.path.exists(sbrc) :
                     shutil.copy(sbrc, hbrc)
@@ -629,16 +627,14 @@ class LbLoginScript(SourceScript):
 
             rename_cmtuser = False
             if os.path.exists(opts.userarea) : # is a file, a directory or a valid link
-                if os.path.isfile(opts.userarea) :
+                if os.path.isfile(opts.userarea) : # is a file or a link pointing to a file
                     log.warning("%s is a file"  % opts.userarea)
                     rename_cmtuser = True
                     newdir = True
-                elif os.path.islink(opts.userarea) :
-                    log.debug("%s is a link" % opts.userarea)
-                else :
+                else : # is a directory or a link pointing to a directory. Nothing to do
                     log.debug("%s is a directory" % opts.userarea)
             else : # doesn't exist or is an invalid link
-                if os.path.islink(opts.userarea) :
+                if os.path.islink(opts.userarea) : # broken link
                     log.warning("%s is a broken link"  % opts.userarea)
                     rename_cmtuser = True
                 newdir = True
@@ -947,7 +943,7 @@ class LbLoginScript(SourceScript):
         # at the destruction of the instance
         return self.copyEnv()
 
-    def Manifest(self, debug=False):
+    def manifest(self, debug=False):
         ev = self.Environment()
         opts = self.options
         if opts.log_level != "CRITICAL" :
@@ -984,7 +980,7 @@ class LbLoginScript(SourceScript):
                 debug = True
 
         self.setEnv(debug)
-        self.Manifest(debug)
+        self.manifest(debug)
 
         self.flush()
 
