@@ -35,6 +35,9 @@ use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 use TisTosTobbing		v6r5	 Phys	 # Tomasz Skwarnicki
 
 #===================================================================
+use NeuroBayesTools             v1r0     Phys    # Ulrich Kerzel
+
+#===================================================================
 # Temporary MC stuff.
 use DaVinciMCKernel v4r2p1 Phys
 
