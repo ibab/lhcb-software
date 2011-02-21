@@ -18,7 +18,7 @@ class Muons_draft2011 :
 
         lines = [
 
-            #'Hlt2MuonFromHLT1',
+            'Hlt2MuonFromHLT1',
             'Hlt2SingleMuon',
             'Hlt2SingleMuonHighPT',
             'Hlt2SingleMuonLowPT',
@@ -48,9 +48,9 @@ class Muons_draft2011 :
             'Hlt2DiMuonDY4',
 
             # control rate via flight distance chi2, sum IP chi2 cuts - avoid PT cuts
-            'Hlt2MuTrack1',
-            'Hlt2MuTrack2',
-            'Hlt2MuTrack3',
+            #'Hlt2MuTrack1',
+            #'Hlt2MuTrack2',
+            #'Hlt2MuTrack3',
              
             'Hlt2Dst2PiD02MuMu',         
             #'Hlt2Dst2PiD02EMu', 
@@ -109,7 +109,7 @@ class Muons_draft2011 :
             'SingleMuonPt'         : 1300      # MeV
             #,'SingleMuonIP'        : 0.11     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
-            ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0001
+            ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0
                               ,'Hlt2SingleMuon'        : 0.2 
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               }
