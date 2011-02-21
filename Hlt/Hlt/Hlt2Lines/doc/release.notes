@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Gerhard Raven
+ - fix use of Hlt2UnfittedForwardTracking in Hlt2CharmHadD02HHKsLines...
+
 ! 2011-02-21 - Alex Shires
  - updated Hlt1TOS code to be configurable and changed corrected mass functor
  - removed L0 TOS code to avoid confusion / incorrect implementation
