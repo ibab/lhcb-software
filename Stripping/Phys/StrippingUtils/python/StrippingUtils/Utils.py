@@ -102,9 +102,7 @@ class MasterLineBuilder(LineBuilder):
     """
     Configure more than one line builder from the same class at once
     """
-    
-    __slave_builders__ = {}
-    
+        
     def __init__(self,
                  name,
                  config,
@@ -112,6 +110,7 @@ class MasterLineBuilder(LineBuilder):
         """
         config should be a dictionary or a map {SlaveSuffix: config_slave}
         """
+        self.__slave_builders__={}
         self._config = config
         self._name = name
         
@@ -119,7 +118,7 @@ class MasterLineBuilder(LineBuilder):
             raise TypeError, "The slave class must inherit from a LineBuilder"
         
         self.__configuration_keys__=SlaveBuilderClass.__configuration_keys__
-
+        
         #check all the configs
         for slaveLine in config.keys():
             try:
