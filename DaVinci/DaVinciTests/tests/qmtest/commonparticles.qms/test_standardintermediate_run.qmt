@@ -19,7 +19,7 @@ DaVinciInitAlg                                              SUCCESS Number of co
  | "Events"                                        |       500 |        500 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id='Events')
 findReferenceBlock("""
-CountParticles                                              SUCCESS Number of counters : 45
+CountParticles                                              SUCCESS Number of counters : 55
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# Phys/StdLTUnbiasedJpsi2MuMu"                 |       500 |          7 |   0.014000 |    0.11749 |      0.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
