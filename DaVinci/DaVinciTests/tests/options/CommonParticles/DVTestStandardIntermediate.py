@@ -21,10 +21,10 @@ Locations = []
 for a,b in StandardIntermediate.locations.iteritems():
     print "DVTestCommonParticles adding location", a
     List.append(b)                      # ist of algorithms
-    Locations.append(a.split('/')[1])   # whatever comes after Phys/
+    Locations.append(a)
 
 from Configurables import CountParticles
-CP = CountParticles(InputLocations = Locations)
+CP = CountParticles(Inputs = Locations)
 ##############################################################################
 #
 # Histograms

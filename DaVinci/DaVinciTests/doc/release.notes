@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Juan Palacios
+ - CommonParticles tests
+  . Adapt to new output locations from CommonParticles module.
+
 ! 2011-02-17 - Juan Palacios
  - tests/options 
   . Options involving DataOnDemand or AutomaticData. These classes now need 
