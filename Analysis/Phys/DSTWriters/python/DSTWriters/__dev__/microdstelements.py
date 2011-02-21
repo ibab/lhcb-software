@@ -10,6 +10,7 @@ __author__  = 'Juan Palacios juan.palacios@nikhef.nl'
 __all__ = ( 'CloneRecHeader',
             'CloneRecSummary',
             'CloneODIN',
+            'GlobalEventCounters',
             'CloneParticleTrees',
             'ClonePVs',
             'CloneMCInfo',
@@ -52,6 +53,20 @@ class CloneODIN(MicroDSTElement) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
+class GlobalEventCounters(MicroDSTElement) :
+
+    def __init__(self, branch='', configGenerator=None) :
+        MicroDSTElement.__init__(self, branch)
+        if not configGenerator :
+            raise Exception('GlobalEventCounters configGenerator NoneType')
+        self.configGenerator = configGenerator
+
+    def __call__(self, sel) :
+        cloner = self.configGenerator(self.personaliseName(sel,
+                                                           'GlobalEventCounters'))
+        cloner.Location = self.branch + "/GlobalEventCounters"
+        return [cloner]
+    
 class CloneParticleTrees(MicroDSTElement) :
 
     def __init__(self, branch='', copyProtoParticles = True) :

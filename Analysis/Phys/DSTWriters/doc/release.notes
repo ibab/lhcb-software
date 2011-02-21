@@ -4,7 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
-! ======================== DSTWriters v2r0 2011-02-20 =======================
+! ======================== DSTWriters v2r0 2011-02-21 =======================
+
+! 2011-02-21 - Juan Palacios
+ - Add DSTWriters.__dev__.microdstelements.GlobalEventCounters
 
 ! 2011-02-10 - Juan Palacios
  - SelectionSequence.algos -> SelectionSequence.algorithms()

@@ -17,6 +17,7 @@ from streamconf import OutputStreamConf
 from microdstelements import  (CloneRecHeader,
                                CloneRecSummary,
                                CloneODIN,
+                               GlobalEventCounters,
                                ClonePVs,
                                CloneParticleTrees,
                                ClonePVRelations,
@@ -26,10 +27,24 @@ from microdstelements import  (CloneRecHeader,
                                CloneLHCbIDs,
                                CloneRawBanks)
 
+from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
+_gecConfig = CounterAlg(Preambulo = ["from LoKiTracks.decorators import *"],
+                        Variables = {
+    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits' )          " ,
+    "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO ) " ,
+    "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG ) " ,
+    "nMuon"         : "CONTAINS ( 'Rec/Track/Muon' ) "          ,
+    "nOT"           : "CONTAINS ( 'Raw/OT/Times'    )"          ,
+    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters' )"          ,
+    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters' )"          ,
+    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters' )"
+    })
+
 def microDSTElements() :
     return [CloneRecHeader(),
             CloneRecSummary(),
             CloneODIN(),
+            GlobalEventCounters(configGenerator=_gecConfig),
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),
             ClonePVRelations("Particle2VertexRelations",True)]
@@ -44,6 +59,7 @@ def stripMicroDSTElements() :
     return [CloneRecHeader(),
             CloneRecSummary(),
             CloneODIN(),
+            GlobalEventCounters(configGenerator=_gecConfig),
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),
             ClonePVRelations("Particle2VertexRelations", True),
