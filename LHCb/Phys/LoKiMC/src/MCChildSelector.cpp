@@ -35,7 +35,8 @@ namespace
 { 
   // ==========================================================================
   /// invalid decay
-  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid       s_INVALID        ;
+  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid       s_INVALID =
+        Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid();
   /// "None"-selector
   const LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant s_NONE ( false ) ;
   /// "Factory"

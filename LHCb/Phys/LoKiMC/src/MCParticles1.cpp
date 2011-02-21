@@ -29,7 +29,8 @@ namespace
 { 
   // ==========================================================================
   /// invalid decay
-  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid     s_TREE ;
+  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid     s_TREE =
+        Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid();
   /// "Factory"
   const std::string  s_FACTORY = "LoKi::MCDecay" ;
   // ==========================================================================

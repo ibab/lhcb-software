@@ -29,6 +29,13 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+    #ifdef __INTEL_COMPILER
+      #pragma warning(disable:854)
+      #pragma warning(push)
+    #endif
     // ========================================================================
     /** Minimum from 2 functions 
      *  
@@ -365,6 +372,10 @@ namespace LoKi
      *  @date 2011-02-14
      */
     const LoKi::MCVertices::Key                                        MCVKEY ;
+
+    #ifdef __INTEL_COMPILER
+      #pragma warning(pop) // End disable ICC warning #854
+    #endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================

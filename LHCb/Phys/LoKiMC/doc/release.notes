@@ -15,6 +15,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-02-21 - Marco Cattaneo
+ - Suppress Intel compiler warnings about missing default constructor
+   In this case the compiler generated constructor is fine, since there are
+   no member data to be initialised 
+
 ! 2011-02-20 - Vanya Belyaev
 
  - undo ICC-fixed 
