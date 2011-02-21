@@ -32,7 +32,7 @@ FilterMuonsName = "FilterMuons"
 FilterMuons = FilterDesktop(FilterMuonsName)
 FilterMuons.OutputLevel = 4
 
-FilterMuons.InputLocations = [ "StdLooseMuons" ]
+FilterMuons.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 FilterMuons.Code = "ALL"
 #FilterMuons.Code = "(MIPCHI2DV(PRIMARY) > 4)"
 

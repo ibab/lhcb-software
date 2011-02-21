@@ -25,7 +25,7 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
 tree = PrintDecayTree("PrintFoundBs")
-tree.InputLocations = [ SeqBs2JpsiPhi.outputLocation() ]
+tree.Inputs = [ SeqBs2JpsiPhi.outputLocation() ]
 tree.addTool( PrintDecayTreeTool, name = "PrintDecay" )
 tree.PrintDecay.Information = "Name M P Px Py Pz Pt chi2"
 #######################################################################

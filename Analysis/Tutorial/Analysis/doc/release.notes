@@ -9,6 +9,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Juan Palacios
+ - solutions
+  . Provide complete paths for InputLocations, and use Inputs instead of
+    InputLocations
+ - Increase to v10r0.
+
 !========================== Analysis v9r1 2011-01-24 =================
 
 ! 2011-01-24 - Rob Lambert

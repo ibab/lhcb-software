@@ -21,7 +21,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from Configurables import TutorialAlgorithm
 tutalg = TutorialAlgorithm()
 tutorialseq.Members += [ tutalg ]
-tutalg.InputLocations = [ "StdLooseMuons" ]
+tutalg.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 #######################################################################
 #
 # 3) Configure the application

@@ -22,7 +22,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from Configurables import TutorialAlgorithm, PhysDesktop
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
 tutorialseq.Members += [ jpsi2mumu ]
-jpsi2mumu.InputLocations = [ "StdLooseMuons" ]
+jpsi2mumu.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 from GaudiKernel.SystemOfUnits import MeV
 jpsi2mumu.MassWindow = 30*MeV
 jpsi2mumu.MaxChi2 = 100 

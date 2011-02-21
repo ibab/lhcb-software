@@ -20,7 +20,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import TutorialAlgorithm
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
-jpsi2mumu.InputLocations = [ "StdLooseMuons" ]
+jpsi2mumu.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 from GaudiKernel.SystemOfUnits import MeV
 jpsi2mumu.MassWindow = 30*MeV 
 jpsi2mumu.MaxChi2 = 100 
@@ -31,7 +31,7 @@ tutorialseq.Members += [ jpsi2mumu ]
 # 2) Add the Phi
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
-phi2kk.InputLocations = [ "StdLooseKaons" ]
+phi2kk.InputLocations = [ "Phys/StdLooseKaons/Particles" ]
 phi2kk.MassWindow = 50*MeV 
 phi2kk.Particle =  "phi(1020)" 
 phi2kk.MaxChi2 = 20 

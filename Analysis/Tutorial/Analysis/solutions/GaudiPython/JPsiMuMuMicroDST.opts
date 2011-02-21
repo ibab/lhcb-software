@@ -10,7 +10,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 // J/psi->mumu selection
 //
 TutorialSeq.Members                += { "CombineParticles/JPsiMuMu" };
-JPsiMuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+JPsiMuMu.PhysDesktop.Inputs         = { "Phys/StdLooseMuons/Particles" } ;
 JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu-"; // mandatory
 JPsiMuMu.DaughtersCut               = { "mu-" : "P>100*MeV" };
 JPsiMuMu.CombinationCut             = "ADAMASS('J/psi(1S)')<2*GeV";

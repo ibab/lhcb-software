@@ -20,7 +20,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple("TutorialTree")
 tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
-tuple.InputLocations = [ "Bs2JpsiPhi" ]
+tuple.Inputs = [ "Phys/Bs2JpsiPhi/Particles" ]
 tuple.ToolList +=  [
     "TupleToolMCTruth",
     "TupleToolMCBackgroundInfo",

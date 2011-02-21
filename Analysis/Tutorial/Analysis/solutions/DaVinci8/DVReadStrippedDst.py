@@ -48,7 +48,7 @@ tuple.ToolList +=  [
     , "TupleToolPropertime"
     ]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
-tuple.InputLocations = [ JpsiSeq.outputLocation() ]
+tuple.Inputs = [ JpsiSeq.outputLocation() ]
 tuple.addTool(TupleToolTISTOS)
 tuple.TupleToolTISTOS.TriggerList = [ "Hlt2DiMuonUnbiasedJPsiDecision" ]
 tuple.TupleToolTISTOS.VerboseHlt2 = True

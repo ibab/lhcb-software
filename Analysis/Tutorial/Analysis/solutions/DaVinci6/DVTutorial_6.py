@@ -21,7 +21,7 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple() 
-tuple.InputLocations = [ SeqBs2JpsiPhi.outputLocation() ]
+tuple.Inputs = [ SeqBs2JpsiPhi.outputLocation() ]
 tuple.ToolList +=  [
 #      "TupleToolTrigger"
      "TupleToolMCTruth"
