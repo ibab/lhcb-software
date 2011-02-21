@@ -4,6 +4,11 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-21 - Marco Cattaneo
+ - Suppress Intel compiler warnings about missing default constructor
+   In this case the compiler generated constructor is fine, since there are
+   no member data to be initialised 
+
 !========================= LoKiHlt v3r4 2011-01-31 =========================
 ! 2011-01-17 - Marco Cattaneo
  - Fix ICC remarks and warnings

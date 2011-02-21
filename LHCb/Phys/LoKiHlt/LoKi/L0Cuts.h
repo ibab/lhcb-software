@@ -14,6 +14,13 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {   
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+    #ifdef __INTEL_COMPILER
+      #pragma warning(disable:854)
+      #pragma warning(push)
+    #endif
     // ========================================================================
     /** @typedef L0_CHANNEL
      *  Accessor to check the channel decision 
@@ -498,6 +505,10 @@ namespace LoKi
      *  @date 2010-01-08
      */
     const LoKi::L0::Valid                                            L0_VALID ;
+
+    #ifdef __INTEL_COMPILER
+      #pragma warning(pop) // End disable ICC warning #854
+    #endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================

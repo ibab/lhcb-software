@@ -19,6 +19,13 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+    #ifdef __INTEL_COMPILER
+      #pragma warning(disable:854)
+      #pragma warning(push)
+    #endif
     // ========================================================================
     /** @typedef HLT_COUNT_ERRORBITS
      *  simple functor to get the error bits for some lines 
@@ -375,6 +382,10 @@ namespace LoKi
      *  @date 2008-09-21
      */
     const LoKi::HLT::Size                                            HLT_SIZE ;
+
+    #ifdef __INTEL_COMPILER
+      #pragma warning(pop) // End disable ICC warning #854
+    #endif
     // ========================================================================
   } // end of namespace LoKi::Cuts 
   // ==========================================================================
