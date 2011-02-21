@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Johannes Albrecht
+ - remove MuNTracks, see T&S meeting Feb 14
+ - include MuonsFromHLT1 with 0 prescale to have 
+   a fast-runchangeable option
+
 !========================== HltSettings v5r5   2011-02-16 ===================
 ! 2011-02-16 - Gerhard Raven
  - follow rename of Hlt1NewMuonLines into Hlt1MuonLines
