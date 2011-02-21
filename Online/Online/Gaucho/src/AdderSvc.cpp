@@ -210,8 +210,10 @@ StatusCode AdderSvc::stop()
 
 StatusCode AdderSvc::finalize()
 {
+  dim_lock();
   if (m_SaveTimer != 0) {delete m_SaveTimer;m_SaveTimer=0;}
   if (m_adder != 0) {delete m_adder;m_adder=0;}
   if (m_EoRadder != 0) {delete m_EoRadder;m_EoRadder=0;}
+  dim_unlock();
   return Service::finalize();
 }

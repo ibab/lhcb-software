@@ -178,6 +178,7 @@ StatusCode MonitorSvc::i_start()
 //  CALLGRIND_START_INSTRUMENTATION
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
+  DimServer::autoStartOff();
   if (m_CntrMgr != 0)
   {
 //    printf("In STARTS Method... Counter Manager present... Closing it...\n");
@@ -186,6 +187,8 @@ StatusCode MonitorSvc::i_start()
   if (m_started)
   {
     this->m_MonSys->start();
+    DimServer::autoStartOn();
+    DimServer::start();
     return StatusCode::SUCCESS;
   }
   if (m_CntrSubSys != 0)
@@ -243,6 +246,8 @@ StatusCode MonitorSvc::i_start()
   }
   this->m_MonSys->List();
   this->m_MonSys->start();
+  DimServer::autoStartOn();
+  DimServer::start();
   m_started = true;
   return StatusCode::SUCCESS;
 }
@@ -270,7 +275,8 @@ StatusCode MonitorSvc::finalize()
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "MonitorSvc Destructor" << endmsg;
 
-  if ( m_incidentSvc ) {
+  if ( m_incidentSvc )
+  {
     m_incidentSvc->removeListener(this);
     m_incidentSvc->release();
     m_incidentSvc = 0;
