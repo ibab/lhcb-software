@@ -5,6 +5,8 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! ====================== Phys/NeuroBayesTool v1r0 2011-02-21==================
+
 ! 2011-02-18 - Ulrich Kerzel
 - use return vaule of Error() 
 
