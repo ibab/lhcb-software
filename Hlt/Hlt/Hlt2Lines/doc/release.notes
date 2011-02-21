@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Alex Shires
+ - updated Hlt1TOS code to be configurable and changed corrected mass functor
+ - removed L0 TOS code to avoid confusion / incorrect implementation
+
 !========================== Hlt2Lines v7r5 2011-02-17 ===================
 ! 2011-02-17 - Michael Williams
  - use Hlt1 TOS (TUS) in Hlt2 topo

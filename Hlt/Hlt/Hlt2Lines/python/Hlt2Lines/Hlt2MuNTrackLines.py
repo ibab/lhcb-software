@@ -54,6 +54,9 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         'ALL_MU_PT_MIN'      : 800.0,   # MeV
         'ALL_TR_PT_MIN'      : 600.0,   # MeV
         'ALL_P_MIN'          : 5000.0,  # MeV
+        #Hlt1Decision
+        'HLT1TOSMUONS'       : True,
+        'HLT1TOSKAONS'       : True,
         # pre- and post-scale values
         'Prescale' : {},
         'Postscale' : {},
@@ -154,9 +157,6 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
     def __filter(self, name, inputSeq, extraCode=None):
         '''Configures filter for all mu + n track lines.'''
         props = self.getProps()
-        
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
 
         pid = "(('mu+'==ABSID) | ('K+'==ABSID) | ('pi+'==ABSID))"
         # cut values
@@ -180,7 +180,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
                 % (pid,props["MAX_PT_MIN"])
         cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' \
                 % (pid,sum_pt_min)
-        cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
+        cuts += '& (in_range(%s*MeV,BPVCORRM,%s*MeV))' \
                 % (mcor_min,props['MCOR_MAX'])
         cuts += '& (SUMTREE(MIPCHI2DV(PRIMARY),%s,0.0) > %s)' \
                 % (pid,sum_ipchi2_min)
@@ -191,66 +191,23 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
         _filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
-                            Code=cuts,Preambulo=preambulo)
+                            Code=cuts)
         return bindMembers(name, inputSeq+[_filter])
 
-
-    def __inputMuonsL0Filter(self, name, inputSeq):
-        '''Filters input muons and requires l0 TOS.'''
-        props = self.getProps()     
-        #configure tistostool
-        from Configurables import DataOnDemandSvc, L0SelReportsMaker, L0DecReportsMaker
-        DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
-        DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )
-        from Configurables import TisTosParticleTagger
-        TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter") 
-        TOSInputMuonsFilter.TriggerTisTosName= "L0TriggerTisTos"
-        TOSInputMuonsFilter.TisTosSpecs = { "L0.*Muon.*Decision%TOS":0 }
-        TOSInputMuonsFilter.ProjectTracksToCalo = False
-        TOSInputMuonsFilter.CaloClustForCharged = False
-        TOSInputMuonsFilter.CaloClustForNeutral = False
-        TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
-        TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
-        #cuts
-        cuts = '(PT > %s*MeV) ' % (props['ALL_MU_PT_MIN'])
-        cuts += '& (P > %s*MeV) ' % (props['ALL_P_MIN'])
-        cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
-        cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
-        #create filter
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop
-        _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
-                            Code=cuts)
-        # require PV3D reconstruction before our cut on IP!
-        from HltTracking.HltPVs import PV3D
-        return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
-
-    def __inputMuonsHlt1Filter(self, name, inputSeq):
-        '''Filters input muons and requires htl1 TOS.'''
-        props = self.getProps()     
+    def __inputTracksHlt1Filter(self, name, inputSeq, line):
+        '''Filters input particles and requires htl1 TOS.'''
         #configure tistostool
         from Configurables import TisTosParticleTagger
-        TOSInputMuonsFilter = TisTosParticleTagger("TOSInputMuonsFilter")
-        TOSInputMuonsFilter.TisTosSpecs = { "Hlt1Track.*Decision%TOS":0 }
-        TOSInputMuonsFilter.ProjectTracksToCalo = False
-        TOSInputMuonsFilter.CaloClustForCharged = False
-        TOSInputMuonsFilter.CaloClustForNeutral = False
-        TOSInputMuonsFilter.TOSFrac = { 4:0.0, 5:0.0 }
-        TOSInputMuonsFilter.InputLocations = [inputSeq[-1].outputSelection() ]
-        #cuts
-        cuts = '(PT > %s*MeV) ' % (props['ALL_MU_PT_MIN'])
-        #equal for all tracks
-        cuts += '& (P > %s*MeV) ' % (props['ALL_P_MIN'])
-        cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % (props['ALL_MIPCHI2DV_MIN'])
-        cuts += '& (TRCHI2DOF < %s)' % (props['ALL_TRCHI2DOF_MAX'])
-        #create filter
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop
-        _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
-                            Code=cuts)
-        # require PV3D reconstruction before our cut on IP!
-        from HltTracking.HltPVs import PV3D
-        return bindMembers(name, [PV3D()]+inputSeq+[_filter,TOSInputMuonsFilter])
+        TOSInputParticlesFilter = TisTosParticleTagger("TOSInputTracksFilter")
+        TOSInputParticlesFilter.TisTosSpecs = { line : 0 }
+        TOSInputParticlesFilter.ProjectTracksToCalo = False
+        TOSInputParticlesFilter.CaloClustForCharged = False
+        TOSInputParticlesFilter.CaloClustForNeutral = False
+        TOSInputParticlesFilter.TOSFrac = { 4:0.0, 5:0.0 }
+        TOSInputParticlesFilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        from HltLine.HltLine import bindMembers
+        return bindMembers(name, inputSeq+[TOSInputParticlesFilter])
+
 
     def __inputParticleFilter(self, name, inputSeq):
         '''Filters input particles for all mu + n track lines.'''
@@ -315,6 +272,16 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
                                     ,[BiKalmanFittedKaons])
         _inputMuons = self.__inputParticleFilter('MuNTrackInputMuons'
                                     ,[BiKalmanFittedMuons])
+        #TOS options
+        hlt1muons = self.getProps()['HLT1TOSMUONS']
+        hlt1kaons = self.getProps()['HLT1TOSKAONS']
+        if hlt1muons:
+           _inputMuons = self.__inputTracksHlt1Filter('MuNTrackHlt1TOSMuons'
+                                    ,[_inputMuons], "Hlt1TrackMuonDecision%TOS" )
+        if hlt1kaons:
+           _inputKaons = self.__inputTracksHlt1Filter('MuNTrackHlt1TOSKaons'
+                                    ,[_inputKaons], "Hlt1Track.*Decision%TOS")
+        #make sequences
         Seqs = self.__buildNBodySeqs('MuNTrack',
                                          _inputMuons, _inputKaons)
         self.__makeLines('MuNTrack',Seqs)        
