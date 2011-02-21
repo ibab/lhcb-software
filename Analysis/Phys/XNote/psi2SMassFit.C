@@ -102,12 +102,12 @@ void psi2SMassFit() {
   mpsi2.setConstant(true);
   RooRealVar lambda("lambda", "lambda",4. , 0., 100);
   //  lambda.setConstant(true);
-   RooRealVar p0("p0","p0",3.25425  , -4., 4.);
+   RooRealVar p0("p0","p0",3.06  , -4., 4.);
      p0.setConstant(true);
-   RooRealVar p1("p1","p1", -0.00848233   , -4., 4.);
+   RooRealVar p1("p1","p1", -0.0077  , -4., 4.);
   
    p1.setConstant(true);
-  RooRealVar p2("p2","p2", 7e-6   , -4., 4.);
+  RooRealVar p2("p2","p2", 6.2e-6   , -4., 4.);
   p2.setConstant(true);
 
   RooDataHist data("data", "dataset", pp , sig_m23_data);
