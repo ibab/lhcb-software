@@ -18,7 +18,7 @@ def test_instantiate_empty_line() :
     assert line.outputLocation() == None
     
 def test_instantiate_from_Selection_object() :
-    selection = AutomaticData(Location = 'Phys/Selection')
+    selection = AutomaticData(Location = 'Phys/Selection/Particles')
     line = StrippingLine('SelectionLine', algos = [selection])
     assert line.name() == 'StrippingSelectionLine'
     assert line.subname() == 'SelectionLine'
@@ -35,7 +35,7 @@ def test_filterMembers() :
     It is necessary to construct a StrippingStream and a StrippingConf
     to test the filterMembers of the line. The line by itself is useless.
     '''
-    selection = AutomaticData(Location = 'Phys/Selection')
+    selection = AutomaticData(Location = 'Phys/Selection/Particles')
     name = 'FilterMembersTest'
     line = StrippingLine('FilterMembersTest', algos = [selection])
     assert line.name() == 'Stripping' + name
