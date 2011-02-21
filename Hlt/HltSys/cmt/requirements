@@ -21,7 +21,7 @@ use HltLuminosity       v2r17   Hlt   # Jaap Panman
 use HltRawData          v2r10   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r0   Hlt   # Patrick Koppenburg
-use HltSettings         v5r5    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r5p1  Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r2    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r7    Hlt   # Gerhard Raven
