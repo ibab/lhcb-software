@@ -84,12 +84,17 @@ StatusCode VeloClusterPosition::initialize()
   m_veloDet=getDet<DeVelo>( DeVeloLocation::Default );
 
   IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
-  mgrSvc->registerCondition(this, m_condPath,
-                            &VeloClusterPosition::i_cacheConditions);
-  StatusCode mgrSvcStatus=mgrSvc->update(this);
-
-  if(mgrSvcStatus.isFailure())
+  SmartDataPtr<Condition> cond(detSvc(), (m_condPath+"/VeloErrorParam"));
+  
+  if(NULL!=cond)
   {
+    
+    mgrSvc->registerCondition(this, m_condPath,
+                              &VeloClusterPosition::i_cacheConditions);
+    StatusCode mgrSvcStatus=mgrSvc->update(this);
+    mgrSvcStatus.ignore();
+
+  }else{    
     
     info()<< " --> Error para condition not found! "<<endmsg;
     info()<< " --> The tool Will use the default values! " <<endmsg;
