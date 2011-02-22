@@ -4,12 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciInterfaces v2r9 2011-02-22 =========================
 ! 2011-02-15 - Vanya Belyaev
- - add exxtend_interfaces* pattern into dictionries 
-
-- cmt/requirements 
-    version increment to v2r9  
-
+ - add extend_interfaces* pattern into dictionries 
 
 !========================= DaVinciInterfaces v2r8 2011-01-31 =========================
 ! 2011-01-24 - Juan Palacios
