@@ -75,9 +75,11 @@ def test_single_constructor_argument_raises(builderType, conf_dict) :
     raises(Exception, builderType, 'SomeCrazyName')
 
 def test_configuration_not_dictlike_raises(builderType, conf_dict) :
+    print 'test_configuration_not_dictlike_raises', builderType.__name__, '...'
     raises(AttributeError, builderType, 'TestBadConfDict', conf_dict)
 
 def test_bad_configuration_raises(builderType, good_conf_dict) :
+    print 'test_bad_configuration_raises', builderType.__name__, '...'
     assert hasattr(good_conf_dict, 'keys')
     assert hasattr(good_conf_dict, '__getitem__')
     bad_conf_dict = deepcopy(good_conf_dict)
@@ -92,8 +94,9 @@ def test_line_location(line, allowEmptyLocation=True) :
     Test that the output location of a line called StrippingXYZ is .../XYZ.
     If allowEmptyLocation = True accept an empty string.
     """
-    if allowEmptyLocation and line.outputLocation() == '' :
-        return
+    if allowEmptyLocation :
+        if not line.outputLocation() or line.outputLocation() =='':
+            return
     assert 'Stripping'+line.outputLocation().split('/')[-2] == line.name()
 
 def test_lines(builder) :

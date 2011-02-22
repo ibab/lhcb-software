@@ -4,7 +4,11 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
-! ===================== StrippingUtils v1r3 2011-02-21 =======================
+! ===================== StrippingUtils v1r3 2011-02-22 =======================
+
+! 2011-02-22 - Juan Palacios
+ - LineBuilderTests
+  . Accept StrippingLines with outputLocation() == None
 
 ! 2011-02-21 - Rob Lambert
  - StrippingUtils.Utils
