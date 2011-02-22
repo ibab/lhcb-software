@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r12 2011-02-22 =========================
 ! 2011-02-18 - Marco Cattaneo
  - In genClasses.py:
    . Remove #pragma directive to suppress ICC remark 177
