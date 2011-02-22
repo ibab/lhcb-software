@@ -138,8 +138,6 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
     }
     if ( foundTheTask ) {
       HistTask myHists( (*itT).location );
-      std::vector<std::string> allHists;
-      myHists.Directory( allHists );
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -153,22 +151,23 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
             dimName.erase( 0, pos+1 );
           }
         }
-        
-        std::cout << "-- Search for DIM name " << dimName << std::endl;
-        if ( std::find( allHists.begin(), allHists.end(), dimName ) != allHists.end() ) {
-          histNames.push_back( dimName );
-          (*itH).setShortName( dimName );
-          std::cout << "  ++ Search for    " << dimName << std::endl;
-        } else {
-          std::cout << "  -- Not Available " << dimName << std::endl;
-          (*itH).setShortName( "" );
-        }
+        (*itH).setShortName( dimName );
+        std::cout << "  ++ Search for    " << dimName << std::endl;
+        histNames.push_back( dimName );
       }
       std::vector<TObject*> results;
       std::cout << "before calling Histos, size " << histNames.size() << std::endl;
       int status = myHists.Histos( histNames, results );
       std::cout << "Load result  = " << status << " result size " << results.size() << std::endl;
-      while ( results.size() < histNames.size() ) results.push_back( 0 );
+      if ( results.size() != histNames.size() ) {
+        std::cout << "*** Some histograms missing: Got " << results.size() << " for " << histNames.size() << std::endl;
+        while ( 0 < results.size() ) {   // Delete all temporary results
+          delete results.back();
+          results.pop_back();
+        }
+        while ( results.size() < histNames.size() ) results.push_back( 0 );
+      }
+      
       unsigned int indx = 0;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
