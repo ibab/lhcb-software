@@ -3,7 +3,7 @@
 # =========================================================================
 
 package MuonDet
-version           v9r4
+version           v9r5
 
 # =============== structure ===============================================
 branches         src cmt doc MuonDet dict
