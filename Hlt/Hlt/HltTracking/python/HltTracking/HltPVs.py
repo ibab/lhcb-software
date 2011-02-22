@@ -36,23 +36,23 @@ __all__ = ( 'PV3D'            # bindMembers instance with algorithms needed to g
 # Import Configurables
 #############################################################################################
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer
 #############################################################################################
 # Configure PV algorithms
 #############################################################################################
-from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
 from HltLine.HltLine import bindMembers
-from HltVertexNames import HltSharedVerticesPrefix
-from HltVertexNames import Hlt3DPrimaryVerticesName,_vertexLocation
-from HltVertexNames import HltGlobalVertexLocation
-
-from Configurables import PatPV3D
-from Configurables import PVOfflineTool, PVSeedTool, LSAdaptPV3DFitter
-from HltReco import MinimalVelo
 
 PV3DSelection = 'PV3D'
 
 def _RecoPV3D():
+    from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
+    from HltVertexNames import HltSharedVerticesPrefix
+    from HltVertexNames import Hlt3DPrimaryVerticesName,_vertexLocation
+    from HltVertexNames import HltGlobalVertexLocation
+    from HltReco import MinimalVelo
+
+    from Configurables import PatPV3D
+    from Configurables import PVOfflineTool, PVSeedTool, LSAdaptPV3DFitter
+
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
     recoPV3D = PatPV3D('HltPVsPV3D' )
@@ -74,14 +74,9 @@ def _RecoPV3D():
     return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D ] )
 
 def PV3D():
+    from HltReco import MinimalVelo
     return bindMembers( "HltPVsPV3D", [ MinimalVelo, _RecoPV3D() ])
 
 ## Symbols for streamer framework
 RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in _RecoPV3D().members() ]
 
-def to_action( symbol ):
-    return symbol.split( '=' )[ 1 ]
-
-## from HltReco import VeloCandidates
-## FullPV3D = "FullPV3D = %s >> execute( %s )" \
-##            % ( to_action( VeloCandidates ), [ m.getFullName() for m in _RecoPV3D().members() ] )

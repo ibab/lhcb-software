@@ -45,16 +45,13 @@ public:
   double match(const LHCb::Track& rzvelo, 
                const LHCb::L0CaloCandidate& tcalo);
 
-protected:
+private:
 
   double match(const LHCb::Track& rzvelo,int matchtype);
   
-protected:
   
   double m_maxXChi2;
   double m_maxYChi2;
-
-protected:
 
   double m_ptkickConstant;
   double m_zKick;
