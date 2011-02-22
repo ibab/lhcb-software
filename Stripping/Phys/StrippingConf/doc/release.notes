@@ -5,6 +5,12 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2011-02-22 - Juan Palacios
+ - StrippingConf.StrippingLine
+  . StrippingLine constructor argument algos only accepts Selection types or
+    Strippingmembers
+ - Increase to v4r0
+
 !========================== StrippingConf v3r13 2011-02-21 ===================
 
 ! 2011-02-21 - Juan Palacios

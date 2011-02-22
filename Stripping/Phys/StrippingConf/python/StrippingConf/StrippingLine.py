@@ -125,12 +125,7 @@ class bindMembers (object) :
             self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
-	if isinstance(line, str) and line.find("Stream") != 0 : 
-    	    print 'WARNING: line', line, 'uses plain Gaudi configurable', alg.name(), '. Consider using Selection instead!'
-        # if not known, blindly copy -- not much else we can do
-        self._members += [ alg ]
-        # try to guess where the output goes...
-        self._getOutputLocation(alg)
+        return self._handleSelectionType(line, sel)
 
     def _handle_SelectionSequence(self, line, alg) :
         print 'WARNING: line', line, 'using SelectionSequence', alg.name(), '. This could be unnecessary. Consider using Selection directly.'
@@ -179,7 +174,9 @@ class bindMembers (object) :
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        return self._default_handler_( line,  alg )
+        self._members += [ alg ]
+        # try to guess where the output goes...
+        self._getOutputLocation(alg)
 
     def __init__( self, line, algos ) :
 
@@ -301,8 +298,8 @@ class StrippingLine(object):
                    L0DU      = None ,   # L0DU predicate
                    HLT       = None ,   # HltDecReports predicate
                    FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
-                   checkPV   = True ,   # Check PV before running algos 
-                   algos     = None ,   # the list of algorithms/members
+                   checkPV   = True ,   # Check PV before running algos
+                   algos     = None ,   # the list of stripping members
                    selection = None ,
                    postscale = 1    ,   # postscale factor
                    MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
