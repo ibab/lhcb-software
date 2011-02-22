@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-22 - Anton Poluektov
+ - python/StrippingSelections/StrippingB2DX.py
+   . Added Bd->D-Kstar+ (Kstar+ -> Kpi0) line
+   . Modified cuts. Retention is 1.3% with Stripping12 test sample. Modified cuts are: 
+     * track chi2 < 3
+     * D DOCA < 0.6
+     * D vertex chi2 < 9
+     * B vertex chi2 < 9
+     * B DIRA > 0.9999
+     * GEC: Nlong < 150 (180 for D2hhh)
+
 ! 2011-02-22 - Liming Zhang
  - Fixed StrippingB2DMuNuX.py to satisfy the new framework
 
