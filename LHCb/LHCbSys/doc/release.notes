@@ -6,6 +6,123 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v32r1>2011-02-24 LHCbSys v32r1</A></H1><PRE>
+This version uses Gaudi v22r1 and LCG_60a
+Production version for 2011 startup
+
+- Packages modified: CaloDAQ v4r21, MDF v3r29, CaloDet v10r10, DDDB v1r41,
+    DetDesc v18r23, DetDescChecks v5r5, MuonDet v9r5, RichDet v16r1, STDet v4r24,
+    VeloDet v13r14, VeloPixDet v1r10, DAQEvent v9r4, EventPacker v2r7,
+    HltEvent v9r2, L0Event v19r2, LinkerEvent v3r7, MCEvent v2r19,
+    PackedEvent v4r5, RecEvent v2r35, RecreatePIDTools v1r3, TrackEvent v5r11,
+    GaudiConf v13r9, GaudiObjDesc v11r12, LHCbAlgs v2r37, LHCbKernel v12r8,
+    LHCbMath v3r24, MCInterfaces v1r13, DaVinciInterfaces v2r9, LoKiCore v10r9,
+    LoKiGen v9r6, LoKiHlt v3r5, LoKiMC v9r5, LoKiNumbers v9r5, RichKernel v7r42,
+    RichRecBase v4r4, TfKernel v2r20, TrackInterfaces v4r19, TrackKernel v1r7
+
+- In CaloDAQ v4r21
+  . CaloDigitFilterTool/Alg : new tool/alg for digit masking and energy offset
+  . CaloDataProvider : fix Spd L0Data decoding
+  . requirements : add dependency on CaloUtils
+
+- In MDF v3r29, v3r28
+  . Fix bug in accessing the (x)rootd protocol.
+
+- In CaloDet v10r10
+  . DeCalorimeter/CellParam : new condition : pileUpOffset
+
+- In DDDB v1r41
+  . Defaults for DQFLAGS db tag are added to DDDBConf configurable for 2011,
+    2010, 2009 and 2008 datatypes.
+
+- In DetDesc v18r23
+  . Add to Material and Mixture classes a new reset() method, that resets the
+    objects back to their default constructor states. 
+    Developmental, so may evolve. Does NOT affect any existing functionality.
+
+- In DetDescChecks v5r5
+  . Added tests 'loaddddb2011.qmt','loaddddb-sim-2011.qmt'.
+
+- In RichDet v16r1
+  . Rework the way the various DeRich objects initialise, moving as much as
+    possible to happen on demand, instead of always being done by default.
+  . Adapt to removal of depreciated RichRadIntersection typedef.
+
+- In STDet v4r24
+  . Add setNoise and setCMNoise in DeSTSector using a strip or STChannelID
+
+- In L0Event v19r2
+  . L0DUBase   : update according to the latest firmware update
+                (new data DiMuonProd + condition number changes)
+  . L0DUCounter : counter base change from 10^3 to 10^6
+  . L0DUReport :
+    o add embedded data value map
+     (useful when data is not available via config smartref)
+    o add L0DU BCID as attribute of L0DUReport
+  . L0DUConfig  : add muon FOIx/y as a configuration attribute
+
+- In RecEvent v2r35
+  . Add TT cluster and Muon information (# Muon Coords in each station and
+    # Muon tracks) to RecSummary object
+
+- In GaudiConf v13r9, v13r8
+  . 'DQFLAGStag' property added to the LHCbApp configurable. Default one is
+    picked up from DDDB package.
+  . SimConf: add new phases (GenToMCTree) used in Gauss to save generator
+    level information into MCParticles (skipping the full simulation phase).
+  . Add the new reconstruction summary object to the DST content.
+
+- In LHCbAlgs v2r37
+  . In TrajPoca, set the maximum warning to 0 to avoid printouts.
+
+- In LHCbKernel v12r8
+  . Add ICountContainedObjects as a generic interface
+  . Add various Rich methods, classes and variables to python dictionary.
+  . Remove a few obsolete CVS doxygen comments.
+
+- In LHCbMath v3r24
+  . ValueWithErorr: add constructor from textual representation
+
+- In LoKiCore v10r9
+  . TES.cpp: fix typo causing compilation problem for VC9
+  . LoKi/FunOps.h: Fix wrong name/typo for python's "right-side-multiplication"
+  . Add new algorithm LoKi::CounterAlg
+    allows to evaluate certain functions and store results in TES
+  . Make sure that algorithms used in AlgFunctors are registered as subAlgorithms
+    with the IAlgManager -- borrow some code from GaudiSequencer...
+  . add "right-side" form of gate for pipes, maps, fun&cut-vals
+  . Timers.h, Timers.cpp:  new files for implementation of "timers":
+
+- In LoKiMC v9r5
+  . Add more symbols
+
+- In LoKiNumbers v9r5
+  . add COUNTER & STAT symbols
+
+- In RichKernel v7r42
+  . Update RichTools to include configuration option "RawBufferWithPanelFlip"
+    which reconstructs the Rich pixels as per normal, but flips the HPD panel.
+  . Initialise all data members in Rich::HypoData constructors.
+
+- In RichKernel v7r42, RichRecBase v4r4, LHCbKernel v12r8
+  . Remove some deprecated Rich typedefs
+
+- In TrackInterfaces v4r19
+  . Remove ICountVeloTracks, now using ICountContainedObjects in LHCbKernel
+
+- In MDF v3r29, DetDesc v18r23, MuonDet v9r5, RichDet v16r1, VeloDet v13r14,
+     VeloPixDet v1r10, DAQEvent v9r4, EventPacker v2r7, HltEvent v9r2,
+     LinkerEvent v3r7, PackedEvent v4r5, RecEvent v2r35, TrackEvent v5r11,
+     LHCbMath v3r24, RichKernel v7r42, RichRecBase v4r4, TfKernel v2r20,
+     TrackKernel v1r7
+  . Fix bugs and issues found by Coverity (UNINIT_CTOR, leaks, sprintf etc.)
+
+- In MuonDet v9r5, RichDet v16r1, EventPacker v2r7, MCEvent v2r19,
+     RecreatePIDTools v1r3, GaudiObjDesc v11r12, LHCbKernel v12r8,
+     MCInterfaces v1r13, DaVinciInterfaces v2r9, LoKiGen v9r6, LoKiHlt v3r5,
+     LoKiMC v9r5, RichKernel v7r42, RichRecBase v4r4, TrackInterfaces v4r19
+  . Fix or suppress ICC warnings and remarks
+
 </PRE><H1><A NAME=v32r0>2011-02-02 LHCbSys v32r0</A></H1><PRE>
 This version uses Gaudi v22r0 and LCG_60
 Development version on top of the latest Gaudi/Root for 2011 data
