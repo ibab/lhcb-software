@@ -7,6 +7,7 @@ Purpose     : LHCb stripping packages
 
  * Backwards incompatible version for Stripping13 development.
  * Changes to selection toolkit.
+ * Stripping framework no longer accepts SelectionSequence, but accepts generic Selection types.
  * Use of LineBuilders.
  * NOT COMISSIONED FOR PRODUCTION.
 
