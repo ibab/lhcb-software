@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= TrackKernel v1r7 2011-02-22 =========================
 ! 2011-02-08 - Wouter Hulsbergen
  - Initialize unitialized variables in default constructors of CubicStateInterpolationTraj and 
 CubicStateVectorInterpolationTraj
