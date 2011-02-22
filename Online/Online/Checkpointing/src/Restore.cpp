@@ -710,7 +710,6 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
   }
   else if ( sys->utgid == 0 ) {
     mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);
-    ::setenv("UTGID",new_utgid,1);
   }
   else if ( sys->utgidLen < int(::strlen(new_utgid)) ) {
     mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack.\n");
@@ -727,5 +726,6 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
     m_memset(sys->utgid,0,sys->utgidLen);
     m_strncpy(sys->utgid,new_utgid,sys->utgidLen-1);
   }
+  ::setenv("UTGID",new_utgid,1);
   return 0;
 }
