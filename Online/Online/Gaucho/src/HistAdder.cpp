@@ -52,6 +52,11 @@ HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
 }
 HistAdder::~HistAdder()
 {
+  std::vector<MonAdder*>::iterator g=std::find( gg_AdderList.begin(),gg_AdderList.end(),this);
+  if (g != gg_AdderList.end())
+  {
+    gg_AdderList.erase(g);
+  }
   if (gg_DNSInfo != 0)
   {
     delete gg_DNSInfo;

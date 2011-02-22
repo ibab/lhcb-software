@@ -10,7 +10,7 @@
 #include <vector>
 #include "string.h"
 #include "Gaucho/Utilities.h"
-static int mpty;
+//static int mpty;
 typedef std::pair<std::string, void*> MonPair;
 
 
