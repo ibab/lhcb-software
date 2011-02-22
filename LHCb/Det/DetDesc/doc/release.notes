@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!========================= DetDesc v18r23 2011-02-22 =========================
 ! 2011-02-15 - Chris Jones
  - Add to Material and Mixture classes a new reset() method, that resets the
    objects back to their default constructor states. Starting point to  
