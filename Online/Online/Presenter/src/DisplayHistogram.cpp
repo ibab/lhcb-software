@@ -654,10 +654,6 @@ void DisplayHistogram::resetOffsetHistogram ( ) {
 void DisplayHistogram::prepareForDisplay ( ) {
   if ( NULL == m_rootHistogram ) return;
   if ( NULL != m_offsetHistogram ) {
-    std::cout << "Subtract offset histogram " << std::endl;
-    
-    //m_rootHistogram->Add( m_offsetHistogram, -1. );
-    
     if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram)  ) {
       for (int i=1; i<= m_rootHistogram->GetNbinsX() ; ++i) {
         for (int j=1; j <= m_rootHistogram->GetNbinsY() ; ++j) {
