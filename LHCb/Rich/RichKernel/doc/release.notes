@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r42 2011-02-22 =========================
 ! 2011-02-18 - Chris Jones
  - Fix some icc warnings/remarks without pragmas
  - Update RichTools to include configuration option 
