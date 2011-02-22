@@ -1,10 +1,7 @@
 
 /** @file RichZSPacked_V2.h
  *
- *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
- *
- *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.9 2009-08-07 12:15:09 jonrob Exp $
+ *  Header file for RICH DAQ utility class : Rich::DAQ::RichZSPacked_V2::RichZSPacked
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -43,7 +40,6 @@ namespace Rich
        *  Second version. Inverted row number (0,1,2 -> 31,30,29)
        *  as compared to the first version. Used in 2006 September testbeam.
        *
-       *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   2005-01-12
        */
@@ -67,10 +63,10 @@ namespace Rich
         static const ShortType ShiftAddress1  = ShiftField1   + BitsField;
 
         // The masks
-        static const LongType  MaskField0   = ((1 << BitsField)-1)   << ShiftField0;
-        static const LongType  MaskAddress0 = ((1 << BitsAddress)-1) << ShiftAddress0;
-        static const LongType  MaskField1   = ((1 << BitsField)-1)   << ShiftField1;
-        static const LongType  MaskAddress1 = ((1 << BitsAddress)-1) << ShiftAddress1;
+        static const LongType  MaskField0   = (LongType) ((1 << BitsField)-1)   << ShiftField0;
+        static const LongType  MaskAddress0 = (LongType) ((1 << BitsAddress)-1) << ShiftAddress0;
+        static const LongType  MaskField1   = (LongType) ((1 << BitsField)-1)   << ShiftField1;
+        static const LongType  MaskAddress1 = (LongType) ((1 << BitsAddress)-1) << ShiftAddress1;
 
         // the max value of address and bit-field storable
         static const ShortType MaxField     = ( 1 << BitsField   ) - 1;
@@ -246,7 +242,10 @@ namespace Rich
         inline void dataInRange( const ShortType value,
                                  const ShortType max ) const
         {
-          if ( value > max ) throw GaudiException( "Data out of range", "*RichZSPacked*", StatusCode::FAILURE );
+          if ( value > max ) 
+          {
+            throw GaudiException( "Data out of range", "*RichZSPacked*", StatusCode::FAILURE );
+          }
         }
 
       private: // data

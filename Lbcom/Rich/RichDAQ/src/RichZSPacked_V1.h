@@ -1,10 +1,7 @@
 
 /** @file RichZSPacked_V1.h
  *
- *  Header file for RICH DAQ utility class : RichZSPacked_V1::RichZSPacked
- *
- *  CVS Log :-
- *  $Id: RichZSPacked_V1.h,v 1.6 2007-04-23 17:23:42 cattanem Exp $
+ *  Header file for RICH DAQ utility class : Rich::DAQ::RichZSPacked_V1::RichZSPacked
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -46,25 +43,25 @@ namespace Rich
       {
 
         /// Number of bits for each address
-        static const Rich::DAQ::ShortType BitsAddress = 7;
+        static const ShortType BitsAddress = 7;
         /// Number of bits for each bit field
-        static const Rich::DAQ::ShortType BitsField   = 8;
+        static const ShortType BitsField   = 8;
 
         // shift registers
-        static const Rich::DAQ::ShortType ShiftField0    = 0;
-        static const Rich::DAQ::ShortType ShiftAddress0  = ShiftField0 + BitsField;
-        static const Rich::DAQ::ShortType ShiftField1    = ShiftAddress0 + 1 + BitsAddress;
-        static const Rich::DAQ::ShortType ShiftAddress1  = ShiftField1 + BitsField;
+        static const ShortType ShiftField0    = 0;
+        static const ShortType ShiftAddress0  = ShiftField0 + BitsField;
+        static const ShortType ShiftField1    = ShiftAddress0 + 1 + BitsAddress;
+        static const ShortType ShiftAddress1  = ShiftField1 + BitsField;
 
         // The masks
-        static const Rich::DAQ::LongType  MaskField0   = ((1 << BitsField)-1)   << ShiftField0;
-        static const Rich::DAQ::LongType  MaskAddress0 = ((1 << BitsAddress)-1) << ShiftAddress0;
-        static const Rich::DAQ::LongType  MaskField1   = ((1 << BitsField)-1)   << ShiftField1;
-        static const Rich::DAQ::LongType  MaskAddress1 = ((1 << BitsAddress)-1) << ShiftAddress1;
+        static const LongType  MaskField0   = (LongType) ((1 << BitsField)-1)   << ShiftField0;
+        static const LongType  MaskAddress0 = (LongType) ((1 << BitsAddress)-1) << ShiftAddress0;
+        static const LongType  MaskField1   = (LongType) ((1 << BitsField)-1)   << ShiftField1;
+        static const LongType  MaskAddress1 = (LongType) ((1 << BitsAddress)-1) << ShiftAddress1;
 
         // the max value of address and bit-field storable
-        static const Rich::DAQ::ShortType MaxField     = ( 1 << BitsField   ) - 1;
-        static const Rich::DAQ::ShortType MaxAddress   = ( 1 << BitsAddress ) - 1;
+        static const ShortType MaxField     = ( 1 << BitsField   ) - 1;
+        static const ShortType MaxAddress   = ( 1 << BitsAddress ) - 1;
 
       }
 
