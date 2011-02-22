@@ -1,10 +1,9 @@
 #define main checkpointing_main
 #include "main.cpp"
 #undef main
-class CheckpointRestoreWrapper;
-extern CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance();
+extern void CheckpointRestoreWrapper__init_instance(int argc, char** argv);
 
 int main (int argc, char** argv)  {
-  CheckpointRestoreWrapper__instance();
+  CheckpointRestoreWrapper__init_instance(argc, argv);
   return checkpointing_main(argc,argv);
 }
