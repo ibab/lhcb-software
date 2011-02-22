@@ -125,7 +125,16 @@ class bindMembers (object) :
             self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
-        return self._handleSelectionType(line, alg)
+        return self._handle_Selection(line, alg)
+
+    def _handle_GaudiSequencer( self, line, alg ) :
+        if isinstance(line, str) and line.find("Stream") != 0 :
+            print 'WARNING: line', line, 'uses plain Gaudi configurable', alg.name(), '. Consider using Selection instead!'
+        # if not known, blindly copy -- not much else we can do
+        self._members += [ alg ]
+        # try to guess where the output goes...
+        self._getOutputLocation(alg)
+
 
     def _handle_SelectionSequence(self, line, alg) :
         print 'WARNING: line', line, 'using SelectionSequence', alg.name(), '. This could be unnecessary. Consider using Selection directly.'
@@ -148,9 +157,6 @@ class bindMembers (object) :
         self._handleSelectionType( line, sel )
 
     def _handle_EventSelection(self, line, alg) :
-        if alg.outoutLocation() != '' :
-            from PhysSelPython.Wrappers import MergedSelection
-            alg = MergedSelection(line, RequiredSelections = [alg])        
         self._handleSelectionType( line, alg )
 
     def _handle_MergedSelection(self, line, alg) :
@@ -174,9 +180,7 @@ class bindMembers (object) :
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        self._members += [ alg ]
-        # try to guess where the output goes...
-        self._getOutputLocation(alg)
+        return self._default_handler_( line,  alg )
 
     def __init__( self, line, algos ) :
 
