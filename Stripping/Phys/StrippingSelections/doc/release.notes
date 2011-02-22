@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-22 - Juan Palacios
+ - Add StrippingB2DMuNuX to modules imported in __init__.py
+
 ! 2011-02-22 - Anton Poluektov
  - python/StrippingSelections/StrippingB2DX.py
    . Added Bd->D-Kstar+ (Kstar+ -> Kpi0) line

@@ -14,6 +14,7 @@ import StrippingB2nbody
 import StrippingHb2Charged2Body
 import StrippingBu2LLK
 import StrippingB0q2DplusMuX
+import StrippingB2DMuNuX
 
 from sys import modules as _modules
 _this = _modules[__name__]
