@@ -107,10 +107,14 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
       } //for i
     } // if msg
 
-    const double netOut = m_NBExpert->nb_expert(m_inArray);
-    const double prob   = (1.0 + netOut)*0.5;
+    double netOut =  -1.0;
+#ifdef __GNUC__    
+    netOut = m_NBExpert->nb_expert(m_inArray);
+#endif
 
-    m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
+    double prob   = (1.0 + netOut)*0.5;
+
+    //m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
 
 
     if ( msgLevel(MSG::DEBUG) ) {
