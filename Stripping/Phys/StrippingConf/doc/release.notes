@@ -7,8 +7,7 @@
 
 ! 2011-02-22 - Juan Palacios
  - StrippingConf.StrippingLine
-  . StrippingLine constructor argument algos only accepts Selection types or
-    Strippingmembers
+  . Separate handler for plain Configurables.
   . Default handler now treats Selection types. 
   . Add default handler for Configurables.   
   . Add support for PassThroughSelection, VoidEventSelection
