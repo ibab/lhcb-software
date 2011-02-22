@@ -19,7 +19,7 @@ Hlt2SharedDiMuon = Hlt2Member( CombineParticles
                              , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
                              , CombinationCut = "AALL"
                              , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
-                             , InputLocations = [ Muons ]
+                             , Inputs = [ Muons ]
                              , WriteP2PVRelations = False
                              )
 
@@ -35,7 +35,7 @@ DiMuon = bindMembers( "Shared", [ Muons, Hlt2SharedDiMuon ] )
 Hlt2SharedJpsi2MuMu = Hlt2Member( FilterDesktop
                                 , "Jpsi2MuMu"
                                 , Code = "ADMASS('J/psi(1S)')<100*MeV"
-                                , InputLocations  = [ DiMuon ]
+                                , Inputs  = [ DiMuon ]
                                 )
 
 Jpsi2MuMu = bindMembers( "Shared", [ DiMuon, Hlt2SharedJpsi2MuMu ] )
@@ -51,7 +51,7 @@ Jpsi2MuMu = bindMembers( "Shared", [ DiMuon, Hlt2SharedJpsi2MuMu ] )
 Hlt2SharedHighPtJpsi2MuMu = Hlt2Member( FilterDesktop
                                       , "HighPtJpsi2MuMu"
                                       , Code = "(PT>1*GeV) & (MINTREE(ABSID=='mu+',PT)>800*MeV) & (MAXTREE(ABSID=='mu+',TRCHI2DOF)<8) & (ADMASS('J/psi(1S)')<80*MeV)"
-                                      , InputLocations  = [ Jpsi2MuMu ]
+                                      , Inputs  = [ Jpsi2MuMu ]
                                       )
 
 HighPtJpsi2MuMu  = bindMembers( 'Shared', [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )

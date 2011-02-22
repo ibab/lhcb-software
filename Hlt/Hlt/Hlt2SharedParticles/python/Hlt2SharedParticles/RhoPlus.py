@@ -18,7 +18,8 @@ __all__ = ( 'RhoPlus2PiPi0','RhoPlus2KPi0')
 Hlt2SharedRhoPlus2PiPi0 = CombineParticles("Hlt2SharedRhoPlus2PiPi0")
 # Special vertex fitter
 Hlt2SharedRhoPlus2PiPi0.VertexFitters.update( { "" : "ParticleAdder"} ) 
-Hlt2SharedRhoPlus2PiPi0.InputLocations = [ GoodPions.outputSelection() ] + AllPi0s.outputSelection()
+Hlt2SharedRhoPlus2PiPi0.Output = 'Hlt2/Hlt2SharedRhoPlus2PiPi0/Particles'
+Hlt2SharedRhoPlus2PiPi0.Inputs = [ GoodPions.outputSelection() ] + AllPi0s.outputSelection()
 Hlt2SharedRhoPlus2PiPi0.DecayDescriptor = "[rho(770)- -> pi- pi0]cc"
 Hlt2SharedRhoPlus2PiPi0.DaughtersCuts = { "pi+" : "ALL"
                                         , "pi0" :  "(PT>1000*MeV)  & (P> 1500*MeV)"}
@@ -33,7 +34,8 @@ RhoPlus2PiPi0 = bindMembers( None, [ GoodPions, AllPi0s, Hlt2SharedRhoPlus2PiPi0
 #rho(770) -> K pi0 is a clone of rho(770) -> pi pi0
 Hlt2SharedRhoPlus2KPi0 = Hlt2SharedRhoPlus2PiPi0.clone("Hlt2SharedRhoPlus2KPi0")
 Hlt2SharedRhoPlus2KPi0.DecayDescriptor = "[rho(770)- -> K- pi0]cc"
-Hlt2SharedRhoPlus2KPi0.InputLocations = [ GoodKaons.outputSelection() ] + AllPi0s.outputSelection()
+Hlt2SharedRhoPlus2KPi0.Output = 'Hlt2/Hlt2SharedRhoPlus2KPi0/Particles'
+Hlt2SharedRhoPlus2KPi0.Inputs = [ GoodKaons.outputSelection() ] + AllPi0s.outputSelection()
 Hlt2SharedRhoPlus2KPi0.DaughtersCuts.update(  { "K+" : "ALL" } )
 Hlt2SharedRhoPlus2KPi0.DaughtersCuts.pop( 'pi+' )
 

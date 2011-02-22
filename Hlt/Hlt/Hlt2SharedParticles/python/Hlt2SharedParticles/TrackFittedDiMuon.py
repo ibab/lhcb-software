@@ -19,7 +19,7 @@ Hlt2SharedTrackFittedDiMuon = Hlt2Member( CombineParticles
                                           , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
                                           , CombinationCut = "AALL"
                                           , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
-                                          , InputLocations = [ BiKalmanFittedMuons ]
+                                          , Inputs = [ BiKalmanFittedMuons ]
                                           , WriteP2PVRelations = False
                                           )
 
@@ -36,7 +36,7 @@ TrackFittedDiMuon = bindMembers( "Shared", [ BiKalmanFittedMuons, Hlt2SharedTrac
 Hlt2SharedTrackFittedJpsi2MuMu = Hlt2Member( FilterDesktop
                                              , "TrackFittedJpsi2MuMu"
                                              , Code = "ADMASS('J/psi(1S)')<120*MeV"
-                                             , InputLocations  = [ TrackFittedDiMuon ]
+                                             , Inputs  = [ TrackFittedDiMuon ]
                                              )
 
 TrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedDiMuon, Hlt2SharedTrackFittedJpsi2MuMu ] )
@@ -52,7 +52,7 @@ TrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedDiMuon, Hlt2SharedTra
 Hlt2SharedDetachedTrackFittedJpsi2MuMu = Hlt2Member( FilterDesktop
                                                      , "DetachedTrackFittedJpsi2MuMu"
                                                      , Code = "BPVDLS > 3"
-                                                     , InputLocations  = [ TrackFittedJpsi2MuMu ]
+                                                     , Inputs  = [ TrackFittedJpsi2MuMu ]
                                                      )
 
 DetachedTrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedJpsi2MuMu,
@@ -69,7 +69,7 @@ DetachedTrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedJpsi2MuMu,
 Hlt2SharedTrackFittedHighPtJpsi2MuMu = Hlt2Member( FilterDesktop
                                                    , "TrackFittedHighPtJpsi2MuMu"
                                                    , Code = "(PT>1*GeV) & (MINTREE(ABSID=='mu+',PT)>800*MeV) & (MAXTREE(ABSID=='mu+',TRCHI2DOF)<8) & (ADMASS('J/psi(1S)')<80*MeV)"
-                                                   , InputLocations  = [ TrackFittedJpsi2MuMu ]
+                                                   , Inputs  = [ TrackFittedJpsi2MuMu ]
                                       )
 
 TrackFittedHighPtJpsi2MuMu  = bindMembers( 'Shared', [ TrackFittedJpsi2MuMu, Hlt2SharedTrackFittedHighPtJpsi2MuMu ] )

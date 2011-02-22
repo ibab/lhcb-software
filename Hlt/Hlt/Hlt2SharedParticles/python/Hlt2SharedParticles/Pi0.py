@@ -16,6 +16,7 @@ neutralProtos = Hlt2BiKalmanFittedForwardTracking.hlt2NeutralProtos()
 #
 Hlt2ResolvedPi0s 			= ResolvedPi0Maker("Hlt2ResolvedPi0s")
 Hlt2ResolvedPi0s.DecayDescriptor 	= "Pi0"
+Hlt2ResolvedPi0s.Output 	= 'Hlt2/Hlt2ResolvedPi0s/Particles'
 Hlt2ResolvedPi0s.addTool(PhotonMaker)
 Hlt2ResolvedPi0s.PhotonMaker.Input 	= neutralProtos.outputSelection() 
 Hlt2ResolvedPi0s.MassWindow 		= 30.* MeV
@@ -24,6 +25,7 @@ Hlt2ResolvedPi0s.PhotonMaker.PtCut 	= 200.*MeV
 # Make the pi0
 #
 Hlt2MergedPi0s 			= MergedPi0Maker("Hlt2MergedPi0s")
+Hlt2MergedPi0s.Output        = 'Hlt2/Hlt2MergedPi0s/Particles'
 Hlt2MergedPi0s.DecayDescriptor 	= "Pi0" 
 Hlt2MergedPi0s.Input		= neutralProtos.outputSelection()
 Hlt2MergedPi0s.MassWindow 	= 60.* MeV

@@ -21,7 +21,7 @@ Hlt2SharedLambdaLLTrackFitted = Hlt2Member( CombineParticles, "LambdaLLTrackFitt
                                                                 "p+"  : "(TRCHI2DOF<20)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
                                             , MotherCut = "(ADMASS('Lambda0')<100*MeV) & (VFASPF(VCHI2PDOF)<50)"
-                                            , InputLocations = [ BiKalmanFittedPions, BiKalmanFittedProtons ]
+                                            , Inputs = [ BiKalmanFittedPions, BiKalmanFittedProtons ]
                                             )
 
 ##################################################
@@ -32,7 +32,7 @@ Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitt
                                                                 "p+"  : "(TRCHI2DOF<20)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<100*MeV)"
                                             , MotherCut = "(ADMASS('Lambda0')<100*MeV) & (VFASPF(VCHI2PDOF)<50)"
-                                            , InputLocations = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
+                                            , Inputs = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
                                             )
 
 LambdaLLTrackFitted = bindMembers( "Shared", [ BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLLTrackFitted ] )

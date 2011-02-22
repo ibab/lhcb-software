@@ -21,7 +21,7 @@ __all__ = ( 'DiElectron'  )
 
 Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  , "DiElectron"
-                                 , InputLocations = [ Electrons ]
+                                 , Inputs = [ Electrons ]
                                  , DecayDescriptor = "J/psi(1S) -> e+ e-" 
                                  , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
                                  , CombinationCut = "AALL"

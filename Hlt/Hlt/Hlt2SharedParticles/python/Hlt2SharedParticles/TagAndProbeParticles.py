@@ -31,6 +31,7 @@ muonWithCaloProtos 	= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedMuonWithCaloP
 #
 Hlt2TagAndProbePions = CombinedParticleMaker("Hlt2TagAndProbePions")
 Hlt2TagAndProbePions.Input =  caloProtos.outputSelection()
+Hlt2TagAndProbePions.Output = 'Hlt2/Hlt2TagAndProbePions/Particles'
 Hlt2TagAndProbePions.Particle =  "pion" 
 Hlt2TagAndProbePions.WriteP2PVRelations = False
 ##########################################################################
@@ -41,6 +42,7 @@ Hlt2TagAndProbeMuons.Particle = "muon"
 Hlt2TagAndProbeMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TagAndProbeMuons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2TagAndProbeMuons.Input =  muonWithCaloProtos.outputSelection()
+Hlt2TagAndProbeMuons.Output = 'Hlt2/Hlt2TagAndProbeMuons/Particles'
 Hlt2TagAndProbeMuons.WriteP2PVRelations = False
 ##########################################################################
 #

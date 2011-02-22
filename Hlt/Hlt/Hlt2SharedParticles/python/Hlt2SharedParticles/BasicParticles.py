@@ -41,17 +41,20 @@ neutralProtos 	= Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
 #
 Hlt2NoCutsPions = NoPIDsParticleMaker("Hlt2NoCutsPions")
 Hlt2NoCutsPions.Input =  hadronProtos.outputSelection()
+Hlt2NoCutsPions.Output = 'Hlt2/Hlt2NoCutsPions/Particles'
 Hlt2NoCutsPions.Particle =  "pion" 
 Hlt2NoCutsPions.WriteP2PVRelations = False
 ##########################################################################
 # Make the kaons
 #
 Hlt2NoCutsKaons = Hlt2NoCutsPions.clone("Hlt2NoCutsKaons")
+Hlt2NoCutsKaons.Output = 'Hlt2/Hlt2NoCutsKaons/Particles'
 Hlt2NoCutsKaons.Particle =  "kaon" 
 ##########################################################################
 # Make the protons
 #
 Hlt2NoCutsProtons = Hlt2NoCutsPions.clone("Hlt2NoCutsProtons")
+Hlt2NoCutsProtons.Output =  'Hlt2/Hlt2NoCutsProtons/Particles'
 Hlt2NoCutsProtons.Particle =  "proton" 
 ##########################################################################
 # Make the Muons
@@ -61,6 +64,7 @@ Hlt2Muons.Particle = "muon"
 Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2Muons.Input =  muonProtos.outputSelection()
+Hlt2Muons.Output =  'Htl2/Hlt2Muons/Particles'
 Hlt2Muons.WriteP2PVRelations = False
 ##########################################################################
 # Make the electrons
@@ -68,6 +72,7 @@ Hlt2Muons.WriteP2PVRelations = False
 Hlt2Electrons = CombinedParticleMaker("Hlt2Electrons")
 Hlt2Electrons.Particle =   "electron" 
 Hlt2Electrons.Input = caloProtos.outputSelection()  
+Hlt2Electrons.Output = 'Hlt2/Hlt2Electrons/Particles'
 Hlt2Electrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
 Hlt2Electrons.WriteP2PVRelations = False
@@ -77,6 +82,7 @@ Hlt2Electrons.WriteP2PVRelations = False
 Hlt2Photons = PhotonMakerAlg("Hlt2Photons")
 Hlt2Photons.addTool(PhotonMaker)
 Hlt2Photons.PhotonMaker.Input = neutralProtos.outputSelection()
+Hlt2Photons.Output = 'Hlt2/Hlt2Photons/Particles'
 Hlt2Photons.PhotonMaker.ConvertedPhotons = True  
 Hlt2Photons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 

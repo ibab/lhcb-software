@@ -15,9 +15,9 @@ from HltLine.HltLine import bindMembers
 __all__ = ( 'Kstar2KPi' )
 
 Hlt2SharedKstar2KPi = CombineParticles("Hlt2SharedKstar2KPi")
-Hlt2SharedKstar2KPi.InputLocations = [ BiKalmanFittedKaons.outputSelection(), BiKalmanFittedPions.outputSelection() ]
+Hlt2SharedKstar2KPi.Inputs = [ BiKalmanFittedKaons.outputSelection(), BiKalmanFittedPions.outputSelection() ]
+Hlt2SharedKstar2KPi.Output = 'Hlt2/Hlt2SharedKstar2KPi/Particles'
 Hlt2SharedKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-
 Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "ALL", "K+" : "ALL" } 
 Hlt2SharedKstar2KPi.CombinationCut = "(ADAMASS('K*(892)0')<300)"
 Hlt2SharedKstar2KPi.MotherCut = "(VFASPF(VCHI2PDOF)<25)"

@@ -19,7 +19,7 @@ Hlt2SharedKsLL = Hlt2Member( CombineParticles, "KsLL"
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" } 
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
                            , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30)"
-                           , InputLocations = [ GoodPions ]
+                           , Inputs = [ GoodPions ]
                            )
 
 KsLL = bindMembers( "SharedKsLL", [ GoodPions, Hlt2SharedKsLL ] )
@@ -30,7 +30,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" } 
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
                            , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30)"
-                           , InputLocations = [ BiKalmanFittedPions ]
+                           , Inputs = [ BiKalmanFittedPions ]
                            )
 
 KsLLTF = bindMembers( "SharedKsLLTF", [BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
@@ -41,7 +41,7 @@ Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" }
                            , CombinationCut = "(ADAMASS('KS0')<80*MeV)"
                            , MotherCut = "(ADMASS('KS0')<64*MeV) & (VFASPF(VCHI2PDOF)<30)"
-                           , InputLocations = [ BiKalmanFittedDownPions ]
+                           , Inputs = [ BiKalmanFittedDownPions ]
                            )
 
 KsDD = bindMembers( "SharedKsDD", [ BiKalmanFittedDownPions , Hlt2SharedKsDD ] )

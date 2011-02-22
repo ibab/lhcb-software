@@ -72,114 +72,140 @@ BiKalmanFittedNeutralProtoMaker   = Hlt2BiKalmanFittedForwardTracking.hlt2Neutra
 #
 # Make the Muons
 #
-Hlt2BiKalmanFittedMuons 				= CombinedParticleMaker("Hlt2BiKalmanFittedMuons")
+Hlt2BiKalmanFittedMuons = CombinedParticleMaker("Hlt2BiKalmanFittedMuons"
+                                            , Particle 			    = "muon"
+                                            , Input 				=  BiKalmanFittedMuonProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedMuons/Particles'
+                                            , WriteP2PVRelations 	=  False
+                                            )
 Hlt2BiKalmanFittedMuons.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2BiKalmanFittedMuons.Input 				=  BiKalmanFittedMuonProtoMaker.outputSelection()
-Hlt2BiKalmanFittedMuons.Particle 			= "muon"
 Hlt2BiKalmanFittedMuons.Muon.Selection 			= ["RequiresDet='MUON' IsMuon=True"]
-Hlt2BiKalmanFittedMuons.WriteP2PVRelations 		=  False
 ##########################################################################
 #
 # Make the pions
 #
-Hlt2BiKalmanFittedPions 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedPions")
-Hlt2BiKalmanFittedPions.Particle 			=  "pion"
-Hlt2BiKalmanFittedPions.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedPions.WriteP2PVRelations 		=  False
+Hlt2BiKalmanFittedPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedPions"
+                                             , Particle 			=  "pion"
+                                             , Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
+                                             , Output               = 'Hlt2/Hlt2BiKalmanFittedPions/Particles'
+                                             , WriteP2PVRelations 	=  False
+                                             )
 ##########################################################################
 #
 # Make the downstream pions
 #
-Hlt2BiKalmanFittedDownPions 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedDownPions")
-Hlt2BiKalmanFittedDownPions.Particle 			=  "pion"
-Hlt2BiKalmanFittedDownPions.Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
-Hlt2BiKalmanFittedDownPions.WriteP2PVRelations 		=  False
+Hlt2BiKalmanFittedDownPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedDownPions"
+                                                 , Particle 			=  "pion"
+                                                 , Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
+                                                 , Output                   = 'Hlt2/Hlt2BiKalmanFittedDownPions/Particles'
+                                                 , WriteP2PVRelations 		=  False
+                                                 )
 ##########################################################################
 #
 # Make the kaons
 #
-Hlt2BiKalmanFittedKaons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedKaons")
-Hlt2BiKalmanFittedKaons.Particle 			=  "kaon"
-Hlt2BiKalmanFittedKaons.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedKaons.WriteP2PVRelations 		=  False
+Hlt2BiKalmanFittedKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedKaons"
+                                            , Particle           =  "kaon"
+                                            , Input              =  BiKalmanFittedChargedProtoMaker.outputSelection()
+                                            , Output             = 'Hlt2/Hlt2BiKalmanFittedKaons/Particles'
+                                            , WriteP2PVRelations =  False
+                                            )
 ##########################################################################
 #
 # Make the kaons w/ muon ID available
 #
-Hlt2BiKalmanFittedKaonsWithMuonID			= NoPIDsParticleMaker("Hlt2BiKalmanFittedKaonsWithMuonID")
+Hlt2BiKalmanFittedKaonsWithMuonID = NoPIDsParticleMaker("Hlt2BiKalmanFittedKaonsWithMuonID"
+                                            , Particle 		= "kaon"
+                                            , Input 		= BiKalmanFittedMuonProtoMaker.outputSelection()
+                                            , Output        = 'Hlt2/Hlt2BiKalmanFittedKaonsWithMuonID/Particles'
+                                            , WriteP2PVRelations	= False
+                                            )
 Hlt2BiKalmanFittedKaonsWithMuonID.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2BiKalmanFittedKaonsWithMuonID.Particle 		= "kaon"
-Hlt2BiKalmanFittedKaonsWithMuonID.Input 		= BiKalmanFittedMuonProtoMaker.outputSelection()
 Hlt2BiKalmanFittedKaonsWithMuonID.Muon.Selection        = [""]
-Hlt2BiKalmanFittedKaonsWithMuonID.WriteP2PVRelations	= False
 ##########################################################################
 #
 # Make the protons
 #
-Hlt2BiKalmanFittedProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedProtons")
-Hlt2BiKalmanFittedProtons.Particle 			=  "proton"
-Hlt2BiKalmanFittedProtons.Input 			=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedProtons.WriteP2PVRelations 		=  False
+Hlt2BiKalmanFittedProtons = NoPIDsParticleMaker("Hlt2BiKalmanFittedProtons"
+                                            , Particle 			    =  "proton"
+                                            , Input 			    =  BiKalmanFittedChargedProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedProtons/Particles'
+                                            , WriteP2PVRelations 	=  False
+                                            )
 ##########################################################################
 #
 # Make the downstream protons
 #
-Hlt2BiKalmanFittedDownProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedDownProtons")
-Hlt2BiKalmanFittedDownProtons.Particle 			=  "proton"
-Hlt2BiKalmanFittedDownProtons.Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
-Hlt2BiKalmanFittedDownProtons.WriteP2PVRelations 	=  False
+Hlt2BiKalmanFittedDownProtons = NoPIDsParticleMaker("Hlt2BiKalmanFittedDownProtons"
+                                            , Particle 			    =  "proton"
+                                            , Input 			    =  BiKalmanFittedChargedDownProtoMaker.outputSelection()
+                                            , Output                =  'Hlt2/Hlt2BiKalmanFittedDownProtons/Particles'
+                                            , WriteP2PVRelations 	=  False
+                                            )
 ##########################################################################
 #
 # Make the Rich kaons 
 # Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class 
 #
-Hlt2BiKalmanFittedRichKaons 				=  CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons")
+Hlt2BiKalmanFittedRichKaons = CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons"
+                                            , Particle 			=  "kaon"
+                                            , Input 			=  BiKalmanFittedChargedRichHadronProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedRichKaons/Particles'
+                                            , WriteP2PVRelations  	=  False
+                                            )
 Hlt2BiKalmanFittedRichKaons.addTool(ProtoParticleCALOFilter('Kaon'))
-Hlt2BiKalmanFittedRichKaons.Particle 			=  "kaon"
-Hlt2BiKalmanFittedRichKaons.Input 			=  BiKalmanFittedChargedRichHadronProtoMaker.outputSelection()
-Hlt2BiKalmanFittedRichKaons.WriteP2PVRelations  	=  False
 Hlt2BiKalmanFittedRichKaons.Kaon.Selection		=  ["RequiresDet='RICH'"]
 ##########################################################################
 #
 # Make the Rich protons 
 # Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class
 #
-Hlt2BiKalmanFittedRichProtons                           = CombinedParticleMaker("Hlt2BiKalmanFittedRichProtons")
+Hlt2BiKalmanFittedRichProtons = CombinedParticleMaker("Hlt2BiKalmanFittedRichProtons"
+                                            , Particle              =  "proton"
+                                            , Input                 = BiKalmanFittedChargedRichForProtonsHadronProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedRichProtons/Particles'
+                                            , WriteP2PVRelations 	=  False
+                                            )
 Hlt2BiKalmanFittedRichProtons.addTool(ProtoParticleCALOFilter('Proton'))
-Hlt2BiKalmanFittedRichProtons.Particle                  =  "proton"
-Hlt2BiKalmanFittedRichProtons.Input                     = BiKalmanFittedChargedRichForProtonsHadronProtoMaker.outputSelection()
-Hlt2BiKalmanFittedRichProtons.WriteP2PVRelations 	=  False
 Hlt2BiKalmanFittedRichProtons.Proton.Selection		= ["RequiresDet='RICH'"]
 ########################################################################
 #
 # Make the electrons
 #
-Hlt2BiKalmanFittedElectrons 				= CombinedParticleMaker("Hlt2BiKalmanFittedElectrons")
+Hlt2BiKalmanFittedElectrons	= CombinedParticleMaker("Hlt2BiKalmanFittedElectrons"
+                                            , Particle 			    =  "electron"
+                                            , Input 			    =  BiKalmanFittedChargedCaloProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedElectrons/Particles'
+                                            , WriteP2PVRelations 	=  False
+                                            )
 Hlt2BiKalmanFittedElectrons.addTool(ProtoParticleCALOFilter('Electron'))
-Hlt2BiKalmanFittedElectrons.Particle 			=  "electron"
-Hlt2BiKalmanFittedElectrons.Input 			=  BiKalmanFittedChargedCaloProtoMaker.outputSelection()
 Hlt2BiKalmanFittedElectrons.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-Hlt2BiKalmanFittedElectrons.WriteP2PVRelations 		=  False
 ##########################################################################
 #
 # Make the second loop pions
 #
-Hlt2BiKalmanFittedSecondLoopPions                 = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopPions")
-Hlt2BiKalmanFittedSecondLoopPions.Particle            =  "pion"
-Hlt2BiKalmanFittedSecondLoopPions.Input               =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
-Hlt2BiKalmanFittedSecondLoopPions.WriteP2PVRelations      =  False
+Hlt2BiKalmanFittedSecondLoopPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopPions"
+                                            , Particle              =  "pion"
+                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopPions/Particles'
+                                            , WriteP2PVRelations    =  False
+                                            )
 ##########################################################################
 #
 # Make the second loop kaons
 #
-Hlt2BiKalmanFittedSecondLoopKaons                 = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopKaons")
-Hlt2BiKalmanFittedSecondLoopKaons.Particle            =  "kaon"
-Hlt2BiKalmanFittedSecondLoopKaons.Input               =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
-Hlt2BiKalmanFittedSecondLoopKaons.WriteP2PVRelations      =  False
+Hlt2BiKalmanFittedSecondLoopKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopKaons"
+                                            , Particle              =  "kaon"
+                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopKaons/Particles'
+                                            , WriteP2PVRelations    =  False
+                                            )
 ##########################################################################
 # Make the photons
 #
 Hlt2BiKalmanFittedPhotons = PhotonMakerAlg("Hlt2BiKalmanFittedPhotons")
+Hlt2BiKalmanFittedPhotons.Input = BiKalmanFittedNeutralProtoMaker.outputSelection()
+Hlt2BiKalmanFittedPhotons.Output = 'Hlt2/Hlt2BiKalmanFittedPhotons/Particles'
 Hlt2BiKalmanFittedPhotons.addTool(PhotonMaker)
 Hlt2BiKalmanFittedPhotons.PhotonMaker.Input = BiKalmanFittedNeutralProtoMaker.outputSelection()
 Hlt2BiKalmanFittedPhotons.PhotonMaker.ConvertedPhotons = True  

@@ -15,7 +15,7 @@ __all__ = ( 'TrackFittedDiElectron'  )
 
 Hlt2SharedTrackFittedDiElectron = Hlt2Member( CombineParticles
                                               , "TrackFittedDiElectron"
-                                              , InputLocations = [ BiKalmanFittedElectrons ]
+                                              , Inputs = [ BiKalmanFittedElectrons ]
                                               , DecayDescriptor = "J/psi(1S) -> e+ e-" 
                                               , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
                                               , CombinationCut = "AALL"
