@@ -6,12 +6,11 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiNumbers v9r5 2011-02-22 =========================
 ! 2011-02-12 - Vanya Belyaev
-
  - add COUNTER & STAT symbols 
  - cmt/requirements
    version increment to v9r5
-
 
 !========================= LoKiNumbers v9r4 2010-10-25 =========================
 
