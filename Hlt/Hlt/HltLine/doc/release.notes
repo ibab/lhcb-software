@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v5r0  2011-02-22 ===================
+! 2010-02-22 - Gerhard Raven
+ - adapt to PHYS_v12r0
 !========================== HltLine v4r8  2011-02-16 ===================
 ! 2010-02-12 - Gerhard Raven
  - add muon and rich decoding symbols

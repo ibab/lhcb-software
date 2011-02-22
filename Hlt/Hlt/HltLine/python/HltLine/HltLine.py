@@ -504,17 +504,18 @@ class bindMembers (object) :
 
 #
     def _InputOutputLocationMatchMaker(self,alg) :
-        if hasattr(alg,'InputLocations') : # only Hlt2...
-            req_inputs = getattr(alg,'InputLocations')
+        if hasattr(alg,'Inputs') : # only Hlt2...
+            req_inputs = getattr(alg,'Inputs')
             known_inputs = []
             def _OutputLocationsGetter(alg) :
                     if hasattr(alg,'Members') : 
                         _list = []
                         for i in getattr(alg,'Members') : _list += _OutputLocationsGetter(i) 
                         return _list
+                    if hasattr(alg,'Output') : return [ getattr(alg,'Output') ] 
                     if hasattr(alg,'OutputLocation') : return [ getattr(alg,'OutputLocation') ] 
                     if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ]
-		    if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
+                    if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
                     return [ alg.name() ]
             for i in self._members: 
                  known_inputs += _OutputLocationsGetter(i)
@@ -541,6 +542,9 @@ class bindMembers (object) :
         if hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputsel = alg.OutputSelection 
+        elif hasattr ( type(alg) , 'Output' ) :
+            if hasattr ( alg , 'Output' ) :
+                self._outputsel = alg.Output
         elif hasattr ( type(alg) , 'OutputLocation' ) :
             if hasattr ( alg , 'OutputLocation' ) :
                 self._outputsel = alg.OutputLocation 
@@ -1160,7 +1164,7 @@ class Hlt2Member ( object ) :
                    **Args     ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
-        >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', InputLocations = ... ,
+        >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', Inputs = ... ,
         """
         from Configurables import FilterDesktop, CombineParticles
         ## (0) verify input
@@ -1205,27 +1209,33 @@ class Hlt2Member ( object ) :
         ## clone the arguments
         line = deepcopy ( line )
         args = deepcopy ( args ) 
-        if 'InputLocations' in args : 
+        if 'Inputs' in args : 
             # adapt input...  and put back...  
-            inputLocations = args.pop('InputLocations')
+            inputLocations = args.pop('Inputs')
             def _adapt(i,line) :
-                from Configurables import FilterDesktop, CombineParticles
-                if type(i) is bindMembers :
+                from Configurables import FilterDesktop, CombineParticles, NoPIDsParticleMaker, CombinedParticleMaker
+                if hasattr(i,'Output') : 
+                        return i.Output
+                elif type(i) is bindMembers :
                        return  i.outputSelection()
-                elif type(i) in [ CombineParticles, FilterDesktop ] :
-                       return i.getName()
+                elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker ] : 
+                       return 'Hlt2/%s/Particles' % i.getName()
                 elif type(i) is Hlt2Member :
-                       return 'Hlt2'+line+i.subname()
+                       return 'Hlt2/Hlt2'+line+i.subname()+'/Particles'
                 else :
                        from re import sub
                        return sub('^%', 'Hlt2' + line, i )
             inputLocations = [ _adapt(i,line) for i in inputLocations ]
             # deal with nested lists (one level only), keep order invariant
-            args['InputLocations'] = []
+            args['Inputs'] = []
             for i in inputLocations :
-                args['InputLocations']  += i if type(i) is list else [ i ]
+                args['Inputs']  += i if type(i) is list else [ i ]
 
         _name = self.name( line )
+        if 'Output' not in args :
+            args['Output'] = 'Hlt2/%s/Particles' % _name
+        else :
+            print 'WARNING: Output for %s has been explicitly specified as %s' % ( name, args['Output'] )
         instance =  self.Type( _name, **args)
         # see if alg has any special Tool requests...
         for tool in self.Tools : tool.createConfigurable( instance )
@@ -1691,7 +1701,7 @@ def prnt ( obj        ,   # the object
     else : lst = [ lst ]
     #
     for item in lst :
-        if hasattr ( obj , item ) :
+        if hasattr ( obj , item ) and getattr( obj, item ) :
             if l1 < len1( line ) : line += '\n' + l1*' '
             line += "%-15s : %s" % ( item , getattr ( obj , item ) )
     return line 
