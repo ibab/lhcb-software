@@ -76,6 +76,8 @@ namespace LHCb  {
     bool                      m_restartChildren;
     /// Internal flag to indicate if chldren should be killed in releaseChildren
     bool                      m_killChildren;
+    /// Initial UTGID length
+    int                       m_utgidLen;
     /// Reference to the IncidentSvc instance
     IIncidentSvc             *m_incidentSvc;
     /// Reference to the steering FSM unit (DimTaskFSM)
@@ -93,7 +95,7 @@ namespace LHCb  {
     /// Checkpoint main process instance. Stops dim
     int stopMainInstance();
     /// Resume main process instance from checkpoint. Restarts dim
-    int resumeMainInstance();
+    int resumeMainInstance(bool with_resume_children);
     /// Fork child process as an image of the parent
     int forkChild(int which);
     /// Watch children while running. If a child dies, restart it
@@ -266,8 +268,10 @@ namespace  {
 
 /// Standard constructor
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc) 
-  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
+  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0), m_utgidLen(0)
 {
+  const char* utgid = ::getenv("UTGID");
+  if ( utgid ) m_utgidLen = ::strlen(utgid);
   m_masterProcess = true;
   m_restartChildren = false;
   declareProperty("NumberOfInstances",  m_numInstances  = 0);
@@ -347,8 +351,8 @@ StatusCode CheckpointSvc::start() {
 	}
       }
       m_restartChildren = true;
-      m_state = m_targetState; // Update internal Gaudi FSM
-      resumeMainInstance();    // And restore execution
+      m_state = m_targetState;     // Update internal Gaudi FSM
+      resumeMainInstance(true);    // And restore execution
       m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
       m_fsm->declareState(ITaskFSM::ST_RUNNING);
       return watchChildren();  // Will never return for the parent's instance!
@@ -489,18 +493,17 @@ int CheckpointSvc::finishRestore() {
     return sc.getCode();
   }
   if ( ::getenv("TEST_CHECKPOINT") )  {
-    ::printf(" [ALWAYS] %s%s\n",MARKER,MARKER);
-    ::printf(" [ALWAYS] =  RESTORE TEST WAS SUCCESSFUL.\n");
-    ::printf(" [ALWAYS] =  Looks like this checkpoint is working.\n");
-    ::printf(" [ALWAYS] =  The process will now exit.\n");
-    ::printf(" [ALWAYS] %s%s\n",MARKER,MARKER);
+    ::printf(" No Error seen: %s%s\n",MARKER,MARKER);
+    ::printf(" No Error seen: =  RESTORE TEST WAS SUCCESSFUL.\n");
+    ::printf(" No Error seen: =  Looks like this checkpoint is working.\n");
+    ::printf(" No Error seen: =  The process will now exit.\n");
+    ::printf(" No Error seen: %s%s\n",MARKER,MARKER);
     ::_exit(EXIT_SUCCESS);
   }
   MsgStream log(msgSvc(),name());
-  log << MSG::INFO;
-  log << "Update process environment and restart options." << endmsg;
-  log << "Stop threads after restart from checkpoint. " << endmsg;
-  chkpt->stop();
+  log << MSG::INFO << "Updated process environment and restart options." << endmsg;
+  //log << "Stop threads after restart from checkpoint. " << endmsg;
+  // Not necessary anymore: chkpt->stop();
   return StatusCode::SUCCESS;
 }
 
@@ -556,15 +559,16 @@ int CheckpointSvc::saveCheckpoint() {
       CHKPT* chkpt =  CHKPT_get();
       int ret = chkpt->checkpoint(fd);
       ::close(fd);
-      MsgStream log(msgSvc(),name());
-      log << MSG::INFO << MARKER;
       if ( ret == 1 )   {
 	//!!!!!!! No printing here! other threads may lock output!!!!!!!
-	//log << " FINISHED loading process from checkpoint..."
+	// MsgStream log(msgSvc(),name());
+	// log << MSG::INFO << MARKER;
+	// log << " FINISHED loading process from checkpoint..."
 	//    << "Continue processing... " << endmsg;
       }
       else {
-	log << " FINISHED CHECKPOINT " << endmsg
+	MsgStream log(msgSvc(),name());
+	log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg
 	    << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
       }
       return StatusCode::SUCCESS;
@@ -582,13 +586,15 @@ int CheckpointSvc::saveCheckpoint() {
 int CheckpointSvc::stopMainInstance() {
   MsgStream log(msgSvc(),name());
   CHKPT* chkpt =  CHKPT_get();
+  // First get rid of DIM
   m_fsm->disconnectDIM();
   ::dis_stop_serving();
   ::dim_stop();
-  ::lib_rtl_usleep(10000);
-  chkpt->stop();
+  ::lib_rtl_sleep(100);
   if ( m_files ) ::free(m_files);
   m_files = 0;
+  // Now stop child threads
+  chkpt->stop();
   chkpt->getFileDescriptors(&m_files);
   if ( m_dumpFD ) {
     chkpt->dumpFileDescriptors(m_files);
@@ -597,15 +603,17 @@ int CheckpointSvc::stopMainInstance() {
 }
 
 /// Resume main process instance from checkpoint. Restarts dim
-int CheckpointSvc::resumeMainInstance() {
+int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
   CHKPT* chkpt =  CHKPT_get();
   string proc  = RTL::processName();
   const char* dns = 0;
   // Let the paret resume its work
-  chkpt->resume();
+  if ( with_resume_chil_threads )   {
+    chkpt->resume();
+    ::lib_rtl_sleep(200);
+  }
   dns = ::getenv("DIM_DNS_NODE");
-  MsgStream log(msgSvc(),name()); 
-
+  MsgStream log(msgSvc(),name());
   log << MSG::INFO;
   log << "ProcessName:" << proc << " ";
   if ( dns ) {
@@ -663,9 +671,10 @@ int CheckpointSvc::forkChild(int which) {
     ::setenv("UTGID",proc.c_str(),1);
   }
   else if (pid < 0)    {        // failed to fork
-    MsgStream log(msgSvc(),name());
-    log << MSG::FATAL << "Failed to fork child:" << ::strerror(errno) << endmsg;
-    ::_exit(1);
+    char text[256];
+    ::sprintf(text,"[ERROR] Failed to fork child:%s %s\n",utgid.c_str(),::strerror(errno));
+    ::write(STDOUT_FILENO,text,strlen(text));
+    ::_exit(EXIT_FAILURE);
   }
   return pid;
 }
@@ -680,26 +689,29 @@ int CheckpointSvc::execChild() {
       ::write(STDOUT_FILENO,text,strlen(text));
     }
   }
+  /// Restore file descriptors for child process
   chkpt->setFileDescriptors(m_files);
+  /// If requested assign seperate process group to child
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
     if (sid < 0) {
+      char text[256];
+      ::sprintf(text,"[ERROR] Cannot assign process group to child: %s\n",::strerror(errno));
+      ::write(STDOUT_FILENO,text,strlen(text));
       ::_exit(EXIT_FAILURE);
     }
   }
-  // Now it should be save to restart the children
-  chkpt->startChild();
-
-  /// Need to reset RTL to get proper processnames etc.
+  /// Need to reset RTL to get proper processnames etc. afterwards
   RTL::RTL_reset();
+  /// Now it should be save to restart the children
+  chkpt->startChild();
+  /// Configure DIM startup
   const char* dns = ::getenv("DIM_DNS_NODE");
+  string proc = RTL::processName();
   if ( dns ) {
     ::dis_set_dns_node((char*)dns);
     ::dic_set_dns_node((char*)dns);
   }
-  // Now it should be save to restart the children
-  //chkpt->startChild();
-  string proc = RTL::processName();
   ::dim_init();
   ::dis_start_serving((char*)proc.c_str());
   m_fsm->connectDIM(0);
@@ -725,7 +737,7 @@ int CheckpointSvc::watchChildren() {
 	  // Parents continue with the loop until all dead childen are restarted!
 	}
       }
-      resumeMainInstance();
+      resumeMainInstance(true);
     }
     else {
       MsgStream log(msgSvc(),name());
@@ -786,11 +798,12 @@ void CheckpointSvc::handle(const Incident& inc) {
       }
       CHKPT* chkpt =  CHKPT_get();
       int typ = chkpt->restartType();
-      sc = ( typ == 1 ) ? finishRestore() : finishCheckpoint();
+      bool restore =  typ == 1;
+      sc = ( restore ) ? finishRestore() : finishCheckpoint();
       if ( !sc.isSuccess() ) {
 	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
       }
-      resumeMainInstance();
+      resumeMainInstance(!restore);
     }
   }
   else if ( inc.type() == "APP_RUNNING" ) {
