@@ -53,5 +53,6 @@ class CheckpointRestoreWrapper  {
 };
 
 void CheckpointRestoreWrapper__init_instance(int argc, char** argv);
+CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance();
 
 #endif // CHECKPOINTRESTOREWRAPPER_H
