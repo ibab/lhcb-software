@@ -30,7 +30,7 @@ public:
   {
     if (m_flag)
     {
-      printf("[INFO] DIM Error from AdderSvc: Severity %d, Code %x %s\n",severity,code,msg);
+      printf("[INFO] DIM Message from AdderSvc: Severity %d, Code %x %s\n",severity,code,msg);
     }
     return;
   }

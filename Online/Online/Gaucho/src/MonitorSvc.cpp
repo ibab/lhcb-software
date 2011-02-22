@@ -282,6 +282,7 @@ StatusCode MonitorSvc::finalize()
     m_incidentSvc = 0;
   }
 
+  dim_lock();
   if (m_started)
   {
     m_started = false;
@@ -314,6 +315,7 @@ StatusCode MonitorSvc::finalize()
   }
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
+  dim_unlock();
   StatusCode sc = Service::finalize();
   return StatusCode::SUCCESS;
 }
