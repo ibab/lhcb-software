@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r7 2011-02-22 =========================
 ! 2011-02-16 - Chris Jones
  - Fix various coverity warnings
 
