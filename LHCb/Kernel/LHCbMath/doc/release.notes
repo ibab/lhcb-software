@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r24 2011-02-22 =========================
 ! 2011-02-21 - Vanya Belyaev
  - ValueWithErorr:
     add constructor from textual representation 
