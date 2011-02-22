@@ -149,6 +149,7 @@ public:
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
   bool m_isSaver;
   MonAdder(){CycleFn = 0;m_IsEOR = false;};
+  virtual ~MonAdder(){}
   void *Allocate(int siz);
   void *ReAllocate(int);
   void SetCycleFn(void CycleCB(void*,void*,int, MonMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
