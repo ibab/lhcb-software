@@ -286,7 +286,7 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
     hMinusAboveThresholdK = hMinus ->proto()->richPID()->kaonHypoAboveThres();
   }
 
-  double mB              = particle.measuredMass()/Gaudi::Units::GeV;
+  //double mB              = particle.measuredMass()/Gaudi::Units::GeV;
   double chi2B           = particle.endVertex()->chi2();
 
   double     docaB    = -999;
@@ -298,14 +298,14 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
     docaChi2  = -999;
   } //if
 
-  double minP            = std::min(hPlusP    , hMinusP);
+  //double minP            = std::min(hPlusP    , hMinusP);
   //double maxP            = std::max(hPlusP    , hMinusP);
 
   double minPt           = std::min(hPlusPt    , hMinusPt);
   double maxPt           = std::max(hPlusPt    , hMinusPt);
 
   //double minDllK         = std::min(hPlusDllK  , hMinusDllK);
-  double maxDllK         = std::max(hPlusDllK  , hMinusDllK);
+  //double maxDllK         = std::max(hPlusDllK  , hMinusDllK);
   
 
 
