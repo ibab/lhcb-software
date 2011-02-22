@@ -24,7 +24,7 @@ use DIM                 v19r15p2 Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r3     Online
 use Gaucho              v7r3     Online
-use GaudiCheckpointing  v0r3     Online
+use GaudiCheckpointing  v0r4     Online
 use GaudiOnline         v2r49    Online
 use GaudiRootCnvTests   v1r1     Online
 use GaudiSerialize      v0r9     Online
