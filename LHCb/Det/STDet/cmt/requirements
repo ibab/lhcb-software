@@ -1,5 +1,5 @@
 package STDet
-version           v4r23
+version           v4r24
 
 branches cmt doc src STDet dict
 
