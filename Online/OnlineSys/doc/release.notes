@@ -10,7 +10,7 @@
 <PRE>
    Based in Gaudi v22r0.
    Updates in Checkpointing, Gaucho, GaudiCheckpointing, GaudiOnline,
-   OnlineBase, OnlineTasks,
+   OnlineBase, OnlineTasks and DIM.
 </PRE>
 
 <H1><A NAME=v4r46>2010-02-17 OnlineSys v4r47</A></H1>
