@@ -13,6 +13,7 @@ __all__ = (
 import re
 from copy import deepcopy 
 from GaudiConf.Configuration import *
+from GaudiConfUtils import isConfigurable
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
@@ -127,7 +128,7 @@ class bindMembers (object) :
     def _default_handler_( self, line, alg ) :
         return self._handle_Selection(line, alg)
 
-    def _handle_GaudiSequencer( self, line, alg ) :
+    def _handle_Configurable( self, line, alg ) :
         if isinstance(line, str) and line.find("Stream") != 0 :
             print 'WARNING: line', line, 'uses plain Gaudi configurable', alg.name(), '. Consider using Selection instead!'
         # if not known, blindly copy -- not much else we can do
@@ -176,7 +177,7 @@ class bindMembers (object) :
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        return self._handle_GaudiSequencer( line,  alg )
+        return self._handle_Configurable( line,  alg )
 
     def __init__( self, line, algos ) :
 
@@ -184,10 +185,13 @@ class bindMembers (object) :
         self._outputloc = None
         for alg in algos:
             # dispatch according to the type of alg...
-            x = '_handle_' + type(alg).__name__
+            if isConfigurable(alg) :
+                self._handle_Configurable(line, alg)
+            else :
+                x = '_handle_' + type(alg).__name__
             
-            handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
-            handle(line,alg)
+                handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
+                handle(line,alg)
 
 
 class StrippingTool (object ) :  

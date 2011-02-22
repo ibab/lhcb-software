@@ -9,7 +9,9 @@
  - StrippingConf.StrippingLine
   . StrippingLine constructor argument algos only accepts Selection types or
     Strippingmembers
-  . default handler now treats Selection types. Add handler for GaudiSequencer.   . Add support for PassThroughSelection, VoidEventSelection
+  . Default handler now treats Selection types. 
+  . Add default handler for Configurables.   
+  . Add support for PassThroughSelection, VoidEventSelection
   . Disallow use of SelectionSequence
 
  - Increase to v4r0
