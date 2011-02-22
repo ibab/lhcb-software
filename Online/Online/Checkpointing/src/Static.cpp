@@ -114,7 +114,9 @@ static void handle_set_env_string(void* /* par */, const char* s) {
   char* q = (char*)m_chrfind(s,'=');
   if ( q ) {
     *q = 0;
-    if ( 0 == ::setenv(s,q+1,1) )
+    if ( 0 == m_strcmp(s,"UTGID") ) 
+      checkpointing_sys_set_utgid(&chkpt_sys,q+1);
+    else if ( 0 == ::setenv(s,q+1,1) )
       mtcp_output(MTCP_DEBUG,"Set environment: %s=%s\n",s,q+1);
     else
       mtcp_output(MTCP_ERROR,"FAILED Set environment: %s=%s\n",s,q+1);
