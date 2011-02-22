@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VeloPixDet v1r10 2011-02-22 =========================
 ! 2011-02-17 - Chris Jones
  - Fix some coverity resource leaks
 
