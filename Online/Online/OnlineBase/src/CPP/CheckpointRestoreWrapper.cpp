@@ -20,3 +20,8 @@ CheckpointRestoreWrapper* CheckpointRestoreWrapper__instance() {
   if ( s_instance ) return s_instance;
   throw std::runtime_error("No valid CheckpointRestore interface defined!");
 }
+
+void CheckpointRestoreWrapper__init_instance(int argc, char** argv) {
+  CheckpointRestoreWrapper* s = CheckpointRestoreWrapper__instance();
+  s->init_instance(argc, argv, environ);
+}
