@@ -5,6 +5,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r35 2011-02-22 =========================
 ! 2011-02-21 - Chris Jones
  - Add TT cluster information to RecSummary object
 
