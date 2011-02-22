@@ -4,8 +4,6 @@ These will not be used for production, only for testing.
 Dictionaries have the name of the line builder instance.
 """
 
-#bob=1
-
 _dict = {}
 
 # standard Bs->Jpsi/Phi prescaled and detatched lines
@@ -83,7 +81,7 @@ B2hhLTUnbiased = {
                 , 'PostscaleLoose'        :    1.0
                 , 'PrescaleNB'            :    1.0
                 , 'PostscaleNB'           :    1.0
-                , 'NetCut'                :   -1.0
+                , 'NetCut'                :    0.9
                 }
     }
 

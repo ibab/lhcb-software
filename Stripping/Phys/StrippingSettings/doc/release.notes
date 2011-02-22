@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-22 - Juan Palacios
+ - Update 'B2hhLTUnbiased' 'NetCut' value to 0.9
+
 ! 2011-02-11 - Juan Palacios
  - Add function Utils.lineBuilder to create a line builder from DB parameters:
     Create a line builder from a stripping version and a line builder
