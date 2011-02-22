@@ -118,18 +118,18 @@ DimTaskFSM::~DimTaskFSM()  {
 
 StatusCode DimTaskFSM::connectDIM(DimCommand* cmd) {
   std::string svcname;
-  m_name = RTL::processName();
+  m_name        = RTL::processName();
   m_monitor.pid = ::lib_rtl_pid();
   svcname       = m_name+"/status";
   if ( DimServer::itsName ) delete [] DimServer::itsName;
   DimServer::itsName = 0;
-  DimServer::autoStartOn();
-  DimServer::start(m_name.c_str());
+
   m_command = cmd ? cmd : new Command(m_name, this);
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname   = m_name+"/fsm_status";
   m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
-  ::dis_start_serving((char*)m_name.c_str());
+  DimServer::autoStartOn();
+  DimServer::start(m_name.c_str());
   return StatusCode::SUCCESS;
 }
 
