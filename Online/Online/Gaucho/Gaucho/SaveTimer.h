@@ -1,12 +1,12 @@
 #ifndef SAVETIMER_H
 #define SAVETIMER_H
 #include "Gaucho/GenTimer.h"
-#include "HistAdder.h"
+#include "MonAdder.h"
 class MonSubSys;
 
 class SaveTimer : public GenTimer
 {
-  HistAdder *m_Adder;
+  MonAdder *m_Adder;
   void *m_buffadd;
   int m_bsiz;
   std::string m_filename;
@@ -16,7 +16,7 @@ class SaveTimer : public GenTimer
   std::string m_taskname;
   bool m_EOR;
 public:
-  SaveTimer(HistAdder *tis, int period = 900);
+  SaveTimer(MonAdder *tis, int period = 900);
   virtual ~SaveTimer(void);
   void timerHandler ( void );
   void Stop();

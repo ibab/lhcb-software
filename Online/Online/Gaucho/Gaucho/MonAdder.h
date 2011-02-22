@@ -7,18 +7,27 @@
 #include <map>
 #include <string>
 #include <boost/regex.hpp>
+#include "dic.hxx"
+#include "Gaucho/MonInfo.h"
+#include "RTL/rtl.h"
+#define ADD_HISTO 1
+#define ADD_COUNTER 2
+
 //#include "CCPCSerializer.h"
 //char hist_prefix[]="_HIST_";
 
 
-typedef std::map<std::string, void*> HistMap;
-typedef HistMap::iterator HistIter;
+typedef std::map<std::string, void*> MonMap;
+typedef MonMap::iterator MonIter;
 
 class ObjService;
 class HistServer;
 class ObjRPC;
 class MonInfo;
 class DimInfo;
+class HAdderTaskInfoHandler;
+class HAdderServInfoHandler;
+
 //static int empty=-1;
 
 class TaskSvcDescr
@@ -96,11 +105,13 @@ typedef TskMap::iterator TskIter;
 class MonAdder
 {
 public:
+  int m_type;
   void *CycleCBarg;
-  void (*CycleFn)(void*,void*,int, HistMap *, MonAdder *);
+  void (*CycleFn)(void*,void*,int, MonMap *, MonAdder *);
   void *m_buffer;
   int m_buffersize;
   int m_usedSize;
+  std::string m_outsvcname;
   INServiceMap m_inputServicemap;
   OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
@@ -113,7 +124,7 @@ public:
   boost::regex m_taskexp;
   boost::regex m_serviceexp;
   long long m_reference;
-  HistMap m_hmap;
+  MonMap m_hmap;
   int m_expected;
   int m_received;
   int m_added;
@@ -129,15 +140,99 @@ public:
   bool m_noRPC;
 
 public:
+  static DimInfo *gg_DNSInfo;
+  static std::vector<MonAdder*> gg_AdderList;
+  static HAdderTaskInfoHandler gg_TaskHandler;
+  static HAdderServInfoHandler gg_ServHandler;
+  lib_rtl_lock_t m_lockid;
+  lib_rtl_lock_t m_maplock;
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
+  bool m_isSaver;
   MonAdder(){CycleFn = 0;m_IsEOR = false;};
   void *Allocate(int siz);
   void *ReAllocate(int);
-  void SetCycleFn(void CycleCB(void*,void*,int, HistMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
+  void SetCycleFn(void CycleCB(void*,void*,int, MonMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
   INServiceDescr *findINService(std::string);
   OUTServiceDescr *findOUTService(std::string servc);
   void setSrcNode(std::string &src){m_srcnode = src;return;};
   void setOutDNS(std::string &src){m_outdns = src;return;};
   virtual void Configure(void)=0;
+  virtual void TaskHandler(char *, int);
+  virtual void ServiceHandler(DimInfo *, char *, int);
+  void setIsSaver(bool p)
+  {
+    if (p)
+    {
+      lib_rtl_create_lock(0,&m_lockid);
+    }
+    m_isSaver = p;
+    return;
+  };
+  int Lock()
+  {
+    if (m_lockid != 0)
+    {
+      int status;
+//      printf("HistAdder Locking\n");
+      status = lib_rtl_lock(m_lockid);
+//      printf("HistAdder Locked\n");
+      return status;
+    }
+    else
+    {
+      return 0;
+    }
+  };
+  int UnLock()
+  {
+    if (m_lockid != 0)
+    {
+      int status;
+//      printf("HistAdder Un-Locking\n");
+      status = lib_rtl_unlock(m_lockid);
+//      printf("HistAdder UnLocked\n");
+      return status;
+    }
+    else
+    {
+      return 0;
+    }
+  };
+  int LockMap()
+  {
+    if (m_maplock != 0)
+    {
+      int status;
+      status = lib_rtl_lock(m_maplock);
+      return status;
+    }
+    else
+    {
+      return 0;
+    }
+  };
+  int UnLockMap()
+  {
+    if (m_maplock != 0)
+    {
+      int status;
+      status = lib_rtl_unlock(m_maplock);
+      return status;
+    }
+    else
+    {
+      return 0;
+    }
+  };
+};
+class HAdderTaskInfoHandler : public DimInfoHandler
+{
+public:
+  void infoHandler(void);
+};
+class HAdderServInfoHandler : public DimInfoHandler
+{
+public:
+  void infoHandler(void);
 };
 #endif

@@ -11,7 +11,7 @@
 #include "Gaucho/RootHists.h"
 #include "Gaucho/Utilities.h"
 
-SaveTimer::SaveTimer(HistAdder *add, int period) : GenTimer((void*)add,period*1000,TIMER_TYPE_PERIODIC)
+SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*1000,TIMER_TYPE_PERIODIC)
 {
   m_Adder = add;
   m_dueTime = 0;

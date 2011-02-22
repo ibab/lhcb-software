@@ -15,7 +15,7 @@
 DECLARE_SERVICE_FACTORY(AdderSvc)
 extern "C"
 {
-  void EORSaver(void *arg,void* ,int , HistMap *, MonAdder *)
+  void EORSaver(void *arg,void* ,int , MonMap *, MonAdder *)
   {
     SaveTimer *tim = (SaveTimer*) arg;
     tim->timerHandler();

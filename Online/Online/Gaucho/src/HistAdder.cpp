@@ -10,14 +10,13 @@
 #include <vector>
 #include "string.h"
 #include "Gaucho/Utilities.h"
-static int mpty;
 typedef std::pair<std::string, void*> HistPair;
 
 
-DimInfo *HistAdder::gg_DNSInfo =0;
-std::vector<HistAdder*> HistAdder::gg_AdderList;
-HAdderTaskInfoHandler HistAdder::gg_TaskHandler;
-HAdderServInfoHandler HistAdder::gg_ServHandler;
+DimInfo *MonAdder::gg_DNSInfo =0;
+std::vector<MonAdder*> MonAdder::gg_AdderList;
+HAdderTaskInfoHandler MonAdder::gg_TaskHandler;
+HAdderServInfoHandler MonAdder::gg_ServHandler;
 
 
 
@@ -49,6 +48,7 @@ HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
   m_added = 0;
   m_noRPC = false;
   gg_AdderList.push_back(this);
+  m_type = ADD_HISTO;
 }
 HistAdder::~HistAdder()
 {
@@ -138,247 +138,6 @@ void HistAdder::Configure()
   {
     m_rpc = new ObjRPC(m_ser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
   }
-}
-void HistAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
-{
-  if (strcmp(input,"DEAD") == 0)
-  {
-    return;
-  }
-//  printf("New Message from Service List Service %s data:\n%s\n",myInfo->getName(),input);
-  bool Newe;
-  Newe = false;
-  char *sinput=input;
-  if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
-  {
-    Newe = (input[0] == '+');
-    sinput = &input[1];
-  }
-  else
-  {
-    Newe = true;
-  }
-  dyn_string *service_list = Strsplit(sinput,(char*)"\n");
-  for (unsigned int j=0;j<service_list->size();j++)
-  {
-    std::string service_line(service_list->at(j));
-    dyn_string *service = Strsplit((char*)service_line.c_str(),(char*)"|");
-    bool status;
-//    printf("comparing %s to pattern %s\n",service->at(0).c_str(),this->m_servicePattern.c_str());
-    status = boost::regex_search(service->at(0),m_serviceexp);
-    if (status)
-    {
-      INServIter i;
-      i = m_inputServicemap.find(service->at(0));
-      if (Newe)
-      {
-        if (i == m_inputServicemap.end())
-        {
-//          servc = svc->at(0);
-          TaskServIter k;
-          std::string taskn=std::string(myInfo->getName());
-          taskn = taskn.substr(0,taskn.find("/SERVICE_LIST"));
-          k = m_TaskServiceMap.find(taskn);
-          if (k != m_TaskServiceMap.end())
-          {
-            k->second->m_svcname = service->at(0);
-          }
-          INServiceDescr *sd = new INServiceDescr((char*)(service->at(0).c_str()),
-          new MonInfo((char*)(service->at(0).c_str()),&BufferAdder,this));
-//            printf("Service: %s\n",service->at(0).c_str());
-          m_inputServicemap.insert(INServicePair(service->at(0).c_str(),sd));
-//            printf("%s: Adding service @%s@\n",m_name.c_str(),service->at(0).c_str());
-          if (m_inputServicemap.size() == 1)
-          {
-//              printf ("First client for adding... Creating our output service...\n");
-            m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
-            DimServer::start();
-          }
-        }
-        else
-        {
-            printf("Duplicate service %s. DNS restart? \n",service->at(0).c_str());
-        }
-      }
-      else
-      {
-        if (i != m_inputServicemap.end())
-        {
-          TaskServIter k;
-          std::string taskn=std::string(myInfo->getName());
-          taskn = taskn.substr(0,taskn.find("/SERVICE_LIST"));
-          k = m_TaskServiceMap.find(taskn);
-          if (k != m_TaskServiceMap.end())
-          {
-            k->second->m_svcname = "";
-          }
-          INServiceDescr *sd = i->second;
-          delete sd->m_Info;
-          delete sd;
-          m_inputServicemap.erase(i);
-    //      printf("%s: Removing service %s\n",m_name.c_str(),servc.c_str());
-          if (m_inputServicemap.empty())
-          {
-//            printf ("No more client... Deleteing our output service...\n");
-            delete m_outservice;
-            m_outservice = 0;
-          }
-        }
-      }
-    }
-  }
-}
-void HistAdder::TaskHandler(char *input, int )
-{
-//  char *input;
-//  int siz;
-//  input = (char*)m_DNSInfo->getData();
-//  siz = m_DNSInfo->getSize();
-  if (strcmp(input,"DEAD") == 0)
-  {
-//    printf("DNS Down!!!!\n");
-    return;
-  }
-//  printf("New Message from DNS %s\n",input);
-  bool Newe;
-  Newe = true;
-  char *sinput=input;
-  if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
-  {
-    Newe = (input[0] == '+');
-    sinput = &input[1];
-  }
-  dyn_string *server_list = Strsplit(sinput,(char*)"|");
-
-  dyn_string::iterator i;
-  for (i=server_list->begin();i!=server_list->end();i++)
-  {
-    std::string server = *i;
-    std::string tskname,tgen;
-    std::string servc;
-    TaskName(server,tskname,tgen);
-    if (tskname != "")
-    {
-      if (Newe)
-      {
-        TaskServIter i;
-        i = m_TaskServiceMap.find(tskname);
-        if (i == m_TaskServiceMap.end())
-        {
-          servc = tskname+std::string("/SERVICE_LIST");
-          DimInfo *slist = new DimInfo(servc.c_str(),(char *)"DEAD",&gg_ServHandler);
-          TaskSvcDescr *ts = new TaskSvcDescr(tskname,slist);
-          m_TaskServiceMap.insert(TaskServicePair(tskname,ts));
-//          printf("Listening to Task %s\n",tskname.c_str());
-        }
-        else
-        {
-//          printf("Duplicate Task %s. DNS restart? \n",tskname.c_str());
-        }
-      }
-      else
-      {
-        TaskServIter i;
-        i = m_TaskServiceMap.find(tskname);
-        if (i != m_TaskServiceMap.end())
-        {
-          std::string service;
-          INServIter k,l;
-          service = i->second->m_svcname;
-  //        printf("Task %s died. Removing service @%s@\n",tskname.c_str(),service.c_str());
-          k = m_inputServicemap.find(service);
-          if (k != m_inputServicemap.end())
-          {
-            delete k->second->m_Info;
-            delete k->second;
-            m_inputServicemap.erase(k);
-            if (m_inputServicemap.empty())
-            {
-  //            printf ("No more client... Deleteing our output service...\n");
-              delete m_outservice;
-              m_outservice = 0;
-            }
-          }
-          else
-          {
-  //          printf("Very Funny... service @%s@ (%d)is not in service map...\n",service.c_str(),(int)service.size());
-  //          printf("map contents...\n");
-  //          int indx=0;
-  //          for (k=m_inputServicemap.begin(); k!= m_inputServicemap.end();k++)
-  //          {
-  //            printf("Index %d key: @%s@ (%d) @%s@\n",indx,k->first.c_str(),(int)k->first.size(),k->second->m_serviceName.c_str());
-  //            indx++;
-  //          }
-          }
-          TaskSvcDescr *ts = i->second;
-          delete ts->m_diminfo;
-          delete ts;
-          m_TaskServiceMap.erase(i);
-  //        printf("%s: Removing task %s\n",m_name.c_str(),tskname.c_str());
-  //        if (m_inputServicemap.empty())
-  //        {
-  //          printf("no more clients... Exiting volontarily....\n");
-  //          exit(0);
-  //        }
-        }
-        else
-        {
-  //        printf("Task %s not found in map\n",tskname.c_str());
-        }
-        INServIter k;
-        std::string srvc=tskname+m_serviceName;
-        k = m_inputServicemap.find(srvc);
-        if (k != m_inputServicemap.end())
-        {
-          INServiceDescr *is = k->second;
-          m_inputServicemap.erase(k);
-          delete is->m_Info;
-          delete is;
-          if (m_inputServicemap.empty())
-          {
-  //          printf ("No more client... Deleteing our output service...\n");
-            delete m_outservice;
-            m_outservice = 0;
-          }
-        }
-      }
-    }
-  }
-}
-
-void HAdderServInfoHandler::infoHandler(void)
-{
-  char *input;
-  int siz;
-  input = (char*)this->itsService->getData();
-  siz = this->itsService->getSize();
-//  printf("Service Info Handler %s. Input :\n%s\n",this->itsService->getName(),input);
-  std::vector<HistAdder*>::iterator i;
-  for (i=HistAdder::gg_AdderList.begin();i!=HistAdder::gg_AdderList.end();i++)
-  {
-    HistAdder *p;
-    p = *i;
-    p->ServiceHandler(itsService,input,siz);
-  }
-//    m_Hadder->TaskHandler();
-//    m_Hadder->ServiceHandler(itsService);
-}
-
-void HAdderTaskInfoHandler::infoHandler(void)
-{
-  char *input;
-  int siz;
-  input = (char*)this->itsService->getData();
-//  printf("Server Info Handler. Input :%s\n",input);
-  siz = this->itsService->getSize();
-  std::vector<HistAdder*>::iterator i;
-  for (i=HistAdder::gg_AdderList.begin();i!=HistAdder::gg_AdderList.end();i++)
-  {
-    HistAdder *p;
-    p = *i;
-    p->TaskHandler(input,siz);
-  }
-//    m_Hadder->TaskHandler();
 }
 void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
@@ -474,7 +233,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   else if (m_reference == current)
   {
 //    printf("Adding %s\n",h->m_TargetService.c_str());
-    HistMap hmap;
+    MonMap hmap;
     hmap.clear();
     void *bend = AddPtr(buff,siz);
     void *hstart = AddPtr(buff,sizeof(SerialHeader));
@@ -485,9 +244,9 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       hmap.insert(HistPair(std::string(nam),pp));
       pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
     }
-    for (HistIter i=hmap.begin();i!=hmap.end();i++)
+    for (MonIter i=hmap.begin();i!=hmap.end();i++)
     {
-      HistIter j = m_hmap.find(i->first);
+      MonIter j = m_hmap.find(i->first);
       if (j!=m_hmap.end())
       {
         LockMap();
@@ -617,7 +376,8 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     //printf(" %d %d\n", m_received,m_expected);
     if (m_outservice != 0)
     {
-      m_outservice->Updater();
+      m_outservice->Serialize();
+      m_outservice->Update();
     }
     if (m_expandRate)
     {

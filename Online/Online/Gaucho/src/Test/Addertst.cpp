@@ -8,7 +8,7 @@
 TCanvas *canv;
 static int nCB=0;
 
-void CycleFn(void * ,void *,int , HistMap *hm, MonAdder *)
+void CycleFn(void * ,void *,int , MonMap *hm, MonAdder *)
 {
   printf("=====================================Cycle CallBack Function\n");
   int j=0;
@@ -18,7 +18,7 @@ void CycleFn(void * ,void *,int , HistMap *hm, MonAdder *)
     return;
   }
   nCB++;
-  for (HistIter i=hm->begin();i!=hm->end();i++)
+  for (MonIter i=hm->begin();i!=hm->end();i++)
    {
       j++;
 //      printf("%s ",i->first.c_str());

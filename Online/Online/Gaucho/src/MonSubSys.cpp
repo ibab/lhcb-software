@@ -206,7 +206,8 @@ void MonSubSys::Clear()
 void MonSubSys::EORUpdate(int runo)
 {
   m_EORsvc->setRunNo(runo);
-  m_EORsvc->Updater();
+  m_EORsvc->Serialize();
+  m_EORsvc->Update();
 }
 int MonSubSys::Lock(void)
 {

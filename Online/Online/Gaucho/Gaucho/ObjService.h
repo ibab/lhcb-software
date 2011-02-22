@@ -15,6 +15,8 @@ protected:
   ObjSerializer *m_ser;
   bool m_EORservice;
   SerialHeader m_hdr;
+  void *m_serptr;
+  int m_sersiz;
 public:
   //void *p;
   bool m_expandservice;
@@ -25,7 +27,9 @@ public:
   ObjService (ObjSerializer *,const char *name, char *format, void *buff, int siz);
   ObjService (ObjSerializer *,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
 //  ObjService (const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
-  void Updater();
+//  void Updater();
+  void Serialize();
+  void Update();
 //  void setHeader(SerialHeader &hdr){m_hdr=hdr;};
   void setRunNo(int runno){m_hdr.run_number=runno;};
   void setTime(long long tim){m_hdr.ser_tim=tim;};

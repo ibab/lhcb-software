@@ -64,8 +64,8 @@ public:
 private:
 
   std::string m_utgid;
-  HistAdder *m_adder;
-  HistAdder *m_EoRadder;
+  MonAdder *m_adder;
+  MonAdder *m_EoRadder;
   std::string m_TaskName;
   std::string m_PartitionName;
   std::string m_SaverTaskName;
