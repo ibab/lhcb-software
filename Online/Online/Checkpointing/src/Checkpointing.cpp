@@ -31,6 +31,13 @@ HIDDEN(int) m_strncmp(const char* t, const char* s, size_t len) {
   return 1;
 }
 
+HIDDEN(size_t) m_strncpy(char* t, const char* s, size_t len) {
+  const char* q=s;
+  for(; *q && --len; ++q, ++t) *t = *q;
+  *t = 0;
+  return q-s;
+}
+
 HIDDEN(size_t) m_strcpy(char* t, const char* s) {
   const char* q=s;
   for(; *q; ++q, ++t) *t = *q;

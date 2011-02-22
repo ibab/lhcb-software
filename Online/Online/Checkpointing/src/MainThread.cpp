@@ -35,6 +35,18 @@ extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
 static MainThread::clone_t s_cloneFunc;
 static Thread s_thread;
 
+void MainThread::init_instance(int argc, char** argv, char** environment) {
+  Stack stack;
+  stack.argc = argc;
+  stack.argv = argv;
+  stack.environment = environment;
+  chkpt_sys.init_stack(&stack);
+}
+
+int MainThread::setUTGID(const char* new_utgid) {
+  return chkpt_sys.setUTGID(new_utgid);
+}
+
 MainThread::MainThread()  {
   LibC::getSymbol("__clone",s_cloneFunc);
   chkpt_sys.motherofall   = &s_thread;// new Thread();

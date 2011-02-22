@@ -15,6 +15,12 @@ namespace CHECKPOINTING_NAMESPACE    {
   // Forward declarations
   class Thread;
 
+  struct Stack {
+    int argc;
+    char** argv;
+    char** environment;
+  };
+
   /**@struct SysInfo
    *
    * @author  M.Frank
@@ -22,13 +28,14 @@ namespace CHECKPOINTING_NAMESPACE    {
    */
   _ALIGN(struct) SysInfo {
 
+
     enum RestartTypes {
       RESTART_NORMAL = 0,
       RESTART_CHECKPOINT = 1
     };
 
-    typedef void  (*start_restore_t)(SysInfo* sys,int print_level, int optional_flags);
-    typedef void   (*end_restore_t)();
+    typedef void  (*start_restore_t)(Stack* stack,int print_level,int optional_flags);
+    typedef void  (*end_restore_t)();
 
     /// Current stack limit
     unsigned long   stackLimitCurr;
@@ -69,6 +76,15 @@ namespace CHECKPOINTING_NAMESPACE    {
     int             restart_type;
     /// Optional flags to steer restore
     int             restart_flags;
+    /// Process stack info: argv[0]
+    char*           arg0;
+    /// Length of argv[0] string
+    int             arg0Len;
+    /// Process stack info: argv[0]
+    char*           utgid;
+    /// Length of argv[0] string
+    int             utgidLen;
+
     /// The name/path of the checkpointing code image
     char            checkpointImage[1024];
     /// The name/path of the checkpoint file
@@ -83,6 +99,11 @@ namespace CHECKPOINTING_NAMESPACE    {
     void aquire();
     /// Write static system information to file
     long write(int fd);
+    /// Initialize basic variables from stack
+    void init_stack(Stack* s);
+    /// Setup process UTGID/argv[0] if availible
+    int setUTGID(const char* new_utgid);
+
     /// After successful restore update the process environment from file.
     long setEnvironment();
     /// Print data content

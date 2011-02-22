@@ -28,68 +28,84 @@ static int checkMarker(int fd, Marker should) {
   return 1;
 }
 
-static void load(const char* file_name, int advise, SysInfo::start_restore_t* func, SysInfo* pSys) {
+static void load(const char* file_name, int advise, SysInfo::start_restore_t* func) {
+  typedef void* pvoid;
   const Marker PROCESS_BEGIN_MARKER = *(Marker*)"PROC";
   const Marker SYS_BEGIN_MARKER     = *(Marker*)"PSYS";
   const Marker SYS_END_MARKER       = *(Marker*)"psys";
-  int siz, fd = mtcp_sys_open(file_name, O_RDONLY, 0);
+  int   rc, siz, fd, fdnum;
+  struct stat sb;
   SysInfo sys;
 
-  if ( advise ) {
-    int rc = ::posix_fadvise64(fd,0,0,POSIX_FADV_WILLNEED|POSIX_FADV_SEQUENTIAL);
-    if ( 0 != rc ) {
-      mtcp_output(MTCP_ERROR,"restore: fadvise error:%s\n",::strerror(errno));
-    }
-  }
-
   *func = 0;
-  if ( 0 == pSys ) pSys = &sys;
+  rc = mtcp_sys_lstat(file_name,&sb);
+  if ( rc < 0 ) {
+    mtcp_output(MTCP_FATAL,"restore: Failed [%d] to stat checkpoint file:%s\n",mtcp_sys_errno,file_name);
+  }
+  fd = mtcp_sys_open(file_name, O_RDONLY, 0);
   if ( fd < 0 ) {
     mtcp_output(MTCP_FATAL,"Failed to open checkpoint file:%s\n",file_name);
-    mtcp_abort();
   }
   checkMarker(fd,PROCESS_BEGIN_MARKER);
   checkMarker(fd,SYS_BEGIN_MARKER);
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_output(MTCP_DEBUG,"SysInfo has a size of %d bytes\n",siz);
-  mtcp_sys_read(fd,pSys,sizeof(SysInfo));
-  typedef void* pvoid;
-  mtcp_output(MTCP_DEBUG,"checkpoint: SysInfo:       %p \n",pSys->sysInfo);
-  mtcp_output(MTCP_DEBUG,"checkpoint: Page   size:   %d [%X]\n",int(pSys->pageSize),int(pSys->pageSize));
-  mtcp_output(MTCP_DEBUG,"checkpoint: Image  name:  '%s'\n",pSys->checkpointImage);
+  mtcp_sys_read(fd,&sys,sizeof(SysInfo));
+
+  mtcp_output(MTCP_DEBUG,"checkpoint: SysInfo:       %p \n",sys.sysInfo);
+  mtcp_output(MTCP_DEBUG,"checkpoint: Page   size:   %d [%X]\n",int(sys.pageSize),int(sys.pageSize));
+  mtcp_output(MTCP_DEBUG,"checkpoint: Image  name:  '%s'\n",sys.checkpointImage);
   mtcp_output(MTCP_DEBUG,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
-		 pvoid(pSys->addrStart),pvoid(pSys->addrEnd),int(pSys->addrSize));
-  mtcp_output(MTCP_DEBUG,"checkpoint: Heap   saved:  %p\n",pvoid(pSys->saved_break));
+		 pvoid(sys.addrStart),pvoid(sys.addrEnd),int(sys.addrSize));
+  mtcp_output(MTCP_DEBUG,"checkpoint: Heap   saved:  %p\n",pvoid(sys.saved_break));
   mtcp_output(MTCP_DEBUG,"checkpoint: Stack lim soft:%p hard:  %p\n",
-		 pvoid(pSys->stackLimitCurr),pvoid(pSys->stackLimitHard));
+		 pvoid(sys.stackLimitCurr),pvoid(sys.stackLimitHard));
   // The finishRestore function pointer:
   mtcp_output(MTCP_DEBUG,"checkpoint: Restore start: %p finish:%p\n",
-		 pSys->startRestore,pSys->finishRestore);
+		 sys.startRestore,sys.finishRestore);
   
-  void* data = (void*)mtcp_sys_mmap((void*)pSys->addrStart,pSys->addrSize,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_ANONYMOUS|MAP_FIXED|MAP_PRIVATE,-1,0);
+  void* data = (void*)mtcp_sys_mmap((void*)sys.addrStart,sys.addrSize,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_ANONYMOUS|MAP_FIXED|MAP_PRIVATE,-1,0);
   if (data == MAP_FAILED) {
     if (errno != EBUSY) {
       mtcp_output(MTCP_FATAL,"restore: error creating %d byte restore region at %p: %s\n",
-		     int(pSys->addrSize),pvoid(pSys->addrStart),::strerror(errno));
-      mtcp_abort();
+		     int(sys.addrSize),pvoid(sys.addrStart),::strerror(errno));
     } 
     else {
       mtcp_sys_close(fd);
       mtcp_output(MTCP_FATAL,"restore:  address conflict...\n");
     }
   }
-  if ( data != (void*)pSys->addrStart ) {
+  if ( data != (void*)sys.addrStart ) {
     mtcp_output(MTCP_FATAL,"restore: %d byte restore region at %p got mapped at %p\n",
-		   int(pSys->addrSize),pvoid(pSys->addrStart),pvoid(data));
-    mtcp_abort();
+		int(sys.addrSize),pvoid(sys.addrStart),pvoid(data));
   }
   mtcp_output(MTCP_INFO,"restore: mapped %d byte restore image region at %p - %p in execution mode.\n",
-		 int(pSys->addrSize),data,pvoid(pSys->addrStart+pSys->addrSize));
+		 int(sys.addrSize),data,pvoid(sys.addrStart+sys.addrSize));
   mtcp_sys_read(fd,&siz,sizeof(siz));
-  mtcp_sys_read(fd,data,pSys->addrSize);
+  mtcp_sys_read(fd,data,sys.addrSize);
   checkMarker(fd,SYS_END_MARKER);
-  mtcp_sys_close(fd);
-  *func = pSys->startRestore;
+
+  // Move file descriptor to number expected afterwards and seek back to start
+  fdnum = sys.checkpointFD;
+  if ( fd != fdnum ) {  // Move file to the same descriptor used for writing the checkpoint!
+    if ( mtcp_sys_dup2(fd,fdnum) < 0) {
+      mtcp_output(MTCP_FATAL,"FileDesc: error %d [%s] restore %s fd %d to %d.\n", 
+		  mtcp_sys_errno, strerror(mtcp_sys_errno), file_name, fd, fdnum);
+    }
+    mtcp_sys_close(fd);
+  }
+  fd = fdnum;
+  rc = mtcp_sys_lseek(fd,0,SEEK_SET);
+  if ( rc < 0 ) {
+    mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to file begin:%s\n",mtcp_sys_errno,file_name);
+  }
+  if ( advise ) {
+    int rc = ::posix_fadvise64(fd,0,0,POSIX_FADV_WILLNEED|POSIX_FADV_SEQUENTIAL);
+    if ( 0 != rc ) {
+      mtcp_output(MTCP_ERROR,"restore: fadvise error:%s\n",::strerror(errno));
+    }
+  }
+  *func = sys.startRestore;
 }
 
 static int usage() {
@@ -107,7 +123,6 @@ static int usage() {
 int main(int argc, char** argv) {
   SysInfo::start_restore_t func = 0;
   if ( argc > 1 ) {
-    SysInfo* pSys = 0;
     int prt = MTCP_WARNING, opts=0;
     {
       int advise=0;
@@ -122,10 +137,15 @@ int main(int argc, char** argv) {
       if ( 0 == file_name ) return usage();
       mtcp_set_debug_level(MTCP_ERROR /* prt */);
       mtcp_output(MTCP_INFO,"restore: print level:%d input:%s\n",prt,file_name);
-      load(file_name,advise,&func,pSys);
+      load(file_name,advise,&func);
     }
-    // Now call the restore function - it shouldn't return
-    (*func)(pSys,prt,opts);
+    Stack stack;
+    stack.argv = argv;
+    stack.argc = argc;
+    stack.environment = environ;
+    // Now call the restore function - it shouldn't return. 
+    // Checkpoint file is still open and positioned to the beginning.
+    (*func)(&stack,prt,opts);
     mtcp_output(MTCP_FATAL,"restore: restore routine returned (it should never do this!)\n");
     mtcp_abort();
   }

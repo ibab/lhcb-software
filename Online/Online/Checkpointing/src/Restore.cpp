@@ -582,21 +582,19 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) 
 }
 
 /// Main restart routine in checkpointing image
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* sys, int print_level,int flags) {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* stack,int print_level,int flags) {
   /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
    * below, the optimizer generates non-PIC code if it's not -O0 - Gene
    */
   long long* extendedStack = mtcp_internal_tempstack + STACKSIZE;
-
   mtcp_set_debug_level(print_level);
-  /* Switch to a stack area that's part of the shareable's memory address range
-   * and thus not used by the checkpointed program
-   */
-  if ( sys ) {
-    mtcp_output(MTCP_INFO,"restore_start....First check input system information:%p\n",sys);
-    checkpointing_sys_print(*sys);
+  mtcp_output(MTCP_INFO,"restore: Assume that checkpoint file is already opened with fd:%d\n",chkpt_sys.checkpointFD);
+  int rc = mtcp_sys_lseek(chkpt_sys.checkpointFD,0,SEEK_SET);  // Position checkpoint file to start
+  if ( rc < 0 ) {
+    mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to beginning of the checkpoint file\n",mtcp_sys_errno);
   }
   chkpt_sys.restart_flags = flags;
+  checkpointing_sys_init_stack(&chkpt_sys,stack);
   checkpointing_sys_print(chkpt_sys);
 
   // Now we move the process to the temporary stack allocated in this image
@@ -620,26 +618,9 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(SysInfo* s
 
 /// Secondary restore routine. Execution starts once we jumped to the local stack.
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
-  struct stat sb;
   const char* nam = chkpt_sys.checkpointFile;
-  int fdnum = chkpt_sys.checkpointFD;
-  int fd = mtcp_sys_open(nam,O_RDONLY,0);
-  int rc = mtcp_sys_lstat(nam,&sb);
-  if ( rc < 0 ) {
-    mtcp_output(MTCP_FATAL,"restore: Failed [%d] to stat checkpoint file:%s\n",mtcp_sys_errno,nam);
-    mtcp_abort();
-  }
-  if ( fd != fdnum ) {  // Move file to the same descriptor used for writing the checkpoint!
-    if ( mtcp_sys_dup2(fd,fdnum) < 0) {
-      mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] restore %s fd %d to %d.\n", 
-		  mtcp_sys_errno, strerror(mtcp_sys_errno), nam, fd, fdnum);
-      mtcp_sys_close (fd);
-      return;
-    }
-    mtcp_sys_close(fd);
-  }
   Process p(Process::PROCESS_RESTORE);
-  if ( checkpointing_process_fread(&p,fdnum) ) {
+  if ( checkpointing_process_fread(&p,chkpt_sys.checkpointFD) ) {
     mtcp_output(MTCP_INFO,"Finished to restore files and memory areas from %s.\n",nam);
   }
   mtcp_output(MTCP_FATAL,"Failed to read process information from file %s.\n",nam);
@@ -699,4 +680,52 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
     }
   }
   while(rc==1);
+}
+
+/// Initialize basic variables from stack
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys, Stack* s) {
+  char** ee = s->environment;
+  sys->utgid    = 0;
+  sys->utgidLen = 0;
+  sys->arg0     = s->argv[0];
+  sys->arg0Len  = m_strlen(sys->arg0);
+  for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
+    if ( ep ) {
+      if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
+	sys->utgid = (char*)ep + 6;
+	sys->utgidLen = m_strlen(sys->utgid);
+	break;
+      }
+      else if ( *(short*)ep == *(short*)"_=" ) break;
+    }
+  }
+  mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
+	      ee,sys->arg0,sys->arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
+}
+
+/// Setup process UTGID/argv[0] if availible
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid) {
+  if ( 0 == new_utgid ) {
+    mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
+  }
+  else if ( sys->utgid == 0 ) {
+    mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);
+    ::setenv("UTGID",new_utgid,1);
+  }
+  else if ( sys->utgidLen < int(::strlen(new_utgid)) ) {
+    mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack.\n");
+  }
+  else if ( sys->arg0 && sys->arg0Len < int(::strlen(new_utgid)) ) {
+    mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace argv[0] from process stack.\n");
+    mtcp_abort();
+  }
+  if ( sys->arg0 ) {
+    m_memset(sys->arg0,0,sys->arg0Len);
+    m_strncpy(sys->arg0,new_utgid,sys->arg0Len-1);
+  }
+  if ( sys->utgid ) {
+    m_memset(sys->utgid,0,sys->utgidLen);
+    m_strncpy(sys->utgid,new_utgid,sys->utgidLen-1);
+  }
+  return 0;
 }

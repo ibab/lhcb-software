@@ -15,6 +15,7 @@ namespace CHECKPOINTING_NAMESPACE  {
   HIDDEN(int)    m_strcmp(const char* t, const char* s);
   HIDDEN(int)    m_strncmp(const char* t, const char* s, size_t len);
   HIDDEN(size_t) m_strcpy(char* t, const char* s);
+  HIDDEN(size_t) m_strncpy(char* t, const char* s, size_t len);
   HIDDEN(size_t) m_strcat(char* t, const char* s);
 
   HIDDEN(size_t) m_memcpy(void* t, const void* s, size_t len);

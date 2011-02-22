@@ -44,6 +44,10 @@ SysInfo::SysInfo() {
   chkptPID           = 0;
   restart_type       = 0;
   restart_flags      = 0;
+  arg0               = 0;
+  arg0Len            = 0;
+  utgid              = 0;
+  utgidLen           = 0;
 }
 
 void SysInfo::setCheckpointFile(int fd) {
@@ -94,6 +98,16 @@ void SysInfo::print() {
 
 long SysInfo::write(int fd) {
   return checkpointing_sys_fwrite(fd, this);
+}
+
+/// Initialize basic variables from stack
+void SysInfo::init_stack(Stack* s) {
+  checkpointing_sys_init_stack(this,s);
+}
+
+/// Setup process UTGID/argv[0] if availible
+int SysInfo::setUTGID(const char* new_utgid) {
+  return checkpointing_sys_set_utgid(this, new_utgid);
 }
 
 static void handle_set_env_string(void* /* par */, const char* s) {
