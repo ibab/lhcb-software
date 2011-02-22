@@ -7,6 +7,7 @@ __author__ = ['Liming Zhang']
 __date__ = '23/07/2010'
 __version__ = '$Revision: 1.4 $'
 
+#name = "B2DMuNuX"#
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
@@ -73,57 +74,86 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
         self.__confdict__=config
 
-        self.selmuon = self._muonFilter()
-        self.selKaon = self._kaonFilter()
-        self.selPion = self._pionFilter()
-        self.selb2D0MuX = makeb2DMuX(OutputList = "b2D0MuX",
+        self.selmuon = Selection( "Mufor" + name,
+                                  Algorithm = self._muonFilter(),
+                                  RequiredSelections = [StdLooseMuons])
+        
+        self.selKaon = Selection( "Kfor" + name,
+                                  Algorithm = self._kaonFilter(),
+                                  RequiredSelections = [StdLooseKaons])
+        
+        self.selPion = Selection( "Pifor" + name,
+                                  Algorithm = self._pionFilter(),
+                                  RequiredSelections = [StdLoosePions])
+        
+        self.seld02kpi = Selection( "D0KPifor" + name,
+                                    Algorithm = self._D02KPiFilter(),
+                                    RequiredSelections = [self.selKaon, self.selPion] )
+        
+        self.seldp2kpipi = Selection( "Dp2KPiPifor" + name,
+                                      Algorithm = self._Dp2KPiPiFilter(),
+                                      RequiredSelections = [self.selKaon, self.selPion] )
+
+        self.selds2kkpi = Selection( "Ds2KKPifor" + name,
+                                     Algorithm = self._Ds2KKPiFilter(),
+                                     RequiredSelections = [self.selKaon, self.selPion] )
+
+        self.sellambdac = Selection( "Lc2PKPifor" + name,
+                                     Algorithm = self._Lc2PKPiFilter(),
+                                     RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
+        
+        self.selb2D0MuX = makeb2DMuX('b2D0MuX' + name,
                                  DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                 DaughterLists = [ self.selmuon, self._D02KPiFilter()],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.seld02kpi,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )
 
-        self.selb2DpMuX = makeb2DMuX(OutputList = "b2DpMuX",
+        self.selb2DpMuX = makeb2DMuX('b2DpMuX' + name,
                                  DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                 DaughterLists = [ self.selmuon, self._Dp2KPiPiFilter()],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.seldp2kpipi,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )
 
-        self.selb2DsMuX = makeb2DMuX(OutputList = "b2DsMuX",
+        self.selb2DsMuX = makeb2DMuX('b2DsMuX' + name,
                                  DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                 DaughterLists = [ self.selmuon, self._Ds2KKPiFilter()],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.selds2kkpi,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )
-        self.selb2LcMuX = makeb2DMuX(OutputList = "b2LcMuX",
+        self.selb2LcMuX = makeb2DMuX('b2LcMuX' + name,
                                  DecayDescriptors = [ '[Lambda_b0 -> Lambda_c+ mu-]cc', '[Lambda_b0 -> Lambda_c+ mu+]cc'],
-                                 DaughterLists = [ self.selmuon, self._Lc2PKPiFilter()],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.sellambdac,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )         
         
-        self.b2D0MuXLine = StrippingLine('b2D0MuXLine'
+        self.b2D0MuXLine = StrippingLine('b2D0MuX' + name + 'Line'
                                           #, HLT     = " HLT_PASS_RE('Hlt.*(Muon|MuTrack).*Decision') "
                                           , prescale = 1
                                           , selection = self.selb2D0MuX
                                           )
 
-        self.b2DpMuXLine = StrippingLine('b2DpMuXLine'
+        self.b2DpMuXLine = StrippingLine('b2DpMuX' + name + 'Line'
                                          , prescale = 1
                                          , selection = self.selb2DpMuX
                                          )
         
-        self.b2DsMuXLine = StrippingLine('b2DsMuXLine'
+        self.b2DsMuXLine = StrippingLine('b2DsMuX' + name + 'Line'
                                          , prescale = 1
                                          , selection = self.selb2DsMuX
                                          )
         
-        self.b2LcMuXLine = StrippingLine('b2LcMuXLine'
+        self.b2LcMuXLine = StrippingLine('b2LcMuX' + name + 'Line'
                                          , prescale = 1
                                          , selection = self.selb2LcMuX
                                          )
@@ -137,84 +167,85 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
 
     def _muonFilter( self ):
-        from Configurables import FilterDesktop
-        _mu = FilterDesktop("FilterMu_forb2DMuX")
-        _mu.Code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
-        return Selection( "Mu_forb2DMuX", Algorithm = _mu, RequiredSelections = [StdLooseMuons])
+        _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
+        _mu = FilterDesktop( Code = _code )
+        return _mu
         
 
     def _pionFilter( self ):
-        from Configurables import FilterDesktop
-        _pi = FilterDesktop("FilterPi_forb2DMuX")
-        _pi.Code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
-        return Selection( "Pi_forb2DMuX", Algorithm = _pi, RequiredSelections = [StdLoosePions])
+        _pi = FilterDesktop( Code = _code )
+        return _pi
 
     def _kaonFilter( self ):
-        from Configurables import FilterDesktop
-        _ka = FilterDesktop("FilterK_forb2DMuX")
-        _ka.Code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
-        return Selection( "K_forb2DMuX", Algorithm = _ka, RequiredSelections = [StdLooseKaons])
-        
-                   
+        _ka = FilterDesktop( Code = _code )
+        return _ka 
   
     def _D02KPiFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _d02kpi = CombineParticles("CombineD02KPi_forb2DMuX")
-        _d02kpi.DecayDescriptors = [ '[D0 -> K- pi+]cc' ]
-        _d02kpi.CombinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _d02kpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _decayDescriptors = [ '[D0 -> K- pi+]cc' ]
+        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
-        return Selection( "D0KPi_forb2DMuX", Algorithm = _d02kpi, RequiredSelections = [self.selKaon, self.selPion] )
+        _d02kpi = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                            
+        return _d02kpi
 
     def _Dp2KPiPiFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _dp2kpipi = CombineParticles("CombineDp2KPiPi_forb2DMuX")
-        _dp2kpipi.DecayDescriptors = [ '[D+ -> K- pi+ pi+]cc' ]
-        _dp2kpipi.CombinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _dp2kpipi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _decayDescriptors = [ '[D+ -> K- pi+ pi+]cc' ]
+        _combinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
-        return Selection( "Dp2KPiPi_forb2DMuX", Algorithm = _dp2kpipi, RequiredSelections = [self.selKaon, self.selPion] )
+        _dp2kpipi = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                    
+        return _dp2kpipi
 
     def _Ds2KKPiFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _ds2kkpi = CombineParticles("CombineDs2KKPi_forb2DMuX")
-        _ds2kkpi.DecayDescriptors = [ '[D+ -> K+ K- pi+]cc' ]
-        _ds2kkpi.CombinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _ds2kkpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
+        _decayDescriptors = [ '[D+ -> K+ K- pi+]cc' ]
+        _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                              "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                              "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
-        return Selection( "Ds2KKPi_forb2DMuX", Algorithm = _ds2kkpi, RequiredSelections = [self.selKaon, self.selPion] )
+        _ds2kkpi = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                             
+        return _ds2kkpi
 
 
     def _Lc2PKPiFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _lambdac = CombineParticles("CombineLc2PKPi_forb2DMuX")
-        _lambdac.DecayDescriptors = [ '[Lambda_c+ -> K- p+ pi+]cc' ]
-        _lambdac.DaughtersCuts = {  "p+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(KPiPT)s *MeV) & (P>2.0*GeV) "\
+        _decayDescriptors = [ '[Lambda_c+ -> K- p+ pi+]cc' ]
+        _daughtersCuts = {  "p+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(KPiPT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.__confdict__}
-        _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _lambdac.MotherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _combinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
-        return Selection( "Lc2PKPi_forb2DMuX", Algorithm = _lambdac, RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
+        _lambdac = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    DaughtersCuts = _daughtersCuts,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                                                         
+        return _lambdac
         
 
 
-def makeb2DMuX(OutputList,
+def makeb2DMuX(name,
                DecayDescriptors,
-               DaughterLists,
+               MuSel,
+               DSel,
                BVCHI2DOF,
                BDIRA,
                DZ):
-    from Configurables import CombineParticles, OfflineVertexFitter
-    combinerName = OutputList + "_forb2DMuX"
-    _B = CombineParticles( combinerName )
-    _B.DecayDescriptors = DecayDescriptors
-    _B.CombinationCut = "(AM<6.2*GeV)"
-    _B.MotherCut = "  (MM<6.0*GeV) & (MM>2.5*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
+    _combinationCut = "(AM<6.2*GeV)"
+    _motherCut = "  (MM<6.0*GeV) & (MM>2.5*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
                    "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > %(DZ)s *mm ) "  % locals()
     #        _B.ReFitPVs = True
-    return Selection (OutputList,
+    _B = CombineParticles(DecayDescriptors = DecayDescriptors,
+                          CombinationCut = _combinationCut,
+                          MotherCut = _motherCut)
+                          
+    return Selection (name,
                       Algorithm = _B,
-                      RequiredSelections = DaughterLists)
+                      RequiredSelections = [MuSel, DSel])

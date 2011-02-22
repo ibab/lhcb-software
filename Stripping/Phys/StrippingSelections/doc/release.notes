@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-22 - Liming Zhang
+ - Fixed StrippingB2DMuNuX.py to satisfy the new framework
+
 ! 2011-02-21 - Albert Puig
  - Changed cut structure in StrippingB2XGamma.
 
