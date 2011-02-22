@@ -63,6 +63,8 @@ ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
 
+
+
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
