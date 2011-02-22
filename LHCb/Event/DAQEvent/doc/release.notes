@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r4 2011-02-22 =========================
 ! 2011-02-08 - Marco Cattaneo
  - Fix uninitialised variable in ODIN copy constructor (coverity defect 16204)
 
