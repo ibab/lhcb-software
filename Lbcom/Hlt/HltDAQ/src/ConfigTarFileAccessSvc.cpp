@@ -151,31 +151,26 @@ namespace ConfigTarFileAccessSvc_details {
     bool good() const { return m_file.good(); }
     bool dump(const std::string& name,ostream& os) {
       const map<Gaudi::StringKey,Info>& myIndex = getIndex();
-      // TODO: to avoid two lookups for gzipped files, should
-      //       flag compression in Info, and kill the '.gz' 
-      //       from the name during indexing...
       map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
       if (i!=myIndex.end()) {
         // slice works relative to the current file offset, as it works on an istream...
         m_file.seekg(0,std::ios_base::beg);
-        // suggest an 8K buffer size as hint -- most config items are smaller than that...
-        io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
-        return true;
-      }
+        if (i->second.compressed) {
 #ifndef _WIN32
-      // try to read a gzipped version of the filename
-      i = myIndex.find(name+".gz");
-      if (i!=myIndex.end()) {
-        // slice works relative to the current file offset, as it works on an istream...
-        m_file.seekg(0,std::ios_base::beg);
-        io::filtering_istream in;
-        in.push(io::gzip_decompressor());
-        in.push(io::slice(m_file,i->second.offset,i->second.size));
-        // suggest an 8K buffer size as hint -- most config items are smaller than that...
-        io::copy(in, os, 8192);
+            io::filtering_istream in;
+            in.push(io::gzip_decompressor());
+            in.push(io::slice(m_file,i->second.offset,i->second.size));
+            // suggest an 8K buffer size as hint -- most config items are smaller than that...
+            io::copy(in, os, 8192);
+#else 
+            return false;
+#endif
+        } else {
+            // suggest an 8K buffer size as hint -- most config items are smaller than that...
+            io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
+        }
         return true;
       }
-#endif
       return false;
     }
 
@@ -201,11 +196,12 @@ namespace ConfigTarFileAccessSvc_details {
     }
   private:
     struct Info {
-      Info() : size(0),type( TarFileType(0) ),offset(0) {}
+      Info() : size(0),type( TarFileType(0) ),offset(0), compressed(false) {}
       std::string      name;
       size_t           size;
       TarFileType      type;
       size_t           offset;
+      bool             compressed;
     };
 
     bool _append(const string& name, std::stringstream& is);
@@ -278,7 +274,7 @@ namespace ConfigTarFileAccessSvc_details {
 
   bool TarFile::append(const string& name, std::stringstream& is) {
 #ifndef _WIN32
-    if (m_compressOnWrite && is.str().size()>512 ) {
+    if (m_compressOnWrite && is.str().size()>512 && name.compare(name.size()-3,3,".gz")!=0 ) {
         std::stringstream out;
         io::filtering_istream in;
         in.push(io::gzip_compressor(9));
@@ -429,14 +425,15 @@ namespace ConfigTarFileAccessSvc_details {
                 }
                 info.offset = m_file.tellg(); // this goes here, as the longlink handling
                                               // reads an extra block...
+                // if name ends in .gz, assume it is gzipped.
+                // Strip the name down, and flag as compressed in info.
+                info.compressed = (info.name.compare(info.name.size()-3,3,".gz") == 0 );
+                if (info.compressed) info.name = info.name.substr( 0, info.name.size()-3 ) ; 
                 return true;
     }
   
 
     bool TarFile::index(std::streamoff offset) const {
-            // TODO: to avoid two lookups for gzipped files, should
-            //       flag compression in Info, and kill the '.gz' 
-            //       from the name during indexing...
             posix_header header;
             if (offset==0) m_index.clear();
             m_file.seekg(offset,ios::beg);
@@ -452,7 +449,7 @@ namespace ConfigTarFileAccessSvc_details {
                             return true;
                         }
                     }
-                    std::cerr << "failed to interpret header @ " << offset << " in tarfile " << m_name << std::endl;
+                    std::cerr << "failed to interpret header preceeding " << m_file.tellg() << " in tarfile " << m_name << std::endl;
                     m_file.seekg(0,std::ios::beg);
                     return false;
                 }
@@ -531,8 +528,8 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
   }
 
   ios::openmode mode =  (m_mode == "ReadWrite") ? ( ios::in | ios::out | ios::ate   )
-    :  (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
-    :                              ios::in ;
+    :                   (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
+    :                                               ios::in ;
 
   info() << " opening " << m_name << " in mode " << m_mode << endmsg;
   m_file.reset( new TarFile(m_name,mode,m_compress) );
