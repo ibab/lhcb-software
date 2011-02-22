@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-02-22 - Chris Jones
+ - Fix another icc remark in VaryGasPressureTemperatureAlg
+
 ! 2011-02-12 - Chris Jones
  - Fix coverity defect
 

@@ -14,6 +14,7 @@
 
 // STL
 #include <cmath>
+#include <vector>
 
 // RichKernel
 #include "RichKernel/RichAlgBase.h"
@@ -51,13 +52,13 @@ namespace Rich
   private:
 
     /// typedef of array of DeRichRadiators
-    typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
+    typedef std::vector<const DeRichRadiator *> Radiators;
 
     /// typedef of array of doubles for radiators
-    typedef boost::array<double, Rich::NRadiatorTypes> RadiatorData;
+    typedef std::vector<double> RadiatorData;
 
     /// typedef of array of bools for radiators
-    typedef boost::array<bool, Rich::NRadiatorTypes> RadiatorBools;
+    typedef std::vector<bool> RadiatorBools;
 
   private:
 
