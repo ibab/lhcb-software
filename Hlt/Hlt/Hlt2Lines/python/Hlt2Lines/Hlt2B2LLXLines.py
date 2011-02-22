@@ -98,7 +98,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , DaughtersCuts = { "e-" : leptoncut }
                               , CombinationCut = llcombcut
                               , MotherCut = llcut
-                              , InputLocations = [ BiKalmanFittedElectrons ]
+                              , Inputs = [ BiKalmanFittedElectrons ]
                               )
         
         ###################################################################
@@ -113,7 +113,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , DaughtersCuts = { "mu-" : leptoncut }
                               , CombinationCut = llcombcut
                               , MotherCut = llcut
-                              , InputLocations = [ BiKalmanFittedMuons ]
+                              , Inputs = [ BiKalmanFittedMuons ]
                               )
         
         ###################################################################
@@ -127,7 +127,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                              , DaughtersCuts = { "K+" : kaoncut }
                              , CombinationCut = combcut
                              , MotherCut = bcut
-                             , InputLocations = [ BiKalmanFittedKaons, combineEE ]
+                             , Inputs = [ BiKalmanFittedKaons, combineEE ]
                              )
 #        from Configurables import PrintHeader
 #        DEBUGPrintHeader1 = PrintHeader("DEBUGPrintHeader1")
@@ -207,24 +207,24 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
                      , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_M._algos[-1] ]  # 'Bu' ]
-                     , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
+                     , Bu = { 'Inputs' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
                      , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons,combineMM, BiKalmanFittedKaons, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
-                     , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
+                     , Bu = { 'Inputs' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
                      , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
-                     , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
+                     , Bu = {'Inputs' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
                      , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_H._algos[-1] ]# 'Bu' ]
-                     , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
+                     , Bu = {'Inputs' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2eeKDecision" : 50060 } )   # whole prescaled box

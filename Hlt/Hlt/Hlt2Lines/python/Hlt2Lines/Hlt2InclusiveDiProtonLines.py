@@ -73,7 +73,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                               , DaughtersCuts = { "p+" : ProtonCut }
                               , CombinationCut = CombCut
                               , MotherCut = MomCut
-                              , InputLocations = [ NoCutsProtons ]
+                              , Inputs = [ NoCutsProtons ]
                               , InputPrimaryVertices = "None"
                               , UseP2PVRelations = False
                               )
@@ -92,7 +92,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                 , DaughtersCuts = { "p+" : TFProtonCut }
                                 , CombinationCut = TFCombCut
                                 , MotherCut = TFMomCut
-                                , InputLocations = [ BiKalmanFittedProtons ]
+                                , Inputs = [ BiKalmanFittedProtons ]
                                 , InputPrimaryVertices = "None"
                                 , UseP2PVRelations = False
                                 )
@@ -109,7 +109,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     , DaughtersCuts = { "p+" : TFProtonCut+" & "+TFRichProtonPID }
                                     , CombinationCut = TFCombCut
                                     , MotherCut = TFMomCut
-                                    , InputLocations = [ BiKalmanFittedRichProtons ]
+                                    , Inputs = [ BiKalmanFittedRichProtons ]
                                     , InputPrimaryVertices = "None"
                                     , UseP2PVRelations = False
                                     )

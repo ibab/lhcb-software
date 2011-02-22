@@ -33,7 +33,7 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         phiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [BiKalmanFittedKaons] #[Hlt2GoodKaons]
+                                 , Inputs = [BiKalmanFittedKaons] #[Hlt2GoodKaons]
                                  , InputPrimaryVertices = "None"
                                  , UseP2PVRelations = False
                                  , DaughtersCuts = { "K+" : "(PT>%(KaonPtCut)s)"% self.getProps() }
@@ -45,7 +45,7 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member(  CombineParticles
                                  , "BsCombine"
                                  , DecayDescriptor = "B_s0 ->  phi(1020) phi(1020)"
-                                 , InputLocations  = [phiCombine]
+                                 , Inputs  = [phiCombine]
                                  , CombinationCut = "(ADAMASS('B_s0')<%(BsMassWindow)s*MeV) & (ACHILD(PT,1)*ACHILD(PT,2)>%(BsDaughtersPtProductCut)s) "% self.getProps()
                                  , MotherCut = "(BPVDIRA>%(BsDIRACut)s) & (VFASPF(VCHI2)<%(BsVertexChi2Cut)s)"%self.getProps()
                                  )

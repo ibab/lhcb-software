@@ -31,7 +31,7 @@ class Hlt2SecondLoopExampleLinesConf(HltLinesConfigurableUser) :
                                         , CombinationCut = "((AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(doca)s ))" % self.getProps()
                                         , DaughtersCuts = { "pi+" : "(PT> %(PionPTmin)s *MeV) & (MIPDV(PRIMARY)> %(PionIPmin)s )" % self.getProps() }
                                         , MotherCut = "(BPVVDSIGN> %(BSignDistFlight)s ) & (INTREE ( (ABSID=='pi+') & (PT> %(PionPTmax)s *MeV))) & ( INTREE(( ABSID=='pi+') & (MIPDV(PRIMARY)> %(PionIPmax)s )))" % self.getProps()
-                                        , InputLocations = [ BiKalmanFittedPions ])
+                                        , Inputs = [ BiKalmanFittedPions ])
 
         #In the second stage, use the particle made in stage 1 with the lower momentum pions
         #reconstructed during the second loop
@@ -41,7 +41,7 @@ class Hlt2SecondLoopExampleLinesConf(HltLinesConfigurableUser) :
                                         , CombinationCut = "(AM> %(BMassWinLow)s *MeV)" % self.getProps()
                                         , DaughtersCuts = { "pi+" : "(PT> %(PionPTmin)s *MeV) & (MIPDV(PRIMARY)> %(PionIPmin)s )" % self.getProps() }
                                         , MotherCut = "(BPVIP()< %(BIP)s )" % self.getProps()
-                                        , InputLocations = [ BiKalmanFittedSecondLoopPions,Hlt2SecondLoopExample_Stage1 ]) 
+                                        , Inputs = [ BiKalmanFittedSecondLoopPions,Hlt2SecondLoopExample_Stage1 ]) 
 
         ###########################################################################
         # Define the Hlt2 Line

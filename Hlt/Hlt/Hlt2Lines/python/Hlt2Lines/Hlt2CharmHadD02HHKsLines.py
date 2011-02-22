@@ -151,7 +151,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -210,7 +210,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         combineNBody = Hlt2Member( CombineParticles
                                    , 'Combine'
                                    , DecayDescriptors = decayDesc
-                                   , InputLocations = inputSeq
+                                   , Inputs = inputSeq
                                    , CombinationCut = combcuts
                                    , MotherCut = parentcuts
                                  )
@@ -254,7 +254,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         combineKshhTF2Body = Hlt2Member( CombineParticles
                                        , 'Combine'
                                        , DecayDescriptors = [ "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-" ]
-                                       , InputLocations = [ lclKshhTFInputKaons, lclKshhTFInputPions ]
+                                       , Inputs = [ lclKshhTFInputKaons, lclKshhTFInputPions ]
                                        , CombinationCut = KshhHHcombcuts
                                        , MotherCut = KshhHHparentcuts
                                      )
@@ -296,7 +296,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                       , DaughtersCuts   = KshhKsLLdaugcuts
                                       , CombinationCut  = KshhKsLLcombcuts
                                       , MotherCut       = KshhKsLLparentcuts
-                                      , InputLocations  = [ BiKalmanFittedPions ]
+                                      , Inputs  = [ BiKalmanFittedPions ]
                                       )
         charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
 
@@ -335,7 +335,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                       , DaughtersCuts   = KshhKsDDdaugcuts
                                       , CombinationCut  = KshhKsDDcombcuts
                                       , MotherCut       = KshhKsDDparentcuts
-                                      , InputLocations  = [ BiKalmanFittedDownPions ]
+                                      , Inputs  = [ BiKalmanFittedDownPions ]
                                       )
         charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
 

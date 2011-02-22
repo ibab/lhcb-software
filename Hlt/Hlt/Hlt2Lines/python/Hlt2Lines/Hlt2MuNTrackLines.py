@@ -105,7 +105,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         combo = Hlt2Member(CombineParticles, 'Combine',
                            DecayDescriptors=decayDesc,
-                           InputLocations=inputSeq, 
+                           Inputs=inputSeq, 
                            CombinationCut=comboCuts,
                            MotherCut=momCuts)
     
@@ -148,7 +148,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         combo = Hlt2Member(CombineParticles, 'Combine',
                            DecayDescriptors=decayDesc,
-                           InputLocations=inputSeq, 
+                           Inputs=inputSeq, 
                            CombinationCut=comboCuts,
                            MotherCut=momCuts)
     
@@ -190,13 +190,14 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
 
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
-        _filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
+        _filter = Hlt2Member(FilterDesktop, 'Filter', Inputs=inputSeq,
                             Code=cuts)
         return bindMembers(name, inputSeq+[_filter])
 
     def __inputTracksHlt1Filter(self, name, inputSeq, line):
         '''Filters input particles and requires htl1 TOS.'''
         #configure tistostool
+        ### TODO: this is a way to generic a name -- danger of collisions!
         from Configurables import TisTosParticleTagger
         _tosfilter = TisTosParticleTagger(name)
         _tosfilter.TisTosSpecs = { line : 0 }
@@ -205,6 +206,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         _tosfilter.CaloClustForNeutral = False
         _tosfilter.TOSFrac = { 4:0.0, 5:0.0 }
         _tosfilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        _tosfilter.Output = '/Hlt2/%s/Particles' % name
         #from HltLine.HltLine import Hlt2Member
         #from Configurables import TisTosParticleTagger
         #_tosfilter = Hlt2Member(TisTosParticleTagger, 'Hlt1TOSMuonsFilter'
@@ -216,7 +218,6 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         #                                        , InputLocations = inputSeq ) 
         from HltLine.HltLine import bindMembers
         return bindMembers(name, inputSeq+[_tosfilter])
-
 
     def __inputParticleFilter(self, name, inputSeq):
         '''Filters input particles for all mu + n track lines.'''
@@ -232,7 +233,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         #create filter
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
-        _filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
+        _filter = Hlt2Member(FilterDesktop,'Filter', Inputs=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
         from HltTracking.HltPVs import PV3D

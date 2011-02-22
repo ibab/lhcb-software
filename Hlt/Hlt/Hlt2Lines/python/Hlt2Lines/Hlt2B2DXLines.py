@@ -68,7 +68,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         filter = Hlt2Member( FilterDesktop
                              , 'InPartFilter'
-                             , InputLocations = inputContainers
+                             , Inputs = inputContainers
                              , Code = incuts
                              )
         
@@ -92,7 +92,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
 
         filterPrelim = Hlt2Member( FilterDesktop
                                    , 'InPartFilter'
-                                   , InputLocations = inputContainers
+                                   , Inputs = inputContainers
                                    , Code = incuts
                                    )        
 
@@ -126,7 +126,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         filter = Hlt2Member( FilterDesktop
                              , 'InPartFilter'
-                             , InputLocations = inputContainers
+                             , Inputs = inputContainers
                              , Code = incuts
                              )
         
@@ -161,7 +161,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         combineDXNBody = Hlt2Member( CombineParticles
                                      , 'Combine'
                                      , DecayDescriptors = decayDesc
-                                     , InputLocations = inputSeq
+                                     , Inputs = inputSeq
                                      , CombinationCut = combcuts
                                      , MotherCut = parentcuts
                                      )
@@ -180,13 +180,13 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         if extracode :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = extracode
                                  )
         else :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = 'ALL'
                                  )
                                              

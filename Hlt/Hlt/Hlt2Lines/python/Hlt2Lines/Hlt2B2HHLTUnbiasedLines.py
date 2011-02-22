@@ -32,7 +32,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts = { "K+" : "(ISLONG & (TRCHI2DOF<%(TrackChi2)s)& (P> %(KaonPmin)s *MeV) &(PT> %(KaonPTmin)s *MeV)&(PIDK > %(PIDK_min)s) & (PIDmu < %(PIDMu_min)s))" % self.getProps() }
                                          , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))" % self.getProps()
                                          , MotherCut = "(P>%(BPmin)s * MeV) & (MAXTREE(('K+'==ABSID) ,PT) > %(KaonPTmax)s*MeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s ) & (VFASPF(VCHI2PDOF) < %(VertexChi2)s)"  % self.getProps()
-                                         , InputLocations = [BiKalmanFittedRichKaons]
+                                         , Inputs = [BiKalmanFittedRichKaons]
                                          )
         ###########################################################################
         # Define the Hlt2 Line

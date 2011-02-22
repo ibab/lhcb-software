@@ -45,7 +45,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -66,7 +66,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
         ## Require the PV3D reconstruction before our cut on IP.
@@ -87,7 +87,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -113,7 +113,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         combineCharm3Body = Hlt2Member( CombineParticles
                           , "Combine_Stage2"
                           , DecayDescriptors = decayDesc
-                          , InputLocations = inputSeq 
+                          , Inputs = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
@@ -127,13 +127,13 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         if extracode :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = extracode
                                  )
         else :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = 'ALL'
                                  )
 
@@ -174,7 +174,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                           , "K*(892)0 -> K+ pi+"  , "K*(892)0 -> K- pi-" ]
                           , CombinationCut = twoBodyCombCut 
                           , MotherCut = twoBodyMotherCut
-                          , InputLocations = [ pions2BodyFor3Body , kaons2BodyFor3Body ])
+                          , Inputs = [ pions2BodyFor3Body , kaons2BodyFor3Body ])
 
         Hlt2Charm2BodyFor3Body =  bindMembers('CharmHadD2HHH', [ pions2BodyFor3Body , kaons2BodyFor3Body, Charm2BodyCombine ])
                           
@@ -224,4 +224,3 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         decName = "Hlt2CharmHadD2HHHWideMassDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
-        

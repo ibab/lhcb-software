@@ -117,7 +117,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         Hlt2SelSingleMuon = Hlt2Member( FilterDesktop
                                         , "Filter"
-                                        , InputLocations  = [BiKalmanFittedMuons]
+                                        , Inputs  = [BiKalmanFittedMuons]
                                         , Code = "( (PT>%(SingleMuonPt)s*MeV) "\
                                             "& (MIPDV(PRIMARY)>%(SingleMuonIP)s)"\
                                             "& (TRCHI2DOF<%(TrChi2Tight)s)"\
@@ -138,7 +138,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleHighPTMuon = Hlt2Member(   FilterDesktop
                                                 , "Filter"
                                                 , Code = "(PT>%(SingleMuonHighPt)s*MeV)" % self.getProps()
-                                                , InputLocations  = [BiKalmanFittedMuons]
+                                                , Inputs  = [BiKalmanFittedMuons]
                                                 , InputPrimaryVertices = "None"
                                                 , UseP2PVRelations = False
                                                 )
@@ -153,7 +153,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleLowPTMuon = Hlt2Member(   FilterDesktop
                                                 , "Filter"
                                                 , Code = "(PT>%(SingleMuonLowPt)s*MeV) & (TRCHI2DOF<%(TrChi2)s) " % self.getProps()
-                                                , InputLocations  = [BiKalmanFittedMuons]
+                                                , Inputs  = [BiKalmanFittedMuons]
                                                 , InputPrimaryVertices = "None"
                                                 , UseP2PVRelations = False
                                                 )
@@ -179,7 +179,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                   "pi+" : MuTrackTrCut }
                               , CombinationCut = MuTrackComCut
                               , MotherCut = MuTrackCut  
-                              , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
+                              , Inputs  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
                               , Preambulo = _preambulo
                               )
         line = Hlt2Line('MuTrack'
@@ -199,7 +199,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                        "pi-" : "(PT>%(MuTrackNoIPTrPt)s*MeV)"%self.getProps() }
                                    , CombinationCut = DocaNoIP+" & "+MassNoIP 
                                    , MotherCut = "ALL"
-                                   , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
+                                   , Inputs  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
                                    , InputPrimaryVertices = "None"
                                    , UseP2PVRelations = False
                                    )

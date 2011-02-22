@@ -32,7 +32,7 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
         D02MuMuCombine = Hlt2Member(CombineParticles
                                     , 'D02MuMuCombine'
                                     , DecayDescriptor = '[ D0 -> mu+ mu- ]cc'
-                                    , InputLocations = [ BiKalmanFittedMuons ]
+                                    , Inputs = [ BiKalmanFittedMuons ]
                                     , DaughtersCuts = { "mu+" : D0DaughterCut }
                                     , CombinationCut = D02MuMuCombinationCut
                                     , MotherCut = D02MuMuMotherCut)
@@ -47,7 +47,7 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
         D02PiPiForD02MuMuCombine = Hlt2Member(CombineParticles
                                               , 'D02PiPiForD02MuMuCombine'
                                               , DecayDescriptor = '[ D0 -> pi+ pi- ]cc'
-                                              , InputLocations = [ BiKalmanFittedPions ]
+                                              , Inputs = [ BiKalmanFittedPions ]
                                               , DaughtersCuts = { "pi+" : D0DaughterCut }
                                               , CombinationCut = D02PiPiCombinationCut
                                               , MotherCut = D02PiPiMotherCut)

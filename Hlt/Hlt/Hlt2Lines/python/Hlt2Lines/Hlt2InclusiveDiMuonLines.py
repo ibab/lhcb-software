@@ -130,7 +130,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps()
                                    , InputPrimaryVertices = "None"
                                    , UseP2PVRelations = False
-                                   , InputLocations  = [ BiKalmanFittedMuons ]
+                                   , Inputs  = [ BiKalmanFittedMuons ]
                                    )
         line = Hlt2Line('DiMuonSameSign'
                         , prescale = self.prescale 
@@ -149,7 +149,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps() 
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
-                               , InputLocations  = [ TrackFittedDiMuon ]
+                               , Inputs  = [ TrackFittedDiMuon ]
 #                               , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
  #                              , PostMonitor =  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                )
@@ -401,7 +401,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         SimpleDiMuon = Hlt2Member( FilterDesktop
                                    , "SimpleDiMuon"          
-                                   , InputLocations = [ TrackFittedDiMuon ]
+                                   , Inputs = [ TrackFittedDiMuon ]
                                    , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
                                    , PreMonitor = 
                                    Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_in',nbins=25) 
@@ -418,7 +418,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    )
         RefinedDiMuon = Hlt2Member( FilterDesktop
                                     , "RefinedDiMuon"          
-                                    , InputLocations = [ SimpleDiMuon ]
+                                    , Inputs = [ SimpleDiMuon ]
                                     , Code = IPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistChi2Cut
                                     , PreMonitor = 
                                     Hlt2MonitorMinMax( "MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))","#chi^{2}(IP#mu)",0,200,'IP_Chi2_in',nbins=100)
@@ -492,7 +492,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                " & (MINTREE('mu-'==ABSID,PT)>%(DetachedDiMuonMuPt)s*MeV) "\
                                "& (VFASPF(VCHI2PDOF)<%(DetachedDiMuonVertexChi2)s )"\
                                "& (BPVDLS>%(DetachedDiMuonDLS)s )"%  self.getProps() 
-                               , InputLocations  = [ TrackFittedDiMuon ]
+                               , Inputs  = [ TrackFittedDiMuon ]
                                )
         
         #--------------------------------------------
@@ -561,7 +561,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,2000)
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
-                               , InputLocations  = [ BiKalmanFittedMuons ]
+                               , Inputs  = [ BiKalmanFittedMuons ]
                               )
 
         line = Hlt2Line('DiMuonNoPV'

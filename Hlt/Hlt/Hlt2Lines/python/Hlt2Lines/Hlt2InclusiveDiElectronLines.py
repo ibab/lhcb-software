@@ -383,7 +383,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY1MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectrons ]
                                  )
        
         line1 = Hlt2Line('DYee1'
@@ -406,7 +406,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY2MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectrons ]
                                  )
        
         line2 = Hlt2Line('DYee2'
@@ -429,7 +429,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY3MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectrons ]
                                  )
        
         line3 = Hlt2Line('DYee3'
@@ -451,7 +451,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                , CombinationCut = "(AM>"+str(self.getProp('ZeeMinMass'))+"*MeV) & "\
                                                   "(abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                               , InputLocations  = [ BiKalmanFittedElectrons ]
+                               , Inputs  = [ BiKalmanFittedElectrons ]
                                )
        
         line4 = Hlt2Line('Zee'
@@ -479,7 +479,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY1MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ Electrons ]
+                                 , Inputs  = [ Electrons ]
                                  )
        
         line1U = Hlt2Line('DYee1Unfitted'
@@ -502,7 +502,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY2MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ Electrons ]
+                                 , Inputs  = [ Electrons ]
                                  )
        
         line2U = Hlt2Line('DYee2Unfitted'
@@ -525,7 +525,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY3MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , InputLocations  = [ Electrons ]
+                                 , Inputs  = [ Electrons ]
                                  )
        
         line3U = Hlt2Line('DYee3Unfitted'
@@ -547,7 +547,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                , CombinationCut = "(AM>"+str(self.getProp('ZeeMinMass'))+"*MeV) & "\
                                                   "(abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                               , InputLocations  = [ Electrons ]
+                               , Inputs  = [ Electrons ]
                                )
        
         line4U = Hlt2Line('ZeeUnfitted'
@@ -607,7 +607,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        " & (MM > %(UnbiasedDiElectron_MinMass)s *MeV)"\
                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedDiElectron_VtxCHI2)s)"\
                                        " & (PT > %(UnbiasedDiElectron_PT)s *MeV)" %self.getProps() 
-                                       , InputLocations = [ DiElectron ]
+                                       , Inputs = [ DiElectron ]
                                        , InputPrimaryVertices = "None"
                                        , UseP2PVRelations = False
                                        )
@@ -783,7 +783,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                          " & (MM > %(UnbiasedTFDiElectron_MinMass)s *MeV)"\
                                          " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectron_VtxCHI2)s)"\
                                          " & (PT > %(UnbiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
-                                         , InputLocations = [ TrackFittedDiElectron ]
+                                         , Inputs = [ TrackFittedDiElectron ]
                                          , InputPrimaryVertices = "None"
                                          , UseP2PVRelations = False
                                          )
@@ -818,7 +818,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                  " & (MM > %(UnbiasedTFDiElectronHighMass_MinMass)s *MeV)"\
                                                  " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectronHighMass_VtxCHI2)s)"\
                                                  " & (PT > %(UnbiasedTFDiElectronHighMass_PT)s *MeV)" %self.getProps() 
-                                                 , InputLocations = [ TrackFittedDiElectron ]
+                                                 , Inputs = [ TrackFittedDiElectron ]
                                                  , InputPrimaryVertices = "None"
                                                  , UseP2PVRelations = False
                                                  )
@@ -833,7 +833,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                   " & (MM > %(UnbiasedTFDiElectronVHighMass_MinMass)s *MeV)"\
                                                   " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectronHighMass_VtxCHI2)s)"\
                                                   " & (PT > %(UnbiasedTFDiElectronHighMass_PT)s *MeV)" %self.getProps() 
-                                                  , InputLocations = [ TrackFittedDiElectron ]
+                                                  , Inputs = [ TrackFittedDiElectron ]
                                                   , InputPrimaryVertices = "None"
                                                   , UseP2PVRelations = False
                                                   )
@@ -1023,7 +1023,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                              " & (MM > %(BiasedDiElectron_MinMass)s *MeV)"\
                                              " & (VFASPF(VCHI2PDOF) < %(BiasedDiElectron_VtxCHI2)s)"\
                                              " & (PT > %(BiasedDiElectron_PT)s *MeV)" %self.getProps() 
-                                             , InputLocations = [ DiElectron ]
+                                             , Inputs = [ DiElectron ]
                                              )
         
         #--------------------------------------------
@@ -1217,7 +1217,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                " & (MM > %(BiasedTFDiElectron_MinMass)s *MeV)"\
                                                " & (VFASPF(VCHI2PDOF) < %(BiasedTFDiElectron_VtxCHI2)s)"\
                                                " & (PT > %(BiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
-                                               , InputLocations = [ TrackFittedDiElectron ]
+                                               , Inputs = [ TrackFittedDiElectron ]
                                                )
         
         #--------------------------------------------

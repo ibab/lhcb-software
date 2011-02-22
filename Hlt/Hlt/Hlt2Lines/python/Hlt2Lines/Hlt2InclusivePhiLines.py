@@ -71,7 +71,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                        , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
                                        , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
                                        , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
-                                       , InputLocations  = [ BiKalmanFittedKaons ]
+                                       , Inputs  = [ BiKalmanFittedKaons ]
                                        )
         Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
                                        , "TrackCombineSB"
@@ -79,7 +79,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                        , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
                                        , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
                                        , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
-                                       , InputLocations  = [ BiKalmanFittedKaons ]
+                                       , Inputs  = [ BiKalmanFittedKaons ]
                                        )
                                                
         ############################################################################
@@ -96,7 +96,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts = { "K+" : "%s & %s" % (KaonPtCut, KaonIpsCut) }
                                          , CombinationCut = PhiMassCut
                                          , MotherCut = "%s & %s & %s" % (PhiPtCut, PhiVchi2Cut, KaonRichPid)
-                                         , InputLocations  = [ BiKalmanFittedRichKaons ]
+                                         , Inputs  = [ BiKalmanFittedRichKaons ]
                                          # , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,20)
                                          )
         Hlt2InclusivePhiRichSB  = Hlt2Member( CombineParticles
@@ -105,7 +105,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                            , DaughtersCuts = { "K+" : "%s & %s" % (KaonPtCut, KaonIpsCut) }
                                            , CombinationCut = PhiMassCutSB
                                            , MotherCut = "%s & %s & %s" % (PhiPtCut, PhiVchi2Cut, KaonRichPid)
-                                           , InputLocations  = [ BiKalmanFittedRichKaons ]
+                                           , Inputs  = [ BiKalmanFittedRichKaons ]
                                            # , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,20)
                                            )
         ############################################################################

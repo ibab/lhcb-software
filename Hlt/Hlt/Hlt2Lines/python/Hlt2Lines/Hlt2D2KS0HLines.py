@@ -76,7 +76,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop        
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -102,7 +102,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = Bachelor_Cuts_Pion
                            )
 
@@ -126,7 +126,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 # Define the HLT2 member with it's necessary inputs
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = Bachelor_Cuts_Kaon
                            )
 
@@ -156,7 +156,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         combineCharmD2KS0h= Hlt2Member( CombineParticles
                           , "Combine_Stage"
                           , DecayDescriptors = decayDesc
-                          , InputLocations = inputSeq 
+                          , Inputs = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )

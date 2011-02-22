@@ -141,7 +141,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         combineTopoNBody = Hlt2Member( CombineParticles
                                        , 'Combine'
                                        , DecayDescriptors = decayDesc
-                                       , InputLocations = inputSeq
+                                       , Inputs = inputSeq
                                        , CombinationCut = combcuts
                                        , MotherCut = parentcuts
                                      )
@@ -163,7 +163,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
           codestr = extracode + '&' + codestr
         filter = Hlt2Member( FilterDesktop
                              , 'Filter'
-                             , InputLocations = inputSeq
+                             , Inputs = inputSeq
                              , Code = codestr
                              , PreMonitor  =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_in',nbins=101) 
                              , PostMonitor =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_out',nbins=101)   
@@ -204,7 +204,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         combineTopoNBody = Hlt2Member( CombineParticles
                                        , 'Combine'
                                        , DecayDescriptors = decayDesc
-                                       , InputLocations = inputSeq
+                                       , Inputs = inputSeq
                                        , CombinationCut = combcuts
                                        , MotherCut = parentcuts
                                      )    
@@ -230,7 +230,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
                              , 'Filter'
-                             , InputLocations = inputSeq
+                             , Inputs = inputSeq
                              , Code = codestr
                            )    
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
@@ -283,7 +283,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -305,7 +305,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )    
 

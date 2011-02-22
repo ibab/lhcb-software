@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v8r0 2011-02-22 ===================
+! 2011-02-22 - Gerhard Raven
+ - adapt to PHYS_v12r0
+
 ! 2011-02-22 - Alex Shires
  - fixed naming in Hlt2MuNTrackLines Tos filters and added in 
    possible code for a Hlt2Member implementation of TisTosParticleTagger

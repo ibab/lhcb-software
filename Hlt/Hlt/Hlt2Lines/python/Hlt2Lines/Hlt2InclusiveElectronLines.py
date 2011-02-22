@@ -126,7 +126,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleHighPTElectron = Hlt2Member(   FilterDesktop
                                                     , "Filter"
                                                     , Code = " (PT>%(SingleHighPTElectronPT)s*MeV) " % self.getProps() + TKQuality
-                                                    , InputLocations  = [BiKalmanFittedElectrons]
+                                                    , Inputs  = [BiKalmanFittedElectrons]
                                                     )
         line = Hlt2Line( 'SingleHighPTElectron'
                          , prescale = self.prescale
@@ -150,7 +150,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , CombinationCut = "(AM >"+str(self.getProp('DYeh1MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
                                   , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
-                                  , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
+                                  , Inputs  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line1 = Hlt2Line( 'DYeh1'
                           , prescale = self.prescale
@@ -169,7 +169,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , CombinationCut = "(AM>"+str(self.getProp('DYeh2MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
                                   , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
-                                  , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
+                                  , Inputs  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line2 = Hlt2Line( 'DYeh2'
                           , prescale = self.prescale
@@ -192,7 +192,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleHighPTElectronU = Hlt2Member(   FilterDesktop
                                                      , "Filter"
                                                      , Code = " (PT>"+str(self.getProp('SingleHighPTElectronPT'))+"*MeV) " + TKQuality
-                                                     , InputLocations  = [Electrons]
+                                                     , Inputs  = [Electrons]
                                                      )
         lineU = Hlt2Line( 'SingleHighPTElectronUnfitted'
                          , prescale = self.prescale 
@@ -214,7 +214,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , CombinationCut = "(AM >"+str(self.getProp('DYeh1MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
                                   , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
-                                  , InputLocations  = [ Electrons , NoCutsPions ]
+                                  , Inputs  = [ Electrons , NoCutsPions ]
                                   )
         line1U = Hlt2Line( 'DYeh1Unfitted'
                          , prescale = self.prescale 
@@ -231,7 +231,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , CombinationCut = "(AM>"+str(self.getProp('DYeh2MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
                                   , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
-                                  , InputLocations  = [ Electrons , NoCutsPions ]
+                                  , Inputs  = [ Electrons , NoCutsPions ]
                                   )
         line2U = Hlt2Line( 'DYeh2Unfitted'
                          , prescale = self.prescale 
@@ -282,7 +282,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                            " & ( MIPDV(PRIMARY) > %(SingleElectron_IP)s *mm)" \
                                            " & ( PIDe > %(SingleElectron_PIDe)s )" \
                                            " & ( MIPCHI2DV(PRIMARY) > %(SingleElectron_IPCHI2)s )" %self.getProps() 
-                                           , InputLocations = [ Electrons ]
+                                           , Inputs = [ Electrons ]
                                            )
 
         SingleElectronLine = Hlt2Line("SingleElectron"
@@ -346,7 +346,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                                ,"K-": TrackCut  }
                                            , CombinationCut = CombCut
                                            , MotherCut = MomCut
-                                           , InputLocations = [ Electrons, NoCutsKaons ]
+                                           , Inputs = [ Electrons, NoCutsKaons ]
                                            )
 
         ElectronPlusTrackLine = Hlt2Line("ElectronPlusTrack"
@@ -405,7 +405,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                              " & (PIDe > %(SingleTFElectron_PIDe)s )" \
                                              " & (MIPDV(PRIMARY) > %(SingleTFElectron_IP)s *mm)" \
                                              " & (MIPCHI2DV(PRIMARY) > %(SingleTFElectron_IPCHI2)s )" %self.getProps() 
-                                             , InputLocations = [ BiKalmanFittedElectrons ]
+                                             , Inputs = [ BiKalmanFittedElectrons ]
                                              )
 
         SingleTFElectronLine = Hlt2Line("SingleTFElectron"
@@ -428,7 +428,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                    " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
-                                                   , InputLocations = [ BiKalmanFittedElectrons ]
+                                                   , Inputs = [ BiKalmanFittedElectrons ]
                                                    )
 
         SingleTFHighPtElectronLine = Hlt2Line("SingleTFHighPtElectron"
@@ -447,7 +447,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                     " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
-                                                    , InputLocations = [ BiKalmanFittedElectrons ]
+                                                    , Inputs = [ BiKalmanFittedElectrons ]
                                                     )
 
         SingleTFVHighPtElectronLine = Hlt2Line("SingleTFVHighPtElectron"
@@ -509,7 +509,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                                  ,"K-": TrackCut  }
                                              , CombinationCut = CombCut
                                              , MotherCut = MomCut
-                                             , InputLocations = [ BiKalmanFittedElectrons, BiKalmanFittedKaons ]
+                                             , Inputs = [ BiKalmanFittedElectrons, BiKalmanFittedKaons ]
                                              )
         
         TFElectronPlusTrackLine = Hlt2Line("TFElectronPlusTrack"

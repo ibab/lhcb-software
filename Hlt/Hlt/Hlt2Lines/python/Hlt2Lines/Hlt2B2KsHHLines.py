@@ -79,7 +79,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                   , DaughtersCuts = hhdaugcuts
                                   , CombinationCut = hhcombcuts
                                   , MotherCut = hhmothercuts
-                                  , InputLocations = [BiKalmanFittedKaons,BiKalmanFittedPions ]
+                                  , Inputs = [BiKalmanFittedKaons,BiKalmanFittedPions ]
                                      )
         B2KsHHTFHH = bindMembers( 'B2KsHHTFhh',  [PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, hhforB2KsHH ] )
 
@@ -95,7 +95,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
         KSLLforB2KsHH = Hlt2Member( FilterDesktop # type
                                , "KsLLforB2KsHH"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code =KSLL_FilterCuts
-                               , InputLocations = [KsLLTF]
+                               , Inputs = [KsLLTF]
                       )
         B2KsHHKsLL = bindMembers( "B2KsHHKsLL", [ PV3D(), KsLLTF, KSLLforB2KsHH ] )
 
@@ -110,7 +110,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
         KSDDforB2KsHH = Hlt2Member( FilterDesktop # type
                                , "KsDDforB2KsHH"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = KSDD_FilterCuts
-                               , InputLocations = [KsDD]
+                               , Inputs = [KsDD]
                       )
         B2KsHHKsDD = bindMembers( "B2KsHHKsDD", [ PV3D(), KsDD, KSDDforB2KsHH ] )
 
@@ -129,7 +129,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> K*(892)0 KS0"
                                , CombinationCut = "(AM>(5279-%(B_Mlow)s))&(AM<(5279+%(B_Mhigh)s))"% self.getProps()
                                , MotherCut = BLL_MotherCuts
-                               , InputLocations = [B2KsHHTFHH,B2KsHHKsLL]
+                               , Inputs = [B2KsHHTFHH,B2KsHHKsLL]
                                )
 
 
@@ -147,7 +147,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> K*(892)0 KS0"
                                , CombinationCut = "(AM>(5279-%(B_Mlow)s) *MeV)&(AM<(5279+%(B_Mhigh)s) *MeV)"% self.getProps()
                                , MotherCut = BDD_MotherCuts
-                               , InputLocations = [B2KsHHTFHH,B2KsHHKsDD]
+                               , Inputs = [B2KsHHTFHH,B2KsHHKsDD]
                                )
 
        ###########################################################################

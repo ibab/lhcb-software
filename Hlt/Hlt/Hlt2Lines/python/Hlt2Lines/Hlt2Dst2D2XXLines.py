@@ -61,7 +61,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , CombinationCut = d0comb_combcut % self.getProps()
                                  , DaughtersCuts = { "pi+" : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [BiKalmanFittedPions ])
+                                 , Inputs = [BiKalmanFittedPions ])
         
         # D0-> mu mu combination for Dst-> D0(->mumu) pi
         D2MuMuComb = Hlt2Member( CombineParticles 
@@ -71,7 +71,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , CombinationCut = d0comb_combcut % self.getProps()
                                  , DaughtersCuts = { "mu+" : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [ BiKalmanFittedMuons ])
+                                 , Inputs = [ BiKalmanFittedMuons ])
         
         # D0-> pi mu combination for Dst-> D0(->pimu) pi 
         D2PiMuComb = Hlt2Member( CombineParticles 
@@ -81,7 +81,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , DaughtersCuts = { "mu+" : d0comb_childcut % self.getProps(),
                                                      "pi+"  : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [BiKalmanFittedPions, BiKalmanFittedMuons])
+                                 , Inputs = [BiKalmanFittedPions, BiKalmanFittedMuons])
 
         # D0-> K pi combination for Dst-> D0(->Kpi) pi
         D2KPiComb = Hlt2Member( CombineParticles 
@@ -91,7 +91,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "K+" : d0comb_childcut % self.getProps(),
                                                     "pi+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [BiKalmanFittedPions, BiKalmanFittedKaons])
+                                , Inputs = [BiKalmanFittedPions, BiKalmanFittedKaons])
         # D0-> K mu combination for Dst-> D0(->K mu) pi
         D2KMuComb = Hlt2Member( CombineParticles 
                                 , "KMu"     
@@ -100,7 +100,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "K+" : d0comb_childcut % self.getProps(),
                                                     "mu+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [BiKalmanFittedMuons, BiKalmanFittedKaons])
+                                , Inputs = [BiKalmanFittedMuons, BiKalmanFittedKaons])
 
         # D0-> e mu combination for Dst-> D0(->e mu) pi
         D2EMuComb = Hlt2Member( CombineParticles 
@@ -110,7 +110,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "e+" : d0comb_childcut % self.getProps(),
                                                     "mu+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [BiKalmanFittedElectrons, BiKalmanFittedMuons])
+                                , Inputs = [BiKalmanFittedElectrons, BiKalmanFittedMuons])
         # D0-> e pi combination for Dst-> D0(->e pi) pi
         D2EPiComb = Hlt2Member( CombineParticles 
                                 , "EPi"     
@@ -119,7 +119,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "e+" : d0comb_childcut % self.getProps(),
                                                     "pi+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [BiKalmanFittedElectrons, BiKalmanFittedPions])
+                                , Inputs = [BiKalmanFittedElectrons, BiKalmanFittedPions])
         # D0-> e K combination for Dst-> D0(->e K) pi
         D2EKComb = Hlt2Member( CombineParticles 
                                 , "EK"     
@@ -128,7 +128,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "e+" : d0comb_childcut % self.getProps(),
                                                     "K+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [BiKalmanFittedElectrons, BiKalmanFittedKaons])
+                                , Inputs = [BiKalmanFittedElectrons, BiKalmanFittedKaons])
         
         ###########################################################################
         # Define the Hlt2 Lines

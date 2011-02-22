@@ -45,7 +45,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , MotherCut = "ALL"  
                             , InputPrimaryVertices = "None"
                             , UseP2PVRelations = False
-                            , InputLocations  = [ BiKalmanFittedMuons ]
+                            , Inputs  = [ BiKalmanFittedMuons ]
                             )
         
 

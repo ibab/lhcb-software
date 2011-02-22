@@ -225,7 +225,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         phiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [NoCutsKaons]
+                                 , Inputs = [NoCutsKaons]
                                  , MotherCut = "(M<1100*MeV) & (PT>500*MeV) & (VFASPF(VCHI2PDOF)<25)"
                                  )
         
@@ -234,7 +234,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"
-                                , InputLocations  = [Jpsi2MuMu, phiCombine]
+                                , Inputs  = [Jpsi2MuMu, phiCombine]
                                 , MotherCut = BsCuts
                                 )
        
@@ -275,7 +275,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         PhiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [NoCutsKaons]
+                                 , Inputs = [NoCutsKaons]
                                  , CombinationCut = "(AM<1045*MeV) & (APT>1000*MeV)"
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                  )
@@ -284,7 +284,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"
-                                , InputLocations  = [HighPtJpsi2MuMu, PhiCombine]
+                                , Inputs  = [HighPtJpsi2MuMu, PhiCombine]
                                 , CombinationCut = "(ADAMASS('B_s0')<300*MeV)"
                                 , MotherCut = "(VFASPF(VCHI2PDOF)<6)"
                                 )
@@ -351,7 +351,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         JpsiCombine = Hlt2Member( CombineParticles
                                   , "JpsiCombine"
                                   , DecayDescriptor = "J/psi(1S) -> e+ e-"
-                                  , InputLocations = [Electrons]
+                                  , Inputs = [Electrons]
                                   , DaughtersCuts = {"e+" : ElCuts }
                                   , MotherCut = JpsiCuts
                                   , InputPrimaryVertices = "None"
@@ -365,7 +365,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         PhiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [NoCutsKaons]
+                                 , Inputs = [NoCutsKaons]
                                  , MotherCut = PhiCuts
                                  , InputPrimaryVertices = "None"
                                  , UseP2PVRelations = False
@@ -378,7 +378,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-                                , InputLocations  = [JpsiCombine, PhiCombine]
+                                , Inputs  = [JpsiCombine, PhiCombine]
                                 , MotherCut = BsCuts
                                 , InputPrimaryVertices = "None"
                                 , UseP2PVRelations = False                                
@@ -405,7 +405,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterBs2JpsieePhi  = Hlt2Member( FilterDesktop # type
                                           , "FilterBs2JpsieePhi" 
                                           , Code = AddElectronCuts + " & " + AddKaonCuts + " & " + AddBsCuts
-                                          , InputLocations = [ Bs2JpsieePhiUnbiased ]
+                                          , Inputs = [ Bs2JpsieePhiUnbiased ]
                                           )
 
         line.clone('Bs2JpsieePhiSignal'
@@ -461,7 +461,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         JpsiCombine = Hlt2Member( CombineParticles
                                   , "JpsiCombine"
                                   , DecayDescriptor = "J/psi(1S) -> e+ e-"
-                                  , InputLocations = [BiKalmanFittedElectrons]
+                                  , Inputs = [BiKalmanFittedElectrons]
                                   , DaughtersCuts = {"e+" : ElCuts }
                                   , MotherCut = JpsiCuts
                                   , InputPrimaryVertices = "None"
@@ -475,7 +475,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         PhiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [BiKalmanFittedKaons]
+                                 , Inputs = [BiKalmanFittedKaons]
                                  , MotherCut = PhiCuts
                                  , InputPrimaryVertices = "None"
                                  , UseP2PVRelations = False
@@ -487,7 +487,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-                                , InputLocations  = [JpsiCombine, PhiCombine]
+                                , Inputs  = [JpsiCombine, PhiCombine]
                                 , MotherCut = BsCuts
                                 , InputPrimaryVertices = "None"
                                 , UseP2PVRelations = False
@@ -514,7 +514,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterTFBs2JpsieePhi  = Hlt2Member( FilterDesktop # type
                                             , "FilterTFBs2JpsieePhi" 
                                             , Code = AddElectronCuts + " & " + AddKaonCuts + " & " + AddBsCuts
-                                            , InputLocations = [ TFBs2JpsieePhiUnbiased ]
+                                            , Inputs = [ TFBs2JpsieePhiUnbiased ]
                                             )
         
         line.clone('TFBs2JpsieePhiSignal'
@@ -550,7 +550,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         KstarCombine = Hlt2Member( CombineParticles
                                    , "KstarCombine"
                                    , DecayDescriptor = "K*(892)0 -> K+ pi-"
-                                   , InputLocations = [NoCutsKaons, NoCutsPions]
+                                   , Inputs = [NoCutsKaons, NoCutsPions]
                                    , CombinationCut = "(ADAMASS('K*(892)0')<120*MeV) & (APT>1000*MeV)"
                                    , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                    )
@@ -559,7 +559,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BdCombine = Hlt2Member( CombineParticles
                                 , "BdCombine"
                                 , DecayDescriptor = "B0 -> J/psi(1S) K*(892)0"
-                                , InputLocations  = [HighPtJpsi2MuMu, KstarCombine]
+                                , Inputs  = [HighPtJpsi2MuMu, KstarCombine]
                                 , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                 , MotherCut = "(VFASPF(VCHI2PDOF)<6) & (PT>2000*MeV)"
                                 )
@@ -598,7 +598,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BuCombine = Hlt2Member( CombineParticles
                                 , "BuCombine"
                                 , DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
-                                , InputLocations  = [HighPtJpsi2MuMu, NoCutsKaons]
+                                , Inputs  = [HighPtJpsi2MuMu, NoCutsKaons]
                                 , CombinationCut = "(ADAMASS('B+')<300*MeV)"
                                 , MotherCut = "(VFASPF(VCHI2PDOF)<6)"
                                 , DaughtersCuts = {"K+" : "(PT>1300*MeV)"}
@@ -635,13 +635,13 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                  #,Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.5*GeV) & (BPVVDCHI2 > 4) "
                                  , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (BPVVDCHI2>7)  "
-                                 , InputLocations = [ Jpsi2MuMu ]
+                                 , Inputs = [ Jpsi2MuMu ]
                                  )
 
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = "VFASPF(VCHI2PDOF)<16 "
-                               , InputLocations = [ KsLL ]
+                               , Inputs = [ KsLL ]
                                )
 
         combineB = Hlt2Member( CombineParticles # type
@@ -649,7 +649,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                , MotherCut = "(VFASPF(VCHI2PDOF)<55) & (BPVIPCHI2()< 50) "
-                               , InputLocations = ['%FilterJpsi','%FilterKS' ]
+                               , Inputs = [filterJpsi,filterKS ]
                                )
 
         line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
@@ -678,13 +678,13 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filterJpsi = Hlt2Member( FilterDesktop # type
                                  , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                  , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.8*GeV)"
-                                 , InputLocations = [ Jpsi2MuMu ]
+                                 , Inputs = [ Jpsi2MuMu ]
                                  )
         
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = "(PT > 1.0*GeV)"
-                               , InputLocations = [ KsLL ]
+                               , Inputs = [ KsLL ]
                                )
         
         combineB = Hlt2Member( CombineParticles # type
@@ -692,7 +692,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2PDOF)<25)"
-                               , InputLocations = ['%FilterJpsi','%FilterKS' ]
+                               , Inputs = [filterJpsi,filterKS ]
                                )
         
         line = Hlt2Line('Bd2JpsiMuMuKsLLUnbiased'
@@ -722,7 +722,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filterJpsi = Hlt2Member( FilterDesktop # type
                                  , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                  , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (BPVVDCHI2>7)  "
-                                 , InputLocations = [ Jpsi2MuMu ]
+                                 , Inputs = [ Jpsi2MuMu ]
                                  )
 
         combineB = Hlt2Member( CombineParticles # type
@@ -730,7 +730,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                , MotherCut = "(VFASPF(VCHI2PDOF)<25) & (BPVIPCHI2()< 45)"
-                               , InputLocations = ['%FilterJpsi',KsDD ]
+                               , Inputs = [filterJpsi,KsDD ]
                                )
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
                         , prescale = self.prescale
@@ -759,13 +759,13 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filterJpsi = Hlt2Member( FilterDesktop # type
                                  , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                  , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.8*GeV)"
-                                 , InputLocations = [ Jpsi2MuMu ]
+                                 , Inputs = [ Jpsi2MuMu ]
                                  )
 
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = "(PT > 0.8*GeV)"
-                               , InputLocations = [KsDD ]
+                               , Inputs = [KsDD ]
                                )
 
         combineB = Hlt2Member( CombineParticles # type
@@ -773,7 +773,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2PDOF)<20) & (BPVIPCHI2()< 30)"
-                               , InputLocations = [filterJpsi,filterKS ]
+                               , Inputs = [filterJpsi,filterKS ]
                                )
 
         line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
@@ -798,7 +798,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member( FilterDesktop # type
                              , "Filter"      # name -- to be bound to the line name: Hlt2LineNameFilter
                              , Code = "(ADMASS('J/psi(1S)')<50*MeV) & (MINTREE('mu-'==ABSID,PT)>1.5*GeV)"
-                             , InputLocations = [ DiMuon ]
+                             , Inputs = [ DiMuon ]
                              )
         # @todo Add some IP cuts                   
 
@@ -845,7 +845,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4Bc2JpsiMuX = Hlt2Member( FilterDesktop # type
                                             , "FilterJpsi4Bc2JpsiMuX" 
                                             , Code = JpsiCut
-                                            , InputLocations = [ DiMuon ]
+                                            , Inputs = [ DiMuon ]
                                             , InputPrimaryVertices = "None"
                                             , UseP2PVRelations = False
                                             )
@@ -861,7 +861,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                         , DaughtersCuts = { "mu+" : MuonBcCut }
                                         , CombinationCut = combCut
                                         , MotherCut = BcCut
-                                        , InputLocations = [ FilterJpsi4Bc2JpsiMuX, Muons ]
+                                        , Inputs = [ FilterJpsi4Bc2JpsiMuX, Muons ]
                                         , InputPrimaryVertices = "None"
                                         , UseP2PVRelations = False
                                         )
@@ -883,7 +883,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterBc2JpsiMuXSignal = Hlt2Member( FilterDesktop 
                                              , "FilterBc2JpsiMuXSignal" 
                                              , Code = JpsiTightCut
-                                             , InputLocations = [ Bc2JpsiMuXAll ]
+                                             , Inputs = [ Bc2JpsiMuXAll ]
                                              , InputPrimaryVertices = "None"
                                              , UseP2PVRelations = False
                                              )
@@ -930,7 +930,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4Bc2JpsiH = Hlt2Member( FilterDesktop # type
                                           , "FilterJpsi4Bc2JpsiH"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                           , Code = JpsiCut
-                                          , InputLocations = [ DiMuon ]
+                                          , Inputs = [ DiMuon ]
                                           , InputPrimaryVertices = "None"
                                           , UseP2PVRelations = False
                                           )
@@ -946,7 +946,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                       , DaughtersCuts = { "pi+" : PionCut }
                                       , CombinationCut = combCut
                                       , MotherCut = BcCut
-                                      , InputLocations = [ FilterJpsi4Bc2JpsiH, NoCutsPions ]
+                                      , Inputs = [ FilterJpsi4Bc2JpsiH, NoCutsPions ]
                                       , InputPrimaryVertices = "None"
                                       , UseP2PVRelations = False
                                       )
@@ -1000,7 +1000,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4Bc2JpsiHPD = Hlt2Member( FilterDesktop # type
                                             , "FilterJpsi4Bc2JpsiHPD" 
                                             , Code = JpsiPDCut
-                                            , InputLocations = [ DiMuon ]
+                                            , Inputs = [ DiMuon ]
                                             , InputPrimaryVertices = "None"
                                             , UseP2PVRelations = False
                                             )
@@ -1016,7 +1016,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                         , DaughtersCuts = { "pi+" : PionPDCut }
                                         , CombinationCut = combPDCut
                                         , MotherCut = BcPDCut
-                                        , InputLocations = [ FilterJpsi4Bc2JpsiHPD, NoCutsPions ]
+                                        , Inputs = [ FilterJpsi4Bc2JpsiHPD, NoCutsPions ]
                                         , InputPrimaryVertices = "None"
                                         , UseP2PVRelations = False
                                         )
@@ -1041,7 +1041,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterBc2JpsiHPD = Hlt2Member( FilterDesktop # type
                                        , "FilterBc2JpsiHPD" 
                                        , Code = LifetimeBiasedCut
-                                       , InputLocations = [ Bc2JpsiHPDLoose ]
+                                       , Inputs = [ Bc2JpsiHPDLoose ]
                                        )
 
         
@@ -1091,7 +1091,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4TFBc2JpsiMuX = Hlt2Member( FilterDesktop # type
                                               , "FilterJpsi4TFBc2JpsiMuX" 
                                               , Code = JpsiCut
-                                              , InputLocations = [ TrackFittedDiMuon ]
+                                              , Inputs = [ TrackFittedDiMuon ]
                                               , InputPrimaryVertices = "None"
                                               , UseP2PVRelations = False                                             
                                               )
@@ -1107,7 +1107,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                           , DaughtersCuts = { "mu+" : MuonBcCut }
                                           , CombinationCut = combCut
                                           , MotherCut = BcCut
-                                          , InputLocations = [ FilterJpsi4TFBc2JpsiMuX, BiKalmanFittedMuons ]
+                                          , Inputs = [ FilterJpsi4TFBc2JpsiMuX, BiKalmanFittedMuons ]
                                           , InputPrimaryVertices = "None"
                                           , UseP2PVRelations = False
                                           )
@@ -1129,7 +1129,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterTFBc2JpsiMuXSignal = Hlt2Member( FilterDesktop 
                                                , "FilterTFBc2JpsiMuXSignal" 
                                                , Code = JpsiTightCut
-                                               , InputLocations = [ TFBc2JpsiMuXAll ]
+                                               , Inputs = [ TFBc2JpsiMuXAll ]
                                                , InputPrimaryVertices = "None"
                                                , UseP2PVRelations = False
                                                )
@@ -1176,7 +1176,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4TFBc2JpsiH = Hlt2Member( FilterDesktop # type
                                             , "FilterJpsi4TFBc2JpsiH" 
                                             , Code = JpsiCut
-                                            , InputLocations = [ TrackFittedDiMuon ]
+                                            , Inputs = [ TrackFittedDiMuon ]
                                             , InputPrimaryVertices = "None"
                                             , UseP2PVRelations = False
                                             )
@@ -1192,7 +1192,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                         , DaughtersCuts = { "pi+" : PionCut }
                                         , CombinationCut = combCut
                                         , MotherCut = BcCut
-                                        , InputLocations = [ FilterJpsi4TFBc2JpsiH, BiKalmanFittedPions ]
+                                        , Inputs = [ FilterJpsi4TFBc2JpsiH, BiKalmanFittedPions ]
                                         , InputPrimaryVertices = "None"
                                         , UseP2PVRelations = False
                                         )
@@ -1246,7 +1246,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterJpsi4TFBc2JpsiHPD = Hlt2Member( FilterDesktop # type
                                               , "FilterJpsi4TFBc2JpsiHPD" 
                                               , Code = JpsiPDCut
-                                              , InputLocations = [ TrackFittedDiMuon ]
+                                              , Inputs = [ TrackFittedDiMuon ]
                                               , InputPrimaryVertices = "None"
                                               , UseP2PVRelations = False
                                               )
@@ -1262,7 +1262,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                           , DaughtersCuts = { "pi+" : PionPDCut }
                                           , CombinationCut = combPDCut
                                           , MotherCut = BcPDCut
-                                          , InputLocations = [ FilterJpsi4TFBc2JpsiHPD, BiKalmanFittedPions ]
+                                          , Inputs = [ FilterJpsi4TFBc2JpsiHPD, BiKalmanFittedPions ]
                                           , InputPrimaryVertices = "None"
                                           , UseP2PVRelations = False
                                           )
@@ -1286,7 +1286,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         FilterTFBc2JpsiHPD = Hlt2Member( FilterDesktop # type
                                          , "FilterTFBc2JpsiHPD" 
                                          , Code = LifetimeBiasedCut
-                                         , InputLocations = [ TFBc2JpsiHPDLoose ]
+                                         , Inputs = [ TFBc2JpsiHPDLoose ]
                                          )
         
         

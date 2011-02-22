@@ -144,7 +144,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
-                             , InputLocations  = [ TrackFittedDiMuon ]
+                             , Inputs  = [ TrackFittedDiMuon ]
                              , InputPrimaryVertices = "None"
                              , UseP2PVRelations = False
                              , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=101) 
@@ -199,7 +199,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
      
       JPsiCombine = Hlt2Member( CombineParticles
                                 , 'JPsiCombine'
-                                , InputLocations = [ TagAndProbePions, TagAndProbeMuons ]
+                                , Inputs = [ TagAndProbePions, TagAndProbeMuons ]
                                 , DecayDescriptor = '[J/psi(1S) -> mu+ pi-]cc'
                                 , DaughtersCuts = { 'mu+' : cocut ,
                                                     'pi-' : cocut }
@@ -229,7 +229,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   , "LambdaCombine"
                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
                                   , Preambulo        = [ "from GaudiKernel.PhysicalConstants import c_light "]
-                                  , InputLocations = [BiKalmanFittedPions,BiKalmanFittedProtons ]
+                                  , Inputs = [BiKalmanFittedPions,BiKalmanFittedProtons ]
                                   , CombinationCut = "(ADAMASS('Lambda0')<%(ExLambdaMassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('Lambda0')<%(ExLambdaMassWin)s*MeV)"\
                                   " & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(ExLambdaVChi2)s   )" \
@@ -267,7 +267,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , "KsCombine"
                               , Preambulo        = [ "from GaudiKernel.PhysicalConstants import c_light "]
                               , DecayDescriptor  = "KS0 -> pi+ pi-"
-                              , InputLocations   = [BiKalmanFittedPions]
+                              , Inputs   = [BiKalmanFittedPions]
                               , DaughtersCuts    = {"pi+" : "(P > %(ExKSTrackP)s) & (ISLONG) & (TRCHI2DOF < %(ExKSTrackChi2)s) " \
                               " & (MIPCHI2DV(PRIMARY) > %(ExKSTrackMinIPChi2)s) "%  self.getProps() }
                               , CombinationCut   = "(ADAMASS('KS0') < %(ExKSMassWinWide)s )"%  self.getProps()
@@ -303,7 +303,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       PhiCombine = Hlt2Member( CombineParticles
                                , "PhiCombine"
                                , DecayDescriptor = "phi(1020) -> K+ K-"
-                               , InputLocations = [BiKalmanFittedKaons]
+                               , Inputs = [BiKalmanFittedKaons]
                                , CombinationCut = "(ADAMASS('phi(1020)')<%(ExPhiMassWinWide)s*MeV)"%  self.getProps()
                                , MotherCut = "(ADMASS('phi(1020)') < %(ExPhiMassWin)s*MeV)"\
                                " & (DOCAMAX < %(ExPhiDOCAMax)s*mm)"\
@@ -317,7 +317,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       DsCombine = Hlt2Member( CombineParticles
                               , "DsCombine"
                               , DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
-                              , InputLocations = [BiKalmanFittedPions, PhiCombine]
+                              , Inputs = [BiKalmanFittedPions, PhiCombine]
                               , CombinationCut = "(ADAMASS('D_s+')<%(ExDsMassWinWide)s*MeV)"%  self.getProps()
                               , MotherCut = "(ADMASS('D_s+')<%(ExDsMassWin)s*MeV)"\
                               " & (BPVDIRA > %(ExDsBPVDIRA)s)"\
@@ -378,7 +378,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       D02KPiCombine = Hlt2Member( CombineParticles
                                   , "D02KPiCombine"
                                   , DecayDescriptor = "[ D0 -> K- pi+ ]cc"
-                                  , InputLocations = [BiKalmanFittedKaons, BiKalmanFittedPions]
+                                  , Inputs = [BiKalmanFittedKaons, BiKalmanFittedPions]
                                   , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)s*MeV)"\
                                   " & (VFASPF(VCHI2PDOF) < %(ExD0VCHI2)s)"\
@@ -398,7 +398,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       DStarCombine = Hlt2Member( CombineParticles
                                  , "DStarCombine"
                                  , DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
-                                 , InputLocations = [BiKalmanFittedPions, D02KPiCombine]
+                                 , Inputs = [BiKalmanFittedPions, D02KPiCombine]
                                  , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)s*MeV)"%  self.getProps()
                                  , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)s*MeV)"\
                                  " & (PT > %(ExDStarPt)s*MeV)"\

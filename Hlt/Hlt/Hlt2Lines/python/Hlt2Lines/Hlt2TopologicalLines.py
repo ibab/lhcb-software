@@ -116,7 +116,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MIPCHI2DV(PRIMARY) > %s) & (TRCHI2DOF < %s)' % \
                 (ipChi2,props['ALL_TRCHI2DOF_MAX'])
         
-        filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
+        filter = Hlt2Member(FilterDesktop,'Filter', Inputs=inputSeq,
                             Code=cuts)
         return bindMembers(name, inputSeq+[filter])
 
@@ -131,7 +131,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % props['ALL_MIPCHI2DV_MIN']
         cuts += "& (BPVDIRA > 0) & (BPVVDCHI2 > %s)" \
                 % props['KS_BPVVDCHI2_MIN']
-        filter = Hlt2Member(FilterDesktop ,'KsFilter', InputLocations=inputSeq,
+        filter = Hlt2Member(FilterDesktop ,'KsFilter', Inputs=inputSeq,
                             Code=cuts)
         return bindMembers(name, inputSeq+[filter])
 
@@ -146,7 +146,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < %s)' \
                 % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
         filter = Hlt2Member(FilterDesktop, 'FilterNforN',
-                            InputLocations=input,Code=cuts)
+                            Inputs=input,Code=cuts)
         return bindMembers('Topo%d' % n, input+[filter])
 
     def __filterBDT(self,n,input):
@@ -160,7 +160,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file)
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
-        filter = Hlt2Member(FilterDesktop, 'FilterBDT', InputLocations=input,
+        filter = Hlt2Member(FilterDesktop, 'FilterBDT', Inputs=input,
                             Code=cuts,tools=[bdttool]) 
         return bindMembers('Topo%d' % n, input+[filter])
 
@@ -177,7 +177,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts = "INTREE(HASPROTO & HASMUON & ISMUON)"
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
-                            InputLocations=input,Code=cuts,tools=[bdttool]) 
+                            Inputs=input,Code=cuts,tools=[bdttool]) 
         return bindMembers('TopoMu%d' % n, input+[filter])
 
     def __filterSimple(self,n,input):
@@ -189,7 +189,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         simpletool = Tool(type=BBDTSimple,name='TrgSimple',NBody=n)
         cuts = "FILTER('BBDTSimpleTool/TrgSimple') "
         filter = Hlt2Member(FilterDesktop, 'FilterBBDTSimple',
-                            InputLocations=input,Code=cuts,tools=[simpletool]) 
+                            Inputs=input,Code=cuts,tools=[simpletool]) 
         return bindMembers('TopoMu%d' % n, input+[filter])
 
     def __filter2forN(self,n,input):
@@ -201,7 +201,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         if n == 4: m = 5000
         cuts = '(M < %d*MeV) & (VFASPF(VCHI2) < %s)' \
                % (m,props['V2BODYCHI2_MAX'])
-        filter = Hlt2Member(FilterDesktop, 'Filter2forN', InputLocations=input,
+        filter = Hlt2Member(FilterDesktop, 'Filter2forN', Inputs=input,
                              Code=cuts)
         return bindMembers('Topo%d' % n, input+[filter])
 
@@ -210,7 +210,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
         cuts = '(M < 6000*MeV)'
-        filter = Hlt2Member(FilterDesktop, 'Filter3for4', InputLocations=input,
+        filter = Hlt2Member(FilterDesktop, 'Filter3for4', Inputs=input,
                             Code=cuts)
         return bindMembers('Topo', input+[filter])
     
@@ -224,7 +224,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                      % props["AMAXDOCA_MAX"]
         momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
         combo = Hlt2Member(CombineParticles, 'Combine',DecayDescriptors=decay,
-                           InputLocations=input, CombinationCut=comboCuts,
+                           Inputs=input, CombinationCut=comboCuts,
                            MotherCut=momCuts)
         return bindMembers(name, input+[combo])
 
@@ -243,7 +243,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         
         createKs = Hlt2Member(CombineParticles, "KsLL",DecayDescriptors=decay, 
                               CombinationCut=comboCuts,MotherCut = momCuts,
-                              InputLocations=input)
+                              Inputs=input)
         return bindMembers("CreateKsLL", input+[createKs])
 
     def __makeInput(self,kaons,kshorts):
@@ -255,7 +255,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         inputKandKS = GaudiSequencer("InputKandKs",Members=[inputK,inputKS],
                                      ModeOR=True,ShortCircuit=False)
         filter = Hlt2Member(FilterDesktop,'FilterKandKS',
-                            InputLocations=[kaons, kshorts], Code='ALL')
+                            Inputs=[kaons, kshorts], Code='ALL')
         return bindMembers("InputKandKS", [inputKandKS, filter])
 
     def __allNBody(self,n,input):
@@ -279,11 +279,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         TOSParticleTagger.CaloClustForNeutral = False
         TOSParticleTagger.TOSFrac = {4:0.0,5:0.0 }
         #TOSParticleTagger.CompositeTPSviaPartialTOSonly = True
-        TOSParticleTagger.InputLocations = [input.outputSelection()]
+        TOSParticleTagger.Inputs = [input.outputSelection()]
+        TOSParticleTagger.Output = 'Hlt2/%s/Particles'%(name+'Tagger')
         filter = bindMembers(name+'ParticleFilter',[input,TOSParticleTagger])
         return filter
         #dummy = Hlt2Member(FilterDesktop, name+'DummyFilter',
-        #                   InputLocations=[filter], Code="ALL")
+        #                   Inputs=[filter], Code="ALL")
         #return bindMembers(name+'FullFilter',[filter,dummy])
 
     def __makeLines(self,name,seqs):
