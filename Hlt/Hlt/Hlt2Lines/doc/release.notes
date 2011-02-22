@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-22 - Alex Shires
+ - fixed naming in Hlt2MuNTrackLines Tos filters and added in 
+   possible code for a Hlt2Member implementation of TisTosParticleTagger
+
 ! 2011-Feb-21 - Patrick Spradlin
  - Rearranged some cut ordering in Hlt2CharmHadD2HHHLines.py, 
    Hlt2CharmHadD02HHKsLines.py, Hlt2D2KS0HLines.py, and

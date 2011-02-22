@@ -198,15 +198,24 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         '''Filters input particles and requires htl1 TOS.'''
         #configure tistostool
         from Configurables import TisTosParticleTagger
-        TOSInputParticlesFilter = TisTosParticleTagger("TOSInputTracksFilter")
-        TOSInputParticlesFilter.TisTosSpecs = { line : 0 }
-        TOSInputParticlesFilter.ProjectTracksToCalo = False
-        TOSInputParticlesFilter.CaloClustForCharged = False
-        TOSInputParticlesFilter.CaloClustForNeutral = False
-        TOSInputParticlesFilter.TOSFrac = { 4:0.0, 5:0.0 }
-        TOSInputParticlesFilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        _tosfilter = TisTosParticleTagger(name)
+        _tosfilter.TisTosSpecs = { line : 0 }
+        _tosfilter.ProjectTracksToCalo = False
+        _tosfilter.CaloClustForCharged = False
+        _tosfilter.CaloClustForNeutral = False
+        _tosfilter.TOSFrac = { 4:0.0, 5:0.0 }
+        _tosfilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        #from HltLine.HltLine import Hlt2Member
+        #from Configurables import TisTosParticleTagger
+        #_tosfilter = Hlt2Member(TisTosParticleTagger, 'Hlt1TOSMuonsFilter'
+        #                                        , TisTosSpecs = { line : 0 }
+        #                                        , ProjectTracksToCalo = False
+        #                                        , CaloClustForCharged = False
+        #                                        , CaloClustForNeutral = False
+        #                                        , TOSFrac = { 4:0.0, 5:0.0 }
+        #                                        , InputLocations = inputSeq ) 
         from HltLine.HltLine import bindMembers
-        return bindMembers(name, inputSeq+[TOSInputParticlesFilter])
+        return bindMembers(name, inputSeq+[_tosfilter])
 
 
     def __inputParticleFilter(self, name, inputSeq):
