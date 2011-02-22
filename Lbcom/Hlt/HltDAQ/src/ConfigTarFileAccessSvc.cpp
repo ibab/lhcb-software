@@ -138,18 +138,22 @@ namespace {
 namespace ConfigTarFileAccessSvc_details {
   class TarFile {
   public:
-    TarFile(const std::string& name, ios::openmode mode = ios::in )
+    TarFile(const std::string& name, ios::openmode mode = ios::in, bool compressOnWrite = false )
       : m_name(name)
       , m_leof(0)
       , m_indexUpToDate(false)
       , m_myUid(0)
       , m_myGid(0)
+      , m_compressOnWrite( compressOnWrite )
     {
       m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
     }
     bool good() const { return m_file.good(); }
     bool dump(const std::string& name,ostream& os) {
       const map<Gaudi::StringKey,Info>& myIndex = getIndex();
+      // TODO: to avoid two lookups for gzipped files, should
+      //       flag compression in Info, and kill the '.gz' 
+      //       from the name during indexing...
       map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
       if (i!=myIndex.end()) {
         // slice works relative to the current file offset, as it works on an istream...
@@ -204,6 +208,7 @@ namespace ConfigTarFileAccessSvc_details {
       size_t           offset;
     };
 
+    bool _append(const string& name, std::stringstream& is);
     bool index(std::streamoff start=0) const;
     const std::map<Gaudi::StringKey,Info>&  getIndex() const {
       if (!m_indexUpToDate) m_indexUpToDate = index();
@@ -268,17 +273,31 @@ namespace ConfigTarFileAccessSvc_details {
     mutable std::string m_uname;
     mutable uid_t m_myUid;
     mutable gid_t m_myGid;
+    bool m_compressOnWrite;
   };
 
   bool TarFile::append(const string& name, std::stringstream& is) {
+#ifndef _WIN32
+    if (m_compressOnWrite && is.str().size()>512 ) {
+        std::stringstream out;
+        io::filtering_istream in;
+        in.push(io::gzip_compressor(9));
+        in.push(is);
+        io::copy(in,out, is.str().size());
+        // TODO: check that the compressed version actually occupies less blocks
+        //       if not, it's useless to compress..
+        return _append(name+".gz",out);
+    } 
+#endif
+    return _append(name,is);
+  }
+
+  bool TarFile::_append(const string& name, std::stringstream& is) {
     //TODO: check if file is open in read/write mode...
     m_indexUpToDate = false;
     std::string bstring = is.str();
     size_t size = bstring.size();
     const char* buffer = bstring.c_str();
-    // TODO: if size exceed the blocksize, perform gzip compression, and see if it reduces the # of blocks...
-    //       if so, write the .gz version instead
-
     if (m_file.tellp()>=0 && m_leof!=m_file.tellp() ) {
       m_file.seekp(m_leof,ios::beg); // where do we start writing?
     }
@@ -415,6 +434,9 @@ namespace ConfigTarFileAccessSvc_details {
   
 
     bool TarFile::index(std::streamoff offset) const {
+            // TODO: to avoid two lookups for gzipped files, should
+            //       flag compression in Info, and kill the '.gz' 
+            //       from the name during indexing...
             posix_header header;
             if (offset==0) m_index.clear();
             m_file.seekg(offset,ios::beg);
@@ -473,6 +495,7 @@ DECLARE_SERVICE_FACTORY(ConfigTarFileAccessSvc)
   if (!def.empty()) def += "/config.tar";
   declareProperty("File", m_name = def);
   declareProperty("Mode", m_mode = "ReadOnly");
+  declareProperty("CompressOnWrite", m_compress = false );
 }
 
 //=============================================================================
@@ -512,7 +535,7 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
     :                              ios::in ;
 
   info() << " opening " << m_name << " in mode " << m_mode << endmsg;
-  m_file.reset( new TarFile(m_name,mode) );
+  m_file.reset( new TarFile(m_name,mode,m_compress) );
   if (!m_file->good()) {
     error() << " Failed to open " << m_name << " in mode " << m_mode << endmsg;
     // refuse to continue...

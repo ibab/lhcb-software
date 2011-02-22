@@ -6,6 +6,8 @@
 
 ! 2011-02-22 - Gerhard Raven
  - fix some of the ICC 'remarks'
+ - add transparent on-the-fly compression when writing through ConfigTarFileAccessSvc
+   (transparent on-the-fly decompression when reading has been supported for a long time)
 
 ! 2011-02-17 - Chris Jones
  - Various minor icc and coverity fixes
