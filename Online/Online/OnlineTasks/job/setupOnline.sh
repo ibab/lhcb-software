@@ -6,9 +6,6 @@
 # $3: runtype; for tae events prefixed with TAE_
 # $4: acceptrate in percent
 
-export ARCH=`uname -i`;
-#echo "Architecture "${ARCH}
-
 if test -n "$1" ;
   then 
     export PARENT=$1 
@@ -40,9 +37,11 @@ else
     export IS_TAE_RUN=""
 fi   
 
-
-if [[ ${ARCH} == "x86_64" ]]
-  then 
+## ----> We only have x86_64 !!
+##export ARCH=`uname -i`;
+#echo "Architecture "${ARCH} 
+##if [[ ${ARCH} == "x86_64" ]]
+##  then 
      if test -z "${DEBUGGING}";
        then 
 	 #echo running normal sw;
@@ -63,37 +62,21 @@ if [[ ${ARCH} == "x86_64" ]]
 	 #fi 
 	 export CMTCONFIG=x86_64-slc5-gcc43-dbg     
      fi        
-  else
-    if test -z "${DEBUGGING}";
-      then 
-	#echo running normal sw;
-	export CMTCONFIG=slc4_ia32_gcc34
-      else 
-	#echo running debug sw;
-	export CMTCONFIG=slc4_ia32_gcc34_dbg   
-    fi
-fi
-
-
+##  else
+##    if test -z "${DEBUGGING}";
+##      then 
+##	#echo running normal sw;
+##	export CMTCONFIG=slc4_ia32_gcc34
+##      else 
+##	#echo running debug sw;
+##	export CMTCONFIG=slc4_ia32_gcc34_dbg   
+##    fi
+##fi
 
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
 
-echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
-
-#
-#  MSF: All this is unnecessary. Just create setup in cmt directory using crsetup macro (see .bashrc)
-#
-#while [ $# -ne 0 ]; do
-#  shift 
-#done
-#
-#export MYSITEROOT=/sw/lib
-#export LHCBHOME=/sw/lib
-#
-#. ${CMTROOT}/mgr/setup.sh
-#. $MYSITEROOT/scripts/ExtCMT.sh
-#export CMTPROJECTPATH=$LHCBPROJECTPATH
+###echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
 
 #. ../cmt/setup.sh
 if [[ ${CMTCONFIG} == "slc4_ia32_gcc34" ]]
@@ -125,7 +108,10 @@ export LOGFIFO=/tmp/logGaudi.fifo
 ##export LD_LIBRARY_PATH=$GAUDIONLINEROOT/${CMTCONFIG}:${LD_LIBRARY_PATH}:$GAUDIONLINEROOT/${CMTCONFIG}
 ##echo $LD_LIBRARY_PATH
 #export gaudi_exe="/bin/nice -n 20 $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
-renice 10 -p $$;
+
+#### No renice anymore . is only counter productive
+#####renice 10 -p $$;
+
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
 export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"

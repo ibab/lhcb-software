@@ -1,6 +1,4 @@
 #!/bin/bash
-
-#cd job
 export DEBUGGING=YES
 
 . ./setupOnline.sh $*

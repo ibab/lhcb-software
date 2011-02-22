@@ -11,32 +11,29 @@ ulimit -d 1048576
 ulimit -m 1048576
 ulimit -v 1048576
 
-
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
 if test -n "$2" ; then
    export UTGID=$2
-fi
+fi;
 
 if test -n "$3" ; then 
    export PARTNAME=$3
-fi
+fi;
 
 if test -n "$4" ; then 
    export ONLINEVERSION=$4
-fi
+fi;
 
 if test -n "$5" ; then 
    export TOP=$5
-fi
+fi;
 
 if test -n "$6" ; then 
    export DEBUG=$6
-fi
+fi;
 
 export DIM_DNS_CLIENT_NODE=${DIM_DNS_NODE}.lbdaq.cern.ch
-
-#export ONLINEVERSION=/home/online/ONLINE/Online_v4r43/Online/OnlineTasks/job
 
 # if the parent > 6 chars its run inside a node
 if test -z "${PARENT:6}" ; then
@@ -44,7 +41,7 @@ if test -z "${PARENT:6}" ; then
    export DIM_DNS_CLIENT_NODE=${PARENT}.lbdaq.cern.ch  
 fi
 
-echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME} ONLINE ${ONLINEVERSION}
+####echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME} ONLINE ${ONLINEVERSION}
 
 cd ${ONLINEVERSION}
 export DEBUGGING=YES
@@ -57,11 +54,9 @@ done
 export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
 export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts;
 
-
 . ./setupOnline.sh
 
-
-echo DIM_DNS_NODE ${DIM_DNS_NODE} DIM_DNS_CLIENT_NODE ${DIM_DNS_CLIENT_NODE}
+##### echo DIM_DNS_NODE ${DIM_DNS_NODE} DIM_DNS_CLIENT_NODE ${DIM_DNS_CLIENT_NODE}
 
 if test -n "${TOP}" ; then 
   #top level adder for this partition
@@ -84,7 +79,7 @@ if [[ ${PARENT} == "mona09" ]] ; then
    export DIM_DNS_CLIENT_NODE=mona09.lbdaq.cern.ch
 fi
 
-echo DIM_DNS_NODE ${DIM_DNS_NODE} DIM_DNS_CLIENT_NODE ${DIM_DNS_CLIENT_NODE}
+####echo DIM_DNS_NODE ${DIM_DNS_NODE} DIM_DNS_CLIENT_NODE ${DIM_DNS_CLIENT_NODE}
 
 if test -z "${TOP}" ; then
   if [[ ${PARENT} == "cald07" ]]

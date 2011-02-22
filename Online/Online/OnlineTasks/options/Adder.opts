@@ -16,9 +16,13 @@ AdderSvc.AdderType          = "top";
 AdderSvc.SourceTaskPattern  = "Adder";
 AdderSvc.MyName             = "<part>_Adder";
 AdderSvc.InDNS              = "hlt01";
-
 AdderSvc.TopLevel           = false;
 AdderSvc.PartitionName      = @OnlineEnv.PartitionName;
 AdderSvc.ExpandRate         = false;
 AdderSvc.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder(.*)";
 AdderSvc.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_Adder(.*)";
+
+AdderSvc.SaveSetTaskName   = "GauchoJob";
+AdderSvc.IsSaver           = true;
+AdderSvc.SaveRootDir       = "/hist/Savesets";
+AdderSvc.SaveInterval      = 120;              // Save snapshot every 2 minutes
