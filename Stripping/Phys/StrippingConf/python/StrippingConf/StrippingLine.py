@@ -125,7 +125,7 @@ class bindMembers (object) :
             self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
-        return self._handleSelectionType(line, sel)
+        return self._handleSelectionType(line, alg)
 
     def _handle_SelectionSequence(self, line, alg) :
         print 'WARNING: line', line, 'using SelectionSequence', alg.name(), '. This could be unnecessary. Consider using Selection directly.'
