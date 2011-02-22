@@ -162,10 +162,7 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monTH1D->hist() );
           prepareForDisplay();
-          if ( NULL != m_hostingPad ) {
-            //setDrawingOptions( m_hostingPad );
-            m_hostingPad->Modified();
-           }
+          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
         } else {
           m_rootHistogram = (TH1*)monTH1D->hist()->Clone();
         }
@@ -181,10 +178,7 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monTH2D->hist() );
           prepareForDisplay();
-          if ( NULL != m_hostingPad ) {
-            //  setDrawingOptions( m_hostingPad );
-            m_hostingPad->Modified();
-          }
+          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
         } else {
           m_rootHistogram = (TH1*)monTH2D->hist()->Clone();
         }
@@ -200,10 +194,7 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monProfile->profile() );
           prepareForDisplay();
-          if ( NULL != m_hostingPad ) {
-          //  setDrawingOptions( m_hostingPad );
-            m_hostingPad->Modified();
-          }
+          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
         } else {
           m_rootHistogram = (TH1*)monProfile->profile()->Clone();
         }
@@ -243,11 +234,11 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
                              bool fastHitmapDraw ,
                              TPad* overlayOnPad ){
   TPad* pad = overlayOnPad;
-  bool isOverlap = (NULL != overlayOnPad);
+  m_isOverlap = (NULL != overlayOnPad);
 
   editorCanvas->cd();
 
-  if ( !isOverlap ) {
+  if ( !m_isOverlap ) {
     pad = new TPad( m_onlineHist->identifier().c_str(),
                     TString(""),
                     fabs(xlow), fabs(ylow), fabs(xup), fabs(yup));
@@ -280,7 +271,8 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
                                   m_prettyPalette ); // gWebImagePalette
       m_histogramImage->Draw();
     } else {
-      std::string opt =  isOverlap ? "SAME" : "";
+      std::string opt =  m_isOverlap ? "SAME" : "";
+      std::cout << "  option for drawing " << opt << std::endl;
       m_rootHistogram->Draw(opt.c_str());
     }
   }
@@ -289,12 +281,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   // fit if requested
   fit( analysisLib );
 
-  if ( !isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
+  if ( !m_isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
 
   std::string sopt("");
   //boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
   if ( /*rootLock && */ 0 != m_onlineHist ) {
-    if ( hasOption("DRAWPATTERN", &sopt) && false == isOverlap) {
+    if ( hasOption("DRAWPATTERN", &sopt) && false == m_isOverlap) {
 
       std::string drawPatternFile = analysisLib->refRoot() + "/" + m_onlineHist->task() + "/" + sopt;
 
@@ -345,7 +337,10 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 //
 //=========================================================================
 void DisplayHistogram::setDrawingOptions( TPad* pad ) {
-  if ( ( 0 == m_onlineHist ) || ( 0 == m_rootHistogram ) ) return ;
+  if ( ( 0 == m_onlineHist ) || 
+       ( 0 == m_rootHistogram ) ) return ;
+  if ( m_isOverlap ) return;
+  
   int iopt = 0;
   float fopt = 0.0;
   std::string sopt("");
@@ -441,14 +436,12 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
   }
   
   if (hasOption("DRAWOPTS", &sopt) ) {
-    /*
     if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
-    if (m_fitfunction) { // remove HIST option that disables showing the fit
-      if (sopt.find("HIST") < sopt.size()) {
-        sopt.erase(sopt.find("HIST"), 4);
-      }
-    }
-    */
+    //if (m_fitfunction) { // remove HIST option that disables showing the fit
+    //  if (sopt.find("HIST") < sopt.size()) {
+    //    sopt.erase(sopt.find("HIST"), 4);
+    //  }
+    // }
     m_rootHistogram->SetDrawOption(sopt.c_str());
   }
   if (hasOption("LOGX", &iopt)) pad->SetLogx(1);

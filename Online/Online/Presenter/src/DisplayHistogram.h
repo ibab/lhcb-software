@@ -73,6 +73,7 @@ protected:
 private:
   OnlineHistogram* m_onlineHist; ///< the online histogram.
   std::string m_shortName;
+  bool m_isOverlap;
   TH1* m_rootHistogram;   ///< pointer to the underlying ROOT histogram
   TH1* m_offsetHistogram; ///< pointer to offset histogram
   TH1* m_referenceHist;   ///< reference histogram
