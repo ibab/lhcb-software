@@ -25,7 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLooseDetachedPhi2KK = CombineParticles ("StdLooseDetachedPhi2KK")
-StdLooseDetachedPhi2KK.InputLocations = ["Phys/StdLooseKaons/Particles"]
+StdLooseDetachedPhi2KK.Inputs = ["Phys/StdLooseKaons/Particles"]
 StdLooseDetachedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 StdLooseDetachedPhi2KK.DaughtersCuts = {"K+": "(MIPCHI2DV(PRIMARY) > 4.)"} 
 StdLooseDetachedPhi2KK.CombinationCut = "(AM < 1100.*MeV) & (ADOCACHI2CUT(30, ''))"

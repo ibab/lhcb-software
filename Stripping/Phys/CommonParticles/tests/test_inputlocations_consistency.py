@@ -20,10 +20,10 @@ errors = {}
 message = ""
 
 for alg in algs :
-    locs = alg.InputLocations
+    locs = alg.Inputs
     for loc in locs :
         if not loc in outputLocations :
-            message+= "ERROR: Algorithm "+alg.name()+".InputLocation "+loc+" not in output locations\n"
+            message+= "ERROR: Algorithm "+alg.name()+".Input "+loc+" not in output locations\n"
             errors[alg.name()]=loc
 
 

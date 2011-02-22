@@ -16,7 +16,7 @@ import GaudiKernel.SystemOfUnits as Units
 ###########################
 
 StdLooseDetachedKst2Kpi = FilterDesktop("StdLooseDetachedKst2Kpi")
-StdLooseDetachedKst2Kpi.InputLocations = ["Phys/StdVeryLooseDetachedKst2Kpi/Particles"]
+StdLooseDetachedKst2Kpi.Inputs = ["Phys/StdVeryLooseDetachedKst2Kpi/Particles"]
 StdLooseDetachedKst2Kpi.Code = "(MIPCHI2DV(PRIMARY)> 2.25)"
 locations = updateDoD(StdLooseDetachedKst2Kpi)
 

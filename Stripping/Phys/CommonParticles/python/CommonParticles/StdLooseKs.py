@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseKsLL = CombineParticles ( 'StdLooseKsLL' )
 
-StdLooseKsLL.InputLocations = [ "Phys/StdLoosePions/Particles" ]
+StdLooseKsLL.Inputs = [ "Phys/StdLoosePions/Particles" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsLL.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 9.)" } 
@@ -44,7 +44,7 @@ locations = updateDoD ( StdLooseKsLL )
 # ============================================================================= 
 StdLooseKsDD = CombineParticles ( 'StdLooseKsDD' )
 
-StdLooseKsDD.InputLocations = [ "Phys/StdNoPIDsDownPions/Particles" ]
+StdLooseKsDD.Inputs = [ "Phys/StdNoPIDsDownPions/Particles" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)" } 

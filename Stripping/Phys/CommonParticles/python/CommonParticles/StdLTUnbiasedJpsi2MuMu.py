@@ -24,7 +24,7 @@ from CommonParticles.Utils import *
 
 ## ============================================================================
 StdLTUnbiasedJpsi2MuMu = FilterDesktop("StdLTUnbiasedJpsi2MuMu")
-StdLTUnbiasedJpsi2MuMu.InputLocations =["Phys/StdLooseJpsi2MuMu/Particles"]
+StdLTUnbiasedJpsi2MuMu.Inputs =["Phys/StdLooseJpsi2MuMu/Particles"]
 StdLTUnbiasedJpsi2MuMu.Code = "  (MINTREE('mu+'==ABSID, PT) > 500.*MeV)" \
                               "& (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
                               "& (MAXTREE('mu+'==ABSID, PIDK) < 10.0)" \
