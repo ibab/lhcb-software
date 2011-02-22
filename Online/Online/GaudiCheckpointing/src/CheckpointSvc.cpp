@@ -489,11 +489,12 @@ int CheckpointSvc::finishRestore() {
     return sc.getCode();
   }
   if ( ::getenv("TEST_CHECKPOINT") )  {
-    ::printf(" No Error seen: %s%s\n",MARKER,MARKER);
-    ::printf(" No Error seen: =  RESTORE TEST WAS SUCCESSFUL.\n");
-    ::printf(" No Error seen: =  Looks like this checkpoint is working.\n");
-    ::printf(" No Error seen: =  The process will now exit.\n");
-    ::printf(" No Error seen: %s%s\n",MARKER,MARKER);
+    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
+    ::fprintf(stdout,"=  RESTORE TEST WAS SUCCESSFUL.\n");
+    ::fprintf(stdout,"=  Looks like this checkpoint is working.\n");
+    ::fprintf(stdout,"=  The process will now exit.\n");
+    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
+    ::fflush(stdout);
     ::_exit(EXIT_SUCCESS);
   }
   MsgStream log(msgSvc(),name());
