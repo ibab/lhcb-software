@@ -73,7 +73,7 @@ for line in lines:
       trunk = vsn.replace('/tags/','/trunk/')
       #trunk = trunk[:trunk.rfind('/')]
       #print vsn, tags, trunk
-      lines = _exec('svn list '+vsn).readlines()
+      lines = _exec('svn list '+tags).readlines()
       l = len(lines)-1
       if l==1: last_tag=[lines[l][:-1]]
       if l==2: last_tag=[lines[l][:-1],lines[l-1][:-1]]

@@ -6,6 +6,13 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r46>2010-02-22 OnlineSys v4r48</A></H1>
+<PRE>
+   Based in Gaudi v22r0.
+   Updates in Checkpointing, Gaucho, GaudiCheckpointing, GaudiOnline,
+   OnlineBase, OnlineTasks,
+</PRE>
+
 <H1><A NAME=v4r46>2010-02-17 OnlineSys v4r47</A></H1>
 <PRE>
    Based in Gaudi v22r0.
