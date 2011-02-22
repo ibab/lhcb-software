@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!========================= LinkerEvent v3r7 2011-02-22 =========================
 ! 2011-02-10 - Chris Jones
  - Fix a warning with the icc compiler - Replace use of sprintf with an 
    std::ostringstream object.
