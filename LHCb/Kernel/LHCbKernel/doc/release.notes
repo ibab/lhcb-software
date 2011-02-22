@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v12r8 2011-02-22 =========================
 ! 2011-02-18 - Chris Jones
  - Various minor changes for icc11, removes some #pragma statements
 
