@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v11r7 2011-02-22 ===================
 ! 2011-02-20 - Gerhard Raven
  - remove code which uses the match2dVelo interface -- we don't use
    2D velo anymore ;-)
