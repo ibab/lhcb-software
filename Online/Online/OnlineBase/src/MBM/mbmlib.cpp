@@ -1325,14 +1325,14 @@ int _mbm_shutdown (void* /* param */) {
       continue;
     }
     if ( !bm->user || !bm->ctrl ) {
-      ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Exit handler called with invalid BMID\n");
+      ::lib_rtl_output(LIB_RTL_ERROR,"[ERROR] mbmlib: Exit handler called with invalid BMID\n");
       continue;
     }
     if ( bm->ctrl->pid_lock == USER_PID ) {
-      ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Exit handler called with lock held by same process:%d\n", bm->ctrl->pid_lock);
+      ::lib_rtl_output(LIB_RTL_ERROR,"[ERROR] mbmlib: Exit handler called with lock held by same process:%d\n", bm->ctrl->pid_lock);
     }
     _mbm_lock_tables(bm);
-    ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Emergency shutdown of buffer:%s\n", bm->bm_name);
+    ::lib_rtl_output(LIB_RTL_ERROR,"[INFO] mbmlib: Emergency shutdown of buffer:%s\n", bm->bm_name);
     _mbm_uclean (bm);
     ::lib_rtl_delete_event(bm->WES_event_flag);
     ::lib_rtl_delete_event(bm->WEV_event_flag);
@@ -1357,7 +1357,7 @@ int _mbm_shutdown (void* /* param */) {
     bm->WEVA_event_flag = 0;
     _mbm_unlock_tables(bm);
     ::lib_rtl_unmap_section(bm->ctrl_add);
-    ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
+    ::lib_rtl_output(LIB_RTL_ERROR,"[ERROR] mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
     bm->lockid = 0;
   }
   /*  bm_exh_unlink (); */
