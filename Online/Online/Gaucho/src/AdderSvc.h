@@ -76,6 +76,7 @@ private:
   std::string m_TaskPattern;
   std::string m_ServicePattern;
   std::string m_AdderType;
+  std::string m_AdderClass;
   bool m_TopLevel;
   bool m_ExpandRate;
   bool m_isSaver;

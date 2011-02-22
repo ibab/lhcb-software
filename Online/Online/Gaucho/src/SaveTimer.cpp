@@ -50,10 +50,10 @@ void SaveTimer::timerHandler ( void )
   m_Adder->UnLock();
   SavetoFile(m_buffadd);
 }
-void SaveTimer::Stop()
-{
-  GenTimer::Stop();
-}
+//void SaveTimer::Stop()
+//{
+//  GenTimer::Stop();
+//}
 void SaveTimer::SavetoFile(void *buff)
 {
   SerialHeader *hd = (SerialHeader *)buff;
@@ -63,7 +63,7 @@ void SaveTimer::SavetoFile(void *buff)
   int runo = (int)hd->run_number;
   if (m_EOR && (runo == 0))
   {
-    printf("Run Number == 0. No attempt to save....\n");
+//    printf("Run Number == 0. No attempt to save....\n");
     return;
   }
 

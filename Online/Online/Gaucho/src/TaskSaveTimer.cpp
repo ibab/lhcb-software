@@ -64,7 +64,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   int runo = (int)hd->run_number;
   if (runo == 0)
   {
-    printf("Run Number == 0. No attempt to save....\n");
+//    printf("Run Number == 0. No attempt to save....\n");
     return;
   }
 

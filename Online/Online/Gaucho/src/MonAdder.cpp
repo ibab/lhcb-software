@@ -295,7 +295,7 @@ void MonAdder::ServiceHandler(DimInfo *myInfo, char *input,int )
         }
         else
         {
-            printf("Duplicate service %s. DNS restart? \n",service->at(0).c_str());
+//            printf("Duplicate service %s. DNS restart? \n",service->at(0).c_str());
         }
       }
       else

@@ -42,6 +42,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 //  'node' for a node adder,
 //  'sf' or 'subfarm' for subfarm adder
 //  'top' or 'part' for top or partition adder
+  declareProperty("AdderClass",m_AdderClass="hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
   m_SaveTimer = 0;
   m_started = false;
   m_errh =0;
@@ -73,6 +74,7 @@ StatusCode AdderSvc::initialize()
   return StatusCode::SUCCESS;
 }
 #include "TBrowser.h"
+
 StatusCode AdderSvc::start()
 {
   Service::start();
@@ -84,6 +86,16 @@ StatusCode AdderSvc::start()
   toLowerCase(m_AdderType);
   std::string nodename = RTL::nodeNameShort();
   toLowerCase(nodename);
+  toLowerCase(m_AdderClass);
+  std::string servicename;
+  if (m_AdderClass == "hists")
+  {
+    servicename = "Histos";
+  }
+  else if(m_AdderClass == "counter")
+  {
+    servicename = "Counter";
+  }
 // Nodeadders:
 // Source task names:
 //  Reconstruction task structure: <Partition>_<Node>_RecBrunel_xx
@@ -112,7 +124,7 @@ StatusCode AdderSvc::start()
 //    m_MyName = nodename+std::string("_Adder");
     if (m_ServicePattern == "")
     {
-      m_ServicePattern = "MON_"+m_TaskPattern+"/Histos/";
+      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";
     }
     if (m_InputDNS == "")
     {
@@ -124,7 +136,7 @@ StatusCode AdderSvc::start()
 //    m_MyName = nodename+std::string("_Adder");
     if (m_ServicePattern == "")
     {
-      m_ServicePattern = "MON_"+m_TaskPattern+"/Histos/";//+m_ServiceName;
+      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";//+m_ServiceName;
     }
     if (m_InputDNS == "")
     {
@@ -135,7 +147,7 @@ StatusCode AdderSvc::start()
   {
     if (m_ServicePattern != "")
     {
-      m_ServicePattern +="/Histos/";
+      m_ServicePattern +="/"+servicename+"/";
     }
     else
     {
@@ -153,7 +165,7 @@ StatusCode AdderSvc::start()
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);
-  printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
+//  printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
   DimServer::autoStartOn();
   DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());

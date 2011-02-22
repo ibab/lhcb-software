@@ -19,7 +19,7 @@ public:
   SaveTimer(MonAdder *tis, int period = 900);
   virtual ~SaveTimer(void);
   void timerHandler ( void );
-  void Stop();
+//  void Stop();
   void SavetoFile(void *buff);
   void setRootDir(std::string &p){m_rootdir = p;return;};
   void setPartName(std::string &p){ m_partname= p;return;};
