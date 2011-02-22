@@ -28,24 +28,23 @@ namespace
 Rich::RayTracing::RayTracing( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : Rich::HistoToolBase       ( type, name, parent ),
-    m_snellsLaw               ( NULL               ),
-    m_rich                    ( Rich::NRiches      ),
-    m_sphMirrorSegRows        ( Rich::NRiches, 0   ),
-    m_sphMirrorSegCols        ( Rich::NRiches, 0   ),
-    m_secMirrorSegRows        ( Rich::NRiches, 0   ),
-    m_secMirrorSegCols        ( Rich::NRiches, 0   ),
-    m_deBeam                  ( Rich::NRiches      )
+  : Rich::HistoToolBase       ( type, name, parent  ),
+    m_snellsLaw               ( NULL                ),
+    m_mirrorSegFinder         ( NULL                ),
+    m_rich                    ( Rich::NRiches, NULL ),
+    m_photoDetPanels          ( Rich::NRiches,
+                                HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) ),
+    m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
+    m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
+    m_secMirrorSegRows        ( Rich::NRiches, 0    ),
+    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
+    m_deBeam                  ( Rich::NRiches, NULL )
 {
   // interface
   declareInterface<IRayTracing>(this);
 
   // default to having histograms disabled
   setProduceHistos ( false );
-
-  // initialise
-  m_deBeam[Rich::Rich1] = NULL;
-  m_deBeam[Rich::Rich2] = NULL;
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::SmartIDTool
  *
- *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.26 2008-02-15 08:45:17 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-10-28
@@ -16,12 +13,14 @@
 #ifndef RICHTOOLS_RICHSMARTIDTOOL_H
 #define RICHTOOLS_RICHSMARTIDTOOL_H 1
 
+// STL
+#include <vector>
+
 // Base class and interface
 #include "RichKernel/RichToolBase.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
 // from RichKernel
-#include "RichKernel/BoostArray.h"
 #include "RichKernel/RichSmartIDSorter.h"
 #include "RichKernel/RichPixelCluster.h"
 
@@ -114,9 +113,13 @@ namespace Rich
   private:
 
     /// photodetector panels per rich
-    typedef boost::array<const DeRichHPDPanel*, Rich::NHPDPanelsPerRICH> HPDPanelsPerRich;
+    typedef std::vector<const DeRichHPDPanel*> HPDPanelsPerRich;
+
     /// typedef for photodetector for each rich
-    typedef boost::array<HPDPanelsPerRich, Rich::NRiches> RichHPDPanels;
+    typedef std::vector<HPDPanelsPerRich> RichHPDPanels;
+
+  private:
+
     /// photodetector for each rich
     RichHPDPanels m_photoDetPanels;
 
@@ -128,6 +131,7 @@ namespace Rich
 
     /// false to get the hit on the outside of HPD window (inlcuding refraction)
     bool m_hitPhotoCathSide;
+
   };
 
 }

@@ -12,11 +12,13 @@
 #ifndef RICHTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHTOOLS_RICHPARTICLEPROPERTIES_H 1
 
+// STL
+#include <vector>
+
 // GSL
 #include "gsl/gsl_math.h"
 
 // Rich Kernel
-#include "RichKernel/BoostArray.h"
 #include "RichKernel/RichTrackSegment.h"
 
 // base class
@@ -89,10 +91,10 @@ namespace Rich
     const IRefractiveIndex * m_refIndex;
 
     /// Array containing particle masses
-    boost::array<double,Rich::NParticleTypes> m_particleMass;
+    std::vector<double> m_particleMass;
 
     /// Array containing square of particle masses
-    boost::array<double,Rich::NParticleTypes> m_particleMassSq;
+    std::vector<double> m_particleMassSq;
 
     /// Particle ID types to consider in the likelihood minimisation (JO)
     std::vector<std::string> m_pidTypesJO;

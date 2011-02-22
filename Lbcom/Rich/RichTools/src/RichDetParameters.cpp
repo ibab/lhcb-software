@@ -27,11 +27,12 @@ namespace Rich
   DetParameters::DetParameters( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : Rich::ToolBase ( type, name , parent ),
+    : Rich::ToolBase ( type, name , parent  ),
       m_maxPhotEn    ( Rich::NRadiatorTypes ),
       m_minPhotEn    ( Rich::NRadiatorTypes ),
       m_meanPhotEn   ( Rich::NRadiatorTypes ),
-      m_refSD        ( Rich::NRadiatorTypes )
+      m_refSD        ( Rich::NRadiatorTypes ),
+      m_radOutLimLoc ( Rich::NRadiatorTypes )
   {
 
     declareInterface<IDetParameters>(this);

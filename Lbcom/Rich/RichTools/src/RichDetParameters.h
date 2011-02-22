@@ -12,8 +12,8 @@
 #ifndef RICHTOOLS_RICHDETPARAMETERS_H
 #define RICHTOOLS_RICHDETPARAMETERS_H 1
 
-// Rich Kernel
-#include "RichKernel/BoostArray.h"
+// STL
+#include <vector>
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -80,7 +80,7 @@ namespace Rich
     std::vector<double> m_refSD; ///< Standard deviation of n-1 distribution for observed photons
 
     /// The radiator acceptance limits
-    boost::array< IDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;
+    std::vector< IDetParameters::RadLimits > m_radOutLimLoc;
 
   };
 

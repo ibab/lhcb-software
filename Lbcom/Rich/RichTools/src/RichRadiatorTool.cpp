@@ -30,7 +30,9 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool )
 Rich::RadiatorTool::RadiatorTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : Rich::ToolBase ( type, name, parent )
+  : Rich::ToolBase ( type, name, parent   ),
+    m_radiators    ( Rich::NRadiatorTypes ),
+    m_transforms   ( Rich::NRadiatorTypes )
 {
   declareInterface<IRadiatorTool>(this);
 }
@@ -64,13 +66,12 @@ StatusCode Rich::RadiatorTool::initialize ( )
 
   // aerogel
   const IDetectorElement::IDEContainer& detelemsR1 = rich1->childIDetectorElements();
-  for ( IDetectorElement::IDEContainer::const_iterator det_it =  detelemsR1.begin();
-        det_it != detelemsR1.end();
-        ++det_it )
+  for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR1.begin();
+        det_it != detelemsR1.end(); ++det_it )
   {
     const std::string& detName = (*det_it)->name();
     if ( detName.find("AerogelT") != std::string::npos )
-      m_radiators[Rich::Aerogel].push_back( getDet<DeRichRadiator>( detName ));
+      m_radiators[Rich::Aerogel].push_back( getDet<DeRichRadiator>(detName) );
   }
 
   if ( msgLevel(MSG::DEBUG) )

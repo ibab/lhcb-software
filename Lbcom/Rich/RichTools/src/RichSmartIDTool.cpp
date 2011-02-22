@@ -23,9 +23,13 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool )
 Rich::SmartIDTool::SmartIDTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : Rich::ToolBase ( type, name, parent )
+  : Rich::ToolBase   ( type, name, parent ),
+    m_photoDetPanels ( Rich::NRiches, 
+                       HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) )
 {
+  // Interface
   declareInterface<ISmartIDTool>(this);
+  // JOs
   declareProperty( "HitOnPhotoCathSide", m_hitPhotoCathSide = false );
 }
 

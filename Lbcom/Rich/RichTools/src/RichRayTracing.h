@@ -12,6 +12,9 @@
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
 
+// STL
+#include <vector>
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
@@ -194,13 +197,17 @@ namespace Rich
     /// Snell's Law refraction tool
     const ISnellsLawRefraction * m_snellsLaw;
 
+    /// Mirror segment finder tool
+    const IMirrorSegFinder* m_mirrorSegFinder;
+
     /// Rich1 and Rich2 pointers
     std::vector< const DeRich* > m_rich;
 
     /// photodetector panels per rich
-    typedef boost::array<const DeRichHPDPanel*, Rich::NHPDPanelsPerRICH> HPDPanelsPerRich;
+    typedef std::vector<const DeRichHPDPanel*> HPDPanelsPerRich;
     /// typedef for photodetector for each rich
-    typedef boost::array<HPDPanelsPerRich, Rich::NRiches> RichHPDPanels;
+    typedef std::vector<HPDPanelsPerRich> RichHPDPanels;
+
     /// photodetector for each rich
     RichHPDPanels m_photoDetPanels;
 
@@ -208,9 +215,6 @@ namespace Rich
     std::vector<int> m_sphMirrorSegCols; ///< Number of primary mirror columns in each RICH
     std::vector<int> m_secMirrorSegRows; ///< Number of secondary mirror rows in each RICH
     std::vector<int> m_secMirrorSegCols; ///< Number of secondary mirror columns in each RICH
-
-    /// Mirror segment finder tool
-    const IMirrorSegFinder* m_mirrorSegFinder;
 
     /// Flag to to ignore secondary mirrors (useful for test beam work)
     bool m_ignoreSecMirrs;

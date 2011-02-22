@@ -12,12 +12,14 @@
 #ifndef RICHTOOLS_RICHRADIATORTOOL_H
 #define RICHTOOLS_RICHRADIATORTOOL_H 1
 
+// STL
+#include <vector>
+
 // base class
 #include "RichKernel/RichToolBase.h"
 
 // RichKernel
 #include "RichKernel/IRichRadiatorTool.h"
-#include "RichKernel/BoostArray.h"
 
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
@@ -78,10 +80,12 @@ namespace Rich
   private:
 
     typedef std::vector<const DeRichRadiator*> RichRadiators;
-    boost::array<RichRadiators, Rich::NRadiatorTypes> m_radiators;
+    /// Vector of DeRich radiator volumes for each Radiator type
+    std::vector<RichRadiators> m_radiators;
 
     typedef std::vector<Gaudi::Transform3D> Transforms;
-    boost::array<Transforms, Rich::NRadiatorTypes> m_transforms;
+    /// Transforms for each Radiator type
+    std::vector<Transforms> m_transforms;
 
   };
 

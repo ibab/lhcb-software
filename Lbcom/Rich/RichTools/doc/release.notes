@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-02-22 - Chris Jones
+ - Some more icc fixes
+
 ! 2011-02-12 - Chris Jones
  - Fix minor coverity defect
 
