@@ -4995,6 +4995,8 @@ void PresenterMainFrame::refreshPage() {
 
   std::cout << "refreshing..." << std::endl;
 
+  editorCanvas->cd();
+  
   if ( pres::Online == m_presenterInfo.presenterMode() ) {
     std::string partition = currentPartition();
     m_presenterPage.loadFromDIM( partition, true );
@@ -5009,8 +5011,8 @@ void PresenterMainFrame::refreshPage() {
   m_presenterPage.buildAnalysisHistos( m_analysisLib );  // Only after histos are loaded...
 
   editorCanvas->Update();
-  
-  //m_presenterPage.updatePage( editorCanvas, m_analysisLib, m_fastHitMapDraw );
+  m_presenterPage.updateDrawingOptions();
+  editorCanvas->Update();
   
   /*
   bool parallelRefresh = threadSafePage();

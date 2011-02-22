@@ -139,7 +139,6 @@ void DisplayHistogram::normalizeReference ( ) {
 //=========================================================================
 void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) {
   std::string dimService = m_onlineHist->dimServiceName();
-  std::cout << ".. original dimService = " << dimService << std::endl;
   HistogramIdentifier hid( dimService );
   dimService.erase( 0, dimService.find( "_" ) ); //== erase to first underscore
   dimService.erase( 0, dimService.find( "/" ) ); //== erase to first slash after
@@ -162,6 +161,11 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
         if ( update ) {
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monTH1D->hist() );
+          prepareForDisplay();
+          if ( NULL != m_hostingPad ) {
+            //setDrawingOptions( m_hostingPad );
+            m_hostingPad->Modified();
+           }
         } else {
           m_rootHistogram = (TH1*)monTH1D->hist()->Clone();
         }
@@ -176,6 +180,11 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
         if ( update ) {
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monTH2D->hist() );
+          prepareForDisplay();
+          if ( NULL != m_hostingPad ) {
+            //  setDrawingOptions( m_hostingPad );
+            m_hostingPad->Modified();
+          }
         } else {
           m_rootHistogram = (TH1*)monTH2D->hist()->Clone();
         }
@@ -190,6 +199,11 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
         if ( update ) {
           m_rootHistogram->Reset();
           m_rootHistogram->Add( monProfile->profile() );
+          prepareForDisplay();
+          if ( NULL != m_hostingPad ) {
+          //  setDrawingOptions( m_hostingPad );
+            m_hostingPad->Modified();
+          }
         } else {
           m_rootHistogram = (TH1*)monProfile->profile()->Clone();
         }
@@ -214,6 +228,7 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
 //  Creata a dummy histogram...
 //=========================================================================
 void DisplayHistogram::createDummyHisto( ) {
+  if ( NULL != m_rootHistogram ) delete m_rootHistogram;
   std::string dummyTitle = "ERROR: missing source for " + m_onlineHist->identifier();
   m_rootHistogram = new TH1F( m_onlineHist->identifier().c_str(), dummyTitle.c_str(), 1, 0., 1.);
   m_rootHistogram->SetBit(kNoContextMenu);
@@ -442,6 +457,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
     // Set log scale also if the minimum and maximum scale is not 0
     else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
               ( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
+    else pad->SetLogy( 0 );
   }
 
   int gridx = gStyle->GetPadGridX();
@@ -609,16 +625,17 @@ bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
 //=========================================================================
 void DisplayHistogram::setOffsetHistogram ( ) {
   if ( NULL == m_rootHistogram ) return;
-
+  
+  std::cout << "Set offset for " << m_rootHistogram->GetTitle() << std::endl;
   if ( m_offsetHistogram ) { delete m_offsetHistogram; m_offsetHistogram = 0;}
-  if ( 0 != dynamic_cast<TH1D*>(m_rootHistogram) ) {
+  if ( 0 != dynamic_cast<TProfile*>(m_rootHistogram) ) {
+    m_offsetHistogram = new TProfile(*dynamic_cast<TProfile*>(m_rootHistogram));
+    m_offsetHistogram->SetBit(kNoContextMenu);
+  } else if ( 0 != dynamic_cast<TH1D*>(m_rootHistogram) ) {
     m_offsetHistogram = new TH1D(*dynamic_cast<TH1D*>(m_rootHistogram));
     m_offsetHistogram->SetBit(kNoContextMenu);
   } else if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram) ) {
     m_offsetHistogram = new TH2D(*dynamic_cast<TH2D*>(m_rootHistogram));
-    m_offsetHistogram->SetBit(kNoContextMenu);
-  } else if ( 0 != dynamic_cast<TProfile*>(m_rootHistogram) ) {
-    m_offsetHistogram = new TProfile(*dynamic_cast<TProfile*>(m_rootHistogram));
     m_offsetHistogram->SetBit(kNoContextMenu);
   }
   if ( m_offsetHistogram ) { m_offsetHistogram->AddDirectory(kFALSE); }
@@ -632,11 +649,15 @@ void DisplayHistogram::resetOffsetHistogram ( ) {
   if ( m_offsetHistogram ) { delete m_offsetHistogram; m_offsetHistogram = 0;}
 }
 //=========================================================================
-//  Prepare teh histogram for display: Subtract offset, build image.
+//  Prepare the histogram for display: Subtract offset, build image.
 //=========================================================================
 void DisplayHistogram::prepareForDisplay ( ) {
   if ( NULL == m_rootHistogram ) return;
   if ( NULL != m_offsetHistogram ) {
+    std::cout << "Subtract offset histogram " << std::endl;
+    
+    //m_rootHistogram->Add( m_offsetHistogram, -1. );
+    
     if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram)  ) {
       for (int i=1; i<= m_rootHistogram->GetNbinsX() ; ++i) {
         for (int j=1; j <= m_rootHistogram->GetNbinsY() ; ++j) {
@@ -655,6 +676,7 @@ void DisplayHistogram::prepareForDisplay ( ) {
       }
       std::cout << "Subtract offset 1D size " << m_rootHistogram->GetNbinsX() << std::endl;
     }
+    
   }
   if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram) ) {
     if ((TH2D::Class() == m_rootHistogram->IsA()) && m_histogramImage) {

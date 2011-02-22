@@ -121,6 +121,11 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
   HistTask::TaskList( "", knownTasks );
 
   std::cout << "Found " << knownTasks.size() << " tasks with 2011 publication." << std::endl;
+  for ( std::vector<std::string>::iterator itS = knownTasks.begin();
+        knownTasks.end() != itS; ++itS ) {
+    std::cout << "   " << (*itS ) << std::endl;
+  }
+  
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     bool foundTheTask = false;
     for ( std::vector<std::string>::iterator itS = knownTasks.begin();
@@ -141,10 +146,15 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
             (*itT).histos.end() != itH; ++itH ) {
         std::string dimName = (*itH).histo()->dimServiceName();
         unsigned int pos = dimName.find( "/" );
-        while( pos < dimName.size() ) {
+        if ( pos < dimName.size() ) {
           dimName.erase( 0, pos+1 );
           pos = dimName.find( "/" );
+          if ( pos < dimName.size() ) {
+            dimName.erase( 0, pos+1 );
+          }
         }
+        
+        std::cout << "-- Search for DIM name " << dimName << std::endl;
         if ( std::find( allHists.begin(), allHists.end(), dimName ) != allHists.end() ) {
           histNames.push_back( dimName );
           (*itH).setShortName( dimName );
@@ -167,14 +177,21 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
             std::cout << "-- not found " << histNames[indx] << std::endl;
             (*itH).createDummyHisto();
           } else {
-            std::cout << "++ set histo " << histNames[indx] << " as " << results[indx] << std::endl;
-            if ( update ) {
+            std::cout << "++ set histo " << histNames[indx] << std::endl;
+            if ( update && 
+                 ( (*itH).rootHist()->GetNbinsX() == ((TH1*)results[indx])->GetNbinsX() ) ) {
               (*itH).rootHist()->Reset();
-              (*itH).rootHist()->Add( (TH1*)results[indx] );
+              (*itH).rootHist()->Add( (TH1*)results[indx], 1. );
               delete results[indx];
+              (*itH).prepareForDisplay();
+              (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
+              (*itH).setDrawingOptions( (*itH).hostingPad() );
+              (*itH).hostingPad()->Modified();
             } else {
               if ( NULL != (*itH).rootHist() ) delete (*itH).rootHist();
               (*itH).setRootHist( (TH1*) results[indx] );
+              (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
+              (*itH).prepareForDisplay();
             }
           }
           indx++;
@@ -189,30 +206,27 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       m_dimBrowser->getServices( dimServiceQuery.c_str() );
       char* dimService;
       char* dimFormat;
+      bool foundTask = false;
       while( m_dimBrowser->getNextService(dimService, dimFormat) ) {
         std::string task( dimService );
         task = task.substr( task.find( "/")+1 );
         task = task.substr( 0, task.find( "/" ) );
         (*itT).location = task;
         std::cout << "Found task " << (*itT).name << " as " << (*itT).location << std::endl;
+        foundTask = true;
         break;
       }
+      if ( !foundTask ) std::cout << "  --- no services for task " << (*itT).name << std::endl;
 
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        (*itH).loadFromMonObject( (*itT).location, update );
+        if ( foundTask ) {
+          (*itH).loadFromMonObject( (*itT).location, update );
+        } else {
+          (*itH).createDummyHisto();
+        }
       }
     }
-  }
-  std::cout << "   ... all histograms loaded from MonObj..." << std::endl;
-  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-    for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
-          (*itT).histos.end() != itH; ++itH ) {
-      (*itH).prepareForDisplay();
-    }
-  }
-  for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
-    (*itA).displayHisto->prepareForDisplay();
   }
   std::cout << "   ... display prepared" << std::endl;
 }
@@ -429,7 +443,6 @@ void PresenterPage::resetOffsetHistograms ( ) {
 //  Draw the full page
 //=========================================================================
 void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool fastHitMapDraw ) {
-  std::vector<DisplayHistogram*> displayed;
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
 
@@ -471,7 +484,6 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
                 << "  Y " << ylow << " to " << yup
                 << " overlay " << overlayOnPad << std::endl;
       dispH->draw( editorCanvas, xlow, ylow, xup, yup, analysisLib, fastHitMapDraw, overlayOnPad );
-      displayed.push_back( dispH );
     }
   }
   std::cout << "Update the canvas" << std::endl;
@@ -480,22 +492,22 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
   // reliable random crashes when below invoked...
   // via TH painter (timing dependent?)
   editorCanvas->Update();
-
-  for ( std::vector<DisplayHistogram*>::iterator itH =  displayed.begin();
-        displayed.end() != itH; ++itH ) {
-    TPad* pad = (*itH)->hostingPad();
-    if ( NULL != pad ) (*itH)->setDrawingOptions( pad );
-  }
-
+  updateDrawingOptions();
   editorCanvas->Update();
   std::cout << "Second Update of the canvas" << std::endl;
 }
+
 //=========================================================================
-//  Update the full page
+//  Update the pad
 //=========================================================================
-void PresenterPage::updatePage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool fastHitMapDraw ) {
-  editorCanvas->cd();
-  editorCanvas->Clear();
-  drawPage( editorCanvas, analysisLib, fastHitMapDraw );
+void PresenterPage::updateDrawingOptions ( ) {
+  for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
+        m_onlineHistosOnPage.end() != itHP; ++itHP ) {
+    DisplayHistogram* dispH =  displayHisto( (*itHP)  );
+    if ( NULL != dispH ) {
+      TPad* pad = dispH->hostingPad();
+      if ( NULL != pad ) dispH->setDrawingOptions( pad );
+    }
+  }
 }
 //=============================================================================

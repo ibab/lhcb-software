@@ -88,7 +88,8 @@ public:
   void resetOffsetHistograms();
 
   void drawPage( TCanvas* canvas, OMAlib* analysisLib, bool fastHitMapDraw );
-  void updatePage( TCanvas* canvas, OMAlib* analysisLib, bool fastHitMapDraw );
+
+  void updateDrawingOptions();
   
 protected:
 
