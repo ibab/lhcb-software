@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2011-22-02 - Nikolai Nikitin
+ - Minor bug fix: optimization of the function for the maximum probability
+   calculation
+
 !====================== EvtGenExtras v2r5p1 2010-10-12 =======================
 ! 2010-23-09 - Nikolai Nikitin
  - Some minor bug fixes

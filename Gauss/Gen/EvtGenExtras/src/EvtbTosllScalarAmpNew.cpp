@@ -20,6 +20,7 @@
 // N.Nikitin (nnikit@mail.cern.ch)   May  06 2008       Module created
 // N.Nikitin                         May  20 2008       Add maximum prabability
 // N.Nikitin                         June 04 2008       Add CKM matrix elements
+// N.Nikitin                         Feb  21 2011       CalcMaxProb(...) optimisation
 //
 //------------------------------------------------------------------------
 //
@@ -509,11 +510,31 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
           double cosVellminus; // angle between the P-meson and ell^- directions
           cosVellminus = (pow(M2,2.0)+pow(ml,2.0)+2.0*EV*El2-t_for_s)/(2.0*modV*modl2);
           if((fabs(cosVellminus)>1.0)&&(fabs(cosVellminus)<=1.0001)){
-            report(NOTICE,"EvtGen") 
-              << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
-              << "\n cos(theta) = " << cosVellminus 
-              << std::endl;
+//            report(NOTICE,"EvtGen") 
+//               << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//               << "\n cos(theta) = " << cosVellminus 
+//               << std::endl;
             cosVellminus = cosVellminus/fabs(cosVellminus);
+          }
+          if((modV<=0.000001)||(modl2<=0.000001)){
+            cosVellminus = cosVellminus/fabs(cosVellminus);
+//            report(NOTICE,"EvtGen") 
+//               << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//               << "\n modV       = " << modV
+//               << "\n modl2      = " << modl2
+//               << "\n cos(theta) = " << cosVellminus
+//               << "\n s          = " << s
+//               << "\n t_for_s    = " << t_for_s
+//               << "\n s_min      = " << s_min
+//               << "\n s_max      = " << s_max
+//               << "\n t_plus     = " << t_plus 
+//               << "\n t_minus    = " << t_minus
+//               << "\n dt         = " << dt
+//               << "\n EV         = " << EV
+//               << "\n El2        = " << El2
+//               << "\n M2         = " << M2
+//               << "\n ml         = " << ml
+//               << std::endl;
           }
           if(fabs(cosVellminus)>1.0001){
              report(ERROR,"EvtGen") 
@@ -619,11 +640,11 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
              maxfoundprob=nikmax;
              s_at_max = s;
              t_at_max = t_for_s;
-             report(NOTICE,"EvtGen")
-                    << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
-                    << maxfoundprob
-                    << "\n k =" << k
-                    << std::endl;
+//             report(NOTICE,"EvtGen")
+//                    << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
+//                    << maxfoundprob
+//                    << "\n k =" << k
+//                    << std::endl;
           }
 
         } // for(k=0; k<=max_k; k++)
@@ -690,11 +711,29 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        double cosVellminus; // angle between the vector meson and ell^- directions
        cosVellminus = (pow(M2,2.0)+pow(ml,2.0)+2.0*EV*El2-t_for_s)/(2.0*modV*modl2);
        if((fabs(cosVellminus)>1.0)&&(fabs(cosVellminus)<=1.0001)){
-         report(NOTICE,"EvtGen") 
-           << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
-           << "\n cos(theta) = " << cosVellminus 
-           << std::endl;
+//         report(NOTICE,"EvtGen") 
+//           << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//           << "\n cos(theta) = " << cosVellminus 
+//           << std::endl;
          cosVellminus = cosVellminus/fabs(cosVellminus);
+       }
+       if((modV<=0.000001)||(modl2<=0.000001)){
+         cosVellminus = cosVellminus/fabs(cosVellminus);
+//         report(NOTICE,"EvtGen") 
+//            << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//            << "\n modV       = " << modV
+//            << "\n modl2      = " << modl2
+//            << "\n cos(theta) = " << cosVellminus
+//            << "\n s          = " << s
+//            << "\n t_for_s    = " << t_for_s
+//            << "\n t_plus     = " << t_plus 
+//            << "\n t_minus    = " << t_minus
+//            << "\n dt         = " << dt
+//            << "\n EV         = " << EV
+//            << "\n El2        = " << El2
+//            << "\n M2         = " << M2
+//            << "\n ml         = " << ml
+//            << std::endl;         
        }
        if(fabs(cosVellminus)>1.0001){
           report(ERROR,"EvtGen") 
@@ -796,11 +835,11 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
        if(nikmax>maxfoundprob){
           maxfoundprob=nikmax;
-          report(NOTICE,"EvtGen")
-                 << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
-                 << maxfoundprob
-                 << "\n k =" << k
-                 << std::endl;
+//          report(NOTICE,"EvtGen")
+//                 << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
+//                 << maxfoundprob
+//                 << "\n k =" << k
+//                 << std::endl;
        }
 
     } // for(k=0; k<=1000; k++)
@@ -816,6 +855,11 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        << std::endl;
      ::abort();
   }
+
+  report(NOTICE,"EvtGen")
+    << "\n maxfoundprob (...) = " 
+    << maxfoundprob
+    << std::endl;
 
   maxfoundprob *=1.01;
 
