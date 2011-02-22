@@ -81,9 +81,13 @@ private:
 
    void clean();
 
-   inline double dtx( const double p ) const;
+   inline double dtx( const double p ) const {
+        return  m_kickScale / ( p - m_kickOffset );
+   }
 
-   inline double momentum( const double dtx ) const;
+   inline double momentum( const double dtx ) const {
+        return m_kickScale / dtx + m_kickOffset;
+   }
 
 };
 #endif // MATCHVELOMUON_H

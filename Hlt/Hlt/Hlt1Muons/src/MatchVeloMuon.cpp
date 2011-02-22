@@ -107,9 +107,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
    findSeeds( veloSeed.get(), seedStation );
    if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
-   BOOST_FOREACH( Candidate* seed, m_seeds ) {
-      addHits( seed );
-   }
+   BOOST_FOREACH( Candidate* c, m_seeds ) { addHits( c ); }
 
    // Find the best candidate.
    Candidates::const_iterator best = std::min_element
@@ -220,7 +218,7 @@ void MatchVeloMuon::addHits( Candidate* seed )
 
       // Look for the closest hit inside the search window
       const Hlt1MuonHit* closest = 0;
-      double minDist = 0;
+      double minDist2 = 0;
       for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
          const Hlt1MuonRegion& region = station.region( r );
          if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
@@ -228,11 +226,11 @@ void MatchVeloMuon::addHits( Candidate* seed )
          BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
             if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
-            double dist = sqrt( ( xMuon - hit->x() ) * ( xMuon - hit->x() )
-                                + ( yMuon - hit->y() ) * ( yMuon - hit->y() ) );
-            if ( !closest || dist < minDist ) {
+            double dist2 =  ( xMuon - hit->x() ) * ( xMuon - hit->x() )
+                          + ( yMuon - hit->y() ) * ( yMuon - hit->y() ) ;
+            if ( !closest || dist2 < minDist2 ) {
                closest = hit;
-               minDist = dist;
+               minDist2 = dist2;
             }
          }
       }
@@ -242,17 +240,13 @@ void MatchVeloMuon::addHits( Candidate* seed )
       } else {
          ++nMissed ;
       }
-      if ( nMissed >= m_maxMissed ) {
-         break;
-      }
+      if ( nMissed >= m_maxMissed ) break;
    }
    // If a new candidate is good, store it.
    if ( nMissed < m_maxMissed ) {
       fitCandidate( seed );
       if ( produceHistos() ) plot( seed->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-      if ( seed->chi2DoF() < m_maxChi2DoFX ) {
-         m_candidates.push_back( seed );
-      }
+      if ( seed->chi2DoF() < m_maxChi2DoFX ) m_candidates.push_back( seed );
    }
 }
 
@@ -302,25 +296,9 @@ void MatchVeloMuon::fitCandidate( Candidate* candidate ) const
 void MatchVeloMuon::clean()
 {
    // delete leftover seeds
-   BOOST_FOREACH( Candidate* candidate, m_seeds ) {
-      delete candidate;
-   }
+   BOOST_FOREACH( Candidate* candidate, m_seeds ) { delete candidate; }
    m_seeds.clear();
    m_candidates.clear();
-   if ( m_magnetHit ) {
-      delete m_magnetHit;
-      m_magnetHit = 0;
-   }
-}
-
-//=============================================================================
-inline double MatchVeloMuon::dtx( const double p ) const
-{
-   return  m_kickScale / ( p - m_kickOffset );
-}
-
-//=============================================================================
-inline double MatchVeloMuon::momentum( const double dtx ) const
-{
-   return m_kickScale / dtx + m_kickOffset;
+   delete m_magnetHit;
+   m_magnetHit = 0;
 }
