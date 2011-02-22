@@ -139,7 +139,7 @@ public:
 protected:
 
   /// Pack a double to an int
-  int packDouble ( double val ) const 
+  int packDouble ( const double val ) const 
   {
     return ( 2.e9  < val ?  2000000000         : // saturate 31 bits
              -2.e9 > val ? -2000000000         : // idem
@@ -148,10 +148,10 @@ protected:
   }
 
   /// Pack a double to a short int
-  short int shortPackDouble ( double val ) const
+  short int shortPackDouble ( const double val ) const
   {
-    return ( 3.e4  < val ?  30000                    : // saturate 15 bits
-             -3.e4 > val ? -30000                    : // idem
+    return ( 3.e4  < val ? (short int)  30000        : // saturate 15 bits
+             -3.e4 > val ? (short int) -30000        : // idem
              0     < val ? (short int) ( val + 0.5 ) : // proper rounding
              (short int) ( val - 0.5 )               );
   }
