@@ -180,7 +180,7 @@ class bindMembers (object) :
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        return self._default_handler_( line,  alg )
+        return self._handle_GaudiSequencer( line,  alg )
 
     def __init__( self, line, algos ) :
 
