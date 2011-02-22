@@ -4,8 +4,10 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!======================= StrippingNeuroBayes v1r2 2011-02-22 =================
+
 ! 2011-02-22 - Ulrich Kerzel
-- fix compiler warnings
+	- fix compiler warnings
 
 ! 2011-02-09 - Ulrich Kerzel
 - don't apply precuts for B->hh when filling input variables
