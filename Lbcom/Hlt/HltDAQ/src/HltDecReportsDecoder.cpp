@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltDecReportsDecoder );
+DECLARE_ALGORITHM_FACTORY( HltDecReportsDecoder )
 
 
 using namespace LHCb;

@@ -219,7 +219,6 @@ StatusCode HltRoutingBitsWriter::execute() {
 
   std::vector<unsigned int> bits(3,0); 
 
-  unsigned int& w = bits[0]; // ODIN + L0DU
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
   
@@ -239,7 +238,7 @@ StatusCode HltRoutingBitsWriter::execute() {
         bool result = (*eval)(odin);
         *(m_odin_evaluators[ i ].counter) += result;
         if ( result ) m_odin_evaluators[ i ].hist->fill( t,  weight ); 
-        if ( result ) w |= (0x01UL << i); 
+        if ( result ) bits[0] |= (0x01UL << i); 
     }
 
   // bits 8--32 are for L0DU
@@ -253,7 +252,7 @@ StatusCode HltRoutingBitsWriter::execute() {
               bool result = (*eval)(l0du);
               *(m_l0_evaluators[ i-8 ].counter) += result;
               if ( result ) m_l0_evaluators[ i-8 ].hist->fill( t, weight ); 
-              if ( result ) w |= (0x01UL << i); 
+              if ( result ) bits[0] |= (0x01UL << i); 
         }
     }
   }
@@ -261,14 +260,13 @@ StatusCode HltRoutingBitsWriter::execute() {
   // bits 32--95 are for HLT
   LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( m_hlt_location );
   for (unsigned j=1;j<3;++j) {
-    unsigned int& w = bits[j];
     for (unsigned i=0;i<32;++i) {
         LoKi::Types::HLT_Cut* eval = m_hlt_evaluators[ (j-1)*32+i ].predicate;
         if ( eval == 0 ) continue;
         bool result = (*eval)(hdr);
         *(m_hlt_evaluators[ (j-1)*32+i ].counter) += result;
         if ( result ) m_hlt_evaluators[ (j-1)*32+i ].hist->fill( t, weight ); 
-        if ( result ) w |= (0x01UL << i); 
+        if ( result ) bits[j] |= (0x01UL << i); 
     }
   }
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);

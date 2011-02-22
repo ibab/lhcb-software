@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-02-22 - Gerhard Raven
+ - fix some of the ICC 'remarks'
+
 ! 2011-02-17 - Chris Jones
  - Various minor icc and coverity fixes
 

@@ -201,7 +201,7 @@ HltConfigSvc::tck2id(TCK tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
     TCKMap_t::const_iterator i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
-        ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
+        id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
         debug() << " TCK " << tck << " mapped (by explicit option) to " << id << endmsg;
         return id;
     }

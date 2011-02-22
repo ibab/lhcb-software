@@ -15,7 +15,7 @@ public:
     {
         declareProperty("allowUndefined",m_allowUndefined=true,"do we allow undefined, on-demand generated, key/value pairs?");
     }
-    virtual boost::optional<IANNSvc::minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
+    virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
 private:
     bool              m_allowUndefined;
 };

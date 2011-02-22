@@ -553,10 +553,10 @@ StatusCode HltSelReportsDecoder::execute() {
           }
           if( hltDecReports ){
             unsigned int idu(id);          
-            for( HltDecReports::Container::const_iterator i=hltDecReports->begin();
-                 i!=hltDecReports->end(); ++i){
-              if( (*i).second.intDecisionID() == idu ){
-                selName = (*i).first;
+            for( HltDecReports::Container::const_iterator j=hltDecReports->begin();
+                 j!=hltDecReports->end(); ++j){
+              if( j->second.intDecisionID() == idu ){
+                selName = j->first;
                 break;              
               }
             }

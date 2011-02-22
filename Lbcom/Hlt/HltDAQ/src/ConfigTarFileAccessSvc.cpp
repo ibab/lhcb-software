@@ -88,9 +88,9 @@ namespace {
   }
 
 
-  size_t maxValWithDigits(unsigned digits, unsigned bitsPerDigit) {
-    return (1UL << (digits*bitsPerDigit)) - 1 ;
-  }
+    //size_t maxValWithDigits(unsigned digits, unsigned bitsPerDigit) {
+    //    return (1UL << (digits*bitsPerDigit)) - 1 ;
+    //}
 
   template <typename T>
   char* putString(const char* s, T& buffer ) {
@@ -368,93 +368,94 @@ namespace ConfigTarFileAccessSvc_details {
     return sum;
   }
 
-  bool TarFile::interpretHeader(posix_header& header, Info& info) const {
-    if (strncmp(header.magic,"ustar ",6)&&strncmp(header.magic,"ustar\0",6)) {
-      return false;
-    }
-    long chksum       = getOctal(header.chksum,sizeof(header.chksum));
-    /* Check the checksum */
-    long sum=computeChecksum(header);
-    if (sum!=chksum) {
-      std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
-      return false;
-    }
-    info.type  = TarFileType(header.typeflag);
-    long size  = getOctal(header.size,sizeof(header.size));
-    if (size<0) {
-      std::cerr << " got negative file size: " << info.size << std::endl;
-      return false;
-    }
-    info.size  = size;
-    info.name  = convert(header.name);
-    if (header.prefix[0]!=0) {
-      std::string prefix = convert(header.prefix);
-      info.name = prefix + "/" + info.name;
-    }
-    info.offset = m_file.tellg();
+    bool TarFile::interpretHeader(posix_header& header, Info& info) const {
+                if (strncmp(header.magic,"ustar ",6)&&strncmp(header.magic,"ustar\0",6)) { 
+                    return false;
+                }
+                long chksum       = getOctal(header.chksum,sizeof(header.chksum));
+                /* Check the checksum */
+                long sum=computeChecksum(header);
+                if (sum!=chksum) {
+                    std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
+                    return false;
+                }
+                info.type  = TarFileType(header.typeflag);
+                long size  = getOctal(header.size,sizeof(header.size));
+                if (size<0) {
+                    std::cerr << " got negative file size: " << info.size << std::endl;
+                    return false;
+                }
+                info.size  = size;
+                info.name  = convert(header.name);
+                if (header.prefix[0]!=0) {
+                    std::string prefix = convert(header.prefix);
+                    info.name = prefix + "/" + info.name;
+                }
 
-    if ( info.type == GNUTYPE_LONGNAME ) {
-      // current header is a dummy 'flag', followed by data blocks
-      // with name as content (length of name is 'size' of data)
-      assert(info.name == "././@LongLink");
-      // first read the real, untruncated name as data
-      std::ostringstream fname;
-      io::copy(io::slice(m_file,0,info.size), fname);
-      size_t padding = info.size % 512;
-      if (padding!=0) m_file.seekg(512-padding,std::ios::cur);
-      // and now get another header, which contains a truncated name
-      // but which is otherwise the 'real' one
-      m_file.read( (char*) &header, sizeof(header) ) ;
-      if (!interpretHeader( header, info)) return false;
-      // so we overwrite the truncated one with the long one...
-      info.name = fname.str();
+                if ( info.type == GNUTYPE_LONGNAME ) { 
+                    // current header is a dummy 'flag', followed by data blocks 
+                    // with name as content (length of name is 'size' of data)
+                    assert(info.name == "././@LongLink");
+                    // first read the real, untruncated name as data
+                    std::ostringstream fname;
+                    io::copy(io::slice(m_file,0,info.size), fname);
+                    size_t padding = info.size % 512;
+                    if (padding!=0) m_file.seekg(512-padding,std::ios::cur);
+                    // and now get another header, which contains a truncated name
+                    // but which is otherwise the 'real' one
+                    m_file.read( (char*) &header, sizeof(header) ) ;
+                    if (!interpretHeader( header, info)) return false;
+                    // so we overwrite the truncated one with the long one...
+                    info.name = fname.str();
+                }
+                info.offset = m_file.tellg(); // this goes here, as the longlink handling
+                                              // reads an extra block...
+                return true;
     }
-    return true;
-  }
+  
 
-  bool TarFile::index(std::streamoff offset) const {
-    posix_header header;
-    if (offset==0) m_index.clear();
-    m_file.seekg(offset,ios::beg);
-    while (m_file.read( (char*) &header, sizeof(header) )) {
-      std::streamoff offset = m_file.tellg()-std::streamoff(sizeof(header));
-      Info info;
-      if (!interpretHeader( header, info))  {
-        // check whether we're at the end of the file: (at least) two all-zero headers)
-        if (isZero(header)) {
-          m_file.read( (char*) &header, sizeof(header) ) ;
-          if (isZero(header)){
-            m_leof = offset;
+    bool TarFile::index(std::streamoff offset) const {
+            posix_header header;
+            if (offset==0) m_index.clear();
+            m_file.seekg(offset,ios::beg);
+            while (m_file.read( (char*) &header, sizeof(header) )) {
+                Info info;
+                if (!interpretHeader( header, info))  {
+                    // check whether we're at the end of the file: (at least) two all-zero headers)
+                    if (isZero(header)) {
+                        m_file.read( (char*) &header, sizeof(header) ) ;
+                        if (isZero(header)){
+                            m_leof = m_file.tellg()-2*std::streamoff(sizeof(header));
+                            m_file.seekg(0,std::ios::beg);
+                            return true;
+                        }
+                    }
+                    std::cerr << "failed to interpret header @ " << offset << " in tarfile " << m_name << std::endl;
+                    m_file.seekg(0,std::ios::beg);
+                    return false;
+                }
+                if (info.name.empty()) {
+                    std::cerr << " got empty name " << std::endl;
+                    break;
+                }
+                if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
+                   && info.name[ info.name.size()-1 ] != '/' 
+                   && info.name.find("/CVS/")  == string::npos 
+                   && info.name.find("/.svn/") == string::npos )  {
+                    //TODO: check for duplicates!!
+                    m_index.insert(make_pair(Gaudi::StringKey(info.name),info));
+                }
+                // round up size to block size, and skip to next header...
+                size_t skip = info.size;
+                size_t padding = skip % 512;
+                if (padding!=0 ) skip += 512 - padding;
+                m_file.seekg(skip,std::ios::cur);
+            }
+            m_leof = 0;
+            m_file.clear();
             m_file.seekg(0,std::ios::beg);
             return true;
-          }
-        }
-        std::cerr << "failed to interpret header @ " << offset << " in tarfile " << m_name << std::endl;
-        m_file.seekg(0,std::ios::beg);
-        return false;
-      }
-      if (info.name.empty()) {
-        std::cerr << " got empty name " << std::endl;
-        break;
-      }
-      if ( (info.type == REGTYPE || info.type == REGTYPE0 )
-           && info.name[ info.name.size()-1 ] != '/'
-           && info.name.find("/CVS/")  == string::npos
-           && info.name.find("/.svn/") == string::npos )  {
-        //TODO: check for duplicates!!
-        m_index.insert(make_pair(Gaudi::StringKey(info.name),info));
-      }
-      // round up size to block size, and skip to next header...
-      size_t skip = info.size;
-      size_t padding = skip % 512;
-      if (padding!=0 ) skip += 512 - padding;
-      m_file.seekg(skip,std::ios::cur);
     }
-    m_leof = 0;
-    m_file.clear();
-    m_file.seekg(0,std::ios::beg);
-    return true;
-  }
 }
 
 using namespace ConfigTarFileAccessSvc_details;

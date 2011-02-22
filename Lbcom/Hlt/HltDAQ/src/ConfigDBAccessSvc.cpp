@@ -65,8 +65,8 @@ namespace {
             //TODO: deal with nested transactions... upgrading read to write...
             Transaction(coral::ISessionProxy& session,bool readonly=true) : m_trans(session.transaction()), m_readonly(readonly) { 
                if (!m_trans.isActive()) m_trans.start(readonly); }
-            void abort() { m_trans.rollback(); }
-            void commit() { m_trans.commit();  }
+            //void abort() { m_trans.rollback(); }
+            //void commit() { m_trans.commit();  }
             ~Transaction() { if (m_trans.isActive())  m_trans.commit();  }
         private:
             Mutex m_mutex; // forbid nested transactions;
