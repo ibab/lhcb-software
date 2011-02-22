@@ -76,8 +76,6 @@ namespace LHCb  {
     bool                      m_restartChildren;
     /// Internal flag to indicate if chldren should be killed in releaseChildren
     bool                      m_killChildren;
-    /// Initial UTGID length
-    int                       m_utgidLen;
     /// Reference to the IncidentSvc instance
     IIncidentSvc             *m_incidentSvc;
     /// Reference to the steering FSM unit (DimTaskFSM)
@@ -268,10 +266,8 @@ namespace  {
 
 /// Standard constructor
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc) 
-  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0), m_utgidLen(0)
+  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
 {
-  const char* utgid = ::getenv("UTGID");
-  if ( utgid ) m_utgidLen = ::strlen(utgid);
   m_masterProcess = true;
   m_restartChildren = false;
   declareProperty("NumberOfInstances",  m_numInstances  = 0);
@@ -524,9 +520,10 @@ int CheckpointSvc::parseRestartOptions()    {
       if ( sc.isSuccess() ) {
      	sc = setProperties();
 	if ( sc.isSuccess() ) {
+	  CHKPT* chkpt =  CHKPT_get();
 	  RTL::RTL_reset();
 	  string utgid = buildChildUTGID(0);
-	  ::setenv("UTGID",utgid.c_str(),1);
+	  chkpt->setUTGID(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
 	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
@@ -646,7 +643,7 @@ int CheckpointSvc::forkChild(int which) {
   string utgid = buildChildUTGID(which);
   CHKPT* chkpt =  CHKPT_get();
 
-  ::setenv("UTGID",utgid.c_str(),1);
+  chkpt->setUTGID(utgid.c_str());
   pid_t pid = chkpt->forkInstance();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
@@ -668,7 +665,7 @@ int CheckpointSvc::forkChild(int which) {
   else if ( pid>0 ) {
     m_masterProcess = true;
     m_children[which] = pid;
-    ::setenv("UTGID",proc.c_str(),1);
+    chkpt->setUTGID(proc.c_str());
   }
   else if (pid < 0)    {        // failed to fork
     char text[256];
