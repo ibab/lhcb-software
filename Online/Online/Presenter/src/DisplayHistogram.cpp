@@ -38,6 +38,8 @@
 //=============================================================================
 DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_onlineHist( hist ),
+  m_shortName( "" ),
+  m_isOverlap( false ),
   m_rootHistogram( NULL ),
   m_offsetHistogram( NULL),
   m_referenceHist( NULL ),
@@ -45,12 +47,17 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_histogramImage( NULL ),
   m_prettyPalette( NULL )
 {
-
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 DisplayHistogram::~DisplayHistogram() {
+  if ( NULL != m_rootHistogram ) delete m_rootHistogram;
+  m_rootHistogram = 0;
+  if ( NULL != m_offsetHistogram ) delete m_offsetHistogram;
+  m_offsetHistogram = 0;
+  if ( NULL != m_referenceHist ) delete m_referenceHist;
+  m_referenceHist = 0;  
   if ( NULL != m_histogramImage ) delete m_histogramImage;
   m_histogramImage = NULL;
   if ( NULL != m_prettyPalette ) delete m_prettyPalette;
@@ -86,7 +93,8 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
   if ( 0 != m_referenceHist ) return;
   m_referenceHist = ref;
 
-  if ( 0 == m_rootHistogram ) return;
+  if ( NULL == m_hostingPad ) return;
+  if ( NULL == m_rootHistogram ) return;
   if ( 1 != m_rootHistogram->GetDimension() ) return;
 
   // standard plot style

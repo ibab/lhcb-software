@@ -28,6 +28,10 @@
 PresenterPage::PresenterPage( ) {
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
+  m_dimBrowser = NULL;
+  m_onlineHistosOnPage.clear();
+  m_tasks.clear();
+  m_analysis.clear();
 }
 //=============================================================================
 // Destructor
@@ -39,8 +43,11 @@ PresenterPage::~PresenterPage() {}
 //  Reset and clear. remove all objects created and owned by the page.
 //=========================================================================
 void PresenterPage::clear ( ) {
-  m_onlineHistosOnPage.clear();
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    (*itT).histos.clear();
+  }
   m_tasks.clear();
+  m_onlineHistosOnPage.clear();
   for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
     delete (*itA).displayHisto;
   }
@@ -303,8 +310,10 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
     if ( f ) {
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        TH1* out = analysisLib->findRootHistogram( (*itH).histo(), f );
+        TH1* tmp = analysisLib->findRootHistogram( (*itH).histo(), f );
+        TH1* out = (TH1*)tmp->Clone();
         (*itH).setReferenceHistogram( out );
+        delete tmp;
       }
       std::cout << "*** References are set ***" << std::endl;
       f->Close();
@@ -348,10 +357,11 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
 
         if ( NULL != dispH ) {
           rootHists.push_back( dispH->rootHist() );
-          if ( NULL != dispH->referenceHist() ) refHists.push_back(  dispH->referenceHist() );
+          if ( NULL != dispH->referenceHist() ) {
+            refHists.push_back(  dispH->referenceHist() );
+          }
         }
       }
-      std::cout << "   before executing the analysis operation " << std::endl;
       TH1* rootH = NULL;
       TH1* refH  = NULL;
       if ( rootHists.size() == (*itA).onlineHistos.size() ) {
