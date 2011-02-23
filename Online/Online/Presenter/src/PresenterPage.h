@@ -77,7 +77,7 @@ public:
   //== Give the (first) DisplayHistogram for the specified OnlineHistogram
   DisplayHistogram* displayHisto( TH1* hist );
 
-  void buildAnalysisHistos (OMAlib* analysisLib );
+  bool buildAnalysisHistos (OMAlib* analysisLib, bool update );
 
   void loadFromArchive( Archive* archive, 
                         const std::string & timePoint,

@@ -52,6 +52,8 @@ void PresenterPage::clear ( ) {
 //=========================================================================
 void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
   std::cout << "** Preparing access for " << m_onlineHistosOnPage.size() << " online histos on page" << std::endl;
+  std::vector<OnlineHistogram*> anaHistos;
+  anaHistos.reserve( 100 ); // avoid relocation
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
 
@@ -74,43 +76,57 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
         std::cout << (*itHP)->histo->task() << " ** Histo   " << (*itHP)->histo->dimServiceName() << std::endl;
       }
     } else {    //== Analysis histograms: Get the source histograns
-      AnalysisHisto myAna;
-      myAna.displayHisto = new DisplayHistogram( (*itHP)->histo );
-      (*itHP)->histo->getCreationDirections( myAna.algorithm, myAna.histoNames, myAna.params );
-      for (unsigned int i=0; i< myAna.histoNames.size(); ++i) {
-        OnlineHistogram* histo = histDB->getHistogram( myAna.histoNames[i] );
-        myAna.onlineHistos.push_back( histo );
-        bool existed = false;
-        for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-          if ( (*itT).name == histo->task() ) {
-            for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
-                  (*itT).histos.end() != itH; ++itH ) {
-              if ( (*itH).histo() == histo ) {
-                std::cout << "              already existing " << histo->identifier() << std::endl;
-                existed = true;
-                break;
-              }
-            }
-            if ( !existed ) {
-              (*itT).histos.push_back( DisplayHistogram( histo ) );
-              existed = true;
-              std::cout << histo->task() << " ++++ Histo " << histo->identifier() << std::endl;
-            }
-            break;
-          }
-        }
-        if ( !existed ) {
-          TaskHistos newTask;
-          newTask.name = histo->task();
-          newTask.dead = false;
-          newTask.histos.push_back( DisplayHistogram( histo ) );
-          m_tasks.push_back( newTask );
-          std::cout << histo->task() << " **** Histo " << histo->identifier() << std::endl;
-        }
-      }
-      m_analysis.push_back( myAna );
+      anaHistos.push_back( (*itHP )->histo );
     }
   }
+  for ( std::vector<OnlineHistogram*>::iterator itOH = anaHistos.begin(); anaHistos.end() != itOH; ++itOH ) {
+    AnalysisHisto myAna;
+    myAna.displayHisto = new DisplayHistogram( *itOH );
+    (*itOH)->getCreationDirections( myAna.algorithm, myAna.histoNames, myAna.params );
+    for (unsigned int i=0; i< myAna.histoNames.size(); ++i) {
+      OnlineHistogram* histo = histDB->getHistogram( myAna.histoNames[i] );
+      std::string taskName = histo->task();
+      if ( taskName.find( "_ANALYSIS" ) != std::string::npos ) {
+        taskName = taskName.substr( 0, taskName.find( "_ANALYSIS" ) );
+      }
+      myAna.onlineHistos.push_back( histo );
+      if ( histo->isAnaHist() ) {
+        anaHistos.push_back( histo );
+        std::cout << "  .. Ana hist as source of ana hist... new size " << anaHistos.size() << std::endl;
+        continue;
+      }
+      bool existed = false;
+      for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+        if ( (*itT).name == taskName ) {
+          for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+                (*itT).histos.end() != itH; ++itH ) {
+            if ( (*itH).histo() == histo ) {
+              std::cout << "              already existing " << histo->identifier() << std::endl;
+              existed = true;
+              break;
+            }
+          }
+          if ( !existed ) {
+            (*itT).histos.push_back( DisplayHistogram( histo ) );
+            existed = true;
+            std::cout << taskName << " ++++ Histo " << histo->identifier() << std::endl;
+          }
+          break;
+        }
+      }
+      if ( !existed ) {
+        TaskHistos newTask;
+        newTask.name = taskName;
+        newTask.dead = false;
+        newTask.histos.push_back( DisplayHistogram( histo ) );
+        m_tasks.push_back( newTask );
+        std::cout << taskName << " **** Histo " << histo->identifier() << std::endl;
+      }
+    }
+    m_analysis.insert( m_analysis.begin(), myAna );   //== put dependent before...
+    std::cout << "Inserted analysis title: " << myAna.displayHisto->histo()->htitle() << std::endl;
+  }
+
   std::cout << ".. Now we have " <<  m_tasks.size() << " tasks on page" << std::endl;
 }
 //=========================================================================
@@ -182,8 +198,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
               (*itH).rootHist()->Reset();
               (*itH).rootHist()->Add( (TH1*)results[indx], 1. );
               delete results[indx];
-              (*itH).prepareForDisplay();
               (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
+              (*itH).prepareForDisplay();
               (*itH).setDrawingOptions( (*itH).hostingPad() );
               (*itH).hostingPad()->Modified();
             } else {
@@ -300,13 +316,13 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
 //=========================================================================
 //  Build the analysis histograms
 //=========================================================================
-void PresenterPage::buildAnalysisHistos (OMAlib* analysisLib ) {
+bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
   for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
     std::cout << "Get creator for algorithm '" << (*itA).algorithm << "'" << std::endl;
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>( analysisLib->getAlg( (*itA).algorithm ) );
     if ( creator ) {
       std::string htitle( (*itA).displayHisto->histo()->htitle());
-      std::cout << "  Title " << htitle << std::endl;
+      std::cout << "  Title: " << htitle << std::endl;
       TH1* ref=NULL;
       if ( creator->needRef() && (*itA).histoNames.size() > 0 ) {
         std::cout << "   .. get ref for " << (*itA).histoNames[0] << " pointer " << (*itA).onlineHistos[0] << std::endl;
@@ -315,19 +331,29 @@ void PresenterPage::buildAnalysisHistos (OMAlib* analysisLib ) {
           std::cout << "   corresponding DisplayHisto not found" << std::endl;
         } else {
           ref = myDisplay->referenceHist();
+          if ( NULL == ref ) {
+            std::cout << "*** Reference not loaded ! ***" << std::endl;
+            return false;
+          }          
         }
       }
       std::vector<TH1*> rootHists;
+      std::vector<TH1*> refHists;
       for ( std::vector<OnlineHistogram*>::iterator itOH = (*itA).onlineHistos.begin();
             (*itA).onlineHistos.end() != itOH; ++itOH ) {
+        DisplayHistogram* dispH = displayHisto( (*itOH) );
         std::cout << "  get OnlineHistogram " << itOH-(*itA).onlineHistos.begin()
                   << " hname " << (*itOH)->hname()
-                  << " pointer " <<  displayHisto( (*itOH) ) << std::endl;
+                  << " pointer " <<  dispH << std::endl;
 
-        if ( NULL !=  displayHisto( (*itOH) ) ) rootHists.push_back( displayHisto( (*itOH) )->rootHist() );
+        if ( NULL != dispH ) {
+          rootHists.push_back( dispH->rootHist() );
+          if ( NULL != dispH->referenceHist() ) refHists.push_back(  dispH->referenceHist() );
+        }
       }
       std::cout << "   before executing the analysis operation " << std::endl;
       TH1* rootH = NULL;
+      TH1* refH  = NULL;
       if ( rootHists.size() == (*itA).onlineHistos.size() ) {
         rootH = creator->exec( &rootHists,
                                &(*itA).params,
@@ -335,11 +361,29 @@ void PresenterPage::buildAnalysisHistos (OMAlib* analysisLib ) {
                                htitle,
                                NULL,
                                ref );
+        if ( refHists.size() == (*itA).onlineHistos.size() ) {
+          refH = creator->exec( &refHists,
+                                &(*itA).params,
+                                htitle, //(*itA).displayHisto->histo()->htitle(),
+                                htitle,
+                                NULL,
+                                ref );
+        }
         std::cout << "Created analysis histogram " << htitle << std::endl;
       }
       if ( rootH ) {
-        (*itA).displayHisto->setRootHist( rootH );
-        (*itA).displayHisto->setDisplayOptions( );
+        if ( update ) {
+          (*itA).displayHisto->rootHist()->Reset();
+          (*itA).displayHisto->rootHist()->Add( rootH, 1. );
+          if ( refH ) {
+            (*itA).displayHisto->referenceHist()->Reset();
+            (*itA).displayHisto->referenceHist()->Add( refH, 1. );
+          }
+        } else {
+          (*itA).displayHisto->setRootHist( rootH );
+          (*itA).displayHisto->setDisplayOptions( );
+          if ( refH ) (*itA).displayHisto->setReferenceHistogram( refH );
+        }
       } else {
         std::cout<< "creator algorithm failed!"<<std::endl;
         (*itA).displayHisto->createDummyHisto();
@@ -349,6 +393,7 @@ void PresenterPage::buildAnalysisHistos (OMAlib* analysisLib ) {
       (*itA).displayHisto->createDummyHisto();
     }
   }
+  return true;
 }
 
 //=========================================================================
@@ -364,6 +409,8 @@ void PresenterPage::loadFromArchive( Archive* archive,
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {
       archive->fillHistogramFromFiles( &(*itH) );
+      (*itH).setDisplayOptions();
+      (*itH).prepareForDisplay();
     }
   }
 }
@@ -399,11 +446,13 @@ DisplayHistogram* PresenterPage::displayHisto( OnlineHistogram* onlHist ) {
 //=========================================================================
 DisplayHistogram* PresenterPage::displayHisto( TH1* hist ) {
   for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
-    if ( (*itA).displayHisto->rootHist() == hist ) return (*itA).displayHisto;
+    if ( (*itA).displayHisto->rootHist()      == hist ) return (*itA).displayHisto;
+    if ( (*itA).displayHisto->referenceHist() == hist ) return (*itA).displayHisto;
   }
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
-      if ( (*itDH).rootHist() == hist ) return &(*itDH);
+      if ( (*itDH).rootHist()      == hist ) return &(*itDH);
+      if ( (*itDH).referenceHist() == hist ) return &(*itDH);
     }
   }
   return NULL;

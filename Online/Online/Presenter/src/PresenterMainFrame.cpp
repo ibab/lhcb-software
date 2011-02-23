@@ -1871,6 +1871,7 @@ void PresenterMainFrame::reportToLog() {
     std::string message  = "See attached plot.";
     std::string title    = "";
     int         isOK     = 0;
+    std::string runNumber= "";
 
     //== In LHCb partition, get the Data Manager name, extract the system
     // from the SHIFTS page and remove subject
@@ -1881,16 +1882,26 @@ void PresenterMainFrame::reportToLog() {
       if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
         system   = m_currentPageName.substr( 7 );
         system   = system.substr( 0, system.find( ':' ));
+        int def = -1;
+
+        //== Current run number
+        char runChar[12]     = "";
+        DimCurrentInfo getRun( "LHCbStatus/RunNumber", def );
+        sprintf( runChar, "%d", getRun.getInt() );
+        runNumber = std::string( runChar );
+        std::cout << "Run number " << runNumber << std::endl;
+        
       } else if ( "/OfflineDataQuality/" == m_currentPageName.substr(0, 20) ) {
         username =  shiftdb.getDQPiquet().c_str();
         system   = m_currentPageName.substr( 20 );
         system   = system.substr( 0, system.find( ':' ));
       }
+
       subject = "-none-";
       if ( !m_pbdbConfig.empty() )  elogDialog->setProblemDatabase( title );
     }
 
-    elogDialog->setParameters( logbook, username, system, subject, message,
+    elogDialog->setParameters( logbook, username, system, subject, message, runNumber,
                                isOK );
 
     TString pageName;
@@ -1906,7 +1917,12 @@ void PresenterMainFrame::reportToLog() {
       myElog.addAttachment( pageName.Data() );
       myElog.addAttribute( "Author", username );
       myElog.addAttribute( "System", system );
-      if ( "Shift" != logbook ) myElog.addAttribute( "Subject", subject );
+      if ( "Shift" != logbook ) {
+        myElog.addAttribute( "Subject", subject );
+      } else {
+        myElog.addAttribute( "Run", runNumber );
+      }
+
       std::cout << "send to Elog " << std::endl;
       int number = myElog.submit( message );
       std::cout << "=== produced entry " << number << std::endl;
@@ -4409,8 +4425,15 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           std::cout << "**** Unsupported presenter mode " <<  m_presenterInfo.presenterMode() << " ****" << std::endl;
         }        
         std::cout << "Build analysis histograms " << std::endl;
-        m_presenterPage.buildAnalysisHistos( m_analysisLib );  // Only after histos are loaded...
-
+        bool status = m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  // Only after histos are loaded...
+        if ( !status ) {
+          std::cout << "Load references for analysis, and rebuild..." << std::endl;
+          m_presenterPage.uploadReference( m_analysisLib, 
+                                           m_presenterInfo.referenceRun(), 
+                                           m_presenterInfo.currentTCK() );
+          m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  
+        }        
+          
         // Display status bar and comments
         displayStatusAndComments( page ) ;
 
@@ -4803,6 +4826,7 @@ DisplayHistogram* PresenterMainFrame::selectedDisplayHistogram() {
     }
 
     if ( 0 != theHisto ) {
+      std::cout << "  selected TH1 named " << theHisto->GetName() << std::endl;
       dispHist = m_presenterPage.displayHisto( theHisto );
     }
   }
@@ -5008,7 +5032,7 @@ void PresenterMainFrame::refreshPage() {
     std::cout << "**** Unsupported presenter mode " <<  m_presenterInfo.presenterMode() << " ****" << std::endl;
   }        
   std::cout << "Build analysis histograms " << std::endl;
-  m_presenterPage.buildAnalysisHistos( m_analysisLib );  // Only after histos are loaded...
+  m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
 
   editorCanvas->Update();
   m_presenterPage.updateDrawingOptions();

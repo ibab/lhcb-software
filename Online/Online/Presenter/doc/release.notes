@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-02-23 - Olivier Callot
+ - Fix the nested analysis histograms with references
+ - Fix the options in history mode
+ - Add the current run number in ELog for Shift pages
+
 ! 2011-02-22 - Olivier Callot
  - Fix the auto-refresh, with cleanup of histograms
  - MOnitoringService now keeps the directory in the histo name.

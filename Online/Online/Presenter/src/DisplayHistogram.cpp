@@ -84,11 +84,11 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
     return;
   }
   if ( 0 != m_referenceHist ) return;
+  m_referenceHist = ref;
 
   if ( 0 == m_rootHistogram ) return;
   if ( 1 != m_rootHistogram->GetDimension() ) return;
 
-  m_referenceHist = ref;
   // standard plot style
   m_referenceHist->SetLineStyle(2);
   m_referenceHist->SetLineColor(2); // red

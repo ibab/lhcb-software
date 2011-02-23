@@ -41,12 +41,13 @@ ElogDialog::~ElogDialog() {
 }
 void ElogDialog::setParameters( std::string& logbook, std::string& username,
                                 std::string& system, std::string& subject,
-                                std::string& message, int& isOK ) {
+                                std::string& message, std::string& runNumber, int& isOK ) {
   m_logbook  = &logbook;
   m_username = &username;
   m_system   = &system;
   m_subject  = &subject;
   m_message  = &message;
+  m_runNumber= &runNumber;
   m_isOK     = &isOK;
   
   build();
@@ -65,8 +66,10 @@ void ElogDialog::ok() {
 
   *m_username =  m_usernameTextEntry->GetDisplayText().Data();
   *m_system   =  m_systemTextEntry->GetDisplayText().Data();
-  if ( 0 != m_subjectTextEntry ) *m_subject  =  m_subjectTextEntry->GetDisplayText().Data();
+  if ( 0 != m_subjectTextEntry   ) *m_subject   = m_subjectTextEntry->GetDisplayText().Data();
+  if ( 0 != m_runNumberTextEntry ) *m_runNumber = m_runNumberTextEntry->GetDisplayText().Data();
   *m_message  =  m_messageTextEntry->GetText()->AsString();
+  
   *m_isOK     = 1;
 
   if ( m_hasProblem ) *m_title =  m_titleTextEntry->GetDisplayText().Data();
@@ -142,6 +145,21 @@ void ElogDialog::build() {
     m_subjectTextEntry->SetText( (*m_subject).c_str() );
     elogFrame->AddFrame(m_subjectTextEntry, layout );
     m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+    yBeg += yStep;
+  }  
+
+  m_runNumberTextEntry = 0;
+  if ( "" != *m_runNumber ) {
+    TGLabel* m_runNumberLabel = new TGLabel(elogFrame,"RunNumber: ");
+    m_runNumberLabel->SetTextJustify(kTextRight);
+    elogFrame->AddFrame(m_runNumberLabel, layout );
+    m_runNumberLabel->MoveResize( xBeg, yBeg, xSize, 18);
+    m_runNumberTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+    m_runNumberTextEntry->SetMaxLength(255);
+    m_runNumberTextEntry->SetAlignment(kTextLeft);
+    m_runNumberTextEntry->SetText( (*m_runNumber).c_str() );
+    elogFrame->AddFrame(m_runNumberTextEntry, layout );
+    m_runNumberTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
     yBeg += yStep;
   }  
 

@@ -34,7 +34,8 @@ public:
   void setProblemDatabase( std::string& title );
   
   void setParameters( std::string& logbook, std::string& username, std::string& system, 
-                      std::string& subject, std::string& message, int& isOK );
+                      std::string& subject, std::string& message, std::string& runNumber, 
+                      int& isOK );
   
   void ok();
   void build();
@@ -49,6 +50,7 @@ private:
   std::string* m_system;
   std::string* m_subject;
   std::string* m_message;
+  std::string* m_runNumber;
   int*         m_isOK;
   std::string* m_title;
   int          m_hasProblem;
@@ -57,6 +59,7 @@ private:
   TGTextEntry        *m_usernameTextEntry;
   TGTextEntry        *m_systemTextEntry;
   TGTextEntry        *m_subjectTextEntry;
+  TGTextEntry        *m_runNumberTextEntry;
   TGTextEdit         *m_messageTextEntry;
   TGTextEntry        *m_titleTextEntry;
 
