@@ -57,13 +57,13 @@ namespace LHCb  {
     virtual void i_reportMessageEx(const Message& message,int lvl);
 
   private:
-    bool m_noDrop;
+    bool           m_noDrop;
     StringProperty m_fifoPath;
-    int m_tryN;
-    char hostName[80];
-    const char *pName;
-    int fifoFD;
-    int dfltFifoFD;
+    int            m_tryN;
+    char           m_hostName[80];
+    const char*    m_pName;
+    int            fifoFD;
+    int            dfltFifoFD;
     int droppedN;
     bool dropped;
     StatusCode openFifo();

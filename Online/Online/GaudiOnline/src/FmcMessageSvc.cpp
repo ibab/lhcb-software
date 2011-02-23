@@ -24,8 +24,8 @@ LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
 {
   const char* fifo = ::getenv("LOGFIFO");
   setErrorLogger(this);
-  hostName[0] = 0;
-  pName       = NULL;
+  m_hostName[0] = 0;
+  m_pName       = NULL;
   fifoFD      = NO_FIFO;
   dfltFifoFD  = NO_FIFO;
   declareProperty("fifoPath",m_fifoPath= fifo ? fifo : "/tmp/logSrv.fifo");
@@ -65,9 +65,10 @@ StatusCode LHCb::FmcMessageSvc::start()   {
     close(fifoFD);
     fifoFD = NO_FIFO;
   }
-  if ( pName ) {
-    delete pName;
-    pName = 0;
+  if ( m_pName ) {
+    m_hostName[0] = 0;
+    delete m_pName;
+    m_pName = 0;
   }
   return openFifo();
 }
@@ -80,9 +81,10 @@ StatusCode LHCb::FmcMessageSvc::restart()  {
       close(fifoFD);
       fifoFD = NO_FIFO;
     }
-    if ( pName ) {
-      delete pName;
-      pName = 0;
+    if ( m_pName ) {
+      m_hostName[0] = 0;
+      delete m_pName;
+      m_pName = 0;
     }
     return openFifo();
   }
@@ -108,13 +110,13 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   droppedN=0;
   /*-------------------------------------------------------------------------*/
   /* process name */
-  if(!pName)getPName();
+  if(!m_pName)getPName();
 
   /* host name */
-  if(hostName[0]=='\0')  {
+  if(m_hostName[0]=='\0')  {
     char *p;
-    gethostname(hostName,80);
-    p=strchr(hostName,'.');
+    gethostname(m_hostName,80);
+    p=strchr(m_hostName,'.');
     if(p)*p='\0';
   }
   /*-------------------------------------------------------------------------*/
@@ -148,7 +150,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
 	     dflt ? "(without" : "",
 	     dflt ? "or"       : fifo_name.c_str(),
 	     dflt ? "options)" : "<srv_name>",
-	     hostName);
+	     m_hostName);
     }
     return StatusCode::FAILURE;
   }
@@ -176,7 +178,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
 	     dflt ? "(without" : "",
 	     dflt ? "or"       : fifo_name.c_str(),
 	     dflt ? "options)" : "<srv_name>",
-	     hostName);
+	     m_hostName);
     }
     else    {
       printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",fifo_name.c_str(),::strerror(errno));
@@ -252,8 +254,8 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   /*-------------------------------------------------------------------------*/
   /* compose message header */
   typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
-  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],hostName,
-           pName,utgid.c_str(),src.c_str());
+  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],m_hostName,
+           m_pName,utgid.c_str(),src.c_str());
   /* NULL-terminate header if truncated */
   if(!memchr(header,0,BUF_SZ/2))header[BUF_SZ/2-1]='\0';
   /*-------------------------------------------------------------------------*/
@@ -331,7 +333,7 @@ void LHCb::FmcMessageSvc::getPName()   {
     exit(1);
   }
   pathName[len]='\0';
-  pName = strdup(basename(pathName));
+  m_pName = strdup(basename(pathName));
   return;
 }
 /*****************************************************************************/
@@ -368,8 +370,8 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   /* compose message string with header */
   severity = (severity>int(sizeof(sl)/sizeof(sl[0]))) 
     ? (sizeof(sl)/sizeof(sl[0]))-1 : (severity<0 ? 0 : severity);
-  snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],hostName,
-           pName,utgid.c_str(),fName,rawMsg);
+  snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],m_hostName,
+           m_pName,utgid.c_str(),fName,rawMsg);
   /*-------------------------------------------------------------------------*/
   msg[BUF_SZ-1]='\0';
   /* add newline if missed */
