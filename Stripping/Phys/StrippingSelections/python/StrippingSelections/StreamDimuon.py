@@ -33,7 +33,7 @@ from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingBc2JpsiMuX import StrippingBc2JpsiMuXConf
 from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
 from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetachedConf
-from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
+#from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
 
 from StrippingSelections.StrippingB2XMuMuSS import StrippingB2XMuMuSSConf
 from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
@@ -82,8 +82,8 @@ stream.appendLines( [
 		        StrippingBd2KstarMuMuConf().Early_NoMuIDLine(),  
 		        StrippingBd2KstarMuMuConf().Early_eMuLine(),
                         StrippingBd2KstarMuMuConf().simplestLTLine(),
-			StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine(),
-                    	StrippingBs2PhiMuMuConf().Bs2f0MuMuLine(),
+#			StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine(),
+#                    	StrippingBs2PhiMuMuConf().Bs2f0MuMuLine(),
 #		        StrippingBs2Jpsif0Conf().nominal_line(),  
 #                    	StrippingBs2Jpsif0Conf().nominalKst_line(), 
 		        StrippingBiasedBs2JpsiPhi.line,  
@@ -142,3 +142,7 @@ from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as B
 Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config= Bd2KstarMuMuConfig, activeLines=Bd2KstarMuMuLines )
 lines = Bd2KstarMuMuConf.lines()
 stream.appendLines( lines )
+
+from StrippingSelections import StrippingBs2PhiMuMu
+confBs2PhiMuMu = StrippingBs2PhiMuMu.Bs2PhiMuMuLinesConf("confBs2PhiMuMu",StrippingBs2PhiMuMu.confdict)
+stream.appendLines(confBs2PhiMuMu.lines())

@@ -38,7 +38,6 @@ from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 #from StrippingSelections.StrippingDstarD02xxForCross import  StrippingDstarD02xxForCrossConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
-from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
 
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingLambdac      import StrippingLambdacConf
@@ -115,9 +114,6 @@ stream.appendLines( [
 #        , StrippingDstarVeryLooseWithD02HHConf().line()
         , StrippingD0forBXXConf().D02KPiforBXXLine()
         , StrippingD0forBXXConf().D02K3PiforBXXLine()
-        , StrippingDforBSemiConf().DpforBSemiLine()
-        , StrippingDforBSemiConf().DsforBSemiLine()
-        , StrippingDforBSemiConf().LcforBSemiLine()
         , StrippingBd2KstarMuMuConf().line_for_DKpipipi()
         , StrippingDstarPromptWithD02HHNoPt.lineDstarPromptWithD02HHNoPt
         , StrippingDstarPromptWithD02HHNoPt.lineD02HHPromptNoPt
@@ -167,3 +163,7 @@ stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
 from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi  
 confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
 stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines ) 
+
+from StrippingSelections import StrippingDForBSemi
+confDforBSemi = StrippingDForBSemi.DforBSemiLinesConf("confDforBSemi",StrippingDForBSemi.confdict)
+stream.appendLines(confDforBSemi.lines())
