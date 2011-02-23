@@ -125,7 +125,7 @@ public:
    *  const IVertexFit* fitter = tool<IVertexFit>( ... ) ;
    * 
    *  // container of all selected particles:
-   *  Particles* particles = get<Particles>( "/Event/Phys/MyParticlesFromPV" );
+   *  Particles* particles = get<Particle::Range>( "/Event/Phys/MyParticlesFromPV" );
    *  
    *  Vertex vertex ;
    *  StatusCode sc = fitter->fit( particles->begin()  ,
@@ -274,7 +274,7 @@ public:
    *  const IVertexFit* fitter = get<IVertexFit>( ... ) ;
    * 
    *  // container of all selected particles:
-   *  Particles* particles = get<Particles>( "/Event/Phys/MyParticlesFromPV" );
+   *  Particles* particles = get<Particle::Range>( "/Event/Phys/MyParticlesFromPV" );
    *  
    *  Vertex   vertex ;
    *  LHCb::Particle particle ;

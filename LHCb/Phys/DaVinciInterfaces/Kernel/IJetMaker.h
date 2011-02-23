@@ -107,7 +107,7 @@ public:
    *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
    *
    *  // get input data 
-   *  const Particles* ps = get<Particles> ( ... ) ;
+   *  const Particles* ps = get<Particle::Range> ( ... ) ;
    * 
    *  // output jets 
    *  IJetMaker::Jets  jets ;

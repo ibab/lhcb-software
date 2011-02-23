@@ -4,6 +4,11 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-02-23 - Juan Palacios
+ - Kernel/IVertexFit.h, Kernel/IJetMaker.h
+  . Fix doxygen comments: get<Particles> -> get<Particle::Range>
+ - Increase to v2r9p1.
+
 !========================= DaVinciInterfaces v2r9 2011-02-22 =========================
 ! 2011-02-15 - Vanya Belyaev
  - add extend_interfaces* pattern into dictionries 
