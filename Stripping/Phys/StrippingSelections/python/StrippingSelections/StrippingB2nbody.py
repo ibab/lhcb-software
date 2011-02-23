@@ -19,6 +19,141 @@ __all__ = ('B2nbodyConf',
            'makeJp',
            'makeDS')
 
+confdict_2body = {'nbody':              2,
+                  'MinBMass':        4500.0,
+                  'MaxBMass':        8000.0,
+                  'MinBPt':          2000.0,
+                  'MaxBVertChi2DOF':   10.0,
+                  'MinBPVVDChi2':     225.0,
+                  'MaxBPVIPChi2':      15.0,
+                  'MinBPVDIRA':         0.0,
+                  'MinNvc':             2,
+                  'doPi':            True,
+                  'doK':             True,
+                  'dop':             True,
+                  'doKs':            True,
+                  'doLm':            True,
+                  'doDz':            True,
+                  'doDp':            True,
+                  'doDs':            True,
+                  'doLc':            True,
+                  'doPh':            True,
+                  'doKS':            True,
+                  'doJp':            True,
+                  'doDS':            True,
+                  'MinPiPt':         1500.0,
+                  'MinPiIPChi2DV':     25.0,
+                  'MaxPiChi2':          5.0,
+                  'MinKPt':          1500.0,
+                  'MinKIPChi2DV':      25.0,
+                  'MaxKChi2':           5.0,
+                  'MinpPt':          1500.0,
+                  'MinpIPChi2DV':      25.0,
+                  'MaxpChi2':           5.0,
+                  'MaxKsDeltaM':       40.0,
+                  'MinKsPt':         1500.0,
+                  'MaxKsVertChi2DOF':  10.0,
+                  'MinKsPVVDChi2':    400.0,
+                  'MinKsIPChi2':        0.0,
+                  'MinKsDauPt':       200.0,
+                  'MinKsDauIPChi2':    16.0,
+                  'MaxKsDauTrkChi2':   10.0,
+                  'MaxLmDeltaM':       15.0,
+                  'MinLmPt':         1500.0,
+                  'MaxLmVertChi2DOF':  10.0,
+                  'MinLmPVVDChi2':    400.0,
+                  'MinLmIPChi2':        0.0,
+                  'MinLmPrtPt':       500.0,
+                  'MinLmPiPt':        100.0,
+                  'MinLmPrtIPChi2':     4.0,
+                  'MinLmPiIPChi2':     16.0,
+                  'MaxLmPrtTrkChi2':   10.0,
+                  'MaxLmPiTrkChi2':    10.0,
+                  'MaxDzDeltaM':      40.0,
+                  'MinDzPt':         1500.0,
+                  'MaxDzVertChi2DOF':  10.0,
+                  'MinDzPVVDChi2':    225.0,
+                  'MinDzIPChi2':        0.0,
+                  'MinDzDauPt':       250.0,
+                  'MinDzDauIPChi2':     9.0,
+                  'MaxDzDauTrkChi2':    5.0,
+                  'MinDzPIDK':         -5.0,
+                  'MaxDpDeltaM':       40.0,
+                  'MinDpPt':         1500.0,
+                  'MaxDpVertChi2DOF':  10.0,
+                  'MinDpPVVDChi2':    225.0,
+                  'MinDpIPChi2':        0.0,
+                  'MinDpDauPt':       250.0,
+                  'MinDpDauIPChi2':     9.0,
+                  'MaxDpDauTrkChi2':    5.0,
+                  'MinDpPIDK':         -5.0,
+                  'MaxDsDeltaM':       40.0,
+                  'MinDsPt':         1500.0,
+                  'MaxDsVertChi2DOF':  10.0,
+                  'MinDsPVVDChi2':    225.0,
+                  'MinDsIPChi2':        0.0,
+                  'MinDsDauPt':       250.0,
+                  'MinDsDauIPChi2':     9.0,
+                  'MaxDsDauTrkChi2':    5.0,
+                  'MinDsPIDK':         -5.0,
+                  'MaxLcDeltaM':       40.0,
+                  'MinLcPt':         1500.0,
+                  'MaxLcVertChi2DOF':  10.0,
+                  'MinLcPVVDChi2':    225.0,
+                  'MinLcIPChi2':        0.0,
+                  'MinLcDauPt':       250.0,
+                  'MinLcDauIPChi2':     9.0,
+                  'MaxLcDauTrkChi2':    5.0,
+                  'MinLcPIDK':         -5.0,
+                  'MinLcPIDp':         -5.0,
+                  'MaxPhDeltaM':       30.0,
+                  'MinPhPt':         1500.0,
+                  'MaxPhVertChi2DOF':  10.0,
+                  'MinPhPVVDChi2':    100.0,
+                  'MinPhIPChi2':       16.0,
+                  'MinPhDauPt':       500.0,
+                  'MinPhDauIPChi2':     9.0,
+                  'MaxPhDauTrkChi2':   10.0,
+                  'MaxKSDeltaM':      150.0,
+                  'MinKSPt':         2000.0,
+                  'MaxKSVertChi2DOF':  10.0,
+                  'MinKSPVVDChi2':    100.0,
+                  'MinKSIPChi2':       16.0,
+                  'MinKSDauPt':       500.0,
+                  'MinKSDauIPChi2':    16.0,
+                  'MaxKSDauTrkChi2':    5.0,
+                  'MaxJpDeltaM':     3000.0,
+                  'MinJpPt':         1000.0,
+                  'MaxJpVertChi2DOF':  10.0,
+                  'MinJpPVVDChi2':     16.0,
+                  'MinJpIPChi2':        0.0,
+                  'MinJpDauPt':       500.0,
+                  'MinJpDauIPChi2':     0.0,
+                  'MaxJpDauTrkChi2':   10.0,
+                  'MaxDSDeltaM':      153.0,
+                  'MinDSPt':         1500.0,
+                  'MaxDSVertChi2DOF':  10.0,
+                  'MinDSPVVDChi2':      0.0,
+                  'MinDSIPChi2':        0.0,
+                  'MinDSPiPt':        100.0,
+                  'MinDSPiIPChi2':      0.0,
+                  'MaxDSPiTrkChi2':     5.0,
+                  'MaxDSD0DeltaM':     40.0,
+                  'MinDSD0Pt':       1250.0,
+                  'MaxDSD0VertChi2DOF':10.0,
+                  'MinDSD0PVVDChi2':  225.0,
+                  'MinDSD0IPChi2':      0.0,
+                  'MinDSD0DauPt':     250.0,
+                  'MinDSD0DauIPChi2':   9.0,
+                  'MaxDSD0DauTrkChi2':  5.0
+                  }
+
+confdict_3body=confdict_2body.copy()
+confdict_3body['nbody']=3
+confdict_3body['doKS']=False
+confdict={'2body':confdict_2body, '3body':confdict_3body}
+
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, MergedSelection, DataOnDemand
@@ -391,8 +526,8 @@ def makeKs(name, MaxKsDeltaM, MinKsPt, MaxKsVertChi2DOF, MinKsPVVDChi2, MinKsIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 2 )"%locals()
     _KsFilter = FilterDesktop(Code = _code)
-    _stdKsLL    = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
-    _stdKsDD    = DataOnDemand(Location = "Phys/StdLooseKsDD/Particles")
+    _stdKsLL    = DataOnDemand(Location = "Phys/StdLooseKsLL")
+    _stdKsDD    = DataOnDemand(Location = "Phys/StdLooseKsDD")
     _KsMerged = MergedSelection( "MergedKsFor" + name, RequiredSelections = [_stdKsDD,_stdKsLL] )
     return Selection (name, Algorithm = _KsFilter, RequiredSelections = [_KsMerged])
 
@@ -410,8 +545,8 @@ def makeLm(name, MaxLmDeltaM, MinLmPt, MaxLmVertChi2DOF, MinLmPVVDChi2, MinLmIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPrtTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPiTrkChi2)s , 2 )"%locals()
     _LmFilter = FilterDesktop(Code = _code)
-    _stdLmLL    = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
-    _stdLmDD    = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
+    _stdLmLL    = DataOnDemand(Location = "Phys/StdLooseLambdaLL")
+    _stdLmDD    = DataOnDemand(Location = "Phys/StdLooseLambdaDD")
     _LmMerged = MergedSelection( "MergedLmFor" + name, RequiredSelections = [_stdLmDD,_stdLmLL] )
     return Selection (name, Algorithm = _LmFilter, RequiredSelections = [_LmMerged])
 
@@ -429,7 +564,7 @@ def makeDz(name, MaxDzDeltaM, MinDzPt, MaxDzVertChi2DOF, MinDzPVVDChi2, MinDzIPC
     _code+="& (ADMASS('D0') < %(MaxDzDeltaM)s*MeV)"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDzPIDK)s , 1 )"%locals()
     _DzFilter = FilterDesktop(Code = _code)
-    _stdDz = DataOnDemand(Location = "Phys/StdLooseD02KPi/Particles")
+    _stdDz = DataOnDemand(Location = "Phys/StdLooseD02KPi")
     return Selection (name, Algorithm = _DzFilter, RequiredSelections = [_stdDz])
 
 def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPChi2, MinDpDauPt, MinDpDauIPChi2, MaxDpDauTrkChi2, MinDpPIDK):
@@ -449,7 +584,7 @@ def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPC
     _code+="& (ADMASS('D+') < %(MaxDpDeltaM)s*MeV)"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDpPIDK)s , 1 )"%locals()
     _DpFilter = FilterDesktop(Code = _code)
-    _stdDp = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
+    _stdDp = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
     return Selection (name, Algorithm = _DpFilter, RequiredSelections = [_stdDp])
 
 def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPChi2, MinDsDauPt, MinDsDauIPChi2, MaxDsDauTrkChi2, MinDsPIDK):
@@ -470,7 +605,7 @@ def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPC
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 1 )"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 2 )"%locals()
     _DsFilter = FilterDesktop(Code = _code)
-    _stdDs = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
+    _stdDs = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
     return Selection (name, Algorithm = _DsFilter, RequiredSelections = [_stdDs])
 
 def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPChi2, MinLcDauPt, MinLcDauIPChi2, MaxLcDauTrkChi2, MinLcPIDK, MinLcPIDp):
@@ -491,7 +626,7 @@ def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPC
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinLcPIDK)s , 1 )"%locals()
     _code+="& CHILDCUT ( PIDp-PIDpi > %(MinLcPIDp)s , 2 )"%locals()
     _LcFilter = FilterDesktop(Code = _code)
-    _stdLc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi/Particles")
+    _stdLc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi")
     return Selection (name, Algorithm = _LcFilter, RequiredSelections = [_stdLc])
 
 
@@ -508,7 +643,7 @@ def makePh(name, MaxPhDeltaM, MinPhPt, MaxPhVertChi2DOF, MinPhPVVDChi2, MinPhIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxPhDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxPhDauTrkChi2)s , 2 )"%locals()
     _PhFilter = FilterDesktop(Code = _code)
-    _stdPh = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK/Particles")
+    _stdPh = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK")
     return Selection (name, Algorithm = _PhFilter, RequiredSelections = [_stdPh])
 
 def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPChi2, MinKSDauPt, MinKSDauIPChi2, MaxKSDauTrkChi2):
@@ -524,7 +659,7 @@ def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 2 )"%locals()
     _KSFilter = FilterDesktop(Code = _code)
-    _stdKS = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi/Particles")
+    _stdKS = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi")
     return Selection (name, Algorithm = _KSFilter, RequiredSelections = [_stdKS])
                                                             
 def makeJp(name, MaxJpDeltaM, MinJpPt, MaxJpVertChi2DOF, MinJpPVVDChi2, MinJpIPChi2, MinJpDauPt, MinJpDauIPChi2, MaxJpDauTrkChi2):
@@ -540,7 +675,7 @@ def makeJp(name, MaxJpDeltaM, MinJpPt, MaxJpVertChi2DOF, MinJpPVVDChi2, MinJpIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxJpDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxJpDauTrkChi2)s , 2 )"%locals()
     _JpFilter = FilterDesktop(Code = _code)
-    _stdJp = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
+    _stdJp = DataOnDemand(Location = "Phys/StdLooseDiMuon")
     return Selection (name, Algorithm = _JpFilter, RequiredSelections = [_stdJp])
 
 def makeDS(name, MaxDSDeltaM, MinDSPt, MaxDSVertChi2DOF, MinDSPVVDChi2, MinDSIPChi2, MinDSPiPt, MinDSPiIPChi2,MaxDSPiTrkChi2, MaxDSD0DeltaM,
@@ -562,7 +697,7 @@ def makeDS(name, MaxDSDeltaM, MinDSPt, MaxDSVertChi2DOF, MinDSPVVDChi2, MinDSIPC
     _code+="& ( NINGENERATION ( ( MIPCHI2DV ( PRIMARY ) > %(MinDSD0DauIPChi2)s ) , 2 ) == 2 )"%locals()
     _code+="& ( NINGENERATION ( ( TRCHI2DOF < %(MaxDSD0DauTrkChi2)s ) , 2 ) == 2 )"%locals()
     _DSFilter = FilterDesktop(Code = _code)
-    _stdDS = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi/Particles")
+    _stdDS = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi")
     return Selection (name, Algorithm = _DSFilter, RequiredSelections = [_stdDS])
                                                                
 
