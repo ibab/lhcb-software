@@ -171,7 +171,7 @@ void MonitorSvc::handle(const Incident& inc) {
 
 void MonitorSvc::undeclareInfo( const std::string& name, const IInterface*  owner)
 {
-  printf("Called undeclareInfo with name %s\n",name.c_str());
+//  printf("Called undeclareInfo with name %s\n",name.c_str());
   std::map<std::string,void*>::iterator it;
   std::string oname = makeoname(owner);
   std::string newName;
@@ -204,8 +204,8 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface*  owne
 */
 void MonitorSvc::undeclareAll( const IInterface*  owner)
 {
-  std::string oname = makeoname(owner);
-  printf("Called undeclareAll with owner %s\n",oname.c_str());
+  std::string oname = owner ? makeoname(owner) : "-ALL-";
+//  printf("Called undeclareAll with owner %s\n",oname.c_str());
   std::vector<std::string> strings;
   std::string nam;
   strings.clear();
@@ -215,7 +215,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
         m_CntrMgr->m_counterMapIt++)
     {
       nam = m_CntrMgr->m_counterMapIt->first;
-      if (nam.find(oname.c_str()) != std::string::npos)
+      if (owner==0 || nam.find(oname.c_str()) != std::string::npos)
       {
         strings.push_back(nam);
       }
@@ -234,7 +234,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     {
       MonObj *o = it->second;
       std::string s = o->name();
-      if (s.find(oname.c_str()) != std::string::npos)
+      if (0==owner || s.find(oname.c_str()) != std::string::npos)
       {
         v.push_back(o);;
       }
@@ -252,7 +252,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     {
       MonObj *o = it->second;
       std::string s = o->name();
-      if (s.find(oname.c_str()) != std::string::npos)
+      if (0==owner || s.find(oname.c_str()) != std::string::npos)
       {
         v.push_back(o);;
       }
