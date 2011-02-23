@@ -119,6 +119,7 @@ int MainThread::stop()   {
 
   if (getcontext (&chkpt_sys.motherofall->m_savctx) < 0)   {
     mtcp_output(MTCP_FATAL,"stopThreads: failed to retrieve context of motherofall.\n");
+    mtcp_abort();
   }
   while (1) {
     sigpending (&chkpt_sys.motherofall->m_sigpending);
