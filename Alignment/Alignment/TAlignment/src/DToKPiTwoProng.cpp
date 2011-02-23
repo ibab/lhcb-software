@@ -15,6 +15,9 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 
+#include "TrackInterfaces/ITrackFitter.h"
+
+
 //#include "LoKi/ParticleProperties.h"
 
 DECLARE_ALGORITHM_FACTORY( DToKPiTwoProng );
@@ -24,11 +27,12 @@ DToKPiTwoProng::DToKPiTwoProng(const std::string& name, ISvcLocator* pSvc):
   GaudiTupleAlg(name,pSvc)
 {
 
-  declareProperty("ParticleLocation", m_particleLocation = "/Event/Strip02/SeqD2HH/Phys/SelD2HH/Particles");
+  declareProperty( "ParticleLocation", m_particleLocation = "/Event/Strip02/SeqD2HH/Phys/SelD2HH/Particles" );
   declareProperty( "VertexLocation", m_vertexLocation = "Rec/Vertex/DKPi" ) ;
   declareProperty( "DaughterTrackLocation", m_trackOutputLocation = "Rec/Track/DKPiDaughters" ) ;
-  declareProperty("dM", m_deltaMass = 24 * Gaudi::Units::MeV);
-  declareProperty("resonanceName", m_resonanceName = "D0");
+  declareProperty( "dM", m_deltaMass = 24 * Gaudi::Units::MeV );
+  declareProperty( "resonanceName", m_resonanceName = "D0" );
+
 }
 
 
@@ -43,6 +47,9 @@ StatusCode DToKPiTwoProng::initialize() {
 
   m_vertexer = tool<ITrackVertexer>( "TrackVertexer" );
   m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator");
+
+  m_trackPreFit = tool<ITrackFitter>("TrackMasterFitter"," preFit", this);
+  m_trackFit = tool<ITrackFitter>("TrackMasterFitter", "fit", this);
   
   LHCb::IParticlePropertySvc* propertysvc = 
     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
@@ -82,24 +89,30 @@ StatusCode DToKPiTwoProng::finalize(){
 
 StatusCode DToKPiTwoProng::execute()
 {
-
- // Create the output container 
- typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
- TwoProngVertices* vertContainer = new TwoProngVertices() ;
- put(vertContainer, m_vertexLocation);
-
- LHCb::Track::Selection* daughterCont = new LHCb::Track::Selection() ;
- put(daughterCont, m_trackOutputLocation);
-
- //std::cout << " Going to Loop " << std::endl;
-
- // get the input particles 
- const LHCb::Particle::Container* particles = get<LHCb::Particle::Container>(m_particleLocation);
- for (LHCb::Particle::Container::const_iterator iterP = particles->begin(); iterP != particles->end(); ++iterP ){
-
+  
+  // Create the output container 
+  typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
+  TwoProngVertices* vertContainer = new TwoProngVertices() ;
+  put(vertContainer, m_vertexLocation);
+  
+  LHCb::Track::Selection* daughterCont = new LHCb::Track::Selection() ;
+  put(daughterCont, m_trackOutputLocation);
+  
+  //std::cout << " Going to Loop " << std::endl;
+  
+  // get the input particles 
+  const LHCb::Particle::Container* particles = get<LHCb::Particle::Container>(m_particleLocation);
+  for( LHCb::Particle::Container::const_iterator iterP = particles->begin(); iterP != particles->end(); ++iterP ){
+    
     const SmartRefVector<LHCb::Particle> daughters = (*iterP)->daughters();
     LHCb::Track* track1 = track(daughters.front());
     LHCb::Track* track2 = track(daughters.back());
+
+    m_trackPreFit->fit(*track1); 
+    m_trackFit->fit(*track1);
+
+    m_trackPreFit->fit(*track2); 
+    m_trackFit->fit(*track2);
 
     double z = (*iterP)->endVertex()->position().z();
 
@@ -111,8 +124,6 @@ StatusCode DToKPiTwoProng::execute()
    else {
      tvertex = refittedMass(track2, track1, z); 
    }
-
-
   
    double m = tvertex->mass(m_kaonMass, m_pionMass);
    
@@ -158,7 +169,12 @@ LHCb::TwoProngVertex* DToKPiTwoProng::refittedMass(LHCb::Track* track1,
   m_trackExtrapolator->propagate(*state1, zVert);
   LHCb::State* state2 =track2->stateAt(LHCb::State::ClosestToBeam);
   m_trackExtrapolator->propagate(*state2, zVert);
-  return m_vertexer->fit(*state1,*state2);
+
+  LHCb::TwoProngVertex* vertex =  m_vertexer->fit(*state1,*state2) ;
+  vertex->addToTracks( track1 ) ;
+  vertex->addToTracks( track2 ) ;
+
+  return vertex;
  
 }
 

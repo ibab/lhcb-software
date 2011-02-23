@@ -18,6 +18,9 @@ class IHitExpectation;
 class ITrackVertexer;
 class ITrackExtrapolator;
 
+class ITrackFitter;
+
+
 class DToKPiTwoProng: public GaudiTupleAlg{
 
  public:
@@ -45,9 +48,11 @@ class DToKPiTwoProng: public GaudiTupleAlg{
   double PIDK(const LHCb::Particle* part) const;
 
 
-
   ITrackVertexer* m_vertexer;
   ITrackExtrapolator* m_trackExtrapolator;
+
+  ITrackFitter* m_trackFit;
+  ITrackFitter* m_trackPreFit;
 
   std::string m_particleLocation;
   std::string m_vertexLocation;
