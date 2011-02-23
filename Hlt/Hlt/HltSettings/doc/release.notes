@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-15 - Victor Coco
+ - Update DV_draft2011.py to include the dowstream vertex line
+
+
 !========================== HltSettings v5r5p1 2011-02-21 ===================
 ! 2011-02-21 - Johannes Albrecht
  - remove MuNTracks, see T&S meeting Feb 14

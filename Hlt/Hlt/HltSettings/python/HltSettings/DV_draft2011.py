@@ -20,7 +20,8 @@ class DV_draft2011 :
             'Hlt2DisplVerticesLowMassSingle',
             'Hlt2DisplVerticesHighMassSingle',
             'Hlt2DisplVerticesHighFDSingle',
-            'Hlt2DisplVerticesSinglePostScaled'
+            'Hlt2DisplVerticesSinglePostScaled',
+            'Hlt2DisplVerticesSingleDown'
             ]
 
         return lines
