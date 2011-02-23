@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Rob Lambert
+ - Fixed TestMyStrippingLineOnRealData.py
+   It used one of the lines which has just been updated
+
 ! 2011-02-23 - Juan Palacios
  - Added new semileptonic line builder packages to __init__.py.
 

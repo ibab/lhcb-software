@@ -15,8 +15,8 @@ confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseW
 stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines )
 
 from StrippingSelections import StrippingBd2DstarMuNu
-confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
-stream.appendLines( confBd2DstarMuNu.Lines )
+confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu",StrippingBd2DstarMuNu.confdict)
+stream.appendLines( confBd2DstarMuNu.lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
