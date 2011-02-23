@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-14 - Victor Coco
+ - Hlt2DisplVerticesLine.py: add a downstream vertex line.
+
 !========================== Hlt2Lines v8r0 2011-02-22 ===================
 ! 2011-02-22 - Gerhard Raven
  - adapt to PHYS_v12r0
