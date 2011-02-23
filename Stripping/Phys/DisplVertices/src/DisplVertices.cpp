@@ -51,7 +51,6 @@ DisplVertices::DisplVertices( const std::string& name,
     , PV(0)
     , m_PreyID(0)
     , m_MotherPreyID(0){
-  //declareProperty("SaveOnTES", m_SaveonTES = true );
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
@@ -62,6 +61,7 @@ DisplVertices::DisplVertices( const std::string& name,
   //Unlimited
   declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
   declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
+  declareProperty("PreyMinSumpt", m_PreyMaxSumPt = 14.*TeV );
   declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
   declareProperty("RMax", m_RMax = 10.*m );
   declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
@@ -302,13 +302,11 @@ StatusCode DisplVertices::execute(){
   int nbCands(0);
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
-  //Particle::ConstVector Cands;
   Particle::ConstVector::const_iterator iend = preys.end();
   for( Particle::ConstVector::const_iterator is = preys.begin(); 
        is < iend; ++is ){
     const Particle * p = (*is);
 
-    //always()<<"tag3 "<<p->isBasicParticle()<<endreq;
     //Get rid of non-reconstructed particles, i.e. with no daughters.
     if( p->isBasicParticle() ){ 
       debug()<<"Basic particle !" << endmsg; 
@@ -329,7 +327,6 @@ StatusCode DisplVertices::execute(){
     double recq = 0.;
     GetQPt( p->endVertex(), sumpt, recq );
 
-    //always()<<"tag4 "<<p->info(51,-1000.)<<" "<<p->info(52,-1000.)<<endreq;
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
       debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
@@ -346,7 +343,6 @@ StatusCode DisplVertices::execute(){
     if( m_RemVtxFromDet!= 5 && IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) ) continue;
     if( m_RemVtxFromDet== 5 && p->info(51,-1000.)>-900) continue;
       
-  //always()<<"tag5"<<endreq;
     //Is the particle decay vertex in the RF-foil ?
     if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
       if( msgLevel( MSG::DEBUG ) )
@@ -354,19 +350,17 @@ StatusCode DisplVertices::execute(){
       continue; 
     }
 
-    //always()<<"tag5a "<<mass<< " "<<nbtrks<<" "<<endreq;
-    if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
+    if( mass < m_PreyMinMass || ( mass > m_PreyMaxMass && sumpt > m_PreyMaxSumPt ) || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
         pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
-        pos.y() > m_MaxY || pos.z() < m_MinZ || pos.z() > m_MaxZ ||
+        pos.y() > m_MaxY ||( pos.z() < m_MinZ )|| pos.z() > m_MaxZ ||
         errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
     }
 
-  //always()<<"tag6"<<endreq;
     //Save infos in tuple !
     if( m_SaveTuple ){
       nboftracks.push_back( nbtrks ); chindof.push_back( chi );
@@ -384,15 +378,12 @@ StatusCode DisplVertices::execute(){
       if( p->info(51,-1000.)>-900 ) indet += 1000;
       indets.push_back( indet ); 
     }
-  //always()<<"tag7"<<endreq;
     Particle clone = Particle( *p );
     clone.setParticleID( m_PreyID );
     this->markTree(&clone);
-  //always()<<"tag8"<<endreq;
     nbCands++;
   }//  <--- end of Prey loop
 
-  //always()<<"tag9 "<<nbCands<<endreq;
   
   if((unsigned int) nbCands < m_NbCands ){
     if( msgLevel( MSG::DEBUG ) )

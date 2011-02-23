@@ -126,6 +126,7 @@ private:
   // cuts
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
+  double m_PreyMaxSumPt ;     ///< Maximum sumpt
   double m_SumPt ;            ///< Sumpt of all daughters tracks
   double m_DistMax;           ///< Max distance of the vertices 
   double m_RMin;              ///< Min dist to the z axis

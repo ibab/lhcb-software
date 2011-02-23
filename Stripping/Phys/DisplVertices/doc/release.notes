@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2011-02-23 - Victor Coco
+-  Simplification of the RecVertices2Particles class, removing the developpment
+   functions and unnecessary cuts. Update for stripping 13
+
 !========================== DisplVertices v7r3 2011-01-21 ====================
 
 ! 2011-01-14 - Victor Coco
