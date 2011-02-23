@@ -34,6 +34,7 @@ then
         if test $clean = 1; 
 	then
 	    $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "rm -rf ../${CMTCONFIG} || /bin/true";
+	    rm -rf ../../InstallArea;
 	fi;
         if test $config = 1;
         then
