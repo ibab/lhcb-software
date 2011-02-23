@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Juan Palacios
+ - Added new semileptonic line builder packages to __init__.py.
+
 ! 2011-02-23 - Will Barter
  - Updated Electroweak Lines to new framework, edited cuts and prescales on high rate lines.
 

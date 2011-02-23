@@ -13,7 +13,10 @@ import StrippingNeuroBayesMuMu
 import StrippingB2nbody
 import StrippingHb2Charged2Body
 import StrippingBu2LLK
+import StrippingBd2DstarMuNu
 import StrippingB0q2DplusMuX
+import StrippingBd2DstarTauNu
+import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 
 from sys import modules as _modules
