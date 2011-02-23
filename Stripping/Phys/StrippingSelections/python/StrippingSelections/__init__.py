@@ -18,6 +18,10 @@ import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
 import StrippingB2XuMuNu
 import StrippingB2DMuNuX
+import StrippingBu2D0h_D02KShh_NoPID
+import StrippingBu2D0h_D02KShh_NoPID_WS
+import StrippingBs2PhiPhi
+import StrippingInclPhi
 
 from sys import modules as _modules
 _this = _modules[__name__]
