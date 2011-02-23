@@ -16,36 +16,16 @@ __all__ = ('Hb2Charged2BodyLines',
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from StandardParticles import StdNoPIDsPions, StdLooseProtons 
+from StandardParticles                     import StdNoPIDsPions, StdLooseProtons 
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils   import checkConfig 
-from StrippingUtils.Utils import LineBuilder
-
-name = "Presel"
-
-configHb2hh = { 'PrescaleB2Charged2Body' : 1, 'PrescaleB2PPbar' : 1,
-                'MinPTB2Charged2Body' : 700,  'MinPTB2PPbar' : 900,
-                'MinIP' : 0.08,               'MinIPChi2' : 9,
-                'TrChi2' : 5,
-                'PIDppi' : 0, 
-                'PIDpk' : -2,
-                'MaxPTB2Charged2Body' : 2400, 'MaxPTB2PPbar' : 2500,
-                'MaxIP' : 0.2,
-                'CombMassLow' : 4500, 
-                'CombMassHigh' : 6500,        'CombMassWindow' : 200,
-                'BPT' : 1000,
-                'BTAU' : 0.0005,              'VertexChi2' : 16,
-                'BIPChi2' : 36, 
-                'BDIRA' : 0.9995,
-                'MassLow' : 4800,
-                'MassHigh' : 5800
-                }
+from StrippingUtils.Utils        import LineBuilder
 
 class Hb2Charged2BodyLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""
-   
+    
     __configuration_keys__ = ( 'PrescaleB2Charged2Body',  'PrescaleB2PPbar',
                                'MinPTB2Charged2Body',     'MinPTB2PPbar',
                                'MinIPB2Charged2Body',
@@ -68,48 +48,53 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                'MassHigh' 
                                )
     
-    def __init__( self,name,configHb2hh ) :
+    def __init__( self,name,config ) :        
         
-        
-        LineBuilder.__init__(self, name, configHb2hh)
+        LineBuilder.__init__(self, name, config)
         
         B2Charged2BodyName = name+"B2Charged2Body"
         B2PPbarName = name+"B2PPbar"
         
         # make the various stripping selections
         self.B2Charged2Body = makeB2Charged2Body( B2Charged2BodyName,
-                                                  configHb2hh['MinPTB2Charged2Body'],
-                                                  configHb2hh['MinIP'],
-                                                  configHb2hh['TrChi2'],
-                                                  configHb2hh['MaxPTB2Charged2Body'],
-                                                  configHb2hh['MaxIP'],
-                                                  configHb2hh['CombMassLow'],
-                                                  configHb2hh['CombMassHigh'],
-                                                  configHb2hh['BPT'],
-                                                  configHb2hh['BTAU'],
-                                                  configHb2hh['MassLow'],
-                                                  configHb2hh['MassHigh'] )
-
+                                                  config['TrChi2'],
+                                                  config['MinPTB2Charged2Body'],
+                                                  config['MinIPB2Charged2Body'],
+                                                  config['MinIPChi2B2Charged2Body'],
+                                                  config['MaxPTB2Charged2Body'],
+                                                  config['MaxIPB2Charged2Body'],
+                                                  config['MaxIPChi2B2Charged2Body'],
+                                                  config['CombMassLow'],
+                                                  config['CombMassHigh'],
+                                                  config['DOCA'],
+                                                  config['BPT'],
+                                                  config['BIP'],
+                                                  config['BIPChi2B2Charged2Body'],
+                                                  config['BTAU'],
+                                                  config['MassLow'],
+                                                  config['MassHigh']
+                                                )
+                                                  
         self.B2PPbar = makeB2PPbar( B2PPbarName,
-                                    configHb2hh['MinPTB2PPbar'],
-                                    configHb2hh['TrChi2'],
-                                    configHb2hh['PIDppi'],
-                                    configHb2hh['PIDpk'],
-                                    configHb2hh['MinIPChi2'],
-                                    configHb2hh['CombMassWindow'],
-                                    configHb2hh['MaxPTB2PPbar'], 
-                                    configHb2hh['VertexChi2'], 
-                                    configHb2hh['BIPChi2'], 
-                                    configHb2hh['BDIRA'] )                            
+                                    config['MinPTB2PPbar'],
+                                    config['TrChi2'],
+                                    config['PIDppi'],
+                                    config['PIDpk'],
+                                    config['MinIPChi2B2PPbar'],
+                                    config['CombMassWindow'],
+                                    config['MaxPTB2PPbar'], 
+                                    config['VertexChi2B2PPbar'], 
+                                    config['BIPChi2B2PPbar'], 
+                                    config['BDIRA'] )                            
         
         self.lineB2Charged2Body = StrippingLine( B2Charged2BodyName+"Line",
-                                                 prescale  = configHb2hh['PrescaleB2Charged2Body'],
+                                                 prescale  = config['PrescaleB2Charged2Body'],
                                                  selection = self.B2Charged2Body )
-
+        
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
-                                          prescale = configHb2hh['PrescaleB2PPbar'],
+                                          prescale = config['PrescaleB2PPbar'],
                                           selection = self.B2PPbar )
-
+        
         self.registerLine(self.lineB2PPbar)    
         self.registerLine(self.lineB2Charged2Body)
 
@@ -124,7 +109,7 @@ def makeB2Charged2Body( name,
     _combination_cuts = "(AMAXCHILD(MAXTREE('pi+'==ABSID,PT)) > %(maxPT)s ) & ( (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPDV(PRIMARY))) > %(maxIP)s) | (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s ) ) & (AMAXDOCA('') < %(doca)s ) & (AM > %(combMassLow)s * MeV) & (AM < %(combMassHigh)s * MeV)" %locals()
     
     _mother_cuts = "(PT > %(bPT)s * MeV) & (M > %(massLow)s * MeV) & (M < %(massHigh)s * MeV) & ( ( BPVIP() < %(bIP)s ) | ( BPVIPCHI2() < %(bIPChi2)s ) ) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(bTAU)s )" %locals()
-
+    
     CombineHb2Charged2Body = CombineParticles( DecayDescriptor = 'B0 -> pi+ pi-',
                                                DaughtersCuts = { "pi+" : _daughters_cuts },
                                                CombinationCut = _combination_cuts,
