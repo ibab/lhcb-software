@@ -124,95 +124,193 @@ Last modification $Date: 2010-10-04 $
                by $Author: aborgia $
 """
 
+confdict= {
+    #Muons
+    "MuonTRCHI2"          : 6.   ,#adimensional
+    "MuonP"               : 3000. ,#MeV
+    "MuonPT"              : 1000. ,#MeV
+    "MuonPIDK"            : 0.    ,#adimensional
+    "MuonPIDmu"           : 3.    ,#adimensional
+    "MuonPIDp"            : 0.    ,#adimensional
+    #        "MuonMINIP"           : 0.05  ,#mm
+    "MuonMINIPCHI2"       : 12     ,#adminensional
+    #Xu
+    #Pi Channel
+    "PionTRCHI2"          : 6.   ,#adimensional
+    "PionP"               : 3000. ,#MeV
+    "PionPT"              : 800.  ,#MeV
+    "PionPIDK"            : 0.    ,#adimensional
+    "PionPIDmu"           : 0.    ,#adimensional
+    "PionPIDp"            : 0.    ,#adimensional
+    #        "PionMINIP"           : 0.05  ,#mm
+    "PionMINIPCHI2"       : 16     ,#adminensional
+    #K channel
+    "KaonTRCHI2"          : 6.   ,#adimensional
+    "KaonP"               : 3000. ,#MeV
+    "KaonPT"              : 800.  ,#MeV
+    "KaonPIDK"            : 5.    ,#adimensional // JUST CHANGED THIS
+    "KaonPIDmu"           : 0.    ,#adimensional
+    "KaonPIDp"            : 0.    ,#adimensional
+    #        "KaonMINIP"          : 0.05  ,#mm
+    "KaonMINIPCHI2"       : 16     ,#adminensional
+    #Rho channel
+    "RhoMassWindow"       : 190.  ,#MeV
+    "RhoVCHI2DOF"         : 6    ,#adimensional
+    "RhoPT"               : 500.  ,#MeV
+    "RhoLeadingPionPT"    : 800.  ,#MeV
+    #        "RhoMINIP"           : 0.05  ,#mm 
+    "RhoMINIPCHI2"        : 4     ,#adimensional
+    "RhoChPionPT"         : 300.  ,#MeV
+    "RhoChPionTRCHI2"     : 10.  ,#MeV
+    "RhoChPionPIDK"       : -10.   ,#adminensional
+    #        "RhoChPionMINIP"     : 0.05  ,#mm
+    "RhoChPionMINIPCHI2"  : 9     ,#adimensional
+    #K* channel
+    "KSMassWindow"        : 300.  ,#MeV
+    "KSVCHI2DOF"          : 6    ,#adimensional
+    "KSPT"                : 400.  ,#MeV
+    #        "KSMINIP"             : 0.05  ,#mm 
+    "KSMINIPCHI2"         : 4     ,#adimensional
+    "KstarMassWindow"     : 100.  ,#MeV
+    "KstarVCHI2DOF"       : 6    ,#adimensional
+    "KstarPT"             : 400.  ,#MeV
+    #        "KstarMINIP"          : 0.05  ,#mm 
+    "KstarMINIPCHI2"      : 4     ,#adimensional
+    "KstarChPionPT"       : 100.  ,#MeV
+    "KstarChPionTRCHI2"   : 10.  ,#MeV
+    "KstarChPionPIDK"     : -10.   ,#adminensional
+    #        "KstarChPionMINIP"    : 0.05  ,#mm
+    "KstarChPionMINIPCHI2": 9     ,#adimensional
+    "KstarLeadingPionPT"  : 800.  ,#MeV
+    #Xu
+    "PiMuMassLowLoose"    : 1230. ,#MeV
+    "KMuMassLowTight"     : 1370. ,#MeV
+    "RhoMuMassLowTight"   : 1360. ,#MeV
+    "KstarMuMassLowTight" : 1400. ,#MeV
+    #B
+    "BVCHI2DOF"           : 4     ,#adminensional
+    "BDIRA"               : 0.99,  #adminensional
+    "BFDCHI2LOW"             : 15,   #adimensional
+    "BFDCHI2HIGH"             : 225,   #adimensional
+    "XMuMassUpper"        : 5500 # MeV
+    }
+
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from PhysSelPython.Wrappers      import AutomaticData    , Selection
-from PhysSelPython.Wrappers      import MergedSelection 
-from Configurables               import CombineParticles , FilterDesktop  , LoKi__VoidFilter
-from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 import logging
 
+name="B2XuMuNu"
 
-class StrippingB2XuMuNuConf(LHCbConfigurableUser):
+class B2XuMuNuBuilder(LineBuilder):
     """
     Definition of B->Xu mu nu (Xu=pi,rho,k,k*) stripping
     """
     
-    __slots__ = {
+    __configuration_keys__ = [
         #Muons
-        "MuonTRCHI2"          : 6.   ,#adimensional
-        "MuonP"               : 3000. ,#MeV
-        "MuonPT"              : 1000. ,#MeV
-        "MuonPIDK"            : 0.    ,#adimensional
-        "MuonPIDmu"           : 3.    ,#adimensional
-        "MuonPIDp"            : 0.    ,#adimensional
-        #        "MuonMINIP"           : 0.05  ,#mm
-        "MuonMINIPCHI2"       : 12     ,#adminensional
-        #Xu
-        #Pi Channel
-        "PionTRCHI2"          : 6.   ,#adimensional
-        "PionP"               : 3000. ,#MeV
-        "PionPT"              : 800.  ,#MeV
-        "PionPIDK"            : 0.    ,#adimensional
-        "PionPIDmu"           : 0.    ,#adimensional
-        "PionPIDp"            : 0.    ,#adimensional
-        #        "PionMINIP"           : 0.05  ,#mm
-        "PionMINIPCHI2"       : 16     ,#adminensional
-        #K channel
-        "KaonTRCHI2"          : 6.   ,#adimensional
-        "KaonP"               : 3000. ,#MeV
-        "KaonPT"              : 800.  ,#MeV
-        "KaonPIDK"            : 5.    ,#adimensional // JUST CHANGED THIS
-        "KaonPIDmu"           : 0.    ,#adimensional
-        "KaonPIDp"            : 0.    ,#adimensional
-        #        "KaonMINIP"          : 0.05  ,#mm
-        "KaonMINIPCHI2"       : 16     ,#adminensional
-        #Rho channel
-        "RhoMassWindow"       : 190.  ,#MeV
-        "RhoVCHI2DOF"         : 6    ,#adimensional
-        "RhoPT"               : 500.  ,#MeV
-        "RhoLeadingPionPT"    : 800.  ,#MeV
-        #        "RhoMINIP"           : 0.05  ,#mm 
-        "RhoMINIPCHI2"        : 4     ,#adimensional
-        "RhoChPionPT"         : 300.  ,#MeV
-        "RhoChPionTRCHI2"     : 10.  ,#MeV
-        "RhoChPionPIDK"       : -10.   ,#adminensional
-        #        "RhoChPionMINIP"     : 0.05  ,#mm
-        "RhoChPionMINIPCHI2"  : 9     ,#adimensional
-        #K* channel
-        "KSMassWindow"        : 300.  ,#MeV
-        "KSVCHI2DOF"          : 6    ,#adimensional
-        "KSPT"                : 400.  ,#MeV
-        #        "KSMINIP"             : 0.05  ,#mm 
-        "KSMINIPCHI2"         : 4     ,#adimensional
-        "KstarMassWindow"     : 100.  ,#MeV
-        "KstarVCHI2DOF"       : 6    ,#adimensional
-        "KstarPT"             : 400.  ,#MeV
-        #        "KstarMINIP"          : 0.05  ,#mm 
-        "KstarMINIPCHI2"      : 4     ,#adimensional
-        "KstarChPionPT"       : 100.  ,#MeV
-        "KstarChPionTRCHI2"   : 10.  ,#MeV
-        "KstarChPionPIDK"     : -10.   ,#adminensional
-        #        "KstarChPionMINIP"    : 0.05  ,#mm
-        "KstarChPionMINIPCHI2": 9     ,#adimensional
-        "KstarLeadingPionPT"  : 800.  ,#MeV
-        #Xu
-        "PiMuMassLowLoose"    : 1230. ,#MeV
-        "KMuMassLowTight"     : 1370. ,#MeV
-        "RhoMuMassLowTight"   : 1360. ,#MeV
-        "KstarMuMassLowTight" : 1400. ,#MeV
-        #B
-        "BVCHI2DOF"           : 4     ,#adminensional
-        "BDIRA"               : 0.99,  #adminensional
-        "BFDCHI2LOW"             : 15,   #adimensional
-        "BFDCHI2HIGH"             : 225,   #adimensional
-        "XMuMassUpper"        : 5500 # MeV
-        }
+        "MuonTRCHI2"              ,      
+        "MuonP"                   ,
+        "MuonPT"                  ,
+        "MuonPIDK"                ,
+        "MuonPIDmu"               ,
+        "MuonPIDp"                ,
+        #        "MuonMINIP"      ,
+        "MuonMINIPCHI2"           ,
+        #Xu                       ,
+        #Pi Channel               ,
+        "PionTRCHI2"              ,
+        "PionP"                   ,
+        "PionPT"                  ,
+        "PionPIDK"                ,
+        "PionPIDmu"               ,
+        "PionPIDp"                ,
+        #        "PionMINIP"      ,
+        "PionMINIPCHI2"           ,
+        #K channel                ,
+        "KaonTRCHI2"              ,
+        "KaonP"                   ,
+        "KaonPT"                  ,
+        "KaonPIDK"                ,
+        "KaonPIDmu"               ,
+        "KaonPIDp"                ,
+        #        "KaonMINIP"      ,
+        "KaonMINIPCHI2"           ,
+        #Rho channel              ,
+        "RhoMassWindow"           ,
+        "RhoVCHI2DOF"             ,
+        "RhoPT"                   ,
+        "RhoLeadingPionPT"        ,
+        #        "RhoMINIP"       ,
+        "RhoMINIPCHI2"            ,
+        "RhoChPionPT"             ,
+        "RhoChPionTRCHI2"         ,
+        "RhoChPionPIDK"           ,
+        #        "RhoChPionMINIP" , 
+        "RhoChPionMINIPCHI2"      ,
+        #K* channel               ,
+        "KSMassWindow"            ,
+        "KSVCHI2DOF"              ,
+        "KSPT"                    ,
+        #        "KSMINIP"        ,
+        "KSMINIPCHI2"             ,
+        "KstarMassWindow"         ,
+        "KstarVCHI2DOF"           ,
+        "KstarPT"                 ,
+        #        "KstarMINIP"     ,
+        "KstarMINIPCHI2"          ,
+        "KstarChPionPT"           ,
+        "KstarChPionTRCHI2"       ,
+        "KstarChPionPIDK"         ,
+        #        "KstarChPionMINIP",  
+        "KstarChPionMINIPCHI2"    ,
+        "KstarLeadingPionPT"      ,
+        #Xu                       ,
+        "PiMuMassLowLoose"        ,
+        "KMuMassLowTight"         ,
+        "RhoMuMassLowTight"       ,
+        "KstarMuMassLowTight"     ,
+        #B                        ,
+        "BVCHI2DOF"               ,
+        "BDIRA"                   ,
+        "BFDCHI2LOW"              ,
+        "BFDCHI2HIGH"             ,
+        "XMuMassUpper"                 
+        ]
 
+    def __init__(self,name,config):
+        LineBuilder.__init__(self, name, config)
 
+        self._muonSel=None
+        self._pionSel=None
+        self._kaonSel=None
+        
+        self._muonFilter()
+        self._pionFilter()
+        self._kaonFilter()
+
+        
+        self._rho770Sel=None
+        self._rho770WSSel=None
+        self._KshortSel=None
+        self._KstarSel=None
+        
+        self._Rho02PiPiFilter()
+        self._Rho02PiPiWSFilter()
+        self._KS02PiPiFilter()
+        self._Kstar2KSPiFilter()
+        
+        self.registerLine(self._Pi_line())
+        self.registerLine(self._PiSS_line())
+        self.registerLine(self._Rho_line())
+        self.registerLine(self._RhoWS_line())
+        self.registerLine(self._K_line())
+        self.registerLine(self._KSS_line())
+        self.registerLine(self._Kstar_line())
+        self.registerLine(self._KstarSS_line())
+        
+    
     def _NominalMuSelection( self ):
         return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
                "& (PIDmu-PIDpi> %(MuonPIDmu)s )"\
@@ -230,10 +328,10 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
-    def Pi_line( self ):
+    def _Pi_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import DataOnDemand
-        return StrippingLine('Bd2PiMuNuLine',
+        return StrippingLine(self._name+'Bd2PiLine',
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              prescale = 0.2,
                              FILTER = {'Code' :
@@ -246,14 +344,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._pionFilter(),
-                                      self._Bd2PiMuNu()
-                                      ])
+                             algos = [ self._Bd2PiMuNu()])
     
-    def PiSS_line( self ):
+    def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -265,13 +360,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._pionFilter(),
-                                      self._Bd2PiMuNuSS()])
+                             algos = [ self._Bd2PiMuNuSS()])
 
-    def Rho_line( self ):
+    def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bu2RhoMuNuLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -283,13 +376,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._Rho02PiPiFilter(),
-                                      self._Bu2RhoMuNu()])
+                             algos = [ self._Bu2RhoMuNu()])
         
-    def RhoWS_line( self ):
+    def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bu2RhoMuNuWSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -301,13 +392,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._Rho02PiPiWSFilter(),
-                                      self._Bu2RhoMuNuWS()])
+                             algos = [ self._Bu2RhoMuNuWS()])
     
-    def K_line( self ):
+    def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bs2KLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -319,13 +408,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._kaonFilter(),
-                                      self._Bs2KMuNu()])
+                             algos = [ self._Bs2KMuNu()])
     
-    def KSS_line( self ):
+    def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.2,
+        return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.2,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -337,13 +424,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._kaonFilter(),
-                                      self._Bs2KMuNuSS()])
+                             algos = [ self._Bs2KMuNuSS()])
 
-    def Kstar_line( self ):
+    def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KstarMuNuLine', prescale = 1.,
+        return StrippingLine(self._name+'Bs2KstarLine', prescale = 1.,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -355,14 +440,11 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._KS02PiPiFilter(),
-                                      self._Kstar2KSPiFilter(),
-                                      self._Bs2KstarMuNu()])
+                             algos = [ self._Bs2KstarMuNu()])
 
-    def KstarSS_line( self ):
+    def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KstarMuNuSSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -374,178 +456,290 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
-                             algos = [self._muonFilter(),
-                                      self._KS02PiPiFilter(),
-                                      self._Kstar2KSPiFilter(),
-                                      self._Bs2KstarMuNuSS()])
+                             algos = [ self._Bs2KstarMuNuSS()])
 
 
 
     def _muonFilter( self ):
-        from Configurables import FilterDesktop
-        _mu = FilterDesktop("Mu_forB2XuMuNu",
-                            InputLocations = ["Phys/StdLooseMuons"])
-        _mu.Code = self._NominalMuSelection() % self.getProps()
-
-        return _mu
+        if self._muonSel is not None:
+            return self._muonSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseMuons
+        _mu = FilterDesktop( Code = self._NominalMuSelection() % self._config )
+        _muSel=Selection("Mu_for"+self._name,
+                         Algorithm=_mu,
+                         RequiredSelections = [StdLooseMuons])
+        
+        self._muonSel=_muSel
+        
+        return _muSel
 
     
     def _pionFilter( self ):
-        from Configurables import FilterDesktop
-        _pi = FilterDesktop("Pi_forB2XuMuNu",
-                            InputLocations = ["Phys/StdLoosePions"])
-        _pi.Code = self._NominalPiSelection() % self.getProps()
-        return _pi
+        if self._pionSel is not None:
+            return self._pionSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
+        _pi = FilterDesktop( Code = self._NominalPiSelection() % self._config )
+        _piSel=Selection("Pi_for"+self._name,
+                         Algorithm=_pi,
+                         RequiredSelections = [StdLoosePions])
+        
+        self._pionSel=_piSel
+
+        return _piSel
 
     def _kaonFilter( self ):
-        from Configurables import FilterDesktop
-        _ka = FilterDesktop("K_forB2XuMuNu",
-                            InputLocations = ["Phys/StdLooseKaons"])
-        _ka.Code = self._NominalKSelection() % self.getProps()
-        return _ka
+        if self._kaonSel is not None:
+            return self._kaonSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseKaons
+        
+        _ka = FilterDesktop( Code = self._NominalKSelection() % self._config )
+        _kaSel=Selection("K_for"+self._name,
+                         Algorithm=_ka,
+                         RequiredSelections = [StdLooseKaons])
+        
+        self._kaonSel=_kaSel
+        
+        return _kaSel
 
     def _Rho02PiPiFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _rho770 = CombineParticles("Rho02PiPi_forB2XuMuNu")
-        _rho770.InputLocations = ["Phys/StdLoosePions"]
-        _rho770.DecayDescriptors = ["[rho(770)0 -> pi- pi+]cc"] 
-        _rho770.DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
-                                   "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self.getProps()
-                                   }
-        _rho770.CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self.getProps()
-        _rho770.MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
-                                  "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self.getProps() 
-        return _rho770
+        if self._rho770Sel is not None:
+            return self._rho770Sel
+        
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
+        _rho770 = CombineParticles(
+            DecayDescriptors = ["[rho(770)0 -> pi- pi+]cc"] ,
+            DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
+                               "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self._config
+                               },
+            CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self._config,
+            MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
+                              "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self._config,
+        )
+        _rho770Sel=Selection("Rho02PiPi_for"+self._name,
+                         Algorithm=_rho770,
+                         RequiredSelections = [StdLoosePions])
+        
+        self._rho770Sel=_rho770Sel
+        
+        return _rho770Sel
 
     def _Rho02PiPiWSFilter( self ):
-        from Configurables import FilterDesktop, CombineParticles
-        _rho770 = CombineParticles("Rho02PiPiWS_forB2XuMuNu")
-        _rho770.InputLocations = ["Phys/StdLoosePions"]
-        _rho770.DecayDescriptors = ["[rho(770)0 -> pi+ pi+]cc"] 
-        _rho770.DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
-                                   "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self.getProps()
-                                   }
-        _rho770.CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self.getProps()
-        _rho770.MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
-                                  "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self.getProps() 
-        return _rho770
+        if self._rho770WSSel is not None:
+            return self._rho770WSSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
+        _rho770 = CombineParticles(
+            DecayDescriptors = ["[rho(770)0 -> pi+ pi+]cc"] ,
+            DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
+                               "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self._config
+                               },
+            CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self._config,
+            MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
+                              "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self._config
+        )
+        _rho770Sel=Selection("Rho02PiPiWS_for"+self._name,
+                         Algorithm=_rho770,
+                         RequiredSelections = [StdLoosePions])
+        
+        self._rho770WSSel=_rho770Sel
+        return _rho770Sel
 
     def _KS02PiPiFilter( self, trail="" ):
-        from Configurables import FilterDesktop, CombineParticles
-        _KS = CombineParticles("KS02PiPi_forB2XuMuNu")
-        _KS.InputLocations = ["Phys/StdLoosePions"]
-        _KS.DecayDescriptors = ["[KS0 -> pi- pi+]cc"] 
-        _KS.CombinationCut = "(ADAMASS('KS0')< %(KSMassWindow)s)" % self.getProps()
-        _KS.DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
-                                   "& (MIPCHI2DV(PRIMARY)> %(KstarChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(KstarChPionPIDK)s )" % self.getProps()
-                               }
-        _KS.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KSVCHI2DOF)s ) & (PT > %(KSPT)s *MeV) "\
-                              "& (MIPCHI2DV(PRIMARY)> %(KSMINIPCHI2)s )" % self.getProps()
-        return _KS
+        if self._KshortSel is not None:
+            return self._KshortSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+
+        _KS = CombineParticles(
+            DecayDescriptors = ["[KS0 -> pi- pi+]cc"] ,
+            CombinationCut = "(ADAMASS('KS0')< %(KSMassWindow)s)" % self._config ,
+            DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
+                                   "& (MIPCHI2DV(PRIMARY)> %(KstarChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(KstarChPionPIDK)s )" % self._config
+                               },
+            MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KSVCHI2DOF)s ) & (PT > %(KSPT)s *MeV) "\
+                              "& (MIPCHI2DV(PRIMARY)> %(KSMINIPCHI2)s )" % self._config ,
+        )
+        _KSSel=Selection("KS02PiPi_for"+self._name,
+                         Algorithm=_KS,
+                         RequiredSelections = [StdLoosePions])
+        
+        self._KshortSel=_KSSel
+        return _KSSel
 
     def _Kstar2KSPiFilter( self, trail="" ):
-        from Configurables import FilterDesktop, CombineParticles
-        _Kstar = CombineParticles("Kstar2KSPi_forB2XuMuNu")
-        _Kstar.InputLocations = ["Phys/StdLoosePions", "Phys/KS02PiPi_forB2XuMuNu"]
-        _Kstar.DecayDescriptors = ["[K*(892)+ -> KS0 pi+]cc"] 
-        _Kstar.CombinationCut = "(ADAMASS('K*(892)+')< %(KstarMassWindow)s)" % self.getProps()
-        _Kstar.DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
-                                  "& (MIPCHI2DV(PRIMARY)>%(KstarChPionMINIPCHI2)s) & (PIDpi-PIDK>%(KstarChPionPIDK)s)" % self.getProps()
-                                  }
-        _Kstar.MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KstarVCHI2DOF)s ) & (PT > %(KstarPT)s *MeV) "\
-                                 "& (MAXTREE('pi+'==ABSID,PT)>%(KstarLeadingPionPT)s *MeV )"\
-                                 "& (MIPCHI2DV(PRIMARY)> %(KstarMINIPCHI2)s )" % self.getProps() 
-        return _Kstar
+        if self._KstarSel is not None:
+            return self._KstarSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
+        _Kstar = CombineParticles(
+            DecayDescriptors = ["[K*(892)+ -> KS0 pi+]cc"] ,
+            CombinationCut = "(ADAMASS('K*(892)+')< %(KstarMassWindow)s)" % self._config,
+            DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
+                               "& (MIPCHI2DV(PRIMARY)>%(KstarChPionMINIPCHI2)s) & (PIDpi-PIDK>%(KstarChPionPIDK)s)" % self._config
+                               },
+            MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KstarVCHI2DOF)s ) & (PT > %(KstarPT)s *MeV) "\
+                              "& (MAXTREE('pi+'==ABSID,PT)>%(KstarLeadingPionPT)s *MeV )"\
+                              "& (MIPCHI2DV(PRIMARY)> %(KstarMINIPCHI2)s )" % self._config 
+        )
+        
+        _KstarSel=Selection("Kstar2KSPi_for"+self._name,
+                         Algorithm=_Kstar,
+                         RequiredSelections = [StdLoosePions, self._KS02PiPiFilter()])
+        self._KstarSel=_KstarSel
+        
+        return _KstarSel
     
     def _Bd2PiMuNu( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMu = CombineParticles("PiMu")
-        _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
-        _PiMu.DecayDescriptors = ["[B~0 -> pi+ mu-]cc"]
-        _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-
-        _PiMu.ReFitPVs = True
-        return _PiMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _PiMu = CombineParticles(
+            DecayDescriptors = ["[B~0 -> pi+ mu-]cc"],
+            CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config ,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self._config ,
+            ReFitPVs = True
+            )
+        
+        _PiMuSel=Selection("PiMu_for"+self._name,
+                         Algorithm=_PiMu,
+                         RequiredSelections = [self._muonFilter(), self._pionFilter()])
+        return _PiMuSel
 
     def _Bd2PiMuNuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMu = CombineParticles("PiMuSS")
-        _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
-        _PiMu.DecayDescriptors = ["[B~0 -> pi- mu-]cc"]
-        _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _PiMu.ReFitPVs = True
-        return _PiMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _PiMu = CombineParticles(
+            DecayDescriptors = ["[B~0 -> pi- mu-]cc"],
+            CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config ,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self._config ,
+            ReFitPVs = True
+            )
+        
+        _PiMuSel=Selection("PiMuSS_for"+self._name,
+                         Algorithm=_PiMu,
+                         RequiredSelections = [self._muonFilter(), self._pionFilter()])
+        return _PiMuSel
 
     
     def _Bs2KMuNu( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KMu = CombineParticles("KMu")
-        _KMu.InputLocations=["Phys/K_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
-        _KMu.DecayDescriptors = ["[B_s~0 -> K+ mu-]cc"]
-        _KMu.CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _KMu.ReFitPVs = True
-        return _KMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _KMu = CombineParticles(
+            DecayDescriptors = ["[B_s~0 -> K+ mu-]cc"],
+            CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        _KMuSel=Selection("KMu_for"+self._name,
+                         Algorithm=_KMu,
+                         RequiredSelections = [self._muonFilter(), self._kaonFilter()])
+        return _KMuSel
     
     def _Bs2KMuNuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KMu = CombineParticles("KMuSS")
-        _KMu.InputLocations=["Phys/K_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
-        _KMu.DecayDescriptors = ["[B_s~0 -> K- mu-]cc"]
-        _KMu.CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _KMu.ReFitPVs = True
-        return _KMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _KMu = CombineParticles(
+            DecayDescriptors = ["[B_s~0 -> K- mu-]cc"],
+            CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        _KMuSel=Selection("KMuSS_for"+self._name,
+                         Algorithm=_KMu,
+                         RequiredSelections = [self._muonFilter(), self._kaonFilter()])
+        return _KMuSel
         
     def _Bu2RhoMuNu( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _RhoMu = CombineParticles("RhoMu")
-        _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPi_forB2XuMuNu"]
-        _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
-        _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _RhoMu.ReFitPVs = True
-        return _RhoMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _RhoMu = CombineParticles(
+            DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"],
+            CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        _RhoMuSel=Selection("RhoMu_for"+self._name,
+                         Algorithm=_RhoMu,
+                         RequiredSelections = [self._muonFilter(), self._Rho02PiPiFilter()])
+        return _RhoMuSel
 
     def _Bu2RhoMuNuWS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _RhoMu = CombineParticles("RhoMuWS")
-        _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPiWS_forB2XuMuNu"]
-        _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
-        _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _RhoMu.ReFitPVs = True
-        return _RhoMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _RhoMu = CombineParticles(
+            DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"],
+            CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        _RhoMuSel=Selection("RhoMuWS_for"+self._name,
+                         Algorithm=_RhoMu,
+                         RequiredSelections = [self._muonFilter(), self._Rho02PiPiWSFilter()])
+        return _RhoMuSel
 
     def _Bs2KstarMuNu( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KstarMu = CombineParticles("KstarMu")
-        _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
-        _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu-]cc"]
-        _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _KstarMu.ReFitPVs = True
-        return _KstarMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _KstarMu = CombineParticles(
+            DecayDescriptors = ["[B_s~0 -> K*(892)+ mu-]cc"],
+            CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        _KstarMuSel=Selection("KstarMu_for"+self._name,
+                         Algorithm=_KstarMu,
+                         RequiredSelections = [self._muonFilter(), self._Kstar2KSPiFilter()])
+        
+        return _KstarMuSel
 
     def _Bs2KstarMuNuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KstarMu = CombineParticles("KstarMuSS")
-        _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
-        _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu+]cc"]
-        _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
-        _KstarMu.ReFitPVs = True
-        return _KstarMu
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _KstarMu = CombineParticles(
+            DecayDescriptors = ["[B_s~0 -> K*(892)+ mu+]cc"],
+            CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            ReFitPVs = True
+            )
+        
+        
+        _KstarMuSel=Selection("KstarMuSS_for"+self._name,
+                         Algorithm=_KstarMu,
+                         RequiredSelections = [self._muonFilter(), self._Kstar2KSPiFilter()])
+        
+        return _KstarMuSel
     
     
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
