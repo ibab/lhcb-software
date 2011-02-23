@@ -20,16 +20,16 @@ namespace LHCb {
  *
  * \brief Fill isolation information for DecayTreeTuple
  *
- * - head_NOPARTWITHINIPWDW : no. of non-signal particles within given ip window 
- * - head_NOPARTWITHINIPSWDW :  no. of non-signal particles within given ips window 
  * - head_NOPARTWITHINDCHI2WDW : no. of non-signal particles that when added to vertex give delta chi2 < specified window 
  * - head_NOPARTWITHINCHI2WDW : no. of non-signal particles that when added to vertex give chi2 < specified window 
+ * head_SMALLESTCHI2: chi2 of smallest chi2 combination with any of the input Particles
+ * head_SMALLESTDELTACHI2: delta chi2 of smallest delta chi2 combination with any of the input Particles
  * 
  * \sa DecayTreeTuple
  *
  *  @todo Maybe one should get Tracks instead of Particles?
  *
- *  @author Mitesh Patel
+ *  @author Mitesh Patel, Patrick Koppenburg
  *  @date   2008-04-15
  */
 class TupleToolVtxIsoln : public TupleToolBase, virtual public IParticleTupleTool {
@@ -57,8 +57,6 @@ private:
   DVAlgorithm* m_dva;
   const IDistanceCalculator* m_dist;
   const IVertexFit* m_pVertexFit;
-  double m_IP; 
-  //  double m_IPS; 
   double m_deltaChi2; 
   double m_Chi2; 
   std::string m_typeVertexFit; 

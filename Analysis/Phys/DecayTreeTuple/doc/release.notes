@@ -4,6 +4,15 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-02-22 - Patrick Koppenburg
+ - TupleToolVtxIsoln: 
+   . Remove useless limitation to pid 511
+   . Remoev IP and IPS options (that were'n working anyway)
+   . Change default chi2 and DeltaChi2 cuts to 9 (so they do something)
+   . Add tuple variables <head>_SMALLESTCHI2, <head>_SMALLESTDELTACHI2
+   . Fixed doxygen
+   . Fix bug 78611
+
 !========================== DecayTreeTuple v3r12 2011-02-20 =================
 
 ! 2011-02-15 - Chris Jones
