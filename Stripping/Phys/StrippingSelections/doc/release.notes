@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Alexandr Kozlinskiy
+ - Updated StrippingD02MuMu.py.
+
 ! 2011-02-23 - Stefano Perazzini
  - Update StrippingHb2Charged2Body.py
 
