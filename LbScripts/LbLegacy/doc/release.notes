@@ -1,3 +1,8 @@
+2011-02-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: fixed problem with the --not-parallel option. It was alway active
+	because of the -p option.
+
 2011-02-21  hubert  <hubert@hphub>
 
 	* scripts/mkLHCbtar: fixed usage of the TempDir class.

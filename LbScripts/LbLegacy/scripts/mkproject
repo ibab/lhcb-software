@@ -651,7 +651,7 @@ if __name__ == "__main__":
         sys.exit()
     try:
         keys, values = getopt.getopt(arguments, 'hyp:v:a:',
-            ['help', 'yes', 'project=', 'version=', 'action='])
+            ['help', 'yes', 'project=', 'version=', 'action=', 'not-parallel'])
 
     except getopt.GetoptError:
         print 'wrong arguments'
@@ -673,7 +673,7 @@ if __name__ == "__main__":
             help()
         if key in ('-y', '--yes'):
             yes_mode = True
-        if key in ('--not-parallel'):
+        if key in ('--not-parallel',):
             parallel_mode = False
         if key in ('-v', '--version'):
             pversion = value
