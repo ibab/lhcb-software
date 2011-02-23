@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Will Barter
+ - Updated Electroweak Lines to new framework, edited cuts and prescales on high rate lines.
+
 ! 2011-02-23 - Rob Lambert
  - Updated StrippingB2XuMuNu to new framework
  - Added test for all semileptonic lines that they are in the new
@@ -12,8 +15,6 @@
  - Updated StrippingBd2DstarMuNu to the new framework
  - Updated StrippingBd2DstarTauNu to the new framework
    (Bd2DstarTauNu doesn't pass all the tests yet)
- - Added TestSemileptonicsOnRealData.py
-   Copy of TestMyLineOnRealData.py, but with all semileptonic line builders
 
 !========================== StrippingSelections v3r0 2011-02-23 ===============
 
