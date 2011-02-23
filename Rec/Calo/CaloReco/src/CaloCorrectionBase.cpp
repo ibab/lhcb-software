@@ -194,7 +194,8 @@ CaloCorrection::Parameters CaloCorrectionBase::getParams(CaloCorrection::Type ty
 
   // get parameters
   std::vector<double> pars = (*it).second;
-
+  if( pars.size() < 2 )return pdef;
+  
   // consistency of pars checked elsewhere - straight parsing here
   int func = (int) pars[0];
   int dim  = (int) pars[1];
@@ -309,7 +310,12 @@ void CaloCorrectionBase::checkParams(){
         break;
       }      
     }
-    if( !ok ) warning() << " o Type " << type << " is not registered" << endmsg;
+    if( !ok ){
+      warning() << " o Type " << type << " is not registered" << endmsg;
+      m_params[ type ].clear();
+      continue;
+    }
+    
     std::vector<double> vec = (*it).second;
     int func = CaloCorrection::Unknown;
     int dim  = 0;
