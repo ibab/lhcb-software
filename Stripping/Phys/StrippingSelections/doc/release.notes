@@ -12,6 +12,8 @@
  - Updated StrippingBd2DstarMuNu to the new framework
  - Updated StrippingBd2DstarTauNu to the new framework
    (Bd2DstarTauNu doesn't pass all the tests yet)
+ - Added TestSemileptonicsOnRealData.py
+   Copy of TestMyLineOnRealData.py, but with all semileptonic line builders
 
 !========================== StrippingSelections v3r0 2011-02-23 ===============
 

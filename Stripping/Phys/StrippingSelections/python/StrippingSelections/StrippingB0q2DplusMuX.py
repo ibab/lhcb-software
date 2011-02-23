@@ -192,7 +192,8 @@ class B0q2DplusMuXAllLinesConf(MasterLineBuilder):
     def __init__(self, name, config):
         '''In the constructor we make all the lines, and configure them all
         name is the initial name of the lines, i.e. B0q2DplusMuX
-        config is the dictionary of {LineSuffix : configuration}'''
+        config is the dictionary of {LineSuffix : configuration}
+        '''
         MasterLineBuilder.__init__(self, name, config, B0q2DplusMuXOneLineConf)
         
     def printCuts(self):
@@ -215,7 +216,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
     
     Use conf.printCuts to check the cuts in python
     The selections are available individually as MuSel, DSel and B0Sel
-    The Line object, a member of this class, holds the configured line
+    The lines method returns the configured line
     """
     
     Line=None
