@@ -1,187 +1,243 @@
-## #####################################################################
-# A stripping selection for Drell-Yan ( gamma* -> mu+ mu- ) decays
-#
-# @authors J.Keaveney
-# @date 2010-1-24
-# 
-## #####################################################################
+#Stripping Lines for DY->MuMu
+#Electroweak Group (Convenor: Tara Shears)
+#Adaptation of lines (to use line builders) originally written by James Keaveney by Will Barter
 
-name = "dy2MuMu"
+# 8 Lines - 4 standard lines cover different mass ranges. The additional 4 place HLT requirements, in an attempt to reduce the level of prescale needed at low mass. 
 
-__all__ = ('name', 'DY', 'sequence')
 
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
-
-# Create DY -> mumu candidates out of std loose muons
-## ############################################################
-_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 
-mucut_1_ps = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)&(( PIDmu-PIDpi)>-3.0)'
-mucut_2 = '(PT>1*GeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+confdict_DY2MuMu={
+    'DY2MuMu1Line_psPrescale'    : .02
+    ,  'DY2MuMu1Line_HltPrescale': .05 
+    ,  'DY2MuMu1Line_HltaPrescale': .5 
+    ,  'DY2MuMu1LinePostscale'   : 1.0
+    ,  'DY2MuMu2LinePrescale'    : .1 
+    ,  'DY2MuMu2Line_HltPrescale': .1
+    ,  'DY2MuMu2Line_HltaPrescale': 1.0
+    ,  'DY2MuMu2LinePostscale'   : 1.0
+    ,  'DY2MuMu3LinePrescale'    : 1.0
+    ,  'DY2MuMu3LinePostscale'   : 1.0
+    ,  'DY2MuMu4LinePrescale'    : 1.0
+    ,  'DY2MuMu4LinePostscale'   : 1.0
+    ,  'DY1MinMass' : 2.5
+    ,  'DY1jpsiexclow' : 3.0
+    ,  'DY1jpsiexchigh' : 3.2
+    ,  'DY1MaxMass' : 5.
+    ,  'DY2MinMass' : 5.
+    ,  'DY2MaxMass' : 10.
+    ,  'DY3MinMass' : 10.
+    ,  'DY3MaxMass' : 20.
+    ,  'DY4MinMass' : 20.
+    ,  'DY4MaxMass' : 40.
+    ,  'mupt1' : 800.
+    ,  'mupt2' : 1.
+    ,  'mutrkpchi2' : 0.001
+    ,  'muipdvchi2ratio' : 5.
+    ,  'mupidreq' : -3.
+ }
+
+name = "DY2MuMu"
+
+class DY2MuMuConf(LineBuilder) :
+
+    __configuration_keys__ = ('DY1MinMass',
+                              'DY1jpsiexclow',
+                              'DY1jpsiexchigh',
+                              'DY1MaxMass',
+                              'DY2MinMass',
+                              'DY2MaxMass',
+                              'DY3MinMass',
+                              'DY3MaxMass',
+                              'DY4MinMass',
+                              'DY4MaxMass',
+                              'mupt1',
+                              'mupt2',
+                              'mutrkpchi2',
+                              'muipdvchi2ratio',
+                              'mupidreq',
+                              'DY2MuMu1Line_psPrescale',
+                              'DY2MuMu1Line_HltPrescale',
+                              'DY2MuMu1Line_HltaPrescale',
+                              'DY2MuMu1LinePostscale',
+                              'DY2MuMu2LinePrescale',
+                              'DY2MuMu2Line_HltPrescale',
+                              'DY2MuMu2Line_HltaPrescale',
+                              'DY2MuMu2LinePostscale',
+                              'DY2MuMu3LinePrescale',
+                              'DY2MuMu3LinePostscale',
+                              'DY2MuMu4LinePrescale',
+                              'DY2MuMu4LinePostscale',
+                              )
+
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
+
+        self._myname = name
+
+        #Define the cuts
+        _mucut1= '(PT>%(mupt1)s*MeV)&(TRPCHI2>%(mutrkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(muipdvchi2ratio)s)&((PIDmu-PIDpi)>%(mupidreq)s)'%config
+        _mucut2= '(PT>%(mupt2)s*GeV)&(TRPCHI2>%(mutrkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(muipdvchi2ratio)s)'%config
+
+        _DY1MassCut = '((MM>%(DY1MinMass)s*GeV)&(MM<%(DY1jpsiexclow)s*GeV))|((MM>%(DY1jpsiexchigh)s*GeV)&(MM<%(DY1MaxMass)s*GeV))'%config
+        _DY1MassCutHlt = '((MM>%(DY1MinMass)s*GeV)&(MM<%(DY1jpsiexclow)s*GeV))|((MM>%(DY1jpsiexchigh)s*GeV))'%config
+        _DY2MassCut = '(MM>%(DY2MinMass)s*GeV)&(MM<%(DY2MaxMass)s*GeV)'%config
+        _DY2MassCutHlt = '(MM>%(DY2MinMass)s*GeV)'%config
+        _DY3MassCut = '(MM>%(DY3MinMass)s*GeV)&(MM<%(DY3MaxMass)s*GeV)'%config
+        _DY4MassCut = '(MM>%(DY4MinMass)s*GeV)&(MM<%(DY4MaxMass)s*GeV)'%config
+
+
+        self.selDY2MuMu1 = makeDY2MuMu1(self._myname+'DYDecay1_ps',
+                                     _DY1MassCut,
+                                     _mucut1)
+
+        self.selDY2MuMu1_Hlt = makeDY2MuMu1(self._myname+'DYDecay1_Hlt',
+                                     _DY1MassCutHlt,
+                                     _mucut1)
+
+        self.DY2MuMu_line1_ps = StrippingLine(self._myname+"DY2MuMuLine1_ps",
+                                            prescale = config['DY2MuMu1Line_psPrescale'],
+                                            postscale = config['DY2MuMu1LinePostscale'],
+                                            selection = self.selDY2MuMu1
+                                            )
+
+        self.DY2MuMu_line1_Hlt = StrippingLine(self._myname+"DY2MuMuLine1_Hlt",
+                                            prescale = config['DY2MuMu1Line_HltPrescale'],
+                                            postscale = config['DY2MuMu1LinePostscale'],
+                                            HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')",
+                                            selection = self.selDY2MuMu1_Hlt
+                                            )
+
+        self.DY2MuMu_line1_Hlta = StrippingLine(self._myname+"DY2MuMuLine1_Hlta",
+                                            prescale = config['DY2MuMu1Line_HltaPrescale'],
+                                            postscale = config['DY2MuMu1LinePostscale'],
+                                            HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')",
+                                            selection = self.selDY2MuMu1_Hlt
+                                            )
+
+        self.registerLine(self.DY2MuMu_line1_ps)
+
+        self.registerLine(self.DY2MuMu_line1_Hlt)
+
+        self.registerLine(self.DY2MuMu_line1_Hlta)
+
+
+        self.selDY2MuMu2 = makeDY2MuMu2(self._myname+'DYDecay2',
+                                     _DY2MassCut,
+                                     _mucut2)
+
+        self.selDY2MuMu2_Hlt = makeDY2MuMu2(self._myname+'DYDecay2_Hlt',
+                                     _DY2MassCutHlt,
+                                     _mucut1)
+
+        self.DY2MuMu_line2 = StrippingLine(self._myname+"DY2MuMuLine2",
+                                            prescale = config['DY2MuMu2LinePrescale'],
+                                            postscale = config['DY2MuMu2LinePostscale'],
+                                            selection = self.selDY2MuMu2
+                                            )
+
+        self.DY2MuMu_line2_Hlt = StrippingLine(self._myname+"DY2MuMuLine2_Hlt",
+                                            prescale = config['DY2MuMu2Line_HltPrescale'],
+                                            postscale = config['DY2MuMu2LinePostscale'],
+                                            HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')",
+                                            selection = self.selDY2MuMu2_Hlt
+                                            )
+
+        self.DY2MuMu_line2_Hlta = StrippingLine(self._myname+"DY2MuMuLine2_Hlta",
+                                            prescale = config['DY2MuMu2Line_HltaPrescale'],
+                                            postscale = config['DY2MuMu2LinePostscale'],
+                                            HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')",
+                                            selection = self.selDY2MuMu2_Hlt
+                                            )
+
+
+        self.registerLine(self.DY2MuMu_line2)
+
+        self.registerLine(self.DY2MuMu_line2_Hlt)
+
+        self.registerLine(self.DY2MuMu_line2_Hlta)
 
 
 
-#pre-scaled line for lowest mass bin
-_DY1_ps = CombineParticles(name+"1_ps",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
-                                           'mu-' : mucut_1_ps },
-                         MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
-                         WriteP2PVRelations = False
-                         )
+        self.selDY2MuMu3 = makeDY2MuMu3(self._myname+'DY2MuMuDecay3',
+                                     _DY3MassCut,
+                                     _mucut2)
+
+        self.DY2MuMu_line3 = StrippingLine(self._myname+"DY2MuMuLine3",
+                                            prescale = config['DY2MuMu3LinePrescale'],
+                                            postscale = config['DY2MuMu3LinePostscale'],
+                                            selection = self.selDY2MuMu3
+                                            )
+
+        self.registerLine(self.DY2MuMu_line3)
 
 
-#lines with HLT2 requirements
-_DY1_HLT2 = CombineParticles(name+"1_HLT2",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
-                                           'mu-' : mucut_1_ps },
-                         MotherCut = "(MM>2.5*GeV)",
-                         WriteP2PVRelations = False
-                         )
+        self.selDY2MuMu4 = makeDY2MuMu4(self._myname+'DY2MuMuDecay4',
+                                     _DY4MassCut,
+                                     _mucut2)
 
-_DY2_HLT2 = CombineParticles(name+"2_HLT2",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
-                                           'mu-' : mucut_1_ps },
-                         MotherCut = "(MM>5*GeV)",
-                         WriteP2PVRelations = False
-                         )
+        self.DY2MuMu_line4 = StrippingLine(self._myname+"DY2MuMuLine4",
+                                            prescale = config['DY2MuMu4LinePrescale'],
+                                            postscale = config['DY2MuMu4LinePostscale'],
+                                            selection = self.selDY2MuMu4
+                                            )
 
-
-
-_DY2 = CombineParticles(name+"2",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_2 , 
-                                           'mu-' : mucut_2 },
-                         MotherCut = "(MM>5*GeV) &(MM<10*GeV)",
-                         WriteP2PVRelations = False
-                         )
-
-_DY3 = CombineParticles(name+"3",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_2 , 
-                                           'mu-' : mucut_2 },
-                         MotherCut = "(MM>10*GeV) &(MM<20*GeV ) ",
-                         WriteP2PVRelations = False
-                         )
-
-_DY4 = CombineParticles(name+"4",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_2 , 
-                                           'mu-' : mucut_2 },
-                         MotherCut = "(MM>20*GeV) &(MM<40*GeV ) ",
-                         WriteP2PVRelations = False
-                         )
+        self.registerLine(self.DY2MuMu_line4)
 
 
 
-
-DY1_ps = Selection( "Sel"+name+"1_ps",
-                  Algorithm = _DY1_ps,
-                  RequiredSelections = [_muons]
-                  )
-
-
-DY1_HLT2 = Selection( "Sel"+name+"1_HLT2",
-                  Algorithm = _DY1_HLT2,
-                  RequiredSelections = [_muons]
-                  )
-
-DY2_HLT2 = Selection( "Sel"+name+"2_HLT2",
-                  Algorithm = _DY2_HLT2,
-                  RequiredSelections = [_muons]
-                  )
-
-
-DY2 = Selection( "Sel"+name+"2",
-                  Algorithm = _DY2,
-                  RequiredSelections = [_muons]
-                  )
-DY3 = Selection( "Sel"+name+"3",
-                  Algorithm = _DY3,
-                  RequiredSelections = [_muons]
-                  )
-DY4 = Selection( "Sel"+name+"4",
-                  Algorithm = _DY4,
-                  RequiredSelections = [_muons]
-                  )
-
-
-
-# build the SelectionSequence
-
-sequence1_ps = SelectionSequence("Seq"+name+"1_ps",
-                             TopSelection = DY1_ps
-                             )
-
-sequence1_HLT2 = SelectionSequence("Seq"+name+"1_HLT2",
-                             TopSelection = DY1_HLT2
-                             )
-
-sequence2_HLT2 = SelectionSequence("Seq"+name+"2_HLT2",
-                             TopSelection = DY2_HLT2
-                             )
-
-sequence2 = SelectionSequence("Seq"+name+"2",
-                             TopSelection = DY2
-                             )
-sequence3 = SelectionSequence("Seq"+name+"3",
-                             TopSelection = DY3
-                             )
-sequence4 = SelectionSequence("Seq"+name+"4",
-                             TopSelection = DY4
-                             )
-
-# Define the lines
-## ############################################################
-
-line1_ps = StrippingLine('DY2MuMu1_ps'
-                           , prescale = .02
-                           , algos = [ DY1_ps ]
+def makeDY2MuMu1(name, _DY1MassCut, _mucut1) :
+    _DY1= CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut1 ,
+                                             'mu-' : _mucut1 },
+                           MotherCut = _DY1MassCut,
+                           WriteP2PVRelations = False
                            )
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _DY1,
+                       RequiredSelections = [_stdloosemuons])
 
-line1_HLT2 = StrippingLine('DY2MuMu1_HLT2'
-                           , prescale = .1
-                           , algos = [ DY1_HLT2 ]
-                           , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
+
+def makeDY2MuMu2(name, _DY2MassCut, _mucut2) :
+    _DY2 = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut2 ,
+                                             'mu-' : _mucut2 },
+                           MotherCut = _DY2MassCut,
+                           WriteP2PVRelations = False
                            )
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _DY2,
+                       RequiredSelections = [_stdloosemuons])
 
-line2_HLT2 = StrippingLine('DY2MuMu2_HLT2'
-                           , prescale = .2
-                           , algos = [ DY2_HLT2 ]
-                           , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
+
+def makeDY2MuMu3(name, _DY3MassCut, _mucut2) :
+    _DY3 = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut2 ,
+                                             'mu-' : _mucut2 },
+                           MotherCut = _DY3MassCut,
+                           WriteP2PVRelations = False
                            )
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _DY3,
+                       RequiredSelections = [_stdloosemuons])
 
 
-line1_HLT2_a = StrippingLine('DY2MuMu1_HLT2_a'
-                          , prescale = .1
-                          , algos = [ DY1_HLT2 ]
-                          , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
-                          )
-
-line2_HLT2_a = StrippingLine('DY2MuMu2_HLT2_a'
-                          , prescale = .2
-                          , algos = [ DY2_HLT2 ]
-                          , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
-                          )
-
-
-line2 = StrippingLine('DY2MuMu2'
-                           , prescale = 1.
-                           , algos = [ DY2 ]
+def makeDY2MuMu4(name, _DY4MassCut, _mucut2) :
+    _DY4 = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut2 ,
+                                             'mu-' : _mucut2 },
+                           MotherCut = _DY4MassCut,
+                           WriteP2PVRelations = False
                            )
-
-line3 = StrippingLine('DY2MuMu3'
-                           , prescale = 1.
-                           , algos = [ DY3 ]
-                           )
-
-line4 = StrippingLine('DY2MuMu4'
-                           , prescale = 1.
-                           , algos = [ DY4 ]
-                           )
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _DY4,
+                       RequiredSelections = [_stdloosemuons])

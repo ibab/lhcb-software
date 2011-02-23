@@ -1,58 +1,46 @@
-## #####################################################################
-# A stripping selection for pp -> pp  mu+ mu- decays for indirect luminosity
-# measurment
-# @authors J.Keaveney, D.Moran
-# @date 2010-1-24
-# 
-## #####################################################################
+#Stripping Lines for Exclusive Elastic DiMuon Processes.
+#Electroweak Group (Convenor: Tara Shears)
+#Adaptation of lines (to use line builders) originally written by James Keaveneyand Dermot Moran by Will Barter
+
+# Accepts events that passed the relevant L0 trigger.
+
+
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
+confdict_PP2PPMuMu={
+    'PP2PPMuMuLinePrescale'    : 1.0 
+    ,  'PP2PPMuMuLinePostscale'   : 1.0
+    }
 
 name = "PP2PPMuMu"
 
-__all__ = ('name', 'diPhoton', 'sequence')
+class PP2PPMuMuConf(LineBuilder) :
 
-from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, EventSelection
+    __configuration_keys__ = ('PP2PPMuMuLinePrescale',
+                              'PP2PPMuMuLinePostscale'                           
+                              )
+    
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
 
-# Create pp -> pp  mumu candidates out of std loose muons
-## ############################################################
-_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
+        self._myname = name
 
-mucut = '(PT>400*MeV) '
 
-from GaudiConfUtils.ConfigurableGenerators import NumberOfTracksFilter
-_filterNumMuons = EventSelection("FilterNumMuons",
-                                 Algorithm=NumberOfTracksFilter(MinTracks = 2,
-                                                                MaxTracks = 2,
-                                                                TrackLocations  = [ "Rec/Track/Muon" ]))
+                      
+        self.PP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
+                                            prescale = config['PP2PPMuMuLinePrescale'],
+                                            postscale = config['PP2PPMuMuLinePostscale'],
+                                            checkPV = False,
+                                            L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')",
+                                            )
+        
+        self.registerLine(self.PP2PPMuMu_line)
+       
 
-#Using J/psi(1S) as dimuon container
-_diPhoton = CombineParticles(name,
-                         DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
-                         CombinationCut =
-                         "(AM>1000*MeV)&(APT<900*MeV)&(AMAXDOCA('')<0.15)" ,
-                         MotherCut = "ALL",
-                         WriteP2PVRelations = False
-                         )
-                         
-diPhoton = Selection( "Sel"+name,
-                  Algorithm = _diPhoton,
-                  RequiredSelections = [_filterNumMuons, _muons] 
-                  )
 
-# Define the line
-## ############################################################
-line = StrippingLine('PP2PPMuMu'
-                     , prescale = 1.
-                     , checkPV  = False
-                     , algos = [ diPhoton ]
-                     )
 
-line_2 = StrippingLine('PP2PPMuMu_2'
-                     , prescale = 1.
-                     , checkPV  = False
-                     , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')" 
-                  )

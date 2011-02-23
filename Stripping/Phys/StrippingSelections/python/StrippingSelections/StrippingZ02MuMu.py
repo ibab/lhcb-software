@@ -1,115 +1,118 @@
-## #####################################################################
-# A stripping selection for Z0 -> mu+ mu- decays
-#
-# @author J.Keaveney
-# @date 2010-1-24
-# 
-## #####################################################################
+#Stripping Lines for Z->MuMu
+#Electroweak Group (Convenor: Tara Shears)
+#Adaptation of lines (to use line builders) originally written by James Keaveney by Will Barter
+
+# Lines needed:
+# Z02MuMu. stdloosemuons
+# Z02MuMu. stdveryloosemuons
+# Z02MuMu. stdnopids muons. 
+
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
+confdict_Z02MuMu={
+    'Z02MuMuLinePrescale'    : 1.0 
+    ,  'Z02MuMuLinePostscale'   : 1.0
+    ,  'Z0MinMass' : 40.
+    ,  'mucut' : 15.                                   
+ }
 
 name = "Z02MuMu"
 
-__all__ = ('name', 'Z0', 'sequence')
+class Z02MuMuConf(LineBuilder) :
 
-from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+    __configuration_keys__ = ('Z0MinMass',
+                              'mucut',
+                              'Z02MuMuLinePrescale',
+                              'Z02MuMuLinePostscale'                           
+                              )
+    
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
 
-# Create Z0 -> mumu candidates out of std loose muons
-## ############################################################
-_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
+        self._myname = name
+        
+        #Define the cuts
+        _mucut= '(PT>%(mucut)s*GeV)'%config
+        _Z0MinMass = '(MM>%(Z0MinMass)s*GeV)'%config
 
-mucut =  '(PT>15*GeV)'
+
+        self.selZ02MuMu = makeZ02MuMu(self._myname+'Z02MuMu', 
+                                     _Z0MinMass,
+                                     _mucut)
+     
+        self.Z02MuMu_line = StrippingLine(self._myname+"Z02MuMuLine",
+                                          prescale = config['Z02MuMuLinePrescale'],
+                                          postscale = config['Z02MuMuLinePostscale'],
+                                          checkPV = False,
+                                          selection = self.selZ02MuMu
+                                          )
+        self.registerLine(self.Z02MuMu_line)
+       
+        self.selZ02MuMuloose = makeZ02MuMuloose(self._myname+'Z02MuMuLoose', 
+                                     _Z0MinMass,
+                                     _mucut)
+     
+        self.Z02MuMu_lineloose = StrippingLine(self._myname+"Z02MuMuLooseLine",
+                                               prescale = config['Z02MuMuLinePrescale'],
+                                               postscale = config['Z02MuMuLinePostscale'],
+                                               checkPV = False,
+                                               selection = self.selZ02MuMuloose
+                                               )
+        self.registerLine(self.Z02MuMu_lineloose)
 
 
-_Z0 = CombineParticles(name,
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
-                         MotherCut = "(MM>40*GeV) ",
-                         WriteP2PVRelations = False
-                         )
-                         
-Z0 = Selection( "Sel"+name,
-                  Algorithm = _Z0,
-                  RequiredSelections = [_muons]
-                  )
+        self.selZ02MuMuNoPIDs = makeZ02MuMuNoPIDs(self._myname+'Z02MuMuNoPIDs', 
+                                     _Z0MinMass,
+                                     _mucut)
+     
+        self.Z02MuMu_lineNoPIDs = StrippingLine(self._myname+"Z02MuMuNoPIDsLine",
+                                                prescale = config['Z02MuMuLinePrescale'],
+                                                postscale = config['Z02MuMuLinePostscale'],
+                                                checkPV = False,
+                                                selection = self.selZ02MuMuNoPIDs
+                                            )
+        self.registerLine(self.Z02MuMu_lineNoPIDs)
 
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = Z0
-                             )
-# Define the line
-## ############################################################
-line = StrippingLine('Z02MuMu'
-                           , prescale = 1.
-                           , algos = [ Z0 ]
 
+def makeZ02MuMu(name, _Z0MinMass, _mucut) :
+    _Z0 = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut , 
+                                             'mu-' : _mucut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
                            )
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _Z0,
+                       RequiredSelections = [_stdloosemuons])
 
 
-
-# Create Z0 -> mumu candidates out of std very loose muons
-## ############################################################
-_loosemuons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
-
-
-_Z0loose = CombineParticles(name+"loose",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
-                         MotherCut = "(MM>40*GeV) ",
-                         WriteP2PVRelations = False
-                         )
-                         
-Z0loose = Selection( "Sel"+name+"loose",
-                  Algorithm = _Z0loose,
-                  RequiredSelections = [_loosemuons]
-                  )
-
-# build the SelectionSequence
-sequenceloose = SelectionSequence("Seq"+name+"loose",
-                             TopSelection = Z0loose
-                             )
-# Define the line
-## ############################################################
-lineloose = StrippingLine('Z02MuMuloose'
-                           , prescale = 1.
-                           , algos = [ Z0loose ]
-
+def makeZ02MuMuloose(name, _Z0MinMass, _mucut) :
+    _Z0loose = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut , 
+                                             'mu-' : _mucut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
                            )
+    _stdveryloosemuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+    return Selection ( name,
+                       Algorithm = _Z0loose,
+                       RequiredSelections = [_stdveryloosemuons])
 
 
-
-# Create Z0 -> mumu candidates out of NoPIDs  muons
-## ############################################################
-_NoPIDsmuons =  DataOnDemand(Location = 'Phys/StdNoPIDsMuons')
-
-
-_Z0NoPIDs = CombineParticles(name+"NoPIDs",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
-                         MotherCut = "(MM>40*GeV) ",
-                         WriteP2PVRelations = False
-                         )
-                         
-Z0NoPIDs = Selection( "Sel"+name+"NoPIDs",
-                  Algorithm = _Z0NoPIDs,
-                  RequiredSelections = [_NoPIDsmuons]
-                  )
-
-# build the SelectionSequence
-sequenceNoPIDs = SelectionSequence("Seq"+name+"NoPIDs",
-                             TopSelection = Z0NoPIDs
-                             )
-# Define the line
-## ############################################################
-lineNoPIDs = StrippingLine('Z02MuMuNoPIDs'
-                           , prescale = 1.
-                           , algos = [ Z0NoPIDs ]
-
+def makeZ02MuMuNoPIDs(name, _Z0MinMass, _mucut) :
+    _Z0NoPIDs = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
+                           DaughtersCuts = { 'mu+' : _mucut , 
+                                             'mu-' : _mucut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
                            )
-
-
-
+    _NoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    return Selection ( name,
+                       Algorithm = _Z0NoPIDs,
+                       RequiredSelections = [_NoPIDsMuons])

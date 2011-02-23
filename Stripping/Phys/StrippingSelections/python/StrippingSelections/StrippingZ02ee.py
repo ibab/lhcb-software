@@ -1,47 +1,67 @@
-## #####################################################################
-# A stripping selection for Z0 -> e+ e- decays
-#
-# @authors J.Keaveney
-# @date 2010-1-24
-# 
-## #####################################################################
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
+confdict_Z02ee={
+    'Z02eeLinePrescale'    : 1.0 
+    ,  'Z02eeLinePostscale'   : 1.0
+    ,  'Z0MinMass' : 40.
+    ,  'ptcut' : 10.
+    ,  'trkpchi2' : 0.001
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
+    ,  'mipdvchi2ratio' : 5.
+ }
 
 name = "Z02ee"
 
-__all__ = ('name', 'Z0', 'sequence')
+class Z02eeConf(LineBuilder) :
 
-from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+    __configuration_keys__ = ('Z0MinMass',
+                              'ptcut',
+                              'trkpchi2',
+                              'HCalMax',
+                              'ECalMin',
+                              'PrsCalMin',
+                              'mipdvchi2ratio',
+                              'Z02eeLinePrescale',
+                              'Z02eeLinePostscale'                           
+                              )
+    
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
 
-# Create Z0 -> ee candidates out of std loose electrons
-## ############################################################
-_electrons =  DataOnDemand(Location = 'Phys/StdTightElectrons')
+        self._myname = name
+        
+        #Define the cuts
+        _ecut= '((PT>%(ptcut)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(mipdvchi2ratio)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
+        _Z0MinMass = '(MM>%(Z0MinMass)s*GeV)'%config
 
-ecut = '(PT>15*GeV) &(TRPCHI2>0.001)&(PIDe >1)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
 
-_Z0 = CombineParticles(name,
-                         DecayDescriptor = 'Z0 -> e+ e-',
-                         DaughtersCuts = { 'e+' : ecut , 
-                                           'e-' : ecut },
-                         MotherCut = "(MM>40*GeV) ",
-                         WriteP2PVRelations = False
-                         )
-                         
-Z0 = Selection( "Sel"+name,
-                  Algorithm = _Z0,
-                  RequiredSelections = [_electrons]
-                  )
+        self.selZ02ee = makeZ02ee(self._myname+'Z02ee', 
+                                     _Z0MinMass,
+                                     _ecut)
+     
+        self.Z02ee_line = StrippingLine(self._myname+"Z02eeLine",
+                                            prescale = config['Z02eeLinePrescale'],
+                                            postscale = config['Z02eeLinePostscale'],
+                                            selection = self.selZ02ee
+                                            )
+        self.registerLine(self.Z02ee_line)
 
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = Z0
-                             )
-# Define the line
-## ############################################################
-line = StrippingLine('Z02ee'
-                           , prescale = 1.
-                           , algos = [ Z0 ]
+
+def makeZ02ee(name, _Z0MinMass, _ecut) :
+    _Z02ee = CombineParticles(DecayDescriptor = 'Z0 -> e+ e-',
+                           DaughtersCuts = { 'e+' : _ecut , 
+                                             'e-' : _ecut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
                            )
-
+    _NoPIDsElectrons = DataOnDemand(Location = "Phys/StdNoPIDsElectrons")
+    return Selection ( name,
+                       Algorithm = _Z02ee,
+                       RequiredSelections = [_NoPIDsElectrons])

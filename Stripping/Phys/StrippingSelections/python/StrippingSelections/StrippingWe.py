@@ -1,72 +1,79 @@
-## #####################################################################
-# A stripping selection for W -> e decays
-#
-# @authors J.Keaveney
-# @date 2010-1-24
-# 
-## #####################################################################
+#Stripping Lines for W->eNu.
+#Electroweak Group (Convenor: Tara Shears)
+#Adaptation of lines (to use line builders) originally written by James Keaveney and David Ward by Will Barter
+
+
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
+confdict_We={
+    'WeLinePrescale'    : 1.0 
+    ,  'WeLinePostscale'   : 1.0
+    ,  'WeLinePrescale_ps'    : .1 
+    ,  'ptcut' : 20.
+    ,  'ptcut_ps' : 15.
+    ,  'trkpchi2' : 0.001
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
+    ,  'trkghostprob' : 0.6
+ }
 
 name = "We"
 
-__all__ = ('name', 'W', 'sequence')
+class WeConf(LineBuilder) :
 
-from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+    __configuration_keys__ = ('ptcut',
+                              'ptcut_ps',
+                              'trkpchi2',
+                              'HCalMax',
+                              'ECalMin',
+                              'PrsCalMin',
+                              'trkghostprob',
+                              'WeLinePrescale',
+                              'WeLinePrescale_ps',
+                              'WeLinePostscale'                           
+                              )
+    
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
 
-# Create W -> e candidates out of std loose electrons
-## ############################################################
-_electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
+        self._myname = name
+        
+        #Define the cuts
+        _ecut= '((PT>%(ptcut)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(TRGHOSTPROB<%(trkghostprob)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
+        _ecut_ps= '((PT>%(ptcut_ps)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
 
-ecut = '(PT>20*GeV)&(TRPCHI2>0.001)&(PIDe>1)&(TRGHOSTPROB<0.6)'
-
-_W = FilterDesktop(name
-                    , Code = ecut
-                               )
-                         
-W = Selection( "Sel"+name,
-                  Algorithm = _W,
-                  RequiredSelections = [_electrons]
-                  )
-
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = W
-                             )
-# Define the line
-## ############################################################
-line = StrippingLine('W2e'
-                           , prescale = 1.
-                           , algos = [ W ]
-                           )
-
-
-#pre-scaled line with looser Pt cut, and no ghost prob cut
-ecut_1 = '(PT>15*GeV)&(TRPCHI2>0.001)&(PIDe>1)'
+        
+        self.selWe = makeWe(self._myname+'We', 
+                               _ecut)
+        
+        self.We_line = StrippingLine(self._myname+"WeLine",
+                                     prescale = config['WeLinePrescale'],
+                                     postscale = config['WeLinePostscale'],
+                                     selection = self.selWe
+                                     )
+        self.registerLine(self.We_line)
 
 
-
-_W_ps = FilterDesktop(name+"_ps"
-                    , Code = ecut_1
-                               )
-                         
-W_ps = Selection( "Sel"+name+"_ps",
-                  Algorithm = _W_ps,
-                  RequiredSelections = [_electrons]
-                  )
-
-# build the SelectionSequence
-sequence_ps = SelectionSequence("Seq"+name+"_ps",
-                             TopSelection = W_ps
-                             )
-# Define the line
-## ############################################################
-line_ps = StrippingLine('W2e_ps'
-                           , prescale = .1
-                           , algos = [ W_ps ]
-                           )
+        self.selWe_ps = makeWe(self._myname+'We_ps', 
+                               _ecut_ps)
+        
+        self.We_line_ps = StrippingLine(self._myname+"WeLine_ps",
+                                     prescale = config['WeLinePrescale_ps'],
+                                     postscale = config['WeLinePostscale'],
+                                     selection = self.selWe_ps
+                                     )
+        self.registerLine(self.We_line_ps)
 
 
-
-
+def makeWe(name, eCut) :
+    _We = FilterDesktop(Code = eCut)
+    _NoPIDsElectrons = DataOnDemand(Location = "Phys/StdNoPIDsElectrons")
+    return Selection ( name,
+                       Algorithm = _We,
+                       RequiredSelections = [_NoPIDsElectrons])

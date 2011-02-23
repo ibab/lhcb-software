@@ -1,153 +1,159 @@
-## #####################################################################
-# A stripping selection for W -> mu decays
-#
-# @authors J.Keaveney
-# @date 2010-1-24
-# 
-## #####################################################################
+#Stripping Lines for W->MuNu and Studies of their Background.
+#Electroweak Group (Convenor: Tara Shears)
+#Adaptation of lines (to use line builders) originally written by James Keaveney by Will Barter
 
-name = "WMu"
-
-__all__ = ('name', 'W', 'sequence')
+# Lines needed:
+# W prescaled 0.1. normal cut. stdloosemuons
+# W prescaled 0.1. normal cut. stdveryloosemuons
+# W prescaled 0.1. tight cut. stdnopids muons. Unlikely to be run in 2011.
+# W not prescaled. tight cut. stdloosemuons
+# W not prescaled. tight cut. stdveryloosemuons
+# no prescale, low pt cut, used to study background. Ensure absence of bias by only taking events that trigger min bias in HLT.
 
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 
+confdict_WMu={
+    'WMuLinePrescale_ps'    : .1
+    ,  'WMuLinePrescale'    : 1.0 
+    ,  'WMuLinePostscale'   : 1.0
+    ,  'mucuttight' : 20.
+    ,  'mucut' : 15.
+    ,  'mucutlow' : 5.
+    ,  'trkpchi2' : 0.001
+ }
 
-#Pre-scaled lines
+name = "W2Mu"
 
-# Create W -> mu candidates out of std loose muons
-## ############################################################
-_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
+class WMuConf(LineBuilder) :
 
+    __configuration_keys__ = ('mucuttight',
+                              'mucut',
+                              'mucutlow',
+                              'trkpchi2',
+                              'WMuLinePrescale_ps',
+                              'WMuLinePrescale',
+                              'WMuLinePostscale'                           
+                              )
+    
+    def __init__(self, name, config) :
+        LineBuilder.__init__(self, name, config)
 
-mucut =  '(PT>15*GeV)'
-mucut_tight =  '(PT>20*GeV)'
+        self._myname = name
+        
+        #Define the cuts
+        _mucut='(PT>%(mucut)s*GeV)'%config
+        _mucuttight = '(PT>%(mucuttight)s*GeV)'%config
+        _mucutverytight = '(PT>%(mucuttight)s*GeV)&(TRPCHI2>%(trkpchi2)s)'%config
+        _mucutlow='(PT>%(mucutlow)s*GeV)'%config
 
+        # First Make the PrescaledLines
 
-_W_ps = FilterDesktop(name+"_ps"
-                    , Code = mucut
-                               )
-                         
-W_ps = Selection( "Sel"+name+"_ps",
-                  Algorithm = _W_ps,
-                  RequiredSelections = [_muons]
-                  )
+        # Prescaled Line, StdLooseMuons, Cut at 15GeV
+        self.selWMu_ps = makeWMu(self._myname+'WMu_ps', _mucut)
+     
+        self.WMu_lineps = StrippingLine(self._myname+"WMuLine_ps",
+                                        prescale = config['WMuLinePrescale_ps'],
+                                        postscale = config['WMuLinePostscale'],
+                                        checkPV = False,
+                                        selection = self.selWMu_ps
+                                            )
+        self.registerLine(self.WMu_lineps)
 
-# build the SelectionSequence
-sequence_ps = SelectionSequence("Seq"+name+"_ps",
-                             TopSelection = W_ps
-                             )
-# Define the line
-## ############################################################
-line_ps = StrippingLine('W2Mu_ps'
-                           , prescale = .1
-                           , algos = [ W_ps ]
-                           )
+        # Prescaled Line, StdVeryLooseMuons, Cut at 15GeV
+        self.selWMu_looseps = makeWMuLoose(self._myname+'WMu_looseps', 
+                                           _mucut)
+     
+        self.WMu_linelooseps = StrippingLine(self._myname+"WMuLine_looseps",
+                                             prescale = config['WMuLinePrescale_ps'],
+                                             postscale = config['WMuLinePostscale'],
+                                             checkPV = False,
+                                             selection = self.selWMu_looseps
+                                             )
+        self.registerLine(self.WMu_linelooseps)
 
-
-
-# Create W -> mu candidates out of std very loose muons
-## ############################################################
-_loosemuons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
-
-
-_Wloose_ps = FilterDesktop(name+"loose_ps"
-                    , Code = mucut
-                               )
-                         
-Wloose_ps = Selection( "Sel"+name+"loose_ps",
-                  Algorithm = _Wloose_ps,
-                  RequiredSelections = [_loosemuons]
-                  )
-
-# build the SelectionSequence
-sequenceloose_ps = SelectionSequence("Seq"+name+"loose_ps",
-                             TopSelection = Wloose_ps
-                             )
-
-
-# Define the line
-## ############################################################
-lineloose_ps = StrippingLine('W2Muloose_ps'
-                           , prescale = .1
-                           , algos = [ Wloose_ps ]
-                           )
-
-
-# Create W -> mu candidates out of std No PIDs muons
-## ############################################################
-_NoPIDsmuons =  DataOnDemand(Location = 'Phys/StdNoPIDsMuons')
-
-_WNoPIDs_ps = FilterDesktop(name+"NoPIDs_ps"
-                    , Code = mucut
-                               )
-                         
-WNoPIDs_ps = Selection( "Sel"+name+"NoPIDs_ps",
-                  Algorithm = _WNoPIDs_ps,
-                  RequiredSelections = [_NoPIDsmuons]
-                  )
-
-# build the SelectionSequence
-sequenceNoPIDs_ps = SelectionSequence("Seq"+name+"NoPIDs_ps",
-                             TopSelection = WNoPIDs_ps
-                             )
-# Define the line
-## ############################################################
-lineNoPIDs_ps = StrippingLine('W2MuNoPIDs_ps'
-                           , prescale = .1
-                           , algos = [ WNoPIDs_ps ]
-                           )
+        # Prescaled Line, StdNoPIDsMuons, Cut at 20GeV. Unlikely to use this line in 2011
+        self.selWMu_NoPIDsps = makeWMuNoPIDs(self._myname+'WMu_NoPIDsps', 
+                                             _mucutverytight)
+     
+        self.WMu_lineNoPIDsps = StrippingLine(self._myname+"WMuLine_NoPIDsps",
+                                              prescale = config['WMuLinePrescale_ps'],
+                                              postscale = config['WMuLinePostscale'],
+                                              checkPV = False,
+                                              selection = self.selWMu_NoPIDsps
+                                              )
+        self.registerLine(self.WMu_lineNoPIDsps)
 
 
+        # Now the tighter, non pre-scaled lines
+
+        # StdLooseMuons, Cut at 20GeV
+        self.selWMu = makeWMu(self._myname+'WMu', 
+                              _mucuttight)
+     
+        self.WMu_line = StrippingLine(self._myname+"WMuLine",
+                                      prescale = config['WMuLinePrescale'],
+                                      postscale = config['WMuLinePostscale'],
+                                      checkPV = False,
+                                      selection = self.selWMu
+                                      )
+        self.registerLine(self.WMu_line)
+
+        # StdVeryLooseMuons, Cut at 20GeV
+        self.selWMu_loose = makeWMuLoose(self._myname+'WMu_loose', 
+                              _mucuttight)
+     
+        self.WMu_lineloose = StrippingLine(self._myname+"WMuLine_loose",
+                                           prescale = config['WMuLinePrescale'],
+                                           postscale = config['WMuLinePostscale'],
+                                           checkPV = False,
+                                           selection = self.selWMu_loose
+                                           )
+        self.registerLine(self.WMu_lineloose)
+        
+        #new line, require minbias triggers to have fired.
+        self.selNoPIDsPTCut = makeNoPIDs(self._myname+'NoPIDs', 
+                                         _mucutlow)  
+        self.line_HighPTNoPIDs = StrippingLine(self._myname+"HighPTNoPIDs",
+                                               prescale = config['WMuLinePrescale'],
+                                               postscale = config['WMuLinePostscale'],
+                                               checkPV = False,
+                                               HLT = "HLT_PASS_RE('Hlt1MB.*Decision')",
+                                               selection = self.selNoPIDsPTCut
+                                               )
+        self.registerLine(self.line_HighPTNoPIDs)
+
+       
+def makeWMu(name, _muCut) :
+    _W = FilterDesktop(Code = _muCut)
+    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    return Selection ( name,
+                       Algorithm = _W,
+                       RequiredSelections = [_stdloosemuons])
 
 
-#Non Pre-scaled lines
+def makeWMuLoose(name, _muCut) :
+    _WLoose = FilterDesktop(Code = _muCut)                            
+    _stdveryloosemuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+    return Selection ( name,
+                       Algorithm = _WLoose,
+                       RequiredSelections = [_stdveryloosemuons])
 
-# Candidates from StdLooseMuons
-## ############################################################
 
-_W = FilterDesktop(name
-                    , Code = mucut_tight
-                               )
-                         
-W = Selection( "Sel"+name,
-                  Algorithm = _W,
-                  RequiredSelections = [_muons]
-                  )
+def makeWMuNoPIDs(name, _muCut) :
+    _WNoPIDs = FilterDesktop(Code = _muCut)
+    _NoPIDsmuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    return Selection ( name,
+                       Algorithm = _WNoPIDs,
+                       RequiredSelections = [_NoPIDsmuons])
 
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = W
-                             )
-# Define the line
-## ############################################################
-line = StrippingLine('W2Mu'
-                           , prescale = 1.
-                           , algos = [ W ]
-                           )
-
-#Candidates from StdVeryLooseMuons
-_Wloose = FilterDesktop(name+"loose"
-                    , Code = mucut_tight
-                               )
-                         
-Wloose = Selection( "Sel"+name+"loose",
-                  Algorithm = _W,
-                  RequiredSelections = [_loosemuons]
-                  )
-
-# build the SelectionSequence
-sequenceloose = SelectionSequence("Seq"+name+"loose",
-                             TopSelection = Wloose
-                             )
-# Define the line
-## ############################################################
-lineloose = StrippingLine('W2Muloose'
-                           , prescale = 1.
-                           , algos = [ Wloose ]
-                           )
-
+def makeNoPIDs(name, _muCut) :
+    _NoPIDsSelection = FilterDesktop(Code = _muCut)
+    _NoPIDsmuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    return Selection ( name,
+                       Algorithm = _NoPIDsSelection,
+                       RequiredSelections = [_NoPIDsmuons])
