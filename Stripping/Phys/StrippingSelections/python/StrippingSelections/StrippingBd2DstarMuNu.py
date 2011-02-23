@@ -25,7 +25,7 @@ It will be used also for bbar cross section measurement, by studying the efficie
 
 ==== Description of the configuration ====
 
-The selection cuts are stored in the dictionaries: confdict['Loose'] or 'Tight'.
+The selection cuts are stored in the dictionaries: confdict["Loose"] or "Tight".
 The cuts are stored only if they are different between the lines, common cuts are hardcoded.
 
 The configuration class makes all the selections and the lines, when passed a correct dictionary.
@@ -43,7 +43,7 @@ To look at all the configurable cuts, see StrippingBd2DstarMuNu.confdict
 
 To configure all lines, just instantiate the class:
 
-all=Bd2DstarMuNuAllLinesConf(confdict)
+all=Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu",confdict)
 
 Then to print all cuts do:
 
@@ -51,7 +51,7 @@ all.printCuts()
 
 You can configure one line at a time with the Bd2DstarMuNuOneLineConf class:
 
-one=Bd2DstarMuNuOneLineConf('Loose',confdict['Loose'])
+one=Bd2DstarMuNuOneLineConf("Bd2DstarMuNuLoose",confdict["Loose"])
 '''
 __author__ = [ 'Stefania Vecchi, Marta Calvi' ]
 __date__ = '2010-10-04'
@@ -59,8 +59,6 @@ __version = '$Revision: 1.6 $'
 
 #### Which VertexFitter to use? ####
 
-#combiner='LoKi::VertexFitter'
-combiner='OfflineVertexFitter'
 
 #### Next is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
@@ -147,8 +145,12 @@ confdict={
 
 
 
+from StrippingUtils.Utils import LineBuilder, MasterLineBuilder
 
-class Bd2DstarMuNuAllLinesConf(object):
+name = "Bd2DstarMuNu"
+
+
+class Bd2DstarMuNuAllLinesConf(MasterLineBuilder):
     """
     Configuration object for all Bd2DstarMuNu lines
 
@@ -159,46 +161,36 @@ class Bd2DstarMuNuAllLinesConf(object):
     configdict={'LineNameSuffix' : {...},
                 'LineNameSuffix2': {...} }
     
-    Bd2DstarMuNuAllLinesConf(config, offLines=[] )
+    Bd2DstarMuNuAllLinesConf(name, config)
     
     To turn off lines which otherwise would be created, add the name
     of the line to offLines.
     
     To only configure/run one line, it's better to use the Bd2DstarMuNuOneLineConf class.
     
-    The created lines appear as a list in the Lines object, member variable
+    The created lines appear as a list in the lines() function
     
     To print out all the cuts, use the printCuts method
     """
-    
-    Lines=[]
-    
-    confObjects={}
-    
-    def __init__(self, config, offLines=[]):
+        
+    def __init__(self, name, config):
         '''In the constructor we make all the lines, and configure them all
-        config is the dictionary of {LineSuffix : configuration}
-        offlines is a list of lines to turn off'''
-        for aline in config.keys():
-            if aline not in offLines:
-                lineconf=Bd2DstarMuNuOneLineConf(aline, config[aline])
-                
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                
+        config is the dictionary of {LineSuffix : configuration}'''
+        MasterLineBuilder.__init__(self, name, config, Bd2DstarMuNuOneLineConf)
+        
     def printCuts(self):
         '''Print out all the configured cuts for the lines you asked for'''
-        for aline in self.confObjects.keys():
+        for aline in self.slaves():
             print '===='
-            self.confObjects[aline].printCuts()
+            aline.printCuts()
             
 
-class Bd2DstarMuNuOneLineConf(object):
+class Bd2DstarMuNuOneLineConf(LineBuilder):
     """
     Configuration object for a Bd2DstarMuNu line
 
     usage: config={...}
-    Bd2DstarMuNuConf(LineSuffix, config)
+    Bd2DstarMuNuConf(name+LineSuffix, config)
     Will make lines ending in LineSuffix with the config configurations
     
     The cuts are configuration parameter only if they are different between the lines,
@@ -206,7 +198,7 @@ class Bd2DstarMuNuOneLineConf(object):
     
     Use conf.printCuts to check the cuts in python
     The selections are available individually as MuSel, DSel and B0Sel
-    The Line object, a member of this class, holds the configured line
+    The lines() method, a member of this class, holds the configured line
     """
     
     Line=None
@@ -229,8 +221,7 @@ class Bd2DstarMuNuOneLineConf(object):
     DstarSel=None
     B0Sel=None
     
-    LineSuffix=''
-    
+        
     __configuration_keys__=[
         'Prescale',
         'Postscale',
@@ -258,19 +249,12 @@ class Bd2DstarMuNuOneLineConf(object):
         'B0dPV_DeltaZVtx'
         ]
     
-    def __init__(self, LineSuffix, config):
+    def __init__(self, name, config):
         '''The constructor of the configuration class.
-        Requires a name which is added to the end of each algorithm name, LineSuffix
+        Requires a name which is added to the end of each algorithm name,
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
-
-        from StrippingSelections.Utils import checkConfig
-        
-        checkConfig(Bd2DstarMuNuOneLineConf.__configuration_keys__,
-                    config)
-        
-        self.LineSuffix=LineSuffix
-        
+        LineBuilder.__init__(self, name, config)
         ### first we define the cuts from the configuration ###
         ### it's nice to see all the cuts in one place      ###
 
@@ -318,16 +302,15 @@ class Bd2DstarMuNuOneLineConf(object):
         self.__MakeB0d__()
         
         from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import SelectionSequence
         
-        #SeqBd2DstarMuNu = SelectionSequence("SeqBd2DstarMuNu"+self.LineSuffix, TopSelection = self.B0Sel)
         ### Now make a stripping line ###
-        B0dLine=StrippingLine("Bd2DstarMuNu"+self.LineSuffix,
+        B0dLine=StrippingLine("Bd2DstarMuNu"+self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.B0Sel ]
                               )
         
+        self.registerLine(B0dLine)
         ### Collect them all together in a nice way ###
         self.Line=B0dLine
         #self.TopSelectionSeq=SeqBd2DstarMuNu
@@ -335,7 +318,7 @@ class Bd2DstarMuNuOneLineConf(object):
         
     def printCuts(self):
         '''Print the compiled cut values'''
-        print 'name', self.LineSuffix
+        print 'name', self._name
         print 'MuCut', self.MuCut
         print 'KCut', self.KCut
         print 'PiCut', self.PiCut
@@ -353,14 +336,13 @@ class Bd2DstarMuNuOneLineConf(object):
         """
         the bachelor muon selection, takes some keyword arguements to make a muon selection
         """
-        from Configurables import FilterDesktop
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseMuons
 
-        MuForB0d = FilterDesktop(self.LineSuffix+"MuForB0d")
-        MuForB0d.Code = self.MuCut
-        MyStdMuons = DataOnDemand(Location = 'Phys/StdLooseMuons')
-        SelMuForB0d = Selection("SelMuForBd2DstarMuNu"+self.LineSuffix,
-                                Algorithm=MuForB0d, RequiredSelections = [MyStdMuons])
+        MuForB0d = FilterDesktop(Code=self.MuCut)
+        SelMuForB0d = Selection("SelMuFor"+self._name,
+                                Algorithm=MuForB0d, RequiredSelections = [StdLooseMuons])
         
         self.MuSel=SelMuForB0d
 
@@ -370,28 +352,23 @@ class Bd2DstarMuNuOneLineConf(object):
         Here [D0 -> K+ pi-]cc
         Which can be assosciated in this selection to:
         """
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseKaons, StdLoosePions
         
-        D02KpiForB0d = CombineParticles(self.LineSuffix+"D02KpiForB0q")
-        D02KpiForB0d.DecayDescriptor = "[D0 -> K- pi+]cc " 
-        D02KpiForB0d.DaughtersCuts = {
-            "K+"  : self.KCut,
-            "pi+" : self.PiCut
-            } 
-        D02KpiForB0d.CombinationCut = self.D0CombCut
-        D02KpiForB0d.MotherCut = self.D0Cut
+        D02KpiForB0d = CombineParticles(
+            DecayDescriptor = "[D0 -> K- pi+]cc " ,
+            DaughtersCuts = {
+                "K+"  : self.KCut,
+                "pi+" : self.PiCut
+                } ,
+            CombinationCut = self.D0CombCut,
+            MotherCut = self.D0Cut
+            )        
         
-        D02KpiForB0d.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        MyStdLooseKaonsForD0 = DataOnDemand(Location = 'Phys/StdLooseKaons')
-        MyStdLoosePionsForD0 = DataOnDemand(Location = 'Phys/StdLoosePions')
-        
-        SelD02KpiForB0d = Selection("SelD02KpiForB0d"+self.LineSuffix,
+        SelD02KpiForB0d = Selection("SelD02KpiFor"+self._name,
                                     Algorithm=D02KpiForB0d,
-                                    RequiredSelections = [MyStdLooseKaonsForD0,MyStdLoosePionsForD0])
+                                    RequiredSelections = [StdLooseKaons,StdLoosePions])
         
         self.D0Sel=SelD02KpiForB0d
     
@@ -401,27 +378,22 @@ class Bd2DstarMuNuOneLineConf(object):
         Here [D*(2010)+ -> pi+ D0]cc
         
         """
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
         
-        DstarForB0d = CombineParticles(self.LineSuffix+"DstarForB0d")
-        DstarForB0d.DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc" 
-        DstarForB0d.DaughtersCuts = {
-            "pi+" : self.slowPiCut
-            } 
-        DstarForB0d.CombinationCut = self.DstarCombCut
-        DstarForB0d.MotherCut = self.DstarCut
-        
-        DstarForB0d.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-
-        MyStdLoosePionsForDstar = DataOnDemand(Location = 'Phys/StdLoosePions')
-        
-        SelDstarForB0d = Selection("SelDstarForB0d"+self.LineSuffix,
+        DstarForB0d = CombineParticles(
+            DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc" ,
+            DaughtersCuts = {
+                "pi+" : self.slowPiCut
+                } ,
+            CombinationCut = self.DstarCombCut,
+            MotherCut = self.DstarCut
+            )
+                
+        SelDstarForB0d = Selection("SelDstarFor"+self._name,
                                     Algorithm=DstarForB0d,
-                                    RequiredSelections = [self.D0Sel,MyStdLoosePionsForDstar])
+                                    RequiredSelections = [self.D0Sel,StdLoosePions])
         
         self.DstarSel=SelDstarForB0d
     
@@ -431,22 +403,16 @@ class Bd2DstarMuNuOneLineConf(object):
         [B0 -> D*- mu+]cc, [B0 -> D*+ mu+]cc
         use of wrong charge combination is useful for background subtraction
         """
-        from Configurables import CombineParticles
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        CombBd2DstarMuNu = CombineParticles(self.LineSuffix+'CombBd2DstarMuNu')
+        CombBd2DstarMuNu = CombineParticles(        
+            DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"], #includes wrong charges
+            CombinationCut = self.BCombCut,
+            MotherCut      = self.BCut
+            )
         
-        CombBd2DstarMuNu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"] #includes wrong charges
-        
-        CombBd2DstarMuNu.CombinationCut = self.BCombCut
-        
-        CombBd2DstarMuNu.MotherCut      = self.BCut
-        
-        CombBd2DstarMuNu.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        SelBd2DstarMuNu = Selection("SelBd2DstarMuNu"+self.LineSuffix, Algorithm=CombBd2DstarMuNu,
+        SelBd2DstarMuNu = Selection("Sel"+self._name, Algorithm=CombBd2DstarMuNu,
                                     RequiredSelections = [self.MuSel,self.DstarSel])
         
         self.B0Sel=SelBd2DstarMuNu

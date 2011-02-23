@@ -9,6 +9,7 @@
  - Added test for all semileptonic lines that they are in the new
    framework, tests/test_semileptonic.py
    This also serves as a coded example on how to instantiate all lines
+ - Updated StrippingBd2DstarMuNu to the new framework
 
 !========================== StrippingSelections v3r0 2011-02-23 ===============
 
