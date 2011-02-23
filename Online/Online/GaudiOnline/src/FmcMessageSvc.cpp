@@ -97,6 +97,11 @@ void LHCb::FmcMessageSvc::changeFifo(Property& ) {
     close(fifoFD);
     fifoFD = NO_FIFO;
   }
+  if ( m_pName ) {
+    m_hostName[0] = 0;
+    delete m_pName;
+    m_pName = 0;
+  }
   openFifo();
 }
 
