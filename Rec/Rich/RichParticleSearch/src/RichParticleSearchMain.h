@@ -3,27 +3,15 @@
 #define RICHPARTICLESEARCHMAIN_H 1
 
 // Include files
-//#include <CheckPV.h>
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-
-#include "Kernel/RichRadiatorType.h"
-#include "Event/RichRecSegment.h"
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/IAlgTool.h"
 
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/MCRichOpticalPhoton.h"
-#include "Event/RichRecTrack.h"
-#include "Event/Track.h"
-#include "Event/Particle.h"
-#include "Event/RecVertex.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -36,31 +24,22 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichIsolatedTrack.h"
-#include "RichKernel/IRichRefractiveIndex.h"
-#include "RichRecBase/IRichRecGeomTool.h"
-#include "IMuonInformation.h"
 #include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
+
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
-#include "RichDet/DeRichHPD.h"
-#include "RichDet/DeRichLocations.h"
-#include "RichDet/DeRich.h"
 
 // Kernel
 #include "RichKernel/BoostArray.h"
-#include "RichKernel/RichSmartIDCnv.h"
-#include "RichKernel/IRichSmartIDTool.h"
-#include <RichKernel/IRichRayTracing.h>
-#include <Kernel/IOnOffline.h>
-//#include "Kernel/DVAlgorithm.h"
-//#include "Kernel/DVAlgorithm.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
 #include <boost/foreach.hpp>
-#include "boost/format.hpp"
 #include "boost/assign/list_of.hpp"
 
+//My Interfaces
+
+#include "IMuonInformation.h"
 
 //class IOnOffline;
 
@@ -105,8 +84,8 @@ namespace Rich
         bool m_useMCTruth;
 
         // particle type when fixed
-        int m_particleType;
-        Rich::ParticleIDType m_pType;
+       // int m_particleType;
+       // Rich::ParticleIDType m_pType;
 
         // keep totals of particle types
         // std::vector<int> m_pTypes;
@@ -116,12 +95,10 @@ namespace Rich
 
         // tools
         const ITrackSelector* m_trSelector;        ///< Track selector
-        const IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
         const IParticleProperties* m_richPartProp; ///< Rich Particle properties
         const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
         const IIsolatedTrack * m_isoTrack; ///< Pointer to isolated track tool
-        const IRefractiveIndex* m_refractiveIndex;
-        const IGeomTool* m_geomTool;
         const ITrackEffectiveRefractiveIndex * m_tkIndex;
         IMuonInformation* m_MuonInformation;
 
@@ -145,14 +122,13 @@ namespace Rich
         //whether to use Muon information
         bool m_useMuonInfo;
 
-        std::string m_tracksInContainer;
-        mutable LHCb::MuonPID m_pid;
+       // std::string m_tracksInContainer;
+      //  mutable LHCb::MuonPID m_pid;
 
         // mcoombes event counter
         int EvtNum;
 
         int m_tkTotal;
-
       };
 
       // Get an interger value for each RICH radiator

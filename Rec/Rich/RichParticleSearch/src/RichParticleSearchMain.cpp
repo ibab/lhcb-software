@@ -42,8 +42,7 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
       m_richPartProp      ( NULL ),
       m_ckAngle           ( NULL ),
       m_isoTrack          ( NULL ),
-      m_refractiveIndex   ( NULL )
-
+      m_tkIndex			  ( NULL )
 {
 
   // Maximum number of tracks
@@ -51,7 +50,7 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   declareProperty( "UseMCTruth",    m_useMCTruth   = false );
   declareProperty( "Radiator",   m_radTemp = 2 ); // default is Rich2
   declareProperty( "HistoOutputLevel", m_histoOutputLevel = 0 );
-  declareProperty( "ParticleType",     m_particleType = 2 ); // pion
+  //declareProperty( "ParticleType",     m_particleType = 2 ); // pion
   //               (Aerogel) (R1Gas) (R2Gas)
   declareProperty( "MinIsolationCut",     m_IsoCut       = boost::assign::list_of (150) (100) (100), "IsolationCuts for each Radiator in mm");
   declareProperty( "MaxBeta",       m_maxBetaCut   = boost::assign::list_of (0.99985)(0.99985)(0.99985),"beta cut");
@@ -82,12 +81,11 @@ StatusCode RichParticleSearchMain::initialize() {
   // get track selector
   acquireTool( "TrackSelector", m_trSelector, this );
   acquireTool( "RichIsolatedTrack", m_isoTrack     );
-  acquireTool( "RichRefractiveIndex", m_refractiveIndex    );
-  acquireTool( "RichRecGeometry",         m_geomTool    );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
 
+
   if ( m_useMCTruth ) {
-    info()<<"Use MC in ParticleSearch"<<endmsg;
+    debug()<<"Use MC in ParticleSearch"<<endmsg;
     acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
     acquireTool( "RichParticleProperties", m_richPartProp );
   }
@@ -96,20 +94,22 @@ StatusCode RichParticleSearchMain::initialize() {
   EvtNum =0;
   m_tkTotal = 0;
 
+  debug()<<"IsoCuts "<<m_IsoCut<<endmsg;
 
-
-  info()<<"IsoCuts "<<m_IsoCut<<endmsg;
-
-  info()<<"MaxRichRecTracks "<<m_maxUsedTracks<<endmsg;
+  debug()<<"MaxRichRecTracks "<<m_maxUsedTracks<<endmsg;
 
   m_radiator = static_cast<Rich::RadiatorType>(m_radTemp);
   debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
 
-  m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
-  debug() << "Fixed particle type:" << m_pType << endmsg;
+ // m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
+  //debug() << "Fixed particle type:" << m_pType << endmsg;
 
 
   const std::string RAD = Rich::text(m_radiator);
+
+  if (m_useMuonInfo){
+	  StatusCode scM = m_MuonInformation->initialize();
+  }
 
   debug() << "Finished Initialization" << endmsg;
   return StatusCode::SUCCESS;
@@ -131,7 +131,7 @@ StatusCode RichParticleSearchMain::execute() {
     {
       return Error( "Problem Making Tracks" );
     }
-    debug() << "No tracks found : Created " << richTracks()->size()
+    debug () << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endmsg;
   }
@@ -161,7 +161,7 @@ StatusCode RichParticleSearchMain::execute() {
             << richPhotons()->size() << " RichRecPhotons" << endmsg;
   }
   int trackCounter =0;
-  // info()<< "Event "<<EvtNum<<endmsg;
+  debug()<< "Event "<<EvtNum<<endmsg;
 
   //Get int for RICH; 0 Aerogel; 1 RICH1Gas; 2 Rich2Gas
   const int RICHint = GetRichInt();
@@ -183,9 +183,6 @@ StatusCode RichParticleSearchMain::execute() {
 
     const std::string RAD = Rich::text(rad);
 
-    // track selection
-    // if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
-
     trackCounter++;
 
     m_tkTotal++;
@@ -194,28 +191,17 @@ StatusCode RichParticleSearchMain::execute() {
     int MCtype(-1);
 
     if ( m_useMCTruth ) {
-      debug()<< "trackCounter "<<trackCounter<<endmsg;
+   //   debug()<< "trackCounter "<<trackCounter<<endmsg;
       // Get true beta from true particle type
 
       const ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
       debug()<< "mcType: "<<mcType<<endmsg;
-      // debug() << "mcType:" << mcType << endmsg;
 
-      //  m_pTypes[mcType]++;
-
-      //const double beta = m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
-
-      // Expected Cherenkov theta angle for true particle type
-      //thetaExpTrue =  m_ckAngle->avgCherenkovTheta( segment, mcType );
       //assign nmber to each type of true particle to store in NTuple
       MCtype = (int) mcType;
-
-      //  m_pTypes[MCtype]++;
-
     }//end if use truth
 
     double pt=0.0;
-    //   double refIndx =0.0;
     double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
  
     int numberOfUsedTracks = 0;
@@ -226,7 +212,6 @@ StatusCode RichParticleSearchMain::execute() {
     const double trChi2 = track->chi2();
 
     const int TrackType = (int) track->type();
-
 
     // T Hampson - added this line
     numberOfUsedTracks=(int)richTracks()->size();
@@ -246,9 +231,8 @@ StatusCode RichParticleSearchMain::execute() {
     double MinimumTrackSeperation = this->MinimumTrackSeparation(segment);
     if (MinimumTrackSeperation>m_IsoCut[RICHint]){
 
-      // Loop over photons to make photon Cut of maximum number of photons per track
+      // Loop over photons to make photon Cut of maximum number of photons per track etc
       // ============================================================================================//
-
       int PhotonCounter =0;
       int TruePhotonCounter =0;
       double thetaRecSum = 0.0;
@@ -281,31 +265,30 @@ StatusCode RichParticleSearchMain::execute() {
           TruePhotonCounter++;
         }
 
-
         if (PhotonCounter>150){
+        //  info()<<"More than 150 photons"<<endmsg;
           break;
         } //END photon cut
-
-
       }// end photon counter loop
 
-      //double stdDevMass = 0.0;
-      //double avTrackMass = 0.0;
 
-      if (PhotonCounter>2 && PhotonCounter<149){
+      if (PhotonCounter>0 && PhotonCounter<149){
         double AvThetaRec = thetaRecSum/PhotonCounter;
-        double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
-        if (AvThetaRec > m_minCK[RICHint]  && avBetaTk <= 1.00){
+        if (AvThetaRec > m_minCK[RICHint]){
+        	double CKVariance = 0.0;
+        	double thetaRecSumRemoval =0.0;
 
-          //    avTrackMass = trackMassSum/PhotonCounter;
-          double avTrackMass = momentum * std::sqrt((1/(std::pow(avBetaTk,2)))-1.0);
-          double stdDevCKsq = 0.0;
-          for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
-            stdDevCKsq = stdDevCKsq + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
-          }
-          double stdDevCK = std::pow(stdDevCKsq/(PhotonCounter-1), 0.5);
+        	for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
+        		CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
+        	}// end iterator
 
-          if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut[RICHint] ){
+
+        	double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
+        	//    avTrackMass = trackMassSum/PhotonCounter;
+        	double avTrackMass = momentum * std::sqrt((1/(std::pow(avBetaTk,2)))-1.0);
+        	double stdDevCK = std::pow(CKVariance/(PhotonCounter-1), 0.5);
+
+        	if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut[RICHint] ){
             /*
               vector<double>::iterator it2;
               double stdDevMassSq = 0.0;
@@ -333,7 +316,7 @@ StatusCode RichParticleSearchMain::execute() {
               if (m_useMuonInfo){
 
                 //Loop over proto particles
-                StatusCode scM = m_MuonInformation->initialize();
+                //StatusCode scM = m_MuonInformation->initialize();
                 hasMuonPID = m_MuonInformation->HasMuonInformation(track);
               }
 
@@ -378,9 +361,9 @@ StatusCode RichParticleSearchMain::execute() {
                   // Cherenkov angles
                   const double thetaRec = gPhoton.CherenkovTheta();
 
-                  bool trueParent( false );
+                  bool trueParent2( false );
                   if ( m_useMCTruth ) {
-                    trueParent = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
+                    trueParent2 = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
                   }
                   //track Beta = v/c
                   double beta = 1.0/(cos(thetaRec)*refIndx);
@@ -388,6 +371,7 @@ StatusCode RichParticleSearchMain::execute() {
                   double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
 
                   if (beta <= m_maxBetaCut[RICHint] && beta >=1.0/refIndx && thetaRec > m_minCK[RICHint]){
+
                     if ( m_histoOutputLevel > 1 ){
 
                       //Make Plots per track
@@ -400,8 +384,9 @@ StatusCode RichParticleSearchMain::execute() {
                       photonTuple->column( "CKangle"      , thetaRec        );
                       photonTuple->column( "tkNum",trackCounter);
                       photonTuple->column( "mass"          , mass           );
-                      photonTuple->column( "TrueParent", trueParent );
+                      photonTuple->column( "TrueParent", trueParent2 );
                       photonTuple->column( "EvtNum", EvtNum);
+
 
                       /*
                         if (m_useMCTruth){

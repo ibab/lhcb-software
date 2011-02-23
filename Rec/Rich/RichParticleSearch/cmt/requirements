@@ -3,7 +3,7 @@
 # Maintainer : Matt Coombes
 #============================================================================
 package           RichParticleSearch
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,17 +17,17 @@ branches          cmt doc src
 use  RichRecBase          v*    Rich
 use  MCEvent              v*    Event
 use  MCInterfaces         v*    Kernel
-#use  MuonID               v*    Muon
+
 
 private
-use GaudiObjDesc v* -no_auto_imports
+#use GaudiObjDesc v* -no_auto_imports
 end_private
 
 #include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          RichParticleSearch    ../src/*.cpp 
+library          RichParticleSearch    ../src/*.cpp  -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================

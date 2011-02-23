@@ -51,25 +51,25 @@ class RichParticleSearchConf(RichConfigurableUser):
         # Mirror Alignment monitor for Aerogel
         #-------------------------------------------------------------------------------
         if "Aerogel" in self.getProp("Radiators") :
-            RichAlignMoniAerogel = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchAerogel")
-            sequence.Members += [RichAlignMoniAerogel]
+            RichPartSearchAerogel = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchAerogel")
+            sequence.Members += [RichPartSearchAerogel]
 
-            RichAlignMoniAerogel.UseMCTruth      = self.getProp("WithMC")
-            RichAlignMoniAerogel.Radiator        = 0   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichPartSearchAerogel.UseMCTruth      = self.getProp("WithMC")
+            RichPartSearchAerogel.Radiator        = 0   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
         
 
             # Track selector
             trselname = "TrackSelector"
-            RichAlignMoniAerogel.addTool( self.richTools().trackSelector(trselname), name=trselname )
+            RichPartSearchAerogel.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniAerogel.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichPartSearchAerogel.TrackSelector.TrackAlgs = [ "Match","Forward" ]
             aeroMinPCut = self.getProp("MinTrackMomentum")[0]
-            RichAlignMoniAerogel.TrackSelector.MinPCut   = aeroMinPCut
+            RichPartSearchAerogel.TrackSelector.MinPCut   = aeroMinPCut
 
-            RichAlignMoniAerogel.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
-            RichAlignMoniAerogel.HistoProduce  = self.getProp("Histograms") != "None"
+            RichPartSearchAerogel.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
+            RichPartSearchAerogel.HistoProduce  = self.getProp("Histograms") != "None"
 
-            RichAlignMoniAerogel.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            RichPartSearchAerogel.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
             
@@ -80,24 +80,24 @@ class RichParticleSearchConf(RichConfigurableUser):
         #-------------------------------------------------------------------------------
         if "Rich1Gas" in self.getProp("Radiators") :
 
-            RichAlignMoniR1 = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchR1Gas")
-            sequence.Members += [RichAlignMoniR1]
+            RichPartSearchR1 = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchR1Gas")
+            sequence.Members += [RichPartSearchR1]
 
-            RichAlignMoniR1.UseMCTruth      = self.getProp("WithMC")
-            RichAlignMoniR1.Radiator        = 1   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichPartSearchR1.UseMCTruth      = self.getProp("WithMC")
+            RichPartSearchR1.Radiator        = 1   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
 
             # Track selector
             trselname = "TrackSelector"
-            RichAlignMoniR1.addTool( self.richTools().trackSelector(trselname), name=trselname )
+            RichPartSearchR1.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichPartSearchR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
             r1MinPCut = self.getProp("MinTrackMomentum")[1]
-            RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
+            RichPartSearchR1.TrackSelector.MinPCut   = r1MinPCut
 
-            RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
-            RichAlignMoniR1.HistoProduce  = self.getProp("Histograms") != "None"
+            RichPartSearchR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
+            RichPartSearchR1.HistoProduce  = self.getProp("Histograms") != "None"
 
-            RichAlignMoniR1.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            RichPartSearchR1.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
            
@@ -108,24 +108,24 @@ class RichParticleSearchConf(RichConfigurableUser):
         #-------------------------------------------------------------------------------
         if "Rich2Gas" in self.getProp("Radiators") :
 
-            RichAlignMoniR2 = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchR2Gas")
-            sequence.Members += [RichAlignMoniR2]
+            RichPartSearchR2 = Rich__Rec__MC__RichParticleSearchMain("RichParticleSearchR2Gas")
+            sequence.Members += [RichPartSearchR2]
 
-            RichAlignMoniR2.UseMCTruth      = self.getProp("WithMC")
-            RichAlignMoniR2.Radiator        = 2   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
+            RichPartSearchR2.UseMCTruth      = self.getProp("WithMC")
+            RichPartSearchR2.Radiator        = 2   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
 
             # Track selector
             trselname = "TrackSelector"
-            RichAlignMoniR2.addTool( self.richTools().trackSelector(trselname), name=trselname )
+            RichPartSearchR2.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichPartSearchR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
             r2MinPCut = self.getProp("MinTrackMomentum")[2]
-            RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
+            RichPartSearchR2.TrackSelector.MinPCut   = r2MinPCut
 
-            RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
-            RichAlignMoniR2.HistoProduce  = self.getProp("Histograms") != "None"
+            RichPartSearchR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
+            RichPartSearchR2.HistoProduce  = self.getProp("Histograms") != "None"
 
-            RichAlignMoniR2.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            RichPartSearchR2.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
       #      RichAlignMoniR2.HPDList = self.getProp("HPDList")[2]
 
