@@ -361,7 +361,8 @@ DimServerDns::~DimServerDns()
 	if(itsName)
 	{
 		DimServer::stop(this);
-		delete[] itsName;
+//		if(itsName)
+//			delete[] itsName;
 	}
 	if(itsNode)
 		delete[] itsNode;
@@ -378,6 +379,15 @@ void DimServerDns::setName(const char *name)
 	{
 		itsName = new char[strlen(name)+1];
 		strcpy(itsName,name);
+	}
+}
+
+void DimServerDns::clearName()
+{
+	if(itsName)
+	{
+		delete[] itsName;
+		itsName = 0;
 	}
 }
 
@@ -497,11 +507,17 @@ void DimServer::start(DimServerDns *dns)
 void DimServer::stop()
 {
 	dis_stop_serving();
+	if(itsName)
+	{
+		delete(itsName);
+		itsName = 0;
+	}
 }
 
 void DimServer::stop(DimServerDns *dns)
 {
 	dis_stop_serving_dns(dns->getDnsId());
+	dns->clearName();
 }
 
 void DimServer::autoStartOn()

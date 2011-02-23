@@ -66,6 +66,7 @@ public:
 	long getDnsId();
 	void setName(const char *name);
 	char *getName();
+	void clearName();
 	void autoStartOn();
 	void autoStartOff();
 	int isAutoStart();

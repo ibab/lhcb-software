@@ -189,10 +189,8 @@ int dim_dtq_init(int thr_flag)
 
 void dim_dtq_stop()
 {
-
+/*
 	int i;
-
-	scan_it();
 	for(i = 0; i < MAX_TIMER_QUEUES + 2; i++)
 	{
 		if( timer_queues[i].queue_head != NULL)
@@ -201,6 +199,14 @@ void dim_dtq_stop()
 			free((TIMR_ENT *)timer_queues[i].queue_head);
 			timer_queues[i].queue_head = 0;
 		}
+	}
+*/
+	scan_it();
+	if( timer_queues[WRITE_QUEUE].queue_head != NULL)
+	{
+		dtq_delete(WRITE_QUEUE);
+		free((TIMR_ENT *)timer_queues[WRITE_QUEUE].queue_head);
+		timer_queues[WRITE_QUEUE].queue_head = 0;
 	}
 	sigvec_done = 0;
 }

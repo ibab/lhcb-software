@@ -333,10 +333,6 @@ int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_mi
 				node_info[strlen(node_info)+i+1] = (char)0xff;
 			connp->conn_id = 0;
 			connp->connecting = 1;
-			/*
-			  dim_print_date_time();
-			  printf("Trying DNS %s\n", node_info);
-			*/
 			conn_id = dna_open_client( node_info, DNS_TASK, dns_port,
 						 TCPIP, recv_rout, error_rout, src_type );
 			connp->connecting = 0;
@@ -348,15 +344,11 @@ int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_mi
 		connp->conn_id = conn_id;
 		if(!conn_id)
 		{
+			strncpy(connp->task_name, DNS_TASK, MAX_TASK_NAME); 
 			connp->recv_rout = recv_rout;
 			connp->error_rout = error_rout;
 			connp->pending = 1;
 			timeout = rand_tmout( tmout_min, tmout_max );
-			/*
-			dim_print_date_time();
-			printf("DNS failed, retrying in %d secs.\n", timeout);
-			*/
-			strncpy(connp->task_name, DNS_TASK, MAX_TASK_NAME); 
 			connp->timr_ent = dtq_add_entry( Timer_q, timeout,
 				retry_dns_connection,
 				connp );
@@ -376,10 +368,7 @@ void retry_dns_connection( DNS_CONN *connp )
 	register int conn_id, node_exists;
 	static int retrying = 0;
 	int i, dns_port;
-	/*
-	dim_print_date_time();
-	printf("In Re-Trying DNS...\n");
-	*/
+
 	if( retrying ) return;
 	retrying = 1;
 
@@ -401,10 +390,6 @@ void retry_dns_connection( DNS_CONN *connp )
 				node_info[strlen(node_info)+i+1] = (char)0xff;
 			connp->conn_id = 0;
 			connp->connecting = 1;
-			/*
-			dim_print_date_time();
-			printf("Re-Trying DNS %s\n", node_info);
-			*/
 			conn_id = dna_open_client( node_info, connp->task_name,
 					 dns_port, TCPIP,
 					 connp->recv_rout, connp->error_rout, connp->src_type );

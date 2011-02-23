@@ -209,11 +209,11 @@ void dim_stop()
 	sem_close(DIM_WAIT_Semap);
 	*/
 #endif
-	dim_tcpip_stop();
 	if(IO_thread) 
 		pthread_join(IO_thread,0);
 	if(ALRM_thread) 
 		pthread_join(ALRM_thread,0);
+	dim_tcpip_stop();
 	dim_dtq_stop();	
 	IO_thread = 0;
 	ALRM_thread = 0;
