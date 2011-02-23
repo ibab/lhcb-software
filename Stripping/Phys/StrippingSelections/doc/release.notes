@@ -10,6 +10,8 @@
    framework, tests/test_semileptonic.py
    This also serves as a coded example on how to instantiate all lines
  - Updated StrippingBd2DstarMuNu to the new framework
+ - Updated StrippingBd2DstarTauNu to the new framework
+   (Bd2DstarTauNu doesn't pass all the tests yet)
 
 !========================== StrippingSelections v3r0 2011-02-23 ===============
 

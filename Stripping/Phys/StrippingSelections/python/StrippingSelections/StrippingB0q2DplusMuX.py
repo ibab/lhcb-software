@@ -192,8 +192,7 @@ class B0q2DplusMuXAllLinesConf(MasterLineBuilder):
     def __init__(self, name, config):
         '''In the constructor we make all the lines, and configure them all
         name is the initial name of the lines, i.e. B0q2DplusMuX
-        config is the dictionary of {LineSuffix : configuration}
-        offlines is a list of lines to turn off'''
+        config is the dictionary of {LineSuffix : configuration}'''
         MasterLineBuilder.__init__(self, name, config, B0q2DplusMuXOneLineConf)
         
     def printCuts(self):

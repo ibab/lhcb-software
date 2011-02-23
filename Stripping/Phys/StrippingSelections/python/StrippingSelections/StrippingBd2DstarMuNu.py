@@ -304,7 +304,7 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
         
         ### Now make a stripping line ###
-        B0dLine=StrippingLine("Bd2DstarMuNu"+self._name,
+        B0dLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.B0Sel ]

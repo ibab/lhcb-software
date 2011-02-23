@@ -38,7 +38,7 @@ To look at all the configurable cuts, see StrippingBd2DstarTauNu.confdict
 
 To configure all lines, just instantiate the class:
 
-all=Bd2DstarTauNuAllLinesConf(confdict)
+all=Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu",confdict)
 
 Then to print all cuts do:
 
@@ -46,15 +46,11 @@ all.printCuts()
 
 You can configure one line at a time with the Bd2DstarTauNuOneLineConf class:
 
-one=Bd2DstarTauNuOneLineConf('Loose',confdict['Loose'])
+one=Bd2DstarTauNuOneLineConf("Bd2DstarTauNu"+"Loose",confdict["Loose"])
 '''
 __author__ = [ 'Anne Keune' ]
 __date__ = '2010-10-26'
 __version = '$Revision: 1.6 $'
-
-#### Which VertexFitter to use? ####
-
-combiner='OfflineVertexFitter'
 
 #### Next is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
@@ -167,10 +163,11 @@ confdict={
     }
 
 
+from StrippingUtils.Utils import LineBuilder, MasterLineBuilder
 
+name="Bd2DstarTauNu"
 
-
-class Bd2DstarTauNuAllLinesConf(object):
+class Bd2DstarTauNuAllLinesConf(MasterLineBuilder):
     """
     Configuration object for both Bd2DstarTauNu lines
 
@@ -181,46 +178,35 @@ class Bd2DstarTauNuAllLinesConf(object):
     configdict={'LineNameSuffix' : {...},
                 'LineNameSuffix2': {...} }
     
-    Bd2DstarTauNuAllLinesConf(config, offLines=[] )
+    Bd2DstarTauNuAllLinesConf(name, config )
     
-    To turn off lines which otherwise would be created, add the name
-    of the line to offLines.
     
     To only configure/run one line, it's better to use the Bd2DstarTauNuOneLineConf class.
     
-    The created lines appear as a list in the Lines object, member variable
+    The created lines appear as a list in the lines() method
     
     To print out all the cuts, use the printCuts method
     """
     
-    Lines=[]
-    
-    confObjects={}
-    
-    def __init__(self, config, offLines=[]):
+    def __init__(self, name, config):
         '''In the constructor we make all the lines, and configure them all
-        config is the dictionary of {LineSuffix : configuration}
-        offlines is a list of lines to turn off'''
-        for aline in config.keys():
-            if aline not in offLines:
-                lineconf=Bd2DstarTauNuOneLineConf(aline, config[aline])
-                
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                
+        name is the initial name of the lines, i.e. Bd2DstarTauNu
+        config is the dictionary of {LineSuffix : configuration}'''
+        MasterLineBuilder.__init__(self, name, config, Bd2DstarTauNuOneLineConf)
+        
     def printCuts(self):
         '''Print out all the configured cuts for the lines you asked for'''
-        for aline in self.confObjects.keys():
+        for aline in self.slaves():
             print '===='
-            self.confObjects[aline].printCuts()
+            aline.printCuts()
             
 
-class Bd2DstarTauNuOneLineConf(object):
+class Bd2DstarTauNuOneLineConf(LineBuilder):
     """
     Configuration object for a Bd2DstarTauNu line
 
     usage: config={...}
-    Bd2DstarTauNuConf(LineSuffix, config)
+    Bd2DstarTauNuConf(name+LineSuffix, config)
     Will make lines ending in LineSuffix with the config configurations
     
     The cuts are configuration parameter only if they are different between the lines,
@@ -254,7 +240,6 @@ class Bd2DstarTauNuOneLineConf(object):
     DstarSel=None
     B0Sel=None
     
-    LineSuffix=''
     
     __configuration_keys__=[
         'Prescale',
@@ -310,18 +295,12 @@ class Bd2DstarTauNuOneLineConf(object):
         'B0dPV_DeltaZVtx'
         ]
     
-    def __init__(self, LineSuffix, config):
+    def __init__(self, name, config):
         '''The constructor of the configuration class.
-        Requires a name which is added to the end of each algorithm name, LineSuffix
+        Requires a name which is added to the end of each algorithm name
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
-
-        from StrippingSelections.Utils import checkConfig
-        
-        checkConfig(Bd2DstarTauNuOneLineConf.__configuration_keys__,
-                    config)
-        
-        self.LineSuffix=LineSuffix
+        LineBuilder.__init__(self, name, config)
         
         #Tau: Cuts for single pions
         self.PionCut = "(PT > %(SinglePiPT)s*MeV) & (MIPCHI2DV(PRIMARY)> %(SinglePiIPChi2)s )" %config
@@ -367,8 +346,8 @@ class Bd2DstarTauNuOneLineConf(object):
         self.totalDstarCut = self.DstarCut + self.KCut + self.PiCut + self.D0Cut + self.slowPiCut
 
         #new B0 Cuts:
-        self.BCombCut="(DAMASS('B0') > %(BdLowDM)s*MeV) & (DAMASS('B0') < %(BdHighDM)s*MeV)" %config
-        self.BCut = " (VFASPF(VCHI2/VDOF) > %(BdVxChi2)s) & (BPVDIRA > %(BdDira)s) & (D2DVVD(2)-D2DVVD(1)> %(VxOrder)s) &"\
+        self.B0CombCut="(DAMASS('B0') > %(BdLowDM)s*MeV) & (DAMASS('B0') < %(BdHighDM)s*MeV)" %config
+        self.B0Cut = " (VFASPF(VCHI2/VDOF) > %(BdVxChi2)s) & (BPVDIRA > %(BdDira)s) & (D2DVVD(2)-D2DVVD(1)> %(VxOrder)s) &"\
                     " (MINTREE(ABSID=='D0', VFASPF(VZ))-VFASPF(VZ) > %(B0dD0_DeltaZVtx)s*mm) & (BPVVDZ > %(B0dPV_DeltaZVtx)s*mm)" %config
 
         ### Now make all the selections ###
@@ -385,11 +364,12 @@ class Bd2DstarTauNuOneLineConf(object):
         from PhysSelPython.Wrappers import SelectionSequence
         
         ### Now make a stripping line ###
-        B0dLine=StrippingLine("Bd2DstarTauNu"+self.LineSuffix,
+        B0dLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.B0Sel ]
                               )
+        self.registerLine(B0dLine)
         
         ### Collect them all together in a nice way ###
         self.Line=B0dLine
@@ -397,7 +377,7 @@ class Bd2DstarTauNuOneLineConf(object):
         
     def printCuts(self):
         '''Print the compiled cut values'''
-        print 'name', self.LineSuffix
+        print 'name', self._name
         print 'PionCut', self.PionCut
         print 'DiPionCut', self.DiPionCut
         print 'DiPionCombCut', self.DiPionCombCut
@@ -415,13 +395,14 @@ class Bd2DstarTauNuOneLineConf(object):
 
     def __FilterDstars__(self):
 
-        from Configurables import FilterDesktop
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-        DstarsForB0d = FilterDesktop(self.LineSuffix+"DstarsForB0d")
-        DstarsForB0d.Code = self.totalDstarCut
+        DstarsForB0d = FilterDesktop(
+            Code = self.totalDstarCut
+            )
         MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi')
-        SelDstarsForB0d = Selection("SelDstarsForBd2DstarTauNu"+self.LineSuffix,
+        SelDstarsForB0d = Selection("SelDstarsFor"+self._name,
                                    Algorithm=DstarsForB0d, RequiredSelections = [MyStdDstars])
         
         self.DstarSel=SelDstarsForB0d
@@ -430,14 +411,14 @@ class Bd2DstarTauNuOneLineConf(object):
         """
         to speed up the selection, single pions are filtered before combinations are made.
         """
-        from Configurables import FilterDesktop
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
 
-        PionsForB0d = FilterDesktop(self.LineSuffix+"PionsForB0d")
-        PionsForB0d.Code = self.PionCut
-        MyStdPions = DataOnDemand(Location = 'Phys/StdLoosePions')
-        SelPionsForB0d = Selection("SelPionsForBd2DstarTauNu"+self.LineSuffix,
-                                   Algorithm=PionsForB0d, RequiredSelections = [MyStdPions])
+        PionsForB0d = FilterDesktop(Code = self.PionCut)
+        SelPionsForB0d = Selection("SelPionsFor"+self._name,
+                                   Algorithm=PionsForB0d, RequiredSelections = [StdLoosePions])
         
         self.PionSel=SelPionsForB0d
 
@@ -447,19 +428,16 @@ class Bd2DstarTauNuOneLineConf(object):
         [rho(770)0 -> pi+ pi-]cc, [rho(770)+ -> pi+ pi+]cc
         As we can cut on di-pion mass well, this cuts down on combinatorics and speeds up the stripping line.
         """
-        from Configurables import CombineParticles
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        PiPiForTau = CombineParticles(self.LineSuffix+'PiPiForTau')
-        PiPiForTau.DecayDescriptors = ["[rho(770)0 -> pi+ pi-]cc", "[rho(770)+ -> pi+ pi+]cc"]
-        PiPiForTau.CombinationCut = self.DiPionCombCut
-        PiPiForTau.MotherCut      = self.DiPionCut
+        PiPiForTau = CombineParticles(
+            DecayDescriptors = ["[rho(770)0 -> pi+ pi-]cc", "[rho(770)+ -> pi+ pi+]cc"],
+            CombinationCut = self.DiPionCombCut,
+            MotherCut      = self.DiPionCut
+            )
         
-        PiPiForTau.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        SelPiPiForTau = Selection("SelPiPiForTau"+self.LineSuffix, Algorithm=PiPiForTau,
+        SelPiPiForTau = Selection("SelPiPiFor"+self._name, Algorithm=PiPiForTau,
                                   RequiredSelections = [self.PionSel])
         
         self.PiPiSel=SelPiPiForTau
@@ -470,18 +448,15 @@ class Bd2DstarTauNuOneLineConf(object):
         [rho(770)0 -> pi+ pi-]cc, [rho(770)+ -> pi+ pi+]cc
         As we can cut on di-pion mass well, this cuts down on combinatorics and speeds up the stripping line.
         """
-        from Configurables import CombineParticles
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        Tau2PiPiPi = CombineParticles(self.LineSuffix+'Tau2PiPiPi')
-        Tau2PiPiPi.DecayDescriptors = ["[tau+ -> pi+ rho(770)0]cc", "[tau+ -> pi- rho(770)+]cc"]
-        Tau2PiPiPi.MotherCut      = self.TriPionCut
+        Tau2PiPiPi = CombineParticles(
+            DecayDescriptors = ["[tau+ -> pi+ rho(770)0]cc", "[tau+ -> pi- rho(770)+]cc"],
+            MotherCut      = self.TriPionCut
+            )
         
-        Tau2PiPiPi.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        SelTau2PiPiPi = Selection("SelTau2PiPiPi"+self.LineSuffix, Algorithm=Tau2PiPiPi,
+        SelTau2PiPiPi = Selection("SelTau2PiPiPiFor"+self._name, Algorithm=Tau2PiPiPi,
                                   RequiredSelections = [self.PionSel,self.PiPiSel])
         
         self.TauSel=SelTau2PiPiPi
@@ -492,22 +467,16 @@ class Bd2DstarTauNuOneLineConf(object):
         [B0 -> D*- tau+]cc, [B0 -> D*+ tau+]cc
         use of wrong charge combination is useful for background subtraction
         """
-        from Configurables import CombineParticles
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        CombBd2DstarTauNu = CombineParticles(self.LineSuffix+'CombBd2DstarTauNu')
+        CombBd2DstarTauNu = CombineParticles(        
+            DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc", "[B0 -> D*(2010)+ tau+]cc"],
+            CombinationCut = self.B0CombCut,
+            MotherCut      = self.B0Cut,
+            )
         
-        CombBd2DstarTauNu.DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc", "[B0 -> D*(2010)+ tau+]cc"]
-        
-        CombBd2DstarTauNu.CombinationCut = self.BCombCut
-        
-        CombBd2DstarTauNu.MotherCut      = self.BCut
-        
-        CombBd2DstarTauNu.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        SelBd2DstarTauNu = Selection("SelBd2DstarTauNu"+self.LineSuffix, Algorithm=CombBd2DstarTauNu,
+        SelBd2DstarTauNu = Selection("Sel"+self._name, Algorithm=CombBd2DstarTauNu,
                                     RequiredSelections = [self.DstarSel,self.TauSel])
         
         self.B0Sel=SelBd2DstarTauNu
