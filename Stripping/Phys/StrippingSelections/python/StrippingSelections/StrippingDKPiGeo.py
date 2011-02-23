@@ -23,7 +23,7 @@ __all__ = ('name', 'D0', 'sequence')
 
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 name = "DKPiGeo"
@@ -67,12 +67,10 @@ D0 = Selection ( "Sel"+name,
                )
 
 
-sequence = SelectionSequence("Seq"+name, TopSelection = D0)
-
 ############################################
 # Create StrippingLine with this selection #
 ############################################
 line = StrippingLine(name+"Line"
                           , prescale = 1.
-                          , algos = [ sequence ]
+                          , algos = [ D0 ]
                           )

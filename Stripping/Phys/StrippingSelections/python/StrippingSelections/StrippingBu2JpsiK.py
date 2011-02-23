@@ -13,7 +13,7 @@ and loose stripping selections.
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingBu2JpsiKConf(LHCbConfigurableUser):
     """
@@ -41,14 +41,12 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bu2JpsiKSel = self.Bu2JpsiK()
-	Bu2JpsiKSeq = SelectionSequence("SeqBu2JpsiK", TopSelection = Bu2JpsiKSel)
-	return StrippingLine('Bu2JpsiKLine', prescale = 1, algos = [Bu2JpsiKSeq])   
+	return StrippingLine('Bu2JpsiKLine', prescale = 1, algos = [Bu2JpsiKSel])   
      	
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bu2JpsiKSel = self.Bu2JpsiKLoose()
-	Bu2JpsiKSeq = SelectionSequence("SeqBu2JpsiKLoose", TopSelection = Bu2JpsiKSel)
-	return StrippingLine('Bu2JpsiKLooseLine', prescale = 1, algos = [Bu2JpsiKSeq])   
+	return StrippingLine('Bu2JpsiKLooseLine', prescale = 1, algos = [Bu2JpsiKSel])   
      	
     def Jpsi2MuMuLoose( self ):
         StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")

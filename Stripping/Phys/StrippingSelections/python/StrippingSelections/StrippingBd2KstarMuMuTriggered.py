@@ -279,11 +279,11 @@ def WrapSelection( name = None , alg = None ):
     """
     if hasattr( alg, 'InputLocations' ):
         _requires = []
-        for loc in alg.InputLocations:
+        for loc in alg.Inputs:
             if 'Phys/' in loc: _requires += [ DataOnDemand( Location = loc ) ]
             else : _requires += [ DataOnDemand( Location = "Phys/" + loc ) ]
 
-        alg.InputLocations = []
+        alg.Inputs = []
         _sel = Selection( "Sel"+name , RequiredSelections = _requires, Algorithm = alg )
         return _sel
     else:

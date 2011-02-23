@@ -4,7 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingSelections v3r0 2011-02-22 ===============
+!========================== StrippingSelections v3r0 2011-02-23 ===============
+
+! 2011-02-23 - Juan Palacios
+ - Remove use of SelectionSequence in many old lines.
 
 ! 2011-02-22 - Juan Palacios
  - Add StrippingB2DMuNuX to modules imported in __init__.py

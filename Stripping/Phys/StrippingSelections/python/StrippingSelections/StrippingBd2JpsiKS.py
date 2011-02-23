@@ -15,7 +15,7 @@ __all__ = ('name', 'Bd_KSLL', 'Bd_KSDD', 'seqLL', 'seqDD')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 #import GaudiKernel.SystemOfUnits as Units
 
 name = "Bd2JpsiKS"
@@ -67,15 +67,6 @@ Bd_KSDD = Selection ("SelBDD"+name,
                      Algorithm = _Bd_KSDD,
                      RequiredSelections = [_stdKSDD, SelJPsi2MuMu])
 
-##############################
-# build the Sel Sequence     #
-##############################
-seqLL = SelectionSequence("SeqLL"+name, 
-                          TopSelection = Bd_KSLL)
-seqDD = SelectionSequence("SeqDD"+name, 
-                          TopSelection = Bd_KSDD)
-
-
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 ############################################
@@ -83,10 +74,10 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 ############################################
 line1 = StrippingLine(name+'_KSLL_Line'
                , prescale = 1
-               , algos = [seqLL]
+               , algos = [Bd_KSLL]
                , postscale = 1)
 
 line2 = StrippingLine(name+'_KSDD_Line'
                , prescale = 1
-               , algos = [seqDD]
+               , algos = [Bd_KSDD]
                , postscale = 1)

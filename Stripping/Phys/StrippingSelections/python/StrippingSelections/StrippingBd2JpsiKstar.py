@@ -13,7 +13,7 @@ and looser stripping selections.
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
     """
@@ -46,14 +46,12 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bd2JpsiKstarSel = self.Bd2JpsiKstar()
-	Bd2JpsiKstarSeq = SelectionSequence("SeqBd2JpsiKstar", TopSelection = Bd2JpsiKstarSel)
-	return StrippingLine('Bd2JpsiKstarLine', prescale = 1, algos = [Bd2JpsiKstarSeq])   
+	return StrippingLine('Bd2JpsiKstarLine', prescale = 1, algos = [Bd2JpsiKstarSel])   
      	
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bd2JpsiKstarSel = self.Bd2JpsiKstarLoose()
-	Bd2JpsiKstarSeq = SelectionSequence("SeqBd2JpsiKstarLoose", TopSelection = Bd2JpsiKstarSel)
-	return StrippingLine('Bd2JpsiKstarLooseLine', prescale = 1, algos = [Bd2JpsiKstarSeq])   
+	return StrippingLine('Bd2JpsiKstarLooseLine', prescale = 1, algos = [Bd2JpsiKstarSel])   
      
     def Jpsi2MuMuLoose( self ):
         StdVeryLooseJpsi2MuMu = DataOnDemand(Location = "Phys/StdVeryLooseJpsi2MuMu")

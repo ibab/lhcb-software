@@ -70,23 +70,6 @@ MuMuSS4 = Selection( "Sel"+name+"4",
                   RequiredSelections = [_muons]
                   )
 
-
-
-
-# build the SelectionSequence
-sequence1 = SelectionSequence("Seq"+name+"1",
-                             TopSelection = MuMuSS1
-                             )
-sequence2 = SelectionSequence("Seq"+name+"2",
-                             TopSelection = MuMuSS2
-                             )
-sequence3 = SelectionSequence("Seq"+name+"3",
-                             TopSelection = MuMuSS3
-                             )
-sequence4 = SelectionSequence("Seq"+name+"4",
-                             TopSelection = MuMuSS4
-                             )
-
 # Define the lines
 ## ############################################################
 line1 = StrippingLine('MuMuSS1'

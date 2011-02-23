@@ -10,7 +10,7 @@
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingDiMuonConf(LHCbConfigurableUser):
     """
@@ -34,20 +34,17 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	JpsiSel = self.Jpsi()
-	JpsiSeq = SelectionSequence("SeqDiMuonInc", TopSelection = JpsiSel)
-	return StrippingLine('DiMuonIncLine', prescale = 1, algos = [JpsiSeq])   
+	return StrippingLine('DiMuonIncLine', prescale = 1, algos = [JpsiSel])   
      	
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	JpsiSel = self.JpsiLoose()
-	JpsiSeq = SelectionSequence("SeqDiMuonIncLoose", TopSelection = JpsiSel)
-	return StrippingLine('DiMuonIncLooseLine', prescale = 1, algos = [JpsiSeq])   
+	return StrippingLine('DiMuonIncLooseLine', prescale = 1, algos = [JpsiSel])   
 
     def likesign_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	JpsiSel = self.JpsiSameSign()
-	JpsiSeq = SelectionSequence("SeqDiMuonSameSign", TopSelection = JpsiSel)
-	return StrippingLine('DiMuonSameSignLine', prescale = 0.1, algos = [JpsiSeq])   
+	return StrippingLine('DiMuonSameSignLine', prescale = 0.1, algos = [JpsiSel])   
 
     def Jpsi( self ):
 	_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
@@ -118,8 +115,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         s = Selection("SelB2DiMuon",
                          Algorithm = _diMu,
                          RequiredSelections = [ _muons ] )
-	ss = SelectionSequence("SeqSelB2DiMuon", TopSelection = s )
-	return StrippingLine('SelB2DiMuonLine', prescale = 1, algos = [ ss ])   
+	return StrippingLine('SelB2DiMuonLine', prescale = 1, algos = [ s ])   
 
 #########################################################################################
     def getProps(self) :

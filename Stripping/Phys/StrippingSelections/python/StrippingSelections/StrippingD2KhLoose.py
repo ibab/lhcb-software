@@ -15,7 +15,7 @@ D0->Kh stripping selection.
 
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 #----------------------------------------
@@ -43,13 +43,10 @@ SelStdNoPIDsKaons = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
 
 SelDKhPreselLoose = Selection("SelDKhPreselLoose",  Algorithm = DKhPreselLoose, RequiredSelections = [ SelStdNoPIDsKaons])
 
-SelSeqDKhPreselLoose = SelectionSequence("SeqDKhPreselLoose", TopSelection = SelDKhPreselLoose)
-
-
 #--------------------------------------------
 # 4) Create StrippingLine with this selection 
 #--------------------------------------------
 DKhPreselLooseLine = StrippingLine("DKhPreselLooseLine"
                           , prescale = 1.
-                          , algos = [ SelSeqDKhPreselLoose ]
+                          , algos = [ SelDKhPreselLoose ]
                           )

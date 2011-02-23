@@ -11,9 +11,9 @@ name = "PP2PPMuMu"
 __all__ = ('name', 'diPhoton', 'sequence')
 
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop, NumberOfTracksFilter
+from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+from PhysSelPython.Wrappers import DataOnDemand, Selection, EventSelection
 
 # Create pp -> pp  mumu candidates out of std loose muons
 ## ############################################################
@@ -21,10 +21,11 @@ _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 mucut = '(PT>400*MeV) '
 
-FilterNumMuons = NumberOfTracksFilter("FilterNumMuons")
-FilterNumMuons.MinTracks = 2
-FilterNumMuons.MaxTracks = 2
-FilterNumMuons.TrackLocations  = [ "Rec/Track/Muon" ]
+from GaudiConfUtils.ConfigurableGenerators import NumberOfTracksFilter
+_filterNumMuons = EventSelection("FilterNumMuons",
+                                 Algorithm=NumberOfTracksFilter(MinTracks = 2,
+                                                                MaxTracks = 2,
+                                                                TrackLocations  = [ "Rec/Track/Muon" ]))
 
 #Using J/psi(1S) as dimuon container
 _diPhoton = CombineParticles(name,
@@ -39,20 +40,15 @@ _diPhoton = CombineParticles(name,
                          
 diPhoton = Selection( "Sel"+name,
                   Algorithm = _diPhoton,
-                  RequiredSelections = [_muons] 
+                  RequiredSelections = [_filterNumMuons, _muons] 
                   )
 
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = diPhoton,
-                             EventPreSelector = [FilterNumMuons]
-                             )
 # Define the line
 ## ############################################################
 line = StrippingLine('PP2PPMuMu'
                      , prescale = 1.
                      , checkPV  = False
-                     , algos = [ sequence ]
+                     , algos = [ diPhoton ]
                      )
 
 line_2 = StrippingLine('PP2PPMuMu_2'

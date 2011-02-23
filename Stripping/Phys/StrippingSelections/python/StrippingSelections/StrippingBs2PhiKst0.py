@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingBs2PhiKstConf(LHCbConfigurableUser):
     """
@@ -60,14 +60,12 @@ class StrippingBs2PhiKstConf(LHCbConfigurableUser):
     def nominall( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2PhiKstSel = self.Bs2PhiKst()
-	Bs2PhiKstSeq = SelectionSequence("SeqBs2PhiKstNominal", TopSelection = Bs2PhiKstSel)
-	return StrippingLine('Bs2PhiKst0bLine', prescale = 1, algos = [Bs2PhiKstSeq])   
+	return StrippingLine('Bs2PhiKst0bLine', prescale = 1, algos = [Bs2PhiKstSel])   
      	
     def loosel( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2PhiKstSel = self.Bs2PhiKstLoose()
-	Bs2PhiKstSeq = SelectionSequence("SeqBs2PhiKstLoose", TopSelection = Bs2PhiKstSel)
-	return StrippingLine('Bs2PhiKst0bLooseLine', prescale = 1, algos = [Bs2PhiKstSeq])   
+	return StrippingLine('Bs2PhiKst0bLooseLine', prescale = 1, algos = [Bs2PhiKstSel])   
     def Phi2KKLoose( self ):
         from Configurables import  OnOfflineTool
         StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
