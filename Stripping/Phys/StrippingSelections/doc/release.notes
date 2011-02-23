@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Marco Gersabeck
+ - Update StrippingD2hh.py to new framework
+   Combines tagged and untagged stripping lines for D0 to two-body final states
+
 ! 2011-02-23 - Victor Coco 
  - Update StrippingDisplVertices.py to use LineBuilder
 
