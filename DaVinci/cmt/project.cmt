@@ -1,10 +1,10 @@
 project DAVINCI
 
-use HLT       HLT_v12r2
-use PHYS      PHYS_v10r0
-use ANALYSIS  ANALYSIS_v5r0
-use STRIPPING STRIPPING_v1r3
-use LBCOM     LBCOM_v9r9
+use HLT       HLT_v13r0
+use PHYS      PHYS_v12r0
+use ANALYSIS  ANALYSIS_v6r0
+use STRIPPING STRIPPING_v2r0
+use LBCOM     LBCOM_v10r0
 
 build_strategy with_installarea
 setup_strategy root
