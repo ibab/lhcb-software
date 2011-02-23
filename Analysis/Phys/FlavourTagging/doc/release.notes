@@ -5,6 +5,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-02-23 - Juan Palacios
+ - Remove reference to Particle::Container.
+ - Increase to v12r4p1
+
 !========================== FlavourTagging v12r4 2011-02-20 ==================
 
 ! 2011-02-16 Marc Grabalosa

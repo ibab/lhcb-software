@@ -52,8 +52,7 @@ StatusCode BTagging::execute() {
 void BTagging::performTagging(const std::string & location) 
 {
   //look in location where Selection has put the B candidates
-  if(!exist<LHCb::Particle::Container>(location+"/Particles") &&
-     !exist<LHCb::Particle::Selection>(location+"/Particles") ){
+  if(!exist<LHCb::Particle::Range>(location+"/Particles") ) {
     debug()<<("No selection found in "+ location+"/Particles")<<endreq;
     return;
   }
