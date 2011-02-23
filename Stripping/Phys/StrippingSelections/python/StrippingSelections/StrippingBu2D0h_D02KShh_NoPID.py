@@ -1,7 +1,7 @@
 
 
 __author__ = 'Susan Haines'
-__date__ = '01/10/2010'
+__date__ = '20/02/2011'
 __version__ = '$Revision: 1.4 $'
 
 '''
@@ -11,89 +11,88 @@ configurables for new MC09 offline selection, using StdNoPIDs particles.  Only P
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
-## confdict={ #pre-17/08/2010
-##     'DefaultCuts' :   {   'PrescaleLL'    : 1.0 
-##                        ,  'PostscaleLL'   : 1.0
-##                        #B cuts, LL seln
-##                        ,  'BFlightCHI2_LL'        : 144.  
-##                        ,  'BDIRA_LL'           : 0.99985     
-##                        ,  'BIPCHI2_LL'         : 16.         
+## confdict_Bu2D0h_D02KShh_NoPID={# new cuts 17/08/2010 onwards
+##                         'PrescaleLL'    : 1.0 
+##                         ,  'PostscaleLL'   : 1.0
+##                         #B cuts, LL seln
+##                        ,  'BFlightCHI2_LL'        : 156.25 
+##                        ,  'BDIRA_LL'           : 0.9999     
+##                        ,  'BIPCHI2_LL'         : 12.25         
 ##                        ,  'BVertexCHI2_LL'     : 9.
 ##                        #Bachelor K cuts, LL seln
-##                        ,  'BachIPCHI2_LL'     : 9.
-##                        ,  'BachPt_LL'         : 1.0
+##                        ,  'BachIPCHI2_LL'     : 12.25
+##                        ,  'BachPt_LL'         : 1.0  
 ##                        #D0 and D0 daughter pi cuts, LL seln
 ##                        ,  'DVertexCHI2_LL'     : 6.25     
 ##                        ,  'DdaughterIPCHI2_LL' : 9.
 ##                        #KS and KS daughter pi cuts, LL seln
 ##                        ,  'KSFlightCHI2_LL'    : 4.
-##                        ,  'KSVertexCHI2_LL'    : 20.25
-##                        ,  'KSdaughterPiIPCHI2_LL' : 4.
+##                        ,  'KSVertexCHI2_LL'    : 18.
+##                        ,  'KSdaughterPiIPCHI2_LL' : 6.25
 ##                        ,  'PrescaleDD'    : 1.0 
 ##                        ,  'PostscaleDD'   : 1.0
 ##                        #B cuts, DD seln
-##                        ,  'BFlightCHI2_DD'     : 81.
-##                        ,  'BDIRA_DD'           : 0.9998    
-##                        ,  'BIPCHI2_DD'         : 25.         
+##                        ,  'BFlightCHI2_DD'     : 90.25
+##                        ,  'BDIRA_DD'           : 0.99985    
+##                        ,  'BIPCHI2_DD'         : 18.         
 ##                        ,  'BVertexCHI2_DD'     : 12.25
 ##                        #Bachelor K cuts, DD seln
 ##                        ,  'BachIPCHI2_DD'     : 4.
-##                        ,  'BachPt_DD'         : 0.5  
+##                        ,  'BachPt_DD'         : 0.5 
 ##                        #D0 and D0 daughter pi cuts, DD seln
 ##                        ,  'DVertexCHI2_DD'     : 16.        
-##                        ,  'DdaughterIPCHI2_DD' : 4.
+##                        ,  'DdaughterIPCHI2_DD' : 9.
 ##                         #KS and KS daughter pi cuts, DD seln
 ##                        ,  'KSFlightCHI2_DD'    : 4.
-##                        ,  'KSVertexCHI2_DD'    : 20.25
+##                        ,  'KSVertexCHI2_DD'    : 18.
 ##                        ,  'KSdaughterPiIPCHI2_DD' : 4.
-##                        }
+                       
 ##  }
 
-confdict={# new cuts 17/08/2010 onwards
-     'DefaultCuts' :   {   'PrescaleLL'    : 1.0 
+confdict_Bu2D0h_D02KShh_NoPID_offlinesel={#almost offline sel cuts 8/2/2011 (D daughter pi/K IPchi2s looser, Ks DD daughter pi PID cut looser)
+                        'PrescaleLL'    : 1.0 
                         ,  'PostscaleLL'   : 1.0
                         #B cuts, LL seln
-                       ,  'BFlightCHI2_LL'        : 156.25 
-                       ,  'BDIRA_LL'           : 0.9999     
-                       ,  'BIPCHI2_LL'         : 12.25         
-                       ,  'BVertexCHI2_LL'     : 9.
+                       ,  'BFlightCHI2_LL'        : 169. 
+                       ,  'BDIRA_LL'           : 0.99999     
+                       ,  'BIPCHI2_LL'         : 9.         
+                       ,  'BVertexCHI2_LL'     : 6.25
                        #Bachelor K cuts, LL seln
-                       ,  'BachIPCHI2_LL'     : 12.25
+                       ,  'BachIPCHI2_LL'     : 16.
                        ,  'BachPt_LL'         : 1.0  
                        #D0 and D0 daughter pi cuts, LL seln
-                       ,  'DVertexCHI2_LL'     : 6.25     
-                       ,  'DdaughterIPCHI2_LL' : 9.
+                       ,  'DVertexCHI2_LL'     : 4.     
+                       ,  'DdaughterIPCHI2_LL' : 16.
                        #KS and KS daughter pi cuts, LL seln
                        ,  'KSFlightCHI2_LL'    : 4.
-                       ,  'KSVertexCHI2_LL'    : 18.
-                       ,  'KSdaughterPiIPCHI2_LL' : 6.25
+                       ,  'KSVertexCHI2_LL'    : 16.
+                       ,  'KSdaughterPiIPCHI2_LL' : 9.
                        ,  'PrescaleDD'    : 1.0 
                        ,  'PostscaleDD'   : 1.0
                        #B cuts, DD seln
-                       ,  'BFlightCHI2_DD'     : 90.25
-                       ,  'BDIRA_DD'           : 0.99985    
-                       ,  'BIPCHI2_DD'         : 18.         
-                       ,  'BVertexCHI2_DD'     : 12.25
+                       ,  'BFlightCHI2_DD'     : 100.
+                       ,  'BDIRA_DD'           : 0.9999    
+                       ,  'BIPCHI2_DD'         : 16.         
+                       ,  'BVertexCHI2_DD'     : 9.
                        #Bachelor K cuts, DD seln
-                       ,  'BachIPCHI2_DD'     : 4.
+                       ,  'BachIPCHI2_DD'     : 6.25
                        ,  'BachPt_DD'         : 0.5 
                        #D0 and D0 daughter pi cuts, DD seln
                        ,  'DVertexCHI2_DD'     : 16.        
                        ,  'DdaughterIPCHI2_DD' : 9.
                         #KS and KS daughter pi cuts, DD seln
                        ,  'KSFlightCHI2_DD'    : 4.
-                       ,  'KSVertexCHI2_DD'    : 18.
-                       ,  'KSdaughterPiIPCHI2_DD' : 4.
-                       }
+                       ,  'KSVertexCHI2_DD'    : 16.
+                       ,  'KSdaughterPiIPCHI2_DD' : 6.25
+                       
  }
 
-
-
-
-
-
-class StrippingBu2D0h_D02KShh_NoPIDConf(object):
+class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
     '''
     Configuration object for a B->D0h, D0->KShh lines, KS->LL and DD pions, where h is K or Pi.
     
@@ -101,13 +100,11 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 
     PID cuts only applied to downstream Ks daughter pions, all input Pi and K are StdNoPIDs particles.
     
-    Use conf.printCuts to check the cuts in python.
-    
     The Lines object holds the configured line.
     '''
 
-    Line_LL_noPID=None
-    Line_DD_noPID=None
+    Line_LL_Bu2D0h_D02KShh=None
+    Line_DD_Bu2D0h_D02KShh=None 
 
     LLPi_FilterCut = ""
     KSLL_CombCut = ""
@@ -128,20 +125,23 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
     B_DD_BachCut = ""
     B_DD_CombCut = ""
     B_DD_MotherCut = ""
-   
+
     FilteredPions_KSLL_noPID=None
     SelKSLL_Bu2D0h_noPID=None
     mergedPiKforD_LL=None
     MergedD0_KShh_noPID_LL=None
     Bu2D0h_LLSel_noPID=None
-    
+
     FilteredPions_KSDD_noPID=None
     SelKSDD_Bu2D0h_noPID=None
     mergedPiKforD_DD=None
     MergedD0_KShh_noPID_DD=None
     Bu2D0h_DDSel_noPID=None
 
-    __configuration_keys__ = [ 
+    B2Dh_D2KShh_StrippingNumTracksGECLL=None
+    B2Dh_D2KShh_StrippingNumTracksGECDD=None
+
+    __configuration_keys__ = ( 
           'PrescaleLL'
         ,  'PostscaleLL'
         #B cuts, LL seln
@@ -176,16 +176,16 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         ,  'KSFlightCHI2_DD'    
         ,  'KSVertexCHI2_DD'    
         ,  'KSdaughterPiIPCHI2_DD' 
-        ]
+        )
 
-    def __init__(self, config = confdict['DefaultCuts']):
+    def __init__(self, name, config):
         '''The constructor of the configuration class.
         Requires a configuration dictionary, config, which must provide all the settings for cuts which are not hard coded'''
-        
-        from StrippingSelections.Utils import checkConfig
-        
-        checkConfig(StrippingBu2D0h_D02KShh_NoPIDConf.__configuration_keys__, config)
 
+        LineBuilder.__init__(self, name, config)
+
+        self._myname = name
+            
         #define cuts
         #LL selection cuts
         self.LLPi_FilterCut = "(P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s)"%config
@@ -210,40 +210,44 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         self.B_DD_CombCut = "(ADAMASS('B+') < 505.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.5)"
         self.B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)& (BPVDIRA > %(BDIRA_DD)s)"%config
 
-
-        from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import SelectionSequence
-
         #Make the selections
-        self.GEC_NumTracks_LL()
         self.LLPionFilterForBu2D0h_D02KShhAlg()
         self.KSLLForBu2D0h_D02KShhAlg()
         self.DForBu2D0h_D02KShh_KSLLAlg()
         self.Bu2D0h_KShh_KSLLAlg()
         
-        self.GEC_NumTracks_DD()
         self.DDPionFilterForBu2D0h_D02KShhAlg()   
         self.KSDDForBu2D0h_D02KShhAlg()
         self.DForBu2D0h_D02KShh_KSDDAlg()
         self.Bu2D0h_KShh_KSDDAlg()
-    
+
+##     '''
+##     Define the GEC on number of long tracks, needed in order to control
+##     the time for the combinatorics (D in particular)
+##     '''
+ 
+        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
+                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
+                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+
         #Stripping lines
-        LL_line=StrippingLine('Bu2D0h_D02KShh_KSLL'
-                          , prescale = config['PrescaleLL']
-                          , postscale = config['PostscaleLL']
-                          , algos = [self.GEC_NumTracks_LL(), self.Bu2D0h_LLSel_noPID]
-                         )
-    
-        DD_line=StrippingLine('Bu2D0h_D02KShh_KSDD'
-                          , prescale = config['PrescaleDD']
-                          , postscale = config['PostscaleDD']
-                          , algos = [self.GEC_NumTracks_DD(), self.Bu2D0h_DDSel_noPID]
-                         )
+        self.Line_LL_Bu2D0h_D02KShh = StrippingLine(self._myname+'Bu2D0h_D02KShh_KSLL'
+                                     , prescale = config['PrescaleLL']
+                                     , postscale = config['PostscaleLL']
+                                     , FILTER = B2Dh_D2KShh_StrippingNumTracksGECLL   
+                                     , selection = self.Bu2D0h_LLSel_noPID       
+                                     )
 
-
-        self.Line_LL = LL_line
-        self.Line_DD = DD_line
-
+        self.Line_DD_Bu2D0h_D02KShh = StrippingLine(self._myname+'Bu2D0h_D02KShh_KSDD'
+                                     , prescale = config['PrescaleDD']
+                                     , postscale = config['PostscaleDD']
+                                     , FILTER = B2Dh_D2KShh_StrippingNumTracksGECDD
+                                     , selection = self.Bu2D0h_DDSel_noPID
+                                     )
+        
+        self.registerLine(self.Line_LL_Bu2D0h_D02KShh)
+        self.registerLine(self.Line_DD_Bu2D0h_D02KShh)
 
     def printCuts(self):
         '''Print the compiled cut values'''
@@ -266,46 +270,9 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         print 'B combination cuts, DD ', self.B_DD_CombCut
         print 'B mother cuts, DD ', self.B_DD_MotherCut
 
-    
-
     ###############################################
     # Create selections for StrippingLines        #
     ############################################### 
-
-    def GEC_NumTracks_LL( self ):
-        '''
-        Define the GEC on number of tracks, needed in order to control
-        the time for the combinatorics (D in particular)
-        '''
-        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-        modules =  CoreFactory('CoreFactory').Modules
-        for i in [ 'LoKiTrigger.decorators' ] :
-            if i not in modules : modules.append(i)
-
-        B2Dh_KSLL_StrippingNumTracksGEC = VoidFilter('B2Dh_KSLL_StrippingNumTracksGEC'
-                                          , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
-                                          )
-
-        return B2Dh_KSLL_StrippingNumTracksGEC
-
-    def GEC_NumTracks_DD( self ):
-        '''
-        Define the GEC on number of tracks, needed in order to control
-        the time for the combinatorics (D in particular)
-        '''
-        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-        modules =  CoreFactory('CoreFactory').Modules
-        for i in [ 'LoKiTrigger.decorators' ] :
-            if i not in modules : modules.append(i)
-
-        B2Dh_KSDD_StrippingNumTracksGEC = VoidFilter('B2Dh_KSDD_StrippingNumTracksGEC'
-                                          , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
-                                          )
-      
-        return B2Dh_KSDD_StrippingNumTracksGEC
-
 
         ###########################
         # KS daughters, long long # 
@@ -318,13 +285,13 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-        MyStdPions_KS2PiPi_LL_noPID = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
+        from StandardParticles import StdNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
 
-        LLPionFilterForBu2D0h_D02KShh = FilterDesktop("LLPionFilterForBu2D0h_D02KShh")
+        LLPionFilterForBu2D0h_D02KShh = FilterDesktop(self._myname+"LLPionFilterForBu2D0h_D02KShh")
         
         LLPionFilterForBu2D0h_D02KShh.Code = self.LLPi_FilterCut
         
-        SelLLPionFilterForBu2D0h_D02KShh = Selection("SelLLPionFilterForBu2D0h_D02KShh", Algorithm=LLPionFilterForBu2D0h_D02KShh,
+        SelLLPionFilterForBu2D0h_D02KShh = Selection(self._myname+"SelLLPionFilterForBu2D0h_D02KShh", Algorithm=LLPionFilterForBu2D0h_D02KShh,
                                                        RequiredSelections = [MyStdPions_KS2PiPi_LL_noPID]
                                                        )
         
@@ -342,13 +309,13 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-        MyStdPions_KS2PiPi_DD_noPID = DataOnDemand(Location = 'Phys/StdNoPIDsDownPions')
+        from StandardParticles import StdNoPIDsDownPions as MyStdPions_KS2PiPi_DD_noPID
 
-        DDPionFilterForBu2D0h_D02KShh = FilterDesktop("DDPionFilterForBu2D0h_D02KShh")
+        DDPionFilterForBu2D0h_D02KShh = FilterDesktop(self._myname+"DDPionFilterForBu2D0h_D02KShh")
         
         DDPionFilterForBu2D0h_D02KShh.Code = self.DDPi_FilterCut
        
-        SelDDPionFilterForBu2D0h_D02KShh = Selection("SelDDPionFilterForBu2D0h_D02KShh", Algorithm=DDPionFilterForBu2D0h_D02KShh,
+        SelDDPionFilterForBu2D0h_D02KShh = Selection(self._myname+"SelDDPionFilterForBu2D0h_D02KShh", Algorithm=DDPionFilterForBu2D0h_D02KShh,
                                                        RequiredSelections = [MyStdPions_KS2PiPi_DD_noPID]
                                                        )
         
@@ -365,7 +332,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
 
-        KSLLForBu2D0h_D02KShh = CombineParticles("KSLLForBu2D0h_D02KShh")
+        KSLLForBu2D0h_D02KShh = CombineParticles(self._myname+"KSLLForBu2D0h_D02KShh")
         
         KSLLForBu2D0h_D02KShh.DecayDescriptor = "KS0 -> pi+ pi-"
         KSLLForBu2D0h_D02KShh.DaughtersCuts = {"pi+": "ALL"}
@@ -377,7 +344,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        KSLLForBu2D0h_D02KShh.addTool(lvf)
 #        KSLLForBu2D0h_D02KShh.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
 
-        SelKSLLForBu2D0h_D02KShh = Selection("SelKSLLForBu2D0h_D02KShh", Algorithm=KSLLForBu2D0h_D02KShh,
+        SelKSLLForBu2D0h_D02KShh = Selection(self._myname+"SelKSLLForBu2D0h_D02KShh", Algorithm=KSLLForBu2D0h_D02KShh,
                                                RequiredSelections = [self.FilteredPions_KSLL_noPID]
                                                )
         
@@ -394,7 +361,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
 
-        KSDDForBu2D0h_D02KShh = CombineParticles("KSDDForBu2D0h_D02KShh")
+        KSDDForBu2D0h_D02KShh = CombineParticles(self._myname+"KSDDForBu2D0h_D02KShh")
   
         KSDDForBu2D0h_D02KShh.DecayDescriptor = "KS0 -> pi+ pi-" 
         KSDDForBu2D0h_D02KShh.DaughtersCuts = {"pi+" : "ALL"}
@@ -406,7 +373,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        KSDDForBu2D0h_D02KShh.addTool(lvf)
 #        KSDDForBu2D0h_D02KShh.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
         
-        SelKSDDForBu2D0h_D02KShh = Selection("SelKSDDForBu2D0h_D02KShh", Algorithm=KSDDForBu2D0h_D02KShh,
+        SelKSDDForBu2D0h_D02KShh = Selection(self._myname+"SelKSDDForBu2D0h_D02KShh", Algorithm=KSDDForBu2D0h_D02KShh,
                                                RequiredSelections = [self.FilteredPions_KSDD_noPID]
                                                )
         
@@ -423,12 +390,10 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import MergedSelection, Selection, DataOnDemand
 
-        MyStdLoosePions_D2KShh_LL = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
-        MyStdLooseKaons_D2KShh_LL = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
-        mergedD0_PionsandKaonsLL = MergedSelection('mergedD0_PionsandKaonsLL', RequiredSelections = [MyStdLoosePions_D2KShh_LL, MyStdLooseKaons_D2KShh_LL])
-        self.mergedPiKforD_LL = mergedD0_PionsandKaonsLL
-        
-        DForBu2D0h_D02KShh_KSLL = CombineParticles("DForBu2D0h_D02KShh_KSLL")
+        from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_LL
+        from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
+
+        DForBu2D0h_D02KShh_KSLL = CombineParticles(self._myname+"DForBu2D0h_D02KShh_KSLL")
         DForBu2D0h_D02KShh_KSLL.DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"]
         DForBu2D0h_D02KShh_KSLL.DaughtersCuts  = {"pi+" : self.D_LL_DaughterCut
                                                   ,"K+": self.D_LL_DaughterCut
@@ -442,7 +407,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        DForBu2D0h_D02KShh_KSLL.addTool(lvf)
 #        DForBu2D0h_D02KShh_KSLL.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
   
-        SelDForBu2D0h_D02KShh_KSLL = Selection("SelDForBu2D0h_D02KShh_KSLL", Algorithm=DForBu2D0h_D02KShh_KSLL,
+        SelDForBu2D0h_D02KShh_KSLL = Selection(self._myname+"SelDForBu2D0h_D02KShh_KSLL", Algorithm=DForBu2D0h_D02KShh_KSLL,
                                                  RequiredSelections = [self.SelKSLL_Bu2D0h_noPID, MyStdLoosePions_D2KShh_LL, MyStdLooseKaons_D2KShh_LL ])
         
         self.MergedD0_KShh_noPID_LL=SelDForBu2D0h_D02KShh_KSLL
@@ -458,10 +423,10 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import MergedSelection, Selection, DataOnDemand
 
-        MyStdLoosePions_D2KShh_DD = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
-        MyStdLooseKaons_D2KShh_DD = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
+        from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_DD
+        from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
 
-        DForBu2D0h_D02KShh_KSDD = CombineParticles("DForBu2D0h_D02KShh_KSDD")
+        DForBu2D0h_D02KShh_KSDD = CombineParticles(self._myname+"DForBu2D0h_D02KShh_KSDD")
         DForBu2D0h_D02KShh_KSDD.DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"]
         DForBu2D0h_D02KShh_KSDD.DaughtersCuts  = {"pi+" : self.D_DD_DaughterCut
                                                    , "K+": self.D_DD_DaughterCut
@@ -475,7 +440,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        DForBu2D0h_D02KShh_KSDD.addTool(lvf)
 #        DForBu2D0h_D02KShh_KSDD.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
         
-        SelDForBu2D0h_D02KShh_KSDD = Selection("SelDForBu2D0h_D02KShh_KSDD", Algorithm=DForBu2D0h_D02KShh_KSDD,
+        SelDForBu2D0h_D02KShh_KSDD = Selection(self._myname+"SelDForBu2D0h_D02KShh_KSDD", Algorithm=DForBu2D0h_D02KShh_KSDD,
                                                  RequiredSelections = [self.SelKSDD_Bu2D0h_noPID, MyStdLoosePions_D2KShh_DD, MyStdLooseKaons_D2KShh_DD])
                 
         self.MergedD0_KShh_noPID_DD=SelDForBu2D0h_D02KShh_KSDD
@@ -486,19 +451,22 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         ################
     def Bu2D0h_KShh_KSLLAlg(self):
         '''
-        B->D0K, D0->KS Pi Pi, KS LL selection
+        B->D0K,pi D0->KS Pi Pi, KS LL selection
         '''
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-        MyStdNoPIDKaons_BDh_LL = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
-
-        Bu2D0h_KSLL = CombineParticles("Bu2D0h_KSLL")
-        Bu2D0h_KSLL.DecayDescriptor = "[B+ -> D~0 K+]cc"
+        from StandardParticles import StdNoPIDsKaons as MyStdNoPIDKaons_BDh_LL
+        from StandardParticles import StdNoPIDsPions as MyStdNoPIDPions_BDh_LL
+        
+        Bu2D0h_KSLL = CombineParticles(self._myname+"Bu2D0h_KSLL")
+#        Bu2D0h_KSLL.DecayDescriptor = "[B+ -> D~0 K+]cc"
+        Bu2D0h_KSLL.DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"]
 
         Bu2D0h_KSLL.DaughtersCuts = { "D0" : "ALL",
-                                      "K+" : self.B_LL_BachCut
+                                      "K+" : self.B_LL_BachCut,
+                                      "pi+" : self.B_LL_BachCut
                                     }
         Bu2D0h_KSLL.CombinationCut =  self.B_LL_CombCut
         Bu2D0h_KSLL.MotherCut = self.B_LL_MotherCut 
@@ -508,8 +476,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        Bu2D0h_KSLL.addTool(lvf)
 #        Bu2D0h_KSLL.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
         
-        SelBu2D0h_KSLL = Selection("SelBu2D0h_KSLL", Algorithm=Bu2D0h_KSLL,
-                                    RequiredSelections = [self.MergedD0_KShh_noPID_LL, MyStdNoPIDKaons_BDh_LL])
+        SelBu2D0h_KSLL = Selection(self._myname+"SelBu2D0h_KSLL", Algorithm=Bu2D0h_KSLL,
+                                    RequiredSelections = [self.MergedD0_KShh_noPID_LL, MyStdNoPIDKaons_BDh_LL, MyStdNoPIDPions_BDh_LL])
         
         self.Bu2D0h_LLSel_noPID=SelBu2D0h_KSLL
 
@@ -520,19 +488,22 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
         ################
     def Bu2D0h_KShh_KSDDAlg(self):
         '''
-        B->D0K, D0->KS Pi Pi, KS DD selection
+        B->D0K,pi D0->KS Pi Pi, KS DD selection
         '''
         from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-        MyStdNoPIDKaons_BDh_DD = DataOnDemand(Location = 'Phys/StdNoPIDsKaons')
+        from StandardParticles import StdNoPIDsKaons as MyStdNoPIDKaons_BDh_DD
+        from StandardParticles import StdNoPIDsPions as MyStdNoPIDPions_BDh_DD
 
-        Bu2D0h_KSDD = CombineParticles("Bu2D0h_KSDD")
-        Bu2D0h_KSDD.DecayDescriptor = "[B+ -> D~0 K+]cc"
-
+        Bu2D0h_KSDD = CombineParticles(self._myname+"Bu2D0h_KSDD")
+#        Bu2D0h_KSDD.DecayDescriptor = "[B+ -> D~0 K+]cc"
+        Bu2D0h_KSDD.DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"]
+     
         Bu2D0h_KSDD.DaughtersCuts = { "D0" : "ALL",
-                                      "K+" : self.B_DD_BachCut
+                                      "K+" : self.B_DD_BachCut,
+                                      "pi+" : self.B_DD_BachCut
                                       }
         Bu2D0h_KSDD.CombinationCut = self.B_DD_CombCut
         Bu2D0h_KSDD.MotherCut = self.B_DD_MotherCut
@@ -542,10 +513,7 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(object):
 #        Bu2D0h_KSDD.addTool(lvf)
 #        Bu2D0h_KSDD.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
 
-        SelBu2D0h_KSDD = Selection("SelBu2D0h_KSDD", Algorithm=Bu2D0h_KSDD,
-                                    RequiredSelections = [self.MergedD0_KShh_noPID_DD, MyStdNoPIDKaons_BDh_DD])
+        SelBu2D0h_KSDD = Selection(self._myname+"SelBu2D0h_KSDD", Algorithm=Bu2D0h_KSDD,
+                                    RequiredSelections = [self.MergedD0_KShh_noPID_DD, MyStdNoPIDKaons_BDh_DD, MyStdNoPIDPions_BDh_DD])
         
         self.Bu2D0h_DDSel_noPID=SelBu2D0h_KSDD
-
-
-_StrippingBu2D0h_D02KShh_NoPIDConf = StrippingBu2D0h_D02KShh_NoPIDConf()

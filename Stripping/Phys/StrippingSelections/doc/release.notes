@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-02-23 _ Susan Haines
+	- Updated StrippingBu2D0h_D02KShh_NoPID to new framework.  
+	- GEC changed from <240 total tracks to <180 long tracks. 
+	- Added WS lines in StrippingBu2D0h_D02KShh_NoPID_WS.
+	- Added tests/StrippingBu2D0h_D02KShh_NoPID*.
 
 ! 2011-02-23 - Rob Lambert
  - Fixed TestMyStrippingLineOnRealData.py
