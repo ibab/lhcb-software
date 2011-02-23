@@ -94,7 +94,8 @@ private:
   int m_nbpassed;
 
   // cuts
-  unsigned int m_NbCands;     ///< Min nb of desired candidates
+  unsigned int m_NbCands;     ///< Min nb of desired candidates  
+  bool m_NbCandsExclusive;    ///< Is the number of candidate exclusive
   unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
@@ -115,7 +116,7 @@ private:
   double m_MinY;              ///< Min Y position     
   double m_MaxY;              ///< Max Y position     
   double m_MinZ;              ///< Min Z position     
-  double m_MaxZ;              ///< Max Z position     
+  double m_MaxZ;              ///< Max Z position   
   /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled

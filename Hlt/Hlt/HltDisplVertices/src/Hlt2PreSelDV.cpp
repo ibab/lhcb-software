@@ -50,7 +50,6 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   declareProperty("RMax", m_RMax = 50.*Gaudi::Units::m );
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks
   declareProperty("RecVerticesLocation", m_RVLocation );
-  //"BlindVertexFitter", "OfflineVertexFitter"
   declareProperty("VertexFitter", m_Fitter = "none"  );
   declareProperty("KeepLowestZ", m_KeepLowestZ = false  );
   declareProperty("IsolationDistance", m_Dist = 0.0*mm  );
@@ -428,17 +427,11 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     Particle tmpPart = Particle( m_PreyID );
     //Fix end vertex
     tmpPart.addInfo(52,r ); 
-    //Store 51 info if found to be in detector material
-    //always()<<"before checking material"<<endreq;
-    //if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) tmpPart.addInfo(51,1.);
-    //always()<<"after checking material"<<endreq;
  
  
     if( m_UseMap ){
       //Loop on RecVertex daughter tracks and save corresponding Particles
       for( ; iVtx != iVtxend; ++iVtx ){
-        //debug()<<"Key "<< (*iVtx)->key() <<" type "
-        //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
 
@@ -448,8 +441,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         //Give a default pion with pT of 400 MeV
         if( it != m_map.end() ){ 
           part = it->second; 
-          //debug()<<"got Particle from map with slope "
-          //     << part->slopes() <<endmsg;
         }
 
         if( it == m_map.end() ) {
@@ -466,22 +457,17 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
             j != jend;++j) {
-
         if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
         const Track * tk = (*j)->proto()->track();
-
-        while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
-          ++iVtx;
-        }
-
-        if( (*iVtx)->key() == tk->key() ){ 
-          if( (*iVtx)->key() != endkey ) ++iVtx; 
-          tmpVtx.addToOutgoingParticles ( (*j)->clone() );
-          tmpPart.addToDaughters( (*j)->clone() );
-          mom += (*j)->momentum();
-          continue;
-        }
+        for( SmartRefVector< Track >::const_iterator itr = rv->tracks().begin(); itr !=  rv->tracks().end(); ++itr ){
+	  if( (fabs((*itr)->p()-tk->p())<1e-10) ){ 
+	    tmpVtx.addToOutgoingParticles ( *j );
+	    tmpPart.addToDaughters( *j );
+	    mom += (*j)->momentum();
+	    continue;
+	  }
+	}
       }
     }
 
@@ -533,8 +519,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     Vertex* tmpVtx = new Vertex();; 
     Particle tmpPart;
     tmpPart.addInfo(52,r ); 
-    //Store 51 info if found to be in detector material
-    //if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) tmpPart.addInfo(51,1.);
  
     if( !( m_vFit->fit( Daughters, *tmpVtx, tmpPart ) ) ){
       Warning("Fit error."+ m_Fitter +" not able to create Particle !"); 
@@ -548,8 +532,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
       return false;   
     }
 
-    //Remove if found to be in detector material
-    //if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) return false;
     nbRecParts++;
     this->markNewTree(tmpPart.clone());
   }

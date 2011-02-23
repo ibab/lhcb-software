@@ -48,6 +48,7 @@ Hlt2SelDV::Hlt2SelDV( const std::string& name,
   declareProperty("Prey", m_Prey = "~chi_10" );
   //>6.286GeV=Bc+ Mass
   declareProperty("MinNBCands", m_NbCands = 1 );
+  declareProperty("MinNBCandsExclusive", m_NbCandsExclusive = false );
   declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
   //Unlimited
   declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
@@ -403,7 +404,7 @@ StatusCode Hlt2SelDV::execute() {
       indets.push_back( indet ); 
     }
     // Apply the material cut
-    if (m_RemVtxFromDet !=0 && p->info(51,-1000.)>0) continue;
+    if (m_RemVtxFromDet !=0 and p->info(51,-1000.)>0) continue;
     //The only way to have the candidates saved in the Stripping is to have 
     //  the latest algo in the sequence put them in the TES.
     //As they are already saved by a preselection algorithm, 
@@ -417,7 +418,7 @@ StatusCode Hlt2SelDV::execute() {
     nbCands++;
 
   }//  <--- end of Prey loop
-  if( (unsigned int)nbCands < m_NbCands ){
+  if( (unsigned int)nbCands < m_NbCands || (m_NbCandsExclusive && (unsigned int)nbCands!=m_NbCands)){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;

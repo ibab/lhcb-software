@@ -4,6 +4,11 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2011-02-21 - Victor Coco
+ - update Hlt2PreSelDV.cpp to deal with downstream tracks, update Hlt2SelDV
+   with new option
+
+
 !========================== HltDisplVertices v3r2p1 2011-02-22 ===================
 ! 2011-02-21 - Gerhard Raven
  - windows does not like 'and' as a keyword
