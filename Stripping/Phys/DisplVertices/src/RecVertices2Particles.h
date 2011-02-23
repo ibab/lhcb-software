@@ -96,7 +96,6 @@ private:
   double m_RMax;              ///< Max dist to the z axis
   double m_TChi2;             ///< Max chi2/ndof of tracks to stay in Vtx.
   double m_Dist;              ///< Distance bet. RV to be said isolated
-  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
 
   /***************************************************************//**
    * Remove vtx if in detector material ?
@@ -130,6 +129,7 @@ private:
   /// set to true when geometry is already initialised
   bool        m_GeoInit;
 
+  unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   double m_piMass;  ///< the pion mass
   double m_pt;      ///< default pt for default pions
 

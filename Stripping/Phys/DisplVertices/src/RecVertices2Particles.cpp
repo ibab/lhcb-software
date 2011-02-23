@@ -39,8 +39,8 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   , m_FromBL(false)
   , m_FromUpPV(false)
   , m_GeoInit(false)
-  , m_pt(400.)
   , m_PVnbtrks(10)
+  , m_pt(400.)
 {
   declareProperty("UsePartFromTES", m_UsePartFromTES = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
