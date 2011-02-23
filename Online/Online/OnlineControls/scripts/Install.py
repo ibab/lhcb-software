@@ -244,7 +244,7 @@ def install():
 def copyProject():
   start = time.time()
   src = sourceDir()+os.sep+'farmTemplate'
-  src = '/group/online/dataflow/pvss/TEMPLATE/project.mona07'
+  src = '/group/online/dataflow/pvss/TEMPLATE/project.2010.11.15'
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
@@ -252,7 +252,7 @@ def copyProject():
   execCmd(pvssPMON()+' -config '+cfg+' -stopWait')
   execCmd('rm -rf /localdisk/pvss'+os.sep+nam)
   execCmd('cp -r '+src+' /localdisk/pvss'+os.sep+nam)
-  execCmd('chmod 0777 /localdisk/pvss'+os.sep+nam)
+  execCmd('chmod -R 0777 /localdisk/pvss'+os.sep+nam)
   print '......... --> Patching project configuration file'
   lines = open(cfg,'r').readlines()
   fout  = open(cfg,'w')

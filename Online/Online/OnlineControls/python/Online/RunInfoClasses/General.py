@@ -95,28 +95,30 @@ class General:
 
         @return reference to initialized object
     """
-    self.manager      = manager
-    self.name         = name
-    self.postfix      = postfix
-    self.devMgr       = self.manager.deviceMgr()
-    self.reader       = self.manager.devReader()
+    self.manager         = manager
+    self.name            = name
+    self.postfix         = postfix
+    self.devMgr          = self.manager.deviceMgr()
+    self.reader          = self.manager.devReader()
 
-    self.outputLvl    = None
-    self.acceptFrac   = None
-    self.tae          = None
-    self.storeSlice   = None
-    self.monSlice     = None
-    self.tck          = None
-    self.L0Type       = None
-    self.hltType      = None
-    self.condDBtag    = None
-    self.gaudiVersion = None
-    self.mooreVersion = None
-    self.onlineVersion = None
+    self.outputLvl       = None
+    self.acceptFrac      = None
+    self.tae             = None
+    self.storeSlice      = None
+    self.monSlice        = None
+    self.mooreStartup    = None
+    self.tck             = None
+    self.L0Type          = None
+    self.hltType         = None
+    self.condDBtag       = None
+    self.DDDBtag         = None
+    self.gaudiVersion    = None
+    self.mooreVersion    = None
+    self.onlineVersion   = None
     self.dataflowVersion = None
-    self.lumiTrigger  = None
-    self.lumiPars     = None
-    self.beamgasTrigger = None
+    self.lumiTrigger     = None
+    self.lumiPars        = None
+    self.beamgasTrigger  = None
 
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
@@ -173,6 +175,10 @@ class General:
   # ===========================================================================
   def addTrigger(self):
     "Add Trigger information to availible information."
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.HLTFarm.mooreStartupMode'
+    if self.devMgr.exists(dpn):
+      self.mooreStartup = self.dp('HLTFarm.mooreStartupMode')
+      self.reader.add(self.mooreStartup)
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.TCK'
     if self.devMgr.exists(dpn):
       self.tck = self.dp('Trigger.TCK')
@@ -206,6 +212,10 @@ class General:
     if self.devMgr.exists(dpn):
       self.condDBtag = self.dp('Trigger.condDBTag')
       self.reader.add(self.condDBtag)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.DDDBTag'
+    if self.devMgr.exists(dpn):
+      self.DDDBtag = self.dp('Trigger.DDDBTag')
+      self.reader.add(self.DDDBtag)
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.LumiTrigger'
     if self.devMgr.exists(dpn):
       self.lumiTrigger = self.dp('Trigger.LumiTrigger')
@@ -377,7 +387,9 @@ class General:
   # ===========================================================================
   def showTell1Boards(self):
     "Show TELL1 boards related information of the RunInfo datapoint."
-    t1 = self.tell1Boards
+    if self.tell1Boards is None or self.tell1Boards.data is None:
+      return
+    t1 = self.tell1Boards.data
     log('Number of TELL1 boards:%d'%len(t1))
     s = ''
     for i in xrange(len(t1)):
@@ -407,6 +419,36 @@ class General:
     for i in xrange(len(streams)):
       log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
       
+  # ===========================================================================
+  def showTrigger(self):
+    "Show Trigger information to availible information."
+    log('--> Trigger RUN_Info content:')
+    if self.tck is not None:
+      log(' %-32s  %s'%('Initial TCK',str(self.tck.data),))
+    if self.L0Type is not None:
+      log(' %-32s  %s'%('L0 type',str(self.L0Type.data),))
+    if self.hltType is not None:
+      log(' %-32s  %s'%('HLT type',str(self.hltType.data),))
+    if self.gaudiVersion is not None:
+      log(' %-32s  %s'%('Gaudi Version',str(self.gaudiVersion.data),))
+    if self.mooreVersion is not None:
+      log(' %-32s  %s'%('Moore Version',str(self.mooreVersion.data),))
+    if self.onlineVersion is not None:
+      log(' %-32s  %s'%('Online Version',str(self.onlineVersion.data),))
+    if self.dataflowVersion is not None:
+      log(' %-32s  %s'%('Dataflow Version',str(self.dataflowVersion.data),))
+    if self.condDBtag is not None:
+      log(' %-32s  %s'%('CONDB tag',str(self.condDBtag.data),))
+    if self.DDDBtag is not None:
+      log(' %-32s  %s'%('CONDB tag',str(self.DDDBtag.data),))
+    if self.lumiTrigger is not None:
+      log(' %-32s  %s'%('Lumi trigger',str(self.lumiTrigger.data),))
+    if self.lumiPars is not None:
+      log(' %-32s  %s'%('Lumi parameters',str(['%7.3f'%i for i in self.lumiPars.data]).replace('\'',''),))
+    if self.beamgasTrigger is not None:
+      log(' %-32s  %s'%('Beam gas trigger',str(self.beamgasTrigger.data),))
+    return self
+
   # ===========================================================================
   def isDetectorUsed(self,detector):
     "Check if detector identified by its name is in use by the selected partition."

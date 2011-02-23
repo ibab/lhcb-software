@@ -1,4 +1,4 @@
-import sys, os, time, DbCore, gaudiweb, xmlrpclib
+import sys, os, time, DbCore, gaudiweb, xmlrpclib, datetime, pprint
 
 basePath        = os.environ['ONLINEKERNELROOT']
 default_users = [ ('administrator', 'admin_oder_was'), ('frankm', 'h')]
@@ -38,6 +38,16 @@ class Dirac:
     self.diracmanager = xmlrpclib.ServerProxy('http://storeio01.lbdaq.cern.ch:8890')
     self.jobIDs = {}
     
+  # ----------------------------------------------------------------------------
+  def removeFile(self, fid):
+    global g_simulate
+    print "diracmanager.getJobOutputb("+str(fid)+")"
+    if g_simulate: return 1
+    sc = self.diracmanager.getJobOutput(int(fid));
+    print 'Dirac Simulator:Submitted job to DIRAC:', sc
+    self.jobIDs[sc['Value']] = 'Submitted'
+    return sc['Value']
+
   # ----------------------------------------------------------------------------
   def submit(self, guid, source_file, out_file):
     global g_simulate
@@ -207,7 +217,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
          @date     30/06/2002
     """
     gaudiweb.FileServlet.__init__(self, name, name, require_authentication)
-    self.rundb = DbCore.DbCore('rundb_admin/adm1n@oradb01')
+    self.rundb  = DbCore.DbCore('rundb_admin/adm1n@rundb')
     self.recodb = DbCore.DbCore('RECODB/lbreco09@lhcbonr_recodb')
     self.dirac  = xmlrpclib.ServerProxy('http://storeio01.lbdaq.cern.ch:8890')
     self.slice  = 'Reco_Ctrl00'
@@ -233,6 +243,22 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       row = c.fetchone()
     return result
     
+  #===============================================================================
+  def configSelectionBox(self):
+    configs = []
+    stmt = "SELECT slice FROM reco_slices ORDER BY slice DESC"
+    cur = DbCore.Cursor(self.recodb)
+    res = cur.select(stmt)
+    b = '<SELECT id="recodb_slice_selector">'
+    if res:
+      res = cur.next()[1]
+      while res is not None:
+        s = ''
+        if res[0]==self.slice:s=' SELECTED="true"'
+        b = b + '<OPTION'+s+' value="'+res[0]+'">'+res[0]+'</OPTION>'
+        res = cur.next()[1]
+    b = b + '</SELECT>'
+    return b
   #===============================================================================
   def rundbRun(self,run_no,partition='LHCb'):
     stmt = """\
@@ -305,7 +331,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     return '</body></html>'
 
   #===============================================================================
-  def pageHeader(self, url, home_page):
+  def pageHeader(self, url, home_page,with_header=True):
     buf = """<html><head><title>"""+self.pageTitle()+"""</title>
                <meta content="text/html; charset=iso-8859-1" http-equiv=Content-Type></meta>
                <meta HTTP-EQUIV="Pragma"         CONTENT="no-cache"></meta>
@@ -325,12 +351,14 @@ class ReprocesssingManager(gaudiweb.FileServlet):
                <link rel="stylesheet" href="/style/Reco.css"/>
                <script lang="javascript" src="/style/Reco.cpp"></script>
                <script lang="javascript" src="/html/DataMgmt.js"></script>
+               """
+    if with_header:
+      buf = buf + """
                <script lang="javascript">
                    make_header();
                    make_toolbar('http://lhcb.cern.ch','"""+home_page+"""',null); </script>
-               </head>
-               <body>
-               """
+                   """
+    buf = buf + '</head><body>'
     return buf
 
   #===============================================================================
@@ -360,18 +388,85 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     return buf
 
   #===============================================================================
+  def showRunDbFills(self, url, handler, req_path, req, args, data):
+    srv = handler.server
+    fill = ''
+    if args.has_key('-fill_selector'):
+      fill = args['-fill_selector']
+
+    f = 'fill_id='
+    if len(fill): f = fill
+    buf = """<H2>Recent LHCb Fills:</H2>
+             Select fills by number:<INPUT type="text" id="rundb_fill_selector" width="200" value="%s"/>
+             <INPUT type="button" value="Show" onclick="javascript:rundb_show_fills()"/><BR>
+    """%(f,)
+
+    fill_sel = ''
+    if len(fill): fill_sel = " WHERE " + fill
+    stmt= """\
+    SELECT * FROM (
+    SELECT   fill_id,
+    TO_CHAR(timestamp,'YYYY-MM-DD HH24:MI:SS'),
+    time_total,
+    time_hvon,
+    time_veloin,
+    time_running,
+    time_logged,
+    FLOOR(lumi_total),
+    FLOOR(lumi_hvon),
+    FLOOR(lumi_veloin),
+    FLOOR(lumi_running),
+    FLOOR(lumi_logged)
+    FROM     rundbfills %s
+    ORDER BY fill_id DESC)
+    WHERE ROWNUM<100
+    """%(fill_sel,)
+    cur = DbCore.Cursor(self.rundb)
+    tab = DbTable(cur)
+    tab.headers = ['Fill', 'Time:Start', 'Fill Length','HV On','Velo IN','Running','Logged','Lumi:Total','HV On','Velo IN','Running','Logged']
+    res = cur.select(stmt)
+    if res[1]:
+      b = '<TABLE class="RecoTable">'+tab.heading()
+      res = cur.next()[1]
+      while res is not None:
+        r = str(res[0])
+        b = b + """<TR><TD onclick="javascript:rundb_show_runs_by_fill('fillid=%s')">%s</TD>"""%(r,r,)
+        b = b + '<TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD>'%\
+            (res[1],
+             datetime.datetime.fromtimestamp(res[2]).strftime('%H:%M:%S'),
+             datetime.datetime.fromtimestamp(res[3]).strftime('%H:%M:%S'),
+             datetime.datetime.fromtimestamp(res[4]).strftime('%H:%M:%S'),
+             datetime.datetime.fromtimestamp(res[5]).strftime('%H:%M:%S'),
+             datetime.datetime.fromtimestamp(res[6]).strftime('%H:%M:%S'),
+             )
+        b = b + tab.add2line(res[7:])+'</TR>'
+        res = cur.next()[1]
+      return buf + b + '</TABLE>'
+    return buf
+
+  #===============================================================================
   def showRunDbRuns(self, url, handler, req_path, req, args, data):
     srv = handler.server
-    buf = '<H2>Recent LHCb runs:</H2>'
+    fill = '';
+    if args.has_key('-fill'):
+      fill = ' AND '+args['-fill']
+
+    f = 'fillID='
+    if len(fill): f = args['-fill']
+    buf = """<H2>Recent LHCb runs:</H2>
+             Select runs by fill number:<INPUT type="text" id="fill_no" width="200" value="%s"/>
+             <INPUT type="button" value="Show" onclick="javascript:rundb_show_fill()"/><BR>
+    """%(f,)
+
     stmt= """\
     SELECT * FROM (
     SELECT   runid, fillid, partitionname, state, starttime, endtime, runtype, activity, destination
     FROM     rundbruns
     WHERE    partitionname='LHCb'
-    AND      destination='OFFLINE'
+    AND      destination='OFFLINE' %s
     ORDER BY runid DESC)
     WHERE ROWNUM<30
-    """
+    """%(fill,)
     cur = DbCore.Cursor(self.rundb)
     tab = DbTable(cur)
     tab.headers = ['Run', 'Fill', 'Partition','State','Start','End','Runtype','Activity','Destination']
@@ -382,17 +477,18 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       res = cur.next()[1]
       while res is not None:
         r = str(res[0])
-        b = b + '<TR><TD onclick="document.location=\''+url+'?-rundb_show_run='+r+'\'">'+r+'</TD>'
+        b = b + '<TR><TD onclick="javascript:rundb_show_run('+r+')">'+r+'</TD>'
         b = b + tab.add2line(res[1:])+'</TR>'
         res = cur.next()[1]
       return buf + b + '</TABLE>'
     return buf
-      
+
   #===============================================================================
   def showRunDbRun(self, url, handler, req_path, req, args, data):
     srv = handler.server
     run = args['-rundb_show_run']
     buf = '<H2>Files for run '+str(run)+':</H2>'
+
     stmt= """\
     SELECT   runid, fileid, name, stream, creationtime, events, bytes
     FROM     rundbfiles
@@ -408,7 +504,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       res = cur.next()[1]
       while res is not None:
         fid = str(res[1])
-        b = b + '<TR><TD onclick="document.location=\''+url+'?-rundb_show_file='+fid+'\'">'+str(res[0])+'</TD>'
+        b = b + '<TR><TD onclick="javascript:rundb_show_file('+fid+')">'+str(res[0])+'</TD>'
         b = b + tab.add2line(res[1:])+'</TR>'
         res = cur.next()[1]
 
@@ -417,11 +513,15 @@ class ReprocesssingManager(gaudiweb.FileServlet):
         <TR><TD>
         <INPUT type="button" value="Show files in recodb" onclick="javascript:recodb_show_files()"></INPUT>
         </TD><TD>
+        <INPUT type="button" value="Goto Run Selector" onclick="javascript:rundb_show_runs()"></INPUT>
+        </TD><TD>
+        Select Configuration:%s
+        </TD><TD>
         <INPUT type="button" value="Submit FULL Stream" onclick="javascript:rundb_submit_run('%s','FULL')"></INPUT>
         </TD><TD>
         <INPUT type="button" value="Submit EXPRESS Stream" onclick="javascript:rundb_submit_run('%s','EXPRESS')"></INPUT>
         </TD></TR></TABLE>
-        """%(run,run,)
+        """%(self.configSelectionBox(),run,run,)
       return buf + cmd + b + '</TABLE>'
     return buf
 
@@ -504,16 +604,21 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     if res[1]:
       b = '<TABLE class="RecoTable">'+tab.heading()
       res = cur.next()[1]
-      buf = '<H2>File '+str(res[2])+' for run '+str(res[0])+':</H2>'
+      run = str(res[0])
+      buf = '<H2>File '+str(res[2])+' for run '+run+':</H2>'
       while res is not None:
         fid = str(res[1])
         b = buf + b + tab.line(res)+'</TR></TABLE>'
         b = b + """
         <TABLE class="RecoActions">
         <TR><TD>
-        <INPUT type="button" value="Submit File" onclick="javascript:rundb_submit_file('%s')"></INPUT>
+        <INPUT type="button" value="Goto Run" onclick="javascript:rundb_show_run(%s)"></INPUT>
+        <INPUT type="button" value="Goto Run Selector" onclick="javascript:rundb_show_runs()"></INPUT>
+        <INPUT type="button" value="File in RecoDB" onclick="javascript:recodb_show_files()"></INPUT>
+        Select Configuration:%s
+        <INPUT type="button" value="Submit File" onclick="javascript:rundb_submit_file(%s)"></INPUT>
         </TD></TR></TABLE>
-        """%(fid,)
+        """%(run,self.configSelectionBox(),fid)
         b = b + self.showRunDbFileParams(fid)
         b = b + self.showRunDbFileCounters(fid)
         return b
@@ -525,6 +630,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
   def showRunDbSubmitRun(self, url, handler, req_path, req, args, data):
     run    = args['-rundb_submit_run']
     stream = args['-stream']
+    self.slice = args['-recodb_slice']
     buf = "<H2>Submitted from run:"+run+" all files of stream:"+stream+"</H2>"
     files = self.rundbFiles(run,stream=stream)
     if len(files)>0:
@@ -532,6 +638,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       r = self.rundbRun(f[FILE_RUNID])
       log = '<TABLE class="RecoLog"><TR><TH>FID</TH><TH>Result</TH></TR>'
       for f in files: log = log + '<TR><TD>' + str(f[FILE_FILEID]) + '</TD><TD>' + self.submitJob(r,f) + '</TD></TR>'
+      ##for f in files: log = log + '<TR><TD>' + str(f[FILE_FILEID]) + '</TD><TD>' + str(f)+'  '+str(r)+'  </TD></TR>'
       log = log + '</TABLE>'
     else:
       log = '<H2>No files found....</H2>'
@@ -540,6 +647,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
   #===============================================================================
   def showRunDbSubmitFile(self, url, handler, req_path, req, args, data):
     fid    = args['-rundb_submit_file']
+    self.slice = args['-recodb_slice']
     files = self.rundbFiles(fid=fid)
     if len(files) > 0:
       f = files[0]
@@ -547,6 +655,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       buf = "<H2>Submitted file:"+fid+"</H2>"
       log = '<TABLE class="RecoLog"><TR><TH>FID</TH><TH>Result</TH></TR>'
       log = log + '<TR><TD>' + str(f[FILE_FILEID]) + '</TD><TD>' + self.submitJob(r,f) + '</TD></TR>'
+      ##log = log + '<TR><TD>' + str(f[FILE_FILEID]) + '</TD><TD>' + self.slice + '</TD></TR>'
       log = log + '</TABLE>'
     else:
       log = '<H2>No files found....</H2>'
@@ -557,6 +666,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     buf =       '<TABLE cellspacing="0" cellpadding="6" width="100%">'
     buf = buf + '<TR><TD colspan="3" bgcolor="red"><div class="TITLES">Reprocessing Actions &amp; Commands</div></TD></TR>'
     buf = buf + self.addItem(url, 'recodb_show_configs', 'Show known configurations')
+    buf = buf + self.addItem(url, 'recodb_show_summary', 'Show Reconstruction activity summary')
     buf = buf + self.addItem(url, 'recodb_show_files',   'Show all files present in the system')
     buf = buf + self.addItem(url, 'recodb_clean',        'Clean reprocessing database')
     buf = buf + '</TABLE>'
@@ -580,6 +690,8 @@ class ReprocesssingManager(gaudiweb.FileServlet):
   def showRecoDbRemoveFile(self, url, handler, req_path, req, args, data):
     fid = args['-recodb_remove_file']
     buf = "<H1>Remove file "+fid+"</H1>"
+    """
+    #  ==> Do it with the database:
     stmt = "DELETE FROM reco_main WHERE fileid=%s"%(fid,)
     cur = DbCore.Cursor(self.recodb)
     res = cur.select(stmt)
@@ -589,14 +701,61 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     res = cur.select(stmt)
     buf = buf + '<BR>'+stmt+'<BR>SQL result:'+str(res)+'<BR>'
     cur.commit()
+    """
+    sc = self.dirac.getJobOutput(int(fid));
+    res = pprint.pformat(sc).replace('\n','</TD></TR><TR><TD>')
+    buf = buf + '<BR>' + '<TABLE class="RecoLog"><TR><TD><B>Result of removing FID:'+fid+'</B></TD></TR><TR><TD>'+res+'</TD></TR></TABLE>'
     return buf + self.showRecoDbFiles(url, handler, req_path, req, args, data)
+
+  #===============================================================================
+  def showRecoDbRescheduleFile(self, url, handler, req_path, req, args, data):
+    fid = args['-recodb_reschedule_file']
+    buf = "<H1>Reschedule file with fid:"+fid+"</H1>"
+    sc = self.dirac.rescheduleJob(int(fid))
+    res = pprint.pformat(sc).replace('\n','</TD></TR><TR><TD>')
+    buf = buf + '<BR>' + '<TABLE class="RecoLog"><TR><TD><B>Result of rescheduling FID:'+fid+'</B></TD></TR><TR><TD>'+res+'</TD></TR></TABLE>'
+    args['-recodb_show_file'] = fid
+    return buf + self.showRecoDbFile(url, handler, req_path, req, args, data)
+
+  #===============================================================================
+  def showRecoDbRescheduleFileSelection(self, url, handler, req_path, req, args, data):
+    prev  = ''
+    state = args['-state']
+    mgr   = args['-manager']
+
+    if args.has_key('-prev_state'): prev = " AND prev_state='%s'"%(args['-prev_state'],)
+
+    buf = "<H1>Reschedule files for manager:"+mgr+" which are in state:"+state+"</H1>"
+
+    stmt= """\
+    SELECT   m.fileid
+    FROM     reco_main m
+    WHERE    m.slice='%s' AND m.now_state='%s' %s
+    ORDER BY m.fileid ASC
+    """%(mgr,state,prev,)
+    cur = DbCore.Cursor(self.recodb)
+    res = cur.select(stmt)
+    fids=[]
+    if res[1]:
+      res = cur.next()[1]
+      while res is not None:
+        fids.append(res[0])
+        res = cur.next()[1]
+      for fid in fids:
+        sc = self.dirac.rescheduleJob(fid)
+        fid = str(fid)
+        res = pprint.pformat(sc).replace('\n','</TD></TR><TR><TD>')
+        buf = buf + '<BR>' + '<TABLE class="RecoLog"><TR><TD><B>Result of rescheduling FID:'+fid+'</B></TD></TR><TR><TD>'+res+'</TD></TR></TABLE>'
+    else:
+      buf = buf + 'No files found, which satisfy the selection.'
+    return buf + self.showRecoDbSummary(url, handler, req_path, req, args, data)
 
   #===============================================================================
   def showRecoDbSetFileState(self, url, handler, req_path, req, args, data):
     st  = args['-state']
     fid = args['-recodb_set_filestate']
     buf = "<H1>Change of file state fid:"+fid+" new state:"+st+"</H1>"
-    stmt = "UPDATE reco_main SET prev_state='%s', now_state='%s' WHERE fileid=%s"%(st,st,fid,)
+    stmt = "UPDATE reco_main SET prev_state='%s', now_state='%s',  WHERE fileid=%s"%(st,st,fid,)
     cur = DbCore.Cursor(self.recodb)
     res = cur.select(stmt)
     buf = buf + '<BR>'+stmt+'<BR>SQL result:'+str(res)+'<BR>'
@@ -612,7 +771,7 @@ class ReprocesssingManager(gaudiweb.FileServlet):
              NVL(m.slice,'---'),
              NVL(m.prev_state,'Unknown'),
              NVL(m.now_state,'Unknown'),
-             NVL(TO_CHAR(m.updated_time),'---'),
+             NVL(m.updated_time,0.0),
              NVL(f.raw_file,'---'),
              NVL(f.reco_file,'---'),
              NVL(f.log_file,'---'),
@@ -638,15 +797,17 @@ class ReprocesssingManager(gaudiweb.FileServlet):
         <TR><TD>Raw file:</TD><TD>%s</TD></TR>
         <TR><TD>Reconstructed file:</TD><TD>%s</TD></TR>
         <TR><TD>Log file:</TD><TD>%s</TD></TR>
-        <TR><TD>Prev.State:</TD><TD>%s</TD></TR>
-        <TR><TD>Curr.State:</TD><TD>%s</TD></TR>
+        <TR><TD>Previous State:</TD><TD>%s</TD></TR>
+        <TR><TD>Current State:</TD><TD>%s</TD></TR>
         <TR><TD>Timestamp:</TD><TD>%s</TD></TR>
         <TR><TD>GUID:</TD><TD>%s</TD></TR>
         <TR><TD>Events read:</TD><TD>%d</TD></TR>
         <TR><TD>Events written:</TD><TD>%d</TD></TR>
         <TR><TD>Output file size:</TD><TD>%d</TD></TR>
         <TR><TD>MD5 checksum:</TD><TD>%s</TD></TR></TABLE>
-        """%(res[0],res[5],res[6],res[7],res[2],res[3],res[4],res[8],res[9],res[10],res[11],res[12])
+        """%(res[0],res[5],res[6],res[7],res[2],res[3],
+             datetime.datetime.fromtimestamp(res[4]).strftime('%Y-%m-%d %H:%M:%S'),
+             res[8],res[9],res[10],res[11],res[12])
         res = cur.next()[1]
       buf = buf + """
         </TABLE><BR></BR>
@@ -654,11 +815,13 @@ class ReprocesssingManager(gaudiweb.FileServlet):
         <TR><TD>
         <INPUT type="button" value="Remove File" onclick="javascript:recodb_remove_file('%s')"></INPUT>
         </TD><TD>
-        <INPUT type="button" value="Reschedule File" onclick="javascript:recodb_setstate_file('%s','TODO')"></INPUT>
+        <INPUT type="button" value="Reschedule File" onclick="javascript:recodb_reschedule_file('%s','TODO')"></INPUT>
         </TD><TD>
         <INPUT type="button" value="Set to Error" onclick="javascript:recodb_setstate_file('%s','ERROR')"></INPUT>
         </TD><TD>
         <INPUT type="button" value="Show files" onclick="javascript:recodb_show_files()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Show configs" onclick="javascript:recodb_show_configs()"></INPUT>
         </TD></TR></TABLE>
         """%(fid,fid,fid,)
     else:
@@ -666,45 +829,165 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     return buf
 
   #===============================================================================
-  def showRecoDbFiles(self, url, handler, req_path, req, args, data):
-    buf = '<H2>Reconstruction files:</H2>'
+  def showRecoDbSummary(self, url, handler, req_path, req, args, data):
+    buf = '<H2>Reconstruction Activity Summary</H2>'
     stmt= """\
-    SELECT   m.fileid,
+    SELECT   m.fileid as fid,
              NVL(f.raw_file,'---'),
-             NVL(m.slice,'---'),
+             NVL(m.slice,'---') as slice,
              NVL(m.prev_state,'Unknown'),
              NVL(m.now_state,'Unknown'),
-             NVL(TO_CHAR(m.updated_time),'---')
+             NVL(m.updated_time,0.0)
     FROM     reco_main m, reco_files f
     WHERE    m.fileid=f.fileid
-    ORDER BY m.fileid ASC
+    ORDER BY slice, m.fileid ASC
     """
     cur = DbCore.Cursor(self.recodb)
     res = cur.select(stmt)
     if res[1]:
-      buf = buf + """<TABLE class="RecoTable">
-      <TR><TH>FID</TH><TH colspan="4">FIle name</TH></TR>
-      <TR><TH></TH><TH>Slice</TH><TH>Prev.State</TH><TH>Curr.State</TH><TH>Timestamp</TH></TR>
-      """
       res = cur.next()[1]
+      evts={}
+      states = {}
       while res is not None:
-        buf = buf + """
-        <TR><TD><A href="/ReprocesssingManager?-recodb_show_file=%d">%d</A></TD>
-        <TD colspan="4"><A href="/ReprocesssingManager?-recodb_show_file=%d">%s</A></TD></TR>
-        <TR><TD></TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR>
-        """%(res[0],res[0],res[0],res[1],res[2],res[3],res[4],res[5],)
+        key = str([res[2],res[3],res[4]])
+        curr = str(res[4])
+        if not states.has_key(key): states[key]=[0,str(res[2]),str(res[3]),curr]
+        if not evts.has_key(curr): evts[curr] = 0
+        states[key][0] = states[key][0]+1
+        evts[curr] = evts[curr] + 1
         res = cur.next()[1]
-      buf = buf + """</TABLE>
+
+      b2 = """<TABLE class="RecoTable">
+      <TR><TH>Slice</TH><TH>Previous State</TH><TH>Current State</TH><TH>Number of files</TH><TH></TH></TR>
+      """
+      sl = ''
+      count = 0;
+      for k in sorted(states):
+        v=states[k]
+        count = count + v[0]
+        if sl != v[1]:
+          if len(sl):
+            b2 = b2 + '<TR><TD colspan="3"></TD><TD>Total:'+str(count)+'</TD>' + \
+                 '<TD><INPUT style="{width:50%}" type=\"button\" value=\"Show\" onclick=\"javascript:recodb_show_files_selection(\''+sl+'\',null)"></INPUT></TD></TR>'
+          count = 0
+          sl = v[1]
+        reschedule = "<INPUT style=\"{width:50%}\" type=\"button\" value=\"Reschedule\" onclick=\"javascript:recodb_reschedule_files_selection('"+v[1]+"','"+v[2]+"','"+v[3]+"')\"></INPUT>"
+        b2 = b2 + '<TR><TD>'+v[1]+'</TD><TD>'+v[2]+'</TD><TD>'+v[3]+'</TD><TD>'+str(v[0])+'</TD>' + \
+             '<TD><INPUT style="{width:50%}" type="button" value="Show" onclick="javascript:recodb_show_files_selection(\''+v[1]+'\',\''+v[3]+'\')"></INPUT>' + \
+             reschedule + \
+             '</TD></TR>'
+      if count > 0:
+        b2 = b2 + '<TR><TD colspan="3"></TD><TD>Total:'+str(count)+'</TD>' + \
+             '<TD><INPUT style="{width:50%}" type=\"button\" value=\"Show\" onclick="javascript:recodb_show_files_selection(\''+sl+'\',null)"></INPUT></TD></TR>'
+      b2 = b2 + "</TABLE><BR>"
+
+      b3 = '<TABLE class="RecoTable"><TR><TH>Current State</TH><TH>Number of files</TH><TH></TH></TR>'
+      for k in sorted(evts):
+        b3 = b3 + "<TR><TD>"+k+"</TD><TD>"+str(evts[k])+"</TD>" + \
+                  "<TD><INPUT type=\"button\" value=\"Show\" onclick=\"javascript:recodb_show_files_selection(null,'"+k+"')\"></INPUT></TD></TR>"
+      b3 = b3 + "</TABLE><BR>"
+
+      buf = buf + b3 + b2 + """
         </TABLE><BR></BR>
         <TABLE class="RecoActions">
         <TR><TD>
+        <INPUT type="button" value="Back" onclick="javascript:goto_history_back()"></INPUT>
+        </TD><TD>
         <INPUT type="button" value="Show files" onclick="javascript:recodb_show_files()"></INPUT>
         </TD><TD>
-        <INPUT type="button" value="Clean reco DB" onclick="javascript:recodb_cleandb()"></INPUT>
-        </TD><TD>
         <INPUT type="button" value="Show recent runs" onclick="javascript:rundb_show_runs()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Show configs" onclick="javascript:recodb_show_configs()"></INPUT>
         </TD></TR></TABLE>
       """
+    return buf
+
+  #===============================================================================
+  def showRecoDbFiles(self, url, handler, req_path, req, args, data):
+    buf = '<H2>Reconstruction Database Dump</H2>'
+    st = ''
+    if args.has_key('-state'):
+      st = ' AND m.now_state=\''+args['-state']+'\''
+    slice = ''
+    if args.has_key('-slice'):
+      slice = ' AND m.slice=\''+args['-slice']+'\''
+
+    stmt= """\
+    SELECT   m.fileid as fid,
+             NVL(f.raw_file,'---'),
+             NVL(m.slice,'---') as slice,
+             NVL(m.prev_state,'Unknown'),
+             NVL(m.now_state,'Unknown'),
+             NVL(m.updated_time,0.0)
+    FROM     reco_main m, reco_files f
+    WHERE    m.fileid=f.fileid %s %s
+    ORDER BY slice, m.fileid ASC
+    """%(st,slice)
+    cur = DbCore.Cursor(self.recodb)
+    res = cur.select(stmt)
+    if res[1]:
+      b1 = """<H3>File list</H3>
+      <TABLE class="RecoTable">
+      <TR><TH>FID</TH><TH colspan="4">File name</TH></TR>
+      <TR><TH></TH><TH>Slice</TH><TH>Previous State</TH><TH>Current State</TH><TH>Timestamp</TH></TR>
+      """
+      res = cur.next()[1]
+      states = {}
+      evts={}
+      while res is not None:
+        b1 = b1 + """
+        <TR><TD><A href="/ReprocesssingManager?-recodb_show_file=%d">%d</A></TD>
+        <TD colspan="4"><A href="/ReprocesssingManager?-recodb_show_file=%d">%s</A></TD></TR>
+        <TR><TD></TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR>
+        """%(res[0],res[0],res[0],res[1],res[2],res[3],res[4],datetime.datetime.fromtimestamp(res[5]).strftime('%Y-%m-%d %H:%M:%S'),)
+        curr = str(res[4])
+        key = str([res[2],res[3],res[4]])
+        if not states.has_key(key): states[key]=[0,str(res[2]),str(res[3]),curr]
+        if not evts.has_key(curr): evts[curr] = 0
+        states[key][0] = states[key][0]+1
+        evts[curr] = evts[curr] + 1
+        res = cur.next()[1]
+      b1 = b1 + "</TABLE>"
+
+      b2 = """<TABLE class="RecoTable">
+      <TR><TH>Slice</TH><TH>Previous State</TH><TH>Current State</TH><TH>Number of files</TH><TH></TH></TR>
+      """
+      sl = ''
+      for k in sorted(states):
+        v=states[k]
+        if sl != v[1]:
+          if len(sl): b2 = b2 + '<TR><TD colspan="5">&nbsp;</TD></TR>'
+          sl = v[1]
+        reschedule = "<INPUT style=\"{width:50%}\" type=\"button\" value=\"Reschedule\" onclick=\"javascript:recodb_reschedule_files_selection('"+v[1]+"','"+v[2]+"','"+v[3]+"')\"></INPUT>"
+        b2 = b2 + "<TR><TD>"+v[1]+"</TD><TD>"+v[2]+"</TD><TD>"+v[3]+"</TD><TD>"+str(v[0])+"</TD><TD>" + \
+             "<INPUT style=\"{width:50%}\" type=\"button\" value=\"Show\" onclick=\"javascript:recodb_show_files_selection('"+v[1]+"','"+v[3]+"')\"></INPUT>" + \
+             reschedule + \
+             "</TD></TR>"
+      b2 = b2 + "</TABLE><BR>"
+
+      b3 = '<TABLE class="RecoTable"><TR><TH>Current State</TH><TH>Number of files</TH><TH></TH></TR>'
+      for k in sorted(evts):
+        b3 = b3 + "<TR><TD>"+k+"</TD><TD>"+str(evts[k])+"</TD>" + \
+                  "<TD><INPUT style=\"{width:50%}\" type=\"button\" value=\"Show\" onclick=\"javascript:recodb_show_files_selection(null,null,'"+k+"')\"></INPUT></TD></TR>"
+      b3 = b3 + "</TABLE><BR>"
+
+      cmds = """
+        </TABLE><BR></BR>
+        <TABLE class="RecoActions">
+        <TR><TD>
+        <INPUT type="button" value="Back" onclick="javascript:goto_history_back()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Show files" onclick="javascript:recodb_show_files()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Show recent runs" onclick="javascript:rundb_show_runs()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Show configs" onclick="javascript:recodb_show_configs()"></INPUT>
+        </TD><TD>
+        <INPUT type="button" value="Clean reco DB" onclick="javascript:recodb_cleandb()"></INPUT>
+        </TD></TR></TABLE>
+      """
+        
+      buf = buf +  """<H3>Summary</H3>"""+ b3 + b2 + b1 + cmds
     return buf
 
   #===============================================================================
@@ -749,6 +1032,90 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     return buf
 
   #===============================================================================
+  def showRecoDbManagers(self, url, handler, req_path, req, args, data):
+    buf = '<H2>Processing Manager Setup:</H2>'
+    srv = handler.server
+    stmt= """\
+    SELECT   pid, name, start_time, src_file
+    FROM     system_managers
+    ORDER BY name DESC
+    """
+    cur = DbCore.Cursor(self.recodb)
+    res = cur.select(stmt)
+    if res[1]:
+      tab = DbTable(cur)
+      tab.headers = ['PID','Name', 'Start time','File']
+      buf = buf + '<TABLE class="RecoTable">'+tab.heading()
+      res = cur.next()[1]
+      while res is not None:
+        pid = str(res[0])
+        buf = buf + '<TR><TD>'+pid+'</TD><TD>'+str(res[1])+'</TD><TD>'+\
+              datetime.datetime.fromtimestamp(res[2]).strftime('%Y-%m-%d %H:%M:%S')+'</TD><TD>'+\
+              '<INPUT type="button" style="{width:30%}" value="Start" onclick="javascript:recodb_manip_manager('+pid+',\''+res[1]+'\',\'start\')"></INPUT>'+\
+              '<INPUT type="button" style="{width:30%}" value="Stop"  onclick="javascript:recodb_manip_manager('+pid+',\''+res[1]+'\',\'stop\')"></INPUT>'+\
+              '<INPUT type="button" style="{width:30%}" value="Kill"  onclick="javascript:recodb_manip_manager('+pid+',\''+res[1]+'\',\'kill\')"></INPUT>'+\
+              '</TD></TR><TR><TD style="{text-align:right}" colspan="4">'+str(res[3])+'</TD></TR><TR><TD colspan="4">&nbsp;</TD></TR>'
+        res = cur.next()[1]
+      buf = buf + '</TABLE>'
+    return buf
+  
+  #===============================================================================
+  def showRecoDbManipManager(self, url, handler, req_path, req, args, data):
+    buf    = '<H2>Manipulating Reprocessing manager</H2>'
+    pid    = args['-pid']
+    name   = args['-name']
+    action = args['-action']
+    buf    = buf + 'Set manager %s [PID:%s] to %s'%(name,pid,action,)
+    return buf + self.showRecoDbManagers( url, handler, req_path, req, args, data)
+
+  #===============================================================================
+  def showMain(self, url, handler, req_path, req, args, data):
+    buff = """
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
+    <HTML>
+    <TITLE>LHCb Online status displays</TITLE>
+    <HEAD id="html_head_tag">
+    <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"></META>
+    <META HTTP-EQUIV="Expires" CONTENT="0"></META>
+    </HEAD>
+    <FRAMESET OnUnload="WarnOnLogOff()" framespacing="1" cols="150,*">
+    <FRAME name="navigation" src="/ReprocesssingManager?-left_pane=1" marginheight="0" marginwidth="0" scrolling="auto" border="1"/>
+    <FRAME name="viewer" src="/ReprocesssingManager?-right_pane=1" scrolling="auto"/>
+    <NOFRAMES>
+    <BODY>
+    <P>This page uses frames, but your browser doesn't support them.</P>
+    <P>Sorry, you cannot access this page.</P>
+    </BODY>
+    </NOFRAMES>
+    </FRAMESET>     
+    </HTML>
+    """
+    return buff
+
+  #===============================================================================
+  def showNavbar(self, url, handler, req_path, req, args, home):
+    srv = handler.server
+    nam = self.name()
+    uri = 'http://'+srv.nodeName()+':'+str(srv.port)+'/'+nam
+    buff = self.pageHeader(uri,home,False) + """
+    <H2>Action<BR>Master</H2>
+    <BR><BR>
+    <TABLE class="RecoNavbar">
+    <TR><TH>Run Database:</TH></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Show Fills"          onclick="javascript:rundb_show_fills()"></INPUT></TD></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Show Runs"           onclick="javascript:rundb_show_runs()"></INPUT></TD></TR>
+    <TR><TH>Reprocessing:</TH></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Show Configs"        onclick="javascript:recodb_show_configs()"></INPUT>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Show Summary"        onclick="javascript:recodb_show_summary()"></INPUT></TD></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Show Files"          onclick="javascript:recodb_show_files()"></INPUT></TD></TR>
+    <TR><TH>For experts:</TH></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Clean Reco DB"       onclick="javascript:recodb_cleandb()"></INPUT></TD></TR>
+    <TR><TD><INPUT style="{width:100%;text-align:left}" type="button" value="Reco Managers"       onclick="javascript:recodb_show_managers()"></INPUT></TD></TR>
+    </TABLE>
+    """
+    return buff
+
+  #===============================================================================
   def handleHTTP(self, handler, req_path, req, args, data):
     """  Handle standard HTTP requests to access files.
          Normally the file to be accessed must be visible under the mount point.
@@ -765,14 +1132,29 @@ class ReprocesssingManager(gaudiweb.FileServlet):
     """
     if ( handler.mount == self.name() ):
       home_page = '/ReprocesssingManager'
-      if ( args.has_key('-recodb_show_status')):
+      if ( args.has_key('-main')):
+        buf = self.showMain(req_path, handler, req, args, data, home_page)
+        return self.makeWebFile((req_path, self.name(), 'text/html', len(buf), buf))
+      elif ( args.has_key('-left_pane')):
+        buf = self.showNavbar(req_path, handler, req, args, data, home_page)
+        return self.makeWebFile((req_path, self.name(), 'text/html', len(buf), buf))
+      elif ( args.has_key('-recodb_show_status')):
         self.pageContent = self.showReprocessing
       elif ( args.has_key('-recodb_show_configs')):
         home_page = '/ReprocesssingManager?-recodb_show_status=1'
         self.pageContent = self.showRecoDbConfigurations
+      elif ( args.has_key('-recodb_show_managers')):
+        home_page = '/ReprocesssingManager?-recodb_show_status=1'
+        self.pageContent = self.showRecoDbManagers
+      elif ( args.has_key('-recodb_manip_manager')):
+        home_page = '/ReprocesssingManager?-recodb_show_status=1'
+        self.pageContent = self.showRecoDbManipManager
       elif ( args.has_key('-recodb_show_files')):
         home_page = '/ReprocesssingManager?-recodb_show_status=1'
         self.pageContent = self.showRecoDbFiles
+      elif ( args.has_key('-recodb_show_summary')):
+        home_page = '/ReprocesssingManager?-recodb_show_status=1'
+        self.pageContent = self.showRecoDbSummary
       elif ( args.has_key('-recodb_show_file')):
         home_page = '/ReprocesssingManager?-recodb_show_status=1'
         self.pageContent = self.showRecoDbFile
@@ -782,9 +1164,17 @@ class ReprocesssingManager(gaudiweb.FileServlet):
       elif ( args.has_key('-recodb_remove_file')):
         home_page = '/ReprocesssingManager?-recodb_show_status=1'
         self.pageContent = self.showRecoDbRemoveFile
+      elif ( args.has_key('-recodb_reschedule_file')):
+        home_page = '/ReprocesssingManager?-recodb_show_status=1'
+        self.pageContent = self.showRecoDbRescheduleFile
+      elif ( args.has_key('-recodb_reschedule_file_selection')):
+        home_page = '/ReprocesssingManager?-recodb_show_status=1'
+        self.pageContent = self.showRecoDbRescheduleFileSelection
       elif ( args.has_key('-recodb_set_filestate')):
         home_page = '/ReprocesssingManager?-recodb_show_status=1'
         self.pageContent = self.showRecoDbSetFileState
+      elif ( args.has_key('-rundb_recent_fills')):
+        self.pageContent = self.showRunDbFills
       elif ( args.has_key('-rundb_recent_runs')):
         self.pageContent = self.showRunDbRuns
       elif ( args.has_key('-rundb_show_run')):

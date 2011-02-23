@@ -89,6 +89,7 @@ class OptionsWriter(Control.AllocatorClient):
     "Object constructor."
     Control.AllocatorClient.__init__(self,manager,name)
     self.hostType = hosttype
+    self._hostnames = {}
     self.run = None
     self.optionsMgr = None
     self.infoCreator = info
@@ -272,12 +273,22 @@ class OptionsWriter(Control.AllocatorClient):
     else:
       opts.comment('Note: No TCK information present for partition:'+str(partition))
 
+    if self.run.mooreStartup is not None:
+      opts.add('MooreStartupMode',self.run.mooreStartup.data)
+    else: 
+      opts.add('MooreStartupMode',   0)
+
     if self.run.condDBtag is not None:
       opts.add('CondDBTag',   str(self.run.condDBtag.data))
       opts.add('condDBTag',   str(self.run.condDBtag.data))
     else:
       opts.add('CondDBTag',   '')
       opts.add('condDBTag',   '')
+
+    if self.run.DDDBtag is not None:
+      opts.add('DDDBTag',   str(self.run.DDDBtag.data))
+    else:
+      opts.add('DDDBTag',   '')
 
     if self.run.lumiTrigger is not None:
       opts.add('LumiTrigger',   self.run.lumiTrigger.data)
@@ -346,9 +357,15 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('TAE',            self.run.TAE())
     opts.add('OutputLevel',    self.run.outputLevel())
     self.addTriggerInfo(opts)
+    if self.writePythonFile(partition, fname+'Base', subdir, opts.value) is None:
+      return None
+
+    opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+    opts.comment().add('from '+fname+'Base import *')
     opts.comment().add('from OnlineConfig import *')
     if self.writePythonFile(partition, fname, subdir, opts.value) is None:
       return None
+
     return self.run
 
   
@@ -362,7 +379,7 @@ class OptionsWriter(Control.AllocatorClient):
         try:
           board = itms[0]
           if len(itms)>1: board = itms[1]
-          boards.append((socket.gethostbyname(board+'-d1'),board,));
+          boards.append((self._gethost(board+'-d1'),board,));
         except Exception,X:
           error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
           error('Error '+str(X),timestamp=1)
@@ -399,13 +416,13 @@ class OptionsWriter(Control.AllocatorClient):
       odin  = self.run.odinData.data
       host  = odin
       if odin != "None":
-        host = socket.gethostbyname(odin)
+        host = self._gethost(odin)
       opts.append('Tell1Boards',[host,odin,'ODIN'])
 
       odin  = self.run.odinRequest.data
       host  = odin
       if odin != "None":
-        host = socket.gethostbyname(odin)
+        host = self._gethost(odin)
 
       opts.add('ODIN_Name',odin)
       opts.add('ODIN_IP',  host)
@@ -431,7 +448,11 @@ class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
   def _gethost(self,ip):
     try:
-      return socket.gethostbyname(ip)
+      if self._hostnames.has_key(ip):
+        return self._hostnames[ip]
+      h = socket.gethostbyname(ip)
+      self._hostnames[ip] = h
+      return h
     except:
       return str(None) ## str(ip)
     
@@ -690,13 +711,13 @@ class HLTOptionsWriter(OptionsWriter):
         odin  = self.run.odinData.data
         host  = odin
         if odin != "None":
-          host = socket.gethostbyname(odin)
+          host = self._gethost(odin)
         opts.append('Tell1Boards',[host,odin,'ODIN'])
 
         odin  = self.run.odinRequest.data
         host  = odin
         if odin != "None":
-          host = socket.gethostbyname(odin)
+          host = self._gethost(odin)
 
         opts.add('ODIN_Name',odin)
         opts.add('ODIN_IP',  host)
@@ -897,7 +918,7 @@ class StorageOptionsWriter(StreamingOptionsWriter):
   # ===========================================================================
   def _configure(self, partition):
     res=StreamingOptionsWriter._configure(self,partition)
-    self._writePyOnlineEnv(partition,fname='StorageEnv')
+    #self._writePyOnlineEnv(partition,fname='StorageEnv')
     self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='STORAGE')
     return res
       
@@ -948,6 +969,6 @@ class RecoOptionsWriter(StreamingOptionsWriter):
   def _configure(self, partition):
     res=StreamingOptionsWriter._configure(self,partition)
     self._writeOnlineEnv(partition)
-    self._writePyOnlineEnv(partition,fname='ReconstructionEnv')
+    #self._writePyOnlineEnv(partition,fname='ReconstructionEnv')
     self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='RECONSTRUCTION')
     return res

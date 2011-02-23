@@ -5,8 +5,8 @@ DpName	TypeName	ID
 fwOT_FSM_Alloc	_FwFsmObjectType	118776
 
 # DpValue
-ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_Alloc.panel	_FwFsmObjectType	"FSM_Alloc|FSM_Alloc.pnl"	0x101	01.10.2008 07:01:07.018
+ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
+fwOT_FSM_Alloc.panel	_FwFsmObjectType	"FSM_Alloc|FSM_Alloc.pnl"	0x101	02.06.2010 11:20:13.631
 fwOT_FSM_Alloc.components	_FwFsmObjectType	"string State
 ", "string State
 ", "mapping maps;
@@ -17,19 +17,24 @@ FSM_Alloc_initialize(string domain, string device)
   string parentNum;
   string selfname;
   string selftype;
-  getinfo(device, selfname, selftype, parentNum);
+  FSM_Alloc_getinfo(device, selfname, selftype, parentNum);
   DebugN(\"Subscribe:REC\"+strtoupper(selftype)+\":\"+selftype+\"Alloc.State\");
-  dpConnect(\"procAnswer\",true,\"REC\"+strtoupper(selftype)+\":\"+selftype+\"Alloc.State\");
+  int sc = dpConnect(\"FSM_Alloc_procAnswer\",true,\"REC\"+strtoupper(selftype)+\":\"+selftype+\"Alloc.State\");
+  DebugN(\"Connected to \"+\"REC\"+strtoupper(selftype)+\":\"+selftype+\"Alloc.State\",sc);
+/*
   for (int i=0; i<16; i++){
     string name;
     sprintf(name,\"Storage_Slice%02X\",i);
+    DebugTN(\"Excluding \"+name+\" from Reco_Ctrl\"+parentNum);
     fwUi_getOwnership(name, id);
-    fwCU_excludeTree(\"Reco_Ctrl\"+parentNum,name,id,1);      
+    fwUi_lockOutTree(\"Reco_Ctrl\"+parentNum,name,id,1);      
  }
+*/
 }
 
-void procAnswer(string dp1, string State){
+void FSM_Alloc_procAnswer(string dp1, string State){
   DebugTN(\"Callback\",State,dp1);
+/*
   if ( \"NOT_ALLOCATED\" == State ) {
     for (int i=0; i<16; i++){
       string name;
@@ -38,6 +43,7 @@ void procAnswer(string dp1, string State){
       fwCU_excludeTree(\"Reco_Ctrl\"+parentNum,name,id,1);      
     }
   }
+*/
   dyn_string items = strsplit(State,\"/\");
   DebugN(\"procAnswer> \"+dynlen(items)+\" Values: \"+items);
   if ( dynlen(items)>= 4)  {
@@ -55,7 +61,7 @@ void procAnswer(string dp1, string State){
     if (!mappingHasKey(maps,typeB+partNameB)) return;
     string device = maps[typeB+partNameB];
     string parentNum, selfname, selftype;
-    getinfo(device, selfname, selftype, parentNum);
+    FSM_Alloc_getinfo(device, selfname, selftype, parentNum);
      
     dpGet(\"RECFARM:Farm_Reco\"+parentNum+\".general.partName\",partName,\"RECFARM:Farm_Reco\"+parentNum+\".general.partId\",partId); 
     DebugN(\"procAnswer-2> \"+command+\" Status:\"+status+\" partName: \"+partName);
@@ -73,9 +79,16 @@ void procAnswer(string dp1, string State){
               DebugTN(name,status);
               if (strtoupper(name)==status) {
                 DebugTN(\"Taking \"+name+\" from Reco_Ctrl\"+parentNum);
-                fwUi_getOwnership(name, id);
+                fwUi_getOwnership(\"Reco_Ctrl\"+parentNum, id);
                 fwCU_includeTree(\"Reco_Ctrl\"+parentNum,name,id,1);                
-                fwCU_takeTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+//                fwCU_takeTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+              }
+              else
+              {
+                if(fwFsmTree_isNode(name)) {
+                  fwUi_getOwnership(\"Reco_Ctrl\"+parentNum, id);
+                  fwCU_excludeTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+                }
               }
             }
           }
@@ -86,9 +99,11 @@ void procAnswer(string dp1, string State){
             for (int i=0; i<16; i++){
               string name;
               sprintf(name,\"Storage_Slice%02X\",i);
-              fwUi_getOwnership(name, id);
-              fwCU_releaseTree(\"Reco_Ctrl\"+parentNum,name,id,1);
-              fwCU_excludeTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+              if(fwFsmTree_isNode(name)) {
+                fwUi_getOwnership(name, id);
+//              fwCU_releaseTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+                fwCU_excludeTree(\"Reco_Ctrl\"+parentNum,name,id,1);
+              }
             }
           }
           mappingRemove(maps,selftype+partNameB);                           
@@ -124,7 +139,7 @@ void procAnswer(string dp1, string State){
   } 
 }
 
-void getinfo(string device, string &selfname, string &selftype, string &parentNum){
+void FSM_Alloc_getinfo(string device, string &selfname, string &selftype, string &parentNum){
   int type;
   string parent = fwCU_getParent(type, device);
   parentNum=parent;
@@ -132,7 +147,8 @@ void getinfo(string device, string &selfname, string &selftype, string &parentNu
   selfname=device;
   selftype=selfname;
   strreplace(selftype,\"_Alloc\"+parentNum,\"\");  
-}", "FSM_Alloc_valueChanged( string domain, string device,
+}
+", "FSM_Alloc_valueChanged( string domain, string device,
       string State, string &fwState )
 {
   DebugN(device+\" [FSM_Alloc] > New state:\"+State);
@@ -154,49 +170,51 @@ void getinfo(string device, string &selfname, string &selftype, string &parentNu
   fwState=State;
 }
 ", "FSM_Alloc_doCommand(string domain, string device, string command)      {
-	if (command == \"Allocate\" || command == \"Deallocate\")  {
+  string cmd = strtoupper(command);
+	if (cmd == \"ALLOCATE\" || cmd == \"DEALLOCATE\")  {
           int partId;
           dyn_string names, values;
-          string parentNum, selfname, selftype, partName, cmd;
-          getinfo(device, selfname, selftype, parentNum);       
+          string parentNum, selfname, selftype, partName;
+          FSM_Alloc_getinfo(device, selfname, selftype, parentNum);       
           dpGet(\"RECFARM:Farm_Reco\"+parentNum+\".general.partName\",partName,\"RECFARM:Farm_Reco\"+parentNum+\".general.partId\",partId);
           names=makeDynString(\"PART_ID\",\"PART_NAME\",\"RUN_INFO_DP\");
           values=makeDynString(partId,partName,\"RECFARM:Farm_Reco\"+parentNum);
-          DebugN(device+\"> \"+command+\": PartName:\"+partName+\" PartID:\"+partId+\" Type:\"+selftype,names,values);
+          DebugN(device+\"> \"+cmd+\": PartName:\"+partName+\" PartID:\"+partId+\" Type:\"+selftype,names,values);
           maps[selftype+partName]=device;
-          cmd = strtoupper(command);
           fwCU_sendCommand(\"Data\"+selftype,cmd,names,values);
           fwDU_startTimeout(20,domain,device,\"ERROR\");
           return;
 	}
-	else if (command == \"Configure\" )
+	else if (cmd == \"SET_DEALLOCATED\" )
+	  dpSet(device+\".State\",\"NOT_ALLOCATED\");
+	else if (cmd == \"CONFIGURE\" )
 	  dpSet(device+\".State\",\"CONFIGURED\");
-	else if (command == \"Reset\")
-          dpSet(device+\".State\",\"NOT_READY\");
-	else if (command == \"Recover\")
+	else if (cmd == \"RESET\")
+    dpSet(device+\".State\",\"NOT_READY\");
+	else if (cmd == \"RECOVER\")
 	  dpSet(device+\".State\",\"NOT_READY\");
-	else if (command == \"Kill\")
+	else if (cmd == \"KILL\")
 	  dpSet(device+\".State\",\"NOT_READY\");
-	else if (command == \"Create\")
+	else if (cmd == \"CREATE\")
 	  dpSet(device+\".State\",\"CREATED\");
-	else if (command == \"Initialize\")
+	else if (cmd == \"INITIALIZE\")
 	  dpSet(device+\".State\",\"READY\");
-	else if (command == \"Start\")
+	else if (cmd == \"START\")
 	  dpSet(device+\".State\",\"RUNNING\");
-	else if (command == \"Stop\")
+	else if (cmd == \"STOP\")
 	  dpSet(device+\".State\",\"STOPPED\");
-	else if (command == \"Finalize\")
+	else if (cmd == \"FINALIZE\")
 	  dpSet(device+\".State\",\"FINALIZED\");
-        else {
-          DebugTN(\"Unknown command\");
-          dpSet(device+\".State\",\"ERROR\"); 
-        }
-        // Since answers are redirected, we need a timeout if the python server is down.
-        DebugTN(device+\" > Command:\"+command);
-        fwDU_startTimeout(20,domain,device,\"ERROR\");
+  else {
+    DebugTN(\"Unknown command:\"+cmd);
+    dpSet(device+\".State\",\"ERROR\"); 
+  }
+  // Since answers are redirected, we need a timeout if the python server is down.
+  DebugTN(device+\" > Command:\"+cmd);
+  fwDU_startTimeout(20,domain,device,\"ERROR\");
 }
 
-"	0x101	01.10.2008 07:01:07.418
-fwOT_FSM_Alloc.states	_FwFsmObjectType	"NOT_ALLOCATED", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "STOPPED", "FwStateOKNotPhysics", "", "", "", "FINALIZED", "FwStateAttention1", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	01.10.2008 07:01:07.406
-fwOT_FSM_Alloc.actions	_FwFsmObjectType	"NOT_ALLOCATED/Allocate", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Reset", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "NOT_READY/Deallocate", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Reset", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0", "ERROR/Recover", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0"	0x101	01.10.2008 07:01:07.403
+"	0x101	16.11.2010 15:19:31.945
+fwOT_FSM_Alloc.states	_FwFsmObjectType	"NOT_ALLOCATED", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	16.11.2010 15:19:31.937
+fwOT_FSM_Alloc.actions	_FwFsmObjectType	"NOT_ALLOCATED/Allocate", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Reset", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "NOT_READY/Deallocate", "", "1", "", "0", "NOT_READY/Set_Deallocated", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Reset", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0", "FINALIZED/Start", "", "1", "", "0", "ERROR/Recover", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0"	0x101	16.11.2010 15:19:31.934
 fwOT_FSM_Alloc.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	29.09.2008 12:41:16.484

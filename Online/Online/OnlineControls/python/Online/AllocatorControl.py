@@ -87,6 +87,7 @@ class Control(PVSS.PyDeviceListener):
     PVSS.info(name+': Listen to '+self.control.name(),timestamp=1,type=PVSS.CONNECTED)
     PVSS.info(name+': Answer to '+self.state.name(),timestamp=1,type=PVSS.CONNECTED)
     self.sensor = PVSS.DeviceSensor(manager,self.control)
+    ##PVSS.info(name+': Sensor created...'+self.postfix,timestamp=1,type=PVSS.CONNECTED)
     
   # ===========================================================================
   def makeAnswer(self,status,msg):
@@ -122,6 +123,7 @@ class Control(PVSS.PyDeviceListener):
     """
     result = None
     r0 = None
+    ##PVSS.info('Executing action:'+function,timestamp=1)
     for i in self.objects:
       if hasattr(i,function):
         result = getattr(i,function)(runDpName, partition)
@@ -158,10 +160,11 @@ class Control(PVSS.PyDeviceListener):
     import traceback
     cmd = ''
     try:
+      print "Callback once per item in the device sensor list on datapoint change."
       nam = self.dp().name()
       cmd = self.dp().value().data()
       itms = cmd.split('/')
-      #print nam,cmd
+      print nam,cmd
       if len(itms) >= 5:
         command   = itms[0]
         storage   = itms[1][:-len(self.postfix)]
@@ -263,6 +266,7 @@ class Control(PVSS.PyDeviceListener):
     "Start the controls task by activating the listening devices."
     self.sensor.addListener(self)
     self.sensor.run(1)
+    PVSS.info(self.name+': Sensor started...',timestamp=1,type=PVSS.CONNECTED)
     return self
 
   # ===========================================================================

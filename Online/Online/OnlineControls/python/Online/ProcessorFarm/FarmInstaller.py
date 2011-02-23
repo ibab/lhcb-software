@@ -81,6 +81,7 @@ class Installer(Online.InstallerBase.InstallerBase):
       self.name = nam
       self.set('Name',nam)
       for i in xrange(len(n[0])):
+        ##print 'Add Node:',dev,n[0][i]+'/'+str(n[1][i])
         v.push_back(n[0][i]+'/'+str(n[1][i]))
       self.set('Nodes',v)
       v.clear()

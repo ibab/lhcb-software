@@ -2,9 +2,10 @@ subfarmSetup()
 {
     # PVSS 3.8
     cd `dirname $0`/../cmt;
+    echo `dirname $0`/../cmt;
     # PVSS 3.6
-    #cd /home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-    source PVSS.setup.sh
+    ##cd /home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
+    source setup.slc4_ia32_gcc34.vars
     unset PVSS_II
     export PVSS_PROJECT_HOST=`hostname -s|tr a-z A-Z`
     export PVSS_PROJECT_FARM=`echo ${PVSS_PROJECT_HOST} | cut -b 1-4`

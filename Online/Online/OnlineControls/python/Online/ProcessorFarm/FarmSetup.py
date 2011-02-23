@@ -1,15 +1,15 @@
-import os, socket
-pvss_system = 'RECOTEST'
+import os, socket, subprocess
+pvss_system    = 'RECOTEST'
 storage_system = 'RECSTORAGE'
-reco_control = 'RECFARM'
+reco_control   = 'RECFARM'
 
-gaudiScript = '/group/online/dataflow/scripts/runReco.sh'
+gaudiScript    = '/group/online/dataflow/scripts/runReco.sh'
 
 Name = 'Farm'
 
 numFarm = 6
 numSubFarm = 6
-_numNodePerSubFarm = 10
+_numNodePerSubFarm = 19
 subFarms = {}
 
 for i in xrange(numSubFarm):
@@ -29,14 +29,37 @@ else:
 print 'DIM DNS Node:',dns
 pvss_system = 'REC'+dns.upper()
 sf = dns.upper() # socket.gethostname().upper()
-nodes = [sf+'01',sf+'02']
-nodes= []
-lines=os.popen("tmLs -u zzzzzzzzz").readlines()
-for i in lines:
-  l=i.replace(' ','').split('"')
-  if l[0]=='Node:' and l[1].upper()!=dns: nodes.append(l[1].upper())
 
-cpus  = [8 for j in xrange(len(nodes))]
+#nodes= []
+#lines=os.popen("tmLs -u zzzzzzzzz").readlines()
+#for i in lines:
+#  l=i.replace(' ','').split('"')
+#  if l[0]=='Node:' and l[1].upper()!=dns: nodes.append(l[1].upper())
+#
+#nodes = sorted(nodes)
+#cpus  = [8 for j in xrange(len(nodes))]
+
+def getFarmInfo(sf):
+  p1=subprocess.Popen(["memViewer"], stdout=subprocess.PIPE)
+  p2=subprocess.Popen(["grep", "-e MemTotal","-e NODE" ], stdin=p1.stdout, stdout=subprocess.PIPE)
+  output=p2.communicate()[0].split('\n')
+  nodes=[]
+  cpus=[]
+  if len(nodes)==0:
+    n={}
+    for i in range(0,len(output),2):
+      node=output[i].replace('NODE','').replace(':','').replace(' ','')
+      if not node: break
+      if node.upper() == sf.upper(): continue
+      mem=output[i+1].replace('KiB','').replace('MemTotal','').replace(' ','')
+      n[node]=int(round(float(mem)/2./1024./1024.))
+    for k in sorted(n):
+      nodes.append(k.upper())
+      cpus.append(n[k])
+  return nodes,cpus
+
+nodes,cpus=getFarmInfo(sf)
+
 subFarms = {sf: (nodes,cpus)}
 numFarm = 16
 numSubFarm = len(subFarms.keys())

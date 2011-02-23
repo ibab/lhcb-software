@@ -27,7 +27,7 @@ void ProcessorFarm_installSubfarm(int flag) {
     ctrl_node = substr(dp,strlen(name)+1);
     DebugN("Sub farm installation starting: "+name+"_"+ctrl_node);
     ctrlUtils_stopAllTree();
-    ProcessorFarm_createTree(name,ctrl_node,-1,16,0);
+    ProcessorFarm_createTree(name,ctrl_node,-1,22,0);
     DebugN("Connecting task manager");
     ProcessorFarm_connectTaskManager(name,ctrl_node);
     // Finally generate all FSMs

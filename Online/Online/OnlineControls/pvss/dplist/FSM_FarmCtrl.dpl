@@ -5,30 +5,50 @@ DpName	TypeName	ID
 fwOT_FSM_FarmCtrl	_FwFsmObjectType	118620
 
 # DpValue
-ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_FarmCtrl.panel	_FwFsmObjectType	"fwFSMuser/FSM_FarmCtrl.pnl"	0x101	26.06.2008 18:30:32.247
-fwOT_FSM_FarmCtrl.states	_FwFsmObjectType	"NOT_ALLOCATED", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR|when ( $ALL$FSM_Alloc in_state NOT_READY ) move_to NOT_READY|", "", "", "NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( ( $ALL$FSM_Alloc in_state NOT_ALLOCATED ) and
-( $ALL$FSM_Farm in_state NOT_READY ) )  move_to NOT_ALLOCATED|when ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING} )  move_to CONFIGURED
+ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
+fwOT_FSM_FarmCtrl.panel	_FwFsmObjectType	"fwFSMuser/FSM_FarmCtrl.pnl"	0x101	16.11.2010 15:06:29.393
+fwOT_FSM_FarmCtrl.states	_FwFsmObjectType	"NOT_ALLOCATED", "FwStateAttention2", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|when ( $ALL$FwCHILDREN in_state {NOT_READY,CONFIGURED,CREATED,READY,RUNNING} )  move_to NOT_READY
+|", "", "", "NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
+|when ( $ALL$FSM_Alloc in_state NOT_ALLOCATED ) move_to NOT_ALLOCATED
+|when ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING,STOPPED} )  move_to CONFIGURED
+|when ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING,STOPPED} )  move_to CREATED
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {RUNNING} )  move_to RUNNING
 |", "", "", "CONFIGURED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING} )  move_to CREATED
+|when ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING,STOPPED} )  move_to CREATED
+|when ( $ANY$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |", "", "", "CREATED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( $ALL$FwCHILDREN in_state {READY,RUNNING} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} )  move_to READY
+|when ( $ANY$FwCHILDREN in_state {NOT_READY,CONFIGURED} )  move_to CONFIGURED
 |", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
+|when ( $ANY$FwCHILDREN in_state {NOT_READY,CONFIGURED,CREATED} )  move_to CREATED
 |", "", "", "RUNNING", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state {STOPPED,FINALIZED,NOT_READY} )  move_to STOPPED
+|when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |", "", "", "STOPPED", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( $ALL$FwCHILDREN in_state FINALIZED )  move_to FINALIZED
+|when ( $ALL$FwCHILDREN in_state {FINALIZED,NOT_READY} )  move_to FINALIZED
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
-|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
-|", "", ""	0x101	29.09.2008 18:15:21.010
-fwOT_FSM_FarmCtrl.actions	_FwFsmObjectType	"NOT_ALLOCATED/Allocate", "", "1", "do Allocate $ALL$FSM_Alloc", "0", "NOT_READY/Configure", "", "1", "do Configure $ALL$FwCHILDREN
-       if ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING} ) then
-          move_to CONFIGURED
-       endif
-", "0", "NOT_READY/Deallocate", "", "1", "if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
+|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to NOT_READY
+|", "", ""	0x101	16.11.2010 15:19:37.241
+fwOT_FSM_FarmCtrl.actions	_FwFsmObjectType	"NOT_ALLOCATED/Allocate", "", "1", "do Allocate $ALL$FSM_Alloc
+", "0", "NOT_ALLOCATED/Set_Running", "", "1", "move_to RUNNING
+", "0", "NOT_READY/Configure", "", "1", "do Configure $ALL$FwCHILDREN
+  if ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING,STOPPED} ) then
+     move_to CONFIGURED
+  endif
+", "0", "NOT_READY/Deallocate", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,FINALIZED} )  then
+  do Reset $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
   do Reset $ALL$FwCHILDREN
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
@@ -37,7 +57,6 @@ endif
 if ( $ALL$FSM_Alloc in_state NOT_READY ) then
   do Deallocate $ALL$FSM_Alloc
 endif
-
 ", "0", "NOT_READY/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
 endif
@@ -51,13 +70,9 @@ if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
   do Kill $ALL$FwCHILDREN
 endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
-move_to NOT_READY
+  move_to NOT_READY
 endif
-", "0", "CONFIGURED/Create", "", "1", "do Create $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state CREATED )  then
-move_to CREATED
-endif
-", "0", "CONFIGURED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
+", "0", "NOT_READY/Set_Deallocated", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
 endif
 if ( $ANY$FwCHILDREN in_state STOPPED )  then
@@ -70,11 +85,34 @@ if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
   do Kill $ALL$FwCHILDREN
 endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+  do Set_Deallocated $ALL$FSM_Alloc
+endif
+", "0", "NOT_READY/Set_Running", "", "1", "move_to RUNNING
+", "0", "CONFIGURED/Create", "", "1", "do Create $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING,STOPPED} )  then
+  move_to CREATED
+endif
+", "0", "CONFIGURED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_IOTasks in_state {CONFIGURED,CREATED} ) then
+  do Unload $ALL$FSM_IOTasks
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then
+  do Reset $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
 endif
 ", "0", "CREATED/Initialize", "", "1", "do Initialize $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state READY )  then
-move_to READY
+if ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} )  then
+  move_to READY
 endif
 ", "0", "CREATED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
@@ -91,9 +129,13 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
 endif
-", "0", "READY/Start", "", "1", "do Start $ALL$FwCHILDREN
+", "0", "READY/Start", "", "1", "do Start $ALL$FSM_Slice
+do Start $ALL$FSM_Farm
+if ( $ALL$FSM_Slice in_state RUNNING ) then
+  do Start $ALL$FwCHILDREN
+endif
 if ( $ALL$FwCHILDREN in_state RUNNING )  then
-move_to RUNNING
+  move_to RUNNING
 endif
 ", "0", "READY/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
@@ -120,7 +162,7 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED )  then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,FINALIZED} )  then
+if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,STOPPED,FINALIZED} )  then
   do Reset $ALL$FwCHILDREN
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
@@ -129,9 +171,25 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
 endif
+", "0", "RUNNING/Set_Deallocated", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,STOPPED,CREATED,FINALIZED} )  then
+  do Reset $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+  do Set_Deallocated $ALL$FSM_Alloc
+endif
+move_to NOT_ALLOCATED
 ", "0", "STOPPED/Finalize", "", "1", "do Finalize $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state FINALIZED )  then
-move_to FINALIZED
+  move_to FINALIZED
 endif
 ", "0", "STOPPED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
@@ -139,7 +197,7 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED )  then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,FINALIZED} )  then
+if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,STOPPED,FINALIZED} )  then
   do Reset $ALL$FwCHILDREN
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
@@ -147,6 +205,10 @@ if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
 endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
+endif
+", "0", "STOPPED/Start", "", "1", "do Start $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+  move_to RUNNING
 endif
 ", "0", "FINALIZED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
@@ -154,7 +216,7 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED )  then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,FINALIZED} )  then
+if ( $ANY$FwCHILDREN in_state {READY,CONFIGURED,CREATED,STOPPED,FINALIZED} )  then
   do Reset $ALL$FwCHILDREN
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
@@ -163,6 +225,10 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
 endif
+", "0", "FINALIZED/Start", "", "1", "do Start $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state RUNNING )  then
+  move_to RUNNING
+endif     
 ", "0", "ERROR/Recover", "", "1", "do Recover $ALL$FwCHILDREN
 ", "0", "ERROR/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING )  then
   do Stop $ALL$FwCHILDREN
@@ -179,5 +245,5 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
 move_to NOT_READY
 endif
-", "0"	0x101	29.09.2008 18:15:21.007
-fwOT_FSM_FarmCtrl.parameters	_FwFsmObjectType		0x101	19.06.2008 14:57:40.172
+", "0"	0x101	16.11.2010 15:19:37.238
+fwOT_FSM_FarmCtrl.parameters	_FwFsmObjectType		0x101	16.11.2010 15:06:29.393
