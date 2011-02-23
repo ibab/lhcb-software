@@ -95,7 +95,23 @@ public:
 //      printf("Counter Manager: Adding Counters not allowed anymore...\n");
     }
   }
-
+  void removeCounter (std::string &name)
+  {
+    m_counterMapIt = m_counterMap.find(name);
+    if (m_counterMapIt != m_counterMap.end())
+    {
+      m_counterMap.erase(m_counterMapIt);
+      delete (m_counterMapIt->second.first);
+    }
+  }
+  void removeCounterAll ()
+  {
+    for (m_counterMapIt = m_counterMap.begin();m_counterMapIt!= m_counterMap.end();m_counterMapIt++)
+    {
+      delete (m_counterMapIt->second.first);
+    }
+    m_counterMap.clear();
+  }
 
   void addComplement(int* runNumber, unsigned int* triggerConfigurationKey, int* cycleNumber, double* deltaT, double* offsetTimeFirstEvInRun, double* offsetTimeLastEvInCycle, double* offsetGpsTimeLastEvInCycle)
   {

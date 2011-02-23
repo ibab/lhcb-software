@@ -111,6 +111,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
+  m_InfoMap.clear();
 //   declareProperty("teste", m_teste);
 
 //  MsgStream msg(msgSvc(),"MonitorSvc");
@@ -167,6 +168,102 @@ void MonitorSvc::handle(const Incident& inc) {
     i_start();
   }
 }
+
+void MonitorSvc::undeclareInfo( const std::string& name, const IInterface*  owner)
+{
+  printf("Called undeclareInfo with name %s\n",name.c_str());
+  std::map<std::string,void*>::iterator it;
+  std::string oname = makeoname(owner);
+  std::string newName;
+  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  {
+    newName = extract("COUNTER_TO_RATE", name);
+    newName = oname+"/"+newName;
+    it = m_InfoMap.find(newName);
+    if (it != m_InfoMap.end())
+    {
+       CntrMgr* cm = (CntrMgr*)it->second;
+       cm->removeCounter(newName);
+    }
+    return;
+  }
+  newName = oname +"/"+name;
+  it = m_InfoMap.find(newName);
+  if (it != m_InfoMap.end())
+  {
+     MonSubSys* ss = (MonSubSys*)it->second;
+     MonObj *o = ss->findobj(newName.c_str());
+     ss->removeObj(o);
+     delete o;
+  }
+  return;
+}
+
+/** Undeclare monitoring information
+    @param owner Owner identifier of the monitoring information
+*/
+void MonitorSvc::undeclareAll( const IInterface*  owner)
+{
+  std::string oname = makeoname(owner);
+  printf("Called undeclareAll with owner %s\n",oname.c_str());
+  std::vector<std::string> strings;
+  std::string nam;
+  strings.clear();
+  if (m_CntrMgr != 0)
+  {
+    for (m_CntrMgr->m_counterMapIt = m_CntrMgr->m_counterMap.begin();m_CntrMgr->m_counterMapIt != m_CntrMgr->m_counterMap.end();
+        m_CntrMgr->m_counterMapIt++)
+    {
+      nam = m_CntrMgr->m_counterMapIt->first;
+      if (nam.find(oname.c_str()) != std::string::npos)
+      {
+        strings.push_back(nam);
+      }
+    }
+    for (unsigned int i=0;i<strings.size();i++)
+    {
+      m_CntrMgr->removeCounter(strings[i]);
+    }
+  }
+  std::vector<MonObj*> v;
+  v.clear();
+  if (m_HistSubSys != 0)
+  {
+    ObjMap::iterator it;
+    for (it=m_HistSubSys->m_Objmap.begin();it!=m_HistSubSys->m_Objmap.end();it++)
+    {
+      MonObj *o = it->second;
+      std::string s = o->name();
+      if (s.find(oname.c_str()) != std::string::npos)
+      {
+        v.push_back(o);;
+      }
+    }
+    for (unsigned int i=0;i<v.size();i++)
+    {
+      m_HistSubSys->removeObj(v[i]);
+    }
+  }
+  v.clear();
+  if (m_CntrSubSys != 0)
+  {
+    ObjMap::iterator it;
+    for (it=m_CntrSubSys->m_Objmap.begin();it!=m_CntrSubSys->m_Objmap.end();it++)
+    {
+      MonObj *o = it->second;
+      std::string s = o->name();
+      if (s.find(oname.c_str()) != std::string::npos)
+      {
+        v.push_back(o);;
+      }
+    }
+    for (unsigned int i=0;i<v.size();i++)
+    {
+      m_HistSubSys->removeObj(v[i]);
+    }
+  }
+}
+
 
 StatusCode MonitorSvc::start()
 {
@@ -356,6 +453,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
+      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       if (m_HistSubSys == 0)
       {
         m_HistSubSys = new MonSubSys(m_updateInterval);
@@ -382,6 +480,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
 //    m_CntrSubSys->start();
 
   }
+  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 
@@ -404,6 +503,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
+      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
@@ -431,6 +531,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
 //    m_CntrSubSys->setup((char*)"Counter");
 //    m_CntrSubSys->start();
   }
+  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 void MonitorSvc::declareInfo(const std::string& name, const double& var,
@@ -452,6 +553,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
+      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
@@ -478,6 +580,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
 //    m_CntrSubSys->setup((char*)"Counter");
 //    m_CntrSubSys->start();
   }
+  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
@@ -535,6 +638,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
 //    m_CntrSubSys->setup((char*)"Counter");
 //    m_CntrSubSys->start();
   }
+  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
   return;
 }
@@ -559,6 +663,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
+      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
@@ -586,7 +691,8 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
 //      m_HistSubSys->setup((char*)"Histos");
   //    m_HistSubSys->start();
     }
-    MonHist *m = new MonHist(msgSvc(),name,desc,&var);
+    MonHist *m = new MonHist(msgSvc(),oname+"/"+name,desc,&var);
+    m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_HistSubSys));
     m_HistSubSys->addObj(m);
   }
   return;
@@ -634,6 +740,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   {
 //    isMonObject = true;
     mhist = new MonHist(msgSvc(),oname+"/"+name,var);
+    m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_HistSubSys));
     m_HistSubSys->addObj(mhist);
   }
   else

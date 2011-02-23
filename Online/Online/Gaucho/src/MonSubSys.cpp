@@ -92,6 +92,16 @@ void MonSubSys::addObj(MonObj* h)
 //  calcBufferSize();
 //  this->unLock();
 }
+void MonSubSys::removeAll()
+{
+  ObjMap::iterator i;
+  for (i=m_Objmap.begin();i!= m_Objmap.end();i++)
+  {
+    delete i->second;
+  }
+  m_Objmap.clear();
+  m_numObjs = 0;
+}
 void MonSubSys::removeObj(MonObj* h)
 {
   std::string n(h->name());

@@ -884,7 +884,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //        delete m_rootdeser;
 //        m_rootdeser = 0;
 //      }
-      StatEntity *s = new StatEntity ( (const unsigned long) b->nentries ,
+      StatEntity *s = new StatEntity ( (unsigned long) b->nentries ,
                    b->m_sumw    ,
                    b->m_sumw2   ,
                    b->m_min ,

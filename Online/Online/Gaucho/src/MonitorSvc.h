@@ -91,12 +91,12 @@ public:
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
   */
-  void undeclareInfo( const std::string& , const IInterface*  ) {};
+  void undeclareInfo( const std::string& , const IInterface*  );
 
   /** Undeclare monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void undeclareAll( const IInterface*  ) {};
+  void undeclareAll( const IInterface*  );
 
   /** Update monitoring information
       @param name Monitoring information name knwon to the external system
@@ -134,6 +134,7 @@ private:
   std::string m_partname;
   std::string m_ProcName;
   std::string m_ProgName;
+  std::map<std::string,void*> m_InfoMap;
   typedef std::map<const IInterface*, std::set<std::string> > InfoNamesMap;
   typedef InfoNamesMap::iterator InfoNamesMapIt;
   InfoNamesMap  m_InfoNamesMap;

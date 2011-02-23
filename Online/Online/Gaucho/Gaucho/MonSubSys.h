@@ -67,6 +67,7 @@ public:
   void stop();
   int m_runno;
   bool m_expandnames;
+  void removeAll();
 };
 
 #endif
