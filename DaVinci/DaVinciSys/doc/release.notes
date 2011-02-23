@@ -3,6 +3,14 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r0>2011-02-24 DaVinci v28r0. For stripping13 line developments and validation.</A></H1><PRE>
+
+  *** Based on LHCb v32r0 stack. 
+  
+  * Enhancements to selection toolkit.
+  * Backwards-incompatible changes to DVAlgorithm input and output locations.
+    No context-dependent location extensions for particles.
+
 </PRE><H1><A NAME=v27r1>2011-02-02 DaVinci v27r1. For 2011 stripping line developments.</A></H1><PRE>
 
   *** Based on LHCb v31r8 stack. Baseline version for early 2011 stripping line development.
