@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r27    DAQ
+use MDF               v3r29    DAQ
 use MDF_ROOT          v1r6     DAQ
 use DAQEvent          v9r3     Event
 use GaudiObjDesc      v11r11
@@ -34,10 +34,10 @@ use GaudiUPI            v1r13    Online
 use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
-use OMAlib              v3r3     Online
-use OnlineBase          v1r7     Online
+use OMAlib              v3r4     Online
+use OnlineBase          v1r8     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
-use OnlineHistDB        v7r3     Online
+use OnlineHistDB        v7r4     Online
 use OnlineKernel        v2r6     Online
 use OnlineTools         v1r4     Online
 use OnlineTasks         v1r36    Online

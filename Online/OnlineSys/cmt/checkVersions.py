@@ -57,6 +57,8 @@ for line in lines:
     pkg = head+os.sep+package
   if with_versions: path = path+os.sep+version
   #print dir,pkg,path,dir==dir2,dir2
+  tags = ''
+  trunk = ''
   if dir == dir2:
     last_tag = []
     os.chdir(curr_dir)
@@ -122,8 +124,9 @@ for line in lines:
     vsn = "%-8s"%version
     if changes:
       tag = version.replace('v','').replace('r',' ').replace('p',' ').split(' ')
-      print prefix,'========> HEAD differs from version '+vsn+' of package:',pkg
-      print prefix,'          Last tags:',last_tag
+      print prefix,'==> HEAD differs from version '+vsn+' of package:',pkg
+      print prefix,'==> See '+tags
+      print prefix,'==> Last tags:',last_tag
     else:
       print prefix,'UNCHANGED Version '+vsn+'    package:',pkg
       # print prefix,'          Last tags:',last_tag
