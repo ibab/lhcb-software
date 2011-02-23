@@ -213,7 +213,7 @@ public:
   void disableMonObjectsForString() {m_disableMonObjectsForString = 1;}
   void disableMonObjectsForPairs() {m_disableMonObjectsForPairs = 1;}
   void disableMonObjectsForHistos() {m_disableMonObjectsForHistos = 1;}
-  virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period);
+  virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period, DimService *sav=0);
   virtual void StopSaving();
 
   int m_updateInterval;

@@ -849,7 +849,7 @@ void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
 //   printf("Monitor System Un-Locking\n");
     this->m_MonSys->unLock();
   }
- void MonitorSvc::StartSaving(std::string &dir, std::string &part, std::string &task, int period)
+ void MonitorSvc::StartSaving(std::string &dir, std::string &part, std::string &task, int period, DimService *sav)
  {
    if (m_savetimer == 0)
    {
@@ -857,6 +857,7 @@ void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
      m_savetimer->setPartName(part);
      m_savetimer->setRootDir(dir);
      m_savetimer->setTaskName(task);
+     m_savetimer->m_filenamesvc = sav;
    }
    m_savetimer->Start();
  }

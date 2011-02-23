@@ -22,7 +22,7 @@ SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*100
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
-
+  m_filenamesvc =0;
 }
 
 SaveTimer::~SaveTimer( )
@@ -203,4 +203,5 @@ void SaveTimer::SavetoFile(void *buff)
   m_Adder->Lock();
   f->Close();
   m_Adder->UnLock();
+  if (m_filenamesvc != 0) m_filenamesvc->updateService(fn);
 }

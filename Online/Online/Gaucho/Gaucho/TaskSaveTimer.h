@@ -24,5 +24,6 @@ public:
   void setPartName(std::string &p){ m_partname= p;return;};
   void setTaskName(std::string &p){m_taskname = p;return;};
   void setEOR(bool flg){m_EOR = flg;return;};
+  DimService *m_filenamesvc;
 };
 #endif

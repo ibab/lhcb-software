@@ -91,7 +91,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
   m_dimSvcSaveSetLoc = 0;
-  m_pGauchoMonitorSvc = 0;  
+  m_pGauchoMonitorSvc = 0;
 }
 
 
@@ -208,7 +208,7 @@ StatusCode UpdateAndReset::start()
       m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_gpsTimeLastEvInCycle);
   if (this->m_saveHistograms != 0)
   {
-    m_pGauchoMonitorSvc->StartSaving(this->m_saveSetDir,partName,taskName,this->m_saverCycle);
+    m_pGauchoMonitorSvc->StartSaving(this->m_saveSetDir,partName,taskName,this->m_saverCycle,m_dimSvcSaveSetLoc );
   }
   return StatusCode::SUCCESS;
 }
@@ -279,7 +279,7 @@ StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
-  if (m_stopdone)   
+  if (m_stopdone)
   {
     return StatusCode::SUCCESS;
   }

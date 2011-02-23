@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IMonitorSvc.h"
+class DimService;
 
 static const InterfaceID IID_IGauchoMonitorSvc ( "IGauchoMonitorSvc", 1, 0 );
 
@@ -61,7 +62,7 @@ public:
   virtual void UnLock(void)=0;
   virtual void resetHistos( const IInterface*  )=0;
   virtual void setRunNo(int runno) = 0;
-  virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period)=0;
+  virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period, DimService *sav=0)=0;
   virtual void StopSaving()=0;
 
 
