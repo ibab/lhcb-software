@@ -30,7 +30,7 @@ VaryGasPressureTemperatureAlg( const std::string& name,
                                ISvcLocator* pSvcLocator )
   : Rich::AlgBase    ( name , pSvcLocator ),
     m_firstEvent     ( Rich::NRadiatorTypes, true ),
-    m_radiators      ( Rich::NRadiatorTypes, NULL ),
+    m_radiators      ( Rich::NRadiatorTypes, (DeRichRadiator *)(NULL) ),
     m_nomPressure    ( Rich::NRadiatorTypes, 0.0  ),
     m_nomTemperature ( Rich::NRadiatorTypes, 0.0  ),
     m_nEvt           ( 0 )
