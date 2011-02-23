@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Sebastian Schleich
+ - updated StrippingBs2PhiPhi to use LineBuilder
+ - updated instantiation in StreamBHadron
+ - added test_Bs2PhiPhi.py
+ - Retention (2.4E-4) tested with data set from TestMyStrippingLineOnRealData.py, rev.118764
+ - updated StrippingInclPhi to use LineBuilder
+ - added test_InclPhi.py
+
 ! 2011-02-23 - Eduardo Rodrigues
  - Tiny fix to StrippingHb2Charged2Body.py
 

@@ -15,7 +15,7 @@ Exports the following StrippingLines as instance data members:
 - lines                  : List of all lines
 The phase space is split up ("HighPT" and "LowPT") because of high combinatorics at low pt. For the purpose of RICH calibration it is advantageous do do this cut on K-pt whereas for the inclusive phi studies, the cut is made on Phi-pt (the "...PhiLine"s)
 When cutting on phi-pt, an overlap is provided to allow later CM frame boosting.
-The Phi- and K- Lines have of course a large overlap, which would vanish in the case of prescaling. To save bandwith, the lines do NOT use the "official" prescalers, but feature their own one, which acts at the same time for the Kaon- and the phi- Line.
+The Phi- and K- Lines have of course a large overlap, which would vanish in the case of prescaling. To save bandwith, the lines _did_ NOT use the "official" prescalers, but feature their own one, which acts at the same time for the Kaon- and the phi- Line. This deems to be impossible with the Selection framework and is abandonned for Stripping13, 2011-02-23
 
 The mother- and combination cuts and additional pt cuts are centralized in the following internal methods:
 _Phi2KK_MC
@@ -35,31 +35,24 @@ see: http://indico.cern.ch/conferenceDisplay.py?confId=82203
 '''
 
 __author__  = ['Andrew Powell','Sebastian Schleich']
-__date__    = '2010/09/02'
+__date__    = '2011/02/23'
 __version__ = '$Revision: 1.7 $'
 __all__     = ('InclPhiConf')
 
-from Gaudi.Configuration   import *
-from LHCbKernel.Configuration import *
-from Configurables import LoKi__VoidFilter as VoidFilter
-from StrippingConf.StrippingLine import StrippingLine
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember, StrippingTool
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
-from StrippingSelections.Utils import checkConfig
-from Configurables import FilterDesktop, CombineParticles
-import GaudiKernel.SystemOfUnits as Units
-from Configurables import DeterministicPrescaler as Scaler
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
-
+from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 modules =  CoreFactory('CoreFactory').Modules
 for i in [ 'LoKiTrigger.decorators' ] :
   if i not in modules : modules.append(i)
 
 
 
-class InclPhiConf(object):
+class InclPhiConf(LineBuilder):
     __configuration_keys__ = ( 
                   'KaonPT'                   # MeV
                 , 'KaonDLL'                  # adimensional
@@ -80,19 +73,20 @@ class InclPhiConf(object):
 
 
 
-    def __init__(self, name = 'InclPhi', config= None) :
-      checkConfig(InclPhiConf.__configuration_keys__, config)
+    def __init__(self, name, config) :
+
+      LineBuilder.__init__(self, name, config)
 
       self.InclPhiHighPtLine    = self._InclPhiHighPt_X_Line( name, config , False )
       self.InclPhiLowPtLine     = self._InclPhiLowPt_X_Line(  name, config , False )
       self.InclPhiHighPtPhiLine = self._InclPhiHighPt_X_Line( name, config , True )
       self.InclPhiLowPtPhiLine  = self._InclPhiLowPt_X_Line(  name, config , True )
       self.InclPhiLDLine        = self._InclPhiLDLine( name, config )
-      self.lines = [self.InclPhiHighPtLine,
-		    self.InclPhiLowPtLine,
-		    self.InclPhiHighPtPhiLine,
-		    self.InclPhiLowPtPhiLine,
-		    self.InclPhiLDLine]
+      self.registerLine(self.InclPhiHighPtLine)
+      self.registerLine(self.InclPhiLowPtLine)
+      self.registerLine(self.InclPhiHighPtPhiLine)
+      self.registerLine(self.InclPhiLowPtPhiLine)
+      self.registerLine(self.InclPhiLDLine)
 
     # ====================================================================
     # mother and combination cut definition
@@ -138,11 +132,10 @@ class InclPhiConf(object):
         #print Phi2KK_CC
         #print Phi2KK_MC
 
-        StrippingInclPhiHighPtScaler = Scaler ("StrippingInclPhiHighPtScaler", AcceptFraction=ps)
         _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
         _Phi2KK =  CombineParticles(
-                           "_"+name+"Phi2KK"
-                          , DecayDescriptor = "phi(1020) -> K+ K-"
+                         #  "_"+name+"Phi2KK"
+                            DecayDescriptor = "phi(1020) -> K+ K-"
                          #, DaughtersCuts = {"K+": Phi2KK_DC}
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
@@ -151,10 +144,10 @@ class InclPhiConf(object):
 
         return StrippingLine( name
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
-             #, prescale = ps   Prescale realized by my own prescaler (shared between Phi and K)->Do not set here!
+              , prescale = ps
               , checkPV = False
               , postscale = 1
-              , algos = [StrippingInclPhiHighPtScaler, Phi2KK]
+              , selection = Phi2KK
               )
 
 
@@ -176,12 +169,11 @@ class InclPhiConf(object):
         #print Phi2KK_CC
         #print Phi2KK_MC
 
-        StrippingInclPhiLowPtScaler = Scaler ("StrippingInclPhiLowPtScaler", AcceptFraction=ps)
         _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
 
         _Phi2KK = CombineParticles(
-                           "_"+name+"Phi2KK"
-                          , DecayDescriptor = "phi(1020) -> K+ K-"
+                         #  "_"+name+"Phi2KK"
+                            DecayDescriptor = "phi(1020) -> K+ K-"
                          #, DaughtersCuts = {"K+": Phi2KK_DC}
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
@@ -190,10 +182,10 @@ class InclPhiConf(object):
 
 	return StrippingLine(name
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
-             #, prescale = ps   Prescale realized by my own prescaler (shared between Phi and K)->Do not set here!
+              , prescale = ps
               , checkPV = False
               , postscale = 1
-              , algos = [StrippingInclPhiLowPtScaler, Phi2KK]
+              , selection = Phi2KK
               )
 
 
@@ -223,8 +215,8 @@ class InclPhiConf(object):
         #print Phi2KK_MC
 
         _Phi2KK = CombineParticles(
-                           "_"+name+"Phi2KK"
-                          , DecayDescriptor = "phi(1020) -> K+ K-"
+                         #  "_"+name+"Phi2KK"
+                            DecayDescriptor = "phi(1020) -> K+ K-"
                          #, DaughtersCuts = {"K+": Phi2KK_DC}
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
@@ -236,6 +228,6 @@ class InclPhiConf(object):
               , prescale = ps
               , postscale = 1
               , checkPV = False
-              , algos = [DownNoPIDsKaons, Phi2KK]
+              , selection = Phi2KK
               )
 
