@@ -259,7 +259,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     }
     for (unsigned int i=0;i<v.size();i++)
     {
-      m_HistSubSys->removeObj(v[i]);
+      m_CntrSubSys->removeObj(v[i]);
     }
   }
 }
