@@ -19,8 +19,6 @@
 //namespaces
 
 using namespace Rich::Rec::MC;
-
-
 using std::vector;
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichParticleSearchMain
@@ -276,7 +274,6 @@ StatusCode RichParticleSearchMain::execute() {
         double AvThetaRec = thetaRecSum/PhotonCounter;
         if (AvThetaRec > m_minCK[RICHint]){
         	double CKVariance = 0.0;
-        	double thetaRecSumRemoval =0.0;
 
         	for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
         		CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta

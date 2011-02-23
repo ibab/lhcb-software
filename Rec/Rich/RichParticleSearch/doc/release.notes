@@ -3,7 +3,9 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
+
 ! 2011-02-23 - Matt Coombes
+ - Fixed for clean compilation
  - Removed unused Tools
  - Cleaned up imported headers
  - Removed forced Average beta < 1.0 Cut

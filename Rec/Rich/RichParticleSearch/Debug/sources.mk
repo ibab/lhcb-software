@@ -23,5 +23,6 @@ C_UPPER_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+x86_64-slc5-gcc43-opt \
 src \
 

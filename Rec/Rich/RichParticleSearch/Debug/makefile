@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir.mk
+-include x86_64-slc5-gcc43-opt/subdir.mk
 -include src/subdir.mk
 -include objects.mk
 
@@ -38,19 +39,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: RICHHeavyParticleSearch
+all: HeavyParticleSearch
 
 # Tool invocations
-RICHHeavyParticleSearch: $(OBJS) $(USER_OBJS)
+HeavyParticleSearch: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MacOS X C++ Linker'
-	g++  -o "RICHHeavyParticleSearch" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "HeavyParticleSearch" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) RICHHeavyParticleSearch
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) HeavyParticleSearch
 	-@echo ' '
 
 .PHONY: all clean dependents
