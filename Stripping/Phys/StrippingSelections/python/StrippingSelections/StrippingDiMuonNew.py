@@ -193,10 +193,10 @@ class DiMuonConf(object):
         'DiMuonHighMass_Postscale'                 :     1.   ,
         'DiMuonHighMass_checkPV'                   : False    ,
         
-        'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
         'DiMuonHighMass_MuonP'                     : -8000.   , 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  7500.   , # MeV
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
         'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
         'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
 
@@ -225,8 +225,8 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
         'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
 
@@ -286,10 +286,10 @@ class DiMuonConf(object):
         'DiMuonHighMass_Postscale'                 :     1.   ,
         'DiMuonHighMass_checkPV'                   :  True    ,
         
-        'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
         'DiMuonHighMass_MuonP'                     : -8000.   , 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  7500.   , # MeV
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
         'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
         'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
 
@@ -318,8 +318,8 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
         'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
 
@@ -379,10 +379,10 @@ class DiMuonConf(object):
         'DiMuonHighMass_Postscale'                 :     1.   ,
         'DiMuonHighMass_checkPV'                   :  True    ,
         
-        'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
         'DiMuonHighMass_MuonP'                     : -8000.   , 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  7500.   , # MeV
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
         'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
         'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
 
@@ -411,8 +411,8 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
         'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
 
