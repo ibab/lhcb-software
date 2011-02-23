@@ -586,8 +586,6 @@ int CheckpointSvc::stopMainInstance() {
   CHKPT* chkpt =  CHKPT_get();
   // First get rid of DIM
   m_fsm->disconnectDIM();
-  ::dis_stop_serving();
-  ::dim_stop();
   ::lib_rtl_sleep(100);
   if ( m_files ) ::free(m_files);
   m_files = 0;
@@ -617,10 +615,10 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
   if ( dns ) {
     log << "DIM_DNS_NODE:" << dns << " ";
     ::dis_set_dns_node((char*)dns);
-    ::dic_set_dns_node((char*)dns);
+    //    ::dic_set_dns_node((char*)dns);
   }
   log << endmsg;
-  ::dim_init();
+  //  ::dim_init();
   //
   // We have to overload the underlying dim command, since for the 
   // forker instance all Gaudi actions are over....
@@ -634,7 +632,6 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
     }
   }
   m_fsm->connectDIM(command);
-  ::dis_start_serving((char*)proc.c_str());
   return 1;
 }
 
@@ -708,10 +705,9 @@ int CheckpointSvc::execChild() {
   string proc = RTL::processName();
   if ( dns ) {
     ::dis_set_dns_node((char*)dns);
-    ::dic_set_dns_node((char*)dns);
+    //    ::dic_set_dns_node((char*)dns);
   }
-  ::dim_init();
-  ::dis_start_serving((char*)proc.c_str());
+  //  ::dim_init();
   m_fsm->connectDIM(0);
   return StatusCode::SUCCESS;
 }
@@ -806,7 +802,7 @@ void CheckpointSvc::handle(const Incident& inc) {
   }
   else if ( inc.type() == "APP_RUNNING" ) {
     string proc  = RTL::processName();
-    ::dis_start_serving((char*)proc.c_str());
+    //    ::dis_start_serving((char*)proc.c_str());
   }
   else if ( inc.type() == "APP_STOPPED" ) {
   }
