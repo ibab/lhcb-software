@@ -642,7 +642,7 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
 int CheckpointSvc::forkChild(int which) {
   string proc  = RTL::processName();
   string utgid = buildChildUTGID(which);
-  CHKPT* chkpt =  CHKPT_get();
+  CHKPT* chkpt = CHKPT_get();
 
   chkpt->setUTGID(utgid.c_str());
   pid_t pid = chkpt->forkInstance();
