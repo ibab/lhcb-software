@@ -350,7 +350,7 @@ StatusCode DisplVertices::execute(){
       continue; 
     }
 
-    if( mass < m_PreyMinMass || ( mass > m_PreyMaxMass && sumpt > m_PreyMaxSumPt ) || 
+    if( mass < m_PreyMinMass || ( mass > m_PreyMaxMass ) || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
         pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
