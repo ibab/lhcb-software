@@ -27,10 +27,10 @@ default_config = { 'DaugPtMin': 800.,
            'D0FDChi2': 40.,
            'D0BPVDira': 0.9999,
            'D0DOCA': 0.07,
-           'Daug_TRCHI2DOF_MAX': 9.,
-           'Dstar_AMDiff_MAX': 160.,
+           'Daug_TRCHI2DOF_MAX': 5.,
+           'Dstar_AMDiff_MAX': 165.,
            'Dstar_VCHI2VDOF_MAX': 100.,
-           'Dstar_MDiff_MAX': 155.,
+           'Dstar_MDiff_MAX': 160.,
            'UntaggedCFLinePrescale': 1.,
            'UntaggedCFLinePostscale': 1.,
            'UntaggedSCSLinePrescale': 1.,
@@ -254,21 +254,21 @@ def makeD2hh(name,
     inputSel    : input selections
     """
 
-    _Kcuts1  = "(PT > %(DaugPtMin)s) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
+    _Kcuts1  = "(PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
     _KcutsPIDK  = KPIDK_string % locals()['config']
-    _Kcuts2  = " & (ISLONG) & (P > %(DaugP)s) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
+    _Kcuts2  = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
     _Kcuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
-    _Picuts1 = "(PT > %(DaugPtMin)s) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
+    _Picuts1 = "(PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
     _PicutsPIDK  = PiPIDK_string % locals()['config']
-    _Picuts2 = " & (ISLONG) & (P > %(DaugP)s) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
+    _Picuts2 = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
     _Picuts = _Picuts1 + _PicutsPIDK + _Picuts2
     _dauCuts = { 'K+': _Kcuts, 'pi+': _Picuts }
 
-    _combCuts1 = "(APT > %(D0Pt)s)" \
-		"& (AHASCHILD( PT > %(DaugPtMax)s ) )" \
-    		"& (ADOCA(1,2)< %(D0DOCA)s)" \
-                "& (ADAMASS(%(D0MassWindowCentre)s) < %(D0MassWindowWidth)s)" \
-                "& (AP > %(D0P)s)" % locals()['config']
+    _combCuts1 = "(APT > %(D0Pt)s* MeV)" \
+		"& (AHASCHILD( PT > %(DaugPtMax)s* MeV ) )" \
+    		"& (ADOCA(1,2)< %(D0DOCA)s* mm)" \
+                "& (ADAMASS(%(D0MassWindowCentre)s* MeV) < %(D0MassWindowWidth)s* MeV)" \
+                "& (AP > %(D0P)s* MeV)" % locals()['config']
     _combCutsPIDK = CombPIDK_string % locals()['config']
     _combCuts = _combCuts1 + _combCutsPIDK
 
@@ -301,9 +301,9 @@ def makeDstar2D0Pi( name
     """
 
     daugCuts = "(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % locals()['config']
-    combCuts = "((AM - AM1) < %(Dstar_AMDiff_MAX)s)" % locals()['config']
+    combCuts = "((AM - AM1) < %(Dstar_AMDiff_MAX)s* MeV)" % locals()['config']
     dstarCuts = "(VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2VDOF_MAX)s)" \
-                "& ((M - M1) < %(Dstar_MDiff_MAX)s)" % locals()['config']
+                "& ((M - M1) < %(Dstar_MDiff_MAX)s* MeV)" % locals()['config']
 
     _Dstar = CombineParticles( DecayDescriptor = DecayDescriptor
                              , DaughtersCuts = { "pi+" : daugCuts }

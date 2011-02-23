@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-23 - Marco Gersabeck
+ - Update to StrippingD2hh.py: minor changes to D* related cuts
+
 ! 2011-02-23 - Liming Zhang
  - updated StrippingB2DMuNuX.py and added a new line for B->D0XMuNu, D0->K3Pi.
  - updated StrippingBs2PhiMuMu.py and StrippingDForBSemi.py to new framework.
