@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Wouter Hulsbergen
+ - bug fix in FitNode: was always putting fit in error mode for classical smoother
+
 ! 2011-02-20 - Wouter Hulsbergen
  - added missing consts in KalmanFitResult
 

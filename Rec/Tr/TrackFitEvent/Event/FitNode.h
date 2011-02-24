@@ -242,8 +242,7 @@ namespace LHCb
     /// Deactivate this node (outlier)
     void deactivateMeasurement(bool deactivate = true) ;
     
-    Gaudi::Math::ValueWithError computeResidualFromFilter() const ;
-        
+    /// Get the index of this node. For debugging only.
     int index() const ;
 
     /// set previous node
@@ -252,6 +251,7 @@ namespace LHCb
       if( m_prevNode ) m_prevNode->m_nextNode = this ;
     }
 
+    /// Unlink this node
     void unLink() {
       m_prevNode = m_nextNode = 0 ;
       m_parent = 0 ;
@@ -259,10 +259,10 @@ namespace LHCb
     
     /// set the parent
     void setParent( KalmanFitResult* p) { m_parent = p ; }
+
     /// get the parent
     KalmanFitResult* getParent(){ return m_parent ; }
-   
-    
+       
     /// update node residual using a smoothed state
     Gaudi::Math::ValueWithError computeResidual(const LHCb::State& state, bool biased) const ;
     
@@ -346,9 +346,6 @@ namespace LHCb
     void computeClassicalSmoothedState() ;
     
   private:
-    /// update node residual using weighted average of forward and backward filter
-    void updateResidual() ;
-    
     /// update node residual using a smoothed state
     void updateResidual(const LHCb::State& state) ;
     

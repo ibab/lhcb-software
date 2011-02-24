@@ -21,6 +21,9 @@ using namespace TriangularInversion;
  *  (predicted from filter step)  and the best state at k  
  *  (notation note filter procedes from k -> k + 1 -> k + 2 ......)
  *  
+ *  @author Victor Coco and Wouter Hulsbergen (moved K-math here)
+ *  @date   2011-02-01
+ *
  *  @author Eduardo Rodrigues (adaptations to the new track event model)
  *  @date   2005-04-15
  *
@@ -501,11 +504,6 @@ namespace LHCb {
     }
     // now we fill the residual
     updateResidual(state) ;
-    if( hasMeasurement() && m_errResidual > 0 ){
-      KalmanFitResult* kfr = this->getParent();
-      if (!kfr->inError())
-	kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
-    } ;
 
     // finally update the _Forward_ state
     m_filterStatus[Forward] = Smoothed ;
@@ -541,57 +539,6 @@ namespace LHCb {
     setErrResidual(res.error()) ;
   }
   
-  
-  void FitNode::updateResidual()
-  {
-    if( m_filterStatus[Forward] != Smoothed &&
-	m_filterStatus[Backward] != Smoothed ) {
-      Gaudi::Math::ValueWithError res = computeResidualFromFilter() ;
-      setResidual(res.value()) ;
-      setErrResidual(res.error()) ;
-    }
-  }
-  
-  Gaudi::Math::ValueWithError FitNode::computeResidualFromFilter() const
-  {
-    // this routine computes the smoothed residual by taking a weighted
-    // average
-    Gaudi::Math::ValueWithError rc ;
-    if ( this->hasMeasurement() ) {
-      // 
-      const TrackProjectionMatrix&  H  = this->projectionMatrix();
-      const TrackVector&  refX         = this->refVector().parameters() ;
-
-      const LHCb::State&     S1 = filteredState(Forward) ;
-      const LHCb::State&     S2 = predictedState(Backward) ;
-      
-      SymMatrix4x4 C ;
-      Vector4     X ;
-      bool success =
-	weightedAverage( S1.stateVector().Sub<Vector4>(0),S1.covariance().Sub<SymMatrix4x4>(0,0),
-			 S2.stateVector().Sub<Vector4>(0),S2.covariance().Sub<SymMatrix4x4>(0,0),
-			 X,C) ;
-      if(!success){
-	KalmanFitResult* kfr = unConst().getParent();
-	if (!kfr->inError())
-	  kfr->setErrorFlag(2,KalmanFitResult::WeightedAverage ,KalmanFitResult::Other ) ;
-      }
-      typedef ROOT::Math::SMatrix<double,1,4> Matrix1x4;   
-      Matrix1x4 Hsub = H.Sub<Matrix1x4>(0,0) ;
-      Vector4   refXsub = refX.Sub<Vector4>(0) ;
-      
-      double r = this->refResidual() + (Hsub*(refXsub - X))(0) ;
-      double V = this->errMeasure2();
-      double HCH = Similarity( Hsub, C )(0,0) ;
-      //std::cout << "sqrt(HCH) from partial smooth: " << index() << " " << sqrt(HCH) << std::endl ;
-      
-      double sign = type()==LHCb::Node::HitOnTrack? -1 : 1 ;
-      double R = V + sign * HCH;
-      rc = Gaudi::Math::ValueWithError( r, R ) ;
-    }
-    return rc ;
-  }
-    
   // inline bool TrackKalmanFilter::isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
   // {
   //   unsigned int i = 0u;
