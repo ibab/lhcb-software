@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Sam Gregson
+ - StrippingD2KS0H_conf.py
+   Update the D2KS0H stripping lines to the new line builder structure
+
 ! 2011-02-24 - Jibo He
  - StrippingDiMuonNew.py
    Update the cuts of DiMuonHighMassLine and Jpsi2MuMuLine
