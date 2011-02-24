@@ -22,6 +22,7 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
 
 class StrippingD02HHForXSecConf(LineBuilder): # {
 
@@ -52,8 +53,8 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
         d02HH_name = name + 'D02HH'
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
-        self.inPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-        self.inKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        self.inPions = StdNoPIDsPions
+        self.inKaons = StdNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
                                    , inputSel = [ self.inPions, self.inKaons ]

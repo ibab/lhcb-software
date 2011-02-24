@@ -110,10 +110,10 @@ class D2hhhConf(LineBuilder) :
         D2KKK_name = name+'_KKK'
         D2HHHInc_name = name+'_HHHInc'
 
-        self.selKKP = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
-        self.selKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
-        self.selPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi")
-        self.selKPPos = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi")
+        self.selKKP = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
+        self.selKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
+        self.selPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
+        self.selKPPos = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi/Particles")
 
 
         self.selD2KKP = makeStdD2hhh(D2KKP_name,  

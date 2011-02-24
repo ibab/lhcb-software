@@ -64,11 +64,11 @@ class Bs2PhiMuMuLinesConf(LineBuilder) :
         
         self.seldiMuon = Selection( "diMuonfor" + name, 
                                     Algorithm = self._diMuonFilter(),
-                                    RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseDiMuon")] )
+                                    RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")] )
         
         self.selPhi =  Selection( "phifor" + name, 
                                   Algorithm = self._phiFilter(), 
-                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK")] )
+                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK/Particles")] )
         
         self.self0 = Selection( "f0for" + name, 
                                 Algorithm = self._f02PiPi(),

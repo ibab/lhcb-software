@@ -21,8 +21,10 @@ from GaudiKernel.SystemOfUnits import MeV, picosecond
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
+
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
 
 class StrippingDstar2D0Pi_D02KPiForXSecConf(LineBuilder): # {
 
@@ -54,8 +56,8 @@ class StrippingDstar2D0Pi_D02KPiForXSecConf(LineBuilder): # {
         d02HH_name = name + 'D02HH'
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
-        self.inPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-        self.inKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        self.inPions = StdNoPIDsPions
+        self.inKaons = StdNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
                                    , inputSel = [ self.inPions, self.inKaons ]

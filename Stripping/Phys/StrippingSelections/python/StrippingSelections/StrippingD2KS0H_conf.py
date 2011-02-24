@@ -28,6 +28,7 @@ __all__ = ('D2KS0HConf',
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StandardParticles import StdLoosePions, StdLooseKaons
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils   import checkConfig 
 from StrippingUtils.Utils import LineBuilder
@@ -272,7 +273,7 @@ def makeBachelorPions(name
  
          # Define the pion filter
         _BachPionsFilter = FilterDesktop(Code = _code)
-        _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
+        _stdLoosePions = StdLoosePions
 
         return Selection (name,
                       Algorithm = _BachPionsFilter,
@@ -301,7 +302,7 @@ def makeBachelorKaons(name
  
          # Define the pion filter
         _BachKaonsFilter = FilterDesktop(Code = _code)
-        _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        _stdLooseKaons = StdLooseKaons
 
         return Selection (name,
                       Algorithm = _BachKaonsFilter,
@@ -341,7 +342,7 @@ def makeKS02PiPi(name,
     
         # Define the KS0 LL filter
         _KS0LLFilter = FilterDesktop(Code = _code)
-        _stdKS0LL = DataOnDemand(Location = "Phys/StdLooseKsLL")
+        _stdKS0LL = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
 
         return Selection (name,
                       Algorithm = _KS0LLFilter,

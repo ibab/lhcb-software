@@ -20,9 +20,10 @@ from GaudiKernel.SystemOfUnits import MeV
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
-
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+        
 class StrippingD2PhiPiForXSecConf(LineBuilder): # {
 
     __configuration_keys__ = (   'Daug_TRCHI2DOF_MAX'
@@ -49,8 +50,8 @@ class StrippingD2PhiPiForXSecConf(LineBuilder): # {
         phi2KK_name = name + 'Phi2KK'
         d2PhiPi_name = name + 'D2PhiPi'
 
-        self.inPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-        self.inKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        self.inPions = StdNoPIDsPions
+        self.inKaons = StdNoPIDsKaons
 
         self.selPhi2KK =  makePhi2KK( name = phi2KK_name
                             , inputSel = [ self.inPions, self.inKaons ]

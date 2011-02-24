@@ -19,8 +19,9 @@ from GaudiKernel.SystemOfUnits import MeV, mm, ns
 from LHCbKernel.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 
 class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
 
@@ -54,9 +55,9 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
 
         lambdac_name = name + 'Lambdac2PKPi'
 
-        self.inPions   = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-        self.inKaons   = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-        self.inProtons = DataOnDemand(Location = "Phys/StdNoPIDsProtons")
+        self.inPions   = StdNoPIDsPions
+        self.inKaons   = StdNoPIDsKaons
+        self.inProtons = StdNoPIDsProtons
 
 
         self.selLambdac2PKPi = makeLambdac2PKPi( name = lambdac_name 

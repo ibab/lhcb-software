@@ -12,10 +12,10 @@
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-
+from StandardSelections import StdVeryLooseMuons, StdNoPIDsMuons, StdLooseMuons
 
 confdict_WMu={
     'WMuLinePrescale_ps'    : .1
@@ -130,7 +130,7 @@ class WMuConf(LineBuilder) :
        
 def makeWMu(name, _muCut) :
     _W = FilterDesktop(Code = _muCut)
-    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdloosemuons = StdLooseMuons
     return Selection ( name,
                        Algorithm = _W,
                        RequiredSelections = [_stdloosemuons])
@@ -138,7 +138,7 @@ def makeWMu(name, _muCut) :
 
 def makeWMuLoose(name, _muCut) :
     _WLoose = FilterDesktop(Code = _muCut)                            
-    _stdveryloosemuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+    _stdveryloosemuons = StdVeryLooseMuons
     return Selection ( name,
                        Algorithm = _WLoose,
                        RequiredSelections = [_stdveryloosemuons])
@@ -146,14 +146,14 @@ def makeWMuLoose(name, _muCut) :
 
 def makeWMuNoPIDs(name, _muCut) :
     _WNoPIDs = FilterDesktop(Code = _muCut)
-    _NoPIDsmuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    _NoPIDsmuons = StdNoPIDsMuons
     return Selection ( name,
                        Algorithm = _WNoPIDs,
                        RequiredSelections = [_NoPIDsmuons])
 
 def makeNoPIDs(name, _muCut) :
     _NoPIDsSelection = FilterDesktop(Code = _muCut)
-    _NoPIDsmuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    _NoPIDsmuons = StdNoPIDsMuons
     return Selection ( name,
                        Algorithm = _NoPIDsSelection,
                        RequiredSelections = [_NoPIDsmuons])

@@ -21,6 +21,7 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsPions, StdLooseKaons
 
 class StrippingD2HHHForXSecConf(LineBuilder): # {
 
@@ -67,8 +68,8 @@ class StrippingD2HHHForXSecConf(LineBuilder): # {
         d2PPP_name = name + 'D2PPP'
         d2PPK_name = name + 'D2KPPDCS'
 
-        self.inNoPIDsPions = DataOnDemand(Location = 'Phys/StdNoPIDsPions')
-        self.inLooseKaons  = DataOnDemand(Location = 'Phys/StdLooseKaons')
+        self.inNoPIDsPions = StdNoPIDsPions
+        self.inLooseKaons  = StdLooseKaons
 
 
         ## The (K- pi+ pi+) final state

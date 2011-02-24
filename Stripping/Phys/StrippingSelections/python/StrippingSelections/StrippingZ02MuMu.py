@@ -9,10 +9,10 @@
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-
+from StandardParticles import StdVeryLooseMuons, StdNoPIDsMuons, StdLooseMuons
 
 confdict_Z02MuMu={
     'Z02MuMuLinePrescale'    : 1.0 
@@ -86,7 +86,7 @@ def makeZ02MuMu(name, _Z0MinMass, _mucut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdloosemuons = StdLooseMuons
     return Selection ( name,
                        Algorithm = _Z0,
                        RequiredSelections = [_stdloosemuons])
@@ -99,7 +99,7 @@ def makeZ02MuMuloose(name, _Z0MinMass, _mucut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _stdveryloosemuons = DataOnDemand(Location = "Phys/StdVeryLooseMuons")
+    _stdveryloosemuons = StdVeryLooseMuons
     return Selection ( name,
                        Algorithm = _Z0loose,
                        RequiredSelections = [_stdveryloosemuons])
@@ -112,7 +112,7 @@ def makeZ02MuMuNoPIDs(name, _Z0MinMass, _mucut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _NoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    _NoPIDsMuons = StdNoPIDsMuons
     return Selection ( name,
                        Algorithm = _Z0NoPIDs,
                        RequiredSelections = [_NoPIDsMuons])

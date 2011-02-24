@@ -4,6 +4,27 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+ - Fixed DataOnDemands for the following modules:
+  . StrippingMuMuSS.py
+  . StrippingWe.py
+  . StrippingD2HHHForXSec.py
+  . StrippingBs2PhiMuMu.py
+  . StrippingDiMuonNew.py
+  . StrippingD2PhiPiForXSec.py
+  . StrippingD2hhh_conf.py
+  . StrippingDY2ee.py
+  . StrippingZ02MuMu.py
+  . StrippingLambdac2PKPiForXSec.py
+  . StrippingD2hh.py
+  . StrippingDstar2D0Pi_D02KPiForXSec.py
+  . StrippingD02KPiGeoForXSec.py
+  . StrippingDisplVertices.py
+  . StrippingD02HHForXSec.py
+  . StrippingDY2MuMu.py
+  . StrippingWMu.py
+  . StrippingZ02ee.py
+  . StrippingD2KS0H_conf.py
+
 ! 2011-02-24 - Sophie Redford
  - StrippingB2XMuMuSS.py
    Changed from DataOnDemand to StandardParticles 
