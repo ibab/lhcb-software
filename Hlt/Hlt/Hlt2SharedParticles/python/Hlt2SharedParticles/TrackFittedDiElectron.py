@@ -17,9 +17,9 @@ Hlt2SharedTrackFittedDiElectron = Hlt2Member( CombineParticles
                                               , "TrackFittedDiElectron"
                                               , Inputs = [ BiKalmanFittedElectrons ]
                                               , DecayDescriptor = "J/psi(1S) -> e+ e-" 
-                                              , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
+                                              , DaughtersCuts = {"e+" : "(PT>1000*MeV)"}
                                               , CombinationCut = "AALL"
-                                              , MotherCut = "(VFASPF(VCHI2PDOF)<100)"
+                                              , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                               )
 
 TrackFittedDiElectron = bindMembers( "Shared", [ BiKalmanFittedElectrons, Hlt2SharedTrackFittedDiElectron ] )
