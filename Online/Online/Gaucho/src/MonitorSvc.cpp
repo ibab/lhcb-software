@@ -221,12 +221,13 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
   }
   std::vector<MonObj*> v;
   v.clear();
+  MonObj *o;
   if (m_HistSubSys != 0)
   {
     ObjMap::iterator it;
     for (it=m_HistSubSys->m_Objmap.begin();it!=m_HistSubSys->m_Objmap.end();it++)
     {
-      MonObj *o = it->second;
+      o = it->second;
       std::string s = o->name();
       if (0==owner || s.find(oname.c_str()) != std::string::npos)
       {
@@ -244,7 +245,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     ObjMap::iterator it;
     for (it=m_CntrSubSys->m_Objmap.begin();it!=m_CntrSubSys->m_Objmap.end();it++)
     {
-      MonObj *o = it->second;
+      o = it->second;
       std::string s = o->name();
       if (0==owner || s.find(oname.c_str()) != std::string::npos)
       {
