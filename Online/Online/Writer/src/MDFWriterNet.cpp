@@ -196,7 +196,7 @@ void MDFWriterNet::constructNet()
   declareProperty("StorageServerPort",     m_serverPort=45247);
   declareProperty("RunDBServiceURL",       m_runDBURL="");
   declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=1);
-  declareProperty("MaxEventInFile",        m_maxEventInFile=20000);
+  declareProperty("MaxEventInFile",        m_maxEventInFile=0);
   declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",            m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",             m_directory=".");
@@ -908,7 +908,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   }
   
   //How much have we written?
-  if (totalBytesWritten > (m_maxFileSizeMB << 20) || m_maxEventInFile <= m_currFile->getEvents() ) {
+  if (totalBytesWritten > (m_maxFileSizeMB << 20) || (m_maxEventInFile != 0 && m_maxEventInFile <= m_currFile->getEvents() )) {
     closeFile(m_currFile);
     m_openFiles.removeFile(m_currFile);
     delete(m_currFile);
