@@ -195,7 +195,7 @@ void MDFWriterNet::constructNet()
   declareProperty("StorageServerAddr",     m_serverAddr="");
   declareProperty("StorageServerPort",     m_serverPort=45247);
   declareProperty("RunDBServiceURL",       m_runDBURL="");
-  declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=1);
+  declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=2000);
   declareProperty("MaxEventInFile",        m_maxEventInFile=0);
   declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",            m_filePrefix="MDFWriterNet_File_");
