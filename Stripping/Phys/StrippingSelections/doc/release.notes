@@ -3,9 +3,16 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
 ! 2011-02-24 - Johannes Albrecht
  - StrippingB2MuMuMuMuLines and StrippingB2MuMuMuMuLines:
    revise for stripping 13 
+
+! 2011-02-24 Alexandr Kozlinskiy
+ - update StrippingD02MuMu
+   - added IP chi2 for D0 daughters (default: "> 1")
+   - removed DataOnDemand
+ - update StrippingPromptCharm
 
 ! 2011-02-24 Sebastian Schleich
  - adapted Bs2PhiPhi and InclPhi to new Std particle
