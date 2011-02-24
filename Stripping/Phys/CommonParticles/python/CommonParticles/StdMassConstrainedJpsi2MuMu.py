@@ -19,17 +19,16 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop 
+from Configurables import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
-StdMassConstrainedJpsi2MuMu = FilterDesktop("StdMassConstrainedJpsi2MuMu")
-StdMassConstrainedJpsi2MuMu.Inputs =["Phys/StdLooseJpsi2MuMu/Particles"]
-StdMassConstrainedJpsi2MuMu.Code = "  (ADMASS('J/psi(1S)') < 80.*MeV)" \
-                              	   "& (VFASPF(VCHI2) < 16.)" \
-                                   "& (MINTREE('mu+'==ABSID, PIDmu) > 0)" \
-			     	   "& (MFIT)"
-				   #"& (INFO( LHCb.Particle.Chi2OfMassConstrainedFit, 100 ) < 25)"
+StdMassConstrainedJpsi2MuMu = CombineParticles("StdMassConstrainedJpsi2MuMu")
+StdMassConstrainedJpsi2MuMu.Inputs = ["Phys/StdLooseMuons/Particles"]
+StdMassConstrainedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
+StdMassConstrainedJpsi2MuMu.DaughtersCuts = { 'mu+' : 'PIDmu > 0' }
+StdMassConstrainedJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 80.*MeV) & ADOCACHI2CUT(30., '')"
+StdMassConstrainedJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 16.) & (MFIT)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdMassConstrainedJpsi2MuMu )

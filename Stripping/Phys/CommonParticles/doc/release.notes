@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Roel Aaij
+ - Changed StdMassConstrainedJpsi2MuMu from a FilterDesktop to a CombineParticles.
+   This will prevent the StdLooseJpsi2MuMu from also having the mass constraint
+   applied.
+
 !========================== CommonParticles v8r0 2011-02-22 ==================
 
 ! 2011-02-22 - Juan Palacios
