@@ -76,7 +76,6 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("teste", m_teste = 100000);
   declareProperty("MyName",m_MyName=""); //partition_TaskName
 
-  EoEInc = new EoEIncidentListener("",ploc,-1);
   m_timerCycle = m_desiredDeltaTCycle - 1;
   m_firstExecute = true;
   m_cycleNumber=0;
@@ -92,6 +91,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetGpsTimeLastEvInCycle=0;
   m_dimSvcSaveSetLoc = 0;
   m_pGauchoMonitorSvc = 0;
+  EoEInc = 0;
 }
 
 
@@ -105,6 +105,7 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "GaudiAlgorithm not Initialized" << endreq;
     return StatusCode::FAILURE;
   }
+  EoEInc = new EoEIncidentListener("",serviceLocator(),-1);
   m_stopdone = false;
   //const std::string& utgid = RTL::processName();
    return StatusCode::SUCCESS;
@@ -221,7 +222,7 @@ StatusCode UpdateAndReset::execute()
   int runno;
   unsigned int tck;
   ulonglong gps;
-  m_pGauchoMonitorSvc->Lock();
+//  m_pGauchoMonitorSvc->Lock();
 //  printf("+++++++++++++++++++++++++++++ UPDATE AND RESET Monitor System LockED\n");
   getEventChar(runno,tck,gps);
   if (m_runNumber == 0)

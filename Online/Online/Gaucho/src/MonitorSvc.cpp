@@ -275,6 +275,7 @@ StatusCode MonitorSvc::i_start()
 //  CALLGRIND_START_INSTRUMENTATION
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
+//  setProperties();
   DimServer::autoStartOff();
   if (m_CntrMgr != 0)
   {

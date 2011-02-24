@@ -27,7 +27,12 @@ void EoEIncidentListener::setMonitorSvc(IGauchoMonitorSvc *m)
 }
 void EoEIncidentListener::handle(const Incident &i)
 {
-  if (i.type() == IncidentType::EndEvent)
+  if (i.type() == "DAQ_END_EVENT")
+  {
+    m_MonSvc->UnLock();
+//    printf("-----------------EoE Handler Monitor System UN-LockED\n");
+  }
+  else if (i.type() == "DAQ_BEGIN_EVENT")
   {
     m_MonSvc->UnLock();
 //    printf("-----------------EoE Handler Monitor System UN-LockED\n");
