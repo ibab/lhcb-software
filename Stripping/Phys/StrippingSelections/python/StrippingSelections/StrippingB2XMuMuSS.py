@@ -43,9 +43,10 @@ __all__ = ('B2XMuMuConf', 'makeB2PiMuMuOS', 'makeB2PiMuMuSS', 'makeB2KMuMuOS', '
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons
 
 name = "B2XMuMu"
 
@@ -101,7 +102,6 @@ class B2XMuMuConf(LineBuilder) :
         KSSLine_name = name+"_KSS"
         
         # 1 : Make kaons
-        Kaons = DataOnDemand(Location = "Phys/StdLooseKaons")
         selKaons = makeKaons(name="KaonsFor"+name
                              , KaonP = config['KaonP']
                              , KaonPT = config['KaonPT']
@@ -109,14 +109,12 @@ class B2XMuMuConf(LineBuilder) :
                              , KaonMINIPCHI2 = config['KaonMINIPCHI2'])
 
         # 2 : Make pions
-        Pions = DataOnDemand(Location = "Phys/StdLoosePions")
         selPions = makePions(name="PionsFor"+name
                              , PionP = config['PionP']
                              , PionPT = config['PionPT']
                              , PionMINIPCHI2 = config['PionMINIPCHI2'])
                                                         
         # 3 : Make muons
-        Muons = DataOnDemand(Location = "Phys/StdLooseMuons")
         selMuons = makeMuons(name="MuonsFor"+name
                              , MuonP = config['MuonP']
                              , MuonPT = config['MuonPT']
@@ -328,11 +326,10 @@ def makeKaons(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2):
             "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
-    _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons" )
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ _stdKaons ] )
+                     RequiredSelections = [ StdLooseKaons ] )
 
 #####################################################
 def makePions(name, PionP, PionPT, PionMINIPCHI2):
@@ -344,11 +341,10 @@ def makePions(name, PionP, PionPT, PionMINIPCHI2):
             "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
-    _stdPions = DataOnDemand(Location = "Phys/StdLoosePions" )
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ _stdPions ] )
+                     RequiredSelections = [ StdLoosePions ] )
                     
 #####################################################
 def makeMuons(name, MuonP, MuonPT, MuonMINIPCHI2):
@@ -360,10 +356,10 @@ def makeMuons(name, MuonP, MuonPT, MuonMINIPCHI2):
             "(MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
-    _stdMuons = DataOnDemand(Location = "Phys/StdLooseMuons" )
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ _stdMuons ] )
+                     RequiredSelections = [ StdLooseMuons ] )
+
                     
 

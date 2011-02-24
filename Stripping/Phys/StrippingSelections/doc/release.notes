@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Sophie Redford
+ - StrippingB2XMuMuSS.py
+   Changed from DataOnDemand to StandardParticles 
+
 ! 2011-02-24 - Rob Lambert
  - Added DForBSemi lines to semileptonic tests
 
