@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-02-24 - Philip Hunt
+ - StrippingD02K3PiForXSec.py
+ Additional module not included in the previous commit of open charm
+ cross-section lines. As with the other lines, the previous line will
+ eventually be removed.
 
 ! 2011-02-24 - Benoit Viaud
  - New version of the StrippingDstarD02KKmumuRegular and 
