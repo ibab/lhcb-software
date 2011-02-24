@@ -132,11 +132,11 @@ Thanks to Marco Gersabeck & Harry Cliff for nice idea.
   +-------------------------------------+----------+----------+-------+--------+
   | StrippingSequenceStreamPromptCharm  | 0.003300 |   330    |       | 4.567  |
   +-------------------------------------+----------+----------+-------+--------+
-  |    StrippingD02HHForPromptCharm     | 0.001970 |   197    | 1.020 |  3.119 |
-  |    StrippingDstarForPromptCharm     | 0.000480 |    48    | 1.208 |  0.372 |
-  |    StrippingDsForPromptCharm        | 0.000170 |    17    | 1.000 |  0.165 |
-  |    StrippingDForPromptCharm         | 0.000930 |    93    | 1.000 |  0.170 |
-  |    StrippingLambdaCForPromptCharm   | 0.000220 |    22    | 1.000 |  0.646 |
+  |    StrippingD02HHForPromptCharm     | 0.1970 |   197    | 1.020 |  3.119 |
+  |    StrippingDstarForPromptCharm     | 0.0480 |    48    | 1.208 |  0.372 |
+  |    StrippingDsForPromptCharm        | 0.0170 |    17    | 1.000 |  0.165 |
+  |    StrippingDForPromptCharm         | 0.0930 |    93    | 1.000 |  0.170 |
+  |    StrippingLambdaCForPromptCharm   | 0.0220 |    22    | 1.000 |  0.646 |
   +-----------------------------------------------------------+-------+--------+
  
   +-------------------------------------+----------+----------+-------+--------+
@@ -166,6 +166,33 @@ Thanks to Marco Gersabeck & Harry Cliff for nice idea.
     
     >>> stream.appendLines ( promptCharm.lines() )
 
+
+Data sample: $STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py
+Note: no prescales
+
+StrippingReport                                                INFO Event 50000, Good event 46049
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  1.1531|       531|       |   5.498|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  1.1531|       531|       |   5.493|       |       |       |
+ |!StrippingD02HHForPromptCharm                      |  0.7275|       335|  0.000|   4.354|      0|      0|     65|
+ |!StrippingDstarForPromptCharm                      |  0.1716|        79|  0.000|   0.064|      0|      0|      0|
+ |!StrippingDsForPromptCharm                         |  0.0586|        27|  0.000|   0.086|      0|      0|      0|
+ |!StrippingDForPromptCharm                          |  0.3496|       161|  0.000|   0.094|      0|      0|      0|
+ |!StrippingLambdaCForPromptCharm                    |  0.0217|        10|  0.000|   0.436|      0|      0|      0|
+
+=============================================================================================================
+                               AlgorithmCorrelationsAlg.AlgorithmCorrelations
+=============================================================================================================
+    Algorithm                         Eff.       1        2        3        4        5        6        7   
+-------------------------------------------------------------------------------------------------------------
+  1 StrippingGlobal                   1.153% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
+  2 StrippingSequenceStreamTest       1.153% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000%
+  3 StrippingD02HHForPromptCharm      0.727% |  63.089%  63.089%  #######  97.468%   3.704%   0.621%   0.000%
+  4 StrippingDstarForPromptCharm      0.172% |  14.878%  14.878%  22.985%  #######   0.000%   0.000%   0.000%
+  5 StrippingDsForPromptCharm         0.059% |   5.085%   5.085%   0.299%   0.000%  #######   0.000%   0.000%
+  6 StrippingDForPromptCharm          0.350% |  30.320%  30.320%   0.299%   0.000%   0.000%  #######  20.000%
+  7 StrippingLambdaCForPromptCharm    0.022% |   1.883%   1.883%   0.000%   0.000%   0.000%   1.242%  #######
+=============================================================================================================
 
 $Revision: 1.14 $
 Last modification $Date: 2010-09-06 22:42:46 $
@@ -216,14 +243,6 @@ _default_configuration_ = {
                                            'from LoKiCore.functions    import *' ]
                           } ,
     #
-    # Prescale 
-    #
-    'D0Prescale'      : 1.00 , 
-    'DstarPrescale'   : 1.00 , 
-    'DsPrescale'      : 1.00 , 
-    'DplusPrescale'   : 1.00 , 
-    'LamCPrescale'    : 1.00 , 
-    #
     # Technicalities:
     #
     'Preambulo'       : [
@@ -240,21 +259,30 @@ _default_configuration_ = {
     "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetimeFit)<9 
     ] ,
     ## monitoring ?
-    'Monitor'     : False  ,
-    ## name
-    'Name'        : "%sForPromptCharm"
+    'Monitor'     : False
     }
+
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 # =============================================================================
 ## @class  StrippingPromptCharmConf
 #  Helper class required by Tom & Greig 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-09-26
-class StrippingPromptCharmConf(object) :
+class StrippingPromptCharmConf(LineBuilder) :
     """
     Helper class to confiugure 'PromptCharm'-lines
     """
-    __configuration_keys__ = _default_configuration_ 
+    __configuration_keys__ = ('D0Prescale',
+                              'DstarPrescale',
+                              'DsPrescale',
+                              'DplusPrescale',
+                              'LamCPrescale',
+                              )
 
     ## get the default configuration 
     @staticmethod
@@ -275,14 +303,16 @@ class StrippingPromptCharmConf(object) :
         return _config
     
     ## constructor
-    def __init__   ( self , config ) :
+    def __init__(self, name, config) :
         """
         Constructor
         """
-        
+
+        LineBuilder.__init__(self, name, config)
+
         from copy import deepcopy
-        _config   = deepcopy ( config )
-        
+        _config = deepcopy ( _default_configuration_ )
+
         keys = _config.keys()
         for key in keys :
             
@@ -293,9 +323,7 @@ class StrippingPromptCharmConf(object) :
             if val != _default_configuration_ [ key ] : 
                 log.warning ('StrippingPromptCharm: new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
-
-        
-        self._name         = _config.pop ( 'Name' , _default_configuration_ [ 'Name' ] ) 
+        self._name         = name
 
         self._trackcuts    =                   _config.pop ( 'TrackCuts'    , _default_configuration_ [ 'TrackCuts'    ] )
         self._basiccuts    = self._trackcuts + _config.pop ( 'BasicCuts'    , _default_configuration_ [ 'BasicCuts'    ] )
@@ -303,25 +331,27 @@ class StrippingPromptCharmConf(object) :
         self._pioncuts     = self._basiccuts + _config.pop ( 'PionCuts'     , _default_configuration_ [ 'PionCuts'     ] )
         self._protoncuts   = self._basiccuts + _config.pop ( 'ProtonCuts'   , _default_configuration_ [ 'ProtonCuts'   ] )
         self._slowpioncuts =                   _config.pop ( 'SlowPionCuts' , _default_configuration_ [ 'SlowPionCuts' ] )
-        
+
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
         self._GEC          = _config.pop ( 'GlobalEventCuts' , _default_configuration_ [ 'GlobalEventCuts' ] ) 
-                
-        self.D0Prescale    = _config.pop ( 'D0Prescale'      , _default_configuration_ [ 'D0Prescale'      ] )
-        self.DstarPrescale = _config.pop ( 'DstarPrescale'   , _default_configuration_ [ 'DstarPrescale'   ] )
-        self.DsPrescale    = _config.pop ( 'DsPrescale'      , _default_configuration_ [ 'DsPrescale'      ] )
-        self.DplusPrescale = _config.pop ( 'DplusPrescale'   , _default_configuration_ [ 'DplusPrescale'   ] )
-        self.LamCPrescale  = _config.pop ( 'LamCPrescale'    , _default_configuration_ [ 'LamCPrescale'    ] )
 
-        
+        self.D0Prescale    = config['D0Prescale'   ]
+        self.DstarPrescale = config['DstarPrescale']
+        self.DsPrescale    = config['DsPrescale'   ]
+        self.DplusPrescale = config['DplusPrescale']
+        self.LamCPrescale  = config['LamCPrescale' ]
+
         self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
         self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
-        
+
         if _config :
             raise KeyError('Invalid keys are specified for configuration: %s ' % _config.keys() )
-        
-    ## get the selections 
-    def selections ( self ) :
+
+        for line in self._lines_inner() :
+          self.registerLine(line)
+
+    ## get the selections
+    def _selections ( self ) :
         
         if hasattr ( self , '_Selections' ) : return self._Selections
         
@@ -334,14 +364,14 @@ class StrippingPromptCharmConf(object) :
         return self._Selections
 
     ## get all stripping lines 
-    def lines      ( self ) :
+    def _lines_inner ( self ) :
         
         if hasattr ( self , '_Lines' ) : return self._Lines
         
         self._Lines = [
             ##
             StrippingLine (
-            self._name % "D02HH"          ,
+            "D02HHFor" + self._name ,
             prescale = self.D0Prescale    ,                ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
             FILTER   = self._GEC          , 
@@ -349,7 +379,7 @@ class StrippingPromptCharmConf(object) :
             ) ,
             ## 
             StrippingLine (
-            self._name % "Dstar"          ,
+            "DstarFor" + self._name ,
             prescale = self.DstarPrescale ,                ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
             FILTER   = self._GEC          , 
@@ -357,7 +387,7 @@ class StrippingPromptCharmConf(object) :
             ) ,
             ##
             StrippingLine (
-            self._name % "Ds"             ,
+            "DsFor" + self._name ,
             prescale = self.DsPrescale    ,                ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
             FILTER   = self._GEC          , 
@@ -365,7 +395,7 @@ class StrippingPromptCharmConf(object) :
             ) ,
             ##
             StrippingLine (
-            self._name % "D"              ,
+            "DFor" + self._name ,
             prescale = self.DplusPrescale ,                ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
             FILTER   = self._GEC          , 
@@ -373,7 +403,7 @@ class StrippingPromptCharmConf(object) :
             ) ,
             ##
             StrippingLine (
-            self._name % "LambdaC"        ,
+            "LambdaCFor" + self._name ,
             prescale = self.LamCPrescale  ,                ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
             FILTER   = self._GEC          , 
@@ -391,22 +421,23 @@ class StrippingPromptCharmConf(object) :
     def slowPionCuts ( self ) : return self._slowpioncuts 
 
     ## get the selection of kaons 
-    def kaons      ( self ) :
+    def kaons ( self ) :
         """
         Get the kaons 
         """
         
         if hasattr ( self , 'KaonSelection' ) : return self.KaonSelection
         #
-        _Kaons          = AutomaticData ( Location = "Phys/StdLooseKaons"   )
+#        _Kaons          = AutomaticData ( Location = "Phys/StdLooseKaons"   )
+        _Kaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
         #
         _KaonFilter     = FilterDesktop (
-            "KaonsForPromptCharm" ,
+#            "KaonsFor" + self._name ,
             Code        = " ( 'K+'  == ABSID ) & ( %s ) " % self.kaonCuts()
             )
         #
         self.KaonSelection   = Selection (
-            'SelKaonsForPromptCharm' ,
+            'SelKaons' + self._name ,
             Algorithm          = _KaonFilter ,
             RequiredSelections = [ _Kaons ]
             )
@@ -421,15 +452,16 @@ class StrippingPromptCharmConf(object) :
         
         if hasattr ( self , 'PionSelection' ) : return self.PionSelection
         #
-        _Pions         = AutomaticData ( Location = "Phys/StdLoosePions"   )
+#        _Pions         = AutomaticData ( Location = "Phys/StdLoosePions"   )
+        _Pions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
         #
         _PionFilter     = FilterDesktop (
-            "PionsForPromptCharm" ,
+#            "PionsFor" + self._name ,
             Code        = " ( 'pi+' == ABSID ) & ( %s ) " % self.pionCuts()
             )
         #
         self.PionSelection = Selection (
-            'SelPionsForPromptCharm' ,
+            'SelPionsFor' + self._name ,
             Algorithm          = _PionFilter ,
             RequiredSelections = [ _Pions ]
             )
@@ -444,15 +476,16 @@ class StrippingPromptCharmConf(object) :
         
         if hasattr ( self , 'ProtonSelection' ) : return self.ProtonSelection
         #
-        _Protons      = AutomaticData ( Location = "Phys/StdLooseProtons" )
+#        _Protons      = AutomaticData ( Location = "Phys/StdLooseProtons" )
+        _Protons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
         #
         _ProtonFilter = FilterDesktop (
-            "ProtonsForPromptCharm" ,
+#            "ProtonsFor" + self._name ,
             Code      = " ( 'p+'  == ABSID ) & ( %s ) " % self.protonCuts() 
             )
         
         self.ProtonSelection = Selection (
-            'SelProtonsForPromptCharm' ,
+            'SelProtonsFor' + self._name ,
             Algorithm          = _ProtonFilter ,
             RequiredSelections = [ _Protons ]
             )
@@ -469,14 +502,14 @@ class StrippingPromptCharmConf(object) :
         #
         self.MesonSelection =  MergedSelection (
             ##
-            'SelBasicMesonsForPromptCharm' , 
+            'SelBasicMesonsFor' + self._name , 
             RequiredSelections = [ self.pions() , self.kaons() ]
             )
         #
         return self.MesonSelection
 
     ## get the common preambulo: 
-    def preambulo    ( self ) : return self._Preambulo
+    def preambulo ( self ) : return self._Preambulo
     
     ## get the preselection of D0->hh
     def preD02HH ( self ) :
@@ -488,7 +521,7 @@ class StrippingPromptCharmConf(object) :
         #
         ## prepare D0 for D0 and D*+ 
         _D0PreCombine = CombineParticles (
-            "PreCombineD02HHForPromptCharm" ,
+#            "PreCombineD02HHFor" + self._name ,
             ## the decays to be reconstructed 
             DecayDescriptors = [
             " D0  -> pi+ pi-    " ,
@@ -515,7 +548,7 @@ class StrippingPromptCharmConf(object) :
         ## make (pre)selection
         self.D02HHForPromptCharm_PreSelection = Selection (
             ##
-            'PreSelD02HHForPromptCharm' ,
+            'PreSelD02HHFor' + self._name ,
             ##
             Algorithm          = _D0PreCombine   ,
             ##
@@ -534,10 +567,11 @@ class StrippingPromptCharmConf(object) :
         if hasattr ( self , 'D02HHForPromptCharm_Selection' ) : 
             return self.D02HHForPromptCharm_Selection
         
+#        help(FilterDesktop)
         ##
         _D0Filter = FilterDesktop (
             ##
-            "PromptD02HH" ,
+#            "D02HHFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -561,7 +595,7 @@ class StrippingPromptCharmConf(object) :
         
         ## make selection 
         self.D02HHForPromptCharm_Selection = Selection (
-            'SelD02HHForPromptCharm'                ,
+            'SelD02HHFor' + self._name ,
             Algorithm          = _D0Filter          ,
             RequiredSelections = [ self.preD02HH() ]
             )
@@ -579,7 +613,7 @@ class StrippingPromptCharmConf(object) :
         
         _DstarCombine = CombineParticles(
             ##
-            "CombineDstarForPromptCharm" ,
+#            "CombineDstarFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -613,12 +647,13 @@ class StrippingPromptCharmConf(object) :
             """
             )
         
-        _NoPIDPions    = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
+#        _NoPIDPions    = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
+        _NoPIDPions = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
         
         ## convert it to selection
         self.DstarForPromptCharm_Selection = Selection  (
             ##
-            "SelDstarForPromptCharm" ,
+            "SelDstarFor" + self._name ,
             ## 
             Algorithm          = _DstarCombine ,
             ##
@@ -641,7 +676,7 @@ class StrippingPromptCharmConf(object) :
         
         _DsCombine = CombineParticles(
             ## 
-            "CombineDsForPromptCharm" ,
+#            "CombineDsFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -680,7 +715,7 @@ class StrippingPromptCharmConf(object) :
         
         ## convert it to selection
         self.DsForPromptCharm_Selection = Selection (
-            "SelDsForPromptCharm" ,
+            "SelDsFor" + self._name ,
             Algorithm          = _DsCombine ,
             RequiredSelections = [ self.mesons() ]
             )
@@ -699,7 +734,7 @@ class StrippingPromptCharmConf(object) :
         
         _DCombine = CombineParticles(
             ## 
-            "CombineDForPromptCharm" ,
+#            "CombineDFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -729,7 +764,7 @@ class StrippingPromptCharmConf(object) :
         
         # convert it to selection
         self.DForPromptCharm_Selection = Selection (
-            "SelDForPromptCharm" ,
+            "SelDFor" + self._name ,
             Algorithm          = _DCombine ,
             RequiredSelections = [ self.mesons() ]
             )
@@ -748,7 +783,7 @@ class StrippingPromptCharmConf(object) :
         
         _LambdaC_Combine = CombineParticles(
             ## 
-            "CombineLambdaCForPromptCharm" ,
+#            "CombineLambdaCFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -780,7 +815,7 @@ class StrippingPromptCharmConf(object) :
         
         # convert it to selection
         self.LambdaCForPromptCharm_Selection = Selection (
-            "SelLambdaCForPromptCharm" ,
+            "SelLambdaCFor" + self._name ,
             Algorithm          = _LambdaC_Combine ,
             RequiredSelections = [ self.mesons  () ,
                                    self.protons () ]  
@@ -797,7 +832,7 @@ if '__main__' == __name__ :
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
     print ' The output locations for default configuration: '
-    _conf = StrippingPromptCharmConf( config = {} ) 
+    _conf = StrippingPromptCharmConf( "PromptCharm", config = {} ) 
     for l in _conf.lines() :
         print ' \t ', l.outputLocation  () , l 
     print 80*'*'

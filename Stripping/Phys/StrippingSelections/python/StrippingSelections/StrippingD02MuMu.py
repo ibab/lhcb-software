@@ -13,13 +13,14 @@ Control channel: D0 -> pi+ pi- (prescaled)
 Cuts:
   * Particles input: StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
   * Track-Chi2/NDOF of the D0 daughters < 5
-  * Pt of the D0 daughters > 1 GeV
+  * Pt of the D0 daughters > 1 GeV (configurable)
+  * IP chi2 of the D0 daughters > 1 (configurable)
   * D0 mass window 100 MeV
   * Chi2 of the D0 vertex < 25
   * Chi2 of the D0 life time fit < 25
-  * D0 life time > 0.1 ps
+  * D0 life time > 0.1 ps (configurable)
   * Track-Chi2/NDOF of the soft pion from D* < 5
-  * M(D*) - M(D0) < 155 MeV
+  * M(D*) - M(D0) < 160 MeV
   * Chi2 of the D* vertex < 25
   * HLT = 'Hlt.*(MuMu|MBMicro|Muon).*Decision'
 
@@ -30,54 +31,55 @@ Note: no prescales
 
 StrippingReport                                                INFO Event 10000, Good event 9252
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  3.3182|       307|       |   5.889|       |       |       |
- |_StrippingSequenceStreamTest_                      |  3.3182|       307|       |   5.884|       |       |       |
- |!StrippingD02MuMuLine                              |  0.1189|        11|  0.000|   3.638|      0|      0|     17|
- |!StrippingD02MuMuDstLine                           |  0.0324|         3|  0.000|   1.131|      0|      0|      0|
- |!StrippingD02MuMuClbrD02PiPiLine                   |  3.3074|       306|  0.000|   0.338|      0|      0|      0|
- |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.6701|        62|  0.000|   0.318|      0|      0|      0|
+ |_StrippingGlobal_                                  |  2.2157|       205|       |   8.234|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  2.2157|       205|       |   8.225|       |       |       |
+ |!StrippingD02MuMuLine                              |  0.0973|         9|  0.000|   4.811|      0|      0|     27|
+ |!StrippingD02MuMuDstLine                           |  0.0324|         3|  0.000|   1.677|      0|      0|      0|
+ |!StrippingD02MuMuClbrD02PiPiLine                   |  2.2049|       204|  0.000|   0.515|      0|      0|      0|
+ |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.6485|        60|  0.000|   0.489|      0|      0|      0|
  
 =================================================================================================
                          AlgorithmCorrelationsAlg.AlgorithmCorrelations
 =================================================================================================
     Algorithm                             Eff.       1       2       3       4       5       6  
 -------------------------------------------------------------------------------------------------
-  1 StrippingGlobal                       3.32% |  ###### 100.00% 100.00% 100.00% 100.00% 100.00%
-  2 StrippingSequenceStreamTest           3.32% | 100.00%  ###### 100.00% 100.00% 100.00% 100.00%
-  3 StrippingD02MuMuLine                  0.12% |   3.58%   3.58%  ###### 100.00%   3.27%   4.84%
-  4 StrippingD02MuMuDstLine               0.03% |   0.98%   0.98%  27.27%  ######   0.98%   4.84%
-  5 StrippingD02MuMuClbrD02PiPiLine       3.31% |  99.67%  99.67%  90.91% 100.00%  ###### 100.00%
-  6 StrippingD02MuMuClbrDstD02PiPiLine    0.67% |  20.20%  20.20%  27.27% 100.00%  20.26%  ######
+  1 StrippingGlobal                       2.22% |  ###### 100.00% 100.00% 100.00% 100.00% 100.00%
+  2 StrippingSequenceStreamTest           2.22% | 100.00%  ###### 100.00% 100.00% 100.00% 100.00%
+  3 StrippingD02MuMuLine                  0.10% |   4.39%   4.39%  ###### 100.00%   3.92%   5.00%
+  4 StrippingD02MuMuDstLine               0.03% |   1.46%   1.46%  33.33%  ######   1.47%   5.00%
+  5 StrippingD02MuMuClbrD02PiPiLine       2.20% |  99.51%  99.51%  88.89% 100.00%  ###### 100.00%
+  6 StrippingD02MuMuClbrDstD02PiPiLine    0.65% |  29.27%  29.27%  33.33% 100.00%  29.41%  ######
 =================================================================================================
 
 """
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StandardParticles import StdNoPIDsPions, StdLooseMuons
+
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 class D02MuMuConf(LineBuilder) :
     __configuration_keys__ = ('MinDauPT',           # 1.0 GeV
+                              'MinDauIPCHI2',       # 1.0
                               'MinD0LT',            # 0.1 ps
                               'D02MuMuPrescale',    # 1.0
                               'DstD02MuMuPrescale', # 1.0
-                              'D02PiPiPrescale',    # 0.05
-                              'DstD02PiPiPrescale'  # 0.05
+                              'D02PiPiPrescale',    # 0.1
+                              'DstD02PiPiPrescale'  # 0.1
                               )
 
     def __init__(self, name, config) :
 
         LineBuilder.__init__(self, name, config)
 
-        muons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-        pions = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
-
         D0DaughtersCutsMuons = \
-          "(TRCHI2DOF < 5) & (PT > %(MinDauPT)s * GeV)" % config
+          "(TRCHI2DOF < 5) & (PT > %(MinDauPT)s * GeV) & (MIPCHI2DV() > %(MinDauIPCHI2)s)" % config
         D0DaughtersCutsPion = \
-          "(TRCHI2DOF < 5) & (PT > %(MinDauPT)s * GeV)" % config
+          "(TRCHI2DOF < 5) & (PT > %(MinDauPT)s * GeV) & (MIPCHI2DV() > %(MinDauIPCHI2)s)" % config
         D0CombinationCut = \
           "(ADAMASS('D0') < 110 * MeV)"
         D0MotherCut = \
@@ -89,10 +91,10 @@ class D02MuMuConf(LineBuilder) :
         DstarDaughtersCutsPion = \
           "(TRCHI2DOF < 5)"
         DstarCombinationCut = \
-          "AM - AM1 < 160 * MeV"
+          "AM - AM1 < 165 * MeV"
         DstarMotherCut = \
           "(VFASPF(VCHI2) < 25) & " + \
-          "((M - M1) < 155 * MeV)"
+          "((M - M1) < 160 * MeV)"
 
         # D0 combine
         from Configurables import CombineParticles
@@ -109,12 +111,15 @@ class D02MuMuConf(LineBuilder) :
         CombineDst.CombinationCut = DstarCombinationCut
         CombineDst.MotherCut = DstarMotherCut
 
+        muons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        pions = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
+
         # D0 and D* selections
         from PhysSelPython.Wrappers import Selection
-        D02MuMuSelection = Selection(name + "_D02MuMuSelection", Algorithm = CombineD0, RequiredSelections = [ muons ])
-        DstD02MuMuSelection = Selection(name + "_DstD02MuMuSelection", Algorithm = CombineDst, RequiredSelections = [ muons, pions, D02MuMuSelection ])
-        D02PiPiSelection = Selection(name + "_D02PiPiSelection", Algorithm = CombineD0, RequiredSelections = [ pions ])
-        DstD02PiPiSelection = Selection(name + "_DstD02PiPiSelection", Algorithm = CombineDst, RequiredSelections = [ pions, D02PiPiSelection ])
+        D02MuMuSelection = Selection(name + "_D02MuMuSelection", Algorithm = CombineD0, RequiredSelections = [ StdLooseMuons ])
+        DstD02MuMuSelection = Selection(name + "_DstD02MuMuSelection", Algorithm = CombineDst, RequiredSelections = [ StdLooseMuons, StdNoPIDsPions, D02MuMuSelection ])
+        D02PiPiSelection = Selection(name + "_D02PiPiSelection", Algorithm = CombineD0, RequiredSelections = [ StdNoPIDsPions ])
+        DstD02PiPiSelection = Selection(name + "_DstD02PiPiSelection", Algorithm = CombineDst, RequiredSelections = [ StdNoPIDsPions, D02PiPiSelection ])
 
         self.lineD02MuMu = StrippingLine(name + "Line",
           algos = [ D02MuMuSelection ],
