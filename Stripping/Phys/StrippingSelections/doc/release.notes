@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Eduardo Rodrigues
+ - test file for Hb -> hh, tests/test_hb2charged2body.py, updated
+
 ! 2011-02-24 - Erica Polycarpo 
  - StrippingD2hhh_conf.py
    Update the D->hhh lines to the new linebuilder framework. 
@@ -38,7 +41,6 @@
 ! 2011-02-24 - Juan Palacios
  - Add StrippingBu2D0h_D02KShh_NoPID,  StrippingBu2D0h_D02KShh_NoPID_WS,
    StrippingBs2PhiPhi, StrippingInclPhi to __init__.py
-
 
 ! 2011-02-23 - Sebastian Schleich
  - updated StrippingBs2PhiPhi to use LineBuilder
