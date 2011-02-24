@@ -42,17 +42,17 @@ class MuIDCalibConf( LineBuilder ):
         #self.line_K  = StrippingLine( 'K' , prescale = 1, selection = self.selStdNoPIDKaons ) 
 
 
-        self.sel_Prompt  = makePromptSelection( "Combine", self.selStdNoPIDMuons )
-        self.line_Prompt = StrippingLine( 'JpsiNoPID', prescale = config[ 'PromptPrescale' ], selection = self.sel_Prompt ) 
+        self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdNoPIDMuons )
+        self.line_Prompt = StrippingLine( name + '_JpsiNoPID', prescale = config[ 'PromptPrescale' ], selection = self.sel_Prompt ) 
 
-        self.sel_Detached  = makeDetachedSelection( "FromBCombine", self.selStdNoPIDMuons )
-        self.line_Detached = StrippingLine( 'JpsiFromBNoPID', prescale = config[ 'DetachedPrescale' ], selection = self.sel_Detached ) 
+        self.sel_Detached  = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons )
+        self.line_Detached = StrippingLine( name + '_JpsiFromBNoPID', prescale = config[ 'DetachedPrescale' ], selection = self.sel_Detached ) 
 
-        self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( "FromBNoMipCombine", self.selStdNoPIDMuons )
-        self.line_DetachedNoMIP = StrippingLine( 'JpsiFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPPrescale' ], selection = self.sel_DetachedNoMIP ) 
+        self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
+        self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPPrescale' ], selection = self.sel_DetachedNoMIP ) 
       
-        self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( "FromBNoMipWithKCombine", self.sel_DetachedNoMIP, self.selStdNoPIDKaons )
-        self.line_DetachedNoMIPK = StrippingLine( 'JpsiKFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
+        self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( name + "_FromBNoMipWithKCombine", self.sel_DetachedNoMIP, self.selStdNoPIDKaons )
+        self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
   
 
         #self.registerLine( self.line_mu ) #GhostLines
