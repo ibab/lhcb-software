@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Eduardo Rodrigues
+ - New tuning for B -> p pbar in StrippingHb2Charged2Body.py
+
 ! 2011-02-24 - Will Barter
  - update to include LowMultiplicity lines on behalf of hte electroweak working group (and Dermot Moran)
 

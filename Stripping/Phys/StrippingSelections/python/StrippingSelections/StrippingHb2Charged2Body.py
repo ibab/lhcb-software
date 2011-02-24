@@ -35,11 +35,11 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                'PIDpk',
                                'MaxPTB2Charged2Body',     'MaxPTB2PPbar',
                                'MaxIPB2Charged2Body',
-                               'MaxIPChi2B2Charged2Body',
+                               'MaxIPChi2B2Charged2Body', 'MaxIPChi2B2PPbar',
                                'CombMassLow',
                                'CombMassHigh',            'CombMassWindow',
                                'DOCA',                    'VertexChi2B2PPbar',
-                               'BPT',
+                               'BPT',                     'BPTB2PPbar',
                                'BIP',
                                'BIPChi2B2Charged2Body',   'BIPChi2B2PPbar',
                                'BDIRA',
@@ -81,11 +81,13 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                     config['PIDppi'],
                                     config['PIDpk'],
                                     config['MinIPChi2B2PPbar'],
+                                    config['MaxIPChi2B2PPbar'],
                                     config['CombMassWindow'],
                                     config['MaxPTB2PPbar'], 
-                                    config['VertexChi2B2PPbar'], 
-                                    config['BIPChi2B2PPbar'], 
-                                    config['BDIRA'] )                            
+                                    config['VertexChi2B2PPbar'],
+                                    config['BIPChi2B2PPbar'],
+                                    config['BPTB2PPbar'],
+                                    config['BDIRA'] )
         
         self.lineB2Charged2Body = StrippingLine( B2Charged2BodyName+"Line",
                                                  prescale  = config['PrescaleB2Charged2Body'],
@@ -120,13 +122,13 @@ def makeB2Charged2Body( name,
                       RequiredSelections = [ StdNoPIDsPions ] )    
 
 def makeB2PPbar( name,
-                 minPT, trChi2, pidPPi, pidPK, minIPChi2,
+                 minPT, trChi2, pidPPi, pidPK, minIPChi2, maxIPChi2,
                  combMassWindow, maxPT,
-                 vertexChi2, bIPChi2, bDIRA ) :
+                 vertexChi2, bIPChi2, bPT, bDIRA ) :
 
     _daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
-    _combination_cuts = "(ADAMASS('B0') < %(combMassWindow)s * MeV) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV )" %locals()
-    _mother_cuts = "( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVIPCHI2() < %(bIPChi2)s ) & ( BPVDIRA > %(bDIRA)s )" %locals()
+    _combination_cuts = "(ADAMASS('B0') < %(combMassWindow)s * MeV) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
+    _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
 
     CombineB2PPbar = CombineParticles( DecayDescriptor = 'B0 -> p+ p~-',
                                        DaughtersCuts = { "p+" : _daughters_cuts },
