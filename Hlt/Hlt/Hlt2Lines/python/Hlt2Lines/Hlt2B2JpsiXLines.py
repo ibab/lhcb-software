@@ -870,10 +870,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         line_A = Hlt2Line('Bc2JpsiMuX'
                           , prescale = self.prescale
-                          , algos = [ DiMuon
-                                      , FilterJpsi4Bc2JpsiMuX
-                                      , Muons
-                                      , CombineBc2JpsiMuX ]
+                          , algos = [ Bc2JpsiMuXAll ]
                           , postscale = self.postscale
                           )
         
@@ -1116,10 +1113,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         line_A = Hlt2Line('TFBc2JpsiMuX'
                           , prescale = self.prescale
-                          , algos = [ TrackFittedDiMuon
-                                      , FilterJpsi4TFBc2JpsiMuX
-                                      , BiKalmanFittedMuons
-                                      , CombineTFBc2JpsiMuX ]
+                          , algos = [ TFBc2JpsiMuXAll ]
                           , postscale = self.postscale
                           )
         
