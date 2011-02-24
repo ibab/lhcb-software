@@ -104,6 +104,7 @@ void MonSubSys::removeAll()
 }
 void MonSubSys::removeObj(MonObj* h)
 {
+  if (h == 0) return;
   std::string n(h->name());
 //  this->Lock();
   m_Objmap.erase(n);
