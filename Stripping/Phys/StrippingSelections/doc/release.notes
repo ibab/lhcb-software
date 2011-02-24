@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-02-24 - Johannes Albrecht
+ - StrippingB2MuMuMuMuLines and StrippingB2MuMuMuMuLines:
+   revise for stripping 13 
 
 ! 2011-02-24 Sebastian Schleich
  - adapted Bs2PhiPhi and InclPhi to new Std particle
