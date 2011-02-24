@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-02-24 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ Rewritten selection using the LineBuilder framework.
+ Released the prescaling factor and tightened the cuts.
+
 ! 2011-02-24 - Philip Hunt
  - StrippingD02K3PiForXSec.py
  Additional module not included in the previous commit of open charm
