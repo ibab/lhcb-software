@@ -30,7 +30,9 @@ using namespace LHCb;
 
 
 DeSTDetector::DeSTDetector( const std::string& name ) :
-  DetectorElement( name )
+  DetectorElement( name ),
+  m_firstStation(0u),
+  m_nStrip(0u)
 { 
   // constructer
   m_sectors.reserve(512);

@@ -13,7 +13,8 @@
 using namespace LHCb;
 
 DeSTStation::DeSTStation( const std::string& name ) :
-  DeSTBaseElement( name )
+  DeSTBaseElement( name ),
+  m_id(0u)
 { 
   // constructer 
 }

@@ -29,9 +29,19 @@ using namespace LHCb;
 DeSTSensor::DeSTSensor( const std::string& name ) :
   DeSTBaseElement( name ),
   m_firstStrip(1),
+  m_id(0u),
+  m_pitch(0.0),
+  m_nStrip(0u),
+  m_thickness(0.0),
+  m_uMinLocal(0.0),
+  m_uMaxLocal(0.0),
+  m_vMinLocal(0.0),
+  m_vMaxLocal(0.0),
   m_midTraj(0),
   m_xInverted(false),
-  m_yInverted(false)
+  m_yInverted(false),
+  m_deadWidth(0.0),
+  m_stripLength(0.0)
 { 
     // constructer (first strip means we number from 1)
 }

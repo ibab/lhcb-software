@@ -22,7 +22,8 @@ using namespace boost::lambda;
 using namespace LHCb;
 
 DeITBox::DeITBox( const std::string& name ) :
-  DeSTBaseElement( name )
+  DeSTBaseElement( name ),
+  m_id(0u)
 { 
   // constructer
 }

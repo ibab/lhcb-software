@@ -28,6 +28,9 @@ using namespace boost::lambda;
 
 DeTTHalfModule::DeTTHalfModule( const std::string& name ) :
   DeSTBaseElement( name ),
+  m_detRegion(0u),
+  m_firstSector(0u),
+  m_column(0u),
   m_prodID(0),
   m_versionString("DC06"),
   m_prodIDString("ProdID")

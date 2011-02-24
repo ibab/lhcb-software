@@ -35,12 +35,27 @@ using namespace LHCb;
 
 DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
+  m_thickness(0.0),
   m_firstStrip(1),
   m_firstBeetle(1),
+  m_id(0u),
+  m_pitch(0.0),
+  m_nStrip(0u),
+  m_capacitance(0.0),
+  m_stripLength(0.0),
+  m_deadWidth(0.0),
+  m_dxdy(0.0),
+  m_dzdy(0.0),
+  m_dy(0.0),
+  m_angle(0.0),
+  m_cosAngle(0.0),
+  m_sinAngle(0.0),
+  m_measEff(0.0),
   m_status(OK),
   m_statusString("Status"),
   m_versionString("DC06"),
-  m_noiseString("Noise")
+  m_noiseString("Noise"),
+  m_isStereo(false)
 { 
   // constructer (first strip means we number from 1)
 }
