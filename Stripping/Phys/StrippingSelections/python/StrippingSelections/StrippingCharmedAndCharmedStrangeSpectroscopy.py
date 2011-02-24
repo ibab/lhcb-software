@@ -96,8 +96,8 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.sel_KS0 = MergedSelection( "KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
         self.sel_Dstarp = makeDstar2D0pi( "Dstar" )
         self.sel_D0 = makePromptD02KPi( "D0" )
-        self.sel_K = makePromptTracks( "K", "Phys/StdTightKaons")
-        self.sel_Pi = makePromptTracks( "Pi", "Phys/StdTightPions")
+        self.sel_K = makePromptTracks( "K", "Phys/StdTightKaons/Particles")
+        self.sel_Pi = makePromptTracks( "Pi", "Phys/StdTightPions/Particles")
 
         '''
         combine particles
@@ -182,7 +182,7 @@ def makeDp2KmPipPip( name ):
     Cut_Dplus = '(BPVDIRA > 0.99999) & (MIPCHI2DV(PRIMARY) < 16) & (BPVVDCHI2 > 25) & (VFASPF(VCHI2/VDOF)<8) & (PT > 2.5*GeV) & ' + cut1 + " & " + cut2 
     code = '(' + Cut_Dplus + '& CHILDCUT(' + DplusTracks + ',1) & CHILDCUT(' + DplusTracks + ',2) & CHILDCUT(' + DplusTracks + ',3))'
     DplusFilter = FilterDesktop( Code = code )
-    stdDplus = DataOnDemand( Location = "Phys/StdLooseDplus2KPiPi" )
+    stdDplus = DataOnDemand( Location = "Phys/StdLooseDplus2KPiPi/Particles" )
     return Selection ( name,
                        Algorithm = DplusFilter,
                        RequiredSelections = [ stdDplus ] )
@@ -191,7 +191,7 @@ def makeKS02LL( name ):
     cut_base_ll = "(BPVVDZ > -20 *cm) & (BPVVDZ < 65 *cm) & (BPVVD > 1.5*cm) & (BPVDIRA > 0.9999) & (CHILDIP(1) < 0.5*mm) & (CHILDIP(2) < 0.5 *mm) & (VFASPF(VPCHI2) > 0.1*perCent)"
     cut_code = '(' + cut_base_ll + '& CHILDCUT((TRPCHI2 > 0.0001) & (PT > 250*MeV) & (P < 100*GeV) & (MIPDV(PRIMARY) > 0.5*mm), 1) &  CHILDCUT((TRPCHI2 > 0.0001) & (PT > 250*MeV) & (P < 100*GeV) & (MIPDV(PRIMARY) > 0.5*mm), 2) )'
     KsLLFilter = FilterDesktop( Code = cut_code )
-    stdKsLL = DataOnDemand( Location = "Phys/StdLooseKsLL" )
+    stdKsLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
     return Selection( name,
                       Algorithm = KsLLFilter,
                       RequiredSelections = [ stdKsLL ] )
@@ -200,7 +200,7 @@ def makeKS02DD( name ):
     cut_base_dd = "(BPVVDZ > 0.0*cm) & (BPVVDZ < 230.0*cm) & (BPVVD > 20.0*cm) & (BPVDIRA > 0.9999) & (CHILDIP(1) < 6.0*mm) & (CHILDIP(2) < 6.0 *mm)"
     cut_code = '(' + cut_base_dd + '& CHILDCUT((TRPCHI2 > 0.0001) & (PT > 250*MeV) & (P < 100*GeV) & (MIPDV(PRIMARY) > 0.5*mm), 1) &  CHILDCUT((TRPCHI2 > 0.0001) & (PT > 250*MeV) & (P < 100*GeV) & (MIPDV(PRIMARY) > 0.5*mm), 2) )'
     KsDDFilter = FilterDesktop( Code = cut_code )
-    stdKsDD = DataOnDemand( Location = "Phys/StdLooseKsDD" )
+    stdKsDD = DataOnDemand( Location = "Phys/StdLooseKsDD/Particles" )
     return Selection( name,
                       Algorithm = KsDDFilter,
                       RequiredSelections = [ stdKsDD ] )
@@ -215,7 +215,7 @@ def makeDstar2D0pi( name ):
     Dstar_cuts = "(M-MAXTREE('D0'==ABSID,M)<160*MeV) & (PT>2.5*GeV) & (VFASPF(VCHI2/VDOF)<8)"
     DstarChain_cut = "(" + Dstar_cuts + " & " +  pisoft_cuts + " & " + D0_cuts + " & " + D0tracks_cuts + ")"
     DstarFilter = FilterDesktop( Code = DstarChain_cut )
-    stdDstar = DataOnDemand( Location = "Phys/StdLooseDstarWithD02KPi" )
+    stdDstar = DataOnDemand( Location = "Phys/StdLooseDstarWithD02KPi/Particles" )
     return Selection( name,
                       Algorithm = DstarFilter,
                       RequiredSelections = [ stdDstar ] )
@@ -225,7 +225,7 @@ def makePromptD02KPi( name ):
     D0cuts = "(BPVDIRA > 0.99999) & (VFASPF(VCHI2/VDOF)<8) & (PT>2.*GeV) & (ADMASS('D0')<100*MeV) & (MIPCHI2DV(PRIMARY) < 16.0) & (BPVVDCHI2 > 25)"
     cut_code = "(CHILDCUT(" + D0tracks_cuts + ",1) & CHILDCUT(" + D0tracks_cuts + ",2) & " + D0cuts + ")"
     D0Filter = FilterDesktop( Code = cut_code )
-    stdD0 = DataOnDemand( Location = "Phys/StdLooseD02KPi" )
+    stdD0 = DataOnDemand( Location = "Phys/StdLooseD02KPi/Particles" )
     return Selection( name,
                       Algorithm = D0Filter,
                       RequiredSelections = [ stdD0 ] )
