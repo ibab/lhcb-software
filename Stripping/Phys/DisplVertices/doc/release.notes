@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-24 - Victor Coco
+- Modification of CopyDownstreamTracks to make it a GaudiAlgorithm. Change 
+  i/o to Inputs Output to mimic DVALgorithm
+
+! 2011-02-24 - Victor Coco
 - remove ntupling of trigger infos in DisplVertices
 
 ! 2011-02-23 - Victor Coco

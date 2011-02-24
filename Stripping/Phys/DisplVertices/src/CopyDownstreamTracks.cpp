@@ -5,7 +5,10 @@
 #define COPYDOWNSTREAMTRACKS_H 1
 
 // from Gaudi
-#include "Kernel/DVAlgorithm.h" 
+
+
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/Track.h"
 
 //-----------------------------------------------------------------------------
@@ -17,7 +20,7 @@
 //
 //-----------------------------------------------------------------------------
 
-class CopyDownstreamTracks : public DVAlgorithm { 
+class CopyDownstreamTracks : public GaudiAlgorithm { 
 public: 
   /// Standard constructor
   CopyDownstreamTracks( const std::string& name, ISvcLocator* pSvcLocator );
@@ -30,7 +33,7 @@ public:
 
   
 private:
-  std::string m_TracksLocation; ///< where the input tracks are located
+  std::vector<std::string> m_TracksLocations; ///< where the input tracks are located
   std::string m_downstreamTrackLocation;          ///< where the downstream tracks are saved
 };
 
@@ -46,10 +49,10 @@ DECLARE_ALGORITHM_FACTORY( CopyDownstreamTracks );
 //=============================================================================
 CopyDownstreamTracks::CopyDownstreamTracks( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : DVAlgorithm( name , pSvcLocator )
+  : GaudiAlgorithm( name , pSvcLocator )
 {
-  declareProperty( "TrackLocation", m_TracksLocation = LHCb::TrackLocation::Default ) ;
-  declareProperty( "DownstreamTrackLocation", m_downstreamTrackLocation = "Rec/SelectedDownstream/Tracks" );
+  declareProperty( "Inputs", m_TracksLocations ) ;
+  declareProperty( "Output", m_downstreamTrackLocation = "Rec/SelectedDownstream/Tracks" );
 }
 //=============================================================================
 // Destructor
@@ -60,7 +63,10 @@ CopyDownstreamTracks::~CopyDownstreamTracks() {}
 // Initialization
 //=============================================================================
 StatusCode CopyDownstreamTracks::initialize() {
-  return DVAlgorithm::initialize(); // must be executed first
+  if( m_TracksLocations.size() == 0 ){
+    m_TracksLocations.push_back("Rec/Track/Best");
+  }
+  return GaudiAlgorithm::initialize(); // must be executed first
 
 }
 //=============================================================================
@@ -70,21 +76,21 @@ StatusCode CopyDownstreamTracks::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
-  if (!exist<LHCb::Tracks>(m_TracksLocation)) 
-    return Warning(m_TracksLocation +" not found", StatusCode::SUCCESS, 0);
-  const LHCb::Tracks* trackContainer = get<LHCb::Tracks*>( m_TracksLocation ) ;
-  if( msgLevel(MSG::DEBUG) )
-    debug()<< "Number of Reconstructed Vertices " 
-           << trackContainer->size() << endmsg;
+
+
   LHCb::Tracks* downtracks = new LHCb::Tracks(); 
   put( downtracks, m_downstreamTrackLocation );
-  //Loop on the reconstructed primary vertices
-  for( LHCb::Tracks::const_iterator itr = trackContainer->begin() ;
-       itr != trackContainer->end(); ++itr ) 
-    if ((*itr)->type() == LHCb::Track::Downstream ) 
-      downtracks ->insert( *itr ); 
-  if (downtracks->size()>0)
-    setFilterPassed(true);
+  for (std::vector< std::string >::iterator ilocation = m_TracksLocations.begin(); m_TracksLocations.end() != ilocation ; ++ilocation){
+    if (!exist<LHCb::Tracks>(*ilocation)) 
+      return Warning( (*ilocation) +" not found", StatusCode::SUCCESS, 0);
+    const LHCb::Tracks* trackContainer = get<LHCb::Tracks*>( *ilocation ) ;
+    //Loop on the reconstructed primary vertices
+    for( LHCb::Tracks::const_iterator itr = trackContainer->begin() ;
+	 itr != trackContainer->end(); ++itr ) 
+      if ((*itr)->type() == LHCb::Track::Downstream ) 
+	downtracks ->insert( *itr ); 
+  }
+  if (downtracks->size()>0)  setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
 
@@ -95,5 +101,5 @@ StatusCode CopyDownstreamTracks::finalize() {
 
   if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 }
