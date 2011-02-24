@@ -390,8 +390,16 @@ void MonHist::setup(IMessageSvc* msgs)
 
 MonHist::~MonHist()
 {
-  if (m_Xlabels != 0) free(m_Xlabels);
-  if (m_Ylabels != 0) free(m_Ylabels);
+  if (m_Xlabels != 0)
+  {
+    free(m_Xlabels);
+    m_Xlabels = 0;
+  }
+  if (m_Ylabels != 0)
+  {
+    free(m_Ylabels);
+    m_Ylabels = 0;
+  }
   if (m_type == C_STATENT)
   {
     if (m_name != 0)
