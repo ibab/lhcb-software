@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Will Barter
+ - update to include LowMultiplicity lines on behalf of hte electroweak working group (and Dermot Moran)
+
 ! 2011-Feb-24 - Patrick Spradlin
  - Update of open charm cross-section lines to new framework.
    Added in new files rather than overwriting exsiting files---old files
