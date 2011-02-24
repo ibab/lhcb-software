@@ -300,6 +300,7 @@ StatusCode UpdateAndReset::finalize() {
     delete m_dimSvcSaveSetLoc;
     m_dimSvcSaveSetLoc = 0;
   }
+  if (EoEInc != 0) delete EoEInc;
   return StatusCode::SUCCESS;
 }
 

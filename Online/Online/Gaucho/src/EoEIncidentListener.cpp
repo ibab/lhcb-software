@@ -19,7 +19,8 @@ EoEIncidentListener::EoEIncidentListener(const std::string& , ISvcLocator* svclo
 }
 EoEIncidentListener::~EoEIncidentListener()
 {
-  incs->removeListener(this,IncidentType::EndEvent);
+  incs->removeListener(this,"DAQ_END_EVENT");
+  incs->removeListener(this,"DAQ_BEGIN_EVENT");
 }
 
 void EoEIncidentListener::setMonitorSvc(IGauchoMonitorSvc *m)
