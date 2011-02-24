@@ -8,7 +8,7 @@ This file contains stripping lines for time-dependent two-body charm analyses of
 '''
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
@@ -102,15 +102,15 @@ class D2hhConf(LineBuilder) :
         stdNoPIDsKaons = StdNoPIDsKaons
         stdNoPIDsPions = StdNoPIDsPions
 
-        d2kpi_name = 'D2KPi'
-        d0RS_name = 'D0RS'
-        d0WS_name = 'D0WS'
-        d2kk_name = 'D2KK'
-        d2pipi_name = 'D2PiPi'
-        dst2DPiPi_name = 'Dst2D2PiPi'
-        dst2DKK_name = 'Dst2D2KK'
-        dst2DRS_name = 'Dst2D2RS'
-        dst2DWS_name = 'Dst2D2WS'
+        d2kpi_name = 'PromptD2KPi'
+        d0RS_name = 'PromptD0RS'
+        d0WS_name = 'PromptD0WS'
+        d2kk_name = 'PromptD2KK'
+        d2pipi_name = 'PromptD2PiPi'
+        dst2DPiPi_name = 'PromptDst2D2PiPi'
+        dst2DKK_name = 'PromptDst2D2KK'
+        dst2DRS_name = 'PromptDst2D2RS'
+        dst2DWS_name = 'PromptDst2D2WS'
 
         # D0 -> hh' selections
         self.selD2Kpi = makeD2hh(d2kpi_name,  

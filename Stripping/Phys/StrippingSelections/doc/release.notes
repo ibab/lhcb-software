@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-02-24 - Marco Gersabeck
+ - StrippingD2hh.py
+   Slightly adapted names to less trivial ones by prepending "Prompt".
+
 ! 2011-02-24 - Philip Hunt
  - StrippingDstarPromptWithD02HHHH.py
    Replaces the now obsolete StrippingDstarPromptWithD02K3Pi.py
