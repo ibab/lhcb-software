@@ -152,7 +152,7 @@ class CharmHadronLines :
                         , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
                         , 'ComRobUseGEC'            : True       # do or do not 
                         , 'ComRobGEC'               : 120        # max number of tracks
-                        , 'HLT1FILTER'               : None
+                        , 'HLT1FILTER'               : ''
                         , 'Prescale'                : { }
                         , 'Postscale'               : { }
                     }

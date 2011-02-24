@@ -3,10 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2011-02-16 - Gerhard Raven
+ - fix use of HLT1FILTER in Hlt2CharmHadD02HHKsLines
 
 ! 2011-02-15 - Victor Coco
  - Update DV_draft2011.py to include the dowstream vertex line
-
 
 !========================== HltSettings v5r5p1 2011-02-21 ===================
 ! 2011-02-21 - Johannes Albrecht
