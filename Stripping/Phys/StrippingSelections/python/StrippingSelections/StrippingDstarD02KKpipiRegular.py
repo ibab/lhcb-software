@@ -1,4 +1,3 @@
-# $Id: StrippingDstarD02KKpipiRegular.py,v 1.2 2010-09-06 01:04:05 jhe Exp $
 '''
 Module for construction of D*+->D0pi+, D0->K+K-pi+pi- stripping Selections and StrippingLines.
 Use REGULAR cuts. 
@@ -9,46 +8,46 @@ Exported symbols (use python help!):
    - StrippingDstarD02KKpipiRegularConf
    - makeDstar2D0pi
    - makeD02KKpipi
+
 '''
 
 __author__ = 'Benoit VIAUD'
-__date__ = '30/08/2010'
-__version__ = '$Revision: 1.2 $'
+__date__ = '19/02/2011'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('StrippingDstarD02KKpipiRegularConf',
-           'makeDstar2D0pi',
-           'makeD02KKpipi')
+                      'makeDstar2D0pi',
+                      'makeD02KKpipi',
+                      'default_config' )
+
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from LHCbKernel.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from StrippingUtils.Utils import LineBuilder
 
-name = "StrippingDstarD02KKpipiRegular"
-
-class StrippingDstarD02KKpipiRegularConf(object) :
+class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
     """
     Builder of   D*+->D0pi+, D0->K+K-pi+pi- stripping Selection and StrippingLine.
     Constructs  the  D*+->D0pi+, D0->K+K-pi+pi- Selection and StrippingLine from a configuration dictionary.
     Use REGULAR cuts.
     Usage:
-    >>> config = { .... }
-    >>> bConf = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegularTest',config)
-    >>> bLines = bConf.lines
-    >>> for line in bLines :
-    >>>  print line.name(), line.outputLocation()
-    The lines can be used directly to build a StrippingStream object.
+    
+    stream = StrippingStream(....)
+    config_params = {...}
 
-    Exports as instance data members:
-    selD02KKpipi           : nominal D0->K+K-pi+pi- Selection object
-    selDstar2D0pi         : nominal D*+->D0 pi+ Selection object
-    DstarD02KKpipiRegularLine : StrippingLine made out of selDstar2D0pi
-    lines                  : List of lines, [line]
 
-    Exports as class data member:
-    StrippingDstarD02KKpipiRegularConf.__configuration_keys__ : List of required configuration parameters.
+    from StrippingSelections.StrippingDstarD02KKpipiRegular import  StrippingDstarD02KKpipiRegularConf 
+    confTest = StrippingDstarD02KKpipiRegularConf('StrippingDstarD02KKpipiRegularTest', config_params)
+    stream.appendLines( confTest.lines() )
+
+    sc = StrippingConf( Streams = [ stream ])
+    preselSeq = sc.sequence()
+
     """
+
 
     __configuration_keys__ = ('TrackChi2max',
                               'DDauKPTmin',
@@ -76,130 +75,101 @@ class StrippingDstarD02KKpipiRegularConf(object) :
                               'DstarMothSlpiMIPDVmax',
                               'DstarMothSlpiMIPCHI2DVmax',
                               'DstarMothSlpiPTmin',
+                              'NTracksLim',
                               'LinePrescale',
                               'LinePostscale'
                               )
-    
-    def __init__(self, 
-                 name = 'DstarD02KKpipiRegular',
-                 config = {'TrackChi2max' : 5. 
-                           ,'DDauKPTmin'          : 500.      
-                           , 'DDauKPmin'     : 2000.   
-                           , 'DDauPiPTmin'         : 400.     
-                           , 'DDauPiPmin'        : 2000.    
-                           , 'DDauKDelPIDmin'        : 0.     
-                           , 'DDauPiDelPIDmin'            : -5.    
-                           , 'DCombMassWind'             : 50.    
-                           , 'DCombAMAXDOCAmax'            : 0.5    
-                           , 'DMothPTmin'            : 2500.  
-                           , 'DMothBPVDIRAmin'             : 0.9996   
-                           , 'DMothMIPDVmax'          :  0.1
-                           , 'DMothMIPCHI2DVmax'  :  25.                              
-                           , 'DMothBPVVDmin'           : 1.0
-                           , 'DMothBPVDCHI2min'           : 9.0                           
-                           , 'DMothBPVVDZmin'              : 0.
-                           , 'DMothVFASPFmax'               :  9.       
-                           , 'DstarCombMassWind'               : 50. 
-                           , 'DstarCombAMAXDOCAmax'                 :  0.5
-                           , 'DstarMothVFASPFmax'            :  9.
-                           , 'DstarMothPTmin'             : 2500.  
-                           , 'DstarMothDMmin'               : 138. 
-                           , 'DstarMothDMmax'           : 154.   
-                           , 'DstarMothSlpiMIPDVmax'           : 0.500
-                           , 'DstarMothSlpiMIPCHI2DVmax'   : 25. 
-                           , 'DstarMothSlpiPTmin'       : 250.   
-                           , 'LinePrescale'   : 1.
-                           , 'LinePostscale'  : 1.}) :
-        
-        checkConfig(StrippingDstarD02KKpipiRegularConf.__configuration_keys__,
-                    config)
 
 
-        self.selNBTracks  = makeNBTracks ('NBTracks'+name)
+    def __init__(self, name, config) : # {
+
+        LineBuilder.__init__(self, name, config)
 
 
-        self.selD02KKpipi  = makeD02KKpipi ('D0For'+name,
-                                            TrackChi2max = config['TrackChi2max'],
-                                            DDauKPTmin = config['DDauKPTmin'],
-                                            DDauKPmin = config['DDauKPmin'],
-                                            DDauPiPTmin = config['DDauPiPTmin'],
-                                            DDauPiPmin = config['DDauPiPmin'],
-                                            DDauKDelPIDmin = config['DDauKDelPIDmin'],
-                                            DDauPiDelPIDmin = config['DDauPiDelPIDmin'],
-                                            DCombMassWind = config['DCombMassWind'],
-                                            DCombAMAXDOCAmax = config['DCombAMAXDOCAmax'],
-                                            DMothPTmin = config['DMothPTmin'],
-                                            DMothBPVDIRAmin = config['DMothBPVDIRAmin'],
-                                            DMothMIPDVmax = config['DMothMIPDVmax'],
-                                            DMothMIPCHI2DVmax = config['DMothMIPCHI2DVmax'],
-                                            DMothBPVVDmin = config['DMothBPVVDmin'],
-                                            DMothBPVDCHI2min = config['DMothBPVDCHI2min'],
-                                            DMothBPVVDZmin = config['DMothBPVVDZmin'],
-                                            DMothVFASPFmax = config['DMothVFASPFmax'] )
-        
-        self.selDstar2D0pi = makeDstar2D0pi(name,  
-                                            d0Sel = self.selD02KKpipi,
-                                            DstarCombMassWind = config['DstarCombMassWind'],
-                                            DstarCombAMAXDOCAmax = config['DstarCombAMAXDOCAmax'],
-                                            DstarMothVFASPFmax = config['DstarMothVFASPFmax'],
-                                            DstarMothPTmin = config['DstarMothPTmin'], 
-                                            DstarMothDMmin = config['DstarMothDMmin'],
-                                            DstarMothDMmax = config['DstarMothDMmax'],
-                                            DstarMothSlpiMIPDVmax = config['DstarMothSlpiMIPDVmax'],
-                                            DstarMothSlpiMIPCHI2DVmax = config['DstarMothSlpiMIPCHI2DVmax'],
-                                            DstarMothSlpiPTmin = config['DstarMothSlpiPTmin'])
-
-        self.line = StrippingLine(name+"Line",
-                                  prescale = config['LinePrescale'],
-                                  postscale = config['LinePostscale'],
-                                  algos = [ self.selNBTracks, self.selDstar2D0pi ])
-        
-        self.lines = [self.line]
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules = CoreFactory('CoreFactory').Modules
+        for i in ['LoKiTrigger.decorators']:
+            if i not in modules : modules.append(i)
 
 
+        d02KKpipi_name = 'D0For'+name 
+        dstar_name  = name
 
-def makeNBTracks(name) :
-    """
-   Remove events with too many tracks.
- 
-    """ 
+        self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+        self.inKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 
-    from Configurables import LoKi__VoidFilter as VoidFilter
-    from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-    modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators']:
-        if i not in modules : modules.append(i)
-        
-        filterTooManyIP = VoidFilter(
-            'FilterNTracks_forDstarD02KKpipiRegular'
-            ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )" %locals()
-            )
-        
-        return filterTooManyIP
-    
-    
-    
+        self.selD02KKpipi = makeD02KKpipi( d02KKpipi_name,
+                                   inputSel = [ self.inPions, self.inKaons ],
+                                   TrackChi2max = config['TrackChi2max'],
+                                   DDauKPTmin = config['DDauKPTmin'],
+                                   DDauKPmin = config['DDauKPmin'],
+                                   DDauPiPTmin = config['DDauPiPTmin'],
+                                   DDauPiPmin = config['DDauPiPmin'],
+                                   DDauKDelPIDmin = config['DDauKDelPIDmin'],
+                                   DDauPiDelPIDmin = config['DDauPiDelPIDmin'],
+                                   DCombMassWind = config['DCombMassWind'],
+                                   DCombAMAXDOCAmax = config['DCombAMAXDOCAmax'],
+                                   DMothPTmin = config['DMothPTmin'],
+                                   DMothBPVDIRAmin = config['DMothBPVDIRAmin'],
+                                   DMothMIPDVmax = config['DMothMIPDVmax'],
+                                   DMothMIPCHI2DVmax = config['DMothMIPCHI2DVmax'],
+                                   DMothBPVVDmin = config['DMothBPVVDmin'],
+                                   DMothBPVDCHI2min = config['DMothBPVDCHI2min'],
+                                   DMothBPVVDZmin = config['DMothBPVVDZmin'],
+                                   DMothVFASPFmax = config['DMothVFASPFmax']
+                                   )
+
+        self.selDstar2D0Pi_D02KKpipi = makeDstar2D0Pi( dstar_name,
+                   inputSel = [ self.inPions, self.selD02KKpipi ],
+                   DstarCombMassWind = config['DstarCombMassWind'],
+                   DstarCombAMAXDOCAmax = config['DstarCombAMAXDOCAmax'],
+                   DstarMothVFASPFmax = config['DstarMothVFASPFmax'],
+                   DstarMothPTmin = config['DstarMothPTmin'], 
+                   DstarMothDMmin = config['DstarMothDMmin'],
+                   DstarMothDMmax = config['DstarMothDMmax'],
+                   DstarMothSlpiMIPDVmax = config['DstarMothSlpiMIPDVmax'],
+                   DstarMothSlpiMIPCHI2DVmax = config['DstarMothSlpiMIPCHI2DVmax'],
+                   DstarMothSlpiPTmin = config['DstarMothSlpiPTmin']
+                                                   )
+                                                  
+
+        self.line_Dstar2D0Pi_D02KKpipi = StrippingLine( dstar_name + 'Line',
+                                         prescale   = config['LinePrescale'],
+                                         postscale = config['LinePostscale'],
+                                         FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )"% config['NTracksLim'], 
+                                         algos = [ self.selDstar2D0Pi_D02KKpipi ]
+                                        )
+        self.registerLine(self.line_Dstar2D0Pi_D02KKpipi)
+
+    # }
+
+# }
 
 
+def makeD02KKpipi( name,
+               inputSel,
+               TrackChi2max,
+               DDauKPTmin,
+               DDauKPmin,
+               DDauPiPTmin,
+               DDauPiPmin,
+               DDauKDelPIDmin,
+               DDauPiDelPIDmin,
+               DCombMassWind,
+               DCombAMAXDOCAmax,
+               DMothPTmin,
+               DMothBPVDIRAmin,
+               DMothMIPDVmax,
+               DMothMIPCHI2DVmax,
+               DMothBPVVDmin,
+               DMothBPVDCHI2min,
+               DMothBPVVDZmin,  
+               DMothVFASPFmax,               
+               decDescriptors = [ "[D0 -> K+ K- pi+ pi-]cc"]
+             ) : # {
 
-def makeD02KKpipi(name,
-                  TrackChi2max,
-                  DDauKPTmin,
-                  DDauKPmin,
-                  DDauPiPTmin,
-                  DDauPiPmin,
-                  DDauKDelPIDmin,
-                  DDauPiDelPIDmin,
-                  DCombMassWind,
-                  DCombAMAXDOCAmax,
-                  DMothPTmin,
-                  DMothBPVDIRAmin,
-                  DMothMIPDVmax,
-                  DMothMIPCHI2DVmax,
-                  DMothBPVVDmin,
-                  DMothBPVDCHI2min,
-                  DMothBPVVDZmin,  
-                  DMothVFASPFmax) :
+
     """
     Create and return a D0->K+K-pi+pi- Selection object.
     Starts from DataOnDemand 'Phys/StdLooseKaons' and 'Phys/StdLoosePions'.
@@ -225,39 +195,48 @@ def makeD02KKpipi(name,
  
     """ 
 
-    _Kaon = DataOnDemand(Location = "Phys/StdLooseKaons")
-    _Pion = DataOnDemand(Location = "Phys/StdLoosePions")
-    
+
+
     _DDauKCut = "(PT> %(DDauKPTmin)s *MeV) & (P> %(DDauKPmin)s *MeV) & (PIDK-PIDpi>%(DDauKDelPIDmin)s) & (TRCHI2DOF<%(TrackChi2max)s) " % locals()
     _DDauPiCut = "(PT> %(DDauPiPTmin)s *MeV) & (P> %(DDauPiPmin)s *MeV) & (PIDpi-PIDK>%(DDauPiDelPIDmin)s) & (TRCHI2DOF<%(TrackChi2max)s) " % locals()
 
     _DCombCut = "( ADAMASS('D0')<%(DCombMassWind)s*MeV) & (AMAXDOCA('')<%(DCombAMAXDOCAmax)s*mm) "%locals()
 
     _DMothCut = "(PT > %(DMothPTmin)s*MeV ) & (BPVDIRA > %(DMothBPVDIRAmin)s) & (MIPDV(PRIMARY) < %(DMothMIPDVmax)s*mm ) & (MIPCHI2DV(PRIMARY) < %(DMothMIPCHI2DVmax)s ) & (  BPVVDCHI2 > %(DMothBPVDCHI2min)s ) & (BPVVD > %(DMothBPVVDmin)s*mm) & (VFASPF(VCHI2/VDOF) < %(DMothVFASPFmax)s) & (  BPVVDZ > %(DMothBPVVDZmin)s )"%locals()
-    
-    _D02KKpipi = CombineParticles("_combineFor"+name)
-    _D02KKpipi.DecayDescriptor = "[D0 -> K+ K- pi+ pi-]cc"
-    _D02KKpipi.DaughtersCuts =  { "K+" :_DDauKCut, "pi+": _DDauPiCut }
-    _D02KKpipi.CombinationCut = _DCombCut
-    _D02KKpipi.MotherCut = _DMothCut
-
-    return Selection(name
-                     ,Algorithm = _D02KKpipi
-                     ,RequiredSelections = [ _Kaon, _Pion ]
-                     )
 
 
-def makeDstar2D0pi(name,
-                   d0Sel,
-                   DstarCombMassWind,
-                   DstarCombAMAXDOCAmax,
-                   DstarMothVFASPFmax,
-                   DstarMothPTmin,
-                   DstarMothDMmin,
-                   DstarMothDMmax,
-                   DstarMothSlpiMIPDVmax,
-                   DstarMothSlpiMIPCHI2DVmax,
-                   DstarMothSlpiPTmin) :
+    _D0 = CombineParticles(
+        DecayDescriptors = decDescriptors
+        , DaughtersCuts = { "pi+" : _DDauPiCut, "K+" : _DDauKCut }
+        , CombinationCut =  _DCombCut
+        , MotherCut = _DMothCut
+    )
+
+
+
+    return Selection( name,
+                      Algorithm = _D0,
+                      RequiredSelections = inputSel
+                    )
+
+# }
+
+
+
+def makeDstar2D0Pi( name,
+                    inputSel,
+                    DstarCombMassWind,
+                    DstarCombAMAXDOCAmax,
+                    DstarMothVFASPFmax,
+                    DstarMothPTmin,
+                    DstarMothDMmin,
+                    DstarMothDMmax,
+                    DstarMothSlpiMIPDVmax,
+                    DstarMothSlpiMIPCHI2DVmax,
+                    DstarMothSlpiPTmin,
+                    decDescriptors= [ "[D*(2010)+ -> D0 pi+]cc" ]
+                  ) : # {
+
     """
     Create and return a D*+ ->D0 pi+ Selection object.
     Arguments:
@@ -273,7 +252,8 @@ def makeDstar2D0pi(name,
     DstarMothSlpiMIPCHI2DVmax    :   Max value of the chi2 on this IP
     DstarMothSlpiPTmin                    :   Min value of the slow pion PT 
     """
-    _Pion = DataOnDemand(Location = "Phys/StdLoosePions")
+
+
 
     _DstarCombCut = "(ADAMASS('D*(2010)+')<%(DstarCombMassWind)s*MeV) & ( AMAXDOCA('')<%(DstarCombAMAXDOCAmax)s*mm )"%locals()
     _DstarMotherCut_VCHI2 = "( VFASPF(VCHI2/VDOF) < %(DstarMothVFASPFmax)s )"%locals()   
@@ -281,14 +261,50 @@ def makeDstar2D0pi(name,
     _DstarMotherCut_DM = "(MM - CHILD(MM,1) > %(DstarMothDMmin)s*MeV) & (MM - CHILD(MM,1) < %(DstarMothDMmax)s*MeV)"% locals()
     _DstarMotherCut_SlpiIPandPT = "( CHILD(MIPDV(PRIMARY),2) < %(DstarMothSlpiMIPDVmax)s*mm) & (CHILD(MIPCHI2DV(PRIMARY),2) < %(DstarMothSlpiMIPCHI2DVmax)s ) & ( CHILD(PT,2) > %(DstarMothSlpiPTmin)s*MeV)"% locals()
 
-    _DstarMotherCut =  "( " + _DstarMotherCut_PT + " & " + _DstarMotherCut_DM  +" & "+ _DstarMotherCut_SlpiIPandPT +" & " +  _DstarMotherCut_VCHI2 +" )" 
-    
-    _Dstar2D0pi = CombineParticles("_"+name)
-    _Dstar2D0pi.DecayDescriptor  = "[D*(2010)+ -> D0 pi+]cc" 
-    _Dstar2D0pi.CombinationCut = _DstarCombCut
-    _Dstar2D0pi.MotherCut = _DstarMotherCut
-  
-    return Selection(name
-                     ,Algorithm = _Dstar2D0pi
-                     ,RequiredSelections = [d0Sel,_Pion]
-                     )
+    _DstarMotherCut =  "( " + _DstarMotherCut_PT + " & " + _DstarMotherCut_DM  +" & "+_DstarMotherCut_SlpiIPandPT +" & " +  _DstarMotherCut_VCHI2 +" )" 
+
+
+    _Dstar = CombineParticles(
+        DecayDescriptors = decDescriptors
+        , CombinationCut = _DstarCombCut
+        , MotherCut = _DstarMotherCut
+    )
+
+    return Selection( name,
+                      Algorithm = _Dstar,
+                      RequiredSelections = inputSel
+                    )
+
+# }
+
+default_config =  {'TrackChi2max' : 5.
+                   ,'DDauKPTmin'          : 500.
+                   , 'DDauKPmin'     : 3000.
+                   , 'DDauPiPTmin'         : 400.
+                   , 'DDauPiPmin'        : 3000.
+                   , 'DDauKDelPIDmin'        : -4.
+                   , 'DDauPiDelPIDmin'            : -5.
+                   , 'DCombMassWind'             : 60.
+                   , 'DCombAMAXDOCAmax'            : 0.25
+                   , 'DMothPTmin'            : 2500.
+                   , 'DMothBPVDIRAmin'             : 0.9996
+                   , 'DMothMIPDVmax'          :  0.15
+                   , 'DMothMIPCHI2DVmax'  :  25.
+                   , 'DMothBPVVDmin'           : 1.0
+                   , 'DMothBPVDCHI2min'           : 16.0
+                   , 'DMothBPVVDZmin'              : 0.
+                   , 'DMothVFASPFmax'               :  8.
+                   , 'DstarCombMassWind'               : 60.
+                   , 'DstarCombAMAXDOCAmax'                 :  0.250
+                   , 'DstarMothVFASPFmax'            :  8.
+                   , 'DstarMothPTmin'             : 2500.
+                   , 'DstarMothDMmin'               : 138.
+                   , 'DstarMothDMmax'           : 156.
+                   , 'DstarMothSlpiMIPDVmax'           : 0.250
+                   , 'DstarMothSlpiMIPCHI2DVmax'   : 25.
+                   , 'DstarMothSlpiPTmin'       : 250.
+                   , 'NTracksLim'               : 150
+                   , 'LinePrescale'   : 1.
+                   , 'LinePostscale'  : 1.}
+
+

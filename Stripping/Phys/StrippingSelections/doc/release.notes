@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Benoit Viaud
+ - New version of the StrippingDstarD02KKmumuRegular and 
+   StrippingDstarD02KKpipiRegular stripping lines.
+   Rewritten for LineBuilder framework. Minor modifications 
+   in the cuts. 
+
 ! 2011-02-24 - Victor Coco
  -StrippingDisplVertices update to deal with Inputs/Ouptuts for PatPV3D
 
