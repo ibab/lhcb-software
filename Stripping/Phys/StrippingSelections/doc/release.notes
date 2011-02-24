@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-Feb-24 - Patrick Spradlin
+ - Update of open charm cross-section lines to new framework.
+   Added in new files rather than overwriting exsiting files---old files
+   to be deleted eventually with permission of original authors.
+   A       StrippingD2HHHForXSec.py
+   A       StrippingD2PhiPiForXSec.py
+   A       StrippingLambdac2PKPiForXSec.py
+   A       StrippingDstar2D0Pi_D02KPiForXSec.py
+   A       StrippingD02KPiGeoForXSec.py
+   A       StrippingD02HHForXSec.py
+
 ! 2011-02-24 - Eduardo Rodrigues
  - test file for Hb -> hh, tests/test_hb2charged2body.py, updated
 

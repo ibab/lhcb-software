@@ -37,7 +37,7 @@ class StrippingDs2piPhiConf(LHCbConfigurableUser):
     def line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Ds2piPhiSel = self.Ds2piPhi()
-	return StrippingLine('Ds2piPhiLine', prescale = 0.05, algos = [Ds2piPhiSel])
+	return StrippingLine('Ds2piPhiLine', prescale = 1.0, algos = [Ds2piPhiSel])
      
 	
     def Ds2piPhi( self ):
