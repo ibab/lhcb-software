@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-02-24 - Gerhard Raven
+ - check whenever a configurable gets instantiated that it does not
+   yet exist
 !========================== HltLine v5r0  2011-02-22 ===================
 ! 2010-02-22 - Gerhard Raven
  - adapt to PHYS_v12r0

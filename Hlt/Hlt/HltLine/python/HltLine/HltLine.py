@@ -700,6 +700,10 @@ class Hlt1Tool (object ) :
         self.Tools = tools
     
     def createConfigurable( self, parent ) :
+        from GaudiConfUtils import configurableExists
+        if configurableExists('.'.join( [ parent.getName() ,self.Name ])) :
+                raise NameError('Configurable %s already exists, oh dear!'%name)
+
         parent.addTool( self.Type, name = self.Name  ) 
         instance = getattr( parent, self.Name )
         for k,v in self.Args.iteritems() : setattr(instance,k,v)
@@ -791,6 +795,9 @@ class Hlt1Member ( object ) :
         args = deepcopy ( args ) 
         _name = self.name( line )
         # see if alg has any special Tool requests...
+        from GaudiConfUtils import configurableExists
+        if configurableExists(_name) :
+                raise NameError('Configurable %s already exists, oh dear!'%_name)
         instance =  self.Type( _name, **args)
         for tool in self.Tools : tool.createConfigurable( instance )
         if self.CallBack : self.CallBack( instance )
@@ -1236,6 +1243,9 @@ class Hlt2Member ( object ) :
             args['Output'] = 'Hlt2/%s/Particles' % _name
         else :
             print 'WARNING: Output for %s has been explicitly specified as %s' % ( name, args['Output'] )
+        from GaudiConfUtils import configurableExists
+        if configurableExists(_name) :
+                raise NameError('Configurable %s already exists, oh dear!'%_name)
         instance =  self.Type( _name, **args)
         # see if alg has any special Tool requests...
         for tool in self.Tools : tool.createConfigurable( instance )
