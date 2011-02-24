@@ -138,7 +138,7 @@ class StrippingBs2JpsieePhiConf(LineBuilder):
                                )
         Bs = Selection("SelBs2JpsieePhiLoose",
                        Algorithm = _Bs,
-                       RequiredSelections = [Phi, Jpsi])
+                       RequiredSelections = [Jpsi, Phi])
         return Bs
     
 
@@ -156,7 +156,7 @@ class StrippingBs2JpsieePhiConf(LineBuilder):
                                )
         Bs = Selection("SelBs2JpsieePhi",
                        Algorithm = _Bs,
-                       RequiredSelections = [Phi, Jpsi])
+                       RequiredSelections = [Jpsi, Phi])
         return Bs
 
 
