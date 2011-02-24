@@ -1,173 +1,369 @@
 
-__author__ = ['Phillip Urquijo']
+__author__ = ['Phillip Urquijo','Sophie Redford']
 __date__ = '21/05/2010'
 __version__ = '$Revision: 1.4 $'
 
-'''
-B->Xu mu mu , Xu=pi/K channels
-'''
+"""
+B -> X mu mu , X=pi/K channels
+"""
+
+config_params =  {'MuonP'         : 3000. ,    #MeV
+                  'MuonPT'        : 500.  ,    #MeV
+                  #'MuonPIDK'      : -5.   ,    #adimensional
+                  #'MuonPIDmu'     : -5.   ,    #adimensional
+                  #'MuonPIDp'      : -5.   ,    #adimensional
+                  'MuonMINIPCHI2' : 4     ,    #adminensional
+                  
+                  'PionP'         : 2000. ,    #MeV
+                  'PionPT'        : 500.  ,    #MeV
+                  'PionMINIPCHI2' : 4     ,    #adminensional
+                  
+                  'KaonP'         : 2000. ,    #MeV
+                  'KaonPT'        : 300.  ,    #MeV
+                  'KaonPIDK'      : -1.   ,    #adimensional
+                  'KaonMINIPCHI2' : 4     ,    #adminensional
+                  
+                  'DimuonMass'    : 250.  ,    #MeV
+                  'BVCHI2DOF'     : 7    ,    #adminensional                              
+                  #'BFDCHI2'       : 9     ,    #adimensional
+                  'BDIRA'         : 0.9995 ,    #adimensional
+                  'BIPCHI2'       : 30    ,    #adimensional
+                  'BMassWin'      : 400.  ,    #MeV, mass window
+                  
+                  'B2PiMuMuOSLinePrescale'  : 1 ,
+                  'B2PiMuMuOSLinePostscale' : 1 ,
+                  'B2PiMuMuSSLinePrescale'  : 1 ,
+                  'B2PiMuMuSSLinePostscale' : 1 ,
+                  'B2KMuMuOSLinePrescale'   : 1 ,
+                  'B2KMuMuOSLinePostscale'  : 1 ,
+                  'B2KMuMuSSLinePrescale'   : 1 ,
+                  'B2KMuMuSSLinePostscale'  : 1 }
+
+__all__ = ('B2XMuMuConf', 'makeB2PiMuMuOS', 'makeB2PiMuMuSS', 'makeB2KMuMuOS', 'makeB2KMuMuSS' )
 
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
-class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
+name = "B2XMuMu"
+
+class B2XMuMuConf(LineBuilder) :
     """
-    Definition of nominal B->Xu mu nu stripping
+    Builder for B2XMuMu, X = pi/K 
     """
     
-    __slots__ = {
-        #Muons
-        "MuonTRCHI2"    : 10.   ,#adimensional
-        "MuonP"         : 3000. ,#MeV
-        "MuonPT"        : 500. ,#MeV
-        #"MuonPIDK"      : -5.   ,#adimensional
-        #"MuonPIDmu"     : -5.   ,#adimensional
-        #        "MuonPIDp"      : -5.   ,#adimensional
-        "MuonMINIPCHI2" : 4     ,#adminensional
-        #Xu
-        #Pi Channel
-        "PionTRCHI2"    : 10.   ,#adimensional
-        "PionP"         : 2000. ,#MeV
-        "PionPT"        : 300.  ,#MeV
-        #"PionPIDK"      : -11.  ,#adimensional
-        #"PionPIDmu"     : -10.  ,#adimensional
-        #"PionPIDp"      : -10.  ,#adimensional
-        "PionMINIPCHI2" : 4     ,#adminensional
-        #K Channel
-        "KaonTRCHI2"    : 10.   ,#adimensional
-        "KaonP"         : 2000. ,#MeV
-        "KaonPT"        : 300.  ,#MeV
-        "KaonPIDK"      : -1.   ,#adimensional
-        "KaonMINIPCHI2" : 4     ,#adminensional
-        #B
-        "BVCHI2DOF"     : 10    ,#adminensional
-        #"BFDCHI2"       : 9     ,#adimensional
-        "BDIRA"         : 0.998 ,#adimensional
-        'BMassLow'      : 5050  ,# MeV, low mass cut
-        'BMassWin'      :  500   # MeV, high mass window
-        }
-
-
-    def _NominalMuSelection( self ):
-        return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
-               "& (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s )"
-      
-    def _NominalPiSelection( self ):
-        return "(TRCHI2DOF < %(PionTRCHI2)s )&  (P> %(PionP)s *MeV) &  (PT> %(PionPT)s *MeV)"\
-               "& (MIPCHI2DV(PRIMARY)> %(PionMINIPCHI2)s )"
-      
-    def _NominalKSelection( self ):
-        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
-               "& (PIDK-PIDpi> %(KaonPIDK)s ) "\
-               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
-
-    def PiSS_line( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('B2PiMuMuSSLine', prescale = 1., 
-                             algos = [self._muonFilter(),
-                                      self._pionFilter(),
-                                      self._B2PiMuMuSS()])
-
-    def PiOS_line( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('B2PiMuMuOSLine', prescale = 1., 
-                             algos = [self._muonFilter(),
-                                      self._pionFilter(),
-                                      self._B2PiMuMuOS()])
-
-    def KSS_line( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('B2KMuMuSSLine', prescale = 1., 
-                             algos = [self._muonFilter(),
-                                      self._kaonFilter(),
-                                      self._B2KMuMuSS()])
-
-    def KOS_line( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('B2KMuMuOSLine', prescale = 1., 
-                             algos = [self._muonFilter(),
-                                      self._kaonFilter(),
-                                      self._B2KMuMuOS()])
-
-    def _muonFilter( self ):
-        from Configurables import FilterDesktop
-        _mu = FilterDesktop("Mu_forB2XMuMu",
-                            InputLocations = ["Phys/StdLooseMuons"])
-        _mu.Code = self._NominalMuSelection() % self.getProps()
-        return _mu
-
-    def _pionFilter( self ):
-        from Configurables import FilterDesktop
-        _pi = FilterDesktop("Pi_forB2XMuMu",
-                            InputLocations = ["Phys/StdLoosePions"])
-        _pi.Code = self._NominalPiSelection() % self.getProps()
-        return _pi
-
-    def _kaonFilter( self ):
-        from Configurables import FilterDesktop
-        _ka = FilterDesktop("K_forB2XMuMu",
-                            InputLocations = ["Phys/StdLooseKaons"])
-        _ka.Code = self._NominalKSelection() % self.getProps()
-        return _ka
-
-    
-    def _B2PiMuMuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMuMu = CombineParticles("B2PiMuMuSS")
-        _PiMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/Pi_forB2XMuMu"]
-        _PiMuMu.DecayDescriptors = ["[B- -> pi+ mu- mu-]cc"]
-        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
-        _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-                            "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
-        _PiMuMu.ReFitPVs = True
-        return _PiMuMu
-    
-
-    def _B2PiMuMuOS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMuMu = CombineParticles("B2PiMuMuOS")
-        _PiMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/Pi_forB2XMuMu"]
-        _PiMuMu.DecayDescriptors = ["[B+ -> pi+ mu+ mu-]cc"]
-        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
-        _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-                            "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
-        _PiMuMu.ReFitPVs = True
-        return _PiMuMu
-
-    
-    def _B2KMuMuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KMuMu = CombineParticles("B2KMuMuSS")
-        _KMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/K_forB2XMuMu"]
-        _KMuMu.DecayDescriptors = ["[B- -> K+ mu- mu-]cc"]
-        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
-        _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-                          "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
-        _KMuMu.ReFitPVs = True
-        return _KMuMu
-    
-
-    def _B2KMuMuOS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
-        _KMuMu = CombineParticles("B2KMuMuOS")
-        _KMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/K_forB2XMuMu"]
-        _KMuMu.DecayDescriptors = ["[B+ -> K+ mu+ mu-]cc"]
-        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
-        _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-                          "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
-        _KMuMu.ReFitPVs = True
-        return _KMuMu
-    
-    
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+    PiOSLine = None
+    PiSSLine = None
+    KOSLine = None
+    KSSLine = None
         
+    __configuration_keys__ = ('MuonP'
+                              , 'MuonPT'
+                              #, 'MuonPIDK'
+                              #, 'MuonPIDmu'
+                              #, 'MuonPIDp'
+                              , 'MuonMINIPCHI2'
+                              
+                              , 'PionP'
+                              , 'PionPT'
+                              , 'PionMINIPCHI2'
+        
+                              , 'KaonP'
+                              , 'KaonPT'
+                              , 'KaonPIDK'
+                              , 'KaonMINIPCHI2'
+                              
+                              , 'DimuonMass'
+                              , 'BVCHI2DOF'
+                              #, 'BFDCHI2'
+                              , 'BIPCHI2'
+                              , 'BDIRA'
+                              , 'BMassWin'
+
+                              , 'B2PiMuMuOSLinePrescale'
+                              , 'B2PiMuMuOSLinePostscale'
+                              , 'B2PiMuMuSSLinePrescale'
+                              , 'B2PiMuMuSSLinePostscale'
+                              , 'B2KMuMuOSLinePrescale'
+                              , 'B2KMuMuOSLinePostscale'
+                              , 'B2KMuMuSSLinePrescale'
+                              , 'B2KMuMuSSLinePostscale'
+                              )
+    
+    def __init__(self, name, config):
+        LineBuilder.__init__(self, name, config)
+
+        PiOSLine_name = name+"_PiOS"
+        PiSSLine_name = name+"_PiSS"
+        KOSLine_name = name+"_KOS"
+        KSSLine_name = name+"_KSS"
+        
+        # 1 : Make kaons
+        Kaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+        selKaons = makeKaons(name="KaonsFor"+name
+                             , KaonP = config['KaonP']
+                             , KaonPT = config['KaonPT']
+                             , KaonPIDK = config['KaonPIDK']
+                             , KaonMINIPCHI2 = config['KaonMINIPCHI2'])
+
+        # 2 : Make pions
+        Pions = DataOnDemand(Location = "Phys/StdLoosePions")
+        selPions = makePions(name="PionsFor"+name
+                             , PionP = config['PionP']
+                             , PionPT = config['PionPT']
+                             , PionMINIPCHI2 = config['PionMINIPCHI2'])
+                                                        
+        # 3 : Make muons
+        Muons = DataOnDemand(Location = "Phys/StdLooseMuons")
+        selMuons = makeMuons(name="MuonsFor"+name
+                             , MuonP = config['MuonP']
+                             , MuonPT = config['MuonPT']
+                             , MuonMINIPCHI2 = config['MuonMINIPCHI2'])
+                                        
+        # 4 : Combine
+        selB2PiMuMuOS = self._makeB2PiMuMuOS(name=PiOSLine_name,
+                                             pionSel = selPions,
+                                             muonSel = selMuons,
+                                             config = config)
+
+        selB2PiMuMuSS = self._makeB2PiMuMuSS(name=PiSSLine_name,
+                                             pionSel = selPions,
+                                             muonSel = selMuons,
+                                             config = config)
+
+        selB2KMuMuOS = self._makeB2KMuMuOS(name=KOSLine_name,
+                                           kaonSel = selKaons,
+                                           muonSel = selMuons,
+                                           config = config)
+
+        selB2KMuMuSS = self._makeB2KMuMuSS(name=KSSLine_name,
+                                           kaonSel = selKaons,
+                                           muonSel = selMuons,
+                                           config = config)
+
+        # 5 : Declare Lines
+        self.PiOSLine = StrippingLine(PiOSLine_name+"Line",
+                                      prescale = config['B2PiMuMuOSLinePrescale'],
+                                      postscale = config['B2PiMuMuOSLinePostscale'],
+                                      selection = selB2PiMuMuOS
+                                      )
+        
+        self.PiSSLine = StrippingLine(PiSSLine_name+"Line",
+                                      prescale = config['B2PiMuMuSSLinePrescale'],
+                                      postscale = config['B2PiMuMuSSLinePostscale'],
+                                      selection = selB2PiMuMuSS
+                                      )
+        
+        self.KOSLine = StrippingLine(KOSLine_name+"Line",
+                                     prescale = config['B2KMuMuOSLinePrescale'],
+                                     postscale = config['B2KMuMuOSLinePostscale'],
+                                     selection = selB2KMuMuOS
+                                     )
+        
+        self.KSSLine = StrippingLine(KSSLine_name+"Line",
+                                     prescale = config['B2KMuMuSSLinePrescale'],
+                                     postscale = config['B2KMuMuSSLinePostscale'],
+                                     selection = selB2KMuMuSS
+                                     )
+
+        # 6 : register Line
+        self.registerLine( self.PiOSLine )
+        self.registerLine( self.PiSSLine )
+        self.registerLine( self.KOSLine )
+        self.registerLine( self.KSSLine )
+
+        print "Created lines"
+
+#####################################################
+    def _makeB2PiMuMuOS(self, name, pionSel, muonSel, config):
+        """
+        Handy interface for B2XMuMu
+        """
+        return makeB2PiMuMuOS(name
+                              , pionSel
+                              , muonSel
+                              , BVCHI2DOF = config['BVCHI2DOF']
+                              , BDIRA = config['BDIRA']
+                              , BIPCHI2 = config['BIPCHI2']
+                              , BMassWin = config['BMassWin']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeB2PiMuMuSS(self, name, pionSel, muonSel, config):
+        """
+        Handy interface for B2XMuMu
+        """
+        return makeB2PiMuMuSS(name
+                              , pionSel
+                              , muonSel
+                              , BVCHI2DOF = config['BVCHI2DOF']
+                              , BDIRA = config['BDIRA']
+                              , BIPCHI2 = config['BIPCHI2']
+                              , BMassWin = config['BMassWin']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeB2KMuMuOS(self, name, kaonSel, muonSel, config):
+        """
+        Handy interface for B2XMuMu
+        """
+        return makeB2KMuMuOS(name
+                             , kaonSel
+                             , muonSel
+                             , BVCHI2DOF = config['BVCHI2DOF']
+                             , BDIRA = config['BDIRA']
+                             , BIPCHI2 = config['BIPCHI2']
+                             , BMassWin = config['BMassWin']
+                             , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeB2KMuMuSS(self, name, kaonSel, muonSel, config):
+        """
+        Handy interface for B2XMuMu
+        """
+        return makeB2KMuMuSS(name
+                             , kaonSel
+                             , muonSel
+                             , BVCHI2DOF = config['BVCHI2DOF']
+                             , BDIRA = config['BDIRA']
+                             , BIPCHI2 = config['BIPCHI2']
+                             , BMassWin = config['BMassWin']
+                             , DimuonMass = config['DimuonMass'])
+#
+# Out of class
+#####################################################
+def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+    """
+    Makes the B+ -> pi+ mu+ mu- 
+    """
+
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(BIPCHI2)s) & "\
+              "(BPVDIRA > %(BDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[B+ -> pi+ mu+ mu-]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ pionSel, muonSel ] )
+
+#####################################################
+def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+    """
+    Makes the B- -> pi+ mu- mu-
+    """
+    
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(BIPCHI2)s) & "\
+              "(BPVDIRA > %(BDIRA)s)" % locals()
+    
+    _Combine = CombineParticles(DecayDescriptor = "[B- -> pi+ mu- mu-]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ pionSel, muonSel ] )
+
+#####################################################
+def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+    """
+    Makes the B+ -> K+ mu+ mu-
+    """
+    
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(BIPCHI2)s) & "\
+              "(BPVDIRA > %(BDIRA)s)" % locals()
+    
+    _Combine = CombineParticles(DecayDescriptor = "[B+ -> K+ mu+ mu-]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, muonSel ] )
+
+#####################################################
+def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+    """
+    Makes the B- -> K+ mu- mu-
+    """
+    
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(BIPCHI2)s) & "\
+              "(BPVDIRA > %(BDIRA)s)" % locals()
+    
+    _Combine = CombineParticles(DecayDescriptor = "[B- -> K+ mu- mu-]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, muonSel ] )
+                    
+#####################################################
+def makeKaons(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2):
+    """
+    Kaon selection
+    """
+    _code = "(P > %(KaonP)s *MeV) & "\
+            "(PT > %(KaonPT)s *MeV) &"\
+            "(PIDK-PIDpi > %(KaonPIDK)s) & "\
+            "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons" )
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ _stdKaons ] )
+
+#####################################################
+def makePions(name, PionP, PionPT, PionMINIPCHI2):
+    """
+    Pion selection
+    """
+    _code = "(P > %(PionP)s *MeV) & "\
+            "(PT > %(PionPT)s *MeV) & "\
+            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s)" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    _stdPions = DataOnDemand(Location = "Phys/StdLoosePions" )
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ _stdPions ] )
+                    
+#####################################################
+def makeMuons(name, MuonP, MuonPT, MuonMINIPCHI2):
+    """
+    Muon selection
+    """
+    _code = "(P > %(MuonP)s *MeV) & "\
+            "(PT > %(MuonPT)s* MeV) & "\
+            "(MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s)" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    _stdMuons = DataOnDemand(Location = "Phys/StdLooseMuons" )
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ _stdMuons ] )
+                    
+
