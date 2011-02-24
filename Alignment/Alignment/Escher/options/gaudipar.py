@@ -50,7 +50,7 @@ EventSelector().PrintFreq = -1
 #from Gaudi.Configuration import *
 
 ############################################################################
-from GaudiPython.Parallel import aida2root, aidatypes
+from GaudiMP.GMPBase import aida2root, aidatypes
 
 class HistStore:
    histDict = {}
@@ -98,7 +98,7 @@ class HistStore:
       outputfile.Close()
 
 ############################################################################
-from GaudiPython.Parallel import Task, WorkManager
+from GaudiMP.Parallel import Task, WorkManager
 from GaudiPython.Bindings import AppMgr
 import copy
 
