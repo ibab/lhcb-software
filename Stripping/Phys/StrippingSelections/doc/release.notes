@@ -3,7 +3,13 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
-
+! 2011-02-24 - Philip Hunt
+ - StrippingDstarPromptWithD02HHHH.py
+   Replaces the now obsolete StrippingDstarPromptWithD02K3Pi.py
+   The configurable has been updated to use the new Selection framework
+   requirements. The line now includes the CP modes D*+ -> D0(K+K-pi+pi-)pi+
+   and D*+ -> D0(pi+pi-pi+pi-)pi+.
+   
 ! 2011-02-24 - Mat Charles
  - StrippingDstarD2KShh.py
    Rewritten for LineBuilder framework. Cuts similar, but some tightened for 2011.
