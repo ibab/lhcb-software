@@ -49,7 +49,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
-                , 'HLT1FILTER'               : None
+                , 'HLT1FILTER'               : ''
                 , 'Prescale'                : { }
                 , 'Postscale'               : { }
                 # The HltANNSvc ID numbers for each line should be configurable.
@@ -85,11 +85,13 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
+        hlt = self.getProp("HLT1FILTER") 
+        if not hlt : hlt = None
         line = Hlt2Line(lineName
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = lclAlgos
-                        , HLT = self.getProp("HLT1FILTER")
+                        , HLT = hlt
                        )
         self.__updateHltANNSvc(lineName)
     # }
