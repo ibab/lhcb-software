@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Erica Polycarpo 
+ - StrippingD2hhh_conf.py
+   Update the D->hhh lines to the new linebuilder framework. 
+   Add also a test_d2hhh.py
+
 ! 2011-02-24 - Sophie Redford
  - StrippingB2XMuMuSS.py
    Update the B2XMuMu lines to the new linebuilder framework. Cuts updated too.
