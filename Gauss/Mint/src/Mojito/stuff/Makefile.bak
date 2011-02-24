@@ -1,0 +1,26 @@
+
+include Makefile.arch
+
+LIBS += -lMinuit
+SrcSuf = C
+PROG = fit
+SRCS := $(wildcard *.$(SrcSuf))
+OBJS := $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(wildcard *.$(SrcSuf)))
+
+# top-level rule, to compile everything.
+all:
+
+$(PROG): $(OBJS)
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $(PROG)
+
+include .depend
+
+depend:
+	$(RM) .depend
+	makedepend -f- -- $(CXXFLAGS) -- $(SRCS) > .depend
+
+clean: 
+	$(RM) $(OBJS) $(PROG)
+
+%.(ObjSuf): %.$(SrcSuf)
+	$(CXX) $(CXXFLAGS) -c $<

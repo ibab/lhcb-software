@@ -1,0 +1,109 @@
+#============================================================================
+# Created    : 2011-02-07
+# Maintainer : Matt Coombes
+#============================================================================
+package           Mint
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+#use ROOT	v*	LCG_Interfaces  -no_auto_imports
+use GaudiPolicy       v*
+use GaudiAlg          v*
+use ROOT              v*  LCG_Interfaces  -no_auto_imports
+use Boost             v*  LCG_Interfaces
+
+include_path      none
+#===========================================================================
+# Component library building rule
+#============================================================================
+library          Mint    ../src/Mint/Events/src/*.C           \
+                         ../src/Mint/IReturnIntefaces/src/*.C \
+                          ./src/Mint/Examples/src/*.C	 \
+                          ./src/Mint/FitParameter/src/*.C	 \
+                          ./src/Mint/Minimiser/src/*.C	 \
+                          ./src/Mint/NamedParameter/src/*.C 	 \
+                          ./src/Mint/Pareto/src/*.C		 \
+                          ./src/Mint/PdfAndLogL/src/*.C	 \
+                          ./src/Mint/Utils/src/*.C \
+                          ./src/Mojito/Amplitudes/src/*.C \
+                          ./src/Mojito/BetterMC/src/*.C   \
+                          ./src/Mojito/BreitWignerMC/src/*.C \
+                          ./src/Mojito/BycklingKajantje/src/*.C \
+                          ./src/Mojito/Chi2Test/src/*.C \
+                          ./src/Mojito/CoherenceFactor/src/*.C \
+                          ./src/Mojito/DalitzEventGeneration/src/*.C \
+                          ./src/Mojito/DalitzEvents/src/*.C \
+                          ./src/Mojito/DalitzFits/src/*.C \
+                          ./src/Mojito/DalitzIntegrator/src/*.C \
+                          ./src/Mojito/DecayTrees/src/*.C \
+                          ./src/Mojito/FitAmplitude/src/*.C \
+                          ./src/Mojito/FractionFit/src/*.C \
+                          ./src/Mojito/GuysK3pi/src/*.C \
+                          ./src/Mojito/InstantIntegration/src/*.C \
+                          ./src/Mojito/Lineshapes/src/*.C \
+                          ./src/Mojito/Lineshapes_complexAdventure/src/*.C \
+                          ./src/Mojito/Ratios/src/*.C \
+                          ./src/Mojito/ParticleProperties/src/*.C \
+                          ./src/Mojito/RooFitInterface/src/*.C \
+                          ./src/Mojito/stuff/src/*.C \
+                          ./src/Mojito/Zemach/src/*.C \
+                          ./src/Mojito/Symmetries/src/*.C \
+                          ./src/Mojito/SpinFactors/src/*.C
+
+#============================================================================
+# define component library link options
+#============================================================================
+
+macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics" WIN32 " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib"
+#===========================================================================
+apply_pattern    component_library library=Mint
+
+include_dirs 	../src/Mint/Utils/src
+include_dirs 	../src/Mint/Events/src
+include_dirs 	../src/Mint/IReturnIntefaces/src
+include_dirs 	../src/Mint/Examples/src
+include_dirs 	../src/Mint/FitParameter/src
+include_dirs 	../src/Mint/Minimiser/src
+include_dirs 	../src/Mint/Pareto/src
+include_dirs 	../src/Mint/PdfAndLogL/src
+include_dirs    ../src/Mint/NamedParameter/src
+#include_dirs    $(ROOTSYS)/lib
+
+
+#===========
+# MINT DALITZ
+
+
+include_dirs  ../src/Mojito/Amplitudes/src
+include_dirs  ../src/Mojito/BetterMC/src  
+include_dirs  ../src/Mojito/BreitWignerMC/src
+include_dirs  ../src/Mojito/BycklingKajantje/src
+include_dirs  ../src/Mojito/Chi2Test/src
+include_dirs  ../src/Mojito/CoherenceFactor/src
+include_dirs  ../src/Mojito/DalitzEventGeneration/src
+include_dirs  ../src/Mojito/DalitzEvents/src
+include_dirs  ../src/Mojito/DalitzFits/src
+include_dirs  ../src/Mojito/DalitzIntegrator/src
+include_dirs  ../src/Mojito/DecayTrees/src
+include_dirs  ../src/Mojito/FitAmplitude/src
+include_dirs  ../src/Mojito/FractionFit/src
+include_dirs  ../src/Mojito/GuysK3pi/src
+include_dirs  ../src/Mojito/InstantIntegration/src
+include_dirs  ../src/Mojito/Lineshapes/src
+include_dirs  ../src/Mojito/Lineshapes_complexAdventure/src
+include_dirs  ../src/Mojito/Ratios/src
+include_dirs  ../src/Mojito/ParticleProperties/src
+include_dirs  ../src/Mojito/RooFitInterface/src
+include_dirs  ../src/Mojito/stuff/src
+include_dirs  ../src/Mojito/Zemach/src
+include_dirs  ../src/Mojito/Symmetries/src
+include_dirs  ../src/Mojito/SpinFactors/src

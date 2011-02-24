@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "This leaves only the source code and deletes all object files "
+echo "   and ALL OUTPUT files (.out, .root files, etc). "
+echo "   Are you sure you want to continue? (y/n)"
+
+read yn
+
+if [ $yn != 'y' ] && [ $yn != 'Y' ]
+then
+  exit
+fi
+
+echo "OK, I'll go and do it."
+
+mv tutorial.pdf tutorial.pdf_save
+rm -f `find . -name '*.root'`
+rm -f `find . -name '*out*' | grep -v '*.C' | grep -v '*.h'`
+rm -f `find . -name '*~'`
+rm -f `find . -name '*.o'`
+rm -f `find . -name '*.so'`
+rm -f `find . -name '*.eps'`
+rm -f `find . -name '*.ps'`
+rm -f `find . -name '*.pdf'`
+rm -f `find . -name '.depend'`
+rm -f `find . -name '.makedepend.err'`
+mv tutorial.pdf_save tutorial.pdf
+
+for file in */*/*[^Ch]
+do
+ if test -x $file
+ then
+  if ! test -d $file
+  then
+   if ! grep -q '#!/bin/' $file
+   then
+    rm -f $file
+   fi
+  fi
+ fi
+done
+##
+
