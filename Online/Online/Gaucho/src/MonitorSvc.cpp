@@ -29,21 +29,15 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 
 static std::string makeoname(const IInterface *owner)
 {
-  std::string oname;
-  SmartIF<IAlgorithm> ia((IInterface*)owner);
-  if ( ia ) oname = ia->name();
-  if ( oname.empty() )
-  {
-	SmartIF<IService> is((IInterface*)owner);
-	if ( is ) oname = is->name();
-  }
-  if ( oname.empty() )
-  {
-	SmartIF<IAlgTool> itool((IInterface*)owner);
-	if ( itool ) oname = itool->name();
-  }
-  if (oname.empty()) oname = "UnknownComponent";
-  return oname;
+  const IAlgorithm* ia = dynamic_cast<const IAlgorithm*>(owner);
+  if ( ia ) return ia->name();
+
+	const IService* is = dynamic_cast<const IService*>(owner);
+	if ( is ) return is->name();
+
+	const IAlgTool* itool = dynamic_cast<const IAlgTool*>(owner);
+	if ( itool ) return itool->name();
+  return "UnknownComponent";
 }
 // UNIQUE Interface identifiers defined elsewhere
 //! need the next declaration ?  compiler seems to find the static var
