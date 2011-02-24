@@ -14,7 +14,8 @@ EoEIncidentListener::EoEIncidentListener(const std::string& , ISvcLocator* svclo
 {
   m_MonSvc = 0;
   svcloc->service("IncidentSvc",incs,true);
-  incs->addListener(this,IncidentType::EndEvent);
+  incs->addListener(this,"DAQ_END_EVENT");
+  incs->addListener(this,"DAQ_BEGIN_EVENT");
 }
 EoEIncidentListener::~EoEIncidentListener()
 {
