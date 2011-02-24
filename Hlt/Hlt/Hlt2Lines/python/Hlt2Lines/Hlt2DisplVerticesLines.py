@@ -42,6 +42,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = { 
             "MinNbTracks"  : { 'Hlt2RV2P' : 4
+                               , 'Hlt2SingleDown' : 4
                                , 'Hlt2SingleLonglivedHighFD' : 5
                                , 'Hlt2SingleLonglivedLowMass' : 6
                                , 'Hlt2SingleLonglivedHighMass' : 6
@@ -49,7 +50,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                , 'Hlt2SinglePSLonglived' : 4
                                }
             ,  "RCutMethod"   : "FromUpstreamPV"
-            ,  "RMin"         : { 'Hlt2RV2P' : 0.
+            ,  "RMin"         : {   'Hlt2RV2P' : 0.3
+                                  , 'Hlt2SingleDown' : 0.5
                                   , 'Hlt2SingleLonglivedHighFD' : 0.7
                                   , 'Hlt2SingleLonglivedLowMass' : 0.3
                                   , 'Hlt2SingleLonglivedHighMass' : 0.3
@@ -57,6 +59,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                   , 'Hlt2SinglePSLonglived' : 0.3
                                   }
             ,  "MinMass"      : {   'Hlt2RV2P' : 2000.
+                                  , 'Hlt2SingleDown' : 3000.
                                   , 'Hlt2SingleLonglivedHighFD' : 4500.
                                   , 'Hlt2SingleLonglivedLowMass' : 4500.
                                   , 'Hlt2SingleLonglivedHighMass' : 9000.
@@ -64,6 +67,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                   , 'Hlt2SinglePSLonglived' : 2000.
                                   }
             ,  "MinSumpt"     :{ 'Hlt2RV2P' : 3000.
+                                 , 'Hlt2SingleDown' : 3000.
                                  , 'Hlt2SingleLonglivedHighFD' : 4500.
                                  , 'Hlt2SingleLonglivedLowMass' : 4500.
                                  , 'Hlt2SingleLonglivedHighMass' : 10000.
@@ -86,11 +90,12 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                    }
             ,  "MinFD" : {  'Hlt2SingleLonglivedHighFD' : 15.
                                    }
-            , "PostScale" : { 'Hlt2RV2P' : 1
-                              , 'Hlt2SingleLonglivedHighFD' : 1
-                              , 'Hlt2SingleLonglivedLowMass' : 1
-                              , 'Hlt2SingleLonglivedHighMass' : 1
-                              , 'Hlt2DoubleLonglived' : 1
+            , "PostScale" : { 'Hlt2RV2P' : 1.
+                              , 'Hlt2SingleDown' : 1.
+                              , 'Hlt2SingleLonglivedHighFD' : 1.
+                              , 'Hlt2SingleLonglivedLowMass' : 1.
+                              , 'Hlt2SingleLonglivedHighMass' : 1.
+                              , 'Hlt2DoubleLonglived' : 1.
                               , 'Hlt2SinglePSLonglived' : 0.0006
                               }
             }
@@ -178,7 +183,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         from Configurables import Hlt2SelDV
         Hlt2SingleLonglivedHighMass = Hlt2SelDV("Hlt2SingleLonglivedHighMass")
-        Hlt2SingleLonglivedHighMass.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedHighMass.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2SingleLonglivedHighMass.Output = 'Hlt2/Hlt2SingleLonglivedHighMass/Particles'
         Hlt2SingleLonglivedHighMass.MinNBCands = 1
         Hlt2SingleLonglivedHighMass.RMin = self.getProp('RMin')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighMass']
@@ -201,9 +207,10 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         #Run Hlt2LonglivedParts : double LLP selection
         Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
-        Hlt2DoubleLonglived.InputLocations = [ Hlt2RV2P.getName() ]
-        Hlt2DoubleLonglived.MinNBCands = 2
+        Hlt2DoubleLonglived.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2DoubleLonglived.Output = 'Hlt2/Hlt2DoubleLonglived/Particles'
         Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.MinNBCands = 2
         Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
@@ -222,7 +229,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #Run Single LLP selection
         from Configurables import Hlt2SelDV
         Hlt2SinglePSLonglived = Hlt2SelDV("Hlt2SinglePSLonglived")
-        Hlt2SinglePSLonglived.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SinglePSLonglived.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2SinglePSLonglived.Output = 'Hlt2/Hlt2SinglePSLonglived/Particles'
         Hlt2SinglePSLonglived.MinNBCands = 1
         Hlt2SinglePSLonglived.RMin = self.getProp('RMin')['Hlt2SinglePSLonglived']
         Hlt2SinglePSLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglived']
@@ -239,7 +247,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         from Configurables import Hlt2SelDV
         Hlt2SingleLonglivedHighFD = Hlt2SelDV("Hlt2SingleLonglivedHighFD")
-        Hlt2SingleLonglivedHighFD.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedHighFD.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2SingleLonglivedHighFD.Output = 'Hlt2/Hlt2SingleLonglivedHighFD/Particles'
         Hlt2SingleLonglivedHighFD.MinNBCands = 1
         Hlt2SingleLonglivedHighFD.RMin = self.getProp('RMin')['Hlt2SingleLonglivedHighFD']
         Hlt2SingleLonglivedHighFD.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedHighFD']
@@ -360,42 +369,47 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2BiKalmanFittedDownstreamPions.WriteP2PVRelations              =  False
         BiKalmanFittedDownstreamPions  = bindMembers( None, [ BiKalmanFittedChargedDownstreamProtoMaker   , Hlt2BiKalmanFittedDownstreamPions   ] )
 
-        ## Downstream candidate preselection
-        from Configurables import Hlt2PreSelDV
-        Hlt2RV2PDown = Hlt2PreSelDV("Hlt2RV2PDown")
-        Hlt2RV2PDown.InputLocations = [BiKalmanFittedDownstreamPions.outputSelection()]
-        Hlt2RV2PDown.RecVerticesLocation = [Hlt2PatPV3DDown.OutputVerticesName] 
-        Hlt2RV2PDown.RCutMethod = self.getProp('RCutMethod')
-        Hlt2RV2PDown.RMin = 0.3
-        Hlt2RV2PDown.PreyMinMass = 3000.
-        Hlt2RV2PDown.RemVtxFromDet = 0
-        Hlt2RV2PDown.UseMap = False
-        Hlt2RV2PDown.KeepLowestZ = True
-        Hlt2RV2PDown.NbTracks = 3
-
+        
         ## Associated Velo candidate selection
         from Configurables import Hlt2SelDV
         Hlt2SingleDownVelo = Hlt2SelDV("Hlt2SingleDownVelo")
-        Hlt2SingleDownVelo.InputLocations = [Hlt2RV2P.getName() ]
+        Hlt2SingleDownVelo.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2SingleDownVelo.Output = 'Hlt2/Hlt2SingleDownVelo/Particles'
         Hlt2SingleDownVelo.MinNBCands = 1
         Hlt2SingleDownVelo.MinNBCandsExclusive = True
-        Hlt2SingleDownVelo.RMin = 0.3
-        Hlt2SingleDownVelo.PreyMinMass = 2500.
-        Hlt2SingleDownVelo.PreyMinSumpt = 3000.
+        Hlt2SingleDownVelo.RMin = self.getProp('RMin')['Hlt2RV2P']
+        Hlt2SingleDownVelo.PreyMinMass = self.getProp('MinMass')['Hlt2RV2P']
+        Hlt2SingleDownVelo.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2RV2P']
         Hlt2SingleDownVelo.NbTracks = 5
         Hlt2SingleDownVelo.RemVtxFromDet = 5
         Hlt2SingleDownVelo.SaveOnTES = False
 
+        ## Downstream candidate preselection
+        from Configurables import Hlt2PreSelDV
+        Hlt2RV2PDown = Hlt2PreSelDV("Hlt2RV2PDown")
+        Hlt2RV2PDown.Inputs = [BiKalmanFittedDownstreamPions.outputSelection()]
+        Hlt2RV2PDown.Output = 'Hlt2/Hlt2RV2PDown/Particles'
+        Hlt2RV2PDown.RecVerticesLocation = [Hlt2PatPV3DDown.OutputVerticesName] 
+        Hlt2RV2PDown.RCutMethod = self.getProp('RCutMethod')
+        Hlt2RV2PDown.RMin = self.getProp('RMin')['Hlt2SingleDown']
+        Hlt2RV2PDown.PreyMinMass = self.getProp('MinMass')['Hlt2SingleDown']
+        Hlt2RV2PDown.RemVtxFromDet = 0
+        Hlt2RV2PDown.UseMap = False
+        Hlt2RV2PDown.KeepLowestZ = True
+        Hlt2RV2PDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
+
+
         ## Downstream candidate selection
         from Configurables import Hlt2SelDV
         Hlt2SingleDown = Hlt2SelDV("Hlt2SingleDown")
-        Hlt2SingleDown.InputLocations = [Hlt2RV2PDown .getName() ]
+        Hlt2SingleDown.Inputs = [ Hlt2RV2PDown.Output ]
+        Hlt2SingleDown.Output = 'Hlt2/Hlt2SingleDown/Particles'
         Hlt2SingleDown.MinNBCands = 1
-        Hlt2SingleDown.RMin = 0.5
-        Hlt2SingleDown.PreyMinMass = 3000
-        Hlt2SingleDown.PreyMinSumpt = 3000
+        Hlt2SingleDown.RMin = self.getProp('RMin')['Hlt2SingleDown']
+        Hlt2SingleDown.PreyMinMass = self.getProp('MinMass')['Hlt2SingleDown']
+        Hlt2SingleDown.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleDown']
         Hlt2SingleDown.MinZ = 200*units.mm
-        Hlt2SingleDown.NbTracks = 4
+        Hlt2SingleDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
         Hlt2SingleDown.SaveOnTES = False
 
         line = Hlt2Line( 'DisplVerticesSingleDown'
