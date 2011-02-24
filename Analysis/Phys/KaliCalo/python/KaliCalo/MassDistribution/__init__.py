@@ -18,14 +18,14 @@ from KaliCalo.Kali.HistoBase import HistosBase as _HistosBase
 from KaliCalo.Kali.HistoBase import HistoMapBase as _HistoMapBase
 
 class Histos( _HistosBase):
-    def __init__ ( cellID , background = False ):
+    def __init__ ( self, cellID , background = False ):
         histoList = [ '_LL' , '_LG' , '_GG' ]
         if background:
           histoList.extend( [ '_LL_BG' , '_LG_BG' , '_GG_BG' ] )
         _HistosBase.__init__ ( self , cellID , histoList , 2 )
         
 class HistoMap( _HistoMapBase ):
-    def __init__ ( background = False , *args ):
+    def __init__ ( self, background = False , *args ):
         _HistoMapBase.__init__ ( self , Histos , background , *args )
 
 # =============================================================================
