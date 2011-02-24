@@ -15,7 +15,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardSelections import StdVeryLooseMuons, StdNoPIDsMuons, StdLooseMuons
+from StandardParticles import StdVeryLooseMuons, StdNoPIDsMuons, StdLooseMuons
 
 confdict_WMu={
     'WMuLinePrescale_ps'    : .1
