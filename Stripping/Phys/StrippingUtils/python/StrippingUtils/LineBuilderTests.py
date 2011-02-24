@@ -39,7 +39,7 @@ def test_build_many_instances(builderType, conf_dict) :
     Test that an arbitrary number of instances can be instantiated with different names.
     Access the lines of each instance to catch on-demand line building.
     """
-    baseName = 'StrippingLineBuilderTest'
+    baseName =  builderType.__name__
     for n in '0123456789' :
         b = builderType(baseName + n, conf_dict)
         lines = b.lines()
@@ -47,9 +47,9 @@ def test_build_many_instances(builderType, conf_dict) :
 
 def test_second_instance_does_not_overwrite_lines(builderType, conf_dict) :
     print 'test_second_instance_does_not_overwrite_lines', builderType.__name__, '...'    
-    b0 = builderType('FirstBuilder', conf_dict)
+    b0 = builderType(builderType.__name__+'FirstBuilder', conf_dict)
     b0lines = b0.lines()
-    b1 = builderType('SecondBuilder', conf_dict)
+    b1 = builderType(builderType.__name__+'SecondBuilder', conf_dict)
     assert b0.lines() == b0lines
     
 def test_linebuilder_instance(b) :
@@ -62,8 +62,9 @@ def test_linebuilder_instance(b) :
         
 def test_duplicate_name_raises(builderType, conf_dict) :
     print 'test_duplicate_name_raises', builderType.__name__, '...'
-    b0 = builderType('bob12345', conf_dict)
-    raises(Exception, builderType, 'bob12345', conf_dict)
+    name=builderType.__name__+'Instance'
+    b0 = builderType(name, conf_dict)
+    raises(Exception, builderType, name, conf_dict)
         
 def test_default_raises(builderType) :
     print 'test_default_raises', builderType.__name__, '...'

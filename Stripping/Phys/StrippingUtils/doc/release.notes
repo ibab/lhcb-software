@@ -4,6 +4,12 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Juan Palacios
+ - LineBuilderTests
+  . Protect against different types of line builder being tested with
+    the same name.
+ - Increase to v1r4.
+
 ! ===================== StrippingUtils v1r3 2011-02-22 =======================
 
 ! 2011-02-22 - Juan Palacios
