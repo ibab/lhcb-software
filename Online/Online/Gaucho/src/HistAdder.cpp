@@ -210,24 +210,6 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       LockMap();
       m_hmap.insert(HistPair(nams,pp));
       UnLockMap();
-//      printf("Name: %s Nentries %i\n",nam,(int)pp->nentries);
-//      if (m_expandRate)
-//      {
-//        OUTServiceDescr *outs;
-//        outs = findOUTService(nams);
-//        if (outs != 0)
-//        {
-//          outs->m_buffer = pp;
-//          outs->m_buffersize = pp->reclen;
-//        }
-//        else
-//        {
-//          outs = new OUTServiceDescr((char*)nams.c_str(),pp->type,(char*)m_name.c_str());
-//          outs->m_buffer = pp;
-//          outs->m_buffersize = pp->reclen;
-//          this->m_outputServicemap.insert(OUTServicePair(nams,outs));
-//        }
-//      }
       if ((MONTYPE)pp->type == H_RATE)
       {
         m_RateBuff = pp;

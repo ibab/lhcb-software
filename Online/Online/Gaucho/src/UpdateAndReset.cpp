@@ -92,6 +92,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_dimSvcSaveSetLoc = 0;
   m_pGauchoMonitorSvc = 0;
   EoEInc = 0;
+  m_eorNumber = 0;
 }
 
 

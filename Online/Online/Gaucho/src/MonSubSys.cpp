@@ -29,6 +29,7 @@ MonSubSys::MonSubSys(int intv)
   m_ser = 0;
   m_genSrv = 0;
   m_EORsvc = 0;
+  m_runno = 0;
 
 }
 MonSubSys::~MonSubSys()
