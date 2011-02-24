@@ -17,8 +17,8 @@ __all__ = [ 'FillTask' , 'fillDatabase' ]
 import KaliCalo.Kali.FillTaskBase             as _FillTaskBase
 import KaliCalo.MassDistribution.FillSelector as _FillSelector
 
-FillTask = _FillTaskBase.FillTaskBase
+#FillTask = _FillTaskBase.FillTaskBase
 
-fillDatabase = _FillTaskBase.FillDatabase( _FillSelector.fillDataBase )
+fillDatabase = _FillTaskBase.FillHistos( _FillSelector.fillDataBase )
 
 # EOF

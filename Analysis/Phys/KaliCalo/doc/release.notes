@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Daria Savrina
+ - Added prefix "Phys/" for the InputLocations according to the DaVinci v28r0
+   needs
+ - Fixed some typos in MassDistribution and Kali python modules
+
 ! 2011-02-17 - Albert Puig
  - Changed references from GaudiPython.Parallel to GaudiMP.Parallel.
 

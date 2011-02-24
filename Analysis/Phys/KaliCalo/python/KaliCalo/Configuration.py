@@ -416,7 +416,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             NTupleLUN      = "KALIPI0"                      ,
             HistoPrint     = True                           ,
             NTuplePrint    = True                           ,
-            InputLocations = [ 'StdLooseAllPhotons' ]       ,
+            Inputs         = [ 'Phys/StdLooseAllPhotons' ]  ,
             OutputLevel    = self.getProp ( 'OutputLevel' ) ,
             Mirror         = self.getProp ( 'Mirror'      ) , 
             HistoProduce   = self.getProp ( 'Histograms'  ) ,

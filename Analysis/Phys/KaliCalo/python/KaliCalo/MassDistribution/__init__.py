@@ -15,7 +15,7 @@ __version__ = "$Revision$"
 __all__ = ['Histos', 'HistoMap', 'getHistosFromDB']
 
 from KaliCalo.Kali.HistoBase import HistosBase as _HistosBase
-from KaliCalo.Kali.HistoBase import Histos as _Histos
+from KaliCalo.Kali.HistoBase import HistoMapBase as _HistoMapBase
 
 class Histos( _HistosBase):
     def __init__ ( cellID , background = False ):

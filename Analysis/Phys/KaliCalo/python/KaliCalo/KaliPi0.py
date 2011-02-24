@@ -63,8 +63,8 @@ kali = secondPass (
     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
     ## general 
     DataType         = '2010',
-    PrintFreq        =  5000 ,
-    EvtMax           =  1000 
+    PrintFreq        =  1000 ,
+    EvtMax           =  -1
     )
 
 # =============================================================================
@@ -86,8 +86,8 @@ if '__main__' == __name__ :
     evtSel = gaudi.evtSel()
     castor   =  'castor:/castor/cern.ch/user/d/dsavrina/1759/'
     pattern  =  '%d/outputdata/KaliPi0_2010test.fmDST'
-    evtSel.open ( [ castor+pattern%i for i in range(0,11) ] )
-    gaudi.run(1000)
+    evtSel.open ( [ castor+pattern%i for i in range(0,3) ] )
+    gaudi.run(-1)
     
     from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 

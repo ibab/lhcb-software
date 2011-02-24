@@ -173,7 +173,7 @@ class FillHistos( object ):
         Perform the regular ``sequential'' fill for the histograms 
         """
 
-        histomap, lambdas, badfiles = self._fillDataBase (
+        histomap, lambdas, badfiles = self._fillDatabase (
                                 lambdas                  ,
                                 file_names               ,
                                 dbase_name  = dbase_name ,
@@ -203,7 +203,7 @@ class FillHistos( object ):
         if 'cluster' == manager.mode :  
             tmpdir = os.path.abspath('./')
 
-        task = FillTask ( self._fillDataBase  ,
+        task = FillTask ( self._fillDatabase  ,
                           lambdas             ,
                           cellFunc = cellFunc ,
                           Unit     = Unit     ) 

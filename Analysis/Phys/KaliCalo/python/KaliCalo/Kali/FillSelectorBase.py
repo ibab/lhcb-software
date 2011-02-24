@@ -88,7 +88,7 @@ class FillPi0Base( TPySelectorFix  ):
 
 class FillDatabase(object):
     def __init__(self, FillSelector, HistoMapClass):
-        if not issubclass( FillSelector , FillPi0 ):
+        if not issubclass( FillSelector , FillPi0Base ):
             raise Exception ( "Specified Fill Selector is not a subclass of FillPi0" )
         self._FillSelector  = FillSelector
         if not issubclass( HistoMapClass , HistoMapBase ):
