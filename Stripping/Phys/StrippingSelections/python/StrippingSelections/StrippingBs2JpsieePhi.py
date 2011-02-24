@@ -8,10 +8,11 @@ Bs->JpsieePhi stripping selection
 '''
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles  
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from StrippingUtils.Utils import LineBuilder
 
-class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
+class StrippingBs2JpsieePhiConf(LineBuilder):
     """
     Definition of Bs->JpsieePhi stripping
     """
