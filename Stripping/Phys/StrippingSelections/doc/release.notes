@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Mat Charles
+ - StrippingDstarD2KShh.py
+   Rewritten for LineBuilder framework. Cuts similar, but some tightened for 2011.
+ - test_dstar2d2kshh.py
+   Basic unit/validation tests for StrippingDstarD2KShh.py
+
  - Fixed DataOnDemands for the following modules:
   . StrippingMuMuSS.py
   . StrippingWe.py
