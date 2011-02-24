@@ -123,6 +123,7 @@ StatusCode EventRunable::run()   {
       m_eventTMO = false;
       StatusCode sc = StatusCode::SUCCESS;
       try  {
+	incidentSvc()->fireIncident(Incident(name(),"DAQ_BEGIN_EVENT"));
 	sc = ui->nextEvent(m_evtMax);
       }
       catch(const exception& e) {
@@ -131,8 +132,9 @@ StatusCode EventRunable::run()   {
       }
       catch(...) {
 	sc = m_eventTMO ? StatusCode::SUCCESS : StatusCode::FAILURE;
-	info(string("Caught unknown exception in main eventy loop."));
+	info("Caught unknown exception in main eventy loop.");
       }
+      incidentSvc()->fireIncident(Incident(name(),"DAQ_END_EVENT"));
       if ( sc.isSuccess() )  {
         m_evtCount++;
 	if ( m_eventTMO )    {
