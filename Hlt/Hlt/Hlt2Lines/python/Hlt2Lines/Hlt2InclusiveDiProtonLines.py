@@ -37,8 +37,10 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   , 'TFProtonTrkChi2'    :     4.   
                   , 'TFCombUpperMass'    :  3950.   # MeV, before Vtx fit
                   , 'TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
+                  , 'TFCombPT'           :  5800.   # MeV, before Vtx fit
                   , 'TFUpperMass'        :  3900.   # MeV, after Vtx fit
                   , 'TFLowerMass'        :  2900.   # MeV, after Vtx fit
+                  , 'TFCCbarPT'          :  6000.   # MeV, after Vtx fit 
                   , 'TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
                   , 'TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
@@ -82,8 +84,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         # Track Fitted
         #------------------------------------
         TFProtonCut = "(PT> %(TFProtonPT)s *MeV) & (TRCHI2DOF < %(TFProtonTrkChi2)s)" % self.getProps()
-        TFCombCut = "(in_range( %(TFCombLowerMass)s *MeV, AM, %(TFCombUpperMass)s *MeV))" % self.getProps()
-        TFMomCut = "(VFASPF(VCHI2PDOF)< %(TFVtxCHI2)s) & (in_range( %(TFLowerMass)s *MeV, MM, %(TFUpperMass)s *MeV))" % self.getProps()
+        TFCombCut = "(in_range( %(TFCombLowerMass)s *MeV, AM, %(TFCombUpperMass)s *MeV)) & (APT> %(TFCombPT)s *MeV)" % self.getProps()
+        TFMomCut = "(VFASPF(VCHI2PDOF)< %(TFVtxCHI2)s) & (in_range( %(TFLowerMass)s *MeV, MM, %(TFUpperMass)s *MeV)) & (PT> %(TFCCbarPT)s *MeV)" % self.getProps()
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons
         TFCombine = Hlt2Member( CombineParticles
@@ -120,9 +122,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('IncDiProton'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()   
-                        , algos = [ NoCutsProtons
-                                    , Combine
-                                    , BiKalmanFittedProtons
+                        , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     , BiKalmanFittedRichProtons
                                     , TFRichCombine
@@ -143,14 +143,12 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                         )
 
         #------------------------------------
-        # Inclusive DiProton presel & TrackFitted
+        # Inclusive TrackFitted
         #------------------------------------
         line = Hlt2Line('IncDiProtonTrackFitted'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()   
-                        , algos = [ NoCutsProtons
-                                    , Combine
-                                    , BiKalmanFittedProtons
+                        , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     ]
                         , postscale = self.postscale

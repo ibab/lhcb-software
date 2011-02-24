@@ -8,6 +8,15 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Jibo He
+ - Hlt2InclusiveDiElectronLines.py
+   . Renamed all lifetime unbised DiElectron lines to "DiElectron*"
+   . Added track chi2 cut 
+ - Hlt2B2JpsiXLines.py
+   . Increased PT cut on Bc(->JpsiMuX)
+ - Hlt2InclusiveDiProtonLines.py
+   . Updated to 2 stages, added PT cut on Charmonium 
+
 ! 2011-02-14 - Victor Coco
  - Hlt2DisplVerticesLine.py: add a downstream vertex line.
 
