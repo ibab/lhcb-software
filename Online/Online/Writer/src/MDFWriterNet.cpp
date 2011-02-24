@@ -555,7 +555,7 @@ void MDFWriterNet::closeFile(File *currFile)
   if(m_mq_available) {
 
       unsigned int statEvents[MAX_STAT_TYPES];
-      if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
+      if(currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0) {
         *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
       }
 
