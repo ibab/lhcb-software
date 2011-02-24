@@ -223,9 +223,9 @@ def getCMTExtraTags(binary):
     return cmtargs
 
 def getLCGBinary(workdir, extname, binary):
-    ext_home, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_home" % extname, cwd = workdir)[0][:-1]
-    nat_version, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_native_version" % extname, cwd = workdir)[0][:-1]
-    cfg_version, _, _ = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_config_version" % extname, cwd = workdir)[0][:-1]
+    ext_home = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_home" % extname, cwd = workdir)[0][:-1]
+    nat_version = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_native_version" % extname, cwd = workdir)[0][:-1]
+    cfg_version = CMT(getCMTExtraTags(binary), "show", "macro_value", "%s_config_version" % extname, cwd = workdir)[0][:-1]
     if nat_version :
        ext_bin = None
        ext_bin_list = ext_home[ext_home.find(nat_version):].split(os.sep)
