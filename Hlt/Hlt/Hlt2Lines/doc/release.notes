@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Gerhard Raven
+ - make Hlt2B2HHPi0Lines PHYS_v12r0 compatible
+
 ! 2011-02-24 - O. Deschamps for R. Lefevre
  - update Hlt2B2HHPi0Lines selections
 
