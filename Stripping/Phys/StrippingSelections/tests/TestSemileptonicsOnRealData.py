@@ -34,6 +34,11 @@ from StrippingSelections import StrippingB2DMuNuX
 confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
 stream.appendLines( confB2DMuNuX.lines() )
 
+# Import your stripping lines
+from StrippingSelections import StrippingDForBSemi
+confDForBSemi = StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict)
+stream.appendLines( confDForBSemi.lines() )
+
 
 
 from Configurables import  ProcStatusCheck
@@ -87,7 +92,7 @@ MakePionsEtc = FilterDesktop('MakePionsEtc')
 MakePionsEtc.InputLocations=["Phys/StdLooseKaons","Phys/StdLoosePions","Phys/StdLooseMuons","Phys/StdLooseDstarWithD02KPi"]
 MakePionsEtc.Code="ALL"
 
-DaVinci().PrintFreq = 1000
+DaVinci().PrintFreq = 5000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
 DaVinci().EvtMax = 100000

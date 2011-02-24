@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Rob Lambert
+ - Added DForBSemi lines to semileptonic tests
+
 ! 2011-02-24 - Johannes Albrecht
  - StrippingB2MuMuMuMuLines and StrippingB2MuMuMuMuLines:
    revise for stripping 13 
