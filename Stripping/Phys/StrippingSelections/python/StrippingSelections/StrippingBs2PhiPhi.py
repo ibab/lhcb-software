@@ -26,6 +26,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLooseKaons
 
 
 class StrippingBs2PhiPhiConf(LineBuilder):
@@ -96,8 +97,8 @@ class StrippingBs2PhiPhiConf(LineBuilder):
     	    #print Bs2PhiPhi_MC
             #print "Prescale: ", ps
 	    
-	    _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
-            
+	    #_stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+
             _Bs2PhiPhiLooseDetachedPhi2KK = CombineParticles(
                             DecayDescriptor = "phi(1020) -> K+ K-"
                           , DaughtersCuts = {"K+": Phi2KK_DC}
@@ -117,7 +118,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 	    Bs2PhiPhiLooseDetachedPhi2KK = Selection(
 		name+ "_LoosePhi2KK",
 		Algorithm = _Bs2PhiPhiLooseDetachedPhi2KK,
-		RequiredSelections = [_stdLooseKaons])
+		RequiredSelections = [StdLooseKaons])
 	    Bs2PhiPhi = Selection(
 		 name,
 		 Algorithm = _Bs2PhiPhi,

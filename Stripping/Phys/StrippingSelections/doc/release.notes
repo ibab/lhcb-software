@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 Sebastian Schleich
+ - adapted Bs2PhiPhi and InclPhi to new Std particle
+
 ! 2011-02-24 - Eduardo Rodrigues
  - New tuning for B -> p pbar in StrippingHb2Charged2Body.py
 

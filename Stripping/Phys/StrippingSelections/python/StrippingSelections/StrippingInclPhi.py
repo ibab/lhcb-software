@@ -44,6 +44,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsKaons
 
 from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 modules =  CoreFactory('CoreFactory').Modules
@@ -131,8 +132,7 @@ class InclPhiConf(LineBuilder):
         #print Phi2KK_DC
         #print Phi2KK_CC
         #print Phi2KK_MC
-
-        _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
         _Phi2KK =  CombineParticles(
                          #  "_"+name+"Phi2KK"
                             DecayDescriptor = "phi(1020) -> K+ K-"
@@ -140,7 +140,7 @@ class InclPhiConf(LineBuilder):
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
                           )
-        Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [_StdNoPIDsKaons] )
+        Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [StdNoPIDsKaons] )
 
         return StrippingLine( name
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
@@ -169,7 +169,7 @@ class InclPhiConf(LineBuilder):
         #print Phi2KK_CC
         #print Phi2KK_MC
 
-        _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
 
         _Phi2KK = CombineParticles(
                          #  "_"+name+"Phi2KK"
@@ -178,7 +178,7 @@ class InclPhiConf(LineBuilder):
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
                           )
-        Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [_StdNoPIDsKaons] )
+        Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [StdNoPIDsKaons] )
 
 	return StrippingLine(name
               , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
