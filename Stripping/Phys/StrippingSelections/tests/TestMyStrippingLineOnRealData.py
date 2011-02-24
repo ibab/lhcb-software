@@ -10,20 +10,22 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Import your stripping lines
-from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi 
-confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
-stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines )
 
-from StrippingSelections import StrippingBd2DstarMuNu
-confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu",StrippingBd2DstarMuNu.confdict)
-stream.appendLines( confBd2DstarMuNu.lines() )
+from StrippingSelections import StrippingDstarPromptWithD02HH
+confTaggedD02hh = StrippingDstarPromptWithD02HH.StrippingDstarPromptWithD02HHConf("confTaggedD02hh", StrippingDstarPromptWithD02HH.default_config)
+stream.appendLines( confTaggedD02hh.lines() )
+'''
+from StrippingSelections import StrippingD2hh
+confD2hh = StrippingD2hh.D2hhConf("D2hh",StrippingD2hh.default_config)
+stream.appendLines( confD2hh.lines() )
+'''
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
 # Configure the stripping using the same options as in Reco06-Stripping10
 sc = StrippingConf( Streams = [ stream ],
-                    MaxCandidates = 2000,
+                    MaxCandidates = 50000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )
 sc.OutputType = "ETC"                    # Can be either "ETC" or "DST"
@@ -68,7 +70,7 @@ CondDB().IgnoreHeartBeat = True
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 20
+DaVinci().EvtMax = 50000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

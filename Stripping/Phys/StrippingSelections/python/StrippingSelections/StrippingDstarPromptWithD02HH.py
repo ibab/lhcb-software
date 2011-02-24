@@ -1,445 +1,242 @@
 # $Id: StrippingDstarPromptWithD02HH.py,v 1.7 2010-09-04 22:12:02 pxing Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
-__date__ = '03 September 2010'
-__version__ = '$Revision: 1.7 $'
+__date__ = '2011.02.24'
+__version__ = '$Revision: 1.8 $'
 
 '''
-Configurable for the y_CP analysis selections for D*+ -> pi+ D0(h h'').
+Configurable for the y_CP and A_Gamma analysis selections for D*+ -> pi+ D0(h h'').
 
-This configurable uses bindMembers to compose sequences from StrippingMembers
-in the same way that it is used (or perhaps abused) in Hlt2.
+The initial implementation as a configurable borrows from StrippingBu2LLK.py and StrippingD0hh.py.
 
-The initial implementation as a configurable borrows from StrippingBu2LLK.py
-Rev. 1.2.
+Usage:
+from StrippingSelections import StrippingDstarPromptWithD02HH
+confTaggedD02hh = StrippingDstarPromptWithD02HH.StrippingDstarPromptWithD02HHConf("confTaggedD02hh", StrippingDstarPromptWithD02HH.default_config)
+stream.appendLines( confTaggedD02hh.lines() )
+
+Performances:
+StrippingReport                                                INFO Event 50000, Good event 46049
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  0.1672|        77|       |   7.691|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.1672|        77|       |   7.686|       |       |       |
+ |!StrippingStripDstarPromptWithD02RSKPiLine         |  0.0608|        28|  0.000|   6.707|      0|      0|     61|
+ |!StrippingStripDstarPromptWithD02WSKPiLine         |  0.0261|        12|  0.000|   0.182|      0|      0|      0|
+ |!StrippingStripDstarPromptWithD02KKLine            |  0.0391|        18|  0.000|   0.162|      0|      0|      0|
+ |!StrippingStripDstarPromptWithD02PiPiLine          |  0.0413|        19|  0.000|   0.168|      0|      0|      0|
+ 
+===============================================================================================================
+                                AlgorithmCorrelationsAlg.AlgorithmCorrelations
+===============================================================================================================
+    Algorithm                                    Eff.       1        2        3        4        5        6   
+---------------------------------------------------------------------------------------------------------------
+  1 StrippingGlobal                              0.167% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000%
+  2 StrippingSequenceStreamTest                  0.167% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000%
+  3 StrippingStripDstarPromptWithD02RSKPiLine    0.061% |  36.364%  36.364%  #######   0.000%   0.000%   0.000%
+  4 StrippingStripDstarPromptWithD02WSKPiLine    0.026% |  15.584%  15.584%   0.000%  #######   0.000%   0.000%
+  5 StrippingStripDstarPromptWithD02KKLine       0.039% |  23.377%  23.377%   0.000%   0.000%  #######   0.000%
+  6 StrippingStripDstarPromptWithD02PiPiLine     0.041% |  24.675%  24.675%   0.000%   0.000%   0.000%  #######
+===============================================================================================================
+
 '''
 
+##############################################################
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
 
-class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
+default_config = { 'DaugPt'            : 0.9,        ## GeV
+                   'DaugP'             : 5.,         ## GeV
+                   'DaugTrkChi2'       : 5.,         ## unitless
+                   'D0Pt'              : 3.3,       ## GeV
+                   'D0MassWindowCentre': 1.865,     ## GeV
+                   'D0MassWindowWidth' : 0.075,     ## GeV 
+                   'D0VtxChi2Ndof'     : 13,         ## unitless
+                   'D0PVDisp'          : 0.9,        ## mm
+                   'SlowPiPt'          : 0.260,      ## GeV
+                   'DstarPt'           : 3.6,        ## GeV
+                   'DstarVtxChi2Ndof'  : 13,         ## unitless
+                   'RSLinePrescale'    : 1.,         ## unitless
+                   'RSLinePostscale'   : 1.,         ## unitless
+                   'WSLinePrescale'    : 1.,         ## unitless
+                   'WSLinePostscale'   : 1.,         ## unitless
+                   'HHLinePrescale'    : 1.,         ## unitless
+                   'HHLinePostscale'   : 1.,         ## unitless
+                   'prefix': 'StripDstarPrompt'
+         }
+
+class StrippingDstarPromptWithD02HHConf(LineBuilder) :
+
+    __configuration_keys__ = ('DaugPt',
+	     		      'DaugP',
+	     		      'DaugTrkChi2',
+	     		      'D0Pt',
+	     		      'D0MassWindowCentre',
+	     		      'D0MassWindowWidth',
+	     		      'D0VtxChi2Ndof',  
+                  	      'D0PVDisp',            
+                  	      'SlowPiPt',         
+                  	      'DstarPt',          
+                  	      'DstarVtxChi2Ndof',            
+                  	      'RSLinePrescale',
+               	              'RSLinePostscale',
+               	              'WSLinePrescale',
+                  	      'WSLinePostscale',
+                  	      'HHLinePrescale',
+                              'HHLinePostscale',
+                              'prefix'
+                              )
+
+##############################################################
+    def __init__(self, name, config) :
+
+        LineBuilder.__init__(self, name, config)
+
+        stdNoPIDsKaons = StdNoPIDsKaons
+        stdNoPIDsPions = StdNoPIDsPions
+        #---------------------------------------
+        # D0 -> hh' selections
+        self.selD0RS = makeD2hh( 'D02RSKPi',
+			         config,
+				 DecayDescriptor = 'D0 -> K- pi+',
+			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
+			        )
+
+        self.selD0WS = makeD2hh( 'D02WSKPi',  
+			         config,
+				 DecayDescriptor = 'D0 -> K+ pi-',
+			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
+			        )
+
+        self.selD0KK = makeD2hh( 'D02KK',  
+			         config,
+				 DecayDescriptor = '[D0 -> K+ K-]cc',
+			         inputSel = [stdNoPIDsKaons]
+ 			        )
+
+        self.selD0PiPi = makeD2hh( 'D02PiPi',  
+			           config,
+				   DecayDescriptor = '[D0 -> pi+ pi-]cc',
+			           inputSel = [stdNoPIDsPions]
+			          )
+        #---------------------------------------
+        # Dstar -> D0 pi selections
+	self.selDstRS = makeDstar2D0Pi( 'DstarWithD02RSKPi',
+				        config,
+                                        '[D*(2010)+ -> D0 pi+]cc',
+                                        inputSel = [self.selD0RS, stdNoPIDsPions]
+                                       )
+
+	self.selDstWS = makeDstar2D0Pi( 'DstarWithD02WSKPi',
+				        config,
+                                        '[D*(2010)+ -> D0 pi+]cc',
+                                        inputSel = [self.selD0WS, stdNoPIDsPions]
+                                       )
+
+	self.selDstKK = makeDstar2D0Pi( 'DstarWithD02KK',
+				        config,
+                                        '[D*(2010)+ -> D0 pi+]cc',
+                                        inputSel = [self.selD0KK, stdNoPIDsPions]
+                                       )
+
+	self.selDstPiPi = makeDstar2D0Pi( 'DstarWithD02PiPi',
+				           config,
+                                           '[D*(2010)+ -> D0 pi+]cc',
+                                           inputSel = [self.selD0PiPi, stdNoPIDsPions]
+                                         )
+        #---------------------------------------
+        # Tagged lines
+        self.dstRS_line = StrippingLine("%(prefix)sWithD02RSKPiLine" %locals()['config'],
+                                        prescale = config['RSLinePrescale'],
+                                        postscale = config['RSLinePostscale'],
+                                        selection = self.selDstRS
+                                       )
+
+        self.dstWS_line = StrippingLine("%(prefix)sWithD02WSKPiLine" %locals()['config'],
+                                        prescale = config['WSLinePrescale'],
+                                        postscale = config['WSLinePostscale'],
+                                        selection = self.selDstWS
+                                       )
+
+        self.dstKK_line = StrippingLine("%(prefix)sWithD02KKLine" %locals()['config'],
+                                        prescale = config['HHLinePrescale'],
+                                        postscale = config['HHLinePostscale'],
+                                        selection = self.selDstKK
+                                       )
+
+        self.dstPiPi_line = StrippingLine("%(prefix)sWithD02PiPiLine" %locals()['config'],
+                                        prescale = config['HHLinePrescale'],
+                                        postscale = config['HHLinePostscale'],
+                                        selection = self.selDstPiPi
+                                       )
+
+        # register lines
+        self.registerLine(self.dstRS_line)
+        self.registerLine(self.dstWS_line)
+        self.registerLine(self.dstKK_line)
+        self.registerLine(self.dstPiPi_line)
+
+##############################################################
+def makeD2hh(name,
+             config,
+	     DecayDescriptor,
+             inputSel
+            ) :
     """
-    Definition of prompt D*+ -> D0(h h') pi+ stripping lines.
-
-    The the main user method is lines(), which returns a list of the
-    StrippingLine objects defined and configured by this configurable.
-
-    Standard or not, 4-space indentation is silly.
+    Create and return a D0 -> hh' Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
     """
-    __slots__ = {
-                    'DaugPt'           : 0.900          ## GeV
-                  , 'DaugP'            : 5.0            ## GeV
-                  , 'DaugTrkChi2'      : 5             ## unitless
-                  , 'D0Pt'             : 3.3            ## GeV
-                  , 'D0VtxChi2Ndof'    : 13             ## unitless
-                  , 'D0PVDisp'         : 0.9             ## mm
-                  , 'SlowPiPt'         : 0.260          ## GeV
-                  , 'DstarPt'          : 3.6            ## GeV
-                  , 'DstarVtxChi2Ndof' : 13             ## unitless
-                  , 'prefix'       : 'StripDstarPrompt'
-                }
-                
-    _rsLine   = {} 
-    _wsLine   = {} 
-    _kkLine   = {} 
-    _pipiLine = {} 
 
-    def lines(self) : # {
-        """
-        The the main user method that returns a list of the StrippingLine
-        objects defined and configured by this configurable.
-        """
-        lclLineRS = self.lineRS()
-        lclLineWS = self.lineWS()
-        lclLineKK = self.lineKK()
-        lclLinePiPi = self.linePiPi()
-
-        lineList = [ lclLineRS, lclLineWS, lclLineKK, lclLinePiPi ]
-
-        return lineList
-    # }
-
-
-    def linesDstarOnly(self) : # {
-        """
-        The the main user method that returns a list of the StrippingLine
-        objects defined and configured by this configurable.
-        """
-        lclLineRS = self.lineRS()
-        lclLineWS = self.lineWS()
-        lclLineKK = self.lineKK()
-        lclLinePiPi = self.linePiPi()
-
-        lineList = [ lclLineRS, lclLineWS, lclLineKK, lclLinePiPi ]
-
-        return lineList
-    # }
-
-
-
-    def lineRS(self) : # {
-        """
-        Returns a stripping line for the D0 -> K- pi+ (right sign).
-        """
-
-        linepref = self.getProp('prefix')
-        #if StrippingDstarPromptWithD02HHConf._rsLine == None : 
-        if not linepref in StrippingDstarPromptWithD02HHConf._rsLine:
-            
-            from StrippingConf.StrippingLine import StrippingLine
-
-            lineName = "%(prefix)sWithD02RSKPiLine" % self.getProps()
-            lineSeq = self.seqWithD02RSKPi()
-            
-            StrippingDstarPromptWithD02HHConf._rsLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
-    	
-        return StrippingDstarPromptWithD02HHConf._rsLine[linepref]
-    # }
-
-
-    def lineWS(self) : # {
-        """
-        Returns a stripping line for the D0 -> pi- K+ (wrong sign).
-        """
-        
-        linepref = self.getProp('prefix')
-        #        if StrippingDstarPromptWithD02HHConf._wsLine == None : 
-
-        
-        if not linepref in StrippingDstarPromptWithD02HHConf._wsLine:
-            from StrippingConf.StrippingLine import StrippingLine
-            
-            lineName = "%(prefix)sWithD02WSKPiLine" % self.getProps()
-            lineSeq = self.seqWithD02WSKPi()
-            
-            StrippingDstarPromptWithD02HHConf._wsLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
-
-        return StrippingDstarPromptWithD02HHConf._wsLine[linepref]
-    # }
-
-
-    def lineKK(self) : # {
-        """
-        Returns a stripping line for the D0 -> K- K+.
-        """
-        
-        #if StrippingDstarPromptWithD02HHConf._kkLine == None : 
-        linepref = self.getProp('prefix')
-        if not linepref in StrippingDstarPromptWithD02HHConf._kkLine:
-            from StrippingConf.StrippingLine import StrippingLine
-            
-            lineName = "%(prefix)sWithD02KKLine" % self.getProps()
-            lineSeq = self.seqWithD02KK()
-            
-            StrippingDstarPromptWithD02HHConf._kkLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
-
-        return StrippingDstarPromptWithD02HHConf._kkLine[linepref]
-    # }
-
-
-    def linePiPi(self) : # {
-        """
-        Returns a stripping line for the D0 -> pi- pi+.
-        """
-        
-        #if StrippingDstarPromptWithD02HHConf._pipiLine == None : 
-        linepref = self.getProp('prefix')
-        if not linepref in StrippingDstarPromptWithD02HHConf._pipiLine:
-            from StrippingConf.StrippingLine import StrippingLine
-            
-            lineName = "%(prefix)sWithD02PiPiLine" % self.getProps()
-            lineSeq = self.seqWithD02PiPi()
-            
-            StrippingDstarPromptWithD02HHConf._pipiLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
-
-        return StrippingDstarPromptWithD02HHConf._pipiLine[linepref]
-    # }
-
-
-
-    def seqWithD02RSKPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the
-        D*+ -> D0(K-pi+) pi+ reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        ## Make sure that StdNoPIDsPions has been registered with the
-        ##  DoD service.
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-
-        d0Seq = self.seqD02RSKPi()   ## Seq for D0 -> K- pi+ reconstruction
-        dstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
-
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
-
-        seqName = "%(prefix)sWithD02RSKPiSeq" % self.getProps()
-
-        ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
-        seq =  bindMembers(seqName, algos = [d0Seq, dstar])
-
-        return seq
-    # }
-
-
-    def seqWithD02WSKPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the
-        D*+ -> D0(pi-K+) pi+ reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        ## Make sure that StdNoPIDsPions has been registered with the
-        ##  DoD service.
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-
-        d0Seq = self.seqD02WSKPi()   ## Seq for D0 -> pi- K+ reconstruction
-        rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
-
-        combName = "%(prefix)sWithD02WSKPiComb" % self.getProps()
-
-        dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
-
-        seqName = "%(prefix)sWithD02WSKPiSeq" % self.getProps()
-
-        ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
-        seq =  bindMembers(seqName, algos = [d0Seq, dstar])
-
-        return seq
-    # }
-
-
-    def seqWithD02KK(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the
-        D*+ -> D0(K-K+) pi+ reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        ## Make sure that StdNoPIDsPions has been registered with the
-        ##  DoD service.
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-
-        d0Seq = self.seqD02KK()   ## Seq for D0 -> pi- K+ reconstruction
-        rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
-
-        combName = "%(prefix)sWithD02KKComb" % self.getProps()
-
-        dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
-
-        seqName = "%(prefix)sWithD02KKSeq" % self.getProps()
-
-        ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
-        seq =  bindMembers(seqName, algos = [d0Seq, dstar])
-
-        return seq
-    # }
-
-
-    def seqWithD02PiPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the
-        D*+ -> D0(pi-pi+) pi+ reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        ## Make sure that StdNoPIDsPions has been registered with the
-        ##  DoD service.
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-
-        d0Seq = self.seqD02PiPi()   ## Seq for D0 -> pi- K+ reconstruction
-        rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
-
-        combName = "%(prefix)sWithD02PiPiComb" % self.getProps()
-
-        dstar = rsDstar.clone(combName)
-        dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
-
-        seqName = "%(prefix)sWithD02PiPiSeq" % self.getProps()
-
-        ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
-        seq =  bindMembers(seqName, algos = [d0Seq, dstar])
-
-        return seq
-    # }
-
-
-    def combRSDstar(self) : # {
-        """
-        Returns a CombineParticles for D*+ -> D0 pi+ reconstruction.
-        """
-        from Configurables import CombineParticles
-
-        slowPiCuts = "(PT>%(SlowPiPt)s*GeV)" % self.getProps()
-        d0Cuts =     "(ALL)"
-        ## Hard-code the mass windows for now.
-        combiCut =  "(APT>%(DstarPt)s*GeV) & (ADAMASS('D*(2010)+')<75*MeV)" % self.getProps()
-        motherCut =  "(VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s) & (M-MAXTREE('D0'==ABSID,M)<(145.5+15)*MeV)" % self.getProps()
-
-        combName = "%(prefix)sWithD02RSKPiComb" % self.getProps()
-
-        ## InputLocations must be defined by calling method.
-        comb = CombineParticles( combName )
-        comb.DecayDescriptor = '[D*(2010)+ -> D0 pi+]cc'
-        comb.DaughtersCuts = { 'pi+' : slowPiCuts, 'D0' : d0Cuts }
-        comb.CombinationCut = combiCut
-        comb.MotherCut = motherCut
-
-        return comb
-    # }
-
-    ########################################### D0 sequences
-    def seqD02RSKPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the D0 -> K- pi+
-        reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        d0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
-
-        seqName = "%(prefix)sD02RSKPiSeq" % self.getProps()
-
-        ## Since the base list StdLooseD02KPi is DoD, no explicit dependence
-        ##   in the sequence
-        seq =  bindMembers(seqName, algos = [d0Recon])
-
-        return seq
-    # }
-
-
-    def seqD02WSKPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the D0 -> pi- K+
-        reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-        
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-        from CommonParticles.StdNoPIDsKaons import StdNoPIDsKaons
-
-        rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
-
-        filtName = "%(prefix)sD02WSKPiFilt" % self.getProps()
-
-        d0Recon = rsD0Recon.clone(filtName)
-        d0Recon.DecayDescriptor = "[D0 -> pi- K+]cc"
-        d0Recon.InputLocations = [ 'StdNoPIDsPions', 'StdNoPIDsKaons' ]
-
-        seqName = "%(prefix)sD02WSKPiSeq" % self.getProps()
-
-        ## Since the base list StdLooseD02KPiDCS is DoD, no explicit dependence
-        ##   in the sequence
-        seq =  bindMembers(seqName, algos = [d0Recon])
-
-        return seq
-    # }
-
-
-    def seqD02KK(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the D0 -> K- K+
-        reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        from CommonParticles.StdNoPIDsKaons import StdNoPIDsKaons
-
-        rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
-
-        filtName = "%(prefix)sD02KKFilt" % self.getProps()
-
-        d0Recon = rsD0Recon.clone(filtName)
-        d0Recon.DecayDescriptor = "[D0 -> K- K+]cc"
-        d0Recon.InputLocations = [ 'StdNoPIDsKaons' ]
-
-        seqName = "%(prefix)sD02KKSeq" % self.getProps()
-
-        ## Since the base list StdLooseD02KK is DoD, no explicit dependence
-        ##   in the sequence
-        seq =  bindMembers(seqName, algos = [d0Recon])
-
-        return seq
-    # }
-
-
-    def seqD02PiPi(self) : # {
-        """
-        Returns a sequence (or rather, a bindMembers object, which is a
-        Stripping/Hlt extension for sequences) for the D0 -> pi- pi+
-        reconstruction.
-        """
-        from StrippingConf.StrippingLine import bindMembers
-
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-
-        rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
-
-        filtName = "%(prefix)sD02PiPiFilt" % self.getProps()
-
-        d0Recon = rsD0Recon.clone(filtName)
-        d0Recon.DecayDescriptor = "[D0 -> pi- pi+]cc"
-        d0Recon.InputLocations = [ 'StdNoPIDsPions' ]
-
-        seqName = "%(prefix)sD02PiPiSeq" % self.getProps()
-
-        ## Since the base list StdLooseD02PiPi is DoD, no explicit dependence
-        ##   in the sequence
-        seq =  bindMembers(seqName, algos = [d0Recon])
-
-        return seq
-    # }
-
-
-    ###############################################################################
-    ### This is the main change
-    ###############################################################################
-    def filtRSD0(self) : # {
-        """
-        D0 -> K- pi+ reconstruction.
-        """
-        from Configurables import CombineParticles
-        from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
-        from CommonParticles.StdNoPIDsKaons import StdNoPIDsKaons
-
-        PiCuts = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDpi - PIDK > 5)" % self.getProps()
-        KCuts  = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDK - PIDpi > 8)" % self.getProps()
-        combiCut =  "(ADAMASS('D0')<75*MeV)" % self.getProps() ## Hard-code the mass windows for now.
-        motherCut =  "(PT>%(D0Pt)s*GeV) & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s) & (BPVVD>%(D0PVDisp)s)" % self.getProps()
-
-        combName = "%(prefix)sD02RSKPiFilt" % self.getProps()
-
-        comb = CombineParticles( combName )
-        comb.DecayDescriptor = '[D0 -> pi+ K-]cc'
-        comb.DaughtersCuts = { 'pi+' : PiCuts, 'K-' : KCuts }
-        comb.CombinationCut = combiCut
-        comb.MotherCut = motherCut
-
-        comb.InputLocations = [ 'StdNoPIDsPions', 'StdNoPIDsKaons' ]
-        return comb
-    # }
-
-
-    def getProps(self) :
-        """
-        Copied from StrippingBu2LLKConf.
-        Originally from HltLinesConfigurableUser.
-        May someday be absorbed into the base class definition.
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
-
-
-# }
-
+    _PiCuts ="(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDpi-PIDK>5)" %locals()['config']
+    _KCuts  ="(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDK-PIDpi>8)" %locals()['config']
+    _daughterCuts = { 'pi+' : _PiCuts, 'K-' : _KCuts }
+    _combCuts = " (ADAMASS(%(D0MassWindowCentre)s* GeV) < %(D0MassWindowWidth)s* GeV)"  % locals()['config']
+    _motherCuts = "(PT>%(D0Pt)s*GeV) & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s) & (BPVVD>%(D0PVDisp)s)" % locals()['config']
+
+    _D0 = CombineParticles( DecayDescriptor = DecayDescriptor,
+                            MotherCut = _motherCuts,
+                            CombinationCut = _combCuts,
+                            DaughtersCuts = _daughterCuts)
+
+    return Selection ( name+'Sel',
+                       Algorithm = _D0,
+                       RequiredSelections = inputSel )
+
+##############################################################
+def makeDstar2D0Pi( name
+                    , config
+                    , DecayDescriptor
+                    , inputSel
+                  ) :
+    """
+    Create and return a D* -> D0 pi Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
+    """
+
+    slowPiCuts = "(PT>%(SlowPiPt)s*GeV)" % locals()['config']
+    d0Cuts =     "(ALL)"
+    combCuts =  "(APT>%(DstarPt)s*GeV) & (ADAMASS('D*(2010)+')<90*MeV)" % locals()['config']
+    dstarCuts = "(VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s) & (M-MAXTREE('D0'==ABSID,M)<(145.5+15)*MeV)" % locals()['config']
+
+    _Dstar = CombineParticles( DecayDescriptor = DecayDescriptor
+                             , DaughtersCuts = { 'pi+' : slowPiCuts, 'D0' : d0Cuts }
+                             , CombinationCut = combCuts
+                             , MotherCut = dstarCuts
+                             )
+
+    return Selection( name+'Sel',
+                      Algorithm = _Dstar,
+                      RequiredSelections = inputSel
+                    )
+
+##############################################################
