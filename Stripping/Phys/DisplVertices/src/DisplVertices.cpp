@@ -8,8 +8,8 @@
 #include "Event/ODIN.h"
 
 //Trigger decisions
-#include "Event/L0DUReport.h"
-#include "Event/HltDecReports.h"
+//#include "Event/L0DUReport.h"
+//#include "Event/HltDecReports.h"
 
 //get the Header of the event
 #include "Event/RecHeader.h"
@@ -52,7 +52,7 @@ DisplVertices::DisplVertices( const std::string& name,
     , m_PreyID(0)
     , m_MotherPreyID(0){
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
-  declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
+  //declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
   declareProperty("MotherPrey", m_MotherPrey = "H_10" );
   //>6.286GeV=Bc+ Mass
@@ -100,10 +100,10 @@ StatusCode DisplVertices::initialize() {
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Initialize the DisplVertices algorithm" << endmsg;
 
-  if( m_SaveTrigInfos ){
+  /*if( m_SaveTrigInfos ){
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
     m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");    
-  }
+    }*/
 
   if( m_RemVtxFromDet != 0 || m_SaveTuple ){
     //Get detector elements
@@ -247,13 +247,13 @@ StatusCode DisplVertices::execute(){
   PVs.clear();
   //always()<<"Entering"<<endreq;
   //---------------------------------------------  
-  if( m_SaveTrigInfos && !m_SaveTuple ){
+  /*if( m_SaveTrigInfos && !m_SaveTuple ){
     Tuple tuple = nTuple("Trigger");
     if( fillHeader( tuple ).isFailure() || 
         SaveTrigInfinTuple( tuple ).isFailure() )
       Warning("Not being able to save trigger infos in tuple !");
     if( !(tuple->write()) ) return StatusCode::FAILURE;
-  }
+    }*/
 
   //always()<<"tag1"<<endreq;
   if( m_SaveTuple || m_RCut != "FromPreyInfo"){
@@ -428,8 +428,8 @@ StatusCode DisplVertices::execute(){
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
     if( !SavePVs( tuple )  ) return StatusCode::FAILURE;
     tuple->column( "NbVelo", GetNbVeloTracks() );
-    if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
-      return StatusCode::FAILURE;
+    //if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
+    // return StatusCode::FAILURE;
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
@@ -1194,105 +1194,105 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //  Save trigger and event infos in a tuple
 //  To find out the alleys, TriggerMonitor.py with hlt2 = True
 //=============================================================================
-StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
+// StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
 
-  if( m_tisTos == NULL ) return Error("m_tisTos not initialized");
+//   if( m_tisTos == NULL ) return Error("m_tisTos not initialized");
 
-  //Get L0 info and save decision in tuple
-  if( !exist<L0DUReport>( L0DUReportLocation::Default )){
-    err()<<"You requested the trigger, make sure you run it."<<endmsg;
-    err()<<"No LODU report at " << L0DUReportLocation::Default <<endmsg;
-    return StatusCode::FAILURE;
-  }
-  L0DUReport * l0 = get<L0DUReport>( L0DUReportLocation::Default );
-  int L0dec = l0->decision();
-  if( msgLevel(MSG::DEBUG) )
-    debug()<<"L0 decision                  : " << L0dec << endreq;
-  tuple->column( "L0", L0dec );
+//   //Get L0 info and save decision in tuple
+//   if( !exist<L0DUReport>( L0DUReportLocation::Default )){
+//     err()<<"You requested the trigger, make sure you run it."<<endmsg;
+//     err()<<"No LODU report at " << L0DUReportLocation::Default <<endmsg;
+//     return StatusCode::FAILURE;
+//   }
+//   L0DUReport * l0 = get<L0DUReport>( L0DUReportLocation::Default );
+//   int L0dec = l0->decision();
+//   if( msgLevel(MSG::DEBUG) )
+//     debug()<<"L0 decision                  : " << L0dec << endreq;
+//   tuple->column( "L0", L0dec );
 
-  //fill the HLT global : Hlt2 : 77,Hlt1 :  46
-  vector<unsigned int> m_routingBits;   
-  m_routingBits.push_back( 46 );
-  m_routingBits.push_back( 77 );  
-  //   for ( unsigned int i = 32 ; i < 96 ; i++){m_routingBits.push_back(i);}
-  bool Hlt1Globdec = false;
-  bool Hlt2Globdec = false;
-  if(exist<LHCb::RawEvent>(RawEventLocation::Default)){
-    RawEvent* rawEvent = get<RawEvent>(RawEventLocation::Default);
-    vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
-    unsigned int d1 = 46;
-    unsigned int d2 = 77;
-    if( find( yes.begin(), yes.end(), d1 ) != yes.end() ) Hlt1Globdec = true;
-    if( find( yes.begin(), yes.end(), d2 ) != yes.end() )  Hlt2Globdec = true;
-    if( msgLevel(MSG::DEBUG) ){
-      debug()<<"Firing routing bits : "<< yes << endmsg;
-      debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
-      debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
-    }
-  } 
-  tuple->column( "Hlt1", Hlt1Globdec );
-  tuple->column( "Hlt2", Hlt2Globdec);
+//   //fill the HLT global : Hlt2 : 77,Hlt1 :  46
+//   vector<unsigned int> m_routingBits;   
+//   m_routingBits.push_back( 46 );
+//   m_routingBits.push_back( 77 );  
+//   //   for ( unsigned int i = 32 ; i < 96 ; i++){m_routingBits.push_back(i);}
+//   bool Hlt1Globdec = false;
+//   bool Hlt2Globdec = false;
+//   if(exist<LHCb::RawEvent>(RawEventLocation::Default)){
+//     RawEvent* rawEvent = get<RawEvent>(RawEventLocation::Default);
+//     vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
+//     unsigned int d1 = 46;
+//     unsigned int d2 = 77;
+//     if( find( yes.begin(), yes.end(), d1 ) != yes.end() ) Hlt1Globdec = true;
+//     if( find( yes.begin(), yes.end(), d2 ) != yes.end() )  Hlt2Globdec = true;
+//     if( msgLevel(MSG::DEBUG) ){
+//       debug()<<"Firing routing bits : "<< yes << endmsg;
+//       debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
+//       debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
+//     }
+//   } 
+//   tuple->column( "Hlt1", Hlt1Globdec );
+//   tuple->column( "Hlt2", Hlt2Globdec);
 
-  /***************************
-   * Beware : it seems that HltDecReport writes only on TES algos that fired
-   *****************************/
-  if (!exist<HltDecReports>( HltDecReportsLocation::Default ) ){
-    return true;
-    warning()<<"No HltDecReports at "
-	     << HltDecReportsLocation::Default << endmsg;
-  }
-  const HltDecReports* decReports = get<HltDecReports>
-    ( HltDecReportsLocation::Default );
+//   /***************************
+//    * Beware : it seems that HltDecRepor writes only on TES algos that fired
+//    *****************************/
+//   if (!exist<HltDecReports>( HltDecReportsLocation::Default ) ){
+//     return true;
+//     warning()<<"No HltDecReports at "
+// 	     << HltDecReportsLocation::Default << endmsg;
+//   }
+//   const HltDecReports* decReports = get<HltDecReports>
+//     ( HltDecReportsLocation::Default );
 
-  int DVdec = 0; 
-  const LHCb::HltDecReport * decrep = 
-    decReports->decReport("Hlt2DisplVerticesSingleDecision");
-  if( decrep != NULL && decrep->decision() ) DVdec += 1;
-  decrep = decReports->decReport("Hlt2DisplVerticesDoubleDecision");
-  if( decrep != NULL && decrep->decision() ) DVdec += 10;
-  if( msgLevel(MSG::DEBUG) )
-    debug()<<"Hlt2DisplVerticesDecision    : " << DVdec << endmsg;
-  tuple->column( "HltDV", DVdec );
+//   int DVdec = 0; 
+//   const LHCb::HltDecReport * decrep = 
+//     decReports->decReport("Hlt2DisplVerticesSingleDecision");
+//   if( decrep != NULL && decrep->decision() ) DVdec += 1;
+//   decrep = decReports->decReport("Hlt2DisplVerticesDoubleDecision");
+//   if( decrep != NULL && decrep->decision() ) DVdec += 10;
+//   if( msgLevel(MSG::DEBUG) )
+//     debug()<<"Hlt2DisplVerticesDecision    : " << DVdec << endmsg;
+//   tuple->column( "HltDV", DVdec );
 
-  //Get topological trigger decision with TisTosTools
-  m_tisTos->setOfflineInput();
-  m_tisTos->setTriggerInput(); // reset trigger names
-  m_tisTos->setTriggerInput("Hlt2Topo.*YesDecision");//addToTriggerInput
-  bool TopoDec = m_tisTos->triggerTisTos().decision();
-  if( msgLevel(MSG::DEBUG) )
-    debug()<<"Hlt2Topo{2,3,4}Decision      : "<< TopoDec << endmsg;
-  tuple->column( "Hlt2Topo", TopoDec );
+//   //Get topological trigger decision with TisTosTools
+//   m_tisTos->setOfflineInput();
+//   m_tisTos->setTriggerInput(); // reset trigger names
+//   m_tisTos->setTriggerInput("Hlt2Topo.*YesDecision");//addToTriggerInput
+//   bool TopoDec = m_tisTos->triggerTisTos().decision();
+//   if( msgLevel(MSG::DEBUG) )
+//     debug()<<"Hlt2Topo{2,3,4}Decision      : "<< TopoDec << endmsg;
+//   tuple->column( "Hlt2Topo", TopoDec );
 
-  //////////////////////////////////////////////////////////////////
-  //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
-  // Offline, all the rate limited stuff, including the Lumi/MinBias, 
-  // doesn't work properly as you don't have the "counter" to limit it,
-  // so the Global //always goes to 1...
-  //   bool Hlt1Globdec = false;
-  //   const LHCb::HltDecReport * decrep = decReports->decReport("Hlt1Global");
-  //   if( decrep != NULL ) Hlt1Globdec = decrep->decision();
-  //   if( msgLevel(MSG::DEBUG) )
-  //     debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
-  //   tuple->column( "Hlt1", Hlt1Globdec );
+//   //////////////////////////////////////////////////////////////////
+//   //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
+//   // Offline, all the rate limited stuff, including the Lumi/MinBias, 
+//   // doesn't work properly as you don't have the "counter" to limit it,
+//   // so the Global //always goes to 1...
+//   //   bool Hlt1Globdec = false;
+//   //   const LHCb::HltDecReport * decrep = decReports->decReport("Hlt1Global");
+//   //   if( decrep != NULL ) Hlt1Globdec = decrep->decision();
+//   //   if( msgLevel(MSG::DEBUG) )
+//   //     debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
+//   //   tuple->column( "Hlt1", Hlt1Globdec );
   
-  //   decrep = decReports->decReport("Hlt2Global");
-  //   bool Hlt2Globdec = false;
-  //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
-  //   if( msgLevel(MSG::DEBUG) )
-  //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
-  //   tuple->column( "Hlt2", Hlt2Globdec);
+//   //   decrep = decReports->decReport("Hlt2Global");
+//   //   bool Hlt2Globdec = false;
+//   //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
+//   //   if( msgLevel(MSG::DEBUG) )
+//   //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
+//   //   tuple->column( "Hlt2", Hlt2Globdec);
   
-  //To print entire report container :
-  //vector<string> allConfiguredTrgLines = decReports->decisionNames();
-  //debug() << *decReports << endmsg;
+//   //To print entire report container :
+//   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
+//   //debug() << *decReports << endmsg;
   
-  return SaveL0RawInfos(tuple);
-}
+//   return SaveL0RawInfos(tuple);
+// }
 
 //============================================================================
 //  Save the SPD multiplicity applied in the hadron and electron triggers.
 //============================================================================
-StatusCode DisplVertices::SaveL0RawInfos( Tuple& tuple ){
+/*StatusCode DisplVertices::SaveL0RawInfos( Tuple& tuple ){
   //TupleToolRecoStats.cpp
 
   int nSpd = -1;
@@ -1311,7 +1311,7 @@ StatusCode DisplVertices::SaveL0RawInfos( Tuple& tuple ){
   tuple->column( "SPDMult", nSpd );
 
   return StatusCode::SUCCESS ;
-}
+  }*/
 
 //============================================================================
 // Save in Tuple the PV candidates

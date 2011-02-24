@@ -7,10 +7,10 @@
 #include "Kernel/DVAlgorithm.h"
 
 //To decode L0DU raw infos
-#include "L0Interfaces/IL0DUFromRawTool.h"
+//#include "L0Interfaces/IL0DUFromRawTool.h"
 
 //Hlt tools
-#include "Kernel/ITriggerTisTos.h"
+//#include "Kernel/ITriggerTisTos.h"
 
 // Detector description
 #include "DetDesc/IGeometryInfo.h"
@@ -47,8 +47,8 @@ protected:
 
 private:
 
-  ITriggerTisTos* m_tisTos;
-  IL0DUFromRawTool* m_l0BankDecoder;
+  //ITriggerTisTos* m_tisTos;
+  //IL0DUFromRawTool* m_l0BankDecoder;
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
@@ -103,7 +103,7 @@ private:
   StatusCode SaveCaloInfos( Tuple & );
   StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode GetCaloClusterInfos( std::string, Tuple &, double &, double & );
-  StatusCode SaveTrigInfinTuple( Tuple & );
+  // StatusCode SaveTrigInfinTuple( Tuple & );
   StatusCode SaveL0RawInfos( Tuple & );
   StatusCode SavePVs( Tuple & );
   StatusCode fillHeader( Tuple & );
