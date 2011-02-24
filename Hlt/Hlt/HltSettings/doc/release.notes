@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2011-02-24 - Victor Coco
+ - Update DV_draft2011.py (downstream line parameters in dictionnary)
+
 ! 2011-02-16 - Gerhard Raven
  - fix use of HLT1FILTER in Hlt2CharmHadD02HHKsLines
 

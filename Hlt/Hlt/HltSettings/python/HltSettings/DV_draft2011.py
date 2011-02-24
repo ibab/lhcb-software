@@ -43,7 +43,8 @@ class DV_draft2011 :
 
         from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
         d.update( { Hlt2DisplVerticesLinesConf : {
-             "MinNbTracks"  : { 'Hlt2RV2P' : 4
+            "MinNbTracks"  : { 'Hlt2RV2P' : 4
+                               , 'Hlt2SingleDown' : 4
                                , 'Hlt2SingleLonglivedHighFD' : 5
                                , 'Hlt2SingleLonglivedLowMass' : 6
                                , 'Hlt2SingleLonglivedHighMass' : 6
@@ -51,7 +52,8 @@ class DV_draft2011 :
                                , 'Hlt2SinglePSLonglived' : 4
                                }
             ,  "RCutMethod"   : "FromUpstreamPV"
-            ,  "RMin"         : { 'Hlt2RV2P' : 0.
+            ,  "RMin"         : {   'Hlt2RV2P' : 0.3
+                                  , 'Hlt2SingleDown' : 0.5
                                   , 'Hlt2SingleLonglivedHighFD' : 0.7
                                   , 'Hlt2SingleLonglivedLowMass' : 0.3
                                   , 'Hlt2SingleLonglivedHighMass' : 0.3
@@ -59,6 +61,7 @@ class DV_draft2011 :
                                   , 'Hlt2SinglePSLonglived' : 0.3
                                   }
             ,  "MinMass"      : {   'Hlt2RV2P' : 2000.
+                                  , 'Hlt2SingleDown' : 3000.
                                   , 'Hlt2SingleLonglivedHighFD' : 4500.
                                   , 'Hlt2SingleLonglivedLowMass' : 4500.
                                   , 'Hlt2SingleLonglivedHighMass' : 9000.
@@ -66,6 +69,7 @@ class DV_draft2011 :
                                   , 'Hlt2SinglePSLonglived' : 2000.
                                   }
             ,  "MinSumpt"     :{ 'Hlt2RV2P' : 3000.
+                                 , 'Hlt2SingleDown' : 3000.
                                  , 'Hlt2SingleLonglivedHighFD' : 4500.
                                  , 'Hlt2SingleLonglivedLowMass' : 4500.
                                  , 'Hlt2SingleLonglivedHighMass' : 10000.
@@ -88,15 +92,14 @@ class DV_draft2011 :
                                    }
             ,  "MinFD" : {  'Hlt2SingleLonglivedHighFD' : 15.
                                    }
-            , "PostScale" : { 'Hlt2RV2P' : 1
-                              , 'Hlt2SingleLonglivedHighFD' : 1
-                              , 'Hlt2SingleLonglivedLowMass' : 1
-                              , 'Hlt2SingleLonglivedHighMass' : 1
-                              , 'Hlt2DoubleLonglived' : 1
+            , "PostScale" : { 'Hlt2RV2P' : 1.
+                              , 'Hlt2SingleDown' : 1.
+                              , 'Hlt2SingleLonglivedHighFD' : 1.
+                              , 'Hlt2SingleLonglivedLowMass' : 1.
+                              , 'Hlt2SingleLonglivedHighMass' : 1.
+                              , 'Hlt2DoubleLonglived' : 1.
                               , 'Hlt2SinglePSLonglived' : 0.0006
-                              }
-
-                
+                              }             
             # pre and post scales
             }})
 
