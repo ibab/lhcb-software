@@ -45,7 +45,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -66,7 +66,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
         ## Require the PV3D reconstruction before our cut on IP.
@@ -87,7 +87,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = inputContainers
+                            , Inputs = inputContainers
                             , Code = incuts
                            )
 
@@ -116,7 +116,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         combineCharm4Body = Hlt2Member( CombineParticles
                           , "Combine_Stage2"
                           , DecayDescriptors = decayDesc
-                          , InputLocations = inputSeq 
+                          , Inputs = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           , Preambulo = preambulo 
@@ -131,13 +131,13 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         if extracode :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = extracode
                                  )
         else :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
-                                 , InputLocations = inputSeq
+                                 , Inputs = inputSeq
                                  , Code = 'ALL'
                                  )
 
@@ -182,7 +182,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                                          & (BPVVD> %(VtxPVDisp_2BodyFor4Body)s )
                                          & (BPVVDCHI2> %(VtxPVDispChi2_2BodyFor4Body)s )""" % self.getProps()
                           , Preambulo = preambulo 
-                          , InputLocations = [ pions2BodyFor4Body , kaons2BodyFor4Body ])
+                          , Inputs = [ pions2BodyFor4Body , kaons2BodyFor4Body ])
 
         Hlt2Charm2BodyFor4Body =  bindMembers('CharmHadD02HHHH', [ pions2BodyFor4Body , kaons2BodyFor4Body, Charm2BodyCombine ])
 			  

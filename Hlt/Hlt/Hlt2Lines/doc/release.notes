@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-24 - Gerhard Raven
+ - make Hlt2DisplVerticesLines and Hlt2CharmHadD02HHHHLines PHYS_v12r0
+   compatible
+
 ! 2011-02-24 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
    . Renamed all lifetime unbised DiElectron lines to "DiElectron*"

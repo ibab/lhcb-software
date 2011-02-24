@@ -144,7 +144,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
-        Hlt2RV2P.InputLocations = [BiKalmanFittedPions.outputSelection()]
+        Hlt2RV2P.Inputs = [BiKalmanFittedPions.outputSelection()]
+        Hlt2RV2P.Output = 'Hlt2/Hlt2RV2P/Particles'
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
         Hlt2RV2P.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2P.RMin = self.getProp('RMin')['Hlt2RV2P']
@@ -156,7 +157,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #Run Single LLP selection
         from Configurables import Hlt2SelDV
         Hlt2SingleLonglivedLowMass = Hlt2SelDV("Hlt2SingleLonglivedLowMass")
-        Hlt2SingleLonglivedLowMass.InputLocations = [ Hlt2RV2P.getName() ]
+        Hlt2SingleLonglivedLowMass.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2SingleLonglivedLowMass.Output = 'Hlt2/Hlt2SingleLonglivedLowMass/Particles'
         Hlt2SingleLonglivedLowMass.MinNBCands = 1
         Hlt2SingleLonglivedLowMass.RMin = self.getProp('RMin')['Hlt2SingleLonglivedLowMass']
         Hlt2SingleLonglivedLowMass.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglivedLowMass']
