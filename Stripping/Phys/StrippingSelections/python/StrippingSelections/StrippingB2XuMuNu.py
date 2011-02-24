@@ -348,7 +348,7 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.25,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
