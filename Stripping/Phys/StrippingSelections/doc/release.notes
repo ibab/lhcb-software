@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-24 - Victor Coco
+ -StrippingDisplVertices update to deal with Inputs/Ouptuts for PatPV3D
+
 ! 2011-02-24 - William James Barter
  - Fixed StrippingWMu.py to use "StandardParticles" rather than "StandardSelections"
 

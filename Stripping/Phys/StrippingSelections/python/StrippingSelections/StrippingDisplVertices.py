@@ -38,7 +38,11 @@ from StrippingUtils.Utils import LineBuilder
 import GaudiKernel.SystemOfUnits as units
 
 
+
+
+
 __all__ = ('DisplVerticeLinesConf',
+           'PatPV3DWrapper',
            'confdict')
 
 confdict = {
@@ -120,6 +124,52 @@ confdict = {
     }
  }
 
+from SelPy.utils import (UniquelyNamedObject,
+                         ClonableObject,
+                         SelectionBase)
+
+from PhysSelPython.Wrappers import checkName
+
+class PatPV3DWrapper(UniquelyNamedObject,
+                                            ClonableObject,
+                                            SelectionBase) :
+
+    def __init__(self,
+                 name,
+                 Algorithm,
+                 Output,
+                 RequiredSelection = []):
+    
+        checkName(name)
+        UniquelyNamedObject.__init__(self, name)
+        ClonableObject.__init__(self, locals())
+        
+        alg= Algorithm.clone(name,OutputVerticesName=Output)
+        SelectionBase.__init__(self,
+                               algorithm = alg,
+                               outputLocation = Output,
+                               requiredSelections = RequiredSelection )
+
+## class CopyDownstreamTracksWrapper(UniquelyNamedObject,
+##                                             ClonableObject,
+##                                             SelectionBase) :
+
+##     def __init__(self,
+##                  name,
+##                  Algorithm,
+##                  Output):
+    
+##         checkName(name)
+##         UniquelyNamedObject.__init__(self, name)
+##         ClonableObject.__init__(self, locals())
+        
+##         alg= Algorithm.clone(name,=Output)
+##         SelectionBase.__init__(self,
+##                                algorithm = alg,
+##                                outputLocation = Output,
+##                                requiredSelections = RequiredSelection )
+        
+
 
 class DisplVerticeLinesConf(LineBuilder) :
     """
@@ -183,17 +233,19 @@ class DisplVerticeLinesConf(LineBuilder) :
         _veloVertices.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
         _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
-        return Selection( name+ 'DV3D',
-                          Algorithm = _veloVertices,
-                          Extension="RecVertices",
-                          OutputBranch="Rec",
-                          InputDataSetter=None)
+        return PatPV3DWrapper(name+ 'DV3D',_veloVertices,'Rec/'+name+'DV3D/RecVertices')
+## return Selection( name+ 'DV3D',
+##                           Algorithm = _veloVertices,
+##                           Extension="RecVertices",
+##                           OutputBranch="Rec",
+##                           InputDataSetter=None)
 
     def _dvDownstreamTrackSelection( self,  name ):
         from Configurables import CopyDownstreamTracks
         _CopyDownstream = CopyDownstreamTracks( name+ "DownstreamTrCpy" )
-        _CopyDownstream.TrackLocation = "Rec/Track/Best"
-        _CopyDownstream.DownstreamTrackLocation = 'Rec/'+name+'DownstreamTr/Tracks'
+        _CopyDownstream.Inputs = ["Rec/Track/Best"]
+        _CopyDownstream.Output = 'Rec/'+name+'DownstreamTr/Tracks'
+        #return PatPV3DWrapper(name+ 'DownstreamTr',_CopyDownstream,'Rec/'+name+'DownstreamTr/Tracks')
         return Selection( name+ 'DownstreamTr',
                           Algorithm = _CopyDownstream,
                           Extension="Tracks",
@@ -224,12 +276,14 @@ class DisplVerticeLinesConf(LineBuilder) :
         _downVertices.PVOfflineTool.LSAdaptPVFitter.acceptTrack = 0.000000001
         _downVertices.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2 = 9
         _downVertices.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2Remove = 64
-        return Selection( name+ 'DownDV3D',
-                          Algorithm = _downVertices,
-                          RequiredSelections = [ self.DownstreamTracks ],
-                          Extension="RecVertices",
-                          OutputBranch="Rec",
-                          InputDataSetter=None)
+        
+        return PatPV3DWrapper(name+'DownDV3D',_downVertices,'Rec/'+name+'DownDV3D/RecVertices',[ self.DownstreamTracks ])
+##         return Selection( name+ 'DownDV3D',
+##                           Algorithm = _downVertices,
+##                           RequiredSelections = [ self.DownstreamTracks ],
+##                           Extension="RecVertices",
+##                           OutputBranch="Rec",
+##                           InputDataSetter=None)
 
 
 
@@ -303,45 +357,6 @@ class DisplVerticeLinesConf(LineBuilder) :
                               prescale = self.__confdict__['prescale'][lineName] ,
                               selection = self._makeDVDownSelection(lineName,name))
 
-## NEW
-##  |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
-##  |_StrippingGlobal_                                  |0.001021|        47|       |   3.646|       |       |       |
-##  |_StrippingSequenceStreamTestDV_                    |0.001021|        47|       |   3.640|       |       |       |
-##  |!StrippingSinglePSDisplVtx                         |0.000195|         9|  0.000|   0.248|      0|      0|      1|
-##  |!StrippingSingleLowMassDisplVtx                    |0.000413|        19|  0.000|   2.876|      0|      0|      5|
-##  |!StrippingSingleHighMassDisplVtx                   |0.000304|        14|  0.000|   0.037|      0|      0|      0|
-##  |!StrippingDoubleDisplVtx                           |0.000130|         6|  0.000|   0.034|      0|      0|      0|
-                         
 
 
 
- 
-
-## OLD
-##  |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
-##  |_StrippingGlobal_                                  |0.001064|        49|       |   3.693|       |       |       |
-##  |_StrippingSequenceStreamTestDV_                    |0.001064|        49|       |   3.689|       |       |       |
-##  |!StrippingSinglePSDisplVtx                         |0.000195|         9|  0.000|   0.252|      0|      0|      2|
-##  |!StrippingSingleLowMassDisplVtx                    |0.000434|        20|  0.000|   2.923|      0|      0|     30|
-##  |!StrippingSingleHighMassDisplVtx                   |0.000326|        15|  0.000|   0.034|      0|      0|      0|
-##  |!StrippingDoubleDisplVtx                           |0.000130|         6|  0.000|   0.036|      0|      0|      0|
-
-
-## Kaplan OLD
-##  |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
-##  |_StrippingGlobal_                                  |0.276200|      1381|       |   3.652|       |       |       |
-##  |_StrippingSequenceStreamTestDV_                    |0.276200|      1381|       |   3.646|       |       |       |
-##  |!StrippingSinglePSDisplVtx                         |0.013400|        67|  0.000|   0.208|      0|      0|      0|
-##  |!StrippingSingleLowMassDisplVtx                    |0.106800|       534|  0.000|   3.234|      0|      0|      4|
-##  |!StrippingSingleHighMassDisplVtx                   |0.140400|       702|  0.000|   0.065|      0|      0|      0|
-##  |!StrippingDoubleDisplVtx                           |0.131600|       658|  0.000|   0.066|      0|      0|      0|
-
-
-## StrippingReport                                                INFO Event 5000, Good event 5000
-##  |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
-##  |_StrippingGlobal_                                  |0.271600|      1358|       |   3.764|       |       |       |
-##  |_StrippingSequenceStreamTestDV_                    |0.271600|      1358|       |   3.756|       |       |       |
-##  |!StrippingSinglePSDisplVtx                         |0.013200|        66|  0.000|   0.205|      0|      0|      0|
-##  |!StrippingSingleLowMassDisplVtx                    |0.105400|       527|  0.000|   3.336|      0|      0|      5|
-##  |!StrippingSingleHighMassDisplVtx                   |0.137400|       687|  0.000|   0.074|      0|      0|      0|
-##  |!StrippingDoubleDisplVtx                           |0.129200|       646|  0.000|   0.071|      0|      0|      0|
