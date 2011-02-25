@@ -5,6 +5,7 @@
 class MonObj
 {
   public:
+  virtual ~MonObj(){}
   virtual int datasize()=0;
   virtual int xmitbuffersize()=0;
   virtual int hdrlen()=0;
