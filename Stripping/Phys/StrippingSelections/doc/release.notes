@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Concezio Bozzi
+ - StrippingBd2DstarMuNu.py
+   Take out StrippingBd2DstarMuNuLooseNoPrescale
+   Change prescale of StrippingBd2DstarMuNuLoose from 0.5 to 0.3
+
 ! 2011-02-25 - Mat Charles
  - Tighten cuts in StrippingXicc.py
 

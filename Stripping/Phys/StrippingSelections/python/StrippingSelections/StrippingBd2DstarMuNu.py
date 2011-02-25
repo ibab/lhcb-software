@@ -65,7 +65,7 @@ __version = '$Revision: 1.6 $'
 
 
 confdict={
-    'Loose' : { 'Prescale'    : 0.5 ,
+    'Loose' : { 'Prescale'    : 0.3 ,
                 'Postscale'   : 1.0 ,
                 #muon paramters # loose # Tight
                 'MuPT'        : 700, # 800  # MeV
@@ -90,31 +90,31 @@ confdict={
                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
                 },
-    'LooseNoPresc' : { 'Prescale'    : 1. ,
-                'Postscale'   : 1.0 ,
-                #muon paramters # loose # Tight
-                'MuPT'        : 700, # 800  # MeV
-                'MuTrPID'     :-20,  # -5   
-                'MuIPChi2'    :  0,  # 4    
-                #kaon parameters
-                'KPT'         : 350, # 350  # MeV
-                'KIPChi2'     :  0,  # 4    
-                'KTrPID'      : -5,  #-5    
-                #pion parameters
-                'PiPT'        : 350, # MeV
-                'PiIPChi2'    :  0, # 4    
-                #D0-resonance parameters
-                'D0MassW'     : 60, # 40    # MeV
-                'D0_BPVVDCHI2': 50,
-                #Dstar-resonance parameters
-                'Dstar_PT'     : 1250, # 1250 # MeV
-                'Dstar_VCHI2'  : 25, # 20 # 
-                'DstarMassW'   : 80, # 50 # MeV
-                #Bd-resonance parameters
-                'B0d_VCHI2'    : 10, # 10 # 
-                'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
-                'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
-                },
+##CB    'LooseNoPresc' : { 'Prescale'    : 1. ,
+##CB                'Postscale'   : 1.0 ,
+##CB                #muon paramters # loose # Tight
+##CB                'MuPT'        : 700, # 800  # MeV
+##CB                'MuTrPID'     :-20,  # -5   
+##CB                'MuIPChi2'    :  0,  # 4    
+##CB                #kaon parameters
+##CB                'KPT'         : 350, # 350  # MeV
+##CB                'KIPChi2'     :  0,  # 4    
+##CB                'KTrPID'      : -5,  #-5    
+##CB                #pion parameters
+##CB                'PiPT'        : 350, # MeV
+##CB                'PiIPChi2'    :  0, # 4    
+##CB                #D0-resonance parameters
+##CB                'D0MassW'     : 60, # 40    # MeV
+##CB                'D0_BPVVDCHI2': 50,
+##CB                #Dstar-resonance parameters
+##CB                'Dstar_PT'     : 1250, # 1250 # MeV
+##CB                'Dstar_VCHI2'  : 25, # 20 # 
+##CB                'DstarMassW'   : 80, # 50 # MeV
+##CB                #Bd-resonance parameters
+##CB                'B0d_VCHI2'    : 10, # 10 # 
+##CB                'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
+##CB                'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
+##CB                },
     'Tight'   : {'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters # 
