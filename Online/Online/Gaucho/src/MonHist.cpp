@@ -415,7 +415,7 @@ MonHist::~MonHist()
   }
   if (m_rootobj !=0)
   {
-    delete m_rootobj;
+    if (m_type == H_RATE) delete m_rootobj;
     m_rootobj = 0;
   }
   if (m_rootdeser != 0)
