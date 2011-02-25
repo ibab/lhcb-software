@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r4 2011-02-25 =========================
 ! 2011-02-11 Mark Tobin
  - Modified binning of some histograms in STClusterMonitor to make more
  understandable in the online monitoring.
@@ -269,3 +270,4 @@
  - Added STFullEventDump from STOnline
 
 ! ====================================================================
+!========================= STMonitors v3r4 2011-02-25 =========================
