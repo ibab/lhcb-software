@@ -23,6 +23,16 @@ MonTimer::MonTimer(MonSubSys *HSys, int period) : GenTimer((void*)HSys,period*10
 MonTimer::~MonTimer( )
 {
 }
+
+namespace {
+  class DimLock {
+  public:
+    DimLock()   { dim_lock();   }
+    ~DimLock()  { dim_unlock(); }
+  };
+}
+
+
 void MonTimer::timerHandler ( void )
 {
 //  printf(" timer_handler Monitor Sun System Locking\n");
@@ -32,10 +42,9 @@ void MonTimer::timerHandler ( void )
   m_Hsys->m_genSrv->setTime(m_dueTime);
   m_Hsys->m_genSrv->Serialize();
   m_Hsys->unLock();
-  dim_lock();
+  DimLock lock();
 //  printf("Updating the monitor service\n");
   m_Hsys->m_genSrv->Update();
-  dim_unlock();
 //  printf(" timer_handler Monitor Sun System Un-Locking\n");
 //  printf("---------------timer_handler Monitor Sun System Un-LockED\n");
 }
