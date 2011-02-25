@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - William James Barter (for ewk working group)
+ - Updated StrippingDY2MuMu.py as trigger now more prescaled, less prescale needed here.
+ - Added new line in StrippingSingleTrackHighPT.py
+ - Changed line name in StrippingWMu.py, to better reflect it's role (accepting min bias events with pT>5GeV) 
+
 ! 2011-02-25 - Alexandr Kozlinskiy
  - updated StrippingD02MuMu.py and StrippingPromptCharm.py
 

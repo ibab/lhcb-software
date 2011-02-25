@@ -118,14 +118,14 @@ class WMuConf(LineBuilder) :
         #new line, require minbias triggers to have fired.
         self.selNoPIDsPTCut = makeNoPIDs(self._myname+'NoPIDs', 
                                          _mucutlow)  
-        self.line_HighPTNoPIDs = StrippingLine(self._myname+"HighPTNoPIDs",
+        self.line_SingleTrackNoBias = StrippingLine(self._myname+"SingleTrackNoBias",
                                                prescale = config['WMuLinePrescale'],
                                                postscale = config['WMuLinePostscale'],
                                                checkPV = False,
                                                HLT = "HLT_PASS_RE('Hlt1MB.*Decision')",
                                                selection = self.selNoPIDsPTCut
                                                )
-        self.registerLine(self.line_HighPTNoPIDs)
+        self.registerLine(self.line_SingleTrackNoBias)
 
        
 def makeWMu(name, _muCut) :

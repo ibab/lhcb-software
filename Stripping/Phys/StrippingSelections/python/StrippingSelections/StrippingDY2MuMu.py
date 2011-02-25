@@ -17,7 +17,7 @@ confdict_DY2MuMu={
     ,  'DY2MuMu1Line_HltPrescale': .05 
     ,  'DY2MuMu1Line_HltaPrescale': .5 
     ,  'DY2MuMu1LinePostscale'   : 1.0
-    ,  'DY2MuMu2LinePrescale'    : .1 
+    ,  'DY2MuMu2LinePrescale'    : .5 
     ,  'DY2MuMu2Line_HltPrescale': .1
     ,  'DY2MuMu2Line_HltaPrescale': 1.0
     ,  'DY2MuMu2LinePostscale'   : 1.0
