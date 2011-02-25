@@ -8,6 +8,9 @@
  Rewritten selection using the LineBuilder framework.
  Released the prescaling factor and tightened the cuts.
 
+! 2011-02-25 - Liming Zhang
+ - StrippingD0ForBXX.py update to new framework.
+
 ! 2011-02-24 - Philip Hunt
  - StrippingD02K3PiForXSec.py
  Additional module not included in the previous commit of open charm
