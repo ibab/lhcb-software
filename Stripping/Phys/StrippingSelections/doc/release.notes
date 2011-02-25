@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Cibran Santamarina
+ - Update StrippingBs2PhiKst.py to match requirements.
+
+! 2011-02-25 - Paula Alvarez
+ - Update StrippingBsKst0Kst0.py to use LineBuilder
+   . Add Bs->Kst Kst
+   . Add Bd->JpsiKst for normalization.
+
 ! 2011-02-25 - Liming Zhang for 'Steven Blusk', 'Brian Maynard'
  - updated StrippingB2D3H.py 
 

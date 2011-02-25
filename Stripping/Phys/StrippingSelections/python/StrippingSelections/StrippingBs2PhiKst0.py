@@ -1,189 +1,247 @@
-__author__ = ['Celestino Rodriguez']
-__date__ = '26/04/2010'
-__version__ = '$Revision: 1.2 $'
+'''
+Module for construction of Bs-->PhiK*0 stripping selections and lines
 
+Exported symbols (use python help!):
+   - StrippingBs2PhiKstConf
+   - makeBs2PhiKst
+   - makeKst2Kpi
+   - makePhi2KK
 '''
-Bs->PhiKst0~ selection
-'''
+
+__author__ = ['Cibran Santamarina']
+__date__ = '21/02/2011'
+__version__= '1.0'
+
+__all__=('StrippingBs2PhiKstConf',
+         'makeBs2PhiKst',
+         'makeKst2Kpi',
+         'makePhi2KK')
+
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
-class StrippingBs2PhiKstConf(LHCbConfigurableUser):
-    """
-    Definition of Bs->PhiKst0 stripping.
-    """
-    __slots__ = { 
-    			"KaonPLoose"		: 1000.0# MeV 
-		,	"KaonPTLoose"		: 350.0	# MeV 
-		,	"KaonIPLoose"		: 0.03	# mm
-                ,       "PionPLoose"            : 1000.0# MeV
-                ,       "PionPTLoose"           : 350.0 # MeV
-                ,       "PionIPLoose"           : 0.03  # mm
-                ,       "PhiVCHI2Loose"         : 30.0  # adimensional
-                ,       "PhiPTLoose"            : 750.0 # MeV
-                ,       "PhiIPLoose"            : 0.08  # mm
-                ,       "PhiMassWinLoose"       : 25.0  # MeV
-		,	"KstarVCHI2Loose"	: 30.0	# adimensional
-		,	"KstarPTLoose"		: 750.0	# MeV
-                ,       "KstarIPLoose"          : 0.08	# mm
-		,	"KstarMassWinLoose"	: 150.0	# MeV
-		,	"BMassWinLoose"		: 500.0	# MeV
-		,	"BVCHI2Loose" 		: 10.0	# adimensional
-		,	"BMIPLoose" 		: 0.1	# mm
-		,	"BDisLoose"		: 0.7	# mm
-                ,	"KaonP"			: 1000.0# MeV
-                ,	"KaonPT"		: 350.0 # MeV
-                ,	"KaonIPCHI2"		: 1.	# adimensional
-                ,       "PionP"                 : 1000.0# MeV
-                ,       "PionPT"                : 350.0 # MeV
-                ,       "PionIPCHI2"            : 1.	# adimensional
-                ,       "PhiVCHI2"              : 25.0  # adimensional
-                ,       "PhiPT"                 : 750.0 # MeV
-                ,       "PhiIPCHI2"             : 6.25  # adimensional
-                ,       "PhiMassWin"            : 20.0  # MeV
-                ,	"KstarVCHI2"		: 25.0  # adimensional
-                ,	"KstarPT"		: 750.0 # MeV
-                ,	"KstarIPCHI2"		: 6.25  # adimensional
-                ,       "KaonPIDK"              : -5.0  # adimensional
-                ,	"KstarMassWin"		: 150.0 # MeV
-                ,	"BMassWin"		: 500.0 # MeV
-                ,	"BVCHI2"		: 5.0	# adimensional
-                ,	"BMIPCHI2"		: 16	# adimensional
-                ,       "BDisCHI2"		: 64	# mm
+name = "Bs2PhiKst"
 
-             }
+
+
+class StrippingBs2PhiKstConf(LineBuilder):
+     """
+     Builder of:
+     - Bs-> Phi Kst0 stripping line (Bs2PhiKst)
+
+     Usage:
+     >>> config = { .... }
+     >>> bsConf = StrippingBs2PhiKstConf('Bs2PhiKstTest',config)
+     >>> bsLines = bsConf.lines
+     >>> for line in line :
+     >>>  print line.name(), line.outputLocation()
+     The lines can be used directly to build a StrippingStream object.
+
+
+     Exports as instance data members:
+     selKst2Kpi               : nominal Kst->Kpi Selection object
+     selBs2KstKst             : nominal Bs -> Kst(K+pi-) anti-Kst(K-pi+) Selection object
+     Bs2KstKst_line           : StrippingLine made out of selBs2KstKst
+     lines                    : List of lines, [Bs2KstKst_line]
     
-    def nominall( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-	Bs2PhiKstSel = self.Bs2PhiKst()
-	return StrippingLine('Bs2PhiKst0bLine', prescale = 1, algos = [Bs2PhiKstSel])   
-     	
-    def loosel( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-	Bs2PhiKstSel = self.Bs2PhiKstLoose()
-	return StrippingLine('Bs2PhiKst0bLooseLine', prescale = 1, algos = [Bs2PhiKstSel])   
-    def Phi2KKLoose( self ):
-        from Configurables import  OnOfflineTool
-        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-        _Phi = CombineParticles("Kstar2KPiForBs2PhiKst")
-        _Phi.DecayDescriptor = "phi(1020) -> K+ K-"
-        _Phi.addTool(OnOfflineTool())
-        _Phi.OnOfflineTool.OfflinePVRelatorName = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
-        _Phi.DaughtersCuts = {  "K+" :"(PT > %(KaonPTLoose)s *MeV) & (MIPDV(PRIMARY)  > %(KaonIPLoose)s *mm)& (P > %(KaonP)s *MeV)" % self.getProps()}
-        _Phi.CombinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" % self.getProps()
-        _Phi.MotherCut = "(VFASPF(VCHI2/VDOF)< %(PhiVCHI2Loose)s) & (PT > %(PhiPTLoose)s *MeV) & (MIPDV(PRIMARY) > %(PhiIPLoose)s *mm)" % self.getProps()
+     Exports as class data member:
+     StrippingBs2PhiKstConf.__configuration_keys__ : List of required configuration parameters.
+     """
+     __configuration_keys__ = (
+          "KaonPT",
+          "KaonIPCHI2",
+          "KaonPIDK",
+          "PionPT",
+          "PionIPCHI2",
+          "PhiVCHI2",
+          "PhiPT",
+          "PhiMassWin",
+          "KstarVCHI2",
+          "KstarPT",
+          "KstarMassWin",
+          "BMassWin",
+          "BVCHI2",
+          "BDOCA")
 
-        Phi = Selection("SelPhiForBs2PhiKstLoose",
-                        Algorithm = _Phi,
-                        RequiredSelections = [StdNoPIDsKaons])
+
+     confdict = {
+          "KaonPT"                : 500.0 # MeV
+          ,     "KaonIPCHI2"            : 9.    # adimensional
+          ,     "KaonPIDK"              : 0.    # adimensional
+          ,     "PionPT"                : 500.0 # MeV
+          ,     "PionIPCHI2"            : 9.    # adimensional
+          ,     "PhiVCHI2"              : 9.    # adimensional
+          ,     "PhiPT"                 : 900.0 # MeV
+          ,     "PhiMassWin"            : 25.0  # MeV
+          ,     "KstarVCHI2"            : 9.0   # adimensional
+          ,     "KstarPT"               : 900.0 # MeV
+          ,     "KstarMassWin"          : 150.0 # MeV
+          ,     "BMassWin"              : 500.0 # MeV
+          ,     "BVCHI2"                : 15.0  # adimensional
+          ,     "BDOCA"                 : 0.3   # mm
+          }
+
+
+
+
+     def __init__(self, name, config) :
+
+          LineBuilder.__init__(self, name, config)
+
+          PhiKst_name = name+"Nominal"
+
+          self.selKst2Kpi = makeKst2Kpi('Kst2KpiFor'+name,
+                                        KaonPT = config['KaonPT'],
+                                        KaonIPCHI2 = config['KaonIPCHI2'],
+                                        PionPT = config['PionPT'],
+                                        PionIPCHI2 = config['PionIPCHI2'],
+                                        KstarPT = config["KstarPT"],
+                                        KaonPIDK = config['KaonPIDK'],
+                                        KstarVCHI2 = config['KstarVCHI2'],
+                                        KstarMassWin = config['KstarMassWin'])
+
+          self.selPhi2KK = makePhi2KK('Phi2KKFor'+name,
+                                    KaonPT = config['KaonPT'],
+                                    KaonIPCHI2 = config['KaonIPCHI2'],
+                                    KaonPIDK = config['KaonPIDK'],
+                                    PhiMassWin = config['PhiMassWin'],
+                                    PhiPT = config['PhiPT'],
+                                    PhiVCHI2 = config['PhiVCHI2'])
+
+          self.selBs2PhiKst = makeBs2PhiKst(PhiKst_name,
+                                            Phisel = self.selPhi2KK,
+                                            Kstsel = self.selKst2Kpi,
+                                            BMassWin = config['BMassWin'],
+                                            BVCHI2 = config['BVCHI2'],
+                                            BDOCA = config['BDOCA'])
+          
+          self.Bs2PhiKst_line = StrippingLine(PhiKst_name+"Line",
+                                              prescale = 1,
+                                              postscale = 1,
+                                              algos = [ self.selBs2PhiKst ]
+                                              )
+
+          self.registerLine(self.Bs2PhiKst_line)
+
+def makePhi2KK( name,
+                KaonPT,
+                KaonIPCHI2,
+                KaonPIDK,
+                PhiMassWin,
+                PhiPT,
+                PhiVCHI2 ):
+
+    """
+    Create and return a Phi -> KK Selection object.
+    Starts from DataOnDemand 'Phys/StdLoosePhi2KK'.
+    Arguments:
+    name             : name of the Selection.
+    KaonPT           : Minimum transverse momentum of K (MeV).
+    KaonIPCHI2       : Minimum impact parameter chi2 of K.
+    KaonPIDK         : Minimum PID_{K-pi} of K.
+    PhiPT            : Minimum transverse momentum of Phi (MeV).
+    PhiMassWin       : Phi invariant mass window around PDG mass value (MeV).
+    PhiVCHI2         : Maximum Phi vertex chi2 (per degree of freedom?)
+    """
+
+    _params = locals()
+    _code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
+        "& (PT > %(KaonPT)s *MeV)" \
+        "& (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)" \
+        "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
+        "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
+        "& (PT > %(PhiPT)s *MeV)" \
+        "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
+    print 'makeJpsiPhi2KK Code =', _code
+    StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
+    _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi",
+                               Code = _code)
+
+    return Selection (name,
+                      Algorithm = _phiFilter,
+                      RequiredSelections = [StdLoosePhi2KK])
+
+
+def makeKst2Kpi(name,
+                KaonPT,
+                KaonIPCHI2,
+                PionPT,
+                PionIPCHI2,
+                KstarPT,
+                KaonPIDK,
+                KstarVCHI2,
+                KstarMassWin):
+
+    """
+    Create and return a Kstar -> K+pi- Selection object.
+    Starts from DataOnDemand 'Phys/StdVeryLooseDetachedKst2Kpi'.
+    Arguments:
+    name             : name of the Selection.
+    KaonPT           : Minimum transverse momentum of K (MeV).
+    KaonIPCHI2       : Minimum impact parameter chi2 of K.
+    PionPT           : Minimum transverse momentum of pi (MeV).
+    PionIPCHI2       : Minimum impact parameter chi2 of pi.
+    KstarPT          : Minimum transverse momentum of Kstar (MeV).
+    KaonPIDK         : Minimum PID_{K-pi} of K.
+    KstarVCHI2       : Maximum Kstar vertex chi2 per degree of freedom.
+    KstarMassWin     : Kstar invariant mass window around PDG mass value (MeV).
+    """
+
+
+    KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s) ))"\
+        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) ))"\
+        "& (ADMASS('K*(892)0') < %(KstarMassWin)s *MeV)"\
+        "& (BPVDIRA > 0) & (VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV)"% locals()
+
+
+    _KstarFilter = FilterDesktop("_filterFor"+name)
+    _KstarFilter.Code = KstarCuts
+    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi")
+
+
+    return Selection (name,
+                      Algorithm = _KstarFilter,
+                      RequiredSelections = [_stdKst2Kpi])
+
+
+def makeBs2PhiKst(name,
+                  Phisel,
+                  Kstsel,
+                  BMassWin,
+                  BVCHI2,
+                  BDOCA):
+       """
+       Create and return a Bs -> Phi (KK) Kstar (Kpi) Selection object.
+       Arguments:
+       name        : name of the Selection.
+       Phisel      : Phi -> K+K- Selection object.
+       Kstsel      : Kst -> K+pi- Selection object.
+       BMassWin    : Bs invariant mass window around PDG mass value (MeV).
+       BVCHI2      : Maximum Bs vertex chi2 per degree of freedom.
+       BDOCA       : Maximum Bs DOCA.
+       """ 
        
-        return Phi
+       _motherCuts = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s)"% locals()
+       _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('')< %(BDOCA)s *mm)" % locals() 
 
-    def Phi2KK( self ):
-        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-        _Phi = CombineParticles("Phi2KPiForBs2PhiKst")
-        _Phi.DecayDescriptor = "phi(1020) -> K+ K-"
-        _Phi.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s )& (P > %(KaonP)s *MeV) &(PIDK> %(KaonPIDK)s)" % self.getProps()}
-        _Phi.CombinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWin)s *MeV)" % self.getProps()
-        _Phi.MotherCut = "(VFASPF(VCHI2/VDOF)< %(PhiVCHI2)s) & (PT > %(PhiPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(PhiIPCHI2)s )" % self.getProps()
+       _Bs = CombineParticles('_'+name)
+       _Bs.DecayDescriptor = "[B_s0 -> phi(1020) K*(892)~0]cc"
+       _Bs.CombinationCut = _combinationCut
+       _Bs.MotherCut = _motherCuts
 
-        Phi = Selection("SelPhiForBs2PhiKst",
-                        Algorithm = _Phi,
-                        RequiredSelections = [StdNoPIDsKaons])
+       _Bs.ReFitPVs = True
 
-        return Phi
+       _Bs.addTool( OfflineVertexFitter() )
+       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+       _Bs.OfflineVertexFitter.useResonanceVertex = False
 
-    def Kstar2Kpi( self ):
-        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-        _Kstar = CombineParticles("Kstar2KPiForBs2PhiKst")
-        _Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-        _Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s)& (P > %(KaonP)s *MeV) & (PIDK > %(KaonPIDK)s)" % self.getProps()
-                                , "pi+":"(PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(PionIPCHI2)s)& (P > %(PionP)s *MeV)" % self.getProps()
-                                }
-        _Kstar.CombinationCut = "(ADAMASS('K*(892)0') < %(KstarMassWin)s *MeV)" % self.getProps()
-        _Kstar.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(KstarIPCHI2)s)" % self.getProps()
 
-        Kstar = Selection("SelKstarForBs2PhiKst",
-                        Algorithm = _Kstar,
-                        RequiredSelections = [StdNoPIDsKaons, StdNoPIDsPions])
-        return Kstar
-	
-
-    def Kstar2KpiLoose( self ):
-        from Configurables import  OnOfflineTool
-        StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
-        StdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-	_Kstar = CombineParticles("Kstar2KPiForBs2PhiKstLoose")
-	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-	_Kstar.addTool(OnOfflineTool())
-	_Kstar.OnOfflineTool.OfflinePVRelatorName = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
-	_Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPTLoose)s *MeV) & (MIPDV(PRIMARY)  > %(KaonIPLoose)s *mm)& (P > %(KaonP)s *MeV)" % self.getProps()
-				, "pi+":"(PT > %(PionPTLoose)s *MeV) & (MIPDV(PRIMARY)  > %(PionIPLoose)s *mm)& (P > %(PionP)s *MeV)" % self.getProps()
-                	  	}
-	_Kstar.CombinationCut = "(ADAMASS('K*(892)0') < %(KstarMassWinLoose)s *MeV)" % self.getProps()
-	_Kstar.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2Loose)s) & (PT > %(KstarPTLoose)s *MeV) & (MIPDV(PRIMARY) > %(KstarIPLoose)s *mm)" % self.getProps()
-
-	Kstar = Selection("SelKstarForBs2PhiKstLoose",
-                 	Algorithm = _Kstar,
-                 	RequiredSelections = [StdNoPIDsKaons, StdNoPIDsPions])
-	return Kstar
-
-    def Bs2PhiKst( self ):
-
-	Kstar = self.Kstar2Kpi()
-        Phi=self.Phi2KK() 
-	_Bs = CombineParticles("Bs2PhiKst")
-      	_Bs.DecayDescriptors =["[B_s0 -> phi(1020) K*(892)~0]cc"]#,"[B_s0 -> phi(1020) K*(892)0]cc"]
-        _Bs.CombinationCut = "ADAMASS('B0') < %(BMassWin)s *MeV" % self.getProps()
-        _Bs.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s)"\
-			"& (MIPCHI2DV(PRIMARY) < %(BMIPCHI2)s)"\
-			"& (BPVVDCHI2	       > %(BDisCHI2)s)"\
-			"& (BPVVDSIGN > 0*mm )" % self.getProps()
-        _Bs.ReFitPVs = True
-
-	_Bs.addTool( OfflineVertexFitter() )
-	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-	_Bs.OfflineVertexFitter.useResonanceVertex = False
-
-	Bs = Selection("SelBs2PhiKst",
-                 	Algorithm = _Bs,
-                 	RequiredSelections = [Kstar,Phi])
-	return Bs
-
-    def Bs2PhiKstLoose( self ):
-        from Configurables import  OnOfflineTool
-	Kstar = self.Kstar2KpiLoose()
-        Phi = self.Phi2KKLoose() 
-	_Bs = CombineParticles("Bs2PhiKstLoose")
-      	_Bs.DecayDescriptors = ["[B_s0 -> phi(1020) K*(892)~0]cc"]#,"B_s0 -> phi(1020) K*(892)0"]
-        _Bs.CombinationCut = "ADAMASS('B0') < %(BMassWinLoose)s *MeV" % self.getProps()
-        _Bs.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BVCHI2Loose)s)"\
-                        "& (MIPDV(PRIMARY) < %(BMIPLoose)s *mm)"\
-                        "& (BPVVDSIGN > %(BDisLoose)s *mm)" % self.getProps()
-
-        _Bs.ReFitPVs = True
-	
-	_Bs.addTool( OfflineVertexFitter() )
-	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-	_Bs.OfflineVertexFitter.useResonanceVertex = False
-        _Bs.addTool(OnOfflineTool())
-        _Bs.OnOfflineTool.OfflinePVRelatorName = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
-	Bs = Selection("SelBs2PhiKstLoose",
-                 	Algorithm = _Bs,
-                 	RequiredSelections = [Kstar,Phi])
-	return Bs
-
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+       return Selection ( name,
+                          Algorithm = _Bs,
+                          RequiredSelections = [Phisel,Kstsel])
