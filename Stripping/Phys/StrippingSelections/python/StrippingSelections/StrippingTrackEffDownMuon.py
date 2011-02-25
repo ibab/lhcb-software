@@ -14,8 +14,6 @@ from Configurables import GaudiSequencer
 from Configurables import UnpackTrack, ChargedProtoParticleMaker, DelegatingTrackSelector, TrackSelector, BestPIDParticleMaker
 from TrackFitter.ConfiguredFitters import ConfiguredFit
 from Configurables import TrackStateInitAlg
-from PatAlgorithms import PatAlgConf
-from Configurables import TrackToDST
 from StrippingConf.StrippingLine import StrippingLine
 from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlg
 from MuonID import ConfiguredMuonIDs
@@ -23,34 +21,28 @@ from Configurables import ChargedProtoCombineDLLsAlg, ProtoParticleMUONFilter
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
-#from Configurables import TrackSys
 from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter
 from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
-#from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
-from Configurables import ( ProcessPhase, MagneticFieldSvc,
-                            DecodeVeloRawBuffer,
-                            Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
-                            Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
-                            Tf__PatVeloTrackTool, Tf__PatVeloGeneric,
-                            FastVeloTracking,
-                            RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
-                            PatForward,
-                            TrackEventFitter,
-                            Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
-                            PatSeeding,
-                            TrackMatchVeloSeed, PatDownstream, PatVeloTT,
-                            TrackStateInitAlg, TrackStateInitTool,
-                            FilterMatchTracks, FilterDownstreamTracks, FilterSeedTracks,
-                            TrackEventCloneKiller, TrackPrepareVelo,
-                            TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
-                            TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
-                            TrackEraseExtraInfo, PatMatch )
+from GaudiConfUtils.ConfigurableGenerators import TisTosParticleTagger
+from StandardParticles import StdLooseMuons
+from Configurables import GaudiSequencer
+from Configurables import TrackToDST
+from Configurables import TrackSys
+from Configurables import PatSeeding, PatDownstream
+from PhysSelPython.Wrappers import AutomaticData
+# Get the fitters
+from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
+from PatAlgorithms import PatAlgConf
+
+from SelPy.utils import ( UniquelyNamedObject,
+                          ClonableObject,
+                          SelectionBase )
 
 #name = "TrackEffDownMuonLine"
 
@@ -107,15 +99,13 @@ class StrippingTrackEffDownMuonConf(LineBuilder):
 			config['MuTMom'], config['MuMom'], config['MassPreComb'], config['Doca'], 
 			config['MassPostComb'], config['VertChi2'] )
 
-	#FIXME: take prescales from configuration
-	self.nominal_line =  StrippingLine(nominal_name + 'Line',  prescale = 1., algos=[self.DownJpsiFilter])
+	self.nominal_line =  StrippingLine(nominal_name + 'Line',  prescale = config['NominalLinePrescale'], postscale = config['NominalLinePostscale'], algos=[self.DownJpsiFilter])
 
-	self.valid_line = StrippingLine(valid_name + 'Line', prescale = 0.5, algos=[self.TisTosPreFilter2Jpsi])
+	self.valid_line = StrippingLine(valid_name + 'Line', prescale = config['ValidationLinePrescale'], postscale = config['ValidationLinePostscale'], algos=[self.TisTosPreFilter2Jpsi])
         
 	self.registerLine(self.nominal_line)
         self.registerLine(self.valid_line)
 
-# FIXME: Translate this to selections
 # ########################################################################################
 # Make the protoparticles
 # ########################################################################################
@@ -222,8 +212,6 @@ Define TisTos Prefilters
 """
 #getMuonParticles = DataOnDemand(Location = 'Phys/StdLooseMuons')
 
-from GaudiConfUtils.ConfigurableGenerators import TisTosParticleTagger
-from StandardParticles import StdLooseMuons
 
 #def selHlt1Jpsi(name, longPartsFilter):
 def selHlt1Jpsi(name):
@@ -264,14 +252,6 @@ def selHlt2Jpsi(name, hlt1Filter):
    return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ StdLooseMuons ])
 ##########################################################
         
-from Configurables import LoKi__VoidFilter
-from Configurables import GaudiSequencer
-from Configurables import TrackToDST
-from Configurables import TrackSys
-from PhysSelPython.Wrappers import AutomaticData
-# Get the fitters
-from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
-from PatAlgorithms import PatAlgConf
 
 def trackingDownPreFilter(name, prefilter):
 
@@ -317,9 +297,6 @@ def trackingDownPreFilter(name, prefilter):
                      requiredSelections = [ prefilter])
 
 
-from SelPy.utils import ( UniquelyNamedObject,
-                          ClonableObject,
-                          SelectionBase )
 
 class GSWrapper(UniquelyNamedObject,
                 ClonableObject,

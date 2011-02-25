@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 -Georg Krocker 
+ - Small fixes to StrippingTrackEffDownMuon.py and StrippingTrackEffVeloMuon.py
+
 ! 2011-02-25 - Jibo He
  - StrippingBd2(Jpsi)eeKstar.py
    . Changed the ordering of making Kstar and ee to save CPU time

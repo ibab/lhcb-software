@@ -7,11 +7,10 @@
 # 
 #######################################################################
 
-#FIXME Write includes in a cleaner way
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter,ProtoParticleMUONFilter	
+from Configurables import OfflineVertexFitter,ProtoParticleMUONFilter, CombineParticles	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOnDemandSvc, UnpackTrack, DelegatingTrackSelector, TrackSelector, CombinedParticleMaker, BestPIDParticleMaker
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking, DecodeVeloRawBuffer
@@ -24,7 +23,25 @@ from MuonID import ConfiguredMuonIDs
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseMuons
 
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, TisTosParticleTagger
+
+from Configurables import LoKi__VoidFilter
+from Configurables import GaudiSequencer
+from Configurables import TrackToDST
+from Configurables import TrackSys
+from PhysSelPython.Wrappers import AutomaticData
+# Get the fitters
+from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
+
+from Configurables import TrackEventCloneKiller,VeloMuonBuilder
+from Configurables import TrackEventFitter, TrackMasterFitter
+from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
+from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+#from Configurables import TrackCloneFinder
+
+from SelPy.utils import ( UniquelyNamedObject,
+                          ClonableObject,
+                          SelectionBase )
 confdict={
 			"TrChi2Mu":		10.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
@@ -97,7 +114,7 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   MassPostComb = config['MassPostComb'], 
 							   JpsiPt = config['JpsiPt'])    
 	
-	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = 1., algos=[self.JpsiMuMuTrackEff1])
+	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1])
 	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = 1., algos=[self.JpsiMuMuTrackEff2])
 
 	self.registerLine(self.nominal_line1)
@@ -177,15 +194,6 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
     
    MuonVeloResonance = CombineParticles('_'+name)
    MuonVeloResonance.DecayDescriptor = decayDescriptor
-   from Configurables import LoKi__Hybrid__PlotTool as PlotTool
-   import GaudiKernel.SystemOfUnits as Units
-   MuonVeloResonance.HistoProduce = True
-
-   MuonVeloResonance.addTool( PlotTool("MotherPlots") )
-
-   MuonVeloResonance.MotherPlots.Histos = { "P/1000"  : ('momentum',0,150) ,
-                                      "PT/1000" : ('pt_%1%',0,5,750) ,
-                                      "M"       : ('mass in MeV_%1%_%2%_%3%',2.9*Units.GeV,3.3*Units.GeV) } 
    MuonVeloResonance.OutputLevel = 4 
    
    muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s)" % locals()
@@ -234,8 +242,6 @@ Define TisTos Prefilters
 """
 #getMuonParticles = DataOnDemand(Location = 'Phys/StdLooseMuons')
 
-from GaudiConfUtils.ConfigurableGenerators import TisTosParticleTagger
-from StandardParticles import StdLooseMuons
 
 #def selHlt1Jpsi(name, longPartsFilter):
 def selHlt1Jpsi(name):
@@ -276,18 +282,9 @@ def selHlt2Jpsi(name, hlt1Filter):
    return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ StdLooseMuons ])
 ##########################################################
         
-from Configurables import LoKi__VoidFilter
-from Configurables import GaudiSequencer
-from Configurables import TrackToDST
-from Configurables import TrackSys
-from PhysSelPython.Wrappers import AutomaticData
-# Get the fitters
-from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
 
 def trackingPreFilter(name, prefilter):
 
-#FIXME: Here goes the tracking
-   from Configurables import TrackEventCloneKiller,VeloMuonBuilder#, VMinMC, VeloMuonBuilder
    VeloMuonBuilder1 = VeloMuonBuilder("VeloMuonBuilder")
    VeloMuonBuilder1.OutputLevel = 6
    VeloMuonBuilder1.MuonLocation = "Hlt1/Track/MuonSeg"
@@ -299,19 +296,15 @@ def trackingPreFilter(name, prefilter):
    preve.inputLocation = "Rec/Track/Velo"
    preve.outputLocation = "Rec/Track/UnfittedPreparedVelo"
    preve.bestLocation = ""
-   from Configurables import TrackEventFitter, TrackMasterFitter
-   from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
    vefit = TrackEventFitter('vefit')
    vefit.TracksInContainer = "Rec/Track/UnfittedPreparedVelo"
    vefit.TracksOutContainer = "Rec/Track/FittedVelo"
    vefit.addTool(TrackMasterFitter, name = 'Fitter')
-   from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
    ConfiguredFastFitter( getattr(vefit,'Fitter'))
 	
    #define a TrackCloneFinder
-   from Configurables import TrackCloneFinder
-   low = TrackCloneFinder("TrackCloneFinder/low")
-   low.MatchingFraction = 0.6
+   #low = TrackCloneFinder("TrackCloneFinder/low")
+   #low.MatchingFraction = 0.6
 	
    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
@@ -332,9 +325,6 @@ def trackingPreFilter(name, prefilter):
                      requiredSelections = [ prefilter])
 
 
-from SelPy.utils import ( UniquelyNamedObject,
-                          ClonableObject,
-                          SelectionBase )
 
 class GSWrapper(UniquelyNamedObject,
                 ClonableObject,
