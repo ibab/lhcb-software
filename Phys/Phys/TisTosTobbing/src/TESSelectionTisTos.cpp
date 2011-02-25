@@ -150,17 +150,17 @@ unsigned int TESSelectionTisTos::tisTosSelection( const std::string & selectionN
     path = m_PrefixInTES.value() + selectionName;
   }
   
-  if( exist<Particles>(path) || exist<Particles>(path+"/Particles") ){
+  if( exist<Particle::Range>(path) || exist<Particle::Range>(path+"/Particles") ){
     
-    Particles* cParticles;
-    if( exist<Particles>(path) ){      
-      cParticles =  get<Particles>(path);  
+    Particle::Range cParticles;
+    if( exist<Particle::Range>(path) ){      
+      cParticles =  get<Particle::Range>(path);  
     } else {
-      cParticles = get<Particles>(path+"/Particles");
+      cParticles = get<Particle::Range>(path+"/Particles");
     }    
     std::vector<Particle*> particles;    
-    for( Particles::iterator icand =  cParticles->begin(); icand !=  cParticles->end(); icand++ ) {
-      particles.push_back(*icand);
+    for( Particle::Range::const_iterator icand =  cParticles.begin(); icand !=  cParticles.end(); icand++ ) {
+      particles.push_back(const_cast<Particle*>(*icand));
     }
     decision = (0!=particles.size());    
     if( decision > 0 ){
@@ -169,39 +169,39 @@ unsigned int TESSelectionTisTos::tisTosSelection( const std::string & selectionN
 
   } else if( exist<Vertices>(path) || exist<Vertices>(path+"/Vertices")  ){
 
-    Vertices* cVertices;    
-    if( exist<Vertices>(path) ){      
-      cVertices =  get<Vertices>(path);  
+    Vertex::Range cVertices;    
+    if( exist<Vertex::Range>(path) ){      
+      cVertices =  get<Vertex::Range>(path);  
     } else {
-      cVertices = get<Vertices>(path+"/Vertices");
+      cVertices = get<Vertex::Range>(path+"/Vertices");
     }    
     std::vector<Vertex*> vtxs;    
-    for( Vertices::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {
-      vtxs.push_back(*icand);
+    for( Vertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {
+      vtxs.push_back(const_cast<Vertex*>(*icand));
     } 
     decision = (0!=vtxs.size());    
     if( decision > 0 ){
       result = IParticleTisTos::tisTos<Vertex>(vtxs);
    }
     
-  } else if( exist<RecVertex::Container>(path) ){ 
+  } else if( exist<RecVertex::Range>(path) ){ 
     
-    RecVertex::Container* cVertices =  get<RecVertex::Container>(path);    
+    RecVertex::Range cVertices =  get<RecVertex::Range>(path);    
     std::vector<RecVertex*> vertices;
-    for( RecVertex::Container::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {
-      vertices.push_back(*icand);
+    for( RecVertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {
+      vertices.push_back(const_cast<RecVertex*>(*icand));
     }
     decision = (0!=vertices.size());    
     if( decision ){
       result = IParticleTisTos::tisTos<RecVertex>(vertices);
     }
     
-  } else if( exist<Tracks>(path) ){
+  } else if( exist<Track::Range>(path) ){
     
-    Tracks* cTracks =  get<Tracks>(path);    
+    Track::Range cTracks =  get<Track::Range>(path);    
     std::vector<Track*> tracks;
-    for( Tracks::iterator icand =  cTracks->begin(); icand !=  cTracks->end(); icand++ ) {
-      tracks.push_back(*icand);
+    for( Track::Range::iterator icand =  cTracks.begin(); icand !=  cTracks.end(); icand++ ) {
+      tracks.push_back(const_cast<Track*>(*icand));
     }
     decision = (0!=tracks.size());    
     if( decision ){
@@ -233,17 +233,17 @@ std::string TESSelectionTisTos::analysisReportSelection( const std::string & sel
   std::ostringstream report;
   report << offset() << " Selection path "+path;  
 
-  if( exist<Particles>(path) || exist<Particles>(path+"/Particles") ){
+  if( exist<Particle::Range>(path) || exist<Particle::Range>(path+"/Particles") ){
     
-    Particles* cParticles;
-    if( exist<Particles>(path) ){      
-      cParticles =  get<Particles>(path);  
+    Particle::Range cParticles;
+    if( exist<Particle::Range>(path) ){      
+      cParticles =  get<Particle::Range>(path);  
     } else {
-      cParticles = get<Particles>(path+"/Particles");
+      cParticles = get<Particle::Range>(path+"/Particles");
     }    
     std::vector<Particle*> particles;    
-    for( Particles::iterator icand =  cParticles->begin(); icand !=  cParticles->end(); icand++ ) {
-      particles.push_back(*icand);
+    for( Particle::Range::const_iterator icand =  cParticles.begin(); icand !=  cParticles.end(); icand++ ) {
+      particles.push_back(const_cast<Particle*>(*icand));
     }
     report << " Particles size= " << particles.size() << std::endl;
     decision = (0!=particles.size());    
@@ -252,17 +252,17 @@ std::string TESSelectionTisTos::analysisReportSelection( const std::string & sel
        report<< analysisReport<Particle>(particles);
     }
 
-  } else if( exist<Vertices>(path) || exist<Vertices>(path+"/Vertices")  ){
+  } else if( exist<Vertex::Range>(path) || exist<Vertex::Range>(path+"/Vertices")  ){
 
-    Vertices* cVertices;    
-    if( exist<Vertices>(path) ){      
-      cVertices =  get<Vertices>(path);  
+    Vertex::Range cVertices;    
+    if( exist<Vertex::Range>(path) ){      
+      cVertices =  get<Vertex::Range>(path);  
     } else {
-      cVertices = get<Vertices>(path+"/Vertices");
+      cVertices = get<Vertex::Range>(path+"/Vertices");
     }    
     std::vector<Vertex*> vtxs;    
-    for( Vertices::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {
-      vtxs.push_back(*icand);
+    for( Vertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {
+      vtxs.push_back(const_cast<Vertex*>(*icand));
     } 
     report << " Vertcies size= " << vtxs.size() << std::endl;
     decision = (0!=vtxs.size());    
@@ -271,12 +271,12 @@ std::string TESSelectionTisTos::analysisReportSelection( const std::string & sel
       report<< analysisReport<Vertex>(vtxs);
    }
     
-  } else if( exist<RecVertex::Container>(path) ){ 
+  } else if( exist<RecVertex::Range>(path) ){ 
     
-    RecVertex::Container* cVertices =  get<RecVertex::Container>(path);    
+    RecVertex::Range cVertices =  get<RecVertex::Range>(path);    
     std::vector<RecVertex*> vertices;
-    for( RecVertex::Container::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {
-      vertices.push_back(*icand);
+    for( RecVertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {
+      vertices.push_back(const_cast<RecVertex*>(*icand));
     }
     report << " RecVerticies size= " << vertices.size() << std::endl;
     decision = (0!=vertices.size());    
@@ -285,12 +285,12 @@ std::string TESSelectionTisTos::analysisReportSelection( const std::string & sel
       report<< analysisReport<RecVertex>(vertices);
    }
     
-  } else if( exist<Tracks>(path) ){
+  } else if( exist<Track::Range>(path) ){
     
-    Tracks* cTracks =  get<Tracks>(path);    
+    Track::Range cTracks =  get<Track::Range>(path);    
     std::vector<Track*> tracks;
-    for( Tracks::iterator icand =  cTracks->begin(); icand !=  cTracks->end(); icand++ ) {
-      tracks.push_back(*icand);
+    for( Track::Range::iterator icand =  cTracks.begin(); icand !=  cTracks.end(); icand++ ) {
+      tracks.push_back(const_cast<Track*>(*icand));
     }
     report << " Tracks size= " << tracks.size() << std::endl;
     decision = (0!=tracks.size());    
@@ -321,58 +321,58 @@ std::string TESSelectionTisTos::analysisReportSelection( const std::string & sel
     path = m_PrefixInTES.value() + selectionName;\
   }\
   \
-  if( exist<Particles>(path) || exist<Particles>(path+"/Particles") ){\
+  if( exist<Particle::Range>(path) || exist<Particle::Range>(path+"/Particles") ){\
     \
-    Particles* cParticles;\
-    if( exist<Particles>(path) ){      \
-      cParticles =  get<Particles>(path);  \
+    Particle::Range cParticles;\
+    if( exist<Particle::Range>(path) ){      \
+      cParticles =  get<Particle::Range>(path);  \
     } else {\
-      cParticles = get<Particles>(path+"/Particles");\
+      cParticles = get<Particle::Range>(path+"/Particles");\
     }    \
     std::vector<Particle*> particles;    \
-    for( Particles::iterator icand =  cParticles->begin(); icand !=  cParticles->end(); icand++ ) {\
-      particles.push_back(*icand);\
+    for( Particle::Range::const_iterator icand =  cParticles.begin(); icand !=  cParticles.end(); icand++ ) {\
+      particles.push_back(const_cast<Particle*>(*icand));\
     }\
     decision = (0!=particles.size());    \
     if( decision > 0 ){\
        return IParticleTisTos::FUN<Particle>(particles);\
     }    \
 \
-  } else if( exist<Vertices>(path) || exist<Vertices>(path+"/Vertices")  ){\
+  } else if( exist<Vertex::Range>(path) || exist<Vertex::Range>(path+"/Vertices")  ){\
 \
-    Vertices* cVertices;    \
-    if( exist<Vertices>(path) ){      \
-      cVertices =  get<Vertices>(path);  \
+    Vertex::Range cVertices;    \
+    if( exist<Vertex::Range>(path) ){      \
+      cVertices =  get<Vertex::Range>(path);  \
     } else {\
-      cVertices = get<Vertices>(path+"/Vertices");\
+      cVertices = get<Vertex::Range>(path+"/Vertices");\
     }    \
     std::vector<Vertex*> vtxs;    \
-    for( Vertices::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {\
-      vtxs.push_back(*icand);\
+    for( Vertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {\
+      vtxs.push_back(const_cast<Vertex*>(*icand));\
     } \
     decision = (0!=vtxs.size());    \
     if( decision > 0 ){\
       return IParticleTisTos::FUN<Vertex>(vtxs);\
    }\
     \
-  } else if( exist<RecVertex::Container>(path) ){ \
+  } else if( exist<RecVertex::Range>(path) ){ \
     \
-    RecVertex::Container* cVertices =  get<RecVertex::Container>(path);    \
+    RecVertex::Range cVertices =  get<RecVertex::Range>(path);    \
     std::vector<RecVertex*> vertices;\
-    for( RecVertex::Container::iterator icand =  cVertices->begin(); icand !=  cVertices->end(); icand++ ) {\
-      vertices.push_back(*icand);\
+    for( RecVertex::Range::iterator icand =  cVertices.begin(); icand !=  cVertices.end(); icand++ ) {\
+      vertices.push_back(const_cast<RecVertex*>(*icand));\
     }\
     decision = (0!=vertices.size());    \
     if( decision ){\
       return IParticleTisTos::FUN<RecVertex>(vertices);\
     }\
     \
-  } else if( exist<Tracks>(path) ){\
+  } else if( exist<Track::Range>(path) ){\
     \
-    Tracks* cTracks =  get<Tracks>(path);    \
+    Track::Range cTracks =  get<Track::Range>(path);    \
     std::vector<Track*> tracks;\
-    for( Tracks::iterator icand =  cTracks->begin(); icand !=  cTracks->end(); icand++ ) {\
-      tracks.push_back(*icand);\
+    for( Track::Range::iterator icand =  cTracks.begin(); icand !=  cTracks.end(); icand++ ) {\
+      tracks.push_back(const_cast<Track*>(*icand));\
     }\
     decision = (0!=tracks.size());    \
     if( decision ){\
@@ -453,53 +453,49 @@ std::vector<const LHCb::HltObjectSummary*> TESSelectionTisTos::hltSelectionObjec
     path = m_PrefixInTES.value() + selectionName;
   }
   
-  if( exist<Tracks>(path) ){
+  if( exist<Track::Range>(path) ){
     
-    Tracks* sel =  get<Tracks>(path);    
-    if( !sel )return matchedObjectSummaries;
-    if( !(sel->size()) )return matchedObjectSummaries;
-    for( Tracks::iterator icand =  sel->begin(); icand !=  sel->end(); icand++ ) {
-      Track* object= *icand; 
+    Track::Range sel =  get<Track::Range>(path);    
+    if( !(sel.size()) )return matchedObjectSummaries;
+    for( Track::Range::iterator icand =  sel.begin(); icand !=  sel.end(); icand++ ) {
+      Track* object= const_cast<Track*>(*icand); 
       TISTOSSELECTSTORE()
     }
 
-  } else if( exist<RecVertex::Container>(path) ){
+  } else if( exist<RecVertex::Range>(path) ){
 
-    RecVertex::Container* sel =  get<RecVertex::Container>(path);    
-    if( !sel )return matchedObjectSummaries;
-    if( !(sel->size()) )return matchedObjectSummaries;
-    for( RecVertex::Container::iterator icand =  sel->begin(); icand !=  sel->end(); icand++ ) {
-      RecVertex* object= *icand; 
+    RecVertex::Range sel =  get<RecVertex::Range>(path);    
+    if( !(sel.size()) )return matchedObjectSummaries;
+    for( RecVertex::Range::iterator icand =  sel.begin(); icand !=  sel.end(); icand++ ) {
+      RecVertex* object= const_cast<RecVertex*>(*icand); 
       TISTOSSELECTSTORE()
     }
 
-  } else if( exist<Particles>(path) ||  exist<Particles>(path+"/Particles") ){
+  } else if( exist<Particle::Range>(path) ||  exist<Particle::Range>(path+"/Particles") ){
     
-    Particles* sel;
-    if( exist<Particles>(path) ){      
-      sel =  get<Particles>(path);
+    Particle::Range sel;
+    if( exist<Particle::Range>(path) ){      
+      sel =  get<Particle::Range>(path);
     } else {
-      sel =  get<Particles>(path+"/Particles" );
+      sel =  get<Particle::Range>(path+"/Particles" );
     }    
-    if( !sel )return matchedObjectSummaries;
-    if( !(sel->size()) )return matchedObjectSummaries;
-    for( Particles::iterator icand =  sel->begin(); icand !=  sel->end(); icand++ ) {
-      Particle* object= *icand; 
+    if( !(sel.size()) )return matchedObjectSummaries;
+    for( Particle::Range::iterator icand =  sel.begin(); icand !=  sel.end(); icand++ ) {
+      Particle* object= const_cast<Particle*>(*icand); 
       TISTOSSELECTSTORE()
     }
     
-  } else if( exist<Vertices>(path) ||  exist<Vertices>(path+"/Vertices") ){
+  } else if( exist<Vertex::Range>(path) ||  exist<Vertex::Range>(path+"/Vertices") ){
     
-    Vertices* sel;
-    if( exist<Vertices>(path) ){      
-      sel =  get<Vertices>(path);
+    Vertex::Range sel;
+    if( exist<Vertex::Range>(path) ){      
+      sel =  get<Vertex::Range>(path);
     } else {
-      sel =  get<Vertices>(path+"/Vertices" );
+      sel =  get<Vertex::Range>(path+"/Vertices" );
     }    
-    if( !sel )return matchedObjectSummaries;
-    if( !(sel->size()) )return matchedObjectSummaries;
-    for( Vertices::iterator icand =  sel->begin(); icand !=  sel->end(); icand++ ) {
-      Vertex* object= *icand; 
+    if( !(sel.size()) )return matchedObjectSummaries;
+    for( Vertex::Range::iterator icand =  sel.begin(); icand !=  sel.end(); icand++ ) {
+      Vertex* object= const_cast<Vertex*>(*icand); 
       TISTOSSELECTSTORE()
     }
     

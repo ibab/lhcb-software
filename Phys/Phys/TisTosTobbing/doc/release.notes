@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-02-24 - Tomasz Skwarnicki
+ - src/TesSelectionTisTos.cpp switch to using ::Range in get< > statements
+
 !========================== TisTosTobbing v6r5 2011-02-04 =====================
 
 ! 2011-02-02 - Juan Palacios
