@@ -20,6 +20,13 @@ confD2hh = StrippingD2hh.D2hhConf("D2hh",StrippingD2hh.default_config)
 stream.appendLines( confD2hh.lines() )
 '''
 
+
+from StrippingSelections.StrippingDstarD02xx import StrippingDstarD02xxConf as dstar_strip
+my_config = dstar_strip.config_default
+dstar_build = dstar_strip("Dst",my_config)
+stream.appendLines( dstar_build.lines() )
+
+
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 

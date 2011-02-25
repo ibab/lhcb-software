@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Francesco Dettori
+ - Update to StrippingDstarD02xx.py to use LineBuilder 
+  
 ! 2011-02-25 - Concezio Bozzi
  - StrippingBd2DstarMuNu.py
    Take out StrippingBd2DstarMuNuLooseNoPrescale
