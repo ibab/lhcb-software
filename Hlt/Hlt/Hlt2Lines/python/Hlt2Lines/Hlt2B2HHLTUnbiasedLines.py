@@ -27,6 +27,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'TrackChi2'          :    5.
                    ,'VertexChi2'         :    10.0
                    ,'AbsCosTheta'        :     0.9
+                   ,'Expertise'          : '2010Tuning' 
                      }
     
 
@@ -97,30 +98,6 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , InputLocations = [ tisFilteredKaons] 
                                          )
 
-        #dummyFilter = Hlt2Member(FilterDesktop,
-        #                         'DummyFilter',
-        #                         InputLocations=[ Hlt2B2HHLTUnbiased ],
-        #                         Code = 'ALL')
-        from Configurables   import NBB2HHTriggerTool
-        from HltLine.HltLine import Hlt1Tool as Tool
-        import BhhNetTrigger
-        
-        expertise = BhhNetTrigger.bhhnet
-        NetCut    =  -1.0
-        NBBhhTool = Tool(type       = NBB2HHTriggerTool,
-                         name       = 'TrigNBB2HH',
-                         Expertise  =  expertise ,
-                         NetworkCut = NetCut
-                         )
-        cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
-        filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
-                            InputLocations= [Hlt2B2HHLTUnbiased ],
-                            Code=cuts,
-                            tools=[NBBhhTool])
-        NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiased, filter])
-                                                                                
-
-
         #######################################################################################################
         #######################################################################################################
         ##
@@ -167,23 +144,24 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ##
         ## call NeuroBayes
         ##
-        #from Configurables   import NBB2HHTriggerTool
-        #from HltLine.HltLine import Hlt1Tool as Tool
-        #import BhhNetTrigger
-        #
-        #expertise = BhhNetTrigger.bhhnet
-        #NetCut    =  -1.0
-        #NBBhhTool = Tool(type       = NBB2HHTriggerTool,
-        #                 name       = 'TrigNBB2HH',
-        #                 Expertise  =  expertise ,
-        #                 NetworkCut = NetCut
-        #                 )
-        #cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
-        #filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
-        #                    InputLocations= [Hlt2B2HHLTUnbiasedRich ],
-        #                    Code=cuts,
-        #                    tools=[NBBhhTool])
-        #NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, filter])
+        from Configurables   import NBB2HHTriggerTool
+        from HltLine.HltLine import Hlt1Tool as Tool
+        from NeuroBayesTools.BhhNetTrigger   import NetConfig
+
+        NBName    = '%(Expertise)s' % self.getProps() 
+        expertise = NetConfig[ NBName ] 
+        NetCut    =  -1.0
+        NBBhhTool = Tool(type       = NBB2HHTriggerTool,
+                         name       = 'TrigNBB2HH',
+                         Expertise  =  expertise ,
+                         NetworkCut = NetCut
+                         )
+        cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
+        filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
+                            InputLocations= [Hlt2B2HHLTUnbiasedRich ],
+                            Code=cuts,
+                            tools=[NBBhhTool])
+        NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, filter])
                             
         
         ###########################################################################
