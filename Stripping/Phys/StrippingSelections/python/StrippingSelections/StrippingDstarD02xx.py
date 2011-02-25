@@ -60,9 +60,9 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  ,'RequireHlt'
                                  ,'prefix'
                                  )
-    config_default ={'PrescalepipiBox'     : 1.
+    config_default ={'PrescalepipiBox'     : 0.5
                      , 'PrescalemumuBox'     : 1.
-                     , 'PrescaleKpiBox'    : 1.
+                     , 'PrescaleKpiBox'    : 0.3
                      , 'PrescaleemuBox'    : 1.
                      , 'PrescaleeKBox'    : 1.
                      , 'PrescaleepiBox'    : 1.
