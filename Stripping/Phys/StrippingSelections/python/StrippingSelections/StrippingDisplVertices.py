@@ -75,7 +75,7 @@ confdict = {
        'SinglePS': 5.*units.GeV  ,
        'SingleLowMass': 6.*units.GeV ,
        'SingleHighMass':  6.*units.GeV,
-       'SingleDown':  3.2*units.GeV,
+       'SingleDown':  3.5*units.GeV,
        'Double': 3.*units.GeV
     },
     'MaxMass':{

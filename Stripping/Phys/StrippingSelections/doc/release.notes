@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Victor Coco
+ - Update StrippingDisplVertices.py downstream line
+
 ! 2011-02-25 -Georg Krocker 
  - Update StrippingTrackEffDownMuon.py and StrippingTrackEffVeloMuon.py
 
