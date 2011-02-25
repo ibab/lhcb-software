@@ -1,8 +1,8 @@
 
 
 __author__ = 'Susan Haines'
-__date__ = '20/02/2011'
-__version__ = '$Revision: 1.4 $'
+__date__ = '25/02/2011'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bu->D0(KShh)h stripping selection using LoKi::Hybrid and python
@@ -281,15 +281,12 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         Pion filter for input to LL KS - uses long pions
         '''
-        from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from PhysSelPython.Wrappers import Selection
 
         from StandardParticles import StdNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
 
-        LLPionFilterForBu2D0h_D02KShh = FilterDesktop(self._myname+"LLPionFilterForBu2D0h_D02KShh")
-        
-        LLPionFilterForBu2D0h_D02KShh.Code = self.LLPi_FilterCut
+        LLPionFilterForBu2D0h_D02KShh = FilterDesktop(Code = self.LLPi_FilterCut)
         
         SelLLPionFilterForBu2D0h_D02KShh = Selection(self._myname+"SelLLPionFilterForBu2D0h_D02KShh", Algorithm=LLPionFilterForBu2D0h_D02KShh,
                                                        RequiredSelections = [MyStdPions_KS2PiPi_LL_noPID]
@@ -305,15 +302,12 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         Pion filter for input to DD KS - uses no PID downstream pions
         '''
-        from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from PhysSelPython.Wrappers import Selection
 
         from StandardParticles import StdNoPIDsDownPions as MyStdPions_KS2PiPi_DD_noPID
 
-        DDPionFilterForBu2D0h_D02KShh = FilterDesktop(self._myname+"DDPionFilterForBu2D0h_D02KShh")
-        
-        DDPionFilterForBu2D0h_D02KShh.Code = self.DDPi_FilterCut
+        DDPionFilterForBu2D0h_D02KShh = FilterDesktop(Code= self.DDPi_FilterCut)
        
         SelDDPionFilterForBu2D0h_D02KShh = Selection(self._myname+"SelDDPionFilterForBu2D0h_D02KShh", Algorithm=DDPionFilterForBu2D0h_D02KShh,
                                                        RequiredSelections = [MyStdPions_KS2PiPi_DD_noPID]
@@ -328,16 +322,13 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         KS LL selection
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
 
-        KSLLForBu2D0h_D02KShh = CombineParticles(self._myname+"KSLLForBu2D0h_D02KShh")
-        
-        KSLLForBu2D0h_D02KShh.DecayDescriptor = "KS0 -> pi+ pi-"
-        KSLLForBu2D0h_D02KShh.DaughtersCuts = {"pi+": "ALL"}
-        KSLLForBu2D0h_D02KShh.CombinationCut = self.KSLL_CombCut
-        KSLLForBu2D0h_D02KShh.MotherCut = self.KSLL_MotherCut
+        KSLLForBu2D0h_D02KShh = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi-",
+                                                 DaughtersCuts = {"pi+": "ALL"},
+                                                 CombinationCut = self.KSLL_CombCut,
+                                                 MotherCut = self.KSLL_MotherCut)
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
@@ -357,16 +348,13 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         KS DD selection
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
 
-        KSDDForBu2D0h_D02KShh = CombineParticles(self._myname+"KSDDForBu2D0h_D02KShh")
-  
-        KSDDForBu2D0h_D02KShh.DecayDescriptor = "KS0 -> pi+ pi-" 
-        KSDDForBu2D0h_D02KShh.DaughtersCuts = {"pi+" : "ALL"}
-        KSDDForBu2D0h_D02KShh.CombinationCut = self.KSDD_CombCut
-        KSDDForBu2D0h_D02KShh.MotherCut = self.KSDD_MotherCut
+        KSDDForBu2D0h_D02KShh = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi-" ,
+                                                 DaughtersCuts = {"pi+" : "ALL"},
+                                                 CombinationCut = self.KSDD_CombCut,
+                                                 MotherCut = self.KSDD_MotherCut)
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
@@ -386,21 +374,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         D0->KS Pi Pi, D0->KS K Pi, D0->KS K K, KS LL selections 
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import MergedSelection, Selection, DataOnDemand
+        from PhysSelPython.Wrappers import Selection
 
         from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_LL
         from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
 
-        DForBu2D0h_D02KShh_KSLL = CombineParticles(self._myname+"DForBu2D0h_D02KShh_KSLL")
-        DForBu2D0h_D02KShh_KSLL.DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"]
-        DForBu2D0h_D02KShh_KSLL.DaughtersCuts  = {"pi+" : self.D_LL_DaughterCut
+        DForBu2D0h_D02KShh_KSLL = CombineParticles(DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"],
+                                                   DaughtersCuts  = {"pi+" : self.D_LL_DaughterCut
                                                   ,"K+": self.D_LL_DaughterCut
                                                   ,"KS0" : "ALL"
-                                                  }
-        DForBu2D0h_D02KShh_KSLL.CombinationCut =  self.D_LL_CombCut
-        DForBu2D0h_D02KShh_KSLL.MotherCut      =  self.D_LL_MotherCut
+                                                  },
+                                                   CombinationCut =  self.D_LL_CombCut,
+                                                   MotherCut      =  self.D_LL_MotherCut)
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
@@ -419,21 +405,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         D0->KS Pi Pi, D0->KS K Pi, D0->KS K K, KS DD selections
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import MergedSelection, Selection, DataOnDemand
-
+        from PhysSelPython.Wrappers import Selection
+        
         from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_DD
         from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
 
-        DForBu2D0h_D02KShh_KSDD = CombineParticles(self._myname+"DForBu2D0h_D02KShh_KSDD")
-        DForBu2D0h_D02KShh_KSDD.DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"]
-        DForBu2D0h_D02KShh_KSDD.DaughtersCuts  = {"pi+" : self.D_DD_DaughterCut
+        DForBu2D0h_D02KShh_KSDD = CombineParticles(DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"],
+                                                   DaughtersCuts  = {"pi+" : self.D_DD_DaughterCut
                                                    , "K+": self.D_DD_DaughterCut
                                                    ,"KS0" : "ALL"
-                                                   }
-        DForBu2D0h_D02KShh_KSDD.CombinationCut =  self.D_DD_CombCut
-        DForBu2D0h_D02KShh_KSDD.MotherCut      =  self.D_DD_MotherCut
+                                                   },
+                                                   CombinationCut =  self.D_DD_CombCut,
+                                                   MotherCut      =  self.D_DD_MotherCut)
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
@@ -453,23 +437,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         B->D0K,pi D0->KS Pi Pi, KS LL selection
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from PhysSelPython.Wrappers import Selection
 
         from StandardParticles import StdNoPIDsKaons as MyStdNoPIDKaons_BDh_LL
         from StandardParticles import StdNoPIDsPions as MyStdNoPIDPions_BDh_LL
         
-        Bu2D0h_KSLL = CombineParticles(self._myname+"Bu2D0h_KSLL")
-#        Bu2D0h_KSLL.DecayDescriptor = "[B+ -> D~0 K+]cc"
-        Bu2D0h_KSLL.DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"]
-
-        Bu2D0h_KSLL.DaughtersCuts = { "D0" : "ALL",
+        Bu2D0h_KSLL = CombineParticles(DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"],
+                                       DaughtersCuts = { "D0" : "ALL",
                                       "K+" : self.B_LL_BachCut,
                                       "pi+" : self.B_LL_BachCut
-                                    }
-        Bu2D0h_KSLL.CombinationCut =  self.B_LL_CombCut
-        Bu2D0h_KSLL.MotherCut = self.B_LL_MotherCut 
+                                                         },
+                                       CombinationCut =  self.B_LL_CombCut,
+                                       MotherCut = self.B_LL_MotherCut )
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
@@ -490,23 +470,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         B->D0K,pi D0->KS Pi Pi, KS DD selection
         '''
-        from Configurables import CombineParticles
         import GaudiKernel.SystemOfUnits as Units
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from PhysSelPython.Wrappers import Selection
 
         from StandardParticles import StdNoPIDsKaons as MyStdNoPIDKaons_BDh_DD
         from StandardParticles import StdNoPIDsPions as MyStdNoPIDPions_BDh_DD
 
-        Bu2D0h_KSDD = CombineParticles(self._myname+"Bu2D0h_KSDD")
-#        Bu2D0h_KSDD.DecayDescriptor = "[B+ -> D~0 K+]cc"
-        Bu2D0h_KSDD.DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"]
-     
-        Bu2D0h_KSDD.DaughtersCuts = { "D0" : "ALL",
+        Bu2D0h_KSDD = CombineParticles(DecayDescriptors = ["[B+ -> D~0 K+]cc", "[B+ -> D~0 pi+]cc"],
+                                       DaughtersCuts = { "D0" : "ALL",
                                       "K+" : self.B_DD_BachCut,
                                       "pi+" : self.B_DD_BachCut
-                                      }
-        Bu2D0h_KSDD.CombinationCut = self.B_DD_CombCut
-        Bu2D0h_KSDD.MotherCut = self.B_DD_MotherCut
+                                      },
+                                       CombinationCut = self.B_DD_CombCut,
+                                       MotherCut = self.B_DD_MotherCut)
 
 #        from Configurables import LoKi__VertexFitter
 #        lvf = LoKi__VertexFitter()
