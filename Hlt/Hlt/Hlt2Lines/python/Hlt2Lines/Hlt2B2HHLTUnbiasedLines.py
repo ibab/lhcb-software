@@ -68,6 +68,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         HLT1TISFilter = TisTosParticleTagger("HLT1TISFilter")
         HLT1TISFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
         HLT1TISFilter.Inputs = [ bindPrelim.outputSelection() ]
+        HLT1TISFilter.Output = 'Hlt2/HLT1TISFilter/Particles'
         
         
         tisFilteredKaons = bindMembers("tisFilteredKaons", [ bindPrelim, HLT1TISFilter ])
