@@ -4,6 +4,9 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Olivier Callot
+ - remove obsolete and unused files PatCalibV0.h and .cpp
+
 !======================== PatFitParams v4r0 2009-09-03 =======================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/PatFitParams_dll.cpp
