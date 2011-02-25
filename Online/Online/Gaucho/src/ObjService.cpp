@@ -75,6 +75,10 @@ void ObjService::Serialize()
 void ObjService::Update()
 {
   updateService(m_serptr,m_sersiz);
+  if (this->m_expandservice)
+  {
+    m_ser->UpdateExpansions();
+  }
 }
 /*
 void ObjService::Updater()
