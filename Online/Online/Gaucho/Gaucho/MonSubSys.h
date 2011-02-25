@@ -45,7 +45,7 @@ public:
   int m_type;
   std::string m_expandInfix;
   MonSubSys(int intv = 10);
-  ~MonSubSys();
+  virtual ~MonSubSys();
   MonTimer *m_updateTimer;
 //  void *Allocate(int);
   void setup(char *n, bool expand=false);

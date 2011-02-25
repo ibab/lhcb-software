@@ -15,7 +15,7 @@ public:
   bool m_expandservices;
   ObjSerializer(void);
   ObjSerializer(ObjMap *ObjMap, bool expand=false);
-  ~ObjSerializer(void);
+  virtual ~ObjSerializer(void);
   void *Allocate(int siz);
   virtual void *SerializeObj(void * &ptr,int &siz, bool clear=false);
   virtual void *SerializeObj(char *name,void * &ptr,int &siz, bool clear=false);

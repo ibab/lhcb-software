@@ -13,7 +13,7 @@ protected:
   std::vector<MonSubSys*> Subsyslist;
 public:
   MonSys();
-  ~MonSys();
+  virtual ~MonSys();
   void addSubSys(MonSubSys *);
   void remSubSys(MonSubSys *);
   void Lock();

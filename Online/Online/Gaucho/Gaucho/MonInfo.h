@@ -11,6 +11,7 @@ class MonInfo : public DIMTYPE
   void *adderobj;
 public:
   std::string m_TargetService;
+  virtual ~MonInfo(){}
   MonInfo(char *target, int period);
   MonInfo(char *target, void addfn(void*,void*, int, MonInfo *), void * add, int period);
   MonInfo(char *target, void addfn(void*,void*, int, MonInfo *), void * add);

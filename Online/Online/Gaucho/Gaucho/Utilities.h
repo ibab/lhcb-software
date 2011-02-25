@@ -25,7 +25,7 @@ class dyn_string : public std::vector<std::string >
 {
 public:
   dyn_string() {};
-  ~dyn_string()
+  virtual ~dyn_string()
   {
   }
 };

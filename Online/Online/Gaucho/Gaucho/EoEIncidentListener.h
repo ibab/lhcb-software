@@ -20,7 +20,7 @@ class EoEIncidentListener : public implements1<IIncidentListener>
 public:
   EoEIncidentListener(const std::string& name, ISvcLocator* svcloc, long shots );
   void setMonitorSvc(IGauchoMonitorSvc* );
-  ~EoEIncidentListener();
+  virtual ~EoEIncidentListener();
   void handle(const Incident&);
 private:
   IGauchoMonitorSvc *m_MonSvc;

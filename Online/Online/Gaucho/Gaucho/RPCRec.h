@@ -20,6 +20,7 @@ public:
   PTRMAP *hists;
   void rpcInfoHandler();
   RPCRec(char *name, int timeout,bool synch=false); // : DimRpcInfo(name, timeout, -1)
+  virtual ~RPCRec(){}
   void (*DirCB)(NAMEVEC*);
   void (*DatCB)(PTRMAP*);
   void declareDirCB(void CBfn(NAMEVEC*)){DirCB = CBfn;return;};

@@ -7,7 +7,7 @@ class Misc {
 
 public:
   Misc();
-  ~Misc();
+  virtual ~Misc();
 
   static std::vector<std::string>  splitString(const std::string &str, const char *s);
   static bool matchString(const std::string &str, const std::vector<std::string> &strV);

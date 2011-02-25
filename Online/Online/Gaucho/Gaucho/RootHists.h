@@ -18,7 +18,7 @@ public:
   {
 
   }
-  ~MyTProfile(){};
+  virtual ~MyTProfile(){};
   double *GetSumwArr(void)
   {
 //    printf("MyProfile::GetSumwArr %x\n",fArray);

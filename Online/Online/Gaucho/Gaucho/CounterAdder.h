@@ -22,7 +22,7 @@ public:
     DimHistbuff1 *m_oldProf;
     void add(void *buffer, int siz, MonInfo *h);
     CounterAdder(char *taskname, char *myName, char * serviceName/*, bool expand = false*/);
-    ~CounterAdder();
+    virtual ~CounterAdder();
     void Configure(void);
 };
 #endif

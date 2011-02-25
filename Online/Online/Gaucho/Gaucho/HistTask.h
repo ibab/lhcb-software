@@ -26,6 +26,7 @@ protected:
   int Histos(std::vector<std::string> &hists);
 public:
   HistTask(std::string task,std::string dns=std::string(""));
+  virtual ~HistTask(){}
   int Directory(std::vector<std::string> &hists);
   int Histos(std::vector<std::string> &hists,std::vector<TObject*> &histos);
   int Histos(std::vector<std::string> &hists,std::map<std::string,TObject*> &histos);
