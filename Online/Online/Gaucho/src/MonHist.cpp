@@ -178,6 +178,8 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
 {
   MsgStream msg(msgs,"MonitorSvc");
   m_cntrmgr = 0;
+  m_rootdeser = 0;
+  m_rootobj = 0;
   if( 0 != dynamic_cast<const AIDA::IProfile1D* >(aidahist) )
 	{
 
@@ -212,6 +214,8 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
 void MonHist::setup(IMessageSvc* msgs, const std::string& source, const std::string &desc, const StatEntity *se)
 {
   MsgStream msg(msgs,"MonitorSvc");
+  m_rootdeser = 0;
+  m_rootobj = 0;
   m_cntrmgr = 0;
   m_type = C_STATENT;
   m_rootobj = (TObject*)se;
