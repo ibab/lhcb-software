@@ -2,6 +2,8 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+
+!========================= VeloDAQ v6r2 2011-02-25 =========================
 ! 2011-02-17 - Tomasz Szumlak
  - a minor modification of the decoder code - add option IgnoreErrorBanks
    that makes using the TAE scan in VETRA more convinient
