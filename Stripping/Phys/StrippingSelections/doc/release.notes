@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Liming Zhang for 'Steven Blusk', 'Brian Maynard'
+ - updated StrippingB2D3H.py 
+
 ! 2011-02-25 - Jeremy Dickens
  - Bug fix to KstarMuMu lines and added test dictionary
  - Added test dictionary to X3872 lines

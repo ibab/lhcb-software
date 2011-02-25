@@ -1,9 +1,9 @@
-# $Id: StrippingB2D3H.py,v 1.0 2010/07/23 sblusk 
+# $Id: StrippingB2D3H.py,v 1.5 2011/02/21 sblusk bmaynard
 """
 Module for construction of B->D+3H Stripping Selections and StrippingLines.
 Provides functions to build 3H Final states in PiPiPi and KPiPi.
 D candidates are filtered from StdLooseD02HH and StdLooseDplus2XXX.
-Provides class StrippingB2D3HConf, which constructs the Selections and 
+Provides class B2D3HAllLinesConf, which constructs the Selections and 
 StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
    - StrippngB2D3HConf
@@ -20,12 +20,12 @@ Exported symbols (use python help!):
 """
 
 
-__author__ = ['Steven Blusk']
+__author__ = ['Steven Blusk', 'Brian Maynard']
 __date__ = '26/07/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 
-__all__ = ('StrippingB2D3HConf',
+__all__ = ('B2D3HAllLinesConf',
            'makeB2D3H',
            'makeD0Meson',
            'makeDMeson',
@@ -48,9 +48,11 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from copy import copy
+from StrippingUtils.Utils import LineBuilder  #ADDED LINE
+from CommonParticles import StdLoosePions, StdLooseKaons, StdLooseProtons, StdLooseDplus
 
 
-class StrippingB2D3HConf( object ):
+class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUILDER)
 
     """
     Builder of B-->D+3H stripping Selection and StrippingLine.
@@ -196,7 +198,9 @@ class StrippingB2D3HConf( object ):
                  name = 'Loose',
                  config = None) :
 
-        checkConfig(StrippingB2D3HConf.__configuration_keys__, config)
+	LineBuilder.__init__(self, name, config)  #ADDED LINE
+
+        checkConfig(B2D3HAllLinesConf.__configuration_keys__, config)
 
 
         self.EventFilter = MyEventFilter('B2D3H'+name,
@@ -877,7 +881,8 @@ class StrippingB2D3HConf( object ):
         self.StrippingAllB2D0PiPiPiLine = StrippingLine('AllB2D0PiPiPiLine'+name,
                                                      prescale = config['B2D0PiPiPiAll_Prescale'],
                                                      postscale = config['B2D0PiPiPiAll_Postscale'],
-                                                     algos = [ self.EventFilter, self.B2D0PiPiPi]
+                                                     algos = [ self.EventFilter, self.B2D0PiPiPi],
+						     #FILTER = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %(MaxTracks)s )" %locals()
                                                      )
 
         self.StrippingAllB2D0KPiPiLine = StrippingLine('AllB2D0KPiPiLine'+name,
@@ -1059,38 +1064,37 @@ class StrippingB2D3HConf( object ):
                                                     )
 
 
-
-        self.lines = [ self.StrippingAllB2D0PiPiPiLine,
-                       self.StrippingAllB2D0KPiPiLine,
-                       self.StrippingAllUnbiasedB2DPiPiPiLine,
-                       self.StrippingAllB2DPiPiPiLine,
-                       self.StrippingAllB2DKPiPiLine,
-                       self.StrippingAllB2DStarPiPiPiLine,
-                       self.StrippingAllB2DStarKPiPiLine,
-                       self.StrippingAllB2DDLine,
-                       self.StrippingAllB2DStarDLine,
-                       self.StrippingAllLambdaB2LambdaCPiPiPiLine,
-                       self.StrippingAllLambdaB2LambdaCKPiPiLine,
-                       self.StrippingAllWSB2DPiPiPiLine,
-                       self.StrippingAllWSB2DKPiPiLine,
-                       self.StrippingAllWSB2DStarPiPiPiLine,
-                       self.StrippingAllWSB2DStarKPiPiLine,
-                       self.StrippingAllWSB2DDLine,
-                       self.StrippingAllWSB2DStarDLine,
-                       self.StrippingAllWSLambdaB2LambdaCPiPiPiLine,
-                       self.StrippingAllWSLambdaB2LambdaCKPiPiLine,                      
-                       self.StrippingSignalB2D0PiPiPiLine,
-                       self.StrippingSignalB2D0KPiPiLine,
-                       self.StrippingSignalB2DPiPiPiLine,
-                       self.StrippingSignalB2DKPiPiLine,
-                       self.StrippingSignalB2DStarPiPiPiLine,
-                       self.StrippingSignalB2DStarKPiPiLine,            
-                       self.StrippingSignalB2DDLine,
-                       self.StrippingSignalB2DStarDLine,
-                       self.StrippingSignalLambdaB2LambdaCPiPiPiLine,
-                       self.StrippingSignalLambdaB2LambdaCKPiPiLine
-                       ]
-
+#ADDED (CHANGED self.lines = ---> self.registerLine
+#might have to register each line separately
+        self.registerLine ( self.StrippingAllB2D0PiPiPiLine )	
+        self.registerLine ( self.StrippingAllB2D0KPiPiLine )
+        self.registerLine ( self.StrippingAllUnbiasedB2DPiPiPiLine )                       
+        self.registerLine ( self.StrippingAllB2DPiPiPiLine )                       
+        self.registerLine ( self.StrippingAllB2DKPiPiLine )                       
+        self.registerLine ( self.StrippingAllB2DStarPiPiPiLine )                       
+        self.registerLine ( self.StrippingAllB2DStarKPiPiLine )                      
+        self.registerLine ( self.StrippingAllB2DDLine )                       
+        self.registerLine ( self.StrippingAllB2DStarDLine )                       
+        self.registerLine ( self.StrippingAllLambdaB2LambdaCPiPiPiLine )	#might be an error in line                
+        self.registerLine ( self.StrippingAllLambdaB2LambdaCKPiPiLine )                       
+        self.registerLine ( self.StrippingAllWSB2DPiPiPiLine )                       
+        self.registerLine ( self.StrippingAllWSB2DKPiPiLine )                      
+        self.registerLine ( self.StrippingAllWSB2DStarPiPiPiLine )                       
+        self.registerLine ( self.StrippingAllWSB2DStarKPiPiLine )                       
+        self.registerLine ( self.StrippingAllWSB2DDLine )                      
+        self.registerLine ( self.StrippingAllWSB2DStarDLine )                       
+        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPiPiPiLine )                      
+        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCKPiPiLine )                      
+        self.registerLine ( self.StrippingSignalB2D0PiPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2D0KPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2DPiPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2DKPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2DStarPiPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2DStarKPiPiLine )                       
+        self.registerLine ( self.StrippingSignalB2DDLine )                     
+        self.registerLine ( self.StrippingSignalB2DStarDLine )                       
+        self.registerLine ( self.StrippingSignalLambdaB2LambdaCPiPiPiLine )                       
+        self.registerLine ( self.StrippingSignalLambdaB2LambdaCKPiPiLine )	#might be an error
 
 def MyEventFilter(name, MaxTracks):
     """
@@ -1336,8 +1340,6 @@ def makeKPiPi( name,
                                RequiredSelections = [pionSel, kaonSel]) 
     return KPiPiSelection
 
-
-
 def makeD0Meson(name,
                 pionSel,
                 kaonSel,
@@ -1412,7 +1414,7 @@ def makeD0Meson(name,
     _d0m = MergedSelection(selName, RequiredSelections = [D2PiPiSelection, D2KPiSelection, D2KKSelection, D2KPiDCSSelection] )    
 
     return _d0m
-    
+
 
 def makeDStarMeson(name,
                    dSel,
@@ -1466,7 +1468,6 @@ def makeDStarMeson(name,
     DStarSelection = Selection("Sel"+name, Algorithm = _dstar, RequiredSelections = [pionSel, dSel]) 
 
     return DStarSelection
-
 
 def makeDMeson(name,
                pionSel,
@@ -1555,6 +1556,7 @@ def makeDMeson(name,
     selName = 'MergedSel'+name
     _dm = MergedSelection(selName, RequiredSelections = [ D2KPiPiSelection, D2KKPiSelection, D2PiPiPiSelection, D2KPiPiOppSignPiSelection])
     return _dm
+
 
 def makeLambdaC(name,
                 pionSel,
@@ -1747,9 +1749,9 @@ def filterB2D3H( name,
 
     return Selection ('SignalSel'+name, Algorithm = _bFilter, RequiredSelections = [bSel])    
 
-
+"""
 def StrippingB2D3HNominal(name="Def") :
-    from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf as conf
+    from StrippingSelections.StrippingB2D3Hnew import B2D3HAllLinesConf as conf
     config_params =  {
         "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
@@ -1848,9 +1850,10 @@ def StrippingB2D3HNominal(name="Def") :
     b2d3h = conf(name,config_params)
 
     return b2d3h
+"""
 
 def StrippingB2D3HLoose(name='Loose') :
-    from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf as conf
+    from StrippingSelections.StrippingB2D3H import B2D3HAllLinesConf as conf
     config_params =  {
         "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
@@ -1868,42 +1871,42 @@ def StrippingB2D3HLoose(name='Loose') :
         "ProtonMinPT"            : 200.,
         "ProtonMinIPChisq"       : 6.25,
         "MinPT"                : 300.,
-        "TrkChisq"             : 5.0,
-        "TrkChisqtight"        : 5.0,        
+        "TrkChisq"             : 4.0,
+        "TrkChisqtight"        : 4.0,        
         "Bach3HMassWindow"     : 3000,
-        "Bach3HDocaMax"        : 0.4,
+        "Bach3HDocaMax"        : 0.6,
         "Bach3HVtxChisq"       : 8.0,
         "Bach3HMinPT"          : 1000.0, 
-        "Bach3HIP2PV"          : 0.07,
+        "Bach3HIP2PV"          : 0.0,
         "Bach3HIPChisq2PV"     : 9.0,
         "Bach3HVtxSepChisq"    : 36.0,
-        "Bach3HDiraPV"         : 0.985,
-        "Bach3HZVtxSep"        : 2.0,
+        "Bach3HDiraPV"         : 0.98,
+        "Bach3HZVtxSep"        : 0.0,
         "Bach3HDRPV"           : 0.1,
-        "DMinPT"               : 1100,
+        "DMinPT"               : 1000,
         "DVtxChisq"            : 8.0,
-        "DMassWindow"          : 100,
-        "D0MassWindow"         : 100,
-        "DsMassWindow"         : 100,
+        "DMassWindow"          : 80,
+        "D0MassWindow"         : 80,
+        "DsMassWindow"         : 70,
         "tightDMassWindow"     : 40,
-        "DDocaMax"             : 0.4,
-        "DIP2PV"               : 0.07,
-        "DIPChisq2PV"          : 10.0,
-        "DVtxSepChisq"         : 36.0,
-        "DDiraPV"              : 0.99,
-        "DZVtxSep"             : 2.0,
+        "DDocaMax"             : 0.6,
+        "DIP2PV"               : 0.0,
+        "DIPChisq2PV"          : 4.0,
+        "DVtxSepChisq"         : 49.0,
+        "DDiraPV"              : 0.98,
+        "DZVtxSep"             : 0.0,
         "DDRPV"                : 0.1,
         "DStarMassWindow"      : 50,
-        "DStarMinPT"           : 1250,
+        "DStarMinPT"           : 1000,
         "BMinPT"               : 0.0, 
-        "BVtxChisq"            : 6.0,
+        "BVtxChisq"            : 8.0, #was 6.0
         "BMassWindow"          : 300, 
         "tightBMassWindow"     : 300,
         "BIP2PV"               : 0.15,
         "BIPChisq2PV"          : 16.0,
         "BVtxSepChisq"         : 25.0,
         "BDiraPV"              : 0.99994,
-        "BZVtxSep"             : 2.0,
+        "BZVtxSep"             : 0.0,
         "BDZVtxSep"            : -1.0,  
         "BDRPV"                : 0.1,
         "MaxTracks"                     : 300,

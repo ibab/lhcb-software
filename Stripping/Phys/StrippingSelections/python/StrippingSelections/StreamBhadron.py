@@ -27,7 +27,7 @@ from StrippingSelections.StrippingB2hhLTUnbiased import StrippingB2hhLTUnbiasedC
 
 #from StrippingSelections.StrippingB2DX import B2DXLines
 
-from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf, StrippingB2D3HNominal, StrippingB2D3HLoose
+from StrippingSelections.StrippingB2D3H import StrippingB2D3HLoose
 
 
 stream = StrippingStream("Bhadron")
@@ -61,4 +61,4 @@ stream.appendLines( [
 #stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
 #stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
 #stream.appendLines( B2twobody_promptLine() )
-stream.appendLines( StrippingB2D3HLoose('Loose').lines ) # B2D3H Lines
+stream.appendLines( StrippingB2D3HLoose('Loose').lines() ) # B2D3H Lines
