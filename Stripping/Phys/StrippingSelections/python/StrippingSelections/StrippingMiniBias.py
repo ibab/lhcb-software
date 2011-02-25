@@ -1,57 +1,56 @@
-#
-# Stripping selections 
-# for Minimum Bias physics.
-# author: Yasmine Amhis
-# date : 2009-11-11
-#
- 
+__author__ = 'Patrick Koppenburg'
+__date__ = '25/02/2011'
+__version__ = '$Revision: 2 $'
+
+"""
+Stripping selections or Minimum Bias physics.
+"""
+
 # Begin StrippingMinBias.py
-from Configurables import LoKi__VoidFilter as VoidFilter
+
+config_params = { "NoBiasLine_RE"       : "HLT_PASS_RE('Hlt1.*NoBiasDecision')",
+                  "NoBiasLine_Prescale" : 0.01,
+                  "L0AnyLine_RE"        : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
+                  "L0AnyLine_Prescale"  : 0.01 }
+
+__all__ = ('MiniBiasConf' )
+
 from StrippingConf.StrippingLine import StrippingLine
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+from StrippingUtils.Utils import LineBuilder
 
-modules =  CoreFactory('CoreFactory').Modules
-for i in [ 'LoKiTrigger.decorators' ] :
-  if i not in modules : modules.append(i)
-#----------------------------------------------------------------------
-#Here we require at least one  reconstructed best track in the event 
+class MiniBiasConf(LineBuilder) :
+    """
+    Builder for Minimum bias lines
+    """
+    NoBiasLine = None
+    L0AnyLine = None
 
-#-----------------------------------------------------------------
-# Microbias line
-#-----------------------------------------------------------------
-MBMicroBiasRateLimitedLine  = StrippingLine( "MBMicroBiasRateLimited"
-                                             , HLT = "HLT_PASS_RE('Hlt1MBMicro.*RateLimitedDecision')"
-                                             , checkPV = False
-                                             , prescale = 0.01
-                                             , postscale = 1)
+    __configuration_keys__ = ( 
+      "NoBiasLine_RE",
+      "NoBiasLine_Prescale" ,
+      "L0AnyLine_RE",
+      "L0AnyLine_Prescale" 
+      )
 
-
-MBMicroBiasNotRateLimitedLine  = StrippingLine( "MBMicroBiasNotRateLimited"
-                                                , HLT = "HLT_PASS_RE('Hlt1MBMicro.*(?<!RateLimited)Decision')"
-                                                , checkPV = False
-                                                , prescale = 0.01
-                                                , postscale = 1)
-
-
-
-#-----------------------------------------------------------------
-# No bias line
-#-----------------------------------------------------------------
-MBNoBiasLine  = StrippingLine( "MBNoBias"
-                               , HLT = "HLT_PASS('Hlt1MBNoBiasDecision')"
-                               , checkPV = False
-                               , prescale = 0.01
-                               , postscale = 1)
-
-#-----------------------------------------------------------------
-# Mini bias line
-#-----------------------------------------------------------------
-MBMiniBiasLine  = StrippingLine( "Hlt1L0Any"
-                                 , HLT = "(HLT_PASS_RE('Hlt1L0Any.*Decision'))" 
-                                 , checkPV = False
-                                 , prescale = 0.01
-                                 , postscale = 1)
-
-
-# End StrippingMiniBias.py
+    def __init__(self, name, config):
+      LineBuilder.__init__(self, name, config)
+      NoBiasLine_name = "MBNoBias"
+      L0AnyLine_name = "Hlt1L0Any"
+      
+      self.NoBiasLine = StrippingLine(NoBiasLine_name
+                                      , HLT =  config["NoBiasLine_RE"]
+                                      , checkPV = False
+                                      , prescale = config['NoBiasLine_Prescale']
+                                      , postscale = 1
+                                    )
+      
+      self.L0AnyLine = StrippingLine(L0AnyLine_name
+                                      , HLT =  config["L0AnyLine_RE"]
+                                      , checkPV = False
+                                      , prescale = config['L0AnyLine_Prescale']
+                                      , postscale = 1
+                                    )
+      
+      self.registerLine( self.NoBiasLine )
+      self.registerLine( self.L0AnyLine )
 

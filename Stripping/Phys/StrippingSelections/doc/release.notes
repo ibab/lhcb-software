@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Patrick Koppenburg
+ - Upadte StrippingMiniBias.py
+
 ! 2011-02-25 - O. Deschamps for R. Lefevre
  - update StrippingB2HHPi0.py
 
