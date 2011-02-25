@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Michel De Cian
+ - Update StrippingTrackEffMuonTT lines
+
 ! 2011-02-25 - Victor Coco
  - Update StrippingDisplVertices.py downstream line
 

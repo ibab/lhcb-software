@@ -1,35 +1,61 @@
-
 '''
-Module for construction of Jpsi -> mu mu /  Upsilon -> mu mu /  Z -> mu mu to be used to measure tracking efficiency.  
-Provides functions to build a Jpsi / Upsilon / Z selection, with a long track and a muon(tt) track.
+Module for construction of Jpsi -> mu mu /  Upsilon -> mu mu /  Z -> mu mu / B -> J/psi K to be used to measure tracking efficiency.  
+Provides functions to build a Jpsi / Upsilon / Z / B selection , with a long track and a muonTT track.
 Provides class StrippingTrackEffMuonTTConf, which constructs the Selections and 
 StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
-   - chargeFilter
-   - tisTosFilter1
-   - tisTosFilter2
-   - makeResonanceMuMuTrackEff
-   - StrippingTrackEffMuonTTConf
-   
-   
+           - StrippingTrackEffMuonTTConf
+           - selFilterLongPartsMu
+           - selFilterLongPartsK
+           - selMakeMuonTT
+           - selMuonTTPParts
+           - selMuonTTParts
+           - selHlt1Jpsi
+           - selHlt1Upsilon
+           - selHlt1Z
+           - selHlt2Jpsi
+           - selHlt2Upsilon
+           - selHlt2Z
+           - selHlt2BJpsiKMu
+           - selHlt2BJpsiKK
+           - chargeFilter
+           - makeResonanceMuMuTrackEff
+           - makeBJpsiKTrackEff
+           - filterHLT2ForBJpsiK
+      
 '''
 
 __author__ = ['Michel De Cian']
-__date__ = '02/10/2010'
+__date__ = '25/02/2011'
 __version__ = '$Revision: 1.1 $'
 
 
 __all__ = ('StrippingTrackEffMuonTTConf', 
+           'selFilterLongPartsMu',
+           'selFilterLongPartsK',
+           'selMakeMuonTT',
+           'selMuonTTPParts',
+           'selMuonTTParts',
+           'selHlt1Jpsi',
+           'selHlt1Upsilon',
+           'selHlt1Z',
+           'selHlt2Jpsi',
+           'selHlt2Upsilon',
+           'selHlt2Z',
+           'selHlt2BJpsiKMu',
+           'selHlt2BJpsiKK',
            'chargeFilter',
-           'tisTosFilter1',
-           'tisTosFilter2',
-           'makeResonanceMuMuTrackEff')
+           'makeResonanceMuMuTrackEff',
+           'makeBJpsiKTrackEff',
+           'filterHLT2ForBJpsiK')
 
 from Gaudi.Configuration import *
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, ChargedProtoParticleSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils import checkConfig
-
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLooseKaons, StdLooseMuons 
 
 from Configurables import (MuonCombRec, 
                            MuonTTTrack, 
@@ -40,38 +66,43 @@ from Configurables import (MuonCombRec,
                            ChargedProtoParticleMaker, 
                            NoPIDsParticleMaker,
                            ProtoParticleMUONFilter,
-                           FilterDesktop, 
                            CombineParticles, 
-                           TisTosParticleTagger
+                           TisTosParticleTagger,
                            )
 
-class StrippingTrackEffMuonTTConf(object) :
+
+name = 'TrackEffMuonTT'
+
+class StrippingTrackEffMuonTTConf(LineBuilder) :
     """
-    Builder of Jpsi->mu mu, Upsilon-> mu mu and Z-> mu mu stripping Selection and StrippingLine for measuring the tracking efficiency.
+    Builder of Jpsi->mu mu, Upsilon-> mu mu, Z-> mu mu and B -> J/psi K stripping Selection and StrippingLine for measuring the tracking efficiency.
     Constructs the Selections and StrippingLines from a configuration dictionary.
     Usage:
-    >>> config = { .... }
-    >>> trackEffConf = StrippingTrackEffMuonTTConf('Test',config)
-    >>> trackEffLines = trackEffConf.lines
+    >>> TrackEffMuonTTConfig = { .... }
+    >>> from StrippingSelections import StrippingTrackEffMuonTT
+    >>> confTrackEffMuonTT = StrippingTrackEffMuonTT.StrippingTrackEffMuonTTConf(name = "bla", config = TrackEffMuonTTConfig)
+    >>> stream.appendLines( confTrackEffMuonTT.lines() )
+    And:
+    >>> trackEffLines = confTrackEffMuonTT.lines()
     >>> for line in trackEffLines :
     >>>  print line.name(), line.outputLocation()
     The lines can be used directly to build a StrippingStream object.
 
     Lines of interest:
 
-    TrackEffMuonTTJpsiLine1       : Jpsi-> mu mu, long: minus, muonTT: plus
-    TrackEffMuonTTJpsiLine2       : Jpsi-> mu mu, long: plus, muonTT: minus
+    TrackEffMuonTT_JpsiLine1       : Jpsi-> mu mu, long: minus, muonTT: plus
+    TrackEffMuonTT_JpsiLine2       : Jpsi-> mu mu, long: plus, muonTT: minus
 
-    TrackEffMuonTTUpsilonLine1    : Upsilon-> mu mu, long: minus, muonTT: plus
-    TrackEffMuonTTUpsilonLine2    : Upsilon-> mu mu, long: plus, muonTT: minus
+    TrackEffMuonTT_UpsilonLine1    : Upsilon-> mu mu, long: minus, muonTT: plus
+    TrackEffMuonTT_UpsilonLine2    : Upsilon-> mu mu, long: plus, muonTT: minus
     
-    TrackEffMuonTTZLine1          : Z-> mu mu, long: minus, muonTT: plus
-    TrackEffMuonTTZLine2          : Z-> mu mu, long: plus, muonTT: minus
+    TrackEffMuonTT_ZLine1          : Z-> mu mu, long: minus, muonTT: plus
+    TrackEffMuonTT_ZLine2          : Z-> mu mu, long: plus, muonTT: minus
 
-    TrackEffMuonZLine1            : Z-> mu mu, long: minus, muon: plus
-    TrackEffMuonZLine2            : Z-> mu mu, long: plus, muon: minus
+    TrackEffMuonTT_BJpsiKLine1     : B->Jpsi K, long: minus, muon: plus
+    TrackEffMuonTT_BJpsiKLine2     : B->Jpsi K, long: plus, muon: minus
 
-    lines                         : List of all lines
+    lines                          : List of all lines
 
     Exports as class data member:
     StrippingTrackEffMuonTTConf.__configuration_keys__ : List of required configuration parameters.
@@ -82,6 +113,7 @@ class StrippingTrackEffMuonTTConf(object) :
     __configuration_keys__ = ('JpsiMassWin',
                               'UpsilonMassWin',
                               'ZMassWin',
+                              'BMassWin',
                               'JpsiMuonTTPT',
                               'UpsilonMuonTTPT',
                               'ZMuonTTPT',
@@ -102,38 +134,89 @@ class StrippingTrackEffMuonTTConf(object) :
                               'JpsiPrescale',
                               'UpsilonPrescale',
                               'ZPrescale',
+                              'BJpsiKPrescale',
                               'Postscale'
                               )
 
-    def __init__(self, name = 'MuonTTTrackEff', config = None):
+    def __init__(self, name, config = None):
             
-        checkConfig(StrippingTrackEffMuonTTConf.__configuration_keys__,config)
-        
-        self.TisTosFilter1Jpsi = tisTosFilter1( name = 'TisTosFilter1Jpsi', flag = 'Jpsi', trigger =  { "Hlt1TrackMuonDecision%TOS" : 0 } )
-        self.TisTosFilter1Z = tisTosFilter1( name = 'TisTosFilter1Z',  flag = 'Z', trigger =  { "Hlt1SingleMuonNoIPL0HighPTDecision%TOS" : 0 } )
+        LineBuilder.__init__(self, name, config)
 
-        self.TisTosFilter2Jpsi = tisTosFilter2( name = 'TisTosFilter2Jpsi', trigger = { "Hlt2SingleMuonDecision%TOS" : 1 }, firstFilter = self.TisTosFilter1Jpsi)
-        self.TisTosFilter2Z = tisTosFilter2( name = 'TisTosFilter2Z', trigger = { "Hlt2SingleHighPTMuonDecision%TOS" : 2 }, firstFilter = self.TisTosFilter1Z)
-
-        self.muonTTPlus = chargeFilter( name = 'muonTTPlus', trackAlgo = 'MuonTT',  tisTosAlgo = self.TisTosFilter2Jpsi,  charge = 1)
-        self.muonTTMinus = chargeFilter( name = 'muonTTMinus', trackAlgo =  'MuonTT',  tisTosAlgo = self.TisTosFilter2Jpsi, charge = -1)
-        self.longPlus = chargeFilter( name = 'longPlus', trackAlgo =  'Long',  tisTosAlgo = self.TisTosFilter2Jpsi, charge = 1)
-        self.longMinus = chargeFilter( name = 'longMinus', trackAlgo = 'Long',  tisTosAlgo = self.TisTosFilter2Jpsi, charge = -1)
-        
-        self.muonTTPlusZ = chargeFilter( name = 'muonTTPlusZ', trackAlgo = 'MuonTT',  tisTosAlgo = self.TisTosFilter2Z,  charge = 1)
-        self.muonTTMinusZ = chargeFilter( name = 'muonTTMinusZ', trackAlgo =  'MuonTT',  tisTosAlgo = self.TisTosFilter2Z, charge = -1)
-        self.longPlusZ = chargeFilter( name = 'longPlusZ', trackAlgo =  'Long',  tisTosAlgo = self.TisTosFilter2Z, charge = 1)
-        self.longMinusZ = chargeFilter( name = 'longMinusZ', trackAlgo = 'Long',  tisTosAlgo = self.TisTosFilter2Z, charge = -1)
-
-        
                 
+        # ########################################################################################
+        # -->
+        # --> INITIALIZING ALL THE OBJECTS NEEDED TO FORM THE LINES <--
+        # -->
+        # ########################################################################################
+
+        # initialize all the general things 
+        # idea: initialize the first object, that will be called, pass it to the second one, etc.
+                                
+        # make the muonTT tracks
+        self.SelMakeMuonTT = selMakeMuonTT(name, XTolParam = 25.0, MaxChi2TolParam = 7.0, MinAxProjParam = 5.5, MajAxProjParam = 25.0)
+        self.SelMuonTTPParts = selMuonTTPParts(name, muonTTTrackMaker = self.SelMakeMuonTT )
+        self.SelMuonTTParts = selMuonTTParts(name, protoParticlesMaker = self.SelMuonTTPParts )
+
+        self.SelFilterLongPartsMu  = selFilterLongPartsMu(name)
+        # ####################################
+        # J/psis
+        self.SelHlt1JpsiMinus = selHlt1Jpsi(name+'JpsiMinus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt1JpsiPlus = selHlt1Jpsi(name+'JpsiPlus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt2JpsiMinus = selHlt2Jpsi(name+'JpsiMinus', hlt1Filter = self.SelHlt1JpsiMinus)
+        self.SelHlt2JpsiPlus = selHlt2Jpsi(name+'JpsiPlus', hlt1Filter = self.SelHlt1JpsiPlus)
+
+        self.muonTTMinusJpsi = chargeFilter(name+'MuonTTJpsiMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.muonTTPlusJpsi = chargeFilter(name+'MuonTTJpsiPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts,  charge = 1)
+        self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2JpsiMinus, charge = -1)
+        self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2JpsiPlus  , charge = 1)
+        # ##########################################
+        # Upsilons
+        self.SelHlt1UpsilonMinus = selHlt1Upsilon(name+'UpsilonMinus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt1UpsilonPlus = selHlt1Upsilon(name+'UpsilonPlus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt2UpsilonMinus = selHlt2Upsilon(name+'UpsilonMinus', hlt1Filter = self.SelHlt1UpsilonMinus)
+        self.SelHlt2UpsilonPlus = selHlt2Upsilon(name+'UpsilonPlus', hlt1Filter = self.SelHlt1UpsilonPlus)
+
+        self.muonTTPlusUpsilon = chargeFilter(name+'MuonTTUpsilonPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
+        self.muonTTMinusUpsilon = chargeFilter(name+'MuonTTUpsilonMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.longPlusUpsilon = chargeFilter( name+'LongUpsilonPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2UpsilonPlus  , charge = 1)
+        self.longMinusUpsilon = chargeFilter( name+'LongUpsilonMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2UpsilonMinus, charge = -1)
+        # ##########################################
+        # Zs
+        self.SelHlt1ZMinus = selHlt1Z(name+'ZMinus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt1ZPlus = selHlt1Z(name+'ZPlus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt2ZMinus = selHlt2Z(name+'ZMinus', hlt1Filter = self.SelHlt1ZMinus)
+        self.SelHlt2ZPlus = selHlt2Z(name+'ZPlus', hlt1Filter = self.SelHlt1ZPlus)
+
+        self.muonTTPlusZ = chargeFilter(name+'MuonTTZPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
+        self.muonTTMinusZ = chargeFilter(name+'MuonTTZMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.longPlusZ = chargeFilter( name+'LongZPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2ZPlus  , charge = 1)
+        self.longMinusZ = chargeFilter( name+'LongZMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2ZMinus, charge = -1)
+        # ##########################################
+        # B-> J/psi K
+        # first for the J/psi object
+        self.SelHlt1BJpsiKMinus = selHlt1Jpsi(name+'BJpsiKMinus', longPartsFilter = self.SelFilterLongPartsMu) # HLT1 is the same as for Jpsis!
+        self.SelHlt1BJpsiKPlus = selHlt1Jpsi(name+'BJpsiKPlus', longPartsFilter = self.SelFilterLongPartsMu)
+        self.SelHlt2BJpsiKMinus = selHlt2BJpsiKMu(name+'BJpsiKMinus', hlt1Filter = self.SelHlt1BJpsiKMinus)
+        self.SelHlt2BJpsiKPlus = selHlt2BJpsiKMu(name+'BJpsiKPlus', hlt1Filter = self.SelHlt1BJpsiKPlus)
+        
+        # and now for the K (no distinction for charged needed, will be done automatically be the decay descriptor)
+        self.SelFilterLongPartsBJpsiKK = selFilterLongPartsK(name+'BJpsiK')
+        self.SelHlt2BJpsiKK = selHlt2BJpsiKK( name+'BJpsiK',longPartsFilter = self.SelFilterLongPartsBJpsiKK)
+        
+        self.muonTTPlusBJpsiK = chargeFilter(name+'MuonTTBJpsiKPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
+        self.muonTTMinusBJpsiK = chargeFilter(name+'MuonTTBJpsiKMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.longPlusBJpsiK = chargeFilter( name+'LongBJpsiKPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2BJpsiKPlus  , charge = 1)
+        self.longMinusBJpsiK = chargeFilter( name+'LongBJpsiKMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2BJpsiKMinus, charge = -1)
+        # ##################################################################################################################1
         # def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, minusCharge, 
-        # mode, massWin, vertexChi2, resonancePT, muonTTPT, longPT, longMuonPID, longMuonMinIPCHI2, longMuonTrackCHI2):   
-        self.makeJpsiMuMuTrackEff1 = makeResonanceMuMuTrackEff('MakeJpsiMuMuTrackEff1', 
+        # mode, massWin, vertexChi2, resonancePT, muonTTPT, longPT, longMuonPID, longMuonMinIPCHI2, longMuonTrackCHI2):
+
+        # J/psi -> mu mu, tag-and-probe
+        self.makeJpsiMuMuTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuTrackEff1', 
                                                                resonanceName = 'J/psi(1S)',
                                                                decayDescriptor = 'J/psi(1S) -> mu+ mu-',
-                                                               plusCharge = self.muonTTPlus, 
-                                                               minusCharge = self.longMinus,
+                                                               plusCharge = self.muonTTPlusJpsi, 
+                                                               minusCharge = self.longMinusJpsi,
                                                                mode = 1,
                                                                massWin = config['JpsiMassWin'], 
                                                                vertexChi2 = config['VertexChi2'],
@@ -143,12 +226,12 @@ class StrippingTrackEffMuonTTConf(object) :
                                                                longMuonPID = config['LongMuonPID'],
                                                                longMuonMinIPCHI2 = config['JpsiLongMuonMinIPCHI2'],
                                                                longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
-        
-        self.makeJpsiMuMuTrackEff2 = makeResonanceMuMuTrackEff('MakeJpsiMuMuTrackEff2', 
+        # J/psi -> mu mu, probe-and-tag
+        self.makeJpsiMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuTrackEff2', 
                                                                resonanceName = 'J/psi(1S)',
                                                                decayDescriptor = 'J/psi(1S) -> mu+ mu-',
-                                                               plusCharge = self.longPlus, 
-                                                               minusCharge = self.muonTTMinus,
+                                                               minusCharge = self.muonTTMinusJpsi,
+                                                               plusCharge = self.longPlusJpsi, 
                                                                mode = 2,
                                                                massWin = config['JpsiMassWin'], 
                                                                vertexChi2 = config['VertexChi2'],
@@ -158,12 +241,13 @@ class StrippingTrackEffMuonTTConf(object) :
                                                                longMuonPID = config['LongMuonPID'],
                                                                longMuonMinIPCHI2 = config['JpsiLongMuonMinIPCHI2'],
                                                                longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
-
-        self.makeUpsilonMuMuTrackEff1 = makeResonanceMuMuTrackEff('MakeUpsilonMuMuTrackEff1', 
+        # ##################################################################################################################
+        # # Upsilon -> mu mu, tag-and-probe
+        self.makeUpsilonMuMuTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeUpsilonMuMuTrackEff1', 
                                                                   resonanceName = 'Upsilon(1S)',
                                                                   decayDescriptor = 'Upsilon(1S) -> mu+ mu-',
-                                                                  plusCharge = self.muonTTPlus, 
-                                                                  minusCharge = self.longMinus,
+                                                                  plusCharge = self.muonTTPlusUpsilon, 
+                                                                  minusCharge = self.longMinusUpsilon,
                                                                   mode = 1,
                                                                   massWin = config['UpsilonMassWin'], 
                                                                   vertexChi2 = config['VertexChi2'],
@@ -173,12 +257,12 @@ class StrippingTrackEffMuonTTConf(object) :
                                                                   longMuonPID = config['LongMuonPID'],
                                                                   longMuonMinIPCHI2 = config['UpsilonLongMuonMinIPCHI2'],
                                                                   longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'])
-
-        self.makeUpsilonMuMuTrackEff2 = makeResonanceMuMuTrackEff('MakeUpsilonMuMuTrackEff2', 
+        # Upsilon -> mu mu, probe-and-tag
+        self.makeUpsilonMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeUpsilonMuMuTrackEff2', 
                                                                   resonanceName = 'Upsilon(1S)',
                                                                   decayDescriptor = 'Upsilon(1S) -> mu+ mu-',
-                                                                  plusCharge = self.longPlus, 
-                                                                  minusCharge = self.muonTTMinus,
+                                                                  plusCharge = self.longPlusUpsilon, 
+                                                                  minusCharge = self.muonTTMinusUpsilon,
                                                                   mode = 2,
                                                                   massWin = config['UpsilonMassWin'], 
                                                                   vertexChi2 = config['VertexChi2'],
@@ -188,11 +272,9 @@ class StrippingTrackEffMuonTTConf(object) :
                                                                   longMuonPID = config['LongMuonPID'],
                                                                   longMuonMinIPCHI2 = config['UpsilonLongMuonMinIPCHI2'],
                                                                   longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'])
-
-
-
-
-        self.makeZMuMuTrackEff1 = makeResonanceMuMuTrackEff('MakeZMuMuTrackEff1', 
+        # ##################################################################################################################
+        # Z -> mu mu, tag-and-probe
+        self.makeZMuMuTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeZMuMuTrackEff1', 
                                                             resonanceName = 'Z0',
                                                             decayDescriptor = 'Z0 -> mu+ mu-',
                                                             plusCharge = self.muonTTPlusZ, 
@@ -206,8 +288,8 @@ class StrippingTrackEffMuonTTConf(object) :
                                                             longMuonPID = config['LongMuonPID'],
                                                             longMuonMinIPCHI2 = config['ZLongMuonMinIPCHI2'],
                                                             longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'])
-
-        self.makeZMuMuTrackEff2 = makeResonanceMuMuTrackEff('MakeZMuMuTrackEff2', 
+        # Z -> mu mu, probe-and-tag
+        self.makeZMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeZMuMuTrackEff2', 
                                                             resonanceName = 'Z0',
                                                             decayDescriptor = 'Z0 -> mu+ mu-',
                                                             plusCharge = self.longPlusZ, 
@@ -221,168 +303,406 @@ class StrippingTrackEffMuonTTConf(object) :
                                                             longMuonPID = config['LongMuonPID'],
                                                             longMuonMinIPCHI2 = config['ZLongMuonMinIPCHI2'],
                                                             longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'])
+        # ##################################################################################################################
+        # B -> J/psi K exclusive, tag-and-probe
+        self.makeJpsiMuMuForBJpsiKTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuForBJpsiKTrackEff1', 
+                                                                        resonanceName = 'J/psi(1S)',
+                                                                        decayDescriptor = 'J/psi(1S) -> mu+ mu-',
+                                                                        plusCharge = self.muonTTPlusBJpsiK , 
+                                                                        minusCharge = self.longMinusBJpsiK,
+                                                                        mode = 1,
+                                                                        massWin = config['JpsiMassWin'], 
+                                                                        vertexChi2 = config['VertexChi2'],
+                                                                        resonancePT = config['JpsiPT'],
+                                                                        muonTTPT = config['JpsiMuonTTPT'], 
+                                                                        longPT = config['JpsiLongPT'], 
+                                                                        longMuonPID = config['LongMuonPID'],
+                                                                        longMuonMinIPCHI2 = config['JpsiLongMuonMinIPCHI2'],
+                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+        self.makeBJpsiKTrackEff1 = makeBJpsiKTrackEff(name+'_MakeBJpsiKTrackEff1',
+                                                      JpsiSel = self.makeJpsiMuMuForBJpsiKTrackEff1,
+                                                      KSel = self.SelHlt2BJpsiKK,
+                                                      massWin = config['BMassWin'], 
+                                                      vertexChi2 = config['VertexChi2'])
+        self.BJpsiKHLT2Filter1 = filterHLT2ForBJpsiK( name+'_BJpsiKHLT2Filter1', BJpsiKSel = self.makeBJpsiKTrackEff1) # Event must be filtered to be sure its TOS on the tag muon and the Kaon
         
+        # B -> J/psi K exclusive, probe-and-tag
+        self.makeJpsiMuMuForBJpsiKTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuForBJpsiKTrackEff2', 
+                                                                        resonanceName = 'J/psi(1S)',
+                                                                        decayDescriptor = 'J/psi(1S) -> mu+ mu-',
+                                                                        plusCharge = self.longPlusBJpsiK , 
+                                                                        minusCharge = self.muonTTMinusBJpsiK,
+                                                                        mode = 2,
+                                                                        massWin = config['JpsiMassWin'], 
+                                                                        vertexChi2 = config['VertexChi2'],
+                                                                        resonancePT = config['JpsiPT'],
+                                                                        muonTTPT = config['JpsiMuonTTPT'], 
+                                                                        longPT = config['JpsiLongPT'], 
+                                                                        longMuonPID = config['LongMuonPID'],
+                                                                        longMuonMinIPCHI2 = config['JpsiLongMuonMinIPCHI2'],
+                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+        
+        self.makeBJpsiKTrackEff2 = makeBJpsiKTrackEff(name+'_MakeBJpsiKTrackEff2',
+                                                      JpsiSel = self.makeJpsiMuMuForBJpsiKTrackEff2,
+                                                      KSel = self.SelHlt2BJpsiKK,
+                                                      massWin = config['BMassWin'], 
+                                                      vertexChi2 = config['VertexChi2'])
+        
+        self.BJpsiKHLT2Filter2 = filterHLT2ForBJpsiK( name+'_BJpsiKHLT2Filter2', BJpsiKSel = self.makeBJpsiKTrackEff2)  # Event must be filtered to be sure its TOS on the tag muon and the Kaon
+        # # ##################################################################################################################
+    
 
 
         ################################################
         # Jpsi -> mu mu stripping lines (long + muonTT)
         ################################################
-        self.TrackEffMuonTTJpsi_line1 = StrippingLine('TrackEffMuonTTJpsiLine1',
-                                                       #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
-                                                       prescale = config['JpsiPrescale'],
-                                                       postscale = config['Postscale'],
-                                                       algos = [LongParts, FilterLongParts,tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, 
-                                                                MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeJpsiMuMuTrackEff1]
-                                                       )
+        self.TrackEffMuonTTJpsi_line1 = StrippingLine(name+'_JpsiLine1',
+                                                      prescale = config['JpsiPrescale'],
+                                                      postscale = config['Postscale'],
+                                                      selection = self.makeJpsiMuMuTrackEff1)
+        
 
-        self.TrackEffMuonTTJpsi_line2 = StrippingLine('TrackEffMuonTTJpsiLine2',
-                                                       #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
-                                                       prescale = config['JpsiPrescale'],
-                                                       postscale = config['Postscale'],
-                                                       algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Jpsi,tisTosPreFilterHlt2Jpsi,
-                                                                MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeJpsiMuMuTrackEff2]
-                                                       )
+        self.TrackEffMuonTTJpsi_line2 = StrippingLine(name+'_JpsiLine2',
+                                                      prescale = config['JpsiPrescale'],
+                                                      postscale = config['Postscale'],
+                                                      selection = self.makeJpsiMuMuTrackEff2)
+
     
         ################################################
         # Upsilon -> mu mu stripping lines (long + muonTT)
         ################################################
-        self.TrackEffMuonTTUpsilon_line1 = StrippingLine('TrackEffMuonTTUpsilonLine1',
-                                                         #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
+        self.TrackEffMuonTTUpsilon_line1 = StrippingLine(name+'_UpsilonLine1',
                                                          prescale = config['UpsilonPrescale'],
                                                          postscale = config['Postscale'],
-                                                         algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Jpsi,tisTosPreFilterHlt2Jpsi, 
-                                                                  MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeUpsilonMuMuTrackEff1]
-                                                         )
+                                                         selection = self.makeUpsilonMuMuTrackEff1)
+                                                         
 
-        self.TrackEffMuonTTUpsilon_line2 = StrippingLine('TrackEffMuonTTUpsilonLine2',
-                                                         #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
+        self.TrackEffMuonTTUpsilon_line2 = StrippingLine(name+'_UpsilonLine2',
                                                          prescale = config['UpsilonPrescale'],
                                                          postscale = config['Postscale'],
-                                                         algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Jpsi,tisTosPreFilterHlt2Jpsi, 
-                                                                  MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeUpsilonMuMuTrackEff2]
-                                                         )
+                                                         selection = self.makeUpsilonMuMuTrackEff2)
+                                                         
         
         ################################################
         # Z -> mu mu stripping lines (long + muonTT)
         ################################################
-        self.TrackEffMuonTTZ_line1 = StrippingLine('TrackEffMuonTTZLine1',
-                                                   #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
+        self.TrackEffMuonTTZ_line1 = StrippingLine(name+'_ZLine1',
                                                    prescale = config['ZPrescale'],
                                                    postscale = config['Postscale'],
-                                                   algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Z,tisTosPreFilterHlt2Z, 
-                                                            MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeZMuMuTrackEff1]
-                                                   )
+                                                   selection = self.makeZMuMuTrackEff1)
+        
 
 
-        self.TrackEffMuonTTZ_line2 = StrippingLine('TrackEffMuonTTZLine2',
-                                                   #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
+        self.TrackEffMuonTTZ_line2 = StrippingLine(name+'_ZLine2',
                                                    prescale = config['ZPrescale'],
                                                    postscale = config['Postscale'],
-                                                   algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Z, tisTosPreFilterHlt2Z, 
-                                                            MakeMuonTT, MuonTTPParts, MuonTTParts, self.makeZMuMuTrackEff2]
-                                                   )
-
-        ################################################
-        # Z -> mu mu stripping lines (long + muon)
-        ################################################
-        self.TrackEffMuonZ_line1 = StrippingLine('TrackEffMuonZLine1',
-                                                 #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
-                                                 prescale = config['ZPrescale'],
-                                                 postscale = config['Postscale'],
-                                                 algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Z,tisTosPreFilterHlt2Z , 
-                                                          MakeMuon, MuonTTPParts, MuonTTParts, self.makeZMuMuTrackEff1]
-                                                 )
-
-
-        self.TrackEffMuonZ_line2 = StrippingLine('TrackEffMuonZLine2',
-                                                 #HLT = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')",
-                                                 prescale = config['ZPrescale'],
-                                                 postscale = config['Postscale'],
-                                                 algos = [LongParts, FilterLongParts, tisTosPreFilterHlt1Z,tisTosPreFilterHlt2Z, 
-                                                          MakeMuon, MuonTTPParts, MuonTTParts, self.makeZMuMuTrackEff2])
+                                                   selection = self.makeZMuMuTrackEff2)
         
+        ################################################
+        # B -> J/psi K stripping lines (long + muonTT + long)
+        ################################################                                        
+        self.TrackEffMuonTTBJpsiK_line1 = StrippingLine(name+'_BJpsiKLine1',
+                                                        prescale = config['BJpsiKPrescale'],
+                                                        postscale = config['Postscale'],
+                                                        #HLT = "HLT_PASS('Hlt2MuTrackDecision')",
+                                                        selection = self.BJpsiKHLT2Filter1
+                                                        )
         
-        self.lines = [self.TrackEffMuonTTJpsi_line1,self.TrackEffMuonTTJpsi_line2, self.TrackEffMuonTTUpsilon_line1, self.TrackEffMuonTTUpsilon_line2, 
-                      self.TrackEffMuonTTZ_line1, self.TrackEffMuonTTZ_line2, self.TrackEffMuonZ_line1, self.TrackEffMuonZ_line2   ]
+        self.TrackEffMuonTTBJpsiK_line2 = StrippingLine(name+'_BJpsiKLine2',
+                                                        prescale = config['BJpsiKPrescale'],
+                                                        postscale = config['Postscale'],
+                                                        #HLT = "HLT_PASS('Hlt2MuTrackDecision')",
+                                                        selection = self.BJpsiKHLT2Filter2)
+                                                        
 
+        
         ################################################
-        # return the lines
+        # register the lines
         ################################################
-        def lines():
-            return self.lines
+        self.registerLine( self.TrackEffMuonTTJpsi_line1 )
+        self.registerLine( self.TrackEffMuonTTJpsi_line2 )
+        self.registerLine( self.TrackEffMuonTTUpsilon_line1 )
+        self.registerLine( self.TrackEffMuonTTUpsilon_line2 )
+        self.registerLine( self.TrackEffMuonTTZ_line1 )
+        self.registerLine( self.TrackEffMuonTTZ_line2 )
+        self.registerLine( self.TrackEffMuonTTBJpsiK_line1 )
+        self.registerLine( self.TrackEffMuonTTBJpsiK_line2 )
 
 
-####################################################
-# Data on Demand Selections Framework Wrappers
-####################################################
-getMuonTTParticles = DataOnDemand(Location = 'Phys/MuonTTParts')
-getJpsiLongParticles = DataOnDemand(Location = 'Phys/tisTosPreFilterHlt2Jpsi')
-getZLongParticles = DataOnDemand(Location = 'Phys/tisTosPreFilterHlt2Z')
 
-                                                 
-def chargeFilter(name, trackAlgo, tisTosAlgo, charge):
+
+
+# ########################################################################################
+# -->
+# --> PREPARE THE LONG TRACKS <--
+# -->
+# ########################################################################################
+
+# ########################################################################################
+# The long track preparation, including hard coded cuts
+# ########################################################################################
+def selFilterLongPartsMu(name):
+    """
+    Get Muons from StdLooseMuons
+    """
+    Filter = FilterDesktop()
+    FilterLongPartsMu = Filter.configurable(name+"FilterLongPartsMu")
+    FilterLongPartsMu.Code = "(ISMUON) & (P > 3000) & (PT > 1300) & (PIDmu > -2.0) & (TRCHI2DOF < 3.0) & (MIPDV(PRIMARY) > 0.1*mm)"
+#
+    return Selection(name+"_SelFilterLongPartsMu", Algorithm = FilterLongPartsMu, RequiredSelections = [StdLooseMuons])
+# ########################################################################################
+def selFilterLongPartsK(name):
+    """
+    Get Kaons from StdLooseKaons
+    """
+    Filter = FilterDesktop()
+    FilterLongPartsK = Filter.configurable(name+"FilterLongPartsK")
+    FilterLongPartsK.Code = "(~ISMUON) & (P > 10000) & (PT > 800) & (PIDK > 10) & (TRCHI2DOF < 5.0) & (MIPDV(PRIMARY) > 0.1*mm)"
+#
+    return Selection(name+"_SelFilterLongPartsK", Algorithm = FilterLongPartsK, RequiredSelections = [StdLooseKaons])
+# ########################################################################################
+
+# ########################################################################################
+# -->
+# --> PATTERN RECOGNITION AND MUONTT TRACK MAKING <--
+# -->
+# ########################################################################################
+
+# ########################################################################################
+# The pattern recognition -> muonTT track stuff
+# ########################################################################################
+def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjParam):
+    """
+    Make a muonTT track out of hits in the muon station and TT, and give it some options to configure
+    """
+    MakeMuonTT = MuonTTTrack(name+"MakeMuonTT")
+    MakeMuonTT.ToolName = "MuonCombRec"
+    MakeMuonTT.addTool( MuonCombRec )
+    MakeMuonTT.MuonCombRec.MeasureTime = True
+    MakeMuonTT.MuonCombRec.CloneKiller = True
+    MakeMuonTT.MuonCombRec.SkipStation = -1 # -1=no skip, 0=M1, 1=M2, 2=M3, 3=M4, 4=M5
+    MakeMuonTT.MuonCombRec.DecodingTool = "MuonHitDecode"
+    MakeMuonTT.MuonCombRec.PadRecTool = "MuonPadRec"
+    MakeMuonTT.MuonCombRec.ClusterTool = "MuonClusterRec" # to enable: "MuonClusterRec"
+    MakeMuonTT.MuonCombRec.PhysicsTiming = True
+    MakeMuonTT.MuonCombRec.AssumeCosmics = False
+    MakeMuonTT.MuonCombRec.AssumePhysics = True
+    MakeMuonTT.MuonCombRec.StrongCloneKiller = True 
+    MakeMuonTT.MuonCombRec.SeedStation = 2 # default seet station is M5
+    # #############################################################
+    MakeMuonTT.addTool( PatAddTTCoord )
+    MakeMuonTT.PatAddTTCoord.YTolSlope = 400000.0
+    MakeMuonTT.PatAddTTCoord.XTol = XTolParam
+    MakeMuonTT.PatAddTTCoord.XTolSlope = 400000.0
+    MakeMuonTT.PatAddTTCoord.MinAxProj = MinAxProjParam
+    MakeMuonTT.PatAddTTCoord.MajAxProj = MajAxProjParam
+    MakeMuonTT.PatAddTTCoord.MaxChi2Tol = MaxChi2TolParam
+    # ################################################################
+    MakeMuonTT.addTool( TrackMasterFitter)
+    MakeMuonTT.TrackMasterFitter.MaterialLocator = "SimplifiedMaterialLocator"
+    MakeMuonTT.addTool( TrackMasterExtrapolator ) 
+    MakeMuonTT.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
+    # ################################################################
+    MakeMuonTT.AddTTHits = True
+    MakeMuonTT.MC = False
+    MakeMuonTT.OutputLevel = 4
+    #
+    return Selection(name+"_SelMakeMuonTT", Algorithm = MakeMuonTT,  InputDataSetter=None)
+# ########################################################################################
+# Make the protoparticles
+# ########################################################################################
+def selMuonTTPParts(name, muonTTTrackMaker):
+    """
+    Make ProtoParticles out of muonTT tracks
+    """
+    return ChargedProtoParticleSelection(name+"_SelMuonTTPParts", RequiredSelections=[muonTTTrackMaker] )
+# ################################################################
+def selMuonTTParts(name, protoParticlesMaker):
+    """
+    Make Particles out of the muonTT ProtoParticles
+    """
+    MuonTTParts = NoPIDsParticleMaker(name+"MuonTTParts")
+    MuonTTParts.Particle = 'muon'
+    MuonTTParts.addTool( TrackSelector )
+    MuonTTParts.TrackSelector.TrackTypes = [ "Long" ]
+    MuonTTParts.Input =  "Rec/"+name+"_SelMuonTTPParts/ProtoParticles"
+    MuonTTParts.OutputLevel = 4
+#
+    return Selection(name+"_SelMuonTTParts", Algorithm = MuonTTParts, RequiredSelections = [protoParticlesMaker], InputDataSetter=None)
+# ########################################################################################
+
+
+# ########################################################################################
+# -->
+# --> HLT STUFF <--
+# -->
+# ########################################################################################
+
+
+# ########################################################################################
+# HLT 1 lines we run on
+# ########################################################################################
+def selHlt1Jpsi(name, longPartsFilter):
+    """
+    Filter the long track muon to be TOS on a HLT1 single muon trigger, for J/psi selection
+    """
+    Hlt1Jpsi = TisTosParticleTagger(name+"Hlt1Jpsi")
+    Hlt1Jpsi.TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
+    Hlt1Jpsi.ProjectTracksToCalo = False
+    Hlt1Jpsi.CaloClustForCharged = False
+    Hlt1Jpsi.CaloClustForNeutral = False
+    Hlt1Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt1Jpsi.NoRegex = True
+    #Hlt1Jpsi.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ longPartsFilter ])
+# ################################################################
+def selHlt1Upsilon(name, longPartsFilter):
+    """
+    Filter the long track muon to be TOS on a HLT1 single muon trigger, for Upsilon selection
+    """
+    Hlt1Upsilon = TisTosParticleTagger(name+"Hlt1Upsilon")
+    Hlt1Upsilon.TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0} 
+    Hlt1Upsilon.ProjectTracksToCalo = False
+    Hlt1Upsilon.CaloClustForCharged = False
+    Hlt1Upsilon.CaloClustForNeutral = False
+    Hlt1Upsilon.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt1Upsilon.NoRegex = True
+    #Hlt1Upsilon.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt1Upsilon", Algorithm = Hlt1Upsilon, RequiredSelections = [ longPartsFilter ])
+# ################################################################
+def selHlt1Z(name, longPartsFilter):
+    """
+    Filter the long track muon to be TOS on a HLT1 single muon trigger, for Z selection
+    """
+    Hlt1Z = TisTosParticleTagger(name+"Hlt1Z")
+    Hlt1Z.TisTosSpecs = { "Hlt1SingleMuonHighPTDecision%TOS" : 0}
+    Hlt1Z.ProjectTracksToCalo = False
+    Hlt1Z.CaloClustForCharged = False
+    Hlt1Z.CaloClustForNeutral = False
+    Hlt1Z.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt1Z.NoRegex = True
+    #Hlt1Z.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt1Z", Algorithm = Hlt1Z, RequiredSelections = [ longPartsFilter ])
+# ################################################################
+
+# ########################################################################################
+# HLT 2 lines we run on
+# ########################################################################################
+def selHlt2Jpsi(name, hlt1Filter):
+    """
+    Filter the long track muon to be TOS on a HLT2 single muon trigger, for J/psi selection
+    """
+    Hlt2Jpsi = TisTosParticleTagger(name+"Hlt2Jpsi")
+    Hlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuon.*Decision%TOS" : 0} # take all HLT2SingleMuon triggers
+    Hlt2Jpsi.ProjectTracksToCalo = False
+    Hlt2Jpsi.CaloClustForCharged = False
+    Hlt2Jpsi.CaloClustForNeutral = False
+    Hlt2Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2Jpsi.NoRegex = False
+    #Hlt2Jpsi.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ hlt1Filter ])
+# ################################################################
+def selHlt2Upsilon(name, hlt1Filter):
+    """
+    Filter the long track muon to be TOS on a HLT2 single muon trigger, for Upsilon selection
+    """
+    Hlt2Upsilon = TisTosParticleTagger(name+"Hlt2Upsilon")
+    Hlt2Upsilon.TisTosSpecs = { "Hlt2SingleMuonLowPTDecision%TOS" : 0} 
+    Hlt2Upsilon.ProjectTracksToCalo = False
+    Hlt2Upsilon.CaloClustForCharged = False
+    Hlt2Upsilon.CaloClustForNeutral = False
+    Hlt2Upsilon.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2Upsilon.NoRegex = True
+    #Hlt2Upsilon.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt2Upsilon", Algorithm = Hlt2Upsilon, RequiredSelections = [ hlt1Filter ])
+# ################################################################
+def selHlt2Z(name, hlt1Filter):
+    """
+    Filter the long track muon to be TOS on a HLT2 single muon trigger, for Z selection
+    """
+    Hlt2Z = TisTosParticleTagger(name+"Hlt2Z")
+    Hlt2Z.TisTosSpecs = { "Hlt2SingleMuonHighPTDecision%TOS" : 0}
+    Hlt2Z.ProjectTracksToCalo = False
+    Hlt2Z.CaloClustForCharged = False
+    Hlt2Z.CaloClustForNeutral = False
+    Hlt2Z.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2Z.NoRegex = True
+    #Hlt2Z.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt2Z", Algorithm = Hlt2Z, RequiredSelections = [ hlt1Filter ])
+# ################################################################
+def selHlt2BJpsiKMu(name, hlt1Filter):
+    """
+    Filter the long track muon to be TUS on a HLT2 mu+track trigger, for B->J/psi K selection (mainly a speed up)
+    """
+    Hlt2BJpsiKMu = TisTosParticleTagger(name+"Hlt2BJpsiKMu")
+    Hlt2BJpsiKMu.TisTosSpecs = { "Hlt2MuTrackDecision%TUS" : 0} # TUS, not TOS, not a typo!!!
+    Hlt2BJpsiKMu.ProjectTracksToCalo = False
+    Hlt2BJpsiKMu.CaloClustForCharged = False
+    Hlt2BJpsiKMu.CaloClustForNeutral = False
+    Hlt2BJpsiKMu.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2BJpsiKMu.NoRegex = True
+    #Hlt2BJpsiKMu.PassOnAll = True # TESTING!
+#
+    return Selection(name+"_SelHlt2BJpsiKMu", Algorithm = Hlt2BJpsiKMu, RequiredSelections = [ hlt1Filter ])
+# ################################################################
+def selHlt2BJpsiKK(name, longPartsFilter): # No HLT1 needed, as event in HLT1 already triggered with single muon
+    """
+    Filter the long track Kaon to be TUS on a HLT2 mu+track trigger, for B->J/psi K selection (mainly a speed up)
+    """
+    Hlt2BJpsiKK = TisTosParticleTagger(name+"Hlt2BJpsiKK")
+    Hlt2BJpsiKK.TisTosSpecs = { "Hlt2MuTrackDecision%TUS" : 0}  # TUS, not TOS, not a typo!!!
+    Hlt2BJpsiKK.ProjectTracksToCalo = False
+    Hlt2BJpsiKK.CaloClustForCharged = False
+    Hlt2BJpsiKK.CaloClustForNeutral = False
+    Hlt2BJpsiKK.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2BJpsiKK.NoRegex = True
+    #Hlt2BJpsiKK.PassOnAll = True # TESTING!
+    #
+    return Selection(name+"_SelHlt2BJpsiKK", Algorithm = Hlt2BJpsiKK, RequiredSelections = [ longPartsFilter ])
+# ########################################################################################
+        
+# ########################################################################################
+# -->
+# --> FILTERS AND RESONANCE MAKERS <--
+# -->
+# ########################################################################################
+
+
+# ########################################################################################
+# Charge filter, that filters, well, the charge and takes the particles from the right source (long or muonTT)
+# ########################################################################################
+def chargeFilter(name, trackAlgo,  partSource, charge):
     """
     Select plus or minus charge for muonTT or long track
     """
-    Filter = FilterDesktop('_' + name)
+    Filter = FilterDesktop() #there is maybe a change needed
+    myFilter1 = Filter.configurable(name+"chargeFilter1")
         
     if(charge == -1):
-        Filter.Code = "(Q < 0)"
+        myFilter1.Code = "(Q < 0)"
     if(charge == 1):
-        Filter.Code = "(Q > 0)"    
+        myFilter1.Code = "(Q > 0)"    
         
     if(trackAlgo == 'MuonTT'):
-        return Selection( name, Algorithm = Filter, RequiredSelections = [ getMuonTTParticles ] )
-    if(trackAlgo == 'Long'):
-        return Selection( name, Algorithm = Filter, RequiredSelections = [ tisTosAlgo ] )
-                                                    
-
-def tisTosFilter1(name, flag, trigger):
-    """
-    Filter to require the candidate is TOS (Hlt1) for the long track muon!
-    """
-    
-    tisTosFilter1 = TisTosParticleTagger('_' + name)
-
-    tisTosFilter1.TisTosSpecs = trigger
-    tisTosFilter1.NoRegex = True
-
-    # Do TisTosTobbing only with Trackers & Muon (no Calo)
-    tisTosFilter1.ProjectTracksToCalo = False
-    tisTosFilter1.CaloClustForCharged = False
-    tisTosFilter1.CaloClustForNeutral = False
-    tisTosFilter1.TOSFrac = { 4:0.0, 5:0.0 }
-
-    if(flag == 'Jpsi'):
-        return Selection(name, Algorithm = tisTosFilter1, RequiredSelections = [ getJpsiLongParticles ] )
-    if(flag == 'Z'):
-        return Selection(name, Algorithm = tisTosFilter1, RequiredSelections = [ getZLongParticles ] )
+        return Selection( name+'_chargeFilter'+'MuonTT', Algorithm = myFilter1, RequiredSelections = [  partSource ] )
+    if(trackAlgo == 'LongMu'):
+        return Selection( name+'_chargeFilter'+'LongMu', Algorithm = myFilter1, RequiredSelections = [  partSource ] )
+# ################################################################
 
 
-def tisTosFilter2(name, trigger, firstFilter):
-    """
-    Filter to require the candidate is TOS (Hlt2) for the long track muon!
-    """
-    
-    tisTosFilter2 = TisTosParticleTagger('_' + name)
-
-    tisTosFilter2.TisTosSpecs = trigger
-    tisTosFilter2.NoRegex = True
-
-    # Do TisTosTobbing only with Trackers & Muon (no Calo)
-    tisTosFilter2.ProjectTracksToCalo = False
-    tisTosFilter2.CaloClustForCharged = False
-    tisTosFilter2.CaloClustForNeutral = False
-    tisTosFilter2.TOSFrac = { 4:0.0, 5:0.0 }
-
-    return Selection(name, Algorithm = tisTosFilter2, RequiredSelections = [ firstFilter ] )
-
-
-
+# ########################################################################################
+# Resonance maker, that fits two muons to a resonance (J/psi, Upsilon, Z)
+# ########################################################################################    
 def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, minusCharge, 
                               mode, massWin, vertexChi2, resonancePT, muonTTPT, longPT, longMuonPID, longMuonMinIPCHI2, longMuonTrackCHI2):    
     """
-    Create and return a Jpsi -> mu mu Selection object, with one track a long track
+    Create and return a Resonance -> mu mu Selection object, with one track a long track
     and the other a MuonTT track.
     Arguments:
     name                 : name of the selection
@@ -409,138 +729,75 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
 
     MuonTTResonance.OutputLevel = 4 
 
-   
-
     if(mode == 1):
         MuonTTResonance.DaughtersCuts = {"mu+"	:	"PT > %(muonTTPT)s"  % locals(),
                                          "mu-"	:	"(PT > %(longPT)s) & (PIDmu > %(longMuonPID)s)"  % locals() }
-        
+
+        MuonTTResonance.CombinationCut = "ADAMASS('%(resonanceName)s') < %(massWinCombCut)s" % locals()
+        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s)" % locals()
+    
+        return Selection( name, Algorithm = MuonTTResonance, RequiredSelections = [minusCharge, plusCharge] )
+     
     if(mode == 2):
         MuonTTResonance.DaughtersCuts = {"mu-"	:	"PT > %(muonTTPT)s"  % locals(),
                                          "mu+"	:	"(PT > %(longPT)s) & (PIDmu > %(longMuonPID)s)"  % locals() }
-     
+
+        MuonTTResonance.CombinationCut = "ADAMASS('%(resonanceName)s') < %(massWinCombCut)s" % locals()
+        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s)" % locals()
+        
+        return Selection( name, Algorithm = MuonTTResonance, RequiredSelections = [plusCharge, minusCharge] )
     
-    MuonTTResonance.CombinationCut = "ADAMASS('%(resonanceName)s') < %(massWinCombCut)s" % locals()
-    MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s)" % locals()
+    
+# ################################################################
+
+# ########################################################################################
+# Make a B->J/psi K out of a J/psi and a K
+# ########################################################################################
+def makeBJpsiKTrackEff(name, JpsiSel, KSel, massWin, vertexChi2): 
+    """
+    Create and return a B -> J/psi K Selection object, with a J/psi (long+muonTT) and a Kaon.
+
+    Arguments:
+    name                 : name of the selection
+    massWin              : width of the mass window
+    vertexChi2           : vertexChi2/ndof for vertex
+    """
+
+    massWinCombCut = 2 * massWin
+    
+    MuonTTBJpsiK = CombineParticles('_'+name)
+    MuonTTBJpsiK.DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
+
+    MuonTTBJpsiK.OutputLevel = 4 
+    
+    MuonTTBJpsiK.DaughtersCuts = {"J/psi(1S)"	:	"DMASS('J/psi(1S)') < 500" ,
+                                  "K+"          :	"ALL" }
+             
+    MuonTTBJpsiK.CombinationCut = "ADAMASS('B+') < %(massWinCombCut)s" % locals()
+    MuonTTBJpsiK.MotherCut = "(ADMASS('B+') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s) & (BPVDIRA > 0.95)" % locals()
+
+    return Selection( name, Algorithm = MuonTTBJpsiK, RequiredSelections = [ KSel, JpsiSel ] )
+# ################################################################
+
+# ########################################################################################
+# Filter the B->J/psi K to be triggered on the long muon and the Kaon
+# ########################################################################################
+def filterHLT2ForBJpsiK(name, BJpsiKSel):
+    """
+    Filter B->J/psi K to be triggered on mu+track for the long track muon and Kaon
+    """
+    Hlt2BJpsiK = TisTosParticleTagger(name+"_Hlt2BJpsiK")
+    Hlt2BJpsiK.TisTosSpecs = { "Hlt2MuTrackDecision%TOS" : 0}
+    Hlt2BJpsiK.ProjectTracksToCalo = False
+    Hlt2BJpsiK.CaloClustForCharged = False
+    Hlt2BJpsiK.CaloClustForNeutral = False
+    Hlt2BJpsiK.TOSFrac = { 4:0.0, 5:0.0 }
+    Hlt2BJpsiK.NoRegex = True
+    #Hlt2BJpsiK.PassOnAll = True
+    return Selection( name, Algorithm = Hlt2BJpsiK, RequiredSelections = [BJpsiKSel] )
+# ########################################################################################
 
 
-    return Selection( name, Algorithm = MuonTTResonance, RequiredSelections = [minusCharge, plusCharge] )
 
 
-
-
-# ##########################################################################################
-# As we have different inputs (tracks, protoparticles, nothing...)
-# I do not know how to wrap that in the Selections framework... So we just use 
-# plain Gaudi Algorithms and put them in the algos list at the end
-# ##########################################################################################
-muonComb = MuonCombRec(OutputLevel = INFO)  
-muonComb.MeasureTime = True
-muonComb.CloneKiller = True
-muonComb.SkipStation = -1 # -1=no skip, 0=M1, 1=M2, 2=M3, 3=M4, 4=M5
-muonComb.DecodingTool = "MuonHitDecode"
-muonComb.PadRecTool = "MuonPadRec"
-muonComb.ClusterTool = "MuonClusterRec" # to enable: "MuonClusterRec"
-muonComb.PhysicsTiming = True
-muonComb.AssumeCosmics = False
-muonComb.AssumePhysics = True
-muonComb.AddXTalk = True # has no effect if "MuonClusterRec" is selected
-muonComb.SeedStation = 4 # default seet station is M5
-# muonComb.TracksOutputLocation = "Rec/Track/MuonStandalone"
-# muonComb.TracksOutputLocation = "Rec/Track/MuonTTTracks"
-muonComb.OutputLevel = 3
-# ################################################################
-MakeMuonTT = MuonTTTrack("MakeMuonTT")
-MakeMuonTT.ToolName = "MuonCombRec"
-MakeMuonTT.addTool( muonComb )
-MakeMuonTT.OutputLevel = 4
-MakeMuonTT.AddTTHits = True
-MakeMuonTT.MC = False
-MakeMuonTT.addTool( PatAddTTCoord )
-MakeMuonTT.PatAddTTCoord.YTolSlope = 400000.0
-MakeMuonTT.PatAddTTCoord.XTol = 12.0
-MakeMuonTT.PatAddTTCoord.XTolSlope = 400000.0
-MakeMuonTT.PatAddTTCoord.MinAxProj = 2.5
-MakeMuonTT.PatAddTTCoord.MajAxProj = 22.0
-MakeMuonTT.addTool( TrackMasterFitter )
-MakeMuonTT.TrackMasterFitter.OutputLevel = 4
-MakeMuonTT.TrackMasterFitter.MaterialLocator = "SimplifiedMaterialLocator"
-MakeMuonTT.addTool( TrackMasterExtrapolator ) 
-MakeMuonTT.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
-MakeMuonTT.OutputLocation = "Rec/Track/MuonTTTracks"
-# ################################################################
-# To be used if only muon tracks and not MuonTT tracks should be reconstructed
-MakeMuon = MakeMuonTT.clone()
-MakeMuon.AddTTHits = False
-# ################################################################
-MuonTTPParts = ChargedProtoParticleMaker("MuonTTPParts")
-MuonTTPParts.addTool( TrackSelector )
-MuonTTPParts.TrackSelector.TrackTypes = [ "Long" ]
-MuonTTPParts.InputTrackLocation = ["Rec/Track/MuonTTTracks"]
-MuonTTPParts.OutputProtoParticleLocation = "Rec/ProtoP/MuonTTProtoP"
-MuonTTPParts.OutputLevel = 4
-# ################################################################
-MuonTTParts = NoPIDsParticleMaker("MuonTTParts")
-MuonTTParts.Particle = 'muon'
-MuonTTParts.addTool( TrackSelector )
-MuonTTParts.TrackSelector.TrackTypes = [ "Long" ]
-MuonTTParts.Input =  "Rec/ProtoP/MuonTTProtoP"
-MuonTTParts.OutputLevel = 4
-# ################################################################
-LongParts = NoPIDsParticleMaker("LongParts")
-LongParts.addTool(ProtoParticleMUONFilter(Selection = ["RequiresDet='MUON' IsMuon=True"]),name="muon")
-LongParts.Particle = 'muon'
-LongParts.addTool( TrackSelector )
-LongParts.TrackSelector.TrackTypes = [ "Long" ]
-LongParts.addTool( TrackSelector )
-LongParts.TrackSelector.MinPtCut = 1300 # hardcoded PT cut (as in HLT1)!
-LongParts.OutputLevel = 4
-# ################################################################
-# HARDCODED CUTS to speed up everything! Should be looser than cuts which can be configured
-FilterLongParts = FilterDesktop("FilterLongParts")
-FilterLongParts.Code = "(PIDmu > 0.0) & (TRCHI2DOF < 5.0)"
-FilterLongParts.InputLocations = [ "LongParts" ]
-# ################################################################
-# Hlt1 PreFilter for Jpsi and Upsilons 
-tisTosPreFilterHlt1Jpsi = TisTosParticleTagger("tisTosPreFilterHlt1Jpsi")
-tisTosPreFilterHlt1Jpsi.InputLocations = [ "Phys/FilterLongParts" ]
-tisTosPreFilterHlt1Jpsi.TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
-tisTosPreFilterHlt1Jpsi.ProjectTracksToCalo = False
-tisTosPreFilterHlt1Jpsi.CaloClustForCharged = False
-tisTosPreFilterHlt1Jpsi.CaloClustForNeutral = False
-tisTosPreFilterHlt1Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
-tisTosPreFilterHlt1Jpsi.NoRegex = True
-# ################################################################
-# Hlt1 PreFilter for Zs (PT cut)
-tisTosPreFilterHlt1Z = TisTosParticleTagger("tisTosPreFilterHlt1Z")
-tisTosPreFilterHlt1Z.InputLocations = [ "Phys/FilterLongParts" ]
-tisTosPreFilterHlt1Z.TisTosSpecs = { "Hlt1SingleMuonNoIPL0HighPTDecision%TOS" : 0}
-tisTosPreFilterHlt1Z.ProjectTracksToCalo = False
-tisTosPreFilterHlt1Z.CaloClustForCharged = False
-tisTosPreFilterHlt1Z.CaloClustForNeutral = False
-tisTosPreFilterHlt1Z.TOSFrac = { 4:0.0, 5:0.0 }
-tisTosPreFilterHlt1Z.NoRegex = True
-# ################################################################
-# Hlt2 PreFilter for Jpsis and Upsilons (IP cut)
-tisTosPreFilterHlt2Jpsi = TisTosParticleTagger("tisTosPreFilterHlt2Jpsi")
-tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1Jpsi" ]
-tisTosPreFilterHlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuonDecision%TOS" : 0}
-tisTosPreFilterHlt2Jpsi.ProjectTracksToCalo = False
-tisTosPreFilterHlt2Jpsi.CaloClustForCharged = False
-tisTosPreFilterHlt2Jpsi.CaloClustForNeutral = False
-tisTosPreFilterHlt2Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
-tisTosPreFilterHlt2Jpsi.NoRegex = True
-# ################################################################
-# Hlt2 PreFilter for Zs (PT cut)
-tisTosPreFilterHlt2Z = TisTosParticleTagger("tisTosPreFilterHlt2Z")
-tisTosPreFilterHlt2Z.InputLocations = [ "Phys/tisTosPreFilterHlt1Z" ]
-tisTosPreFilterHlt2Z.TisTosSpecs = { "Hlt2SingleHighPTMuonDecision%TOS" : 0}
-tisTosPreFilterHlt2Z.ProjectTracksToCalo = False
-tisTosPreFilterHlt2Z.CaloClustForCharged = False
-tisTosPreFilterHlt2Z.CaloClustForNeutral = False
-tisTosPreFilterHlt2Z.TOSFrac = { 4:0.0, 5:0.0 }
-tisTosPreFilterHlt2Z.NoRegex = True
-# ##########################################################################################
-# The end...
-# ##########################################################################################
 
