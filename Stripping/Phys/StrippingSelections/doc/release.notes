@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Andrew Powell
+	- Updates to StrippingV0ForPID.py
+
 ! 2011-02-25 - Olivier Deschamps for R. Lefevre
  - Updated D02KPiPi0
 
