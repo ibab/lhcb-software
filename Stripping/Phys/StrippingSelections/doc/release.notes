@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Mat Charles
+ - Make line names more intelligible in StrippingXicc.py
+
 ! 2011-02-25 - William James Barter
  - Update to StrippingSingleTrackHighPT - prescales added based on studies of trigger rates. Also included a lower PT version of the line.
 
