@@ -2,7 +2,11 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-!========================= MuonID v8r0p2 2011-02-17 =========================
+!========================= MuonID v8r0p3 2011-02-25 =========================
+! 2011-02-25 - Helder Lopes
+ - Fixed bug in hyperbolic tangent scale factors
+
+!========================= MuonID v8r0p2 2011-02-21 =========================
 ! 2011-02-21 - Helder Lopes
  - Made running new tuning (DLL_Flag = 4) from options file (OverrideDB = True) the default
 

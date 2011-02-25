@@ -9,10 +9,10 @@
 #================================================================================
 
 #  Scale factors (The effective scale factors are these divided by atanh(0.5) )
-tanhScaleFactorsR1 = [ 179.385, 62.0361, 23.4142, 13.0749, 8.0211, 6.35197, 3.80191 ]
-tanhScaleFactorsR2 = [ 103.393, 21.9305, 7.74292, 4.54375, 2.73552 ]
-tanhScaleFactorsR3 = [ 78.0783, 17.1086, 6.5838, 2.87462, 1.80823 ]
-tanhScaleFactorsR4 = [ 21.096, 9.27295, 5.47104, 3.19917, 1.80823 ]
+tanhScaleFactorsR1 = [ 212.527, 73.4972, 27.74, 15.4904, 9.503, 7.52549, 4.50431 ]
+tanhScaleFactorsR2 = [ 122.495, 25.9822, 9.17341, 5.3832, 3.24091 ]
+tanhScaleFactorsR3 = [ 92.5032, 20.2694, 7.80015, 3.4057, 2.14229 ]
+tanhScaleFactorsR4 = [ 24.9934, 10.9861, 6.48181, 3.79021, 2.14229 ]
 
 # Signal muons: Cumulative tanh(dist2) histograms content
 nDistBins = 500
