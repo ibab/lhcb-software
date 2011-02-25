@@ -1,21 +1,62 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
-__date__ = '2011/02/24'
-__version__ = '$Revision: 1.5 $'
+__date__ = '2011/02/25'
 
 '''
 Bs->JpsieePhi stripping selection
-'''
-from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
-    """
-    Definition of Bs->JpsieePhi stripping
-    """
-    __slots__ = { 
+Exports the following stripping lines
+- Bs2JpsieePhiLine
+- Bs2JpsieePhiLooseLine
+'''
+
+__all__ = (
+    'Bs2JpsieePhiConfConf',
+    )
+
+from Gaudi.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+
+
+class Bs2JpsieePhiConf(LineBuilder):
+
+    __configuration_keys__ = (
+                  'ElectronPTLoose'                # MeV
+                , 'ElectronTrackCHI2pDOFLoose'     # adimensional
+                , 'JpsiVertexCHI2pDOFLoose'        # adimensional
+                , 'JpsiMassMinLoose'               # MeV
+                , 'JpsiMassMaxLoose'               # MeV
+                , 'KaonTrackCHI2pDOFLoose'         # adimensional
+                , 'PhiPTLoose'                     # MeV
+                , 'PhiVertexCHI2pDOFLoose'         # adimensional
+                , 'PhiMassMinLoose'                # MeV
+                , 'PhiMassMaxLoose'                # MeV
+                , 'BsVertexCHI2pDOFLoose'          # adimensional
+                , 'BsMassMinLoose'                 # MeV
+                , 'BsMassMaxLoose'                 # MeV
+                , 'BsDIRALoose'                    # adimensional
+                , 'ElectronPT'                # MeV
+                , 'ElectronPID'               # adimensional
+                , 'ElectronTrackCHI2pDOF'     # adimensional
+                , 'JpsiVertexCHI2pDOF'        # adimensional
+                , 'JpsiMassMin'               # MeV
+                , 'JpsiMassMax'               # MeV
+                , 'KaonTrackCHI2pDOF'         # adimensional
+                , 'KaonPID'                   # adimensional
+                , 'PhiPT'                     # MeV
+                , 'PhiVertexCHI2pDOF'         # adimensional
+                , 'PhiMassMin'                # MeV
+                , 'PhiMassMax'                # MeV
+                , 'BsVertexCHI2pDOF'          # adimensional
+                , 'BsMassMin'                 # MeV
+                , 'BsMassMax'                 # MeV
+                , 'BsDIRA'                    # adimensional
+                )
+
+    config_default = {
                   'ElectronPTLoose'            :   800.    # MeV
                 , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
@@ -30,7 +71,6 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
                 , 'BsMassMinLoose'             :  4500.    # MeV
                 , 'BsMassMaxLoose'             :  6000.    # MeV
                 , 'BsDIRALoose'                :     0.99  # adimensional
-
                 , 'ElectronPT'            :   800.    # MeV
                 , 'ElectronPID'           :     2.    # adimensional
                 , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
@@ -50,125 +90,102 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
                 }
 
 
-    def UnbiasedPT_line( self ) :
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2JpsieePhiLoose', prescale = 1., algos = [ self.Bs2JpsieePhiLoose() ])
+
+    def __init__(self, name, config) :
+      LineBuilder.__init__(self, name, config)
+
+      self.name = name
+      self.Bs2JpsieePhiLine      = self._Bs2JpsieePhiLine( name, config )
+      self.Bs2JpsieePhiLooseLine = self._Bs2JpsieePhiLooseLine( name+"Loose", config )
+      self.registerLine( self.Bs2JpsieePhiLine )
+      self.registerLine( self.Bs2JpsieePhiLooseLine )
 
 
-    def Signalbox_line( self ) :
-        from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2JpsieePhi', prescale = 1., algos = [ self.Bs2JpsieePhi() ])
-      
+    def _Bs2JpsieePhiLine( self, name, config ) :
 
-    def Jpsi2eeLoose( self ):
         _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop("Jpsi2eeFilterForBs2JpsieePhiLoose",
-                              Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
-                                     " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOFLoose)s)" \
-                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" \
-                                     " & (MM > %(JpsiMassMinLoose)s *MeV)" \
-                                     " & (MM < %(JpsiMassMaxLoose)s *MeV)" % self.getProps()
-                             )
-        Jpsi = Selection("SelJpsi2eeForBs2JpsieePhiLoose",
-                         Algorithm = _jpsi,
-                         RequiredSelections = [_stdJpsi])
-        return Jpsi
-    
-
-    def Jpsi2ee( self ):
-        _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop("Jpsi2eeFilterForBs2JpsieePhi",
-                              Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
+        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPID)s )" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOF)s)" \
                                      " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOF)s)" \
                                      " & (MM > %(JpsiMassMin)s *MeV)" \
-                                     " & (MM < %(JpsiMassMax)s *MeV)" % self.getProps()
+                                     " & (MM < %(JpsiMassMax)s *MeV)" % config
                              )
-        Jpsi = Selection("SelJpsi2eeForBs2JpsieePhi",
+        Jpsi = Selection("SelJpsi2eeFor"+name,
                          Algorithm = _jpsi,
                          RequiredSelections = [_stdJpsi])
-        return Jpsi
 
-
-
-    def Phi2KKLoose( self ):
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop("Phi2KKFilterForBs2JpsieePhiLoose",
-                             Code = "   (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
-                                    " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOFLoose)s)" \
-                                    " & (PT > %(PhiPTLoose)s *MeV)"\
-                                    " & (MM > %(PhiMassMinLoose)s *MeV)" \
-                                    " & (MM < %(PhiMassMaxLoose)s *MeV)" % self.getProps()
-                            )
-        Phi = Selection("SelPhi2KKForBs2JpsieePhiLoose",
-                        Algorithm = _phi,
-                        RequiredSelections = [_stdPhi])
-        return Phi
-    
-
-    def Phi2KK( self ):
-        _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")  
-        _phi = FilterDesktop("Phi2KKFilterForBs2JpsieePhi",
-                             Code = "   (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
+        _phi = FilterDesktop(Code = "   (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
                                     " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOF)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)" \
                                     " & (PT > %(PhiPT)s *MeV)"\
                                     " & (MM > %(PhiMassMin)s *MeV)" \
-                                    " & (MM < %(PhiMassMax)s *MeV)" % self.getProps()
+                                    " & (MM < %(PhiMassMax)s *MeV)" % config
                             )
-        Phi = Selection("SelPhi2KKForBs2JpsieePhi",
+        Phi = Selection("SelPhi2KKFor"+name,
                         Algorithm = _phi,
                         RequiredSelections = [_stdPhi])
-        return Phi           
+
+        CC = "(AM > %(BsMassMin)s *MeV) & (AM < %(BsMassMax)s *MeV)" % config
+        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOF)s) & (BPVDIRA > %(BsDIRA)s)" % config
+        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+                               CombinationCut = CC ,
+                               MotherCut = MC  
+                               )
+        Bs = Selection(name,
+                       Algorithm = _Bs,
+                       RequiredSelections = [Jpsi, Phi])
+
+        return StrippingLine(name+"Line"
+              , prescale = 1
+              , postscale = 1
+              , selection = Bs
+              )
 
 
+    def _Bs2JpsieePhiLooseLine( self, name, config ) :
 
-    def Bs2JpsieePhiLoose( self ):
-        Jpsi = self.Jpsi2eeLoose()
-        Phi = self.Phi2KKLoose()
-        CC = "(AM > %(BsMassMinLoose)s *MeV) & (AM < %(BsMassMaxLoose)s *MeV)" % self.getProps()
-        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s) & (BPVDIRA > %(BsDIRALoose)s)" % self.getProps()
-        _Bs = CombineParticles("Bs2JpsieePhiLoose",
-                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+        _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
+        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
+                                     " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOFLoose)s)" \
+                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" \
+                                     " & (MM > %(JpsiMassMinLoose)s *MeV)" \
+                                     " & (MM < %(JpsiMassMaxLoose)s *MeV)" % config
+                             )
+        Jpsi = Selection("SelJpsi2eeFor"+name,
+                         Algorithm = _jpsi,
+                         RequiredSelections = [_stdJpsi])
+    
+        _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
+        _phi = FilterDesktop(Code = "   (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
+                                    " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOFLoose)s)" \
+                                    " & (PT > %(PhiPTLoose)s *MeV)"\
+                                    " & (MM > %(PhiMassMinLoose)s *MeV)" \
+                                    " & (MM < %(PhiMassMaxLoose)s *MeV)" % config
+                            )
+        Phi = Selection("SelPhi2KKFor"+name,
+                        Algorithm = _phi,
+                        RequiredSelections = [_stdPhi])
+
+        CC = "(AM > %(BsMassMinLoose)s *MeV) & (AM < %(BsMassMaxLoose)s *MeV)" % config
+        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s) & (BPVDIRA > %(BsDIRALoose)s)" % config
+        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
                                MotherCut = MC 
-                               #ReFitPVs = True
                                )
-        Bs = Selection("SelBs2JpsieePhiLoose",
+        Bs = Selection(name,
                        Algorithm = _Bs,
                        RequiredSelections = [Jpsi, Phi])
-        return Bs
+
+        return StrippingLine(name+"Line"
+              , prescale = 1
+              , postscale = 1
+              , selection = Bs
+              )
+
     
 
-
-    def Bs2JpsieePhi( self ):
-        Jpsi = self.Jpsi2ee()
-        Phi = self.Phi2KK()
-        CC = "(AM > %(BsMassMin)s *MeV) & (AM < %(BsMassMax)s *MeV)" % self.getProps()
-        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOF)s) & (BPVDIRA > %(BsDIRA)s)" % self.getProps()
-        _Bs = CombineParticles("Bs2JpsieePhi",
-                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
-                               CombinationCut = CC ,
-                               MotherCut = MC
-                               #ReFitPVs = True
-                               )
-        Bs = Selection("SelBs2JpsieePhi",
-                       Algorithm = _Bs,
-                       RequiredSelections = [Jpsi, Phi])
-        return Bs
-
-
-
-    def getProps(self) :
-        """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
 
 
 
