@@ -61,12 +61,12 @@ defaulSettings =  {
     
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import LineBuilder
 
-class Bd2eeKstarConf(object):
+class Bd2eeKstarConf(LineBuilder):
     
     __configuration_keys__ = (
         'LinePrescale',
@@ -113,15 +113,12 @@ class Bd2eeKstarConf(object):
         'BIP'                
         )
     
-    def __init__(self, 
-                 name = 'Bd2eeKstar',
-                 config = defaulSettings
-                 ):
+    def __init__(self, name, config ):
         
-        checkConfig(Bd2eeKstarConf.__configuration_keys__, config)
+        LineBuilder.__init__(self, name, config)
         
-        self.name = name
-        self.SelEE = makeEE( 'eeFor'+self.name,
+        Bd2eeKstarName = name
+        self.SelEE = makeEE( 'eeFor'+Bd2eeKstarName,
                              ElectronPT = config['ElectronPT'],
                              ElectronTrackCHI2pNDOF = config['ElectronTrackCHI2pNDOF'],
                              ElectronIPCHI2 = config['ElectronIPCHI2'],
@@ -134,7 +131,7 @@ class Bd2eeKstarConf(object):
                              eeMaxMass = config['eeMaxMass']
                              )
         
-        self.SelKstar = makeKstar('KstarFor'+self.name,
+        self.SelKstar = makeKstar('KstarFor'+Bd2eeKstarName,
                                   KaonPT = config['KaonPT'],
                                   KaonP = config['KaonP'],
                                   KaonTrackCHI2pNDOF = config['KaonTrackCHI2pNDOF'],
@@ -152,7 +149,7 @@ class Bd2eeKstarConf(object):
                                   KstarMassW = config['KstarMassW']                   
                                   )
         
-        self.SelBd2eeKstar = makeBd2eeKstar( "Sel_"+self.name,
+        self.SelBd2eeKstar = makeBd2eeKstar( "Sel_"+Bd2eeKstarName,
                                              SelEE = self.SelEE,
                                              SelKstar = self.SelKstar,
                                              eeFD = config['eeFD'],
@@ -167,13 +164,13 @@ class Bd2eeKstarConf(object):
                                              BIP = config['BIP']
                                              )
                                              
-        self.line = StrippingLine( self.name+"Line",
+        self.line = StrippingLine( Bd2eeKstarName+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
                                    algos = [ self.SelBd2eeKstar ]
                                    )
         
-        
+        self.registerLine(self.line)
        
 
 def makeEE( name,
@@ -189,16 +186,15 @@ def makeEE( name,
             eeMinMass,
             eeMaxMass
             ):
-    
-    _StdLooseElectrons = DataOnDemand( Location = "Phys/StdLooseElectrons" )
+
+    from StandardParticles import StdLooseElectrons as ElectronsForBd2eeKstar
     
     ElectronCut = "(PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) " % locals()
     
     EEComCut = "(%(eeCombMinMass)s < AM) & (AM< %(eeCombMaxMass)s)" % locals() 
     EEMomCut = "(VFASPF(VCHI2)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % locals()
     
-    _EE = CombineParticles( "_combine" + name,
-                            DecayDescriptor = "J/psi(1S) -> e+ e-",
+    _EE = CombineParticles( DecayDescriptor = "J/psi(1S) -> e+ e-",
                             DaughtersCuts = {"e+" : ElectronCut },
                             CombinationCut = EEComCut,
                             MotherCut = EEMomCut
@@ -206,7 +202,7 @@ def makeEE( name,
     
     return Selection( name,
                       Algorithm = _EE,
-                      RequiredSelections = [ _StdLooseElectrons ]
+                      RequiredSelections = [ ElectronsForBd2eeKstar ]
                       )
 
 
@@ -228,8 +224,8 @@ def makeKstar(name,
               KstarMassW
               ):
 
-    _StdTightKaons = DataOnDemand( Location = "Phys/StdLooseKaons" )   
-    _StdTightPions = DataOnDemand( Location = "Phys/StdLoosePions" )
+    from StandardParticles import StdLooseKaons as KaonsForBd2eeKstar
+    from StandardParticles import StdLoosePions as PionsForBd2eeKstar    
     
     KaonCut = "(PT> %(KaonPT)s *MeV) & (P>%(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (PIDK>%(KaonPIDKpi)s)" % locals()
     PionCut = "(PT> %(PionPT)s *MeV) & (P>%(PionP)s *MeV) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (PIDK<%(PionPIDpiK)s)" % locals()
@@ -238,8 +234,7 @@ def makeKstar(name,
     
     KstarMomCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s) & (ADMASS('K*(892)0')< %(KstarMassW)s *MeV)" % locals()
     
-    _Kstar = CombineParticles( "_combine" + name,
-                               DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
+    _Kstar = CombineParticles( DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
                                DaughtersCuts = { "K+":KaonCut, "pi-":PionCut },
                                CombinationCut = KstarComCut, 
                                MotherCut = KstarMomCut
@@ -247,7 +242,7 @@ def makeKstar(name,
     
     return Selection( name,
                       Algorithm = _Kstar,
-                      RequiredSelections = [ _StdTightKaons, _StdTightPions ]
+                      RequiredSelections = [ KaonsForBd2eeKstar, PionsForBd2eeKstar  ]
                       )
 
 
@@ -274,8 +269,7 @@ def makeBd2eeKstar( name,
     eeFinalCut = "(INTREE( (ID=='J/psi(1S)') & (BPVVD>%(eeFD)s*mm) ))" % locals()
     KstarFinalCut = "(INTREE( (ABSID=='K*(892)0') & (BPVIPCHI2()>%(KstarIPCHI2)s) & (BPVVDCHI2>%(KstarFDCHI2)s) ))" % locals()
     
-    _Bd2eeKstar = CombineParticles( "_combine" + name,
-                                    DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc",
+    _Bd2eeKstar = CombineParticles( DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc",
                                     CombinationCut = Bd2eeKstarComCut, 
                                     MotherCut = Bd2eeKstarMomCut + "&" + eeFinalCut + "&" + KstarFinalCut 
                                     )

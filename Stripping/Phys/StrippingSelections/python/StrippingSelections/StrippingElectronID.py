@@ -21,13 +21,41 @@ __all__ = (
     'makeEE'
     )
 
+
+config_default =  {
+        'LinePrescale'            :    0.4  ,
+        'LinePostscale'           :    1.   ,
+
+        'Both_PT'                 :  500.   ,  # MeV
+        'Both_P'                  : 3000.   ,  # MeV
+        'Both_TRCHI2DOF'          :    5.   ,
+        'Both_MIPCHI2'            :    9.   ,
+        
+        'Tag_PT'                  : 1500.   ,  # MeV
+        'Tag_P'                   : 6000.   ,  # MeV
+        'Tag_PIDe'                :    5.   ,
+        'Tag_MIPCHI2'             :    9.   ,
+
+        'Probe_PT'                :  500.   ,  # MeV
+        'Probe_P'                 : 3000.   ,  # MeV
+        'Probe_MIPCHI2'           :    9.   ,
+
+        'eeCombMinMass'           : 2100.   ,  # MeV         
+        'eeCombMaxMass'           : 4300.   ,  # MeV   
+        'eeVCHI2PDOF'             :    9.   ,  
+        'eeMinMass'               : 2200.   ,  # MeV 
+        'eeMaxMass'               : 4200.   ,  # MeV
+                
+        'eeFDCHI2'                :  225.    
+        }
+
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import LineBuilder
 
-class ElectronIDConf(object):
+class ElectronIDConf(LineBuilder):
     
     __configuration_keys__ = (
         'LinePrescale',
@@ -55,41 +83,11 @@ class ElectronIDConf(object):
         
         'eeFDCHI2'
         )
-
-    config_default =  {
-        'LinePrescale'            :    0.4  ,
-        'LinePostscale'           :    1.   ,
-
-        'Both_PT'                 :  500.   ,  # MeV
-        'Both_P'                  : 3000.   ,  # MeV
-        'Both_TRCHI2DOF'          :    5.   ,
-        'Both_MIPCHI2'            :    9.   ,
-        
-        'Tag_PT'                  : 1500.   ,  # MeV
-        'Tag_P'                   : 6000.   ,  # MeV
-        'Tag_PIDe'                :    5.   ,
-        'Tag_MIPCHI2'             :    9.   ,
-
-        'Probe_PT'                :  500.   ,  # MeV
-        'Probe_P'                 : 3000.   ,  # MeV
-        'Probe_MIPCHI2'           :    9.   ,
-
-        'eeCombMinMass'           : 2100.   ,  # MeV         
-        'eeCombMaxMass'           : 4300.   ,  # MeV   
-        'eeVCHI2PDOF'             :    9.   ,  
-        'eeMinMass'               : 2200.   ,  # MeV 
-        'eeMaxMass'               : 4200.   ,  # MeV
-                
-        'eeFDCHI2'                :  225.    
-        }
     
-    def __init__(self, 
-                 name = "Jpsi2eeForElectronID", 
-                 config = None
-                 ):
+    def __init__(self, name, config ): 
         
-        checkConfig(ElectronIDConf.__configuration_keys__, config)
-
+        LineBuilder.__init__(self, name, config)
+        
         self.name = name 
         self.SelEE = makeEE( 'eeFor'+self.name,                             
                              #
@@ -148,9 +146,9 @@ def makeEE( name,
             #
             eeFDCHI2            
             ):
-    
-    _StdNoPIDsElectrons = DataOnDemand( Location = "Phys/StdNoPIDsElectrons" )
 
+    from StandardParticles import StdNoPIDsElectrons as NoPIDsElectronsForElectronID
+    
     InAccCuts = "(0.5<PPINFO(LHCb.ProtoParticle.InAccEcal,-1))"
 
     BothCuts = "(PT> %(Both_PT)s *MeV)"\
@@ -176,8 +174,7 @@ def makeEE( name,
     Tag1Probe2Cuts = Tag1Cuts + " & " + Probe2Cuts
     Tag2Probe1Cuts = Tag2Cuts + " & " + Probe1Cuts 
     
-    _EE = CombineParticles( "_combine" + name,
-                            DecayDescriptor = "J/psi(1S) -> e+ e-",
+    _EE = CombineParticles( DecayDescriptor = "J/psi(1S) -> e+ e-",
                             DaughtersCuts = {"e+" : InAccCuts + "&" + BothCuts },
                             CombinationCut = EEComCut,
                             MotherCut = EEMomCut + " & ( ( " + Tag1Probe2Cuts + " ) | (" + Tag2Probe1Cuts + " ) ) "
@@ -185,5 +182,5 @@ def makeEE( name,
     
     return Selection( name,
                       Algorithm = _EE,
-                      RequiredSelections = [ _StdNoPIDsElectrons ]
+                      RequiredSelections = [ NoPIDsElectronsForElectronID ]
                       )    

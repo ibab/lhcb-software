@@ -6,19 +6,20 @@ Including the following lines:
 1. DiMuonLine
    FullDST (keep 10%) and MicroDST 
 2. DiMuonSameSignLine
-   FullDST (keep  1%) and MicroDST (keep 10%) 
-3. DiMuonHighMassLine                     
-4. DiMuonHighMassSameSignLine             
-5. DiMuonLowMassLine
-   Keep Hlt2UnbiasedDiMuonLowMassDecision triggered events 
-6. Jpsi2MuMuLine
-7. Psi2MuMuLine
-8. DiMuonExclusiveLine
+   FullDST (keep  1%) and MicroDST (keep 10%)
+3. DiMuonExclusiveLine
    Selection is the same as DiMuonLine at present,
    a cut of "1mm upstream of any PV" applied further  
-9. DiMuonNoPVLine
+4. DiMuonNoPVLine
    Using the same selection as DiMuonExclusiveLine at present (except the PV cut)
-   Requring no reconstructed PV.
+   Requring no reconstructed PV.   
+5. DiMuonHighMassLine                     
+6. DiMuonHighMassSameSignLine             
+7. DiMuonLowMassLine
+   Keep Hlt2UnbiasedDiMuonLowMassDecision triggered events 
+8. Jpsi2MuMuLine
+9. Psi2MuMuLine
+
 
 More details can be found here:
 http://indico.cern.ch/contributionDisplay.py?contribId=2&confId=100755
@@ -53,13 +54,293 @@ __all__ = (
     'DiMuonConf'
     )
 
+
+config_default= {
+        # DiMuon line
+        'DiMuon_Prescale'                          :     1.   ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           : False    ,  
+        
+        'DiMuon_MuonPT'                            :   650.   ,  # MeV
+        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
+        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
+        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_VCHI2PDOF'                         :    20.   , 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+
+        # DiMuon Same Sign line
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   : False    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
+        
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
+        
+        # DiMuon High Mass line
+        'DiMuonHighMass_Prescale'                  :     1.   ,
+        'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   : False    ,
+        
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
+        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
+        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
+        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
+
+        # DiMuon High Mass Same Sign line
+        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           : False    ,
+
+        # DiMuon Low Mass line
+        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    : False    , 
+        
+        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
+        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
+        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
+        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
+        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
+        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+
+        # Jpsi2MuMu line
+        'Jpsi2MuMu_Prescale'                       :     1.   ,
+        'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        : False    ,
+        
+        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
+        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
+        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
+        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+        'Psi2MuMu_checkPV'                         : False    ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
+        }
+
+
+config_checkPV= {
+        # DiMuon line
+        'DiMuon_Prescale'                          :     1.   ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           :  True    ,  
+        
+        'DiMuon_MuonPT'                            :   650.   ,  # MeV
+        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
+        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
+        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_VCHI2PDOF'                         :    20.   , 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+
+        # DiMuon Same Sign line
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   :  True    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
+        
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
+                
+        # DiMuon High Mass line
+        'DiMuonHighMass_Prescale'                  :     1.   ,
+        'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   :  True    ,
+        
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
+        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
+        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
+        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
+
+        # DiMuon High Mass Same Sign line
+        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           :  True    ,
+
+        # DiMuon Low Mass line
+        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    :  True    , 
+        
+        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
+        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
+        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
+        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
+        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
+        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+
+        # Jpsi2MuMu line
+        'Jpsi2MuMu_Prescale'                       :     1.   ,
+        'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        :  True    ,
+        
+        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
+        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
+        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
+        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+        'Psi2MuMu_checkPV'                         :  True    ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
+        }
+
+    
+config_microDST= {
+        # DiMuon line
+        'DiMuon_Prescale'                          :     1.   ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           :  True    ,  
+        
+        'DiMuon_MuonPT'                            :   650.   ,  # MeV
+        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
+        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
+        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_VCHI2PDOF'                         :    20.   , 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+
+        # DiMuon Same Sign line
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   :  True    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
+        
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
+               
+        # DiMuon High Mass line
+        'DiMuonHighMass_Prescale'                  :     1.   ,
+        'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   :  True    ,
+        
+        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
+        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
+        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
+        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
+        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
+
+        # DiMuon High Mass Same Sign line
+        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           :  True    ,
+
+        # DiMuon Low Mass line
+        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    :  True    , 
+        
+        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
+        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
+        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
+        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
+        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
+        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+
+        # Jpsi2MuMu line
+        'Jpsi2MuMu_Prescale'                       :     1.   ,
+        'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        :  True    ,
+        
+        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
+        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
+        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
+        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
+        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+        'Psi2MuMu_checkPV'                         :  True    ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
+        }
+
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables import LoKi__VoidFilter
 from PhysSelPython.Wrappers import Selection, DataOnDemand, EventSelection
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import LineBuilder
 
-class DiMuonConf(object):
+class DiMuonConf(LineBuilder):
     
     __configuration_keys__ = (
         # DiMuon line
@@ -153,292 +434,13 @@ class DiMuonConf(object):
         'Psi2MuMu_PT'        
         )
     
-    config_default= {
-        # DiMuon line
-        'DiMuon_Prescale'                          :     1.   ,
-        'DiMuon_Postscale'                         :     1.   ,
-        'DiMuon_checkPV'                           : False    ,  
-        
-        'DiMuon_MuonPT'                            :   650.   ,  # MeV
-        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
-        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
-        'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
 
-        # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.1  ,
-        'DiMuonSameSign_Postscale'                 :     1.   ,
-        'DiMuonSameSign_checkPV'                   : False    ,
-
-        # DiMuonExclusive line
-        'DiMuonExclusive_Prescale'                 :     1.   ,
-        'DiMuonExclusive_Postscale'                :     1.   ,
-        'DiMuonExclusive_checkPV'                  :  True    ,
-        
-        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
-        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonExclusive_MinMass'                  :  2900.   ,
-        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
-        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
-
-        # DiMuonNoPV line
-        'DiMuonNoPV_Prescale'                      :     1.   ,
-        'DiMuonNoPV_Postscale'                     :     1.   ,
-        
-        # DiMuon High Mass line
-        'DiMuonHighMass_Prescale'                  :     1.   ,
-        'DiMuonHighMass_Postscale'                 :     1.   ,
-        'DiMuonHighMass_checkPV'                   : False    ,
-        
-        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
-        'DiMuonHighMass_MuonP'                     : -8000.   , 
-        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
-        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
-        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
-
-        # DiMuon High Mass Same Sign line
-        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
-        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
-        'DiMuonHighMassSameSign_checkPV'           : False    ,
-
-        # DiMuon Low Mass line
-        'DiMuonLowMass_Prescale'                   :     1.   ,
-        'DiMuonLowMass_Postscale'                  :     1.   ,
-        'DiMuonLowMass_checkPV'                    : False    , 
-        
-        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
-        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
-        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
-        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
-        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
-        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
-
-        # Jpsi2MuMu line
-        'Jpsi2MuMu_Prescale'                       :     1.   ,
-        'Jpsi2MuMu_Postscale'                      :     1.   ,
-        'Jpsi2MuMu_checkPV'                        : False    ,
-        
-        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
-        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
-        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
-
-        # Psi2MuMu line
-        'Psi2MuMu_Prescale'                        :     1.   ,
-        'Psi2MuMu_Postscale'                       :     1.   ,
-        'Psi2MuMu_checkPV'                         : False    ,
-
-        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
-        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
-        'Psi2MuMu_PIDmu'                           :     0.   , 
-        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
-        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
-        'Psi2MuMu_PT'                              :  2000.      # MeV  
-        }
-
-
-    config_checkPV= {
-        # DiMuon line
-        'DiMuon_Prescale'                          :     1.   ,
-        'DiMuon_Postscale'                         :     1.   ,
-        'DiMuon_checkPV'                           :  True    ,  
-        
-        'DiMuon_MuonPT'                            :   650.   ,  # MeV
-        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
-        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
-        'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
-
-        # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.1  ,
-        'DiMuonSameSign_Postscale'                 :     1.   ,
-        'DiMuonSameSign_checkPV'                   :  True    ,
-
-        # DiMuonExclusive line
-        'DiMuonExclusive_Prescale'                 :     1.   ,
-        'DiMuonExclusive_Postscale'                :     1.   ,
-        'DiMuonExclusive_checkPV'                  :  True    ,
-        
-        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
-        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonExclusive_MinMass'                  :  2900.   ,
-        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
-        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
-
-        # DiMuonNoPV line
-        'DiMuonNoPV_Prescale'                      :     1.   ,
-        'DiMuonNoPV_Postscale'                     :     1.   ,
-                
-        # DiMuon High Mass line
-        'DiMuonHighMass_Prescale'                  :     1.   ,
-        'DiMuonHighMass_Postscale'                 :     1.   ,
-        'DiMuonHighMass_checkPV'                   :  True    ,
-        
-        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
-        'DiMuonHighMass_MuonP'                     : -8000.   , 
-        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
-        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
-        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
-
-        # DiMuon High Mass Same Sign line
-        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
-        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
-        'DiMuonHighMassSameSign_checkPV'           :  True    ,
-
-        # DiMuon Low Mass line
-        'DiMuonLowMass_Prescale'                   :     1.   ,
-        'DiMuonLowMass_Postscale'                  :     1.   ,
-        'DiMuonLowMass_checkPV'                    :  True    , 
-        
-        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
-        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
-        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
-        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
-        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
-        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
-
-        # Jpsi2MuMu line
-        'Jpsi2MuMu_Prescale'                       :     1.   ,
-        'Jpsi2MuMu_Postscale'                      :     1.   ,
-        'Jpsi2MuMu_checkPV'                        :  True    ,
-        
-        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
-        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
-        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
-
-        # Psi2MuMu line
-        'Psi2MuMu_Prescale'                        :     1.   ,
-        'Psi2MuMu_Postscale'                       :     1.   ,
-        'Psi2MuMu_checkPV'                         :  True    ,
-
-        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
-        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
-        'Psi2MuMu_PIDmu'                           :     0.   , 
-        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
-        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
-        'Psi2MuMu_PT'                              :  2000.      # MeV  
-        }
-
-    
-    config_microDST= {
-        # DiMuon line
-        'DiMuon_Prescale'                          :     1.   ,
-        'DiMuon_Postscale'                         :     1.   ,
-        'DiMuon_checkPV'                           :  True    ,  
-        
-        'DiMuon_MuonPT'                            :   650.   ,  # MeV
-        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
-        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
-        'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
-
-        # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.1  ,
-        'DiMuonSameSign_Postscale'                 :     1.   ,
-        'DiMuonSameSign_checkPV'                   :  True    ,
-
-        # DiMuonExclusive line
-        'DiMuonExclusive_Prescale'                 :     1.   ,
-        'DiMuonExclusive_Postscale'                :     1.   ,
-        'DiMuonExclusive_checkPV'                  :  True    ,
-        
-        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
-        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonExclusive_MinMass'                  :  2900.   ,
-        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
-        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
-        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
-
-        # DiMuonNoPV line
-        'DiMuonNoPV_Prescale'                      :     1.   ,
-        'DiMuonNoPV_Postscale'                     :     1.   ,
-               
-        # DiMuon High Mass line
-        'DiMuonHighMass_Prescale'                  :     1.   ,
-        'DiMuonHighMass_Postscale'                 :     1.   ,
-        'DiMuonHighMass_checkPV'                   :  True    ,
-        
-        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
-        'DiMuonHighMass_MuonP'                     : -8000.   , 
-        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
-        'DiMuonHighMass_MinMass'                   :  8000.   , # MeV
-        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
-        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
-
-        # DiMuon High Mass Same Sign line
-        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
-        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
-        'DiMuonHighMassSameSign_checkPV'           :  True    ,
-
-        # DiMuon Low Mass line
-        'DiMuonLowMass_Prescale'                   :     1.   ,
-        'DiMuonLowMass_Postscale'                  :     1.   ,
-        'DiMuonLowMass_checkPV'                    :  True    , 
-        
-        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
-        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
-        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
-        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
-        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
-        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
-
-        # Jpsi2MuMu line
-        'Jpsi2MuMu_Prescale'                       :     1.   ,
-        'Jpsi2MuMu_Postscale'                      :     1.   ,
-        'Jpsi2MuMu_checkPV'                        :  True    ,
-        
-        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
-        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
-        'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
-        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
-
-        # Psi2MuMu line
-        'Psi2MuMu_Prescale'                        :     1.   ,
-        'Psi2MuMu_Postscale'                       :     1.   ,
-        'Psi2MuMu_checkPV'                         :  True    ,
-
-        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
-        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
-        'Psi2MuMu_PIDmu'                           :     0.   , 
-        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
-        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
-        'Psi2MuMu_PT'                              :  2000.      # MeV  
-        }
 
 
     
-    def __init__(self,
-                name = None,
-                config = None
-                ):
+    def __init__(self, name, config):
         
-        checkConfig(DiMuonConf.__configuration_keys__, config)
+        LineBuilder.__init__(self, name, config)
 
         # if name not set outside, set it to empty 
         if name == None:
@@ -623,9 +625,20 @@ class DiMuonConf(object):
                                            checkPV   = config['Psi2MuMu_checkPV'],
                                            algos = [self.SelPsi2MuMu]
                                            )
+
+
+        self.registerLine( self.DiMuonLine )
+        self.registerLine( self.DiMuonSameSignLine )
+        self.registerLine( self.DiMuonExclusiveLine )
+        self.registerLine( self.DiMuonNoPVLine )
+        self.registerLine( self.DiMuonHighMassLine )
+        self.registerLine( self.DiMuonHighMassSameSignLine )
+        self.registerLine( self.DiMuonLowMassLine )
+        self.registerLine( self.Jpsi2MuMuLine )
+        self.registerLine( self.Psi2MuMuLine )
             
         
-        self.Lines = [
+        self.AllLines = [
             self.DiMuonLine,
             self.DiMuonSameSignLine,
             self.DiMuonExclusiveLine,
@@ -676,8 +689,7 @@ def filterDiMuon( name,
     
     MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
     
-    _MuMu = FilterDesktop( "_Filter" + name,
-                           Code = MuonCut + " & " + MuMuCut )
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
 
     return Selection( name + "_SelMuMu",
                       Algorithm = _MuMu,
@@ -700,8 +712,7 @@ def filterDiMuonSameSign( name,
     
     MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *MeV)" % locals()
     
-    _MuMu = FilterDesktop( "_Filter" + name,
-                           Code = MuonCut + " & " + MuMuCut )
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
     
     return Selection( name + "_SelMuMuSS",
                       Algorithm = _MuMu,
@@ -725,8 +736,7 @@ def filterJpsi2MuMu( name,
     
     MuMuCut = "(MM > %(MuMuMinMass)s) & (MM < %(MuMuMaxMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
     
-    _MuMu = FilterDesktop( "_Filter" + name,
-                           Code = MuonCut + " & " + MuMuCut )
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
     
     return Selection( name + "_SelJpsi2MuMu",
                       Algorithm = _MuMu,
@@ -751,8 +761,7 @@ def filterSignal( name,
     
     MuMuCut = "(ADMASS(%(ParticleName)s) < %(MuMuMassWindow)s *MeV) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *MeV)" % locals()
     
-    _MuMu = FilterDesktop( "_Filter" + name,
-                           Code = MuonCut + " & " + MuMuCut )
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
     
     return Selection( name + "_SelP2MuMu",
                       Algorithm = _MuMu,
@@ -793,8 +802,7 @@ def filterDiMuonAndDZ( name,
     
     MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s) & (BPVVDZ < %(MuMuDZ)s*mm)" % locals()
     
-    _MuMu = FilterDesktop( "_Filter" + name,
-                           Code = MuonCut + " & " + MuMuCut )
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
 
     return Selection( name + "_SelMuMu",
                       Algorithm = _MuMu,

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Jibo He
+ - Updated DiMuon, DiElectron, ElectronID, Ccbar2Ppbar, Bc2JpsiX, 
+   Bd2Jpsi(ee)Kstar, Bd2eeKstar lines to new framework.
+ - Added test scripts for these lines
+
 ! 2011-02-25 - Mat Charles
  - StrippingXicc.py
  New stripping lines, looking for Xi_cc+ and Xi_cc++ via Lambda and Xi-
