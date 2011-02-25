@@ -24,8 +24,6 @@ Cuts:
   * Chi2 of the D* vertex < 25
   * HLT = 'Hlt.*(MuMu|MBMicro|Muon).*Decision'
 
-
-
 Data sample: $STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py
 Note: no prescales
 
@@ -38,9 +36,9 @@ StrippingReport                                                INFO Event 10000,
  |!StrippingD02MuMuClbrD02PiPiLine                   |  2.2049|       204|  0.000|   0.515|      0|      0|      0|
  |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.6485|        60|  0.000|   0.489|      0|      0|      0|
  
-=================================================================================================
+#=================================================================================================
                          AlgorithmCorrelationsAlg.AlgorithmCorrelations
-=================================================================================================
+#=================================================================================================
     Algorithm                             Eff.       1       2       3       4       5       6  
 -------------------------------------------------------------------------------------------------
   1 StrippingGlobal                       2.22% |  ###### 100.00% 100.00% 100.00% 100.00% 100.00%
@@ -49,14 +47,17 @@ StrippingReport                                                INFO Event 10000,
   4 StrippingD02MuMuDstLine               0.03% |   1.46%   1.46%  33.33%  ######   1.47%   5.00%
   5 StrippingD02MuMuClbrD02PiPiLine       2.20% |  99.51%  99.51%  88.89% 100.00%  ###### 100.00%
   6 StrippingD02MuMuClbrDstD02PiPiLine    0.65% |  29.27%  29.27%  33.33% 100.00%  29.41%  ######
-=================================================================================================
+#=================================================================================================
 
 """
+
+__all__ = ( 'D02MuMuConf',
+            'default_config' )
 
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection
 from StandardParticles import StdNoPIDsPions, StdLooseMuons
 
 from StrippingConf.StrippingLine import StrippingLine
@@ -111,9 +112,6 @@ class D02MuMuConf(LineBuilder) :
         CombineDst.CombinationCut = DstarCombinationCut
         CombineDst.MotherCut = DstarMotherCut
 
-        muons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-        pions = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
-
         # D0 and D* selections
         from PhysSelPython.Wrappers import Selection
         D02MuMuSelection = Selection(name + "_D02MuMuSelection", Algorithm = CombineD0, RequiredSelections = [ StdLooseMuons ])
@@ -145,3 +143,14 @@ class D02MuMuConf(LineBuilder) :
         self.registerLine(self.lineDstD02MuMu)
         self.registerLine(self.lineD02PiPi)
         self.registerLine(self.lineDstD02PiPi)
+
+
+
+default_config = {'MinDauPT'            : 1.0, # 1.0 GeV
+                  'MinDauIPCHI2'        : 1.0,
+                  'MinD0LT'             : 0.1, # ps
+                  'D02MuMuPrescale'     : 1.0,
+                  'DstD02MuMuPrescale'  : 1.0,
+                  'D02PiPiPrescale'     : 0.1,
+                  'DstD02PiPiPrescale'  : 0.1
+                  }
