@@ -7,6 +7,9 @@
  - in order to avoid printing error message when there is no condition
    in the DB check if the condition is in the TES via SmartDataPtr
 
+! 2011-02-25 - Michel De Cian
+ - Change property "OutputLocation" in MuonTTTrack.cpp to "Output"
+
 ! 2011-02-20 - Tomasz Szumlak
  - change in VeloClusterPosition tool, now it is possible to configure
    the tool using the LHCBCOND/SIMCOND db this change comes in concert

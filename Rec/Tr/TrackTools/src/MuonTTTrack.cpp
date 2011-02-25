@@ -24,12 +24,12 @@ MuonTTTrack::MuonTTTrack( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("ToolName",             m_trackToolName     = "MuonNNetRec"             );
+  declareProperty( "ToolName",            m_trackToolName     = "MuonNNetRec"             );
   declareProperty( "Extrapolator",        m_extrapolatorName  = "TrackMasterExtrapolator" );
   declareProperty( "MC",                  m_MC                = false                     );
   declareProperty( "AddTTHits",           m_addTTHits         = true                      );
   declareProperty( "FillMuonStubInfo",    m_fillMuonStubInfo  = false                     );
-  declareProperty( "OutputLocation",      m_outputLoc         = "Rec/"+name+"/Tracks"     );
+  declareProperty( "Output",              m_outputLoc         = "Rec/"+name+"/Tracks"     );
   declareProperty( "MinNTTHits",          m_minNumberTTHits   = 2                         );
 }
 //=============================================================================

@@ -37,8 +37,9 @@
  * - ToolName: Name for the tool that makes muon standalone track.
  * - Extrapolator: Name for the track extrapolator.
  * - MC: To enable MC association.
+ * - AddTTHits: Add TT Hits to the muon track.
  * - FillMuonStubInfo: Fill parameters of muon stub in info fields of track;
- * - OutputLocation: The location the tracks should be written to.
+ * - Output: The location the tracks should be written to.
  * - MinNTTHits: Minimal number of TT hits that need to be added to save the track.
  *
  *  @author Michel De Cian
