@@ -114,14 +114,13 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
 
     double prob   = (1.0 + netOut)*0.5;
 
-    //m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
+    m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
 
 
     if ( msgLevel(MSG::DEBUG) ) {
       debug() << "Bhh cand: Network output " << netOut
               << " probability " << prob << endmsg;
     }
-
 
     // accept candidate?
     if (prob > m_NetworkCut) {

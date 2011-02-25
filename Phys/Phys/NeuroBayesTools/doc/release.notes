@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Ulrich Kerzel
+- add python file holding network Expertise
+
 ! 2011-02-22 - Ulrich Kerzel
  - anothehr ifdef for compilation on windows
  - coment out plotting of network output
