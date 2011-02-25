@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-02-21 - Victor Coco
+ - fix Hlt2PreSelDV.cpp downstream track matching to protoparticles
+
+! 2011-02-21 - Victor Coco
  - update Hlt2PreSelDV.cpp to deal with downstream tracks, update Hlt2SelDV
    with new option
 

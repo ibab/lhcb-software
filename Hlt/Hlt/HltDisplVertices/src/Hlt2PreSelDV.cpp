@@ -202,6 +202,7 @@ StatusCode Hlt2PreSelDV::initialize() {
   const RecVertex * UpPV = GetUpstreamPV();
   if(UpPV == NULL) return StatusCode::SUCCESS;
 
+
   //Set the beam line first, it may be used by GetUpstreamPV()
   if( m_RCut=="FromBeamLine"  ){
     if( exist<Particle::Range>( m_BLLoc ) ){
@@ -209,13 +210,10 @@ StatusCode Hlt2PreSelDV::initialize() {
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );
-      //always()<<"Beam line position "<< m_BeamLine->referencePoint()
-      //<<" direction " << m_BeamLine->momentum() << endmsg;
       if( msgLevel(MSG::DEBUG) )
         debug()<<"Beam line position "<< m_BeamLine->referencePoint()
                <<" direction " << m_BeamLine->momentum() << endmsg;
     } else { 
-        //always()<<"No Beam line found at "<< m_BLLoc << " uses upstream PV" << endmsg;
       if( msgLevel(MSG::DEBUG) )
         debug()<<"No Beam line found at "<< m_BLLoc << " uses upstream PV" << endmsg;
       m_BeamLine->setReferencePoint( UpPV->position() );
@@ -302,7 +300,6 @@ StatusCode Hlt2PreSelDV::initialize() {
         debug() <<"RV did not passed the cuts  --> disguarded !"<< endmsg;
       continue;
     }
-
     //Turn it into a Particle !
     //InitialiseGeoInfo();
     //Eventually don't keep it if close to/in detector material
@@ -428,7 +425,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     //Fix end vertex
     tmpPart.addInfo(52,r ); 
  
- 
     if( m_UseMap ){
       //Loop on RecVertex daughter tracks and save corresponding Particles
       for( ; iVtx != iVtxend; ++iVtx ){
@@ -456,6 +452,34 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
       //Find all particles that have tracks in RecVertex
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
+	    j != jend;++j) {
+	
+	if( (*j)->proto() == NULL ) continue;
+	if( (*j)->proto()->track() == NULL ) continue;
+	const Track * tk = (*j)->proto()->track();
+	//if( !TestTrack( tk ) ) continue;
+	while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
+	  ++iVtx;
+	}
+
+	if( (*iVtx)->key() == tk->key() ){ 
+	  if( (*iVtx)->key() != endkey ) ++iVtx; 
+	  // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+	    tmpVtx.addToOutgoingParticles ( *j );
+	    tmpPart.addToDaughters( *j );
+	    mom += (*j)->momentum();
+	  //const LHCb::Particle* clonedPart =  (*j )->clone();
+	  //tmpVtx.addToOutgoingParticles ( clonedPart );
+	  //tmpPart.addToDaughters( clonedPart );
+	  //mom += clonedPart->momentum();
+	  continue;
+	}
+      }
+
+      /*
+      //Find all particles that have tracks in RecVertex
+      Particle::ConstVector::const_iterator jend = Parts.end();
+      for ( Particle::ConstVector::const_iterator j = Parts.begin();
             j != jend;++j) {
         if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
@@ -468,7 +492,7 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
 	    continue;
 	  }
 	}
-      }
+	}*/
     }
 
     //Fill momentum and mass estimate
