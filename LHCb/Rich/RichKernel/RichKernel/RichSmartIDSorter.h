@@ -4,8 +4,6 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  $Id: RichSmartIDSorter.h,v 1.12 2007-03-09 17:58:13 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
  */

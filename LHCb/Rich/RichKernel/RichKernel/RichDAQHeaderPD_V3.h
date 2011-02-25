@@ -69,11 +69,11 @@ namespace Rich
         static const ShortType ShiftEventID     = ShiftMemID + BitsMemID;
 
         // Create the Masks
-        static const LongType MaskNeightBitP1  = ((1 << BitsNeightBitP1)-1) << ShiftNeightBitP1;
-        static const LongType MaskZS           = ((1 << BitsZS)-1)          << ShiftZS;
-        static const LongType MaskAlice        = ((1 << BitsAlice)-1)       << ShiftAlice;
-        static const LongType MaskMemID        = ((1 << BitsMemID )-1)      << ShiftMemID ;
-        static const LongType MaskEventID      = ((1 << BitsEventID)-1)     << ShiftEventID;
+        static const LongType MaskNeightBitP1  = (LongType) ((1 << BitsNeightBitP1)-1) << ShiftNeightBitP1;
+        static const LongType MaskZS           = (LongType) ((1 << BitsZS)-1)          << ShiftZS;
+        static const LongType MaskAlice        = (LongType) ((1 << BitsAlice)-1)       << ShiftAlice;
+        static const LongType MaskMemID        = (LongType) ((1 << BitsMemID )-1)      << ShiftMemID ;
+        static const LongType MaskEventID      = (LongType) ((1 << BitsEventID)-1)     << ShiftEventID;
 
         //-----------------------------------------------------------------------------------------
 

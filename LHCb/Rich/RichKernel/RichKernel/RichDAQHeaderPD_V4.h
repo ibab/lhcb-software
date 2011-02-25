@@ -88,13 +88,13 @@ namespace Rich
         static const ShortType ShiftGTInhibit   = ShiftDataFormat + BitsDataFormat;
 
         // Create the Masks
-        static const LongType MaskL0ID       = ((1 << BitsL0ID)-1)        << ShiftL0ID;
-        static const LongType MaskEventID    = ((1 << BitsEventID)-1)     << ShiftEventID;
-        static const LongType MaskNeightBit  = ((1 << BitsNeightBit)-1)   << ShiftNeightBit;
-        static const LongType MaskZS         = ((1 << BitsZS)-1)          << ShiftZS;
-        static const LongType MaskAlice      = ((1 << BitsAlice)-1)       << ShiftAlice;
-        static const LongType MaskDataFormat = ((1 << BitsDataFormat)-1)  << ShiftDataFormat;
-        static const LongType MaskGTInhibit  = ((1 << BitsGTInhibit)-1)   << ShiftGTInhibit;
+        static const LongType MaskL0ID       = (LongType) ((1 << BitsL0ID)-1)        << ShiftL0ID;
+        static const LongType MaskEventID    = (LongType) ((1 << BitsEventID)-1)     << ShiftEventID;
+        static const LongType MaskNeightBit  = (LongType) ((1 << BitsNeightBit)-1)   << ShiftNeightBit;
+        static const LongType MaskZS         = (LongType) ((1 << BitsZS)-1)          << ShiftZS;
+        static const LongType MaskAlice      = (LongType) ((1 << BitsAlice)-1)       << ShiftAlice;
+        static const LongType MaskDataFormat = (LongType) ((1 << BitsDataFormat)-1)  << ShiftDataFormat;
+        static const LongType MaskGTInhibit  = (LongType) ((1 << BitsGTInhibit)-1)   << ShiftGTInhibit;
 
         // Max values that can be stored
         static const ShortType MaxL0ID       = ( 1 << BitsL0ID  ) - 1;       ///< Max L0 ID

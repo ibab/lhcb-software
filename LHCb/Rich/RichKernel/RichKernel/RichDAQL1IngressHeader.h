@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
- *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.8 2009-10-12 15:47:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
  */
@@ -66,18 +63,18 @@ namespace Rich
       static const ShortType ShiftHPDsSuppressed = ShiftIngressID  + BitsIngressID;
 
       // The masks
-      static const ShortType MaskEventID        = ((1 << BitsEventID)-1)        << ShiftEventID;
-      static const ShortType MaskBXID           = ((1 << BitsBXID)-1)           << ShiftBXID;
-      static const ShortType MaskActiveHPDs     = ((1 << BitsActiveHPDs)-1)     << ShiftActiveHPDs ;
-      static const ShortType MaskIngressID      = ((1 << BitsIngressID)-1)      << ShiftIngressID ;
-      static const ShortType MaskHPDsSuppressed = ((1 << BitsHPDsSuppressed)-1) << ShiftHPDsSuppressed;
+      static const ShortType MaskEventID        = (ShortType) ((1 << BitsEventID)-1)        << ShiftEventID;
+      static const ShortType MaskBXID           = (ShortType) ((1 << BitsBXID)-1)           << ShiftBXID;
+      static const ShortType MaskActiveHPDs     = (ShortType) ((1 << BitsActiveHPDs)-1)     << ShiftActiveHPDs ;
+      static const ShortType MaskIngressID      = (ShortType) ((1 << BitsIngressID)-1)      << ShiftIngressID ;
+      static const ShortType MaskHPDsSuppressed = (ShortType) ((1 << BitsHPDsSuppressed)-1) << ShiftHPDsSuppressed;
 
       // the max values storable
-      static const ShortType MaxEventID        = ( 1 << BitsEventID        ) - 1;
-      static const ShortType MaxBXID           = ( 1 << BitsBXID           ) - 1;
-      static const ShortType MaxActiveHPDs     = ( 1 << BitsActiveHPDs     ) - 1;
-      static const ShortType MaxIngressID      = ( 1 << BitsIngressID      ) - 1;
-      static const ShortType MaxHPDsSuppressed = ( 1 << BitsHPDsSuppressed ) - 1;
+      static const ShortType MaxEventID        = (ShortType) ( 1 << BitsEventID        ) - 1;
+      static const ShortType MaxBXID           = (ShortType) ( 1 << BitsBXID           ) - 1;
+      static const ShortType MaxActiveHPDs     = (ShortType) ( 1 << BitsActiveHPDs     ) - 1;
+      static const ShortType MaxIngressID      = (ShortType) ( 1 << BitsIngressID      ) - 1;
+      static const ShortType MaxHPDsSuppressed = (ShortType) ( 1 << BitsHPDsSuppressed ) - 1;
 
     public:
 
