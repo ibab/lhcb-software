@@ -2,19 +2,6 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
-    #__slots__ = {  'BMassWinLow'         :  5000      # MeV
-    #               ,'BMassWinHigh'       :  5900      # MeV
-    #               ,'doca'               :     0.07
-    #               ,'KaonPTmin'          :  1800       # MeV
-    #               ,'KaonPTmax'          :  2500       # MeV
-    #               ,'KaonPmin'           : 10000       # MeV
-    #               ,'BPmin'              : 10000
-    #               ,'PIDK_min'           :     0.1
-    #               ,'PIDK_max'           :     0.1
-    #               ,'PIDMu_min'          :     2.0
-    #               ,'TrackChi2'          :    5.
-    #               ,'VertexChi2'         :    10.0
-    #               }
 
     __slots__ = {  'BMassWinLow'         :  5000      # MeV
                    ,'BMassWinHigh'       :  5900      # MeV
@@ -71,8 +58,8 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ## filter for kaons
         filterAll = Hlt2Member(FilterDesktop,
                                'FilterAll',
-                               InputLocations=[BiKalmanFittedKaons ],
-                               Code= childCutNoPID)
+                               Inputs  = [BiKalmanFittedKaons ],
+                               Code    = childCutNoPID)
         
         bindPrelim = bindMembers('bindPrelim', [ BiKalmanFittedKaons, filterAll])
         
@@ -80,7 +67,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         
         HLT1TISFilter = TisTosParticleTagger("HLT1TISFilter")
         HLT1TISFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        HLT1TISFilter.InputLocations = [ bindPrelim.outputSelection() ]
+        HLT1TISFilter.Inputs = [ bindPrelim.outputSelection() ]
         
         
         tisFilteredKaons = bindMembers("tisFilteredKaons", [ bindPrelim, HLT1TISFilter ])
@@ -95,7 +82,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts   = { "K+" : childCutNoPID}
                                          , CombinationCut  = combCut 
                                          , MotherCut       = motherCutNoPID
-                                         , InputLocations = [ tisFilteredKaons] 
+                                         , Inputs          = [ tisFilteredKaons] 
                                          )
 
         #######################################################################################################
@@ -114,15 +101,15 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ## filter for kaons
         filterRich     = Hlt2Member(FilterDesktop,
                                     'FilterRich',
-                                    InputLocations=[BiKalmanFittedRichKaons ],
-                                    Code= childCutPID)
+                                    Inputs = [BiKalmanFittedRichKaons ],
+                                    Code   = childCutPID)
 
         bindPrelimRich = bindMembers('bindPrelimRich', [ BiKalmanFittedRichKaons, filterRich])
 
         ## HLT1 TIS Filter
         HLT1TISRichFilter = TisTosParticleTagger("HLT1TISRichFilter")
         HLT1TISRichFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        HLT1TISRichFilter.InputLocations = [ bindPrelimRich.outputSelection() ]
+        HLT1TISRichFilter.Inputs      = [ bindPrelimRich.outputSelection() ]
 
         tisFilteredRichKaons = bindMembers("tisFilteredRichKaons", [ bindPrelimRich, HLT1TISRichFilter ])
 
@@ -136,7 +123,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                              , DaughtersCuts   = { "K+" : childCutPID}
                                              , CombinationCut  = combCut
                                              , MotherCut       = motherCutPID
-                                             , InputLocations = [ tisFilteredRichKaons]
+                                             , Inputs          = [ tisFilteredRichKaons]
                                              )
                                                                 
         
@@ -158,9 +145,9 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                          )
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
         filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
-                            InputLocations= [Hlt2B2HHLTUnbiasedRich ],
-                            Code=cuts,
-                            tools=[NBBhhTool])
+                            Inputs = [Hlt2B2HHLTUnbiasedRich ],
+                            Code    = cuts,
+                            tools   = [NBBhhTool])
         NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, filter])
                             
         
