@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Andrew Powell
+ - Updates to StrippingNoPIDDstarWithD02RSKPi.py
+
 ! 2011-02-25 - Cibran Santamarina
  - Update StrippingBs2PhiKst.py to match requirements.
 
@@ -32,7 +35,7 @@
  - Fixed bug in StrippingBd2DstarTauNu and tightened the Loose cuts 
 
 ! 2011-02-25 - Andrew Powell
-	- Updates to StrippingV0ForPID.py
+ - Updates to StrippingV0ForPID.py
 
 ! 2011-02-25 - Olivier Deschamps for R. Lefevre
  - Updated D02KPiPi0

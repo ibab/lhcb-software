@@ -1,165 +1,233 @@
 # $Id: StrippingNoPIDDstarWithD02RSKPi.py,v 1.1 2010-09-03 22:38:21 pxing Exp $
 
-__author__ = ['Philip Xing', 'Andrew Powell']
-__date__ = '1 November 2010'
-__version__ = '$Revision: 3.0 $'
+__author__  = ['Philip Xing', 'Andrew Powell']
+__date__    = '25th February 2010'
+__version__ = '$Revision: 4.0 $'
 
 '''
 Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
+
+Usage:
+
+from StrippingSelections import StrippingNoPIDDstarWithD02RSKPi
+confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RSKPiConf('noPIDDstar',StrippingNoPIDDstarWithD02RSKPi.default_config)
+stream.appendLines( confNoPIDDstarWithD02RSKPi.lines() )
+
+Results from running over:
+$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py
+
+
+StrippingReport                                                INFO Event 100000, Good event 92017
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  0.2054|       189|       |  16.470|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.2054|       189|       |  16.459|       |       |       |
+ |!StrippingStripDstarNoPIDsWithD02RSKPiLine         |  0.2054|       189|  0.000|  15.578|      0|      0|    100|
+
+====================================================================================
+                   AlgorithmCorrelationsAlg.AlgorithmCorrelations
+====================================================================================
+    Algorithm                                    Eff.       1        2        3
+------------------------------------------------------------------------------------
+  1 StrippingGlobal                              0.205% |  ####### 100.000% 100.000%
+  2 StrippingSequenceStreamTest                  0.205% | 100.000%  ####### 100.000%
+  3 StrippingStripDstarNoPIDsWithD02RSKPiLine    0.205% | 100.000% 100.000%  #######
+====================================================================================
+
 '''
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
 
-class StrippingNoPIDDstarWithD02RSKPiConf(LHCbConfigurableUser) :
+
+default_config =  {
+      'DaugPt'           : 250 * MeV      ## GeV
+    , 'DaugP'            : 2.0 * GeV      ## GeV
+    , 'DaugIPChi2'       : 16             ## unitless
+    , 'DaugTrkChi2'      : 5              ## unitless
+    , 'D0MassWin'        : 75 * MeV       ## MeV
+    , 'D0Pt'             : 1.5 * GeV      ## GeV
+    , 'D0VtxChi2Ndof'    : 13             ## unitless
+    , 'D0FDChi2'         : 49             ## unitless
+    , 'D0BPVDira'        : 0.9999         ## unitless
+    , 'D0IPChi2'         : 30             ## unit
+    , 'SlowPiPt'         : 150 * MeV      ## MeV
+    , 'SlowPiTrkChi2'    : 5              ## unitless
+    , 'DstarPt'          : 2.2 * GeV      ## GeV
+    , 'DstarVtxChi2Ndof' : 13             ## unitless
+    , 'DeltaM_Min'       : 130 * MeV      ## MeV
+    , 'DeltaM_Max'       : 155 * MeV      ## MeV
+    ##
+    , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+    , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+    , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
+    ##
+    , 'Prescale'         : 1.0            ## unitless
+    , 'Postscale'        : 1.0            ## unitless
+    ##
+    , 'Monitor'          : True           ## Activate the monitoring?
+    }
+
+class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
     """
     Definition of prompt D*+ -> D0( K- pi+) pi+ stripping lines.
     The the main user method is Lines(), which returns a list of the
     StrippingLine objects defined and configured by this configurable.
     """
-    __slots__ = {
-        'DaugPt'             : 300 * MeV      ## GeV
-        , 'DaugP'            : 2.0 * GeV      ## GeV
-        , 'DaugIPChi2'       : 16             ## unitless
-        , 'DaugTrkChi2'      : 10             ## unitless
-        , 'D0MassWin'        : 75 * MeV       ## MeV
-        , 'D0Pt'             : 1.5 * GeV      ## GeV
-        , 'D0VtxChi2Ndof'    : 13             ## unitless
-        , 'D0FDChi2'         : 49             ## unitless
-        , 'D0BPVDira'        : 0.9999         ## unitless
-        , 'D0IPChi2'         : 30             ## unit
-        , 'SlowPiPt'         : 150 * MeV      ## MeV
-        , 'DstarPt'          : 2.2 * GeV      ## GeV
-        , 'DstarVtxChi2Ndof' : 13             ## unitless
-        , 'DeltaM'           : 2 * MeV        ## MeV
-        ##
-        , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
-        , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
-        , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
-        ##
-        , 'Prescale'         : 0.42           ## unitless
-        ##
-        , 'Monitor'          : False          ## Activate the monitoring?
-        }
+    __configuration_keys__ = ( 'DaugPt',
+                               'DaugP',
+                               'DaugIPChi2',
+                               'DaugTrkChi2',
+                               'D0MassWin',
+                               'D0Pt', 
+                               'D0VtxChi2Ndof',
+                               'D0FDChi2', 
+                               'D0BPVDira', 
+                               'D0IPChi2',
+                               'SlowPiPt',
+                               'SlowPiTrkChi2',
+                               'DstarPt',
+                               'DstarVtxChi2Ndof',
+                               'DeltaM_Min',
+                               'DeltaM_Max',
+                               ##
+                               'DCS_WrongMass',
+                               'KK_WrongMass',
+                               'PiPi_WrongMass',
+                               ##
+                               'Prescale',
+                               'Postscale',
+                               ##
+                               'Monitor'
+                               )
 
-    def Lines ( self ) :
+    def __init__(self, name, config) :
 
-        lines = [ self.DStLine() ]
-        return lines
+        LineBuilder.__init__(self, name, config)
+        self.selD02KPi = D0(name,
+                            config,
+                            Monitor=config['Monitor']
+                            )
 
-    def DStLine( self ):
-        from StrippingConf.StrippingLine import StrippingLine
-        Dstar2D0PiSel = self.Dstar()
-        return StrippingLine('StripDstarNoPIDsWithD02RSKPiLine',
-                             prescale = self.getProp('Prescale'),
-                             algos = [Dstar2D0PiSel])  
-
-    def D0 ( self ) :
-        """
-        Selection for D0
-        """
-        Pions = DataOnDemand( Location = "Phys/StdNoPIDsPions" )
-        Kaons = DataOnDemand( Location = "Phys/StdNoPIDsKaons" )
-
-        _D0 = CombineParticles("StripD0")
-        _D0.DecayDescriptor = "[D0 -> K- pi+]cc"
-        dauCutStr = "(PT > %(DaugPt)g) & (P > %(DaugP)g) & (TRCHI2DOF < %(DaugTrkChi2)g) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)g)" % self.getProps()
-        _D0.DaughtersCuts = { "K+" : dauCutStr,
-                              "pi+" : dauCutStr
-                              }
-        _D0.CombinationCut = "(ADAMASS('D0')<%(D0MassWin)g)" % self.getProps()
-        mothercut = """
-                    (PT>%(D0Pt)g)
-                    & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)g)
-                    & (BPVVDCHI2>%(D0FDChi2)g)
-                    & (BPVDIRA>%(D0BPVDira)g)
-                    & (BPVIPCHI2()<%(D0IPChi2)g)
-                    & ( ADWM( 'D0' , WM( 'pi-' , 'K+') ) > %(DCS_WrongMass)g)
-                    & ( ADWM( 'D0' , WM( 'K-' , 'K+') ) > %(KK_WrongMass)g)
-                    & ( ADWM( 'D0' , WM( 'pi-' , 'pi+') ) > %(PiPi_WrongMass)g)
-                    """
-        _D0.MotherCut = mothercut % self.getProps()
-
-        if self.getProp ( 'Monitor' ) :    
-            _D0.Preambulo    += [
-                ## define historam type (shortcut)
-                "Histo  = Gaudi.Histo1DDef"  ,
-                ## monitor LL-case
-                "mass     = monitor ( M / GeV , Histo ( 'D0' , 1.79 , 1.94 , 100 ) , 'M'     ) " ,
-                "pT       = monitor ( PT / GeV , Histo ( 'D0' , 0.00 , 20.0 , 100 ) , 'pT'   ) " ,
-                "y        = monitor ( Y , Histo ( 'D0' , 1.60 , 5.40 , 100 ) , 'y'           ) "
-                ]
-            _D0.Monitor       = True
-            _D0.HistoProduce  = True
-            _D0.HistoPrint    = True
-            _D0.MotherMonitor = """ process ( mass )
-            >> process ( pT )
-            >> process ( y )
-            >> EMPTY
-            """
+        self.selDstar2D0Pi = Dstar(name,
+                                   self.selD02KPi,
+                                   config,
+                                   Monitor=config['Monitor']
+                                   )
         
-        D0 = Selection("SelD02RSKPi",
-                        Algorithm = _D0,
-                        RequiredSelections = [Kaons,
-                                              Pions])
-        return D0
+        self.Dstar2D0Pi_line = StrippingLine('StripDstarNoPIDsWithD02RSKPiLine',
+                                             prescale = config['Prescale'],
+                                             postscale = config['Postscale'],
+                                             selection = self.selDstar2D0Pi)  
 
-    def Dstar ( self ) :
-        """
-        Selection for D*
-        """
-        Pions = DataOnDemand( Location = "Phys/StdNoPIDsPions" )
+        self.registerLine(self.Dstar2D0Pi_line)
         
-        _DSt = CombineParticles("StripDSt")
-        _DSt.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
-        slowPiCuts = "(PT>%(SlowPiPt)s)" % self.getProps()
-        d0Cuts = "ALL"
-        _DSt.DaughtersCuts   = { 'pi+' : slowPiCuts, 'D0' : d0Cuts }
-        combcut = """
-        (APT>%(DstarPt)g)
-        & (ADAMASS('D*(2010)+')<75)
-        """
-        _DSt.CombinationCut = combcut % self.getProps()
-        mothercut = """
-        (VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)g)
-        & (M-MAXTREE('D0'==ABSID,M)<(145.5+%(DeltaM)g))
-        & (M-MAXTREE('D0'==ABSID,M)>(145.5-%(DeltaM)g))
-        """
-        _DSt.MotherCut =  mothercut % self.getProps()
 
-        if self.getProp ( 'Monitor' ) :    
-            _DSt.Preambulo    += [
-                ## define historam type (shortcut)
-                "Histo  = Gaudi.Histo1DDef"  ,
-                ## monitor LL-case
-                "mass     = monitor ( M / GeV , Histo ( 'DSt' , 1.93 , 2.09 , 100 ) , 'M'     ) " ,
-                "pT       = monitor ( PT / GeV , Histo ( 'DSt' , 0.00 , 20.0 , 100 ) , 'pT'   ) " ,
-                "y        = monitor ( Y , Histo ( 'DSt' , 1.60 , 5.40 , 100 ) , 'y'           ) "
-                ]
-            _DSt.Monitor       = True
-            _DSt.HistoProduce  = True
-            _DSt.HistoPrint    = True
-            _DSt.MotherMonitor = """ process ( mass )
-            >> process ( pT )
-            >> process ( y )
-            >> EMPTY
+def D0 ( name,
+         config,
+         Monitor
+         ) :
+    """
+    Selection for D0
+    """
+    
+    _D0 = CombineParticles("StripD0")
+    _D0.DecayDescriptor = "[D0 -> K- pi+]cc"
+    dauCutStr = "(PT > %(DaugPt)s) & (P > %(DaugP)s) & (TRCHI2DOF < %(DaugTrkChi2)s) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" %locals()['config']
+    _D0.DaughtersCuts = { "K+" : dauCutStr,
+                          "pi+" : dauCutStr
+                          }
+    _D0.CombinationCut = "(ADAMASS('D0')<85 * MeV)" %locals()['config']
+    mothercut = """
+    (PT>%(D0Pt)s)
+    & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s)
+    & (BPVVDCHI2>%(D0FDChi2)s)
+    & (BPVDIRA>%(D0BPVDira)s)
+    & (BPVIPCHI2()<%(D0IPChi2)s)
+    & (ADMASS('D0') < %(D0MassWin)s )
+    & ( ADWM( 'D0' , WM( 'pi-' , 'K+') ) > %(DCS_WrongMass)s)
+    & ( ADWM( 'D0' , WM( 'K-' , 'K+') ) > %(KK_WrongMass)s)
+    & ( ADWM( 'D0' , WM( 'pi-' , 'pi+') ) > %(PiPi_WrongMass)s)
+    """
+    _D0.MotherCut = mothercut %locals()['config']
+    
+    if Monitor != None :    
+        _D0.Preambulo    += [
+            ## define historam type (shortcut)
+            "Histo  = Gaudi.Histo1DDef"  ,
+            ## monitor LL-case
+            "mass     = monitor ( M / GeV , Histo ( 'D0' , 1.79 , 1.94 , 100 ) , 'M'     ) " ,
+            "pT       = monitor ( PT / GeV , Histo ( 'D0' , 0.00 , 20.0 , 100 ) , 'pT'   ) " ,
+            "y        = monitor ( Y , Histo ( 'D0' , 1.60 , 5.40 , 100 ) , 'y'           ) "
+            ]
+        _D0.Monitor       = True
+        _D0.HistoProduce  = True
+        _D0.HistoPrint    = True
+        _D0.MotherMonitor = """ process ( mass )
+        >> process ( pT )
+        >> process ( y )
+        >> EMPTY
             """
             
-        DSt = Selection("SelDSt2D0Pi",
-                        Algorithm = _DSt,
-                        RequiredSelections = [Pions,
-                                              self.D0()])
-
-        return DSt
-
-    def getProps ( self ) :
+    D0 = Selection("SelD02RSKPi",
+                   Algorithm = _D0,
+                   RequiredSelections = [StdNoPIDsKaons,
+                                         StdNoPIDsPions])
+    return D0
+    
+def Dstar ( name,
+            D0Sel,
+            config,
+            Monitor) :
+    """
+    Selection for D*
+    """
+    
+    _DSt = CombineParticles("StripDSt")
+    _DSt.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
+    slowPiCuts = "(PT>%(SlowPiPt)s) & (TRCHI2DOF < %(SlowPiTrkChi2)s)" %locals()['config']
+    d0Cuts = "ALL"
+    _DSt.DaughtersCuts   = { 'pi+' : slowPiCuts, 'D0' : d0Cuts }
+    combcut = """
+    (APT>%(DstarPt)s)
+    & (ADAMASS('D*(2010)+')<75)
+    & (AM - AM1 < 165 * MeV) 
+    """
+    _DSt.CombinationCut = combcut %locals()['config']
+    mothercut = """
+    (VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s)
+    & (M-MAXTREE('D0'==ABSID,M)<%(DeltaM_Max)s)
+    & (M-MAXTREE('D0'==ABSID,M)>%(DeltaM_Min)s)
+    """
+    _DSt.MotherCut =  mothercut %locals()['config']
+    
+    if Monitor != None :    
+        _DSt.Preambulo    += [
+            ## define historam type (shortcut)
+            "Histo  = Gaudi.Histo1DDef"  ,
+            ## monitor LL-case
+            "mass     = monitor ( M / GeV ,    Histo ( 'DSt' , 1.93 , 2.09 , 100 ) , 'M'     ) " ,
+            "deltaM   = monitor ( M - M1 /MeV, Histo ( 'DSt' , 135  , 160  , 50  ) , 'DeltaM') " ,
+            "pT       = monitor ( PT / GeV ,   Histo ( 'DSt' , 0.00 , 20.0 , 100 ) , 'pT'    ) " ,
+            "y        = monitor ( Y ,          Histo ( 'DSt' , 1.60 , 5.40 , 100 ) , 'y'     ) "
+            ]
+        _DSt.Monitor       = True
+        _DSt.HistoProduce  = True
+        _DSt.HistoPrint    = True
+        _DSt.MotherMonitor = """ process ( mass )
+        >> process ( deltaM )
+        >> process ( pT )
+        >> process ( y )
+        >> EMPTY
         """
-        From HltLinesConfigurableUser
-        @todo Should be shared between Hlt and stripping
-        """
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+        
+    DSt = Selection("SelDSt2D0Pi",
+                    Algorithm = _DSt,
+                    RequiredSelections = [StdNoPIDsPions,
+                                          D0Sel])
+    
+    return DSt
