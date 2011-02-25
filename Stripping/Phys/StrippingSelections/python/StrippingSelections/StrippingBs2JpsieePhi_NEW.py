@@ -10,6 +10,10 @@ Exports the following stripping lines
 - Bs2JpsieePhiLooseLine
 '''
 
+__all__ = (
+    'Bs2JpsieePhiConfConf',
+    )
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -52,7 +56,6 @@ class Bs2JpsieePhiConf(LineBuilder):
                 , 'BsDIRA'                    # adimensional
                 )
 
-
     config_default = {
                   'ElectronPTLoose'            :   800.    # MeV
                 , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
@@ -87,6 +90,7 @@ class Bs2JpsieePhiConf(LineBuilder):
                 }
 
 
+
     def __init__(self, name, config) :
       LineBuilder.__init__(self, name, config)
 
@@ -100,8 +104,7 @@ class Bs2JpsieePhiConf(LineBuilder):
     def _Bs2JpsieePhiLine( self, name, config ) :
 
         _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop("Jpsi2eeFilterForBs2JpsieePhi",
-                              Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
+        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPID)s )" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOF)s)" \
                                      " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOF)s)" \
@@ -113,8 +116,7 @@ class Bs2JpsieePhiConf(LineBuilder):
                          RequiredSelections = [_stdJpsi])
 
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop("Phi2KKFilterForBs2JpsieePhi",
-                             Code = "   (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
+        _phi = FilterDesktop(Code = "   (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
                                     " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOF)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)" \
                                     " & (PT > %(PhiPT)s *MeV)"\
@@ -127,8 +129,7 @@ class Bs2JpsieePhiConf(LineBuilder):
 
         CC = "(AM > %(BsMassMin)s *MeV) & (AM < %(BsMassMax)s *MeV)" % config
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOF)s) & (BPVDIRA > %(BsDIRA)s)" % config
-        _Bs = CombineParticles(name,
-                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC ,
                                MotherCut = MC  
                                )
@@ -146,8 +147,7 @@ class Bs2JpsieePhiConf(LineBuilder):
     def _Bs2JpsieePhiLooseLine( self, name, config ) :
 
         _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop("Jpsi2eeFilterForBs2JpsieePhiLoose",
-                              Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
+        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOFLoose)s)" \
                                      " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" \
                                      " & (MM > %(JpsiMassMinLoose)s *MeV)" \
@@ -158,8 +158,7 @@ class Bs2JpsieePhiConf(LineBuilder):
                          RequiredSelections = [_stdJpsi])
     
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop("Phi2KKFilterForBs2JpsieePhiLoose",
-                             Code = "   (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
+        _phi = FilterDesktop(Code = "   (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOFLoose)s)" \
                                     " & (PT > %(PhiPTLoose)s *MeV)"\
                                     " & (MM > %(PhiMassMinLoose)s *MeV)" \
@@ -171,8 +170,7 @@ class Bs2JpsieePhiConf(LineBuilder):
 
         CC = "(AM > %(BsMassMinLoose)s *MeV) & (AM < %(BsMassMaxLoose)s *MeV)" % config
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s) & (BPVDIRA > %(BsDIRALoose)s)" % config
-        _Bs = CombineParticles(name,
-                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
                                MotherCut = MC 
                                )

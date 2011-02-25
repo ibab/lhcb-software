@@ -3,6 +3,13 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-02-25 - Jibo He
+ - StrippingBd2(Jpsi)eeKstar.py
+   . Changed the ordering of making Kstar and ee to save CPU time
+ - StrippingBs2JpsieePhi_NEW.py
+   . Updated and works now. Test script added. 
+
 ! 2011-02-25 - Anne Keune
  - Fixed bug in StrippingBd2DstarTauNu and tightened the Loose cuts 
 

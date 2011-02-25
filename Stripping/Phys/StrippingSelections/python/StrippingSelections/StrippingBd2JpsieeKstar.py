@@ -278,7 +278,7 @@ def makeBd2eeKstar( name,
                                     )
     return Selection( name,
                       Algorithm = _Bd2eeKstar,
-                      RequiredSelections = [ SelKstar, SelEE ]
+                      RequiredSelections = [ SelEE, SelKstar ]
                       )
     
     
