@@ -4,6 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Anton Poluektov 
+ - Update StrippingB2DX.py: 
+   . Add B->D(hhh)V0 (V0=Kstar,rho,phi) modes 
+   . Add B->Dh with D->Ksh (h=pi,K)
+   . Tighten D->hh selections in default config (vertex chi2<6, FD chi2>100)
+   . Introduce min Pt cut for B candidates (but = 0 in the default config)
+   Total retention with default config is 1.5% 
+ - Update StrippingDstarD02Kpipi0.py (was StrippingDstar_D2KPiPi0.py) to use LineBuilder
+ - Update tests/test_b2dx.py and add tests/test_dstard2kpipi0.py
+
 ! 2011-02-25 - Michel De Cian
  - Update StrippingTrackEffMuonTT lines
 
