@@ -8,10 +8,72 @@ __version__ = '$Revision: 1.2 $'
 Implements 3 lines: B+ -> K+ X3872, B+ -> K+ Psi(2S) and a looser B+ -> K+ JPsi pi+ pi+ 
 '''
 
+## Note this is just for testing the stripping on 25/02/2011
+## Cuts may well change before the stripping is launched
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
 from StrippingUtils.Utils import LineBuilder
+
+Stripping_BuToKX3872_TestDictonary = {
+    'Prescale_BuToKX3872'    : 1.0,
+    'Postscale_BuToKX3872'   : 1.0,
+
+    'Prescale_BuToKX3872Loose'    : 1.0,
+    'Postscale_BuToKX3872Loose'   : 1.0,
+
+    'Prescale_BuToKPsi2S'    : 1.0,
+    'Postscale_BuToKPsi2S'   : 1.0,
+
+    'Prescale_BuToKPsi2SLoose'    : 1.0,
+    'Postscale_BuToKPsi2SLoose'   : 1.0,
+
+    # B cuts
+    'Bu_Comb_MassWindow'         : 450.0,
+    'Bu_Comb_MassWindowLoose'    : 500.0,
+    'Bu_MassWindow'              : 400.0,
+    'Bu_MassWindowLoose'         : 400.0,
+    'Bu_VertexCHI2'              :   5.0,
+    'Bu_VertexCHI2Loose'         :   7.0,
+    'Bu_IPCHI2'                  :  15.0,
+    'Bu_IPCHI2Loose'             :  20.0,
+    'Bu_FlightCHI2'              :  30.0,
+    'Bu_FlightCHI2Loose'         :  20.0,
+    'Bu_DIRA'                    :   0.9995,
+    'Bu_DIRALoose'               :   0.9995,
+    
+    # X3872 / Psi(2S) cuts
+    'X3872_Comb_MassWindow'      : 180.0,
+    'X3872_Comb_MassWindowLoose' : 220.0,
+    'X3872_MassWindow'           : 150.0,
+    'X3872_MassWindowLoose'      : 190.0,
+    'X3872_VertexCHI2'           :   8.0,
+    'X3872_VertexCHI2Loose'      :  10.0,
+
+    # Track cuts
+    'Track_CHI2nDOF'       : 4.0,
+
+    # Kaon cuts
+    'Kaon_MinIPCHI2'       : 4.5,
+    'Kaon_MinIPCHI2Loose'  : 4.0,
+
+    # Pion cuts
+    'Pion_MinIPCHI2'       : 4.5,
+    'Pion_MinIPCHI2Loose'  : 4.0,
+
+    # JPsi cuts
+    'JPsi_MassWindow'       :  70.0,
+    'JPsi_MassWindowLoose'  :  80.0,
+    'JPsi_VertexCHI2'       :  10.0,
+    'JPsi_VertexCHI2Loose'  :  10.0,
+
+    # Muon cuts
+    'Muon_MinIPCHI2'        :   1.5,
+    'Muon_MinIPCHI2Loose'   :   1.5,
+    'Muon_PT'               : 500.0,
+    'Muon_IsMuon'           : True
+    }
 
 class StrippingBu2KX3872Conf(LineBuilder):
     """

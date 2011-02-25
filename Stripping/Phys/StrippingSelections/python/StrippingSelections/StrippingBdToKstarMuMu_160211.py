@@ -9,10 +9,64 @@ Bd->K*mumu stripping selection using LoKi::Hybrid and python
 Default line applies a slightly loosened offline selection
 '''
 
+## Note this is just for testing the stripping on 25/02/2011
+## Cuts may well change before the stripping is launched
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
 from StrippingUtils.Utils import LineBuilder
+
+Stripping_BdToKstarMuMu_TestDictonary = {
+    'UseNoPIDsHadrons'          : True,
+    
+    'Prescale_BdToKstarMuMu'    : 1.0,
+    'Postscale_BdToKstarMuMu'   : 1.0,
+
+    'Prescale_BdToKstarMuMuSS'  : 1.0,
+    'Postscale_BdToKstarMuMuSS' : 1.0,
+
+    'Prescale_BuToKMuMu'        : 1.0,
+    'Postscale_BuToKMuMu'       : 1.0,
+
+    'Prescale_BuToKMuMuSS'      : 1.0,
+    'Postscale_BuToKMuMuSS'     : 1.0,
+   
+    # B cuts
+    'B_Comb_MassLow'      : 4600.0,
+    'B_Comb_MassHigh'     : 6000.0,
+    'B_MassLow'           : 4850.0,
+    'B_MassHigh'          : 5780.0,
+    'B_VertexCHI2'        :    6.0,
+    'B_IPCHI2'            :   16.0,
+    'B_DIRA'              :    0.014,
+    'B_FlightCHI2'        :  121.0,
+        
+    # Daughter cuts
+    'Dau_VertexCHI2'      :   12.0,
+    'Dau_DIRA'            :   -0.9,
+
+    # Kstar cuts
+    'Kstar_Comb_MassLow'  :  550.0,
+    'Kstar_Comb_MassHigh' : 2200.0,
+    'Kstar_MassLow'       :  600.0,
+    'Kstar_MassHigh'      : 2000.0,
+    'Kstar_MinIPCHI2'     :    4.0,
+    'Kstar_FlightChi2'    :   25.0,
+
+    # JPsi (dimu) cuts
+    'Dimu_FlightChi2'     :   81.0,
+    
+    # Track cuts
+    'Track_CHI2nDOF'      :    5.0,
+ 
+    # Hadron cuts
+    'Hadron_MinIPCHI2'    :    9.0,
+
+    # Muon cuts
+    'Muon_MinIPCHI2'      :    9.0,
+    'Muon_IsMuon'         :   False
+    }
 
 class StrippingBdToKstarMuMuConf(LineBuilder):
     '''
@@ -217,6 +271,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         from StandardParticles import StdLooseKaons
         from StandardParticles import StdNoPIDsKaons
 
+        MyStdKaons = None
+        
         if(UseNoPIDsHadrons == True):
             MyStdKaons = StdNoPIDsKaons
         else:

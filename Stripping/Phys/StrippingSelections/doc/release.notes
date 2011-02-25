@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Jeremy Dickens
+ - Bug fix to KstarMuMu lines and added test dictionary
+ - Added test dictionary to X3872 lines
+
 ! 2011-02-25 -Georg Krocker 
  - Small fixes to StrippingTrackEffDownMuon.py and StrippingTrackEffVeloMuon.py
 
