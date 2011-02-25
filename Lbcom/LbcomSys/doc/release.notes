@@ -6,6 +6,36 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r1>2011-02-28 LbcomSys v10r1</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r1
+
+- Production candidate for 2011 data-taking
+
+- Packages updated: DAQMonitors v1r3, HltDAQ v2r7, L0DU v10r12, 
+    RichAlgorithms v1r3, RichDAQ v3r31, RichMCMonitors v1r8, RichMCTools v3r15,
+    RichTools v2r32, STMonitors v3r4, STTools v4r7, VeloDAQ v6r2
+
+- Functionality changes:
+  . Add transparent on-the-fly compression when writing through
+    ConfigTarFileAccessSvc (HltDAQ v2r7)
+  . Adapt to change in L0Event (new data DiMuonProd) (L0DU v10r12)
+  . Add option IgnoreErrorBanks to velol decoder, makes using the TAE scan
+    in VETRA more convenient (VeloDAQ v6r2)
+  . Rewrite of PrepareVeloFullRawBuffer to cope with the nzs data that are sent
+    together with the VeloError banks (VeloDAQ v6r2)
+
+- Monitoring changes
+  . Modified binning of some histograms in STClusterMonitor to make more
+    understandable in the online monitoring (STMonitors v3r4)
+  . Added STBadChannelFinder algorithm to look for bad/open channels.
+    (STMonitors v3r4)
+
+- Bug fixes:
+  . Bug fix in CMS noise tool (STTools v4r7)
+  . Fix coverity defects and icc warnings and remarks (DAQMonitors v1r3,
+    HltDAQ v2r7, RichAlgorithms v1r3, RichDAQ v3r31, RichMCMonitors v1r8,
+    RichMCTools v3r15, RichTools v2r32
+
 </PRE><H1><A NAME=v10r0>2011-02-02 LbcomSys v10r0</A></H1><PRE>
 This version uses Gaudi v22r0 and LHCb v32r0
 
