@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Ulrich Kerzel
+ - new line definitions with cuts for CP WG Gamma/Loop:
+   TestCPGammaLoop.py
+
 ! 2011-02-25 - Jibo He
  - Replaced "algos" by "selection" in 
    DiMuon, DiElectron, ElectronID, Ccbar2Ppbar, Bc2JpsiX, 
