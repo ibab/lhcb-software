@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Alexandr Kozlinskiy
+ - Updated StrippingD02MuMu
+
 ! 2011-02-25 - Francesco Dettori 
  - Changed default prescale for D*->pi (D0-> Kpi, pipi  )
    in StrippingDstarD02xx.py in order to match 0.1% retention.

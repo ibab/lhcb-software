@@ -29,24 +29,24 @@ Note: no prescales
 
 StrippingReport                                                INFO Event 10000, Good event 9252
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  2.2157|       205|       |   8.234|       |       |       |
- |_StrippingSequenceStreamTest_                      |  2.2157|       205|       |   8.225|       |       |       |
- |!StrippingD02MuMuLine                              |  0.0973|         9|  0.000|   4.811|      0|      0|     27|
- |!StrippingD02MuMuDstLine                           |  0.0324|         3|  0.000|   1.677|      0|      0|      0|
- |!StrippingD02MuMuClbrD02PiPiLine                   |  2.2049|       204|  0.000|   0.515|      0|      0|      0|
- |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.6485|        60|  0.000|   0.489|      0|      0|      0|
+ |_StrippingGlobal_                                  |  2.6805|       248|       |   7.045|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  2.6805|       248|       |   7.041|       |       |       |
+ |!StrippingD02MuMuLine                              |  0.0865|         8|  0.000|   4.226|      0|      0|     16|
+ |!StrippingD02MuMuDstLine                           |  0.0324|         3|  0.000|   1.391|      0|      0|      0|
+ |!StrippingD02MuMuClbrD02PiPiLine                   |  2.6697|       247|  0.000|   0.509|      0|      0|      0|
+ |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.8106|        75|  0.000|   0.444|      0|      0|      0|
  
 #=================================================================================================
                          AlgorithmCorrelationsAlg.AlgorithmCorrelations
 #=================================================================================================
     Algorithm                             Eff.       1       2       3       4       5       6  
 -------------------------------------------------------------------------------------------------
-  1 StrippingGlobal                       2.22% |  ###### 100.00% 100.00% 100.00% 100.00% 100.00%
-  2 StrippingSequenceStreamTest           2.22% | 100.00%  ###### 100.00% 100.00% 100.00% 100.00%
-  3 StrippingD02MuMuLine                  0.10% |   4.39%   4.39%  ###### 100.00%   3.92%   5.00%
-  4 StrippingD02MuMuDstLine               0.03% |   1.46%   1.46%  33.33%  ######   1.47%   5.00%
-  5 StrippingD02MuMuClbrD02PiPiLine       2.20% |  99.51%  99.51%  88.89% 100.00%  ###### 100.00%
-  6 StrippingD02MuMuClbrDstD02PiPiLine    0.65% |  29.27%  29.27%  33.33% 100.00%  29.41%  ######
+  1 StrippingGlobal                       2.68% |  ###### 100.00% 100.00% 100.00% 100.00% 100.00%
+  2 StrippingSequenceStreamTest           2.68% | 100.00%  ###### 100.00% 100.00% 100.00% 100.00%
+  3 StrippingD02MuMuLine                  0.09% |   3.23%   3.23%  ###### 100.00%   2.83%   4.00%
+  4 StrippingD02MuMuDstLine               0.03% |   1.21%   1.21%  37.50%  ######   1.21%   4.00%
+  5 StrippingD02MuMuClbrD02PiPiLine       2.67% |  99.60%  99.60%  87.50% 100.00%  ###### 100.00%
+  6 StrippingD02MuMuClbrDstD02PiPiLine    0.81% |  30.24%  30.24%  37.50% 100.00%  30.36%  ######
 #=================================================================================================
 
 """
@@ -84,10 +84,9 @@ class D02MuMuConf(LineBuilder) :
         D0CombinationCut = \
           "(ADAMASS('D0') < 110 * MeV)"
         D0MotherCut = \
-          "(VFASPF(VCHI2) < 25) & " + \
+          "(VFASPF(VCHI2) < 16) & " + \
           "(ADMASS('D0') < 100 * MeV) & " + \
-          "(BPVLTFITCHI2() < 25) & " + \
-          "(BPVLTIME() > %(MinD0LT)s * ps)" % config
+          "(BPVLTIME(16) > %(MinD0LT)s * ps)" % config
 
         DstarDaughtersCutsPion = \
           "(TRCHI2DOF < 5)"
@@ -96,6 +95,8 @@ class D02MuMuConf(LineBuilder) :
         DstarMotherCut = \
           "(VFASPF(VCHI2) < 25) & " + \
           "((M - M1) < 160 * MeV)"
+#        HLTCut = "(HLT_PASS_RE('Hlt.*(MuMu|PiPi|MBMicro|Muon).*Decision'))"
+        HLTCut = "(HLT_PASS_RE('Hlt.*Decision'))"
 
         # D0 combine
         from Configurables import CombineParticles
@@ -122,22 +123,22 @@ class D02MuMuConf(LineBuilder) :
         self.lineD02MuMu = StrippingLine(name + "Line",
           algos = [ D02MuMuSelection ],
           prescale = config['D02MuMuPrescale'],
-          HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+          HLT = HLTCut)
 
         self.lineDstD02MuMu = StrippingLine(name + "Dst" + "Line",
           algos = [ DstD02MuMuSelection ],
           prescale = config['DstD02MuMuPrescale'],
-          HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+          HLT = HLTCut)
 
         self.lineD02PiPi = StrippingLine(name + "ClbrD02PiPi" + "Line",
           algos = [ D02PiPiSelection ],
           prescale = config['D02PiPiPrescale'],
-          HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+          HLT = HLTCut)
 
         self.lineDstD02PiPi = StrippingLine(name + "ClbrDstD02PiPi" + "Line",
           algos = [ DstD02PiPiSelection ],
           prescale = config['DstD02PiPiPrescale'],
-          HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+          HLT = HLTCut)
 
         self.registerLine(self.lineD02MuMu)
         self.registerLine(self.lineDstD02MuMu)
