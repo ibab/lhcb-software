@@ -15,7 +15,7 @@ from StrippingSelections.StrippingBd2JpsieeKstar import Bd2JpsieeKstarConf
 
 #from StrippingSelections.StrippingBu2LLK       import StrippingBu2LLKConf
 from StrippingSelections.StrippingDiElectron   import StrippingDiElectronConf
-from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf
+from StrippingSelections.StrippingBs2JpsieePhi import Bs2JpsieePhiConf
 from StrippingSelections.StrippingDiElectronNew import DiElectronConf
 from StrippingSelections.StrippingElectronID import ElectronIDConf
 
@@ -30,6 +30,10 @@ stream.appendLines( MicroDSTDiElectronConf.MicroDSTLines )
 StrippingElectronIDConf =  ElectronIDConf( name = 'Jpsi2eeForElectronID', config = ElectronIDConf.config_default )
 stream.appendLines( [ StrippingElectronIDConf.line ])
 
+MyStrippingBs2JpsieePhiConf =  Bs2JpsieePhiConf("Bs2JpsieePhi", Bs2JpsieePhiConf.config_default )
+stream.appendLines( MyStrippingBs2JpsieePhiConf.lines() )
+
+
 stream.appendLines( [
     Bd2eeKstarConf().line,
     Bd2JpsieeKstarConf().line,    
@@ -40,6 +44,7 @@ stream.appendLines( [
     #StrippingDiElectronConf().IncDiElectronLowMass_line(),
     #StrippingDiElectronConf().BiasedIncDiElectron_line(),
     #StrippingDiElectronConf().BiasedIncDiElectronLowMass_line(),
-    StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
-    StrippingBs2JpsieePhiConf().Signalbox_line()
+    #StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
+    #StrippingBs2JpsieePhiConf().Signalbox_line()
+
     ] )
