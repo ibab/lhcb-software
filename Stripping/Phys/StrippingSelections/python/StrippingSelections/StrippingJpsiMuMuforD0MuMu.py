@@ -71,9 +71,9 @@ class JpsiMuMuforD0MuMuConf(LineBuilder):
 
     
     def __init__(self,
-                name = None,
-                config = None
-                ):
+                 name = None,
+                 config = None
+                 ):
         
         LineBuilder.__init__(self, name, config)
 
@@ -96,12 +96,12 @@ class JpsiMuMuforD0MuMuConf(LineBuilder):
                                              MuMuBPVIPCHI2 = config['Jpsi2MuMuForD0mumu_BPVIPCHI2']
                                              )
         self.Jpsi2MuMuForD0mumuLine = StrippingLine( name + 'Line',
-                                            prescale  = config['Jpsi2MuMuForD0mumu_Prescale'],
-                                            postscale = config['Jpsi2MuMuForD0mumu_Postscale'],
-                                            selection = self.SelJpsi2MuMuForD0mumu
-                                            )
- 
-        self.registerLine = (self.Jpsi2MuMuForD0mumuLine)
+                                                     prescale  = config['Jpsi2MuMuForD0mumu_Prescale'],
+                                                     postscale = config['Jpsi2MuMuForD0mumu_Postscale'],
+                                                     selection = self.SelJpsi2MuMuForD0mumu
+                                                     )
+        
+        self.registerLine( self.Jpsi2MuMuForD0mumuLine )
         
 #        self.MicroDSTLines = [
 #            self.Jpsi2MuMuForD0mumuLine

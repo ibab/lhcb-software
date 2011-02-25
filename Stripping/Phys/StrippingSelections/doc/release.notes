@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-02-25 - Jibo He
+ - Replaced "algos" by "selection" in 
+   DiMuon, DiElectron, ElectronID, Ccbar2Ppbar, Bc2JpsiX, 
+   Bd2Jpsi(ee)Kstar, Bd2eeKstar lines 
+
+! 2011-02-25 - Jibo He
  - Updated DiMuon, DiElectron, ElectronID, Ccbar2Ppbar, Bc2JpsiX, 
    Bd2Jpsi(ee)Kstar, Bd2eeKstar lines to new framework.
  - Added test scripts for these lines

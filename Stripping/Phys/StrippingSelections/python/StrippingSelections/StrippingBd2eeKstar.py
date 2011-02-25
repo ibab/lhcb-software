@@ -167,7 +167,7 @@ class Bd2eeKstarConf(LineBuilder):
         self.line = StrippingLine( Bd2eeKstarName+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   algos = [ self.SelBd2eeKstar ]
+                                   selection = self.SelBd2eeKstar
                                    )
         
         self.registerLine(self.line)

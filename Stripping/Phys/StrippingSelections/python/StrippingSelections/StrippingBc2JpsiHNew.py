@@ -136,7 +136,7 @@ class Bc2JpsiHConf(LineBuilder):
         self.line = StrippingLine( Bc2JpsiHName+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   algos = [ self.SelBc2JpsiH ]
+                                   selection = self.SelBc2JpsiH 
                                    )
 
         self.registerLine(self.line)

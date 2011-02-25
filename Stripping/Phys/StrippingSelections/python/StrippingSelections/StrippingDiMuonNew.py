@@ -462,7 +462,7 @@ class DiMuonConf(LineBuilder):
                                          prescale  = config['DiMuon_Prescale'],
                                          postscale = config['DiMuon_Postscale'],
                                          checkPV   = config['DiMuon_checkPV'],
-                                         algos = [self.SelDiMuon]
+                                         selection = self.SelDiMuon
                                          )
 
         """
@@ -480,7 +480,7 @@ class DiMuonConf(LineBuilder):
                                                  prescale  = config['DiMuonSameSign_Prescale'],
                                                  postscale = config['DiMuonSameSign_Postscale'],
                                                  checkPV   = config['DiMuonSameSign_checkPV'],
-                                                 algos = [self.SelDiMuonSameSign]
+                                                 selection = self.SelDiMuonSameSign
                                                  )
         
         """
@@ -500,7 +500,7 @@ class DiMuonConf(LineBuilder):
                                                   prescale  = config['DiMuonExclusive_Prescale'],
                                                   postscale = config['DiMuonExclusive_Postscale'],
                                                   checkPV   = config['DiMuonExclusive_checkPV'],
-                                                  algos = [self.SelDiMuonExclusive]
+                                                  selection = self.SelDiMuonExclusive
                                                   )
 
         """
@@ -523,7 +523,7 @@ class DiMuonConf(LineBuilder):
                                                         'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
                                                                          'from LoKiCore.functions    import *' ]
                                                         },
-                                             algos = [self.SelDiMuonExclusive]
+                                             selection = self.SelDiMuonExclusive
                                              )       
         
         """
@@ -541,7 +541,7 @@ class DiMuonConf(LineBuilder):
                                                  prescale  = config['DiMuonHighMass_Prescale'],
                                                  postscale = config['DiMuonHighMass_Postscale'],
                                                  checkPV   = config['DiMuonHighMass_checkPV'],
-                                                 algos = [self.SelDiMuonHighMass]
+                                                 selection = self.SelDiMuonHighMass
                                                  )
 
 
@@ -562,7 +562,7 @@ class DiMuonConf(LineBuilder):
                                                          prescale  = config['DiMuonHighMassSameSign_Prescale'],
                                                          postscale = config['DiMuonHighMassSameSign_Postscale'],
                                                          checkPV   = config['DiMuonHighMassSameSign_checkPV'],
-                                                         algos = [self.SelDiMuonHighMassSameSign]
+                                                         selection = self.SelDiMuonHighMassSameSign
                                                          )
 
 
@@ -583,7 +583,7 @@ class DiMuonConf(LineBuilder):
                                                 prescale  = config['DiMuonLowMass_Prescale'],
                                                 postscale = config['DiMuonLowMass_Postscale'],
                                                 checkPV   = config['DiMuonLowMass_checkPV'],
-                                                algos = [ self.SelDiMuonLowMass ]
+                                                selection = self.SelDiMuonLowMass 
                                                 )
         
         """
@@ -602,7 +602,7 @@ class DiMuonConf(LineBuilder):
                                             prescale  = config['Jpsi2MuMu_Prescale'],
                                             postscale = config['Jpsi2MuMu_Postscale'],
                                             checkPV   = config['Jpsi2MuMu_checkPV'],
-                                            algos = [self.SelJpsi2MuMu]
+                                            selection = self.SelJpsi2MuMu
                                             )
 
         """
@@ -623,7 +623,7 @@ class DiMuonConf(LineBuilder):
                                            prescale  = config['Psi2MuMu_Prescale'],
                                            postscale = config['Psi2MuMu_Postscale'],
                                            checkPV   = config['Psi2MuMu_checkPV'],
-                                           algos = [self.SelPsi2MuMu]
+                                           selection = self.SelPsi2MuMu
                                            )
 
 

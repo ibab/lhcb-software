@@ -95,7 +95,7 @@ class Bc2JpsiMuXConf(LineBuilder):
         self.line = StrippingLine( Bc2JpsiMuXName+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   algos = [ self.SelBc2JpsiMuX ]
+                                   selection = self.SelBc2JpsiMuX 
                                    )
 
         self.registerLine(self.line)

@@ -272,7 +272,7 @@ class DiElectronConf(LineBuilder):
                                              prescale  = config['DiElectron_Prescale'],
                                              postscale = config['DiElectron_Postscale'],
                                              checkPV   = config['DiElectron_checkPV'],
-                                             algos = [self.SelDiElectron]
+                                             selection = self.SelDiElectron
                                              )
 
 
@@ -293,7 +293,7 @@ class DiElectronConf(LineBuilder):
                                                     prescale  = config['DiElectronLowMass_Prescale'],
                                                     postscale = config['DiElectronLowMass_Postscale'],
                                                     checkPV   = config['DiElectronLowMass_checkPV'],
-                                                    algos = [ self.SelDiElectronLowMass ]
+                                                    selection = self.SelDiElectronLowMass 
                                                     )
 
         
@@ -314,7 +314,7 @@ class DiElectronConf(LineBuilder):
         self.BiasedDiElectronLine = StrippingLine( name + 'BiasedIncDiElectron' + 'Line',
                                                    prescale  = config['BiasedDiElectron_Prescale'],
                                                    postscale = config['BiasedDiElectron_Postscale'],
-                                                   algos = [self.SelBiasedDiElectron]
+                                                   selection = self.SelBiasedDiElectron
                                                    )
 
 
@@ -336,7 +336,7 @@ class DiElectronConf(LineBuilder):
                                                           HLT = "HLT_PASS('Hlt2BiasedTFDiElectronLowMassDecision')",
                                                           prescale  = config['BiasedDiElectronLowMass_Prescale'],
                                                           postscale = config['BiasedDiElectronLowMass_Postscale'],
-                                                          algos = [self.SelBiasedDiElectronLowMass]
+                                                          selection = self.SelBiasedDiElectronLowMass
                                                           )       
                
         """
@@ -356,7 +356,7 @@ class DiElectronConf(LineBuilder):
                                           prescale  = config['Jpsi2ee_Prescale'],
                                           postscale = config['Jpsi2ee_Postscale'],
                                           checkPV   = config['Jpsi2ee_checkPV'],
-                                          algos = [self.SelJpsi2ee]
+                                          selection = self.SelJpsi2ee
                                           )
         
 

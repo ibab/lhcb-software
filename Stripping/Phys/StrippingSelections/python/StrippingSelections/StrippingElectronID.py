@@ -117,8 +117,10 @@ class ElectronIDConf(LineBuilder):
         self.line = StrippingLine( self.name+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   algos = [ self.SelEE ]
+                                   selection =  self.SelEE 
                                    )
+
+        self.registerLine( self.line )
         
         
        

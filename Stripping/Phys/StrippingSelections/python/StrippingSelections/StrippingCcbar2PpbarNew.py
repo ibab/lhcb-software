@@ -115,9 +115,11 @@ class Ccbar2PpbarConf(LineBuilder):
                                                                'from LoKiCore.functions    import *' ]
                                               },
                                    checkPV  = False,
-                                   algos = [ self.SelPP ]                                   
+                                   selection =  self.SelPP                                   
                                    )
-                
+
+        self.registerLine( self.line )
+        
        
 def makePP( name,
             #
