@@ -44,7 +44,7 @@ from StrippingSelections.StrippingJpsiMuMuforD0MuMu import JpsiMuMuforD0MuMuConf
 
 from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
 
-from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
+#from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
 
 stream = StrippingStream("Dimuon")
@@ -116,9 +116,9 @@ stream.appendLines( [
                         , StrippingLambdab2JpsiLambdaConf().line_LL()
                         , StrippingLambdab2JpsiLambdaConf().line_DD()
 
-                        , StrippingBu2KJpsiPiPiConf().loose_line()
-                        , StrippingBu2KJpsiPiPiConf().X3872_line()
-                        , StrippingBu2KJpsiPiPiConf().Psi2S_line()
+                        #, StrippingBu2KJpsiPiPiConf().loose_line()
+                        #, StrippingBu2KJpsiPiPiConf().X3872_line()
+                        #, StrippingBu2KJpsiPiPiConf().Psi2S_line()
                         
                         ] )
 
@@ -135,13 +135,13 @@ stream.appendLines( [
 #bs2mm = Bs2MuMuNoMuIDConf("Bs2MuMu",Bs2MuMuNoMuIDConf.config_default)
 #stream.appendLines(bs2mm.lines)
 
-from StrippingSelections.StrippingBd2KstarMuMuTriggered import StrippingBd2KstarMuMuConf
-from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultConfig as Bd2KstarMuMuConfig
-from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as Bd2KstarMuMuLines
+#from StrippingSelections.StrippingBd2KstarMuMuTriggered import StrippingBd2KstarMuMuConf
+#from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultConfig as Bd2KstarMuMuConfig
+#from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as Bd2KstarMuMuLines
 
-Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config= Bd2KstarMuMuConfig, activeLines=Bd2KstarMuMuLines )
-lines = Bd2KstarMuMuConf.lines()
-stream.appendLines( lines )
+#Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config= Bd2KstarMuMuConfig, activeLines=Bd2KstarMuMuLines )
+#lines = Bd2KstarMuMuConf.lines()
+#stream.appendLines( lines )
 
 from StrippingSelections import StrippingBs2PhiMuMu
 confBs2PhiMuMu = StrippingBs2PhiMuMu.Bs2PhiMuMuLinesConf("confBs2PhiMuMu",StrippingBs2PhiMuMu.confdict)
