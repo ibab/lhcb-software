@@ -43,21 +43,20 @@ You can configure one line at a time with the DstarVeryLooseWithD02KpiOneLineCon
 
 one=DstarVeryLooseWithD02KpiOneLineConf('Loose',confdict['Loose'])
 '''
-__author__ = [ 'Stefania Vecchi, Marta Calvi' ]
+__author__ = [ 'Stefania Vecchi, Marta Calvi','Antonio Falabella' ]
 __date__ = '2010-10-04'
 __version = '$Revision: 1.6 $'
 
 #### Which VertexFitter to use? ####
 
-#combiner='LoKi::VertexFitter'
-combiner='OfflineVertexFitter'
+
 
 #### Next is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
 
 
 confdict={
-    'Loose' : { 'Prescale'    : 0.03 ,
+		'Prescale'    : 0.08 ,
                 'Postscale'   : 1.0 ,
                 #kaon parameters
                 'KPT'         : 350,# MeV
@@ -76,59 +75,13 @@ confdict={
                 'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
                 'Dstar_VCHI2' : 25, # 20 # 15
                 'DstarMassW'  : 80 # 50 # 80 MeV
-                }
-    }
+                	
+    	}
+
+from StrippingUtils.Utils import LineBuilder
 
 
-
-
-
-class DstarVeryLooseWithD02KpiAllLinesConf(object):
-    """
-    Configuration object for all DstarVeryLooseWithD02Kpi lines
-
-    DstarVeryLooseWithD02Kpi attempts to strip ((Kpi)pi) Mu.
-    Several different lines are used, and for more information call help on the module
-    
-    usage:
-    configdict={'LineNameSuffix' : {...},
-                'LineNameSuffix2': {...} }
-    
-    DstarVeryLooseWithD02KpiAllLinesConf(config, offLines=[] )
-    
-    To turn off lines which otherwise would be created, add the name
-    of the line to offLines.
-    
-    To only configure/run one line, it's better to use the DstarVeryLooseWithD02KpiOneLineConf class.
-    
-    The created lines appear as a list in the Lines object, member variable
-    
-    To print out all the cuts, use the printCuts method
-    """
-    
-    Lines=[]
-    
-    confObjects={}
-    
-    def __init__(self, config, offLines=[]):
-        '''In the constructor we make all the lines, and configure them all
-        config is the dictionary of {LineSuffix : configuration}
-        offlines is a list of lines to turn off'''
-        for aline in config.keys():
-            if aline not in offLines:
-                lineconf=DstarVeryLooseWithD02KpiOneLineConf(aline, config[aline])
-                
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                
-    def printCuts(self):
-        '''Print out all the configured cuts for the lines you asked for'''
-        for aline in self.confObjects.keys():
-            print '===='
-            self.confObjects[aline].printCuts()
-            
-
-class DstarVeryLooseWithD02KpiOneLineConf(object):
+class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
     """
     Configuration object for a DstarVeryLooseWithD02Kpi line
 
@@ -159,7 +112,6 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
     D0Sel=None
     DstarSel=None
     
-    LineSuffix=''
     
     __configuration_keys__=[
         'Prescale',
@@ -183,18 +135,14 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         'DstarMassW'
         ]
     
-    def __init__(self, LineSuffix, config):
+    def __init__(self, name, config):
         '''The constructor of the configuration class.
         Requires a name which is added to the end of each algorithm name, LineSuffix
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
 
-        from StrippingSelections.Utils import checkConfig
         
-        checkConfig(DstarVeryLooseWithD02KpiOneLineConf.__configuration_keys__,
-                    config)
-        
-        self.LineSuffix=LineSuffix
+        LineBuilder.__init__(self, name, config)
         
         ### first we define the cuts from the configuration ###
         ### it's nice to see all the cuts in one place      ###
@@ -234,20 +182,20 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         from PhysSelPython.Wrappers import SelectionSequence
         #SeqDstarVeryLooseWithD02Kpi = SelectionSequence("SeqDstarVeryLooseWithD02Kpi"+self.LineSuffix, TopSelection = self.DstarSel)
         ### Now make a stripping line ###
-        DstarLine=StrippingLine("DstarVeryLooseWithD02Kpi"+self.LineSuffix,
+        DstarLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
                               algos = [ self.DstarSel ]
                               )
         
         ### Collect them all together in a nice way ###
-        self.Line=DstarLine
+        self.registerLine(DstarLine)
         #self.TopSelectionSeq=SeqDstarVeryLooseWithD02Kpi
         self.Selections=[self.D0Sel, self.DstarSel]
         
     def printCuts(self):
         '''Print the compiled cut values'''
-        print 'name', self.LineSuffix
+        print 'name', self._name
         print 'KCut', self.KCut
         print 'PiCut', self.PiCut
         print 'slowPiCut', self.slowPiCut
@@ -265,28 +213,22 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         Here [D0 -> K+ pi-]cc
         Which can be assosciated in this selection to:
         """
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+	from StandardParticles import StdLooseKaons, StdLoosePions
         
-        D02Kpi = CombineParticles(self.LineSuffix+"D02Kpi")
-        D02Kpi.DecayDescriptors = ["[D0 -> K- pi+]cc", "[D0 -> K+ pi-]cc"]  # includes WS (DCS) combination
-        D02Kpi.DaughtersCuts = {
-            "K+"  : self.KCut,
-            "pi+" : self.PiCut
-            } 
-        D02Kpi.CombinationCut = self.D0CombCut
-        D02Kpi.MotherCut = self.D0Cut
-        
-        D02Kpi.ParticleCombiners = {
-            ''  : combiner
-            } 
-        
-        MyStdLooseKaonsForD0 = DataOnDemand(Location = 'Phys/StdLooseKaons')
-        MyStdLoosePionsForD0 = DataOnDemand(Location = 'Phys/StdLoosePions')
-        
-        SelD02Kpi = Selection("SelD02Kpi"+self.LineSuffix,
+        D02Kpi = CombineParticles(DecayDescriptors = ["[D0 -> K- pi+]cc", "[D0 -> K+ pi-]cc"],  # includes WS (DCS) combination
+        	 DaughtersCuts = {
+            		"K+"  : self.KCut,
+            		"pi+" : self.PiCut
+            			}, 
+        	 CombinationCut = self.D0CombCut,
+        	 MotherCut = self.D0Cut
+        )
+                
+        SelD02Kpi = Selection("SelD02Kpi"+self._name,
                               Algorithm=D02Kpi,
-                              RequiredSelections = [MyStdLooseKaonsForD0,MyStdLoosePionsForD0])
+                              RequiredSelections = [StdLooseKaons,StdLoosePions])
         
         self.D0Sel=SelD02Kpi
     
@@ -296,27 +238,22 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         Here [D*(2010)+ -> pi+ D0]cc
         
         """
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+	from StandardParticles import StdLoosePions
         
-        Dstar = CombineParticles(self.LineSuffix+"Dstar")
-        Dstar.DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc" 
-        Dstar.DaughtersCuts = {
-            "pi+" : self.slowPiCut
-            } 
-        Dstar.CombinationCut = self.DstarCombCut
-        Dstar.MotherCut = self.DstarCut
+        Dstar = CombineParticles(DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc", 
+        	DaughtersCuts = {
+        		    "pi+" : self.slowPiCut
+            	}, 
+        	CombinationCut = self.DstarCombCut,
+        	MotherCut = self.DstarCut
+        	)
         
-        Dstar.ParticleCombiners = {
-            ''  : combiner
-            } 
         
-
-        MyStdLoosePionsForDstar = DataOnDemand(Location = 'Phys/StdLoosePions')
-        
-        SelDstar = Selection("SelDstar"+self.LineSuffix,
+        SelDstar = Selection("SelDstar"+self._name,
                                     Algorithm=Dstar,
-                                    RequiredSelections = [self.D0Sel,MyStdLoosePionsForDstar])
+                                    RequiredSelections = [self.D0Sel,StdLoosePions])
         
         self.DstarSel=SelDstar
     
