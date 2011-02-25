@@ -38,6 +38,7 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  , 'PrescaleKmu_untagged_Box'
                                  ,'DMassWin'
                                  ,'DMassWinMuMu'
+                                 ,'DMassWinEMu' 
                                  ,'doca'
                                  ,'XminPT'
                                  ,'XmaxPT'
@@ -59,7 +60,7 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  ,'RequireHlt'
                                  ,'prefix'
                                  )
-    config_default ={   'PrescalepipiBox'     : 1.
+    config_default ={'PrescalepipiBox'     : 1.
                      , 'PrescalemumuBox'     : 1.
                      , 'PrescaleKpiBox'    : 1.
                      , 'PrescaleemuBox'    : 1.
@@ -74,6 +75,7 @@ class StrippingDstarD02xxConf(LineBuilder):
                      , 'PrescaleKmu_untagged_Box'    : 0.2  
                      ,'DMassWin'           : 70.       # MeV
                      ,'DMassWinMuMu'       : 300       #MeV
+                     ,'DMassWinEMu'        : 300
                      ,'doca'               : 0.1        # mm
                      ,'XminPT'             : 750.       # MeV
                      ,'XmaxPT'             : 1100.      # MeV
@@ -110,6 +112,8 @@ class StrippingDstarD02xxConf(LineBuilder):
         from Configurables import CombineParticles
         if(xplus == "mu") and (xminus == "mu") :                                     
             d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWinMuMu)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
+        elif (((xplus == "mu") and (xminus == "e")) or ((xplus == "e") and (xminus == "mu"))) :
+            d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWinEMu)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
         else :
             d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
             
