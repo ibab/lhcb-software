@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Victor Coco
+ - fix Hlt2DisplVerticesLines for downstream vertices
+
 ! 2011-02-25 - Ulrich Kerzel
   First version of B->hh lifetime unbiased line, need to check if it works with
   Moore v12rx
