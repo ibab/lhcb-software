@@ -61,10 +61,13 @@ class XiccBuilder(LineBuilder) :
 
         # Pick up standard Lambdac -> p K- pi+ then filter it to reduce rate:
         self.filterLc = makeLc(name+'FilterLc')
+        self.filterLcForControl = filterLcForControl(name+'FilterLcForControl', self.filterLc)
 
-        # Some generic cuts for Xicc:
+        # Some generic cuts for Xicc. Vertex chi2 cut depends on number of daughters (2 dau => 1 NDF; 3 dau => 3 NDF; 4 dau => 5 NDF)
         _strCutComb = '(APT>2000.0*MeV)'
-        _strCutMoth = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<30.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) )'
+        _strCutMoth2 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<20.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
+        _strCutMoth3 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<30.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
+        _strCutMoth4 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<60.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
 
         # Combine Lambda with pion to make Xi-
         self.stdLambdaLL = DataOnDemand(Location = 'Phys/StdLooseLambdaLL/Particles')
@@ -77,13 +80,13 @@ class XiccBuilder(LineBuilder) :
         self.combineXicPlus = makeXicPlus(name+"CombineXicPlus", [ self.combineXiLL, self.combineXiDD, self.dauPi ])
 
         # Combine Lc+ with a K and a pi to make a Xicc+ or Xicc++:
-        self.combineXicc1 = makeXicc(name+'CombineXicc1', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K- pi+]cc', _strCutComb, _strCutMoth)
-        self.combineXicc2 = makeXicc(name+'CombineXicc2', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc++ -> Lambda_c+ K- pi+ pi+]cc', _strCutComb, _strCutMoth)
+        self.combineXicc1 = makeXicc(name+'CombineXicc1', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K- pi+]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc2 = makeXicc(name+'CombineXicc2', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc++ -> Lambda_c+ K- pi+ pi+]cc', _strCutComb, _strCutMoth4)
         # Combine Xic0/+ with pion(s) to make Xicc+, Xicc++
-        self.combineXicc3 = makeXicc(name+'CombineXicc3', [ self.combineXicZero, self.dauPi ], '[Xi_cc+ -> Xi_c0 pi+]cc', _strCutComb, _strCutMoth)
-        self.combineXicc4 = makeXicc(name+'CombineXicc4', [ self.combineXicZero, self.dauPi ], '[Xi_cc++ -> Xi_c0 pi+ pi+]cc', _strCutComb, _strCutMoth)
-        self.combineXicc5 = makeXicc(name+'CombineXicc5', [ self.combineXicPlus, self.dauPi ], '[Xi_cc+ -> Xi_c+ pi+ pi-]cc', _strCutComb, _strCutMoth)
-        self.combineXicc6 = makeXicc(name+'CombineXicc6', [ self.combineXicPlus, self.dauPi ], '[Xi_cc++ -> Xi_c+ pi+]cc', _strCutComb, _strCutMoth)
+        self.combineXicc3 = makeXicc(name+'CombineXicc3', [ self.combineXicZero, self.dauPi ], '[Xi_cc+ -> Xi_c0 pi+]cc', _strCutComb, _strCutMoth2)
+        self.combineXicc4 = makeXicc(name+'CombineXicc4', [ self.combineXicZero, self.dauPi ], '[Xi_cc++ -> Xi_c0 pi+ pi+]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc5 = makeXicc(name+'CombineXicc5', [ self.combineXicPlus, self.dauPi ], '[Xi_cc+ -> Xi_c+ pi+ pi-]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc6 = makeXicc(name+'CombineXicc6', [ self.combineXicPlus, self.dauPi ], '[Xi_cc++ -> Xi_c+ pi+]cc', _strCutComb, _strCutMoth2)
 
 
         # Control lines (to be prescaled!)
@@ -91,7 +94,7 @@ class XiccBuilder(LineBuilder) :
                                           prescale = config['controlPrescaleLc'],
                                           postscale = 1.0,
                                           FILTER = _globalEventCuts,
-                                          selection = self.filterLc)
+                                          selection = self.filterLcForControl)
         self.lineControl2 = StrippingLine(name+'ControlXicZero',
                                           prescale = config['controlPrescaleXic'],
                                           postscale = 1.0,
@@ -154,8 +157,8 @@ def makeLc(localName) :
     _strCutK  = '( CHILD(PIDK,1) - CHILD(PIDpi,1) > 5.0 )'
     _strCutp  = '( CHILD(PIDp,2) - CHILD(PIDpi,2) > 5.0 )'
     _strCutpi = '( CHILD(PIDpi,3) - CHILD(PIDK,3) > 0.0 )'
-    _strCutTrackChi2 = '( (CHILD(TRCHI2DOF,1)<5.0) & (CHILD(TRCHI2DOF,2)<5.0) & (CHILD(TRCHI2DOF,3)<5.0) )'
-    _strCutDIRA = '( BPVDIRA > 0.99 )'
+    _strCutTrackChi2 = '( (CHILD(TRCHI2DOF,1)<4.0) & (CHILD(TRCHI2DOF,2)<4.0) & (CHILD(TRCHI2DOF,3)<4.0) )'
+    _strCutDIRA = '( BPVDIRA > 0.95 )'
     _strCutFD = '( BPVVDCHI2 > 25 )'
     _strCutMass = '( (M > 2185.0*MeV) & (M < 2385*MeV) )'
     _strCutIP = '( NINGENERATION( (MIPCHI2DV(PRIMARY) > 30.0), 1) >= 1 )'
@@ -165,11 +168,19 @@ def makeLc(localName) :
                        Algorithm = _filterLc,
                        RequiredSelections = [ _stdLc ] )
 
+def filterLcForControl(localName, inputSel) :
+    # Apply additional cuts for prompt Lc:
+    _strCutDIRA = '( BPVDIRA > 0.999 )'
+    _filterLc = FilterDesktop(Code = _strCutDIRA)
+    return Selection ( localName,
+                       Algorithm = _filterLc,
+                       RequiredSelections = [ inputSel ] )
+
 def filterKaons(localName) :
     # Pick up standard input list
     _stdK = DataOnDemand(Location = 'Phys/StdLooseKaons/Particles')
     # Filter:
-    _strCutDauK  = '( (P>2.0*GeV) & (PIDK-PIDpi>5.0) & (TRCHI2DOF<5.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>4.0) )'
+    _strCutDauK  = '( (P>2.0*GeV) & (PIDK-PIDpi>5.0) & (TRCHI2DOF<4.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>4.0) )'
     _filterK = FilterDesktop(Code = _strCutDauK)
     return Selection ( localName,
                        Algorithm = _filterK,
@@ -179,7 +190,7 @@ def filterPions(localName) :
     # Pick up standard input list
     _stdPi = DataOnDemand(Location = 'Phys/StdLoosePions/Particles')
     # Filter:
-    _strCutDauPi = '( (P>2.0*GeV) & (PIDpi-PIDK>0.0) & (TRCHI2DOF<5.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>4.0) )'
+    _strCutDauPi = '( (P>2.0*GeV) & (PIDpi-PIDK>0.0) & (TRCHI2DOF<4.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>4.0) )'
     _filterPi = FilterDesktop(Code = _strCutDauPi)
     return Selection ( localName,
                        Algorithm = _filterPi,
@@ -187,7 +198,7 @@ def filterPions(localName) :
 
 def makeXi(localName, inputList, cutWide, cutTight) :
     _stdPi = DataOnDemand(Location = 'Phys/StdLoosePions/Particles')
-    _strCutPiForXi = '( (P>2.0*GeV) & (TRCHI2DOF<5.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>25.0) )'
+    _strCutPiForXi = '( (P>2.0*GeV) & (TRCHI2DOF<4.0) & (PT>250.0*MeV) & (MIPCHI2DV(PRIMARY)>25.0) )'
     _strCutCombXi = "( ADAMASS('Xi-') < %(cutWide)s * MeV )" % locals()
     _strCutMothXi = "( ( ADMASS('Xi-') < %(cutTight)s * MeV ) & (VFASPF(VCHI2)<20) )" % locals()
     _combineXi = CombineParticles( DecayDescriptor = '[Xi- -> Lambda0 pi-]cc',
@@ -209,7 +220,7 @@ def makeXicc(localName, inputSelections, decay, cutComb, cutMoth) :
 
 def makeXicZero(localName, inputSelections) :
     _strCutCombXicZero = "( ADAMASS('Xi_c0') < 170*MeV )"
-    _strCutMothXicZero = "( ( ADMASS('Xi_c0') < 120*MeV ) & ( BPVDIRA > 0.99 ) & ( BPVVDCHI2 > 25 ) )"
+    _strCutMothXicZero = "( ( ADMASS('Xi_c0') < 120*MeV ) & ( BPVDIRA > 0.9 ) & ( BPVVDCHI2 > 25 ) & (VFASPF(VCHI2)<30) )"
     _combineXicZero = CombineParticles( DecayDescriptor = '[Xi_c0 -> Xi- pi+]cc',
                                         CombinationCut = _strCutCombXicZero,
                                         MotherCut = _strCutMothXicZero )
@@ -218,8 +229,8 @@ def makeXicZero(localName, inputSelections) :
                       RequiredSelections = inputSelections )
 
 def makeXicPlus(localName, inputSelections) :
-    _strCutCombXicPlus = "( ( ADAMASS('Xi_c+') < 170*MeV ) & ( AHASCHILD( (ABSID == 'pi+') & (MIPCHI2DV(PRIMARY) > 30.0) ) ) )"
-    _strCutMothXicPlus = "( ( ADMASS('Xi_c+') < 120*MeV ) & ( BPVDIRA > 0.99 ) & ( BPVVDCHI2 > 25 ) )"
+    _strCutCombXicPlus = "( ( ADAMASS('Xi_c+') < 170*MeV ) & ( AHASCHILD( (ABSID == 'pi+') & (MIPCHI2DV(PRIMARY) > 10.0) ) ) )"
+    _strCutMothXicPlus = "( ( ADMASS('Xi_c+') < 120*MeV ) & ( BPVDIRA > 0.9 ) & ( BPVVDCHI2 > 25 ) & (VFASPF(VCHI2)<60) )"
     _combineXicPlus = CombineParticles( DecayDescriptor = '[Xi_c+ -> Xi- pi+ pi+]cc',
                                         CombinationCut = _strCutCombXicPlus,
                                         MotherCut = _strCutMothXicPlus )

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-25 - Mat Charles
+ - Tighten cuts in StrippingXicc.py
+
 ! 2011-02-25 - William James Barter (for ewk working group)
  - Updated StrippingDY2MuMu.py as trigger now more prescaled, less prescale needed here.
  - Added new line in StrippingSingleTrackHighPT.py
