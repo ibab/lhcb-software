@@ -3,10 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
-
-
+!========================= L0DU v10r12 2011-02-25 =========================
 ! 2011-01-24 - Olivier Deschamps
-	- adapt to change in L0Event (new data DiMuonProd)
+ - adapt to change in L0Event (new data DiMuonProd)
 
 !========================= L0DU v10r11 2011-02-01 =========================
 ! 2011-01-20 - Marco Cattaneo
