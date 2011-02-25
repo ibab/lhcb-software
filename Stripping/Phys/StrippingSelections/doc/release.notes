@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-02-25 - Mat Charles
+ - StrippingXicc.py
+ New stripping lines, looking for Xi_cc+ and Xi_cc++ via Lambda and Xi-
+
 ! 2011-02-24 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  Rewritten selection using the LineBuilder framework.
