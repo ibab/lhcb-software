@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r31 2011-02-25 =========================
 ! 2011-02-22 - Chris Jones
  - A few more (hopefully final) icc fixes
 
