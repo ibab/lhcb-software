@@ -1,5 +1,5 @@
 __author__ = 'Paul Schaack'
-__date__ = '24/10/2010'
+__date__ = '12/02/2011'
 __version__ = '$Revision: 1.0 $'
 
 """
@@ -7,12 +7,11 @@ Stripping selection for Bs -> Mu Mu Phi ( -> K K).
 """
 
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-
 from Configurables import CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 from PhysSelPython.Wrappers import Selection, AutomaticData
-from StrippingSelections.Utils import checkConfig
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+from LHCbKernel.Configuration import *  #check if needed
 
 
 #################
@@ -31,14 +30,19 @@ defaultConfig = {
     , 'MuonMINIPCHI2'      : 9.0           # dimensionless
 }
 
+
 #################
 #
 #  Make line here
 #
 #################
 
-class StrippingBs2MuMuPhiConf(object):
-    __config_keys__ = (
+defaultName = "Bs2MuMuPhi"
+
+
+class Bs2MuMuPhiConf(LineBuilder) :
+
+    __configuration_keys__ = (
         'BsIPCHI2'
         , 'BsLT'
         , 'BsVertexCHI2'
@@ -47,17 +51,23 @@ class StrippingBs2MuMuPhiConf(object):
         , 'MuonMINIPCHI2'
     )
 
-    def __init__(self, config, name="Bs2MuMuPhi"):
-        """
-        Creates Bs Selection object
-        """
-        checkConfig(StrippingBs2MuMuPhiConf.__config_keys__, config)
+    def __init__(self, name, config) :
+
+
+        LineBuilder.__init__(self, name, config)
 
         self.name = name
         self.Muons = self.__Muons__(config)
         self.Kaons = self.__Kaons__(config)
-        self.Bs = self.selBs(self.Muons, self.Kaons, config)
-        self.line = None
+        self.Bs = self.__Bs__(self.Muons, self.Kaons, config)
+
+        self.line = StrippingLine(self.name+"Line",
+                                  prescale = 1,
+                                  algos = [ self.Bs ]
+                                  )
+        self.registerLine(self.line)
+
+
 
     def __Muons__(self, conf):
         """
@@ -114,7 +124,7 @@ class StrippingBs2MuMuPhiConf(object):
         """ % conf
         return _BsCuts
 
-    def selBs(self, Muons, Kaons, conf):
+    def __Bs__(self, Muons, Kaons, conf):
         """
         Make and return a Bs selection
         """      
@@ -127,15 +137,4 @@ class StrippingBs2MuMuPhiConf(object):
                                   Algorithm = _bs2KKmumu,
                                   RequiredSelections = [ Muons, Kaons ] )
         return SelBS2KKMUMU
-
-    def lines(self):
-        """
-        Return signal line
-        """
-        if None == self.line:
-            self.line = StrippingLine(self.name+"_line",
-                                      prescale = 1,
-                                      algos = [ self.Bs ]
-                                      )
-        return [ self.line ] 
 
