@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-02-25 - Anne Keune
+ - Fixed bug in StrippingBd2DstarTauNu and tightened the Loose cuts 
 
 ! 2011-02-25 - Andrew Powell
 	- Updates to StrippingV0ForPID.py

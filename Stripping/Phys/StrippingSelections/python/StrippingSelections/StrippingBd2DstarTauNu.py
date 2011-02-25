@@ -60,12 +60,12 @@ confdict={
                 'Postscale'   : 1.0 ,
                 #tau: single pi cuts
                 'SinglePiPT'  : 150 ,
-                'SinglePiIPChi2' : 0,
+                'SinglePiIPChi2' : 1.0,
                 #tau: di pi cuts
                 'DiPiPT'      : 600,
                 'DiPiLowM'    : 600,
-                'DiPiHighM'   : 2000,
-                'DiPiVxChi2'  : 12,
+                'DiPiHighM'   : 1800,
+                'DiPiVxChi2'  : 9,
                 'DiPiDira'    : 0.99,
                 'DiPiIPChi2'  : 0,
                 #tau: di pi combi cut
@@ -73,8 +73,8 @@ confdict={
                 #tau: tri pi cuts
                 'TriPiPT'     : 800,
                 'TriPiLowM'   : 1000,
-                'TriPiHighM'  : 2400,
-                'TriPiVxChi2' : 12,
+                'TriPiHighM'  : 2000,
+                'TriPiVxChi2' : 9,
                 'TriPiDira'   : 0.99,
                 'TriPiIPChi2' : 0,
                 #Bd cuts
@@ -401,7 +401,7 @@ class Bd2DstarTauNuOneLineConf(LineBuilder):
         DstarsForB0d = FilterDesktop(
             Code = self.totalDstarCut
             )
-        MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi')
+        MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
         SelDstarsForB0d = Selection("SelDstarsFor"+self._name,
                                    Algorithm=DstarsForB0d, RequiredSelections = [MyStdDstars])
         
