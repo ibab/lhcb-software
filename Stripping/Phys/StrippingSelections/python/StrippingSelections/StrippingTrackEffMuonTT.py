@@ -63,11 +63,8 @@ from Configurables import (MuonCombRec,
                            TrackMasterFitter, 
                            TrackMasterExtrapolator, 
                            TrackSelector, 
-                           ChargedProtoParticleMaker, 
                            NoPIDsParticleMaker,
-                           ProtoParticleMUONFilter,
-                           CombineParticles, 
-                           TisTosParticleTagger,
+                           TisTosParticleTagger
                            )
 
 
@@ -724,7 +721,8 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
     
     massWinCombCut = 2 * massWin
     
-    MuonTTResonance = CombineParticles('_'+name)
+    Combine = CombineParticles()
+    MuonTTResonance = Combine.configurable(name+"MuonTTResonance")
     MuonTTResonance.DecayDescriptor = decayDescriptor
 
     MuonTTResonance.OutputLevel = 4 
@@ -765,7 +763,8 @@ def makeBJpsiKTrackEff(name, JpsiSel, KSel, massWin, vertexChi2):
 
     massWinCombCut = 2 * massWin
     
-    MuonTTBJpsiK = CombineParticles('_'+name)
+    Combine = CombineParticles()
+    MuonTTBJpsiK = Combine.configurable(name+"BJpsiK")
     MuonTTBJpsiK.DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
 
     MuonTTBJpsiK.OutputLevel = 4 
