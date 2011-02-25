@@ -2,7 +2,7 @@
 #include "Gaucho/MonSubSys.h"
 #include "Gaucho/ObjService.h"
 #include "stdio.h"
-//#include "RTL/rtl.h"
+#include "RTL/Lock.h"
 //#include "errno.h"
 //#ifdef WIN32
 //#include "windows.h"
@@ -36,12 +36,15 @@ namespace {
 void MonTimer::timerHandler ( void )
 {
 //  printf(" timer_handler Monitor Sun System Locking\n");
-  m_Hsys->Lock();
-//  printf("++++++++++++++++timer_handler Monitor Sun System LockED\n");
-  m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
-  m_Hsys->m_genSrv->setTime(m_dueTime);
-  m_Hsys->m_genSrv->Serialize();
-  m_Hsys->unLock();
+  {
+    RTL::Lock lock(m_Hsys->m_lockid);
+//    m_Hsys->Lock();
+  //  printf("++++++++++++++++timer_handler Monitor Sun System LockED\n");
+    m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
+    m_Hsys->m_genSrv->setTime(m_dueTime);
+    m_Hsys->m_genSrv->Serialize();
+//    m_Hsys->unLock();
+  }
   DimLock lock();
 //  printf("Updating the monitor service\n");
   m_Hsys->m_genSrv->Update();
