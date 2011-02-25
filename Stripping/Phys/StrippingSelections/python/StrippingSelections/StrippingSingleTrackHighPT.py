@@ -1,8 +1,8 @@
-#Stripping Lines for Low Multiplicity Processes.
+#Stripping Lines for Study of Background to W->MuNu.
 #Electroweak Group (Convenor: Tara Shears)
 #Line designed by Simone Bifani (written by William Barter)
 
-# Accepts events that passed the relevant HLT line.
+# Accepts events that passed the relevant HLT line. Mainly interested in high PT (now also a lower PT version)
 
 
 from Gaudi.Configuration import *
@@ -13,8 +13,10 @@ from StrippingUtils.Utils import LineBuilder
 
 
 confdict_SingleTrackHighPT={
-    'SingleTrackHighPTPrescale'    : 1.0 
+    'SingleTrackHighPTPrescale'    : .1 
     ,  'SingleTrackHighPTPostscale'   : 1.0
+    ,  'SingleTrackLowPTPrescale'    : .05 
+    ,  'SingleTrackLowPTPostscale'   : 1.0
     }
 
 name = "SingleTrackHighPT"
@@ -22,7 +24,9 @@ name = "SingleTrackHighPT"
 class SingleTrackHighPTConf(LineBuilder) :
 
     __configuration_keys__ = ('SingleTrackHighPTPrescale',
-                              'SingleTrackHighPTPostscale'                           
+                              'SingleTrackHighPTPostscale',
+                              'SingleTrackLowPTPrescale',
+                              'SingleTrackLowPTPostscale' 
                               )
     
     def __init__(self, name, config) :
@@ -42,3 +46,11 @@ class SingleTrackHighPTConf(LineBuilder) :
 
        
       
+        self.SingleTrackLowPT_line = StrippingLine(self._myname+"SingleTrackHlt1TisLowPT ",
+                                          prescale = config['SingleTrackLowPTPrescale'],
+                                          postscale = config['SingleTrackLowPTPostscale'],
+                                          checkPV = False,
+                                          HLT = "HLT_PASS('Hlt2SingleTrackLowPTDecision')"
+                                          )
+        
+        self.registerLine(self.SingleTrackLowPT_line)
