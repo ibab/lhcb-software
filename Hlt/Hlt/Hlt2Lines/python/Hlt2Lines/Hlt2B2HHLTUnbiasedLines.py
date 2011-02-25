@@ -48,11 +48,12 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ##
         #######################################################################################################
         #######################################################################################################
-        childCutNoPID  = "ISLONG & (TRCHI2DOF<%(TrackChi2)s) & (P> %(KaonPmin)s *MeV) &(PT> %(KaonPTmin)s *MeV)"                                 % self.getProps()
+        childCutNoPID  = "ISLONG & (TRCHI2DOF<%(TrackChi2)s) & (P> %(KaonPmin)s *MeV) &(PT> %(KaonPTmin)s *MeV)"                                                           % self.getProps()
         childCutPID    = childCutNoPID +  " & (PPCUT(PP_RICHTHRES_K))"
         combCut        = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))"                                  % self.getProps()
         motherCutNoPID = "(P>%(BPmin)s * MeV) & (MAXTREE(('K+'==ABSID) ,PT) > %(KaonPTmax)s*MeV)  & (VFASPF(VCHI2PDOF)< %(VertexChi2)s) & (abs(LV01) < %(AbsCosTheta)s)"   % self.getProps()
-        motherCutPID   = motherCutNoPID + " & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s)"                                                                                % self.getProps()
+        motherCutPID   = motherCutNoPID + " & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s)"                                                                              % self.getProps()
+
 
         #######################################################################################################
         #######################################################################################################
@@ -96,12 +97,29 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , InputLocations = [ tisFilteredKaons] 
                                          )
 
-        dummyFilter = Hlt2Member(FilterDesktop,
-                                 'DummyFilter',
-                                 InputLocations=[ Hlt2B2HHLTUnbiased ],
-                                 Code = 'ALL')
+        #dummyFilter = Hlt2Member(FilterDesktop,
+        #                         'DummyFilter',
+        #                         InputLocations=[ Hlt2B2HHLTUnbiased ],
+        #                         Code = 'ALL')
+        from Configurables   import NBB2HHTriggerTool
+        from HltLine.HltLine import Hlt1Tool as Tool
+        import BhhNetTrigger
+        
+        expertise = BhhNetTrigger.bhhnet
+        NetCut    =  -1.0
+        NBBhhTool = Tool(type       = NBB2HHTriggerTool,
+                         name       = 'TrigNBB2HH',
+                         Expertise  =  expertise ,
+                         NetworkCut = NetCut
+                         )
+        cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
+        filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
+                            InputLocations= [Hlt2B2HHLTUnbiased ],
+                            Code=cuts,
+                            tools=[NBBhhTool])
+        NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiased, filter])
+                                                                                
 
-        kinSel      = bindMembers("kinSel", [Hlt2B2HHLTUnbiased, dummyFilter])
 
         #######################################################################################################
         #######################################################################################################
@@ -149,23 +167,23 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ##
         ## call NeuroBayes
         ##
-        from Configurables   import NBB2HHTriggerTool
-        from HltLine.HltLine import Hlt1Tool as Tool
-        import BhhNetTrigger
-
-        expertise = BhhNetTrigger.bhhnet
-        NetCut    =  -1.0
-        NBBhhTool = Tool(type       = NBB2HHTriggerTool,
-                         name       = 'TrigNBB2HH',
-                         Expertise  =  expertise ,
-                         NetworkCut = NetCut
-                         )
-        cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
-        filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
-                            InputLocations= [Hlt2B2HHLTUnbiasedRich ],
-                            Code=cuts,
-                            tools=[NBBhhTool])
-        NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, filter])
+        #from Configurables   import NBB2HHTriggerTool
+        #from HltLine.HltLine import Hlt1Tool as Tool
+        #import BhhNetTrigger
+        #
+        #expertise = BhhNetTrigger.bhhnet
+        #NetCut    =  -1.0
+        #NBBhhTool = Tool(type       = NBB2HHTriggerTool,
+        #                 name       = 'TrigNBB2HH',
+        #                 Expertise  =  expertise ,
+        #                 NetworkCut = NetCut
+        #                 )
+        #cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
+        #filter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
+        #                    InputLocations= [Hlt2B2HHLTUnbiasedRich ],
+        #                    Code=cuts,
+        #                    tools=[NBBhhTool])
+        #NBBhhFilter = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, filter])
                             
         
         ###########################################################################
@@ -174,8 +192,8 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('B2HHLTUnbiased'
                         , prescale = self.prescale
                         #, HLT = "HLT_PASS_RE('Hlt1DiHadronLTUnbiasedDecision')" 
-                        , algos = [ BiKalmanFittedKaons    , kinSel ] #tisFilteredKaons    , Hlt2B2HHLTUnbiased ,
-            #BiKalmanFittedRichKaons, tisFilteredRichKaons, Hlt2B2HHLTUnbiasedRich, NBBhhFilter ]
+                        , algos = [ BiKalmanFittedKaons    ,tisFilteredKaons,  Hlt2B2HHLTUnbiased, 
+                                    BiKalmanFittedRichKaons, tisFilteredRichKaons, Hlt2B2HHLTUnbiasedRich, NBBhhFilter ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHLTUnbiasedDecision" : 50081 } )
