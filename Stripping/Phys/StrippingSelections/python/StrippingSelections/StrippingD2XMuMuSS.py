@@ -29,6 +29,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'DDIRA'         : 0.9999,    #adimensional
                   'DIPCHI2'       : 30    ,    #adimensional
                   'DMassWin'      : 200.  ,    #MeV, mass window
+                  'DMassLow'      :1763.  ,    #MeV, low-mass veto
                   
                   'D2PiMuMuOSLinePrescale'  : 1 ,
                   'D2PiMuMuOSLinePostscale' : 1 ,
@@ -85,6 +86,7 @@ class D2XMuMuConf(LineBuilder) :
                               , 'DIPCHI2'
                               , 'DDIRA'
                               , 'DMassWin'
+                              , 'DMassLow'
 
                               , 'D2PiPiPiCalLinePrescale'
                               , 'D2PiPiPiCalLinePostscale'
@@ -214,6 +216,7 @@ class D2XMuMuConf(LineBuilder) :
                               , DDIRA = config['DDIRA']
                               , DIPCHI2 = config['DIPCHI2']
                               , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
                               , DimuonMass = config['DimuonMass'])
 
 #####################################################
@@ -228,6 +231,7 @@ class D2XMuMuConf(LineBuilder) :
                               , DDIRA = config['DDIRA']
                               , DIPCHI2 = config['DIPCHI2']
                               , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
                               , DimuonMass = config['DimuonMass'])
 
 #####################################################
@@ -242,6 +246,7 @@ class D2XMuMuConf(LineBuilder) :
                               , DDIRA = config['DDIRA']
                               , DIPCHI2 = config['DIPCHI2']
                               , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
                               , DimuonMass = config['DimuonMass'])
 
 #####################################################
@@ -256,6 +261,7 @@ class D2XMuMuConf(LineBuilder) :
                              , DDIRA = config['DDIRA']
                              , DIPCHI2 = config['DIPCHI2']
                              , DMassWin = config['DMassWin']
+                             , DMassLow = config['DMassLow']
                              , DimuonMass = config['DimuonMass'])
 
 #####################################################
@@ -270,11 +276,12 @@ class D2XMuMuConf(LineBuilder) :
                              , DDIRA = config['DDIRA']
                              , DIPCHI2 = config['DIPCHI2']
                              , DMassWin = config['DMassWin']
+                             , DMassLow = config['DMassLow']
                              , DimuonMass = config['DimuonMass'])
 #
 # Out of class
 #####################################################
-def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> pi+ (pi+ pi-)
     """
@@ -283,6 +290,7 @@ def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI
 									 RequiredSelections=[muonSel] )
 
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
@@ -298,12 +306,13 @@ def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI
                      RequiredSelections = [ pionSel, rhos ] )
 
 #####################################################
-def makeD2PiMuMuOS(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiMuMuOS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> pi+ mu+ mu- 
     """
 
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
@@ -319,12 +328,13 @@ def makeD2PiMuMuOS(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPC
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeD2PiMuMuSS(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiMuMuSS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D- -> pi+ mu- mu-
     """
     
     _combcut = "(ADAMASS('D-') < %(DMassWin)s *MeV) & "\
+		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
@@ -340,12 +350,13 @@ def makeD2PiMuMuSS(name, pionSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPC
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeD2KMuMuOS(name, kaonSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2KMuMuOS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> K+ mu+ mu-
     """
     
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
@@ -361,12 +372,13 @@ def makeD2KMuMuOS(name, kaonSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCH
                      RequiredSelections = [ kaonSel, muonSel ] )
 
 #####################################################
-def makeD2KMuMuSS(name, kaonSel, muonSel, DMassWin, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2KMuMuSS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D- -> K+ mu- mu-
     """
     
     _combcut = "(ADAMASS('D-') < %(DMassWin)s *MeV) & "\
+		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
