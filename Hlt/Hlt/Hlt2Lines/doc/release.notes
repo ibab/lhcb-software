@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-26 - Mat Charles
+  - Tighten cuts in Hlt2CharmHadD02HHKsLines.py
+
 ! 201102-25 - Ulrich Kerzel
   - fix B2HHLTUnbiased lines for Moore v12rx: InputLocations -> Inputs
 

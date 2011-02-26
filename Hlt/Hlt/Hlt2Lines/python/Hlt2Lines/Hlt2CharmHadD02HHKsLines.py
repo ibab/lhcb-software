@@ -20,7 +20,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFHHTrkMaxPVIPLL'    : 0.1        # in mm
                 , 'KshhTFHHVtxChi2UL'       : 10.0       # unitless -- 14 Jan: Mat changed from 20.0 to 10.0
                 , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
-                , 'KshhTFHHPtLL'            : 500.0      # in MeV -- bumping up to even 1000 doesn't really help
+                , 'KshhTFHHPtLL'            : 1000.0     # in MeV
+                , 'KshhTFHHFDLL'            : 2.0        # in mm -- 26 Feb: Mat changed from 1mm to 2mm
                 , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
                 , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
                 , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
@@ -49,7 +50,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
-                , 'HLT1FILTER'               : ''
+                , 'HLT1FILTER'               : None
                 , 'Prescale'                : { }
                 , 'Postscale'               : { }
                 # The HltANNSvc ID numbers for each line should be configurable.
@@ -85,13 +86,11 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
-        hlt = self.getProp("HLT1FILTER") 
-        if not hlt : hlt = None
         line = Hlt2Line(lineName
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = lclAlgos
-                        , HLT = hlt
+                        , HLT = self.getProp("HLT1FILTER")
                        )
         self.__updateHltANNSvc(lineName)
     # }
@@ -236,11 +235,11 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ##   * Upper bound on 2-body invariant mass: m(pipi) < m(D0) - m(KS) = 1367 MeV (plus wiggle room)
         ##   * Both tracks have same best PV
         ##   * Vertex fit chi2/NDF < KshhTFHHVtxChi2UL = 10.0
-        ##   * PT of 2-body combination > KshhTFHHPtLL = 500
+        ##   * PT of 2-body combination > KshhTFHHPtLL = 1000 MeV
         ## Don't cut on:
         ##   * IPchi2-to-PV of tracks
         ## Use complicated cut on estimated lifetime of D0
-        ##   * As a temporary placeholder, flight distance cut on two-body combination. (hard-coded)
+        ##   * As a temporary placeholder, flight distance cut on two-body combination.
         ##     But we can be smarter -- needs some tinkering and perhaps a
         ##     dedicated LoKi functor.
         ###################################################################
@@ -249,7 +248,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                             & (APT > %(KshhTFHHPtLL)s *MeV)
                             & (AALLSAMEBPV)""" % self.getProps()
         KshhHHparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFHHVtxChi2UL)s )
-                              & (BPVVD > 1.0*mm)""" % self.getProps()
+                              & (BPVVD > %(KshhTFHHFDLL)s *mm)""" % self.getProps()
 
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import CombineParticles
