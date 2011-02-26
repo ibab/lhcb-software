@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-26 - William James Barter
+ - Updates to StrippingSingleTrackHighPT (after discussion with Jibo)
+
 ! 2011-02-25 - Andrew Powell
  - Updates to StrippingNoPIDDstarWithD02RSKPi.py
 

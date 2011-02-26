@@ -35,7 +35,7 @@ class SingleTrackHighPTConf(LineBuilder) :
         self._myname = name
 
                       
-        self.SingleTrackHighPT_line = StrippingLine(self._myname+"SingleTrackHlt1TisHighPT ",
+        self.SingleTrackHighPT_line = StrippingLine(self._myname+"SingleTrackHlt1TisHighPT",
                                           prescale = config['SingleTrackHighPTPrescale'],
                                           postscale = config['SingleTrackHighPTPostscale'],
                                           checkPV = False,
@@ -46,7 +46,7 @@ class SingleTrackHighPTConf(LineBuilder) :
 
        
       
-        self.SingleTrackLowPT_line = StrippingLine(self._myname+"SingleTrackHlt1TisLowPT ",
+        self.SingleTrackLowPT_line = StrippingLine(self._myname+"SingleTrackHlt1TisLowPT",
                                           prescale = config['SingleTrackLowPTPrescale'],
                                           postscale = config['SingleTrackLowPTPostscale'],
                                           checkPV = False,
