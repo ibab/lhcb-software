@@ -179,7 +179,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     current = cltime;
   }
-//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
   m_RateBuff = 0;
   if (m_reference < current)
   {
