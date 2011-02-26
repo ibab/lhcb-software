@@ -214,7 +214,7 @@ StatusCode AdderSvc::stop()
 
   if (m_isSaver)
   {
-    m_SaveTimer->Stop();
+//    m_SaveTimer->Stop();
   }
   m_errh->stop();
   return Service::stop();
@@ -223,7 +223,7 @@ StatusCode AdderSvc::stop()
 StatusCode AdderSvc::finalize()
 {
   dim_lock();
-  if (m_SaveTimer != 0) {delete m_SaveTimer;m_SaveTimer=0;}
+  if (m_SaveTimer != 0) {m_SaveTimer->Stop();delete m_SaveTimer;m_SaveTimer=0;}
   if (m_adder != 0) {delete m_adder;m_adder=0;}
   if (m_EoRadder != 0) {delete m_EoRadder;m_EoRadder=0;}
   dim_unlock();

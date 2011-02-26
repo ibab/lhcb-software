@@ -3,6 +3,7 @@
 #include "Gaucho/ObjService.h"
 #include "stdio.h"
 #include "RTL/Lock.h"
+#include "Gaucho/Utilities.h"
 //#include "errno.h"
 //#ifdef WIN32
 //#include "windows.h"
@@ -22,14 +23,6 @@ MonTimer::MonTimer(MonSubSys *HSys, int period) : GenTimer((void*)HSys,period*10
 
 MonTimer::~MonTimer( )
 {
-}
-
-namespace {
-  class DimLock {
-  public:
-    DimLock()   { dim_lock();   }
-    ~DimLock()  { dim_unlock(); }
-  };
 }
 
 

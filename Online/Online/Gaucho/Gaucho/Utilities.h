@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <ctype.h>
+#include "dim.h"
 
 #define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
@@ -29,6 +30,14 @@ public:
   {
   }
 };
+namespace {
+  class DimLock {
+  public:
+    DimLock()   { dim_lock();   }
+    ~DimLock()  { dim_unlock(); }
+  };
+}
+
 
 dyn_string *Strsplit(char *s, char *del);
 dyn_string *Strsplit(const char *s, char *del);

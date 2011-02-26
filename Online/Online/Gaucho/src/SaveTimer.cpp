@@ -10,6 +10,7 @@
 #include "sys/types.h"
 #include "Gaucho/RootHists.h"
 #include "Gaucho/Utilities.h"
+#include "RTL/Lock.h"
 
 SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*1000,TIMER_TYPE_PERIODIC)
 {
@@ -31,23 +32,29 @@ SaveTimer::~SaveTimer( )
 void SaveTimer::timerHandler ( void )
 {
   if (m_Adder->m_inputServicemap.empty()) return;
-  m_Adder->Lock();
-  if (m_Adder->m_usedSize == 0)
+  if (m_Adder->m_lockid != 0)
   {
-    m_Adder->UnLock();
+    RTL::Lock alock(m_Adder->m_lockid);
+    if (m_Adder->m_usedSize == 0)
+    {
+      return;
+    }
+    if (m_bsiz < m_Adder->m_usedSize)
+    {
+      if (m_buffadd != 0)
+      {
+        free (m_buffadd);
+      }
+      m_buffadd = malloc(m_Adder->m_usedSize);
+      m_bsiz = m_Adder->m_usedSize;
+    }
+    memcpy(m_buffadd,m_Adder->m_buffer,m_bsiz);
+  }
+  else
+  {
+    printf("ERORO !!!!!!!!!!!!!!!!!!!! Bad Logic... running a SaveTimer without an adder lock...\n");
     return;
   }
-  if (m_bsiz < m_Adder->m_usedSize)
-  {
-    if (m_buffadd != 0)
-    {
-      free (m_buffadd);
-    }
-    m_buffadd = malloc(m_Adder->m_usedSize);
-    m_bsiz = m_Adder->m_usedSize;
-  }
-  memcpy(m_buffadd,m_Adder->m_buffer,m_bsiz);
-  m_Adder->UnLock();
   SavetoFile(m_buffadd);
 }
 //void SaveTimer::Stop()
