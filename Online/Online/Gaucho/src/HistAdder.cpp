@@ -154,7 +154,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   nrate=0;
   if (siz == 4)
   {
-//    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
@@ -168,7 +168,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   long long cltime;
   SerialHeader* header= ((SerialHeader*)buff);
   cltime = header->ser_tim;
-//  printf("Received size %d Header size %d\n",siz,header->buffersize);
+  printf("Received size %d Header size %d\n",siz,header->buffersize);
   long long runno = ((SerialHeader*)buff)->run_number;
   long long current;
   if (m_IsEOR)
