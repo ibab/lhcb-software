@@ -30,17 +30,19 @@ void MonTimer::timerHandler ( void )
 {
 //  printf(" timer_handler Monitor Sun System Locking\n");
   {
-    RTL::Lock lock(m_Hsys->m_lockid);
-//    m_Hsys->Lock();
+//    RTL::Lock lock(m_Hsys->m_lockid);
+    m_Hsys->Lock();
   //  printf("++++++++++++++++timer_handler Monitor Sun System LockED\n");
     m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
     m_Hsys->m_genSrv->setTime(m_dueTime);
     m_Hsys->m_genSrv->Serialize();
-//    m_Hsys->unLock();
+    m_Hsys->unLock();
   }
-  DimLock lock();
+//  DimLock lock();
+  dim_lock();
 //  printf("Updating the monitor service\n");
   m_Hsys->m_genSrv->Update();
+  dim_unlock();
 //  printf(" timer_handler Monitor Sun System Un-Locking\n");
 //  printf("---------------timer_handler Monitor Sun System Un-LockED\n");
 }
