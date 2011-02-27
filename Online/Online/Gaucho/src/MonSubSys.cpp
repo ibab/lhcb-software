@@ -230,11 +230,13 @@ int MonSubSys::Lock(void)
   int status = 0;
   while (status != 1)
   {
+    printf("Locking subsustem %s\n",m_name.c_str());
     status = lib_rtl_lock(m_lockid);
     if (status != 1)
     {
 //      printf("Status from lock not success......\n");
     }
+    printf("Locking subsustem %s Done...............\n",m_name.c_str());
   }
   m_lockcnt++;
   m_lockcount++;
@@ -253,11 +255,13 @@ int MonSubSys::unLock(void)
   m_unlockcount++;
   while (status != 1)
   {
+    printf("UNLocking subsustem %s\n",m_name.c_str());
     status = lib_rtl_unlock(m_lockid);
     if (status != 1)
     {
 //      printf("Status from unlock not success......\n");
     }
+    printf("UNLocking subsustem %s Done...............\n",m_name.c_str());
   }
 //  printf("-----------Monitor Sub System Un-LockED. Lock Address %0X\n",m_lockid);
   return status;
