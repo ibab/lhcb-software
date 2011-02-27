@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-27 - Ulrich Kerzel
+ - add Network for lifetime unbiaed B->hh trigger based on 
+   kinematic information only to reduce combinatorics before 
+   using PID information  
+
 ! 2011-02-26 - Mat Charles
   - Tighten cuts in Hlt2CharmHadD02HHKsLines.py
 
