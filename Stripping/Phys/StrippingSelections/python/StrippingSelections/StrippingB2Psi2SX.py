@@ -1,167 +1,574 @@
+# $Id: StrippingBs2Psi2SPhiPrescaledAndDetatched.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
 '''
-Module for construction of B->psi(2S)X
-Provides functions to build B, Psi(2S), Phi selections.
+Module for construction of Bs->Psi(2S)Phi pre-scaled and detatched 
+stripping Selections and StrippingLines.
+Provides functions to build Bs, Psi2S, Phi selections.
+Provides class Bs2Psi2SPhiPrescaledConf, which constructs the Selections and 
+StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
-   B2Psi(2S)XLines
+   - Bs2JpsiPhiConf
+   - makeBs2JpsiPhi
+   - makePhi2KK
+   - makePhi2KKLoose
+   - makeJpsi2MuMuLoose
 '''
 
-__author__ = ['Fred Blanc']
-__date__ = '26/10/2010'
+__author__ = ['Fred Blanc - Neus Lopez March']
+__date__ = '16/2/2011'
 __version__ = '$Revision: 1.0 $'
 
+__all__ = ('B2Psi2SXConf',
+           'makePions',
+           'makeJpsi',
+           'makePsi2S',
+           'makeChK',
+           'makePhi2KK',
+           'makeKstar',
+           'makeKsLoose',
+           'makeKs',
+           'makeInclPsi2SToJpsiPiPi',
+           'makeBs2Psi2SPhiJpsiPiPi',
+           'makeBu2Psi2SKJpsiPiPi',
+           'makeBd2Psi2SKstarJpsiPiPi',
+           'makeBd2Psi2SKsJpsiPiPi'
+           )
 
-# Need __all__ for ???
-__all__ = ('Lines')
+config_params = {'PionsTRCHI2DOF': 5,
+                 'Psi2SJpsiMIPCHI2DV' : 4 ,
+                 'Psi2SPiMIPCHI2DV':4 ,
+                 'Psi2SAM23down': 400,
+                 'Psi2SAM23up': 800,
+                 'Psi2SAPT': 500,
+                 'Psi2SADAMASS': 30,
+                 'Psi2SVFASPF': 16,
+                 'ChKTRCHI2DOF':5,
+                 'ChKPID':-2,#
+                 'PhiWin':20,
+                 'PhiPT':500,
+                 'PhiVFASPF':16,
+                 'PhiMAXTRCHI2DOF':5,
+                 'PhiMINTRCHI2DOF':-2,#
+                 'KstPipTRCHI2DOF':5,
+                 'KstAPT' :500,
+                 'KstADAMASS' : 90,
+                 'KstVFASPF':16, #
+                 'KsVFASPF':20,
+                 'KsBPVDLS':5,
+                 'incl_LinePrescale':0.5,
+                 'incl_LinePostscale':1,
+                 'BsMassCutDownPre':5000,
+                 'BsMassCutUpPre':5650,
+                 'BsMassCutDownPost':5100,
+                 'BsMassCutUpPost':5550,
+                 'BsVCHI2PDOF':10,
+                 'sig_LinePrescale': 1,
+                 'sig_LinePostscale': 1,
+                 'ChKPT': 500 ,
+                 'K_LinePrescale': 1,
+                 'K_LinePostscale': 1,
+                 'Kstar_LinePrescale': 1,
+                 'Kstar_LinePostscale': 1,
+                 'BKsVCHI2PDOF': 10,
+                 'Ks_LinePrescale': 1,
+                 'Ks_LinePostscale':1
+                 }
+
+
+
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from StandardParticles import StdLoosePions
+from StandardParticles import StdLooseMuons
+from StandardParticles import StdLooseKaons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
-from GaudiKernel.SystemOfUnits import MeV
+from StrippingUtils.Utils import LineBuilder
 
-##############################################################################
-## This is the common Jpsi that is used in all of the subsequent selections ##
-##############################################################################
-#Jpsi = DataOnDemand(Location = "Phys/StdLTUnbiasedJpsi2MuMu")
+name = "B2Psi2SX"
+
+class B2Psi2SXConf(LineBuilder) :
+  
+    __configuration_keys__ = ('PionsTRCHI2DOF',
+                              'Psi2SJpsiMIPCHI2DV',
+                              'Psi2SPiMIPCHI2DV',
+                              'Psi2SAM23down',
+                              'Psi2SAM23up',
+                              'Psi2SAPT',
+                              'Psi2SADAMASS',
+                              'Psi2SVFASPF',
+                              'ChKTRCHI2DOF',
+                              'ChKPID',
+                              'PhiWin',
+                              'PhiPT',
+                              'PhiVFASPF',
+                              'PhiMAXTRCHI2DOF',
+                              'PhiMINTRCHI2DOF',
+                              'KstPipTRCHI2DOF',
+                              'KstAPT',
+                              'KstADAMASS',
+                              'KstVFASPF',
+                              'KsVFASPF',
+                              'KsBPVDLS',
+                              'incl_LinePrescale',
+                              'incl_LinePostscale',
+                              'BsMassCutDownPre',
+                              'BsMassCutUpPre',
+                              'BsMassCutDownPost',
+                              'BsMassCutUpPost',
+                              'BsVCHI2PDOF',
+                              'sig_LinePrescale',
+                              'sig_LinePostscale',
+                              'ChKPT',
+                              'K_LinePrescale',
+                              'K_LinePostscale',
+                              'Kstar_LinePrescale',
+                              'Kstar_LinePostscale',
+                              'BKsVCHI2PDOF',
+                              'Ks_LinePrescale',
+                              'Ks_LinePostscale'
+                              )
+
+    def __init__(self, name, config) :
+
+        LineBuilder.__init__(self, name, config)
 
 
-# a few functions that we will use. are there alternatives for this in Juan's framework?
-B2Psi2SXJpsiPiPiLines = []
+        incl = 'Psi2SToJpsiPiPi'
+        incl_detatched_name = incl+'Detatched'
+        sig = 'Bs2Psi2SPhiJpsiPiPi'
+        K = 'Bu2Psi2SKJpsiPiPi'
+        Kstar = 'Bd2Psi2SKstarJpsiPiPi'
+        Ks = 'Bd2Psi2SKsJpsiPiPi'
+     
 
-# create a selection using a FilterDesktop
-def createSubSel( OutputList, InputList, Cuts ) :
-    # create a unique filterdesktop
-    filterName = "FilterDesktopFor" + OutputList
-    if allConfigurables.get( filterName ) :
-        raise ValueError, 'FilterDesktop instance with name '+filterName+' already exists'
-    filter = FilterDesktop(filterName, Code = Cuts)
-    return Selection( OutputList,
-                      Algorithm = filter,
-                      RequiredSelections = [ InputList ] )
+        self.selPions = makePions( 'Pions',
+                                   PionsTRCHI2DOF = config['PionsTRCHI2DOF']
+                                   )
+        
+        self.selJpsi = makeJpsi('Jpsi')
+                                 
+        
+        self.selPsi2S2JpsiPiPi = makePsi2S('Psi2SJpsiPiPi',
+                                           Pions = self.selPions,
+                                           Jpsi = self.selJpsi,
+                                           Psi2SJpsiMIPCHI2DV = config['Psi2SJpsiMIPCHI2DV'],
+                                           Psi2SPiMIPCHI2DV = config['Psi2SPiMIPCHI2DV'], 
+                                           Psi2SAM23down = config['Psi2SAM23down'], 
+                                           Psi2SAM23up = config['Psi2SAM23up'], 
+                                           Psi2SAPT = config['Psi2SAPT'] , 
+                                           Psi2SADAMASS = config['Psi2SADAMASS'], 
+                                           Psi2SVFASPF = config['Psi2SVFASPF']
+                                           )
+        
+        self.selChargedK = makeChK('ChK',
+                                   ChKTRCHI2DOF = config['ChKTRCHI2DOF'],
+                                   ChKPID = config['ChKPID']
+                                   ) 
+        
+        
+        self.selPhi2KK = makePhi2KK( 'Phi',
+                                     PhiWin = config['PhiWin'],
+                                     PhiPT = config['PhiPT'],
+                                     PhiVFASPF = config['PhiVFASPF'],
+                                     PhiMAXTRCHI2DOF = config['PhiMAXTRCHI2DOF'],
+                                     PhiMINTRCHI2DOF = config['PhiMINTRCHI2DOF']
+                                     )
+        
+        
+        self.selKstar = makeKstar('Kstar',
+                                  ChKforKst = self.selChargedK,
+                                  KstPipTRCHI2DOF = config['KstPipTRCHI2DOF'],
+                                  KstAPT = config['KstAPT'],
+                                  KstADAMASS = config['KstADAMASS'],
+                                  KstVFASPF = config['KstVFASPF']
+                                  ) 
 
-# create a selection using a ParticleCombiner
-def createCombinationSel( OutputList,
-                          DecayDescriptor,
-                          DaughterLists,
-                          DaughterCuts = {} ,
-                          PreVertexCuts = "ALL",
-                          PostVertexCuts = "ALL" ) :
-    combinerName = "CombinerParticlesFor" + OutputList
-    if allConfigurables.get( combinerName ) :
-        raise ValueError, 'CombineParticles instance with name '+ combinerName+' already exists'
-    combiner = CombineParticles( combinerName,
-                                 DecayDescriptor = DecayDescriptor,
-                                 DaughtersCuts = DaughterCuts,
-                                 MotherCut = PostVertexCuts,
-                                 CombinationCut = PreVertexCuts,
-                                 ReFitPVs = True)
-    combiner.addTool( OfflineVertexFitter() )
-    combiner.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    combiner.OfflineVertexFitter.useResonanceVertex = True
-    return Selection ( OutputList,
-                       Algorithm = combiner,
-                       RequiredSelections = DaughterLists)
-
-
-# define input daughter lists for various B -> J/psi X selections
-PionList = createSubSel( OutputList = "PionsForBToPsi2SXJpsiPiPi",
-                         InputList = DataOnDemand(Location = "Phys/StdLoosePions"),
-                         Cuts = "(TRCHI2DOF < 5)" )
-
-JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
-
-Psi2SList = createCombinationSel( OutputList = "Psi2SToJpsiPiPiForBToPsi2SXJpsiPiPi",
-                                  DaughterLists = [ JpsiList, PionList ],
-                                  DaughterCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > 4" , "pi+" : "MIPCHI2DV(PRIMARY) > 4" },
-                                  DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-",
-                                  PreVertexCuts = "(AM23>400.*MeV) & (AM23<800.*MeV) &(APT>500*MeV) & (ADAMASS('psi(2S)') < 30*MeV)",
-                                  PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 16)" )
-
-KaonList = createSubSel( OutputList = "KaonsForBToPsi2SXJpsiPiPi",
-                         InputList = DataOnDemand(Location = "Phys/StdLooseKaons"),
-                         Cuts = "(TRCHI2DOF < 5) & (PIDK > -2)" )
-
-PhiList = createSubSel( OutputList = "Phi2KKForBToPsi2SXJpsiPiPi",
-                        InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK"),
-                        Cuts = "(ADMASS('phi(1020)') < 20)" \
-                        "& (PT > 500) " \
-                        "& (VFASPF(VCHI2) < 16)" \
-                        "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < 5)" \
-                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" )
-
-KstarList = createCombinationSel( OutputList = "Kstar2KpiForBToPsi2SXJpsiPiPi",
-                                  DaughterLists = [ KaonList, PionList ],
-                                  DaughterCuts = { },
-                                  DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
-                                  PreVertexCuts = "(APT>800*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
-                                  PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
-
-KsList = MergedSelection("KsForBToPsi2SXJpsiPiPi",
-                         RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
-                                               DataOnDemand(Location = "Phys/StdLooseKsLL")] )
+        self.selKsLoose = makeKsLoose('KsLoose') 
+        
+        self.selKs = makeKs('Ks',
+                            KsLooseSel = self.selKsLoose,
+                            KsVFASPF = config['KsVFASPF'],
+                            KsBPVDLS = config['KsBPVDLS']
+                            ) 
 
 ####################
 ### Inlusive psi(2S). We keep it for as long as we can.
 ####################
 
-Psi2SToJpsiPiPiLine =  StrippingLine("Psi2SToJpsiPiPiLine",algos = [ Psi2SList ], prescale = 1)
-B2Psi2SXJpsiPiPiLines += [ Psi2SToJpsiPiPiLine ]
-
+        self.InclPsi2SToJpsiPiPi = makeInclPsi2SToJpsiPiPi(incl,  
+                                                           Psi2SSel = self.selPsi2S2JpsiPiPi 
+                                                           )                                                         
+        
+        self.InclPsi2SToJpsiPiPi_line = StrippingLine(incl+"Line",
+                                                      prescale = config['incl_LinePrescale'],
+                                                      postscale = config['incl_LinePostscale'],
+                                                      selection = self.InclPsi2SToJpsiPiPi
+                                                      )
+               
+#####################
+### Bs->Psi(2S)Phi ## 
+#####################
+        self.selBs2Psi2SPhiJpsiPiPi = makeBs2Psi2SPhiJpsiPiPi(sig,  
+                                                              Psi2SSel = self.selPsi2S2JpsiPiPi, 
+                                                              PhiSel = self.selPhi2KK,
+                                                              BsMassCutDownPre = config['BsMassCutDownPre'],
+                                                              BsMassCutUpPre = config['BsMassCutUpPre'],
+                                                              BsMassCutDownPost = config['BsMassCutDownPost'],
+                                                              BsMassCutUpPost = config['BsMassCutUpPost'],
+                                                              BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                              )
+        
+        self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig+"Line",
+                                                      prescale = config['sig_LinePrescale'],
+                                                      postscale = config['sig_LinePostscale'],
+                                                      selection = self.selBs2Psi2SPhiJpsiPiPi
+                                                      )
+        
 #####################
 ### Bu->Psi(2S)K+ ###
 #####################
-Bu2Psi2SKJpsiPiPi = createCombinationSel( OutputList = "Bu2Psi2SKJpsiPiPi",
-                                          DecayDescriptor = "[B+ -> psi(2S) K+]cc",
-                                          DaughterLists = [ Psi2SList, KaonList ],
-                                          DaughterCuts  = {"K+": "(PT > 500)" },
-                                          PreVertexCuts = "in_range(5000,AM,5650)",
-                                          PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
-
-Bu2Psi2SKJpsiPiPiLine = StrippingLine("Bu2Psi2SKJpsiPiPiLine", algos = [ Bu2Psi2SKJpsiPiPi ] , prescale = 1.00)
-
-B2Psi2SXJpsiPiPiLines += [ Bu2Psi2SKJpsiPiPiLine]
-
-#####################
-### Bs->Psi(2S)Phi ##
-#####################
-
-Bs2Psi2SPhiJpsiPiPi = createCombinationSel( OutputList = "Bs2Psi2SPhiJpsiPiPi",
-                                            DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
-                                            DaughterLists  = [ Psi2SList, PhiList ],
-                                            PreVertexCuts = "in_range(5000,AM,5650)",
-                                            PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
-
-Bs2Psi2SPhiJpsiPiPiLine = StrippingLine("Bs2Psi2SPhiJpsiPiPiLine", algos = [ Bs2Psi2SPhiJpsiPiPi ] , prescale = 1.00)
-
-B2Psi2SXJpsiPiPiLines += [ Bs2Psi2SPhiJpsiPiPiLine]
+        self.selBu2Psi2SKJpsiPiPi = makeBu2Psi2SKJpsiPiPi(K,  
+                                                          Psi2SSel = self.selPsi2S2JpsiPiPi, 
+                                                          ChKSel = self.selChargedK,
+                                                          ChKPT = config['ChKPT'],
+                                                          BsMassCutDownPre = config['BsMassCutDownPre'],
+                                                          BsMassCutUpPre = config['BsMassCutUpPre'],
+                                                          BsMassCutDownPost = config['BsMassCutDownPost'],
+                                                          BsMassCutUpPost = config['BsMassCutUpPost'],
+                                                          BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                          )
+        
+        self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K+"Line",
+                                                    prescale = config['K_LinePrescale'],
+                                                    postscale = config['K_LinePostscale'],
+                                                    selection = self.selBu2Psi2SKJpsiPiPi
+                                                    )
+     
 
 
 #####################
 ### B0->Psi(2S)K*  ##
 #####################
 
-Bd2Psi2SKstarJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKstarJpsiPiPi",
-                                              DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
-                                              DaughterLists  = [ Psi2SList, KstarList ],
-                                              PreVertexCuts = "in_range(5000,AM,5650)",
-                                              PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
+        self.selBd2Psi2SKstarJpsiPiPi = makeBd2Psi2SKstarJpsiPiPi(Kstar,  
+                                                                  Psi2SSel = self.selPsi2S2JpsiPiPi, 
+                                                                  KstarSel = self.selKstar,
+                                                                  BsMassCutDownPre = config['BsMassCutDownPre'],
+                                                                  BsMassCutUpPre = config['BsMassCutUpPre'],
+                                                                  BsMassCutDownPost = config['BsMassCutDownPost'],
+                                                                  BsMassCutUpPost = config['BsMassCutUpPost'],
+                                                                  BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                                  )
+        
+        self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar+"Line",
+                                                        prescale = config['Kstar_LinePrescale'],
+                                                        postscale = config['Kstar_LinePostscale'],
+                                                        selection = self.selBd2Psi2SKstarJpsiPiPi
+                                                        )
+        
+        
+#####################
+### Bd->Psi(2S)KS ###
+#####################
+        
+        self.selBd2Psi2SKsJpsiPiPi = makeBd2Psi2SKsJpsiPiPi(Ks,  
+                                                            Psi2SSel = self.selPsi2S2JpsiPiPi, 
+                                                            KsSel = self.selKs,
+                                                            BsMassCutDownPre = config['BsMassCutDownPre'],
+                                                            BsMassCutUpPre = config['BsMassCutUpPre'],
+                                                            BsMassCutDownPost = config['BsMassCutDownPost'],
+                                                            BsMassCutUpPost = config['BsMassCutUpPost'],
+                                                            BKsVCHI2PDOF = config['BKsVCHI2PDOF']
+                                                            )
+        
+        self.Bd2Psi2SKsJpsiPiPi_line = StrippingLine(Ks+"Line",
+                                                     prescale = config['Ks_LinePrescale'],
+                                                     postscale = config['Ks_LinePostscale'],
+                                                     selection = self.selBd2Psi2SKsJpsiPiPi
+                                                     )
+        
+        
+        self.registerLine(self.InclPsi2SToJpsiPiPi_line)
+        self.registerLine(self.Bs2Psi2SPhiJpsiPiPi_line)
+        self.registerLine(self.Bu2Psi2SKJpsiPiPi_line)
+        self.registerLine(self.Bd2Psi2SKstarJpsiPiPi_line)
+        self.registerLine(self.Bd2Psi2SKsJpsiPiPi_line)
+        
+        
+        
 
-Bd2Psi2SKstarJpsiPiPiLine = StrippingLine("Bd2Psi2SKstarJpsiPiPiLine", algos = [ Bd2Psi2SKstarJpsiPiPi ] , prescale = 1.00)
+def makePions(name,
+              PionsTRCHI2DOF #<5
+              ):
 
-B2Psi2SXJpsiPiPiLines += [ Bd2Psi2SKstarJpsiPiPiLine]
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+    _code = "(TRCHI2DOF < %(PionsTRCHI2DOF)s)"  % locals()
+    _Pions = FilterDesktop(Code = _code)
+    
+#    print ' makePions ', name, 'Code ', _code
+    
+    return Selection (name,
+                      Algorithm = _Pions,
+                      RequiredSelections = [_stdLoosePions])
+    
+def makeJpsi(name):
+
+    _stdLooseJpsi = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu/Particles")
+    _code = "ALL"
+    _Jpsi = FilterDesktop(Code = _code)
+    
+#    print ' makeJpsi ', name, 'Code ', _code
+
+    return Selection (name,
+                      Algorithm = _Jpsi,
+                      RequiredSelections = [ _stdLooseJpsi ])
+    
+
+def makePsi2S(name,
+              Pions,
+              Jpsi,
+              Psi2SJpsiMIPCHI2DV, # 4
+              Psi2SPiMIPCHI2DV, #4
+              Psi2SAM23down, #>400 
+              Psi2SAM23up, #<800 
+              Psi2SAPT, #> 500
+              Psi2SADAMASS, #<30
+              Psi2SVFASPF #<16
+              ) :
+
+    _daughtersCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > %(Psi2SJpsiMIPCHI2DV)s" % locals(), "pi+" : "MIPCHI2DV(PRIMARY) > %(Psi2SPiMIPCHI2DV)s" % locals()}
+    _preVertexCuts = "(AM23>%(Psi2SAM23down)s*MeV) & (AM23<%(Psi2SAM23up)s*MeV)&(APT>%(Psi2SAPT)s*MeV) & (ADAMASS('psi(2S)') < %(Psi2SADAMASS)s*MeV)" % locals()
+    _motherCuts = "(VFASPF(VCHI2/VDOF) < %(Psi2SVFASPF)s)"  % locals()
+    _Psi2S = CombineParticles( DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-",
+                               DaughtersCuts = _daughtersCuts,
+                               CombinationCut = _preVertexCuts,
+                               MotherCut = _motherCuts,
+                               ReFitPVs = True
+                               )
+
+#    print ' makePsi2S ', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
+    return Selection ( name,
+                       Algorithm = _Psi2S,
+                       RequiredSelections = [Pions,Jpsi])
+
+
+def makeChK(name,
+            ChKTRCHI2DOF,#<5 
+            ChKPID #>-2
+            ) :
+    
+    _stdChK = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+    _code = "(TRCHI2DOF < %(ChKTRCHI2DOF)s) & (PIDK > %(ChKPID)s)"  % locals()
+    _ChKFilter = FilterDesktop(Code = _code)
+    
+#    print ' makeChK ', name, 'Code ', _code
+    return Selection (name,
+                      Algorithm = _ChKFilter,
+                      RequiredSelections = [_stdChK])
+
+def makePhi2KK(name,
+               PhiWin, # 20
+               PhiPT, # 500
+               PhiVFASPF, # 16
+               PhiMAXTRCHI2DOF, # <5
+               PhiMINTRCHI2DOF # >-2
+               ) :
+
+    _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")   
+    _code = "(ADMASS('phi(1020)') < %(PhiWin)s) & (PT > %(PhiPT)s *MeV) & (VFASPF(VCHI2) < %(PhiVFASPF)s) & (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(PhiMAXTRCHI2DOF)s) & (MINTREE('K+'==ABSID, PIDK) > %(PhiMINTRCHI2DOF)s)" % locals()
+    _phiFilter = FilterDesktop(Code = _code)
+
+#    print ' makePhi2KK ', name, 'Code ', _code
+    return Selection (name,
+                      Algorithm = _phiFilter,
+                      RequiredSelections = [_stdPhi2KK])
+
+
+
+def makeKstar(name,
+              ChKforKst,
+              KstPipTRCHI2DOF,#<5
+              KstAPT, #>500
+              KstADAMASS,#<90
+              KstVFASPF #<16
+              ) :
+
+    _stdpions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+    _daughtersCuts = { "pi+" : "(TRCHI2DOF < %(KstPipTRCHI2DOF)s)"% locals()} 
+    _preVertexCuts = "(APT>%(KstAPT)s*MeV) & (ADAMASS('K*(892)0') < %(KstADAMASS)s*MeV)" % locals()
+    _motherCuts = "(VFASPF(VCHI2) < %(KstVFASPF)s)" % locals()
+    _Kstar = CombineParticles( DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
+                               DaughtersCuts = _daughtersCuts,
+                               CombinationCut = _preVertexCuts,
+                               MotherCut = _motherCuts,
+                               ReFitPVs = True
+                               )
+
+#    print ' makeKstar ', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
+    return Selection ( name,
+                       Algorithm = _Kstar,
+                       RequiredSelections = [ChKforKst,_stdpions])
+
+
+def makeKsLoose( name ):
+    return MergedSelection(name,
+                           RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
+                                                 DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
+
+def makeKs(name,
+           KsLooseSel,
+           KsVFASPF, #20
+           KsBPVDLS #5
+           ):
+    _code = "(VFASPF(VCHI2)<%(KsVFASPF)s) & (BPVDLS>%(KsBPVDLS)s)" % locals()
+    _KsFilter = FilterDesktop(Code = _code)
+
+#    print ' makeKs ', name, 'Code ', _code 
+    return Selection (name,
+                      Algorithm = _KsFilter,
+                      RequiredSelections = [KsLooseSel])
+
+
+
+####################
+### Inlusive psi(2S). We keep it for as long as we can.
+####################
+def makeInclPsi2SToJpsiPiPi(name,
+                            Psi2SSel
+                            ) :
+    _code = "ALL"
+    _InclFilter = FilterDesktop(Code = _code)
+    
+    return Selection (name,
+                      Algorithm = _InclFilter,
+                      RequiredSelections = [Psi2SSel])
+
+
+
+
+#####################
+### Bs->Psi(2S)Phi ##
+#####################
+
+def makeBs2Psi2SPhiJpsiPiPi(name,
+                            Psi2SSel,
+                            PhiSel,
+                            BsMassCutDownPre,
+                            BsMassCutUpPre,
+                            BsMassCutDownPost,
+                            BsMassCutUpPost,
+                            BsVCHI2PDOF #<10
+                            ) :
+    
+    _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+    
+#    print 'makeBs2Psi2SPhiJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
+    
+    _Bs = CombineParticles( DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
+                            CombinationCut = _preVertexCuts,
+                            MotherCut = _motherCuts,
+                            ReFitPVs = True
+                            )
+    
+    return Selection ( name,
+                       Algorithm = _Bs,
+                       RequiredSelections = [PhiSel, Psi2SSel])
+
+
+        
+#####################
+### Bu->Psi(2S)K+ ###
+#####################
+
+def makeBu2Psi2SKJpsiPiPi(name,
+                          Psi2SSel,
+                          ChKSel,
+                          ChKPT, #500
+                          BsMassCutDownPre,
+                          BsMassCutUpPre,
+                          BsMassCutDownPost,
+                          BsMassCutUpPost,
+                          BsVCHI2PDOF #<10
+                          ) :
+
+    _daughtersCuts= {"K+": "(PT > %(ChKPT)s)" % locals()}
+    _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+    
+#    print 'makeBu2Psi2SKJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts, '_daughtersCuts', _daughtersCuts
+    _Bs = CombineParticles( DecayDescriptor = "[B+ -> psi(2S) K+]cc",
+                            DaughtersCuts = _daughtersCuts,
+                            CombinationCut = _preVertexCuts,
+                            MotherCut = _motherCuts,
+                            ReFitPVs = True
+                            )
+
+    return Selection ( name,
+                       Algorithm = _Bs,
+                       RequiredSelections = [ChKSel, Psi2SSel])
+
+
+
+
+#####################
+### B0->Psi(2S)K*  ##
+#####################
+
+def makeBd2Psi2SKstarJpsiPiPi(name,
+                              Psi2SSel,
+                              KstarSel,
+                              BsMassCutDownPre,
+                              BsMassCutUpPre,
+                              BsMassCutDownPost,
+                              BsMassCutUpPost,
+                              BsVCHI2PDOF #<10
+                              ) :
+
+    _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+
+#    print 'makeBd2Psi2SKstarJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
+    
+    _Bs = CombineParticles( DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
+                            CombinationCut = _preVertexCuts,
+                            MotherCut = _motherCuts,
+                            ReFitPVs = True
+                            )
+    
+    return Selection ( name,
+                       Algorithm = _Bs,
+                       RequiredSelections = [KstarSel, Psi2SSel])
 
 
 #####################
 ### Bd->Psi(2S)KS ###
 #####################
-Bd2Psi2SKsJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKSJpsiPiPi",
-                                           DecayDescriptor = "B0 -> psi(2S) KS0",
-                                           DaughterLists  = [ Psi2SList, KsList ],
-                                           PreVertexCuts = "in_range(5000,AM,5650)",
-                                           PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)")
+def makeBd2Psi2SKsJpsiPiPi(name,
+                           Psi2SSel,
+                           KsSel,
+                           BsMassCutDownPre,
+                           BsMassCutUpPre,
+                           BsMassCutDownPost,
+                           BsMassCutUpPost,
+                           BKsVCHI2PDOF #different 20
+                           ) :
+    
+    _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BKsVCHI2PDOF)s)" % locals()
+    
+#    print 'makeBd2Psi2SKsJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
+    
+    _Bs = CombineParticles( DecayDescriptor = "B0 -> psi(2S) KS0",
+                            CombinationCut = _preVertexCuts,
+                            MotherCut = _motherCuts,
+                            ReFitPVs = True
+                            )
+    
+    return Selection ( name,
+                       Algorithm = _Bs,
+                       RequiredSelections = [KsSel, Psi2SSel])
 
 
-Bd2Psi2SKsJpsiPiPiLine = StrippingLine("Bd2Psi2SKsJpsiPiPiLine", algos = [ Bd2Psi2SKsJpsiPiPi ] , prescale = 1.00)
 
-B2Psi2SXJpsiPiPiLines += [ Bd2Psi2SKsJpsiPiPiLine]
