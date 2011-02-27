@@ -22,6 +22,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
                 , 'KshhTFHHPtLL'            : 1000.0     # in MeV
                 , 'KshhTFHHFDLL'            : 2.0        # in mm -- 26 Feb: Mat changed from 1mm to 2mm
+                , 'KshhTFHHTightTrkChi2UL'  : 3.0        # unitless -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightVtxChi2UL'  : 5.0        # unitless -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightFDLL'       : 3.0        # in mm -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightPtLL'       : 1000.0     # in MeV -- 27 Feb: Mat adds for use in DD filter
                 , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
                 , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
                 , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
@@ -220,7 +224,126 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         return charmNBody
     # }
 
+    ###################################################################
+    ## KS -> long tracks reconstruction by hand.
+    ## FIXME: Should instead start from Hlt2SharedParticles and filter.
+    ##
+    ## These cuts are used by the long-long routine and are probably OK:
+    ##   Tracks:
+    ##    * P > KshhTFKsLLTrkPLL = 2000 MeV
+    ##    * MIPCHI2DV(PRIMARY) > KshhTFKsLLTrkPVIPChi2LL = 9.0
+    ##    * TRCHI2DOF < KshhTFKsLLTrkChi2UL = 20
+    ##   Combination:
+    ##    * Mass within KshhTFKsLLCombSymMassWin = 50.0
+    ##   Mother:
+    ##    * Vertex chi2/NDF < KshhTFKsLLVtxChi2UL = 30.0
+    ##    * KshhTFKsLLVtxPVDispZLL in range (KshhTFKsLLVtxPVDispZLL,KshhTFKsLLVtxPVDispZUL) = (-1000.0, 650)
+    ##    * BPVDIRA > KshhTFKsLLDiraLL = 0.9997
+    ##    * Mass within KshhTFKsLLMothSymMassWin = 11.4
+    ##    * BPVVDCHI2 > KshhTFKsLLVtxPVDispChi2LL = 100.0
+    ##
+    def __makeKsLL(self, name) :
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
+        from HltTracking.HltPVs import PV3D
+        KshhKsLLdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" \
+                                     "& (P> %(KshhTFKsLLTrkPLL)s *MeV)" \
+                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s )" % self.getProps() }
+        KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
+        KshhKsLLparentcuts = "(ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV)" \
+                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) " \
+                        "& in_range( %(KshhTFKsLLVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s *mm)" \
+                        "& (BPVDIRA > %(KshhTFKsLLDiraLL)s )" \
+                        "& (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )" % self.getProps()
+        combineKshhTFKsLL = Hlt2Member( CombineParticles
+                                      , "KsLL"
+                                      , DecayDescriptor = "KS0 -> pi+ pi-"
+                                      , DaughtersCuts   = KshhKsLLdaugcuts
+                                      , CombinationCut  = KshhKsLLcombcuts
+                                      , MotherCut       = KshhKsLLparentcuts
+                                      , Inputs  = [ BiKalmanFittedPions ]
+                                      )
+        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
+        return charmKshhTFKsLL
 
+    ###################################################################
+    ## KS -> downstream tracks reconstruction by hand.
+    ## FIXME: Should instead start from Hlt2SharedParticles and filter.
+    ##
+    ## These cuts are used by the down-down routine and may be too loose:
+    ##   Tracks:
+    ##    * P > KshhTFKsDDTrkPLL = 2000 MeV
+    ##    * MIPCHI2DV(PRIMARY) > KshhTFKsDDTrkPVIPChi2LL = 4.0
+    ##    * TRCHI2DOF < KshhTFKsDDTrkChi2UL = 10.0 
+    ##   Combination:
+    ##    * Mass within KshhTFKsDDCombSymMassWin = 80.0
+    ##   Mother:
+    ##    * Vertex chi2/NDF < KshhTFKsDDVtxChi2UL = 20.0
+    ##    * BPVVDZ in range (KshhTFKsDDVtxPVDispZLL,KshhTFKsDDVtxPVDispZUL = (0, 2300)
+    ##    * BPVDIRA > KshhTFKsDDDiraLL = 0.9999
+    ##    * ADMASS within KshhTFKsDDMothSymMassWin = 24.9
+    ##    * BPVVDCHI2 > KshhTFKsDDVtxPVDispChi2LL = 100.0
+    ##
+    def __makeKsDD(self, name) :
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles
+        from HltTracking.HltPVs import PV3D
+        KshhKsDDdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)"
+                                     "& (P> %(KshhTFKsDDTrkPLL)s *MeV)" \
+                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s )" % self.getProps() }
+        KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
+        KshhKsDDparentcuts = "(ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV)" \
+                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s )" \
+                        "& in_range(%(KshhTFKsDDVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s *mm)" \
+                        "& (BPVDIRA > %(KshhTFKsDDDiraLL)s )" \
+                        "& (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )" % self.getProps()
+        combineKshhTFKsDD = Hlt2Member( CombineParticles
+                                      , "KsDD"
+                                      , DecayDescriptor = "KS0 -> pi+ pi-"
+                                      , DaughtersCuts   = KshhKsDDdaugcuts
+                                      , CombinationCut  = KshhKsDDcombcuts
+                                      , MotherCut       = KshhKsDDparentcuts
+                                      , Inputs  = [ BiKalmanFittedDownPions ]
+                                      )
+        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
+        return charmKshhTFKsDD
+
+    ###################################################################
+    ## Filter the input, requiring that they be TOS on Hlt1Track*
+    ##
+    ## DANGER: How do we enforce that the name of the filter is globally unique?
+    ##         This is easy for an Hlt2Member, but TisTosParticleTagger is not an Hlt2Member...
+    ##
+    def __filterRequiringTOS(self,name,input) :
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
+        from Configurables import TisTosParticleTagger
+        filterTOS = TisTosParticleTagger(name+"TOSFilter")
+        filterTOS.TisTosSpecs = { "Hlt1Track.*Decision%TOS":0 }
+        filterTOS.Inputs = [ input.outputSelection() ]
+        return bindMembers(name, [ input, filterTOS ])
+
+
+    ###################################################################
+    ##
+    ## Utility routine to do a quick Filterdesktop
+    ##
+    def __quickFilter(self,name,cuts,inputContainers) :
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
+        filterPlus = Hlt2Member( FilterDesktop
+                                 , 'FilterPlus'
+                                 , Inputs = inputContainers
+                                 , Code = cuts
+                                 )
+        return bindMembers(name, inputContainers + [filterPlus])
+
+    ###################################################################
+    ##
+    ## Main configuration routine
+    ##
     def __apply_configuration__(self) : # {
 
         ## Input particles for 2-body HH part of KsHH
@@ -263,83 +386,19 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [PV3D(), lclKshhTFInputKaons, lclKshhTFInputPions, combineKshhTF2Body ] )
 
+        ## Special for down-down: Require that the two-body combination pass more cuts:
+        strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s * mm ),1)) 
+                              & (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s * mm),2)) 
+                              & (VFASPF(VCHI2PDOF) < %(KshhTFHHTightVtxChi2UL)s) 
+                              & (PT > %(KshhTFHHTightPtLL)s * MeV)
+                              & (BPVVD > %(KshhTFHHTightFDLL)s *mm) )""" % self.getProps()
+        charmKshhTF2BodyTighter = self.__quickFilter("charmKshhTF2BodyTighter", strTighterCuts, [ charmKshhTF2Body ] )
+        ## Special for down-down: Require that the two-body combination be TOS on Hlt1Track:
+        charmKshhTF2BodyReqTOS = self.__filterRequiringTOS("charmKshhTF2BodyReqTOS", charmKshhTF2BodyTighter )
 
         ## Ks reconstruction
-        ## These should probably be moved to SharedParticles
-
-        ###################################################################
-        ## These cuts are used by the long-long routine and are probably OK:
-        ##   Tracks:
-        ##    * P > KshhTFKsLLTrkPLL = 2000 MeV
-        ##    * MIPCHI2DV(PRIMARY) > KshhTFKsLLTrkPVIPChi2LL = 9.0
-        ##    * TRCHI2DOF < KshhTFKsLLTrkChi2UL = 20
-        ##   Combination:
-        ##    * Mass within KshhTFKsLLCombSymMassWin = 50.0
-        ##   Mother:
-        ##    * Vertex chi2/NDF < KshhTFKsLLVtxChi2UL = 30.0
-        ##    * KshhTFKsLLVtxPVDispZLL in range (KshhTFKsLLVtxPVDispZLL,KshhTFKsLLVtxPVDispZUL) = (-1000.0, 650)
-        ##    * BPVDIRA > KshhTFKsLLDiraLL = 0.9997
-        ##    * Mass within KshhTFKsLLMothSymMassWin = 11.4
-        ##    * BPVVDCHI2 > KshhTFKsLLVtxPVDispChi2LL = 100.0
-
-        KshhKsLLdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" \
-                                     "& (P> %(KshhTFKsLLTrkPLL)s *MeV)" \
-                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s )" % self.getProps() }
-        KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsLLparentcuts = "(ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV)" \
-                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) " \
-                        "& in_range( %(KshhTFKsLLVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s *mm)" \
-                        "& (BPVDIRA > %(KshhTFKsLLDiraLL)s )" \
-                        "& (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )" % self.getProps()
-        combineKshhTFKsLL = Hlt2Member( CombineParticles
-                                      , "KsLL"
-                                      , DecayDescriptor = "KS0 -> pi+ pi-"
-                                      , DaughtersCuts   = KshhKsLLdaugcuts
-                                      , CombinationCut  = KshhKsLLcombcuts
-                                      , MotherCut       = KshhKsLLparentcuts
-                                      , Inputs  = [ BiKalmanFittedPions ]
-                                      )
-        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
-
-
-        ## Repeat for KsDD with independent cuts.
-        ###################################################################
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
-
-        ###################################################################
-        ## These cuts are used by the down-down routine and may be too loose:
-        ##   Tracks:
-        ##    * P > KshhTFKsDDTrkPLL = 2000 MeV
-        ##    * MIPCHI2DV(PRIMARY) > KshhTFKsDDTrkPVIPChi2LL = 4.0
-        ##    * TRCHI2DOF < KshhTFKsDDTrkChi2UL = 10.0 
-        ##   Combination:
-        ##    * Mass within KshhTFKsDDCombSymMassWin = 80.0
-        ##   Mother:
-        ##    * Vertex chi2/NDF < KshhTFKsDDVtxChi2UL = 20.0
-        ##    * BPVVDZ in range (KshhTFKsDDVtxPVDispZLL,KshhTFKsDDVtxPVDispZUL = (0, 2300)
-        ##    * BPVDIRA > KshhTFKsDDDiraLL = 0.9999
-        ##    * ADMASS within KshhTFKsDDMothSymMassWin = 24.9
-        ##    * BPVVDCHI2 > KshhTFKsDDVtxPVDispChi2LL = 100.0
-
-        KshhKsDDdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)"
-                                     "& (P> %(KshhTFKsDDTrkPLL)s *MeV)" \
-                                     "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s )" % self.getProps() }
-        KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsDDparentcuts = "(ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV)" \
-                        "& (VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s )" \
-                        "& in_range(%(KshhTFKsDDVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s *mm)" \
-                        "& (BPVDIRA > %(KshhTFKsDDDiraLL)s )" \
-                        "& (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )" % self.getProps()
-        combineKshhTFKsDD = Hlt2Member( CombineParticles
-                                      , "KsDD"
-                                      , DecayDescriptor = "KS0 -> pi+ pi-"
-                                      , DaughtersCuts   = KshhKsDDdaugcuts
-                                      , CombinationCut  = KshhKsDDcombcuts
-                                      , MotherCut       = KshhKsDDparentcuts
-                                      , Inputs  = [ BiKalmanFittedDownPions ]
-                                      )
-        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
-
+        charmKshhTFKsLL = self.__makeKsLL("CharmKshhTFKsLL")
+        charmKshhTFKsDD = self.__makeKsDD("CharmKshhTFKsDD")
 
         ## D0 -> K_S K* construction sequences.
         ###################################################################
@@ -348,7 +407,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s *MeV)" % self.getProps() } 
                                         )
         combineKshhTFD2HHKsDD = self.__KshhTFDCombine('CharmKshhTFD2HHKsDD'
-                                        , [charmKshhTF2Body, charmKshhTFKsDD]
+                                        , [charmKshhTF2BodyReqTOS, charmKshhTFKsDD]
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s *MeV)" % self.getProps() } 
                                         )
 

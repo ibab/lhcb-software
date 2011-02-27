@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-27 - Mat Charles
+ - Refactor some routines in Hlt2CharmHadD02HHKsLines.py
+ - Require TOS on Hlt1Track (and a few other tighter cuts) before looking
+   for downstream KS in Hlt2CharmHadD02HHKsLines.py
+
 ! 2011-02-27 - Vanya Belyaev
 
  - Hlt2InclusiveDiMuonLines.py
