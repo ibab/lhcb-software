@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-27 - Neus Lopez March
+ - Updates to StrippingB2Psi2SXMuMu.py to use LineBuilder
+ - Updates to StrippingB2Psi2SX.py to use LineBuilder
+
 ! 2011-02-26 - William James Barter
  - Updates to StrippingSingleTrackHighPT (after discussion with Jibo)
 
