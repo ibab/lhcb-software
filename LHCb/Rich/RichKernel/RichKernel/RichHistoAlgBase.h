@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm base class : RichHistoAlgBase
  *
- *  CVS Log :-
- *  $Id: RichHistoAlgBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

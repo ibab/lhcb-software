@@ -1,6 +1,10 @@
 #ifndef DICT_RICHKERNELDICT_H 
 #define DICT_RICHKERNELDICT_H 1
 
+#ifdef __INTEL_COMPILER       // Disable ICC remark from ROOT
+#pragma warning(disable:1572) // Floating-point comparisons are unreliable
+#endif
+
 #include "RichKernel/RichPixelCluster.h"
 #include "RichKernel/RichGeomPhoton.h"
 #include "RichKernel/RichTrackSegment.h"

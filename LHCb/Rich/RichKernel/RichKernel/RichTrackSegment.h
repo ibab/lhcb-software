@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichTrackSegment.h
  *
- *  Header file for tool interface : RichTrackSegment
+ *  Header file for tool interface : LHCb::RichTrackSegment
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -35,7 +35,7 @@ namespace LHCb
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichTrackSegment RichTrackSegment.h RichKernel/RichTrackSegment.h
+  /** @class RichTrackSegment RichKernel/RichTrackSegment.h
    *
    *  RichTrackSegment represents the trajectory of a Track through a radiator volume.
    *
@@ -585,27 +585,6 @@ namespace LHCb
 inline void LHCb::RichTrackSegment::computeRotationMatrix() const
 {
   m_rotation = new Gaudi::Rotation3D( rotationMatrix2().Inverse() );
-}
-
-inline void
-LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
-                                          double & theta,
-                                          double & phi ) const
-{
-#ifdef __INTEL_COMPILER        // Disable ICC remark from ROOT
- #pragma warning(push)
- #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
-#endif
-  // create vector in track reference frame
-  const Gaudi::XYZVector rotDirection ( rotationMatrix() * direction );
-#ifdef __INTEL_COMPILER        // End disable ICC remark
- #pragma warning(pop)
-#endif
-  // get the angles
-  theta = rotDirection.theta();
-  phi   = rotDirection.phi();
-  // correct phi
-  if ( phi < 0 ) phi += 2.0*M_PI;
 }
 
 inline Gaudi::XYZVector

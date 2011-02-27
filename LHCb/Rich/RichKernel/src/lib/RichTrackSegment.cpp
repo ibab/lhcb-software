@@ -2,10 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichTrackSegment.cpp
  *
- *  Implementation file for class : RichTrackSegment
- *
- *  CVS Log :-
- *  $Id: RichTrackSegment.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  Implementation file for class : LHCb::RichTrackSegment
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -13,8 +10,28 @@
  */
 //-----------------------------------------------------------------------------
 
+#ifdef __INTEL_COMPILER       // Disable ICC remark from ROOT
+#pragma warning(disable:1572) // Floating-point comparisons are unreliable
+#endif
+
 // local
 #include "RichKernel/RichTrackSegment.h"
+
+void
+LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
+                                          double & theta,
+                                          double & phi ) const
+{
+  // create vector in track reference frame
+  const Gaudi::XYZVector rotDirection ( rotationMatrix() * direction );
+
+  // get the angles
+  theta = rotDirection.theta();
+  phi   = rotDirection.phi();
+
+  // correct phi
+  if ( phi < 0 ) phi += 2.0*M_PI;
+}
 
 void LHCb::RichTrackSegment::updateState( const Gaudi::XYZPoint & rotPnt,
                                           const Gaudi::Transform3D & trans )
