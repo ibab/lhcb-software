@@ -11,52 +11,80 @@
 
 // STL
 #include <sstream>
-
-// Gaudi
-#include "GaudiKernel/GaudiException.h"
+#include <iostream>
 
 // local
 #include "Kernel/RichSmartID.h"
 
+// Gaudi
+#include "GaudiKernel/GaudiException.h"
+
+std::ostream& LHCb::RichSmartID::dumpBits(std::ostream& s) const
+{
+  for ( int iCol = 0; iCol < 32; ++iCol ) { s << isBitOn( iCol ); }
+  return s;
+}
+
 std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
 {
+  s << "{";
+
+  // Dump the bits
+  s << " "; dumpBits(s);
+
+  // Type
+  s << ( idType() == HPDID ? " HPD" : " MaPMT" );
 
   // Is this smart ID valid
-  if ( isValid() ) 
+  if ( isValid() )
   {
-    // If so, print out only the explicitly set fields
-    s << "{";
-    if ( richIsSet()        ) s << " "            << Rich::text( rich() );
-    if ( panelIsSet()       ) 
+
+    // RICH detector
+    if ( richIsSet() ) s << " " << Rich::text( rich() );
+
+    // Panel
+    if ( panelIsSet() )
     {
-      const std::string PANEL 
+      const std::string PANEL
         = ( rich() == Rich::Rich1 ?
             ( panel() == Rich::top  ? "Top     " : "Bottom  " ) :
             ( panel() == Rich::left ? "Left(A) " : "Right(C)" ) );
       s << " "            << PANEL;
     }
-    if ( hpdColIsSet()      ) s << " HPDCol"      << format("%3i",hpdCol());
-    if ( hpdNumInColIsSet() ) s << " HPDNumInCol" << format("%3i",hpdNumInCol());
-    if ( pixelColIsSet()    ) s << " pixCol"      << format("%3i",pixelCol());
-    if ( pixelRowIsSet()    ) s << " pixRow"      << format("%3i",pixelRow());
-    if ( pixelSubRowIsSet() ) s << " pixSubRow"   << format("%2i",pixelSubRow());
-    s << " }";
-  } 
-  else 
+
+    // PD
+    if ( pdIsSet() )
+    {
+      s << " PDCol"      << format("%3i",pdCol());
+      s << " PDNumInCol" << format("%3i",pdNumInCol());
+    }
+
+    // Pixel
+    if ( pixelColIsSet() ) s << " pixCol" << format("%3i",pixelCol());
+    if ( pixelRowIsSet() ) s << " pixRow" << format("%3i",pixelRow());
+
+    // Subpixel
+    if ( pixelSubRowIsSet() ) s << " pixSubRow" << format("%2i",pixelSubRow());
+
+  }
+  else
   {
     // This SmartID has no valid bits set. This is bad ...
-    s << "WARNING : Invalid RichSmartID";
+    s << " WARNING Invalid RichSmartID";
   }
+
+  // end
+  s << " }";
 
   return s;
 }
 
 void LHCb::RichSmartID::rangeError(const int value,
-                                   const int max,
+                                   const int maxValue,
                                    const std::string& message) const
 {
   std::ostringstream mess;
-  mess << message << " value " << value << " exceeds field maximum " << max;
+  mess << message << " value " << value << " exceeds field maximum " << maxValue;
   throw GaudiException ( mess.str(), "*RichSmartID*", StatusCode::FAILURE );
 }
 
@@ -65,4 +93,21 @@ std::string LHCb::RichSmartID::toString() const
   std::ostringstream text;
   text << *this;
   return text.str();
+}
+
+void LHCb::RichSmartID::setPixelSubRow( const int pixelSubRow )
+{
+  if ( HPDID == idType() )
+  {
+#ifdef RICHDEBUG
+    checkRange( pixelSubRow, HPD::MaxPixelSubRow, "PixelSubRow" );
+#endif
+    setData( pixelSubRow, HPD::ShiftPixelSubRow, HPD::MaskPixelSubRow, HPD::MaskPixelSubRowIsSet );
+  }
+  else
+  {
+    // MaPMTs do not have sub-pixel field...
+    throw GaudiException ( "MaPMTs cannot have their sub-pixel field set",
+                           "*RichSmartID*", StatusCode::FAILURE );
+  }
 }

@@ -4,7 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!========================= LHCbKernel v12r8 2011-02-22 =========================
+! 2011-02-27 - Chris Jones
+ - Rewrite the RichSmartID class to support MaPMTs and HPDs, for Upgrade
+   studies. Change redefines the meaning of some bits of the internal word,
+   but has been done in a backwards compatible way, so any RichSmartIDs 
+   that have been made persistent (either in data or the CondDB) will be
+   correctly intrepreted. Class is now written outside the G.O.D. framework
+   since it was too complex to write it using it.
+ - A small test application to test the backing and unpacking of 
+   RichSmartIDs is added.
+
+!==================== LHCbKernel v12r8 2011-02-22 =========================
 ! 2011-02-18 - Chris Jones
  - Various minor changes for icc11, removes some #pragma statements
 
@@ -19,11 +29,11 @@
  - Remove a few obsolete CVS doxygen comments.
  - Remove depreciated RichRadIntersection typedef.
 
-!========================= LHCbKernel v12r7 2011-01-31 =========================
+!==================== LHCbKernel v12r7 2011-01-31 =========================
 ! 2011-01-07 - Marco Cattaneo
  - Fix icc warnings and remarks
 
-!========================= LHCbKernel v12r6 2010-11-27 =========================
+!==================== LHCbKernel v12r6 2010-11-27 =========================
 ! 2010-11-23 - Marco Clemencic
  - Fixed a compilation problem with ICC + Boost 1.44
 

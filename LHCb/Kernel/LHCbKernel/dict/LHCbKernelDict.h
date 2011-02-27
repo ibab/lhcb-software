@@ -23,6 +23,7 @@
 #include "Kernel/ParabolaTraj.h"
 #include "Kernel/SiPositionInfo.h"
 #include "Kernel/PixelPositionInfo.h"
+#include "Kernel/RichSmartID.h"
 
 #include "Kernel/IAlgorithmCorrelations.h"
 #include "Kernel/IBdlTool.h"
