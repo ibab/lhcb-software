@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SeedTrackSelector );
+DECLARE_TOOL_FACTORY( SeedTrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

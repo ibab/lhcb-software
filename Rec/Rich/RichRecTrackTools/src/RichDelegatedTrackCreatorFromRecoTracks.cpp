@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -19,10 +16,10 @@
 using namespace Rich::Rec;
 
 //---------------------------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY( DelegatedTrackCreatorFromRecoTracks );
+DECLARE_TOOL_FACTORY( DelegatedTrackCreatorFromRecoTracks )
 
 // Standard constructor
-DelegatedTrackCreatorFromRecoTracks::
+  DelegatedTrackCreatorFromRecoTracks::
 DelegatedTrackCreatorFromRecoTracks( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
@@ -152,30 +149,23 @@ DelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) co
   // See if this RichRecTrack already exists
   if ( bookKeep() && m_trackDone[trTrack->key()] )
   {
-
     // track already done
     return richTracks()->object(trTrack->key());
-
   }
-  else
+
+  if ( msgLevel(MSG::VERBOSE) )
   {
-
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Track " << trTrack->key()
-                << " type " << trType
-                << " -> delegating to " << tkTool(trType)->name() << endmsg;
-    }
-
-    // Add to reference map
-    if ( bookKeep() ) m_trackDone[trTrack->key()] = true;
-
-    // delegate work to appropriate tool
-    return tkTool(trType)->newTrack( trTrack );
-
+    verbose() << "Track " << trTrack->key()
+              << " type " << trType
+              << " -> delegating to " << tkTool(trType)->name() << endmsg;
   }
 
-  return 0;
+  // Add to reference map
+  if ( bookKeep() ) m_trackDone[trTrack->key()] = true;
+
+  // delegate work to appropriate tool
+  return tkTool(trType)->newTrack( trTrack );
+
 }
 
 void DelegatedTrackCreatorFromRecoTracks::InitNewEvent()

@@ -14,7 +14,7 @@
 
 using namespace Rich::Rec;
 
-DECLARE_TOOL_FACTORY( TrackEffectiveRefractiveIndex );
+DECLARE_TOOL_FACTORY( TrackEffectiveRefractiveIndex )
 
 // Standard constructor
 TrackEffectiveRefractiveIndex::

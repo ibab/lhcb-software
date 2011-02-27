@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( KsTrackSelector );
+DECLARE_TOOL_FACTORY( KsTrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

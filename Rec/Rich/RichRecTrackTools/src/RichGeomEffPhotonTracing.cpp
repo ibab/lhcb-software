@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomEffPhotonTracing );
+DECLARE_TOOL_FACTORY( GeomEffPhotonTracing )
 
 // Standard constructor
 GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
@@ -156,7 +156,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
                                              photon.smartID().hpdID(),
-                                             static_cast<LHCb::RichRecSegment::FloatType>(m_pdInc) );
+                                             (LHCb::RichRecSegment::FloatType)(m_pdInc) );
 
           // flag regions where we expect hits for this segment
           if ( photon.detectionPoint().x() > 0 )
@@ -189,7 +189,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
     }
 
     // store result
-    segment->setGeomEfficiency( id, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
+    segment->setGeomEfficiency( id, (LHCb::RichRecSegment::FloatType)(eff) );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Segment " 
@@ -217,7 +217,7 @@ GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
      *        probability. Need to do this though without using random numbers ...
      */
     segment->setGeomEfficiencyScat( id, 
-                                    static_cast<LHCb::RichRecSegment::FloatType>(geomEfficiency(segment,id)) );
+                                    (LHCb::RichRecSegment::FloatType)(geomEfficiency(segment,id)) );
   }
 
   // return result fo this id type

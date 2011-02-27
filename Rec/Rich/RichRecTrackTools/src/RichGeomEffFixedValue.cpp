@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomEffFixedValue );
+DECLARE_TOOL_FACTORY( GeomEffFixedValue )
 
 // Standard constructor
 GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
@@ -94,7 +94,7 @@ GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
     }
 
     // Set the geom eff
-    segment->setGeomEfficiency( id, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
+    segment->setGeomEfficiency( id, (LHCb::RichRecSegment::FloatType)(eff) );
 
     if ( m_checkPhotonRegions )
     {

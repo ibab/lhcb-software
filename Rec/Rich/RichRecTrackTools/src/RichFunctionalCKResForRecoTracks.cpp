@@ -28,7 +28,7 @@ using namespace Rich::Rec;
 
 //----------------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( FunctionalCKResForRecoTracks );
+DECLARE_TOOL_FACTORY( FunctionalCKResForRecoTracks )
 
 // Standard constructor
 FunctionalCKResForRecoTracks::

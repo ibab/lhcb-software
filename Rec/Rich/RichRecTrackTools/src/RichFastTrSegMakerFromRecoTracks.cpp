@@ -19,7 +19,7 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
-DECLARE_TOOL_FACTORY( FastTrSegMakerFromRecoTracks );
+DECLARE_TOOL_FACTORY( FastTrSegMakerFromRecoTracks )
 
 //=============================================================================
 // Standard constructor, initializes variables

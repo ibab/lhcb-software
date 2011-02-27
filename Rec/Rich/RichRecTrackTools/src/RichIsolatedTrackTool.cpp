@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 //Declare tool factory
-DECLARE_TOOL_FACTORY( IsolatedTrackTool );
+DECLARE_TOOL_FACTORY( IsolatedTrackTool )
 
 //=============================================================================
 // Standard constructor
@@ -275,8 +275,8 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     ++photontotal; //counting total photons associated with this segment
 
     // Which CK phi region
-    unsigned int region = static_cast<unsigned int>( m_nPhiRegions[rad] * 
-                                                     photon->geomPhoton().CherenkovPhi() / (M_PI*2.0) );
+    unsigned int region = (unsigned int)( m_nPhiRegions[rad] * 
+                                          photon->geomPhoton().CherenkovPhi() / (M_PI*2.0) );
     if ( region >= m_nPhiRegions[rad] ) region = 0; // Protect against index being out of range
     
     // count number in each region

@@ -21,8 +21,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( VeloTTTrackSelector );
+DECLARE_TOOL_FACTORY( VeloTTTrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

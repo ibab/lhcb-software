@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( CherenkovAngle );
+DECLARE_TOOL_FACTORY( CherenkovAngle )
 
 // Standard constructor
 CherenkovAngle::CherenkovAngle ( const std::string& type,
@@ -99,7 +99,7 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     // Don't save in the segment if the emitted spectra was used
     if ( !useEmittedSpectrum ) 
       segment->setAverageCKTheta( id, 
-                                  static_cast<LHCb::RichRecSegment::FloatType>(angle) );
+                                  (LHCb::RichRecSegment::FloatType)(angle) );
     
     // return the newly calculated value
     return angle;
@@ -160,7 +160,7 @@ void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
 
     // Set the value
     const double nomCK = nominalSaturatedCherenkovTheta(segment->trackSegment().radiator());
-    const float C = static_cast<LHCb::RichRecSegment::FloatType>(rMax*(ckTheta/nomCK));
+    const float C = (LHCb::RichRecSegment::FloatType)(rMax*(ckTheta/nomCK));
     segment->setAverageCKRadiusLocal( *hypo, C );
 
   }
@@ -236,9 +236,9 @@ double CherenkovAngle::satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
     // Get radius for saturated angle
     const double nomCK = nominalSaturatedCherenkovTheta(segment->trackSegment().radiator());
     const float R = 
-      static_cast<LHCb::RichRecSegment::FloatType>( avCKRingRadiusLocal( segment,
-                                                                         nomCK,
-                                                                         nSamples ) );
+      (LHCb::RichRecSegment::FloatType)( avCKRingRadiusLocal( segment,
+                                                              nomCK,
+                                                              nSamples ) );
     segment->setAvSaturatedRadiusLocal( R );
   }
 

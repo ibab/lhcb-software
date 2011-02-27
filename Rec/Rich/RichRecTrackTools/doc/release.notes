@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Chris Jones
+ - Fix icc11 compilation remarks and warnings
+
 ! 2011-02-10 - Chris Jones
  - Fix coverity warnings in isolation and match track selector tools
 

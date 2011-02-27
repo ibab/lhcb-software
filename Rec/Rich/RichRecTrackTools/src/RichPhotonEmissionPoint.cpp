@@ -19,7 +19,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonEmissionPoint );
+DECLARE_TOOL_FACTORY( PhotonEmissionPoint )
 
 // Standard constructor
 PhotonEmissionPoint::PhotonEmissionPoint ( const std::string& type,

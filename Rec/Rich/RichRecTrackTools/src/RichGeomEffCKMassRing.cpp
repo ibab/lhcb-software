@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomEffCKMassRing );
+DECLARE_TOOL_FACTORY( GeomEffCKMassRing )
 
 // Standard constructor
 GeomEffCKMassRing::GeomEffCKMassRing ( const std::string& type,
@@ -117,13 +117,13 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
                     hypo != m_pidTypes.end(); ++hypo )
               { 
                 segment->addToGeomEfficiencyPerPD( *hypo, hpdID, 
-                                                   static_cast<LHCb::RichRecSegment::FloatType>(pdInc) );
+                                                   (LHCb::RichRecSegment::FloatType)(pdInc) );
               }
             }
             else
             {
               segment->addToGeomEfficiencyPerPD( id, hpdID, 
-                                                 static_cast<LHCb::RichRecSegment::FloatType>(pdInc) );
+                                                 (LHCb::RichRecSegment::FloatType)(pdInc) );
             }
 
             // flag regions where we expect hits for this segment
@@ -165,12 +165,12 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
       for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
             hypo != m_pidTypes.end(); ++hypo )
       { 
-        segment->setGeomEfficiency( *hypo, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
+        segment->setGeomEfficiency( *hypo, (LHCb::RichRecSegment::FloatType)(eff) );
       }
     }
     else
     {
-      segment->setGeomEfficiency( id, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
+      segment->setGeomEfficiency( id, (LHCb::RichRecSegment::FloatType)(eff) );
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Segment "
@@ -199,7 +199,7 @@ GeomEffCKMassRing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
      *        probability. Need to do this though without using random numbers ...
      */
     segment->setGeomEfficiencyScat( id, 
-                                    static_cast<LHCb::RichRecSegment::FloatType>(geomEfficiency(segment,id)) );
+                                    (LHCb::RichRecSegment::FloatType)(geomEfficiency(segment,id)) );
   }
 
   // return result fo this id type

@@ -17,10 +17,10 @@ using namespace Rich::Rec;
 
 //-------------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracks );
+DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracks )
 
 // Standard constructor
-TrackCreatorFromRecoTracks::
+  TrackCreatorFromRecoTracks::
 TrackCreatorFromRecoTracks( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
@@ -120,7 +120,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
                 removeTracksByType(Rich::Rec::Track::Forward); // To get stats correct
                 removeTracksByType(Rich::Rec::Track::Match);   // To get stats correct
                 // just to be sure nothing is left over
-                richTracks()->clear(); 
+                richTracks()->clear();
                 segmentCreator()->richSegments()->clear();
                 // Put something into ProcStat and set abort flag
                 procStatus()->addAlgorithmStatus( name(), "RICH", "ReachedRichTrackLimit",
@@ -148,7 +148,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-unsigned int 
+unsigned int
 TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type type ) const
 {
 
@@ -187,7 +187,7 @@ TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type typ
   }
 
   // add to ProcStat
-  procStatus()->addAlgorithmStatus( name(), 
+  procStatus()->addAlgorithmStatus( name(),
                                     "RICH", "RejectedAll"+Rich::text(type)+"Tracks",
                                     Rich::Rec::ReachedRichTrackLimit, false );
 
@@ -196,7 +196,7 @@ TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type typ
   mess << "Number of RICH tracks exceeds maximum of "
        << m_maxSelTracks << " -> Rejecting " << Rich::text(type);
   Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
-  
+
   // return number of tracks left
   return richTracks()->size();
 }
@@ -387,25 +387,25 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           newTrack->richRecPixels().reserve(30);
 
           // Set vertex momentum
-          newTrack->setVertexMomentum ( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->p())  );
-          newTrack->setVertexPt       ( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->pt()) );
+          newTrack->setVertexMomentum ( (LHCb::RichRecTrack::FloatType)(trTrack->p())  );
+          newTrack->setVertexPt       ( (LHCb::RichRecTrack::FloatType)(trTrack->pt()) );
 
           // chi2
-          newTrack->setChi2PerDoF( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->chi2PerDoF()) );
-          newTrack->setNDoF      ( trTrack->nDoF()       );
+          newTrack->setChi2PerDoF( (LHCb::RichRecTrack::FloatType)(trTrack->chi2PerDoF()) );
+          newTrack->setNDoF      ( trTrack->nDoF() );
 
           // track charge
           newTrack->setCharge( trTrack->charge() );
 
           // clone variable
-          newTrack->setCloneDist( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->info( LHCb::Track::CloneDist,
-                                                                                            newTrack->cloneDist() )) );
+          newTrack->setCloneDist( (LHCb::RichRecTrack::FloatType)(trTrack->info( LHCb::Track::CloneDist,
+                                                                                 newTrack->cloneDist() )) );
 
           // likelihood
-          newTrack->setLikelihood( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->likelihood()));
+          newTrack->setLikelihood( (LHCb::RichRecTrack::FloatType)(trTrack->likelihood()) );
 
           // ghost prob
-          newTrack->setGhostProbability( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->ghostProbability()));
+          newTrack->setGhostProbability( (LHCb::RichRecTrack::FloatType)(trTrack->ghostProbability()) );
 
           // Set parent information
           newTrack->setParentTrack( trTrack );

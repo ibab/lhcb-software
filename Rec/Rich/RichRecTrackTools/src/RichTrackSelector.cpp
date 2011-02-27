@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::TrackSelector
  *
- *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -24,7 +21,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackSelector );
+DECLARE_TOOL_FACTORY( TrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

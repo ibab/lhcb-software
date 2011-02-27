@@ -19,7 +19,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SegmentCreator );
+DECLARE_TOOL_FACTORY( SegmentCreator )
 
 // Standard constructor
 SegmentCreator::SegmentCreator ( const std::string& type,
@@ -131,8 +131,8 @@ SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
     seg = new LHCb::RichRecSegment ( segment,
                                      pTrk,
                                      m_binsEn[segment->radiator()],
-                                     static_cast<LHCb::RichRecSegment::FloatType>(m_minPhotEn[segment->radiator()]),
-                                     static_cast<LHCb::RichRecSegment::FloatType>(m_maxPhotEn[segment->radiator()]) );
+                                     (LHCb::RichRecSegment::FloatType)(m_minPhotEn[segment->radiator()]),
+                                     (LHCb::RichRecSegment::FloatType)(m_maxPhotEn[segment->radiator()]) );
     // Set the average photon energy
     segment->setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(seg) );
   }

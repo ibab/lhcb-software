@@ -17,10 +17,10 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( BinnedCKResVthetaForRecoTracks );
+DECLARE_TOOL_FACTORY( BinnedCKResVthetaForRecoTracks )
 
 // Standard constructor
-BinnedCKResVthetaForRecoTracks::
+  BinnedCKResVthetaForRecoTracks::
 BinnedCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
@@ -115,18 +115,18 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
       {
         if ( *hypo != Rich::BelowThreshold )
-          segment->setCKThetaResolution( *hypo, OK[*hypo] ? 
-                                         static_cast<LHCb::RichRecSegment::FloatType>(res) : 0.0f );
+          segment->setCKThetaResolution( *hypo, OK[*hypo] ?
+                                         (LHCb::RichRecSegment::FloatType)(res) : 0.0f );
       }
 
       if ( msgLevel(MSG::VERBOSE) )
       {
-        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-              hypo != m_pidTypes.end(); ++hypo )
-        { 
-          if ( *hypo != Rich::BelowThreshold )
-            verbose() << "Segment " << segment->key() << " : " << *hypo
-                      << " ckRes=" << segment->ckThetaResolution( *hypo ) << endmsg;
+        for ( Rich::Particles::const_iterator _hypo = m_pidTypes.begin();
+              _hypo != m_pidTypes.end(); ++_hypo )
+        {
+          if ( *_hypo != Rich::BelowThreshold )
+            verbose() << "Segment " << segment->key() << " : " << *_hypo
+                      << " ckRes=" << segment->ckThetaResolution( *_hypo ) << endmsg;
         }
       }
 
@@ -140,7 +140,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
 
       double res(0);
       ckThetaResolution_Imp(segment,id,res);
-      segment->setCKThetaResolution( id, static_cast<LHCb::RichRecSegment::FloatType>(res) );
+      segment->setCKThetaResolution( id, (LHCb::RichRecSegment::FloatType)(res) );
 
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -208,7 +208,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     }
     if ( !OK )
     {
-      Error( "Failed to find binned CK resolution for : " + 
+      Error( "Failed to find binned CK resolution for : " +
              Rich::text(rad) + " " + Rich::text(type) ).ignore();
     }
 

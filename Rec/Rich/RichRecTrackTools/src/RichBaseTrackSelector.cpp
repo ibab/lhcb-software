@@ -21,7 +21,7 @@ using namespace Rich::Rec;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( BaseTrackSelector );
+DECLARE_TOOL_FACTORY( BaseTrackSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

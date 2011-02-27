@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-------------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracksWithForcedIneffic );
+DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracksWithForcedIneffic )
 
 // Standard constructor
 TrackCreatorFromRecoTracksWithForcedIneffic::

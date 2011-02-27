@@ -17,7 +17,7 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( InterpCKResVthetaForRecoTracks );
+DECLARE_TOOL_FACTORY( InterpCKResVthetaForRecoTracks )
 
 // Standard constructor
 InterpCKResVthetaForRecoTracks::
@@ -117,7 +117,7 @@ InterpCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
     }
 
     // compute the interpolated resolution
-    segment->setCKThetaResolution( id, static_cast<LHCb::RichRecSegment::FloatType>(res) );
+    segment->setCKThetaResolution( id, (LHCb::RichRecSegment::FloatType)(res) );
 
   }
 
