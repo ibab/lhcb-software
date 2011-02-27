@@ -384,9 +384,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
   // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( static_cast<float>(besttheta) );
-  gPhoton.setCherenkovPhi           ( static_cast<float>(bestphi)   );
-  gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)  );
+  gPhoton.setCherenkovTheta         ( (float)(besttheta) );
+  gPhoton.setCherenkovPhi           ( (float)(bestphi)   );
+  gPhoton.setActiveSegmentFraction  ( (float)(fraction)  );
   gPhoton.setDetectionPoint         ( pixel->globalPosition()    );
   gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
   gPhoton.setUnambiguousPhoton      ( unambigPhoton              );

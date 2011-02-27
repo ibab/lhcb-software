@@ -120,17 +120,17 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & pixPRad  = pixel->radCorrLocalPositions().position(radiator);
 
   // x,y differences
-  const float diff_x = static_cast<float>( segPSide.x() - pixPRad.x() );
-  const float diff_y = static_cast<float>( segPSide.y() - pixPRad.y() );
+  const float diff_x = (float) ( segPSide.x() - pixPRad.x() );
+  const float diff_y = (float) ( segPSide.y() - pixPRad.y() );
 
   // estimate phi from these hits
   // use full atan2
   //const float phiCerenkov = static_cast<float>(Gaudi::Units::pi + std::atan2( diff_y, diff_x ));
   // use fast atan2
-  const float phiCerenkov = static_cast<float>(Gaudi::Units::pi+Rich::Maths::atan2_f(diff_y,diff_x));
+  const float phiCerenkov = (float) (Gaudi::Units::pi+Rich::Maths::atan2_f(diff_y,diff_x));
 
   // Start with CK fudge factor
-  float thetaCerenkov( static_cast<float>(m_ckFudge[radiator]) );
+  float thetaCerenkov( (float)(m_ckFudge[radiator]) );
 
   // use ring info to determine CK theta
   LHCb::RichRecSegment           * seg   = const_cast<LHCb::RichRecSegment*>(segment); // need to remove this
@@ -146,8 +146,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // estimate CK theta from reference point
       const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
                                 gsl_pow_2(segPSide.y()-point->localPosition().y()) );
-      thetaCerenkov += static_cast<float>( ring->radius() *
-                                           std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp ) );
+      thetaCerenkov += (float) ( ring->radius() *
+                                 std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp ) );
 
       // --------------------------------------------------------------------------------------
       // Set (remaining) photon parameters

@@ -537,8 +537,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
   // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( static_cast<float>(thetaCerenkov) );
-  gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
+  gPhoton.setCherenkovTheta         ( (float)(thetaCerenkov) );
+  gPhoton.setCherenkovPhi           ( (float)(phiCerenkov)   );
   gPhoton.setActiveSegmentFraction  ( fraction       );
   gPhoton.setDetectionPoint         ( detectionPoint );
   gPhoton.setSmartID                ( smartIDs.primaryID() );
@@ -623,13 +623,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = static_cast<float>(std::fabs(sphReflPoint1.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
+      fraction = (float)(std::fabs(sphReflPoint1.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = static_cast<float>(std::fabs(sphReflPoint2.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
+      fraction = (float)(std::fabs(sphReflPoint2.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
@@ -651,13 +651,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = static_cast<float>(std::fabs(sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
+      fraction = (float)(std::fabs(sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = static_cast<float>(std::fabs(sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
+      fraction = (float)(std::fabs(sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }

@@ -113,7 +113,7 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
 
     // save final result
-    photon->setExpPixelSignalPhots( id, static_cast<LHCb::RichRecPhoton::FloatType>(pixelSignal) );
+    photon->setExpPixelSignalPhots( id, (LHCb::RichRecPhoton::FloatType)(pixelSignal) );
 
   }
 
