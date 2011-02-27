@@ -95,27 +95,27 @@ StatusCode TimeMonitor::execute()
   richHisto1D( HID("nPIDs"), m_name+" total # PIDs",
                -0.5, m_maxPIDs+0.5, m_maxPIDs+1 )->fill(nPIDs);
   richHisto1D( HID("nPixels"), m_name+" total # Rich Pixels",
-               -0.5, m_maxPixels+0.5, m_maxPixels+1 )->fill(richPixels()->size());
+               -0.5, m_maxPixels+0.5, m_maxPixels+1 )->fill((double)richPixels()->size());
   richHisto1D( HID("nPhotons"), m_name+" total # Rich Photons",
-               0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size());
+               0, m_maxPhotons, nBins1D() )->fill((double)richPhotons()->size());
   richHisto1D( HID("nPhotonsPerPID"), m_name+" total # Rich Photons / PID",
                0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID);
 
   richProfile1D( HID("tottimeVnpids"), m_name+" total processing time (ms) V # RICH PIDs",
                  -0.5, m_maxTracks+0.5, m_maxTracks+1 )->fill(nPIDs,time);
   richProfile1D( HID("tottimeVnpixs"), m_name+" total processing time (ms) V # RICH Pixels",
-                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),time);
+                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill((double)richPixels()->size(),time);
   richProfile1D( HID("tottimeVnphots"), m_name+" total processing time (ms) V # RICH Photons",
-                 0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size(),time);
+                 0, m_maxPhotons, nBins1D() )->fill((double)richPhotons()->size(),time);
   richProfile1D( HID("tottimeVnphotsPerPID"), m_name+" total processing time (ms) V # RICH Photons / PID",
                  0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID,time);
 
   richProfile1D( HID("pidtimeVnpids"), m_name+" processing time per PID (ms) V # RICH PIDs",
                  -0.5,m_maxTracks+0.5,m_maxTracks+1 )->fill(nPIDs, timePerPID);
   richProfile1D( HID("pidtimeVnpixs"), m_name+" processing time per PID (ms) V # RICH Pixels",
-                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill(richPixels()->size(),timePerPID);
+                 -0.5,m_maxPixels+0.5,m_maxPixels+1 )->fill((double)richPixels()->size(),timePerPID);
   richProfile1D( HID("pidtimeVnphots"), m_name+" processing time per PID (ms) V # RICH Photons",
-                 0, m_maxPhotons, nBins1D() )->fill(richPhotons()->size(),timePerPID);
+                 0, m_maxPhotons, nBins1D() )->fill((double)richPhotons()->size(),timePerPID);
   richProfile1D( HID("pidtimeVnphotsPerPID"), m_name+" processing time per PID (ms) V # RICH Photons / PID",
                  0, m_maxPhotonsPerPID, nBins1D() )->fill(photsPerPID,timePerPID);
 
@@ -126,8 +126,8 @@ StatusCode TimeMonitor::execute()
 StatusCode TimeMonitor::finalize()
 {
   // Printout timing info
-  const double evtTime = ( m_nEvents>0 ? m_totTime/static_cast<double>(m_nEvents) : 0 );
-  const double pidTime = ( m_nPIDs>0   ? m_totTime/static_cast<double>(m_nPIDs)   : 0 );
+  const double evtTime = ( m_nEvents>0 ? m_totTime/m_nEvents : 0.0 );
+  const double pidTime = ( m_nPIDs>0   ? m_totTime/m_nPIDs   : 0.0 );
   info() << "Average timing : " << evtTime << " ms/event, "
          << pidTime << " ms/PID" << endmsg;
 
