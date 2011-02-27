@@ -31,11 +31,11 @@ void EoEIncidentListener::handle(const Incident &i)
   if (i.type() == "DAQ_END_EVENT")
   {
     m_MonSvc->UnLock();
-//    printf("-----------------EoE Handler Monitor System UN-LockED\n");
+    printf("-----------------EoE Handler Monitor System UN-LockED\n");
   }
   else if (i.type() == "DAQ_BEGIN_EVENT")
   {
     m_MonSvc->Lock();
-//    printf("-----------------EoE Handler Monitor System UN-LockED\n");
+    printf("-----------------EoE Handler Monitor System UN-LockED\n");
   }
 }
