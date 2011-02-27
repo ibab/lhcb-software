@@ -303,8 +303,9 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   const Gaudi::XYZPoint inPanel( geometry()->toLocal(globalPoint) );
 
   // find the HPD row/col of this point if not set
-  if ( !id.hpdColIsSet() || !id.hpdNumInColIsSet() ) {
-    if ( !findHPDColAndPos(inPanel, id) ) return StatusCode::FAILURE;
+  if ( !id.pdIsSet() )
+  {
+    if ( !findHPDColAndPos(inPanel,id) ) return StatusCode::FAILURE;
   }
 
   // check if the HPD is active or dead
@@ -590,7 +591,6 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   int HPDCol = (int)((u-m_panelColumnSideEdge)/m_HPDColPitch);
   if      ( HPDCol >= (int)nHPDColumns() ) { OK = false; HPDCol = nHPDColumns()-1; }
   else if ( HPDCol < 0                   ) { OK = false; HPDCol = 0;               }
-  id.setHPDCol( HPDCol );
 
   // nearest number in column
   //int HPDNumInCol
@@ -599,13 +599,14 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   //      static_cast<int>(std::floor((v-m_panelStartColPosOdd)/m_HPDPitch)) );
   // CRJ : Faster than floor. Gets it wrong for negative values, but these are reset
   // to 0 anyway so does not matter
-  int HPDNumInCol
-    = ( 0 == HPDCol%2 ?
-        (int)((v-m_panelStartColPosEven)/m_HPDPitch) :
-        (int)((v-m_panelStartColPosOdd)/m_HPDPitch) );
+  int HPDNumInCol = ( 0 == HPDCol%2 ?
+                      (int)((v-m_panelStartColPosEven)/m_HPDPitch) :
+                      (int)((v-m_panelStartColPosOdd)/m_HPDPitch) );
   if      ( HPDNumInCol >= (int)nHPDsPerCol() ) { OK = false; HPDNumInCol = nHPDsPerCol()-1; }
   else if ( HPDNumInCol < 0                   ) { OK = false; HPDNumInCol = 0;               }
-  id.setHPDNumInCol( HPDNumInCol );
+
+  // Set HPD information in RichSmartID
+  id.setPD( HPDCol, HPDNumInCol );
 
   return OK;
 }
