@@ -1463,7 +1463,7 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
         // Print error message
         std::ostringstream mess;
         mess << "Error decoding bank ID=" << bank->sourceID() << " version=" << bankVersion(*bank)
-             << " '" << expt.message() << "'";
+             << " '" << expt.message() << "' '" << expt.tag() << "'";
         Error( mess.str() ).ignore();
         // dump the full bank
         if ( m_verboseErrors ) dumpRawBank( *bank, error() );
