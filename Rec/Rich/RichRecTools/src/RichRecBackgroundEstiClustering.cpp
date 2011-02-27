@@ -31,9 +31,9 @@ BackgroundEstiClustering::~BackgroundEstiClustering() {}
 
 double BackgroundEstiClustering::backWeight( LHCb::RichRecPixel * pixel ) const
 {
-  const double clusSize = pixel->associatedCluster().size();
-  const double nPhots   = pixel->richRecPhotons().size();
-  return clusSize / (nPhots+1) ;
+  const double clusSize = (double) pixel->associatedCluster().size();
+  const double nPhots   = (double) pixel->richRecPhotons().size();
+  return ( clusSize / ( nPhots + 1.0 ) );
 }
 
 void BackgroundEstiClustering::pixelBackgrounds() const
@@ -62,7 +62,7 @@ void BackgroundEstiClustering::pixelBackgrounds() const
 
     // HPD normalisation
     HPDNorm::const_iterator iF = hpdNorm.find(pd);
-    const double norm = ( iF == hpdNorm.end() ? 1 : iF->second.second / iF->second.first ); 
+    const double norm = ( iF == hpdNorm.end() ? 1.0 : iF->second.second / iF->second.first ); 
 
     // background weight for this pixel
     const double bckWeight = backWeight(*pixel) / norm;
@@ -71,7 +71,7 @@ void BackgroundEstiClustering::pixelBackgrounds() const
     const double pixBkg = hpdTotBackground * bckWeight / m_nPixelsPerPD ;
     
     // Save this value in the pixel
-    (*pixel)->setCurrentBackground( pixBkg>0 ? static_cast<LHCb::RichRecRing::FloatType>(pixBkg) : 0.0f );
+    (*pixel)->setCurrentBackground( pixBkg > 0 ? (LHCb::RichRecRing::FloatType)(pixBkg) : 0.0f );
     
     // Debug printout
     if ( msgLevel(MSG::VERBOSE) )

@@ -296,8 +296,8 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
   // Update detector backgrounds
   // CRJ : Ugly conversion from double to float .... To be improved
   std::vector<LHCb::RichRecStatus::FloatType> bckEstiUpdate(Rich::NRiches,0);
-  bckEstiUpdate[Rich::Rich1] = static_cast<LHCb::RichRecStatus::FloatType>(bckEstimate[Rich::Rich1]);
-  bckEstiUpdate[Rich::Rich2] = static_cast<LHCb::RichRecStatus::FloatType>(bckEstimate[Rich::Rich2]);
+  bckEstiUpdate[Rich::Rich1] = (LHCb::RichRecStatus::FloatType)(bckEstimate[Rich::Rich1]);
+  bckEstiUpdate[Rich::Rich2] = (LHCb::RichRecStatus::FloatType)(bckEstimate[Rich::Rich2]);
   LHCb::RichRecStatus * status = const_cast<LHCb::RichRecStatus*>(richStatus());
   status->setDetOverallBkg(bckEstiUpdate);
 
@@ -324,7 +324,7 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
     // Save this value in the pixel
     double bkg = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
     if ( bkg < m_minPixBkg ) bkg = m_minPixBkg;
-    (*pixel)->setCurrentBackground( static_cast<LHCb::RichRecRing::FloatType>(bkg) );
+    (*pixel)->setCurrentBackground( (LHCb::RichRecRing::FloatType)(bkg) );
 
     // printout
     /*

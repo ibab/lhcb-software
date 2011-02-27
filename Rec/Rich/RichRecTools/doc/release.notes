@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2011-02-27 - Chris Jones
+ - various changes to appease icc11
+
 ! 2011-02-18 - Chris Jones
  - Add new tool PixelCreatorWithPanelFlip
   + Does the same as the default PixelCreatorFromRawBuffer but flips the panel

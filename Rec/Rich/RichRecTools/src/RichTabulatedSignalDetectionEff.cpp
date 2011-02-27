@@ -116,7 +116,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   {
     // make a ring object
     newRing = new LHCb::RichRecRing( segment, 
-                                     static_cast<LHCb::RichRecRing::FloatType>(ckTheta), 
+                                     (LHCb::RichRecRing::FloatType)(ckTheta), 
                                      hypo );
 
     // set ring type info

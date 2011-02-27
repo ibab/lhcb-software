@@ -152,7 +152,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
 
     // Get a new ring and save it
     newRing = new LHCb::RichRecRing( segment, 
-                                     static_cast<LHCb::RichRecRing::FloatType>(ckTheta), 
+                                     (LHCb::RichRecRing::FloatType)(ckTheta), 
                                      id );
 
     // set ring type info
@@ -160,7 +160,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
 
     // ray tracing
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    unsigned int nPoints = static_cast<unsigned int>( m_nPointScale[rad] * ckTheta );
+    unsigned int nPoints = (unsigned int) ( m_nPointScale[rad] * ckTheta );
     if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
     else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
     const StatusCode sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
