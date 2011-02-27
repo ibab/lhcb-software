@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Chris Jones
+ - Appease icc11 by replacing boost lexical cast to string with 
+   std::ostringstream
+
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
 

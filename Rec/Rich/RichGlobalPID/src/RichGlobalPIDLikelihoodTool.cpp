@@ -347,7 +347,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
         const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
 
         // Set the value for deltaLL for this hypothesis
-        (*track)->globalPID()->setParticleDeltaLL( *hypo, static_cast<float>(deltaLogL) );
+        (*track)->globalPID()->setParticleDeltaLL( *hypo, (float)(deltaLogL) );
 
         // Set new minimum if lower logLikelihood is achieved
         if ( deltaLogL < mindeltaLL )
@@ -370,7 +370,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
           for ( Rich::Particles::const_iterator hypo3 = hypo;
                 hypo3 != pidTypes().end(); ++hypo3 )
           {
-            (*track)->globalPID()->setParticleDeltaLL( *hypo3, static_cast<float>(deltaLogL) );
+            (*track)->globalPID()->setParticleDeltaLL( *hypo3, (float)(deltaLogL) );
           }
           break;
         }
@@ -482,7 +482,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
       }
 
       // Set the value for deltaLL for this hypothesis
-      gTrack->globalPID()->setParticleDeltaLL( *hypo, static_cast<float>(deltaLogL) );
+      gTrack->globalPID()->setParticleDeltaLL( *hypo, (float)(deltaLogL) );
 
       // is DLL change significant ?
       if ( deltaLogL < m_epsilon )
@@ -547,7 +547,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
         for ( Rich::Particles::const_iterator hypo3 = hypo;
               hypo3 != pidTypes().end(); ++hypo3 )
         {
-          gTrack->globalPID()->setParticleDeltaLL( *hypo3, static_cast<float>(deltaLogL) );
+          gTrack->globalPID()->setParticleDeltaLL( *hypo3, (float)(deltaLogL) );
         }
         break;
       }

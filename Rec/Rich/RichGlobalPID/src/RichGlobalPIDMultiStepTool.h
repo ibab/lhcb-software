@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID tool : Rich::Rec::GlobalPID::MultiStepTool
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDMultiStepTool.h,v 1.1 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
  */
@@ -17,6 +14,7 @@
 
 // STL
 #include <vector>
+#include <sstream>
 
 // Base class
 #include "RichGlobalPIDToolBase.h"
@@ -29,9 +27,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
-// boost
-#include "boost/lexical_cast.hpp"
 
 namespace Rich
 {

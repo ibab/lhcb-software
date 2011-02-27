@@ -124,7 +124,7 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
         iHypo != pidTypes().end(); ++iHypo )
   {
     if ( deltaLLs[*iHypo] < 0 ) { deltaLLs[*iHypo] = 0; }
-    deltaLLs[*iHypo] = static_cast<float>( pionDLL - deltaLLs[*iHypo] );
+    deltaLLs[*iHypo] = (float) ( pionDLL - deltaLLs[*iHypo] );
   }
   // final update DLL values in stored RichPID data object
   pid->setParticleLLValues(deltaLLs);

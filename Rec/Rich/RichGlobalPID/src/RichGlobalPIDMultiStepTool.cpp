@@ -52,13 +52,16 @@ StatusCode MultiStepTool::initialize()
   acquireTool( "GPIDTrackCreator", m_gtkCreator );
   for ( unsigned int iStep = 0; iStep<m_nSteps; ++iStep )
   {
+    std::ostringstream bkgEstiName, pidLikeName;
     const IPixelBackgroundEsti * bkgEst(0);
+    bkgEstiName << "BackEsti" << iStep;
     m_bckTools.push_back( acquireTool( "PixelBackgroundTool",
-                                       "BackEsti"+boost::lexical_cast<std::string>(iStep),
+                                       bkgEstiName.str(),
                                        bkgEst, this ) );
     const IRichGlobalPID * pidLike(0);
+    pidLikeName << "Likelihood" << iStep;
     m_pidTools.push_back( acquireTool( "GPIDLikelihoodTool",
-                                       "Likelihood"+boost::lexical_cast<std::string>(iStep),
+                                       pidLikeName.str(),
                                        pidLike, this ) );
   }
 
