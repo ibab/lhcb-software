@@ -35,7 +35,7 @@ void EoEIncidentListener::handle(const Incident &i)
   }
   else if (i.type() == "DAQ_BEGIN_EVENT")
   {
-    m_MonSvc->Lock();
-    printf("-----------------EoE Handler Monitor System LockED\n");
+//    m_MonSvc->Lock();
+//    printf("-----------------EoE Handler Monitor System LockED\n");
   }
 }
