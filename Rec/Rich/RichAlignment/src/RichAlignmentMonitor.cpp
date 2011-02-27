@@ -9,11 +9,6 @@
 
 // local
 #include "RichAlignmentMonitor.h"
-// From Gaudi
-#include "GaudiKernel/SystemOfUnits.h"
-
-// RichKernel
-#include "RichKernel/RichHPDIdentifier.h"
 
 // namespaces
 using namespace Rich::Rec::MC;
@@ -25,19 +20,19 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-AlignmentMonitor::AlignmentMonitor( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
-  : TupleAlgBase        ( name , pSvcLocator ),
-    m_radiator          ( Rich::InvalidRadiator ),
-    m_deltaThetaHistoRange ( 0 ),
-    m_pType             ( Rich::Unknown ),
-    m_pTypes            ( 7, 0 ),
-    m_trSelector        ( NULL ),
-    m_richRecMCTruth    ( NULL ),
-    m_richPartProp      ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_isoTrack          ( NULL ),
-    m_plotAllHPDs       ( false )
+  AlignmentMonitor::AlignmentMonitor( const std::string& name,
+                                      ISvcLocator* pSvcLocator)
+    : TupleAlgBase        ( name , pSvcLocator ),
+      m_radiator          ( Rich::InvalidRadiator ),
+      m_deltaThetaHistoRange ( 0 ),
+      m_pType             ( Rich::Unknown ),
+      m_pTypes            ( 7, 0 ),
+      m_trSelector        ( NULL ),
+      m_richRecMCTruth    ( NULL ),
+      m_richPartProp      ( NULL ),
+      m_ckAngle           ( NULL ),
+      m_isoTrack          ( NULL ),
+      m_plotAllHPDs       ( false )
 {
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks",     m_maxUsedTracks = 200 );
@@ -142,22 +137,29 @@ StatusCode AlignmentMonitor::initialize()
       See below a second usage of this vector and further explanations therein.
       Anatoly Solomin 2008-11-01.
     */
-    BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
+    BOOST_FOREACH( std::string strCombi, m_preBookHistos )
+    {
       std::string h_id = "dThetavphiRec"+strCombi;
       std::string sph  = strCombi.substr(0,2);
       std::string flat = strCombi.substr(2,2);
-      std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(rich+1));
-      book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+
+      std::ostringstream title;
+      title << "Alignment Histogram: Sph " << sph << " flat " << flat << " R" << rich+1;
+      book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+              0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
               m_deltaThetaHistoRange, 50 );
-      if ( m_useMCTruth ) {
+      if ( m_useMCTruth )
+      {
         // use MC estimate for cherenkov angle
         h_id += "MC";
-        title += " MC";
-        book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        title << " MC";
+        book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
-        title += " TrueP";
+        title << " TrueP";
         h_id += "TruP";
-        book2D( Rich::HistogramID(h_id,m_radiator), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
       }
     }
@@ -383,52 +385,52 @@ StatusCode AlignmentMonitor::execute()
       if ( m_histoOutputLevel > 2 )
       {
         // now for individual mirror combinations
-        std::string title = RAD+" Alignment Histogram: Sph " +
-          boost::lexical_cast<std::string>(sphMirNum) + " flat " +
-          boost::lexical_cast<std::string>(flatMirNum) + " R" +
-          boost::lexical_cast<std::string>(rich+1);
+        std::ostringstream title;
+        title << RAD << " Alignment Histogram: Sph " << sphMirNum
+              << " flat " << flatMirNum << " R" << (rich+1);
         std::string h_id( "dThetavphiRec" );
 
-        std::string thisCombiNr( "" ); // only the 4-digit combination number (string)
+        std::ostringstream thisCombiNr; // only the 4-digit combination number (string)
 
         if ( sphMirNum > 9 )
-          thisCombiNr +=       boost::lexical_cast<std::string>( sphMirNum );
+          thisCombiNr << sphMirNum;
         else
-          thisCombiNr += "0" + boost::lexical_cast<std::string>( sphMirNum );
+          thisCombiNr << "0" << sphMirNum;
         if ( flatMirNum > 9 )
-          thisCombiNr +=       boost::lexical_cast<std::string>( flatMirNum );
+          thisCombiNr << flatMirNum;
         else
-          thisCombiNr += "0" + boost::lexical_cast<std::string>( flatMirNum );
+          thisCombiNr << "0" << flatMirNum;
 
         // depending on options, make plots only for prebooked mirror combimations.
         bool allowMirrorCombi( true );
         if ( m_histoOutputLevel < 5 )
           // search to see if this mirror combination has been prebooked
           if ( m_preBookHistos.empty() ||
-               std::find( m_preBookHistos.begin(),m_preBookHistos.end(), thisCombiNr) == m_preBookHistos.end() )
+               std::find( m_preBookHistos.begin(), 
+                          m_preBookHistos.end(), thisCombiNr.str()) == m_preBookHistos.end() )
             allowMirrorCombi = false;
 
         if ( allowMirrorCombi )
         {
-          h_id += thisCombiNr;
-          plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+          h_id += thisCombiNr.str();
+          plot2D( phiRec, delTheta, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
           if ( m_histoOutputLevel > 3 && isolated )
-            plot2D( phiRec, delTheta, hid(rad,h_id+"Iso"), title+" Iso", 0.0, 2*Gaudi::Units::pi,
+            plot2D( phiRec, delTheta, hid(rad,h_id+"Iso"), title.str()+" Iso", 0.0, 2*Gaudi::Units::pi,
                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
           if ( m_useMCTruth ) {
             // use MC estimate for cherenkov angle
             h_id += "MC";
-            title += " MC";
-            plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+            title << " MC";
+            plot2D( phiRec, delThetaTrue, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
             // test to see if this photon was emitted from this track
             if ( trueParent ) {
               h_id += "TruP";
-              title += " TrueP";
-              plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+              title << " TrueP";
+              plot2D( phiRec, delThetaTrue, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
             }
           }
@@ -442,8 +444,9 @@ StatusCode AlignmentMonitor::execute()
 
           if ( hpd != 0 )
           {
-            const std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
-            plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
+            std::ostringstream hpd_id;
+            hpd_id << "HPD_" << hpd;
+            plot2D( phiRec, delTheta, "HPDs/"+hpd_id.str(), hpd_id.str(), 0.0, 2*Gaudi::Units::pi,
                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
           }
         }

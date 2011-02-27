@@ -10,12 +10,15 @@
 #ifndef RICHRECMONITOR_RICHALIGNMENTMONITOR_H
 #define RICHRECMONITOR_RICHALIGNMENTMONITOR_H 1
 
-// Include files
+// STL
+#include <sstream>
+
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event
 #include "Event/RichRecStatus.h"
@@ -38,9 +41,9 @@
 
 // Kernel
 #include "RichKernel/BoostArray.h"
+#include "RichKernel/RichHPDIdentifier.h"
 
 // boost
-#include "boost/lexical_cast.hpp"
 #include <boost/foreach.hpp>
 
 namespace Rich

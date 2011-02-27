@@ -1,49 +1,38 @@
 // $Id: $
-#ifndef EVENTSELECTION_H
-#define EVENTSELECTION_H 1
+#ifndef RICHALIGNMENT_EVENTSELECTION_H
+#define RICHALIGNMENT_EVENTSELECTION_H 1
 
-// Include files
+// STL
+#include <map>
+
 // base class
-#include "RichRecBase/RichRecTupleAlgBase.h"
-
+#include "RichRecBase/RichRecAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event
 #include "Event/RichRecStatus.h"
 
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IProfile1D.h"
-
 // Interfaces
-#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"
 
-// RichDet
-#include "RichDet/DeRichSphMirror.h"
-
-// Kernel
-#include "RichKernel/BoostArray.h"
-
-// boost
-#include "boost/lexical_cast.hpp"
-#include <boost/foreach.hpp>
-
-/** @class EventSelection EventSelection.h
- *
- *
- *  @author Thomas Rex Hampson
- *  @date   2010-02-09
- */
 namespace Rich
 {
   namespace Rec
   {
-    class EventSelection : public TupleAlgBase
+
+    /** @class EventSelection EventSelection.h
+     *
+     *  Selects events for the Rich mirror alignment
+     *
+     *  @author Thomas Rex Hampson
+     *  @date   2010-02-09
+     */
+
+    class EventSelection : public AlgBase
     {
 
     public:
@@ -58,7 +47,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     private: // data
 
@@ -70,16 +58,10 @@ namespace Rich
       // T Hampson
       // declare the arrays and other stuff
       //======================================
-      
-      static const unsigned int nRich1Comb = 24;
-      static const unsigned int nRich2Comb = 170;
 
-      double m_combiCountR2[nRich2Comb];
-      double m_combiCountR1[nRich1Comb];
-
-      // store the total number of mirror photons for the job/subjob
-      double m_totalPhotonsR2[nRich2Comb];
-      double m_totalPhotonsR1[nRich1Comb];
+      typedef std::map<unsigned long int,unsigned long int> IDToCount;
+      IDToCount m_combiMap; ///< Count photons for each mirror pair, current event
+      IDToCount m_totalMap; ///< Count photons for each mirror pair, overall
 
       //======================================
 
@@ -102,4 +84,4 @@ namespace Rich
   }
 }
 
-#endif // EVENTSELECTION_H
+#endif // RICHALIGNMENT_EVENTSELECTION_H

@@ -4,6 +4,12 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-02-25 - Chris Jones
+ - Replace boost:lexical_cast<std::string> with std::ostringstream, to appease
+   icc11 and coverity
+ - Use a map in EventSelection instead of hideously slow  block of string to 
+   int if statements ..
+
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
 
