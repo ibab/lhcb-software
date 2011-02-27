@@ -271,7 +271,7 @@ StatusCode UpdateAndReset::stop() {
   else if ( 0 != m_pGauchoMonitorSvc )
   {
 //    this->m_pGauchoMonitorSvc->Lock();
-    this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+//    this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
 //    this->m_pGauchoMonitorSvc->UnLock();
 //    m_pGauchoMonitorSvc->release();
 //    m_pGauchoMonitorSvc = 0;
@@ -295,7 +295,9 @@ StatusCode UpdateAndReset::finalize() {
   }
   else if ( 0 != m_pGauchoMonitorSvc )
   {
+    this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+    this->m_pGauchoMonitorSvc->UnLock();
     m_pGauchoMonitorSvc->release();
     m_pGauchoMonitorSvc = 0;
   }
@@ -436,7 +438,8 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   ::strftime(day, sizeof(day),"%d", timeInfo);
 
 
-  if (save)  {
+  if (save)
+  {
      //std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;
      //add the month and day to avoid too many files per year
      std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName + "/" + month + "/" + day;
