@@ -207,12 +207,12 @@ StatusCode HPDIonFeedbackMoni::execute()
   } // ----- End of Loop over L1 boards
 
   if(r1clustersThisEvent>0) {      // If clusters were found in RICH1
-    richHisto1D( HID("R1ClusOcc") ) -> fill(r1clustersThisEvent);
+    richHisto1D( HID("R1ClusOcc") ) -> fill((double)r1clustersThisEvent);
     r1clustersThisEvent = 0;
   }
 
   if(r2clustersThisEvent>0) {      // If clusters were found in RICH2
-    richHisto1D( HID("R2ClusOcc") ) -> fill(r2clustersThisEvent);
+    richHisto1D( HID("R2ClusOcc") ) -> fill((double)r2clustersThisEvent);
     r2clustersThisEvent = 0;
   }
 
