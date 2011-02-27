@@ -198,13 +198,13 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
 {
 
   // check to see if the smartID is set, and if HPD is active
-  if ( smartid.hpdColIsSet() && smartid.hpdNumInColIsSet() )
-    if ( !m_richS->hpdIsActive( smartid ) )
-      return StatusCode::FAILURE;
+  if ( smartid.pdIsSet() && 
+       !m_richS->hpdIsActive(smartid) )
+    return StatusCode::FAILURE;
 
   try
   {
-    if (globalPoint.z() < 8000.0)
+    if ( globalPoint.z() < 8000.0 )
     {
       smartid.setRich  ( Rich::Rich1 );
       smartid.setPanel ( globalPoint.y() > 0.0 ? Rich::top : Rich::bottom );
@@ -238,7 +238,7 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
 Gaudi::XYZPoint
 Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
 {
-  if (globalPoint.z() < 8000.0)
+  if ( globalPoint.z() < 8000.0 )
   {
     // Rich1
     if (globalPoint.y() > 0.0)

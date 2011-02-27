@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-02-27 - Chris Jones
+ - Adapt to changes in RichSmartID class
+
 !========================= RichTools v2r32 2011-02-25 =========================
 ! 2011-02-22 - Chris Jones
  - Some more icc fixes
