@@ -5,6 +5,12 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-27 - Jibo He
+ - Hlt1ProtonLines.py
+   . Tuned DiProton lines, still missing SumPT cut to reduce output rate further 
+	 + Added a new DiProtonLowMult line, for exclusive production study, 
+     CPU timing and output rate negligible 
+
 !========================== Hlt1Lines v6r5   2011-02-22 ===================
 ! 2011-02-20 - Gerhard Raven
  - remove Hlt1NewMuonLines from SVN... (as intended in the previous commit!)
