@@ -50,7 +50,7 @@ void GenTimer::Start()
   int status;
 //  printf("Starting Timer Thread...\n");
   m_ForceExit = false;
-  status = pthread_create(&m_thread,NULL,ThreadRoutine_C, (void *)this);
+  if (m_thread == 0) status = pthread_create(&m_thread,NULL,ThreadRoutine_C, (void *)this);
   if (status == 0)
   {
 //    printf("Timer Thread Started successfully\n");
