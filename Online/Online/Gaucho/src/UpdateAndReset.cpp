@@ -270,9 +270,9 @@ StatusCode UpdateAndReset::stop() {
   }
   else if ( 0 != m_pGauchoMonitorSvc )
   {
-    this->m_pGauchoMonitorSvc->Lock();
+//    this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
-    this->m_pGauchoMonitorSvc->UnLock();
+//    this->m_pGauchoMonitorSvc->UnLock();
 //    m_pGauchoMonitorSvc->release();
 //    m_pGauchoMonitorSvc = 0;
   }

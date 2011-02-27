@@ -217,8 +217,10 @@ void MonSubSys::Clear()
 }
 void MonSubSys::EORUpdate(int runo)
 {
+  Lock();
   m_EORsvc->setRunNo(runo);
   m_EORsvc->Serialize();
+  unLock();
   dim_lock();
   m_EORsvc->Update();
   dim_unlock();
