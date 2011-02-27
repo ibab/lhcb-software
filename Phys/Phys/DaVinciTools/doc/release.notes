@@ -4,6 +4,30 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-02-27 - Vanya Belyaev
+  
+ - DVFilter1
+
+   new algorithm that allows to filter events based on some 
+   properties of input particles 
+   It is an extention of Void-filter
+   The "Code" property ahas a signature of "CutVal" :
+          vector<const LHCb::Particle*>  -> bool 
+   Output container is always empty, the filtering result 
+   is a result of CutVal-evaluation 
+
+ - DVFilter2
+
+   new algorithm that allows to filter particles based on some 
+   properties of input particles 
+   It is an extention of Void-filter
+   The "Code" property ahas a signature of "Pipe" :
+          vector<const LHCb::Particle*>  -> 
+                  vector<const LHCb::Particle*> 
+   The filtering result is defined as non-empty selection 
+
+   Both are useful as "event-selection" 
+
 !========================== DaVinciTools v22r3 2011-02-20 ===================
 
 ! 2011-02-14 - Juan Palacios

@@ -397,8 +397,8 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
  */
 // ============================================================================
 StatusCode FilterDesktop::filter 
-( const LHCb::Particle::Range& input    , 
-  LHCb::Particle::ConstVector& filtered ) const 
+( const LHCb::Particle::ConstVector& input    , 
+  LHCb::Particle::ConstVector&       filtered ) const 
 {
   // Filter particles!!  - the most important line :-) 
   LoKi::select ( input.begin () , 
@@ -518,15 +518,15 @@ void FilterDesktop::writeEmptySharedContainers() const
 StatusCode FilterDesktop::decodeCode () 
 {
   // locate the factory
-  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( m_factory , this ) ;
-  
+  LoKi::IHybridFactory* factory_ = tool<LoKi::IHybridFactory> ( factory() , this ) ;
+  //
   // use the factory 
-  StatusCode sc = factory-> get ( code() , m_cut , preambulo() ) ;
+  StatusCode sc = factory_ -> get ( code() , m_cut , preambulo() ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='" 
                    + code() + "'" , sc )  ; }
   //
-  release ( factory ) ;
+  release ( factory_ ) ;
   //
   return sc ;
 }

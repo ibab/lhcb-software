@@ -57,8 +57,8 @@ public:
    *  @return Status code 
    */
   virtual StatusCode filter 
-  ( const LHCb::Particle::Range& input    , 
-    LHCb::Particle::ConstVector& filtered ) const 
+  ( const LHCb::Particle::ConstVector& input    , 
+    LHCb::Particle::ConstVector&       filtered ) const 
   {
     //
     LoKi::Extract::particles ( input.begin () , 

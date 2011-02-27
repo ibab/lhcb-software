@@ -134,8 +134,8 @@ public:
    *  @return Status code 
    */
   virtual StatusCode filter 
-  ( const LHCb::Particle::Range& input    , 
-    LHCb::Particle::ConstVector& filtered ) const ;
+  ( const LHCb::Particle::ConstVector& input    , 
+    LHCb::Particle::ConstVector&       filtered ) const ;
   // ==========================================================================
 public:
   // ==========================================================================
@@ -188,11 +188,9 @@ private:
   // ============================================================================
   /// save (clone if needed) selected particles in TES 
   template <class PARTICLES, class VERTICES, class CLONER>
-  StatusCode _save
-  () const ;
+  StatusCode _save () const ;
   // ============================================================================
 protected :
-
   // ==========================================================================
   /// get the actual predicate: 
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& predicate() const 
@@ -206,6 +204,10 @@ protected :
   /// CloneFilteredParticles ? 
   void setCloneFilteredParticles ( const bool value ) 
   { m_cloneFilteredParticles = value ; }
+  // ==========================================================================
+protected:
+  // ==========================================================================
+  const std::string& factory() const { return m_factory ; }
   // ==========================================================================
 private:
   // ==========================================================================
@@ -228,6 +230,9 @@ private:
   /// the predicate itself 
   LoKi::BasicFunctors<const LHCb::Particle*>::PredicateFromPredicate m_cut ;
   //
+  // ==========================================================================
+protected:
+  // ==========================================================================
   /// general flag to switch on/off monitoring
   bool                m_monitor ;   // general flag to switch on/off monitoring
   /// (pre-monitoring) code 
@@ -238,9 +243,10 @@ private:
   std::string         m_postMonitorCode ;         // (post-monitoring)     code
   /// (post-monitoring) functor 
   LoKi::Types::CutVal m_postMonitor     ;         // (post-monitoring)  functor 
+  //
+  // ==========================================================================
   // local storage
   LHCb::Particle::ConstVector m_accepted;
-
   //
   // input plots
   //
@@ -251,7 +257,10 @@ private:
   /// the THS path for the input plots 
   std::string m_inputPlotsPath  ;                     // the input plots path 
   //
-  // output plots 
+  // ==========================================================================
+private:
+  // ==========================================================================
+  //  // output plots 
   //
   /// type/name for the output plots tool 
   std::string m_outputPlotsTool ;          // type-name for output plots tool 
@@ -261,10 +270,14 @@ private:
   std::string m_outputPlotsPath ;                    // the output plots path 
   //
   // ==========================================================================
+protected:
+  // ==========================================================================
   /// the flag to indicate the nesessity of update 
   bool m_to_be_updated1 ; // the flag to indicate the nesessity of update 
   /// the flag to indicate the nesessity of update 
   bool m_to_be_updated2 ; // the flag to indicate the nesessity of update 
+  // ==========================================================================
+private:
   // ==========================================================================
   /// CloneFilteredParticles ? 
   bool m_cloneFilteredParticles;                    // CloneFilteredParticles ? 
