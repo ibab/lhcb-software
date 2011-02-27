@@ -349,7 +349,7 @@ StatusCode MonitorSvc::i_start()
 StatusCode MonitorSvc::stop()
 {
 //  CALLGRIND_STOP_INSTRUMENTATION
-//  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
+  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
 //  m_started = false;
 //  updateSvc("",m_runno,0);
   if (m_CntrMgr != 0)
@@ -358,6 +358,7 @@ StatusCode MonitorSvc::stop()
   }
   m_MonSys->stop();
   StatusCode sc = Service::stop();
+  printf("+++++++++++++++++++++++++++ Monitor Service STOP DONE.......\n");
  return StatusCode::SUCCESS;
 }
 
