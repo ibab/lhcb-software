@@ -119,7 +119,8 @@ StatusCode UpdateAndReset::start()
   m_utgid = RTL::processName();
   StatusCode sc;
   m_stopdone = false;
-  sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
+  sc = StatusCode::SUCCESS;
+  if (m_pGauchoMonitorSvc== 0) sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
   if( sc.isSuccess() ) msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
   else {
     msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
@@ -272,8 +273,8 @@ StatusCode UpdateAndReset::stop() {
     this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
     this->m_pGauchoMonitorSvc->UnLock();
-    m_pGauchoMonitorSvc->release();
-    m_pGauchoMonitorSvc = 0;
+//    m_pGauchoMonitorSvc->release();
+//    m_pGauchoMonitorSvc = 0;
   }
   m_stopdone = true;
   return StatusCode::SUCCESS;
