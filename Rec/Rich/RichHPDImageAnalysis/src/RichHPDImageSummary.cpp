@@ -18,12 +18,12 @@ DECLARE_ALGORITHM_FACTORY( RichHPDImageSummary )
 //=============================================================================
 
 RichHPDImageSummary::RichHPDImageSummary( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
-  : HistoAlgBase( name , pSvcLocator ) ,
-    m_nEvt( 0 ),
-    m_pixelsize( 0.5 ),
-    m_siliconx( 16.0 ),
-    m_silicony( 16.0 )
+                                          ISvcLocator* pSvcLocator )
+  : HistoAlgBase ( name , pSvcLocator ) ,
+    m_nEvt       ( 0    ),
+    m_pixelsize  ( 0.5  ),
+    m_siliconx   ( 16.0 ),
+    m_silicony   ( 16.0 )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
@@ -54,19 +54,19 @@ StatusCode RichHPDImageSummary::initialize()
 
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
 
-  const LHCb::RichSmartID::Vector &activeHPDs = m_RichSys->activeHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector & activeHPDs = m_RichSys->activeHPDRichSmartIDs();
 
   for (  LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
          iHPD != activeHPDs.end(); ++iHPD )
   {
     const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( *iHPD );
 
-    std::string name = "Rich_HPD_" + boost::lexical_cast<std::string>( hpdID.data() );
-    name += "_Image";
+    std::ostringstream name;
+    name << "Rich_HPD_" << hpdID.data() << "_Image";
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << " Booking histogram " << name << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " Booking histogram " << name.str() << endmsg ;
 
-    m_histo.insert( std::make_pair( hpdID.data() ,this->create2D(name) ) );
+    m_histo.insert( std::make_pair(hpdID.data(),this->create2D(name.str()) ) );
   }
 
   return sc;
@@ -203,11 +203,13 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
                                                    const double x0,
                                                    const double y0 ) const
 {
-  const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber( ID ) );
-  std::string sensorpath = m_RichSys->getDeHPDLocation(smartID);
-  sensorpath += ( "/SiSensor:" + boost::lexical_cast<std::string>( ID ) );
+  const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber(ID) );
 
-  DetectorElement * dd = getDet<DetectorElement>( sensorpath );
+  std::ostringstream sensorpath;
+  sensorpath << m_RichSys->getDeHPDLocation(smartID);
+  sensorpath << "/SiSensor:" << ID;
+
+  DetectorElement * dd = getDet<DetectorElement>( sensorpath.str() );
 
   Gaudi::XYZPoint zero;
   Gaudi::XYZPoint offsetCondDB = (dd->geometry()->ownMatrix())*zero;
@@ -297,19 +299,19 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   }
   else
   {
-    std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
+    std::ostringstream nameHPD;
+    nameHPD << "RICH_HPD_" << ID;
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding counter " << nameHPD << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding counter " << nameHPD.str() << endmsg ;
 
     const double x0ErrSq  = std::pow(xErr0,2);
     const double y0ErrSq  = std::pow(yErr0,2);
     const double RadErrSq = std::pow(RadErr,2);
 
-    counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0,  nPix*x0ErrSq,  0. , 0. );
-    counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0,  nPix*y0ErrSq,  0. , 0. );
-    counter( nameHPD + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
+    counter( nameHPD.str() + "_XOffset" ) = StatEntity( nPix, nPix*x0,  nPix*x0ErrSq,  0. , 0. );
+    counter( nameHPD.str() + "_YOffset" ) = StatEntity( nPix, nPix*y0,  nPix*y0ErrSq,  0. , 0. );
+    counter( nameHPD.str() + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
   }
-  return;
 }
 
 //=============================================================================

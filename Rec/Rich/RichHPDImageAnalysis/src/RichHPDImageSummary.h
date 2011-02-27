@@ -35,9 +35,6 @@
 #include "Minuit2/MnMigrad.h"
 #include "Minuit2/FCNBase.h"
 
-// Boost
-#include "boost/lexical_cast.hpp"
-
 namespace Rich
 {
   namespace Mon
