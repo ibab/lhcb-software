@@ -152,7 +152,7 @@ StatusCode TracklessRingMoni::execute()
     }
 
     // photon yield
-    richHisto1D( HID("totalPhotons",rad) )->fill( (*iR)->richRecPixels().size() );
+    richHisto1D( HID("totalPhotons",rad) )->fill( (double) (*iR)->richRecPixels().size() );
 
     // refit the ring ...
     FastRingFitter fitter(**iR);

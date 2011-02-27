@@ -9,7 +9,7 @@ package RichPIDMerge
 version v2r9p1
 
 # ================ structure ================================================
-branches src cmt doc options
+branches src cmt doc
 
 # ================ environment ==============================================
 set RICHPIDMERGEOPTS $(RICHPIDMERGEROOT)/options

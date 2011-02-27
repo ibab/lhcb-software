@@ -41,8 +41,6 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         from Configurables import RichTools
 
-        # First data options. To be removed eventually ...
-        #if "earlyData" in self.getProp("SpecialData") :
         if not self.getProp("Simulation") :
             self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.00625,0,0 ]
 

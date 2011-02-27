@@ -9,7 +9,7 @@ package           RichRecSys
 version           v3r35p1
 
 # ================ structure ================================================
-branches          cmt doc options python
+branches          cmt doc python
 
 # ================ environment ==============================================
 set RICHRECSYSOPTS $(RICHRECSYSROOT)/options

@@ -375,10 +375,10 @@ StatusCode RecoQC::execute()
 
     } // photon loop
 
-    richHisto1D(HID("totalPhotonsPerSeg",rad))->fill(segment->richRecPhotons().size());
+    richHisto1D(HID("totalPhotonsPerSeg",rad))->fill((double)segment->richRecPhotons().size());
     if ( isolated )
     {
-      richHisto1D(HID("totalPhotonsPerSegIso",rad))->fill(segment->richRecPhotons().size());
+      richHisto1D(HID("totalPhotonsPerSegIso",rad))->fill((double)segment->richRecPhotons().size());
     }
 
     // number of true photons
