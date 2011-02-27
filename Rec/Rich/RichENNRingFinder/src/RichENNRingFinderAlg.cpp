@@ -17,16 +17,16 @@ using namespace Rich::Rec::ENNRingFinder;
 
 // Declaration of the Algorithm Factories
 DECLARE_ALGORITHM_FACTORY( Rich1AerogelTopPanel    )
-  DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel )
-  DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        )
-  DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     )
-  DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       )
-  DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      )
+DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel )
+DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        )
+DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     )
+DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       )
+DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  template < class FINDER >
+template < class FINDER >
 AlgBase<FINDER>::AlgBase( const std::string& name,
                           ISvcLocator* pSvcLocator,
                           const Rich::DetectorType rich,
@@ -297,7 +297,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
       if ( m_refitRings ) refit( newRing, radius );
 
       // ring radius
-      newRing->setRadius ( static_cast<LHCb::RichRecRing::FloatType>(radius*m_scaleFactor) );
+      newRing->setRadius ( (LHCb::RichRecRing::FloatType) (radius*m_scaleFactor) );
 
       // build the ring points
       if ( m_buildRingPoints ) buildRingPoints ( newRing );
@@ -419,7 +419,7 @@ void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
   if ( nPoints>0 )
   {
     // NB : Much of this could be optimised and run in the initialisation
-    const double incr ( 2.0 * M_PI / static_cast<double>(nPoints) );
+    const double incr ( 2.0 * M_PI / (double)(nPoints) );
     double angle(0);
     ring->ringPoints().reserve(nPoints);
     for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
