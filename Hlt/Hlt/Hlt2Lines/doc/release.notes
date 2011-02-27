@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-27 - Alexandr Kozlinskiy
+ - Updated Hlt2CharmRareDecayLines (added cut MIPCHI2 for D0 daughters)
+ - Updated Hlt2Dst2D2XXLines (L0 requirement for electron lines, larger signal mass window)
+
 ! 2011-02-27 - Mat Charles
  - Refactor some routines in Hlt2CharmHadD02HHKsLines.py
  - Require TOS on Hlt1Track (and a few other tighter cuts) before looking

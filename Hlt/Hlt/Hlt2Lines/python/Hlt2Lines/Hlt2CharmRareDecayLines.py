@@ -5,7 +5,8 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
         'D02MuMuMinDaughterPt'            : 1.0 # GeV
       , 'D02MuMuMinLifeTime'              : 0.1 # ps
-      , 'D02PiPiForD02MuMuMinLifeTime'    : 0.3 # ps
+      , 'D02MuMuMinIPChi2'                : 4.0
+      , 'D02PiPiForD02MuMuMinLifeTime'    : 0.1 # ps (todo: remove)
       , 'Prescale' : {
           'Hlt2CharmRareDecayD02MuMu'           : 1.0
         , 'Hlt2CharmRareDecayD02PiPiForD02MuMu' : 0.1
@@ -23,15 +24,15 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons, BiKalmanFittedPions
         from HltTracking.HltPVs import PV3D
 
-        D0DaughterCut = "(PT > %(D02MuMuMinDaughterPt)s * GeV)" % self.getProps()
+        D0DaughterCut = "(PT > %(D02MuMuMinDaughterPt)s * GeV) & (MIPCHI2DV(PRIMARY) > %(D02MuMuMinIPChi2)s)" % self.getProps()
         D02MuMuCombinationCut = "(ADAMASS('D0') < 100 * MeV)"
         D02PiPiCombinationCut = "(ADAMASS('D0') < 50 * MeV)"
-        D02MuMuMotherCut = "(VFASPF(VCHI2PDOF) < 25) & (BPVLTFITCHI2() < 25) & (BPVLTIME() > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
-        D02PiPiMotherCut = "(VFASPF(VCHI2PDOF) < 4) & (BPVLTFITCHI2() < 4) & (BPVLTIME() > %(D02PiPiForD02MuMuMinLifeTime)s * ps)" % self.getProps()
+        D02MuMuMotherCut = "(VFASPF(VCHI2PDOF) < 25) & (BPVLTIME(25) > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
+        D02PiPiMotherCut = "(VFASPF(VCHI2PDOF) < 25) & (BPVLTIME(25) > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
 
         D02MuMuCombine = Hlt2Member(CombineParticles
                                     , 'D02MuMuCombine'
-                                    , DecayDescriptor = '[ D0 -> mu+ mu- ]cc'
+                                    , DecayDescriptor = 'D0 -> mu+ mu-'
                                     , Inputs = [ BiKalmanFittedMuons ]
                                     , DaughtersCuts = { "mu+" : D0DaughterCut }
                                     , CombinationCut = D02MuMuCombinationCut
@@ -46,7 +47,7 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
 
         D02PiPiForD02MuMuCombine = Hlt2Member(CombineParticles
                                               , 'D02PiPiForD02MuMuCombine'
-                                              , DecayDescriptor = '[ D0 -> pi+ pi- ]cc'
+                                              , DecayDescriptor = 'D0 -> pi+ pi-'
                                               , Inputs = [ BiKalmanFittedPions ]
                                               , DaughtersCuts = { "pi+" : D0DaughterCut }
                                               , CombinationCut = D02PiPiCombinationCut
