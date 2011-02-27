@@ -1,19 +1,55 @@
+#!/usr/bi/env python
+# =============================================================================
+# $Id:$
+# =============================================================================
 ## @file
 #
 #  Hlt2 dimuon selections
-#
-#  @author J. Albrecht, Leandro de Paula, Antonio Perez-Calero
-#  @date 2009-02-13
 #
 #   a) unbiased dimuon selections, i.e. dimuon selections without
 #           cuts correlated to the Bs lifetime (J. Albrecht)
 #
 #   b) biased dimuon and dimuon without PV (Leandro de Paula)
 #
-##
+#   c) ``multi-muon''-lines:
+#        - at least three muons iwth high pt ad high chi2(ip)
+#        - at least two dimuons 
+#        - dimuon and muon iwth high-pt high chi2(ip) or
+#                              muon and detached dimuon
+#        - tau -> 3mu 
+#        
+#
+#  @author J. Albrecht, Leandro de Paula, Antonio Perez-Calero
+#  @date 2009-02-13
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
+# =============================================================================
+"""
+
+  Hlt2 dimuon selections
+
+   a) unbiased dimuon selections, i.e. dimuon selections without
+           cuts correlated to the Bs lifetime (J. Albrecht)
+
+   b) biased dimuon and dimuon without PV (Leandro de Paula)
+
+   c) ``multi-muon''-lines:
+   
+        - at least three muons iwth high pt ad high chi2(ip)
+        - at leats two dimuons 
+        - dimuon and muon iwth high-pt high chi2(ip) or
+                              muon and detached dimuon
+        - tau -> 3mu 
+   
+"""
+# =============================================================================
+__version__ = " $Revision$ "
+# =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-
+from GaudiKernel.SystemOfUnits import GeV,MeV 
 
 
 class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
@@ -94,10 +130,48 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
                    ,'NoPVPt'                    : 1500 # MeV
                    ,'NoPVMass'                  : 1000 # MeV
-
+                   ,
+                   # ==========================================================
+                   ## Configuration parameters for ``multi-muon''-lines  
+                   #                                       ``reasonable range''
+                   #
+                   # In case of automatic-tuning/bandwidth division,
+                   # the following parameters are the most important:
+                   # For "ThreeDetachedMuons"-line
+                   #       - 'MultiMu_TightMuon_Chi2_IP'
+                   #       - 'MultiMu_TightMuon_PT' 
+                   # For "Tau2MuMuMu"-line
+                   #       - 'MultiMu_Tau3Mu_MassWindow' 
+                   #       - 'MultiMu_Tau3Mu_max_PT'
+                   # For "DiDiMuon"-line
+                   #       - 'MultiMu_DiMuon_Chi2_VX'
+                   #       - 'MultiMu_Psi1S_MassWindow'
+                   #       - 'MultiMu_Psi2S_MassWindow'
+                   # For "MuAndDiMu"-line
+                   #       - 'MultiMu_DiMuon_DLS'
+                   #       - 'MultiMu_TightMuon_Chi2_IP'
+                   #       - 'MultiMu_TightMuon_PT' 
+                   # ==========================================================
+                   ## chi2(IP) for ``good-muons''    ## [  4 ->  9 ]
+                   'MultiMu_GoodMuon_Chi2_IP'   :   4         ,
+                   ## PT for ``tight'' muons         ## [ 1.2 GeV -> 1.4 GeV ]
+                   'MultiMu_TightMuon_PT'       :   1.2 * GeV ,
+                   ## chi2(IP) for ``tight-muons''   ## [  9 -> 16 ]                   
+                   'MultiMu_TightMuon_Chi2_IP'  :   9         ,
+                   ## chi2(VX) for ``dimuons''       ## [ 25 -> 16 ]
+                   'MultiMu_DiMuon_Chi2_VX'     :  25         ,
+                   ## Decay flight significance for detached dimuon ## [ 5 -> 7 ]
+                   'MultiMu_DiMuon_DLS'         :   5         ,
+                   ## (half)mass-window for J/psi    ## [ 150 MeV -> 110 MeV ]
+                   'MultiMu_Psi1S_MassWindow'   : 150   * MeV ,
+                   ## (half)mass-window for psi(2S)  ## [ 150 MeV -> 110 MeV ]
+                   'MultiMu_Psi2S_MassWindow'   : 150   * MeV ,
+                   ## (half)mass-window for tau->3mu ## [ 350 MeV -> 200 MeV ]
+                   'MultiMu_Tau3Mu_MassWindow'  : 350   * MeV ,
+                   ## max(PT) for 1-muon from tau    ## [ 1 GeV   -> 1.4 GeV ]
+                   'MultiMu_Tau3Mu_max_PT'      :   1   * GeV
                    }
     
-
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
@@ -574,3 +648,274 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
         #--------------------------------------------
 
+        # =====================================================================
+        # Add some ``multi-muon''-lines
+        # =====================================================================
+        self.__multiMuonLines  ()
+
+        
+    ## define set of ``multi-muon''-lines 
+    def __multiMuonLines  ( self ) :
+        """
+        Define set of ``multi-muon''-lines
+
+        Four lines are defined:
+
+        - at least three muons iwth high pt ad high chi2(ip)
+        - at least two dimuons 
+        - dimuon and muon iwth high-pt high chi2(ip) or
+                              muon and detached dimuon
+        - tau -> 3mu 
+        
+        The parameters:
+        
+        - MultiMu_GoodMuon_chi2_IP   : default    4 
+        - MultiMu_TightMuon_PT       : default    1.2 * GeV 
+        - MultiMu_TightMuon_chi2_IP  : default    9 
+        - MultiMu_DiMuon_Chi2_VX     : default   25 
+        - MultiMu_DiMuon_DLS         : default    5 
+        - MultiMu_Psi1S_MassWindow   : default  150 * MeV  
+        - MultiMu_Psi2S_MassWindow   : default  150 * MeV 
+        - MultiMu_Tau3Mu_MassWindow  : default  350 * MeV 
+        - MultiMu_Tau3Mu_max_PT      : default    1 * GeV 
+        
+        """
+        
+        #
+        ## pure techinical stuff: import all nesessary components
+        # 
+        from Configurables      import HltANNSvc , CombineParticles, FilterDesktop
+        from Configurables      import LoKi__VoidFilter as Counter
+        
+        from HltLine.HltLine    import Hlt2Member , Hlt2Line , bindMembers 
+        from HltTracking.HltPVs import PV3D
+
+        #
+        ## get main symbols: Muons & DiMuons 
+        # 
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons as Muons
+        from Hlt2SharedParticles.TrackFittedDiMuon         import TrackFittedDiMuon   as DiMuons
+        
+        
+        Preambulo0 = [
+            "from LoKiCore.functions           import *" 
+            ]
+        
+        Preambulo  = Preambulo0 + [
+            "goodMuon  = ( TRCHI2DOF < 10 )                                     & ( BPVIPCHI2() > %(MultiMu_GoodMuon_Chi2_IP)g  ) " ,
+            "tightMuon = ( TRCHI2DOF < 10 ) & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,
+            # related to tau->3mu 
+            "ctau      = BPVLTIME ( ) * c_light   " ,
+            "chi2vx    = VFASPF(VCHI2) "            , 
+            "min_m12   = 2* PDGM('mu+') + 3 * MeV " ,
+            # related to dimuons 
+            "psi             = ADMASS ( 'J/psi(1S)' ) < %(MultiMu_Psi1S_MassWindow)g "           ,
+            "psi_prime       = ADMASS (   'psi(2S)' ) < %(MultiMu_Psi2S_MassWindow)g "           ,
+            "dimuon_mass     = psi | psi_prime | ( M > 5 * GeV ) "                               ,
+            "dimuon          = dimuon_mass & ( VFASPF ( VCHI2 ) < %(MultiMu_DiMuon_Chi2_VX)g ) " ,            
+            "detached_dimuon = dimuon & ( BPVDLS > %(MultiMu_DiMuon_DLS)g ) " 
+            ]
+        
+        Preambulo = [ p % self.getProps() for p in Preambulo ]
+        
+        Preambulo2 = [
+            "from LoKiPhys.decorators          import *" ,
+            "from LoKiArrayFunctors.decorators import *" ] + Preambulo 
+        
+        ## save some typing for the most trivial filters 
+        def _filter_  ( Inputs  , Code = " ALL " , name = 'All' ) :
+            " save some typing for the most trivial filters"
+            if not isinstance ( Inputs , list ) : Inputs = [ Inputs ] 
+            return [ Hlt2Member ( FilterDesktop         ,
+                                  name                  ,
+                                  Preambulo = Preambulo , 
+                                  Inputs    = Inputs    ,
+                                  Code      = Code      ) ] 
+        
+        # =====================================================================
+        ## palette of "technical" algorithms/filters  
+        # =====================================================================
+        #
+        ## check the presense of at least three muons in event
+        Check_3mu = Counter (
+            "Hlt2MultiMu:CheckFor3Mu"  ,
+            Preambulo = Preambulo0 , 
+            Code      = " 2.9 < CONTAINS ( '%s' ) " % Muons.outputSelection()
+            )
+        #
+        ## check the presense of at least four muons in event
+        Check_4mu = Counter (
+            "Hlt2MultiMu:CheckFor4Mu"  ,
+            Preambulo = Preambulo0 , 
+            Code      = " 3.9 < CONTAINS ( '%s' ) " % Muons.outputSelection()
+            )
+        #
+        ## select 'good' muons 
+        GoodMuons = bindMembers (
+            'MultiMu:'  , 
+            Muons.members()      + _filter_ ( Inputs =    Muons  , Code =  'goodMuon' , name =  'GoodMuons' )
+            )
+        #
+        ## select 'tight' muons 
+        TightMuons = bindMembers  (
+            'MultiMu:' ,
+            GoodMuons.members () + _filter_ ( Inputs = GoodMuons , Code = 'tightMuon' , name = 'TightMuons' )
+            )
+        #
+        ## check the presense of at least three "good" muons in event
+        Check_3GoodMu  = Counter (
+            "Hlt2MultiMu:ThreeGoodMu",
+            Preambulo  = Preambulo0 ,
+            Code       = " 2.9 < CONTAINS ( '%s' ) " % GoodMuons.outputSelection () 
+            )
+        #
+        ## check the presense of at least three "tight" muons in event
+        Check_3TightMu = Counter(
+            "Hlt2MultiMu:ThreeTightMu",
+            Preambulo  = Preambulo2 ,
+            Code       = " 2.9 < CONTAINS ( '%s' )  " % TightMuons.outputSelection () 
+            )
+        #
+        ## select 'our' dimuons 
+        DiMuons  = bindMembers (
+            'MultiMu:' ,
+            DiMuons.members()    + _filter_ ( Inputs =   DiMuons , Code =    'dimuon' , name =    'DiMuons' ) 
+            )
+        #
+        ## check the presense of at least two dimuons 
+        check_2dimu    = Counter (
+            "Hlt2MultiMu:CheckFor2DiMu" ,
+            Preambulo  = Preambulo  ,
+            Code       = " 1.9 < NUMBER ( '%s' , dimuon ) " % DiMuons.outputSelection()
+            )
+        #
+        ## Maker of tau+ -> mu+ mu+ mu- candidates 
+        tau_3mu = Hlt2Member (
+            CombineParticles , 
+            'Combine'        , 
+            Inputs          = [ GoodMuons ]               , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = '[ tau+ -> mu+ mu+ mu- ]cc' , 
+            DaughtersCuts   = { "mu+" : 'goodMuon' }      , 
+            CombinationCut  = """
+            ( ADAMASS('tau+') < %(MultiMu_Tau3Mu_MassWindow)g ) &
+            ( AM12            > min_m12   ) & 
+            AHASCHILD ( PT    > %(MultiMu_Tau3Mu_max_PT)g     ) 
+            """ % self.getProps() ,
+            MotherCut       = " ( chi2vx < 30 ) & ( ctau > 40 * um ) "
+            )
+        #
+        ## maker of dimu plus mu cominations 
+        mu_and_dimu     = Hlt2Member (
+            CombineParticles ,
+            'Combine'        ,
+            Inputs          = [ DiMuons , Muons ]         , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = "[B_c+ -> J/psi(1S) mu+]cc" , 
+            DaughtersCuts   = {
+            'J/psi(1S)' : 'dimuon'
+            } ,
+            CombinationCut  = """
+            ACHILDCUT ( 1 , detached_dimuon ) |
+            ACHILDCUT ( 2 , tightMuon       ) 
+            """,
+            MotherCut       = " ALL  " 
+            )
+        
+        # =====================================================================
+        # three generic detached high-pt muons 
+        # =====================================================================
+        three_mu = Hlt2Line (
+            "ThreeDetachedMuons" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [   
+            Muons          ,    ## get muons  
+            Check_3mu      ,    ## require at least 3 muons 
+            PV3D    ()     ,    ## recontruct PV
+            GoodMuons      ,    ## select good muons
+            Check_3GoodMu  ,    ## require at least 3 good muons            
+            TightMuons     ,    ## select tight muons 
+            Check_3TightMu ]    ## require at least 3 tight muons
+            + _filter_ ( Inputs = TightMuons ) ## select/copy tight muons (again)
+            )
+        
+        # =====================================================================
+        # generic di-dimuon line
+        # =====================================================================
+        di_dimuon = Hlt2Line (
+            "DiDiMuons" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            Muons          ,  ## get muons 
+            Check_4mu      ,  ## require at least 4 muons
+            DiMuons        ,  ## get dimuons 
+            check_2dimu    ]  ## require at least two 'true' dimuons
+            + _filter_ ( Inputs = DiMuons ) ## select/copy dimuons (again)
+            )
+        
+        # =====================================================================
+        # dimuon + muon line:
+        #                dimuon + tight muon
+        #       detached dimuon + muon
+        # =====================================================================        
+        dimuon_and_muon = Hlt2Line (
+            "MuAndDiMu" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            Check_3mu      ,  ## require at least 3 muons
+            DiMuons        ,  ## get dimuons
+            mu_and_dimu       ## good "dimu+mu" combination
+            ], 
+            )
+        
+        # =====================================================================
+        # tau -> mu+ mu+ mu- line: 
+        # =====================================================================
+        line_tau_3mu = Hlt2Line (
+            "Tau2MuMuMu" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [  
+            Muons         ,  ## get muons  
+            Check_3mu     ,  ## require at least 3 muons 
+            PV3D    ()    ,  ## recontruct PV
+            GoodMuons     ,  ## select good muons 
+            Check_3GoodMu ,  ## require at least 3 "good" muons 
+            tau_3mu          ## check for tau->3mu candidates 
+            ] , 
+            )
+        
+        # =====================================================================
+        # define unique IDs
+        # =====================================================================
+        
+        HltANNSvc().Hlt2SelectionID.update (
+            { "Hlt2ThreeDetachedMuonsDecision" : 50214 ,
+              "Hlt2DiDiMuonsDecision"          : 50215 ,
+              "Hlt2MuAndDiMuDecision"          : 50216 , 
+              "Hlt2Tau2MuMuMuDecision"         : 50217 }
+            )
+        
+        
+# =============================================================================
+if '__main__' == __name__ :
+    print 100*'*'
+    print __doc__
+    print 100*'*'
+# =============================================================================
+# The END 
+# =============================================================================
+        
