@@ -74,6 +74,8 @@ private:
   std::vector<float>          m_Expertise;
   float                       m_NetworkCut;
   bool                        m_DoPrecuts;
+  bool                        m_UsePID;
+  bool                        m_DoPlot;
 
   // attributes
   const IDistanceCalculator*  m_DistCalc; ///< LoKi::DistanceCalculator

@@ -32,11 +32,15 @@ NBB2HHTriggerTool::NBB2HHTriggerTool( const std::string& type,
   base_class(type,name,parent),
   m_NetworkCut (       -1.0         ),
   m_DoPrecuts  (       false        ),
+  m_UsePID     (       true         ),
+  m_DoPlot     (       false        ),
   m_nVar       (       16           )
 {
   declareProperty("Expertise"    , m_Expertise        , "NeuroBayes Expertise");
   declareProperty("NetworkCut"   , m_NetworkCut       , "Cut on Network output");
   declareProperty("DoPrecuts"    , m_DoPrecuts        , "Apply pre-cuts");
+  declareProperty("UsePID"       , m_UsePID           , "Use PID info");
+  declareProperty("DoPlot"       , m_DoPlot           , "Create control histograms");
 }
 
 // ===========================================================================
@@ -62,12 +66,19 @@ StatusCode NBB2HHTriggerTool::initialize() {
     return Error("Could not get Histogramming tool");
   }
 
+  if (m_UsePID)
+    m_nVar = 16;
+  else
+    m_nVar = 12;
+
   //
   // print settings
   //
   verbose() <<  "Expertise      " <<  m_Expertise     << endmsg;
   debug()   <<  "NetworkCut     " <<  m_NetworkCut    << endmsg;
   debug()   <<  "Apply precuts  " <<  m_DoPrecuts     << endmsg;
+  debug()   <<  "Use PID        " <<  m_UsePID        << endmsg;
+  debug()   <<  "#variables     " <<  m_nVar          << endmsg;
  
   //
   // setup NeuroBayes
@@ -114,18 +125,28 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
 
     double prob   = (1.0 + netOut)*0.5;
 
-    m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
+    if (m_DoPlot) {
+      double mB   = p->measuredMass()/Gaudi::Units::GeV;
+
+      m_HistoTool->plot1D(netOut, "BhhNet" , "NeuroBayes Bhh network output ", -1.0  , 1.0 ,  120);
+      m_HistoTool->plot1D(mB    , "mBAll"  , "mass all cand"                 ,  5.0  , 6.0 ,  120);
+    } //if plot
 
 
     if ( msgLevel(MSG::DEBUG) ) {
       debug() << "Bhh cand: Network output " << netOut
               << " probability " << prob << endmsg;
-    }
+    } // if msg
 
     // accept candidate?
     if (prob > m_NetworkCut) {
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Bhh cand pass cut "  << m_NetworkCut << endmsg;
+      
+      if (m_DoPlot) {
+        double mB   = p->measuredMass()/Gaudi::Units::GeV;
+        m_HistoTool->plot1D(mB    , "mBCut"  , "mass acc cand"                 ,  5.0  , 6.0 ,  120);
+      } //if plot
 
       // accept candidate
       returnValue = true;
@@ -185,8 +206,15 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
   double hMinusP         = hMinus->p()/Gaudi::Units::GeV;
   double hPlusDllK       = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLk,-999);
   double hMinusDllK      = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLk,-999);
-  double hPlusTrackChi2  = hPlus ->proto()->track()->probChi2();
-  double hMinusTrackChi2 = hMinus->proto()->track()->probChi2();
+  int    hPlusTrackNDoF  = hPlus ->proto()->track()->nDoF();
+  double hPlusTrackChi2  = -999;
+  if (hPlusTrackNDoF > 0)
+    hPlusTrackChi2  = hPlus ->proto()->track()->chi2()/hPlusTrackNDoF;
+  int    hMinusTrackNDoF = hMinus->proto()->track()->nDoF();
+  double hMinusTrackChi2 = -999;
+  if (hMinusTrackNDoF > 0)
+    hMinusTrackChi2 = hMinus->proto()->track()->chi2()/hMinusTrackNDoF;
+
 
   double chi2B           = particle->endVertex()->chi2();
 
@@ -227,18 +255,22 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
 
     if (mB               < 5.0      ||
         mB               > 5.8      ||
-        !hPlusAboveThresholdK       ||
-        !hMinusAboveThresholdK      ||
-        hPlusTrackChi2   >  5       ||
         hMinusTrackChi2  >  5       ||
         minP             < 10.0     ||
         minPt            <  1.5     ||
-        (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
-        (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
         docaB            > 0.10     ||
         chi2B            > 25.0     ||
-        maxPt            <  2.0     ||
-        maxDllK          <  0.1)
+        maxPt            <  2.0    )
+      return false;
+
+      if (m_UsePID) {
+        if (!hPlusAboveThresholdK       ||
+            !hMinusAboveThresholdK      ||
+            (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
+            (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
+            maxDllK          <  0.1)            
+          return false;
+      } // if usePID
       return false;
   } //if doPrecut
 
@@ -246,27 +278,19 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
   //
   // get remaining variables
   //
-
-  // not accessible at trigger level 
-  //double hPlusCaloE      = hPlus ->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
-  //double hMinusCaloE     = hMinus->proto()->info(LHCb::ProtoParticle::CaloEcalE, -999);
-  //double hPlusDllP       = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLp,-999);
-  //double hMinusDllP      = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLp,-999);
-  //double hPlusDllMu      = hPlus ->proto()->info(LHCb::ProtoParticle::CombDLLmu,-999);
-  //double hMinusDllMu     = hMinus->proto()->info(LHCb::ProtoParticle::CombDLLmu,-999);
-  //double hPlusGhost      = hPlus ->proto()->track()->ghostProbability();
-  //double hMinusGhost     = hMinus->proto()->track()->ghostProbability();
-
   double hPlusIsMuon     = 0;
   double hMinusIsMuon    = 0;
-  const LHCb::MuonPID *hPlusMuonPID  = hPlus ->proto()->muonPID();
-  const LHCb::MuonPID *hMinusMuonPID = hMinus->proto()->muonPID();
-  if (hPlusMuonPID)
-    hPlusIsMuon = hPlusMuonPID->IsMuon();
-  if (hMinusMuonPID)
-    hMinusIsMuon = hMinusMuonPID->IsMuon();
+  if (m_UsePID) {
+    const LHCb::MuonPID *hPlusMuonPID  = hPlus ->proto()->muonPID();
+    const LHCb::MuonPID *hMinusMuonPID = hMinus->proto()->muonPID();
+    if (hPlusMuonPID)
+      hPlusIsMuon = hPlusMuonPID->IsMuon();
+    if (hMinusMuonPID)
+      hMinusIsMuon = hMinusMuonPID->IsMuon();
+  } // if usePID
+
+
   double mErrB           = particle->measuredMassErr()/Gaudi::Units::GeV;
-  
   double ptB             = particle->pt()/Gaudi::Units::GeV;
   double pB              = particle->p() /Gaudi::Units::GeV;
 
@@ -274,6 +298,8 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
   double cosTheta        = LoKi::Cuts::LV01(particle);
   if (lnan(cosTheta))
     cosTheta = -999;
+  else
+    cosTheta = fabs(cosTheta); 
 
 
 
@@ -283,63 +309,62 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
   // move delta functions to -999
   //
 
-  //if (hPlusCaloE > -0.01 && hPlusCaloE < 0.01)
-  //  hPlusCaloE = -999;
-  //if (hMinusCaloE > -0.01 && hMinusCaloE < 0.01)
-  //  hMinusCaloE = -999;
-  //if (hPlusCaloE < -999)
-  //  hPlusCaloE = -999;
-  //if (hMinusCaloE < -999)
-  //  hMinusCaloE = -999;
-
   if (hPlusDllK > -0.01 && hPlusDllK < 0.01)
     hPlusDllK = -999;
   if (hMinusDllK > -0.01 && hMinusDllK < 0.01)
     hMinusDllK = -999;
 
-
-  //if (hPlusDllP > -0.01 && hPlusDllP < 0.01)
-  //  hPlusDllP = -999;
-  //if (hMinusDllP > -0.01 && hMinusDllP < 0.01)
-  //  hMinusDllP = -999;
-  //if (hPlusDllP > -0.01 && hPlusDllP < 0.01)
-  //  hPlusDllP = -999;
-  //if (hMinusDllP > -0.01 && hMinusDllP < 0.01)
-  //  hMinusDllP = -999;
-  //
-  //
-  //if (hPlusDllMu > -0.1 && hPlusDllMu < 0.01)
-  //  hPlusDllK = -999;
-  //if (hMinusDllMu > -0.1 && hMinusDllMu < 0.01)
-  //  hMinusDllMu = -999;
-  //
-  //if (hPlusGhost < 0)
-  //  hPlusGhost = -999;
-  //
-  //if (hMinusGhost < 0)
-  //  hMinusGhost = -999;
-
-
   //
   // fill input array
   //
-  m_inArray[  0 ] =  hPlusIsMuon;
-  m_inArray[  1 ] =  hMinusIsMuon;
-  m_inArray[  2 ] =  hPlusDllK;
-  m_inArray[  3 ] =  hMinusDllK;
-  m_inArray[  4 ] =  minPt;
-  m_inArray[  5 ] =  maxPt;
-  m_inArray[  6 ] =  hPlusP;
-  m_inArray[  7 ] =  hMinusP;
-  m_inArray[  8 ] =  chi2B;
-  m_inArray[  9 ] =  mErrB;
-  m_inArray[ 10 ] =  pB;
-  m_inArray[ 11 ] =  docaB;
-  m_inArray[ 12 ] =  hPlusTrackChi2;
-  m_inArray[ 13 ] =  hMinusTrackChi2;
-  m_inArray[ 14 ] =  cosTheta;
-  m_inArray[ 15 ] =  ptB; 
-
+  if (m_UsePID) {
+    m_inArray[  0 ] =  hPlusIsMuon;
+    m_inArray[  1 ] =  hMinusIsMuon;
+    m_inArray[  2 ] =  hPlusDllK;
+    m_inArray[  3 ] =  hMinusDllK;
+    m_inArray[  4 ] =  minPt;
+    m_inArray[  5 ] =  maxPt;
+    m_inArray[  6 ] =  hPlusP;
+    m_inArray[  7 ] =  hMinusP;
+    m_inArray[  8 ] =  chi2B;
+    m_inArray[  9 ] =  mErrB;
+    m_inArray[ 10 ] =  pB;
+    m_inArray[ 11 ] =  docaB;
+    m_inArray[ 12 ] =  hPlusTrackChi2;
+    m_inArray[ 13 ] =  hMinusTrackChi2;
+    m_inArray[ 14 ] =  cosTheta;
+    m_inArray[ 15 ] =  ptB; 
+  } else {
+    m_inArray[  0 ] =  minPt;
+    m_inArray[  1 ] =  maxPt;
+    m_inArray[  2 ] =  hPlusP;
+    m_inArray[  3 ] =  hMinusP;
+    m_inArray[  4 ] =  chi2B;
+    m_inArray[  5 ] =  mErrB;
+    m_inArray[  6 ] =  pB;
+    m_inArray[  7 ] =  docaB;
+    m_inArray[  8 ] =  hPlusTrackChi2;
+    m_inArray[  9 ] =  hMinusTrackChi2;
+    m_inArray[ 10 ] =  cosTheta;
+    m_inArray[ 11 ] =  ptB;
+  } // if UsePID
+    
+  if (m_DoPlot) {
+    m_HistoTool->plot1D(hPlusDllK      , "DllK"      , "Delta LL K" , -20,     20.0, 120);
+    m_HistoTool->plot1D(hMinusDllK     , "DllK"      , "Delta LL K" , -20,     20.0, 120);
+    m_HistoTool->plot1D(hPlusPt        , "pt"        , "Kaon pt"    ,   0,     10.0, 120);
+    m_HistoTool->plot1D(hMinusPt       , "pt"        , "Kaon pt"    ,   0,     10.0, 120);
+    m_HistoTool->plot1D(hPlusP         , "p"         , "Kaon p"     ,  10,     50.0, 120);
+    m_HistoTool->plot1D(hMinusP        , "p"         , "Kaon p"     ,  10,     50.0, 120);
+    m_HistoTool->plot1D(chi2B          , "chi2"      , "B chi2"     ,   0,     25.0, 120);
+    m_HistoTool->plot1D(mErrB          , "mErrB"     , "B mErr"     ,   0,      0.1, 120); 
+    m_HistoTool->plot1D(pB             , "pB"        , "B p"        ,  25,    100.0, 120);
+    m_HistoTool->plot1D(docaB          , "doca"      , "doca"       ,   0,      0.1, 120);
+    m_HistoTool->plot1D(hPlusTrackChi2 , "trackChi2" , "trackChi2"  ,   0,      5.0, 120);
+    m_HistoTool->plot1D(hMinusTrackChi2, "trackChi2" , "trackChi2"  ,   0,      5.0, 120);
+    m_HistoTool->plot1D(cosTheta       , "cosTheta"  , "hel angle"  ,  0.0,     1.0, 120);
+    m_HistoTool->plot1D(ptB            , "ptB"       , "B pt"       ,   0,     10.0, 120);
+  } //if do Plot
 
 #endif
 
