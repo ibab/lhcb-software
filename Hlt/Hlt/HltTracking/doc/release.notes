@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Roel Aaij
+ - Update the options to the UpgradeConf for MatchVeloMuon
+
 ! 2011-02-28 - Mariusz Witek
  - Switch to 3D PV seeding.  PVSeedTool->PVSeed3DTool. Modifications in HltPVs.py
 

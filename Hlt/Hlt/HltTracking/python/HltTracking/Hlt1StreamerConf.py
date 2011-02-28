@@ -108,9 +108,9 @@ MatchVeloMuon=LoKi.Hlt1.UpgradeConf(
     "Hlt1/Track/VeloMuon"        ,                     ##          "TESOutput"
     LHCb.Track.Velo              ,                     ##          "TrackType"
     False                        ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
+    False                        ,                     ##        "TransferIDs"
+    False                        ,                     ##   "TransferAncestor"
+    False                        ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
 IsMuon=LoKi.Hlt1.UpgradeConf(
