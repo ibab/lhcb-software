@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDMerge v2r9p2 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings 
 
