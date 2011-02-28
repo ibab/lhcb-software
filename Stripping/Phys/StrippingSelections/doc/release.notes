@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Greig Cowan
+ - Switched back to using the mass constrained Jpsi in the beta_s lines.
+
 ! 2011-02-28 - Andrew Powell
  - Fixed bug in StrippingV0ForPID lines
 

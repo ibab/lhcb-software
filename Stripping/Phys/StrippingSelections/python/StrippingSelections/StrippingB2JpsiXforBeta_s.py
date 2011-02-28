@@ -47,7 +47,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 	self.config = config
 	
         # define input daughter lists for various B -> J/psi X selections
-        self.JpsiList = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu/Particles")
+        self.JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
         self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
                                         InputList = StdLooseKaons,
