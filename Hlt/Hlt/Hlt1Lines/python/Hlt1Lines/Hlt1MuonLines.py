@@ -5,7 +5,13 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     # steering variables
     __slots__ = { 
         #  Muon Lines
-         'DiMuonLowMass_VxDOCA'     :  0.2
+         'SingleMuonHighPT_P'       : 6000
+        ,'SingleMuonHighPT_PT'      :  500
+        ,'SingleMuonHighPT_TrChi2'  :    4
+        ,'SingleMuonNoIP_P'         : 6000
+        ,'SingleMuonNoIP_PT'        :  500
+        ,'SingleMuonNoIP_TrChi2'    :    4
+        ,'DiMuonLowMass_VxDOCA'     :  0.2
         ,'DiMuonLowMass_VxChi2'     :   25
         ,'DiMuonLowMass_P'          : 6000
         ,'DiMuonLowMass_PT'         :  500
@@ -18,16 +24,15 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'DiMuonHighMass_PT'        :  500
         ,'DiMuonHighMass_TrChi2'    :    4
         ,'DiMuonHighMass_M'         : 2900
-        ,'SingleMuonHighPT_P'       : 6000
-        ,'SingleMuonHighPT_PT'      :  500
-        ,'SingleMuonHighPT_TrChi2'  :    4
-        ,'SingleMuonNoIP_P'         : 6000
-        ,'SingleMuonNoIP_PT'        :  500
-        ,'SingleMuonNoIP_TrChi2'    :    4
-        ,'channels'                 : { 'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
+        ,'MultiMuonNoIP_P'          : 6000
+        ,'MultiMuonNoIP_PT'         :  500
+        ,'MultiMuonNoIP_TrChi2'     :    4
+        ,'MultiMuonNoIP_GT'         :  2.5
+        ,'channels'                 : { 'SingleMuonHighPT' : ( 'Muon', ),
+                                        'SingleMuonNoIP'   : ( 'Muon', ),
+                                        'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                         'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                        'SingleMuonHighPT' : ( 'Muon', ),
-                                        'SingleMuonNoIP'   : ( 'Muon', ) }
+                                        'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' ) }
         }
     
     def localise_props( self, prefix ):
@@ -47,6 +52,35 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                       FitTrack,
                       IsMuon ]
         return preambulo
+
+
+    def singleMuon_streamer( self, properties ):
+        from Configurables import LoKi__HltUnit as HltUnit
+        unit = HltUnit(
+            'Hlt1%(name)sStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.singleMuon_preambulo( properties ),
+            Code = """
+            VeloCandidates
+            >>  MatchVeloMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  LooseForward
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( TrCHI2PDOF < %(TrChi2)s )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        return unit
 
     def diMuon_preambulo( self, properties ):
         from HltTracking.HltPVs import RecoPV3D
@@ -128,7 +162,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             )
         return unit
 
-    def singleMuon_streamer( self, properties ):
+    def multiMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
@@ -151,7 +185,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
-            >> ~TC_EMPTY
+            >>  TC_SIZE > %(GT)s
             """ % properties
             )
         return unit
@@ -161,25 +195,25 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         line = Hlt1Line(
             name,
             prescale  = self.prescale,
-            postscale = self.prescale,
+            postscale = self.postscale,
             L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.channels[ name ] ] ) ,
             algos = [ streamer( self.localise_props( name ) ) ] 
             )
 
     def __apply_configuration__( self ) : 
          ## Create the lines
-        to_build = [ ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
+        to_build = [ ( 'SingleMuonHighPT', self.singleMuon_streamer ),
+                     ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
+                     ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
-                     ( 'SingleMuonHighPT', self.singleMuon_streamer ),
-                     ( 'SingleMuonNoIP',   self.singleMuon_streamer ) ]
+                     ( 'MultiMuonNoIP',    self.multiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
 
         from HltLine.HltLine import Hlt1Line   as Line
-
-        # First the pass-through NoPV line
+        # The pass-through NoPV line
         Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
                                         , prescale = self.prescale
                                         , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon,lowMult','DiMuon,lowMult'] ] )
-                                        , postscale = self.postscale)  
+                                        , postscale = self.postscale)
 

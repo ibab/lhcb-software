@@ -5,6 +5,14 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Roel Aaij
+ - Change TightForward to LooseForward in Hlt1SingleMuonHighPT. This gains time
+   since all tracks passing MatchVeloMuon are upgraded by LooseForward in 
+   DiMuonHighMass anyway.
+ - Remove MuonHigh from L0Channels in Hlt1MuonLines.py
+ - Set postscale to postscale, not prescale (J. He)
+ - Add MultiMuonNoIP, prescaled to 0
+
 !2011-02-28 - Johannes Albrecht & Eric van Herwijnen
  - Hlt1MBLines make slots 
 
