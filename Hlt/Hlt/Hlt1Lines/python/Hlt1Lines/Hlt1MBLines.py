@@ -9,6 +9,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'MiniBiasL0Channels'     : ['CALO'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
+                , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'MaxNoBiasRate'          : 97.
                 , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)' }
                 }
@@ -31,7 +32,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBMicroBias%s' % name 
                     , prescale = self.prescale
-                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+                    , ODIN = self.getProp('MicroBiasOdin')
                     , algos = [ tracking
                               , Member( 'Hlt::TrackFilter','All'
                                       , Code = [ 'TrALL' ]
