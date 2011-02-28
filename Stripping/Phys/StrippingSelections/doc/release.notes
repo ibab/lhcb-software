@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Patrick Koppenburg
+ - MiniBias changed to Hlt1.*NoBias.*Decision
+
 ! 2011-02-27 - Neus Lopez March
  - Updates to StrippingB2Psi2SXMuMu.py to use LineBuilder
  - Updates to StrippingB2Psi2SX.py to use LineBuilder
