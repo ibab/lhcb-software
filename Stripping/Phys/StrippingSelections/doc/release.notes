@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Victor Coco
+ - Update StrippingTriMuons.py to use line builder and 
+   update the cuts to match retention rate
+
 ! 2011-02-28 - Liming Zhang
  - Add Bs2JpsiKstar line in beta_s lines.
 
