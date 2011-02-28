@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Mariusz Witek
+ - Switch to 3D PV seeding.  PVSeedTool->PVSeed3DTool. Modifications in HltPVs.py
+
 ! 2011-02-28 - Jibo He
  - Hlt2TrackingConfigurations.py
   + Added Low PT Proton (>0.6 GeV, same as Hlt1 LooseForward) 

@@ -51,13 +51,12 @@ def _RecoPV3D():
     from HltReco import MinimalVelo
 
     from Configurables import PatPV3D
-    from Configurables import PVOfflineTool, PVSeedTool, LSAdaptPV3DFitter
+    from Configurables import PVOfflineTool, LSAdaptPV3DFitter
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
 
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
-    recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
