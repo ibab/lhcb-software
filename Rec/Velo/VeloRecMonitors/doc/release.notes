@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!========================= VeloRecMonitors v2r12p1 2011-02-28 =========================
+! 2010-09-29 - Chris Jones
+ - Fix coverity performance warnings
+
+
 !======================= VeloRecMonitors v2r12 2010-09-27 ===================
 ! 2010-09-29 - Eduardo Rodrigues
  - fix to warning in VeloClusterMonitor
