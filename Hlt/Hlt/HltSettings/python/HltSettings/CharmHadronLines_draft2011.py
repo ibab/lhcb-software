@@ -92,24 +92,26 @@ class CharmHadronLines :
                         ## 3Body
                           'TrkPt_3Body'                 : 250.0    # MeV
                         , 'TrkP_3Body'                  : 2000.0   # MeV
-                        , 'TrkPVIPChi2_3Body'           : 2.0      # unitless
-                        , 'TrkChi2_3Body'               : 5.0      # unitless
-                        , 'PairMinDoca_3Body'           : 0.10     # mm
-                        , 'VtxPVDispChi2_3Body'         : 100.0    # unitless
+                        , 'TrkPVIPChi2_3Body'           : 5.0      # unitless
+                        , 'TrkChi2_3Body'               : 3.0      # unitless
+                        , 'PairMinDoca_3Body'           : 0.08     # mm
+                        , 'VtxPVDispChi2_3Body'         : 150.0    # unitless
                         , 'VtxChi2_3Body'               : 20.0     # unitless
-                        , 'DIPChi2_3Body'               : 25.0     # unitless
-                        , 'DSumPt_3Body'                : 2000.0   # MeV
+                        , 'DIPChi2_3Body'               : 15.0     # unitless
+                        , 'DSumPt_3Body'                : 2500.0   # MeV
                         , 'MCOR_MAX_3Body'              : 3500.    # MeV
                         ## 2-body Input for 3Body
                         , 'TrkPt_2BodyFor3Body'         : 500.0    # MeV
                         , 'TrkP_2BodyFor3Body'          : 5000.0   # MeV
-                        , 'TrkPVIPChi2_2BodyFor3Body'   : 7.0      # unitless
-                        , 'TrkChi2_2BodyFor3Body'       : 5.0      # unitless
-                        , 'Doca_2BodyFor3Body'          : 0.085    # mm
+                        , 'TrkPVIPChi2_2BodyFor3Body'   : 10.0      # unitless
+                        , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
+                        , 'Doca_2BodyFor3Body'          : 0.1    # mm
                         , 'VtxPVDispChi2_2BodyFor3Body' : 40.      # unitless
                         , 'VtxPVDisp_2BodyFor3Body'     : 3.0      # mm
-                        , 'DSumPt_2BodyFor3Body'        : 1400.0   # MeV
+                        , 'DSumPt_2BodyFor3Body'        : 2000.0   # MeV
                         , 'MCOR_MAX_2BodyFor3Body'      : 3500.    # MeV
+                        , 'GEC_Filter_NTRACK'           : True     # do or do not
+                        , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
                         # prescales
                         , 'Prescale'                    : {
                                 'Hlt2CharmHadD2HHHWideMass'    : 0.1

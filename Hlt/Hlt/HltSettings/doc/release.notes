@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Sandra Amato
+ - Tighten cuts in Hlt2CharmHadD2HHH lines
+
 ! 2011-02-24 - Victor Coco
  - Update DV_draft2011.py (downstream line parameters in dictionnary)
 
