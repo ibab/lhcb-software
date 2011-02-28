@@ -22,9 +22,16 @@ Highlights:
  - Tr/TrackTools, roll back of error parameterisation to DC06 settings
                   new MC10 parameterisation is under study
  - Tr/TrackSys, make 2011 the default datatype
+ - Rec/LumiAlgs, 
+      . move database access to a tool, "GetLumiParameters" 
+        used by LumiIntegrateFSR, LumiCheckCondDB
+      . add usage of online partition for LHC parameters (filling scheme) and TCK
+        dependent parameters (e.g. rate limiters)
+      . update unit tests using new pinned input files
+      . update requirements file to enable TCK and online partition
 
 Otherwise many minor cosmetic changes, including the start of the campaign to 
-suppress the many icc warnings, remarks, and coverity defects.
+suppress the many icc warnings, remarks, and coverity defects in Rec.
 
 For more details, links to changesets and bugs, see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v11r2
