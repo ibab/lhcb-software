@@ -155,17 +155,17 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ## chi2(IP) for ``good-muons''    ## [  4 ->  9 ]
                    'MultiMu_GoodMuon_Chi2_IP'   :   4         ,
                    ## PT for ``tight'' muons         ## [ 1.2 GeV -> 1.4 GeV ]
-                   'MultiMu_TightMuon_PT'       :   1.2 * GeV ,
-                   ## chi2(IP) for ``tight-muons''   ## [  9 -> 16 ]                   
-                   'MultiMu_TightMuon_Chi2_IP'  :   9         ,
-                   ## chi2(VX) for ``dimuons''       ## [ 25 -> 16 ]
-                   'MultiMu_DiMuon_Chi2_VX'     :  25         ,
+                   'MultiMu_TightMuon_PT'       :   1.25 * GeV ,
+                   ## chi2(IP) for ``tight-muons''   ## [ 25 -> 36 ]                   
+                   'MultiMu_TightMuon_Chi2_IP'  :  25         ,
+                   ## chi2(VX) for ``dimuons''       ## [ 16 ->  9 ]
+                   'MultiMu_DiMuon_Chi2_VX'     :  16         ,
                    ## Decay flight significance for detached dimuon ## [ 5 -> 7 ]
                    'MultiMu_DiMuon_DLS'         :   5         ,
-                   ## (half)mass-window for J/psi    ## [ 150 MeV -> 110 MeV ]
-                   'MultiMu_Psi1S_MassWindow'   : 150   * MeV ,
-                   ## (half)mass-window for psi(2S)  ## [ 150 MeV -> 110 MeV ]
-                   'MultiMu_Psi2S_MassWindow'   : 150   * MeV ,
+                   ## (half)mass-window for J/psi    ## [ 125 MeV -> 110 MeV ]
+                   'MultiMu_Psi1S_MassWindow'   : 125   * MeV ,
+                   ## (half)mass-window for psi(2S)  ## [ 125 MeV -> 110 MeV ]
+                   'MultiMu_Psi2S_MassWindow'   : 125   * MeV ,
                    ## (half)mass-window for tau->3mu ## [ 350 MeV -> 200 MeV ]
                    'MultiMu_Tau3Mu_MassWindow'  : 350   * MeV ,
                    ## max(PT) for 1-muon from tau    ## [ 1 GeV   -> 1.4 GeV ]
@@ -702,8 +702,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             ]
         
         Preambulo  = Preambulo0 + [
-            "goodMuon  = ( TRCHI2DOF < 10 )                                     & ( BPVIPCHI2() > %(MultiMu_GoodMuon_Chi2_IP)g  ) " ,
-            "tightMuon = ( TRCHI2DOF < 10 ) & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,
+            "goodTrack = TRCHI2DOF < 6 " , 
+            "goodMuon  = goodTrack                                     & ( BPVIPCHI2() > %(MultiMu_GoodMuon_Chi2_IP)g  ) " ,
+            "tightMuon = goodTrack & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,
             # related to tau->3mu 
             "ctau      = BPVLTIME ( ) * c_light   " ,
             "chi2vx    = VFASPF(VCHI2) "            , 
@@ -813,11 +814,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             Preambulo       = Preambulo                   ,
             DecayDescriptor = "[B_c+ -> J/psi(1S) mu+]cc" , 
             DaughtersCuts   = {
-            'J/psi(1S)' : 'dimuon'
+            'J/psi(1S)' : 'dimuon    & ( chi2vx <   10       ) ' ,
+            'mu+'       : 'goodTrack & ( PT     > 1.25 * GeV ) '
             } ,
             CombinationCut  = """
             ACHILDCUT ( 1 , detached_dimuon ) |
-            ACHILDCUT ( 2 , tightMuon       ) 
+            ACHILDCUT ( 2 , tightMuon       )  
             """,
             MotherCut       = " ALL  " 
             )

@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Vanya Belyaev
+
+ - Hlt2InclusiveDiMuonLines.py
+     tighten "multi-muon"-lines 
+
 ! 2011-02-28 - Ulrich Kerzel
 - let Hlt2B2HHLTUnbiased use HltMember for TisTosParticleTagger
 
