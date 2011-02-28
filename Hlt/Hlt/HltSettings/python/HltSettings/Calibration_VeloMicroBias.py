@@ -35,8 +35,13 @@ class Calibration_VeloMicroBias :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        return { Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } 
-                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 1. }
+        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+                                 ,'Prescale' : { 'Hlt1MBMicroBias.*' : 0.01 } 
+#                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 'RATE(5000)' }
                                    }
+
+             }
         
-               }
+
+
+        return d
