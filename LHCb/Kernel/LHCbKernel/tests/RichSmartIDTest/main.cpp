@@ -34,10 +34,10 @@ int main ( int /*argc*/, char** /*argv*/ )
               {
 
                 // Make a test smart ID
-                LHCb::RichSmartID id( rich,panel,
-                                      pdrow,pdcol,
-                                      pixrow,pixcol,subpix,
-                                      LHCb::RichSmartID::HPDID );
+                const LHCb::RichSmartID id( rich,panel,
+                                            pdrow,pdcol,
+                                            pixrow,pixcol,subpix,
+                                            LHCb::RichSmartID::HPDID );
 
                 // Check values
                 if ( rich   != id.rich()       ||
@@ -45,7 +45,8 @@ int main ( int /*argc*/, char** /*argv*/ )
                      pdrow  != id.pdNumInCol() ||
                      pdcol  != id.pdCol()      ||
                      pixrow != id.pixelRow()   ||
-                     pixcol != id.pixelCol()    )
+                     pixcol != id.pixelCol()   ||
+                     subpix != id.pixelSubRow() )
                 {
                   cout << "Problem with RichSmartID " << id << endl;
                   OK = false;
@@ -75,10 +76,10 @@ int main ( int /*argc*/, char** /*argv*/ )
             {
 
               // Make a test smart ID
-              LHCb::RichSmartID id( rich,panel,
-                                    pdrow,pdcol,
-                                    pixrow,pixcol,
-                                    LHCb::RichSmartID::MaPMTID );
+              const LHCb::RichSmartID id( rich,panel,
+                                          pdrow,pdcol,
+                                          pixrow,pixcol,
+                                          LHCb::RichSmartID::MaPMTID );
 
               // Check values
               if ( rich   != id.rich()       ||
