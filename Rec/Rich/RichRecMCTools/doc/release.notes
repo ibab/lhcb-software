@@ -4,7 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecMCTools v2r27p1 2011-02-28 =========================
+!========================= RichRecMCTools v2r28p1 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc and coverity warnings
 
