@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!========================= TrackProjectors v2r29 2011-02-28 =========================
 ! 2011-02-18 Wouter Hulsbergen
  - Call node.updateProjection tomake sure it properly resets kalman filer status.
 

@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackProjectors
-version           v2r28p2
+version           v2r29
 
 #============================================================================
 # Structure, i.e. directories to process. 
