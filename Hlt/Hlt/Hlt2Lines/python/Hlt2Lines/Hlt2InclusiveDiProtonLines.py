@@ -17,18 +17,23 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
     
     __slots__ = { 'Prescale'           : {    'Hlt2DiProton'                   : 1.  
                                             , 'Hlt2DiProtonTF'                 : 0.005  # of 200
+                                            , 'Hlt2DiProtonTis'            : 1.  
+                                            , 'Hlt2DiProtonTisTF'          : 0.005  # of 200
                                             , 'Hlt2DiProtonLowMult'            : 1.
                                             , 'Hlt2DiProtonLowMultTF'          : 0.005     
                                             }
                   
                   ,'Postscale'         : {    'Hlt2DiProton'                   : 1.  
                                             , 'Hlt2DiProtonTF'                 : 1.
+                                            , 'Hlt2DiProtonTis'            : 1.  
+                                            , 'Hlt2DiProtonTisTF'          : 1.                                            
                                             , 'Hlt2DiProtonLowMult'            : 1.
                                             , 'Hlt2DiProtonLowMultTF'          : 1.
                                             }
                   
-                  , 'SpdMult'            :   600.
+                  , 'SpdMult'            :   900.
                   , 'DiProton_Hlt1Req'   :  "HLT_PASS('Hlt1DiProtonDecision')"
+                  , 'DiProton_Hlt1TIS'   :  "Hlt1.*Decision%TIS"
                   # Track Fitted
                   , 'TFProtonPT'         :  1900.   # MeV
                   , 'TFProtonTrkChi2'    :     4.   
@@ -57,15 +62,18 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   
                   
                   , 'HltANNSvcID'      : {  'DiProton'                   : 51000
-                                           ,'DiProtonTF'                 : 51002
-                                           ,'DiProtonLowMult'            : 51005
-                                           ,'DiProtonLowMultTF'          : 51006
-                                           }
+                                           ,'DiProtonTF'                 : 51001
+                                           ,'DiProtonTis'            : 51002
+                                           ,'DiProtonTisTF'          : 51003
+                                           ,'DiProtonLowMult'            : 51004
+                                           ,'DiProtonLowMultTF'          : 51005
+                                            }
                   }
     
     def __apply_configuration__(self):
         self.__makeHlt2DiProtonLines()
         self.__makeHlt2DiProtonLowMultLines()
+        self.__makeHlt2DiProtonReqHlt1TISLines() 
         
     def __makeHlt2DiProtonLines(self):        
         from HltLine.HltLine import Hlt2Line
@@ -236,4 +244,124 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     , TFCombine
                                     ]
                         , postscale = self.postscale
-                        )           
+                        )
+
+
+
+
+
+        
+    def __makeHlt2DiProtonReqHlt1TISLines(self):        
+        from HltLine.HltLine import Hlt2Line
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonTisDecision" : self.getProp('HltANNSvcID')['DiProtonTis'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonTisTFDecision" : self.getProp('HltANNSvcID')['DiProtonTisTF'] } )
+
+            
+        #------------------------------------
+        # Track Fitted
+        #------------------------------------
+        TFProtonCut = "(PT> %(TFProtonPT)s *MeV) & (TRCHI2DOF < %(TFProtonTrkChi2)s)" % self.getProps()
+        TFCombCut = "(in_range( %(TFCombLowerMass)s *MeV, AM, %(TFCombUpperMass)s *MeV)) & (APT> %(TFCombPT)s *MeV)" % self.getProps()
+        TFMomCut = "(VFASPF(VCHI2PDOF)< %(TFVtxCHI2)s) & (in_range( %(TFLowerMass)s *MeV, MM, %(TFUpperMass)s *MeV)) & (PT> %(TFCCbarPT)s *MeV)" % self.getProps()
+
+        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons        
+
+        # Fitler Protons before requring Hlt1 TIS
+        FilterProtonsForDiProton = Hlt2Member( FilterDesktop
+                                               , 'FilterProtonsForDiProton'
+                                               , Inputs  = [ BiKalmanFittedProtons ]
+                                               , Code    = TFProtonCut )
+        
+        ProtonsForDiProton = bindMembers( "ProtonsForDiProton", [ BiKalmanFittedProtons,
+                                                                  FilterProtonsForDiProton
+                                                                  ] )
+        
+        TaggerHlt1TISProtonsForDiProton = Hlt2Member( TisTosParticleTagger
+                                                      , 'TaggerHlt1TISProtonsForDiProton'
+                                                      , TisTosSpecs = { self.getProp("DiProton_Hlt1TIS") : 0 }
+                                                      , Inputs = [ ProtonsForDiProton ]
+                                                      )
+
+        Hlt1TISProtonsForDiProton = bindMembers("Hlt1TISProtonsForDiProton", [ ProtonsForDiProton,
+                                                                               TaggerHlt1TISProtonsForDiProton ])
+                                                
+        
+        TFCombine = Hlt2Member( CombineParticles
+                                , "TFCombine"
+                                , DecayDescriptor = "J/psi(1S) -> p+ p~-"
+                                , DaughtersCuts = { "p+" : TFProtonCut }
+                                , CombinationCut = TFCombCut
+                                , MotherCut = TFMomCut
+                                , Inputs = [ Hlt1TISProtonsForDiProton ]
+                                , InputPrimaryVertices = "None"
+                                , UseP2PVRelations = False
+                                )
+
+
+        #------------------------------------
+        # Track Fitted & RichPID
+        #------------------------------------
+        TFRichProtonPID = "((PIDp-PIDpi) > %(TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(TFRichProtonPIDpK)s)" % self.getProps()   
+        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons
+        
+        # Fitler RichProtons before requring Hlt1 TIS
+        FilterRichProtonsForDiProton = Hlt2Member( FilterDesktop
+                                               , 'FilterRichProtonsForDiProton'
+                                               , Inputs  = [ BiKalmanFittedRichProtons ]
+                                               , Code    = TFProtonCut+" & "+TFRichProtonPID  )
+        
+        RichProtonsForDiProton = bindMembers( "RichProtonsForDiProton", [ BiKalmanFittedRichProtons,
+                                                                          FilterRichProtonsForDiProton
+                                                                          ] )
+        
+        TaggerHlt1TISRichProtonsForDiProton = Hlt2Member( TisTosParticleTagger
+                                                          , 'TaggerHlt1TISRichProtonsForDiProton'
+                                                          , TisTosSpecs = { self.getProp("DiProton_Hlt1TIS") : 0 }
+                                                          , Inputs = [ RichProtonsForDiProton ]
+                                                          )
+        
+        Hlt1TISRichProtonsForDiProton = bindMembers("Hlt1TISRichProtonsForDiProton", [ RichProtonsForDiProton,
+                                                                                       TaggerHlt1TISRichProtonsForDiProton ])
+        
+        TFRichCombine = Hlt2Member( CombineParticles
+                                    , "TFRichCombine"
+                                    , DecayDescriptor = "J/psi(1S) -> p+ p~-"
+                                    , DaughtersCuts = { "p+" : TFProtonCut+" & "+TFRichProtonPID }
+                                    , CombinationCut = TFCombCut
+                                    , MotherCut = TFMomCut
+                                    , Inputs = [ Hlt1TISRichProtonsForDiProton ]
+                                    , InputPrimaryVertices = "None"
+                                    , UseP2PVRelations = False
+                                    )
+
+        #------------------------------------
+        # Inclusive DiProton complete
+        #------------------------------------
+        line = Hlt2Line('DiProtonTis'
+                        , prescale = self.prescale
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , algos = [ Hlt1TISProtonsForDiProton
+                                    , TFCombine
+                                    , Hlt1TISRichProtonsForDiProton
+                                    , TFRichCombine
+                                    ]
+                        , postscale = self.postscale
+                        )
+        
+        #------------------------------------
+        # Inclusive TF
+        #------------------------------------
+        line = Hlt2Line('DiProtonTisTF'
+                        , prescale = self.prescale
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , algos = [ Hlt1TISProtonsForDiProton
+                                    , TFCombine
+                                    ]
+                        , postscale = self.postscale
+                        )       

@@ -10,12 +10,14 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                             ,'Hlt2DYeh1Unfitted'                   : 1.0
                                             ,'Hlt2DYeh2Unfitted'                   : 1.0
 
-                                            ,'Hlt2SingleElectron'         :  0.01
-                                            ,'Hlt2ElectronPlusTrack'      :  0.01
-                                            ,'Hlt2SingleTFElectron'       :  1.0
-                                            ,'Hlt2SingleTFHighPtElectron' :  1.0
-                                            ,'Hlt2SingleTFVHighPtElectron':  1.0
-                                            ,'Hlt2TFElectronPlusTrack'    :  1.0
+                                            ,'Hlt2SingleElectron'          :  0.01
+                                            ,'Hlt2ElectronPlusTrack'       :  0.01
+                                            ,'Hlt2SingleTFElectron'        :  1.0
+                                            ,'Hlt2SingleTFLowPtElectron'   :  0.1
+                                            ,'Hlt2SingleTFHighPtElectron'  :  1.0
+                                            ,'Hlt2SingleTFVHighPtElectron' :  1.0
+                                            ,'Hlt2TFElectronPlusTrack'     :  1.0
+                                            ,'Hlt2TFElectronPlusTrackNoIP' :  0.1
                                              }
                                              
                  
@@ -55,35 +57,59 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'SingleTFElectron_L0Req'   :  "L0_CHANNEL('Electron')"
                   ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
                   ,'SingleTFElectron_PT'      :  3000.    # MeV
-                  ,'SingleTFHighPtElectron_PT': 10000.    # MeV
-                  ,'SingleTFHighPtElectron_PrsMin': 50.
-                  ,'SingleTFHighPtElectron_EcalMin': 0.1    
-                  ,'SingleTFHighPtElectron_HcalMax': 0.05
-                  ,'SingleTFHighPtElectron_TkChi2' : 20.
-                  ,'SingleTFVHighPtElectron_PT': 20000.    # MeV
                   ,'SingleTFElectron_IP'      :     0.2   # mm
                   ,'SingleTFElectron_PIDe'    :     4.  
-                  ,'SingleTFElectron_IPCHI2'  :    -1.    
+                  ,'SingleTFElectron_IPCHI2'  :    -1.
+                  ,'SingleTFElectron_TrCHI2'  :     5.
 
+                  
+                  ,'SingleTFLowPtElectron_L0Req'   :  "L0_CHANNEL('Electron')"
+                  ,'SingleTFLowPtElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
+                  ,'SingleTFLowPtElectron_PT'      :  4800.    # MeV
+                  ,'SingleTFLowPtElectron_PIDe'    :     4.  
+                  ,'SingleTFLowPtElectron_TrCHI2'  :     5.
+                  
+                  
+                  ,'SingleTFHighPtElectron_PT':      10000.    # MeV
+                  ,'SingleTFHighPtElectron_PrsMin':     50.
+                  ,'SingleTFHighPtElectron_EcalMin':     0.1    
+                  ,'SingleTFHighPtElectron_HcalMax':     0.05
+                  ,'SingleTFHighPtElectron_TkChi2' :    20.
+                  ,'SingleTFVHighPtElectron_PT':     20000.    # MeV
+
+                  
                   ,'TFElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
                   ,'TFElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"                     
                   ,'TFElectronPlusTrack_ElecPT'       : 1500.   # MeV
-                  ,'TFElectronPlusTrack_ElecIP'       :    0.2  # mm
+                  ,'TFElectronPlusTrack_ElecIP'       :    0.5  # mm
                   ,'TFElectronPlusTrack_ElecIPCHI2'   :   -1.
                   ,'TFElectronPlusTrack_ElecPIDe'     :    4.
+                  ,'TFElectronPlusTrack_ElecTrCHI2'   :    5.
                   ,'TFElectronPlusTrack_TrackPT'      : 1500.   # MeV
-                  ,'TFElectronPlusTrack_TrackIP'      :    0.2  # mm
+                  ,'TFElectronPlusTrack_TrackIP'      :    0.5  # mm
                   ,'TFElectronPlusTrack_TrackIPCHI2'  :   -1.
+                  ,'TFElectronPlusTrack_TrackTrCHI2'  :    5.
                   ,'TFElectronPlusTrack_VtxCHI2'      :   25.
                   
+                  ,'TFElectronPlusTrackNoIP_L0Req'        :  "L0_CHANNEL('Electron')"
+                  ,'TFElectronPlusTrackNoIP_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
+                  ,'TFElectronPlusTrackNoIP_ElecPT'       : 1500.   # MeV
+                  ,'TFElectronPlusTrackNoIP_ElecPIDe'     :    4.
+                  ,'TFElectronPlusTrackNoIP_ElecTrCHI2'   :    5.
+                  ,'TFElectronPlusTrackNoIP_TrackPT'      : 1500.   # MeV
+                  ,'TFElectronPlusTrackNoIP_TrackTrCHI2'  :    5.
+                  ,'TFElectronPlusTrackNoIP_VtxCHI2'      :   25.
+                  
+                  
                   ,'HltANNSvcID'  : {
-                                      'SingleElectron'         :  51300
-                                     ,'ElectronPlusTrack'      :  51310
-                                     ,'SingleTFElectron'       :  51350
-                                     ,'SingleTFHighPtElectron' :  51351
-                                     ,'SingleTFVHighPtElectron':  51352
-                                     ,'TFElectronPlusTrack'    :  51360
-                                     
+                                      'SingleElectron'          :  51300
+                                     ,'ElectronPlusTrack'       :  51310
+                                     ,'SingleTFElectron'        :  51350                                     
+                                     ,'SingleTFHighPtElectron'  :  51351
+                                     ,'SingleTFVHighPtElectron' :  51352
+                                     ,'SingleTFLowPtElectron'   :  51353
+                                     ,'TFElectronPlusTrack'     :  51360
+                                     ,'TFElectronPlusTrackNoIP' :  51362                                      
                                       }
                   }
     
@@ -94,7 +120,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         self.__makeHlt2ElectronPlusTrackLines()
         self.__makeHlt2SingleTFElectronLines()
         self.__makeHlt2TFElectronPlusTrackLines()       
-
+        self.__makeHlt2TFElectronPlusTrackNoIPLines()
         
     def __makeHlt2SingleElectronForDYLines(self):
         # Hlt2 Inclusive single Electron and Electron+track selections 
@@ -383,6 +409,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                               self.getProp('HltANNSvcID')['SingleTFHighPtElectron'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFVHighPtElectronDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFVHighPtElectron'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFLowPtElectronDecision" :
+                                              self.getProp('HltANNSvcID')['SingleTFLowPtElectron'] } )
 
         """
         #------------------------
@@ -404,7 +432,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                              , Code ="(PT > %(SingleTFElectron_PT)s *MeV)" \
                                              " & (PIDe > %(SingleTFElectron_PIDe)s )" \
                                              " & (MIPDV(PRIMARY) > %(SingleTFElectron_IP)s *mm)" \
-                                             " & (MIPCHI2DV(PRIMARY) > %(SingleTFElectron_IPCHI2)s )" %self.getProps() 
+                                             " & (MIPCHI2DV(PRIMARY) > %(SingleTFElectron_IPCHI2)s )"\
+                                             " & (TRCHI2DOF < %(SingleTFElectron_TrCHI2)s )"  %self.getProps() 
                                              , Inputs = [ BiKalmanFittedElectrons ]
                                              )
 
@@ -417,6 +446,28 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     , FilterSingleTFElectron ]
                                         , postscale = self.postscale
                                         )
+
+
+        #
+        # Low PT Electron lines 
+        #
+        FilterSingleTFLowPtElectron = Hlt2Member( FilterDesktop # type
+                                                  , "FilterSingleTFLowPtElectron" 
+                                                  , Code ="(PT > %(SingleTFLowPtElectron_PT)s *MeV)" \
+                                                  " & (PIDe > %(SingleTFLowPtElectron_PIDe)s )" \
+                                                  " & (TRCHI2DOF < %(SingleTFLowPtElectron_TrCHI2)s )"  %self.getProps()
+                                             , Inputs = [ BiKalmanFittedElectrons ]
+                                             )
+
+        SingleTFLowPtElectronLine = Hlt2Line("SingleTFLowPtElectron"
+                                             , prescale = self.prescale
+                                             , L0DU = L0Req
+                                             , HLT = Hlt1Req
+                                             , algos = [ BiKalmanFittedElectrons
+                                                         , FilterSingleTFLowPtElectron ]
+                                             , postscale = self.postscale
+                                             )
+        
 
         #
         # D.R.Ward  Add high PT versions, replacing PIDe cut with direct Calo cuts
@@ -492,10 +543,10 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         if not Hlt1Req:
             Hlt1Req= None 
         
-
-        ElectronCut = "(PT > %(TFElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(TFElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_ElecIPCHI2)s )" %self.getProps()
+            
+        ElectronCut = "(PT > %(TFElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(TFElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_ElecIPCHI2)s ) & (TRCHI2DOF < %(TFElectronPlusTrack_ElecTrCHI2)s)" %self.getProps()
         
-        TrackCut = "(PT > %(TFElectronPlusTrack_TrackPT)s *MeV) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_TrackIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_TrackIPCHI2)s )" %self.getProps()
+        TrackCut = "(PT > %(TFElectronPlusTrack_TrackPT)s *MeV) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_TrackIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_TrackIPCHI2)s ) & (TRCHI2DOF < %(TFElectronPlusTrack_TrackTrCHI2)s)" %self.getProps()
         
         CombCut = "AALL"
         
@@ -522,4 +573,68 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                        , CombineTFElectronTrack ]
                                            , postscale = self.postscale
                                            )        
+        
+
+
+    def __makeHlt2TFElectronPlusTrackNoIPLines(self):
+
+        #
+        # Electron + Track line with PT, IP, PIDe cuts using fitted track
+        #
+        # Author: Jibo.He@cern.ch
+        # 12 May 2010
+        #
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import CombineParticles
+
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons
+        from HltTracking.HltPVs import PV3D
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFElectronPlusTrackNoIPDecision" :
+                                              self.getProp('HltANNSvcID')['TFElectronPlusTrackNoIP'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("TFElectronPlusTrackNoIP_L0Req")
+        Hlt1Req = self.getProp("TFElectronPlusTrackNoIP_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None 
+            
+            
+        ElectronCut = "(PT > %(TFElectronPlusTrackNoIP_ElecPT)s *MeV) & (PIDe > %(TFElectronPlusTrackNoIP_ElecPIDe)s) & (TRCHI2DOF < %(TFElectronPlusTrackNoIP_ElecTrCHI2)s)" %self.getProps()
+        
+        TrackCut = "(PT > %(TFElectronPlusTrackNoIP_TrackPT)s *MeV) & (TRCHI2DOF < %(TFElectronPlusTrackNoIP_TrackTrCHI2)s)" %self.getProps()
+        
+        CombCut = "AALL"
+        
+        MomCut = "(VFASPF(VCHI2PDOF)< %(TFElectronPlusTrackNoIP_VtxCHI2)s )" %self.getProps()
+        
+        CombineTFElectronTrack = Hlt2Member( CombineParticles # type
+                                             , "CombineTFElectronTrack"
+                                             , DecayDescriptors = [ "[ J/psi(1S) -> e+ K- ]cc",
+                                                                    "[ J/psi(1S) -> e+ K+ ]cc" ]
+                                             , DaughtersCuts = { "e+" : ElectronCut  
+                                                                 ,"K-": TrackCut  }
+                                             , CombinationCut = CombCut
+                                             , MotherCut = MomCut
+                                             , Inputs = [ BiKalmanFittedElectrons, BiKalmanFittedKaons ]
+                                             )
+        
+        TFElectronPlusTrackNoIPLine = Hlt2Line("TFElectronPlusTrackNoIP"
+                                               , prescale = self.prescale
+                                               , L0DU = L0Req
+                                               , HLT  = Hlt1Req 
+                                               , algos = [ BiKalmanFittedElectrons
+                                                           , BiKalmanFittedKaons
+                                                           , CombineTFElectronTrack ]
+                                               , postscale = self.postscale
+                                               )        
         

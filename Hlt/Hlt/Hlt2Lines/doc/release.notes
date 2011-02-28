@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Jibo He
+ - Hlt2InclusiveDiProtonLines.py
+  + Added a new line running on Hlt Tis
+ - Hlt2InclusiveElectronLines.py
+  + Added SingleElectron Low Pt, and ElectronPlusTrackNoIP lines
+
 ! 2011-II-28 - Gerhard Raven
  - make Hlt2MuNTrackLines.py, Hlt2B2DXLines.py and Hlt2B2XGammaLines.py
    compliant with PHYS_v12r1
