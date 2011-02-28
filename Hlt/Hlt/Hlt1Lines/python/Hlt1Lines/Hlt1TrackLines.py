@@ -89,13 +89,23 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
         >>  %(forward)s 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
         >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
         ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
         >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
         >> SINK( 'Hlt1%(name)sDecision' )
         >> ~TC_EMPTY
         """ % props
@@ -119,17 +129,31 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         %(gec)s * VeloCandidates
         >>  RecoPV3D
         >>  MatchVeloMuon
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass MatchVeloMuon', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nMatchVeloMuon' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
         >>  LooseForward
-        >>  (TrTNORMIDC > %(TrNTHits)s )
-        >>  ( ( TrPT > %(PT)s * MeV ) & \
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+        >>  ((TrTNORMIDC > %(TrNTHits)s ) & \
+        ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
         >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
         >>  IsMuon
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
         >>  SINK( 'Hlt1%(name)sDecision' )
         >>  ~TC_EMPTY
         """ % props
