@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r48p1 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
 
