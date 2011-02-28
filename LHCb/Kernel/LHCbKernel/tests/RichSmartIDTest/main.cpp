@@ -16,10 +16,12 @@ int main ( int /*argc*/, char** /*argv*/ )
 
   bool OK = true;
 
-  for ( unsigned int rich=0; rich<2; ++rich )
+  for ( unsigned int irich=0; irich<2; ++irich )
   {
-    for ( unsigned int panel=0; panel<2; ++panel )
+    const Rich::DetectorType rich = (Rich::DetectorType)irich;
+    for ( unsigned int ipanel=0; ipanel<2; ++ipanel )
     {
+      const Rich::Side panel = (Rich::Side)ipanel;
       for ( unsigned int pdrow=0; pdrow<LHCb::RichSmartID::HPD::MaxPDNumInCol; ++pdrow )
       {
         for ( unsigned int pdcol=0; pdcol<LHCb::RichSmartID::HPD::MaxPDCol; ++pdcol )
@@ -28,23 +30,28 @@ int main ( int /*argc*/, char** /*argv*/ )
           {
             for ( unsigned int pixcol=0; pixcol<LHCb::RichSmartID::HPD::MaxPixelCol; ++pixcol )
             {
-
-              // Make a test smart ID
-              LHCb::RichSmartID id((Rich::DetectorType)rich,(Rich::Side)panel,
-                                   pdrow,pdcol,pixrow,pixcol,LHCb::RichSmartID::HPDID);
-
-              // Check values
-              if ( (Rich::DetectorType)rich != id.rich()       ||
-                   (Rich::Side)panel        != id.panel()      ||
-                   pdrow                    != id.pdNumInCol() ||
-                   pdcol                    != id.pdCol()      ||
-                   pixrow                   != id.pixelRow()   ||
-                   pixcol                   != id.pixelCol()    )
+              for ( unsigned int subpix=0; subpix<LHCb::RichSmartID::HPD::MaxPixelSubRow; ++subpix )
               {
-                cout << "Problem with RichSmartID " << id << endl;
-                OK = false;
-              }
 
+                // Make a test smart ID
+                LHCb::RichSmartID id( rich,panel,
+                                      pdrow,pdcol,
+                                      pixrow,pixcol,subpix,
+                                      LHCb::RichSmartID::HPDID );
+
+                // Check values
+                if ( rich   != id.rich()       ||
+                     panel  != id.panel()      ||
+                     pdrow  != id.pdNumInCol() ||
+                     pdcol  != id.pdCol()      ||
+                     pixrow != id.pixelRow()   ||
+                     pixcol != id.pixelCol()    )
+                {
+                  cout << "Problem with RichSmartID " << id << endl;
+                  OK = false;
+                }
+
+              }
             }
           }
         }
@@ -52,10 +59,12 @@ int main ( int /*argc*/, char** /*argv*/ )
     }
   }
 
-  for ( unsigned int rich=0; rich<2; ++rich )
+  for ( unsigned int irich=0; irich<2; ++irich )
   {
-    for ( unsigned int panel=0; panel<2; ++panel )
+    const Rich::DetectorType rich = (Rich::DetectorType)irich;
+    for ( unsigned int ipanel=0; ipanel<2; ++ipanel )
     {
+      const Rich::Side panel = (Rich::Side)ipanel;
       for ( unsigned int pdrow=0; pdrow<LHCb::RichSmartID::MaPMT::MaxPDNumInCol; ++pdrow )
       {
         for ( unsigned int pdcol=0; pdcol<LHCb::RichSmartID::MaPMT::MaxPDCol; ++pdcol )
@@ -66,16 +75,18 @@ int main ( int /*argc*/, char** /*argv*/ )
             {
 
               // Make a test smart ID
-              LHCb::RichSmartID id((Rich::DetectorType)rich,(Rich::Side)panel,
-                                   pdrow,pdcol,pixrow,pixcol,LHCb::RichSmartID::MaPMTID);
+              LHCb::RichSmartID id( rich,panel,
+                                    pdrow,pdcol,
+                                    pixrow,pixcol,
+                                    LHCb::RichSmartID::MaPMTID );
 
               // Check values
-              if ( (Rich::DetectorType)rich != id.rich()       ||
-                   (Rich::Side)panel        != id.panel()      ||
-                   pdrow                    != id.pdNumInCol() ||
-                   pdcol                    != id.pdCol()      ||
-                   pixrow                   != id.pixelRow()   ||
-                   pixcol                   != id.pixelCol()    )
+              if ( rich   != id.rich()       ||
+                   panel  != id.panel()      ||
+                   pdrow  != id.pdNumInCol() ||
+                   pdcol  != id.pdCol()      ||
+                   pixrow != id.pixelRow()   ||
+                   pixcol != id.pixelCol()    )
               {
                 cout << "Problem with RichSmartID " << id << endl;
                 OK = false;
