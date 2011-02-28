@@ -5,7 +5,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-!========================= CaloReco v5r8 2011-02-28 =========================
+!========================= CaloReco v5r8p1 2011-02-28 =========================
 ! 2011-02-23 - Olivier Deschamps
  - CaloCorrectionBase : add missing protection
 
@@ -25,6 +25,7 @@
 	- Add : Et threshold in cluster selection for hypo building
 	- few protections here and therrequirements : add dpencency on CaloUtils
 
+!========================= CaloReco v5r8 2011-01-17 ========================
 
 - 2010-12-20 - Olivier Deschamps
  - reduce verbosity and fix untested StatusCode 
