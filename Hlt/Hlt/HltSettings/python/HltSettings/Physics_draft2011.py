@@ -70,25 +70,31 @@ class Physics_draft2011( object ):
                                             ,   'Photon_IPChi2' : 16
                                             ,   'Photon_TrChi2' : 2.5
                                                 }
-		     , Hlt1MuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
-						,'DiMuonLowMass_VxChi2'     :   25
-						,'DiMuonLowMass_P'          : 6000
-						,'DiMuonLowMass_PT'         :  500
-						,'DiMuonLowMass_TrChi2'     :    4
-						,'DiMuonLowMass_M'          : 1000
-						,'DiMuonHighMass_VxDOCA'    :  0.2
-						,'DiMuonHighMass_VxChi2'    :   25
-						,'DiMuonHighMass_P'         : 6000
-						,'DiMuonHighMass_PT'        :  500
-						,'DiMuonHighMass_TrChi2'    :    4
-						,'DiMuonHighMass_M'         : 2900
-						,'SingleMuonHighPT_P'       : 6000
-						,'SingleMuonHighPT_PT'      : 4800
-						,'SingleMuonHighPT_TrChi2'  :    4
-						,'SingleMuonNoIP_P'         : 6000
-						,'SingleMuonNoIP_PT'        : 1300
-						,'SingleMuonNoIP_TrChi2'    :    4
-                        ,'Prescale'                 : {'Hlt1SingleMuonNoIP':0.1}
+                     , Hlt1MuonLinesConf : { 'SingleMuonHighPT_P'        : 8000
+                                             ,'SingleMuonHighPT_PT'      : 4800
+                                             ,'SingleMuonHighPT_TrChi2'  :    4
+                                             ,'SingleMuonNoIP_P'         : 6000
+                                             ,'SingleMuonNoIP_PT'        : 1300
+                                             ,'SingleMuonNoIP_TrChi2'    :    4
+                                             ,'DiMuonLowMass_VxDOCA'     :  0.2
+                                             ,'DiMuonLowMass_VxChi2'     :   25
+                                             ,'DiMuonLowMass_P'          : 6000
+                                             ,'DiMuonLowMass_PT'         :  600
+                                             ,'DiMuonLowMass_TrChi2'     :    4
+                                             ,'DiMuonLowMass_M'          : 1000
+                                             ,'DiMuonLowMass_IPChi2'     :    4
+                                             ,'DiMuonHighMass_VxDOCA'    :  0.2
+                                             ,'DiMuonHighMass_VxChi2'    :   25
+                                             ,'DiMuonHighMass_P'         : 6000
+                                             ,'DiMuonHighMass_PT'        :  600
+                                             ,'DiMuonHighMass_TrChi2'    :    4
+                                             ,'DiMuonHighMass_M'         : 2900
+                                             ,'MultiMuonNoIP_P'          : 6000
+                                             ,'MultiMuonNoIP_PT'         :  600
+                                             ,'MultiMuonNoIP_TrChi2'     :    4
+                                             ,'MultiMuonNoIP_GT'         :  2.5
+                                             ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
+                                                                             'Hlt1MultiMuonNoIP'  : 0.0 }
                                               }
 		       }
 
@@ -132,8 +138,8 @@ class Physics_draft2011( object ):
                   'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton',
-		          'Hlt1DiMuonLowMass',
-                  'Hlt1DiMuonHighMass',
-		          'Hlt1SingleMuonHighPT',
-		          'Hlt1SingleMuonNoIP' ]
+                  'Hlt1SingleMuonHighPT',
+                  'Hlt1SingleMuonNoIP',
+                  'Hlt1DiMuonLowMass',
+                  'Hlt1DiMuonHighMass' ]
         return lines 

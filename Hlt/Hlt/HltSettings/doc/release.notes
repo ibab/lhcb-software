@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Roel Aaij
+ - Align cuts of Hlt1Muon lines with tracking configuration
+ - Add cuts for Hlt1MultiMuonLine, prescaled to 0.0 and not active
+
 ! 2010-02-28 - Johannes Albrecht
  - update Muons_draft2011: complete revision
 
