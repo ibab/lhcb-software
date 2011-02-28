@@ -132,7 +132,7 @@ _default_configuration_ = {
     ## 
     # Technicalities:
     #
-    'Monitor'              : False    ,          ## Activate the monitoring ?
+    'Monitor'              : None    ,          ## Activate the monitoring ?
     ##
     "HLT"                  : "HLT_PASS_RE('Hlt1MB.*Decision')" ,  ## HLT-cut
     ##
@@ -332,7 +332,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             _K0S.MotherCut       = self._k0s_motherCut()        
             _K0S.Preambulo       = self._Preambulo
             
-            if self._monitor :    
+            if self._monitor != None :    
                 _K0S.Preambulo    += self._k0smonitor
                 _K0S.Monitor       = True
                 _K0S.HistoProduce  = True
@@ -364,7 +364,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             _K0S.MotherCut       = self._k0s_motherCut()      
             _K0S.Preambulo       = self._Preambulo
             
-            if self._monitor :    
+            if self._monitor != None :    
                 _K0S.Preambulo    += self._k0smonitor
                 _K0S.Monitor       = True
                 _K0S.HistoProduce  = True
@@ -396,7 +396,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             _Lam0.MotherCut       = self._lam0_motherCut()        
             _Lam0.Preambulo       = self._Preambulo
             
-            if self._monitor :    
+            if self._monitor != None :    
                 _Lam0.Preambulo    += self._lam0monitor
                 _Lam0.Monitor       = True
                 _Lam0.HistoProduce  = True
@@ -428,7 +428,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             _Lam0.MotherCut       = self._lam0_motherCut()        
             _Lam0.Preambulo       = self._Preambulo
             
-            if self._monitor :    
+            if self._monitor != None:    
                 _Lam0.Preambulo    += self._lam0monitor
                 _Lam0.Monitor       = True
                 _Lam0.HistoProduce  = True

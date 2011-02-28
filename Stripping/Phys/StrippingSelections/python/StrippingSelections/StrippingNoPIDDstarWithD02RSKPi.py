@@ -66,10 +66,10 @@ default_config =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 1.0            ## unitless
+    , 'Prescale'         : 0.45           ## unitless
     , 'Postscale'        : 1.0            ## unitless
     ##
-    , 'Monitor'          : True           ## Activate the monitoring?
+    , 'Monitor'          : None           ## Activate the monitoring?
     }
 
 class NoPIDDstarWithD02RSKPiConf(LineBuilder) :

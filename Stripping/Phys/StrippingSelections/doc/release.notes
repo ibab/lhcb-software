@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Andrew Powell
+ - Updates to PID Calibration lines:
+	 . Remove dependance on HLT1 in StrippingInclPhi.py
+	 . Changes to default config in StrippingV0ForPID.py
+	 . Changes to default config in StrippingNoPIDDstarWithD02RSKPi.py
+
 ! 2011-02-28 - Greig Cowan
  - Updated beta_s JpsiX lines to the new framework.
  - Added testing scripts for all beta_s lines.

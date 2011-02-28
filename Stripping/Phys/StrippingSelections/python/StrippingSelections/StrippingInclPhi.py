@@ -35,8 +35,8 @@ see: http://indico.cern.ch/conferenceDisplay.py?confId=82203
 '''
 
 __author__  = ['Andrew Powell','Sebastian Schleich']
-__date__    = '2011/02/23'
-__version__ = '$Revision: 1.7 $'
+__date__    = '2011/02/28'
+__version__ = '$Revision: 1.8 $'
 __all__     = ('InclPhiConf')
 
 from Gaudi.Configuration import *
@@ -68,8 +68,8 @@ class InclPhiConf(LineBuilder):
                 , 'KaonDLL'             : 15       # adimensional
                 , 'PhiMassWindow'       : 30       # MeV
                 , 'HighPtPrescale'      : 0.0015    # adimensional
-                , 'LowPtPrescale'       : 0.0005    # adimensional
-                , 'LDPrescale'          : 0.00001   # adimensional
+                , 'LowPtPrescale'       : 0.0020    # adimensional
+                , 'LDPrescale'          : 0.0001   # adimensional
                 }
 
 
@@ -143,7 +143,7 @@ class InclPhiConf(LineBuilder):
         Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [StdNoPIDsKaons] )
 
         return StrippingLine( name
-              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
+#              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
               , prescale = ps
               , checkPV = False
               , postscale = 1
@@ -181,7 +181,7 @@ class InclPhiConf(LineBuilder):
         Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [StdNoPIDsKaons] )
 
 	return StrippingLine(name
-              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
+#              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
               , prescale = ps
               , checkPV = False
               , postscale = 1
@@ -224,7 +224,7 @@ class InclPhiConf(LineBuilder):
         Phi2KK = Selection( name+"Phi2KK", Algorithm = _Phi2KK, RequiredSelections = [_DownNoPIDsKaons] )
 
         return StrippingLine(name
-              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
+#              , HLT = "HLT_PASS_RE('Hlt1MB.*Decision')"
               , prescale = ps
               , postscale = 1
               , checkPV = False
