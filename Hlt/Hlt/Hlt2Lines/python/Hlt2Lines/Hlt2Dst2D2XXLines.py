@@ -167,7 +167,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_mm  = Hlt2Line('Dst2PiD02MuMu'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedMuons, D2PiPiComb  ]
+                               , algos = [ PV3D(), BiKalmanFittedMuons, D2MuMuComb  ]
                                )
 
         ################################################################################
