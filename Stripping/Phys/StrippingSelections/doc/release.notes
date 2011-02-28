@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Thomas Blake
+ - Added:
+	. test_Bd2KstarMuMu.py
+	. test_Bs2MuMuPhi.py
+  . test_B2XMuMu.py
+	. test_B2XMuMuSS.py
+
 ! 2011-02-28 - Andrew Powell
  - Updates to PID Calibration lines:
 	 . Remove dependance on HLT1 in StrippingInclPhi.py
