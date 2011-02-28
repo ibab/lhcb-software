@@ -47,7 +47,8 @@ class HltConf(LHCbConfigurableUser):
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
                 , "ExpressStreamRateLimit"         : 5         # Hz
-                }
+                , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
+                  }
 
     __settings__ = None 
     #import logging
@@ -200,6 +201,9 @@ class HltConf(LHCbConfigurableUser):
                       , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'SPD','CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
                       , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
                       , 12 : "L0_CHANNEL('CALO')" # note: need to take into account prescale in L0...
+                      , 13 : "L0_CHANNEL('Hadron')" 
+                      , 14 : "L0_CHANNEL_RE('Electron|Photon')"
+                      , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
@@ -245,6 +249,9 @@ class HltConf(LHCbConfigurableUser):
                       , 78 : "HLT_PASS_RE('Hlt2.*(SingleMuon|DiMuon|MuTrack).*Decision')"
                       , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
+                      , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"   
+                      , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"   
+                      , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"   
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
@@ -593,11 +600,12 @@ class HltConf(LHCbConfigurableUser):
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
             EndMembers += [ c() for c in i ]
         if (self.getProp("EnableLumiEventWriting")) :
+            print "JAJA", self.getProp('NanoBanks')
             EndMembers += [ HltLumiWriter()
                           , Sequence( 'LumiStripper' , Members = 
                                       [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                      , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
+                                      , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                       ])
                           ] 
         if self.getProp( 'RequireL0ForEndSequence') :
