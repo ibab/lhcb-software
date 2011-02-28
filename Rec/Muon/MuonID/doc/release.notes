@@ -2,19 +2,16 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-!========================= MuonID v8r0p3 2011-02-25 =========================
+!========================= MuonID v8r0 2011-02-28 =========================
 ! 2011-02-25 - Helder Lopes
  - Fixed bug in hyperbolic tangent scale factors
 
-!========================= MuonID v8r0p2 2011-02-21 =========================
 ! 2011-02-21 - Helder Lopes
  - Made running new tuning (DLL_Flag = 4) from options file (OverrideDB = True) the default
 
-!========================= MuonID v8r0p1 2011-02-17 =========================
 ! 2011-02-18 - Helder Lopes
  - Added 2010 and 2011 python files for chi2s, chi2b, gamoms, gaprobs, dists, distb algs
 
-!========================= MuonID v8r0 2011-02-17 =========================
 ! 2011-02-17 - Helder Lopes
  - Implement muon probability tuned on 2010 data and using cumulative histograms 
    of the hyperbolic tangent of the distances. NonMuon prob still from Landau fits.
