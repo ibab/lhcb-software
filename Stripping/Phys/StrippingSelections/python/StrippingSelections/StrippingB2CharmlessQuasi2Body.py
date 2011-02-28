@@ -48,22 +48,22 @@ class B2Quasi2Body4piConf(LineBuilder) :
                                'Q2BBPVVDZ' )
 
     def __init__(self, name, config) :
-
+	self.name = name
         LineBuilder.__init__(self, name, config)
 
         _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 25) & (PT > 250*MeV)")
-        self.TrackList = Selection( 'TrackList',
+        self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])
 
-        self.DiTrackList = makeDiTrackList( name="DiTracksForCharmlessB",
+        self.DiTrackList = makeDiTrackList( name="DiTracksForCharmlessB" + self.name,
                                             trkList=self.TrackList,
                                             MinPTCut = config['Q2BResMinPT'],
                                             MinPCut = config['Q2BResMinP'],
                                             MaxMassCut = config['Q2BResMaxMass'],
                                             VtxChi2DOFCut = config['Q2BResVtxChiDOF'] )
 
-        B2Q2BName = name+"Selection"
+        B2Q2BName = self.name + "Selection"
         self.B2CharmlessQ2B4pi = makeB2Q2B4pi( B2Q2BName,
                                                diTrkList=self.DiTrackList,
                                                MinMassCut = config['Q2BBMinM'],

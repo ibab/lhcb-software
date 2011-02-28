@@ -130,26 +130,26 @@ class B2Psi2SXConf(LineBuilder) :
                               )
 
     def __init__(self, name, config) :
-
+	self.name = name	
         LineBuilder.__init__(self, name, config)
 
 
-        incl = 'Psi2SToJpsiPiPi'
-        incl_detatched_name = incl+'Detatched'
-        sig = 'Bs2Psi2SPhiJpsiPiPi'
-        K = 'Bu2Psi2SKJpsiPiPi'
-        Kstar = 'Bd2Psi2SKstarJpsiPiPi'
-        Ks = 'Bd2Psi2SKsJpsiPiPi'
+        incl = 'InclPsi2SToJpsiPiPi' + self.name
+        incl_detatched_name = incl + 'Detatched'
+        sig = 'Bs2Psi2SPhiJpsiPiPi' + self.name
+        K = 'Bu2Psi2SKJpsiPiPi' + self.name
+        Kstar = 'Bd2Psi2SKstarJpsiPiPi' + self.name
+        Ks = 'Bd2Psi2SKsJpsiPiPi' + self.name
      
 
-        self.selPions = makePions( 'Pions',
+        self.selPions = makePions( 'Pions' + self.name,
                                    PionsTRCHI2DOF = config['PionsTRCHI2DOF']
                                    )
         
-        self.selJpsi = makeJpsi('Jpsi')
+        self.selJpsi = makeJpsi('Jpsi' + self.name)
                                  
         
-        self.selPsi2S2JpsiPiPi = makePsi2S('Psi2SJpsiPiPi',
+        self.selPsi2S2JpsiPiPi = makePsi2S('Psi2SJpsiPiPi' + self.name,
                                            Pions = self.selPions,
                                            Jpsi = self.selJpsi,
                                            Psi2SJpsiMIPCHI2DV = config['Psi2SJpsiMIPCHI2DV'],
@@ -161,13 +161,13 @@ class B2Psi2SXConf(LineBuilder) :
                                            Psi2SVFASPF = config['Psi2SVFASPF']
                                            )
         
-        self.selChargedK = makeChK('ChK',
+        self.selChargedK = makeChK('ChKForPsi2SJpsiPiPi' + self.name,
                                    ChKTRCHI2DOF = config['ChKTRCHI2DOF'],
                                    ChKPID = config['ChKPID']
                                    ) 
         
         
-        self.selPhi2KK = makePhi2KK( 'Phi',
+        self.selPhi2KK = makePhi2KK( 'PhiForPsi2SJpsiPiPi' + self.name,
                                      PhiWin = config['PhiWin'],
                                      PhiPT = config['PhiPT'],
                                      PhiVFASPF = config['PhiVFASPF'],
@@ -176,7 +176,7 @@ class B2Psi2SXConf(LineBuilder) :
                                      )
         
         
-        self.selKstar = makeKstar('Kstar',
+        self.selKstar = makeKstar('KstarForPsi2SJpsiPiPi' + self.name,
                                   ChKforKst = self.selChargedK,
                                   KstPipTRCHI2DOF = config['KstPipTRCHI2DOF'],
                                   KstAPT = config['KstAPT'],
@@ -184,9 +184,9 @@ class B2Psi2SXConf(LineBuilder) :
                                   KstVFASPF = config['KstVFASPF']
                                   ) 
 
-        self.selKsLoose = makeKsLoose('KsLoose') 
+        self.selKsLoose = makeKsLoose('KsLooseForPsi2SJpsiPiPi' + self.name) 
         
-        self.selKs = makeKs('Ks',
+        self.selKs = makeKs('KsForPsi2SJpsiPiPi' + self.name,
                             KsLooseSel = self.selKsLoose,
                             KsVFASPF = config['KsVFASPF'],
                             KsBPVDLS = config['KsBPVDLS']
@@ -200,7 +200,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                            Psi2SSel = self.selPsi2S2JpsiPiPi 
                                                            )                                                         
         
-        self.InclPsi2SToJpsiPiPi_line = StrippingLine(incl+"Line",
+        self.InclPsi2SToJpsiPiPi_line = StrippingLine(incl + "Line",
                                                       prescale = config['incl_LinePrescale'],
                                                       postscale = config['incl_LinePostscale'],
                                                       selection = self.InclPsi2SToJpsiPiPi
@@ -219,7 +219,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                               BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                               )
         
-        self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig+"Line",
+        self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig + "Line",
                                                       prescale = config['sig_LinePrescale'],
                                                       postscale = config['sig_LinePostscale'],
                                                       selection = self.selBs2Psi2SPhiJpsiPiPi
@@ -239,7 +239,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                           BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                           )
         
-        self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K+"Line",
+        self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K + "Line",
                                                     prescale = config['K_LinePrescale'],
                                                     postscale = config['K_LinePostscale'],
                                                     selection = self.selBu2Psi2SKJpsiPiPi
@@ -261,7 +261,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                                   BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                                   )
         
-        self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar+"Line",
+        self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar + "Line",
                                                         prescale = config['Kstar_LinePrescale'],
                                                         postscale = config['Kstar_LinePostscale'],
                                                         selection = self.selBd2Psi2SKstarJpsiPiPi
@@ -282,7 +282,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                             BKsVCHI2PDOF = config['BKsVCHI2PDOF']
                                                             )
         
-        self.Bd2Psi2SKsJpsiPiPi_line = StrippingLine(Ks+"Line",
+        self.Bd2Psi2SKsJpsiPiPi_line = StrippingLine(Ks + "Line",
                                                      prescale = config['Ks_LinePrescale'],
                                                      postscale = config['Ks_LinePostscale'],
                                                      selection = self.selBd2Psi2SKsJpsiPiPi
@@ -295,9 +295,6 @@ class B2Psi2SXConf(LineBuilder) :
         self.registerLine(self.Bd2Psi2SKstarJpsiPiPi_line)
         self.registerLine(self.Bd2Psi2SKsJpsiPiPi_line)
         
-        
-        
-
 def makePions(name,
               PionsTRCHI2DOF #<5
               ):

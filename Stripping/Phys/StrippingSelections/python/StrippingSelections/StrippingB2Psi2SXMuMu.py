@@ -161,48 +161,48 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               )
 
     def __init__(self, name, config) :
-
+	self.name = name
         LineBuilder.__init__(self, name, config)
 
 
-        incl = 'Psi2SToMuMu'
-        incl_detatched_name = incl+'Detatched'
+        incl = 'InclPsi2SToMuMu' + self.name
+        incl_detatched_name = incl + 'Detatched'
 
-        sig = 'Bs2Psi2SPhiMuMu'
-        sig_unbiased_name = sig+'Unbiased'
-        sig_prescaled_name = sig+'Prescaled'
-        sig_detatched_name = sig+'Detatched'
+        sig = 'Bs2Psi2SPhiMuMu' + self.name
+        sig_unbiased_name = sig + 'Unbiased'
+        sig_prescaled_name = sig + 'Prescaled'
+        sig_detatched_name = sig + 'Detatched'
 
-        K = 'Bu2Psi2SKMuMu'
-        K_unbiased_name = K+'Unbiased'
-        K_prescaled_name = K+'Prescaled'
-        K_detatched_name = K+'Detatched'
+        K = 'Bu2Psi2SKMuMu' + self.name
+        K_unbiased_name = K + 'Unbiased'
+        K_prescaled_name = K + 'Prescaled'
+        K_detatched_name = K + 'Detatched'
 
-        Kstar = 'Bd2Psi2SKstarMuMu'
-        Kstar_unbiased_name = Kstar+'Unbiased'
-        Kstar_prescaled_name = Kstar+'Prescaled'
-        Kstar_detatched_name = Kstar+'Detatched'
+        Kstar = 'Bd2Psi2SKstarMuMu' + self.name
+        Kstar_unbiased_name = Kstar + 'Unbiased'
+        Kstar_prescaled_name = Kstar + 'Prescaled'
+        Kstar_detatched_name = Kstar + 'Detatched'
 
-        Ks = 'Bd2Psi2SKsMuMu'
-        Ks_unbiased_name = Ks+'Unbiased'
-        Ks_prescaled_name = Ks+'Prescaled'
-        Ks_detatched_name = Ks+'Detatched'
+        Ks = 'Bd2Psi2SKsMuMu' + self.name
+        Ks_unbiased_name = Ks + 'Unbiased'
+        Ks_prescaled_name = Ks + 'Prescaled'
+        Ks_detatched_name = Ks + 'Detatched'
 
 
-        self.selPsi2S2MuMu = makePsi2S2MuMu( 'Psi2S',
+        self.selPsi2S2MuMu = makePsi2S2MuMu( 'Psi2SToMuMu' + self.name,
                                              muPID = config['muPID'],
                                              Psi2SMassWin = config['Psi2SMassWin'],
                                              Psi2SADOCACHI2CUT = config['Psi2SADOCACHI2CUT'],
                                              Psi2SVFASPF = config['Psi2SVFASPF']
                                              )
 
-        self.selChargedK = makeChK('ChK',
+        self.selChargedK = makeChK('ChKForPsi2SToMuMu' + self.name,
                                    ChKTRCHI2DOF = config['ChKTRCHI2DOF'],
                                    ChKPID = config['ChKPID']
                                    ) 
         
         
-        self.selPhi2KK = makePhi2KK( 'Phi',
+        self.selPhi2KK = makePhi2KK( 'PhiForPsi2SToMuMu' + self.name,
                                      PhiWin = config['PhiWin'],
                                      PhiPT = config['PhiPT'],
                                      PhiVFASPF = config['PhiVFASPF'],
@@ -211,7 +211,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                      )
 
 
-        self.selKstar = makeKstar('Kstar',
+        self.selKstar = makeKstar('KstarForPsi2SToMuMu' + self.name,
                                   ChKforKst = self.selChargedK,
                                   KstPipTRCHI2DOF = config['KstPipTRCHI2DOF'],
                                   KstAPT = config['KstAPT'],
@@ -219,18 +219,13 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                   KstVFASPF = config['KstVFASPF']
                                   ) 
 
-        self.selKsLoose = makeKsLoose('KsLoose') 
+        self.selKsLoose = makeKsLoose('KsLooseForPsi2SToMuMu' + self.name) 
         
-        self.selKs = makeKs('Ks',
+        self.selKs = makeKs('KsForPsi2SToMuMu' + self.name,
                             KsLooseSel = self.selKsLoose,
                             KsVFASPF = config['KsVFASPF'],
                             KsBPVDLS = config['KsBPVDLS']
-                            ) 
-
-
-
-
-
+                            )
 
 ####################
 ### Inlusive psi(2S). We keep it for as long as we can.
@@ -240,7 +235,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                    Psi2SSel = self.selPsi2S2MuMu 
                                                    )                                                         
         
-        self.InclPsi2SToMuMu_line = StrippingLine(incl+"Line",
+        self.InclPsi2SToMuMu_line = StrippingLine(incl + "Line",
                                                   prescale = config['incl_LinePrescale'],
                                                   postscale = config['incl_LinePostscale'],
                                                   selection = self.InclPsi2SToMuMu
@@ -251,7 +246,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                             BPVLTIME = config['BPVLTIME_detatched']
                                                             )                                                         
         
-        self.InclPsi2SToMuMu_detatched_line = StrippingLine(incl_detatched_name+"Line",
+        self.InclPsi2SToMuMu_detatched_line = StrippingLine(incl_detatched_name + "Line",
                                                             prescale = config['incl_DetatchedLinePrescale'],
                                                             postscale = config['incl_DetatchedLinePostscale'],
                                                             selection = self.InclPsi2SToMuMuDetatched
@@ -271,7 +266,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                            BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                            )
         
-        self.Bs2Psi2SPhi_prescaled_line = StrippingLine(sig_prescaled_name+"Line",
+        self.Bs2Psi2SPhi_prescaled_line = StrippingLine(sig_prescaled_name + "Line",
                                                         prescale = config['sig_PrescaledLinePrescale'],
                                                         postscale = config['sig_PrescaledLinePostscale'],
                                                         selection = self.selBs2Psi2SPhiPrescaled
@@ -288,7 +283,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                            BPVLTIME = config['BPVLTIME_detatched']
                                                            )
         
-        self.Bs2Psi2SPhi_detatched_line = StrippingLine(sig_detatched_name+"Line",
+        self.Bs2Psi2SPhi_detatched_line = StrippingLine(sig_detatched_name + "Line",
                                                         prescale = config['sig_DetatchedLinePrescale'],
                                                         postscale = config['sig_DetatchedLinePostscale'],
                                                         selection = self.selBs2Psi2SPhiDetatched
@@ -306,7 +301,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                           MINTREEPT = config['MINTREEPT']
                                                           )
         
-        self.Bs2Psi2SPhi_unbiased_line = StrippingLine(sig_unbiased_name+"Line",
+        self.Bs2Psi2SPhi_unbiased_line = StrippingLine(sig_unbiased_name + "Line",
                                                        prescale = config['sig_UnbiasedLinePrescale'],
                                                        postscale = config['sig_UnbiasedLinePostscale'],
                                                        selection = self.selBs2Psi2SPhiUnbiased
@@ -326,7 +321,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                        BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                        )
         
-        self.Bu2Psi2SK_prescaled_line = StrippingLine(K_prescaled_name+"Line",
+        self.Bu2Psi2SK_prescaled_line = StrippingLine(K_prescaled_name + "Line",
                                                       prescale = config['K_PrescaledLinePrescale'],
                                                       postscale = config['K_PrescaledLinePostscale'],
                                                       selection = self.selBu2Psi2SKPrescaled
@@ -344,7 +339,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                        BPVLTIME = config['BPVLTIME_detatched']
                                                        )
         
-        self.Bu2Psi2SK_detatched_line = StrippingLine(K_detatched_name+"Line",
+        self.Bu2Psi2SK_detatched_line = StrippingLine(K_detatched_name + "Line",
                                                       prescale = config['K_DetatchedLinePrescale'],
                                                       postscale = config['K_DetatchedLinePostscale'],
                                                       selection = self.selBu2Psi2SKDetatched
@@ -363,14 +358,11 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                       MINTREEPT = config['MINTREEPT']
                                                       )
         
-        self.Bu2Psi2SK_unbiased_line = StrippingLine(K_unbiased_name+"Line",
+        self.Bu2Psi2SK_unbiased_line = StrippingLine(K_unbiased_name + "Line",
                                                      prescale = config['K_UnbiasedLinePrescale'],
                                                      postscale = config['K_UnbiasedLinePostscale'],
                                                      selection = self.selBu2Psi2SKUnbiased
                                                      )
-
-
-
 
 #####################
 ### B0->Psi(2S)K*  ##
@@ -386,7 +378,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                                BsVCHI2PDOF = config['BsVCHI2PDOF']
                                                                )
         
-        self.Bd2Psi2SKstar_prescaled_line = StrippingLine(Kstar_prescaled_name+"Line",
+        self.Bd2Psi2SKstar_prescaled_line = StrippingLine(Kstar_prescaled_name + "Line",
                                                           prescale = config['Kstar_PrescaledLinePrescale'],
                                                           postscale = config['Kstar_PrescaledLinePostscale'],
                                                           selection = self.selBd2Psi2SKstarPrescaled
@@ -403,7 +395,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                                BPVLTIME = config['BPVLTIME_detatched']
                                                                )
         
-        self.Bd2Psi2SKstar_detatched_line = StrippingLine(Kstar_detatched_name+"Line",
+        self.Bd2Psi2SKstar_detatched_line = StrippingLine(Kstar_detatched_name + "Line",
                                                           prescale = config['Kstar_DetatchedLinePrescale'],
                                                           postscale = config['Kstar_DetatchedLinePostscale'],
                                                           selection = self.selBd2Psi2SKstarDetatched
@@ -422,14 +414,12 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                               KstarPT = config['KstarPT']
                                                               )
         
-        self.Bd2Psi2SKstar_unbiased_line = StrippingLine(Kstar_unbiased_name+"Line",
+        self.Bd2Psi2SKstar_unbiased_line = StrippingLine(Kstar_unbiased_name + "Line",
                                                          prescale = config['Kstar_UnbiasedLinePrescale'],
                                                          postscale = config['Kstar_UnbiasedLinePostscale'],
                                                          selection = self.selBd2Psi2SKstarUnbiased
                                                          )
         
-
-
 #####################
 ### Bd->Psi(2S)KS ###
 #####################
@@ -444,7 +434,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                          BKsVCHI2PDOF = config['BKsVCHI2PDOF']
                                                          )
         
-        self.Bd2Psi2SKs_prescaled_line = StrippingLine(Ks_prescaled_name+"Line",
+        self.Bd2Psi2SKs_prescaled_line = StrippingLine(Ks_prescaled_name + "Line",
                                                        prescale = config['Ks_PrescaledLinePrescale'],
                                                        postscale = config['Ks_PrescaledLinePostscale'],
                                                        selection = self.selBd2Psi2SKsPrescaled
@@ -461,7 +451,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                          BPVLTIME = config['BPVLTIME_detatched']
                                                          )
         
-        self.Bd2Psi2SKs_detatched_line = StrippingLine(Ks_detatched_name+"Line",
+        self.Bd2Psi2SKs_detatched_line = StrippingLine(Ks_detatched_name + "Line",
                                                        prescale = config['Ks_DetatchedLinePrescale'],
                                                        postscale = config['Ks_DetatchedLinePostscale'],
                                                        selection = self.selBd2Psi2SKsDetatched
@@ -479,7 +469,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                         MINTREEPT = config['MINTREEPT']
                                                         )
         
-        self.Bd2Psi2SKs_unbiased_line = StrippingLine(Ks_unbiased_name+"Line",
+        self.Bd2Psi2SKs_unbiased_line = StrippingLine(Ks_unbiased_name + "Line",
                                                       prescale = config['Ks_UnbiasedLinePrescale'],
                                                       postscale = config['Ks_UnbiasedLinePostscale'],
                                                       selection = self.selBd2Psi2SKsUnbiased
@@ -505,11 +495,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.registerLine(self.Bd2Psi2SKs_detatched_line)
         self.registerLine(self.Bd2Psi2SKs_prescaled_line)
         
-        
 
-
-
-        
 def makePsi2S2MuMu(name,
                    muPID, # 0
                    Psi2SMassWin, #60
