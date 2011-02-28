@@ -3,34 +3,25 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
-          'DiProton_SpdMult'    :   600.   # dimensionless, Spd Multiplicy cut 
+          'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
         , 'DiProton_PT'         :     1.9  # GeV
         , 'DiProton_P'          :    10.   # GeV  
         , 'DiProton_TrChi2'     :     5. 
         , 'DiProton_MassMin'    :  2900.   # MeV, after Vtx fit
-        , 'DiProton_MassMax'    :  4100.   # MeV, after Vtx fit
-        , 'DiProton_VtxDOCA'    :     0.2    
-        , 'DiProton_VtxChi2'    :     9.   # dimensionless
+        , 'DiProton_MassMax'    :  4500.   # MeV, after Vtx fit
+        , 'DiProton_VtxDOCA'    :     0.1    
+        , 'DiProton_VtxChi2'    :     4.   # dimensionless
 
         , 'DiProton_TrNTHits'   :    15.  # From Track lines
         , 'DiProton_VeloNHits'  :     9.   # From Track lines
         , 'DiProton_VeloQcut'   :     3.   # From Track lines
-
-        , 'SpdMultExclusive'    :    20.
-
-
+          
         , 'DiProtonLowMult_SpdMult'    :    20.   # dimensionless, Spd Multiplicy cut 
         , 'DiProtonLowMult_PT'         :     0.6  # GeV, same as LooseForward
         , 'DiProtonLowMult_P'          :     6.   # GeV, same as LooseForward  
-        , 'DiProtonLowMult_TrChi2'     :     5. 
-        , 'DiProtonLowMult_MassMin'    :  2900.   # MeV, after Vtx fit
-        , 'DiProtonLowMult_MassMax'    :  4100.   # MeV, after Vtx fit
-        , 'DiProtonLowMult_VtxDOCA'    :     0.2    
+        , 'DiProtonLowMult_MassMin'    :  2800.   # MeV, after Vtx fit
+        , 'DiProtonLowMult_VtxDOCA'    :     0.3    
         , 'DiProtonLowMult_VtxChi2'    :    25.   # dimensionless
-
-        , 'DiProtonLowMult_TrNTHits'   :    15.  # From Track lines
-        , 'DiProtonLowMult_VeloNHits'  :     9.   # From Track lines
-        , 'DiProtonLowMult_VeloQcut'   :     3.   # From Track lines
           
           }
         
@@ -81,7 +72,6 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  ( ( TrIDC('isVelo') > %(DiProton_VeloNHits)s ) & ( TrNVELOMISS < %(DiProton_VeloQcut)s ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo Hits', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nVeloHits' , LoKi.Monitoring.ContextSvc ) )
-            >>  execute( decodeIT )
             >>  TightForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass tight forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nTightForward' , LoKi.Monitoring.ContextSvc ) )
@@ -94,10 +84,10 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  MakeDiProtons
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( RV_MASS ( 'p+', 'p~-' ) > %(DiProton_MassMin)s )
+            >>  ( RV_MASS ( 'p+', 'p~-' ) > %(DiProton_MassMin)s * MeV )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass min', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'massMin' , LoKi.Monitoring.ContextSvc ) )   
-            >>  ( RV_MASS ( 'p+', 'p~-' ) < %(DiProton_MassMax)s )
+            >>  ( RV_MASS ( 'p+', 'p~-' ) < %(DiProton_MassMax)s * MeV )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass max', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'massMax' , LoKi.Monitoring.ContextSvc ) )            
             >>  SINK( 'Hlt1DiProtonDecision' )
@@ -115,7 +105,6 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.DiProtonLowMult_preambulo(),
             Code = """
             VeloCandidates
-            >>  execute( decodeIT )
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass loose forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nLooseForward' , LoKi.Monitoring.ContextSvc ) )
@@ -125,12 +114,9 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  MakeDiProtonsLowMult
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( RV_MASS ( 'p+', 'p~-' ) > %(DiProtonLowMult_MassMin)s )
+            >>  ( RV_MASS ( 'p+', 'p~-' ) > %(DiProtonLowMult_MassMin)s *MeV)
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass min', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'massMin' , LoKi.Monitoring.ContextSvc ) )   
-            >>  ( RV_MASS ( 'p+', 'p~-' ) < %(DiProtonLowMult_MassMax)s )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass mass max', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'massMax' , LoKi.Monitoring.ContextSvc ) )            
             >>  SINK( 'Hlt1DiProtonLowMultDecision' )
             >> ~TC_EMPTY
             """ % self.getProps()
