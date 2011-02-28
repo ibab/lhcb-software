@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-02-28 - Thomas Blake
+ - Moved StrippingBdToKstarMuMu_160211.py to StrippingBd2KstarMuMu.py
+
+! 2011-02-28 - Thomas Blake
  - Clean up of old Bd2KstarMuMu lines. Removed: 
    . StrippingBd2KstarMuMu.py
    . StrippingBd2KstarMuMuTrigged.py
