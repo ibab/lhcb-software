@@ -13,6 +13,8 @@ __version__ = "$Revision$"
 
 from ROOT import *
 
+from KaliCalo.Kali import Counter
+
 # =============================================================================
 ## Helper class to hold the histogams associated with the given CellID
 class HistosBase(object):
