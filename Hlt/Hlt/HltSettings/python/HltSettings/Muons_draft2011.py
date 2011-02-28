@@ -20,6 +20,7 @@ class Muons_draft2011 :
 
             'Hlt2MuonFromHLT1',
             'Hlt2SingleMuon',
+            #'Hlt2SingleMuonRateLimited',
             'Hlt2SingleMuonHighPT',
             'Hlt2SingleMuonLowPT',
 
@@ -30,6 +31,7 @@ class Muons_draft2011 :
             # control rate via: 1) mass: 120 --> 70,
             # then rediscuss with beta_s DO NOT INCREASE PT!!
             'Hlt2DiMuonJPsi',
+            'Hlt2DiMuonJPsiHighPT',
             'Hlt2DiMuonPsi2S',
             'Hlt2DiMuonB',
             'Hlt2DiMuonZ',
@@ -55,8 +57,10 @@ class Muons_draft2011 :
             'Hlt2Dst2PiD02MuMu',         
             #'Hlt2Dst2PiD02EMu', 
             'Hlt2CharmRareDecayD02MuMu',
-            'Hlt2CharmRareDecayD02PiPiForD02MuMu'
-    
+            #'Hlt2CharmRareDecayD02PiPiForD02MuMu',
+
+            'Hlt2ThreeDetachedMuons',
+            'Hlt2Tau2MuMuMu'
             ]
             
         return lines
@@ -83,34 +87,42 @@ class Muons_draft2011 :
             ,'UnbiasedDiMuonLowMuPt'   : 0.0      # MeV
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
             ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
-            ,'UnbiasedJPsiMassWindow'  : 120      # MeV
+            ,'UnbiasedJPsiMassWindow'  :  70      # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
             ,'UnbiasedPsi2SMuPt'       : 0.0      # MeV
             ,'UnbiasedPsi2SMassWindow' : 120      # MeV
             ,'UnbiasedBmmMinMass'      : 4700     # MeV
+            ,'UnbiasedBmmVertexChi2'   : 10
             ,'UnbiasedZmmMinMass'      :40000     # MeV
             ,'UnbiasedZmmPt'           :  0.0     # MeV
             ,'DetachedDiMuonPt'        : 1500     #MeV
             ,'DetachedDiMuonDLS'       :   7
+            ,'DetachedDiMuonMinMass'   : 1000 #MeV
+            ,'DetachedDiMuIPChi2'      :   9
+            ,'DetachedHeavyDiMuonMinMass': 2950 # MeV
+            ,'DetachedHeavyDiMuonDLS'  :   5
+            ,'DetachedJPsiDLS'           : 3
+            ,'DetachedJPsiMassWindow'    : 120 #MeV 
 
             
             #,'DYPt'                    : 0.0      # MeV
 
-            , 'Prescale'   : { 'Hlt2DiMuon'          : 0.1
+            , 'Prescale'   : { 'Hlt2DiMuon'          : 0.01
                                , 'Hlt2DiMuonLowMass' : 0.002
-                               , 'Hlt2DiMuonDY1'              :  0.1
-                               #,'Hlt2DiMuonDY2'              :  1
-                               #,'Hlt2BiasedDiMuonIP'         :  1
+                               , 'Hlt2DiMuonDY1'              :  0.05
+                               ,'Hlt2DiMuonDY2'              :  0.2
                                }           
             }}
                   )
 
         d.update( { Hlt2InclusiveMuonLinesConf : {
             'SingleMuonPt'         : 1300      # MeV
-            #,'SingleMuonIP'        : 0.11     # mm
+            ,'SingleMuonIP'        : 0.5     # mm
+            , 'SingleMuonIPChi2'   : 200
             ,'SingleMuonHighPt'    : 10000     # MeV
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0
-                              ,'Hlt2SingleMuon'        : 0.2 
+                              ,'Hlt2SingleMuon'        : 0.5
+                              ,'Hlt2SingleMuonRateLimited'     : 'RATE(200)'
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               }
             }}
