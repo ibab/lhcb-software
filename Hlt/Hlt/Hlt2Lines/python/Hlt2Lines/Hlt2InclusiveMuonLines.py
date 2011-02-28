@@ -1,15 +1,11 @@
 # Hlt2 Inclusive Muon and Muon+track selections 06/12/09 (updated 24th may 2010)
 #
-# Antonio Perez-Calero (aperez@ecm.ub.es)
+# Johanens Albrecht: single muon liens
+# Antonio Perez-Calero (aperez@ecm.ub.es): Mu+Track lines
 #
-# Single muon line with IP for generic B Physics data mining, plus a HighPt line
+# 
 #
-# Muon+track lines designed to trigger on a muon plus any other cherged track in the decay
-# Thus, it can be a muon, as for Bs->mumu, or not, as in the case of Bd->K*mumu.
-#
-# Then, another lifetime unbiased selection designed to trigger on JPsi->mumu, not requiring
-# the second track to have been explicitely identified as a muon. Should trigger prompt JPsi as well as
-# B->JPsi signal with increased robustness 
+
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -20,14 +16,17 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'Prescale'   : { 'Hlt2MuonFromHLT1        '       : 1.0
                                    ,'Hlt2MuonFromHLT1Bs2MuMu'      : 1.0   
                                    ,'Hlt2SingleMuon'                : 1.0
+                                   ,'Hlt2SingleMuonRateLimited'     : 'RATE(200)'
                                    ,'Hlt2SingleHighPTMuon'          : 1.0
                                    ,'Hlt2SingleMuonLowPT'          : 0.1
                                    ,'Hlt2IncMuTrack'                : 1.0
                                    ,'Hlt2IncMuTrackNoIP'            : 1.0
                                    }
                   
+                  ,'SingleMuHLT1Filter'  :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
                   ,'TrChi2'              :   10      #chi2PerDof 
                   ,'TrChi2Tight'         :    5      #chi2PerDof 
+                  ,'TrChi2VeryTight'     :    2      #chi2PerDof 
                   ,'SingleMuonPt'        : 1000      # MeV
                   ,'SingleMuonIP'        : 0.25     # mm
                   ,'SingleMuonIPChi2'    : 100
@@ -115,24 +114,58 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Bs2MuMuDecision" : 50193 } )        
         
         #--------------------------------------------
-        Hlt2SelSingleMuon = Hlt2Member( FilterDesktop
+        Hlt2SelSingleMuonFilter = Hlt2Member( FilterDesktop
                                         , "Filter"
                                         , Inputs  = [BiKalmanFittedMuons]
                                         , Code = "( (PT>%(SingleMuonPt)s*MeV) "\
                                             "& (MIPDV(PRIMARY)>%(SingleMuonIP)s)"\
-                                            "& (TRCHI2DOF<%(TrChi2Tight)s)"\
+                                            "& (TRCHI2DOF<%(TrChi2VeryTight)s)"\
                                             "& (MIPCHI2DV(PRIMARY)>%(SingleMuonIPChi2)s) "\
                                             ")" % self.getProps()
                                         )
-        
-        
+
+        from Configurables import TisTosParticleTagger
+        TOSInputMuonsFilter = Hlt2Member(TisTosParticleTagger
+                                         ,"TOSInputMuonsFilter"
+                                         , TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
+                                         ,Inputs = [ Hlt2SelSingleMuonFilter ]
+                                         ,NoRegex=True
+                                         ,ProjectTracksToCalo = False
+                                         ,CaloClustForCharged = False
+                                         ,CaloClustForNeutral = False
+                                         ,TOSFrac = { 4:0.0, 5:0.0 }
+                                         )
+
+        from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
+
+        Hlt2SelSingleMuonMoni = Hlt2Member( FilterDesktop
+                                            , "Monitor"
+                                            , Inputs  = [TOSInputMuonsFilter]
+                                            , Code = "ALL"
+                                            , PostMonitor =  Hlt2MonitorMinMax( "PT","PT(#mu)",0,10000,'muPT_out',nbins=100)
+                                            +"&"+Hlt2MonitorMinMax( "MIPDV(PRIMARY)","MIPDV(PRIMARY)(#mu)",0,2,'muIP_out',nbins=200)
+                                            +"&"+Hlt2MonitorMinMax( "TRCHI2DOF","TRCHI2DOF(#mu)",0,10,'muTRChi2_out',nbins=100)
+                                            +"&"+Hlt2MonitorMinMax( "MIPCHI2DV(PRIMARY)","MIPCHI2DV(PRIMARY)(#mu)",0,1000,'muIPChi2_out',nbins=200)
+                                            )
+               
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), BiKalmanFittedMuons, Hlt2SelSingleMuon ]
+                        , HLT =self.getProp("SingleMuHLT1Filter")
+                        , algos = [ PV3D(), BiKalmanFittedMuons, 
+                                    Hlt2SelSingleMuonFilter,TOSInputMuonsFilter, 
+                                    Hlt2SelSingleMuonMoni ]
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50191 } )
-        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50191 } )      
+
+        '''
+        unbiased dimuon low mass - prescaled
+        '''
+        line.clone( 'SingleMuonRateLimited'
+                    , prescale = self.prescale 
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonRateLimitedDecision":  50195 } )
         #--------------------------------------------
         
         Hlt2SelSingleHighPTMuon = Hlt2Member(   FilterDesktop
