@@ -54,33 +54,43 @@ class Electrons_Physics_draft2011( object ):
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
 
-        thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
-                                            ,   'AllL0_P'       : 13300
-                                            ,   'AllL0_IP'      : 0.110
-                                            ,   'AllL0_IPChi2'  : 34
-                                            ,   'AllL0_TrChi2'  : 3
-                                            ,   'Muon_PT'       : 800 
+        thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
+                                            ,   'AllL0_P'       : 10000
+                                            ,   'AllL0_IP'      : 0.100
+                                            ,   'AllL0_IPChi2'  : 16
+                                            ,   'AllL0_TrChi2'  : 2.5
+                                            ,   'Muon_PT'       : 1000 
                                             ,   'Muon_P'        : 8000 
-                                            ,   'Muon_IP'       : 0.110
-                                            ,   'Muon_IPChi2'   : 25
-                                            ,   'Muon_TrChi2'   : 10                    
-                                            ,   'Photon_PT'     : 800
-                                            ,   'Photon_P'      : 8000
-                                            ,   'Photon_IP'     : 0.110
-                                            ,   'Photon_IPChi2' : 50
-                                            ,   'Photon_TrChi2' : 5
-                                            ,   'Velo_NHits'    : 9 
-                                            ,   'Velo_Qcut'     : 3 
+                                            ,   'Muon_IP'       : 0.100
+                                            ,   'Muon_IPChi2'   : 16
+                                            ,   'Muon_TrChi2'   : 2.5 
+                                            ,   'Photon_PT'     : 1200
+                                            ,   'Photon_P'      : 6000
+                                            ,   'Photon_IP'     : 0.100
+                                            ,   'Photon_IPChi2' : 16
+                                            ,   'Photon_TrChi2' : 2.5
                                                 }
-                     , Hlt1MuonLinesConf    : {  'L0SingleMuon'    : "Muon"
-                                              ,  'L0SingleMuonGEC' : "Muon"
-                                              ,  'DiMuon_VxDOCA'   :   0.2
-                                              ,  'DiMuon_VxChi2'   :    25
-                                              ,  'DiMuon_P'        :  6000
-                                              ,  'DiMuon_PT'       :   500
-                                              ,  'DiMuon_TrChi2'   :     4
+		     , Hlt1MuonLinesConf : { 'DiMuonLowMass_VxDOCA'      :  0.2
+						,'DiMuonLowMass_VxChi2'     :   25
+						,'DiMuonLowMass_P'          : 6000
+						,'DiMuonLowMass_PT'         :  500
+						,'DiMuonLowMass_TrChi2'     :    4
+						,'DiMuonLowMass_M'          : 1000
+						,'DiMuonHighMass_VxDOCA'    :  0.2
+						,'DiMuonHighMass_VxChi2'    :   25
+						,'DiMuonHighMass_P'         : 6000
+						,'DiMuonHighMass_PT'        :  500
+						,'DiMuonHighMass_TrChi2'    :    4
+						,'DiMuonHighMass_M'         : 2900
+						,'SingleMuonHighPT_P'       : 6000
+						,'SingleMuonHighPT_PT'      : 4800
+						,'SingleMuonHighPT_TrChi2'  :    4
+						,'SingleMuonNoIP_P'         : 6000
+						,'SingleMuonNoIP_PT'        : 1300
+						,'SingleMuonNoIP_TrChi2'    :    4
+                        ,'Prescale'                 : {'Hlt1SingleMuonNoIP':0.1}
                                               }
-                       }
+		       }
 
         from Muons_draft2011 import Muons_draft2011
         __update_conf__(thresholds,  Muons_draft2011().Thresholds() )
@@ -103,7 +113,8 @@ class Electrons_Physics_draft2011( object ):
         hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
 
 	from Electrons_draft2011 import Electrons_draft2011
-	hlt2.extend( Electrons_draft2011().ActiveHlt2Lines() )
+        hlt2.extend( Electrons_draft2011().ActiveHlt2Lines() )
+	
         
         return hlt2
        
@@ -125,5 +136,8 @@ class Electrons_Physics_draft2011( object ):
                   'Hlt1TrackAllL0',
                   'Hlt1TrackMuon',
                   'Hlt1TrackPhoton',
-                  'Hlt1DiMuon' ]
+		          'Hlt1DiMuonLowMass',
+                  'Hlt1DiMuonHighMass',
+		          'Hlt1SingleMuonHighPT',
+		          'Hlt1SingleMuonNoIP' ]
         return lines 
