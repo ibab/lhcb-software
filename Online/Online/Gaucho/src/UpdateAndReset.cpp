@@ -262,7 +262,7 @@ StatusCode UpdateAndReset::stop() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
-  printf("======================UpdateAndReset STOP called\n");
+//  printf("======================UpdateAndReset STOP called\n");
   if ( 1 == m_saveHistograms )
   {
      m_eorNumber=m_runNumber;
@@ -271,11 +271,11 @@ StatusCode UpdateAndReset::stop() {
   }
   else if ( 0 != m_pGauchoMonitorSvc )
   {
-    printf("======================UpdateAndReset Updating EOR service \n");
+//    printf("======================UpdateAndReset Updating EOR service \n");
     this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
     this->m_pGauchoMonitorSvc->UnLock();
-    printf("======================UpdateAndReset Updating EOR DONE...... \n");
+//    printf("======================UpdateAndReset Updating EOR DONE...... \n");
     m_pGauchoMonitorSvc->release();
     m_pGauchoMonitorSvc = 0;
   }

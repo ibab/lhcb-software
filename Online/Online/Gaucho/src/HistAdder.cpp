@@ -154,13 +154,13 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   nrate=0;
   if (siz == 4)
   {
-    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+//    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
   if (((SerialHeader*)buff)->m_magic != SERIAL_MAGIC)
   {
-    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+//    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
@@ -168,7 +168,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   long long cltime;
   SerialHeader* header= ((SerialHeader*)buff);
   cltime = header->ser_tim;
-  printf("Received size %d Header size %d\n",siz,header->buffersize);
+//  printf("Received size %d Header size %d\n",siz,header->buffersize);
   long long runno = ((SerialHeader*)buff)->run_number;
   long long current;
   if (m_IsEOR)
@@ -179,7 +179,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     current = cltime;
   }
-  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
   m_RateBuff = 0;
   if (m_reference < current)
   {
