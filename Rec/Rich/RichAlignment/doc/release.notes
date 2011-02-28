@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r1p1 2011-02-28 =========================
 ! 2011-02-25 - Chris Jones
  - Replace boost:lexical_cast<std::string> with std::ostringstream, to appease
    icc11 and coverity
