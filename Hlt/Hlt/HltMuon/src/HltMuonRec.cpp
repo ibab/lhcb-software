@@ -39,7 +39,6 @@ HltMuonRec::HltMuonRec( const std::string& name,
   declareProperty( "OutputMuonTracksName" ,
                    m_outputMuonTracksName="Hlt1/Track/MuonSeg");
   declareProperty("DecodingFromCoord", m_decodingFromCoord = true );
-  declareProperty("DoPrepareMuonSeg", m_doPrepareMuonSeg = true);
 }
 //=============================================================================
 // Destructor
@@ -56,10 +55,6 @@ StatusCode HltMuonRec::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  // tool to create the proper muon segmets JAH
-  if (m_doPrepareMuonSeg)
-    m_prepareMuonSeed = tool<IMuonSeedTool>("MuonSeedTool",this);
-  
   // Counters
   m_countEvents = 0;
   m_countMuCandidates = 0;
@@ -318,30 +313,19 @@ StatusCode HltMuonRec::execute() {
       LHCb::Track* trgTr = new LHCb::Track();
       //        trgTr->setType(Track::Muon);
       
-    for (int i=1;i<5;++i) {
-      LHCb::State temp;
-      temp.setX( itMuonTrack->point(i).x() );       
-      temp.setY( itMuonTrack->point(i).y() );
-      temp.setZ( m_station[i].z()          );
-      int ii = std::min(i,3);
-      temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
-      temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
-      temp.setLocation(LHCb::State::Muon);
-      trgTr->addToStates( temp );
-      trgTr->addToLhcbIDs(itMuonTrack->point(i).tile());
-    }
-      
-      
-    Track* muonseg = 0;
-    if (m_doPrepareMuonSeg) {
-        muonseg = new Track();
-        m_prepareMuonSeed->makeTrack(*trgTr,*muonseg).ignore();
-        delete trgTr;
-    } else {
-        muonseg = trgTr;
-    } 
-    if (muonseg) outputTracks->insert(muonseg);
-
+      for (int i=1;i<5;++i) {
+        LHCb::State temp;
+        temp.setX( itMuonTrack->point(i).x() );       
+        temp.setY( itMuonTrack->point(i).y() );
+        temp.setZ( m_station[i].z()          );
+        int ii = std::min(i,3);
+        temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
+        temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
+        temp.setLocation(LHCb::State::Muon);
+        trgTr->addToStates( temp );
+        trgTr->addToLhcbIDs(itMuonTrack->point(i).tile());
+      }
+      outputTracks->insert(trgTr);
   }
   
   if ( m_measureTime ) { 

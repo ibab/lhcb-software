@@ -17,7 +17,6 @@
 #include "HltMuonStationRec.h"
 #include "HltMuonTrack.h"
 
-#include "HltBase/IMuonSeedTool.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 
 /** @class HltMuonRec HltMuonRec.h
@@ -111,7 +110,6 @@ private:
 protected:
 
   bool m_doPrepareMuonSeg;
-  IMuonSeedTool* m_prepareMuonSeed;  
   IMuonRawBuffer* m_muonBuffer;
 };
 #endif // HLTMUON_H

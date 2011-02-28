@@ -3,7 +3,7 @@
 # Maintainer : Alessia Satta
 #============================================================================
 package           HltMuon
-version           v3r6p2
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,7 +20,6 @@ use      MuonDet     v*    Det
 use      DAQEvent    v*    Event
 use      L0Event     v*    Event
 use      TrackEvent  v*    Event
-use      HltBase     v*    Hlt
 
 #============================================================================
 # Component library building rule

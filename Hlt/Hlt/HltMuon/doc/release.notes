@@ -3,6 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+
+! 2011-02-28 - Gerhard Raven
+ - remove any HLT dependencies in order to enable this package
+   to be moved out of the HLT project
+
 !========================== HltMuon v3r6p2 2010-08-26 ===================
 ! 2010-08-13 - Gerhard Raven
  - more const correctness
