@@ -12,74 +12,82 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
     """
-
+    
     """
-
-    __slots__ = { 'Prescale'           : {  'Hlt2IncDiProton'             : 1.  
-                                           ,'Hlt2IncDiProtonPresel'       : 0.001  # of 1000
-                                           ,'Hlt2IncDiProtonTrackFitted'  : 0.005  # of 200  
-                                           }
-                  
-                  ,'Postscale'         : {  'Hlt2IncDiProton'             : 1.
-                                           ,'Hlt2IncDiProtonPresel'       : 1.
-                                           ,'Hlt2IncDiProtonTrackFitted'  : 1.  
+    
+    __slots__ = { 'Prescale'           : {    'Hlt2DiProton'                   : 1.  
+                                            , 'Hlt2DiProtonTF'                 : 0.005  # of 200
+                                            , 'Hlt2DiProtonLowMult'            : 1.
+                                            , 'Hlt2DiProtonLowMultTF'          : 0.005     
                                             }
-
-                  , 'SpdMult'          :   600
-                  , 'ProtonPT'         :  1800.   # MeV
-                  , 'CombUpperMass'    :  4000.   # MeV, before Vtx fit
-                  , 'CombLowerMass'    :  2800.   # MeV, before Vtx fit
-                  , 'UpperMass'        :  3950.   # MeV, after Vtx fit
-                  , 'LowerMass'        :  2850.   # MeV, after Vtx fit
-                  , 'VtxCHI2'          :    16.   # dimensionless
+                  
+                  ,'Postscale'         : {    'Hlt2DiProton'                   : 1.  
+                                            , 'Hlt2DiProtonTF'                 : 1.
+                                            , 'Hlt2DiProtonLowMult'            : 1.
+                                            , 'Hlt2DiProtonLowMultTF'          : 1.
+                                            }
+                  
+                  , 'SpdMult'            :   600.
+                  , 'DiProton_Hlt1Req'   :  "HLT_PASS('Hlt1DiProtonDecision')"
                   # Track Fitted
                   , 'TFProtonPT'         :  1900.   # MeV
                   , 'TFProtonTrkChi2'    :     4.   
-                  , 'TFCombUpperMass'    :  3950.   # MeV, before Vtx fit
+                  , 'TFCombUpperMass'    :  4550.   # MeV, before Vtx fit
                   , 'TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
                   , 'TFCombPT'           :  5800.   # MeV, before Vtx fit
-                  , 'TFUpperMass'        :  3900.   # MeV, after Vtx fit
+                  , 'TFUpperMass'        :  4500.   # MeV, after Vtx fit
                   , 'TFLowerMass'        :  2900.   # MeV, after Vtx fit
                   , 'TFCCbarPT'          :  6000.   # MeV, after Vtx fit 
                   , 'TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
                   , 'TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
                   , 'TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)
-                  , 'HltANNSvcID'      : { 'IncDiProton'             : 51000
-                                           ,'IncDiProtonPresel'      : 51001
-                                           ,'IncDiProtonTrackFitted' : 51002 
+
+                  , 'LowMult_SpdMult'            :    20.
+                  , 'DiProtonLowMult_Hlt1Req'    :  "HLT_PASS('Hlt1DiProtonLowMultDecision')"
+                  # Track Fitted
+                  , 'LowMult_TFProtonPT'         :   500.   # MeV
+                  , 'LowMult_TFProtonTrkChi2'    :     5.   
+                  , 'LowMult_TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
+                  , 'LowMult_TFLowerMass'        :  2900.   # MeV, after Vtx fit
+                  , 'LowMult_TFVtxCHI2'          :     9.   # dimensionless
+                  # Track Fitted & RichPID
+                  , 'LowMult_TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
+                  , 'LowMult_TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)                
+                  
+                  
+                  , 'HltANNSvcID'      : {  'DiProton'                   : 51000
+                                           ,'DiProtonTF'                 : 51002
+                                           ,'DiProtonLowMult'            : 51005
+                                           ,'DiProtonLowMultTF'          : 51006
                                            }
                   }
-
-    def __apply_configuration__(self) :
+    
+    def __apply_configuration__(self):
+        self.__makeHlt2DiProtonLines()
+        self.__makeHlt2DiProtonLowMultLines()
+        
+    def __makeHlt2DiProtonLines(self):        
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
         from Configurables import HltANNSvc
         from Configurables import FilterDesktop, CombineParticles
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncDiProtonDecision" : self.getProp('HltANNSvcID')['IncDiProton'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncDiProtonPreselDecision" : self.getProp('HltANNSvcID')['IncDiProtonPresel'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncDiProtonTrackFittedDecision" : self.getProp('HltANNSvcID')['IncDiProtonTrackFitted'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonDecision" : self.getProp('HltANNSvcID')['DiProton'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonTFDecision" : self.getProp('HltANNSvcID')['DiProtonTF'] } )
 
-        #------------------------------------
-        # Preselection 
-        #------------------------------------
-        ProtonCut = "(PT> %(ProtonPT)s *MeV)" % self.getProps()
-        CombCut = "(in_range( %(CombLowerMass)s *MeV, AM, %(CombUpperMass)s *MeV))" % self.getProps()
-        MomCut = "(VFASPF(VCHI2PDOF)< %(VtxCHI2)s) & (in_range(%(LowerMass)s *MeV, MM, %(UpperMass)s *MeV))" % self.getProps()
 
-        from Hlt2SharedParticles.BasicParticles import NoCutsProtons
-        Combine = Hlt2Member( CombineParticles
-                              , "Combine"
-                              , DecayDescriptor = "J/psi(1S) -> p+ p~-"
-                              , DaughtersCuts = { "p+" : ProtonCut }
-                              , CombinationCut = CombCut
-                              , MotherCut = MomCut
-                              , Inputs = [ NoCutsProtons ]
-                              , InputPrimaryVertices = "None"
-                              , UseP2PVRelations = False
-                              )
-
+        """
+        #------------------------
+        #  Hlt1 Requirements
+        #------------------------
+        """
+        Hlt1Req = self.getProp("DiProton_Hlt1Req")
+        
+        if not Hlt1Req:
+            Hlt1Req= None        
+            
+            
         #------------------------------------
         # Track Fitted
         #------------------------------------
@@ -119,9 +127,10 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Inclusive DiProton complete
         #------------------------------------
-        line = Hlt2Line('IncDiProton'
+        line = Hlt2Line('DiProton'
                         , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()   
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , HLT  = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     , BiKalmanFittedRichProtons
@@ -129,27 +138,102 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     ]
                         , postscale = self.postscale
                         )
-
+        
         #------------------------------------
-        # Inclusive DiProton presel
-        #------------------------------------        
-        line = Hlt2Line('IncDiProtonPresel'
+        # Inclusive TF
+        #------------------------------------
+        line = Hlt2Line('DiProtonTF'
                         , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()   
-                        , algos = [ NoCutsProtons
-                                    , Combine
-                                    ]
-                        , postscale = self.postscale
-                        )
-
-        #------------------------------------
-        # Inclusive TrackFitted
-        #------------------------------------
-        line = Hlt2Line('IncDiProtonTrackFitted'
-                        , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()   
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , HLT  = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     ]
                         , postscale = self.postscale
                         )       
+
+
+
+
+    def __makeHlt2DiProtonLowMultLines(self):        
+        from HltLine.HltLine import Hlt2Line
+        from HltLine.HltLine import Hlt2Member
+        from Configurables import HltANNSvc
+        from Configurables import FilterDesktop, CombineParticles
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonLowMultDecision" : self.getProp('HltANNSvcID')['DiProtonLowMult'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiProtonLowMultTFDecision" : self.getProp('HltANNSvcID')['DiProtonLowMultTF'] } )
+
+        """
+        #------------------------
+        #  Hlt1 Requirements
+        #------------------------
+        """
+        Hlt1Req = self.getProp("DiProtonLowMult_Hlt1Req")
+        
+        if not Hlt1Req:
+            Hlt1Req= None       
+        
+        #------------------------------------
+        # Track Fitted
+        #------------------------------------
+        TFProtonCut = "(PT> %(LowMult_TFProtonPT)s *MeV) & (TRCHI2DOF < %(LowMult_TFProtonTrkChi2)s)" % self.getProps()
+        TFCombCut = "(AM>%(LowMult_TFCombLowerMass)s *MeV)" % self.getProps()
+        TFMomCut = "(VFASPF(VCHI2PDOF)< %(LowMult_TFVtxCHI2)s) & (MM> %(LowMult_TFLowerMass)s *MeV)" % self.getProps()
+        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons
+        TFCombine = Hlt2Member( CombineParticles
+                                , "TFCombine"
+                                , DecayDescriptor = "J/psi(1S) -> p+ p~-"
+                                , DaughtersCuts = { "p+" : TFProtonCut }
+                                , CombinationCut = TFCombCut
+                                , MotherCut = TFMomCut
+                                , Inputs = [ BiKalmanFittedProtons ]
+                                , InputPrimaryVertices = "None"
+                                , UseP2PVRelations = False
+                                )
+
+        #------------------------------------
+        # Track Fitted & RichPID
+        #------------------------------------
+        TFRichProtonPID = "((PIDp-PIDpi) > %(LowMult_TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(LowMult_TFRichProtonPIDpK)s)" % self.getProps()   
+        
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTProtons
+        TFRichCombine = Hlt2Member( CombineParticles
+                                    , "TFRichCombine"
+                                    , DecayDescriptor = "J/psi(1S) -> p+ p~-"
+                                    , DaughtersCuts = { "p+" : TFProtonCut+" & "+TFRichProtonPID }
+                                    , CombinationCut = TFCombCut
+                                    , MotherCut = TFMomCut
+                                    , Inputs = [ BiKalmanFittedRichLowPTProtons ]
+                                    , InputPrimaryVertices = "None"
+                                    , UseP2PVRelations = False
+                                    )
+
+        #------------------------------------
+        # Inclusive DiProtonLowMult complete
+        #------------------------------------
+        line = Hlt2Line('DiProtonLowMult'
+                        , prescale = self.prescale
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(LowMult_SpdMult)s )" % self.getProps()
+                        , HLT  = Hlt1Req
+                        , algos = [ BiKalmanFittedProtons
+                                    , TFCombine
+                                    , BiKalmanFittedRichLowPTProtons
+                                    , TFRichCombine
+                                    ]
+                        , postscale = self.postscale
+                        )
+        
+        #------------------------------------
+        # Inclusive TF
+        #------------------------------------
+        line = Hlt2Line('DiProtonLowMultTF'
+                        , prescale = self.prescale
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(LowMult_SpdMult)s )" % self.getProps()
+                        , HLT  = Hlt1Req
+                        , algos = [ BiKalmanFittedProtons
+                                    , TFCombine
+                                    ]
+                        , postscale = self.postscale
+                        )           
