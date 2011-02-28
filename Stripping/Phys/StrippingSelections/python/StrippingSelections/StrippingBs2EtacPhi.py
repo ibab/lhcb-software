@@ -1,320 +1,360 @@
-# $Id: StrippingBs2EtacPhi.py,v 1.2 2010-05-10 12:12:05 jpalac Exp $
+
+__author__ = ['Greig Cowan','Juan Palacios']
+__date__ = '27/02/2011'
+__version__ = '$Revision: 1.1 $'
 
 
-__author__ = ['Katarzyna Senderowska']
-__date__ = '04/10/2010'
-__version__ = '$Revision: 1.2 $'
+__all__ = (
+    'Bs2EtacPhiConf',
+    'makeTightKaons',
+    'makeTightPions',
+    'makePhi2KK',
+    'makePhi2KKForEtac',
+    'makeRho2PiPiForEtac',
+    'makeEtac2RhoPhi',
+    'makeBs2EtacPhi'
+    )
 
 
-#Vertex Fitter
-combiner='OfflineVertexFitter'
+from Gaudi.Configuration import *
+from Configurables import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 
-confdict={    
-    'Tuned'   : {
-                 'Prescale'    : 1.0 ,
-                 'Postscale'   : 1.0 ,
-                 #phi parameters
-                 'K_phi_PT'               : 500.,
-                 'K_phi_TRCHI2'           : 5.,
-                 'K_phi_IPCHI2'           : 9.,
-                 #phi parameters
-                 'phiVDZ'                 : 0., 
-                 'phiPT'                  : 1000., 
-                 'phiIPCHI2'              : 9.,
-                 'phiVCHI2/VDOF'          : 16.,
-                 #pi (for eta_c decay) parameters
-                 'pi_etac_PT'             : 450., 
-                 'pi_etac_TRCHI2'         : 5,
-                 'pi_etac_IPCHI2'         : 9.,
-                 #rho (for eta_c decay) parameters
-                 'rho_etac_VDZ'           : 0.,
-                 'rho_etac_VCHI2/VDOF'    : 16.,
-                 #K (for eta_c decay) parameters
-                 'K_etac_PT'              : 450.,
-                 'K_etac_TRCHI2'          : 5.,
-                 'K_etac_IPCHI2'          : 9.,
-                 #phi (for eta_c decay) parameters
-                 'phi_etac_VDZ'           : 0.,
-                 'phi_etac_VCHI2/VDOF'    : 16.,
-                 #eta_c parameters
-                 'etacVDZ'                : 0.,    
-                 'etacPT'                 : 1000.,
-                 'etacIPCHI2'             : 9.,
-                 'etacVCHI2/VDOF'         : 16.,
-                 #Bs parameters
-                 'BsVDZ'                  : 0.,
-                 'BsDIRA'                 : 0.995,
-                 'BsIPCHI2'               : 9.,
-                 'BsVCHI2/VDOF'           : 16.,
-                 },
+
+name = 'Bs2EtacPhi'
+
+
+config_params = {
+    'Prescale'                : 1.0 ,
+    'Postscale'               : 1.0 ,
+    #K parameters
+    'K_PT'                    : 500.,
+    'K_TRCHI2'                : 5.,
+    'K_IPCHI2'                : 6.,
+    #pi parameters
+    'pi_PT'                   : 500., 
+    'pi_TRCHI2'               : 5.,
+    'pi_IPCHI2'               : 6.,
+    #phi parameters
+    'phi_VDZ'                 : 0., 
+    'phi_PT'                  : 1000., 
+    'phi_IPCHI2'              : 6.,
+    'phi_VCHI2_VDOF'          : 16.,
+    #rho (for eta_c decay) parameters
+    'rho_etac_VDZ'            : 0.,
+    'rho_etac_VCHI2_VDOF'     : 16.,
+    #phi (for eta_c decay) parameters
+    'phi_etac_VDZ'            : 0.,
+    'phi_etac_VCHI2_VDOF'     : 16.,
+    #eta_c parameters
+    'etac_VDZ'                : 0.,    
+    'etac_PT'                 : 1000.,
+    'etac_IPCHI2'             : 6., 
+    'etac_VCHI2_VDOF'         : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
     }
 
 
 
-class Bs2EtacPhiAllLinesConf(object):
-    
-    Lines=[]
-    
-    confObjects={}
-    
-    def __init__(self, config, offLines=[]):
-        for aline in config.keys():
-            if aline not in offLines:
-                lineconf=Bs2EtacPhiOneLineConf(aline, config[aline])
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                
-    def printCuts(self):
-        for aline in self.confObjects.keys():
-            print '===='
-            self.confObjects[aline].printCuts()
-            
 
-class Bs2EtacPhiOneLineConf(object):
+class Bs2EtacPhiConf(LineBuilder) :
     
-    Line=None
-    Selections=[]
-    TopSelectionSeq=None
-
-    ###  cuts ###
     
-    KCut=''
-    PhiCombCut=''
-    PhiCut=''
-    Pi_etac_Cut=''
-    Rho_etac_CombCut=''
-    K_etac_Cut=''
-    Phi_etac_CombCut=''
-    EtacCombCut=''
-    EtacCut=''
-    BsCombCut=''
-    BsCut=''
-
-    PhiSel=None
-    Phi_etac_Sel=None
-    Rho_etac_Sel=None
-    EtacSel=None
-    BsSel=None
-    
-    LineSuffix=''
-    
-    __configuration_keys__=[
+    __configuration_keys__ = (
         'Prescale',
-        'Postscale',            
+        'Postscale',
+        #K parameters
+    	'K_PT',                   
+   	'K_TRCHI2',               
+   	'K_IPCHI2',              
+        #pi parameters
+        'pi_PT',                 
+    	'pi_TRCHI2',             
+    	'pi_IPCHI2',              
         #phi parameters
-        'K_phi_PT',
-        'K_phi_TRCHI2',
-        'K_phi_IPCHI2',
-        #phi parameters
-        'phiVDZ',
-        'phiPT',
-        'phiIPCHI2', 
-        'phiVCHI2/VDOF',                   
-        #pi (for eta_c decay) parameters
-        'pi_etac_PT',
-        'pi_etac_TRCHI2',        
-        'pi_etac_IPCHI2',             
+        'phi_VDZ',
+        'phi_PT',
+        'phi_IPCHI2', 
+        'phi_VCHI2_VDOF',
         #rho (for eta_c decay) parameters
         'rho_etac_VDZ',
-        'rho_etac_VCHI2/VDOF',    
-        #K (for eta_c decay) parameters
-        'K_etac_PT',
-        'K_etac_TRCHI2',         
-        'K_etac_IPCHI2',    
+        'rho_etac_VCHI2_VDOF',    
         #phi (for eta_c decay) parameters
         'phi_etac_VDZ',
-        'phi_etac_VCHI2/VDOF',             
+        'phi_etac_VCHI2_VDOF',             
         #eta_c parameters
-        'etacVDZ', 
-        'etacPT',
-        'etacIPCHI2',
-        'etacVCHI2/VDOF',                     
+        'etac_VDZ', 
+        'etac_PT',
+        'etac_IPCHI2',
+        'etac_VCHI2_VDOF',                     
         #Bs parameters
-        'BsVDZ',
-        'BsDIRA',
-        'BsIPCHI2',
-        'BsVCHI2/VDOF',        
-        ]
-
+        'Bs_VDZ',
+        'Bs_DIRA',
+        'Bs_IPCHI2',
+        'Bs_VCHI2_VDOF'
+        )
     
-    def __init__(self, LineSuffix, config):
-
-        from StrippingSelections.Utils import checkConfig
-        
-        checkConfig(Bs2EtacPhiOneLineConf.__configuration_keys__,config)
-        
-        self.LineSuffix=LineSuffix
-
-        self.KCut = "(PT > %(K_phi_PT)s*MeV) &"\
-                    "(TRCHI2DOF < %(K_phi_TRCHI2)s) &"\
-                    "(MIPCHI2DV(PRIMARY) > %(K_phi_IPCHI2)s) " % config
-
-        self.PhiCombCut = "(ADAMASS('phi(1020)') < 50*MeV) &"\
-                          "(APT > %(phiPT)s*MeV) " % config
-
-        self.PhiCut = "(BPVVDZ > %(phiVDZ)s) &"\
-                      "(VFASPF(VCHI2/VDOF) < %(phiVCHI2/VDOF)s) " % config
-        
-        self.Pi_etac_Cut = "(PT > %(pi_etac_PT)s*MeV) &"\
-                           "(TRCHI2DOF < %(pi_etac_TRCHI2)s) &"\
-                           "(MIPCHI2DV(PRIMARY) > %(pi_etac_IPCHI2)s) " % config
-
-        self.Rho_etac_CombCut = "(AM > 400.*MeV) &"\
-                                "(AM < 3413.*MeV) " % config
- 
-        self.Rho_etac_Cut = "(BPVVDZ > %(rho_etac_VDZ)s) &"\
-                            "(VFASPF(VCHI2/VDOF) < %(rho_etac_VCHI2/VDOF)s) " % config
-
-        self.K_etac_Cut = "(PT > %(K_etac_PT)s*MeV) &"\
-                          "(TRCHI2DOF < %(K_etac_TRCHI2)s) &"\
-                          "(MIPCHI2DV(PRIMARY) > %(K_etac_IPCHI2)s) " % config
-
-        self.Phi_etac_CombCut = "(AM > 400.*MeV) &"\
-                                "(AM < 3413.*MeV) " % config
-        
-        self.Phi_etac_Cut = "(BPVVDZ > %(phi_etac_VDZ)s) &" \
-                            "(VFASPF(VCHI2/VDOF) < %(phi_etac_VCHI2/VDOF)s) " % config
-      
-        self.EtacCombCut = "(ADAMASS('eta_c(1S)')<100.*MeV) &"\
-                           "(APT > %(etacPT)s*MeV) " % config
-        
-        self.EtacCut = "(BPVVDZ > %(etacVDZ)s) &"\
-                       "(MIPCHI2DV(PRIMARY) > %(etacIPCHI2)s) &"\
-                       "(VFASPF(VCHI2/VDOF) < %(etacVCHI2/VDOF)s) " % config
-
-        self.BsCombCut = "(ADAMASS('B_s0')<300.*MeV) " % config
-      
-        self.BsCut = "(BPVVDZ > %(BsVDZ)s) &"\
-                     "(BPVDIRA > %(BsDIRA)s) &"\
-                     "(MIPCHI2DV(PRIMARY) < %(BsIPCHI2)s) &"\
-                     "(VFASPF(VCHI2/VDOF) < %(BsVCHI2/VDOF)s) " % config
-   
-
-
-        ###  selections ###
-
-        self.__MakeEtac__()
-        self.__MakePhi__()
-        self.__MakeBs__()
-        
-        from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import SelectionSequence
-        
-
-        ### stripping line ###
-        Bs2EtacPhiLine=StrippingLine("Bs2EtacPhi"+self.LineSuffix,
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.BsSel ]
-                                     )
-        
-        ### Collect them all together in a nice way ###
-        self.Line=Bs2EtacPhiLine
-        self.Selections=[self.PhiSel, self.Phi_etac_Sel, self.Rho_etac_Sel, self.EtacSel, self.BsSel]
-   
-
-        
-    def printCuts(self):
-        print 'name', self.LineSuffix
-        print 'KCut', self.KCut
-        print 'PhiCombCut', self.PhiCombCut
-        print 'PhiCut', self.PhiCut
-        print 'Pi_etac_Cut', self.Pi_etac_Cut
-        print 'Rho_etac_CombCut', self.Rho_etac_CombCut
-        print 'Rho_etac_Cut', self.Rho_etac_Cut
-        print 'K_etac_Cut', self.K_etac_Cut
-        print 'Phi_etac_CombCut', self.Phi_etac_CombCut
-        print 'Phi_etac_Cut', self.Phi_etac_Cut
-        print 'EtacCut', self.EtacCut
-        print 'EtacCombCut', self.EtacCombCut
-        print 'BsCombCut', self.BsCombCut
-        print 'BsCut', self.BsCut
-
-        
-    ############ Functions to make Selections #######################
-
-        
-    def __MakePhi__(self):
-
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
-
-        PhiForBs2EtacPhi = CombineParticles(self.LineSuffix+"PhiForBs2EtacPhi")
-        PhiForBs2EtacPhi.DecayDescriptor = "[phi(1020) -> K+ K-]cc" 
-        PhiForBs2EtacPhi.DaughtersCuts = { "K-"  : self.KCut }
-        PhiForBs2EtacPhi.CombinationCut = self.PhiCombCut
-        PhiForBs2EtacPhi.MotherCut = self.PhiCut
-        
-        StdTightKaons = DataOnDemand(Location = 'Phys/StdTightKaons')
-
-        SelPhiForBs2EtacPhi = Selection(" SelPhiForBs2EtacPhi"+self.LineSuffix, Algorithm=PhiForBs2EtacPhi, RequiredSelections = [StdTightKaons])
-        
-        self.PhiSel = SelPhiForBs2EtacPhi
-                
     
-    def __MakeEtac__(self):
-
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
-
-        #phi for eta_c selection
-        PhiForEtacForBs2EtacPhi = CombineParticles(self.LineSuffix+"PhiForEtacForBs2EtacPhi")
-        PhiForEtacForBs2EtacPhi.DecayDescriptor = "[phi(1020) -> K+ K-]cc" 
-        PhiForEtacForBs2EtacPhi.DaughtersCuts = { "K-"  : self.K_etac_Cut }
-        PhiForEtacForBs2EtacPhi.CombinationCut = self.Phi_etac_CombCut  
-        PhiForEtacForBs2EtacPhi.MotherCut = self.Phi_etac_Cut        
-        PhiForEtacForBs2EtacPhi.ParticleCombiners = { ''  : combiner } 
-        
-        StdTightKaons = DataOnDemand(Location = 'Phys/StdTightKaons')
-        
-        SelPhiForEtacForBs2EtacPhi = Selection("SelPhiForEtacForBs2EtacPhi"+self.LineSuffix, Algorithm=PhiForEtacForBs2EtacPhi, RequiredSelections = [StdTightKaons])
-            
-        self.Phi_etac_Sel = SelPhiForEtacForBs2EtacPhi
-
-        #rho for eta_c selection
-        RhoForEtacForBs2EtacPhi = CombineParticles(self.LineSuffix+"RhoForEtacForBs2EtacPhi")
-        RhoForEtacForBs2EtacPhi.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc" 
-        RhoForEtacForBs2EtacPhi.DaughtersCuts = { "pi-"  : self.Pi_etac_Cut }
-        RhoForEtacForBs2EtacPhi.CombinationCut = self.Rho_etac_CombCut  
-        RhoForEtacForBs2EtacPhi.MotherCut = self.Rho_etac_Cut        
-        RhoForEtacForBs2EtacPhi.ParticleCombiners = { ''  : combiner } 
-        
-        StdTightPions = DataOnDemand(Location = 'Phys/StdTightPions')
-        
-        SelRhoForEtacForBs2EtacPhi = Selection("SelRhoForEtacForBs2EtacPhi"+self.LineSuffix, Algorithm=RhoForEtacForBs2EtacPhi, RequiredSelections = [StdTightPions])
-            
-        self.Rho_etac_Sel = SelRhoForEtacForBs2EtacPhi
-
-        #eta_c selection
-        EtacForBs2EtacPhi = CombineParticles(self.LineSuffix+"EtacForBs2EtacPhi")
-        EtacForBs2EtacPhi.DecayDescriptor = "eta_c(1S) -> rho(770)0 phi(1020)" 
-        EtacForBs2EtacPhi.CombinationCut = self.EtacCombCut
-        EtacForBs2EtacPhi.MotherCut = self.EtacCut 
-        EtacForBs2EtacPhi.ParticleCombiners = { ''  : combiner } 
-        
-        SelEtacForBs2EtacPhi = Selection("SelEtacForBs2EtacPhi"+self.LineSuffix, Algorithm= EtacForBs2EtacPhi, RequiredSelections = [self.Rho_etac_Sel, self.Phi_etac_Sel])
-            
-        self.EtacSel = SelEtacForBs2EtacPhi
-
     
-    def __MakeBs__(self):
-        
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection
+    def __init__(self, name, config) :
 
-        #B_s0 selection
-        Bs2EtacPhi = CombineParticles(self.LineSuffix+'Bs2EtacPhi')    
-        Bs2EtacPhi.DecayDescriptors = ["B_s0 -> eta_c(1S) phi(1020)"]
-        Bs2EtacPhi.CombinationCut = self.BsCombCut
-        Bs2EtacPhi.MotherCut = self.BsCut
-        Bs2EtacPhi.ParticleCombiners = { ''  : combiner } 
         
-        SelBs2EtacPhi = Selection("SelBs2EtacPhi"+self.LineSuffix, Algorithm=Bs2EtacPhi, RequiredSelections = [self.EtacSel, self.PhiSel])
-      
-        
-        self.BsSel=SelBs2EtacPhi
+        LineBuilder.__init__(self, name, config)
 
+        
+        prescaled_name = name + 'Nominal'
+	
+	
+	self.selKaons = makeKaons (
+            'KaonFor'+prescaled_name,
+            K_PT = config['K_PT'],
+            K_TRCHI2 = config['K_TRCHI2'],
+            K_IPCHI2 = config['K_IPCHI2']
+            )
+
+
+        self.selPions = makePions (
+            'PionFor'+prescaled_name,
+            pi_PT = config['pi_PT'],
+            pi_TRCHI2 = config['pi_TRCHI2'],
+            pi_IPCHI2 = config['pi_IPCHI2']
+            )
+
+        
+        self.selPhi2KK = makePhi2KK (
+            'PhiFor'+prescaled_name,
+            kaons = self.selKaons,
+            phi_VDZ = config['phi_VDZ'],
+            phi_PT = config['phi_PT'],
+            phi_IPCHI2 = config['phi_IPCHI2'],
+            phi_VCHI2_VDOF = config['phi_VCHI2_VDOF']
+            )
+        
+        
+        self.selPhi2KKForEtac = makePhi2KKForEtac (
+            'PhiForEtacFor'+prescaled_name,
+	    kaons = self.selKaons,
+            phi_etac_VDZ = config['phi_etac_VDZ'],
+            phi_etac_VCHI2_VDOF = config['phi_etac_VCHI2_VDOF']
+            )
+        
+        
+        self.selRho2PiPiForEtac = makeRho2PiPiForEtac (
+            'RhoForEtacFor'+prescaled_name,
+	    pions = self.selPions,
+            rho_etac_VDZ = config['rho_etac_VDZ'],
+            rho_etac_VCHI2_VDOF = config['rho_etac_VCHI2_VDOF']
+            )
+        
+        
+        self.selEtac2RhoPhi = makeEtac2RhoPhi (
+            'EtacFor'+prescaled_name,
+            phiForEtacSel = self.selPhi2KKForEtac, 
+            rhoForEtacSel = self.selRho2PiPiForEtac,
+            etac_VDZ = config['etac_VDZ'],
+            etac_PT = config['etac_PT'],
+            etac_IPCHI2 = config['etac_IPCHI2'],
+            etac_VCHI2_VDOF = config['etac_VCHI2_VDOF']
+            )
+        
+
+        self.selBs2EtacPhi = makeBs2EtacPhi (
+            prescaled_name,  
+            etacSel = self.selEtac2RhoPhi, 
+            phiSel = self.selPhi2KK,
+            Bs_VDZ = config['Bs_VDZ'],
+            Bs_DIRA = config['Bs_DIRA'],
+            Bs_IPCHI2 = config['Bs_IPCHI2'],
+            Bs_VCHI2_VDOF = config['Bs_VCHI2_VDOF']
+            )
+        
+
+        self.prescaled_line = StrippingLine (
+            prescaled_name+"Line",
+            prescale = config['Prescale'],
+            postscale = config['Postscale'],
+            algos = [ self.selBs2EtacPhi ]
+            )
+
+        
+        self.registerLine(self.prescaled_line)
+        
+        
+        
+	
+def makeKaons (
+    name,
+    K_PT,
+    K_TRCHI2,
+    K_IPCHI2
+    ):
+
+    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _kaonsFilter = FilterDesktop(Code = _code)
+    _stdKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
+
+    return Selection (
+        name,
+        Algorithm = _kaonsFilter,
+        RequiredSelections = [_stdKaons]
+        )
+
+
+def makePions(
+    name,
+    pi_PT,
+    pi_TRCHI2,
+    pi_IPCHI2
+    ):
+
+    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s)" %locals() 
+    _pionsFilter = FilterDesktop(Code = _code)
+    _stdPions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
+
+    return Selection (
+        name,
+        Algorithm = _pionsFilter,
+        RequiredSelections = [_stdPions]
+        )
+
+	
+	
+        
+def makePhi2KK (
+    name,
+    kaons,
+    phi_VDZ,
+    phi_PT,
+    phi_IPCHI2,
+    phi_VCHI2_VDOF
+    ):
+    
+
+    _phi_combinationCuts = "(ADAMASS('phi(1020)')<50*MeV) & (APT>%(phi_PT)s*MeV)" %locals()
+    _phi_motherCuts = "(BPVVDZ>%(phi_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(phi_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(phi_VCHI2_VDOF)s)" %locals()
+    
+    _phi2KK = CombineParticles (
+        DecayDescriptor = "[phi(1020) -> K+ K-]cc",
+        CombinationCut = _phi_combinationCuts,
+        MotherCut = _phi_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _phi2KK,
+        RequiredSelections = [kaons]
+        )
+
+
+
+def makePhi2KKForEtac (
+    name,
+    kaons,
+    phi_etac_VDZ,
+    phi_etac_VCHI2_VDOF
+    ):
+    
+
+    _phiForEtac_combinationCuts = "(AM>400.*MeV) & (AM<3413.*MeV)" %locals()
+    _phiForEtac_motherCuts = "(BPVVDZ>%(phi_etac_VDZ)s) & ((VFASPF(VCHI2/VDOF)<%(phi_etac_VCHI2_VDOF)s))" %locals()
+    
+    _phi2KKForEtac = CombineParticles (
+        DecayDescriptor = "[phi(1020) -> K+ K-]cc",
+        CombinationCut = _phiForEtac_combinationCuts,
+        MotherCut = _phiForEtac_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _phi2KKForEtac,
+        RequiredSelections = [kaons]
+        )
+
+
+
+def makeRho2PiPiForEtac (
+    name,
+    pions,	
+    rho_etac_VDZ,
+    rho_etac_VCHI2_VDOF
+    ):
+    
+
+    _rho_etac_combinationCuts = "(AM>400.*MeV) & (AM<3413.*MeV)" %locals()
+    _rho_etac_motherCuts = "(BPVVDZ>%(rho_etac_VDZ)s) & (VFASPF(VCHI2/VDOF)<%(rho_etac_VCHI2_VDOF)s)"  %locals()
+    
+    _rho2pipi_etac = CombineParticles (
+        DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc" ,
+        CombinationCut = _rho_etac_combinationCuts,
+        MotherCut = _rho_etac_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _rho2pipi_etac,
+        RequiredSelections = [pions]
+        )
+
+
+
+def makeEtac2RhoPhi (
+    name,
+    phiForEtacSel,
+    rhoForEtacSel,
+    etac_VDZ,
+    etac_PT,
+    etac_IPCHI2,
+    etac_VCHI2_VDOF
+    ):
+    
+    _etac_combinationCuts = "(ADAMASS('eta_c(1S)')<100.*MeV) & (APT>%(etac_PT)s*MeV)" %locals()
+    _etac_motherCuts = "(BPVVDZ>%(etac_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(etac_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(etac_VCHI2_VDOF)s)" %locals()
+    
+    _etac2phirho = CombineParticles (
+        DecayDescriptor = "eta_c(1S) -> rho(770)0 phi(1020)",
+        CombinationCut = _etac_combinationCuts,
+        MotherCut = _etac_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _etac2phirho,
+        RequiredSelections = [phiForEtacSel, rhoForEtacSel]
+        )
+
+
+
+def makeBs2EtacPhi (
+    name,
+    etacSel,
+    phiSel,
+    Bs_VDZ,
+    Bs_DIRA,
+    Bs_IPCHI2,
+    Bs_VCHI2_VDOF
+    ):
+    
+    _Bs_combinationCuts = "(ADAMASS('B_s0')<300.*MeV)" %locals()
+    _Bs_motherCuts = "(BPVVDZ>%(Bs_VDZ)s) & (BPVDIRA>%(Bs_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(Bs_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(Bs_VCHI2_VDOF)s)" %locals()
+    
+    _Bs = CombineParticles (  
+        DecayDescriptor = "B_s0 -> eta_c(1S) phi(1020)",
+        CombinationCut = _Bs_combinationCuts, 
+        MotherCut = _Bs_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _Bs,
+        RequiredSelections = [phiSel, etacSel]
+        )
 
 
 

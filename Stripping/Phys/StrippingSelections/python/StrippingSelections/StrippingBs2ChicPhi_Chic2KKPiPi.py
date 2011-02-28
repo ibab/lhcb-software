@@ -1,312 +1,356 @@
-# $Id: StrippingBs2ChicPhi_Chic2KKPiPi.py,v 1.2 2010-05-10 12:12:05 jpalac Exp $
+__author__ = ['Greig Cowan','Juan Palacios']
+__date__ = '27/02/2011'
+__version__ = '$Revision: 1.1 $'
+
+__all__ = (
+    'Bs2ChicPhi_Chic2KKPiPiConf',
+    'makeTightKaons',
+    'makeTightPions',
+    'makePhi2KK',
+    'makePhi2KKForChic',
+    'makeRho2PiPiForChic',
+    'makeChic2RhoPhi',
+    'makeBs2ChicPhi_Chic2KKPiPi'
+    )
 
 
-__author__ = ['Katarzyna Senderowska']
-__date__ = '04/10/2010'
-__version__ = '$Revision: 1.2 $'
+from Gaudi.Configuration import *
+from Configurables import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
 
 
-#Vertex Fitter
-combiner='OfflineVertexFitter'
+name = "Bs2ChicPhi_Chic2KKPiPi"
 
 
-confdict={
-    'Tuned'   : {
-                 'Prescale'    : 1.0 ,
-                 'Postscale'   : 1.0 ,
-                 #K parameters
-                 'K_phi_PT'               : 500.,
-                 'K_phi_TRCHI2'           : 5.,
-                 'K_phi_IPCHI2'           : 9.,
-                 #phi parameters
-                 'phiVDZ'                 : 0., 
-                 'phiPT'                  : 1000.,
-                 'phiIPCHI2'              : 9.,
-                 'phiVCHI2/VDOF'          : 16.,
-                 #pi (for chi_c decay) parameters
-                 'pi_chic_PT'             : 450., 
-                 'pi_chic_TRCHI2'         : 5,
-                 'pi_chic_IPCHI2'         : 9.,
-                 #rho (for chi_c decay) parameters
-                 'rho_chic_VDZ'           : 0.,
-                 'rho_chic_VCHI2/VDOF'    : 16.,
-                 #K (for chi_c decay) parameters
-                 'K_chic_PT'              : 450.,
-                 'K_chic_TRCHI2'          : 5.,
-                 'K_chic_IPCHI2'          : 9.,
-                 #phi (for eta_c decay) parameters
-                 'phi_chic_VDZ'           : 0.,
-                 'phi_chic_VCHI2/VDOF'    : 16.,
-                 #chi_c parameters
-                 'chicVDZ'                : 0.,   
-                 'chicPT'                 : 1000., 
-                 'chicIPCHI2'             : 9.,
-                 'chicVCHI2/VDOF'         : 16.,               
-                 #Bs parameters
-                 'BsVDZ'                  : 0.,
-                 'BsDIRA'                 : 0.995,
-                 'BsIPCHI2'               : 9.,
-                 'BsVCHI2/VDOF'           : 16.,
-                },
+config_params = {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #K parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500., 
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0., 
+    'phi_PT'                 : 1000., 
+    'phi_IPCHI2'             : 6.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #phi (for chi_c decay) parameters
+    'phi_chic_VDZ'           : 0.,
+    'phi_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,    
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                 : 0.,
+    'Bs_DIRA'                : 0.999,
+    'Bs_IPCHI2'              : 9.,
+    'Bs_VCHI2_VDOF'          : 16.
     }
 
 
-class Bs2ChicPhi_Chic2KKPiPiAllLinesConf(object):
-    
-    Lines=[]
-    
-    confObjects={}
-    
-    def __init__(self, config, offLines=[]):
-        for aline in config.keys():
-            if aline not in offLines:
-                lineconf=Bs2ChicPhi_Chic2KKPiPiOneLineConf(aline, config[aline])
-                self.confObjects[aline]=lineconf
-                self.Lines.append(lineconf.Line)
-                
-    def printCuts(self):
-        for aline in self.confObjects.keys():
-            print '===='
-            self.confObjects[aline].printCuts()
-            
 
-class Bs2ChicPhi_Chic2KKPiPiOneLineConf(object):
-    
-    Line=None
-    Selections=[]
-    TopSelectionSeq=None
 
-    ###  cuts ###
+class Bs2ChicPhi_Chic2KKPiPiConf(LineBuilder) :
     
-    KCut=''
-    PhiCombCut=''    
-    PhiCut=''
-    Pi_chic_Cut=''
-    Rho_chic_CombCut=''
-    K_chic_Cut=''
-    Phi_chic_CombCut=''
-    ChicCombCut=''
-    ChicCut=''
-    BsCombCut=''
-    BsCut=''
     
-    PhiSel=None
-    Phi_chic_Sel=None
-    Rho_chic_Sel=None
-    ChicSel=None
-    BsSel=None
-    
-    LineSuffix=''
-    
-    __configuration_keys__=[
+    __configuration_keys__ = (
         'Prescale',
-        'Postscale',     
+        'Postscale',
         #K parameters
-        'K_phi_PT',
-        'K_phi_TRCHI2',
-        'K_phi_IPCHI2',
+        'K_PT',
+        'K_TRCHI2',
+        'K_IPCHI2',
+	#pi parameters	
+        'pi_PT',
+        'pi_TRCHI2',        
+        'pi_IPCHI2', 
         #phi parameters
-        'phiVDZ',        
-        'phiPT',
-        'phiIPCHI2',
-        'phiVCHI2/VDOF',
-        #pi (for chi_c decay) parameters
-        'pi_chic_PT',
-        'pi_chic_TRCHI2',        
-        'pi_chic_IPCHI2',             
+        'phi_VDZ',        
+        'phi_PT',
+        'phi_IPCHI2',
+        'phi_VCHI2_VDOF',
         #rho (for chi_c decay) parameters
         'rho_chic_VDZ',
-        'rho_chic_VCHI2/VDOF',    
-        #K (for chi_c decay) parameters
-        'K_chic_PT',
-        'K_chic_TRCHI2',         
-        'K_chic_IPCHI2',    
+        'rho_chic_VCHI2_VDOF',      
         #phi (for chi_c decay) parameters
         'phi_chic_VDZ',
-        'phi_chic_VCHI2/VDOF',              
-        #chi_c parameters
-        'chicVDZ',  
-        'chicPT',
-        'chicIPCHI2', 
-        'chicVCHI2/VDOF',                                
+        'phi_chic_VCHI2_VDOF',             
+        #eta_c parameters
+        'chic_VDZ', 
+        'chic_PT',
+        'chic_IPCHI2',
+        'chic_VCHI2_VDOF',                     
         #Bs parameters
-        'BsVDZ',  
-        'BsDIRA',
-        'BsIPCHI2',
-        'BsVCHI2/VDOF',            
-        ]
+        'Bs_VDZ',
+        'Bs_DIRA',
+        'Bs_IPCHI2',
+        'Bs_VCHI2_VDOF'
+        )
+
     
-    def __init__(self, LineSuffix, config):
-
-        from StrippingSelections.Utils import checkConfig
-        
-        checkConfig(Bs2ChicPhi_Chic2KKPiPiOneLineConf.__configuration_keys__,config)    
-
-        self.LineSuffix=LineSuffix
-        
-        self.KCut = "(PT > %(K_phi_PT)s*MeV) &"\
-                    "(TRCHI2DOF < %(K_phi_TRCHI2)s) &"\
-                    "(MIPCHI2DV(PRIMARY) > %(K_phi_IPCHI2)s) " % config
- 
-        self.PhiCombCut = "(ADAMASS('phi(1020)') < 50*MeV) &"\
-                          "(APT > %(phiPT)s*MeV) " % config
-
-        self.PhiCut = "(BPVVDZ > %(phiVDZ)s) &"\
-                      "(VFASPF(VCHI2/VDOF) < %(phiVCHI2/VDOF)s) " % config
-        
-        self.Pi_chic_Cut = "(PT > %(pi_chic_PT)s*MeV) &"\
-                           "(TRCHI2DOF < %(pi_chic_TRCHI2)s) &"\
-                           "(MIPCHI2DV(PRIMARY) > %(pi_chic_IPCHI2)s) " % config
-
-        self.Rho_chic_CombCut = "(AM > 400.*MeV) &"\
-                               "(AM < 3413.*MeV) " % config
-
-        self.Rho_chic_Cut = "(BPVVDZ > %(rho_chic_VDZ)s) &"\
-                            "(VFASPF(VCHI2/VDOF) < %(rho_chic_VCHI2/VDOF)s) " % config
-
-        self.K_chic_Cut = "(PT > %(K_chic_PT)s*MeV) &"\
-                          "(TRCHI2DOF < %(K_chic_TRCHI2)s) &"\
-                          "(MIPCHI2DV(PRIMARY) > %(K_chic_IPCHI2)s) " % config
-        
-        self.Phi_chic_CombCut = "(AM > 400.*MeV) &"\
-                                "(AM < 3413.*MeV) " % config
-
-        self.Phi_chic_Cut = "(BPVVDZ > %(phi_chic_VDZ)s) &" \
-                            "(VFASPF(VCHI2/VDOF) < %(phi_chic_VCHI2/VDOF)s) " % config
-
-        self.ChicCombCut = "(ADAMASS('chi_c0(1P)')<100.*MeV) &"\
-                           "(APT > %(chicPT)s*MeV) " % config
-
-        self.ChicCut = "(BPVVDZ > %(chicVDZ)s) &"\
-                       "(MIPCHI2DV(PRIMARY) > %(chicIPCHI2)s) &"\
-                       "(VFASPF(VCHI2/VDOF) < %(chicVCHI2/VDOF)s) " % config
-                
-        self.BsCombCut = "(ADAMASS('B_s0')<300.*MeV) " % config
-
-        self.BsCut = "(BPVVDZ > %(BsVDZ)s) &"\
-                     "(BPVDIRA > %(BsDIRA)s) &"\
-                     "(MIPCHI2DV(PRIMARY) < %(BsIPCHI2)s) &"\
-                     "(VFASPF(VCHI2/VDOF) < %(BsVCHI2/VDOF)s) " % config
-
-
-
-        ###  selections ###
-        
-               
-        self.__MakePhi__()
-        self.__MakeChic__()
-        self.__MakeBs__()
-        
-        from StrippingConf.StrippingLine import StrippingLine
-        from PhysSelPython.Wrappers import SelectionSequence
-        
-
-        ### stripping line ###
-        Bs2ChicPhi_Chic2KKPiPiLine=StrippingLine("Bs2ChicPhi_Chic2KKPiPi"+self.LineSuffix,
-                                                 prescale = config['Prescale'],
-                                                 postscale = config['Postscale'],
-                                                 algos = [ self.BsSel ]
-                                                 )
-        
-        ### Collect them all together in a nice way ###
-        self.Line=Bs2ChicPhi_Chic2KKPiPiLine
-        self.Selections=[self.PhiSel, self.Phi_chic_Sel, self.Rho_chic_Sel, self.ChicSel, self.BsSel]
-   
-
-      
-    def printCuts(self):
-        print 'name', self.LineSuffix
-        print 'KCut', self.KCut
-        print 'PhiCombCut', self.PhiCombCut
-        print 'PhiCut', self.PhiCut
-        print 'Pi_chic_Cut', self.Pi_chic_Cut
-        print 'Rho_chic_CombCut', self.Rho_chic_CombCut
-        print 'Rho_chic_Cut', self.Rho_chic_Cut
-        print 'K_chic_Cut', self.K_chic_Cut
-        print 'Phi_chic_CombCut', self.Phi_chic_CombCut
-        print 'Phi_chic_Cut', self.Phi_chic_Cut
-        print 'ChicCut', self.ChicCut
-        print 'ChicCombCut', self.ChicCombCut
-        print 'BsCombCut', self.BsCombCut
-        print 'BsCut', self.BsCut
-
-        
-    ############ Functions to make Selections #######################
-        
-    def __MakePhi__(self):
-
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
-
-        PhiForBs2ChicPhi_Chic2KKPiPi = CombineParticles(self.LineSuffix+"PhiForBs2ChicPhi_Chic2KKPiPi")
-        PhiForBs2ChicPhi_Chic2KKPiPi.DecayDescriptor = "[phi(1020) -> K+ K-]cc" 
-        PhiForBs2ChicPhi_Chic2KKPiPi.DaughtersCuts = { "K-"  : self.KCut }
-        PhiForBs2ChicPhi_Chic2KKPiPi.CombinationCut = self.PhiCombCut
-        PhiForBs2ChicPhi_Chic2KKPiPi.MotherCut = self.PhiCut
-        
-        StdTightKaons = DataOnDemand(Location = 'Phys/StdTightKaons')
-
-        SelPhiForBs2ChicPhi_Chic2KKPiPi = Selection(" SelPhiForBs2ChicPhi_Chic2KKPiPi"+self.LineSuffix, Algorithm=PhiForBs2ChicPhi_Chic2KKPiPi, RequiredSelections = [StdTightKaons])
-        
-        self.PhiSel = SelPhiForBs2ChicPhi_Chic2KKPiPi
-
-   
-    def __MakeChic__(self):
-
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection, DataOnDemand
-
-        #phi for chi_c selection
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi = CombineParticles(self.LineSuffix+"PhiForChicForBs2ChicPhi_Chic2KKPiPi")
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi.DecayDescriptor = "[phi(1020) -> K+ K-]cc" 
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi.DaughtersCuts = { "K-"  : self.K_chic_Cut }
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi.CombinationCut = self.Phi_chic_CombCut 
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi.MotherCut = self.Phi_chic_Cut        
-        PhiForChicForBs2ChicPhi_Chic2KKPiPi.ParticleCombiners = { ''  : combiner } 
-        
-        StdTightKaons = DataOnDemand(Location = 'Phys/StdTightKaons')
-        
-        SelPhiForChicForBs2ChicPhi_Chic2KKPiPi = Selection("SelPhiForChicForBs2ChicPhi_Chic2KKPiPi"+self.LineSuffix, Algorithm=PhiForChicForBs2ChicPhi_Chic2KKPiPi, RequiredSelections = [StdTightKaons])
-            
-        self.Phi_chic_Sel = SelPhiForChicForBs2ChicPhi_Chic2KKPiPi
-
-        #rho for eta_c selection
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi = CombineParticles(self.LineSuffix+"RhoForChicForBs2ChicPhi_Chic2KKPiPi")
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc" 
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi.DaughtersCuts = { "pi-"  : self.Pi_chic_Cut }
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi.CombinationCut = self.Rho_chic_CombCut 
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi.MotherCut = self.Rho_chic_Cut        
-        RhoForChicForBs2ChicPhi_Chic2KKPiPi.ParticleCombiners = { '' : combiner } 
-        
-        StdTightPions = DataOnDemand(Location = 'Phys/StdTightPions')
-        
-        SelRhoForChicForBs2ChicPhi_Chic2KKPiPi = Selection("SelRhoForChicForBs2ChicPhi_Chic2KKPiPi"+self.LineSuffix, Algorithm=RhoForChicForBs2ChicPhi_Chic2KKPiPi, RequiredSelections = [StdTightPions])
-            
-        self.Rho_chic_Sel = SelRhoForChicForBs2ChicPhi_Chic2KKPiPi
-
-
-        ChicForBs2ChicPhi_Chic2KKPiPi = CombineParticles(self.LineSuffix+"ChicForBs2ChicPhi_Chic2KKPiPi")
-        ChicForBs2ChicPhi_Chic2KKPiPi.DecayDescriptor = "chi_c0(1P) -> rho(770)0 rho(770)0" 
-        ChicForBs2ChicPhi_Chic2KKPiPi.CombinationCut = self.ChicCombCut
-        ChicForBs2ChicPhi_Chic2KKPiPi.MotherCut = self.ChicCut 
-        ChicForBs2ChicPhi_Chic2KKPiPi.ParticleCombiners = { '' : combiner } 
-        
-        SelChicForBs2ChicPhi_Chic2KKPiPi = Selection("SelChicForBs2ChicPhi_Chic2KKPiPi"+self.LineSuffix, Algorithm= ChicForBs2ChicPhi_Chic2KKPiPi, RequiredSelections = [self.Rho_chic_Sel, self.Phi_chic_Sel])
-            
-        self.ChicSel = SelChicForBs2ChicPhi_Chic2KKPiPi
     
-    def __MakeBs__(self):
+
+    def __init__(self, name, config) :
         
-        from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import Selection
+
+        LineBuilder.__init__(self, name, config)
+
+
+        prescaled_name = name + 'Nominal'
+
+
+
+        self.selKaons = makeKaons (
+            'KaonFor'+prescaled_name,
+            K_PT = config['K_PT'],
+            K_TRCHI2 = config['K_TRCHI2'],
+            K_IPCHI2 = config['K_IPCHI2']
+            )
+
+
+        self.selPions = makePions (
+            'PionFor'+prescaled_name,
+            pi_PT = config['pi_PT'],
+            pi_TRCHI2 = config['pi_TRCHI2'],
+            pi_IPCHI2 = config['pi_IPCHI2']
+            )
+
+
+        self.selPhi2KK = makePhi2KK (
+            'PhiFor'+prescaled_name,
+            kaons = self.selKaons,
+            phi_VDZ = config['phi_VDZ'],
+            phi_PT = config['phi_PT'],
+            phi_IPCHI2 = config['phi_IPCHI2'],
+            phi_VCHI2_VDOF = config['phi_VCHI2_VDOF']
+            )
         
-        Bs2ChicPhi_Chic2KKPiPi = CombineParticles(self.LineSuffix+'Bs2ChicPhi_Chic2KKPiPi')    
-        Bs2ChicPhi_Chic2KKPiPi.DecayDescriptors = ["B_s0 -> chi_c0(1P) phi(1020)"]
-        Bs2ChicPhi_Chic2KKPiPi.CombinationCut = self.BsCombCut
-        Bs2ChicPhi_Chic2KKPiPi.MotherCut = self.BsCut
-        Bs2ChicPhi_Chic2KKPiPi.ParticleCombiners = { '' : combiner } 
+
+        self.selPhi2KKForChic = makePhi2KKForChic (
+            'PhiForChicFor'+prescaled_name,
+            kaons = self.selKaons,
+            phi_chic_VDZ = config['phi_chic_VDZ'],
+            phi_chic_VCHI2_VDOF = config['phi_chic_VCHI2_VDOF']
+            )
+
         
-        SelBs2ChicPhi_Chic2KKPiPi = Selection("SelBs2ChicPhi_Chic2KKPiPi"+self.LineSuffix, Algorithm=Bs2ChicPhi_Chic2KKPiPi, RequiredSelections = [self.ChicSel, self.PhiSel])
-       
+        self.selRho2PiPiForChic = makeRho2PiPiForChic (
+            'RhoForChicFor'+prescaled_name,
+            pions = self.selPions,
+            rho_chic_VDZ = config['rho_chic_VDZ'],
+            rho_chic_VCHI2_VDOF = config['rho_chic_VCHI2_VDOF']
+            )
+
+
+        self.selChic2RhoPhi = makeChic2RhoPhi (
+            'ChicFor'+prescaled_name,
+            phiForChicSel = self.selPhi2KKForChic, 
+            rhoForChicSel = self.selRho2PiPiForChic,
+            chic_VDZ = config['chic_VDZ'],
+            chic_PT = config['chic_PT'],
+            chic_IPCHI2 = config['chic_IPCHI2'],
+            chic_VCHI2_VDOF = config['chic_VCHI2_VDOF']
+            )
+
         
-        self.BsSel = SelBs2ChicPhi_Chic2KKPiPi
+        self.selBs2ChicPhi_Chic2KKPiPi = makeBs2ChicPhi_Chic2KKPiPi (
+            prescaled_name,  
+            chicSel = self.selChic2RhoPhi, 
+            phiSel = self.selPhi2KK,
+            Bs_VDZ = config['Bs_VDZ'],
+            Bs_DIRA = config['Bs_DIRA'],
+            Bs_IPCHI2 = config['Bs_IPCHI2'],
+            Bs_VCHI2_VDOF = config['Bs_VCHI2_VDOF']
+            )
+
+
+        self.prescaled_line = StrippingLine (
+            prescaled_name+"Line",
+            prescale = config['Prescale'],
+            postscale = config['Postscale'],
+            algos = [ self.selBs2ChicPhi_Chic2KKPiPi ]
+            )
+        
+
+        self.registerLine(self.prescaled_line)
+        
+
+
+def makeKaons (
+    name,
+    K_PT,
+    K_TRCHI2,
+    K_IPCHI2
+    ):
+
+    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _kaonsFilter = FilterDesktop(Code = _code)
+    _stdKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
+
+    return Selection (
+        name,
+        Algorithm = _kaonsFilter,
+        RequiredSelections = [_stdKaons]
+        )
+
+
+def makePions(
+    name,
+    pi_PT,
+    pi_TRCHI2,
+    pi_IPCHI2
+    ):
+
+    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s)" %locals() 
+    _pionsFilter = FilterDesktop(Code = _code)
+    _stdPions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
+
+    return Selection (
+        name,
+        Algorithm = _pionsFilter,
+        RequiredSelections = [_stdPions]
+        )
+
+
+
+def makePhi2KK (
+    name,
+    kaons,
+    phi_VDZ,
+    phi_PT,
+    phi_IPCHI2,
+    phi_VCHI2_VDOF,
+    ):
+    
+
+    _phi_combinationCuts = "(ADAMASS('phi(1020)')<50*MeV) & (APT>%(phi_PT)s*MeV)" %locals()
+    _phi_motherCuts = "(BPVVDZ>%(phi_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(phi_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(phi_VCHI2_VDOF)s)" %locals()
+    
+    _phi2KK = CombineParticles (
+        DecayDescriptor = "[phi(1020) -> K+ K-]cc",
+        CombinationCut = _phi_combinationCuts,
+        MotherCut = _phi_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _phi2KK,
+        RequiredSelections = [kaons]
+        )
+
+
+
+def makePhi2KKForChic (
+    name,
+    kaons,
+    phi_chic_VDZ,
+    phi_chic_VCHI2_VDOF
+    ):
+    
+            
+    _phi_chic_combinationCuts = "(AM>400.*MeV) & (AM<3413.*MeV)" %locals()
+    _phi_chic_motherCuts = "(BPVVDZ>%(phi_chic_VDZ)s) & (VFASPF(VCHI2/VDOF)<%(phi_chic_VCHI2_VDOF)s)" %locals()
+            
+    _phi2KK_chic = CombineParticles( 
+        DecayDescriptor = "[phi(1020) -> K+ K-]cc",
+        CombinationCut = _phi_chic_combinationCuts,
+        MotherCut = _phi_chic_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _phi2KK_chic,
+        RequiredSelections = [kaons]
+        )
+
+
+
+def makeRho2PiPiForChic(
+    name,
+    pions,
+    rho_chic_VDZ,
+    rho_chic_VCHI2_VDOF,
+    ):
+    
+
+    _rho_chic_combinationCuts = "(AM>400.*MeV) & (AM<3413.*MeV)" %locals()
+    _rho_chic_motherCuts = "(BPVVDZ>%(rho_chic_VDZ)s) & (VFASPF(VCHI2/VDOF)<%(rho_chic_VCHI2_VDOF)s)"  %locals()
+    
+    _rho2pipi_chic = CombineParticles (
+        DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc" ,
+        CombinationCut = _rho_chic_combinationCuts,
+        MotherCut = _rho_chic_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _rho2pipi_chic,
+        RequiredSelections = [pions]
+        )
+
+
+
+def makeChic2RhoPhi (
+    name,
+    phiForChicSel,
+    rhoForChicSel,
+    chic_VDZ,
+    chic_PT,
+    chic_IPCHI2,
+    chic_VCHI2_VDOF,
+    ):
+    
+    _chic_combinationCuts = "(ADAMASS('chi_c0(1P)')<100.*MeV) & (APT>%(chic_PT)s*MeV)" %locals()
+    _chic_motherCuts = "(BPVVDZ>%(chic_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(chic_VCHI2_VDOF)s)" %locals()
+    
+    _chic2phirho = CombineParticles (
+        DecayDescriptor = "chi_c0(1P) -> rho(770)0 phi(1020)",  
+        CombinationCut = _chic_combinationCuts,
+        MotherCut = _chic_motherCuts
+        )
+            
+    return Selection (
+        name,
+        Algorithm = _chic2phirho,
+        RequiredSelections = [phiForChicSel, rhoForChicSel]
+        )
+
+        
+   
+def makeBs2ChicPhi_Chic2KKPiPi (
+    name,
+    chicSel,
+    phiSel,
+    Bs_VDZ,
+    Bs_DIRA,
+    Bs_IPCHI2,
+    Bs_VCHI2_VDOF,
+    ):
+    
+    
+    _Bs_combinationCuts = "(ADAMASS('B_s0')<300.*MeV)" %locals()
+    _Bs_motherCuts = "(BPVVDZ>%(Bs_VDZ)s) & (BPVDIRA>%(Bs_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(Bs_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(Bs_VCHI2_VDOF)s)" %locals()
+    
+    _Bs = CombineParticles ( 
+        DecayDescriptor = "B_s0 -> chi_c0(1P) phi(1020)",
+        CombinationCut = _Bs_combinationCuts, 
+        MotherCut = _Bs_motherCuts
+        )
+    
+    return Selection (
+        name,
+        Algorithm = _Bs,
+        RequiredSelections = [phiSel, chicSel]
+        )
+   
