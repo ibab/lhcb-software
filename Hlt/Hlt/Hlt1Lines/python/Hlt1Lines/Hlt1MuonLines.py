@@ -26,7 +26,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'SingleMuonNoIP_TrChi2'    :    4
         ,'channels'                 : { 'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                         'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                        'SingleMuonHighPT' : ( 'MuonHigh', ),
+                                        'SingleMuonHighPT' : ( 'Muon', ),
                                         'SingleMuonNoIP'   : ( 'Muon', ) }
         }
     
@@ -139,7 +139,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
-            >>  TightForward
+            >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
             >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
