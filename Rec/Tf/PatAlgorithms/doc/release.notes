@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r12 2011-02-28 =========================
 ! 2011-02-19 - Chris Jones
  - Fix coverity performance warning in PatForwardTool
 
