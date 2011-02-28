@@ -4,6 +4,7 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitors v1r2 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
 
