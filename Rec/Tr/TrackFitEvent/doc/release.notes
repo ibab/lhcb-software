@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r7 2011-02-28 =========================
 ! 2011-02-24 - Wouter Hulsbergen
  - bug fix in FitNode: was always putting fit in error mode for classical smoother
 
