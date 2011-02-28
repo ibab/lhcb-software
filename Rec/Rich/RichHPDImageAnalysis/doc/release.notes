@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r5p1 2011-02-28 =========================
 ! 2011-02-25 - Chris Jones
  - Replace use of boost lexical cast to std::string with std::ostringstream, 
    to appease icc11 and coverity

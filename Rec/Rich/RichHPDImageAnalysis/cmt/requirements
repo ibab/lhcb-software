@@ -4,7 +4,7 @@
 #============================================================================
 
 package           RichHPDImageAnalysis
-version           v1r5
+version           v1r5p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
