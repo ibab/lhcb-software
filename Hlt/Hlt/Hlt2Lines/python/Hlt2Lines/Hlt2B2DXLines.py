@@ -98,15 +98,17 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
 
         bindPrelim = bindMembers('bindPrelim', [PV3D()] + inputContainers + [filterPrelim])
         
+        # TODO: make this an Hlt2Member...
         from Configurables import TisTosParticleTagger
-        TUSInputParticlesFilter = TisTosParticleTagger("TUSInputParticlesFilter")
+        TUSInputParticlesFilter = TisTosParticleTagger("Hlt2B2DXTUSFilter")
         TUSInputParticlesFilter.TisTosSpecs = { "Hlt1.*Hadron.*Decision%TUS":0 }
-        TUSInputParticlesFilter.ProjectTracksToCalo = FALSE
-        TUSInputParticlesFilter.CaloClustForCharged = FALSE
-        TUSInputParticlesFilter.CaloClustForNeutral = FALSE
+        TUSInputParticlesFilter.ProjectTracksToCalo = False
+        TUSInputParticlesFilter.CaloClustForCharged = False
+        TUSInputParticlesFilter.CaloClustForNeutral = False
         TUSInputParticlesFilter.TOSFrac = { 4:0.0, 5:0.0 }
-        TUSInputParticlesFilter.CompositeTPSviaPartialTOSonly = TRUE
-        TUSInputParticlesFilter.InputLocations = [ bindPrelim.outputSelection() ]
+        TUSInputParticlesFilter.CompositeTPSviaPartialTOSonly = True
+        TUSInputParticlesFilter.Inputs = [ bindPrelim.outputSelection() ]
+        TUSInputParticlesFilter.Output = 'Hlt2/Hlt2B2DXTUSFilter/Particles'
 
         return bindMembers(name, [bindPrelim, TUSInputParticlesFilter])
 

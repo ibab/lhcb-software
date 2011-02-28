@@ -205,7 +205,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         _tosfilter.CaloClustForCharged = False
         _tosfilter.CaloClustForNeutral = False
         _tosfilter.TOSFrac = { 4:0.0, 5:0.0 }
-        _tosfilter.InputLocations = [inputSeq[-1].outputSelection() ]
+        _tosfilter.Inputs = [inputSeq[-1].outputSelection() ]
         _tosfilter.Output = '/Hlt2/%s/Particles' % name
         #from HltLine.HltLine import Hlt2Member
         #from Configurables import TisTosParticleTagger
@@ -215,7 +215,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         #                                        , CaloClustForCharged = False
         #                                        , CaloClustForNeutral = False
         #                                        , TOSFrac = { 4:0.0, 5:0.0 }
-        #                                        , InputLocations = inputSeq ) 
+        #                                        , Inputs = inputSeq ) 
         from HltLine.HltLine import bindMembers
         return bindMembers(name, inputSeq+[_tosfilter])
 
