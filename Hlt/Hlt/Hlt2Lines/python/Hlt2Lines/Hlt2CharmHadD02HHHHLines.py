@@ -153,8 +153,8 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         
         # Filter pions and kaons with LowIP Cut
-        pionsLowIP = self.__InPartFilterLowIP('CharmInputPionsLowIP', [ BiKalmanFittedPions] )
-        kaonsLowIP = self.__InPartFilterLowIP('CharmInputKaonsLowIP', [ BiKalmanFittedKaons] )
+        pionsLowIP = self.__InPartFilterLowIP('Charm4BodyInputPionsLowIP', [ BiKalmanFittedPions] )
+        kaonsLowIP = self.__InPartFilterLowIP('Charm4BodyInputKaonsLowIP', [ BiKalmanFittedKaons] )
 
          
         # Tighten IP cut
