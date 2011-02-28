@@ -719,3 +719,65 @@ B2DMuNuX = {
                   }
    
     }
+
+####################################
+# Dictionaries for PID Calib Lines #
+# A. Powell                        #
+####################################
+
+# NoPID D* Line
+# A. Powell & F. Xing
+NoPIDDstarWithD02RSKPi = {
+    'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
+    'CONFIG' : {'DaugPt'             : 250       ## MeV
+                , 'DaugP'            : 2000      ## MeV
+                , 'DaugIPChi2'       : 16        ## unitless
+                , 'DaugTrkChi2'      : 5         ## unitless
+                , 'D0MassWin'        : 75        ## MeV
+                , 'D0Pt'             : 1500      ## MeV
+                , 'D0VtxChi2Ndof'    : 13        ## unitless
+                , 'D0FDChi2'         : 49        ## unitless
+                , 'D0BPVDira'        : 0.9999    ## unitless
+                , 'D0IPChi2'         : 30        ## unit
+                , 'SlowPiPt'         : 150       ## MeV
+                , 'SlowPiTrkChi2'    : 5         ## unitless
+                , 'DstarPt'          : 2200      ## MeV
+                , 'DstarVtxChi2Ndof' : 13        ## unitless
+                , 'DeltaM_Min'       : 130       ## MeV
+                , 'DeltaM_Max'       : 155       ## MeV
+                , 'DCS_WrongMass'    : 25        ## MeV (3 sigma veto)
+                , 'KK_WrongMass'     : 25        ## MeV (3 sigma veto)
+                , 'PiPi_WrongMass'   : 25        ## MeV (3 sigma veto)
+                , 'Prescale'         : 0.45      ## unitless
+                , 'Postscale'        : 1.0       ## unitless
+                , 'Monitor'          : None      ## Monitoring?
+                }
+    }
+
+# NoPID Inclusive Phi Lines
+# A. Powell & S. Schleich
+InclPhi={
+    'BUILDERTYPE' : 'InclPhiConf',
+    'CONFIG' : {'KaonPT'                : 500      # MeV
+                , 'KaonDLL'             : 15       # adimensional
+                , 'PhiMassWindow'       : 30       # MeV
+                , 'HighPtPrescale'      : 0.0015   # adimensional
+                , 'LowPtPrescale'       : 0.0020   # adimensional
+                , 'LDPrescale'          : 0.00002  # adimensional
+                }
+    }
+
+# NoPID V0 Lines
+# A. Powell
+V0ForPID = {
+    'BUILDERTYPE' : 'V0ForPID',
+    'CONFIG' : {'KS0LL_Prescale'   : 0.006,
+                'KS0DD_Prescale'   : 0.006,
+                'LamLL_Prescale'   : 0.025,
+                'LamDD_Prescale'   : 0.022,
+                'LamLLIsMUON_Prescale' : 1.00,
+                'LamDDIsMUON_Prescale' : 1.00
+                }
+    }
+
+

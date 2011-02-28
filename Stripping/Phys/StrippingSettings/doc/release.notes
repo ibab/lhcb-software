@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Andrew Powell
+ - Added dictionaries for PID Calibration lines:
+	 . NoPIDDstarWithD02RSKPi
+	 . InclPhi
+   . V0ForPID 
+
 ! 2011-02-28 - Greig Cowan
  - Added dictionaries for the beta_s lines to StrippingDev.
 
