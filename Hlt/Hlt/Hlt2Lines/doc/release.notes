@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-II-28 - Albert Puig
+ - Updated Hlt2B2XGamma.py: complete revision
+
 ! 2010-02-28 - Johannes Albrecht
  - update Hlt2InclusiveDiMuonLines and Hlt2InclusiveMuonLines: 
    complete revision
