@@ -4,6 +4,7 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!========================= RichENNRingFinder v1r2p1 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc and coverity warnings
 
