@@ -11,6 +11,7 @@
 ! 2011-II-28 - Gerhard Raven
  - make Hlt2MuNTrackLines.py, Hlt2B2DXLines.py and Hlt2B2XGammaLines.py
    compliant with PHYS_v12r1
+ - streamline Hlt2B2HHLTUnbiasedLines
 
 
 ! 2011-02-28 - Albert Puig

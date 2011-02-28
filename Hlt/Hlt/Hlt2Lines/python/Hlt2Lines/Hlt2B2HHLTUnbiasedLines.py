@@ -66,24 +66,15 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                'FilterAll',
                                Inputs  = [BiKalmanFittedKaons ],
                                Code    = childCutNoPID)
-        
-        bindPrelim = bindMembers('bindPrelim', [ BiKalmanFittedKaons, filterAll])
-        
+        nopidAlgos = [ BiKalmanFittedKaons, filterAll ]
         ## HLT1 TIS Filter
-        
         HLT1TISFilter = Hlt2Member ( TisTosParticleTagger
                                      , 'HLT1TISFilter'
                                      , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-                                     , Inputs = [ bindPrelim.outputSelection() ]
                                      )
-        #HLT1TISFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        #HLT1TISFilter.Inputs = [ bindPrelim.outputSelection() ]
-        #HLT1TISFilter.Output = 'Hlt2/HLT1TISFilter/Particles'
+        nopidAlgos += [ HLT1TISFilter ]
         
-        
-        tisFilteredKaons = bindMembers("tisFilteredKaons", [ bindPrelim, HLT1TISFilter ])
 
-        
         ##
         ## prepare the candidates
         ##
@@ -93,8 +84,8 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts   = { "K+" : childCutNoPID}
                                          , CombinationCut  = combCut 
                                          , MotherCut       = motherCutNoPID
-                                         , Inputs          = [ tisFilteredKaons] 
                                          )
+        nopidAlgos += [ Hlt2B2HHLTUnbiased ]
 
         ##
         ## first NeuroBayes network - no PID information (kinemematics + calo)
@@ -111,11 +102,9 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                               )
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HHNoPID')"
         NBNoPIDFilter = Hlt2Member(FilterDesktop, 'FilterNBBhhNoPID',
-                                   Inputs = [Hlt2B2HHLTUnbiased ],
                                    Code    = cuts,
                                    tools   = [NBBhhNoPIDTool])
-        nbNoPIDFilteredBhh = bindMembers('NBBhhNoPIDFilter', [Hlt2B2HHLTUnbiased, NBNoPIDFilter])
-        
+        nopidAlgos += [ NBNoPIDFilter ]
 
 
         #######################################################################################################
@@ -126,7 +115,6 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         #######################################################################################################
         #######################################################################################################
 
-
         ##
         ## get HLT1 TIS events
         ##
@@ -134,22 +122,16 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ## filter for kaons
         filterRich     = Hlt2Member(FilterDesktop,
                                     'FilterRich',
-                                    Inputs = [BiKalmanFittedRichKaons ],
                                     Code   = childCutPID)
 
-        bindPrelimRich = bindMembers('bindPrelimRich', [ BiKalmanFittedRichKaons, filterRich])
+        richpidAlgos =  [ BiKalmanFittedRichKaons, filterRich]
 
         ## HLT1 TIS Filter
         HLT1TISRichFilter = Hlt2Member( TisTosParticleTagger
                                         , 'HLT1TISRichFilter'
                                         , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-                                        , Inputs      = [ bindPrelimRich.outputSelection() ]
                                         )
-        #HLT1TISRichFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        #HLT1TISRichFilter.Inputs      = [ bindPrelimRich.outputSelection() ]
-
-        tisFilteredRichKaons = bindMembers("tisFilteredRichKaons", [ bindPrelimRich, HLT1TISRichFilter ])
-
+        richpidAlgos +=  [ HLT1TISRichFilter ]
 
         ##
         ## prepare the candidates
@@ -160,9 +142,9 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                              , DaughtersCuts   = { "K+" : childCutPID}
                                              , CombinationCut  = combCut
                                              , MotherCut       = motherCutPID
-                                             , Inputs          = [ tisFilteredRichKaons]
                                              )
                                                                 
+        richpidAlgos +=  [ Hlt2B2HHLTUnbiasedRich ]
         
 
         ##
@@ -180,10 +162,9 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                          )
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
         NBFilter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
-                              Inputs = [Hlt2B2HHLTUnbiasedRich ],
                               Code    = cuts,
                               tools   = [NBBhhTool])
-        nbFilteredBhh = bindMembers('NBBhhFilter', [Hlt2B2HHLTUnbiasedRich, NBFilter])
+        richpidAlgos +=  [ NBFilter ]
                             
         
         ###########################################################################
@@ -192,8 +173,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('B2HHLTUnbiased'
                         , prescale = self.prescale
                         #, HLT = "HLT_PASS_RE('Hlt1DiHadronLTUnbiasedDecision')" 
-                        , algos = [ BiKalmanFittedKaons    ,tisFilteredKaons,  Hlt2B2HHLTUnbiased, nbNoPIDFilteredBhh, 
-                                    BiKalmanFittedRichKaons, tisFilteredRichKaons, Hlt2B2HHLTUnbiasedRich, nbFilteredBhh ]
+                        , algos = nopidAlgos + richpidAlgos 
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHLTUnbiasedDecision" : 50081 } )
