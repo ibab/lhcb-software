@@ -5,6 +5,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r8 2011-02-28 =========================
 ! 2011-02-23 - Olivier Deschamps
  - CaloCorrectionBase : add missing protection
 
