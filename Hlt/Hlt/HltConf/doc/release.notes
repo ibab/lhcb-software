@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Johannes Albrecht
+ - Configuration.py: move nano banks to slots  
+                     add routing bits
+
 ! 2011-02-28 - Jibo He
  - Hlt2.py
   + Added Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking 
