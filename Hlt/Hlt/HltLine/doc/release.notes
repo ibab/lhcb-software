@@ -4,7 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
-
+! 2011-02-28 - Ulrich Kerzel
+ - add TisTosParticleTagger to list of allowed Hlt2Members
+ 
 ! 2010-02-24 - Gerhard Raven
  - check whenever a configurable gets instantiated that it does not
    yet exist
