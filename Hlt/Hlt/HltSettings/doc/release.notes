@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-28 - Johannes Albrecht
+ - update Muons_draft2011: complete revision
+
 ! 2011-02-28 - Sandra Amato
  - Tighten cuts in Hlt2CharmHadD2HHH lines
 
