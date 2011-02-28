@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Thomas Blake
+ - Clean up of old Bd2KstarMuMu lines. Removed: 
+   . StrippingBd2KstarMuMu.py
+   . StrippingBd2KstarMuMuTrigged.py
+   . StrippingBd2KstarMuMuTrigger_JD.py
+
+
 ! 2011-02-28 - Patrick Koppenburg
  - MiniBias changed to Hlt1.*NoBias.*Decision
 
