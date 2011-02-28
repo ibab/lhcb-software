@@ -67,6 +67,22 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
                          RichHypos              = ["pion","proton"],
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }  }
                          )
+
+#
+# With track fitting and RICH PID for 2 hypotheses (proton-pion), but no seeding
+#
+def Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() :
+     return Hlt2Tracking("Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking", 
+                         Prefix                 = Hlt2TracksPrefix,
+                         FastFitType            = HltBiDirectionalKalmanFitSuffix,
+                         Hlt2Tracks             = Hlt2ForwardTracksName,
+                         DoFastFit              = True,
+                         DoSeeding              = False,
+                         DoCloneKilling         = False,
+                         RichHypos              = ["pion","proton"],
+                         RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [0.6,100], "Likelihood" : [-999999,999999] }  }
+                         )
+
 #
 def setDataTypeForTracking(trackingInstance, dataType):
 
