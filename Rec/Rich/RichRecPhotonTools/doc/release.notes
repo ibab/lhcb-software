@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r8p2 2011-02-28 =========================
 ! 2011-02-25 - Chris Jones
  - Change some casts to old C style to appease icc11 (compiler issue)
 
