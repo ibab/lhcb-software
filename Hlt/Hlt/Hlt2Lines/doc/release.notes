@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Ulrich Kerzel
+- let Hlt2B2HHLTUnbiased use HltMember for TisTosParticleTagger
+
 ! 2011-02-28 - Sandra Amato
  - Hlt2CharmHadD2HHHLines.py:
    Added GEC, changed the decay descriptors and tighten some cuts

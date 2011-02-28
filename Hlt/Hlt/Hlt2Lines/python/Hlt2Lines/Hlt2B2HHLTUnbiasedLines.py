@@ -15,7 +15,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'VertexChi2'         :    10.0
                    ,'AbsCosTheta'        :     0.9
                    ,'Expertise'          : '2010Tuning'
-                   ,'NetCutNoPID'        :     (1.0 + ( 0.0))*0.5
+                   ,'NetCutNoPID'        :     (1.0 + ( 0.3))*0.5
                    ,'NetCut'             :     (1.0 + (-1.0))*0.5
                      }
     
@@ -71,10 +71,14 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         
         ## HLT1 TIS Filter
         
-        HLT1TISFilter = TisTosParticleTagger("HLT1TISFilter")
-        HLT1TISFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        HLT1TISFilter.Inputs = [ bindPrelim.outputSelection() ]
-        HLT1TISFilter.Output = 'Hlt2/HLT1TISFilter/Particles'
+        HLT1TISFilter = Hlt2Member ( TisTosParticleTagger
+                                     , 'HLT1TISFilter'
+                                     , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+                                     , Inputs = [ bindPrelim.outputSelection() ]
+                                     )
+        #HLT1TISFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+        #HLT1TISFilter.Inputs = [ bindPrelim.outputSelection() ]
+        #HLT1TISFilter.Output = 'Hlt2/HLT1TISFilter/Particles'
         
         
         tisFilteredKaons = bindMembers("tisFilteredKaons", [ bindPrelim, HLT1TISFilter ])
@@ -136,9 +140,13 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         bindPrelimRich = bindMembers('bindPrelimRich', [ BiKalmanFittedRichKaons, filterRich])
 
         ## HLT1 TIS Filter
-        HLT1TISRichFilter = TisTosParticleTagger("HLT1TISRichFilter")
-        HLT1TISRichFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
-        HLT1TISRichFilter.Inputs      = [ bindPrelimRich.outputSelection() ]
+        HLT1TISRichFilter = Hlt2Member( TisTosParticleTagger
+                                        , 'HLT1TISRichFilter'
+                                        , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+                                        , Inputs      = [ bindPrelimRich.outputSelection() ]
+                                        )
+        #HLT1TISRichFilter.TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+        #HLT1TISRichFilter.Inputs      = [ bindPrelimRich.outputSelection() ]
 
         tisFilteredRichKaons = bindMembers("tisFilteredRichKaons", [ bindPrelimRich, HLT1TISRichFilter ])
 
