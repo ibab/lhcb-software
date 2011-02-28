@@ -39,8 +39,8 @@ config_V0ForPID = {
     'KS0DD_Prescale'   : 0.006,
     'LamLL_Prescale'   : 0.025,
     'LamDD_Prescale'   : 0.022,
-    'LamLLIsMUON_Prescale' : 1.00,
-    'LamDDIsMUON_Prescale' : 1.00
+    'LamLLIsMUON_Prescale' : 0.72,
+    'LamDDIsMUON_Prescale' : 0.47
     }
 confV0ForPID = StrippingV0ForPID.StrippingV0ForPIDConf ('noPIDV0',config_V0ForPID)
 stream.appendLines( confV0ForPID.lines() )
@@ -128,7 +128,7 @@ _default_configuration_ = {
     'CTauLambda0'          :   5 * mm ,          ## Cut on c*tau for Lambda0
     'CTauLambda0_DD'       :  20 * mm ,          ## Cut on c*tau for Lambda0 (DD-case)
     ##
-    'Proton_IsMUONCut'     :  "(INTREE( (ID=='p+') & ISMUON ) )" , 
+    'Proton_IsMUONCut'     :  "(INTREE( (ABSID=='p+') & ISMUON ) )" , 
     ## 
     # Technicalities:
     #
@@ -733,7 +733,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Define 'Bin1 Cut' for Lambda0 LL
         """
         cut       = """
-        (INTREE( (ID=='p+') & ISMUON ) )
+        (INTREE( (ABSID=='p+') & ISMUON ) )
         """
         cut = cut % locals()
         return cut.replace ( '\n' , ' ' ) 

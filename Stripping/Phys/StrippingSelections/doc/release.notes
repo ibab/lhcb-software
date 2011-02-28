@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Andrew Powell
+ - Fixed bug in StrippingV0ForPID lines
+
 ! 2011-02-28 - Victor Coco
  - Update StrippingTriMuons.py to use line builder and 
    update the cuts to match retention rate
