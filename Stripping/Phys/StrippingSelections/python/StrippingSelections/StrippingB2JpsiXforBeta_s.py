@@ -82,6 +82,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                     InputList = self.KsListLoose,
                                     Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
 
+        self.DetachedKstarList = self.createSubSel(OutputList = "DetachedKstarListForBetaS" + self.name,
+                                                 InputList = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi/Particles"),
+                                                 Cuts = "(INTREE( ('K+'==ABSID) &  (TRCHI2DOF < %(TRCHI2DOF)s) & (MIPCHI2DV(PRIMARY)>6) &(PIDK > -2)))" \
+                                                 "& (INTREE( ('pi+'==ABSID) & (TRCHI2DOF < %(TRCHI2DOF)s) & (MIPCHI2DV(PRIMARY)>6) ))" \
+                                                 "& (ADMASS('K*(892)0') < 300 *MeV)" \
+                                                 "& (VFASPF(VCHI2/VDOF) < 16)" \
+                                                 "& (SUMTREE(PT, ((ABSID=='pi+') | (ABSID=='K+'))) > 900. * MeV)" % self.config)
+                                                                                                                                                                 
         self.f0List = self.createCombinationsSel( OutputList = "f02PiPiForBetaS" + self.name,
                                DaughterLists = [ self.KaonList, StdLoosePions ],
                                DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-", "f_0(980) -> K- K-", "f_0(980) -> K+ K+"],
@@ -109,7 +117,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBs2JpsiPhi  () 
         self.makeBd2JpsiKstar()  
         self.makeBd2JpsiKs   ()  
-        self.makeBs2Jpsif0   ()  
+        self.makeBs2Jpsif0   ()
+        self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
         self.makeBs2JpsiEta  ()  
 
@@ -288,6 +297,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.registerLine(Bs2Jpsif0Line)
 
+    def makeBs2JpsiKstar( self ):
+        '''Note: the input list is already heavily lifetime biased'''
+        Bs2JpsiKstar = self.createCombinationSel( OutputList = "Bs2JpsiKstar" + self.name,
+                                               DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
+                                               DaughterLists  = [ self.JpsiList, self.DetachedKstarList ],
+                                               PreVertexCuts = "ADAMASS('B_s0') < 300",
+                                               PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
+        
+        Bs2JpsiKstarLine = StrippingLine("Bs2JpsiKstarLine" + self.name, algos = [ Bs2JpsiKstar ])
+        
+        self.registerLine(Bs2JpsiKstarLine)
+        
+        
     def makeLambdab2JpsiLambda( self ):
         Lambdab2JpsiLambda = self.createCombinationSel( OutputList = "Lambdab2JpsiLambda" + self.name,
                                     DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc",

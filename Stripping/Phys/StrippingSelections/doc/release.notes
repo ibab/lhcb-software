@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Liming Zhang
+ - Add Bs2JpsiKstar line in beta_s lines.
+
 ! 2011-02-28 - Thomas Blake
  - Added:
 	. test_Bd2KstarMuMu.py
