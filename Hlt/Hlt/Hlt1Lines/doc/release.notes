@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!2011-02-28 - Johannes Albrecht & Eric van Herwijnen
+ - Hlt1MBLines make slots 
+
 ! 2011-02-28 - V. Gligorov
  - Hlt1TrackLines : add monitoring for the logfiles. 
 
