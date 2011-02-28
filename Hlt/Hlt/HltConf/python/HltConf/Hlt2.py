@@ -54,6 +54,7 @@ from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamT
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -61,6 +62,7 @@ from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
@@ -151,6 +153,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                            , Hlt2BiKalmanFittedForwardTracking()
                            , Hlt2BiKalmanFittedLongTracking() 
                            , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
+                           , Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking()
                            , Hlt2UnfittedForwardTracking() ]
 
 

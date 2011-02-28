@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Jibo He
+ - Hlt2.py
+  + Added Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking 
+
 ! 2011-Feb-24 - Patrick Spradlin
  - Added Hlt2CharmHadD02HHHHLinesConf to Hlt2Conf.__used_configurables__ list.
    Requires Hlt2Lines r118787.
