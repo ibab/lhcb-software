@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-28 - Greig Cowan
+ - Added dictionaries for the beta_s lines to StrippingDev.
+
 ! 2011-02-23 - Juan Palacios
  - Add dictionaries for some new semi-leptonic lines.
  - Increase to v1r6.

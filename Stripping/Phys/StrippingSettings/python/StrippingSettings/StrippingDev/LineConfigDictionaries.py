@@ -25,6 +25,118 @@ Bs2JpsiPhiPrescaledAndDetatchedPrescaled = dict(Bs2JpsiPhiPrescaledAndDetatched)
 Bs2JpsiPhiPrescaledAndDetatchedPrescaled['CONFIG']['PrescaledLinePrescale'] = 0.1
 Bs2JpsiPhiPrescaledAndDetatchedPrescaled['CONFIG']['DetatchedLinePrescale'] = 0.1
 
+################
+# beta_s group #
+################
+# b2JpsiX lines (Greig)
+configJpsiX = {
+	'BUILDERTYPE' : 'B2JpsiXforBeta_sConf',
+	'CONFIG' : {
+		'TRCHI2DOF'             :       4
+        ,       'BPVLTIME'              :       0.25
+        ,       'DaughterPT'            :       1000
+        ,       'VCHI2PDOF'             :       10
+        ,       'Jpsi2MuMuPrescale'     :       0.05
+        ,       'Bu2JpsiKPrescale'      :       0.05
+        ,       'Bd2JpsiKstarPrescale'  :       0.025
+        ,       'Bd2JpsiKsPrescale'     :       0.2
+        ,       'Bs2JpsiPhiPrescale'    :       0.2
+        ,       'Bs2JpsiEtaPrescale'    :       0.1
+        }
+	}
+
+# Bs2Jpsi(ee)Phi (Jibo and Artur)
+configBs2JpsieePhi = {
+	'BUILDERTYPE' : 'Bs2JpsieePhiConf',
+	'CONFIG' : {
+                  'ElectronPTLoose'            :   800.    # MeV
+                , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
+                , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
+                , 'JpsiMassMinLoose'           :  2700.    # MeV
+                , 'JpsiMassMaxLoose'           :  3300.    # MeV
+                , 'KaonTrackCHI2pDOFLoose'     :    10.    # adimensional
+                , 'PhiPTLoose'                 :  1000.    # MeV
+                , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
+                , 'PhiMassMinLoose'            :   990.    # MeV
+                , 'PhiMassMaxLoose'            :  1050.    # MeV
+                , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
+                , 'BsMassMinLoose'             :  4500.    # MeV
+                , 'BsMassMaxLoose'             :  6000.    # MeV
+                , 'BsDIRALoose'                :     0.99  # adimensional
+                , 'ElectronPT'            :   800.    # MeV
+                , 'ElectronPID'           :     2.    # adimensional
+                , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+                , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
+                , 'JpsiMassMin'           :  2700.    # MeV
+                , 'JpsiMassMax'           :  3300.    # MeV
+                , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
+                , 'KaonPID'               :     0.    # adimensional
+                , 'PhiPT'                 :  1000.    # MeV
+                , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
+                , 'PhiMassMin'            :  1005.    # MeV
+                , 'PhiMassMax'            :  1035.    # MeV
+                , 'BsVertexCHI2pDOF'      :     6.    # adimensional
+                , 'BsMassMin'             :  4500.    # MeV
+                , 'BsMassMax'             :  6000.    # MeV
+                , 'BsDIRA'                :     0.99  # adimensional
+                }
+	}
+
+# Quasi two-body (Fred Blanc)
+configQ2B = {
+	'BUILDERTYPE' : 'B2Quasi2Body4piConf',
+	'CONFIG' : {
+		 'Q2BPrescale'     : 1.,
+                 'Q2BResMinPT'     : 1500.,
+                 'Q2BResMinP'      : 10.,
+                 'Q2BResMaxMass'   : 900.,
+                 'Q2BResVtxChiDOF' : 4.,
+                 'Q2BBMinM'        : 2800.,
+                 'Q2BBMaxM'        : 5700.,
+                 'Q2BBVtxChi2DOF'  : 4.,
+                 'Q2BBMinTrkPT'    : 1500.,
+                 'Q2BBPVVDZ'       : 2. 
+		}
+	}
+
+# Bs2Ph2PhiPhi (Sebastian)
+configBs2PhiPhi	= {
+	'BUILDERTYPE' : 'StrippingBs2PhiPhiConf',
+	'CONFIG' : {
+                  'KaonPT'              : 500      # MeV/c 
+                , 'KaonIPCHI2'          : 3.5      # adimensional
+                , 'PhiPT'               : 900      # MeV/c 
+                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
+                , 'PhiMassWindow'       : 25       # MeV/cc
+                , 'PhiMassMax'          : 1090     # MeV/cc
+                , 'BsVertexCHI2pDOF'    : 25       # adimensional
+                , 'BsMassWindow'        : 300      # MeV/cc
+                , 'WidePrescale'        : 0.05     # adimensional
+		}
+	} 
+
+# Bs2KstKst (Paula)
+configBs2KstKst = {
+	'BUILDERTYPE' : 'StrippingBs2KstKstConf',
+	'CONFIG' : {
+          	"KaonPT"              : 500.0 # MeV
+          ,     "KaonIPCHI2"            : 9.    # adimensional
+          ,  	"PionPT"                : 500.0 # MeV    
+          ,  	"PionIPCHI2"            : 9.       # adimensional
+          ,     "KstarVCHI2"            : 9.0   # adimensional
+          ,     "KstarPT"               : 900.0 # MeV 
+          ,     "KaonPIDK"              : -5.0  # adimensional
+          ,     "KstarMassWin"          : 150.0 # MeV 
+          ,     "BMassWin"              : 500.0 # MeV
+          ,     "BVCHI2"                : 15.0  # adimensional
+          ,     "BDOCA"                 : 0.3   # mm
+          ,  	"BIPCHI2"               : 25    # adimensional
+          }
+	}
+
+
+
 B2XGamma = {
     'BUILDERTYPE' : 'StrippingB2XGammaConf',
     'CONFIG' : {'TrIPchi2Phi'          : 10.       # Dimensionless
