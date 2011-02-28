@@ -1,5 +1,5 @@
 package PhysSys
-version v12r0
+version v12r1
 
 branches doc cmt
 
@@ -14,7 +14,7 @@ use  PhysSelPython              v9r0     PhysSel # Juan Palacios
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r6p1   Phys    # Chris Jones
-use  DaVinciTools       	v22r3    Phys    # Juan Palacios
+use  DaVinciTools       	v22r4    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
 use  ParticleMaker      	v6r0 	 Phys    # Chris Jones
 use  VertexFit			v6r7p1   Phys    # Yuehong Xie
@@ -32,10 +32,10 @@ use LoKi                        v9r0     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 
 #===================================================================
-use TisTosTobbing		v6r5	 Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v6r6	 Phys	 # Tomasz Skwarnicki
 
 #===================================================================
-use NeuroBayesTools             v1r0     Phys    # Ulrich Kerzel
+use NeuroBayesTools             v1r1     Phys    # Ulrich Kerzel
 
 #===================================================================
 # Temporary MC stuff.

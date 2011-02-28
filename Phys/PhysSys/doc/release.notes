@@ -3,6 +3,12 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v12r1>2011-03-01 Phys v12r1 </A></H1><PRE>
+
+- Based on LHCb v32r1. For HLT.
+
+ * Minor changes to Phys/DaVinciTools, Phys/NeuroBayesTools, Phys/TisTosTobbing.
+
 </PRE><H1><A NAME=v12r0>2011-02-20 Phys v12r0 </A></H1><PRE>
 
 ###############################################################################
