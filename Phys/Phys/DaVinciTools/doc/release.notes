@@ -4,6 +4,11 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v22r4 2011-02-28 ===================
+
+! 2011-02-28 - Juan Palacios
+ - Remove LoKi::CounterAlg
+
 ! 2011-02-27 - Vanya Belyaev
   
  - DVFilter1
