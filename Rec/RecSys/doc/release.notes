@@ -5,11 +5,29 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-! 2011-02-17 - Chris Jones
- - Add Rich/RichParticleSearch
+</PRE><H1><A NAME=v11r2>2011-02-28 RecSys v11r2</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r1
 
-! 2011-02-13 - Chris Jones
- - Add Rec/RecInterfaces
+- This is a production version of Rec, preparing for new data in 2011
+  Gaudi v22r1 picks up the latest cmt/Root combination necessary
+  to fix a memory leak discovered by Alice.
+
+New packages:
+ - Rich/RichParticleSearch, looking for heavy-multiple-charged exotics in the Rich
+ - Rec/RecInterfaces, interfaces which are non-subdetector specific
+
+Highlights:
+ - Muon/MuonID, new tuning of the muon probability based on 2010 data
+ - Rec/RecAlgs, add #TT clusters to RecSummary, only add MuonCoord if #>0
+ - Tr/TrackTools, roll back of error parameterisation to DC06 settings
+                  new MC10 parameterisation is under study
+ - Tr/TrackSys, make 2011 the default datatype
+
+Otherwise many minor cosmetic changes, including the start of the campaign to 
+suppress the many icc warnings, remarks, and coverity defects.
+
+For more details, links to changesets and bugs, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v11r2
 
 </PRE><H1><A NAME=v11r1>2011-02-02 RecSys v11r1</A></H1><PRE>
 This version uses Gaudi v22r0 and LHCb v32r0
