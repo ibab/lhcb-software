@@ -775,8 +775,8 @@ V0ForPID = {
                 'KS0DD_Prescale'   : 0.006,
                 'LamLL_Prescale'   : 0.025,
                 'LamDD_Prescale'   : 0.022,
-                'LamLLIsMUON_Prescale' : 1.00,
-                'LamDDIsMUON_Prescale' : 1.00
+                'LamLLIsMUON_Prescale' : 0.72,
+                'LamDDIsMUON_Prescale' : 0.47
                 }
     }
 
