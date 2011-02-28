@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Mat Charles
+ - Add more, tighter cuts to Hlt2CharmHadD02HHKsLines.py
+   to reduce frequencey of downstream track search.
+
 ! 2011-02-28 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
   + Added a new line running on Hlt Tis

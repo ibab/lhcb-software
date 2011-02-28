@@ -22,10 +22,11 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
                 , 'KshhTFHHPtLL'            : 1000.0     # in MeV
                 , 'KshhTFHHFDLL'            : 2.0        # in mm -- 26 Feb: Mat changed from 1mm to 2mm
-                , 'KshhTFHHTightTrkChi2UL'  : 3.0        # unitless -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightTrkChi2UL'  : 2.0        # unitless -- 27 Feb: Mat adds for use in DD filter
                 , 'KshhTFHHTightVtxChi2UL'  : 5.0        # unitless -- 27 Feb: Mat adds for use in DD filter
-                , 'KshhTFHHTightFDLL'       : 3.0        # in mm -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightFDLL'       : 4.0        # in mm -- 27 Feb: Mat adds for use in DD filter
                 , 'KshhTFHHTightPtLL'       : 1000.0     # in MeV -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightTrkPVIPChi2LL' : 12.5     # unitless -- 28 Feb: Mat adds for use in DD filter
                 , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
                 , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
                 , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
@@ -391,6 +392,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                               & (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s * mm),2)) 
                               & (VFASPF(VCHI2PDOF) < %(KshhTFHHTightVtxChi2UL)s) 
                               & (PT > %(KshhTFHHTightPtLL)s * MeV)
+                              & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),1))
+                              & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),2))
                               & (BPVVD > %(KshhTFHHTightFDLL)s *mm) )""" % self.getProps()
         charmKshhTF2BodyTighter = self.__quickFilter("charmKshhTF2BodyTighter", strTighterCuts, [ charmKshhTF2Body ] )
         ## Special for down-down: Require that the two-body combination be TOS on Hlt1Track:
