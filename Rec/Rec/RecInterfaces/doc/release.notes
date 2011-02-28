@@ -4,6 +4,7 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+!========================= RecInterfaces v1r0 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - New package for sub-det non-specific reconstruction interfaces.
  - Add interface IChargedProtoANNPIDTupleTool
