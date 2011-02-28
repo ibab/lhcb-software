@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r35 2011-02-28 =========================
 ! 2011-02-18 - Juan Palacios
  - ChargedParticleMaker
   . Added new properties Inputs and Output, mirroring InputTrackLocation and
