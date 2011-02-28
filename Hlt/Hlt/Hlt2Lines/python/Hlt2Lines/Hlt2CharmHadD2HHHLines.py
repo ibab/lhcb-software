@@ -6,24 +6,26 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                  ## 3Body
                     'TrkPt_3Body'                 : 250.0    # in MeV
                   , 'TrkP_3Body'                  : 2000.0   # in MeV
-                  , 'TrkPVIPChi2_3Body'           : 2.0      # unitless
-                  , 'TrkChi2_3Body'               : 5.0      # unitless
-                  , 'PairMinDoca_3Body'      : 0.10     # in mm
-                  , 'VtxPVDispChi2_3Body'         : 100.0    # unitless
+                  , 'TrkPVIPChi2_3Body'           : 5.0      # unitless
+                  , 'TrkChi2_3Body'               : 3.0      # unitless
+                  , 'PairMinDoca_3Body'           : 0.08     # in mm
+                  , 'VtxPVDispChi2_3Body'         : 150.0    # unitless
                   , 'VtxChi2_3Body'               : 20.0     # unitless
-                  , 'DIPChi2_3Body'               : 25.0     # unitless
-                  , 'DSumPt_3Body'                : 2000.0   # sum pT   
-                  , 'MCOR_MAX_3Body'                : 3500.    # MeV
+                  , 'DIPChi2_3Body'               : 15.0     # unitless
+                  , 'DSumPt_3Body'                : 2500.0   # sum pT   
+                  , 'MCOR_MAX_3Body'              : 3500.    # MeV
                   ## 2-body Input for 3Body
                   , 'TrkPt_2BodyFor3Body'         : 500.0    # in MeV
                   , 'TrkP_2BodyFor3Body'          : 5000.0   # in MeV
-                  , 'TrkPVIPChi2_2BodyFor3Body'   : 7.0      # unitless
-                  , 'TrkChi2_2BodyFor3Body'       : 5.0      # unitless
-                  , 'Doca_2BodyFor3Body'          : 0.085     # in mm
+                  , 'TrkPVIPChi2_2BodyFor3Body'   : 10.0      # unitless
+                  , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
+                  , 'Doca_2BodyFor3Body'          : 0.1     # in mm
                   , 'VtxPVDispChi2_2BodyFor3Body' : 40.      # unitless  
                   , 'VtxPVDisp_2BodyFor3Body'     : 3.0      # in mm
-                  , 'DSumPt_2BodyFor3Body'        : 1400.0   # in MeV
-                  , 'MCOR_MAX_2BodyFor3Body'        : 3500.    # MeV
+                  , 'DSumPt_2BodyFor3Body'        : 2000.0   # in MeV
+                  , 'MCOR_MAX_2BodyFor3Body'      : 3500.    # MeV
+                  , 'GEC_Filter_NTRACK'           : True     # do or do not
+                  , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
                   # prescales
                   , 'Prescale'                  : {
                         'Hlt2CharmHadD2HHHWideMass'    : 0.1
@@ -34,6 +36,37 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                         , 'Hlt2CharmHadD2HHHWideMassDecision' : 50912
                         }
                 }
+
+    def __seqGEC(self) : 
+        """
+        # Defines a Global Event Cut (mild badness) on all events with more
+        # than a configurable upper limit of tracks.
+        #  
+        # This is a temporary fix only and will be removed once proper
+        # GEC lines are implemented
+        """
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        from HltLine.HltLine import bindMembers
+
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
+
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
+
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
+        if self.getProp('GEC_Filter_NTRACK') : 
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
+
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD2HHHKillTooManyInTrkAlg'
+                                                 , Code = filtCode
+                                                )
+        Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
+
+        return Hlt2CharmKillTooManyInTrk
+
 
     def __InPartFilterLowIP(self, name, inputContainers) : 
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -106,7 +139,6 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_3Body)s)" \
                    "& (AALLSAMEBPV)" % self.getProps()
         mothercuts = "(VFASPF(VCHI2PDOF) < %(VtxChi2_3Body)s)" \
-                     "& (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)" \
                      "& (BPVVDCHI2> %(VtxPVDispChi2_3Body)s )" \
                      "& (BPVCORRM < %(MCOR_MAX_3Body)s*MeV)" \
                      "& (BPVIPCHI2() < %(DIPChi2_3Body)s)" % self.getProps()
@@ -167,11 +199,11 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         #First stage - Combine 2 Body with pt > 500MeV        
         Charm2BodyCombine = Hlt2Member( CombineParticles
                           , "Combine_Stage1"
-                          , DecayDescriptors = ["K*(892)0 -> pi+ pi+" , "K*(892)0 -> pi+ pi-"
-                          , "K*(892)0 -> pi- pi-" , "K*(892)0 -> K+ K+"
-                          , "K*(892)0 -> K+ K-"   , "K*(892)0 -> K- K-"
-                          , "K*(892)0 -> K+ pi-"  , "K*(892)0 -> pi+ K-"
-                          , "K*(892)0 -> K+ pi+"  , "K*(892)0 -> K- pi-" ]
+                          , DecayDescriptors = ["K*(892)+ -> pi+ pi+" , "K*(892)0 -> pi+ pi-"
+                          , "K*(892)- -> pi- pi-" , "K*(892)+ -> K+ K+"
+                          , "K*(892)0 -> K+ K-"   , "K*(892)- -> K- K-"
+                          , "K*(892)0 -> K+ pi-"  , "K*(892)0 -> K- pi+"
+                          , "K*(892)+ -> K+ pi+"  , "K*(892)- -> K- pi-" ]
                           , CombinationCut = twoBodyCombCut 
                           , MotherCut = twoBodyMotherCut
                           , Inputs = [ pions2BodyFor3Body , kaons2BodyFor3Body ])
@@ -189,7 +221,9 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         Charm3BodyCombine = self.__3BodyCombine (  name = 'CharmHadD2HHH'
                                                   , inputSeq = [ Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP ]
                                                   , decayDesc = ["D+ -> K*(892)0 pi+", "D+ -> K*(892)0 pi-"
-                                                                ,"D+ -> K*(892)0 K+",  "D+ -> K*(892)0 K-" ] 
+                                                                ,"D+ -> K*(892)0 K+",  "D+ -> K*(892)0 K-"
+                                                                ,"D+ -> K*(892)- pi+", "D+ -> K*(892)+ pi-"
+                                                                ,"D+ -> K*(892)- K+",  "D+ -> K*(892)+ K-" ]
                                                  )   
         # 3Body line
         Hlt2Charm3Body = self.__3BodyFilter ( name = 'CharmHadD2HHH', inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
@@ -202,7 +236,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
         line = Hlt2Line('CharmHad2BodyForD2HHH', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body]
+                        , algos = [ self.__seqGEC(), PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmHad2BodyForD2HHHDecision"
@@ -210,7 +244,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line('CharmHadD2HHH', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3Body]
+                        , algos = [self.__seqGEC(), PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3Body]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmHadD2HHHDecision"
@@ -218,7 +252,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line('CharmHadD2HHHWideMass', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3BodyWideMass]
+                        , algos = [self.__seqGEC(), PV3D(), pions2BodyFor3Body , kaons2BodyFor3Body, Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3BodyWideMass]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmHadD2HHHWideMassDecision"

@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - Sandra Amato
+ - Hlt2CharmHadD2HHHLines.py:
+   Added GEC, changed the decay descriptors and tighten some cuts
+
 ! 2011-02-28 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
   + Added a low Mult line, renamed Hlt2IncDiProton* to Hlt2DiProton*
