@@ -6,16 +6,25 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// for incidents listener
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+
 // for DB
 #include "GaudiKernel/IDetDataSvc.h"
+#include "GetLumiParameters.h"
+
+// for TCK
+#include "Kernel/IPropertyConfigSvc.h"
 
 /** @class LumiCheckCondDB LumiCheckCondDB.h
  *   
- *
  *  @author Jaap Panman
  *  @date   2010-10-20
  */
-class LumiCheckCondDB : public GaudiAlgorithm {
+
+class LumiCheckCondDB : public GaudiAlgorithm  
+  , public virtual IIncidentListener {
 
 public: 
   /// Standard constructor
@@ -25,10 +34,17 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode stop      ();    ///< Algorithm stopping
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+  // ==========================================================================
+  // IIncindentListener interface
+  // ==========================================================================
+  virtual void handle ( const Incident& ) ;
+  // ==========================================================================
+
 protected:
-  virtual StatusCode registerDB();    ///< register DB conditions
+  virtual StatusCode checkDB(std::string s);    ///< DB checking code - event loop
 
 protected:
   /// Reference to run records data service
@@ -36,35 +52,15 @@ protected:
 
 private:
   unsigned long long m_startTime;               ///< start probing database here
-  unsigned long long m_numberSteps;                  ///< number of steps checked
-  unsigned long long m_stepHours;                    ///< number of hours per step
-
-  StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
-  StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition
-  StatusCode i_cacheAbsoluteData();             ///< Function extracting data from Condition
-  StatusCode i_cacheCoefficientData();          ///< Function extracting data from Condition
-  StatusCode i_cacheCoefficientDataLog();       ///< Function extracting data from Condition
-  StatusCode i_cacheSamplingData();             ///< Function extracting data from Condition
+  unsigned long long m_numberSteps;             ///< number of steps checked
+  unsigned long long m_stepHours;               ///< number of hours per step
+  bool m_useOnline;                             ///< flag to use online partition of DB
 
   // database conditions and calibration factors
-  Condition *m_condRelative;                    ///< Condition for relative calibration
-  Condition *m_condRelativeLog;                 ///< Condition for relative calibration
-  Condition *m_condAbsolute;                    ///< Condition for absolute scale
-  Condition *m_condCoefficients;                ///< Condition for usage coefficients
-  Condition *m_condCoefficientsLog;             ///< Condition for usage coefficients
-  Condition *m_condSampling;                    ///< Condition for sampling coefficients
-  Condition *m_condGUIDs;                       ///< Condition for GUID based constants
-  
-  std::vector<double> m_calibRelative;          ///< relative calibration factors
-  std::vector<double> m_calibCoefficients;      ///< usage factors
-  std::vector<double> m_calibRelativeLog;       ///< relative calibration factors
-  std::vector<double> m_calibCoefficientsLog;   ///< usage factors
-  double m_statusScale;                         ///< absolute scale  set to zero if no lumi
-  double m_calibScale;                          ///< absolute scale
-  double m_calibScaleError;                     ///< absolute scale error
-  double m_calibRevolutionFrequency;            ///< revolution frequency (Hz)
-  double m_calibRandomFrequencyBB;              ///< random lumi event frequency of BB crossings (Hz)
-  int    m_calibCollidingBunches;               ///< number of colliding bunches
+  std::string m_propertyConfigSvcName;
+  std::string m_instanceName;
+  IGetLumiParameters *m_databaseTool;           ///< tool to query luminosity database
+  mutable IIncidentSvc* m_incSvc ;              ///< the incident service 
 
 };
 #endif // LUMICHECKCONDDB_H

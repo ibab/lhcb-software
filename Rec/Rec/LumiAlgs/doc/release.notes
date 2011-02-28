@@ -4,6 +4,14 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-01-31 - Jaap Panman
+ - move database acces to a tool since it is being used from at leat two 
+   algorithms now: GetLumiParameters used by LumiIntegrateFSR, LumiCheckCondDB
+ - add usage of online partition for LHC parameters (filling scheme) and TCK
+   dependent parameters (e.g. rate limiters)
+ - update unit tests using new pinned input files
+ - update requirements file to enable TCK and online partition
+
 !========================= LumiAlgs v4r1p4 2011-02-02 =========================
 ! 2011-01-19 - Rob Lambert
  - Try and reduce slc4 and slc5 differences by making sure all variables

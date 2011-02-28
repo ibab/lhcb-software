@@ -21,6 +21,11 @@ use DetDesc         v* Det
 use GaudiAlg        v*
 use GaudiConf       v*
 use GaudiPoolDb     v*
+use HltInterfaces   v* Kernel
+
+### for access to the config.tar file with configurations
+use HltTCK          v1r*    TCK         -no_auto_imports
+
 
 include_path      none
 #============================================================================

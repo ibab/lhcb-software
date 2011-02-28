@@ -1,4 +1,4 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v27r1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -21,7 +21,7 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v27r1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
@@ -34,7 +34,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x1b87a800>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x5ee8420>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
@@ -47,17 +47,17 @@
 # |-Simulation  = False
 # |-Monitors    = []  (default: [])
 # |-XMLSummary  = 'summary.xml'  (default: None)
-# |-CondDBtag   = 'head-20100826'  (default: '')
+# |-CondDBtag   = 'head-20101112'  (default: '')
 # |-DDDBtag     = ''
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of LumiIntegratorConf
 # /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
 # |-TupleFile     = ''
-# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x1b9bf840>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x5ffd4b0>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20100826 for partition DDDB
+# WARNING: Using default tag head-20101026 for partition DDDB
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -68,14 +68,14 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-IgnoreHeartBeat           = False
 # |-Tags                      = {}  (default: {})
-# |-Overrides                 = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0x1b9bf660>)]  (default: [])
+# |-Overrides                 = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0x5ffd2d0>)]  (default: [])
 # |-DisableLFC                = False
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
@@ -88,8 +88,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v26r3
-                                          running on lxplus249.cern.ch on Wed Oct 27 16:29:45 2010
+                                                   Welcome to DaVinci version v27r1
+                                          running on lxplus426.cern.ch on Mon Feb 28 10:44:22 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -100,7 +100,7 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
 IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
@@ -111,8 +111,12 @@ COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 automatic_LHCBCOND   INFO Connected to database "sqlite_file:LHCBCOND_Lumi_IOV.db/LHCBCOND"
 automatic_LHCBCOND   INFO Using TAG ""
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20100826"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "head-20101026"
+ONLINE_201012        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/ONLINE-2010.db/ONLINE"
+ONLINE_201012        INFO Using TAG ""
+ToolSvc.lumiDat...WARNING Conditions/Online/LHCb/LHCFillingScheme not found, fall back to sampling data
+ConfigTarFileAc...   INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v1r21p9/config.tar in mode ReadOnly
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
@@ -125,38 +129,27 @@ RootDBase.open    SUCCESS testFSRout0.dst File version:52600
 PoolRootTreeEvt...   INFO Records token:[DB=80F7B06F-18D2-DF11-92B1-003048D2BD0C][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-ApplicationMgr       INFO Application Manager Stopped successfully
+ONLINE_201010        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r44/db/ONLINE-2010.db/ONLINE"
+ONLINE_201010        INFO Using TAG ""
+PropertyConfigSvc    INFO  resolving alias TCK/0x002e002c
+PropertyConfigSvc    INFO  resolved TCK/0x002e002c to 4ed1d289c04ba3cf52f088358919cef2
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
-IntegrateBeamCr...   INFO run: [81363] Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 344
+UpdateManagerSvc  WARNING Cannot find object at 0x89c0fc0
+IntegrateBeamCr...   INFO run: [81430] RandomFrequencyBB 697.9 CollidingBunches 344
 IntegrateBeamCr...   INFO Luminosity scale used: 1.634e-11 relative uncertainty 0.1
-IntegrateBeamCr...   INFO counter PUMult: 0 228 403.119
-IntegrateBeamCr...   INFO counter RZVelo: 1 228 378.715
-IntegrateBeamCr...   INFO counter RZVeloBW: 2 228 374.241
-IntegrateBeamCr...   INFO counter SPDMult: 6 228 391.466
-IntegrateBeamCr...   INFO counter CaloEt: 7 228 412.776
-IntegrateBeamCr...   INFO counter TTIP: 8 228 0
-IntegrateBeamCr...   INFO counter PV3D: 11 228 387.108
-IntegrateBeamCr...   INFO counter Random: 21 228 2.84217e-14
-IntegrateBeamCr...   INFO counter PoissonPUMult: 50 228 395.512
-IntegrateBeamCr...   INFO counter PoissonRZVelo: 51 228 364.961
-IntegrateBeamCr...   INFO counter PoissonRZVeloBW: 52 228 370.993
-IntegrateBeamCr...   INFO counter PoissonSPDMult: 56 228 474.088
-IntegrateBeamCr...   INFO counter PoissonCaloEt: 57 228 386.804
-IntegrateBeamCr...   INFO counter PoissonTTIP: 58 228 0
-IntegrateBeamCr...   INFO counter PoissonPV3D: 61 228 380.469
-IntegrateBeamCr...   INFO counter PoissonRandom: 71 228 0
-IntegrateBeamCr...   INFO Integrated luminosity: 3.30539e-05 +/- 3.30539e-06 [pb-1]
+IntegrateBeamCr...   INFO Integrated luminosity: 3.53016e-05 +/- 3.53016e-06 [pb-1]
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: END ==========
+ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.003 |     0.005 |    0.004       0.0 |    1000 |     0.005 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.002 |     0.002 |    0.002       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.007 |     0.004 |    0.003       0.0 |    1000 |     0.004 |
-ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.003 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiSeq                       |     0.005 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.000 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.000 |     0.001 |    0.001       0.0 |    1000 |     0.001 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

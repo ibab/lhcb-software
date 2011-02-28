@@ -36,11 +36,7 @@ DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR );
 //=============================================================================
 LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_condRelative(NULL),
-    m_condAbsolute(NULL),
-    m_condCoefficients(NULL),
-    m_condGUIDs(NULL)
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
@@ -52,6 +48,9 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
   declareProperty( "IntegratorToolName" , m_ToolName          = "LumiIntegrator" );
   
+  declareProperty( "IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
+  declareProperty( "InstanceName"              , m_instanceName = "Hlt1LumiODINFilter");
+  declareProperty( "UseOnline"                 , m_useOnline    = true);
 }
 //=============================================================================
 // Destructor
@@ -64,7 +63,6 @@ LumiIntegrateFSR::~LumiIntegrateFSR() {}
 StatusCode LumiIntegrateFSR::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // initialize lists - the order is important: the first is the one to normalize to
@@ -116,12 +114,14 @@ StatusCode LumiIntegrateFSR::initialize() {
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
+  // avoid times beyond DB validity at start-up
+  m_dds->setEventTime(Gaudi::Time( 1000 ));
 
-  // register conditions for database acces
-  StatusCode sc0 = registerDB(); // must be executed first
-  if ( sc0.isFailure() ) return sc0;  // error printed already
+  // prepare database tool
+  m_databaseTool = tool<IGetLumiParameters>( "GetLumiParameters" , "lumiDatabaseTool" );
+  m_databaseTool->init( m_propertyConfigSvcName, m_instanceName, m_useOnline );
 
-  return runUpdate();
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -140,11 +140,11 @@ StatusCode LumiIntegrateFSR::execute() {
 }
 
 //=============================================================================
-//  Finalize
+//  Stop
 //=============================================================================
-StatusCode LumiIntegrateFSR::finalize() {
+StatusCode LumiIntegrateFSR::stop() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Stop" << endmsg;
   info() << "========== Integrating luminosity normalization: START ==========" << endmsg;
 
   // use tool to count events for this file
@@ -168,21 +168,30 @@ StatusCode LumiIntegrateFSR::finalize() {
     warning() << "Duplicate Files: " << m_integratorTool->duplicates() << endmsg;
   }
   info() << "========== Integrating luminosity normalization: END ==========" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::stop();  // must be called after all other actions
 }
 
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode LumiIntegrateFSR::finalize() {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
 
 //=============================================================================
 void LumiIntegrateFSR::add_to_xml() {
 
   // declare statEntities for xml output
-  LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
+  LHCb::LumiIntegral::ValuePair defValue ( -1, 0 );
   for ( int key = 0; key < LHCb::LumiCounters::LastGlobal; key++ ) {
     if ( m_integratorTool->integral().hasInfo(key) ) {
       LHCb::LumiIntegral::ValuePair value = m_integratorTool->integral().info( key, defValue );
       std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
       if ( value.first != -1 ) {
-        info() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
+        debug() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
         StatEntity statEntity( value.first, value.second, value.second, 0, 0 );
         if ( m_counterSummarySvc != NULL ) {
           m_counterSummarySvc->addCounter(name(), counterName, statEntity, 
@@ -203,194 +212,11 @@ void LumiIntegrateFSR::add_to_xml() {
   }
 }
 
-
-//=============================================================================
-// DB access
-//=============================================================================
-StatusCode LumiIntegrateFSR::registerDB() {
-  // register the DB conditions for the update maganer
-  debug() << "==> Register DB" << endmsg;
-
-  // register absolute calibration
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/AbsoluteCalibration")) {
-    registerCondition("Conditions/Lumi/LHCb/AbsoluteCalibration",
-                      m_condAbsolute, &LumiIntegrateFSR::i_cacheAbsoluteData);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/AbsoluteCalibration not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-
-  // register relative calibration
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibration")) {
-    registerCondition("Conditions/Lumi/LHCb/RelativeCalibration",
-                      m_condRelative, &LumiIntegrateFSR::i_cacheRelativeData);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/RelativeCalibration not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-
-  // register relative calibration for -log method
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibrationLog")) {
-    registerCondition("Conditions/Lumi/LHCb/RelativeCalibrationLog",
-                      m_condRelativeLog, &LumiIntegrateFSR::i_cacheRelativeDataLog);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/RelativeCalibrationLog not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-
-  // register usage coefficients
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Coefficients")) {
-    registerCondition("Conditions/Lumi/LHCb/Coefficients",
-                      m_condCoefficients, &LumiIntegrateFSR::i_cacheCoefficientData);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/Coefficients not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-
-  // register usage coefficients for -log method
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/CoefficientsLog")) {
-    registerCondition("Conditions/Lumi/LHCb/CoefficientsLog",
-                      m_condCoefficientsLog, &LumiIntegrateFSR::i_cacheCoefficientDataLog);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/CoefficientsLog not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-
-  // register sampling frequencies of bunches
-  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Sampling")) {
-    registerCondition("Conditions/Lumi/LHCb/Sampling",
-                      m_condSampling, &LumiIntegrateFSR::i_cacheSamplingData);
-  }
-  else {
-    fatal() << "Conditions/Lumi/LHCb/Sampling not found" << endmsg;
-    m_statusScale = 0;        // invalid luminosity
-    return StatusCode::SUCCESS;
-  }
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  Extract data from relativeCalibration
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheRelativeData() {
-  debug() << "callback RelativeCalibration:" << endmsg;
-  std::vector<double> cal = m_condRelative->paramVect<double>("RelativeFactors");
-  if ( cal.size() == m_calibRelative.size() ) {
-    m_calibRelative = cal;
-    return StatusCode::SUCCESS;
-  }
-  fatal() << "inconsistent number of parameters in RelativeCalibration:" << cal.size() << endmsg;
-  m_statusScale = 0;        // invalid luminosity
-  return StatusCode::SUCCESS;
-
-}
-
-//=========================================================================
-//  Extract data from relativeCalibrationLog
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheRelativeDataLog() {
-  debug() << "callback RelativeCalibrationLog:" << endmsg;
-  std::vector<double> cal = m_condRelativeLog->paramVect<double>("RelativeFactorsLog");
-  if ( cal.size() == m_calibRelativeLog.size() ) {
-    m_calibRelativeLog = cal;
-    return StatusCode::SUCCESS;
-  }
-  fatal() << "inconsistent number of parameters in RelativeCalibrationLog:" << cal.size() << endmsg;
-  m_statusScale = 0;        // invalid luminosity
-  return StatusCode::SUCCESS;
-
-}
-
-//=========================================================================
-//  Extract data from Coefficients
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheCoefficientData() {
-  debug() << "callback Coefficients:" << endmsg;
-  std::vector<double> cal = m_condCoefficients->paramVect<double>("Coefficients");
-  if ( cal.size() == m_calibCoefficients.size() ) {
-    m_calibCoefficients = cal;
-    return StatusCode::SUCCESS;
-  }
-  fatal() << "inconsistent number of parameters in Coefficients:" << cal.size() << endmsg;
-  m_statusScale = 0;        // invalid luminosity
-  return StatusCode::SUCCESS;
-
-}
-
-//=========================================================================
-//  Extract data from CoefficientsLog
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheCoefficientDataLog() {
-  debug() << "callback CoefficientsLog:" << endmsg;
-  std::vector<double> cal = m_condCoefficientsLog->paramVect<double>("CoefficientsLog");
-  if ( cal.size() == m_calibCoefficientsLog.size() ) {
-    m_calibCoefficientsLog = cal;
-    return StatusCode::SUCCESS;
-  }
-  fatal() << "inconsistent number of parameters in CoefficientsLog:" << cal.size() << endmsg;
-  m_statusScale = 0;        // invalid luminosity
-  return StatusCode::SUCCESS;
-
-}
-
-//=========================================================================
-//  Extract data from AbsoluteCalibration
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheAbsoluteData() {
-  debug() << "callback AbsoluteCalibration:" << endmsg;
-  m_calibScale = m_condAbsolute->param<double>("Scale");
-  m_calibScaleError = m_condAbsolute->param<double>("RelativeError");
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  Extract data from AbsoluteCalibration
-//=========================================================================
-StatusCode LumiIntegrateFSR::i_cacheSamplingData() {
-  debug() << "callback Sampling:" << endmsg;
-  m_calibRevolutionFrequency = m_condSampling->param<double>("RevolutionFrequency");
-  m_calibRandomFrequencyBB = m_condSampling->param<double>("RandomFrequencyBB");
-  m_calibCollidingBunches = m_condSampling->param<int>("CollidingBunches");
-
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  create one calibration vector
-//=========================================================================
-std::vector<double> LumiIntegrateFSR::one_vector(std::vector<double> a, 
-						 std::vector<double> b, int offset) {
-  std::vector<double> c;
-  for ( int key = 0; key <= offset + LHCb::LumiCounters::Random; key++ ) {
-    double value = 0;
-    if ( key <= LHCb::LumiCounters::Random ) value = a[key];
-    if ( key >= offset ) value = b[key-offset];
-    c.push_back(value);
-  }
-  return c;
-}
-
 //=========================================================================
 //  add the FSR data
 //=============================================================================
 StatusCode LumiIntegrateFSR::add_file() {
   // add the FSRs of all input files at the same time
-
-
-  // register conditions for database acces
-  StatusCode sc0 = registerDB(); // must be executed first
-  if ( sc0.isFailure() ) return sc0;  // error printed already
-  
   double rel_scale = 1.0;
   long n_runs = 0;
   
@@ -475,18 +301,16 @@ StatusCode LumiIntegrateFSR::add_file() {
 	  else n_runs = 0;
 	  double old_scale = rel_scale;
 	  rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
-	  if ( old_scale != rel_scale || old_n_runs != n_runs ) {
-	    info() << "run: " << result->runNumbers()
-		   << " Revolution frequency " << m_calibRevolutionFrequency 
-		   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
-		   << " CollidingBunches " << m_calibCollidingBunches 
-		   << endmsg;
-	  }
 	  if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
 								m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
 					    rel_scale ) == StatusCode::FAILURE ) {
 	    m_statusScale = 0;        // invalid luminosity
 	    error() << "ERROR integrating luminosity result" << endmsg;
+	  }
+	  if ( old_scale != rel_scale || old_n_runs != n_runs ) {
+	    info() << "run: " << result->runNumbers()
+		   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
+		   << " CollidingBunches " << m_calibCollidingBunches << endmsg;
 	  }
 	  delete result;
 	}
@@ -564,7 +388,57 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
       error() << "ERROR updating luminosity constants from DB " << endmsg;
     }
   }    
-  return runUpdate();
+  runUpdate();
+  
+  // look at the new DB parameters
+  if ( msgLevel(MSG::DEBUG) ) {
+    unsigned int toolTCK =  m_databaseTool->getTCK();
+    double toolOdinFraction = m_databaseTool->OdinFraction();
+    double toolRandomRate = m_databaseTool->HLTRandomRate();
+    debug() << "TCK:           " << toolTCK << endmsg;
+    debug() << "OdinFraction:  " << toolOdinFraction << endmsg;
+    debug() << "Randomrate:    " << toolRandomRate << endmsg;
+  }
+
+  // get the database parameters
+  m_calibCollidingBunches = m_databaseTool->CollidingBunches();
+  m_calibRevolutionFrequency = m_databaseTool->LHCFrequency();
+  m_calibRandomFrequencyBB = m_databaseTool->RandomRateBB();
+  
+  m_calibRelative = m_databaseTool->CalibRelative();         
+  m_calibCoefficients = m_databaseTool->CalibCoefficients();     
+  m_calibRelativeLog = m_databaseTool->CalibRelativeLog();      
+  m_calibCoefficientsLog = m_databaseTool->CalibCoefficientsLog();  
+  m_calibScale = m_databaseTool->CalibScale();
+  m_calibScaleError = m_databaseTool->CalibScaleError();
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "bunches:       " << m_calibCollidingBunches << endmsg;
+    debug() << "LHCfrequency:  " << m_calibRevolutionFrequency << endmsg;
+    debug() << "BB RandomRate: " << m_calibRandomFrequencyBB << endmsg;
+    debug() << "absolutescale: " << m_calibScale << endmsg;
+    debug() << "scale error:   " << m_calibScaleError << endmsg;
+  }
+
+  // flag correct data
+  m_statusScale *= m_databaseTool->StatusScale();
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  create one calibration vector
+//=========================================================================
+std::vector<double> LumiIntegrateFSR::one_vector(std::vector<double> a,
+                                                 std::vector<double> b, int offset) {
+  std::vector<double> c;
+  for ( int key = 0; key <= offset + LHCb::LumiCounters::Random; key++ ) {
+    double value = 0;
+    if ( key <= LHCb::LumiCounters::Random ) value = a[key];
+    if ( key >= offset ) value = b[key-offset];
+    c.push_back(value);
+  }
+  return c;
 }
 
 //=============================================================================

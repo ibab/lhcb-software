@@ -1,0 +1,513 @@
+// $Id: GetLumiParameters.cpp,v 1.1 2010-11-20 08:17:50 panmanj Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h" 
+
+// CondDB
+#include "DetDesc/Condition.h"
+#include "GaudiKernel/IDetDataSvc.h"
+
+// TCK
+#include "Kernel/IPropertyConfigSvc.h"
+#include "Kernel/TCK.h"
+#include "GaudiKernel/SmartDataPtr.h" 
+
+// event model
+#include "Event/LumiCounters.h"
+#include "Event/LumiMethods.h"
+
+// local
+#include "GetLumiParameters.h"
+
+using namespace LHCb;
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : GetLumiParameters
+//
+// 2010-11-20 : Jaap Panman
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GetLumiParameters );
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+GetLumiParameters::GetLumiParameters( const std::string& type,
+				      const std::string& name,
+				      const IInterface* parent )
+  : GaudiTool ( type, name , parent ),
+    m_condRelative(NULL),
+    m_condAbsolute(NULL),
+    m_condCoefficients(NULL),
+    m_condCoefficientsLog(NULL),
+    m_condSampling(NULL),       
+    m_condTrigger(NULL)
+{
+  declareInterface<IGetLumiParameters>(this);
+  m_initialized = false;
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+GetLumiParameters::~GetLumiParameters() {} 
+
+//=============================================================================
+// Integrate Lumi FSR data
+//=============================================================================
+StatusCode GetLumiParameters::init( std::string propertyConfigSvcName,
+				    std::string instanceName, 
+				    bool useOnline = false){
+
+  if ( m_initialized ) return StatusCode::SUCCESS; 
+
+  m_propertyConfigSvcName = propertyConfigSvcName;
+  m_instanceName = instanceName;
+  m_useOnline = useOnline;
+  // initialize calibration factors
+  m_statusScale = 1.0;
+  m_calibScale = 0;
+  m_calibScaleError = 0;
+  for ( int key = 0; key <= LHCb::LumiCounters::Random; key++ ) {
+    std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+    m_calibRelative.push_back(0);
+    m_calibCoefficients.push_back(0);
+    m_calibRelativeLog.push_back(0);
+    m_calibCoefficientsLog.push_back(0);
+  }
+  m_calibRevolutionFrequency = 1.;
+  m_calibCollidingBunches = 1;
+  m_calibRandomFrequencyBB = 1.;
+
+  // trigger conditions
+  m_knownTCK = 0;
+  m_triggerTCK = 0;
+  m_odinTotalRate = 0;
+  m_odinFraction = 0;
+  m_rateHLT = 0;
+  m_rateBB = 0;
+  for ( int key = 0; key < 4; key++ ) {
+    m_lumiPars.push_back(0);
+  }
+
+  // filling scheme conditions
+  m_B1NBunches = -1;
+  m_B2NBunches = -1;
+  m_NCollidingBunches = -1;
+  m_B1WrongBucketFlag = 1;
+  m_B2WrongBucketFlag = 1;
+  m_onlineCollidingBunches = -1;
+  
+  // get the detectorDataSvc
+  m_dds = detSvc();
+  if (m_dds == NULL) {
+    m_statusScale = 0;              // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+
+  // register conditions for database acces
+  StatusCode sc = registerDB();                // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already
+
+  // get the IConfigAccessSvc
+  if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) {
+    fatal() << "GetLumiParameters failed to get the IConfigAccessSvc." << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  runUpdate();               // initial update of DB
+  m_initialized = true;
+
+  return StatusCode::SUCCESS; 
+}
+
+// retrieve TCK
+unsigned int GetLumiParameters::getTCK( ) {
+  return m_triggerTCK;
+}
+// retrieve Odin Random BB fraction
+double GetLumiParameters::OdinFraction( ) {
+  return m_odinFraction;
+}
+// retrieve random rate in HLT
+double GetLumiParameters::HLTRandomRate( ) {
+  return m_rateHLT;
+}
+// retrieve revolution frequency
+double GetLumiParameters::LHCFrequency( ) {
+  return m_calibRevolutionFrequency;
+}
+// retrieve number of colliding bunches
+long GetLumiParameters::CollidingBunches( ) {
+  if ( m_useOnline ) {
+    processDB(); 
+    // from filling scheme
+    return m_onlineCollidingBunches;
+  } else {
+    return m_calibCollidingBunches;
+  }
+}
+// retrieve random bunch-bunch rate in HLT
+double GetLumiParameters::RandomRateBB( ) {
+  if ( m_useOnline ) {
+    processDB(); 
+    // rate from HLT and ODIN unless undefined
+    if ( m_rateBB != 0 ) return m_rateBB;
+    else return m_calibRandomFrequencyBB; 
+  } else {
+    return m_calibRandomFrequencyBB; 
+  }
+}
+// retrieve calibration scale
+double GetLumiParameters::CalibScale( ) {
+  return m_calibScale;
+}
+// retrieve calibration scale error
+double GetLumiParameters::CalibScaleError( ) {
+  return m_calibScaleError;
+}
+// retrieve coefficients
+std::vector<double>  GetLumiParameters::CalibRelative( ) {
+  return m_calibRelative;
+}
+// retrieve coefficients (log)
+std::vector<double>  GetLumiParameters::CalibRelativeLog( ) {
+  return m_calibRelativeLog;
+}
+// retrieve 
+std::vector<double>  GetLumiParameters::CalibCoefficients( ) {
+  return m_calibCoefficients;
+}
+// retrieve 
+std::vector<double>  GetLumiParameters::CalibCoefficientsLog( ) {
+  return m_calibCoefficientsLog;
+}
+// retrieve status scale
+double GetLumiParameters::StatusScale( ) {
+  return m_statusScale;
+}
+
+//=============================================================================
+// DB access
+//=============================================================================
+StatusCode GetLumiParameters::registerDB() {
+  // register the DB conditions for the update maganer
+  debug() << "==> Register DB" << endmsg;
+
+  // register absolute calibration
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/AbsoluteCalibration")) {
+    registerCondition("Conditions/Lumi/LHCb/AbsoluteCalibration",
+                      m_condAbsolute, &GetLumiParameters::i_cacheAbsoluteData);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/AbsoluteCalibration not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  // register relative calibration
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibration")) {
+    registerCondition("Conditions/Lumi/LHCb/RelativeCalibration",
+                      m_condRelative, &GetLumiParameters::i_cacheRelativeData);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/RelativeCalibration not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  // register relative calibration for -log method
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibrationLog")) {
+    registerCondition("Conditions/Lumi/LHCb/RelativeCalibrationLog",
+                      m_condRelativeLog, &GetLumiParameters::i_cacheRelativeDataLog);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/RelativeCalibrationLog not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  // register usage coefficients
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Coefficients")) {
+    registerCondition("Conditions/Lumi/LHCb/Coefficients",
+                      m_condCoefficients, &GetLumiParameters::i_cacheCoefficientData);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/Coefficients not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  // register usage coefficients for -log method
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/CoefficientsLog")) {
+    registerCondition("Conditions/Lumi/LHCb/CoefficientsLog",
+                      m_condCoefficientsLog, &GetLumiParameters::i_cacheCoefficientDataLog);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/CoefficientsLog not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  // register sampling frequencies of bunches
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Sampling")) {
+    registerCondition("Conditions/Lumi/LHCb/Sampling",
+                      m_condSampling, &GetLumiParameters::i_cacheSamplingData);
+  }
+  else {
+    fatal() << "Conditions/Lumi/LHCb/Sampling not found" << endmsg;
+    m_statusScale = 0;        // invalid luminosity
+    return StatusCode::SUCCESS;
+  }
+  if( m_useOnline ) {
+    // register trigger data
+    if (this->existDet<Condition>("Conditions/Online/LHCb/RunInfo/Trigger")) {
+      registerCondition("Conditions/Online/LHCb/RunInfo/Trigger",
+			m_condTrigger, &GetLumiParameters::i_cacheTriggerData);
+      debug() << "Conditions/Online/LHCb/RunInfo/Trigger found" << endmsg;
+    }
+    else {
+      warning() << "Conditions/Online/LHCb/RunInfo/Trigger not found, fall back to sampling data" << endmsg;
+    }
+    // register filling scheme data
+    if (this->existDet<Condition>("Conditions/Online/LHCb/LHCFillingScheme")) {
+      registerCondition("Conditions/Online/LHCb/LHCFillingScheme",
+			m_condFilling, &GetLumiParameters::i_cacheFillingData);
+      debug() << "Conditions/Online/LHCb/LHCFillingScheme found" << endmsg;
+    }
+    else {
+      warning() << "Conditions/Online/LHCb/LHCFillingScheme not found, fall back to sampling data" << endmsg;
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from relativeCalibration
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheRelativeData() {
+  debug() << "callback RelativeCalibration:" << endmsg;
+  std::vector<double> cal = m_condRelative->paramVect<double>("RelativeFactors");
+  if ( cal.size() == m_calibRelative.size() ) {
+    m_calibRelative = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in RelativeCalibration:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//  Extract data from relativeCalibrationLog
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheRelativeDataLog() {
+  debug() << "callback RelativeCalibrationLog:" << endmsg;
+  std::vector<double> cal = m_condRelativeLog->paramVect<double>("RelativeFactorsLog");
+  if ( cal.size() == m_calibRelativeLog.size() ) {
+    m_calibRelativeLog = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in RelativeCalibrationLog:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//  Extract data from Coefficients
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheCoefficientData() {
+  debug() << "callback Coefficients:" << endmsg;
+  std::vector<double> cal = m_condCoefficients->paramVect<double>("Coefficients");
+  if ( cal.size() == m_calibCoefficients.size() ) {
+    m_calibCoefficients = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in Coefficients:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//  Extract data from CoefficientsLog
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheCoefficientDataLog() {
+  debug() << "callback CoefficientsLog:" << endmsg;
+  std::vector<double> cal = m_condCoefficientsLog->paramVect<double>("CoefficientsLog");
+  if ( cal.size() == m_calibCoefficientsLog.size() ) {
+    m_calibCoefficientsLog = cal;
+    return StatusCode::SUCCESS;
+  }
+  fatal() << "inconsistent number of parameters in CoefficientsLog:" << cal.size() << endmsg;
+  m_statusScale = 0;        // invalid luminosity
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from AbsoluteCalibration
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheAbsoluteData() {
+  debug() << "callback AbsoluteCalibration:" << endmsg;
+  m_calibScale = m_condAbsolute->param<double>("Scale");
+  m_calibScaleError = m_condAbsolute->param<double>("RelativeError");
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from SamplingData
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheSamplingData() {
+  debug() << "callback Sampling:" << endmsg;
+  m_calibRevolutionFrequency = m_condSampling->param<double>("RevolutionFrequency");
+  m_calibRandomFrequencyBB = m_condSampling->param<double>("RandomFrequencyBB");
+  m_calibCollidingBunches = m_condSampling->param<int>("CollidingBunches");
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from Trigger
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheTriggerData() {
+  debug() << "callback Trigger:" << endmsg;
+  m_triggerTCK = (unsigned int) m_condTrigger->param<int>("TCK");
+  m_lumiPars = m_condTrigger->paramVect<double>("LumiPars");
+
+  // derived quantities
+  debug() << "RECALCULATING DERIVED QUANTITIES " << m_triggerTCK << endmsg;
+  m_odinTotalRate = 0;
+  m_odinFraction = 0;
+  for ( unsigned int i = 0; i < m_lumiPars.size(); i++ ) {
+    m_odinTotalRate += m_lumiPars[i];
+  }
+  if ( m_odinTotalRate != 0 ) {
+    m_odinFraction = m_lumiPars[0] / m_odinTotalRate;
+  }
+  // trigger data - enquire TCK
+  if ( m_triggerTCK != m_knownTCK ) {
+    m_knownTCK = m_triggerTCK;
+    m_rateHLT = rateFromTCK(m_triggerTCK);
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Extract data from Filling scheme
+//=========================================================================
+StatusCode GetLumiParameters::i_cacheFillingData() {
+  debug() << "callback Filling:" << endmsg;
+
+  m_B1NBunches = (long) m_condFilling->param<int>("B1NBunches");
+  m_B2NBunches = (long) m_condFilling->param<int>("B2NBunches");
+  m_NCollidingBunches = (long) m_condFilling->param<int>("NCollidingBunches");
+  m_B1WrongBucketFlag = (long) m_condFilling->param<int>("B1WrongBucketFlag");
+  m_B2WrongBucketFlag = (long) m_condFilling->param<int>("B2WrongBucketFlag");
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// process DB parameters
+//=============================================================================
+StatusCode GetLumiParameters::processDB() {
+
+  // only run this after initialization
+  if ( not m_initialized ) return StatusCode::SUCCESS;
+
+  Gaudi::Time xtfound = m_dds->eventTime();
+  
+  debug() << "Event time: " << xtfound.format(true, "%Y-%m-%d %H:%M")
+	  << " fLHC "  << m_calibRevolutionFrequency 
+	  << " fLUMI " << m_calibRandomFrequencyBB 
+	  << " nCB "   << m_calibCollidingBunches ;
+  for ( long long unsigned int i = 0; i < m_calibRelative.size(); i++ ) {
+    if ( m_calibCoefficientsLog[i] != 0 ) debug() << " LOG# " << i << ":" << m_calibRelativeLog[i];
+    if ( m_calibCoefficients[i] != 0 ) {
+      if ( i == LHCb::LumiMethods::CorrectionFlag ) debug() << " no EE correction ";
+      else debug() << " AVG# " << i << ":" << m_calibRelative[i];
+    }
+  }
+  debug() << endmsg;
+  
+  // determine random rate from ODIN LumiPars and TCK
+  debug() << "LumiPars: " ;
+  for ( unsigned int i = 0; i < m_lumiPars.size(); i++ ) debug() << m_lumiPars[i] << " " ;
+  debug() << " ";
+  debug() << "odinTotalRate : " << m_odinTotalRate << " ";
+  debug() << "odinFraction : " << m_odinFraction << " ";
+  debug() << "TCK : " << m_triggerTCK << " "; 
+  debug() << "HLT rate : " << m_rateHLT << endmsg;
+  
+  // HLT rate can never be greater than the ODIN rate (ODIN in kHz)
+  m_rateBB = std::min( m_rateHLT, m_odinTotalRate*1000. ) * m_odinFraction;
+  debug() << "Random BB rate: " << m_rateBB << endmsg;
+  
+  // filling scheme
+  debug() << "B1NBunches : " << m_B1NBunches << " ";
+  debug() << "B2NBunches : " << m_B2NBunches << " ";
+  debug() << "NCollidingBunches : " << m_NCollidingBunches << " ";
+  debug() << "B1WrongBucketFlag : " << m_B1WrongBucketFlag << " ";
+  debug() << "B2WrongBucketFlag : " << m_B2WrongBucketFlag << endmsg;
+  
+  // take the colliding bunches from the online unless undefined or bad
+  m_onlineCollidingBunches = m_calibCollidingBunches;
+  if (m_B1WrongBucketFlag == 0 && m_B2WrongBucketFlag == 0) {
+    m_onlineCollidingBunches = m_NCollidingBunches;
+  }
+  debug() << "nBunches          : "      << m_onlineCollidingBunches << endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// get rate
+//=============================================================================
+double GetLumiParameters::rateFromTCK(unsigned int tck) {
+  // get lumi rate from TCK
+  debug() << "==> rate from TCK" << endmsg;
+  double rate = 0;
+
+  // only run this after initialization
+  if ( not m_initialized ) return rate;
+
+  std::string code = "Code";
+  std::string sub = "RATE(";
+  // Decode the raw event to get the TCK from the raw Hlt DecReports
+  if (tck == 0) {
+    // if there is no TCK, do nothing
+    verbose() << "No TCK was found, we will get the rate from the CondDB" << endmsg;
+    return rate;
+  }
+  else {
+    TCK _tck(tck); 
+    _tck.normalize();
+    ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  _tck.str()  );
+    // grab properties of child from config database...
+    const ConfigTreeNode* tree = m_propertyConfigSvc->resolveConfigTreeNode(alias);
+    if (!tree) {
+      // if we could not resolve the (non-zero) TCK we have a problem
+      verbose() << "Obtained TCK " << _tck << " from the database which could not be resolved" << endmsg;
+      return rate;
+    } else { 
+      PropertyConfig::digest_type child = m_propertyConfigSvc->findInTree(tree->digest(), m_instanceName);
+      const PropertyConfig *config = m_propertyConfigSvc->resolvePropertyConfig(child);
+      if ( config == 0 ) {
+	warning() << "could not find property " << m_instanceName << endmsg;
+	return rate;
+      }
+      verbose() << "TCK data found: " << tck << " for instance " << m_instanceName 
+	     << " " << config->properties().size() << " properties " << endmsg;
+      // list properties
+      for (PropertyConfig::Properties::const_iterator i =  config->properties().begin(); i!= config->properties().end(); ++i ) {
+	verbose() << i->first << " : " << i->second << endmsg;
+	if ( i->first == code ) {
+	  try {
+	    std::size_t pos = (i->second).find(sub);
+	    std::string str2 = (i->second).substr(pos + sub.size()); 
+	    rate = std::strtod(str2.c_str(), NULL);
+	  }
+	  catch (const std::exception&) {
+	    warning() << "could not find substring " << sub << " in " << i->first << endmsg;
+	  }
+	}
+      }
+    }
+  }
+  return rate;
+}

@@ -67,6 +67,23 @@
      </logical>
    </File>
 
+  <File ID="0238bd38-9252-12df-8123-00188b856c32">
+    <physical>
+      <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw?svcClass=lhcbdst&amp;castorVersion=2"/>
+    </physical>
+    <logical>
+      <lfn name="lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw"/>
+    </logical>
+  </File>
+
+  <File ID="0238bd38-9252-13e0-8123-00188b856c32">
+    <physical>
+      <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw?svcClass=lhcbdst&amp;castorVersion=2"/>
+    </physical>
+    <logical>
+      <lfn name="lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw"/>
+    </logical>
+  </File>
 
   <File ID="AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517">
     <physical>

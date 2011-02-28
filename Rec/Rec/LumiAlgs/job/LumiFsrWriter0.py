@@ -11,16 +11,16 @@ from Gaudi.Configuration import *
 from Configurables import LHCbApp
 LHCbApp().XMLSummary = 'summary.xml'
 #-- set explicit CondDB tag
-LHCbApp().CondDBtag = 'head-20100826'
+LHCbApp().CondDBtag = 'head-20101112'
 
 #--- determine application to run
 from LumiAlgs.LumiFsrWriterConf import LumiFsrWriterConf as LumiFsrWriter
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
-files = [
-  "   DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81363/081363_0000000313.raw?svcClass=lhcbrdst' SVC='LHCb::MDFSelector'",
-    ]
+
+# files = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw?svcClass=lhcbdst' SVC='LHCb::MDFSelector'"  ]
+files = [ "DATAFILE='lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw' SVC='LHCb::MDFSelector'"  ]
 
 ofilename='testFSRout0.dst'
 

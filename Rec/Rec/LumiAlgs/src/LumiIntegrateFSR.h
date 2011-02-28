@@ -9,6 +9,9 @@
 // for DB
 #include "GaudiKernel/IDetDataSvc.h"
 
+// for TCK
+#include "Kernel/IPropertyConfigSvc.h"
+
 // event model
 #include "Event/LumiFSR.h"
 #include "Event/EventCountFSR.h"
@@ -16,6 +19,7 @@
 #include "Event/LumiIntegral.h"
 
 // local
+#include "GetLumiParameters.h"
 #include "LumiIntegrator.h"
 
 /** @class LumiIntegrateFSR LumiIntegrateFSR.h
@@ -34,6 +38,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode stop      ();    ///< Algorithm stopping
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
@@ -44,14 +49,15 @@ protected:
   virtual StatusCode trigger_event(std::string addr, unsigned int key); ///< trigger database update
   virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
-  virtual StatusCode registerDB();    ///< register DB conditions
   std::vector<double> one_vector(std::vector<double> a, 
 				 std::vector<double> b, int offset); ///< create one vector
 
 protected:
   /// Reference to run records data service
-  IDataProviderSvc* m_fileRecordSvc;
+  IDataProviderSvc* m_fileRecordSvc;            ///< file record service
   SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
+  ILumiIntegrator *m_integratorTool;            ///< tool to integrate luminosity
+  IGetLumiParameters *m_databaseTool;           ///< tool to query luminosity database
 
   std::string m_FileRecordName;                 ///< location of FileRecords
   std::string m_FSRName;                        ///< specific tag of summary data in FSR
@@ -62,25 +68,12 @@ protected:
   std::vector<std::string> m_BXTypes;           ///< list of bunch crossing types
   std::vector<std::string> m_addBXTypes;        ///< list of bunch crossing types to be added
   std::vector<std::string> m_subtractBXTypes;   ///< list of bunch crossing types to be subtracted
+  std::string m_propertyConfigSvcName;          ///< TCK service
+  std::string m_instanceName;                   ///< and name
+  bool m_useOnline;                             ///< flag to use online partition of DB
 
 private:
-  ILumiIntegrator *m_integratorTool;            ///< tool to integrate luminosity
-  StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
-  StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition
-  StatusCode i_cacheAbsoluteData();             ///< Function extracting data from Condition
-  StatusCode i_cacheCoefficientData();          ///< Function extracting data from Condition
-  StatusCode i_cacheCoefficientDataLog();       ///< Function extracting data from Condition
-  StatusCode i_cacheSamplingData();             ///< Function extracting data from Condition
-
-  // database conditions and calibration factors
-  Condition *m_condRelative;                    ///< Condition for relative calibration
-  Condition *m_condRelativeLog;                 ///< Condition for relative calibration
-  Condition *m_condAbsolute;                    ///< Condition for absolute scale
-  Condition *m_condCoefficients;                ///< Condition for usage coefficients
-  Condition *m_condCoefficientsLog;             ///< Condition for usage coefficients
-  Condition *m_condSampling;                    ///< Condition for sampling coefficients
-  Condition *m_condGUIDs;                       ///< Condition for GUID based constants
-  
+  // database calibration factors
   std::vector<double> m_calibRelative;          ///< relative calibration factors
   std::vector<double> m_calibCoefficients;      ///< usage factors
   std::vector<double> m_calibRelativeLog;       ///< relative calibration factors
@@ -91,6 +84,5 @@ private:
   double m_calibRevolutionFrequency;            ///< revolution frequency (Hz)
   double m_calibRandomFrequencyBB;              ///< random lumi event frequency of BB crossings (Hz)
   int    m_calibCollidingBunches;               ///< number of colliding bunches
-
 };
 #endif // LUMIINTEGRATEFSR_H
