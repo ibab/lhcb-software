@@ -5,6 +5,8 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! ====================== Phys/NeuroBayesTool v1r1 2011-02-28==================
+
 ! 2011-02-27 - Ulrich Kerzel
 - add network with kinematic variables only (no PID) to reduce combinatorics
   before adding PID stage
