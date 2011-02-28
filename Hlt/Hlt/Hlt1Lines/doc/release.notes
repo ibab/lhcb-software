@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-02-28 - V. Gligorov
+ - Hlt1TrackLines : add monitoring for the logfiles. 
+
 ! 2011-02-27 - Jibo He
  - Hlt1ProtonLines.py
    . Tuned DiProton lines, still missing SumPT cut to reduce output rate further 
