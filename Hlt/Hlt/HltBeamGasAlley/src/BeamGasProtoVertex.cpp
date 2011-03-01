@@ -87,9 +87,9 @@ VectorD BeamGasProtoVertex::get1DVector(Vector3DPoints& vect3DPoints, int coord)
   VectorD vector1D;
   vector1D.reserve( vect3DPoints.size() );
   for( Vector3DPoints::const_iterator pIter=vect3DPoints.begin(); pIter!=vect3DPoints.end(); ++pIter) {
-    if      (coord == 0) vector1D.push_back( (*pIter).x() );
-    else if (coord == 1) vector1D.push_back( (*pIter).y() );
-    else if (coord == 2) vector1D.push_back( (*pIter).z() );
+    if      (coord == 0) vector1D.push_back( pIter->x() );
+    else if (coord == 1) vector1D.push_back( pIter->y() );
+    else if (coord == 2) vector1D.push_back( pIter->z() );
   }
   return vector1D;
 }
