@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - V. Gligorov
+ - Update Physics_draft2011 to explicitly set TrackPhoton's L0 channels.
+ - Remove 4 body charm lines until further notice from CharmHadronLines_draft2011.
+ - Add B2HHPi0 Merged line to Hadrons_draft2011.     
+
 ! 2011-02-28 - Jibo He
  - Electrons_draft2011.py updated
 
