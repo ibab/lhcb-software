@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r6   2011-03-01 ===================
 ! 2011-03-01 - Roel Aaij
  - Align Hlt1MuonLines default cuts to PT cut of 500 in LooseForward
 
