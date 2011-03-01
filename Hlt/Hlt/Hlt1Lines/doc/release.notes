@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - Plamen Hopchev
+ - Hlt1BeamGasLines.py updated (needs head of Tf/FastVelo)
+
 ! 2011-02-28 - Jibo He
  - Hlt1ProtonLines.py updated
    
