@@ -16,7 +16,7 @@ class Calibration_VeloMicroBias :
         return 'Calibration_VeloMicroBias'
 
     def L0TCK(self) :
-        return None
+        return '0x1710'
 
     def ActiveHlt2Lines(self) :
         """
@@ -35,11 +35,12 @@ class Calibration_VeloMicroBias :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+        from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
+        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '(ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger)'
                                  ,'Prescale' : { 'Hlt1MBMicroBias.*' : 0.01 } 
 #                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 'RATE(5000)' }
                                    }
-
+                     , Hlt2CharmHadD02HHKsLinesConf : {'HLT1FILTER'               : ""}
              }
         
 
