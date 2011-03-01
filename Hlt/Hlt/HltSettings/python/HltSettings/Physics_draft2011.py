@@ -105,6 +105,9 @@ class Physics_draft2011( object ):
         from Hadrons_draft2011 import Hadrons_draft2011
         __update_conf__(thresholds,  Hadrons_draft2011().Thresholds() )
 
+        from DV_draft2011 import DV_draft2011
+        __update_conf__(thresholds,  DV_draft2011().Thresholds() )
+
         return thresholds
                        
     def ActiveHlt2Lines(self) :
@@ -118,7 +121,10 @@ class Physics_draft2011( object ):
 
         from Hadrons_draft2011 import Hadrons_draft2011
         hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )
-        
+       
+        from DV_draft2011 import DV_draft2011 
+        hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
+ 
         return hlt2
        
     def ActiveHlt1Lines(self) :
@@ -142,6 +148,6 @@ class Physics_draft2011( object ):
                   'Hlt1TrackMuon',
                   'Hlt1TrackAllL0',
                   'Hlt1TrackPhoton',
-		  'Hlt1SingleMuonHighPT',
-		  'Hlt1SingleMuonNoIP' ]
+		          'Hlt1SingleMuonHighPT',
+		          'Hlt1SingleMuonNoIP' ]
         return lines 
