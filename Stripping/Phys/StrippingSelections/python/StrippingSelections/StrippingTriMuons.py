@@ -160,7 +160,7 @@ confdict = {
     #
     # Trigger 
     #
-    'HLT'          : " HLT_PASS_RE('Hlt.*(MicroBias|Muon|MuMu|DiMu).*Decision') " , 
+    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Mu.*Decision') " , 
     #
     # Prescale 
     #
