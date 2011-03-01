@@ -66,7 +66,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
         #checkConfig(B2MuMuMuMuLinesConf.__configuration_keys__,config)
 
-        default_name='B2MuMuMuMu'
+        default_name=name
 
         self.selDefault = makeDefault(default_name)
 
@@ -87,7 +87,7 @@ def makeDefault(name) :
     should become     inclusive bb-->4 mu selection  ??
     """
     from Configurables import OfflineVertexFitter
-    Detached4mu = CombineParticles("StripDetached4mu")
+    Detached4mu = CombineParticles("Combine"+name)
     Detached4mu.DecayDescriptor = "B_s0 -> mu+ mu- mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Detached4mu.addTool( OfflineVertexFitter() )
