@@ -23,6 +23,14 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+
+! ==================== Phys/Bender v17r0 2011-03-01 ===========================
+
+! 2011-03-01 - Vanya Belyaev
+
+ - prepare new version Bender v17r0, based on DaVinci v28r0 
+
+
 ! ==================== Phys/Bender v16r1 2011-02-05 ===========================
 
 ! 2011-02-05 - Vanya Belyaev
