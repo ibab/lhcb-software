@@ -12,7 +12,7 @@ sys.path.append('../python')
 from py.test import raises
 from SelPy.configurabloids import DummyAlgorithm, MockConfGenerator
 from SelPy.utils import (IncompatibleInputLocations,
-                         IncompatibleOutputLocations)
+                         IncompatibleOutputLocation)
 from SelPy.selection import (flatAlgorithmList,
                              Selection,
                              EventSelection,
