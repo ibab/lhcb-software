@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-01 - Vanya Belyaev
+ - minor fix for StrippingPromptCharm
+
+! 2011-03-01 - Vanya Belyaev
 
   - StrippingPromptCharm.py
 

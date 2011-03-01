@@ -240,17 +240,7 @@ _default_configuration_ = {
     #
     # Global Event cuts 
     #
-    'PrimaryVertices' :  ( 1 , 3 )    , 
-    'GlobalEventCuts' : { 'Code'       :
-                          """
-                          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                          ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                          ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 ) &
-                          ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE < 200 ) ) 
-                          """ ,
-                          'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
-                                           'from LoKiCore.functions    import *' ]
-                          } ,
+    'PrimaryVertices' : True , 
     #
     # Technicalities:
     #
@@ -265,13 +255,21 @@ _default_configuration_ = {
     'chi2vx = VFASPF(VCHI2) '                    , 
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
     # dimuons:
     "psi       = ADAMASS ('J/psi(1S)') < 150 * MeV" ,
     "psi_prime = ADAMASS (  'psi(2S)') < 150 * MeV" ,
     ] ,
     ## monitoring ?
-    'Monitor'     : False
+    'Monitor'     : False ,
+    ## pescales 
+    'D0Prescale'             : 1.0 ,
+    'DstarPrescale'          : 1.0 ,
+    'DsPrescale'             : 1.0 ,
+    'DplusPrescale'          : 1.0 ,
+    'LamCPrescale'           : 1.0 ,
+    'DiCharmPrescale'        : 1.0 , 
+    'CharmAndDiMuonPrescale' : 1.0 
     }
 
 # =============================================================================
@@ -283,15 +281,7 @@ class StrippingPromptCharmConf(LineBuilder) :
     """
     Helper class to confiugure 'PromptCharm'-lines
     """
-    __configuration_keys__ = (
-        'D0Prescale'             ,
-        'DstarPrescale'          ,
-        'DsPrescale'             ,
-        'DplusPrescale'          ,
-        'LamCPrescale'           ,
-        'DiCharmPrescale'        , 
-        'CharmAndDimuonPrescale'
-        )
+    __configuration_keys__ = tuple ( _default_configuration_.keys() ) 
     
     ## get the default configuration 
     @staticmethod
@@ -312,16 +302,17 @@ class StrippingPromptCharmConf(LineBuilder) :
         return _config
     
     ## constructor
-    def __init__(self, name, config) :
+    def __init__(self, name, config ) :
         """
         Constructor
         """
 
-        LineBuilder.__init__(self, name, config)
-
         from copy import deepcopy
         _config = deepcopy ( _default_configuration_ )
-
+        _config.update ( config ) 
+        
+        LineBuilder.__init__( self , name , _config )
+        
         keys = _config.keys()
         for key in keys :
             
@@ -342,22 +333,21 @@ class StrippingPromptCharmConf(LineBuilder) :
         self._slowpioncuts =                   _config.pop ( 'SlowPionCuts' , _default_configuration_ [ 'SlowPionCuts' ] )
 
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
-        self._GEC          = _config.pop ( 'GlobalEventCuts' , _default_configuration_ [ 'GlobalEventCuts' ] ) 
 
-        self.D0Prescale             = config [ 'D0Prescale'       ]
-        self.DstarPrescale          = config [ 'DstarPrescale'    ]
-        self.DsPrescale             = config [ 'DsPrescale'       ]
-        self.DplusPrescale          = config [ 'DplusPrescale'    ]
-        self.LamCPrescale           = config [ 'LamCPrescale'     ]
-        self.DiCharmPrescale        = config [ 'DiCharmPrescale'  ]
-        self.CharmAndDiMuonPrescale = config [ 'DiCharmPrescale'  ]
+        self.D0Prescale             = _config.pop ( 'D0Prescale'             , _default_configuration_ [ 'D0Prescale'             ] ) 
+        self.DstarPrescale          = _config.pop ( 'DstarPrescale'          , _default_configuration_ [ 'DstarPrescale'          ] )  
+        self.DsPrescale             = _config.pop ( 'DsPrescale'             , _default_configuration_ [ 'DsPrescale'             ] ) 
+        self.DplusPrescale          = _config.pop ( 'DplusPrescale'          , _default_configuration_ [ 'DplusPrescale'          ] ) 
+        self.LamCPrescale           = _config.pop ( 'LamCPrescale'           , _default_configuration_ [ 'LamCPrescale'           ] ) 
+        self.DiCharmPrescale        = _config.pop ( 'DiCharmPrescale'        , _default_configuration_ [ 'DiCharmPrescale'        ] ) 
+        self.CharmAndDiMuonPrescale = _config.pop ( 'CharmAndDiMuonPrescale' , _default_configuration_ [ 'CharmAndDiMuonPrescale' ] )
         
         self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
         self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
-
+        
         if _config :
             raise KeyError ( 'Invalid keys are specified for configuration: %s ' % _config.keys() )
-
+        
         for line in self._lines_private() :
           self.registerLine(line)
 
@@ -568,11 +558,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         if hasattr ( self , 'D02HHForPromptCharm_Selection' ) : 
             return self.D02HHForPromptCharm_Selection
         
-#        help(FilterDesktop)
         ##
         _D0Filter = FilterDesktop (
-            ##
-#            "D02HHFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -613,8 +600,6 @@ class StrippingPromptCharmConf(LineBuilder) :
             return self.DstarForPromptCharm_Selection
         
         _DstarCombine = CombineParticles(
-            ##
-#            "CombineDstarFor" + self._name ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -671,8 +656,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         _DsCombine = CombineParticles(
             ## 
-#            "CombineDsFor" + self._name ,
-            ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             ##
@@ -729,8 +712,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         _DCombine = CombineParticles(
             ## 
-#            "CombineDFor" + self._name ,
-            ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             ##
@@ -847,15 +828,25 @@ class StrippingPromptCharmConf(LineBuilder) :
         _Combine = CombineParticles (
             ## the decays to be reconstructed 
             DecayDescriptors = [
+            #
             "   psi(3770) -> D0        D~0            "  ,
+            " [ psi(3770) -> D0        D*(2010)-  ]cc "  ,
             " [ psi(3770) -> D0        D-         ]cc "  ,
             " [ psi(3770) -> D0        D_s-       ]cc "  ,
             " [ psi(3770) -> D0        Lambda_c~- ]cc "  ,
+            #
+            " [ psi(3770) -> D*(2010)+ D*(2010)-  ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ D-         ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ D_s-       ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ Lambda_c~- ]cc "  ,
+            #
             "   psi(3770) -> D+        D-             "  ,
             " [ psi(3770) -> D+        D_s-       ]cc "  ,
             " [ psi(3770) -> D+        Lambda_c~- ]cc "  ,
+            #
             "   psi(3770) -> D_s+      D_s-           "  ,
             " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
+            #
             "   psi(3770) -> Lambda_c+ Lambda_c~-     "
             ] ,
             ## combination cut : accept all 
@@ -886,11 +877,14 @@ class StrippingPromptCharmConf(LineBuilder) :
         ## prepare Di-muons
         _Combine = CombineParticles (
             ## the decays to be reconstructed 
-            DecayDescriptor = "J/psi(1S) -> mu+ mu-" , 
+            DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
+            DaughtersCuts = {
+            'mu+' : ' TRCHI2DOF < 5 '
+            } , 
             ## combination cut 
-            CombinationCut = " psi | psi_prime | ( AM > 5 * GeV ) " ,
+            CombinationCut  = " psi | psi_prime | ( AM > 4.5 * GeV ) " ,
             ##      mother cut 
-            MotherCut      = " chi2vx < 10 " 
+            MotherCut       = " chi2vx < 10 " 
             )
         
         ##
@@ -915,7 +909,17 @@ class StrippingPromptCharmConf(LineBuilder) :
         if hasattr ( self , 'CharmAndDiMuon_Selection' ) :
             return self.CharmAndDiMuon_Selection
         
-        _Filter = FilterDesktop ( Code = "ALL" )
+        _Filter = CombineParticles (
+            DecayDescriptors = [
+            "[ Upsilon(1S) -> J/psi(1S) D0        ]cc" ,
+            "[ Upsilon(1S) -> J/psi(1S) D*(2010)+ ]cc" ,
+            "[ Upsilon(1S) -> J/psi(1S) D+        ]cc" ,
+            "[ Upsilon(1S) -> J/psi(1S) D_s+      ]cc" ,
+            "[ Upsilon(1S) -> J/psi(1S) Lambda_c+ ]cc" 
+            ] ,
+            CombinationCut = " AALL " ,
+            MotherCut      = "  ALL " 
+            )
         
         self.CharmAndDiMuon_Selection = Selection  (
             "SelCharmAndDiMuonFor" + self._name  ,
@@ -936,7 +940,7 @@ default_config = {
     'DplusPrescale'          : 1.00 ,
     'LamCPrescale'           : 1.00 ,
     'DiCharmPrescale'        : 1.00 ,
-    'CharmAndDimuonPrescale' : 1.00 
+    'CharmAndDiMuonPrescale' : 1.00 
     }
 
 # =============================================================================
