@@ -123,9 +123,8 @@ class Selection(UniquelyNamedObject,
                                              branch    = OutputBranch,
                                              leaf      = Extension)
         
-        alg = ConfGenerator(self.name())
         SelectionBase.__init__(self,
-                               algorithm = alg,
+                               algorithm = ConfGenerator( self.name() ),
                                outputLocation = _outputLocation,
                                requiredSelections = RequiredSelections )
 
