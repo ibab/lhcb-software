@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - Yasmine Amhis 
+ - TupleToolDecayTreeFitter 
+   . minor bug fix   
 ! 2011-02-22 - Patrick Koppenburg
  - TupleToolVtxIsoln: 
    . Remove useless limitation to pid 511
