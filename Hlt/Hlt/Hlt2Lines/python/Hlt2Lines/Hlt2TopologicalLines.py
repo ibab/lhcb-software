@@ -18,7 +18,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'ALL_PT_MIN'        : 500.0,  # MeV
         'ALL_P_MIN'         : 5000.0, # MeV
         'ALL_MIPCHI2DV_MIN' : 4.0,    # unitless
-        'ALL_TRCHI2DOF_MAX' : 4.0,    # unitless
+        'MU_TRCHI2DOF_MAX'  : 4.0,    # unitless
+        'E_TRCHI2DOF_MAX'   : 5.0,    # unitless
+        'HAD_TRCHI2DOF_MAX' : 3.0,    # unitless
         'KS_MASS_WINDOW'    : 30.0,   # MeV
         'KSPI_MIPCHI2DV_MIN': 16.0,    # unitless
         'KS_BPVVDCHI2_MIN'  : 1000.0,  # unitless 
@@ -35,14 +37,24 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'BDT_2BODYMU_MIN'   : 0.3,
         'BDT_3BODYMU_MIN'   : 0.33,
         'BDT_4BODYMU_MIN'   : 0.28,
+        'BDT_2BODYE_MIN'    : 0.3,
+        'BDT_3BODYE_MIN'    : 0.33,
+        'BDT_4BODYE_MIN'    : 0.28,
         # bdt param file versions
         'BDT_2BODY_PARAMS'  : 'v1r0',
         'BDT_3BODY_PARAMS'  : 'v1r0',
         'BDT_4BODY_PARAMS'  : 'v1r0',
+        # electron filters & cuts
+        'PIDE_MIN'          : -2.0,
+        'L0_ELECTRON_FILTER': "L0_CHANNEL('Electron')",
+        'HLT1_ELECTRON_FILT':"HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
         # global event cuts
         'USE_GEC'           : False,
         'GEC_MAX'           : 350,
-        'HLT1FILTER'        : "",
+        # simple cuts
+        'SIMPLE_2BODY_CUTS' : [],
+        'SIMPLE_3BODY_CUTS' : [],
+        'SIMPLE_4BODY_CUTS' : [],
         # pre- and post-scale values are set in HltSettings/TopoLines.py
         'Prescale' : {},
         'Postscale' : {},
@@ -55,7 +67,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                          'Hlt2Topo4BodyBBDTDecision'   : 50817,
                          'Hlt2TopoMu2BodyBBDTDecision' : 50738,
                          'Hlt2TopoMu3BodyBBDTDecision' : 50778,
-                         'Hlt2TopoMu4BodyBBDTDecision' : 50818
+                         'Hlt2TopoMu4BodyBBDTDecision' : 50818,
+                         'Hlt2TopoE2BodyBBDTDecision'  : 50739,
+                         'Hlt2TopoE3BodyBBDTDecision'  : 50779,
+                         'Hlt2TopoE4BodyBBDTDecision'  : 50819
                          }
         }
     
@@ -66,19 +81,21 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update({lineName:id})
 
-    def __makeLine(self, lineName, algos):
+    def __makeLine(self, lineName, algos, electron=False):
         '''Constructs a new line and registers it to the HltANNSvc.'''
         # Prepend a filter on the number of tracks
         Hlt2TopoKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [Hlt2TopoKillTooManyInTrk] 
         lclAlgos.extend(algos)
-       
-        hltfilter = self.getProp("HLT1FILTER")
-        if hltfilter == "" : hltfilter = None
-     
+        hlt=None
+        l0=None
+        if electron:
+            l0 = self.getProps()['L0_ELECTRON_FILTER']
+            hlt = self.getProps()['HLT1_ELECTRON_FILT']
+            
         from HltLine.HltLine import Hlt2Line
-        Hlt2Line(lineName, HLT=hltfilter, prescale=self.prescale,
-                 postscale=self.postscale,algos=lclAlgos) 
+        Hlt2Line(lineName, prescale=self.prescale,
+                 postscale=self.postscale,algos=lclAlgos,L0DU=l0,HLT=hlt) 
         self.__updateHltANNSvc(lineName)
 
     def __seqGEC(self):  
@@ -109,17 +126,34 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
         props = self.getProps()
-        ipChi2 = props['ALL_MIPCHI2DV_MIN']
-        if forKs: ipChi2 = props['KSPI_MIPCHI2DV_MIN']
         cuts = '(PT > %s*MeV) & (P > %s*MeV) ' \
                % (props['ALL_PT_MIN'],props['ALL_P_MIN'])
-        cuts += '& (MIPCHI2DV(PRIMARY) > %s) & (TRCHI2DOF < %s)' % \
-                (ipChi2,props['ALL_TRCHI2DOF_MAX'])
+        if forKs:
+            cuts += '& (TRCHI2DOF < %s) & (MIPCHI2DV(PRIMARY) > %s)' % \
+                    (props['HAD_TRCHI2DOF_MAX'],props['KSPI_MIPCHI2DV_MIN'])
+        else:
+            cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % props['ALL_MIPCHI2DV_MIN']
+            cuts += '&(((TRCHI2DOF < %s)& ISMUON)|(TRCHI2DOF < %s))' \
+                    % (props['MU_TRCHI2DOF_MAX'],props['HAD_TRCHI2DOF_MAX'])
         
         filter = Hlt2Member(FilterDesktop,'Filter', Inputs=inputSeq,
                             Code=cuts)
         return bindMembers(name, inputSeq+[filter])
 
+    def __inPartEFilter(self, name, inputSeq):
+        '''Filters input particles for e topo lines.'''
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
+        props = self.getProps()
+        cuts = '(PT > %s*MeV) & (P > %s*MeV) ' \
+               % (props['ALL_PT_MIN'],props['ALL_P_MIN'])
+        cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % props['ALL_MIPCHI2DV_MIN']
+        cuts += '&(((TRCHI2DOF < %s)&(PIDe > %s))|(TRCHI2DOF < %s))' \
+                % (props['E_TRCHI2DOF_MAX'],props['PIDE_MIN'],
+                   props['HAD_TRCHI2DOF_MAX'])
+        filter = Hlt2Member(FilterDesktop,'Filter', Inputs=inputSeq,
+                            Code=cuts)
+        return bindMembers(name, inputSeq+[filter])
     
     def __inPartKsFilter(self, name, inputSeq):
         '''Filters K-shorts for topo lines.'''
@@ -135,7 +169,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                             Code=cuts)
         return bindMembers(name, inputSeq+[filter])
 
-    def __filterNforN(self,n,input):
+    def __filterNforN(self,n,input,tag):
         '''Filters n-body combos for n-body line'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
@@ -147,7 +181,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
         filter = Hlt2Member(FilterDesktop, 'FilterNforN',
                             Inputs=input,Code=cuts)
-        return bindMembers('Topo%d' % n, input+[filter])
+        return bindMembers('Topo%d%s' % (n,tag), input+[filter])
 
     def __filterBDT(self,n,input):
         '''Applies the BDT cut.'''
@@ -156,9 +190,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
+        pid = "('K+'==ABSID)"
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
-                       Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file)
+                       Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file,
+                       ANNSvcKey=6300+n)
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
         filter = Hlt2Member(FilterDesktop, 'FilterBDT', Inputs=input,
                             Code=cuts,tools=[bdttool]) 
@@ -173,12 +209,30 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         props = self.getProps()
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
-                       Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file)
+                       Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file,
+                       ANNSvcKey=6300+n)
         cuts = "INTREE(HASPROTO & HASMUON & ISMUON)"
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
                             Inputs=input,Code=cuts,tools=[bdttool]) 
         return bindMembers('TopoMu%d' % n, input+[filter])
+    
+    def __filterElectronBDT(self,n,input):
+        '''Applies the e and BDT cuts.'''
+        from Configurables import BBDecTreeTool as BBDT
+        from Configurables import FilterDesktop
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from HltLine.HltLine import Hlt1Tool as Tool
+        props = self.getProps()
+        file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
+        bdttool = Tool(type=BBDT,name='TrgBBDT',
+                       Threshold=props['BDT_%dBODYE_MIN'%n],ParamFile=file,
+                       ANNSvcKey=6300+n)
+        cuts = "INTREE(HASPROTO & (PIDe > %s))" % props['PIDE_MIN']
+        cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
+        filter = Hlt2Member(FilterDesktop, 'FilterElectronBDT',
+                            Inputs=input,Code=cuts,tools=[bdttool]) 
+        return bindMembers('TopoE%d' % n, input+[filter])
 
     def __filterSimple(self,n,input):
         '''Applies easy cuts factored out of BDT.'''
@@ -186,13 +240,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
-        simpletool = Tool(type=BBDTSimple,name='TrgSimple',NBody=n)
+        simpletool = Tool(type=BBDTSimple,name='TrgSimple',
+                          Cuts=self.getProps()['SIMPLE_%dBODY_CUTS'%n])
         cuts = "FILTER('BBDTSimpleTool/TrgSimple') "
         filter = Hlt2Member(FilterDesktop, 'FilterBBDTSimple',
                             Inputs=input,Code=cuts,tools=[simpletool]) 
-        return bindMembers('TopoMu%d' % n, input+[filter])
+        return bindMembers('Topo%d' % n, input+[filter])
 
-    def __filter2forN(self,n,input):
+    def __filter2forN(self,n,input,tag):
         '''Filters 2-body combos for 3- and 4-body lines.'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
@@ -203,16 +258,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                % (m,props['V2BODYCHI2_MAX'])
         filter = Hlt2Member(FilterDesktop, 'Filter2forN', Inputs=input,
                              Code=cuts)
-        return bindMembers('Topo%d' % n, input+[filter])
+        return bindMembers('Topo%d%s' % (n,tag), input+[filter])
 
-    def __filter3for4(self,input):
+    def __filter3for4(self,input,tag):
         '''Filters 3-body combos for 4-body line.'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
         cuts = '(M < 6000*MeV)'
         filter = Hlt2Member(FilterDesktop, 'Filter3for4', Inputs=input,
                             Code=cuts)
-        return bindMembers('Topo', input+[filter])
+        return bindMembers('Topo'+tag, input+[filter])
     
     def __combine(self, name, input, decay):
         '''Configures common particle combos used by all topo lines.'''        
@@ -228,25 +283,24 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                            MotherCut=momCuts)
         return bindMembers(name, input+[combo])
 
-    def __combineKS(self,input):
+    def __combineKS(self,input,tag):
         '''Make K-shorts for topo (filtered later).'''
         from Hlt2SharedParticles.GoodParticles import GoodPions
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import CombineParticles
-        decay = ["K+ -> pi+ pi-", "K- -> pi+ pi-"]
+        decay = ["K+ -> pi+ pi-"]
         mKs = 497.648
         dm = float(self.getProps()['KS_MASS_WINDOW'])
-        comboCuts = '(AM > %.3f*MeV) & (AM < %.3f*MeV) & (AALLSAMEBPV)' \
-                    % (mKs-1.5*dm,mKs+1.5*dm)
-        momCuts = '(M > %.3f*MeV) & (M < %.3f*MeV) & (VFASPF(VCHI2)<%s)' \
+        comboCuts = 'in_range(%.3f*MeV,AM,%.3f*MeV)'% (mKs-1.5*dm,mKs+1.5*dm)
+        momCuts = 'in_range(%.3f*MeV,M,%.3f*MeV) & (VFASPF(VCHI2)<%s)' \
                   % (mKs-dm,mKs+dm,self.getProps()['V2BODYCHI2_MAX'])
         
         createKs = Hlt2Member(CombineParticles, "KsLL",DecayDescriptors=decay, 
                               CombinationCut=comboCuts,MotherCut = momCuts,
                               Inputs=input)
-        return bindMembers("CreateKsLL", input+[createKs])
+        return bindMembers("TopoCreateKsLL"+tag, input+[createKs])
 
-    def __makeInput(self,kaons,kshorts):
+    def __makeInput(self,kaons,kshorts,tag):
         '''Puts Ks and KSs into one container w/ same ID.'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import GaudiSequencer, FilterDesktop
@@ -256,14 +310,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                      ModeOR=True,ShortCircuit=False)
         filter = Hlt2Member(FilterDesktop,'FilterKandKS',
                             Inputs=[kaons, kshorts], Code='ALL')
-        return bindMembers("InputKandKS", [inputKandKS, filter])
+        return bindMembers("InputKandKS"+tag, [inputKandKS, filter])
 
-    def __allNBody(self,n,input):
+    def __allNBody(self,n,input,tag):
         '''All n-body combos.'''
         decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-"],
                  ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"],
                  ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]]
-        return self.__combine('Topo%dBodyAll'%n,input,decay[n-2])
+        return self.__combine('Topo%dBodyComb%s'%(n,tag),input,decay[n-2])
 
     def __TOSFilter(self, name, input):
         '''Require TOS from 1-track HLT1 lines.'''
@@ -278,65 +332,79 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         TOSParticleTagger.CaloClustForCharged = False
         TOSParticleTagger.CaloClustForNeutral = False
         TOSParticleTagger.TOSFrac = {4:0.0,5:0.0 }
-        #TOSParticleTagger.CompositeTPSviaPartialTOSonly = True
         TOSParticleTagger.Inputs = [input.outputSelection()]
         TOSParticleTagger.Output = 'Hlt2/%s/Particles'%(name+'Tagger')
         filter = bindMembers(name+'ParticleFilter',[input,TOSParticleTagger])
         return filter
-        #dummy = Hlt2Member(FilterDesktop, name+'DummyFilter',
-        #                   Inputs=[filter], Code="ALL")
-        #return bindMembers(name+'FullFilter',[filter,dummy])
 
-    def __makeLines(self,name,seqs):
+    def __makeLines(self,name,seqs,electron=False):
         '''Makes the lines.'''
         for n in [2,3,4]:
             lineName = name.replace('NBody','%dBody' % n)
-            self.__makeLine(lineName,algos=[seqs[n-2]])
+            self.__makeLine(lineName,[seqs[n-2]],electron)
 
     def __apply_configuration__(self):
         '''Constructs all of the lines.'''
         from Hlt2SharedParticles.TrackFittedBasicParticles \
-             import BiKalmanFittedKaonsWithMuonID
+             import BiKalmanFittedKaonsWithEID,BiKalmanFittedKaonsWithMuonID
         from Hlt2SharedParticles.GoodParticles import GoodPions
         # input particles
+        inputKe = self.__inPartEFilter('TopoInputKaonsE',
+                                       [BiKalmanFittedKaonsWithEID])
         inputK = self.__inPartFilter('TopoInputKaons',
                                      [BiKalmanFittedKaonsWithMuonID])
         input = inputK
+        inpute = inputKe
         if self.getProps()['USE_KS']:
             pi4ks = self.__inPartFilter('TopoInputPions4KS',[GoodPions],True)
-            goodKS = self.__combineKS([pi4ks])
+            goodKS = self.__combineKS([pi4ks],'All')
             inputKS = self.__inPartKsFilter('TopoInputKS',[goodKS])
-            input = self.__makeInput(inputK,inputKS)
+            input = self.__makeInput(inputK,inputKS,'All')
         
         # make 2-body line
-        all2 = self.__allNBody(2,[input])
-        topo2_all = self.__filterNforN(2,[all2])
+        all2 = self.__allNBody(2,[input],'All')
+        topo2_all = self.__filterNforN(2,[all2],'All')
         topo2_tos = self.__TOSFilter('Topo2BodyTOS',topo2_all)
         topo2_simple = self.__filterSimple(2,[topo2_tos])
         topo2_bdt = self.__filterBDT(2,[topo2_tos])
-        topo2_mu = self.__filterMuonBDT(2,[topo2_tos]) 
+        topo2_mu = self.__filterMuonBDT(2,[topo2_tos])
+        all2e = self.__allNBody(2,[inpute],'E')
+        topo2_alle = self.__filterNforN(2,[all2e],'E')
+        topo2_tose = self.__TOSFilter('Topo2BodyTOSE',topo2_alle)
+        topo2_e = self.__filterElectronBDT(2,[topo2_tose]) 
         # make 3-body line
-        filt23 = self.__filter2forN(3,[all2])
-        all3 = self.__allNBody(3,[input,filt23])
-        topo3_all = self.__filterNforN(3,[all3])
+        filt23 = self.__filter2forN(3,[all2],'All')
+        all3 = self.__allNBody(3,[input,filt23],'All')
+        topo3_all = self.__filterNforN(3,[all3],'All')
         topo3_tos = self.__TOSFilter('Topo3BodyTOS',topo3_all)
         topo3_simple = self.__filterSimple(3,[topo3_tos])
         topo3_bdt = self.__filterBDT(3,[topo3_tos])
-        topo3_mu = self.__filterMuonBDT(3,[topo3_tos]) 
+        topo3_mu = self.__filterMuonBDT(3,[topo3_tos])
+        filt23e = self.__filter2forN(3,[all2e],'E')
+        all3e = self.__allNBody(3,[inpute,filt23e],'E')
+        topo3_alle = self.__filterNforN(3,[all3e],'E')
+        topo3_tose = self.__TOSFilter('Topo3BodyTOSE',topo3_alle)
+        topo3_e = self.__filterElectronBDT(3,[topo3_tose]) 
         # make 4-body line
-        filt24 = self.__filter2forN(4,[filt23])
-        filt3 = self.__filter3for4([all3])
-        all4 = self.__allNBody(4,[input,filt3])
-        topo4_all = self.__filterNforN(4,[all4])
+        filt24 = self.__filter2forN(4,[filt23],'All')
+        filt3 = self.__filter3for4([all3],'All')
+        all4 = self.__allNBody(4,[input,filt3],'All')
+        topo4_all = self.__filterNforN(4,[all4],'All')
         topo4_tos = self.__TOSFilter('Topo4BodyTOS',topo4_all)
         topo4_simple = self.__filterSimple(4,[topo4_tos])
         topo4_bdt = self.__filterBDT(4,[topo4_tos])
-        topo4_mu = self.__filterMuonBDT(4,[topo4_tos]) 
-
+        topo4_mu = self.__filterMuonBDT(4,[topo4_tos])
+        filt24e = self.__filter2forN(4,[filt23e],'E')
+        filt3e = self.__filter3for4([all3e],'E')
+        all4e = self.__allNBody(4,[inpute,filt3e],'E')
+        topo4_alle = self.__filterNforN(4,[all4e],'E')
+        topo4_tose = self.__TOSFilter('Topo4BodyTOSE',topo4_alle)
+        topo4_e = self.__filterElectronBDT(4,[topo4_tose]) 
         # make the lines
         self.__makeLines('TopoNBodySimple',
                          [topo2_simple,topo3_simple,topo4_simple])
         self.__makeLines('TopoNBodyBBDT',[topo2_bdt,topo3_bdt,topo4_bdt])
         self.__makeLines('TopoMuNBodyBBDT',[topo2_mu,topo3_mu,topo4_mu])
+        self.__makeLines('TopoENBodyBBDT',[topo2_e,topo3_e,topo4_e],True)
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
