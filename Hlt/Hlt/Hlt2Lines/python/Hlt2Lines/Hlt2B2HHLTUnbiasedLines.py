@@ -64,13 +64,14 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ## filter for kaons
         filterAll = Hlt2Member(FilterDesktop,
                                'FilterAll',
-                               Inputs  = [BiKalmanFittedKaons ],
+                               Inputs = [ BiKalmanFittedKaons ],
                                Code    = childCutNoPID)
         nopidAlgos = [ BiKalmanFittedKaons, filterAll ]
         ## HLT1 TIS Filter
         HLT1TISFilter = Hlt2Member ( TisTosParticleTagger
                                      , 'HLT1TISFilter'
                                      , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+                                     , Inputs = [ filterAll ]
                                      )
         nopidAlgos += [ HLT1TISFilter ]
         
@@ -84,6 +85,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts   = { "K+" : childCutNoPID}
                                          , CombinationCut  = combCut 
                                          , MotherCut       = motherCutNoPID
+                                         , Inputs = [ HLT1TISFilter ]
                                          )
         nopidAlgos += [ Hlt2B2HHLTUnbiased ]
 
@@ -103,6 +105,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HHNoPID')"
         NBNoPIDFilter = Hlt2Member(FilterDesktop, 'FilterNBBhhNoPID',
                                    Code    = cuts,
+                                   Inputs = [ Hlt2B2HHLTUnbiased ],
                                    tools   = [NBBhhNoPIDTool])
         nopidAlgos += [ NBNoPIDFilter ]
 
@@ -122,6 +125,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ## filter for kaons
         filterRich     = Hlt2Member(FilterDesktop,
                                     'FilterRich',
+                                    Inputs = [ BiKalmanFittedRichKaons ],
                                     Code   = childCutPID)
 
         richpidAlgos =  [ BiKalmanFittedRichKaons, filterRich]
@@ -130,6 +134,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         HLT1TISRichFilter = Hlt2Member( TisTosParticleTagger
                                         , 'HLT1TISRichFilter'
                                         , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
+                                        , Inputs = [ filterRich ],
                                         )
         richpidAlgos +=  [ HLT1TISRichFilter ]
 
@@ -142,6 +147,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                              , DaughtersCuts   = { "K+" : childCutPID}
                                              , CombinationCut  = combCut
                                              , MotherCut       = motherCutPID
+                                             , Inputs = [ HLT1TISRichFilter ],
                                              )
                                                                 
         richpidAlgos +=  [ Hlt2B2HHLTUnbiasedRich ]
@@ -163,6 +169,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
         NBFilter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
                               Code    = cuts,
+                              Inputs = [ Hlt2B2HHLTUnbiasedRich ],
                               tools   = [NBBhhTool])
         richpidAlgos +=  [ NBFilter ]
                             
