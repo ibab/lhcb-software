@@ -4,6 +4,8 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v4r1 2011-03-01 ==============================
+
 ! 2011-03-01 - Juan Palacios
  - SelPy.selection.Selection
   . Add OutputDataSetter constructor argument. Controls name of the output
