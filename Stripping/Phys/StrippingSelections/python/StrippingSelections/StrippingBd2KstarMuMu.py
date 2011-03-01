@@ -41,11 +41,12 @@ Stripping_BdToKstarMuMu_TestDictonary = {
     'B_IPCHI2'            :   16.0,
     'B_DIRA'              :    0.014,
     'B_FlightCHI2'        :  121.0,
-        
+    'B_Dau_MaxIPCHI2'     : 9.0,
+    
     # Daughter cuts
     'Dau_VertexCHI2'      :   12.0,
     'Dau_DIRA'            :   -0.9,
-
+    
     # Kstar cuts
     'Kstar_Comb_MassLow'  :  550.0,
     'Kstar_Comb_MassHigh' : 2200.0,
@@ -53,9 +54,11 @@ Stripping_BdToKstarMuMu_TestDictonary = {
     'Kstar_MassHigh'      : 2000.0,
     'Kstar_MinIPCHI2'     :    4.0,
     'Kstar_FlightChi2'    :   25.0,
-
+    'Kstar_Dau_MaxIPCHI2' : 9.0,
+    
     # JPsi (dimu) cuts
     'Dimu_FlightChi2'     :   81.0,
+    'Dimu_Dau_MaxIPCHI2'  : 9.0,
     
     # Track cuts
     'Track_CHI2nDOF'      :    5.0,
@@ -99,6 +102,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         'B_IPCHI2',
         'B_DIRA',
         'B_FlightCHI2',
+        'B_Dau_MaxIPCHI2',
         
         # Daughter cuts
         'Dau_VertexCHI2',
@@ -111,9 +115,11 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         'Kstar_MassHigh',
         'Kstar_MinIPCHI2',
         'Kstar_FlightChi2',
+        'Kstar_Dau_MaxIPCHI2',
 
         # JPsi (dimu) cuts
         'Dimu_FlightChi2',
+        'Dimu_Dau_MaxIPCHI2',
         
         # Track cuts
         'Track_CHI2nDOF',
@@ -136,17 +142,33 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
 
         self.BdToKstarMuMuLineName = self.name + "_BdToKstarMuMu"
         self.BuToKMuMuLineName = self.name + "_BuToKMuMu"
- 
+
+        
         # Define cut strings
         self.BdCombCut = "(AM > %(B_Comb_MassLow)s * MeV) & (AM < %(B_Comb_MassHigh)s * MeV)" %config
 
-        self.BdCut = "(M > %(B_MassLow)s * MeV) & (M < %(B_MassHigh)s * MeV) & (VFASPF(VCHI2/VDOF) < %(B_VertexCHI2)s) & (BPVIPCHI2() < %(B_IPCHI2)s) & (BPVDIRA> %(B_DIRA)s) & (BPVVDCHI2 > %(B_FlightCHI2)s)" %config
+        self.BdCut = "(M > %(B_MassLow)s * MeV) & " \
+                     "(M < %(B_MassHigh)s * MeV) & " \
+                     "(VFASPF(VCHI2/VDOF) < %(B_VertexCHI2)s) & " \
+                     "(BPVIPCHI2() < %(B_IPCHI2)s) & " \
+                     "(BPVDIRA> %(B_DIRA)s) & " \
+                     "(BPVVDCHI2 > %(B_FlightCHI2)s) & " \
+                     "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(B_Dau_MaxIPCHI2)s )" %config
 
-        DaughterCuts = "(VFASPF(VCHI2/VDOF) < %(Dau_VertexCHI2)s) & (BPVDIRA> %(Dau_DIRA)s)" %config
+        DaughterCuts = "(VFASPF(VCHI2/VDOF) < %(Dau_VertexCHI2)s) & " \
+                       "(BPVDIRA> %(Dau_DIRA)s)" %config
+        
+        self.KstarCombCut = "(AM > %(Kstar_Comb_MassLow)s * MeV) & " \
+                            "(AM < %(Kstar_Comb_MassHigh)s * MeV)" %config
 
-        self.KstarCombCut = "(AM > %(Kstar_Comb_MassLow)s * MeV) & (AM < %(Kstar_Comb_MassHigh)s * MeV)" %config
-        self.KstarCut = DaughterCuts + " & (M > %(Kstar_MassLow)s * MeV) & (M < %(Kstar_MassHigh)s * MeV) & (BPVVDCHI2 > %(Kstar_FlightChi2)s) & (MIPCHI2DV(PRIMARY) > %(Kstar_MinIPCHI2)s)" %config
-        self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s)" %config
+        self.KstarCut = DaughterCuts + " & (M > %(Kstar_MassLow)s * MeV) & " \
+                        "(M < %(Kstar_MassHigh)s * MeV) & " \
+                        "(BPVVDCHI2 > %(Kstar_FlightChi2)s) & " \
+                        "(MIPCHI2DV(PRIMARY) > %(Kstar_MinIPCHI2)s) & " \
+                        "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Kstar_Dau_MaxIPCHI2)s )" %config
+        
+        self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s) & " \
+                         "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
 
         TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
 

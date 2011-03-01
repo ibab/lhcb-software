@@ -32,7 +32,10 @@ config_params =  {
     'Track_CHI2nDOF'            : 5.0,
     'Hadron_MinIPCHI2'          : 9.0,
     'Muon_MinIPCHI2'            : 9.0,
-    'Muon_IsMuon'               : False
+    'Muon_IsMuon'               : False,
+    'B_Dau_MaxIPCHI2'           : 9.0,
+    'Kstar_Dau_MaxIPCHI2'       : 9.0,
+    'Dimu_Dau_MaxIPCHI2'        : 9.0
     }
 
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBdToKstarMuMuConf as builder
