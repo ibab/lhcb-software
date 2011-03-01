@@ -75,13 +75,12 @@ class Bs2PsiPhi(AlgoMC) :
             return self.Warning('No Primary vertices are found!', SUCCESS)
 
         mips = MIPCHI2( primaries, self.geo() ) 
-        
-        
-        mcbs  = self.mcselect('mcbs'  , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
-        mcpsi = self.mcselect('mcpsi' , '[ B_s0 -> ^( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
-        mcphi = self.mcselect('mcphi' , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- ) ^( phi(1020) =>  K+  K- ) ]CC' ) 
-        mcmu  = self.mcselect('mcmu'  , '[ B_s0 ->  ( J/psi(1S) => ^mu+ ^mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
-        mck   = self.mcselect('mck'   , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) => ^K+ ^K- ) ]CC' )
+              
+        mcbs  = self.mcselect ( 'mcbs'  , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mcpsi = self.mcselect ( 'mcpsi' , '[ B_s0 -> ^( J/psi(1S) =>  mu+  mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mcphi = self.mcselect ( 'mcphi' , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- ) ^( phi(1020) =>  K+  K- ) ]CC' ) 
+        mcmu  = self.mcselect ( 'mcmu'  , '[ B_s0 ->  ( J/psi(1S) => ^mu+ ^mu- )  ( phi(1020) =>  K+  K- ) ]CC' )
+        mck   = self.mcselect ( 'mck'   , '[ B_s0 ->  ( J/psi(1S) =>  mu+  mu- )  ( phi(1020) => ^K+ ^K- ) ]CC' )
         
         if mcbs  . empty() : return self.Warning ( 'No MC-Bs  is found!' , SUCCESS ) # RETURN
         if mcpsi . empty() : return self.Warning ( 'No MC-psi is found!' , SUCCESS ) # RETURN 
@@ -249,6 +248,12 @@ def configure ( datafiles , catalogs = [] ) :
     from Configurables import NTupleSvc
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
+    from StandardParticles import StdTightKaons, StdTightMuons 
+    InputParticles = [
+        StdTightKaons  . outputLocation () ,
+        StdTightMuons  . outputLocation ()
+        ]
+
     ## define input data 
     setData  ( datafiles , catalogs )
     
@@ -267,13 +272,14 @@ def configure ( datafiles , catalogs = [] ) :
         ## N-tuple LUN 
         NTupleLUN  = "PsiPhi" ,
         ## MC-relations
-        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations    = [ 'StdTightKaons' , 'StdTightMuons' ] 
+        Inputs     = InputParticles
         )
     
-    gaudi.addAlgorithm ( alg ) 
-      
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ]
+    
     return SUCCESS 
     
 # =============================================================================
@@ -290,10 +296,9 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 )
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    
-    configure ( inputdata ) 
+    configure( inputdata )  
     
     ## run the job
     run(501)

@@ -81,7 +81,7 @@ def configure ( datafiles , catalogs = [] ) :
         
     from Configurables import DaVinci    
     daVinci = DaVinci (
-        DataType   = 'DC06' , # default  
+        DataType   = '2010' , # default  
         Simulation = True   ) 
     
     ## define the input data 
@@ -112,16 +112,14 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     ## configure the job:
     inputdata = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
+    configure( inputdata )  
 
-    configure ( inputdata ) 
     ## run the job
     run(50)
     

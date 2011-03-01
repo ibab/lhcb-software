@@ -75,12 +75,12 @@ class Bs2PhiGamma(AlgoMC) :
         The only one essential method
         """
 
-        mcbs  = self.mcselect('mcbs' , '[ B_s0 -> (  phi(1020) =>  K+  K- )  gamma]CC')
+        mcbs  = self.mcselect ( 'mcbs'  , '[ B_s0 -> (  phi(1020) =>  K+  K- )  gamma]CC')
         if mcbs.empty() : return self.Warning('No MC-Bs are found', SUCCESS )
         
-        mcphi = self.mcselect('mcphi' , '[ B_s0 -> ^( phi(1020) =>  K+  K- )  gamma]CC') 
-        mck   = self.mcselect('mck'   , '[ B_s0 ->  ( phi(1020) => ^K+ ^K- )  gamma]CC')
-        mcg   = self.mcselect('mcg'   , '[ B_s0 ->  ( phi(1020) =>  K+  K- ) ^gamma]CC') 
+        mcphi = self.mcselect ( 'mcphi' , '[ B_s0 -> ^( phi(1020) =>  K+  K- )  gamma]CC') 
+        mck   = self.mcselect ( 'mck'   , '[ B_s0 ->  ( phi(1020) => ^K+ ^K- )  gamma]CC')
+        mcg   = self.mcselect ( 'mcg'   , '[ B_s0 ->  ( phi(1020) =>  K+  K- ) ^gamma]CC') 
         
         if mcphi.empty() or mck.empty() or mcg.empty() : 
             return self.Warning ('No MC are found', SUCCESS ) 

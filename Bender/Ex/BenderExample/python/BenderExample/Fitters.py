@@ -463,6 +463,12 @@ def configure ( datafiles , catalogs = [] ) :
     from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'Fitters_Histos.root' ) 
         
+    from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+    InputParticles = [
+        StdNoPIDsKaons  . outputLocation () ,
+        StdNoPIDsPions  . outputLocation () ,
+        ]
+
     ## define input data 
     setData  ( datafiles , catalogs )
     
@@ -479,9 +485,9 @@ def configure ( datafiles , catalogs = [] ) :
         ## print histos 
         HistoPrint = True     ,
         ## MC-relations
-        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations    = [ 'StdNoPIDsKaons' , 'StdNoPIDsMuons' ] 
+        Inputs     = InputParticles  
         )
     
     ## create local algorithm:
@@ -490,15 +496,13 @@ def configure ( datafiles , catalogs = [] ) :
         ## print histos 
         HistoPrint = True     ,
         ## MC-relations
-        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations    = [ 'StdNoPIDsKaons' , 'StdNoPIDsMuons' ] 
+        Inputs     = InputParticles 
         )
     
-    ## if runs locally at CERN lxplus 
-    ## gaudi.setAlgorithms( [alg1,alg2] )
-    gaudi.setAlgorithms( [alg2] )
-    ## gaudi.setAlgorithms( [alg1] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg1.name() , alg2.name() ]
     
     return SUCCESS 
     
@@ -513,12 +517,12 @@ if __name__ == '__main__' :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
-    
+        
     ## configure the job:
-    inputdata  = [
-        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 )
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure ( inputdata ) 
+    configure( inputdata )  
 
     ## run the job
     run(500)

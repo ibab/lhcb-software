@@ -74,23 +74,12 @@ class D02hh(AlgoMC) :
         """
         
         # D0/D~0 -> hh 
-        d0 = Trees.MCExclusive  ( Nodes.CC('D0') )        
-        d0 += Nodes.Pid('pi-') | Nodes.Pid('K-')
-        d0 += Nodes.Pid('pi+') | Nodes.Pid('K+')
-        
-        d0 = Trees.MCPhotos ( d0 )
-        
-        st =  d0.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-        
-        cut = MCDECTREE( d0 ) 
-        mcd0 = self.mcselect ('mcd0' , cut )
-        if mcd0.empty() or 1 < mcd0.size() :
+        mcd0 = self.mcselect ( 'mcd0' , ' ( D0 | D~0) => ( pi+ | K+ ) (pi- | K- ) ')
+        if mcd0.empty() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
 
         
         mcD0 = MCTRUTH ( self.mcTruth() , mcd0 )
-
         
         hadrons = self.select ( 'h' ,
                                 ( ( 'pi+' == ABSID ) |
@@ -110,10 +99,10 @@ class D02hh(AlgoMC) :
             self.plot ( M(D) / Units.GeV , 'mass h+ h-' , 0.6 , 3.0 , 240 )            
             D.save('D0')
             
-
+            
         D0 = self.selected('D0')
         self.setFilterPassed ( not D0.empty()  )
-            
+        
         return SUCCESS
     
     ## finalize & print histos 
@@ -126,7 +115,7 @@ class D02hh(AlgoMC) :
             h = histos[key]
             if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
         return AlgoMC.finalize ( self )
-
+        
 
 # =============================================================================
 ## configure the job
@@ -141,11 +130,19 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'DC06', 
-        Simulation = True  )
+        DataType   = '2010', 
+        Simulation = True  ,
+        Lumi       = False 
+        )
     
     from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'D02hh_Histos.root' ) 
+
+    from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+    InputParticles = [
+        StdNoPIDsKaons . outputLocation () ,
+        StdNoPIDsPions . outputLocation () ,
+        ]
 
     ## define the input data 
     setData ( datafiles , catalogs )
@@ -158,18 +155,18 @@ def configure ( datafiles , catalogs = [] ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = D02hh(
+    alg = D02hh (
         'D02hh' ,
         ## MC-relations
-        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## print histos 
         HistoPrint = True ,
         ## input particles:
-        InputLocations = [ 'StdNoPIDsPions' , 'StdNoPIDsKaons' ]
+        Inputs     =  InputParticles 
         )
     
-    ##gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ]
        
     return SUCCESS 
     
@@ -185,13 +182,11 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
-
+    
     ## configure the job:
     inputdata = [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-               
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008581/0000/00008581_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        ]
     configure( inputdata ) 
 
     ## run the job

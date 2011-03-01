@@ -76,54 +76,16 @@ class AP(AlgoMC) :
         Standard method for analyses
         """
         
-        # K0s -> pi+ pi0 
-        ks   = Trees.MCExclusive  ( Nodes.Pid('KS0') )
-        ks  += 'pi+'
-        ks  += 'pi-'
-        st   = ks.validate  ( self.ppSvc() )
-        if st.isFailure()  : return st
+        mcks   = self.mcselect ( 'ks'  , 'KS0      -> pi+ pi-' )        
+        mcl01  = self.mcselect ( 'l01' , 'Lambda0  -> p+  pi-' )
+        mcl02  = self.mcselect ( 'l02' , 'Lambda~0 -> p~- pi+' )
         
-        ## Lambda0
-        l0   = Trees.MCExclusive ( Nodes.Pid('Lambda0')  )
-        l0  += 'pi-'
-        l0  += 'p+'
-        st   = l0.validate  ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        ## Lambda0~
-        l0b  = Trees.MCExclusive ( Nodes.Pid('Lambda~0')  )
-        l0b += 'p~-'
-        l0b += 'pi+'
-        st   = l0b.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-
-        cutks  = MCDECTREE( ks  ) 
-        mcks   = self.mcselect ( 'ks'  , cutks )
-        
-        cutl1  = MCDECTREE( l0 ) 
-        mcl01  = self.mcselect ( 'l01' , cutl1 )
-        
-        cutl2  = MCDECTREE( l0b ) 
-        mcl02  = self.mcselect ( 'l02' , cutl2 )
-                
         if mcks.empty() and mcl01.empty()  and mcl02.empty() : 
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
 
-        if mcks.empty() :
-            mcKS  = NONE
-        else :
-            mcKS  = MCTRUTH ( self.mcTruth() , mcks  )
-
-        if mcl01.empty () :
-            mcL01 = NONE
-        else:
-            mcL01 = MCTRUTH ( self.mcTruth() , mcl01 )
-            
-        if mcl02.empty () :
-            mcL02 = NONE
-        else:
-            mcL02 = MCTRUTH ( self.mcTruth() , mcl02 )
+        mcKS  = NONE if mcks .empty() else MCTRUTH ( self.mcTruth () , mcks  )
+        mcL01 = NONE if mcl01.empty() else MCTRUTH ( self.mcTruth () , mcl01 )
+        mcL02 = NONE if mcl02.empty() else MCTRUTH ( self.mcTruth () , mcl02 )
         
         pions = self.select ( 'pi' ,
                               ( 'pi+' == ABSID   ) &
@@ -131,7 +93,7 @@ class AP(AlgoMC) :
         
         self.select ( 'pi+' , pions , Q > 0 )
         self.select ( 'pi-' , pions , Q < 0 )
-
+        
         tup = self.nTuple ( 'my N-tuple' ) 
         
         ## construct dipions 
@@ -179,7 +141,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci    
     daVinci = DaVinci (
-        DataType   = 'MC09' , 
+        DataType   = '2010' , 
         Simulation = True
         ) 
     
@@ -188,6 +150,10 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import NTupleSvc 
     NTupleSvc ( Output = [ "AP DATAFILE='AP_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
+
+    
+    from StandardParticles import StdNoPIDsPions    
+    StdNoPIDsPions = StdNoPIDsPions.outputLocation()
     
     ## define/set the input data 
     setData ( datafiles , catalogs )
@@ -209,7 +175,7 @@ def configure ( datafiles , catalogs = [] ) :
         ## LUN for N-tuples 
         NTupleLUN      = 'AP'  ,
         ## input particles : 
-        InputLocations = [ 'StdNoPIDsPions' ]
+        Inputs         = [ StdNoPIDsPions ]
         )
     
     ##gaudi.addAlgorithm ( alg ) 
@@ -227,25 +193,12 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
     
     ## configure the job:
     inputfiles = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000004_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000004_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008941/0000/00008941_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    
     configure ( inputfiles ) 
     
     ## run the job

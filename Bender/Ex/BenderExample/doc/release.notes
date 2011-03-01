@@ -22,11 +22,17 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+!  ====================== Ex/BenderExample v17r0 2011-03-01 ===================
+
+! 2011-03-01 - Vanya Belyaev
+
+ - fix some examples
+
 !  ====================== Ex/BenderExample v15r4 2011-01-16 ===================
 
 ! 2011-01-16 - Vanya Belyaev
 
- - tag ad v15r4 
+ - tag as v15r4 
 
 
 !  ====================== Ex/BenderExample v15r3p1 2010-11-30 ==================

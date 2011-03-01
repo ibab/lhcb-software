@@ -81,20 +81,9 @@ class D02mumu(AlgoMC) :
         """
 
         # D0/D~0 -> mu+ mu- 
-        d0 = Trees.MCExclusive  ( Nodes.CC('D0') )
-        d0 += 'mu+'
-        d0 += 'mu-'
-
-        d0 = Trees.MCPhotos ( d0 )
-                
-        st =  d0.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        cut = MCDECTREE( d0 ) 
-        mcd0 = self.mcselect ('mcd0' , cut )
-        if mcd0.empty() or 1 < mcd0.size() :
+        mcd0 = self.mcselect ('mcd0' , ' [D0 => mu+ mu-]CC ')
+        if mcd0.empty() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
-
         
         mcD0 = MCTRUTH ( self.mcTruth() , mcd0 )
         
@@ -110,9 +99,8 @@ class D02mumu(AlgoMC) :
             chi2 = VCHI2 ( D )
             if not 0 <=  chi2 < 100 : continue
             if  not mcD0 ( D )      : continue 
-            self.plot ( M(D) / Units.GeV , 'mass mu+ mu-' , 1.2 , 2.0 , 400 )
+            self.plot ( M(D) / Units.GeV , 'mass mu+ mu-' , 1.2 , 2.2 , 500 )
             D.save('D0')
-
 
         D0 = self.selected('D0')
         self.setFilterPassed ( not D0.empty()  )
@@ -143,12 +131,17 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'DC06' ,
+        DataType   = '2010' ,
         Simulation = True   ) 
     
     from Configurables import HistogramPersistencySvc 
     HistogramPersistencySvc ( OutputFile = 'D02mumu_Histos.root' ) 
     
+    from StandardParticles import StdLooseMuons 
+    InputParticles = [
+        StdLooseMuons  . outputLocation ()
+        ]
+
     ## define the input data 
     setData ( datafiles , catalogs ) 
     
@@ -163,17 +156,16 @@ def configure ( datafiles , catalogs = [] ) :
     alg = D02mumu(
         'D02mumu' ,
         ## MC-links:
-        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] , 
+        PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] , 
         ## print histos 
         HistoPrint = True , 
         ## input particles
-        InputLocations = [ 'StdLooseMuons' ]
+        Inputs     = InputParticles 
         )
     
-    ## gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ]
     
-        
     return SUCCESS 
     
 # =============================================================================
@@ -186,25 +178,14 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
 
-    ## configure the job:
-    inputdata =  [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        ## files with Meike's selection:
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911371/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911372/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911375/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911377/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911379/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911380/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911382/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911383/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ]
     
-    configure( inputdata ) 
+    ## configure the job:
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008828/0000/00008828_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 45 ) 
+        ]
+    configure( inputdata )  
     
     ## run the job
     run(501)

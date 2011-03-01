@@ -26,6 +26,7 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2010-05-31
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -46,6 +47,7 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+                    $Revision$
   Last modification $Date$
                  by $Author$
 """
@@ -462,7 +464,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09'      ,
+        DataType   = '2010'  ,
         Simulation = True
         )
     
@@ -470,10 +472,15 @@ def configure ( datafiles , catalogs = [] ) :
     HistogramPersistencySvc ( OutputFile = 'Angles_Histos.root' ) 
     
     from Configurables import NTupleSvc
-    NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
+    NTupleSvc ( Output = [ "PsiPhi DATAFILE='Angles_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
     ## define input data 
     setData  ( datafiles , catalogs )
+    
+    from StandardParticles import StdTightKaons, StdTightMuons
+    
+    StdTightKaons = StdTightKaons.outputLocation()
+    StdTightMuons = StdTightMuons.outputLocation()
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -493,9 +500,9 @@ def configure ( datafiles , catalogs = [] ) :
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations = [ 'StdTightKaons' , 'StdTightMuons' ]
+        Inputs = [ StdTightKaons , StdTightMuons  ]
         )
-
+    
     angles = Angles (
         'Angles'              ,
         ## print histos 
@@ -505,7 +512,7 @@ def configure ( datafiles , catalogs = [] ) :
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
-        InputLocations = [ 'PsiPhi' ]
+        Inputs = [ 'Phys/PsiPhi/Particles' ]
         )
     
     gaudi.setAlgorithms( [ alg , angles ] )
@@ -524,22 +531,12 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     ## configure the job:
-    inputdata = [ 
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-               
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        ]
     configure( inputdata )  
     
     ## run the job

@@ -75,9 +75,9 @@ class CheckGen(AlgoMC) :
         """
         
         ## get all B0 particles
-        bs1 = self.gselect ( 'bs1' ,  "[ [B0]cc => ( D+ => K- pi+ pi+ ) pi-]CC ")
-        bs2 = self.gselect ( 'bs2' ,  "[ [B0]cc -> ( D+ -> K- pi+ pi+ ) pi-]CC ")
-
+        bs1 = self.gselect ( 'bs1' ,  "[ Beauty => ( D_s+ ==> K- K+ pi+ ) K-]CC ")
+        bs2 = self.gselect ( 'bs2' ,  "[ Beauty -> ( D_s+ --> K- K+ pi+ ) K-]CC ")
+        
         cnt   = self.counter("#1 + photos ")
         cnt  += bs1.size()
         
@@ -104,17 +104,13 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09', 
+        DataType   = '2010', 
         Simulation = True 
         ) 
     
     from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'muDst_Histos_.root') 
+    HistogramPersistencySvc ( OutputFile = 'Photos_Histos_.root') 
     
-    from Configurables import NTupleSvc
-    NTupleSvc ( Output = [
-        "MUDST DATAFILE='muDst_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
-                )
     
     ## define/set the input data 
     setData ( datafiles , catalogs )
@@ -126,21 +122,17 @@ def configure ( datafiles , catalogs = [] ) :
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
     
-    
     ## create local algorithm:
     
     alg = CheckGen (
         'Check'                      ,
         PropertiesPrint  = True      , 
         HistoPrint       = True      ,
-        NTupleLUN        = "CHECK"   ,
         PP2MCs           = [] 
         )
     
     ## finally inform Application Manager about our algorithm
-    gaudi.setAlgorithms( [
-        alg 
-        ] )
+    gaudi.setAlgorithms( [alg] )
     
     return SUCCESS 
     
@@ -158,8 +150,8 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/2010/DST/00006645/0000/00006645_000000' + ( '%02d_1.dst') % f for f in range ( 1 , 28 )
-        ] 
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        ]
     configure ( inputdata ) 
     
     ## run the job

@@ -71,59 +71,26 @@ class Bs2DsK(AlgoMC) :
         """
         Standard method for analyses
         """
-
-        # Ds+/Ds- -> K+ K- pi+/pi-
-        ds = Trees.MCExclusive  ( Nodes.CC('D_s+') , 1 , True )
-        ds += 'K+'
-        ds += 'K-'
-        ds += Nodes.CC('pi+')
         
-        ## Xb -> Ds+/Ds- K+/K-
-        bs = Trees.MCExclusive ( Nodes.Beauty )
-        bs += ds                 # mark Ds!
-        bs += Nodes.CC("K+") 
+        mcbs = self.mcselect ('mcbs' , "[  Beauty ->  ( D_s+ --> K- K+ pi+ ) K- ]CC" )
+        mcds = self.mcselect ('mcds' , "[  Beauty -> ^( D_s+ --> K- K+ pi+ ) K- ]CC" )
         
-        st =  bs.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        ## Xb -> ^Ds+/Ds- K+/K-
-        bsm = Trees.MCExclusive ( Nodes.Beauty )
-        bsm += mark ( ds )     # mark Ds!
-        bsm += Nodes.CC("K+") 
+        if mcbs.empty() or mcds.empty () :
+            return self.Warning ( 'No MC-trees are found' , SUCCESS )        
         
-        st =  bsm.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-        
-        cut = MCDECTREE(bs) 
-        mcbs = self.mcselect ('mcbs' , ( 'B_s0' == MCABSID ) & cut  )
-
-        if mcbs.empty() or 1 < mcbs.size() :
-            return self.Warning ( 'No mc-trees are found' , SUCCESS )        
-
-        # collect "marked" MC particles
-        mcds = LHCb.MCParticle.ConstVector ()
-
-        bsm.reset() 
-        for b in mcbs :
-            if bsm ( b ) :
-                bsm.collect ( mcds )
-                bsm.reset()
-
-
         mcBs = MCTRUTH ( self.mcTruth() , mcbs )        
         mcDs = MCTRUTH ( self.mcTruth() , mcds )
         
-        kaons = self.select ( 'kaons' ,
+        kaons = self.select ( 'kaons'  ,
                               ( 'K+' == ABSID   ) &
-                              ( PIDK > 2        ) & mcDs )
+                              ( PIDK  > 2       ) & mcDs )
         pions = self.select ( 'pion'   ,
                               ( 'pi+' == ABSID  ) &
                               ( PIDK  < 1       ) &
                               ( PIDe  < 1       ) &
                               ( PIDmu < 1       ) & mcDs )
         
-        bkaons = self.select ( 'bk' ,
-                               ( 'K+' == ABSID ) & mcBs & ~mcDs )
+        bkaons = self.select ( 'bk' , ( 'K+' == ABSID ) & mcBs & ~mcDs )
         
         k1p = self.select ( 'k+' , kaons , 0 < Q )
         k1m = self.select ( 'k-' , kaons , 0 > Q )
@@ -143,12 +110,12 @@ class Bs2DsK(AlgoMC) :
         bs = self.loop ( 'Ds bk' , 'B_s0')
         for B in bs :
             m12 = B.mass(1,2) / Units.GeV
-            if not 3 < m12  < 7   : continue
+            if not 3 < m12  < 7    : continue
             chi2 = VCHI2 ( B ) 
-            if not 0<= chi2 < 100 : continue 
-            if not mcDs ( B(1) )  : continue
-            if not mcBs ( B(2) )  : continue
-            if not mcBs ( B    )  : continue 
+            if not 0 <= chi2 < 100 : continue 
+            if not mcDs ( B(1) )   : continue
+            if not mcBs ( B(2) )   : continue
+            if not mcBs ( B    )   : continue 
             self.plot ( M(B) / Units.GeV , 'mass Ds K' , 4.0 , 6.0 , 200 )
             B.save ('Bs') 
 
@@ -178,13 +145,20 @@ def configure ( datafiles  , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09'  , 
-        Simulation = True
+        DataType   = '2010'  , 
+        Simulation = True    ,
+        Lumi       = False   
         )
     
     from Configurables import HistogramPersistencySvc 
     HistogramPersistencySvc ( OutputFile = 'Bs2DsK_Histos.root' ) 
 
+    from StandardParticles import ( StdTightPions   ,
+                                    StdNoPIDsKaons  )
+    
+    StdTightPions  = StdTightPions  . outputLocation ()
+    StdNoPIDsKaons = StdNoPIDsKaons . outputLocation ()
+    
     ## define the input data 
     setData ( datafiles , catalogs )
     
@@ -198,15 +172,11 @@ def configure ( datafiles  , catalogs = [] ) :
         ## print histos 
         HistoPrint     = True , 
         ## define the input particles:
-        InputLocations = [
-        'StdTightKaons'  ,
-        'StdTightPions'  ,
-        'StdNoPIDsKaons'
-        ]
+        Inputs         = [ StdTightPions  , StdNoPIDsKaons ]
         )
     
-    gaudi.addAlgorithm ( alg ) 
-    ##gaudi.setAlgorithms( [alg] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
 
@@ -220,24 +190,12 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
     
     ## configure the job:
-    inputdata = [ 
-        # Bs -> Ds K
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000103_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000104_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000105_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000106_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000107_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000108_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000109_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000110_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000111_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000112_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-
-    
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        ]
     configure( inputdata ) 
 
 
