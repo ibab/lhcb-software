@@ -1,33 +1,33 @@
 package HltSys
-version v13r0
+version v13r1
 
 branches cmt doc 
 
-use Hlt1Lines           v6r5    Hlt   # Gerhard Raven
+use Hlt1Lines           v6r6    Hlt   # Gerhard Raven
 use Hlt1Muons           v1r1p1  Hlt   # Roel Aaij
-use Hlt2Lines           v8r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use Hlt2SharedParticles v6r0    Hlt   # Patrick Koppenburg, Gerhard Raven
+use Hlt2Lines           v8r1    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
+use Hlt2SharedParticles v6r1    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r0   Hlt   # Gerhard Raven
-use HltBeamGasAlley     v2r4p1  Hlt   # Plamen Hopchev
-use HltCommon           v8r0    Hlt   # Gerhard Raven
-use HltConf             v9r4    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBeamGasAlley     v2r5    Hlt   # Plamen Hopchev
+use HltCommon           v8r0p1  Hlt   # Gerhard Raven
+use HltConf             v9r5    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v3r2p1  Hlt   # Neil Gauvin, Victor Coco
+use HltDisplVertices    v3r3    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r6p4  Hlt   # Bruno de Paula
 use HltL0Conf           v3r0    Hlt   # Johannes Albrecht
-use HltLine             v5r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v5r1    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r17   Hlt   # Jaap Panman
-use HltMuon             v3r6p2  Hlt   # to be removed at some point
+use HltMuon             v4r0    Hlt   # to be removed at some point
 use HltRawData          v2r10p1 Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r0   Hlt   # Patrick Koppenburg
-use HltSettings         v5r5p1  Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r6    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r3    Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r4    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r7    Hlt   # Gerhard Raven
-use LoKiTrigger         v11r7   Phys  # Vanya Belyaev
+use LoKiTrigger         v11r8   Phys  # Vanya Belyaev
 use LoKiTracks          v1r8    Phys  # Vanya Belyaev
-use BBDecTreeTool       v1r1    Phys  # Mike Williams
+use BBDecTreeTool       v1r2    Phys  # Mike Williams
 
 # Declare this as a container package
 apply_pattern container_package
