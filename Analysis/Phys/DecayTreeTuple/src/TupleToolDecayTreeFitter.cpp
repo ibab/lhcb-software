@@ -182,7 +182,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
 	test &= tuple->column( taufit+"ctau", ctau.value() );
 	test &= tuple->column( taufit+"ctauErr", ctau.error() );
 	test &= tuple->column( taufit+"_decayLength", decayLength.value() );
-	test &= tuple->column( taufit+"_decayLength", decayLength.error() );
+	test &= tuple->column( taufit+"_decayLengthErr", decayLength.error() );
 	
 	
       }//PV fit
