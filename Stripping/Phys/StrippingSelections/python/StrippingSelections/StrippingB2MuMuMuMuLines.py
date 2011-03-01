@@ -17,9 +17,10 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import LineBuilder
+#from StrippingSelections.Utils import checkConfig
 
-class B2MuMuMuMuLinesConf(object) :
+class B2MuMuMuMuLinesConf(LineBuilder) :
     """
     Builder of:
        ...
@@ -62,8 +63,8 @@ class B2MuMuMuMuLinesConf(object) :
                  name = 'B2MuMuMuMu',
                  config = None) :
 
-        checkConfig(B2MuMuMuMuLinesConf.__configuration_keys__,
-                    config)
+        LineBuilder.__init__(self, name, config)
+        #checkConfig(B2MuMuMuMuLinesConf.__configuration_keys__,config)
 
         default_name='B2MuMuMuMu'
 
