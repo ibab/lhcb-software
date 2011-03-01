@@ -616,5 +616,8 @@ HltANNSvc().InfoID = {
     "Velo"                                       : 6298,
     "PatForwardTool/LooseForward"                : 6299,
     "PatForwardTool/TightForward"                : 6300,
-    "MatchVeloMuon"                              : 6301
+    "MatchVeloMuon"                              : 6301,
+    'Hlt2Topo2BodyBBDTResponse'                  : 6302,
+    'Hlt2Topo3BodyBBDTResponse'                  : 6303,
+    'Hlt2Topo4BodyBBDTResponse'                  : 6304
 }
