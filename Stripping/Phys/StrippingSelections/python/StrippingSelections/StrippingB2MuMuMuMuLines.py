@@ -77,7 +77,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                             )
         
       
-        self.lines = [ self.defaultLine ]
+        self.registerLine( self.defaultLine )
 
 
 
