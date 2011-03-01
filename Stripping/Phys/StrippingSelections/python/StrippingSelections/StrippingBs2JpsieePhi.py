@@ -1,6 +1,6 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
-__date__ = '2011/02/25'
+__date__ = '2011/03/01'
 
 '''
 Bs->JpsieePhi stripping selection
@@ -25,6 +25,7 @@ class Bs2JpsieePhiConf(LineBuilder):
 
     __configuration_keys__ = (
                   'ElectronPTLoose'                # MeV
+                , 'ElectronPIDLoose'               # adimensional
                 , 'ElectronTrackCHI2pDOFLoose'     # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'        # adimensional
                 , 'JpsiMassMinLoose'               # MeV
@@ -58,6 +59,7 @@ class Bs2JpsieePhiConf(LineBuilder):
 
     config_default = {
                   'ElectronPTLoose'            :   800.    # MeV
+                , 'ElectronPIDLoose'           :     0.    # adimensional
                 , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
                 , 'JpsiMassMinLoose'           :  2700.    # MeV
@@ -148,6 +150,7 @@ class Bs2JpsieePhiConf(LineBuilder):
 
         _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
         _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
+                                     " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPIDLoose)s )" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOFLoose)s)" \
                                      " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" \
                                      " & (MM > %(JpsiMassMinLoose)s *MeV)" \
