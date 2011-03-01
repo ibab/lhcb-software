@@ -190,7 +190,7 @@ class NonEmptyInputLocations(Exception) :
     pass
 class IncompatibleInputLocations(Exception) :
     pass
-class IncompatibleOutputLocations(Exception) :
+class IncompatibleOutputLocation(Exception) :
     pass
 
                                 

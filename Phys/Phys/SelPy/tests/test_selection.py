@@ -11,6 +11,8 @@ sys.path.append('../python')
 
 from py.test import raises
 from SelPy.configurabloids import DummyAlgorithm, MockConfGenerator
+from SelPy.utils import (IncompatibleInputLocations,
+                         IncompatibleOutputLocations)
 from SelPy.selection import (flatAlgorithmList,
                              Selection,
                              EventSelection,
@@ -123,6 +125,25 @@ def test_Selection_does_not_modify_generator() :
     assert sel.algorithm().Inputs==[sel0.outputLocation(),
                                     sel1.outputLocation()]
     assert hasattr(alg, 'Output') == False
+
+def test_selection_with_incompatible_Inputs_set_in_algo_raises() :
+    sel02 = AutomaticData(Location = 'Phys/Sel02')
+    sel03 = AutomaticData(Location = 'Phys/Sel03')
+    alg0 = MockConfGenerator(Inputs = ['Phys/Sel00', 'Phys/Sel01'])
+    raises(IncompatibleInputLocations, Selection, 'SelInputCompatTest',
+           ConfGenerator = alg0,
+           RequiredSelections = [sel02, sel03])
+
+def test_selection_with_incompatible_Output_set_in_algo_raises() :
+    sel02 = AutomaticData(Location = 'Phys/Sel02')
+    sel03 = AutomaticData(Location = 'Phys/Sel03')
+    alg = MockConfGenerator(Output = 'Hello/World')
+    raises(IncompatibleOutputLocation,
+           Selection,
+           'SelOutputCompatTest',
+           ConfGenerator = alg,
+           RequiredSelections = [sel02, sel03])
+
     
 if '__main__' == __name__ :
 
