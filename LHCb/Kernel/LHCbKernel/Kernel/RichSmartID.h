@@ -55,9 +55,11 @@ namespace LHCb
   private:
 
     // Setup up the type bit field
-    static const BitPackType BitsIDType  = 1;
-    static const BitPackType ShiftIDType = 31; // Use the last bit
+    static const BitPackType BitsIDType  = 1;  ///< Number of bits to use for the PD type 
+    static const BitPackType ShiftIDType = 31; ///< Use the last bit of the word
+    /// Mask for the PD type
     static const BitPackType MaskIDType  = (BitPackType) ((1 << BitsIDType)-1) << ShiftIDType;
+    /// Max possible value that can be stored in the PD type field
     static const BitPackType MaxIDType   = (BitPackType) ( 1 << BitsIDType ) - 1;
 
   public:
@@ -109,13 +111,13 @@ namespace LHCb
     public:
 
       // Number of bits for each data field in the word
-      static const BitPackType BitsPixelSubRow       = 3;
-      static const BitPackType BitsPixelCol          = 5;
-      static const BitPackType BitsPixelRow          = 5;
-      static const BitPackType BitsPDNumInCol        = 5;
-      static const BitPackType BitsPDCol             = 5;
-      static const BitPackType BitsPanel             = 1;
-      static const BitPackType BitsRich              = 1;
+      static const BitPackType BitsPixelSubRow       = 3; ///< Number of bits for HPD sub pixel field
+      static const BitPackType BitsPixelCol          = 5; ///< Number of bits for HPD pixel column
+      static const BitPackType BitsPixelRow          = 5; ///< Number of bits for HPD pixel row
+      static const BitPackType BitsPDNumInCol        = 5; ///< Number of bits for HPD 'number in column'
+      static const BitPackType BitsPDCol             = 5; ///< Number of bits for HPD column
+      static const BitPackType BitsPanel             = 1; ///< Number of bits for HPD panel
+      static const BitPackType BitsRich              = 1; ///< Number of bits for RICH detector
       static const BitPackType BitsPixelSubRowIsSet  = 1;
       static const BitPackType BitsPixelColIsSet     = 1;
       static const BitPackType BitsPixelRowIsSet     = 1;
@@ -179,12 +181,12 @@ namespace LHCb
     public:
 
       // Number of bits for each data field in the word
-      static const BitPackType BitsPixelCol          = 3;
-      static const BitPackType BitsPixelRow          = 3;
-      static const BitPackType BitsPDNumInCol        = 6;
-      static const BitPackType BitsPDCol             = 6;
-      static const BitPackType BitsPanel             = 1;
-      static const BitPackType BitsRich              = 1;
+      static const BitPackType BitsPixelCol          = 3; ///< Number of bits for MaPMT pixel column
+      static const BitPackType BitsPixelRow          = 3; ///< Number of bits for MaPMT pixel row
+      static const BitPackType BitsPDNumInCol        = 6; ///< Number of bits for MaPMT 'number in column'
+      static const BitPackType BitsPDCol             = 6; ///< Number of bits for MaPMT column
+      static const BitPackType BitsPanel             = 1; ///< Number of bits for MaPMT panel
+      static const BitPackType BitsRich              = 1; ///< Number of bits for RICH detector
       static const BitPackType BitsPixelSubRowIsSet  = 1;
       static const BitPackType BitsPixelColIsSet     = 1;
       static const BitPackType BitsPixelRowIsSet     = 1;
