@@ -12,7 +12,8 @@ from PhysSelPython.Wrappers import ( Selection,
                                      EventSelection,
                                      NameError,
                                      NonEmptyInputLocations,
-                                     IncompatibleInputLocations )
+                                     IncompatibleInputLocations,
+                                     ChargedProtoParticleSelection)
 from SelPy.configurabloids import MockConfGenerator, DummySequencer
 from Configurables import FilterDesktop
 

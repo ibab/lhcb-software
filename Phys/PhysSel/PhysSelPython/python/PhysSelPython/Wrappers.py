@@ -46,6 +46,7 @@ from SelPy.selection import ( flatAlgorithmList,
 from SelPy.utils import update_dict_overlap
 from SelPy.utils import CloneCallable
 from SelPy.utils import connectToRequiredSelections
+from SelPy.utils import makeOutputLocation
 
 from SelPy.selection import Selection as Sel
 from SelPy.selection import SelectionSequence as SelSequence
@@ -356,14 +357,9 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
         UniquelyNamedObject.__init__(self, name)
         ClonableObject.__init__(self, locals())
 
-        _outputLocation = self.name()
-        if OutputBranch != '' :            
-            _outputLocation = OutputBranch + '/' + self.name()
-        if Extension != '' :
-            _outputLocation = _outputLocation + '/' + Extension
-        _outputLocation.replace('//','/')
-        if _outputLocation.endswith('/') :
-            _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
+        _outputLocation = makeOutputLocation(name = self.name(),
+                                             branch    = OutputBranch,
+                                             leaf      = Extension)
 
         _ppMaker = Configurables.ChargedProtoParticleMaker(name+'PPMaker')
         _ppMaker.OutputProtoParticleLocation=_outputLocation
