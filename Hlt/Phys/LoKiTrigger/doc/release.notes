@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v11r8 2011-03-01 ===================
+! 2011-03-01 - Gerhard Raven
+ - enable code which requires LHCb v32r1
+
 !========================== LoKiTrigger v11r7 2011-02-22 ===================
 ! 2011-02-20 - Gerhard Raven
  - remove code which uses the match2dVelo interface -- we don't use
