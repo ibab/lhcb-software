@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Eric van Herwijnen , Johannes Albrecht
+ - Calibration_VeloMicroBias: subscribe to L0 1710 and odin physics
+
 ! 2011-03-01 - Roel Aaij
  - Update cuts for Hlt1MuonLines
 
