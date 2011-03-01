@@ -29,8 +29,10 @@ class CharmHadronLines :
 
                   ### from Hlt2CharmHadD2HHHLines
                   #, 'Hlt2CharmHad2BodyForD2HHH'
-                  , 'Hlt2CharmHadD2HHH'
-                  , 'Hlt2CharmHadD2HHHWideMass'
+                  #, 'Hlt2CharmHadD2HHH'
+                  #, 'Hlt2CharmHadD2HHHWideMass'
+                  #, 'Hlt2CharmHadD02HHHH'
+                  #, 'Hlt2CharmHadD02HHHHWideMass'
                   , 'Hlt2CharmHadD02HHKsLL'
                   , 'Hlt2CharmHadD2KS0Pi'
                   , 'Hlt2CharmHadD2KS0K'

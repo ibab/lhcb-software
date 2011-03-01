@@ -69,6 +69,7 @@ class Physics_draft2011( object ):
                                             ,   'Photon_IP'     : 0.100
                                             ,   'Photon_IPChi2' : 16
                                             ,   'Photon_TrChi2' : 2.5
+                                            ,   'Photon_L0Channels' : 'Photon,Electron' 
                                                 }
                      , Hlt1MuonLinesConf : { 'SingleMuonHighPT_P'        : 8000
                                              ,'SingleMuonHighPT_PT'      : 4800
@@ -135,11 +136,13 @@ class Physics_draft2011( object ):
                   'Hlt1BeamGasCrossingLonelyBeam1',
                   'Hlt1BeamGasCrossingLonelyBeam2',
                   'Hlt1NoPVPassThrough',
-                  'Hlt1TrackAllL0',
-                  'Hlt1TrackMuon',
-                  'Hlt1TrackPhoton',
-                  'Hlt1SingleMuonHighPT',
-                  'Hlt1SingleMuonNoIP',
+                  'Hlt1DiProton',
+                  'Hlt1DiProtonLowMult',
                   'Hlt1DiMuonLowMass',
-                  'Hlt1DiMuonHighMass' ]
+                  'Hlt1DiMuonHighMass',  
+                  'Hlt1TrackMuon',
+                  'Hlt1TrackAllL0',
+                  'Hlt1TrackPhoton',
+		          'Hlt1SingleMuonHighPT',
+		          'Hlt1SingleMuonNoIP' ]
         return lines 
