@@ -6,11 +6,10 @@ Provides functions to build Bs, Psi2S, Phi selections.
 Provides class Bs2Psi2SPhiPrescaledConf, which constructs the Selections and 
 StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
-   - Bs2JpsiPhiConf
+   - Bs2Psi2SPhiConf
    - makeBs2JpsiPhi
    - makePhi2KK
    - makePhi2KKLoose
-   - makeJpsi2MuMuLoose
 '''
 
 __author__ = ['Fred Blanc - Neus Lopez March']
@@ -42,16 +41,18 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Psi2SADAMASS': 30,
                  'Psi2SVFASPF': 16,
                  'ChKTRCHI2DOF':5,
-                 'ChKPID':-2,#
+                 'ChKPID':-2,#   
                  'PhiWin':20,
                  'PhiPT':500,
                  'PhiVFASPF':16,
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,#
-                 'KstPipTRCHI2DOF':5,
-                 'KstAPT' :500,
-                 'KstADAMASS' : 90,
-                 'KstVFASPF':16, #
+                 'KstMassDown':  826,
+                 'KstMassUp': 966,
+                 'KstAPT':500,
+                 'KstVFASPF':16,
+                 'KstTRCHI2DOF':4,
+                 'KstPIDK': -2,
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
                  'incl_LinePrescale':0.5,
@@ -72,9 +73,6 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Ks_LinePrescale': 1,
                  'Ks_LinePostscale':1
                  }
-
-
-
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -104,10 +102,12 @@ class B2Psi2SXConf(LineBuilder) :
                               'PhiVFASPF',
                               'PhiMAXTRCHI2DOF',
                               'PhiMINTRCHI2DOF',
-                              'KstPipTRCHI2DOF',
-                              'KstAPT',
-                              'KstADAMASS',
-                              'KstVFASPF',
+                              'KstMassDown',
+                              'KstMassUp', 
+                              'KstAPT', 
+                              'KstVFASPF', 
+                              'KstTRCHI2DOF',
+                              'KstPIDK',
                               'KsVFASPF',
                               'KsBPVDLS',
                               'incl_LinePrescale',
@@ -174,15 +174,15 @@ class B2Psi2SXConf(LineBuilder) :
                                      PhiMAXTRCHI2DOF = config['PhiMAXTRCHI2DOF'],
                                      PhiMINTRCHI2DOF = config['PhiMINTRCHI2DOF']
                                      )
-        
-        
-        self.selKstar = makeKstar('KstarForPsi2SJpsiPiPi' + self.name,
-                                  ChKforKst = self.selChargedK,
-                                  KstPipTRCHI2DOF = config['KstPipTRCHI2DOF'],
+
+        self.selKstar = makeKstar('KstarForPsi2SToMuMu' + self.name,
+                                  KstMassDown = config['KstMassDown'],
+                                  KstMassUp = config['KstMassUp'],
                                   KstAPT = config['KstAPT'],
-                                  KstADAMASS = config['KstADAMASS'],
-                                  KstVFASPF = config['KstVFASPF']
-                                  ) 
+                                  KstVFASPF = config['KstVFASPF'],
+                                  KstTRCHI2DOF = config['KstTRCHI2DOF'],
+                                  KstPIDK = config['KstPIDK']
+                                  )  
 
         self.selKsLoose = makeKsLoose('KsLooseForPsi2SJpsiPiPi' + self.name) 
         
@@ -311,7 +311,7 @@ def makePions(name,
     
 def makeJpsi(name):
 
-    _stdLooseJpsi = DataOnDemand(Location = "Phys/StdLooseJpsi2MuMu/Particles")
+    _stdJpsi = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
     _code = "ALL"
     _Jpsi = FilterDesktop(Code = _code)
     
@@ -319,7 +319,7 @@ def makeJpsi(name):
 
     return Selection (name,
                       Algorithm = _Jpsi,
-                      RequiredSelections = [ _stdLooseJpsi ])
+                      RequiredSelections = [ _stdJpsi ])
     
 
 def makePsi2S(name,
@@ -381,31 +381,29 @@ def makePhi2KK(name,
                       Algorithm = _phiFilter,
                       RequiredSelections = [_stdPhi2KK])
 
-
-
 def makeKstar(name,
-              ChKforKst,
-              KstPipTRCHI2DOF,#<5
+              KstMassDown, # 826
+              KstMassUp, #966
               KstAPT, #>500
-              KstADAMASS,#<90
-              KstVFASPF #<16
+              KstVFASPF, #<16
+              KstTRCHI2DOF, # 4
+              KstPIDK # -2
               ) :
 
-    _stdpions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
-    _daughtersCuts = { "pi+" : "(TRCHI2DOF < %(KstPipTRCHI2DOF)s)"% locals()} 
-    _preVertexCuts = "(APT>%(KstAPT)s*MeV) & (ADAMASS('K*(892)0') < %(KstADAMASS)s*MeV)" % locals()
-    _motherCuts = "(VFASPF(VCHI2) < %(KstVFASPF)s)" % locals()
-    _Kstar = CombineParticles( DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
-                               DaughtersCuts = _daughtersCuts,
-                               CombinationCut = _preVertexCuts,
-                               MotherCut = _motherCuts,
-                               ReFitPVs = True
-                               )
 
-#    print ' makeKstar ', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
-    return Selection ( name,
-                       Algorithm = _Kstar,
-                       RequiredSelections = [ChKforKst,_stdpions])
+    _stdKstar = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles")   
+    _code = "(in_range(%(KstMassDown)s,M,%(KstMassUp)s)) & (PT > %(KstAPT)s*MeV) " \
+                        "& (VFASPF(VCHI2) < %(KstVFASPF)s)" \
+                        "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
+                        "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
+                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" % locals()
+
+    _KstarFilter = FilterDesktop(Code = _code)
+
+#    print ' makePhi2KK ', name, 'Code ', _code
+    return Selection (name,
+                      Algorithm = _KstarFilter,
+                      RequiredSelections = [_stdKstar])
 
 
 def makeKsLoose( name ):
