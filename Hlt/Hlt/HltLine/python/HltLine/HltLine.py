@@ -502,7 +502,6 @@ class bindMembers (object) :
         x._outputsel = outputSelection
         return x
 
-#
     def _InputOutputLocationMatchMaker(self,alg) :
         if hasattr(alg,'Inputs') : # only Hlt2...
             req_inputs = getattr(alg,'Inputs')
@@ -516,6 +515,9 @@ class bindMembers (object) :
                     if hasattr(alg,'OutputLocation') : return [ getattr(alg,'OutputLocation') ] 
                     if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ]
                     if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
+                    if hasattr(alg,'TracksOutContainer') : return [ getattr(alg,'TracksOutContainer') ] 
+                    #if hasattr(type(alg),'Output') and not hasattr(alg,'Output') :
+                    #    log.warning('Algorithm %s of type %s did not specify Output'% (alg.name(),alg.getType()))
                     return [ alg.name() ]
             for i in self._members: 
                  known_inputs += _OutputLocationsGetter(i)
@@ -527,6 +529,7 @@ class bindMembers (object) :
                 if extra : 
                     log.warning( ' --->   extra requests: ' + str(extra) )
                     log.warning( ' this might be OK if eg. the extra requests produce the output of the missing requests... but this can not yet be verified automatically')
+                #raise AttributeError, 'I/O mismatch detected'
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
@@ -565,7 +568,7 @@ class bindMembers (object) :
             if s : self._outputsel =  s.group(1) 
         else :
             self._outputsel = alg.name()
-        self._InputOutputLocationMatchMaker(alg)
+        self._InputOutputLocationMatchMaker(alg) 
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :

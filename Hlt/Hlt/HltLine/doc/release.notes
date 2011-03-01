@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2011-03-01 - Gerhard Raven
+ - HltLine now recognizes TracksOutContainer as an output specifier
+
 ! 2011-02-28 - Ulrich Kerzel
  - add TisTosParticleTagger to list of allowed Hlt2Members
  
