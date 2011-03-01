@@ -422,7 +422,7 @@ namespace TarFileAccess_details {
                     if (isZero(header)) {
                         m_file.read( (char*) &header, sizeof(header) ) ;
                         if (isZero(header)){
-                            m_leof = m_file.tellg()-std::streamoff(sizeof(header));
+                            m_leof = m_file.tellg()-2*std::streamoff(sizeof(header));
                             m_file.seekg(0,std::ios::beg);
                             return true;
                         }
