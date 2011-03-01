@@ -26,6 +26,7 @@ from copy import copy
 from SelPy.utils import (flatSelectionList,
                          update_dict_overlap,
                          connectToRequiredSelections,
+                         makeOutputLocation,
                          setOutputLocation,
                          NamedObject,
                          UniquelyNamedObject,
@@ -118,14 +119,9 @@ class Selection(UniquelyNamedObject,
         UniquelyNamedObject.__init__(self, name)
         ClonableObject.__init__(self, locals())
 
-        _outputLocation = self.name()
-        if OutputBranch != '' :            
-            _outputLocation = OutputBranch + '/' + self.name()
-        if Extension != '' :
-            _outputLocation = _outputLocation + '/' + Extension
-        _outputLocation.replace('//','/')
-        if _outputLocation.endswith('/') :
-            _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
+        _outputLocation = makeOutputLocation(name = self.name(),
+                                             branch    = OutputBranch,
+                                             leaf      = Extension)
         
         alg = ConfGenerator(self.name())
         SelectionBase.__init__(self,

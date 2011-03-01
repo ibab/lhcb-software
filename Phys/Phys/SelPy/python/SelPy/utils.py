@@ -171,6 +171,21 @@ def connectToRequiredSelections(selection, inputSetter) :
         configurable.__setattr__(inputSetter, list(_outputLocations))
 
 
+def makeOutputLocation(name, branch, leaf) :
+    """
+    Create an output location path in the form branch/name/leaf.
+    Check against double '/' or ending with '/'.
+    """
+    _outputLocation = name
+    if branch != '' :            
+        _outputLocation = branch + '/' + _outputLocation
+    if leaf != '' :
+        _outputLocation = _outputLocation + '/' + leaf
+        _outputLocation.replace('//','/')
+    if _outputLocation.endswith('/') :
+        _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
+    return _outputLocation
+
 def setOutputLocation(selection, setter) :
     configurable = selection.algorithm()
     selOutput = selection.outputLocation()
