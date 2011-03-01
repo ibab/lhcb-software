@@ -59,8 +59,8 @@ class Muons_draft2011 :
             'Hlt2CharmRareDecayD02MuMu',
             #'Hlt2CharmRareDecayD02PiPiForD02MuMu',
 
-            'Hlt2ThreeDetachedMuons',
-            'Hlt2Tau2MuMuMu'
+            'Hlt2TriMuonsDetached',
+            'Hlt2TriMuonsTau'
             ]
             
         return lines
