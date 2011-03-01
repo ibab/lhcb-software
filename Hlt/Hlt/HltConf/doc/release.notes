@@ -5,6 +5,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r5 2011-03-01 ===================
 ! 2011-03-01 - V. Gligorov
  - Removed Hlt2CharmHadD02HHHHLinesConf from Hlt2.py until they
    are fixed to depend properly on the D2HHH lines.
