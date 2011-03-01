@@ -28,9 +28,10 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import LineBuilder
+#from StrippingSelections.Utils import checkConfig
 
-class Bs2MuMuLinesConf(object) :
+class Bs2MuMuLinesConf(LineBuilder) :
     """
     Builder of:
      - Bs-> mumu stripping lines: default and loose,
@@ -81,13 +82,13 @@ class Bs2MuMuLinesConf(object) :
         'DefaultLinePostscale'   : 1,
         'Bs2mmWideLinePrescale'  : 1,
         'Bs2mmWideLinePostscale'  : 1,
-        'LooseLinePrescale'      : 0.001,
+        'LooseLinePrescale'      : 0.05,
         'LooseLinePostscale'     : 1,
         'JPsiLinePrescale'       : 1,
         'JPsiLinePostscale'      : 1,
         'JPsiLooseLinePrescale'  : 0.1,
         'JPsiLooseLinePostscale' : 1,
-        'JPsiPromptLinePrescale' : 0.001,
+        'JPsiPromptLinePrescale' : 0.01,
         'JPsiPromptLinePostscale': 1,
         
         'MuIPChi2_loose'        :  9,
@@ -103,8 +104,8 @@ class Bs2MuMuLinesConf(object) :
                  name = 'Bs2MuMu',
                  config = None) :
 
-        checkConfig(Bs2MuMuLinesConf.__configuration_keys__,
-                    config)
+        LineBuilder.__init__(self, name, config)
+        #checkConfig(Bs2MuMuLinesConf.__configuration_keys__,config)
 
         default_name='Bs2MuMuNoMuID'
         wide_name = 'Bs2MuMuWideMass'
@@ -194,7 +195,7 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
 
-    Bs2MuMuNoMuID.MotherCut = "(VFASPF(VCHI2/VDOF)<15) "\
+    Bs2MuMuNoMuID.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                               "& (ADMASS('B_s0') < 600*MeV )"\
                               "& (BPVDIRA > 0) "\
                               "& (BPVVDCHI2> 225)"\
@@ -226,11 +227,11 @@ def makeBs2mmWide(name) :
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuWideMass.ReFitPVs = True
     Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 5 )" }
-    Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
+    Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<2400*MeV)"\
                                      "& (AMAXDOCA('')<0.3*mm)"
 
-    Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<15) "\
-                                "& (ADMASS('B_s0') < 1200*MeV )"\
+    Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                                "& (ADMASS('B_s0') < 2400*MeV )"\
                                 "& (BPVDIRA > 0) "\
                                 "& (BPVVDCHI2> 225)"\
                                 "& (BPVIPCHI2()< 25) "
@@ -311,7 +312,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
                                    "& (AMAXDOCA('')<0.3*mm)"
 
-    DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<15) "\
+    DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<9) "\
                              "& (ADMASS('J/psi(1S)') < 100*MeV )"\
                              "& (BPVDIRA > 0) "\
                              "& (BPVVDCHI2>169)"
