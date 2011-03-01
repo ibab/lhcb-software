@@ -127,6 +127,7 @@ class Muons_draft2011 :
                               ,'Hlt2SingleMuon'        : 0.5
                               ,'Hlt2SingleMuonRateLimited'     : 'RATE(200)'
                               ,'Hlt2SingleHighPTMuon'  : 1.0
+                              ,'Hlt2SingleMuonLowPT'   : 0.02
                               }
             }}
                   )
