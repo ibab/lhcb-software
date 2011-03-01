@@ -75,27 +75,42 @@ void RPCComm::confirmFile(char *fileName, //still
 void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *statEvents) {
   int ret;
   char headerData[1024];
-  char xmlData[4096];
   char response[1024];
 
   char statEventsCharString[1024];
 
-  ret = sprintf(statEventsCharString, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+  size_t msg_size = snprintf(NULL, 0, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+      trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3],
+      trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7],
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX])+1;
+  
+  char * msg = (char *) malloc(msg_size);
+
+  ret = snprintf(msg, msg_size, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3],
       trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7],
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
       statEvents[HLT1IN], statEvents[HLT1EX]);
-  if(ret < 0 || (unsigned int) ret > sizeof(statEventsCharString)) {
+  if(ret < 0 || (unsigned int) ret >= msg_size) {
     throw FailureException("Could not format stat counters correctly.");
   }
   /* XXX Tricky here, send RANDEX value for RANDIN, as RANDIN should be greater or equal to RANDEX and nothing is counted in it */
   
+  //XXX check if usual trick with 2 snprintf not better here 
   /* Now we fill up templates. */
-  ret = snprintf(xmlData, sizeof(xmlData), UPDATE_TEMPLATE,
-           fileName, statEventsCharString);
-  if(ret < 0 || (unsigned int) ret > sizeof(xmlData)) {
+
+  size_t xml_size = snprintf(NULL, 0, UPDATE_TEMPLATE, fileName, msg) +1;
+ 
+  char *xmlData = (char *) malloc(xml_size); 
+
+  ret = snprintf(xmlData, xml_size, UPDATE_TEMPLATE,
+           fileName, msg);
+  if(ret < 0 || (unsigned int) ret >= xml_size) {
     throw FailureException("Could not format rpc call correctly.");
   }
 
@@ -104,6 +119,11 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
+
+  free(xmlData);
+  free(msg);
+  xmlData = NULL;
+  msg = NULL;
 
   if(ret < 0)
     throw FailureException("Could not run RPC call for confirm.");

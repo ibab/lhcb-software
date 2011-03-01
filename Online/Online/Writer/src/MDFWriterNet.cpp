@@ -559,10 +559,14 @@ void MDFWriterNet::closeFile(File *currFile)
         *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
       }
 
-      char statEventsCharString[512];
-
-      //XXX test return
-      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d", 
+      size_t stats_size = snprintf(NULL, 0, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d", 
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX]) +1;
+      
+      char *stats_msg = (char *) malloc(stats_size);
+      snprintf(stats_msg, stats_size,"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d", 
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
@@ -580,7 +584,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, "physEvents=", currFile->getPhysStat(),
           DELIMITER, (unsigned int) tv.tv_sec,
           DELIMITER, (int) tv.tv_usec,
-          DELIMITER, statEventsCharString) + 1; //XXX Change physEvents to physStat, see with Rainer
+          DELIMITER, stats_msg) + 1; //XXX Change physEvents to physStat, see with Rainer
 
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
@@ -592,7 +596,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, "physEvents=", currFile->getPhysStat(),
           DELIMITER, (unsigned int) tv.tv_sec,
           DELIMITER, (int) tv.tv_usec,
-          DELIMITER, statEventsCharString); 
+          DELIMITER, stats_msg); 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           if(errno != EAGAIN) {
               *m_log << MSG::WARNING
@@ -603,7 +607,9 @@ void MDFWriterNet::closeFile(File *currFile)
           }
       }
       free(msg);
+      free(stats_msg);
       msg = NULL;
+      stats_msg = NULL;
   } 
   *m_log << MSG::INFO << WHERE << endmsg;
 }
@@ -861,15 +867,18 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
         *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
       }      
  
-      char statEventsCharString[512];
+      size_t stats_size = snprintf(NULL, 0, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+      statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
+      statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX]) +1;
 
-      //XXX test return value
-      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d", 
+      char *stats_msg = (char *) malloc(stats_size);
+      snprintf(stats_msg, stats_size,"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
       statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
       statEvents[HLT1IN], statEvents[HLT1EX]);
-
 
       size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",  
       DELIMITER, getpid(), 
@@ -879,7 +888,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, "physEvents=", m_currFile->getPhysStat(),
       DELIMITER, (unsigned int) tv.tv_sec, 
       DELIMITER, (int) tv.tv_usec,
-      DELIMITER, statEventsCharString ) + 1;
+      DELIMITER, stats_msg ) + 1;
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", 
       DELIMITER, getpid(), 
@@ -889,7 +898,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, "physEvents=", m_currFile->getPhysStat(),
       DELIMITER, (unsigned int) tv.tv_sec, 
       DELIMITER, (int) tv.tv_usec,
-      DELIMITER, statEventsCharString );
+      DELIMITER, stats_msg );
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           if(errno != EAGAIN) {
@@ -901,7 +910,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
           }
       }
       free(msg);
+      free(stats_msg);
       msg = NULL;
+      stats_msg = NULL;
 
       m_prevMsgQueue.tv_sec = tv.tv_sec;
       m_prevMsgQueue.tv_usec = tv.tv_usec;
