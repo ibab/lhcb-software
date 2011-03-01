@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - Roel Aaij
+ - Update cuts for Hlt1MuonLines
+
 ! 2011-03-01 - V. Gligorov
  - Update Physics_draft2011 to explicitly set TrackPhoton's L0 channels.
  - Remove 4 body charm lines until further notice from CharmHadronLines_draft2011.
