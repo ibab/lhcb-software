@@ -332,7 +332,11 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
                                     SelectionBase) :
 
     """
-    Simple wrapper class to construct charged ProtoParticles.
+    Simple wrapper class to construct charged ProtoParticles. Can add PID
+    information for Rich, Muon, Ecal, Brem, Hcal, Prs, Spd and Velo.
+    Usage:
+    tracks = AutomaticData(Location='Some/Location/With/Tracks')
+    ppSel = ChargedProtoParticleSelection('TestPP', RequiredSelections=[tracks],  PIDElements=['Rich', 'Muon', 'Hcal'])
     """
     __allowedPIDs = ('Rich',
                      'Muon',
