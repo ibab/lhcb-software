@@ -176,6 +176,7 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesDiMuonLowMass'           :10112,
     'VeloCandidatesSingleMuonHighPT'        :10113,
     'VeloCandidatesSingleMuonNoIP'          :10114,
+    'VeloCandidatesDiProtonLowMult'         :10115,
 
     #
     # 11K - 20K : added automatically by configuration...

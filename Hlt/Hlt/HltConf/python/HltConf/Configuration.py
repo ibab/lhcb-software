@@ -600,7 +600,14 @@ class HltConf(LHCbConfigurableUser):
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
             EndMembers += [ c() for c in i ]
         if (self.getProp("EnableLumiEventWriting")) :
-            print "JAJA", self.getProp('NanoBanks')
+            if sets and hasattr(sets, 'NanoBanks') :
+                if not self.isPropertySet('NanoBanks') :
+                    self.setProp('NanoBanks',sets.NanoBanks)
+                else :
+                    log.warning('Setting %s requested NanoBanks = %s, but also explicitly set; using %s.' % (sets.HltType(), sets.NanoBanks, self.getProp('NanoBanks')))
+            if self.isPropertySet('NanoBanks') :
+                    log.warning('Using non-default NanoBanks = %s.' % (self.getProp('NanoBanks')))
+                
             EndMembers += [ HltLumiWriter()
                           , Sequence( 'LumiStripper' , Members = 
                                       [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
