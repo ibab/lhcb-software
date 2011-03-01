@@ -355,9 +355,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import bindMembers
         chargedDOWNProtosOutputLocation = "Hlt2/ProtoP/Fitted/DVDownstream/Charged"
         charged_name = 'Hlt2ProtoPFittedDownstreamChargedProtoPAlg'
-        charged      = ChargedProtoParticleMaker(charged_name)
-        charged.InputTrackLocation  = ['Hlt2/Track/BiKalmanFitted/DVDownstream']
-        charged.OutputProtoParticleLocation = chargedDOWNProtosOutputLocation
+        charged         = ChargedProtoParticleMaker(charged_name)
+        charged.Inputs  = ['Hlt2/Track/BiKalmanFitted/DVDownstream']
+        charged.Output  = chargedDOWNProtosOutputLocation
         protobm_name         = "Hlt2ProtoPFittedDownstreamChargedProtosSeq" 
         protobm_members      = fitbm.members()+[ charged ]
         protobm_output       = chargedDOWNProtosOutputLocation
