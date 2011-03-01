@@ -906,7 +906,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             { "Hlt2TriMuonsDetachedDecision"   : 50214 ,
               "Hlt2DiMuonAndMuonDecision"      : 50215 ,
               "Hlt2DoubleDiMuonDecision"       : 50216 , 
-              "HltTriMuonsTauDecision"         : 50217 }
+              "Hlt2TriMuonsTauDecision"        : 50217 }
             )
         
         
