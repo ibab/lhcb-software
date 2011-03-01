@@ -51,7 +51,7 @@ from HltTracking.Hlt1TrackUpgradeConf import ConfiguredForward
 import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1250 )
-ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 6000, 600 )
+ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ),  6000,  500 )
 
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"

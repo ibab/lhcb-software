@@ -4,6 +4,10 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2011-03-01 - Roel Aaij
+ - Set PT to 500 for LooseForward
+
 ! 2011-03-01 - Gerhard Raven
  - replace a few InputTrackLocation and OutputProtoParticleLocation with
    generic Input and Output
