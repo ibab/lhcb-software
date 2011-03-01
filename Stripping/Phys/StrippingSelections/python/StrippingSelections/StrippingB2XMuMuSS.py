@@ -39,7 +39,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'B2KMuMuSSLinePrescale'   : 1 ,
                   'B2KMuMuSSLinePostscale'  : 1 }
 
-__all__ = ('B2XMuMuConf', 'makeB2PiMuMuOS', 'makeB2PiMuMuSS', 'makeB2KMuMuOS', 'makeB2KMuMuSS' )
+__all__ = ('B2XMuMuSSConf', 'makeB2PiMuMuOS', 'makeB2PiMuMuSS', 'makeB2KMuMuOS', 'makeB2KMuMuSS' )
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -48,9 +48,9 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons
 
-name = "B2XMuMu"
+name = "B2XMuMuSS"
 
-class B2XMuMuConf(LineBuilder) :
+class B2XMuMuSSConf(LineBuilder) :
     """
     Builder for B2XMuMu, X = pi/K 
     """

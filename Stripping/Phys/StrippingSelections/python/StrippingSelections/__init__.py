@@ -6,13 +6,11 @@ All line builders available via function lineBuilders().
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
 import StrippingB2DX
-import StrippingB2XGamma
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
 import StrippingB2nbody
 import StrippingHb2Charged2Body
-import StrippingBu2LLK
 import StrippingBd2DstarMuNu
 import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
@@ -32,6 +30,18 @@ import StrippingBs2Kst0Kst0
 import StrippingBs2EtacPhi
 import StrippingBs2ChicPhi_Chic2KKPiPi
 import StrippingBs2ChicPhi_Chic2PiPiPiPi
+
+import StrippingBs2MuMuPhi
+import StrippingB2XMuMu
+import StrippingBd2KstarMuMu
+import StrippingB2XMuMuSS
+import StrippingTriMuons
+import StrippingB2XGamma
+import StrippingBs2MuMuLines
+import StrippingB2MuMuMuMuLines
+import StrippingBu2LLK
+import StrippingBd2eeKstar
+import StrippingBd2JpsieeKstar
 
 from sys import modules as _modules
 _this = _modules[__name__]

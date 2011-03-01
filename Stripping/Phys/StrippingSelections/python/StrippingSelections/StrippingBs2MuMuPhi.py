@@ -2,6 +2,8 @@ __author__ = 'Paul Schaack'
 __date__ = '12/02/2011'
 __version__ = '$Revision: 1.0 $'
 
+__all__ = ( 'Bs2MuMuPhiConf' )
+
 """
 Stripping selection for Bs -> Mu Mu Phi ( -> K K).
 """

@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-01 - Thomas Blake
+ - Added betas and RD lines to  __init__.py
+
+! 2011-03-01 - Thomas Blake
  - Updated StrippingBd2KstarMuMu.py (and test) 
 
 ! 2011-03-01 - Victor Coco

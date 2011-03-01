@@ -4,6 +4,8 @@ __author__ = 'Jeremy Dickens'
 __date__ = '16/02/2011'
 __version__ = '$Revision: 1.4 $'
 
+__all__ = ( 'StrippingBdToKstarMuMuConf' )
+
 '''
 Bd->K*mumu stripping selection using LoKi::Hybrid and python
 Default line applies a slightly loosened offline selection

@@ -3,6 +3,8 @@ __author__ = 'Paul Schaack'
 __date__ = '12/02/2011'
 __version__ = '$Revision: 1.0 $'
 
+__all__ = ( 'B2XMuMuConf' )
+
 """
 Stripping selection for B_{s,d} channels
 """
