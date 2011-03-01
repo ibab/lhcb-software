@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file BenderExample/RadLen.py
 #
 #  The simple Bender-based example for radiation lenth studies 
@@ -51,7 +49,7 @@ Last modification $Date$
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = " $Revision$ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.All                  import *
@@ -192,13 +190,13 @@ class RadLen(AlgoMC) :
         point2 += newVct 
 
         return self.iTrSvc.distanceInRadUnits ( point1 , point2 )
-
-                        
+    
 # =============================================================================
 ## configure the job
 def configure ( datafiles , catalogs = [] ) :
-    """ Configure the job """
-    
+    """
+    Configure the job
+    """
     
     ##
     ## Static configuration using "Configurables"
@@ -206,7 +204,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09' ,
+        DataType   = '2010' ,
         Simulation = True   ) 
     
     from Configurables import HistogramPersistencySvc 
@@ -215,6 +213,9 @@ def configure ( datafiles , catalogs = [] ) :
     from Configurables import NTupleSvc 
     NTupleSvc ( Output = [
         "RADLEN DATAFILE='RadLen_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
+    
+    from StandardParticles import StdNoPIDsPions
+    InputParticles = [ StdNoPIDsPions.outputLocation() ]
     
     ## define/set the input data 
     setData ( datafiles , catalogs )
@@ -235,10 +236,9 @@ def configure ( datafiles , catalogs = [] ) :
         HistoPrint     = True      ,
         NTupleLUN      = 'RADLEN'  , 
         PP2MCs         = [ 'Relations/Rec/ProtoP/Charged'] , 
-        InputLocations = [ 'StdNoPIDsPions' ]
+        Inputs         = InputParticles 
         )
     
-    ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms ( [alg] ) 
     
     return SUCCESS 
@@ -253,26 +253,16 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
     
     ## configure the job:
-    configure( [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-        )
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        ]
+    configure( inputdata )  
 
     ## run the job
     run(500)
-
 
 # =============================================================================
 # The END 

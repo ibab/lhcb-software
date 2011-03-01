@@ -75,49 +75,8 @@ class LV02Alg(AlgoMC) :
         Standard method for analyses
         """
         
-        # Ds+/Ds- -> K+ K- pi+/pi-
-        ds = Trees.MCExclusive  ( Nodes.CC('D_s+') , 1 , True )
-        ds += 'K+'
-        ds += 'K-'
-        ds += Nodes.CC('pi+')
-        
-        ## B_s0 -> Ds+/Ds- K-/K+
-        bsk  = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bsk += ds 
-        bsk += Nodes.CC("K+") 
-        
-        ## B_s0 -> ^Ds+/Ds- K-/K+
-        bskm = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bskm += mark ( ds ) 
-        bskm += Nodes.CC("K+") 
-
-        st =  bsk.validate  ( self.ppSvc() )
-        if st.isFailure()  : return st
-        
-        st =  bskm.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        ## B_s0 -> Ds+/Ds- pi-/pi+
-        bspi = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bspi += ds 
-        bspi += Nodes.CC("pi+") 
-        
-        ## B_s0 -> ^Ds+/Ds- pi-/pi+
-        bspim = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bspim += mark ( ds ) 
-        bspim += Nodes.CC("pi+") 
-        
-        st =  bspi.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        st =  bspim.validate ( self.ppSvc() )
-        if st.isFailure()  : return st
-
-        cutk   = MCDECTREE( bsk  ) 
-        mcbsk  = self.mcselect ('mcbsk'  , ( 'B_s0' == MCABSID ) & cutk  )
-        
-        cutpi  = MCDECTREE( bspi ) 
-        mcbspi = self.mcselect ('mcbspi' , ( 'B_s0' == MCABSID ) & cutpi )
+        mcbsk  = self.mcselect ('mcbsk'  , "[ Beauty -> ( D_s+ --> K- K+ pi+ ) K- ]CC")        
+        mcbspi = self.mcselect ('mcbspi' , "[ Beauty -> ( D_s+ --> K- K+ pi+ ) pi-]CC")
         
         if mcbsk.empty() and mcbspi.empty() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
@@ -141,7 +100,6 @@ class LV02Alg(AlgoMC) :
         kminus = self.select ( 'K-'  , kaons , ( Q < 0 ) )
         self.select ( 'gK+' , kplus  , PIDK > 3 )
         self.select ( 'gK-' , kminus , PIDK > 3 )
-
         
         ## construct Ds -> K K pi
         ds = self.loop ( 'gK+ gK- pi' , 'D_s+' )
@@ -224,7 +182,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'DC06' , 
+        DataType   = '2010' , 
         Simulation = True   ) 
     
     from Configurables import HistogramPersistencySvc
@@ -233,6 +191,12 @@ def configure ( datafiles , catalogs = [] ) :
     from Configurables import NTupleSvc
     NTupleSvc ( Output = [ "LV02 DATAFILE='LV02_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
+    from StandardParticles import StdTightPions , StdNoPIDsKaons
+    InputParticles = [
+        StdTightPions  . outputLocation () ,
+        StdNoPIDsKaons . outputLocation ()
+        ]
+
     ## define the input data 
     setData ( datafiles , catalogs ) 
     
@@ -251,13 +215,13 @@ def configure ( datafiles , catalogs = [] ) :
         ## print histos 
         HistoPrint = True   , 
         ## LUN for N-tuples 
-        NTupleLUN = 'LV02'  ,
+        NTupleLUN  = 'LV02'  ,
         ## Input particles 
-        InputLocations = [ 'StdTightPions' , 'StdNoPIDsKaons' ]
+        Inputs     = InputParticles 
         )
     
-    ##gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ] 
    
     return SUCCESS 
 
@@ -271,23 +235,23 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     
     ## configure the job:
-    inputdata = [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_5.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+    inputdata1 = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
         ]
+    inputdata2 = [
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008566/0000/00008566_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 83 ) 
+        ]
+    
+    inputdata = []
+    for i in range ( 1 , min ( len ( inputdata1 ) , len ( inputdata2 ) ) ) :
+        inputdata += [ inputdata1[i] ]
+        inputdata += [ inputdata2[i] ]
 
+        
     configure( inputdata ) 
     ## run the job
     run(1000)

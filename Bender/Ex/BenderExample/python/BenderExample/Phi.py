@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file BenderExample/Phi.py
 #  The simple Bender-based example: plot dikaon mass peak
 #
@@ -25,6 +23,7 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-12
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -110,12 +109,15 @@ def configure ( datafiles , catalogs  = [] ) :
     ##      
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09' ,
+        DataType   = '2010' ,
         Simulation = True   ) 
     
     from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 
 
+    from StandardParticles import StdTightKaons
+    InputParticles = [ StdTightKaons.outputLocation() ]
+    
     ## define the input data 
     setData ( datafiles , catalogs ) 
     
@@ -129,12 +131,12 @@ def configure ( datafiles , catalogs  = [] ) :
     ## create local algorithm:
     alg = Phi(
         'Phi' ,
-        HistoPrint     = True                ,   ## print histos 
-        InputLocations = [ 'StdTightKaons' ]     ## input particles    
+        HistoPrint = True                ,   ## print histos 
+        Inputs     = InputParticles          ## input particles    
         )
     
-    ## gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ] 
      
     return SUCCESS 
     
@@ -151,20 +153,11 @@ if __name__ == '__main__' :
     print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
+    ## configure the job:
     inputdata = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000312_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000313_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000314_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000315_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000316_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000317_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000318_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000319_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    
-    configure ( inputdata )
+    configure( inputdata )  
     
     ## run the job
     run(2000)

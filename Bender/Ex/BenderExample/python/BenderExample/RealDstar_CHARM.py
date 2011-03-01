@@ -24,7 +24,7 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2010-06-18
 #
-#                    $Revision:$ 
+#                    $Revision$ 
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -45,7 +45,7 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision:$ 
+                  $Revision$ 
 Last modification $Date$
                by $Author$
 """
@@ -87,20 +87,25 @@ class Dstar(Algo) :
         if dstars.empty()   :
             return self.Warning ( 'No D*+ decays are found' , SUCCESS )
 
+        
         dm0 = ( M - M1  ) / GeV 
         dm1 = DTF_FUN ( dm0 , False )
+        dm2 = DTF_FUN ( dm0 , True  )
         
         for d in dstars :
             print d.decay()
-
-            _v0 = dm0 ( d ) 
-            self.plot ( _v0 , "delta m0  " ,  0.135 , 0.160 ) 
-            _v1 = dm1 ( d ) 
-            self.plot ( _v1 , "delta m1  " ,  0.135 , 0.160 )            
-            self.plot ( _v0 - _v1 , "delta delta" , -0.0025 , 0.0025 , 200 )
-
-
             
+            v0 = dm0 ( d ) 
+            self.plot ( v0 , "delta m0 (simple)   " ,  0.135 , 0.160 ) 
+            v1 = dm1 ( d ) 
+            self.plot ( v1 , "delta m1 (DTF) "      ,  0.135 , 0.160 )            
+            v2 = dm2 ( d ) 
+            self.plot ( v2 , "delta m2 (DTF+PV) "   ,  0.135 , 0.160 )
+            
+            self.plot ( v0 - v1 , "delta delta-1" , -0.0025 , 0.0025 , 200 )
+            self.plot ( v1 - v2 , "delta delta-2" , -0.0025 , 0.0025 , 200 )
+
+
         if len ( dstars ) :
             self.setFilterPassed ( True  )
         else :
@@ -122,47 +127,38 @@ class Dstar(Algo) :
         return Algo.finalize ( self )
 
 
-_local_algs_ = [] 
 # =============================================================================
 ## configure the job 
 def configure ( datafiles , catalogs = [] ) :
     """
     Job configuration 
     """
-    
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
-        HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
-        STRIP_Code = " HLT_PASS('StrippingDstarForPromptCharmDecision') " ,
-        VOID_Code  = " EXISTS ('/Event/Strip') " 
+        STRIP_Code = " HLT_PASS('StrippingDstarForPromptCharmDecision') " 
         )
-    
     ##
     ## 1. Static configuration using "Configurables"
     ##
     
     from Configurables           import DaVinci    
     davinci = DaVinci (
-        DataType      = '2010' ,
-        PrintFreq     = 1000   ,
-        HistogramFile = 'RealDstar_CHARM_Histos.root' ,
-        ##
-        DDDBtag         = "head-20101026" ,
-        CondDBtag       = "head-20101112" ,
-        ##
+        DataType        = '2010' ,
+        InputType       = 'MDST' ,
+        PrintFreq       = 1000   ,
         EventPreFilters = fltrs.filters('Filters') ,
-        #
-        Lumi = True 
+        HistogramFile   = 'RealDstar_CHARM_Histos.root' ,
+        ##
+        Lumi            = True ,
+        ##
+        DDDBtag   = "head-20101026" ,
+        CondDBtag = "head-20101112" 
         )
-    
-    ## TEMPORARY to be removed!
-    from Configurables import CondDB
-    CondDB( IgnoreHeartBeat = True ) 
     
     from Configurables import NTupleSvc
     ntSvc = NTupleSvc() 
     ntSvc.Output += [ "DSTAR DATAFILE='RealDstar_CHARM.root' TYPE='ROOT' OPT='NEW'" ]
-
+    
     
     ## define the input data:
     setData ( datafiles , catalogs )
@@ -174,8 +170,6 @@ def configure ( datafiles , catalogs = [] ) :
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
-    SELECTION = 'DstarForPromptCharm'
-    
     ## create local algorithm:
     alg = Dstar (
         #
@@ -184,8 +178,8 @@ def configure ( datafiles , catalogs = [] ) :
         NTupleLUN = 'DSTAR' ,   ## Logical unit for output file with N-tuples
         #
         ## RecoStripping-09 conventions! 
-        RootInTES        =  '/Event/Charm/' , 
-        InputLocations   = [ SELECTION ] ## input particles 
+        RootInTES =  '/Event/Charm/' , 
+        Inputs    = [ 'Phys/DstarForPromptCharm' ] ## input particles 
         )
     
     ## finally inform Application Manager about our algorithm
@@ -206,16 +200,16 @@ if '__main__' == __name__ :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
-    
-    ## stripping-10 CHARM-DST
+
+
     files = [
-        '/castor/cern.ch/grid/lhcb/data/2010/CHARM.DST/00007954/0000/00007954_00000%03d_1.charm.dst' % i for i in range(1,700) 
+        '/castor/cern.ch/grid/lhcb/data/2010/CHARM.MDST/00008383/0000/00008383_00000%03d_1.charm.mdst' % i for i in range(1,650) 
         ]
     
     configure ( files )
     
     ## run the job
-    run (1000)
+    run (2000)
     
 
 # =============================================================================

@@ -133,6 +133,9 @@ def configure ( datafiles , catalogs  = [] ) :
     from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'PhiMC_Histos.root' ) 
     
+    from StandardParticles import StdTightKaons
+    InputParticles = [ StdTightKaons.outputLocation() ]
+    
     ## define the input data 
     setData ( datafiles , catalogs ) 
     
@@ -146,14 +149,14 @@ def configure ( datafiles , catalogs  = [] ) :
     ## create local algorithm:
     alg = PhiMC(
         HistoPrint     = True                ,  ## print histos 
-        InputLocations = [ 'StdTightKaons' ] ,  ## input particles 
         PP2MCs         = [
-        'Relations/Rec/ProtoP/Charged' ]        ## MC-truth relation tables
+        'Relations/Rec/ProtoP/Charged' ]     ,  ## MC-truth relation tables
+        Inputs         = InputParticles         ## input particles 
         )
     
-    gaudi.addAlgorithm ( alg ) 
-    ## gaudi.setAlgorithms( [alg] )
-    
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ] 
+         
     return SUCCESS 
     
 # =============================================================================
@@ -168,11 +171,11 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120  
   
-    ## configure the job: 
+    ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 2 , 150 )
+        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure ( inputdata ) 
+    configure( inputdata )  
     
     run(500) 
 

@@ -1,8 +1,6 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # =============================================================================
 # $Id$ 
-# =============================================================================
-# $URL$ 
 # =============================================================================
 ## @file BenderExample/Lam0_Akshay.py
 #
@@ -190,6 +188,16 @@ def configure ( datafiles , catalogs = [] ) :
     ntSvc = NTupleSvc()
     ntSvc.Output += [ "LAM0 DATAFILE='Lam0_Akshay_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
     
+    from StandardParticles import ( StdLoosePions        ,
+                                    StdNoPIDsDownPions   ,
+                                    StdLooseProtons      ,
+                                    StdNoPIDsDownProtons )    
+    InputParticles = [
+        StdLoosePions        .outputLocation () ,
+        StdNoPIDsDownPions   .outputLocation () ,
+        StdLooseProtons      .outputLocation () ,
+        StdNoPIDsDownProtons .outputLocation () 
+        ]
     ## define the input data:
     setData ( datafiles , catalogs )
     
@@ -204,14 +212,12 @@ def configure ( datafiles , catalogs = [] ) :
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
         NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples 
-        InputLocations = [ 'StdLoosePions'         ,
-                           'StdNoPIDsDownPions'    ,
-                           'StdLooseProtons'       ,
-                           'StdNoPIDsDownProtons'  ] ## input particles 
+        Inputs    = InputParticles
         )
     
-    gaudi.setAlgorithms ( [ alg ] ) 
-
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ] 
+    
     return SUCCESS 
 
 # =============================================================================
@@ -226,10 +232,10 @@ if '__main__' == __name__ :
     print ' Date    : %s ' %   __date__
     print '*'*120  
     
-    ## V0-stream 
+    ## minbias-stream 
     inputdata = [
         ## min-bias stream 
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000%03d_1.minibias.dst' % n for n in range ( 11 , 34 )
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00008378/0000/00008378_00000%03d_1.minibias.dst' % n for n in range ( 1 , 658 )
         ]
     
     configure ( inputdata ) 
