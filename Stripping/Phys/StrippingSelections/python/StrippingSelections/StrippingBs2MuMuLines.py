@@ -107,12 +107,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
         #checkConfig(Bs2MuMuLinesConf.__configuration_keys__,config)
 
-        default_name='Bs2MuMuNoMuID'
-        wide_name = 'Bs2MuMuWideMass'
-        loose_name='Bs2MuMuNoMuIDLoose'
-        jPsi_name='DetachedJPsi'
-        jPsiLoose_name='DetachedJPsiLoose'
-        jPsiPrompt_name='DetachedJPsi_noDetached'
+        default_name=name+'NoMuID'
+        wide_name = name+'WideMass'
+        loose_name=name+'NoMuIDLoose'
+        jPsi_name=name+'DetachedJPsi'
+        jPsiLoose_name=name+'DetachedJPsiLoose'
+        jPsiPrompt_name=name+'DetachedJPsi_noDetached'
 
         self.selDefault = makeDefault(default_name)
 
@@ -169,8 +169,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
 
 
-        self.lines = [ self.defaultLine, self.wideLine, self.looseLine,
-                       self.jPsiLine, self.jPsiLooseLine,  self.jPsiPromptLine ]
+        self.registerLine(self.defaultLine)
+        self.registerLine(self.wideLine)
+        self.registerLine(self.looseLine)
+        self.registerLine(self.jPsiLine)
+        self.registerLine(self.jPsiLooseLine)
+        self.registerLine(self.jPsiPromptLine)
 
 
 def makeDefault(name) :
@@ -184,7 +188,7 @@ def makeDefault(name) :
     name        : name of the Selection.
     """
     from Configurables import OfflineVertexFitter
-    Bs2MuMuNoMuID = CombineParticles("StripBs2MuMuNoMuID")
+    Bs2MuMuNoMuID = CombineParticles("Comine"+name)
     Bs2MuMuNoMuID.DecayDescriptor = "B_s0 -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuID.addTool( OfflineVertexFitter() )
@@ -220,7 +224,7 @@ def makeBs2mmWide(name) :
     name        : name of the Selection.
     """
     from Configurables import OfflineVertexFitter
-    Bs2MuMuWideMass = CombineParticles("StripBs2MuMuWideMass")
+    Bs2MuMuWideMass = CombineParticles("Combine"+name)
     Bs2MuMuWideMass.DecayDescriptor = "B_s0 -> mu+ mu-"
     Bs2MuMuWideMass.addTool( OfflineVertexFitter() )
     Bs2MuMuWideMass.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -260,7 +264,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     BFDChi2     : Bs BPVVDCHI2> %(BFDChi2)
     """
     from Configurables import OfflineVertexFitter
-    Bs2MuMuNoMuIDLoose = CombineParticles("StripBs2MuMuNoMuIDLoose")
+    Bs2MuMuNoMuIDLoose = CombineParticles("Combine"+name)
     Bs2MuMuNoMuIDLoose.DecayDescriptor = "B_s0 -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuIDLoose.addTool( OfflineVertexFitter() )
@@ -299,7 +303,7 @@ def makeDetachedJPsi(name) :
     name        : name of the Selection.
     """
     from Configurables import OfflineVertexFitter
-    DetachedJPsi = CombineParticles("StripDetachedJPsi")
+    DetachedJPsi = CombineParticles("Combine"+name)
     DetachedJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     DetachedJPsi.addTool( OfflineVertexFitter() )
@@ -335,7 +339,7 @@ def makeDetachedJPsiLoose(name) :
     name        : name of the Selection.
     """
     from Configurables import OfflineVertexFitter
-    DetachedJPsiLoose = CombineParticles("StripDetachedJPsiLoose")
+    DetachedJPsiLoose = CombineParticles("Combine"+name)
     DetachedJPsiLoose.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     DetachedJPsiLoose.addTool( OfflineVertexFitter() )
@@ -371,7 +375,7 @@ def makePromptJPsi(name) :
     name        : name of the Selection.
     """
     from Configurables import OfflineVertexFitter
-    PromptJPsi = CombineParticles("StripPromptJPsi")
+    PromptJPsi = CombineParticles("Combine"+name)
     PromptJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     PromptJPsi.addTool( OfflineVertexFitter() )
