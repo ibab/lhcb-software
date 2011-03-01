@@ -24,11 +24,12 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
 // ============================================================================
 BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name, 
 			     const IInterface* parent) 
-  : base_class(type,name,parent), m_threshold(-1.0), m_ntrees(-1), 
+  : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1), 
     m_dist(0), m_dva(0), m_vars(){
   // declare configurable properties
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
   declareProperty("ParamFile", m_paramFile, "parameter file (full path)");
+  declareProperty("ANNSvcKey", m_key, "extrainfo key");
 }
 // ============================================================================
 StatusCode BBDecTreeTool::readError(const std::string &msg) const {
@@ -136,7 +137,15 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
     Error("BBDecTreeTool tool is misconfigured!");
     return false;
   }
-  return m_values[index]/(double)m_ntrees > m_threshold;
+  double response = m_values[index]/(double)m_ntrees;
+  if(m_key >= 0){
+    if(p->hasInfo(m_key)){
+      /* don't write msg b/c it's OK for STD, mu, e lines to write to same 
+	 place since they report the same response */
+    }
+    else const_cast<LHCb::Particle*>(p)->addInfo(m_key, response);
+  }
+  return response > m_threshold;
 }
 // ============================================================================
 /// declare & implement the factory 

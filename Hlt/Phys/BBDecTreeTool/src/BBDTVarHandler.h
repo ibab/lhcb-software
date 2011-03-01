@@ -41,12 +41,14 @@ public:
   double massCor() const {return m_values[4];}
   double ptMin() const {return m_values[5];}
   double fdChi2() const {return m_values[6];}
+  bool cut(const std::map<std::string,std::pair<double,double> > &cuts) const;
 
 private:
   std::vector<double> m_values; ///< variables
   const LoKi::PhysTypes::Fun m_SUMPT; ///< SUMTREE(PT,'K+'==ABSID,0.0)
   const LoKi::PhysTypes::Fun m_MINPT; ///< MINTREE('K+'==ABSID,PT)
   const LoKi::Cuts::BPVIPCHI2 m_BPVIPCHI2; ///< BPVIPCHI2()
+  std::map<std::string,int> m_indices; ///< FUNCTOR -> array index map 
 };
 // ============================================================================
 #endif /* BBDTVarHandler_H */

@@ -3,6 +3,17 @@
 #define BBDTSimpleTool_H
 // ============================================================================
 // Include files 
+#include <map>
+#include <vector>
+#include <string>
+class StatusCode;
+namespace Gaudi { 
+  namespace Parsers {
+    StatusCode parse(std::vector<std::map<std::string, 
+		     std::pair<double,double> > >& result, 
+		     const std::string& input);
+  }
+}
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "BBDTVarHandler.h"
@@ -67,7 +78,8 @@ private:
   BBDTSimpleTool& operator=(const BBDTSimpleTool&);
   
   // properties
-  int m_nbody; ///< 2,3 or 4-body?
+  /// Simple tree of cuts
+  std::vector<std::map<std::string,std::pair<double,double> > > m_cuts; 
   
   // attributes
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator

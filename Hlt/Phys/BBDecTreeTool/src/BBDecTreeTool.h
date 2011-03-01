@@ -81,9 +81,10 @@ private:
   // properties
   double m_threshold; ///< response threshold (cut) value
   std::string m_paramFile; ///< parameter file (full path)
+  int m_key; ///< ANNSvc key to write to
   
   // attributes
-  int m_ntrees; ///< number of trees used in training
+  int m_ntrees; ///< number of trees used in training  
   std::vector<std::vector<double> > m_splits; ///< variable split points
   std::vector<unsigned short int> m_values; ///< response values 
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
