@@ -102,15 +102,15 @@ class D2hhConf(LineBuilder) :
         stdNoPIDsKaons = StdNoPIDsKaons
         stdNoPIDsPions = StdNoPIDsPions
 
-        d2kpi_name = 'PromptD2KPi'
-        d0RS_name = 'PromptD0RS'
-        d0WS_name = 'PromptD0WS'
-        d2kk_name = 'PromptD2KK'
-        d2pipi_name = 'PromptD2PiPi'
-        dst2DPiPi_name = 'PromptDst2D2PiPi'
-        dst2DKK_name = 'PromptDst2D2KK'
-        dst2DRS_name = 'PromptDst2D2RS'
-        dst2DWS_name = 'PromptDst2D2WS'
+        d2kpi_name = name+'PromptD2KPi'
+        d0RS_name =  name+'PromptD0RS'
+        d0WS_name = name+'PromptD0WS'
+        d2kk_name = name+'PromptD2KK'
+        d2pipi_name = name+'PromptD2PiPi'
+        dst2DPiPi_name = name+'PromptDst2D2PiPi'
+        dst2DKK_name = name+'PromptDst2D2KK'
+        dst2DRS_name = name+'PromptDst2D2RS'
+        dst2DWS_name = name+'PromptDst2D2WS'
 
         # D0 -> hh' selections
         self.selD2Kpi = makeD2hh(d2kpi_name,  

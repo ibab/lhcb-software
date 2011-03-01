@@ -21,6 +21,19 @@
  - included this in __init__.py (along with other electroweak lines)
 
 ! 2011-03-01 - Thomas Blake
+ - Added:
+  . test_D2hh.py
+  . test_D2hhh.py
+  . test_D02MuMu.py
+  . test_PromptCharm.py
+  . test_CharmedAndStrangeSpectroscopy.py
+  . test_D2KS0H.py
+  . test_DstarD02KMuNu.py
+  . test_DstarD02xx.py
+ 	. test_D2XMuMu.py
+ - Fixed naming of D2hh and CharmedAndStrangeSpectroscopy
+
+! 2011-03-01 - Thomas Blake
  - Added betas and RD lines to  __init__.py
 
 ! 2011-03-01 - Thomas Blake

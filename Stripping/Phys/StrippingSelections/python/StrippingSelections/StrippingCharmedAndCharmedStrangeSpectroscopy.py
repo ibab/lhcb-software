@@ -90,25 +90,25 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         '''
         make particles
         '''
-        self.sel_Dp2KmPipPip = makeDp2KmPipPip( "Dplus" )
-        self.sel_KS02LL = makeKS02LL( "KSLongLong" )
-        self.sel_KS02DD = makeKS02DD( "KSDownDown" )
-        self.sel_KS0 = MergedSelection( "KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
-        self.sel_Dstarp = makeDstar2D0pi( "Dstar" )
-        self.sel_D0 = makePromptD02KPi( "D0" )
-        self.sel_K = makePromptTracks( "K", "Phys/StdTightKaons/Particles")
-        self.sel_Pi = makePromptTracks( "Pi", "Phys/StdTightPions/Particles")
+        self.sel_Dp2KmPipPip = makeDp2KmPipPip( name+"Dplus" )
+        self.sel_KS02LL = makeKS02LL( name+"KSLongLong" )
+        self.sel_KS02DD = makeKS02DD( name+"KSDownDown" )
+        self.sel_KS0 = MergedSelection( name+"KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
+        self.sel_Dstarp = makeDstar2D0pi( name+"Dstar" )
+        self.sel_D0 = makePromptD02KPi( name+"D0" )
+        self.sel_K = makePromptTracks( name+"K", "Phys/StdTightKaons/Particles")
+        self.sel_Pi = makePromptTracks( name+"Pi", "Phys/StdTightPions/Particles")
 
         '''
         combine particles
         '''
 
-        self.DpKs      = CombineDandTrack( "Ds2DpKs"     , "[D*_s2+ -> D+ KS0]cc", self.sel_Dp2KmPipPip, self.sel_KS0 )
-        self.DstarpKs  = CombineDandTrack( "Ds2DstarpKs" , "[D_s1(2536)+ -> D*(2010)+ KS0]cc", self.sel_Dstarp, self.sel_KS0 )
-        self.D0K       = CombineDandTrack( "Ds2D0K"      , "[D_s1(2536)+ -> D0 K+]cc", self.sel_D0, self.sel_K )
-        self.DpPim     = CombineDandTrack( "Dj2DpPim"    , "[D*_2(2460)0 -> D+ pi-]cc", self.sel_Dp2KmPipPip, self.sel_Pi )
-        self.D0Pip     = CombineDandTrack( "Dj2D0Pip"    , "[D*_2(2460)+ -> D0 pi+]cc", self.sel_D0, self.sel_Pi )
-        self.DstarpPim = CombineDandTrack( "Dj2DstarpPim", "[D*_2(2460)0 -> D*(2010)+ pi-]cc", self.sel_Dstarp, self.sel_Pi )
+        self.DpKs      = CombineDandTrack( name+"Ds2DpKs"     , "[D*_s2+ -> D+ KS0]cc", self.sel_Dp2KmPipPip, self.sel_KS0 )
+        self.DstarpKs  = CombineDandTrack( name+"Ds2DstarpKs" , "[D_s1(2536)+ -> D*(2010)+ KS0]cc", self.sel_Dstarp, self.sel_KS0 )
+        self.D0K       = CombineDandTrack( name+"Ds2D0K"      , "[D_s1(2536)+ -> D0 K+]cc", self.sel_D0, self.sel_K )
+        self.DpPim     = CombineDandTrack( name+"Dj2DpPim"    , "[D*_2(2460)0 -> D+ pi-]cc", self.sel_Dp2KmPipPip, self.sel_Pi )
+        self.D0Pip     = CombineDandTrack( name+"Dj2D0Pip"    , "[D*_2(2460)+ -> D0 pi+]cc", self.sel_D0, self.sel_Pi )
+        self.DstarpPim = CombineDandTrack( name+"Dj2DstarpPim", "[D*_2(2460)0 -> D*(2010)+ pi-]cc", self.sel_Dstarp, self.sel_Pi )
 
         '''
         Here we construct the stripping lines
