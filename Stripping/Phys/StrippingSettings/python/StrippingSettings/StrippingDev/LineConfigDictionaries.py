@@ -29,19 +29,19 @@ Bs2JpsiPhiPrescaledAndDetatchedPrescaled['CONFIG']['DetatchedLinePrescale'] = 0.
 # beta_s group #
 ################
 # b2JpsiX lines (Greig)
-configJpsiX = {
+configJpsiX = {         
 	'BUILDERTYPE' : 'B2JpsiXforBeta_sConf',
 	'CONFIG' : {
-		'TRCHI2DOF'             :       4
-        ,       'BPVLTIME'              :       0.25
+ 		'TRCHI2DOF'             :       4
+        ,       'BPVLTIME'              :       0.2
         ,       'DaughterPT'            :       1000
         ,       'VCHI2PDOF'             :       10
-        ,       'Jpsi2MuMuPrescale'     :       0.05
-        ,       'Bu2JpsiKPrescale'      :       0.05
-        ,       'Bd2JpsiKstarPrescale'  :       0.025
-        ,       'Bd2JpsiKsPrescale'     :       0.2
-        ,       'Bs2JpsiPhiPrescale'    :       0.2
-        ,       'Bs2JpsiEtaPrescale'    :       0.1
+        ,       'Jpsi2MuMuPrescale'     :       0.1
+        ,       'Bu2JpsiKPrescale'      :       0.1
+        ,       'Bd2JpsiKstarPrescale'  :       0.05
+        ,       'Bd2JpsiKsPrescale'     :       0.5
+        ,       'Bs2JpsiPhiPrescale'    :       0.5
+        ,       'Bs2JpsiEtaPrescale'    :       0.2
         }
 	}
 
@@ -135,6 +135,117 @@ configBs2KstKst = {
           }
 	}
 
+# Bs2EtacPhi/Bs2ChicPhi (Katarzyna)
+configBs2EtacPhi = {
+	'BUILDERTYPE'	:	'Bs2EtacPhiConf',
+	'CONFIG'	:	{
+    'Prescale'                : 1.0 ,
+    'Postscale'               : 1.0 ,
+    #K parameters
+    'K_PT'                    : 500.,
+    'K_TRCHI2'                : 5.,
+    'K_IPCHI2'                : 6.,
+    #pi parameters
+    'pi_PT'                   : 500.,
+    'pi_TRCHI2'               : 5.,
+    'pi_IPCHI2'               : 6.,
+    #phi parameters
+    'phi_VDZ'                 : 0.,
+    'phi_PT'                  : 1000.,
+    'phi_IPCHI2'              : 6.,
+    'phi_VCHI2_VDOF'          : 16.,
+    #rho (for eta_c decay) parameters
+    'rho_etac_VDZ'            : 0.,
+    'rho_etac_VCHI2_VDOF'     : 16.,
+    #phi (for eta_c decay) parameters
+    'phi_etac_VDZ'            : 0.,
+    'phi_etac_VCHI2_VDOF'     : 16.,
+    #eta_c parameters         
+    'etac_VDZ'                : 0.,   
+    'etac_PT'                 : 1000.,
+    'etac_IPCHI2'             : 6., 
+    'etac_VCHI2_VDOF'         : 16.,
+    #Bs parameters            
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+}
+
+configBs2ChicPhi_Chic2KKPiPi = {
+	'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2KKPiPiConf',
+	'CONFIG'	:	{
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #K parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 6.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #phi (for chi_c decay) parameters
+    'phi_chic_VDZ'           : 0.,
+    'phi_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters        
+    'chic_VDZ'               : 0.,   
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters           
+    'Bs_VDZ'                 : 0.,
+    'Bs_DIRA'                : 0.999,
+    'Bs_IPCHI2'              : 9.,
+    'Bs_VCHI2_VDOF'          : 16.
+    }
+}
+
+configBs2ChicPhi_Chic2PiPiPiPi = {
+	'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2PiPiPiPiConf',
+	'CONFIG'	: {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #phi parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 9.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+}
+##############
+# beta_s end #
+##############
 
 
 B2XGamma = {
@@ -770,7 +881,7 @@ InclPhi={
 # NoPID V0 Lines
 # A. Powell
 V0ForPID = {
-    'BUILDERTYPE' : 'V0ForPID',
+    'BUILDERTYPE' : 'StrippingV0ForPIDConf',
     'CONFIG' : {'KS0LL_Prescale'   : 0.006,
                 'KS0DD_Prescale'   : 0.006,
                 'LamLL_Prescale'   : 0.025,
