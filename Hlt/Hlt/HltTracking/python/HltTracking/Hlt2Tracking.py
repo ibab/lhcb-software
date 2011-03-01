@@ -726,9 +726,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged      = ChargedProtoParticleMaker(charged_name)
             # Need to allow for fitted tracks
             # This is now done inside the staged fast fit based on the fastFitType passed
-            tracks                      = self.__hlt2StagedFastFit()
-            charged.InputTrackLocation  = [tracks.outputSelection()]
-            charged.OutputProtoParticleLocation = chargedProtosOutputLocation
+            tracks          = self.__hlt2StagedFastFit()
+            charged.Inputs  = [tracks.outputSelection()]
+            charged.Output  = chargedProtosOutputLocation
             
             bm_name         = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+"ChargedProtosSeq" 
             bm_members      = [ tracks , charged ]
@@ -741,8 +741,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged_secondLoop_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedSecondLoopProtoPAlg'
             charged_secondLoop      = ChargedProtoParticleMaker(charged_secondLoop_name)
             tracks_secondLoop       = self.__hlt2StagedFastFit(secondLoop=True)
-            charged_secondLoop.InputTrackLocation  = [tracks_secondLoop.outputSelection()]
-            charged_secondLoop.OutputProtoParticleLocation = chargedProtosSecondLoopOutputLocation           
+            charged_secondLoop.Inputs  = [tracks_secondLoop.outputSelection()]
+            charged_secondLoop.Output = chargedProtosSecondLoopOutputLocation           
  
             bm_name         = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+"ChargedSecondLoopProtosSeq"
             bm_members      = [ tracks_secondLoop , charged_secondLoop ]
@@ -954,11 +954,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if (self.__shortTrackLocation() == Hlt2LongTracksName) :
             # Do the forward, seeding + matching
             trackRecoSequence        =    [self.__hlt2ForwardTracking()]
-            trackRecoSequence        +=    [self.__hlt2MatchTracking()]
+            trackRecoSequence       +=    [self.__hlt2MatchTracking()]
             # The copy sequence, which merges the forward and
             # match tracks into the long track container
             hlt2TracksToMergeIntoLong    =    []
-            hlt2TracksToMergeIntoLong    +=    [ self.__hlt2ForwardTracking().outputSelection()]
+            hlt2TracksToMergeIntoLong   +=    [ self.__hlt2ForwardTracking().outputSelection()]
             hlt2TracksToMergeIntoLong   +=    [ self.__hlt2MatchTracking().outputSelection()  ]
             from Configurables import CreateFastTrackCollection
             #### CreateFastTrackCollection

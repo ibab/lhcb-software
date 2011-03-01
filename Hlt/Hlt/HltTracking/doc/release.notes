@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2011-03-01 - Gerhard Raven
+ - replace a few InputTrackLocation and OutputProtoParticleLocation with
+   generic Input and Output
 
 ! 2011-03-01 - V. Gligorov
  - Removed Hlt2CharmHadD02HHHHLinesConf from Hlt2Tracking until they
