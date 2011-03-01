@@ -8,6 +8,10 @@
  - Update HLT requirements in StrippingTriMuons.py
 
 ! 2011-03-01 - Thomas Blake
+ - Added:
+	. test_TriMuons.py
+
+! 2011-03-01 - Thomas Blake
  - Added: 
 	. test_Bs2MuMuLines.py
   . test_B2MuMuMuMuLines.py
