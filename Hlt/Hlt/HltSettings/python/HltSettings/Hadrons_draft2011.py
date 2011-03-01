@@ -27,6 +27,9 @@ class Hadrons_draft2011 :
             'Hlt2TopoMu2BodyBBDT',
             'Hlt2TopoMu3BodyBBDT',
             'Hlt2TopoMu4BodyBBDT',
+            'Hlt2TopoE2BodyBBDT',
+            'Hlt2TopoE3BodyBBDT',
+            'Hlt2TopoE4BodyBBDT',
             # XGamma
             'Hlt2Bs2PhiGamma',
             'Hlt2Bs2PhiGammaWideBMass',
