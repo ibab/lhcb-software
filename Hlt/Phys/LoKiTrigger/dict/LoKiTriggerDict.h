@@ -159,7 +159,6 @@ namespace LoKi
        // ======================================================================
      public: // timing
        // ======================================================================
-       // requires LoKiCore scheduled for LHCb v32r1
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
        __timer__   ( const Pipe&              c , 
                      ChronoEntity*            t ) 
@@ -392,7 +391,6 @@ namespace LoKi
       // ======================================================================
     public: // timing
       // ======================================================================
-       // requires LoKiCore scheduled for LHCb v32r1
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __timer__   ( const Source&            c , 
                     ChronoEntity*            t ) 
