@@ -89,7 +89,7 @@ class Physics_draft2011( object ):
                                              ,'DiMuonHighMass_P'         : 6000
                                              ,'DiMuonHighMass_PT'        :  500
                                              ,'DiMuonHighMass_TrChi2'    :    4
-                                             ,'DiMuonHighMass_M'         : 2900
+                                             ,'DiMuonHighMass_M'         : 2700
                                              ,'MultiMuonNoIP_P'          : 6000
                                              ,'MultiMuonNoIP_PT'         :  500
                                              ,'MultiMuonNoIP_TrChi2'     :    4
@@ -142,6 +142,6 @@ class Physics_draft2011( object ):
                   'Hlt1TrackMuon',
                   'Hlt1TrackAllL0',
                   'Hlt1TrackPhoton',
-		          'Hlt1SingleMuonHighPT',
-		          'Hlt1SingleMuonNoIP' ]
+		  'Hlt1SingleMuonHighPT',
+		  'Hlt1SingleMuonNoIP' ]
         return lines 
