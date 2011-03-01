@@ -1,3 +1,8 @@
+2011-03-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: moved the fixLinks function. Now it only applies when locking (-a K) or when
+	creating tarballs.
+
 2011-02-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: fixed typo when calling the CMT wrapper.

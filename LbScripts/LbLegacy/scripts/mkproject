@@ -34,10 +34,11 @@ from LbUtils.afs.volume import Volume
 import logging
 import sys, os, getopt, time, commands, fnmatch
 
-script_version = '081007'
+script_version = '110301'
 script_name = 'mkproject'
 python_version = sys.version_info[:3]
 core_factor = 1.5
+fixed_links = False
 
 day = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
@@ -491,10 +492,12 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         os.chdir(rel_dir)
 
 
-    fixLinks(os.path.join(rel_dir, maindir))
 
 # ======================= action: build tar files ============================================
     if tar :
+        if not fixed_links :
+            fixLinks(os.path.join(rel_dir, maindir))
+            fixed_links = True
         log.info('build tar files')
         os.chdir(rel_dir)
         str = 'mkLHCbtar -p ' + pname + ' -v ' + pversion
@@ -632,6 +635,9 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
     if wlock :
         if os.path.exists(not_ready_file) :
             os.remove(not_ready_file)
+        if not fixed_links :
+            fixLinks(os.path.join(rel_dir, maindir))
+            fixed_links = True
         afs_dir_path = os.path.join(rel_dir, maindir)
         afs_vol = Volume(dirname=afs_dir_path)
         afs_vol.lock()
