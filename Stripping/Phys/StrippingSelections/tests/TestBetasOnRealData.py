@@ -11,15 +11,15 @@ stream = StrippingStream("Betas")
 
 from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXforBeta_sConf 
 configJpsiX = {      'TRCHI2DOF'             :       4 
-        ,       'BPVLTIME'              :       0.25
+        ,       'BPVLTIME'              :       0.2
         ,       'DaughterPT'            :       1000
         ,       'VCHI2PDOF'             :       10
         ,       'Jpsi2MuMuPrescale'     :       0.1
         ,       'Bu2JpsiKPrescale'      :       0.1
         ,       'Bd2JpsiKstarPrescale'  :       0.05
-        ,       'Bd2JpsiKsPrescale'     :       0.2
-        ,       'Bs2JpsiPhiPrescale'    :       0.2
-        ,       'Bs2JpsiEtaPrescale'    :       0.1
+        ,       'Bd2JpsiKsPrescale'     :       0.5
+        ,       'Bs2JpsiPhiPrescale'    :       0.5
+        ,       'Bs2JpsiEtaPrescale'    :       0.2
         }
 B2JpsiXforBeta_s = B2JpsiXforBeta_sConf("", configJpsiX)
 stream.appendLines( B2JpsiXforBeta_s.lines() )
@@ -65,8 +65,8 @@ configB2Psi2SX = {'PionsTRCHI2DOF': 5,
                  'Ks_LinePrescale': 1,
                  'Ks_LinePostscale':1
                  }
-B2Psi2SX = B2Psi2SXConf("B2Psi2SX", configB2Psi2SX)
-stream.appendLines( B2Psi2SX.lines() )
+#B2Psi2SX = B2Psi2SXConf("B2Psi2SX", configB2Psi2SX)
+#stream.appendLines( B2Psi2SX.lines() )
 
 from StrippingSelections.StrippingB2Psi2SXMuMu import Bs2Psi2SPhiMuMuConf
 configBs2Psi2SPhiMuMu = {'muPID':0.,
@@ -218,6 +218,116 @@ configBs2KstKst = {
           }
 Bs2KstKst = StrippingBs2KstKstConf("Bs2KstKst", configBs2KstKst)
 stream.appendLines( Bs2KstKst.lines() )
+
+# Katarzyna Senderowska
+from StrippingSelections.StrippingBs2EtacPhi import Bs2EtacPhiConf
+configBs2EtacPhi = {
+    'Prescale'                : 1.0 ,
+    'Postscale'               : 1.0 ,
+    #K parameters
+    'K_PT'                    : 500.,
+    'K_TRCHI2'                : 5.,
+    'K_IPCHI2'                : 6.,
+    #pi parameters
+    'pi_PT'                   : 500.,
+    'pi_TRCHI2'               : 5.,
+    'pi_IPCHI2'               : 6.,
+    #phi parameters
+    'phi_VDZ'                 : 0.,
+    'phi_PT'                  : 1000.,
+    'phi_IPCHI2'              : 6.,
+    'phi_VCHI2_VDOF'          : 16.,
+    #rho (for eta_c decay) parameters
+    'rho_etac_VDZ'            : 0.,
+    'rho_etac_VCHI2_VDOF'     : 16.,
+    #phi (for eta_c decay) parameters
+    'phi_etac_VDZ'            : 0.,
+    'phi_etac_VCHI2_VDOF'     : 16.,
+    #eta_c parameters         
+    'etac_VDZ'                : 0.,   
+    'etac_PT'                 : 1000.,
+    'etac_IPCHI2'             : 6., 
+    'etac_VCHI2_VDOF'         : 16.,
+    #Bs parameters            
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+Bs2EtacPhi = Bs2EtacPhiConf("Bs2EtacPhi", configBs2EtacPhi)
+stream.appendLines( Bs2EtacPhi.lines() )
+ 
+from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import Bs2ChicPhi_Chic2KKPiPiConf
+configBs2ChicPhi_Chic2KKPiPi = {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #K parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 6.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #phi (for chi_c decay) parameters
+    'phi_chic_VDZ'           : 0.,
+    'phi_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters        
+    'chic_VDZ'               : 0.,   
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters           
+    'Bs_VDZ'                 : 0.,
+    'Bs_DIRA'                : 0.999,
+    'Bs_IPCHI2'              : 9.,
+    'Bs_VCHI2_VDOF'          : 16.
+    }
+Bs2ChicPhi_Chic2KKPiPi = Bs2ChicPhi_Chic2KKPiPiConf("Bs2ChicPhi_Chic2KKPiPi", configBs2ChicPhi_Chic2KKPiPi)
+stream.appendLines( Bs2ChicPhi_Chic2KKPiPi.lines() )
+
+from StrippingSelections.StrippingBs2ChicPhi_Chic2PiPiPiPi import Bs2ChicPhi_Chic2PiPiPiPiConf
+configBs2ChicPhi_Chic2PiPiPiPi = {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #phi parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 9.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+Bs2ChicPhi_Chic2PiPiPiPi = Bs2ChicPhi_Chic2PiPiPiPiConf("Bs2ChicPhi_Chic2PiPiPiPi", configBs2ChicPhi_Chic2PiPiPiPi)
+stream.appendLines( Bs2ChicPhi_Chic2PiPiPiPi.lines() )
+
 
 config_strip12 = {      'TRCHI2DOF'             :   5 
         ,       'BPVLTIME'              :       0.15

@@ -81,6 +81,7 @@ StrippingReport                                                INFO Event 50000,
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
 __date__    = '2011-02-25'
 __version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $'
+__all__ = ('StrippingV0ForPIDConf')
 # =============================================================================
 
 from Gaudi.Configuration       import *

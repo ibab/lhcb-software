@@ -14,7 +14,7 @@ __date__ = '26/08/2010'
 __version__ = '$Revision: 1.3 $'
 
 
-__all__ = ('Lines')
+__all__ = ('B2JpsiXforBeta_sConf')
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -339,7 +339,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiEtaUnbiasedLine  = StrippingLine("Bs2JpsiEtaUnbiasedLine" + self.name,
                                             algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                OutputList = Bs2JpsiEta.name() + "Unbiased" + self.name,
-                                                               Cuts = "(PT > 4.*GeV) & (MINTREE('eta'==ABSID, PT) > 1500.*MeV)" ) ] )
+                                                               Cuts = "(PT > 3.*GeV) & (MINTREE('eta'==ABSID, PT) > 1500.*MeV)" ) ] )
         self.registerLine(Bs2JpsiEtaPrescaledLine)
         self.registerLine(Bs2JpsiEtaDetachedLine)
         self.registerLine(Bs2JpsiEtaUnbiasedLine)

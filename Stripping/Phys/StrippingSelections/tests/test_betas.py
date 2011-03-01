@@ -7,21 +7,6 @@ from StrippingUtils import LineBuilderTests
 #from StrippingSelections.StrippingBiasedBs2JpsiPhi import line
 #stream.appendLines( [ line ] )
 
-# Katarzyna Senderowska
-#from StrippingSelections.StrippingBs2EtacPhi import Bs2EtacPhiAllLinesConf
-#from StrippingSelections.StrippingBs2EtacPhi import confdict as Bs2EtacPhiConfDict
-#stream.appendLines( Bs2EtacPhiAllLinesConf(Bs2EtacPhiConfDict).Lines )
-                     
-# Katarzyna Senderowska
-#from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import Bs2ChicPhi_Chic2KKPiPiAllLinesConf
-#from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import confdict as Bs2ChicPhi_Chic2KKPiPiConfDict
-#stream.appendLines( Bs2ChicPhi_Chic2KKPiPiAllLinesConf(Bs2ChicPhi_Chic2KKPiPiConfDict).Lines )
-
-# Katarzyna Senderowska
-#from StrippingSelections.StrippingBs2ChicPhi_Chic2PiPiPiPi import Bs2ChicPhi_Chic2PiPiPiPiAllLinesConf
-#from StrippingSelections.StrippingBs2ChicPhi_Chic2PiPiPiPi import confdict as Bs2ChicPhi_Chic2PiPiPiPiConfDict
-#stream.appendLines( Bs2ChicPhi_Chic2PiPiPiPiAllLinesConf(Bs2ChicPhi_Chic2PiPiPiPiConfDict).Lines )
-
 from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXforBeta_sConf 
 configJpsiX = {      'TRCHI2DOF'             :       4 
         ,       'BPVLTIME'              :       0.25
@@ -220,6 +205,109 @@ configBs2KstKst = {
           ,  "BIPCHI2"               : 25    # adimensional
           }
 
+# Katarzyna Senderowska
+from StrippingSelections.StrippingBs2EtacPhi import Bs2EtacPhiConf
+configBs2EtacPhi = {
+    'Prescale'                : 1.0 ,
+    'Postscale'               : 1.0 ,
+    #K parameters
+    'K_PT'                    : 500.,
+    'K_TRCHI2'                : 5.,
+    'K_IPCHI2'                : 6.,
+    #pi parameters
+    'pi_PT'                   : 500.,
+    'pi_TRCHI2'               : 5.,
+    'pi_IPCHI2'               : 6.,
+    #phi parameters
+    'phi_VDZ'                 : 0.,
+    'phi_PT'                  : 1000.,
+    'phi_IPCHI2'              : 6.,
+    'phi_VCHI2_VDOF'          : 16.,
+    #rho (for eta_c decay) parameters
+    'rho_etac_VDZ'            : 0.,
+    'rho_etac_VCHI2_VDOF'     : 16.,
+    #phi (for eta_c decay) parameters
+    'phi_etac_VDZ'            : 0.,
+    'phi_etac_VCHI2_VDOF'     : 16.,
+    #eta_c parameters         
+    'etac_VDZ'                : 0.,   
+    'etac_PT'                 : 1000.,
+    'etac_IPCHI2'             : 6., 
+    'etac_VCHI2_VDOF'         : 16.,
+    #Bs parameters            
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+ 
+from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import Bs2ChicPhi_Chic2KKPiPiConf
+configBs2ChicPhi_Chic2KKPiPi = {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #K parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 6.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #phi (for chi_c decay) parameters
+    'phi_chic_VDZ'           : 0.,
+    'phi_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters        
+    'chic_VDZ'               : 0.,   
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters           
+    'Bs_VDZ'                 : 0.,
+    'Bs_DIRA'                : 0.999,
+    'Bs_IPCHI2'              : 9.,
+    'Bs_VCHI2_VDOF'          : 16.
+    }
+
+from StrippingSelections.StrippingBs2ChicPhi_Chic2PiPiPiPi import Bs2ChicPhi_Chic2PiPiPiPiConf
+configBs2ChicPhi_Chic2PiPiPiPi = {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #phi parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500.,
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0.,
+    'phi_PT'                 : 1000.,
+    'phi_IPCHI2'             : 9.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    }
+
 def test_line_builder() :
     LineBuilderTests.test_line_builder(B2JpsiXforBeta_sConf, configJpsiX)
     b = B2JpsiXforBeta_sConf( "", configJpsiX )
@@ -241,7 +329,6 @@ def test_line_builder() :
     b = StrippingBs2PhiPhiConf( "Bs2PhiPhi", configBsPhiPhi )
     for line in b.lines():
         print line.outputLocation()
-    '''
     
     LineBuilderTests.test_line_builder(StrippingBs2KstKstConf, configBs2KstKst )
     b = StrippingBs2KstKstConf( "Bs2KstKst", configBs2KstKst )
@@ -252,11 +339,29 @@ def test_line_builder() :
     b = B2Quasi2Body4piConf( "Q2B", configQ2B )
     for line in b.lines():
         print line.outputLocation()
-    
+   
     LineBuilderTests.test_line_builder(Bs2JpsieePhiConf, configJpsieePhi )
     b = Bs2JpsieePhiConf( "Bs2JpsieePhi", configJpsieePhi )
     for line in b.lines():
         print line.outputLocation()
+    '''
+
+    LineBuilderTests.test_line_builder(Bs2ChicPhi_Chic2PiPiPiPiConf, configBs2ChicPhi_Chic2PiPiPiPi )
+    b = Bs2ChicPhi_Chic2PiPiPiPiConf( "Bs2ChicPhi_Chic2PiPiPiPi", configBs2ChicPhi_Chic2PiPiPiPi )
+    for line in b.lines():
+        print line.outputLocation()
+    
+    '''
+    LineBuilderTests.test_line_builder(Bs2ChicPhi_Chic2KKPiPiConf, configBs2ChicPhi_Chic2KKPiPi )
+    b = Bs2ChicPhi_Chic2KKPiPiConf( "Bs2ChicPhi_Chic2KKPiPi", configBs2ChicPhi_Chic2KKPiPi )
+    for line in b.lines():
+        print line.outputLocation()
+
+    LineBuilderTests.test_line_builder(Bs2EtacPhiConf, configBs2EtacPhi )
+    b = Bs2EtacPhiConf( "Bs2EtacPhi", configBs2EtacPhi )
+    for line in b.lines():
+        print line.outputLocation()
+    '''
 
 if __name__ == '__main__' :
     test_line_builder()
