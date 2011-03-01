@@ -61,4 +61,4 @@ macro_append LHCbKernel_dictionary_dict_pp_cppflags "" \
 # RichSmartID Debug Application
 #============================================================================
 application RichSmartIDTest ../tests/RichSmartIDTest/*.cpp
-macro_append RichSmartIDTest_dependencies " LHCbKernelLib "
+macro_append RichSmartIDTest_dependencies " LHCbKernel "
