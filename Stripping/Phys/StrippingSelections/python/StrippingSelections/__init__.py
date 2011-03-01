@@ -52,6 +52,7 @@ import StrippingDY2ee
 import StrippingMuMuSS
 import StrippingLowMult
 import StrippingDiPhotonDiMuon
+import StrippingPromptCharm
 
 from sys import modules as _modules
 _this = _modules[__name__]

@@ -212,8 +212,12 @@ __all__ = (
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, MergedSelection 
-from StandardParticles import StdNoPIDsPions, StdLoosePions, StdLooseKaons, StdLooseProtons
+from PhysSelPython.Wrappers import   Selection, MergedSelection 
+from StandardParticles      import ( StdNoPIDsPions  ,
+                                     StdLoosePions   ,
+                                     StdLooseKaons   ,
+                                     StdLooseProtons , 
+                                     StdLooseMuons   ) 
 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -261,7 +265,10 @@ _default_configuration_ = {
     'chi2vx = VFASPF(VCHI2) '                    , 
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetimeFit)<9 
+    "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetimeFit)<9
+    # dimuons:
+    "psi       = ADAMASS ('J/psi(1S)') < 150 * MeV" ,
+    "psi_prime = ADAMASS (  'psi(2S)') < 150 * MeV" ,
     ] ,
     ## monitoring ?
     'Monitor'     : False
@@ -276,13 +283,16 @@ class StrippingPromptCharmConf(LineBuilder) :
     """
     Helper class to confiugure 'PromptCharm'-lines
     """
-    __configuration_keys__ = ('D0Prescale',
-                              'DstarPrescale',
-                              'DsPrescale',
-                              'DplusPrescale',
-                              'LamCPrescale',
-                              )
-
+    __configuration_keys__ = (
+        'D0Prescale'             ,
+        'DstarPrescale'          ,
+        'DsPrescale'             ,
+        'DplusPrescale'          ,
+        'LamCPrescale'           ,
+        'DiCharmPrescale'        , 
+        'CharmAndDimuonPrescale'
+        )
+    
     ## get the default configuration 
     @staticmethod
     def defaultConfiguration( key = None ) :
@@ -334,17 +344,19 @@ class StrippingPromptCharmConf(LineBuilder) :
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
         self._GEC          = _config.pop ( 'GlobalEventCuts' , _default_configuration_ [ 'GlobalEventCuts' ] ) 
 
-        self.D0Prescale    = config['D0Prescale'   ]
-        self.DstarPrescale = config['DstarPrescale']
-        self.DsPrescale    = config['DsPrescale'   ]
-        self.DplusPrescale = config['DplusPrescale']
-        self.LamCPrescale  = config['LamCPrescale' ]
-
+        self.D0Prescale             = config [ 'D0Prescale'       ]
+        self.DstarPrescale          = config [ 'DstarPrescale'    ]
+        self.DsPrescale             = config [ 'DsPrescale'       ]
+        self.DplusPrescale          = config [ 'DplusPrescale'    ]
+        self.LamCPrescale           = config [ 'LamCPrescale'     ]
+        self.DiCharmPrescale        = config [ 'DiCharmPrescale'  ]
+        self.CharmAndDiMuonPrescale = config [ 'DiCharmPrescale'  ]
+        
         self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
         self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
 
         if _config :
-            raise KeyError('Invalid keys are specified for configuration: %s ' % _config.keys() )
+            raise KeyError ( 'Invalid keys are specified for configuration: %s ' % _config.keys() )
 
         for line in self._lines_private() :
           self.registerLine(line)
@@ -371,43 +383,52 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             StrippingLine (
             "D02HHFor" + self._name ,
-            prescale = self.D0Prescale    ,                ## ATTENTION! Prescale here !!
+            prescale = self.D0Prescale    , ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
-#            FILTER   = self._GEC          , 
             algos    = [ self.D02HH() ]
             ) ,
             ## 
             StrippingLine (
             "DstarFor" + self._name ,
-            prescale = self.DstarPrescale ,                ## ATTENTION! Prescale here !!
+            prescale = self.DstarPrescale , ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
-#            FILTER   = self._GEC          , 
             algos    = [ self.Dstar() ]
             ) ,
             ##
             StrippingLine (
             "DsFor" + self._name ,
-            prescale = self.DsPrescale    ,                ## ATTENTION! Prescale here !!
+            prescale = self.DsPrescale    , ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
-#            FILTER   = self._GEC          , 
             algos    = [ self.Ds()    ]
             ) ,
             ##
             StrippingLine (
             "DFor" + self._name ,
-            prescale = self.DplusPrescale ,                ## ATTENTION! Prescale here !!
+            prescale = self.DplusPrescale , ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
-#            FILTER   = self._GEC          , 
             algos    = [ self.Dplus () ]
             ) ,
             ##
             StrippingLine (
             "LambdaCFor" + self._name ,
-            prescale = self.LamCPrescale  ,                ## ATTENTION! Prescale here !!
+            prescale = self.LamCPrescale  , ## ATTENTION! Prescale here !!
             checkPV  = self._checkPV      ,
-#            FILTER   = self._GEC          , 
             algos    = [ self.LamC () ]
-            )
+            ) ,
+            ##
+            StrippingLine (
+            "DiCharmFor" + self._name ,
+            prescale = self.DiCharmPrescale  , ## ATTENTION! Prescale here !!              
+            checkPV  = self._checkPV         ,
+            algos    = [ self.DiCharm () ]            
+            ) ,
+            ## 
+            StrippingLine (
+            "CharmAndDiMuonFor" + self._name ,
+            prescale = self.CharmAndDiMuonPrescale  , ## ATTENTION! Prescale here !!              
+            checkPV  = self._checkPV         ,
+            algos    = [ self.CharmAndDiMuon () ]            
+            ) 
             ]
         #
         return self._Lines
@@ -502,7 +523,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         #
         ## prepare D0 for D0 and D*+ 
         _D0PreCombine = CombineParticles (
-#            "PreCombineD02HHFor" + self._name ,
             ## the decays to be reconstructed 
             DecayDescriptors = [
             " D0  -> pi+ pi-    " ,
@@ -753,13 +773,10 @@ class StrippingPromptCharmConf(LineBuilder) :
     def LamC ( self ) :
         
         if hasattr ( self , 'LambdaCForPromptCharm_Selection' ) :
-            return LambdaCForPromptCharm_Selection
-            
-        
+            return self.LambdaCForPromptCharm_Selection
+                    
         _LambdaC_Combine = CombineParticles(
             ## 
-#            "CombineLambdaCFor" + self._name ,
-            ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             ##
@@ -798,7 +815,130 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         return self.LambdaCForPromptCharm_Selection
     
+    ## helper merged selection of all charmed particles 
+    def PromptCharm ( self ) :
+        """
+        Helper merged selection of all charmed particles 
+        """        
+        if hasattr ( self , 'PromptCharm_Selection' ) :
+            return self.PromptCharm_Selection
+        
+        self.PromptCharm_Selection =  MergedSelection (
+            ##
+            'PromptCharmFor' + self._name , 
+            RequiredSelections = [ self.D02HH () ,
+                                   self.Dstar () ,
+                                   self.Ds    () ,
+                                   self.Dplus () ,
+                                   self.LamC  () ]
+            )
+        
+        return self.PromptCharm_Selection
     
+    ## get "Di-Charm"-selection
+    def DiCharm ( self ) :
+        """
+        Di-Charm selection
+        """
+        if hasattr ( self , 'DiCharm_Selection' ) :
+            return self.DiCharm_Selection
+        
+        ## prepare Di-charm
+        _Combine = CombineParticles (
+            ## the decays to be reconstructed 
+            DecayDescriptors = [
+            "   psi(3770) -> D0        D~0            "  ,
+            " [ psi(3770) -> D0        D-         ]cc "  ,
+            " [ psi(3770) -> D0        D_s-       ]cc "  ,
+            " [ psi(3770) -> D0        Lambda_c~- ]cc "  ,
+            "   psi(3770) -> D+        D-             "  ,
+            " [ psi(3770) -> D+        D_s-       ]cc "  ,
+            " [ psi(3770) -> D+        Lambda_c~- ]cc "  ,
+            "   psi(3770) -> D_s+      D_s-           "  ,
+            " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
+            "   psi(3770) -> Lambda_c+ Lambda_c~-     "
+            ] ,
+            ## combination cut : accept all 
+            CombinationCut = " AALL " ,
+            ##      mother cut : accept all 
+            MotherCut      = " ALL " 
+            )
+        
+        self.DiCharm_Selection = Selection (
+            ##
+            'SelDiCharmFor' + self._name ,
+            ##
+            Algorithm          = _Combine   ,
+            ##
+            RequiredSelections = [ self.PromptCharm () ]
+            )
+        
+        return self.DiCharm_Selection
+    
+    ## get the dimuons 
+    def DiMuon ( self ) :
+        """
+        Get the dimuons  
+        """
+        if hasattr ( self , 'DiMuon_Selection' ) :
+            return self.DiMuon_Selection
+        
+        ## prepare Di-muons
+        _Combine = CombineParticles (
+            ## the decays to be reconstructed 
+            DecayDescriptor = "J/psi(1S) -> mu+ mu-" , 
+            ## combination cut 
+            CombinationCut = " psi | psi_prime | ( AM > 5 * GeV ) " ,
+            ##      mother cut 
+            MotherCut      = " chi2vx < 10 " 
+            )
+        
+        ##
+        self.DiMuon_Selection = Selection (
+            ##
+            'SelDiMuonFor' + self._name ,
+            ##
+            Algorithm          = _Combine   ,
+            ##
+            RequiredSelections = [ StdLooseMuons ]
+            )
+        
+        return self.DiMuon_Selection
+    
+    ## get the dimuons & charn 
+    def CharmAndDiMuon ( self ) :
+        """
+        get charm & dimuon :
+        Select event with at elats one charm particle and
+        at least one dimuon 
+        """
+        if hasattr ( self , 'CharmAndDiMuon_Selection' ) :
+            return self.CharmAndDiMuon_Selection
+        
+        _Filter = FilterDesktop ( Code = "ALL" )
+        
+        self.CharmAndDiMuon_Selection = Selection  (
+            "SelCharmAndDiMuonFor" + self._name  ,
+            Algorithm = _Filter ,
+            RequiredSelections = [
+            self.DiMuon      () ,
+            self.PromptCharm ()
+            ]
+            )
+        
+        return self.CharmAndDiMuon_Selection
+        
+
+default_config = {
+    'D0Prescale'             : 1.00 ,
+    'DstarPrescale'          : 1.00 ,
+    'DsPrescale'             : 1.00 ,
+    'DplusPrescale'          : 1.00 ,
+    'LamCPrescale'           : 1.00 ,
+    'DiCharmPrescale'        : 1.00 ,
+    'CharmAndDimuonPrescale' : 1.00 
+    }
+
 # =============================================================================
 if '__main__' == __name__ :
 
@@ -807,7 +947,7 @@ if '__main__' == __name__ :
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
     print ' The output locations for default configuration: '
-    _conf = StrippingPromptCharmConf( "PromptCharm", config = {} ) 
+    _conf = StrippingPromptCharmConf( "PromptCharm", config = default_config  ) 
     for l in _conf.lines() :
         print ' \t ', l.outputLocation  () , l 
     print 80*'*'
@@ -816,9 +956,3 @@ if '__main__' == __name__ :
 # The END 
 # =============================================================================
 
-default_config = {'D0Prescale'      : 1.00 ,
-                  'DstarPrescale'   : 1.00 ,
-                  'DsPrescale'      : 1.00 ,
-                  'DplusPrescale'   : 1.00 ,
-                  'LamCPrescale'    : 1.00 
-                  }

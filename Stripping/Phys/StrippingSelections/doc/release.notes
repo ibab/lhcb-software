@@ -4,6 +4,18 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-01 - Vanya Belyaev
+
+  - StrippingPromptCharm.py
+
+    add the lines to select:
+ 
+      - DiCharm        = charm + anti-charm 
+      - Charm & DiMuon = charm + ( J/psi | psi | heavydimuon )
+
+     add it into __init__.py file 
+
+
 ! 2011-03-01 - William James Barter
  - Added StrippingSingleTrackTIS.py for Simone Bifani (after discussion with Greig Cowan)
  - included this in __init__.py (along with other electroweak lines)
