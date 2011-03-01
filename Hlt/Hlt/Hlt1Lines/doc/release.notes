@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - Roel Aaij
+ - Align Hlt1MuonLines default cuts to PT cut of 500 in LooseForward
+
 ! 2011-03-01 - Plamen Hopchev
  - Hlt1BeamGasLines.py updated (needs head of Tf/FastVelo)
 

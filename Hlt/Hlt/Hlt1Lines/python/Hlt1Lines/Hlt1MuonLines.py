@@ -5,11 +5,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     # steering variables
     __slots__ = { 
         #  Muon Lines
-         'SingleMuonHighPT_P'       : 6000
-        ,'SingleMuonHighPT_PT'      :  500
+         'SingleMuonHighPT_P'       : 8000
+        ,'SingleMuonHighPT_PT'      : 4800
         ,'SingleMuonHighPT_TrChi2'  :    4
         ,'SingleMuonNoIP_P'         : 6000
-        ,'SingleMuonNoIP_PT'        :  500
+        ,'SingleMuonNoIP_PT'        : 1300
         ,'SingleMuonNoIP_TrChi2'    :    4
         ,'DiMuonLowMass_VxDOCA'     :  0.2
         ,'DiMuonLowMass_VxChi2'     :   25
