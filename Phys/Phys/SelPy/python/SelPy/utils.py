@@ -14,7 +14,8 @@ __all__ = ( 'flatSelectionList',
             'UniquelyNamedObject',
             'NameError',
             'NonEmptyInputLocations',
-            'IncompatibleInputLocations', )
+            'IncompatibleInputLocations',
+            'IncompatibleOutputLocations')
 
 class ClonableObject(object) :
     """
@@ -169,13 +170,27 @@ def connectToRequiredSelections(selection, inputSetter) :
     if inputSetter :
         configurable.__setattr__(inputSetter, list(_outputLocations))
 
-                                                                        
+
+def setOutputLocation(selection, setter) :
+    configurable = selection.algorithm()
+    selOutput = selection.outputLocation()
+    if setter and hasattr(configurable, setter) :
+        confOutput=getattr(configurable, setter)
+        if confOutput != selOutput :
+            raise IncompatibleOutputLocations('Output of input algorithm incompatible with Selection!'\
+                                              '\nOutput: '+confOutput+\
+                                              '\nSelection.outputLocation(): '+selOutput)
+    if setter :
+        configurable.__setattr__( setter, selOutput )
+                              
 class NameError(Exception) :
     pass
 
 class NonEmptyInputLocations(Exception) :
     pass
 class IncompatibleInputLocations(Exception) :
+    pass
+class IncompatibleOutputLocations(Exception) :
     pass
 
                                 

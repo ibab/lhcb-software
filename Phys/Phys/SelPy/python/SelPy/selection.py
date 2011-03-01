@@ -26,6 +26,7 @@ from copy import copy
 from SelPy.utils import (flatSelectionList,
                          update_dict_overlap,
                          connectToRequiredSelections,
+                         setOutputLocation,
                          NamedObject,
                          UniquelyNamedObject,
                          ClonableObject,
@@ -110,7 +111,8 @@ class Selection(UniquelyNamedObject,
                  ConfGenerator,
                  RequiredSelections = [],
                  OutputBranch = "Phys",
-                 InputDataSetter = "Inputs",
+                 InputDataSetter = 'Inputs',
+                 OutputDataSetter = 'Output',
                  Extension='Particles') :
 
         UniquelyNamedObject.__init__(self, name)
@@ -126,13 +128,13 @@ class Selection(UniquelyNamedObject,
             _outputLocation = _outputLocation[:_outputLocation.rfind('/')]
         
         alg = ConfGenerator(self.name())
-        alg.Output=_outputLocation
         SelectionBase.__init__(self,
                                algorithm = alg,
                                outputLocation = _outputLocation,
                                requiredSelections = RequiredSelections )
 
         connectToRequiredSelections(self, InputDataSetter)
+        setOutputLocation(self, OutputDataSetter)
 
 class EventSelection(UniquelyNamedObject,
                      ClonableObject,

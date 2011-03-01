@@ -73,7 +73,7 @@ def test_Selection_outputLocation_with_no_branch_and_no_extension() :
     assert sel.outputLocation()=='SelOutputTest4'
     assert sel.outputLocation()==sel.algorithm().Output
     
-def test_Selection_data_setter() :
+def test_Selection_input_data_setter() :
     alg = MockConfGenerator()
     sel0 = AutomaticData('Phys/Hello/World/0')
     sel1 = AutomaticData('Phys/Hello/World/1')
@@ -83,17 +83,35 @@ def test_Selection_data_setter() :
     assert sel.algorithm().Inputs==[sel0.outputLocation(),
                                     sel1.outputLocation()]
 
-def test_Selection_with_user_defined_data_setter() :
+def test_Selection_output_data_setter() :
     alg = MockConfGenerator()
     sel0 = AutomaticData('Phys/Hello/World/0')
     sel1 = AutomaticData('Phys/Hello/World/1')
     sel = Selection('SelOutputTest6',
+                    ConfGenerator=alg,
+                    RequiredSelections = [sel0,sel1])
+    assert sel.algorithm().Output==sel.outputLocation()
+
+def test_Selection_with_user_defined_input_data_setter() :
+    alg = MockConfGenerator()
+    sel0 = AutomaticData('Phys/Hello/World/0')
+    sel1 = AutomaticData('Phys/Hello/World/1')
+    sel = Selection('SelOutputTest7',
                     ConfGenerator=alg,
                     RequiredSelections = [sel0,sel1],
                     InputDataSetter='TESTINPUTS')
     assert sel.algorithm().TESTINPUTS==[sel0.outputLocation(),
                                         sel1.outputLocation()]
 
+def test_Selection_with_user_defined_output_data_setter() :
+    alg = MockConfGenerator()
+    sel0 = AutomaticData('Phys/Hello/World/0')
+    sel1 = AutomaticData('Phys/Hello/World/1')
+    sel = Selection('SelOutputTest8',
+                    ConfGenerator=alg,
+                    RequiredSelections = [sel0,sel1],
+                    OutputDataSetter='TESTOUTPUTS')
+    assert sel.algorithm().TESTOUTPUTS==sel.outputLocation()
 
 def test_Selection_does_not_modify_generator() :
     alg = MockConfGenerator()
