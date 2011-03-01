@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-03-01 - V. Gligorov
+ - Removed Hlt2CharmHadD02HHHHLinesConf from Hlt2Tracking until they
+   are fixed to depend properly on the D2HHH lines.
+
 ! 2011-02-28 - Roel Aaij
  - Update the options to the UpgradeConf for MatchVeloMuon
 
