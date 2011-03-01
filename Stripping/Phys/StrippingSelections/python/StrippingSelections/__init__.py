@@ -43,7 +43,15 @@ import StrippingBu2LLK
 import StrippingBd2eeKstar
 import StrippingBd2JpsieeKstar
 import StrippingSingleTrackTIS
-
+import StrippingZ02MuMu
+import StrippingZ02ee
+import StrippingWMu
+import StrippingWe
+import StrippingDY2MuMu
+import StrippingDY2ee
+import StrippingMuMuSS
+import StrippingLowMult
+import StrippingDiPhotonDiMuon
 
 from sys import modules as _modules
 _this = _modules[__name__]
