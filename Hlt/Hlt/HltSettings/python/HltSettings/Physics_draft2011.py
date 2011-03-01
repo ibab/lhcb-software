@@ -74,20 +74,20 @@ class Physics_draft2011( object ):
                      , Hlt1MuonLinesConf : { 'SingleMuonHighPT_P'        : 8000
                                              ,'SingleMuonHighPT_PT'      : 4800
                                              ,'SingleMuonHighPT_TrChi2'  :    4
-                                             ,'SingleMuonNoIP_P'         : 6000
+                                             ,'SingleMuonNoIP_P'         : 8000
                                              ,'SingleMuonNoIP_PT'        : 1300
                                              ,'SingleMuonNoIP_TrChi2'    :    4
                                              ,'DiMuonLowMass_VxDOCA'     :  0.2
                                              ,'DiMuonLowMass_VxChi2'     :   25
-                                             ,'DiMuonLowMass_P'          : 6000
-                                             ,'DiMuonLowMass_PT'         :  600
+                                             ,'DiMuonLowMass_P'          : 8000
+                                             ,'DiMuonLowMass_PT'         :  800
                                              ,'DiMuonLowMass_TrChi2'     :    4
                                              ,'DiMuonLowMass_M'          : 1000
                                              ,'DiMuonLowMass_IPChi2'     :    4
                                              ,'DiMuonHighMass_VxDOCA'    :  0.2
                                              ,'DiMuonHighMass_VxChi2'    :   25
-                                             ,'DiMuonHighMass_P'         : 6000
-                                             ,'DiMuonHighMass_PT'        :  600
+                                             ,'DiMuonHighMass_P'         : 8000
+                                             ,'DiMuonHighMass_PT'        :  800
                                              ,'DiMuonHighMass_TrChi2'    :    4
                                              ,'DiMuonHighMass_M'         : 2900
                                              ,'MultiMuonNoIP_P'          : 6000
@@ -136,7 +136,6 @@ class Physics_draft2011( object ):
                   'Hlt1BeamGasCrossingLonelyBeam1',
                   'Hlt1BeamGasCrossingLonelyBeam2',
                   'Hlt1NoPVPassThrough',
-                  'Hlt1DiProton',
                   'Hlt1DiProtonLowMult',
                   'Hlt1DiMuonLowMass',
                   'Hlt1DiMuonHighMass',  
