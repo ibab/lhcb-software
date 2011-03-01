@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-01 - William James Barter
+ - Added StrippingSingleTrackTIS.py for Simone Bifani (after discussion with Greig Cowan)
+ - included this in __init__.py
+
 ! 2011-03-01 - Thomas Blake
  - Added betas and RD lines to  __init__.py
 

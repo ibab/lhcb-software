@@ -42,6 +42,8 @@ import StrippingB2MuMuMuMuLines
 import StrippingBu2LLK
 import StrippingBd2eeKstar
 import StrippingBd2JpsieeKstar
+import StrippingSingleTrackTIS
+
 
 from sys import modules as _modules
 _this = _modules[__name__]
