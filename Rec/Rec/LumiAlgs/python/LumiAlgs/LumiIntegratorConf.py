@@ -21,6 +21,7 @@ class LumiIntegratorConf(LHCbConfigurableUser):
       "InputType"     : "DST"      # Data type, can be ['MDF','DST'], works only on DST types
     , "LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
     , "TupleFile"     : ""         # Name of output Tuple file
+    , "UseOnline"     : True       # flag to use online partition
     }   
 
 
@@ -40,6 +41,7 @@ class LumiIntegratorConf(LHCbConfigurableUser):
                                         AddBXTypes = ['NoBeam'],
                                         SubtractBXTypes = ['Beam1','Beam2'],
                                         IntegratorToolName = 'IntegrateBeamCrossing',
+                                        UseOnline = self.getProp('UseOnline'),
                                         ))
     if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
       seqMembers.append( GetIntegratedLuminosity('GetIntegratedLuminosity',

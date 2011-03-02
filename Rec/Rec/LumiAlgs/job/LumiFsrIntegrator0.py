@@ -20,6 +20,8 @@ LHCbApp().CondDBtag = 'head-20101112'
 from Configurables import LumiAlgsConf, DumpFSR
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 
+LumiIntegratorConf().UseOnline = False
+
 # clock service for CondDB
 from Configurables import EventClockSvc
 EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"

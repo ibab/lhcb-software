@@ -27,7 +27,7 @@ sequence = GaudiSequencer("CheckDB")
 
 # normalization of BeamCrossing
 seqMembers=[]
-seqMembers.append( LumiCheckCondDB('CheckCondDB') )
+seqMembers.append( LumiCheckCondDB('CheckCondDB', UseOnline=False, ) )
 sequence.Members = seqMembers
 sequence.MeasureTime = True
 sequence.ModeOR = False
@@ -35,7 +35,7 @@ sequence.ShortCircuit = True
 sequence.IgnoreFilterPassed = False
 
 #-- main
-ApplicationMgr( TopAlg = [ GaudiSequencer( "CheckDB" ),
+ApplicationMgr( TopAlg = [ GaudiSequencer( "CheckDB"),
                            ], HistogramPersistency = 'NONE' )
 
 #-- File catalogs. First one is read-write

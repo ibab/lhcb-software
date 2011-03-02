@@ -3,6 +3,10 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
+! 2011-03-02 - Jaap Panman
+ - update unit tests to avoid using the PropertyConfigSvc in Rec
+ (changes to GetLumiParameters, LumiCheckCondDB.py, LumiFsrIntegrator*.py and
+ LumiIntegratorConf.py)
 
 !========================= LumiAlgs v5r0 2011-02-28 =========================
 ! 2011-01-31 - Jaap Panman

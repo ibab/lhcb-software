@@ -111,9 +111,11 @@ StatusCode GetLumiParameters::init( std::string propertyConfigSvcName,
   if ( sc.isFailure() ) return sc;  // error printed already
 
   // get the IConfigAccessSvc
-  if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) {
-    fatal() << "GetLumiParameters failed to get the IConfigAccessSvc." << endmsg;
-    return StatusCode::FAILURE;
+  if ( m_useOnline ) {
+    if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) {
+      fatal() << "GetLumiParameters failed to get the IConfigAccessSvc." << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
 
   runUpdate();               // initial update of DB
