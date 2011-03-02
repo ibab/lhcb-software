@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-03-02 - Plamen Hopchev
+ - edit the included beam-gas lines in accord with the changed line names 
+   in the latest Hlt1BeamGasLines.py (package Hlt/Hlt1Lines)
+
 !========================== HltSettings v5r6   2011-03-01 ===================
 ! 2010-03-01 - Johannes Albrecht
  - adjust muon lines, add D2mm
