@@ -410,7 +410,7 @@ StatusCode GetLumiParameters::i_cacheFillingData() {
 StatusCode GetLumiParameters::processDB() {
 
   // only run this after initialization
-  if ( not m_initialized ) return StatusCode::SUCCESS;
+  if ( !m_initialized ) return StatusCode::SUCCESS;
 
   Gaudi::Time xtfound = m_dds->eventTime();
   
@@ -466,7 +466,7 @@ double GetLumiParameters::rateFromTCK(unsigned int tck) {
   double rate = 0;
 
   // only run this after initialization
-  if ( not m_initialized ) return rate;
+  if ( !m_initialized ) return rate;
 
   std::string code = "Code";
   std::string sub = "RATE(";
