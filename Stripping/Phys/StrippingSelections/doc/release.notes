@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Andrew Powell
+ - Updated lines in StrippingV0ForPID.py
+
 ! 2011-03-02 - Greig Cowan
  - Added lines to __init__.py to get Stripping13 development version
    working.
