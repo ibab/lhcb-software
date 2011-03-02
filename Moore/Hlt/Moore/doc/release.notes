@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-03-01 - Gerhard Raven
+ - update online forking as specified by Niko
+
 !========================== Moore v12r0 2011-02-22 ===================
 ! 2011-02-22 - Gerhard Raven
  - keep version in sync with project version

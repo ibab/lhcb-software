@@ -120,7 +120,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MonitorSvc
         MonitorSvc().disableDimPropServer      = 1
         MonitorSvc().disableDimCmdServer       = 1
-	MonitorSvc().disableMonRate            = 0
+        MonitorSvc().disableMonRate            = 0
 
         app=ApplicationMgr()
         
@@ -189,9 +189,8 @@ class Moore(LHCbConfigurableUser):
         if host[:3]=='HLT':
             if len(host)==8:
                 id = int(host[6:])
-                if id < 5: numChildren=7
-                elif id < 12: numChildren=17
-                elif id < 23: numChildren=19
+                if id < 12: numChildren=7
+                else : numChildren=19
 
         forker = LHCb__CheckpointSvc("CheckpointSvc")
         forker.NumberOfInstances   = numChildren
@@ -200,11 +199,13 @@ class Moore(LHCbConfigurableUser):
         forker.UseCores            = False
         forker.ChildSessions       = False
         forker.FirstChild          = 1
-        forker.UtgidPattern        = "%NN_%T_%d";
-        forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
+        # Sleep in [ms] for each child in batches of 10:
+        forker.ChildSleep          = 500;
+        forker.UtgidPattern        = "%NN_%T_%02d";
+        forker.PrintLevel          = 1  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
         forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
         ApplicationMgr().ExtSvc.append(forker)
-        
+
     def _configureOnlineCheckpointing(self):
         pass
 
