@@ -5,10 +5,13 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r5 2011-03-02 ===================
+! 2011-03-02 - Gerhard Raven
+ - remove usage of Hlt2BeamGasLinesConf
+
 ! 2011-03-02 - Plamen Hopchev
  - update HltInit.py to include the renamed beam-gas Hlt1Lines
 
-!========================== HltConf v9r5 2011-03-02 ===================
 ! 2011-03-02 - Gerhard Raven
  - clean up HltInit.py
  - Write (subset of) ExtraInfo of Particles to RawBank

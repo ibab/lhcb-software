@@ -91,11 +91,6 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiMuonNoPV2L0Decision"             :  131,
     "Hlt1DiMuonNoPVL0SegDecision"           :  132,
     "Hlt1DiMuonIPCL0GECDecision"            :  133,
-    "Hlt1NewDiMuonDecision"                 :  134,
-    # Hlt1MuTrack.*Decision
-    "Hlt1MuTrackDecision"                   :  150,
-    "Hlt1MuTrack4JPsiDecision"              :  151,
-    "Hlt1MuTrackFitMuDecision"              :  152,
     # HA Hl1(Single,Di)Hadron.*Decision
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
@@ -103,11 +98,6 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1TrackAllL0Decision"                :  203,
     "Hlt1TrackMuonDecision"                 :  204,
     "Hlt1TrackPhotonDecision"               :  205,  
-    # HAViaT
-    "Hlt1SingleHadronViaTDecision"          :  230,
-    "Hlt1DiHadronViaTDecision"              :  231,
-    # HAVeloOpen
-    "Hlt1SingleHadronOpenDecision"          :  260,
     # PH
     "Hlt1PhotonDecision"                    :  300,
     "Hlt1PhoFromEleDecision"                :  301,
