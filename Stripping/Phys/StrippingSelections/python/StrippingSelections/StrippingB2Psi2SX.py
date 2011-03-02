@@ -74,6 +74,7 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Ks_LinePostscale':1
                  }
 
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StandardParticles import StdLoosePions
@@ -83,7 +84,6 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-name = "B2Psi2SX"
 
 class B2Psi2SXConf(LineBuilder) :
   
@@ -134,22 +134,22 @@ class B2Psi2SXConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
 
 
-        incl = 'InclPsi2SToJpsiPiPi' + self.name
+        incl = self.name + '_InclPsi2SToJpsiPiPi'
         incl_detatched_name = incl + 'Detatched'
-        sig = 'Bs2Psi2SPhiJpsiPiPi' + self.name
-        K = 'Bu2Psi2SKJpsiPiPi' + self.name
-        Kstar = 'Bd2Psi2SKstarJpsiPiPi' + self.name
-        Ks = 'Bd2Psi2SKsJpsiPiPi' + self.name
+        sig = self.name + '_Bs2Psi2SPhiJpsiPiPi' 
+        K = self.name + '_Bu2Psi2SKJpsiPiPi' 
+        Kstar = self.name + '_Bd2Psi2SKstarJpsiPiPi' 
+        Ks = self.name + '_Bd2Psi2SKsJpsiPiPi' 
      
 
-        self.selPions = makePions( 'Pions' + self.name,
+        self.selPions = makePions( self.name + '_PionsForPsi2SJpsiPiPi',
                                    PionsTRCHI2DOF = config['PionsTRCHI2DOF']
                                    )
         
-        self.selJpsi = makeJpsi('Jpsi' + self.name)
+        self.selJpsi = makeJpsi(self.name + '_JpsiForPsi2SJpsiPiPi')
                                  
         
-        self.selPsi2S2JpsiPiPi = makePsi2S('Psi2SJpsiPiPi' + self.name,
+        self.selPsi2S2JpsiPiPi = makePsi2S(self.name + '_Psi2SJpsiPiPi',
                                            Pions = self.selPions,
                                            Jpsi = self.selJpsi,
                                            Psi2SJpsiMIPCHI2DV = config['Psi2SJpsiMIPCHI2DV'],
@@ -161,13 +161,13 @@ class B2Psi2SXConf(LineBuilder) :
                                            Psi2SVFASPF = config['Psi2SVFASPF']
                                            )
         
-        self.selChargedK = makeChK('ChKForPsi2SJpsiPiPi' + self.name,
+        self.selChargedK = makeChK(self.name + '_ChKForPsi2SJpsiPiPi',
                                    ChKTRCHI2DOF = config['ChKTRCHI2DOF'],
                                    ChKPID = config['ChKPID']
                                    ) 
         
         
-        self.selPhi2KK = makePhi2KK( 'PhiForPsi2SJpsiPiPi' + self.name,
+        self.selPhi2KK = makePhi2KK( self.name + '_PhiForPsi2SJpsiPiPi',
                                      PhiWin = config['PhiWin'],
                                      PhiPT = config['PhiPT'],
                                      PhiVFASPF = config['PhiVFASPF'],
@@ -175,7 +175,7 @@ class B2Psi2SXConf(LineBuilder) :
                                      PhiMINTRCHI2DOF = config['PhiMINTRCHI2DOF']
                                      )
 
-        self.selKstar = makeKstar('KstarForPsi2SToMuMu' + self.name,
+        self.selKstar = makeKstar(self.name + '_KstarForPsi2SJpsiPiPi',
                                   KstMassDown = config['KstMassDown'],
                                   KstMassUp = config['KstMassUp'],
                                   KstAPT = config['KstAPT'],
@@ -184,9 +184,9 @@ class B2Psi2SXConf(LineBuilder) :
                                   KstPIDK = config['KstPIDK']
                                   )  
 
-        self.selKsLoose = makeKsLoose('KsLooseForPsi2SJpsiPiPi' + self.name) 
+        self.selKsLoose = makeKsLoose(self.name + '_KsLooseForPsi2SJpsiPiPi') 
         
-        self.selKs = makeKs('KsForPsi2SJpsiPiPi' + self.name,
+        self.selKs = makeKs(self.name + '_KsForPsi2SJpsiPiPi',
                             KsLooseSel = self.selKsLoose,
                             KsVFASPF = config['KsVFASPF'],
                             KsBPVDLS = config['KsBPVDLS']
