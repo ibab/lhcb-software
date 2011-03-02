@@ -3,6 +3,9 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+! 2011-03-02 Plamen Hopchev
+ - remove all obsolate src files and leave only the new proto vertexing algo
+
 !========================== HltBeamGasAlley v2r5   2012-03-01 =================
 ! 2011-03-01 Plamen Hopchev
  - added new proto vertexing algorithm. The rest files in /src become obsolate 
