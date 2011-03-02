@@ -262,11 +262,7 @@ def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
     """
     _preambulo = ["goodTrack = ((MIPCHI2DV(PRIMARY) > %(TrIPchi2Kst)s) & (TRCHI2DOF < %(TrChi2)s))" % locals(),
                   "goodKstar = (((VFASPF(VCHI2/VDOF) < %(KstVCHI2)s)) & (ADMASS('K*(892)0') < %(KstMassWin)s*MeV))" % locals()]
-    _code = """
-    goodKstar
-    & CHILDCUT('[K*(892)0 -> K+ ^pi-]CC' , goodTrack)
-    & CHILDCUT('[K*(892)0 -> ^K+ pi-]CC' , goodTrack)
-    """
+    _code = "goodKstar & CHILDCUT( goodTrack , 1 ) & CHILDCUT( goodTrack , 2 )"
     _kstFilter = FilterDesktop(Preambulo=_preambulo, Code=_code)
     _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
     return Selection(name, Algorithm=_kstFilter, RequiredSelections=[_stdKst2Kpi])

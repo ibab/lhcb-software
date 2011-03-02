@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Albert Puig
+ - Simplified makeKStar code for StrippingB2XGamma
+
 ! 2011-03-02 - Thomas Blake
  - Added:
   .test_DstarPromptWithD02HH.py 
