@@ -1893,8 +1893,6 @@ def decorateMaps ( funcs , opers ) :
     """
     
     _tee_             = None
-    _rshift_          = None
-    _rrshift_         = None
     
     _rmul_            = None
     _union_           = None
@@ -1904,36 +1902,6 @@ def decorateMaps ( funcs , opers ) :
     _includes_        = None
     _cause_           = None
     
-    ## Use the vector function as streamer
-    if hasattr ( opers , '__rshift__' ) : 
-        def _rshift_ ( s ,*a ) :
-            """
-            Use the Streamers 
-            
-            >>> fun1 = ...
-            >>> fun2 = ...
-            >>> func = fun1 >> fun2 
-            
-            Uses:\n
-            """
-            return opers.__rshift__ ( s , *a )
-        # documentation
-        _rshift_ .__doc__   += opers . __rshift__  . __doc__ 
-            
-    # streamers: right right shift 
-    if hasattr ( opers , '__rrshift__' ) :                    
-        def _rrshift_ ( s , a ) :
-            """
-            Streamer (map here)
-            
-            >>> a =
-            >>> function =
-            >>> result = a >> function
-            
-            """
-            return opers.__rrshift__ ( s , a )
-        _rrshift_ . __doc__  += opers.__rrshift__ . __doc__
-
     ## streamers: right multiplication 
     #  @thanks Roel AAIJ    
     if hasattr ( opers , '__rmul__' ) :                    
@@ -2051,10 +2019,7 @@ def decorateMaps ( funcs , opers ) :
     for fun in funcs :
 
         if _rmul_    : fun . __rmul__     =  _rmul_
-        if _cause_   : fun . _cause_      =  _cause_
-        
-        if _rrshift_ : fun . __rrshift__  =  _rrshift_
-        if _rshift_  : fun . __rshift__   =  _rshift_
+        if _cause_   : fun . _cause_      =  _cause_        
         if _tee_     : fun . __tee__      =  _tee_
 
         if _union_         :
@@ -2082,7 +2047,8 @@ def decorateMaps ( funcs , opers ) :
         
         if _includes_          : fun . _includes_  =  _includes_
 
-    return funcs                                 ## RETURN
+
+    return decorateShifts ( funcs , opers )                          ## RETURN
 
 # =============================================================================
 ## get all Mapping functors and decorate them 
