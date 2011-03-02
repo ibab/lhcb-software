@@ -4,9 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Andrew Powell
+ - Updated PID Calibration (V0ForPID) dictionaries
+
 ! 2011-03-02 - Thomas Blake
  - Added line config dictionaries by WG
-
 
 ! 2011-03-02 - Greig Cowan
  - Added more beta_s lines to stripping13 dimuon stream and to the 

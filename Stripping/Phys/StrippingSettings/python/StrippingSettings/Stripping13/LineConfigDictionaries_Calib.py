@@ -53,12 +53,14 @@ InclPhi={
 # A. Powell
 V0ForPID = {
     'BUILDERTYPE' : 'StrippingV0ForPIDConf',
-    'CONFIG' : {'KS0LL_Prescale'   : 0.006,
-                'KS0DD_Prescale'   : 0.006,
-                'LamLL_Prescale'   : 0.025,
-                'LamDD_Prescale'   : 0.022,
-                'LamLLIsMUON_Prescale' : 0.72,
-                'LamDDIsMUON_Prescale' : 0.47
+    'CONFIG' : {'KS0LL_Prescale'           : 0.006,
+                'KS0DD_Prescale'           : 0.006,
+                'LamLL_Prescale_LoP'       : 0.036,
+                'LamLL_Prescale_HiP'       : 0.250,
+                'LamDD_Prescale'           : 0.027,
+                'LamLLIsMUON_Prescale_LoP' : 0.869,
+                'LamLLIsMUON_Prescale_HiP' : 1.000,
+                'LamDDIsMUON_Prescale'     : 0.460
                 },
     'STREAM' : 'Calibration',
     'WGs'    : ['ALL']
