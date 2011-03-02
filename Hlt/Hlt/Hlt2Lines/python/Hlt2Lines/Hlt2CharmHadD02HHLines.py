@@ -117,7 +117,6 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                    "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Trk_Max_APT_MIN)s))" \
                    "& (APT > %(D0_PT_MIN)s)" \
-                   "& (AALLSAMEBPV)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
                        "< %(Pair_AMINDOCA_MAX)s )" \
                    % self.getProps()
@@ -185,7 +184,6 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         combcuts = "(AM<2000*MeV)" \
                    "& ((APT1 > %(Inc_Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Inc_Trk_Max_APT_MIN)s))" \
-                   "& (AALLSAMEBPV) " \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
                         "< %(Inc_Pair_AMINDOCA_MAX)s )" % self.getProps()
 

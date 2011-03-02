@@ -14,6 +14,7 @@
    As originally implemented, it duplicated the stage leading to interference.
    The shared code has been extracted to the independent
    Hlt2CharmHadTwoBodyForMultiBody.py.
+ - Removed AALLSAMEBPV requirements from Hlt2CharmHadD02HHLines
 
 !========================== Hlt2Lines v8r1 2011-03-02 ===================
 ! 2011-03-02 - Gerhard Raven
