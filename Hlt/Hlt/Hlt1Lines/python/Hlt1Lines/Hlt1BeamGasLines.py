@@ -218,15 +218,15 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
             odin = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
         else:
             channel = self.getProp('L0Channel')[nameKey] if (nameKey in self.getProp('L0Channel').keys()) else None
-            ## Only create an Hlt1 line if the corresponding L0 channel exists...
-            from Hlt1Lines.HltL0Candidates import L0Channels
-            if channel not in L0Channels() : return None
-            from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
-            mask = L0Mask(channel)
             l0du = "L0_CHANNEL('%s')" % channel
-            odin = L0Mask2ODINPredicate(mask) #!!! we need to fix the definitions -> no more ee crossings for be and eb crossings
-            ### In case of bb-lonely lines need to make the odin filter add-hoc (can't use the function L0Mask2ODINPredicate)
-            if 'Lonely' == nameParts[1]: odin = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+            if 'NoBeam' == nameParts[1]:
+                odin = '(ODIN_BXTYP == LHCb.ODIN.NoBeam)'
+            elif '' == nameParts[1]:
+                odin = '(ODIN_BXTYP == LHCb.ODIN.'+whichBeam+')'
+            elif 'Enhanced' == nameParts[1]:
+                odin = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+            else:
+                print "\n\nFATAL ERROR - Can't set ODIN Filter\n\n"
 
         ### Get the tracking algo(s) - Fast or Pat
         if   'FastVelo' in self.getProp("TrackingConf"): algTracking = [ self.GetTrackingAlg(self.getProp("TrackContName")) ]
@@ -240,7 +240,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### This is the last algorithm - should have name of the line, plus 'Decision'
         algVertexFilter = self.GetVertexFilterAlg( lineName, algPV3D.OutputVerticesName )
 
-        ''' DEBUG
+        #''' DEBUG
         print "\n", "@"*100
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
@@ -249,7 +249,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "@"*100, "\n"
-        '''
+        #'''
 
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
@@ -309,7 +309,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### (The last algorithm should have name of line, plus 'Decision')
         algVertexFilter = self.GetVertexFilterAlg( lineName, algPV3D.OutputVerticesName )
 
-        ''' DEBUG
+        #''' DEBUG
         print "\n", "%"*100
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
@@ -318,7 +318,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "%"*100, "\n"
-        '''
+        #'''
 
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
