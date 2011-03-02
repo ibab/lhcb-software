@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-02 - Plamen Hopchev
+ - Hlt1BeamGasLines.py - forgot to uncomment the Debug printout ...
+
+! 2011-03-02 - Plamen Hopchev
  - Hlt1BeamGasLines.py - now we set odin filters of the lines ad-hoc
 
 ! 2011-03-02 - Plamen Hopchev

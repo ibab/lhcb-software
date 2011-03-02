@@ -240,7 +240,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### This is the last algorithm - should have name of the line, plus 'Decision'
         algVertexFilter = self.GetVertexFilterAlg( lineName, algPV3D.OutputVerticesName )
 
-        #''' DEBUG
+        ''' DEBUG
         print "\n", "@"*100
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
@@ -249,7 +249,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "@"*100, "\n"
-        #'''
+        '''
 
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
@@ -309,7 +309,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### (The last algorithm should have name of line, plus 'Decision')
         algVertexFilter = self.GetVertexFilterAlg( lineName, algPV3D.OutputVerticesName )
 
-        #''' DEBUG
+        ''' DEBUG
         print "\n", "%"*100
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
@@ -318,7 +318,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "%"*100, "\n"
-        #'''
+        '''
 
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
