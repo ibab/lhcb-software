@@ -1,13 +1,12 @@
 package MooreSys
-version v12r0
+version v12r1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r0   Hlt
-use  LoKiCore           v10r8p1 Phys
+use  Moore              v12r1   Hlt
 # Declare this as a container package
 apply_pattern container_package
 
