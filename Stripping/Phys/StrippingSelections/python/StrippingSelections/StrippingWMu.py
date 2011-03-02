@@ -122,7 +122,7 @@ class WMuConf(LineBuilder) :
                                                prescale = config['WMuLinePrescale'],
                                                postscale = config['WMuLinePostscale'],
                                                checkPV = False,
-                                               HLT = "HLT_PASS_RE('Hlt1MB.*Decision')",
+                                               HLT = "HLT_PASS('Hlt1MBNoBiasDecision')",
                                                selection = self.selNoPIDsPTCut
                                                )
         self.registerLine(self.line_SingleTrackNoBias)

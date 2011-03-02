@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - William James Barter (for Simone Bifani) 
+ - Small updates to StrippingSingleTrackTIS and StrippingWMu, to reflect trigger for this year.
+
 ! 2011-03-01 - Vanya Belyaev
  - minor fix for StrippingPromptCharm
 

@@ -50,11 +50,11 @@ class SingleTrackTISConf(LineBuilder) :
                                           )
         self.selLowPtHlt1TIS = makeTISTOS( self._myname + "LowPtHlt1TIS"
                                            , self.selLowPtNoPIDs
-                                           , "Hlt1Global%TIS"
+                                           , "Hlt1.*Decision%TIS"
                                            )
         self.selLowPtHlt2TIS = makeTISTOS( self._myname + "LowPtHlt2TIS"
                                            , self.selLowPtHlt1TIS
-                                           , "Hlt2Global%TIS"
+                                           , "Hlt2.*Decision%TIS"
                                            )
         self.lineSingleTrackTISLowPt = StrippingLine( self._myname + "LowPtTIS"
                                                       , prescale = config[ "LowPtPrescale" ]
@@ -73,11 +73,11 @@ class SingleTrackTISConf(LineBuilder) :
                                            )
         self.selHighPtHlt1TIS = makeTISTOS( self._myname + "HighPtHlt1TIS"
                                             , self.selHighPtNoPIDs
-                                            , "Hlt1Global%TIS"
+                                            , "Hlt1.*Decision%TIS"
                                             )
         self.selHighPtHlt2TIS = makeTISTOS( self._myname + "HighPtHlt2TIS"
                                             , self.selHighPtHlt1TIS
-                                            , "Hlt2Global%TIS"
+                                            , "Hlt2.*Decision%TIS"
                                             )
         self.lineSingleTrackTISHighPt = StrippingLine( self._myname + "HighPtTIS"
                                                        , prescale = config[ "HighPtPrescale" ]
