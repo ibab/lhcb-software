@@ -158,11 +158,11 @@ def configure( inputdata , catalogs = [] ) :
     DaVinci ( DataType        = '2010' ,
               Lumi            = False  )
     
-    from Configurables import CondDB
-    CondDB  ( IgnoreHeartBeat = True )
+    from StandardParticles import StdLoosePions
+    InputParticles = [ StdLoosePions.outputLocation () ]
     
     setData ( inputdata , catalogs )
-    
+
     ## get/create Application Manager
     gaudi = appMgr()
     
@@ -170,12 +170,12 @@ def configure( inputdata , catalogs = [] ) :
     
     ## create the algorithm
     alg = MakeKs (
-        'MakeKs'                           ,
-        InputLocations = [ 'StdLoosePions' ] 
+        'MakeKs'  ,
+        Inputs =  InputParticles 
         )
     
     ## add algorithm into the main DaVinci sequence
-    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciMainSequence' , True )
+    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciUserSequence' , True )
     dvMain.Members += [ alg.name() ]
     
     return SUCCESS 
