@@ -4,6 +4,8 @@ __author__ = ['Philip Xing', 'Patrick Spradlin']
 __date__ = '2011.02.24'
 __version__ = '$Revision: 1.8 $'
 
+__all__ = ( 'StrippingDstarPromptWithD02HHConf' )
+
 '''
 Configurable for the y_CP and A_Gamma analysis selections for D*+ -> pi+ D0(h h'').
 
@@ -64,7 +66,6 @@ default_config = { 'DaugPt'            : 0.9,        ## GeV
                    'WSLinePostscale'   : 1.,         ## unitless
                    'HHLinePrescale'    : 1.,         ## unitless
                    'HHLinePostscale'   : 1.,         ## unitless
-                   'prefix': 'StripDstarPrompt'
          }
 
 class StrippingDstarPromptWithD02HHConf(LineBuilder) :
@@ -85,8 +86,7 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
                	              'WSLinePrescale',
                   	      'WSLinePostscale',
                   	      'HHLinePrescale',
-                              'HHLinePostscale',
-                              'prefix'
+                              'HHLinePostscale'
                               )
 
 ##############################################################
@@ -98,75 +98,75 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
         stdNoPIDsPions = StdNoPIDsPions
         #---------------------------------------
         # D0 -> hh' selections
-        self.selD0RS = makeD2hh( 'D02RSKPi',
+        self.selD0RS = makeD2hh( name + 'D02RSKPi',
 			         config,
 				 DecayDescriptor = 'D0 -> K- pi+',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
-        self.selD0WS = makeD2hh( 'D02WSKPi',  
+        self.selD0WS = makeD2hh( name + 'D02WSKPi',  
 			         config,
 				 DecayDescriptor = 'D0 -> K+ pi-',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
-        self.selD0KK = makeD2hh( 'D02KK',  
+        self.selD0KK = makeD2hh( name + 'D02KK',  
 			         config,
 				 DecayDescriptor = '[D0 -> K+ K-]cc',
 			         inputSel = [stdNoPIDsKaons]
  			        )
 
-        self.selD0PiPi = makeD2hh( 'D02PiPi',  
+        self.selD0PiPi = makeD2hh( name + 'D02PiPi',  
 			           config,
 				   DecayDescriptor = '[D0 -> pi+ pi-]cc',
 			           inputSel = [stdNoPIDsPions]
 			          )
         #---------------------------------------
         # Dstar -> D0 pi selections
-	self.selDstRS = makeDstar2D0Pi( 'DstarWithD02RSKPi',
+	self.selDstRS = makeDstar2D0Pi( name + 'DstarWithD02RSKPi',
 				        config,
                                         '[D*(2010)+ -> D0 pi+]cc',
                                         inputSel = [self.selD0RS, stdNoPIDsPions]
                                        )
 
-	self.selDstWS = makeDstar2D0Pi( 'DstarWithD02WSKPi',
+	self.selDstWS = makeDstar2D0Pi( name + 'DstarWithD02WSKPi',
 				        config,
                                         '[D*(2010)+ -> D0 pi+]cc',
                                         inputSel = [self.selD0WS, stdNoPIDsPions]
                                        )
 
-	self.selDstKK = makeDstar2D0Pi( 'DstarWithD02KK',
+	self.selDstKK = makeDstar2D0Pi( name + 'DstarWithD02KK',
 				        config,
                                         '[D*(2010)+ -> D0 pi+]cc',
                                         inputSel = [self.selD0KK, stdNoPIDsPions]
                                        )
 
-	self.selDstPiPi = makeDstar2D0Pi( 'DstarWithD02PiPi',
+	self.selDstPiPi = makeDstar2D0Pi( name + 'DstarWithD02PiPi',
 				           config,
                                            '[D*(2010)+ -> D0 pi+]cc',
                                            inputSel = [self.selD0PiPi, stdNoPIDsPions]
                                          )
         #---------------------------------------
         # Tagged lines
-        self.dstRS_line = StrippingLine("%(prefix)sWithD02RSKPiLine" %locals()['config'],
+        self.dstRS_line = StrippingLine(name +    "WithD02RSKPiLine" ,
                                         prescale = config['RSLinePrescale'],
                                         postscale = config['RSLinePostscale'],
                                         selection = self.selDstRS
                                        )
 
-        self.dstWS_line = StrippingLine("%(prefix)sWithD02WSKPiLine" %locals()['config'],
+        self.dstWS_line = StrippingLine(name +    "WithD02WSKPiLine" ,
                                         prescale = config['WSLinePrescale'],
                                         postscale = config['WSLinePostscale'],
                                         selection = self.selDstWS
                                        )
 
-        self.dstKK_line = StrippingLine("%(prefix)sWithD02KKLine" %locals()['config'],
+        self.dstKK_line = StrippingLine(name +    "WithD02KKLine" ,
                                         prescale = config['HHLinePrescale'],
                                         postscale = config['HHLinePostscale'],
                                         selection = self.selDstKK
                                        )
 
-        self.dstPiPi_line = StrippingLine("%(prefix)sWithD02PiPiLine" %locals()['config'],
+        self.dstPiPi_line = StrippingLine(name +    "WithD02PiPiLine" ,
                                         prescale = config['HHLinePrescale'],
                                         postscale = config['HHLinePostscale'],
                                         selection = self.selDstPiPi

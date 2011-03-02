@@ -10,7 +10,8 @@ Stripping selection for B_{s,d} channels
 """
 
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import  CombineParticles, FilterDesktop
+
 from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -135,8 +136,7 @@ class B2XMuMuConf(LineBuilder) :
         Filter muons from StdLooseMuons
         """  
         _muons = AutomaticData(Location = 'Phys/StdLooseMuons')
-        _filter = FilterDesktop("Filter_"+self.name+"_Muons",
-                                Code = self.__MuonCuts__(conf))
+        _filter = FilterDesktop( Code = self.__MuonCuts__(conf) ) 
         _sel = Selection("Selection_"+self.name+"_Muons",
                          RequiredSelections = [ _muons ] ,
                          Algorithm = _filter)
@@ -147,7 +147,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make and return a Dimuon
         """      
-        _dimuon2mumu = CombineParticles("Combine_"+self.name+"_Dimuon")
+        _dimuon2mumu = CombineParticles()
         _dimuon2mumu.DecayDescriptors = ["J/psi(1S) -> mu+ mu-", " J/psi(1S) -> mu+ mu+", " J/psi(1S) -> mu- mu-"]
         _dimuon2mumu.CombinationCut = "(AM < %(DimuonUPPERMASS)s *MeV)" % conf
         _dimuon2mumu.MotherCut = self.__DimuonCuts__(conf)
@@ -175,8 +175,7 @@ class B2XMuMuConf(LineBuilder) :
         Filter kaons from StdLooseKaons
         """  
         _kaons = AutomaticData(Location = 'Phys/StdLooseKaons')
-        _filter = FilterDesktop("Filter_"+self.name+"_StdLooseKaons",
-                                Code = self.__TrackCuts__(conf))
+        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdLooseKaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
@@ -187,8 +186,7 @@ class B2XMuMuConf(LineBuilder) :
         Filter kaons from StdNoPIDsKaons
         """  
         _kaons = AutomaticData(Location = 'Phys/StdNoPIDsKaons')
-        _filter = FilterDesktop("Filter_"+self.name+"_StdNoPIDsKaons",
-                                Code = self.__TrackCuts__(conf))
+        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdNoPIDsKaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
@@ -201,8 +199,7 @@ class B2XMuMuConf(LineBuilder) :
         Filter pions from StdLoosePions
         """  
         _pions = AutomaticData(Location = 'Phys/StdLoosePions')
-        _filter = FilterDesktop("Filter_"+self.name+"_StdLoosePions",
-                                Code = self.__TrackCuts__(conf))
+        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdLoosePions",
                          RequiredSelections = [ _pions ] ,
                          Algorithm = _filter)
@@ -213,8 +210,7 @@ class B2XMuMuConf(LineBuilder) :
         Filter pions from StdNoPIDsPions
         """  
         _pions = AutomaticData(Location = 'Phys/StdNoPIDsPions')
-        _filter = FilterDesktop("Filter_"+self.name+"_StdNoPIDsPions",
-                                Code = self.__TrackCuts__(conf))
+        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdNoPIDsPions",
                          RequiredSelections = [ _pions ] ,
                          Algorithm = _filter)
@@ -237,10 +233,8 @@ class B2XMuMuConf(LineBuilder) :
         """  
         _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD')
         _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL')
-        _filter_ksdd = FilterDesktop("Filter_"+self.name+"_ksdd",
-                                     Code = self.__KsCuts__(conf))
-        _filter_ksll = FilterDesktop("Filter_"+self.name+"_ksll",
-                                     Code = self.__KsCuts__(conf))
+        _filter_ksdd = FilterDesktop(Code = self.__KsCuts__(conf))
+        _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))
         
         _selksdd = Selection("Selection_"+self.name+"_Ksdd",
                              RequiredSelections = [ _ksdd ] ,
@@ -271,17 +265,15 @@ class B2XMuMuConf(LineBuilder) :
         """  
         _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0')
         _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0')
-        _filter_pi0merged = FilterDesktop("Filter_"+self.name+"_pi0merged",
-                                     Code = self.__Pi0Cuts__(conf))
-        _filter_pi0resolved = FilterDesktop("Filter_"+self.name+"_pi0resolved",
-                                     Code = self.__Pi0Cuts__(conf))
+        _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf))
+        _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf))
         
         _selpi0merged = Selection("Selection_"+self.name+"_Pi0merged",
-                             RequiredSelections = [ _pi0merged ] ,
-                             Algorithm = _filter_pi0merged)
+                                  RequiredSelections = [ _pi0merged ] ,
+                                  Algorithm = _filter_pi0merged)
         _selpi0resolved = Selection("Selection_"+self.name+"_pi0resolved",
-                             RequiredSelections = [ _pi0resolved ] ,
-                             Algorithm = _filter_pi0resolved)
+                                    RequiredSelections = [ _pi0resolved ] ,
+                                    Algorithm = _filter_pi0resolved)
         _sel = MergedSelection("Selection_"+self.name+"_Pizero",
                                RequiredSelections = [ _selpi0merged, _selpi0resolved ])
         return _sel
@@ -293,13 +285,15 @@ class B2XMuMuConf(LineBuilder) :
         Make K*(892)+ -> K+ pi0 
         """
         _kstar2kpizero = CombineParticles()
-        _kstar2kpizero.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
         _kstar2kpizero.DecayDescriptor = "[K*(892)+ -> K+ pi0]cc"
         _kstar2kpizero.MotherCut = "(ADMASS('K*(892)+') < %(KstarplusWINDOW)s *MeV)" % conf
 
+        _kstarConf = _kstar2kpizero.configurable("Combine_"+self.name+"_KPi0")
+        _kstarConf.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+                                                 
         _selKSTAR2KPIZERO = Selection( "Selection_"+self.name+"_Kstar2kpizero",
-                                     Algorithm = _kstar2kpizero,
-                                     RequiredSelections = [ Kaons, Pi0 ] )
+                                       Algorithm = _kstarConf,
+                                       RequiredSelections = [ Kaons, Pi0 ] )
         return _selKSTAR2KPIZERO
         
 
@@ -332,7 +326,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a kstarplus
         """      
-        _kstar2kspi = CombineParticles("Combine_"+self.name+"_Kstar2kspi")
+        _kstar2kspi = CombineParticles()
         _kstar2kspi.DecayDescriptor = "[K*(892)+ -> KS0 pi+]cc"
         _kstar2kspi.MotherCut = self.__KpiCuts__(conf)
 
@@ -347,7 +341,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a phi
         """      
-        _phi2kk = CombineParticles("Combine_"+self.name+"_Phi")
+        _phi2kk = CombineParticles()
         _phi2kk.DecayDescriptor = "phi(1020) -> K+ K-"
         _phi2kk.MotherCut = self.__KpiCuts__(conf)
 
@@ -360,7 +354,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a rho
         """      
-        _rho2pipi = CombineParticles("Combine_"+self.name+"_Rho")
+        _rho2pipi = CombineParticles()
         _rho2pipi.DecayDescriptor = "rho(770)0 -> pi+ pi-"
         _rho2pipi.MotherCut = self.__KpiCuts__(conf)
 
@@ -373,7 +367,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a kstar
         """      
-        _kstar2kpi = CombineParticles("Combine_"+self.name+"_Kstar")
+        _kstar2kpi = CombineParticles()
         _kstar2kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
         _kstar2kpi.MotherCut = self.__KpiCuts__(conf)
 
@@ -386,7 +380,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make a kstar
         """      
-        _dplus2kkp = CombineParticles("Combine_"+self.name+"_dplus")
+        _dplus2kkp = CombineParticles()
         _dplus2kkp.DecayDescriptors = [
             "D+ -> K+ K- pi+",
             "D- -> K- K+ pi-",
@@ -424,7 +418,7 @@ class B2XMuMuConf(LineBuilder) :
         Make and return a Bs selection
         """      
 
-        _b2xmumu = CombineParticles("Combine_"+self.name+"_b2xmumu")
+        _b2xmumu = CombineParticles()
         _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
                                       "[B0 -> J/psi(1S) K*(892)0]cc",
                                       "B0 -> J/psi(1S) rho(770)0",

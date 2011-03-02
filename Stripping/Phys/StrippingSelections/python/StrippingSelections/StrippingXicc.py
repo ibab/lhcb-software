@@ -32,7 +32,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-name = "Xicc"
+default_name = "Xicc"
 
 class XiccBuilder(LineBuilder) :
     """
@@ -234,6 +234,6 @@ def makeXicPlus(localName, inputSelections) :
     _combineXicPlus = CombineParticles( DecayDescriptor = '[Xi_c+ -> Xi- pi+ pi+]cc',
                                         CombinationCut = _strCutCombXicPlus,
                                         MotherCut = _strCutMothXicPlus )
-    return Selection( name+"CombineXicPlus",
+    return Selection(localName,
                       Algorithm = _combineXicPlus,
                       RequiredSelections = inputSelections )

@@ -4,6 +4,24 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Thomas Blake
+ - Added:
+  .test_DstarPromptWithD02HH.py 
+	.test_DstarD02KKmumu.py  
+	.test_D2KS0H.py  
+	.test_D2XMuMu.py 
+	.test_Xicc.py  
+	.test_DstarD02KKpipi.py  
+	.test_DstarPromptWithD02HHHH.py  
+	.test_Dstar2D2KShh.py
+ - Fixes for: 
+	. python/StrippingSelections/StrippingDstarPromptWithD02HH.py
+	. python/StrippingSelections/StrippingXicc.py
+ - Updated to use ConfigurableGenerators:
+	. python/StrippingSelections/StrippingBs2MuMuPhi.py	
+	. python/StrippingSelections/StrippingB2XMuMu.py
+
+
 ! 2011-03-02 - Vanya Belyaev
 
   - StrippingPromptCharm.py

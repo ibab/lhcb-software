@@ -9,7 +9,7 @@ Stripping selection for Bs -> Mu Mu Phi ( -> K K).
 """
 
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import  CombineParticles, FilterDesktop
 from PhysSelPython.Wrappers import Selection, AutomaticData
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -76,8 +76,7 @@ class Bs2MuMuPhiConf(LineBuilder) :
         Filter muons from StdLooseMuons
         """  
         _muons = AutomaticData(Location = 'Phys/StdLooseMuons')
-        _filter = FilterDesktop("Filter_"+self.name+"_Muons",
-                                Code = self.__MuonCuts__(conf))
+        _filter = FilterDesktop(Code = self.__MuonCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_Muons",
                          RequiredSelections = [ _muons ] ,
                          Algorithm = _filter)
@@ -89,8 +88,7 @@ class Bs2MuMuPhiConf(LineBuilder) :
         Filter kaons from StdLooseKaons
         """  
         _kaons = AutomaticData(Location = 'Phys/StdLooseKaons')
-        _filter = FilterDesktop("Filter_"+self.name+"_Kaons",
-                                Code = self.__KaonCuts__(conf))
+        _filter = FilterDesktop(Code = self.__KaonCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_Kaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
@@ -130,7 +128,7 @@ class Bs2MuMuPhiConf(LineBuilder) :
         """
         Make and return a Bs selection
         """      
-        _bs2KKmumu = CombineParticles("Combine_"+self.name)
+        _bs2KKmumu = CombineParticles()
         _bs2KKmumu.DecayDescriptor = "B_s0 -> K+ K- mu+ mu-"
         _bs2KKmumu.CombinationCut = "(ADAMASS('B_s0') < 1000.0 *MeV) & (AM12 < 1070.0 *MeV)"
         _bs2KKmumu.MotherCut = self.__BsCuts__(conf)
