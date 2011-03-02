@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Vanya Belyaev
+
+  - StrippingPromptCharm.py
+
+     DiCharm: add aldo dobule-charm combiations  (proposed by Thomas Ruf)
+
+     rate is still 1.5e-4 
+
 ! 2011-03-02 - Greig Cowan 
  - Updated beta_s lines and testing script.
  - Removed old EW line. 

@@ -829,13 +829,15 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## the decays to be reconstructed 
             DecayDescriptors = [
             #
+            # charm-anti-charm
+            #
             "   psi(3770) -> D0        D~0            "  ,
             " [ psi(3770) -> D0        D*(2010)-  ]cc "  ,
             " [ psi(3770) -> D0        D-         ]cc "  ,
             " [ psi(3770) -> D0        D_s-       ]cc "  ,
             " [ psi(3770) -> D0        Lambda_c~- ]cc "  ,
             #
-            " [ psi(3770) -> D*(2010)+ D*(2010)-  ]cc "  ,
+            "   psi(3770) -> D*(2010)+ D*(2010)-      "  ,
             " [ psi(3770) -> D*(2010)+ D-         ]cc "  ,
             " [ psi(3770) -> D*(2010)+ D_s-       ]cc "  ,
             " [ psi(3770) -> D*(2010)+ Lambda_c~- ]cc "  ,
@@ -847,7 +849,30 @@ class StrippingPromptCharmConf(LineBuilder) :
             "   psi(3770) -> D_s+      D_s-           "  ,
             " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
             #
-            "   psi(3770) -> Lambda_c+ Lambda_c~-     "
+            "   psi(3770) -> Lambda_c+ Lambda_c~-     "  ,
+            #
+            # double charm
+            #
+            " [ psi(3770) -> D0        D0         ]cc"  ,
+            " [ psi(3770) -> D0        D*(2010)+  ]cc "  ,
+            " [ psi(3770) -> D0        D+         ]cc "  ,
+            " [ psi(3770) -> D0        D_s+       ]cc "  ,
+            " [ psi(3770) -> D0        Lambda_c+  ]cc "  ,
+            #
+            " [ psi(3770) -> D*(2010)+ D*(2010)+  ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ D+         ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ D_s+       ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ Lambda_c+  ]cc "  ,
+            #
+            " [ psi(3770) -> D+        D+         ]cc "  ,
+            " [ psi(3770) -> D+        D_s+       ]cc "  ,
+            " [ psi(3770) -> D+        Lambda_c+  ]cc "  ,
+            #
+            " [ psi(3770) -> D_s+      D_s+       ]cc "  ,
+            " [ psi(3770) -> D_s+      Lambda_c+  ]cc "  ,
+            #
+            " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "
+            
             ] ,
             ## combination cut : accept all 
             CombinationCut = " AALL " ,
