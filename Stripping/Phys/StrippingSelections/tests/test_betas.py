@@ -205,6 +205,26 @@ configBs2KstKst = {
           ,  "BIPCHI2"               : 25    # adimensional
           }
 
+# Cibran Santamarina Rios
+from StrippingSelections.StrippingBs2PhiKst0 import StrippingBs2PhiKstConf
+configBs2PhiKst = {
+          "KaonPT"                : 500.0 # MeV
+          ,     "KaonIPCHI2"            : 9.    # adimensional
+          ,     "KaonPIDK"              : 0.    # adimensional
+          ,     "PionPT"                : 500.0 # MeV
+          ,     "PionIPCHI2"            : 9.    # adimensional
+          ,     "PhiVCHI2"              : 9.    # adimensional
+          ,     "PhiPT"                 : 900.0 # MeV
+          ,     "PhiMassWin"            : 25.0  # MeV
+          ,     "KstarVCHI2"            : 9.0   # adimensional
+          ,     "KstarPT"               : 900.0 # MeV
+          ,     "KstarMassWin"          : 150.0 # MeV
+          ,     "BMassWin"              : 500.0 # MeV
+          ,     "BVCHI2"                : 15.0  # adimensional
+          ,     "BDOCA"                 : 0.3   # mm
+          }
+
+
 # Katarzyna Senderowska
 from StrippingSelections.StrippingBs2EtacPhi import Bs2EtacPhiConf
 configBs2EtacPhi = {
@@ -310,7 +330,7 @@ configBs2ChicPhi_Chic2PiPiPiPi = {
 
 def test_line_builder() :
     LineBuilderTests.test_line_builder(B2JpsiXforBeta_sConf, configJpsiX)
-    b = B2JpsiXforBeta_sConf( "", configJpsiX )
+    b = B2JpsiXforBeta_sConf( "BetaS", configJpsiX )
     for line in b.lines():
         print line.outputLocation()
    
@@ -324,14 +344,20 @@ def test_line_builder() :
     for line in b.lines():
         print line.outputLocation()
     
-    '''
     LineBuilderTests.test_line_builder(StrippingBs2PhiPhiConf, configBsPhiPhi)
     b = StrippingBs2PhiPhiConf( "Bs2PhiPhi", configBsPhiPhi )
     for line in b.lines():
         print line.outputLocation()
-    
+   
+	''' 
     LineBuilderTests.test_line_builder(StrippingBs2KstKstConf, configBs2KstKst )
     b = StrippingBs2KstKstConf( "Bs2KstKst", configBs2KstKst )
+    for line in b.lines():
+        print line.outputLocation()
+   	'''
+
+    LineBuilderTests.test_line_builder(StrippingBs2PhiKstConf, configBs2PhiKst )
+    b = StrippingBs2PhiKstConf( "Bs2PhiKst", configBs2PhiKst )
     for line in b.lines():
         print line.outputLocation()
     
@@ -339,19 +365,17 @@ def test_line_builder() :
     b = B2Quasi2Body4piConf( "Q2B", configQ2B )
     for line in b.lines():
         print line.outputLocation()
-   
+   	'''
     LineBuilderTests.test_line_builder(Bs2JpsieePhiConf, configJpsieePhi )
     b = Bs2JpsieePhiConf( "Bs2JpsieePhi", configJpsieePhi )
     for line in b.lines():
         print line.outputLocation()
-    '''
-
+	'''
     LineBuilderTests.test_line_builder(Bs2ChicPhi_Chic2PiPiPiPiConf, configBs2ChicPhi_Chic2PiPiPiPi )
     b = Bs2ChicPhi_Chic2PiPiPiPiConf( "Bs2ChicPhi_Chic2PiPiPiPi", configBs2ChicPhi_Chic2PiPiPiPi )
     for line in b.lines():
         print line.outputLocation()
     
-    '''
     LineBuilderTests.test_line_builder(Bs2ChicPhi_Chic2KKPiPiConf, configBs2ChicPhi_Chic2KKPiPi )
     b = Bs2ChicPhi_Chic2KKPiPiConf( "Bs2ChicPhi_Chic2KKPiPi", configBs2ChicPhi_Chic2KKPiPi )
     for line in b.lines():
@@ -361,7 +385,6 @@ def test_line_builder() :
     b = Bs2EtacPhiConf( "Bs2EtacPhi", configBs2EtacPhi )
     for line in b.lines():
         print line.outputLocation()
-    '''
 
 if __name__ == '__main__' :
     test_line_builder()

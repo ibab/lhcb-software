@@ -59,7 +59,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.PhiList = self.createSubSel( OutputList = "Phi2KKForBetaS" + self.name,
                         InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles"),
-                        Cuts = "(in_range(1008,M,1032))" \
+                        Cuts = "(in_range(980,M,1050))" \
                         "& (PT > 500.*MeV) " \
                         "& (VFASPF(VCHI2) < 16)" \
                         "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
@@ -164,11 +164,11 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
     def makeInclJpsi( self ):
         '''Inclusive J/psi. We keep it for as long as we can'''
-        Jpsi2MuMuForBetasLine = StrippingLine("Jpsi2MuMuForBetasLine" + self.name, algos = [ self.JpsiList ], prescale = self.config["Jpsi2MuMuPrescale"])
+        Jpsi2MuMuForBetasLine = StrippingLine( self.name + "Jpsi2MuMuLine", algos = [ self.JpsiList ], prescale = self.config["Jpsi2MuMuPrescale"])
         Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
                                                         InputList  = self.JpsiList,
                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine("Jpsi2MuMuForBetasDetachedLine" + self.name, algos = [ Jpsi2MuMuForBetasDetached ] )
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ] )
 
         self.registerLine(Jpsi2MuMuForBetasLine)
         self.registerLine(Jpsi2MuMuForBetasDetachedLine)
@@ -181,16 +181,16 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
 
-        Bu2JpsiKPrescaledLine = StrippingLine("Bu2JpsiKPrescaledLine" + self.name, algos = [ Bu2JpsiK ] , prescale = self.config["Bu2JpsiKPrescale"])
+        Bu2JpsiKPrescaledLine = StrippingLine( self.name + "Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , prescale = self.config["Bu2JpsiKPrescale"])
 
         Bu2JpsiKDetached = self.createSubSel( InputList = Bu2JpsiK, OutputList = Bu2JpsiK.name() + "Detached" + self.name,
                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
-        Bu2JpsiKDetachedLine  = StrippingLine("Bu2JpsiKDetachedLine" + self.name, algos = [ Bu2JpsiKDetached ] )
+        Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ] )
 
         Bu2JpsiKUnbiased = self.createSubSel( InputList = Bu2JpsiK,
                                         OutputList = Bu2JpsiK.name() + "Unbiased" + self.name,
                                         Cuts = "(MINTREE('K+'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
-        Bu2JpsiKUnbiasedLine = StrippingLine("Bu2JpsiKUnbiasedLine" + self.name,
+        Bu2JpsiKUnbiasedLine = StrippingLine( self.name + "Bu2JpsiKUnbiasedLine",
                                         algos = [ Bu2JpsiKUnbiased ] )
     
         self.registerLine(Bu2JpsiKPrescaledLine)
@@ -206,7 +206,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                  DaughterCuts  = {"K+": "(PT > 0)"},
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
-        Bu2JpsiHDetachedLine  = StrippingLine("Bu2JpsiKNoPIDDetachedLine" + self.name,
+        Bu2JpsiHDetachedLine  = StrippingLine( self.name + "Bu2JpsiKNoPIDDetachedLine",
                                       algos = [ self.createSubSel( InputList = Bu2JpsiH,
                                                               OutputList = Bu2JpsiH.name() + "Detached" + self.name,
                                                               Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config ) ] )
@@ -218,17 +218,17 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                    DaughterLists  = [ self.JpsiList, self.PhiList ],
                                    PreVertexCuts = "in_range(5000,AM,5650)",
                                    PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
-        Bs2JpsiPhiPrescaledLine = StrippingLine("Bs2JpsiPhiPrescaledLine" + self.name, algos = [ Bs2JpsiPhi ] , prescale = self.config['Bs2JpsiPhiPrescale'])
+        Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , prescale = self.config['Bs2JpsiPhiPrescale'])
 
         Bs2JpsiPhiDetached = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
                                    Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
-        Bs2JpsiPhiDetachedLine  = StrippingLine("Bs2JpsiPhiDetachedLine" + self.name, algos = [ Bs2JpsiPhiDetached ] )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ] )
 
         Bs2JpsiPhiUnbiased = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Unbiased" + self.name,
                                    Cuts = "(MINTREE('phi(1020)'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
-        Bs2JpsiPhiUnbiasedLine =  StrippingLine("Bs2JpsiPhiUnbiasedLine" + self.name, algos = [ Bs2JpsiPhiUnbiased ] )
+        Bs2JpsiPhiUnbiasedLine =  StrippingLine( self.name + "Bs2JpsiPhiUnbiasedLine", algos = [ Bs2JpsiPhiUnbiased ] )
 
         self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
@@ -241,19 +241,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                      DaughterLists  = [ self.JpsiList, self.KstarList ],
                                      PreVertexCuts = "in_range(5000,AM,5650)",
                                      PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config)
-        Bd2JpsiKstarPrescaledLine = StrippingLine("Bd2JpsiKstarPrescaledLine" + self.name, algos = [ Bd2JpsiKstar ] , prescale = self.config['Bd2JpsiKstarPrescale'])
+        Bd2JpsiKstarPrescaledLine = StrippingLine( self.name + "Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , prescale = self.config['Bd2JpsiKstarPrescale'])
 
         Bd2JpsiKstarDetached = self.createSubSel( InputList = Bd2JpsiKstar,
                                      OutputList = Bd2JpsiKstar.name() + "Detached" + self.name,
                                      Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
-        Bd2JpsiKstarDetachedLine  = StrippingLine("Bd2JpsiKstarDetachedLine" + self.name,
+        Bd2JpsiKstarDetachedLine  = StrippingLine( self.name + "Bd2JpsiKstarDetachedLine",
                                           algos = [ Bd2JpsiKstarDetached ] )
 
         Bd2JpsiKstarUnbiased = self.createSubSel( InputList = Bd2JpsiKstar,
                                      OutputList = Bd2JpsiKstar.name() + "Unbiased" + self.name,
                                      Cuts = "(PT>2.*GeV) " \
                                      "& (MINTREE('K*(892)0'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
-        Bd2JpsiKstarUnbiasedLine  = StrippingLine("Bd2JpsiKstarUnbiasedLine" + self.name,
+        Bd2JpsiKstarUnbiasedLine  = StrippingLine( self.name + "Bd2JpsiKstarUnbiasedLine",
                                           algos = [ Bd2JpsiKstarUnbiased ] )
 
         self.registerLine(Bd2JpsiKstarPrescaledLine)
@@ -267,18 +267,18 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
-        Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine" + self.name, algos = [ Bd2JpsiKs ] , prescale = self.config['Bd2JpsiKsPrescale'])
+        Bd2JpsiKsPrescaledLine = StrippingLine( self.name + "Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = self.config['Bd2JpsiKsPrescale'])
 
         Bd2JpsiKsDetached = self.createSubSel( InputList = Bd2JpsiKs,
                                     OutputList = Bd2JpsiKs.name() + "Detached" + self.name,
                                     Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
-        Bd2JpsiKsDetachedLine = StrippingLine("Bd2JpsiKsDetachedLine" + self.name,
+        Bd2JpsiKsDetachedLine = StrippingLine( self.name + "Bd2JpsiKsDetachedLine",
                                         algos = [ Bd2JpsiKsDetached ] )
 
         Bd2JpsiKsUnbiased = self.createSubSel( InputList = Bd2JpsiKs,
                                     OutputList = Bd2JpsiKs.name() + "Unbiased" + self.name,
                                     Cuts = "(MINTREE('KS0'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
-        Bd2JpsiKsUnbiasedLine = StrippingLine("Bd2JpsiKsUnbiasedLine" + self.name,
+        Bd2JpsiKsUnbiasedLine = StrippingLine( self.name + "Bd2JpsiKsUnbiasedLine",
                                         algos = [ Bd2JpsiKsUnbiased ] )
 
         self.registerLine(Bd2JpsiKsPrescaledLine)
@@ -293,7 +293,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PreVertexCuts = "ADAMASS('B_s0') < 300",
                                   PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
 
-        Bs2Jpsif0Line = StrippingLine("Bs2Jpsif0Line" + self.name, algos = [ Bs2Jpsif0 ])
+        Bs2Jpsif0Line = StrippingLine( self.name + "Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ])
 
         self.registerLine(Bs2Jpsif0Line)
 
@@ -305,7 +305,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                PreVertexCuts = "ADAMASS('B_s0') < 300",
                                                PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
         
-        Bs2JpsiKstarLine = StrippingLine("Bs2JpsiKstarLine" + self.name, algos = [ Bs2JpsiKstar ])
+        Bs2JpsiKstarLine = StrippingLine( self.name + "Bs2JpsiKstarLine", algos = [ Bs2JpsiKstar ])
         
         self.registerLine(Bs2JpsiKstarLine)
         
@@ -318,7 +318,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                     PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                     )
 
-        Lambdab2JpsiLambdaUnbiasedLine = StrippingLine("Lambdab2JpsiLambdaUnbiasedLine" + self.name, algos = [ Lambdab2JpsiLambda ])
+        Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ])
         self.registerLine(Lambdab2JpsiLambdaUnbiasedLine)
 
 
@@ -330,16 +330,16 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
-        Bs2JpsiEtaPrescaledLine = StrippingLine("Bs2JpsiEtaPrescaledLine" + self.name, algos = [ Bs2JpsiEta ] , prescale = self.config['Bs2JpsiEtaPrescale'])
-        Bs2JpsiEtaDetachedLine  = StrippingLine("Bs2JpsiEtaDetachedLine" + self.name,
+        Bs2JpsiEtaPrescaledLine = StrippingLine( self.name + "Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = self.config['Bs2JpsiEtaPrescale'])
+        Bs2JpsiEtaDetachedLine  = StrippingLine( self.name + "Bs2JpsiEtaDetachedLine",
                                             algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                OutputList = Bs2JpsiEta.name() + "Detached" + self.name,
                                                                Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
 
-        Bs2JpsiEtaUnbiasedLine  = StrippingLine("Bs2JpsiEtaUnbiasedLine" + self.name,
+        Bs2JpsiEtaUnbiasedLine  = StrippingLine( self.name + "Bs2JpsiEtaUnbiasedLine",
                                             algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                OutputList = Bs2JpsiEta.name() + "Unbiased" + self.name,
-                                                               Cuts = "(PT > 3.*GeV) & (MINTREE('eta'==ABSID, PT) > 1500.*MeV)" ) ] )
+                                                               Cuts = "(PT > 3.*GeV) & (MINTREE('eta'==ABSID, PT) > 2000.*MeV)" ) ] )
         self.registerLine(Bs2JpsiEtaPrescaledLine)
         self.registerLine(Bs2JpsiEtaDetachedLine)
         self.registerLine(Bs2JpsiEtaUnbiasedLine)
