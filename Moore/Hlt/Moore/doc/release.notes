@@ -4,6 +4,8 @@ Purpose     : LHCb HLT application
 
 ! 2011-03-01 - Gerhard Raven
  - update online forking as specified by Niko
+ - add a filter when offline writing MDF/RAW files, i.e. this now
+   respects the value of WriterRequires
 
 !========================== Moore v12r0 2011-02-22 ===================
 ! 2011-02-22 - Gerhard Raven

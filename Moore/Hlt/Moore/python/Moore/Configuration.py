@@ -302,6 +302,15 @@ class Moore(LHCbConfigurableUser):
                               , GenerateMD5 = True
                               , Connection = 'file://' + fname
                               )
+            if self.getProp('WriterRequires') :
+                from Configurables import LoKi__VoidFilter as VoidFilter
+                writer = GaudiSequencer( 'WriteSequence'
+                                       , Members = [ VoidFilter( "WriterFilter" 
+                                                               , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
+                                                               )
+                                                   , writer 
+                                                   ]
+                                       )
         if _ext(fname).upper() in ['DST','DIGI'] : 
             importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
             from Configurables import InputCopyStream
