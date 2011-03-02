@@ -35,12 +35,14 @@ Usage:
 
 from StrippingSelections import StrippingV0ForPID
 config_V0ForPID = {
-    'KS0LL_Prescale'   : 0.006,
-    'KS0DD_Prescale'   : 0.006,
-    'LamLL_Prescale'   : 0.025,
-    'LamDD_Prescale'   : 0.022,
-    'LamLLIsMUON_Prescale' : 0.72,
-    'LamDDIsMUON_Prescale' : 0.47
+                'KS0LL_Prescale'           : 0.006,
+                'KS0DD_Prescale'           : 0.006,
+                'LamLL_Prescale_LoP'       : 0.036,
+                'LamLL_Prescale_HiP'       : 0.250,
+                'LamDD_Prescale'           : 0.027,
+                'LamLLIsMUON_Prescale_LoP' : 0.869,
+                'LamLLIsMUON_Prescale_HiP' : 1.000,
+                'LamDDIsMUON_Prescale'     : 0.460
     }
 confV0ForPID = StrippingV0ForPID.StrippingV0ForPIDConf ('noPIDV0',config_V0ForPID)
 stream.appendLines( confV0ForPID.lines() )
@@ -51,36 +53,41 @@ $STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_900000
 
 with prescales above prescales:
 
-StrippingReport                                                INFO Event 50000, Good event 46049
- |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |0.005234|       241|       |  22.768|       |       |       |
- |_StrippingSequenceStreamTest_                      |0.005234|       241|       |  22.763|       |       |       |
- |!StrippingK0SLLLinenoPIDV0                         |0.001064|        49|  0.000|   0.110|      0|      0|      2|
- |!StrippingK0SDDLinenoPIDV0                         |0.000956|        44|  0.000|   0.099|      0|      0|      0|
- |!StrippingLam0LLLinenoPIDV0                        |0.000847|        39|  0.000|   0.274|      0|      0|      3|
- |!StrippingLam0DDLinenoPIDV0                        |0.000977|        45|  0.000|   0.412|      0|      0|      2|
- |!StrippingLam0LLIsMUONLinenoPIDV0                  |0.000586|        27|  0.000|   9.225|      0|      0|     81|
- |!StrippingLam0DDIsMUONLinenoPIDV0                  |0.000869|        40|  0.000|  12.188|      0|      0|      0|
+StrippingReport                                                INFO Event 70000, Good event 64416
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  0.6380|       411|       |  15.200|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.6380|       411|       |  15.197|       |       |       |
+ |!StrippingK0SLLLinenoPIDV0                         |  0.1056|        68|  0.000|   0.100|      0|      0|      2|
+ |!StrippingK0SDDLinenoPIDV0                         |  0.1040|        67|  0.000|   0.094|      0|      0|      0|
+ |!StrippingLam0LLLine1noPIDV0                       |  0.0807|        52|  0.000|   0.337|      0|      0|      3|
+ |!StrippingLam0LLLine2noPIDV0                       |  0.0497|        32|  0.000|   2.098|      0|      0|     18|
+ |!StrippingLam0DDLinenoPIDV0                        |  0.0916|        59|  0.000|   0.427|      0|      0|      2|
+ |!StrippingLam0LLIsMUONLine1noPIDV0                 |  0.1211|        78|  0.000|   5.529|      0|      0|     75|
+ |!StrippingLam0LLIsMUONLine2noPIDV0                 |  0.0062|         4|  0.000|   0.841|      0|      0|     11|
+ |!StrippingLam0DDIsMUONLinenoPIDV0                  |  0.0931|        60|  0.000|   5.377|      0|      0|      0|
 
-========================================================================================================================
-                                     AlgorithmCorrelationsAlg.AlgorithmCorrelations
-========================================================================================================================
-    Algorithm                           Eff.       1        2        3        4        5        6        7        8
-------------------------------------------------------------------------------------------------------------------------
-  1 StrippingGlobal                     0.523% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  2 StrippingSequenceStreamTest         0.523% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  3 StrippingK0SLLLinenoPIDV0           0.106% |  20.332%  20.332%  #######   0.000%   0.000%   0.000%   0.000%   0.000%
-  4 StrippingK0SDDLinenoPIDV0           0.096% |  18.257%  18.257%   0.000%  #######   0.000%   0.000%   0.000%   0.000%
-  5 StrippingLam0LLLinenoPIDV0          0.085% |  16.183%  16.183%   0.000%   0.000%  #######   0.000%   7.407%   0.000%
-  6 StrippingLam0DDLinenoPIDV0          0.098% |  18.672%  18.672%   0.000%   0.000%   0.000%  #######   0.000%   2.500%
-  7 StrippingLam0LLIsMUONLinenoPIDV0    0.059% |  11.203%  11.203%   0.000%   0.000%   5.128%   0.000%  #######   0.000%
-  8 StrippingLam0DDIsMUONLinenoPIDV0    0.087% |  16.598%  16.598%   0.000%   0.000%   0.000%   2.222%   0.000%  #######
-========================================================================================================================    
+===========================================================================================================================================
+                                              AlgorithmCorrelationsAlg.AlgorithmCorrelations
+===========================================================================================================================================
+    Algorithm                            Eff.       1        2        3        4        5        6        7        8        9        10  
+-------------------------------------------------------------------------------------------------------------------------------------------
+  1 StrippingGlobal                      0.638% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
+  2 StrippingSequenceStreamTest          0.638% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
+  3 StrippingK0SLLLinenoPIDV0            0.106% |  16.545%  16.545%  #######   1.493%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
+  4 StrippingK0SDDLinenoPIDV0            0.104% |  16.302%  16.302%   1.471%  #######   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
+  5 StrippingLam0LLLine1noPIDV0          0.081% |  12.652%  12.652%   0.000%   0.000%  #######   3.125%   0.000%   2.564%  25.000%   0.000%
+  6 StrippingLam0LLLine2noPIDV0          0.050% |   7.786%   7.786%   0.000%   0.000%   1.923%  #######   0.000%   1.282%  25.000%   0.000%
+  7 StrippingLam0DDLinenoPIDV0           0.092% |  14.355%  14.355%   0.000%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   0.000%
+  8 StrippingLam0LLIsMUONLine1noPIDV0    0.121% |  18.978%  18.978%   0.000%   0.000%   3.846%   3.125%   0.000%  ####### 100.000%   0.000%
+  9 StrippingLam0LLIsMUONLine2noPIDV0    0.006% |   0.973%   0.973%   0.000%   0.000%   1.923%   3.125%   0.000%   5.128%  #######   0.000%
+ 10 StrippingLam0DDIsMUONLinenoPIDV0     0.093% |  14.599%  14.599%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%  #######
+===========================================================================================================================================
+
 """
 # =============================================================================
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
-__date__    = '2011-02-25'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $'
+__date__    = '2011-03-02'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $'
 __all__ = ('StrippingV0ForPIDConf')
 # =============================================================================
 
@@ -133,7 +140,7 @@ _default_configuration_ = {
     ## 
     # Technicalities:
     #
-    'Monitor'              : True    ,          ## Activate the monitoring ?
+    'Monitor'              : None    ,          ## Activate the monitoring ?
     ##
     "HLT"                  : "HLT_PASS_RE('Hlt1MB.*Decision')" ,  ## HLT-cut
     ##
