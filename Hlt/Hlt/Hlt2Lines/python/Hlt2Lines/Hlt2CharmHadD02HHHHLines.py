@@ -15,15 +15,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                   , 'DSumPt_4Body'                : 2000.0   # sum pT   
                   , 'MCOR_MAX_4Body'                : 3500.    # MeV
                   ## 2-body Input for 4Body
-                  , 'TrkPt_2BodyFor4Body'         : 500.0    # in MeV
-                  , 'TrkP_2BodyFor4Body'          : 5000.0   # in MeV
-                  , 'TrkPVIPChi2_2BodyFor4Body'   : 7.0      # unitless
                   , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
-                  , 'Doca_2BodyFor4Body'          : 0.085     # in mm
-                  , 'VtxPVDispChi2_2BodyFor4Body' : 40.      # unitless  
-                  , 'VtxPVDisp_2BodyFor4Body'     : 3.0      # in mm
-                  , 'DSumPt_2BodyFor4Body'        : 1400.0   # in MeV
-                  , 'MCOR_MAX_2BodyFor4Body'        : 3500.    # MeV
                   # prescales
                   , 'Prescale'                  : {
                         'Hlt2CharmHadD02HHHHWideMass'    : 0.1
@@ -49,26 +41,6 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                             , Code = incuts
                            )
 
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
-
-        return filterSeq
-
-    def __InPartFilter2BodyFor4Body(self, name, inputContainers) :  
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = """(MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_2BodyFor4Body)s )
-                    & (PT> %(TrkPt_2BodyFor4Body)s *MeV)
-                    & (P> %(TrkP_2BodyFor4Body)s *MeV)  """ % self.getProps()
-
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , Inputs = inputContainers
-                            , Code = incuts
-                           )
         ## Require the PV3D reconstruction before our cut on IP.
         filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
 
@@ -101,9 +73,6 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "BPVCORRM = sqrt(M**2 + PTRANS**2) + PTRANS"]
-
         combcuts = """( (APT1+APT2+APT3+APT4) > %(DSumPt_4Body)s) 
                        & (AM<2100*MeV)
                        & (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_4Body)s)
@@ -119,7 +88,6 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                           , Inputs = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
-                          , Preambulo = preambulo 
                           )
         return bindMembers(name, [PV3D()] + inputSeq + [combineCharm4Body])
 
@@ -157,34 +125,9 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         kaonsLowIP = self.__InPartFilterLowIP('Charm4BodyInputKaonsLowIP', [ BiKalmanFittedKaons] )
 
          
-        # Tighten IP cut
-        pions2BodyFor4Body = self.__InPartFilter2BodyFor4Body('CharmInputPions2BodyFor4Body', [ pionsLowIP ] )
-        kaons2BodyFor4Body = self.__InPartFilter2BodyFor4Body('CharmInputKaons2BodyFor4Body', [ kaonsLowIP ] )
- 
-       
-        # Evaluate mcor for 2 Body
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "BPVCORRM = sqrt(M**2 + PTRANS**2) + PTRANS"]
+        from Hlt2CharmHadTwoBodyForMultiBody import Hlt2CharmHadTwoBodyForMultiBodyConf
 
-        #First stage - Combine 2 Body with pt > 500MeV	
-	Charm2BodyCombine = Hlt2Member( CombineParticles
-                          , "Combine_Stage1"
-                          , DecayDescriptors = ["K*(892)0 -> pi+ pi+" , "K*(892)0 -> pi+ pi-"
-                          , "K*(892)0 -> pi- pi-" , "K*(892)0 -> K+ K+"
-                          , "K*(892)0 -> K+ K-"   , "K*(892)0 -> K- K-"
-                          , "K*(892)0 -> K+ pi-"  , "K*(892)0 -> pi+ K-"
-                          , "K*(892)0 -> K+ pi+"  , "K*(892)0 -> K- pi-" ]
-			  , CombinationCut = """((APT1+APT2)> %(DSumPt_2BodyFor4Body)s) 
-			       & (AM<2100*MeV) 
-			       & (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Doca_2BodyFor4Body)s )
-                               & (AALLSAMEBPV)""" % self.getProps()
-                          , MotherCut = """(BPVCORRM < %(MCOR_MAX_2BodyFor4Body)s*MeV)
-                                         & (BPVVD> %(VtxPVDisp_2BodyFor4Body)s )
-                                         & (BPVVDCHI2> %(VtxPVDispChi2_2BodyFor4Body)s )""" % self.getProps()
-                          , Preambulo = preambulo 
-                          , Inputs = [ pions2BodyFor4Body , kaons2BodyFor4Body ])
-
-        Hlt2Charm2BodyFor4Body =  bindMembers('CharmHadD02HHHH', [ pions2BodyFor4Body , kaons2BodyFor4Body, Charm2BodyCombine ])
+        Hlt2Charm2BodyFor4Body =  Hlt2CharmHadTwoBodyForMultiBodyConf().twoBodySequence()
 			  
         #Second Stage - picks up two low pt tracks too
 
@@ -196,9 +139,9 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         # Make 4Body 
         Charm4BodyCombine = self.__4BodyCombine ( name = 'CharmHadD02HHHH'
                                                   , inputSeq = [ Hlt2Charm2BodyFor4Body, pionsFor4Body, kaonsFor4Body, kaonsLowIP, pionsLowIP ]
-                                                  , decayDesc = [ "D0 -> K*(892)0 pi+ pi+", "D0 -> K*(892)0 pi- pi-"
-                                                                  ,"D0 -> K*(892)0 K+ K+",  "D0 -> K*(892)0 K- K-"  
-                                                                  ,"D0 -> K*(892)0 pi+ K+",  "D0 -> K*(892)0 pi- K-"  
+                                                  , decayDesc = [ "D0 -> K*(892)- pi+ pi+", "D0 -> K*(892)+ pi- pi-"
+                                                                  ,"D0 -> K*(892)- K+ K+",  "D0 -> K*(892)+ K- K-"  
+                                                                  ,"D0 -> K*(892)- pi+ K+",  "D0 -> K*(892)+ pi- K-"  
                                                                   ,"D0 -> K*(892)0 pi+ K-",  "D0 -> K*(892)0 pi- K+"  
                                                                   ,"D0 -> K*(892)0 pi+ pi-",  "D0 -> K*(892)0 K+ K-" ]
                                                  )   
@@ -213,7 +156,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
         line = Hlt2Line('CharmHad2BodyForD02HHHH', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor4Body , kaons2BodyFor4Body, Hlt2Charm2BodyFor4Body]
+                        , algos = [ PV3D(), Hlt2Charm2BodyFor4Body]
 			, postscale = self.postscale
                         )
         decName = "Hlt2CharmHad2BodyForD02HHHHDecision"
@@ -221,7 +164,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line('CharmHadD02HHHH', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor4Body , kaons2BodyFor4Body, Hlt2Charm2BodyFor4Body, pionsFor4Body, kaonsFor4Body, kaonsLowIP, pionsLowIP, Hlt2Charm4Body]
+                        , algos = [ PV3D(), Hlt2Charm2BodyFor4Body, pionsFor4Body, kaonsFor4Body, kaonsLowIP, pionsLowIP, Hlt2Charm4Body]
 			, postscale = self.postscale
                         )
         decName = "Hlt2CharmHadD02HHHHDecision"
@@ -229,7 +172,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line('CharmHadD02HHHHWideMass', prescale = self.prescale
-                        , algos = [ PV3D(), pions2BodyFor4Body , kaons2BodyFor4Body, Hlt2Charm2BodyFor4Body, pionsFor4Body, kaonsFor4Body, kaonsLowIP, pionsLowIP, Hlt2Charm4BodyWideMass]
+                        , algos = [ PV3D(), Hlt2Charm2BodyFor4Body, pionsFor4Body, kaonsFor4Body, kaonsLowIP, pionsLowIP, Hlt2Charm4BodyWideMass]
 			, postscale = self.postscale
                         )
         decName = "Hlt2CharmHadD02HHHHWideMassDecision"

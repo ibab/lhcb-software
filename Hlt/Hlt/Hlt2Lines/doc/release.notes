@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-02 - Patrick Spradlin
+ - Fixed a conflict created by the commit of Hlt2CharmHadD02HHHHLines.py.
+   It was intended to share a stage/element with Hlt2CharmHadD2HHHLines.py.
+   As originally implemented, it duplicated the stage leading to interference.
+   The shared code has been extracted to the independent
+   Hlt2CharmHadTwoBodyForMultiBody.py.
+
 !========================== Hlt2Lines v8r1 2011-03-02 ===================
 ! 2011-03-02 - Gerhard Raven
  - add Hlt1BeamGas to Hlt2Transparent
