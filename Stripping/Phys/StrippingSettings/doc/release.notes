@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - William James Barter
+ - Added dictionaries for Electroweak Lines.
+
 ! 2011-03-01 - Greig Cowan
  - Added beta_s config dictionaries.
  - Added Stripping13 directory and started to build the stream definitions using
