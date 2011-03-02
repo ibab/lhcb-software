@@ -31,9 +31,15 @@ class CharmHadronLines :
                   #, 'Hlt2CharmHad2BodyForD2HHH'
                   , 'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
+
+                  ### from Hlt2CharmHadD02HHHHLines
                   #, 'Hlt2CharmHadD02HHHH'
                   #, 'Hlt2CharmHadD02HHHHWideMass'
+
+                  ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
+
+                  ### from Hlt2D2KS0HLines
                   , 'Hlt2CharmHadD2KS0Pi'
                   , 'Hlt2CharmHadD2KS0K'
              ]
@@ -45,12 +51,17 @@ class CharmHadronLines :
         """
         Returns a dictionary of cuts
         """
+        from GaudiKernel.SystemOfUnits import MeV, GeV, mm
+
+
         d = { }
 
         from Hlt2Lines.Hlt2CharmHadD02HHLines   import Hlt2CharmHadD02HHLinesConf
         from Hlt2Lines.Hlt2CharmHadD2HHHLines   import Hlt2CharmHadD2HHHLinesConf
         from Hlt2Lines.Hlt2D2KS0HLines          import Hlt2CharmHadD2KS0HLinesConf
         from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
+        from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
+        from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
                           'Trk_PT_MIN'               : 800.0      # MeV
@@ -90,6 +101,18 @@ class CharmHadronLines :
                                         }
                     }
 
+                    , Hlt2CharmHadTwoBodyForMultiBodyConf : {
+                          'Trk_PT_MIN'                :  500.0 * MeV
+                        , 'Trk_P_MIN'                 : 5000.0 * MeV
+                        , 'Trk_MIPCHI2DV_MIN'         :   10.0      # unitless
+                        , 'Trk_TRCHI2DOF_MAX'         :    3.0      # unitless
+                        , 'Pair_AMINDOCA_MAX'         :    0.1 * mm
+                        , 'Pair_BPVVDCHI2_MIN'        :   40.0      # unitless
+                        , 'Pair_BPVVD_MIN'            :    3.0 * mm
+                        , 'Pair_SumAPT_MIN'           : 2000.0 * MeV
+                        , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
+                    }
+
                     , Hlt2CharmHadD2HHHLinesConf : {
                         ## 3Body
                           'TrkPt_3Body'                 : 250.0    # MeV
@@ -103,15 +126,7 @@ class CharmHadronLines :
                         , 'DSumPt_3Body'                : 2500.0   # MeV
                         , 'MCOR_MAX_3Body'              : 3500.    # MeV
                         ## 2-body Input for 3Body
-                        , 'TrkPt_2BodyFor3Body'         : 500.0    # MeV
-                        , 'TrkP_2BodyFor3Body'          : 5000.0   # MeV
-                        , 'TrkPVIPChi2_2BodyFor3Body'   : 10.0      # unitless
                         , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
-                        , 'Doca_2BodyFor3Body'          : 0.1    # mm
-                        , 'VtxPVDispChi2_2BodyFor3Body' : 40.      # unitless
-                        , 'VtxPVDisp_2BodyFor3Body'     : 3.0      # mm
-                        , 'DSumPt_2BodyFor3Body'        : 2000.0   # MeV
-                        , 'MCOR_MAX_2BodyFor3Body'      : 3500.    # MeV
                         , 'GEC_Filter_NTRACK'           : True     # do or do not
                         , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
                         # prescales
@@ -159,6 +174,24 @@ class CharmHadronLines :
                         , 'HLT1FILTER'               : ''
                         , 'Prescale'                : { }
                         , 'Postscale'               : { }
+                    }
+
+                    , Hlt2CharmHadD02HHHHLinesConf : {
+                          'TrkPt_4Body'                 : 250.0    # in MeV
+                        , 'TrkP_4Body'                  : 2000.0   # in MeV
+                        , 'TrkPVIPChi2_4Body'           : 2.0      # unitless
+                        , 'TrkChi2_4Body'               : 5.0      # unitless
+                        , 'PairMinDoca_4Body'      : 0.10     # in mm
+                        , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
+                        , 'VtxChi2_4Body'               : 20.0     # unitless
+                        , 'DIPChi2_4Body'               : 25.0     # unitless
+                        , 'DSumPt_4Body'                : 2000.0   # sum pT
+                        , 'MCOR_MAX_4Body'                : 3500.    # MeV
+                        , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
+                        # prescales
+                        , 'Prescale'                  : {
+                            'Hlt2CharmHadD02HHHHWideMass'    : 0.1
+                        }
                     }
                     
                   } )

@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-02 - Patrick Spradlin
+ - Updated CharmHadronLines_draft2011.py.  Added thresholds for
+   Hlt2CharmHadTwoBodyForMultiBodyConf and Hlt2CharmHadD02HHHHLinesConf.
+   Updated set of thresholds for Hlt2CharmHadD2HHHLines to remove those
+   absorbed into Hlt2CharmHadTwoBodyForMultiBodyConf.
+   Requires Hlt2Lines 119486.
+
 !========================== HltSettings v5r6   2011-03-02 ===================
 ! 2010-03-02 - Plamen Hopchev
  - edit the included beam-gas lines in accord with the changed line names 
