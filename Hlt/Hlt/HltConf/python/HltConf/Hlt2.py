@@ -25,7 +25,8 @@ from Hlt2Lines.Hlt2B2HHLTUnbiasedLines    import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
-#from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
+from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
+from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
 from Hlt2Lines.Hlt2D2KS0HLines            import  Hlt2CharmHadD2KS0HLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf
 from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
@@ -72,7 +73,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf  
                              , Hlt2CharmHadD02HHKsLinesConf
-                             #, Hlt2CharmHadD02HHHHLinesConf
+                             , Hlt2CharmHadD02HHHHLinesConf
+                             , Hlt2CharmHadTwoBodyForMultiBodyConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf 
