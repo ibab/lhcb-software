@@ -826,7 +826,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         # three generic detached high-pt muons 
         # =====================================================================
         three_mu = Hlt2Line (
-            "TriMuonsDetached" ,
+            "TriMuonDetached" ,
             #
             prescale  = self.prescale  ,  ## prescale 
             postscale = self.postscale ,  ## postscale 
@@ -883,7 +883,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         # tau -> mu+ mu+ mu- line: 
         # =====================================================================
         line_tau_3mu = Hlt2Line (
-            "TriMuonsTau" ,
+            "TriMuonTau" ,
             #
             prescale  = self.prescale  ,  ## prescale 
             postscale = self.postscale ,  ## postscale 
@@ -903,10 +903,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         # =====================================================================
         
         HltANNSvc().Hlt2SelectionID.update (
-            { "Hlt2TriMuonsDetachedDecision"   : 50214 ,
+            { "Hlt2TriMuonDetachedDecision"   : 50214 ,
               "Hlt2DiMuonAndMuonDecision"      : 50215 ,
               "Hlt2DoubleDiMuonDecision"       : 50216 , 
-              "Hlt2TriMuonsTauDecision"        : 50217 }
+              "Hlt2TriMuonTauDecision"        : 50217 }
             )
         
         

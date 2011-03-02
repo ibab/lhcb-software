@@ -31,7 +31,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|Velo.*|NZS.*|Incident|Tell1Error|HadronMonComp|ErrorEvent)Decision$')"
+        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
