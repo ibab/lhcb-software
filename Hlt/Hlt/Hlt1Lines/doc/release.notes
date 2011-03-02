@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-02 - Plamen Hopchev
+ - Hlt1BeamGasLines.py - rename lines, update the rate limits and clean up
+   needs latest HltConf and HltSettings to fix the changed names
+
 !========================== Hlt1Lines v6r6   2011-03-01 ===================
 ! 2011-03-02 - Plamen Hopchev
  - in Hlt1BeamGasLines reorder algorithms in the parasitic line
