@@ -36,7 +36,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'B0DirAngle'   : 0.045  #0.999    # Dimensionless
                   # HLT filter
                    ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
-                  # Pre- and postscale
+                  # Pre- and postscale
                    ,'Prescale'     : { 'Hlt2Bs2PhiGamma$'   : 1.0
                                       ,'Hlt2Bs2PhiGamma.+' : 0.1       # prescale by a factor of 10
                                       ,'Hlt2Bd2KstGamma$'  : 1.0
