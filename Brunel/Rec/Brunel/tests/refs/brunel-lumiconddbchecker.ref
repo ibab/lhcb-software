@@ -1,0 +1,452 @@
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v38r1/Rec/Brunel/tests/options/brunel-lumiconddbchecker.py'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r0/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
+# FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+# FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
+# FileRecordCnvSvc.ShareFiles           = "YES";
+# FileRecordDataSvc.ForceLeaves         = true;
+# FileRecordDataSvc.EnableFaultHandler  = true;
+# FileRecordDataSvc.RootCLID            =    1;
+# PoolRootEvtCnvSvc.EnableIncident      =    1;
+# PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
+# PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r0/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v38r1/Rec/Brunel/tests/options/brunel-lumiconddbchecker.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-DDDBtag     = ''
+# |-OutputLevel = 3
+# |-DataType    = '2009'
+# |-TimeStamp   = False
+# |-SkipEvents  = 0
+# |-EvtMax      = -1
+# |-Simulation  = False
+# |-XMLSummary  = None
+# |-CondDBtag   = 'head-20110131'  (default: '')
+# |-Monitors    = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag head-20101206 for partition DDDB
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType   = '2009'
+# |-DbRoot     = 'conddb:/lhcb.xml'
+# |-Simulation = False
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# skipping configuration of XMLSummary
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/options/SQLDDDB.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
+# |-Tags                      = {}  (default: {})
+# |-Overrides                 = []  (default: [])
+# |-DisableLFC                = False
+# |-Simulation                = False
+# |-SQLiteLocalCopiesDir      = ''
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
+# |-Online                    = False
+# |-UseOracle                 = False
+# |-LogFile                   = ''
+# |-UseLatestTags             = []  (default: [])
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to Brunel version v38r2
+                                          running on lxplus412.cern.ch on Wed Mar  2 16:07:13 2011
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+CheckDB              INFO Member list: LumiCheckCondDB/CheckCondDB
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.73 times the speed of a 2.8 GHz Xeon.
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "head-20101206"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "head-20110131"
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+ONLINE_201101        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2011.db/ONLINE"
+ONLINE_201101        INFO Using TAG ""
+ConfigTarFileAc...   INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v1r21p9/config.tar in mode ReadOnly
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+EventSelector        INFO End of event input reached.
+EventLoopMgr         INFO No more events in event selection
+CheckCondDB          INFO ========== Probe DB: START ========== stop
+CheckCondDB          INFO Generate event at unix time: 1269817249
+ONLINE_201003        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201003        INFO Using TAG ""
+PropertyConfigSvc    INFO  resolving alias TCK/0x00021810
+PropertyConfigSvc    INFO  resolved TCK/0x00021810 to bcfe26c8d3c0d51154e37b179032d735
+CheckCondDB          INFO Event time: 2010-03-29 01:00
+CheckCondDB          INFO  TCK:           137232 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 700 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1270076449
+PropertyConfigSvc    INFO  resolving alias TCK/0x00021310
+PropertyConfigSvc    INFO  resolved TCK/0x00021310 to dd8c0d97e5d96f783dab121bd6be4586
+CheckCondDB          INFO Event time: 2010-04-01 01:00
+CheckCondDB          INFO  TCK:           135952 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 562.274 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1270335649
+ONLINE_201004        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201004        INFO Using TAG ""
+PropertyConfigSvc    INFO  resolving alias TCK/0x00021210
+PropertyConfigSvc    INFO  resolved TCK/0x00021210 to 5f7e62274021536c77f4bf5c19ad53cb
+CheckCondDB          INFO Event time: 2010-04-04 01:00
+CheckCondDB          INFO  TCK:           135696 OdinFraction:  0.933333 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 562.274 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1270594849
+PropertyConfigSvc    INFO  resolving alias TCK/0x00021810
+CheckCondDB          INFO Event time: 2010-04-07 01:00
+CheckCondDB          INFO  TCK:           137232 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 100 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1270854049
+PropertyConfigSvc    INFO  resolving alias TCK/0x00021610
+PropertyConfigSvc    INFO  resolved TCK/0x00021610 to 679abc00f7aafb4b6bf39a7611fbf798
+CheckCondDB          INFO Event time: 2010-04-10 01:00
+CheckCondDB          INFO  TCK:           136720 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 700 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1271113249
+PropertyConfigSvc    INFO  resolving alias TCK/0x10041210
+PropertyConfigSvc    INFO  resolved TCK/0x10041210 to 72a2953b9ad434d9bac69029002c2fee
+CheckCondDB          INFO Event time: 2010-04-13 01:00
+CheckCondDB          INFO  TCK:           268702224 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1271372449
+PropertyConfigSvc    INFO  resolving alias TCK/0x00041210
+PropertyConfigSvc    INFO  resolved TCK/0x00041210 to 406f3d7ebee214cb4eddb32f8f459f0b
+CheckCondDB          INFO Event time: 2010-04-16 01:00
+CheckCondDB          INFO  TCK:           266768 OdinFraction:  0 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1271631649
+CheckCondDB          INFO Event time: 2010-04-19 01:00
+CheckCondDB          INFO  TCK:           266768 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1271890849
+CheckCondDB          INFO Event time: 2010-04-22 01:00
+CheckCondDB          INFO  TCK:           266768 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 562.274 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1272150049
+PropertyConfigSvc    INFO  resolving alias TCK/0x00041710
+PropertyConfigSvc    INFO  resolved TCK/0x00041710 to d31a68913daf330bfcbad03166d1f4c1
+CheckCondDB          INFO Event time: 2010-04-25 01:00
+CheckCondDB          INFO  TCK:           268048 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       2 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1272409249
+PropertyConfigSvc    INFO  resolving alias TCK/0x80810000
+PropertyConfigSvc    INFO  resolved TCK/0x80810000 to a347fdb301f42014926726c25297c112
+PropertyConfigSvc   ERROR  could not obtain ref 00000000000000000000000000000000
+ToolSvc.lumiDat...WARNING could not find property Hlt1LumiODINFilter
+CheckCondDB          INFO Event time: 2010-04-28 01:00
+CheckCondDB          INFO  TCK:           2155937793 OdinFraction:  0.7 Randomrate:    0 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1272668449
+PropertyConfigSvc    INFO  resolving alias TCK/0x80840000
+PropertyConfigSvc    INFO  resolved TCK/0x80840000 to 8d105fa9447104c2ca832d6ea13f0f3e
+PropertyConfigSvc   ERROR  could not obtain ref 00000000000000000000000000000000
+ToolSvc.lumiDat...WARNING could not find property Hlt1LumiODINFilter
+CheckCondDB          INFO Event time: 2010-05-01 01:00
+CheckCondDB          INFO  TCK:           2156139024 OdinFraction:  0.7 Randomrate:    0 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1272927649
+ONLINE_201005        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201005        INFO Using TAG ""
+PropertyConfigSvc    INFO  resolving alias TCK/0x00051210
+PropertyConfigSvc    INFO  resolved TCK/0x00051210 to 39044f6c6a79df8877b8661696708eb5
+CheckCondDB          INFO Event time: 2010-05-04 01:00
+CheckCondDB          INFO  TCK:           332304 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1273186849
+CheckCondDB          INFO Event time: 2010-05-07 01:00
+CheckCondDB          INFO  TCK:           332304 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1273446049
+CheckCondDB          INFO Event time: 2010-05-10 01:00
+CheckCondDB          INFO  TCK:           332304 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1273705249
+PropertyConfigSvc    INFO  resolving alias TCK/0x00081210
+PropertyConfigSvc    INFO  resolved TCK/0x00081210 to e7c9d35ece5cd4ce97a18d7ca82e6fe9
+CheckCondDB          INFO Event time: 2010-05-13 01:00
+CheckCondDB          INFO  TCK:           528912 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1273964449
+PropertyConfigSvc    INFO  resolving alias TCK/0x00081710
+PropertyConfigSvc    INFO  resolved TCK/0x00081710 to fd6c812e5294c47a5859e7db2c7fb976
+CheckCondDB          INFO Event time: 2010-05-16 01:00
+CheckCondDB          INFO  TCK:           530192 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       3 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1274223649
+PropertyConfigSvc    INFO  resolving alias TCK/0x00081210
+CheckCondDB          INFO Event time: 2010-05-19 01:00
+CheckCondDB          INFO  TCK:           528912 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       3 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1274482849
+CheckCondDB          INFO Event time: 2010-05-22 01:00
+CheckCondDB          INFO  TCK:           528912 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       3 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1274742049
+CheckCondDB          INFO Event time: 2010-05-25 01:00
+CheckCondDB          INFO  TCK:           528912 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1275001249
+PropertyConfigSvc    INFO  resolving alias TCK/0x00091210
+PropertyConfigSvc    INFO  resolved TCK/0x00091210 to 902d27aae89b1ee8ad9b58b353955932
+CheckCondDB          INFO Event time: 2010-05-28 01:00
+CheckCondDB          INFO  TCK:           594448 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1275260449
+CheckCondDB          INFO Event time: 2010-05-31 01:00
+CheckCondDB          INFO  TCK:           594448 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1275519649
+ONLINE_201006        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201006        INFO Using TAG ""
+CheckCondDB          INFO Event time: 2010-06-03 01:00
+CheckCondDB          INFO  TCK:           594448 OdinFraction:  1 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1275778849
+CheckCondDB          INFO Event time: 2010-06-06 01:00
+CheckCondDB          INFO  TCK:           594448 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1276038049
+CheckCondDB          INFO Event time: 2010-06-09 01:00
+CheckCondDB          INFO  TCK:           594448 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1276297249
+PropertyConfigSvc    INFO  resolving alias TCK/0x000f2210
+PropertyConfigSvc    INFO  resolved TCK/0x000f2210 to ff2b7781394a9f5dcf78beed8f345cfd
+CheckCondDB          INFO Event time: 2010-06-12 01:00
+CheckCondDB          INFO  TCK:           991760 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1276556449
+CheckCondDB          INFO Event time: 2010-06-15 01:00
+CheckCondDB          INFO  TCK:           991760 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1276815649
+CheckCondDB          INFO Event time: 2010-06-18 01:00
+CheckCondDB          INFO  TCK:           991760 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1277074849
+CheckCondDB          INFO Event time: 2010-06-21 01:00
+CheckCondDB          INFO  TCK:           991760 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1277334049
+PropertyConfigSvc    INFO  resolving alias TCK/0x00081210
+CheckCondDB          INFO Event time: 2010-06-24 01:00
+CheckCondDB          INFO  TCK:           528912 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1277593249
+PropertyConfigSvc    INFO  resolving alias TCK/0x000e001f
+PropertyConfigSvc    INFO  resolved TCK/0x000e001f to 85fc94cd5950ecec83349ad979d6952c
+CheckCondDB          INFO Event time: 2010-06-27 01:00
+CheckCondDB          INFO  TCK:           917535 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       2 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1277852449
+PropertyConfigSvc    INFO  resolving alias TCK/0x000e001e
+PropertyConfigSvc    INFO  resolved TCK/0x000e001e to 92dd07abfe253337e69e3ba4ff01605b
+CheckCondDB          INFO Event time: 2010-06-30 01:00
+CheckCondDB          INFO  TCK:           917534 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       2 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1278111649
+ONLINE_201007        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201007        INFO Using TAG ""
+PropertyConfigSvc    INFO  resolving alias TCK/0x0012001e
+PropertyConfigSvc    INFO  resolved TCK/0x0012001e to 5f62ada7ce1db2d172ad10c34b7d81dc
+CheckCondDB          INFO Event time: 2010-07-03 01:00
+CheckCondDB          INFO  TCK:           1179678 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       4 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1278370849
+PropertyConfigSvc    INFO  resolving alias TCK/0x0012001f
+PropertyConfigSvc    INFO  resolved TCK/0x0012001f to 658cf52a860e4b540ac1decddab6254c
+CheckCondDB          INFO Event time: 2010-07-06 01:00
+CheckCondDB          INFO  TCK:           1179679 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       4 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1278630049
+PropertyConfigSvc    INFO  resolving alias TCK/0x0012001e
+CheckCondDB          INFO Event time: 2010-07-09 01:00
+CheckCondDB          INFO  TCK:           1179678 OdinFraction:  0.933333 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       4 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1278889249
+PropertyConfigSvc    INFO  resolving alias TCK/0x0014001e
+PropertyConfigSvc    INFO  resolved TCK/0x0014001e to bd64ca2064731578249c5a178cb49041
+CheckCondDB          INFO Event time: 2010-07-12 01:00
+CheckCondDB          INFO  TCK:           1310750 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       4 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1279148449
+CheckCondDB          INFO Event time: 2010-07-15 01:00
+CheckCondDB          INFO  TCK:           1310750 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1279407649
+PropertyConfigSvc    INFO  resolving alias TCK/0x0013001f
+PropertyConfigSvc    INFO  resolved TCK/0x0013001f to cd297e8ef06dd2f6c0571e3cd465f84c
+CheckCondDB          INFO Event time: 2010-07-18 01:00
+CheckCondDB          INFO  TCK:           1245215 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1279666849
+PropertyConfigSvc    INFO  resolving alias TCK/0x0014001e
+CheckCondDB          INFO Event time: 2010-07-21 01:00
+CheckCondDB          INFO  TCK:           1310750 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1279926049
+PropertyConfigSvc    INFO  resolving alias TCK/0x0017001e
+PropertyConfigSvc    INFO  resolved TCK/0x0017001e to 93271556dcec15fddd2271fc75a4d76a
+CheckCondDB          INFO Event time: 2010-07-24 01:00
+CheckCondDB          INFO  TCK:           1507358 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1280185249
+CheckCondDB          INFO Event time: 2010-07-27 01:00
+CheckCondDB          INFO  TCK:           1507358 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1280444449
+PropertyConfigSvc    INFO  resolving alias TCK/0x0017001f
+PropertyConfigSvc    INFO  resolved TCK/0x0017001f to 407180c5dd757f15f100a98e1f01f0dc
+CheckCondDB          INFO Event time: 2010-07-30 01:00
+CheckCondDB          INFO  TCK:           1507359 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1280703649
+ONLINE_201008        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201008        INFO Using TAG ""
+CheckCondDB          INFO Event time: 2010-08-02 01:00
+CheckCondDB          INFO  TCK:           1507359 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1280962849
+CheckCondDB          INFO Event time: 2010-08-05 01:00
+CheckCondDB          INFO  TCK:           1507359 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1281222049
+PropertyConfigSvc    INFO  resolving alias TCK/0x0019001f
+PropertyConfigSvc    INFO  resolved TCK/0x0019001f to 8d1a00ec22af25933e68cd71e901c483
+CheckCondDB          INFO Event time: 2010-08-08 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1281481249
+CheckCondDB          INFO Event time: 2010-08-11 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1281740449
+CheckCondDB          INFO Event time: 2010-08-14 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1281999649
+CheckCondDB          INFO Event time: 2010-08-17 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1282258849
+CheckCondDB          INFO Event time: 2010-08-20 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       36 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1282518049
+CheckCondDB          INFO Event time: 2010-08-23 01:00
+CheckCondDB          INFO  TCK:           1638431 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       36 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1282777249
+PropertyConfigSvc    INFO  resolving alias TCK/0x00190023
+PropertyConfigSvc    INFO  resolved TCK/0x00190023 to 5e1fa6fd134f8c3cf7e761bd3488ff77
+CheckCondDB          INFO Event time: 2010-08-26 01:00
+CheckCondDB          INFO  TCK:           1638435 OdinFraction:  0.933333 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1283036449
+PropertyConfigSvc    INFO  resolving alias TCK/0x00190024
+PropertyConfigSvc    INFO  resolved TCK/0x00190024 to 1d5a8b257be98461969cd786059aaea4
+CheckCondDB          INFO Event time: 2010-08-29 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1283295649
+CheckCondDB          INFO Event time: 2010-09-01 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1283554849
+ONLINE_201009        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201009        INFO Using TAG ""
+CheckCondDB          INFO Event time: 2010-09-04 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1283814049
+CheckCondDB          INFO Event time: 2010-09-07 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1284073249
+CheckCondDB          INFO Event time: 2010-09-10 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1284332449
+CheckCondDB          INFO Event time: 2010-09-13 01:00
+CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1284591649
+PropertyConfigSvc    INFO  resolving alias TCK/0x001b0028
+PropertyConfigSvc    INFO  resolved TCK/0x001b0028 to ff2aa536ff79d5b8c61f29702e28e1f5
+CheckCondDB          INFO Event time: 2010-09-16 01:00
+CheckCondDB          INFO  TCK:           1769512 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1284850849
+PropertyConfigSvc    INFO  resolving alias TCK/0x001d0030
+PropertyConfigSvc    INFO  resolved TCK/0x001d0030 to 5713a1c6b1e7b046cda9afa65492a4c1
+CheckCondDB          INFO Event time: 2010-09-19 01:00
+CheckCondDB          INFO  TCK:           1900592 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1285110049
+PropertyConfigSvc    INFO  resolving alias TCK/0x001f0029
+PropertyConfigSvc    INFO  resolved TCK/0x001f0029 to 783bb49d2f0ac24d06e17ffa6666f4c1
+CheckCondDB          INFO Event time: 2010-09-22 01:00
+CheckCondDB          INFO  TCK:           2031657 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1285369249
+PropertyConfigSvc    INFO  resolving alias TCK/0x001f0031
+PropertyConfigSvc    INFO  resolved TCK/0x001f0031 to d23d03d9f6b36eb61d2a867b95d42f14
+CheckCondDB          INFO Event time: 2010-09-25 01:00
+CheckCondDB          INFO  TCK:           2031665 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       47 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1285628449
+PropertyConfigSvc    INFO  resolving alias TCK/0x001e0030
+PropertyConfigSvc    INFO  resolved TCK/0x001e0030 to 70cef4a082660b1a69967f82ce236e7c
+CheckCondDB          INFO Event time: 2010-09-28 01:00
+CheckCondDB          INFO  TCK:           1966128 OdinFraction:  0.933333 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       93 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1285887649
+PropertyConfigSvc    INFO  resolving alias TCK/0x001f0029
+CheckCondDB          INFO Event time: 2010-10-01 01:00
+CheckCondDB          INFO  TCK:           2031657 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       12 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1286146849
+ONLINE_201010        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201010        INFO Using TAG ""
+CheckCondDB          INFO Event time: 2010-10-04 01:00
+CheckCondDB          INFO  TCK:           2031657 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       140 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1286406049
+PropertyConfigSvc    INFO  resolving alias TCK/0x0024002c
+PropertyConfigSvc    INFO  resolved TCK/0x0024002c to 270f35d82eb2a274a86005e7e97b3051
+CheckCondDB          INFO Event time: 2010-10-07 01:00
+CheckCondDB          INFO  TCK:           2359340 OdinFraction:  0.933333 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       186 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1286665249
+PropertyConfigSvc    INFO  resolving alias TCK/0x0027002c
+PropertyConfigSvc    INFO  resolved TCK/0x0027002c to 9e8d961d43eb52e95edcf423a8f5a8df
+CheckCondDB          INFO Event time: 2010-10-10 01:00
+CheckCondDB          INFO  TCK:           2555948 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       233 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1286924449
+PropertyConfigSvc    INFO  resolving alias TCK/0x002b002a
+PropertyConfigSvc    INFO  resolved TCK/0x002b002a to 6f499cf6d61c741fb97507b232903327
+CheckCondDB          INFO Event time: 2010-10-13 01:00
+CheckCondDB          INFO  TCK:           2818090 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       233 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1287183649
+PropertyConfigSvc    INFO  resolving alias TCK/0x002a002a
+PropertyConfigSvc    INFO  resolved TCK/0x002a002a to 5d3c2464069d73ee33e1507232ecd634
+CheckCondDB          INFO Event time: 2010-10-16 01:00
+CheckCondDB          INFO  TCK:           2752554 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       12 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1287442849
+CheckCondDB          INFO Event time: 2010-10-19 01:00
+CheckCondDB          INFO  TCK:           2752554 OdinFraction:  0.777778 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       295 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1287702049
+PropertyConfigSvc    INFO  resolving alias TCK/0x001b0028
+CheckCondDB          INFO Event time: 2010-10-22 01:00
+CheckCondDB          INFO  TCK:           1769512 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       295 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1287961249
+PropertyConfigSvc    INFO  resolving alias TCK/0x002e002a
+PropertyConfigSvc    INFO  resolved TCK/0x002e002a to 4ba57b5c9c269dffb74ccfa86ca39f94
+CheckCondDB          INFO Event time: 2010-10-25 01:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       295 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1288220449
+PropertyConfigSvc    INFO  resolving alias TCK/0x002e002c
+PropertyConfigSvc    INFO  resolved TCK/0x002e002c to 4ed1d289c04ba3cf52f088358919cef2
+CheckCondDB          INFO Event time: 2010-10-28 01:00
+CheckCondDB          INFO  TCK:           3014700 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       344 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1288479649
+PropertyConfigSvc    INFO  resolving alias TCK/0x002e002a
+CheckCondDB          INFO Event time: 2010-10-31 01:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1288738849
+ONLINE_201011        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r0/db/ONLINE-2010.db/ONLINE"
+ONLINE_201011        INFO Using TAG ""
+CheckCondDB          INFO Event time: 2010-11-03 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1288998049
+CheckCondDB          INFO Event time: 2010-11-06 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1289257249
+CheckCondDB          INFO Event time: 2010-11-09 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1289516449
+CheckCondDB          INFO Event time: 2010-11-12 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1289775649
+CheckCondDB          INFO Event time: 2010-11-15 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1290034849
+CheckCondDB          INFO Event time: 2010-11-18 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO Generate event at unix time: 1290294049
+CheckCondDB          INFO Event time: 2010-11-21 00:00
+CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
+CheckCondDB          INFO ========== Probe DB: END   ==========
+ApplicationMgr       INFO Application Manager Stopped successfully
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO CheckDB                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO   CheckCondDB                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully
