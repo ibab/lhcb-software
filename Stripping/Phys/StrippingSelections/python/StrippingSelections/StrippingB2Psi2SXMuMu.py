@@ -69,14 +69,14 @@ config_params = {'muPID':0.,
                  'sig_UnbiasedLinePrescale':1,
                  'sig_UnbiasedLinePostscale':1,
                  'ChKPT':500,
-                 'K_PrescaledLinePrescale':1,
+                 'K_PrescaledLinePrescale':0.5,
                  'K_PrescaledLinePostscale':1,
                  'K_DetatchedLinePrescale':1,
                  'K_DetatchedLinePostscale':1,
                  'K_UnbiasedLinePrescale':1,
                  'K_UnbiasedLinePostscale':1,
                  'KstarPT': 2,
-                 'Kstar_PrescaledLinePrescale':0.5,
+                 'Kstar_PrescaledLinePrescale':0.1,
                  'Kstar_PrescaledLinePostscale':1,
                  'Kstar_DetatchedLinePrescale':1,
                  'Kstar_DetatchedLinePostscale':1,
@@ -102,7 +102,6 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-name = "B2Psi2SXMuMu"
 
 class Bs2Psi2SPhiMuMuConf(LineBuilder) :
   
@@ -167,48 +166,51 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               )
 
     def __init__(self, name, config) :
+
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
+        print 'self.name ' + self.name  
 
-        incl = 'InclPsi2SToMuMu' + self.name
+        incl = self.name +'_InclPsi2SToMuMu'
+        print 'inclusiveline ' + incl  
         incl_detatched_name = incl + 'Detatched'
 
-        sig = 'Bs2Psi2SPhiMuMu' + self.name
+        sig = self.name +'_Bs2Psi2SPhiMuMu'
         sig_unbiased_name = sig + 'Unbiased'
         sig_prescaled_name = sig + 'Prescaled'
         sig_detatched_name = sig + 'Detatched'
 
-        K = 'Bu2Psi2SKMuMu' + self.name
+        K = self.name +'_Bu2Psi2SKMuMu'
         K_unbiased_name = K + 'Unbiased'
         K_prescaled_name = K + 'Prescaled'
         K_detatched_name = K + 'Detatched'
 
-        Kstar = 'Bd2Psi2SKstarMuMu' + self.name
+        Kstar = self.name + '_Bd2Psi2SKstarMuMu'
         Kstar_unbiased_name = Kstar + 'Unbiased'
         Kstar_prescaled_name = Kstar + 'Prescaled'
         Kstar_detatched_name = Kstar + 'Detatched'
 
-        Ks = 'Bd2Psi2SKsMuMu' + self.name
+        Ks = self.name + '_Bd2Psi2SKsMuMu'
         Ks_unbiased_name = Ks + 'Unbiased'
         Ks_prescaled_name = Ks + 'Prescaled'
         Ks_detatched_name = Ks + 'Detatched'
 
 
-        self.selPsi2S2MuMu = makePsi2S2MuMu( 'Psi2SToMuMu' + self.name,
+        self.selPsi2S2MuMu = makePsi2S2MuMu( self.name + '_Psi2SToMuMu',
                                              muPID = config['muPID'],
                                              Psi2SMassWin = config['Psi2SMassWin'],
                                              Psi2SADOCACHI2CUT = config['Psi2SADOCACHI2CUT'],
                                              Psi2SVFASPF = config['Psi2SVFASPF']
                                              )
 
-        self.selChargedK = makeChK('ChKForPsi2SToMuMu' + self.name,
+        self.selChargedK = makeChK(self.name + '_ChKForPsi2SToMuMu' ,
                                    ChKTRCHI2DOF = config['ChKTRCHI2DOF'],
                                    ChKPID = config['ChKPID']
                                    ) 
         
         
-        self.selPhi2KK = makePhi2KK( 'PhiForPsi2SToMuMu' + self.name,
+        self.selPhi2KK = makePhi2KK(self.name + '_PhiForPsi2SToMuMu' ,
                                      PhiWin = config['PhiWin'],
                                      PhiPT = config['PhiPT'],
                                      PhiVFASPF = config['PhiVFASPF'],
@@ -217,7 +219,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                      )
 
 
-        self.selKstar = makeKstar('KstarForPsi2SToMuMu' + self.name,
+        self.selKstar = makeKstar( self.name + '_KstarForPsi2SToMuMu',
                                   KstMassDown = config['KstMassDown'],
                                   KstMassUp = config['KstMassUp'],
                                   KstAPT = config['KstAPT'],
@@ -226,9 +228,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                   KstPIDK = config['KstPIDK']
                                   ) 
 
-        self.selKsLoose = makeKsLoose('KsLooseForPsi2SToMuMu' + self.name) 
+        self.selKsLoose = makeKsLoose( self.name + '_KsLooseForPsi2SToMuMu') 
         
-        self.selKs = makeKs('KsForPsi2SToMuMu' + self.name,
+        self.selKs = makeKs( self.name + '_KsForPsi2SToMuMu',
                             KsLooseSel = self.selKsLoose,
                             KsVFASPF = config['KsVFASPF'],
                             KsBPVDLS = config['KsBPVDLS']
