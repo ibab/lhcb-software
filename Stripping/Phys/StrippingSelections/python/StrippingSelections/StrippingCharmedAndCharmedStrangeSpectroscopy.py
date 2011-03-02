@@ -159,13 +159,13 @@ def CombineDandTrack( name,
                       DSel,
                       KPiSel ):
     Cut_Ds = '(M > 0.0*GeV) & (M<3.5*GeV) & ~INTREE( THASINFO( LHCb.Track.CloneDist ) )'
-    if name in [ "Ds2D0K", "Dj2DpPim", "Dj2D0Pip", "Dj2DstarpPim" ] :
+    if ( name.endswith( "Ds2D0K" ) or name.endswith( "Dj2DstarpPim" ) or name.endswith( "Dj2D0Pip" ) or name.endswith( "Dj2DpPim" ) ) :
         Cut_Ds += ' & (LV02>0.0)'
-    if name in [ "Dj2DstarpPim" ] :
+    if ( name.endswith( "Dj2DstarpPim" )  ) :
         Cut_Ds += ' & (PT>5*GeV) & (M<3.2*GeV)'
-    if name in [ "Dj2DpPim", "Dj2D0Pip" ] :
+    if ( name.endswith( "Dj2DpPim" ) or name.endswith( "Dj2D0Pip" )  ) :
         Cut_Ds += ' & (PT>6*GeV) & (M<3.2*GeV)'
-    if name in [ "Ds2D0K" ] :
+    if ( name.endswith( "Ds2D0K" )  ) :
         Cut_Ds += ' & (PT>4.5*GeV)'
 
     D = CombineParticles( DecayDescriptor = decay,
