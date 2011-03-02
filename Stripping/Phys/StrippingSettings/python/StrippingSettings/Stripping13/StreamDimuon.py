@@ -15,8 +15,11 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream('Dimuon')
 
-BetaSconfigs = [
+# beta_s WG
+configs = [
 	'BetaS', 
+	'BetaSPsi2S',
+        'BetaSPsi2SMuMu',
 	'BetaSBs2JpsieePhi',
 	'BetaSQ2B',
 	'BetaSBs2PhiPhi',
@@ -27,6 +30,27 @@ BetaSconfigs = [
 	'BetaSBs2ChicPhi_Chic2PiPiPiPi'
 	]
 
-for config in BetaSconfigs:
+# FWG
+configs += [
+	'FullDSTDiMuon',
+	'Bc2JpsiH',
+	'Bc2JpsiHDetached',
+	'JpsiMuMuforD0MuMu',
+	'BuToKX3872',
+	'NeuroBayesMuMu'
+	]
+
+# Rare decays WG
+configs += [
+	'Bs2MuMuPhi',
+	'Bd2KstarMuMu',
+	'B2XMuMuSS',
+	'Bs2MuMuLines',
+	'B2MuMuMuMuLines',
+	'TriMuon'
+	]
+
+for config in configs:
 	stream.appendLines( lineBuilder('stripping13.tmp', config).lines() )
+
 

@@ -1,29 +1,7 @@
 """
-Place holder for stripping dictionary configurations under development.
-These will not be used for production, only for testing.
+Stripping13 definitions.
 Dictionaries have the name of the line builder instance.
 """
-
-# standard Bs->Jpsi/Phi prescaled and detatched lines
-Bs2JpsiPhiPrescaledAndDetatched = {
-    'BUILDERTYPE' : 'Bs2JpsiPhiPrescaledAndDetatchedConf',
-    'CONFIG' : {'PhiPT' : 500.,
-                'BsMassWin' : 300.,
-                'BsLTFITCHI2' : 14.,
-                'BsVCHI2' : 20.,
-                'DetatchedBsLTIME' : 15.,
-                'PrescaledLinePrescale' : 1.0,
-                'PrescaledLinePostscale' : 0.1,
-                'DetatchedLinePrescale' : 1.0,
-                'DetatchedLinePostscale' : 1.0
-                }
-    }
-
-# Prescaled Bs->Jpsi/Phi prescaled and detatched lines
-# Copy standard parameters, change pre-scales.
-Bs2JpsiPhiPrescaledAndDetatchedPrescaled = dict(Bs2JpsiPhiPrescaledAndDetatched)
-Bs2JpsiPhiPrescaledAndDetatchedPrescaled['CONFIG']['PrescaledLinePrescale'] = 0.1
-Bs2JpsiPhiPrescaledAndDetatchedPrescaled['CONFIG']['DetatchedLinePrescale'] = 0.1
 
 ################
 # beta_s group #
@@ -1287,5 +1265,721 @@ TriMuon = {
     ]
     },
     'WGs' : [ 'RD' ] 
+    }
+
+#######
+# FWG #
+#######
+
+MiniBias = {
+	'BUILDERTYPE'	:	'MiniBiasConf',
+	'CONFIG'	: {'L0AnyLine_Prescale': 0.01,
+ 'L0AnyLine_RE': "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
+ 'NoBiasLine_Prescale': 0.01,
+ 'NoBiasLine_RE': "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))"}
+	}
+
+FullDSTDiMuon = {
+	'BUILDERTYPE'	:	'DiMuonConf',
+	'CONFIG'	: {'DiMuonExclusive_DZ': -1.0,
+ 'DiMuonExclusive_MinMass': 2900.0,
+ 'DiMuonExclusive_MuonP': -8000.0,
+ 'DiMuonExclusive_MuonPT': 650.0,
+ 'DiMuonExclusive_MuonTRCHI2DOF': 5.0,
+ 'DiMuonExclusive_PT': -1000.0,
+ 'DiMuonExclusive_Postscale': 1.0,
+ 'DiMuonExclusive_Prescale': 1.0,
+ 'DiMuonExclusive_VCHI2PDOF': 20.0,
+ 'DiMuonExclusive_checkPV': True,
+ 'DiMuonHighMassSameSign_Postscale': 1.0,
+ 'DiMuonHighMassSameSign_Prescale': 1.0,
+ 'DiMuonHighMassSameSign_checkPV': False,
+ 'DiMuonHighMass_MinMass': 8000.0,
+ 'DiMuonHighMass_MuonP': -8000.0,
+ 'DiMuonHighMass_MuonPT': 650.0,
+ 'DiMuonHighMass_MuonTRCHI2DOF': 5.0,
+ 'DiMuonHighMass_PT': -1000.0,
+ 'DiMuonHighMass_Postscale': 1.0,
+ 'DiMuonHighMass_Prescale': 1.0,
+ 'DiMuonHighMass_VCHI2PDOF': 20.0,
+ 'DiMuonHighMass_checkPV': False,
+ 'DiMuonLowMass_MinMass': 500.0,
+ 'DiMuonLowMass_MuonP': -8000.0,
+ 'DiMuonLowMass_MuonPT': 650.0,
+ 'DiMuonLowMass_MuonTRCHI2DOF': 5.0,
+ 'DiMuonLowMass_PT': -1000.0,
+ 'DiMuonLowMass_Postscale': 1.0,
+ 'DiMuonLowMass_Prescale': 1.0,
+ 'DiMuonLowMass_VCHI2PDOF': 20.0,
+ 'DiMuonLowMass_checkPV': False,
+ 'DiMuonNoPV_Postscale': 1.0,
+ 'DiMuonNoPV_Prescale': 1.0,
+ 'DiMuonSameSign_Postscale': 1.0,
+ 'DiMuonSameSign_Prescale': 0.10000000000000001,
+ 'DiMuonSameSign_checkPV': False,
+ 'DiMuon_MinMass': 2900.0,
+ 'DiMuon_MuonP': -8000.0,
+ 'DiMuon_MuonPT': 650.0,
+ 'DiMuon_MuonTRCHI2DOF': 5.0,
+ 'DiMuon_PT': -1000.0,
+ 'DiMuon_Postscale': 1.0,
+ 'DiMuon_Prescale': 1.0,
+ 'DiMuon_VCHI2PDOF': 20.0,
+ 'DiMuon_checkPV': False,
+ 'Jpsi2MuMu_MaxMass': 3170.0,
+ 'Jpsi2MuMu_MinMass': 3010.0,
+ 'Jpsi2MuMu_MuonP': -8000.0,
+ 'Jpsi2MuMu_MuonPT': 650.0,
+ 'Jpsi2MuMu_MuonTRCHI2DOF': 5.0,
+ 'Jpsi2MuMu_PT': 1500.0,
+ 'Jpsi2MuMu_Postscale': 1.0,
+ 'Jpsi2MuMu_Prescale': 1.0,
+ 'Jpsi2MuMu_VCHI2PDOF': 20.0,
+ 'Jpsi2MuMu_checkPV': False,
+ 'Psi2MuMu_MassWindow': 120.0,
+ 'Psi2MuMu_MuonP': 8000.0,
+ 'Psi2MuMu_MuonPT': 1000.0,
+ 'Psi2MuMu_MuonTRCHI2DOF': 5.0,
+ 'Psi2MuMu_PIDmu': 0.0,
+ 'Psi2MuMu_PT': 2000.0,
+ 'Psi2MuMu_ParticleName': "'psi(2S)'",
+ 'Psi2MuMu_Postscale': 1.0,
+ 'Psi2MuMu_Prescale': 1.0,
+ 'Psi2MuMu_VCHI2PDOF': 20.0,
+ 'Psi2MuMu_checkPV': False}
+}
+
+MicroDSTDiMuon = {
+	'BUILDERTYPE'	:	'DiMuonConf',
+	'CONFIG'	: {'DiMuonExclusive_DZ': -1.0,
+ 'DiMuonExclusive_MinMass': 2900.0,
+ 'DiMuonExclusive_MuonP': -8000.0,
+ 'DiMuonExclusive_MuonPT': 650.0,
+ 'DiMuonExclusive_MuonTRCHI2DOF': 5.0,
+ 'DiMuonExclusive_PT': -1000.0,
+ 'DiMuonExclusive_Postscale': 1.0,
+ 'DiMuonExclusive_Prescale': 1.0,
+ 'DiMuonExclusive_VCHI2PDOF': 20.0,
+ 'DiMuonExclusive_checkPV': True,
+ 'DiMuonHighMassSameSign_Postscale': 1.0,
+ 'DiMuonHighMassSameSign_Prescale': 1.0,
+ 'DiMuonHighMassSameSign_checkPV': True,
+ 'DiMuonHighMass_MinMass': 8000.0,
+ 'DiMuonHighMass_MuonP': -8000.0,
+ 'DiMuonHighMass_MuonPT': 650.0,
+ 'DiMuonHighMass_MuonTRCHI2DOF': 5.0,
+ 'DiMuonHighMass_PT': -1000.0,
+ 'DiMuonHighMass_Postscale': 1.0,
+ 'DiMuonHighMass_Prescale': 1.0,
+ 'DiMuonHighMass_VCHI2PDOF': 20.0,
+ 'DiMuonHighMass_checkPV': True,
+ 'DiMuonLowMass_MinMass': 500.0,
+ 'DiMuonLowMass_MuonP': -8000.0,
+ 'DiMuonLowMass_MuonPT': 650.0,
+ 'DiMuonLowMass_MuonTRCHI2DOF': 5.0,
+ 'DiMuonLowMass_PT': -1000.0,
+ 'DiMuonLowMass_Postscale': 1.0,
+ 'DiMuonLowMass_Prescale': 1.0,
+ 'DiMuonLowMass_VCHI2PDOF': 20.0,
+ 'DiMuonLowMass_checkPV': True,
+ 'DiMuonNoPV_Postscale': 1.0,
+ 'DiMuonNoPV_Prescale': 1.0,
+ 'DiMuonSameSign_Postscale': 1.0,
+ 'DiMuonSameSign_Prescale': 0.10000000000000001,
+ 'DiMuonSameSign_checkPV': True,
+ 'DiMuon_MinMass': 2900.0,
+ 'DiMuon_MuonP': -8000.0,
+ 'DiMuon_MuonPT': 650.0,
+ 'DiMuon_MuonTRCHI2DOF': 5.0,
+ 'DiMuon_PT': -1000.0,
+ 'DiMuon_Postscale': 1.0,
+ 'DiMuon_Prescale': 1.0,
+ 'DiMuon_VCHI2PDOF': 20.0,
+ 'DiMuon_checkPV': True,
+ 'Jpsi2MuMu_MaxMass': 3170.0,
+ 'Jpsi2MuMu_MinMass': 3010.0,
+ 'Jpsi2MuMu_MuonP': -8000.0,
+ 'Jpsi2MuMu_MuonPT': 650.0,
+ 'Jpsi2MuMu_MuonTRCHI2DOF': 5.0,
+ 'Jpsi2MuMu_PT': 1500.0,
+ 'Jpsi2MuMu_Postscale': 1.0,
+ 'Jpsi2MuMu_Prescale': 1.0,
+ 'Jpsi2MuMu_VCHI2PDOF': 20.0,
+ 'Jpsi2MuMu_checkPV': True,
+ 'Psi2MuMu_MassWindow': 120.0,
+ 'Psi2MuMu_MuonP': 8000.0,
+ 'Psi2MuMu_MuonPT': 1000.0,
+ 'Psi2MuMu_MuonTRCHI2DOF': 5.0,
+ 'Psi2MuMu_PIDmu': 0.0,
+ 'Psi2MuMu_PT': 2000.0,
+ 'Psi2MuMu_ParticleName': "'psi(2S)'",
+ 'Psi2MuMu_Postscale': 1.0,
+ 'Psi2MuMu_Prescale': 1.0,
+ 'Psi2MuMu_VCHI2PDOF': 20.0,
+ 'Psi2MuMu_checkPV': True}
+}
+
+Bc2JpsiH = {
+	'BUILDERTYPE'	: 'Bc2JpsiHConf',
+	'CONFIG'	: {'BcIPCHI2': 5000000000.0,
+ 'BcLTIME': -1000000000.0,
+ 'BcMassWindow': 400.0,
+ 'BcPT': 4000.0,
+ 'BcVtxCHI2': 9.0,
+ 'LinePostscale': 1.0,
+ 'LinePrescale': 1.0,
+ 'MuMuIPCHI2': -1.0,
+ 'MuMuMassWindow': 100.0,
+ 'MuMuPT': -10.0,
+ 'MuMuParticleName': "'J/psi(1S)'",
+ 'MuMuVtxCHI2': 9.0,
+ 'MuonIPCHI2': -1.0,
+ 'MuonP': -5.0,
+ 'MuonPT': 1200.0,
+ 'MuonTRCHI2DOF': 5.0,
+ 'PionIPCHI2': 0.0,
+ 'PionP': -5.0,
+ 'PionPT': 2000.0,
+ 'PionTRCHI2DOF': 5.0}
+}
+
+Bc2JpsiHDetached = {
+        'BUILDERTYPE'   : 'Bc2JpsiHConf',
+	'CONFIG'	: {'BcIPCHI2': 25.0,
+ 'BcLTIME': -1000000000.0,
+ 'BcMassWindow': 400.0,
+ 'BcPT': 4000.0,
+ 'BcVtxCHI2': 9.0,
+ 'LinePostscale': 1.0,
+ 'LinePrescale': 1.0,
+ 'MuMuIPCHI2': -1.0,
+ 'MuMuMassWindow': 100.0,
+ 'MuMuPT': -10.0,
+ 'MuMuParticleName': "'J/psi(1S)'",
+ 'MuMuVtxCHI2': 9.0,
+ 'MuonIPCHI2': -1.0,
+ 'MuonP': -5.0,
+ 'MuonPT': 900.0,
+ 'MuonTRCHI2DOF': 5.0,
+ 'PionIPCHI2': 4.0,
+ 'PionP': -5.0,
+ 'PionPT': 1500.0,
+ 'PionTRCHI2DOF': 5.0}
+}
+
+JpsiMuMuforD0MuMu = {
+	'BUILDERTYPE'	: 'JpsiMuMuforD0MuMuConf',
+	'CONFIG'	: {'Jpsi2MuMuForD0mumu_BPVDIRA': 0.99970000000000003,
+ 'Jpsi2MuMuForD0mumu_BPVIPCHI2': 15.0,
+ 'Jpsi2MuMuForD0mumu_BPVVDCHI2': 20.0,
+ 'Jpsi2MuMuForD0mumu_MaxMass': 3140,
+ 'Jpsi2MuMuForD0mumu_MinMass': 3040,
+ 'Jpsi2MuMuForD0mumu_MuonBPVIPCHI2': 3.0,
+ 'Jpsi2MuMuForD0mumu_MuonMaxBPVIPCHI2': 8.0,
+ 'Jpsi2MuMuForD0mumu_MuonMaxPT': 1100.0,
+ 'Jpsi2MuMuForD0mumu_MuonP': 5000.0,
+ 'Jpsi2MuMuForD0mumu_MuonPT': 750.0,
+ 'Jpsi2MuMuForD0mumu_MuonTRCHI2DOF': 5.0,
+ 'Jpsi2MuMuForD0mumu_PT': 1800.0,
+ 'Jpsi2MuMuForD0mumu_Postscale': 1.0,
+ 'Jpsi2MuMuForD0mumu_Prescale': 1.0,
+ 'Jpsi2MuMuForD0mumu_VCHI2PDOF': 10.0}
+}
+
+BuToKX3872 = {
+	'BUILDERTYPE'	: 'StrippingBu2KX3872Conf',
+	'CONFIG' : {'Bu_Comb_MassWindow': 450.0,
+ 'Bu_Comb_MassWindowLoose': 500.0,
+ 'Bu_DIRA': 0.99950000000000006,
+ 'Bu_DIRALoose': 0.99950000000000006,
+ 'Bu_FlightCHI2': 30.0,
+ 'Bu_FlightCHI2Loose': 20.0,
+ 'Bu_IPCHI2': 15.0,
+ 'Bu_IPCHI2Loose': 20.0,
+ 'Bu_MassWindow': 400.0,
+ 'Bu_MassWindowLoose': 400.0,
+ 'Bu_VertexCHI2': 5.0,
+ 'Bu_VertexCHI2Loose': 7.0,
+ 'JPsi_MassWindow': 70.0,
+ 'JPsi_MassWindowLoose': 80.0,
+ 'JPsi_VertexCHI2': 10.0,
+ 'JPsi_VertexCHI2Loose': 10.0,
+ 'Kaon_MinIPCHI2': 4.5,
+ 'Kaon_MinIPCHI2Loose': 4.0,
+ 'Muon_IsMuon': True,
+ 'Muon_MinIPCHI2': 1.5,
+ 'Muon_MinIPCHI2Loose': 1.5,
+ 'Muon_PT': 500.0,
+ 'Pion_MinIPCHI2': 4.5,
+ 'Pion_MinIPCHI2Loose': 4.0,
+ 'Postscale_BuToKPsi2S': 1.0,
+ 'Postscale_BuToKPsi2SLoose': 1.0,
+ 'Postscale_BuToKX3872': 1.0,
+ 'Postscale_BuToKX3872Loose': 1.0,
+ 'Prescale_BuToKPsi2S': 1.0,
+ 'Prescale_BuToKPsi2SLoose': 1.0,
+ 'Prescale_BuToKX3872': 1.0,
+ 'Prescale_BuToKX3872Loose': 1.0,
+ 'Track_CHI2nDOF': 4.0,
+ 'X3872_Comb_MassWindow': 180.0,
+ 'X3872_Comb_MassWindowLoose': 220.0,
+ 'X3872_MassWindow': 150.0,
+ 'X3872_MassWindowLoose': 190.0,
+ 'X3872_VertexCHI2': 8.0,
+ 'X3872_VertexCHI2Loose': 10.0}
+}
+
+FullDSTDiElectron = {
+	'BUILDERTYPE'	: 'DiElectronConf',
+	'CONFIG'	: {'BiasedDiElectronLowMass_ElectronMIPCHI2': 4.0,
+ 'BiasedDiElectronLowMass_ElectronP': -8000.0,
+ 'BiasedDiElectronLowMass_ElectronPIDe': -2.0,
+ 'BiasedDiElectronLowMass_ElectronPT': 500.0,
+ 'BiasedDiElectronLowMass_ElectronTRCHI2DOF': 5.0,
+ 'BiasedDiElectronLowMass_MinMass': 30.0,
+ 'BiasedDiElectronLowMass_PT': -1000.0,
+ 'BiasedDiElectronLowMass_Postscale': 1.0,
+ 'BiasedDiElectronLowMass_Prescale': 1.0,
+ 'BiasedDiElectronLowMass_VCHI2PDOF': 16.0,
+ 'BiasedDiElectron_ElectronMIPCHI2': 4.0,
+ 'BiasedDiElectron_ElectronP': -8000.0,
+ 'BiasedDiElectron_ElectronPIDe': 3.0,
+ 'BiasedDiElectron_ElectronPT': 500.0,
+ 'BiasedDiElectron_ElectronTRCHI2DOF': 5.0,
+ 'BiasedDiElectron_MinMass': 2000.0,
+ 'BiasedDiElectron_PT': -1000.0,
+ 'BiasedDiElectron_Postscale': 1.0,
+ 'BiasedDiElectron_Prescale': 1.0,
+ 'BiasedDiElectron_VCHI2PDOF': 16.0,
+ 'DiElectronLowMass_ElectronP': -8000.0,
+ 'DiElectronLowMass_ElectronPIDe': 4.0,
+ 'DiElectronLowMass_ElectronPT': 1100.0,
+ 'DiElectronLowMass_ElectronTRCHI2DOF': 5.0,
+ 'DiElectronLowMass_MinMass': 30.0,
+ 'DiElectronLowMass_PT': -1000.0,
+ 'DiElectronLowMass_Postscale': 1.0,
+ 'DiElectronLowMass_Prescale': 0.20000000000000001,
+ 'DiElectronLowMass_VCHI2PDOF': 16.0,
+ 'DiElectronLowMass_checkPV': False,
+ 'DiElectron_ElectronP': -8000.0,
+ 'DiElectron_ElectronPIDe': 4.0,
+ 'DiElectron_ElectronPT': 1100.0,
+ 'DiElectron_ElectronTRCHI2DOF': 5.0,
+ 'DiElectron_MinMass': 2000.0,
+ 'DiElectron_PT': -1000.0,
+ 'DiElectron_Postscale': 1.0,
+ 'DiElectron_Prescale': 1.0,
+ 'DiElectron_VCHI2PDOF': 16.0,
+ 'DiElectron_checkPV': False,
+ 'Jpsi2ee_ElectronP': -8000.0,
+ 'Jpsi2ee_ElectronPIDe': 4.0,
+ 'Jpsi2ee_ElectronPT': 1200.0,
+ 'Jpsi2ee_ElectronTRCHI2DOF': 5.0,
+ 'Jpsi2ee_MaxMass': 3800.0,
+ 'Jpsi2ee_MinMass': 2000.0,
+ 'Jpsi2ee_PT': 1500.0,
+ 'Jpsi2ee_Postscale': 1.0,
+ 'Jpsi2ee_Prescale': 1.0,
+ 'Jpsi2ee_VCHI2PDOF': 16.0,
+ 'Jpsi2ee_checkPV': False}
+}
+
+MicroDSTDiElectron = {
+	'BUILDERTYPE'	:	'DiElectronConf',
+	'CONFIG'	: {'BiasedDiElectronLowMass_ElectronMIPCHI2': 4.0,
+ 'BiasedDiElectronLowMass_ElectronP': -8000.0,
+ 'BiasedDiElectronLowMass_ElectronPIDe': -2.0,
+ 'BiasedDiElectronLowMass_ElectronPT': 300.0,
+ 'BiasedDiElectronLowMass_ElectronTRCHI2DOF': 5.0,
+ 'BiasedDiElectronLowMass_MinMass': 30.0,
+ 'BiasedDiElectronLowMass_PT': -1000.0,
+ 'BiasedDiElectronLowMass_Postscale': 1.0,
+ 'BiasedDiElectronLowMass_Prescale': 1.0,
+ 'BiasedDiElectronLowMass_VCHI2PDOF': 16.0,
+ 'BiasedDiElectron_ElectronMIPCHI2': 4.0,
+ 'BiasedDiElectron_ElectronP': -8000.0,
+ 'BiasedDiElectron_ElectronPIDe': 2.0,
+ 'BiasedDiElectron_ElectronPT': 500.0,
+ 'BiasedDiElectron_ElectronTRCHI2DOF': 5.0,
+ 'BiasedDiElectron_MinMass': 2000.0,
+ 'BiasedDiElectron_PT': -1000.0,
+ 'BiasedDiElectron_Postscale': 1.0,
+ 'BiasedDiElectron_Prescale': 1.0,
+ 'BiasedDiElectron_VCHI2PDOF': 16.0,
+ 'DiElectronLowMass_ElectronP': -8000.0,
+ 'DiElectronLowMass_ElectronPIDe': 2.0,
+ 'DiElectronLowMass_ElectronPT': 750.0,
+ 'DiElectronLowMass_ElectronTRCHI2DOF': 5.0,
+ 'DiElectronLowMass_MinMass': 30.0,
+ 'DiElectronLowMass_PT': -1000.0,
+ 'DiElectronLowMass_Postscale': 1.0,
+ 'DiElectronLowMass_Prescale': 1.0,
+ 'DiElectronLowMass_VCHI2PDOF': 16.0,
+ 'DiElectronLowMass_checkPV': True,
+ 'DiElectron_ElectronP': -8000.0,
+ 'DiElectron_ElectronPIDe': 2.0,
+ 'DiElectron_ElectronPT': 1100.0,
+ 'DiElectron_ElectronTRCHI2DOF': 5.0,
+ 'DiElectron_MinMass': 2000.0,
+ 'DiElectron_PT': -1000.0,
+ 'DiElectron_Postscale': 1.0,
+ 'DiElectron_Prescale': 1.0,
+ 'DiElectron_VCHI2PDOF': 16.0,
+ 'DiElectron_checkPV': True,
+ 'Jpsi2ee_ElectronP': -8000.0,
+ 'Jpsi2ee_ElectronPIDe': 4.0,
+ 'Jpsi2ee_ElectronPT': 1200.0,
+ 'Jpsi2ee_ElectronTRCHI2DOF': 5.0,
+ 'Jpsi2ee_MaxMass': 3800.0,
+ 'Jpsi2ee_MinMass': 2000.0,
+ 'Jpsi2ee_PT': -1500.0,
+ 'Jpsi2ee_Postscale': 1.0,
+ 'Jpsi2ee_Prescale': 1.0,
+ 'Jpsi2ee_VCHI2PDOF': 16.0,
+ 'Jpsi2ee_checkPV': True}
+}
+
+
+Jpsi2eeForElectronID = {
+	'BUILDERTYPE'	: 'StrippingElectronID',
+	'CONFIG'	: {'Both_MIPCHI2': 9.0,
+ 'Both_P': 3000.0,
+ 'Both_PT': 500.0,
+ 'Both_TRCHI2DOF': 5.0,
+ 'LinePostscale': 1.0,
+ 'LinePrescale': 0.40000000000000002,
+ 'Probe_MIPCHI2': 9.0,
+ 'Probe_P': 3000.0,
+ 'Probe_PT': 500.0,
+ 'Tag_MIPCHI2': 9.0,
+ 'Tag_P': 6000.0,
+ 'Tag_PIDe': 5.0,
+ 'Tag_PT': 1500.0,
+ 'eeCombMaxMass': 4300.0,
+ 'eeCombMinMass': 2100.0,
+ 'eeFDCHI2': 225.0,
+ 'eeMaxMass': 4200.0,
+ 'eeMinMass': 2200.0,
+ 'eeVCHI2PDOF': 9.0}
+}
+
+Ccbar2Ppbar = {
+	'BUILDERTYPE'	: 'StrippingCcbar2PpbarNew',
+	'CONFIG'	: {'CCPT': -2.0,
+ 'CombMaxMass': 4050.0,
+ 'CombMinMass': 2850.0,
+ 'LinePostscale': 1.0,
+ 'LinePrescale': 1.0,
+ 'MaxMass': 4000.0,
+ 'MinMass': 2900.0,
+ 'ProtonP': -2.0,
+ 'ProtonPIDpK': 5.0,
+ 'ProtonPIDppi': 10.0,
+ 'ProtonPT': 1950.0,
+ 'ProtonTRCHI2DOF': 5.0,
+ 'SpdMult': 600.0,
+ 'VtxCHI2': 9.0}
+}
+
+Ccbar2PpbarExclusive = {
+	'BUILDERTYPE'	: 'StrippingCcbar2PpbarNew',
+	'CONFIG'	: {'CCPT': -2.0,
+ 'CombMaxMass': 1000000.0,
+ 'CombMinMass': 0.0,
+ 'LinePostscale': 1.0,
+ 'LinePrescale': 1.0,
+ 'MaxMass': 1000000.0,
+ 'MinMass': 0.0,
+ 'ProtonP': -2.0,
+ 'ProtonPIDpK': 5.0,
+ 'ProtonPIDppi': 10.0,
+ 'ProtonPT': 500.0,
+ 'ProtonTRCHI2DOF': 5.0,
+ 'SpdMult': 100.0,
+ 'VtxCHI2': 9.0}
+}
+
+DForBSemi = {
+	'BUILDERTYPE'	: 'StrippingDForBSemi',
+	'CONFIG'	: {'DDocaChi2Max': 20,
+ 'DpPreScale': 0.040000000000000001,
+ 'DsAMassWin': 100.0,
+ 'DsDIRA': 0.98999999999999999,
+ 'DsFDCHI2': 100.0,
+ 'DsIP': 7.4000000000000004,
+ 'DsMassWin': 80.0,
+ 'DsPreScale': 0.040000000000000001,
+ 'DsVCHI2DOF': 6.0,
+ 'KaonPIDK': 4.0,
+ 'LcPreScale': 0.080000000000000002,
+ 'MINIPCHI2': 9.0,
+ 'PT': 300.0,
+ 'PionPIDK': 10.0,
+ 'TRCHI2': 5.0}
+}
+
+
+D0ForBXX = {
+	'BUILDERTYPE'	: 'StrippingD0ForBXX',
+	'CONFIG'	: {'D0AMassWin': 100.0,
+ 'D0DIRA': 0.99990000000000001,
+ 'D0DIRAK3Pi': 0.99990000000000001,
+ 'D0IP': 0.20000000000000001,
+ 'D0K3PiIP': 0.20000000000000001,
+ 'D0MassWin': 80.0,
+ 'D0VCHI2DOF': 6.0,
+ 'DDocaChi2Max': 20,
+ 'FDCHI2': 100.0,
+ 'KaonPIDK': 4.0,
+ 'MINIPCHI2': 9.0,
+ 'PT': 300.0,
+ 'PionPIDK': 10.0,
+ 'PreScale': 0.029999999999999999,
+ 'TRCHI2': 5.0}
+}
+
+# This not in new form
+#from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
+
+
+DisplVertices = {
+	'BUILDERTYPE'	: 'DisplVerticeLinesConf',
+	'CONFIG'	: {'MaterialVeto': {'Double': 0,
+                  'PreselVelo': 5,
+                  'SingleDown': 0,
+                  'SingleHighMass': 0,
+                  'SingleLowMass': 5,
+                  'SinglePS': 0},
+ 'MaxMass': {'Double': 14000000.0,
+             'SingleDown': 14000000.0,
+             'SingleHighMass': 14000000.0,
+             'SingleLowMass': 12000.0,
+             'SinglePS': 14000000.0},
+ 'MaxSumPt': {'Double': 14000000.0,
+              'SingleDown': 14000000.0,
+              'SingleHighMass': 14000000.0,
+              'SingleLowMass': 14000000.0,
+              'SinglePS': 14000000.0},
+ 'MinMass': {'Double': 3000.0,
+             'PreselVelo': 3000.0,
+             'SingleDown': 3000.0,
+             'SingleHighMass': 12000.0,
+             'SingleLowMass': 6800.0,
+             'SinglePS': 5000.0},
+ 'MinR': {'Double': 0.29999999999999999,
+          'PreselVelo': 0.29999999999999999,
+          'SingleDown': 0.29999999999999999,
+          'SingleHighMass': 0.29999999999999999,
+          'SingleLowMass': 0.29999999999999999,
+          'SinglePS': 0.29999999999999999},
+ 'MinSumPt': {'Double': 3000.0,
+              'PreselVelo': 3000.0,
+              'SingleDown': 3500.0,
+              'SingleHighMass': 6000.0,
+              'SingleLowMass': 6000.0,
+              'SinglePS': 5000.0},
+ 'MinZ': {'Double': -10000.0,
+          'SingleDown': 100.0,
+          'SingleHighMass': -10000.0,
+          'SingleLowMass': -10000.0,
+          'SinglePS': -10000.0},
+ 'NCands': {'Double': 2,
+            'SingleDown': 1,
+            'SingleHighMass': 1,
+            'SingleLowMass': 1,
+            'SinglePS': 1},
+ 'NTracks': {'Double': 4,
+             'PreselVelo': 4,
+             'SingleDown': 4,
+             'SingleHighMass': 5,
+             'SingleLowMass': 6,
+             'SinglePS': 5},
+ 'RCutMethod': 'FromUpstreamPV',
+ 'prescale': {'Double': 1.0,
+              'SingleDown': 1.0,
+              'SingleHighMass': 1.0,
+              'SingleLowMass': 1.0,
+              'SinglePS': 0.050000000000000003}}
+}
+
+#####################
+# Electroweak Lines #
+#####################
+# Z02MuMu
+Z02MuMu = {
+    'BUILDERTYPE'  : 'Z02MuMuConf',
+    'CONFIG'       : {
+    'Z02MuMuLinePrescale'    : 1.0,
+    'Z02MuMuLinePostscale'   : 1.0,
+    'Z0MinMass' : 40.,
+    'mucut' : 15.    
+    }
+    }
+
+#WMu
+WMu = {
+    'BUILDERTYPE'  : 'WMuConf',
+    'CONFIG'       : {
+    'WMuLinePrescale_ps'    : .1,
+    'WMuLinePrescale'    : 1.0, 
+    'WMuLinePostscale'   : 1.0,
+    'mucuttight' : 20.,
+    'mucut' : 15.,
+    'mucutlow' : 5.,
+    'trkpchi2' : 0.001
+    }
+    }
+
+#DY2MuMu
+DY2MuMu = {
+    'BUILDERTYPE'  : 'DY2MuMuConf',
+    'CONFIG'       : {
+    'DY2MuMu1Line_psPrescale'    : .02,
+    'DY2MuMu1Line_HltPrescale': .05,
+    'DY2MuMu1Line_HltaPrescale': .5,
+    'DY2MuMu1LinePostscale'   : 1.0,
+    'DY2MuMu2LinePrescale'    : .5,
+    'DY2MuMu2Line_HltPrescale': .1,
+    'DY2MuMu2Line_HltaPrescale': 1.0,
+    'DY2MuMu2LinePostscale'   : 1.0,
+    'DY2MuMu3LinePrescale'    : 1.0,
+    'DY2MuMu3LinePostscale'   : 1.0,
+    'DY2MuMu4LinePrescale'    : 1.0,
+    'DY2MuMu4LinePostscale'   : 1.0,
+    'DY1MinMass' : 2.5,
+    'DY1jpsiexclow' : 3.0,
+    'DY1jpsiexchigh' : 3.2,
+    'DY1MaxMass' : 5.,
+    'DY2MinMass' : 5.,
+    'DY2MaxMass' : 10.,
+    'DY3MinMass' : 10.,
+    'DY3MaxMass' : 20.,
+    'DY4MinMass' : 20.,
+    'DY4MaxMass' : 40.,
+    'mupt1' : 800.,
+    'mupt2' : 1.,
+    'mutrkpchi2' : 0.001,
+    'muipdvchi2ratio' : 5.,
+    'mupidreq' : -3.,
+    }
+    }
+
+#Z02ee
+Z02ee = {
+    'BUILDERTYPE'  : 'Z02eeConf',
+    'CONFIG'       : {
+    'Z02eeLinePrescale'    : 1.0, 
+    'Z02eeLinePostscale'   : 1.0,
+    'Z0MinMass' : 40.,
+    'ptcut' : 10.,
+    'trkpchi2' : 0.001,
+    'HCalMax' : 0.05,
+    'ECalMin' : 0.1,
+    'PrsCalMin' : 50.,
+    'mipdvchi2ratio' : 5.
+    }
+    }
+
+#We
+We = {
+    'BUILDERTYPE'  : 'WeConf',
+    'CONFIG'       : {
+    'WeLinePrescale'    : 1.0,
+    'WeLinePostscale'   : 1.0,
+    'WeLinePrescale_ps'    : .1,
+    'ptcut' : 20.,
+    'ptcut_ps' : 15.,
+    'trkpchi2' : 0.001,
+    'HCalMax' : 0.05,
+    'ECalMin' : 0.1,
+    'PrsCalMin' : 50.,
+    'trkghostprob' : 0.6
+    }
+    }
+
+#DY2ee
+DY2ee = {
+    'BUILDERTYPE'  : 'DY2eeConf',
+    'CONFIG'       : {
+    'DY2eeLine1Prescale'    : .05,
+    'DY2eeLine2Prescale'   : .5,
+    'DY2eeLine3Prescale'   : 1.0,
+    'DY2eeLine4Prescale'   : 1.0,
+    'DY2eeLinePostscale'   : 1.0,
+    'DY1MinMass' : 2.5,
+    'DY1MaxMass' : 5.,
+    'DY2MinMass' : 5.,
+    'DY2MaxMass' : 10.,
+    'DY3MinMass' : 10.,
+    'DY3MaxMass' : 20.,
+    'DY4MinMass' : 20.,
+    'DY4MaxMass' : 40.,
+    'ptcut1' : 1.,
+    'ptcut2' : 2.,
+    'ptcut3' : 5.,
+    'ePID'   : 1.,
+    'trkpchi2' : 0.001,
+    'HCalMax' : 0.05,
+    'ECalMin' : 0.1,
+    'PrsCalMin' : 50.,
+    'mipdvchi2ratio' : 5.
+    }
+    }
+
+#MuMuSS
+MuMuSS = {
+    'BUILDERTYPE'  : 'MuMuSSConf',
+    'CONFIG'       : {
+    'MuMuSSLine1Prescale' : .01,
+    'MuMuSSLine2Prescale' : .1,
+    'MuMuSSLine3Prescale' : 1.0,
+    'MuMuSSLine4Prescale' : 1.0,
+    'MuMuSSLine1Postscale' : 1.0,
+    'MuMuSSLine2Postscale' : 1.0,
+    'MuMuSSLine3Postscale' : 1.0,
+    'MuMuSSLine4Postscale' : 1.0,
+    'MuMuSSLine1MinMass' : 2.5,
+    'MuMuSSLine1jpsiexclow' : 3.0,
+    'MuMuSSLine1jpsiexchigh' : 3.2,
+    'MuMuSSLine1MaxMass' : 5.,
+    'MuMuSSLine2MinMass' : 5.,
+    'MuMuSSLine2MaxMass' : 10.,
+    'MuMuSSLine3MinMass' : 10.,
+    'MuMuSSLine3MaxMass' : 20.,
+    'MuMuSSLine4MinMass' : 20.,
+    'mucut' : 1.         
+    }
+    }
+
+#LowMult
+LowMult = {
+    'BUILDERTYPE'  : 'LowMultConf',
+    'CONFIG'       : {
+    'LowMultPrescale'    : 1.0,
+    'LowMultPostscale'   : 1.0    
+    }
+    }
+
+#DiPhotonDiMuon
+DiPhotonDiMuon = {
+    'BUILDERTYPE'  : 'PP2PPMuMuConf',
+    'CONFIG'       : {
+    'PP2PPMuMuLinePrescale'    : 1.0,
+    'PP2PPMuMuLinePostscale'   : 1.0   
+    }
+    }
+
+
+#SingleTrackTIS
+SingleTrackTIS = {
+    'BUILDERTYPE'  : 'SingleTrackTISConf',
+    'CONFIG'       : {
+    'LowPtPrescale'     : .01,
+    'LowPtPostscale'  : 1.0,
+    'HighPtPrescale'  : .1,
+    'HighPtPostscale' : 1.0,
+    'LowPtCut'  : 5.,
+    'HighPtCut' : 15.,
+    }
     }
 
