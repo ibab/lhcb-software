@@ -429,7 +429,8 @@ B2XGamma = {
                 ,'Bd2KstGammaWidePostScale'          : 1.0
                 ,'Bd2KstGammaPreScale'               : 1.0
                 ,'Bd2KstGammaPostScale'              : 1.0
-                }
+                },
+    'WGs'  : ['RD']
     }
 
 B2hhLTUnbiased = {
@@ -1051,7 +1052,8 @@ Bs2MuMuPhi = {
     , 'KaonPIDK'           : 0             # dimensionless
     , 'KaonMINIPCHI2'      : 9.0           # dimensionless
     , 'MuonMINIPCHI2'      : 9.0           # dimensionless
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 # Bd2KstarMuMu for MVA
@@ -1093,7 +1095,8 @@ Bd2KstarMuMu = {
     'B_Dau_MaxIPCHI2'           : 9.0,
     'Kstar_Dau_MaxIPCHI2'       : 9.0,
     'Dimu_Dau_MaxIPCHI2'        : 9.0
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 
@@ -1119,7 +1122,8 @@ B2XMuMu =  {
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV 
     , 'KstarplusWINDOW'    : 300.0         # MeV
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 # B2XMuMu lines for Majorana searches
@@ -1151,7 +1155,8 @@ B2XMuMuSS = {
     'B2KMuMuOSLinePostscale'  : 1 ,
     'B2KMuMuSSLinePrescale'   : 1 ,
     'B2KMuMuSSLinePostscale'  : 1
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 
@@ -1196,7 +1201,8 @@ Bd2eeKstar = {
     'BFDCHI2'                 :    9.   , 
     'BDIRA'                   :    0.999, 
     'BIP'                     :    0.05    # mm
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 ### Bu2LLK
@@ -1220,7 +1226,8 @@ Bu2LLK = {
     ,  'Bu2eeKLinePostscale' : 1
     ,  'Bu2mmKLinePrescale'  : 1
     ,  'Bu2mmKLinePostscale' : 1
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 
@@ -1245,7 +1252,8 @@ Bs2MuMuLines = {
     'MuTrChi2_loose'        : 10,
     'BIPChi2_loose'         : 64,
     'BFDChi2_loose'         : 100
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
 ### B2MuMuMuMuLines
@@ -1255,7 +1263,8 @@ B2MuMuMuMuLines = {
     'CONFIG'      : {
     'B2MuMuMuMuLinePrescale'    : 1,
     'B2MuMuMuMuLinePostscale'   : 1,
-    }
+    },
+    'WGs' : [ 'RD' ]
     }
 
 ### Stripping TriMuons
@@ -1276,6 +1285,7 @@ TriMuon = {
     "ctau    =                    BPVLTIME ( ) * c_light "  ,
     "ctauBc  = PDGM('B_c+') / M * BPVLTIME ( ) * c_light "  
     ]
-    }
+    },
+    'WGs' : [ 'RD' ] 
     }
 
