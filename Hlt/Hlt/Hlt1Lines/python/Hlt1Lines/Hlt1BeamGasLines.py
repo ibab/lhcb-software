@@ -393,7 +393,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                       , prescale = self.prescale
                       , ODIN  = odin
                       , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, L0RateLimit) if L0RateLimit else l0du
-                      , algos = [ DecodeVELO, algCheckTracks ] + algTracking + [algProtoVertex, algPV3D, algVertexFilter ]
+                      , algos = [ DecodeVELO, algCheckTracks, algProtoVertex ] + algTracking + [ algPV3D, algVertexFilter ]
                       , postscale = self.postscale
                       )
  
