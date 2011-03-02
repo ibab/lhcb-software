@@ -54,8 +54,8 @@ class Muons_draft2011 :
             #'Hlt2MuTrack2',
             #'Hlt2MuTrack3',
              
-            'Hlt2TriMuonsDetached',
-            'Hlt2TriMuonsTau',
+            'Hlt2TriMuonDetached',
+            'Hlt2TriMuonTau',
       
             'Hlt2CharmRareDecayD02MuMu',    
             "Hlt2Dst2PiD02PiPi",            
