@@ -18,6 +18,7 @@ import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 import StrippingBu2D0h_D02KShh_NoPID
 import StrippingBu2D0h_D02KShh_NoPID_WS
+import StrippingNoPIDDstarWithD02RSKPi
 import StrippingInclPhi
 import StrippingV0ForPID
 import StrippingB2JpsiXforBeta_s
@@ -68,6 +69,8 @@ import StrippingDiPhotonDiMuon
 import StrippingPromptCharm
 
 import StrippingDisplVertices
+
+import StrippingMiniBias
 
 from sys import modules as _modules
 _this = _modules[__name__]
