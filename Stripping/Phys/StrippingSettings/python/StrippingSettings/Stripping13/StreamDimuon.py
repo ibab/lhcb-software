@@ -20,14 +20,6 @@ configs = [
 	'BetaS', 
 	'BetaSPsi2S',
         'BetaSPsi2SMuMu',
-	'BetaSBs2JpsieePhi',
-	'BetaSQ2B',
-	'BetaSBs2PhiPhi',
-	'BetaSBs2KstKst',
-	'BetaSBs2PhiKst',
-	'BetaSBs2EtacPhi',
-	'BetaSBs2ChicPhi_Chic2KKPiPi',
-	'BetaSBs2ChicPhi_Chic2PiPiPiPi'
 	]
 
 # FWG

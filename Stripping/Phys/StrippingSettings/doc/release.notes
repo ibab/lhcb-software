@@ -8,6 +8,7 @@
  - Added more beta_s lines to stripping13 dimuon stream and to the 
    list of dictionaries.
  - Added RD and FWG lines to dimuon stream and more config dictionaries.
+ - Added many more streams for stripping13. Still more lines to add.
 
 ! 2011-03-02 - William James Barter
  - Added dictionaries for Electroweak Lines.

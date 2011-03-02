@@ -1641,7 +1641,7 @@ MicroDSTDiElectron = {
 
 
 Jpsi2eeForElectronID = {
-	'BUILDERTYPE'	: 'StrippingElectronID',
+	'BUILDERTYPE'	: 'ElectronIDConf',
 	'CONFIG'	: {'Both_MIPCHI2': 9.0,
  'Both_P': 3000.0,
  'Both_PT': 500.0,
@@ -1664,7 +1664,7 @@ Jpsi2eeForElectronID = {
 }
 
 Ccbar2Ppbar = {
-	'BUILDERTYPE'	: 'StrippingCcbar2PpbarNew',
+	'BUILDERTYPE'	: 'Ccbar2PpbarConf',
 	'CONFIG'	: {'CCPT': -2.0,
  'CombMaxMass': 4050.0,
  'CombMinMass': 2850.0,
@@ -1682,7 +1682,7 @@ Ccbar2Ppbar = {
 }
 
 Ccbar2PpbarExclusive = {
-	'BUILDERTYPE'	: 'StrippingCcbar2PpbarNew',
+	'BUILDERTYPE'	: 'Ccbar2PpbarConf',
 	'CONFIG'	: {'CCPT': -2.0,
  'CombMaxMass': 1000000.0,
  'CombMinMass': 0.0,
@@ -1700,7 +1700,7 @@ Ccbar2PpbarExclusive = {
 }
 
 DForBSemi = {
-	'BUILDERTYPE'	: 'StrippingDForBSemi',
+	'BUILDERTYPE'	: 'DforBSemiLinesConf',
 	'CONFIG'	: {'DDocaChi2Max': 20,
  'DpPreScale': 0.040000000000000001,
  'DsAMassWin': 100.0,
@@ -1720,7 +1720,7 @@ DForBSemi = {
 
 
 D0ForBXX = {
-	'BUILDERTYPE'	: 'StrippingD0ForBXX',
+	'BUILDERTYPE'	: 'D0forBXXLinesConf',
 	'CONFIG'	: {'D0AMassWin': 100.0,
  'D0DIRA': 0.99990000000000001,
  'D0DIRAK3Pi': 0.99990000000000001,
