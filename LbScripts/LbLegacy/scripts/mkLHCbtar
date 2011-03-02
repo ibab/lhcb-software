@@ -236,8 +236,6 @@ def make_tar(pname, pversion, binary=''):
             v = os.listdir(os.path.join(here, maindir, 'GaudiExamples'))
             os.chdir(os.path.join(here, maindir, 'GaudiExamples', v[0], 'home'))
 
-        for line in os.popen('cvs update').readlines():
-            if line.split()[0] == '?': os.remove(line.split()[1])
         os.chdir(here)
 
 #
@@ -270,7 +268,10 @@ def make_tar(pname, pversion, binary=''):
             status, OSC_home = commands.getstatusoutput('cmt show macro_value OSC_home')
             status, LCG_system = commands.getstatusoutput('cmt show macro_value LCG_system')
             OSC_PATH = OSC_home.split(LCG_system)[0]
-            CMTPATH = CMTPATH + ':' + OSC_PATH[0:-1]
+            while OSC_PATH.endswith(os.sep) :
+                OSC_PATH = OSC_PATH[:-1]
+            CMTPATH = os.pathsep.join([CMTPATH, OSC_PATH])
+
     os.putenv('CMTPATH', CMTPATH)
     os.environ['CMTPATH'] = CMTPATH
 
