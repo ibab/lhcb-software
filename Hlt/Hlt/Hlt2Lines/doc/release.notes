@@ -20,6 +20,7 @@
      . Made mass windows properties and introduced a mass cut in
        CombineParticles to reduce combinatorics.
      . Moved units from cut strings to slot assignment.
+ - Hlt2D2KS0HLines: Some code clean-up.  Moved units from cut strings slots.
 
 !========================== Hlt2Lines v8r1 2011-03-02 ===================
 ! 2011-03-02 - Gerhard Raven
