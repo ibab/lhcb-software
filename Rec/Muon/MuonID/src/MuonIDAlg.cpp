@@ -381,8 +381,8 @@ StatusCode MuonIDAlg::initialize() {
     debug()  << "Initialise: Conditions database with muon ID info found"  << endmsg;
 
     if(m_OverrideDB){  // Keep values from options file. Ignore database data
-      warning() << "Initialise: OverrideDB=true. Data from Conditions database will be ignored." << endmsg;
-      warning() << "Initialise: Using values read from options file" << endmsg;
+      info() << "Initialise: OverrideDB=true. Data from Conditions database will be ignored." << endmsg;
+      info() << "Initialise: Using values read from options file" << endmsg;
     }
     else {  // Use database values instead of options file ones.
       // THE CONDITIONS AND THEIR REGISTERING SHOULD BE DONE AFTER GaudiAlgorithm::initialize() !!
