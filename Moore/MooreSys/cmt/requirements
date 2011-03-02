@@ -7,6 +7,9 @@ branches doc cmt
 #=======================================================
 
 use  Moore              v12r1   Hlt
+# patches
+use MuonID              v8r0p1  Muon
+
 # Declare this as a container package
 apply_pattern container_package
 
