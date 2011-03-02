@@ -202,8 +202,8 @@ class Moore(LHCbConfigurableUser):
         # Sleep in [ms] for each child in batches of 10:
         forker.ChildSleep          = 500;
         forker.UtgidPattern        = "%NN_%T_%02d";
-        forker.PrintLevel          = 1  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
-        forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
+        forker.PrintLevel          = 2  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
+        forker.OutputLevel         = 3  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
         ApplicationMgr().ExtSvc.append(forker)
 
     def _configureOnlineCheckpointing(self):
