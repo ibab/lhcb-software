@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Greig Cowan
+ - Added lines to __init__.py to get Stripping13 development version
+   working.
+
 ! 2011-03-02 - Albert Puig
  - Simplified makeKStar code for StrippingB2XGamma
 

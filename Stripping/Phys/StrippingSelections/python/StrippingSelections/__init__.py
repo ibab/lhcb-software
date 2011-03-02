@@ -43,7 +43,19 @@ import StrippingB2MuMuMuMuLines
 import StrippingBu2LLK
 import StrippingBd2eeKstar
 import StrippingBd2JpsieeKstar
+
+import StrippingDiMuonNew
+import StrippingBc2JpsiHNew
+import StrippingJpsiMuMuforD0MuMu
+import StrippingBuToKX3872
 import StrippingSingleTrackTIS
+import StrippingDiElectronNew
+import StrippingElectronID
+import StrippingCcbar2PpbarNew
+import StrippingDForBSemi
+import StrippingD0ForBXX
+import StrippingJpsippForD0MuMu
+
 import StrippingZ02MuMu
 import StrippingZ02ee
 import StrippingWMu
@@ -54,6 +66,8 @@ import StrippingMuMuSS
 import StrippingLowMult
 import StrippingDiPhotonDiMuon
 import StrippingPromptCharm
+
+import StrippingDisplVertices
 
 from sys import modules as _modules
 _this = _modules[__name__]
