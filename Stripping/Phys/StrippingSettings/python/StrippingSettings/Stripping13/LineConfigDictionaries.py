@@ -41,9 +41,123 @@ BetaS = {
         ,       'Bu2JpsiKPrescale'      :       0.1
         ,       'Bd2JpsiKstarPrescale'  :       0.05
         ,       'Bd2JpsiKsPrescale'     :       0.5
-        ,       'Bs2JpsiPhiPrescale'    :       0.5
+        ,       'Bs2JpsiPhiPrescale'    :       0.2
         ,       'Bs2JpsiEtaPrescale'    :       0.2
         }
+	}
+
+# Neus
+BetaSPsi2S = {
+	'WGs'		: ['betas'],
+        'BUILDERTYPE'   : 'B2Psi2SXConf',
+	'CONFIG'	: {
+		'PionsTRCHI2DOF': 5,
+                 'Psi2SJpsiMIPCHI2DV' : 4 ,
+                 'Psi2SPiMIPCHI2DV':4 ,
+                 'Psi2SAM23down': 400,
+                 'Psi2SAM23up': 800,
+                 'Psi2SAPT': 500,
+                 'Psi2SADAMASS': 30,
+                 'Psi2SVFASPF': 16,
+                 'ChKTRCHI2DOF':5,
+                 'ChKPID':-2,#   
+                 'PhiWin':20,
+                 'PhiPT':500,
+                 'PhiVFASPF':16,
+                 'PhiMAXTRCHI2DOF':5,
+                 'PhiMINTRCHI2DOF':-2,#
+                 'KstMassDown':  826,
+                 'KstMassUp': 966,
+                 'KstAPT':500,
+                 'KstVFASPF':16,
+                 'KstTRCHI2DOF':4,
+                 'KstPIDK': -2,
+                 'KsVFASPF':20,
+                 'KsBPVDLS':5,
+                 'incl_LinePrescale':0.5,
+                 'incl_LinePostscale':1,
+                 'BsMassCutDownPre':5000,
+                 'BsMassCutUpPre':5650,
+                 'BsMassCutDownPost':5100,
+                 'BsMassCutUpPost':5550,
+                 'BsVCHI2PDOF':10,
+                 'sig_LinePrescale': 1,
+                 'sig_LinePostscale': 1,
+                 'ChKPT': 500 ,
+                 'K_LinePrescale': 1,
+                 'K_LinePostscale': 1,
+                 'Kstar_LinePrescale': 1,
+                 'Kstar_LinePostscale': 1,
+                 'BKsVCHI2PDOF': 10,
+                 'Ks_LinePrescale': 1,
+                 'Ks_LinePostscale':1
+                 }
+	}
+
+# Neus
+BetaSPsi2SMuMu = {
+        'WGs'           : ['betas'],
+        'BUILDERTYPE'   : 'Bs2Psi2SPhiMuMuConf',
+        'CONFIG'        : {
+		'muPID':0.,
+                 'Psi2SMassWin':60.,
+                 'Psi2SADOCACHI2CUT':30.,
+                 'Psi2SVFASPF':16,
+                 'ChKTRCHI2DOF':5,
+                 'ChKPID':-2,   
+                 'PhiWin':20,
+                 'PhiPT':500,
+                 'PhiVFASPF':16,
+                 'PhiMAXTRCHI2DOF':5,
+                 'PhiMINTRCHI2DOF':-2,
+                 'KstMassDown':  826,
+                 'KstMassUp': 966,
+                 'KstAPT':500,
+                 'KstVFASPF':16,
+                 'KstTRCHI2DOF':4,
+                 'KstPIDK': -2,
+                 'KsVFASPF':20,
+                 'KsBPVDLS':5,
+                 'incl_LinePrescale':0.5,
+                 'incl_LinePostscale':1,
+                 'BPVLTIME_detatched':0.15,
+                 'incl_DetatchedLinePrescale':1,
+                 'incl_DetatchedLinePostscale':1,
+                 'BsMassCutDownPre':5000,
+                 'BsMassCutUpPre':5650,
+                 'BsMassCutDownPost':5100,
+                 'BsMassCutUpPost':5550,
+                 'BsVCHI2PDOF':10,
+                 'sig_PrescaledLinePrescale':1,
+                 'sig_PrescaledLinePostscale':1,
+                 'sig_DetatchedLinePrescale':1,
+                 'sig_DetatchedLinePostscale':1,
+                 'BPVLTIME_unbiased': None,
+                 'MINTREEPT':1000,
+                 'sig_UnbiasedLinePrescale':1,
+                 'sig_UnbiasedLinePostscale':1,
+                 'ChKPT':500,
+                 'K_PrescaledLinePrescale':1,
+                 'K_PrescaledLinePostscale':1,
+                 'K_DetatchedLinePrescale':1,
+                 'K_DetatchedLinePostscale':1,
+                 'K_UnbiasedLinePrescale':1,
+                 'K_UnbiasedLinePostscale':1,
+                 'KstarPT': 2,
+                 'Kstar_PrescaledLinePrescale':0.5,
+                 'Kstar_PrescaledLinePostscale':1,
+                 'Kstar_DetatchedLinePrescale':1,
+                 'Kstar_DetatchedLinePostscale':1,
+                 'Kstar_UnbiasedLinePrescale':1,
+                 'Kstar_UnbiasedLinePostscale':1,
+                 'BKsVCHI2PDOF':10,
+                 'Ks_PrescaledLinePrescale':1,
+                 'Ks_PrescaledLinePostscale':1,
+                 'Ks_DetatchedLinePrescale':1,
+                 'Ks_DetatchedLinePostscale':1,
+                 'Ks_UnbiasedLinePrescale':1,
+                 'Ks_UnbiasedLinePostscale':1
+                 }
 	}
 
 # Bs2Jpsi(ee)Phi (Jibo and Artur)
@@ -52,6 +166,7 @@ BetaSBs2JpsieePhi = {
 	'BUILDERTYPE' 	: 'Bs2JpsieePhiConf',
 	'CONFIG' 	: {
                   'ElectronPTLoose'            :   800.    # MeV
+                , 'ElectronPIDLoose'           :     0.    # adimensional
                 , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
                 , 'JpsiMassMinLoose'           :  2700.    # MeV
@@ -81,7 +196,7 @@ BetaSBs2JpsieePhi = {
                 , 'BsMassMin'             :  4500.    # MeV
                 , 'BsMassMax'             :  6000.    # MeV
                 , 'BsDIRA'                :     0.99  # adimensional
-                }
+                } 
 	}
 
 # Quasi two-body (Fred Blanc)
@@ -143,7 +258,7 @@ BetaSBs2KstKst = {
 # Cibran
 BetaSBs2PhiKst = {
 	'WGs'   	: ['betas'],
-	'BUILDERTYPE'	: 'StrippingBs2iPhiKstConf',
+	'BUILDERTYPE'	: 'StrippingBs2PhiKstConf',
 	'CONFIG'	: {	
           	"KaonPT"                : 500.0 # MeV
           ,     "KaonIPCHI2"            : 9.    # adimensional

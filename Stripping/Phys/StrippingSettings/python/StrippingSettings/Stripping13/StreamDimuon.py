@@ -15,5 +15,18 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream('Dimuon')
 
-stream.appendLines( lineBuilder('stripping13.tmp', 'BetaS').lines() )
+BetaSconfigs = [
+	'BetaS', 
+	'BetaSBs2JpsieePhi',
+	'BetaSQ2B',
+	'BetaSBs2PhiPhi',
+	'BetaSBs2KstKst',
+	'BetaSBs2PhiKst',
+	'BetaSBs2EtacPhi',
+	'BetaSBs2ChicPhi_Chic2KKPiPi',
+	'BetaSBs2ChicPhi_Chic2PiPiPiPi'
+	]
+
+for config in BetaSconfigs:
+	stream.appendLines( lineBuilder('stripping13.tmp', config).lines() )
 

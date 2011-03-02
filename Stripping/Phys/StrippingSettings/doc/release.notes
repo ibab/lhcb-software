@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-02 - Greig Cowan
+ - Added more beta_s lines to stripping13 dimuon stream and to the 
+   list of dictionaries.
+
 ! 2011-03-02 - William James Barter
  - Added dictionaries for Electroweak Lines.
 
