@@ -3,6 +3,9 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-03-02 - Georg Alexander Krocker
+ - Removed PhysDesktop for DaVinci version > v27r1
+ - Fixed compillation error due to boost bug in Zoo.cpp
 
 ! 2010-12-19 - Manuel Tobias Schiller
  - extend ZooTrigger block with methods for trigger decision bits, TIS, TOS,

@@ -357,11 +357,13 @@ ZooWriter::~ZooWriter () { }
 
 StatusCode ZooWriter::execute()
 {
+    //PhysDesktop no longer available for DV ver >=v27r1
+#if DV_VER < 271
     if (!desktop()->cleanDesktop() || !desktop()->getEventInput()) {
 	error() << "Access to desktop failed!" << endmsg;
 	return StatusCode::FAILURE;
     }  
-
+#endif
     setFilterPassed(true);
 
     // make sure event is started and written out properly
@@ -500,8 +502,17 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
 }
 
 void ZooWriter::treeFit(const LHCb::Particle* p) {
+#if DV_VER < 271
   const LHCb::RecVertex* pv =
     dynamic_cast<const LHCb::RecVertex*>(desktop()->relatedVertex(p));
+#endif
+#if DV_VER >= 271
+//  const LHCb::RecVertex* pv =
+//    dynamic_cast<const LHCb::RecVertex*>(this->getRelatedPV(p));
+  const LHCb::RecVertex* pv =
+    dynamic_cast<const LHCb::RecVertex*>(this->bestPV(p));
+#endif
+
   //do the tree fit
   if (pv) {
     LHCb::RecVertex newPV(*pv);
@@ -549,7 +560,13 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
     zp->m_pid = p->particleID().pid();
     
     // get PV
+#if DV_VER < 271
     const LHCb::VertexBase *pv = desktop()->relatedVertex(p);
+#endif
+#if DV_VER >= 271
+    //const LHCb::VertexBase *pv = this->getRelatedPV(p);
+    const LHCb::VertexBase *pv = this->bestPV(p);
+#endif
 
     const LHCb::RecVertex* bestpv = 0;
     if (m_intelligentPV || m_secondIpSig)

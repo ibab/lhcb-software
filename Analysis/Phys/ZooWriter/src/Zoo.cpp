@@ -77,8 +77,9 @@ ZooTrackExtraInfo::ZooTrackExtraInfo(KeyValueVector& extrainfo)
     using namespace boost::lambda;
     m_idx.reserve(extrainfo.size());
     m_val.reserve(extrainfo.size());
+    //the next two lines breake with boost 1.44 so we have to specify the return type of bind explicitely
     std::sort(extrainfo.begin(), extrainfo.end(),
-	    bind(&KeyValuePair::first, _1) < bind(&KeyValuePair::first, _2));
+	    bind<unsigned int>(&KeyValuePair::first, _1) < bind<unsigned int>(&KeyValuePair::first, _2));
     for (std::size_t i = 0; i < extrainfo.size(); ++i) {
 	// skip duplicate keys
 	if (i && extrainfo[i - 1].first == extrainfo[i].first)
