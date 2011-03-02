@@ -59,16 +59,42 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
     xoffset = (0,0)
     yoffset = (0,0)
     if not fullFit:
+
+        # Get the results from the summary histograms saved in the ROOT file
         xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
         yoffset = imageOffsetY( rootfile, hpdcopynr, minEntries )
+        
     else:
-        import pyHPDImageFit
-        fitR = pyHPDImageFit.fit(rootfile,hpdcopynr,minEntries)
-        if fitR["OK"]:
-            xoffset = fitR["XShift"]
-            yoffset = fitR["YShift"]
-        else:
-            raise Exception('HPDImageFitFailed')
+        # Do a full fit
+        
+        from GaudiPython import gbl
+        from ROOT import TH2D
+
+        # Setup the fit object
+        params = gbl.Rich.HPDImage.HPDFit.Params()
+        params.cutFraction = 0.1
+        params.minBoundary = 3
+
+        # Get the histogram for this HPD
+        image = rootfile.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdcopynr)+'_Image')
+
+        # Do the fit
+        fitter = gbl.Rich.HPDImage.HPDFit()
+        result = fitter.fit(image,params)
+
+        # Extract the fit results
+        if result.OK :
+            xoffset = (result.col,result.colErr)
+            yoffset = (result.row,result.rowErr)
+            
+        #import pyHPDImageFit
+        #fitR = pyHPDImageFit.fit(rootfile,hpdcopynr,minEntries)
+        #if fitR["OK"]:
+        #    xoffset = fitR["XShift"]
+        #    yoffset = fitR["YShift"]
+        #else:
+        #    raise Exception('HPDImageFitFailed')
+        
     return (xoffset,yoffset)
 
 def hpdCentreInPixels( rootfile, hpdcopynr, fullFit = False ):

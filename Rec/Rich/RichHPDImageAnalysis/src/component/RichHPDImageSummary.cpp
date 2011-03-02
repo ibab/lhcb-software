@@ -8,28 +8,27 @@
 // 2010-03-16 : Thomas BLAKE
 //-----------------------------------------------------------------------------
 
-using namespace Rich::Mon;
+using namespace Rich::HPDImage;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichHPDImageSummary )
+DECLARE_ALGORITHM_FACTORY( Summary )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-
-RichHPDImageSummary::RichHPDImageSummary( const std::string& name,
-                                          ISvcLocator* pSvcLocator )
-  : HistoAlgBase ( name , pSvcLocator ) ,
-    m_nEvt       ( 0    ),
-    m_pixelsize  ( 0.5  ),
-    m_siliconx   ( 16.0 ),
-    m_silicony   ( 16.0 )
+  Summary::Summary( const std::string& name,
+                    ISvcLocator* pSvcLocator )
+    : HistoAlgBase ( name , pSvcLocator ) ,
+      m_nEvt       ( 0    ),
+      m_pixelsize  ( 0.5  ),
+      m_siliconx   ( 16.0 ),
+      m_silicony   ( 16.0 )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
-  declareProperty( "BoundaryCutThreshold" , m_cutFraction = 0.1 );
+  declareProperty( "BoundaryCutThreshold" , m_params.cutFraction = 0.1 );
   declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
-  declareProperty( "MinBoundaryPixels" , m_minBoundary = 3 );
+  declareProperty( "MinBoundaryPixels" , m_params.minBoundary = 3 );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );
@@ -38,14 +37,13 @@ RichHPDImageSummary::RichHPDImageSummary( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-
-RichHPDImageSummary::~RichHPDImageSummary() {}
+Summary::~Summary() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 
-StatusCode RichHPDImageSummary::initialize()
+StatusCode Summary::initialize()
 {
   const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -76,7 +74,7 @@ StatusCode RichHPDImageSummary::initialize()
 // Main execution
 //=============================================================================
 
-StatusCode RichHPDImageSummary::execute()
+StatusCode Summary::execute()
 {
   ++m_nEvt;
 
@@ -109,9 +107,9 @@ StatusCode RichHPDImageSummary::execute()
         // Skip inhibited HPDs
         if ( (iHPD->second).header().inhibit() ) continue;
 
-        if ( !smartID.isValid() ) 
+        if ( !smartID.isValid() )
         {
-          if ( m_displayWarnings ) 
+          if ( m_displayWarnings )
           {
             Warning(" Invalid Rich Smart ID ").ignore();
           }
@@ -123,9 +121,9 @@ StatusCode RichHPDImageSummary::execute()
         const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( smartID );
         TH2D* hist = m_histo[ hpdID.data() ];
 
-        if ( NULL == hist ) 
+        if ( NULL == hist )
         {
-          if ( m_displayWarnings ) 
+          if ( m_displayWarnings )
           {
             Warning(" Can not retrieve boundary FCN, invalid hardware ID ").ignore();
           }
@@ -149,7 +147,7 @@ StatusCode RichHPDImageSummary::execute()
 //  Finalize
 //=============================================================================
 
-StatusCode RichHPDImageSummary::finalize() 
+StatusCode Summary::finalize()
 {
 
   if ( msgLevel(MSG::DEBUG) )
@@ -157,8 +155,6 @@ StatusCode RichHPDImageSummary::finalize()
     debug() << "==> Finalize" << endmsg;
     debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
   }
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Creating summary information " << endmsg;
 
   for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
   {
@@ -182,7 +178,7 @@ StatusCode RichHPDImageSummary::finalize()
 
 //=============================================================================
 
-TH2D* RichHPDImageSummary::create2D( const std::string& name )
+TH2D* Summary::create2D( const std::string& name )
 {
   using namespace Gaudi::Utils;
   TH2D * hist(NULL);
@@ -199,9 +195,9 @@ TH2D* RichHPDImageSummary::create2D( const std::string& name )
 
 //=============================================================================
 
-double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
-                                                   const double x0,
-                                                   const double y0 ) const
+double Summary::distanceToCondDBValue( const unsigned int ID,
+                                       const double x0,
+                                       const double y0 ) const
 {
   const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber(ID) );
 
@@ -217,38 +213,27 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
   const double condDBx = -offsetCondDB.x();
   const double condDBy = -offsetCondDB.y();
 
-  return std::sqrt( (x0-condDBx)*(x0-condDBx) +
-                    (y0-condDBy)*(y0-condDBy) ) ;
+  return std::sqrt( std::pow(x0-condDBx,2) +
+                    std::pow(y0-condDBy,2) ) ;
 }
 
 //=============================================================================
 
-void RichHPDImageSummary::summaryINFO( const unsigned int ID,
-                                       const TH2D* hist ) const
+void Summary::summaryINFO( const unsigned int ID,
+                           const TH2D* hist ) const
 {
   if ( !hist ) return;
 
   const unsigned int nPix = (unsigned int) (hist->Integral());
   if ( nPix < m_minOccupancy ) return ;
-  
-  HPDBoundaryFcn FCN( hist , m_cutFraction );
 
-  const int boundarySize = FCN.findBoundary() ;
-  if ( boundarySize < m_minBoundary ) return ;
-
-  ROOT::Minuit2::MnUserParameters par;
-  par.Add("Col0",   16. , 0.5 );
-  par.Add("Row0",   16. , 0.5 );
-  par.Add("Radius", 16. , 0.5 );
-
-  // Make the minimiser
-  ROOT::Minuit2::MnMigrad migrad( FCN, par );
-  // minimise ...
-  const ROOT::Minuit2::FunctionMinimum min = migrad();
+  // Do the fit
+  const Rich::HPDImage::HPDFit fitter;
+  const HPDFit::Result result = fitter.fit( *hist, m_params );
 
   // if fit failed, don't fill.
-  if ( !min.IsValid() ) 
-  { 
+  if ( ! result.OK )
+  {
     std::ostringstream mess;
     mess << "Fit for HPD " << ID << " FAILED";
     Warning( mess.str() ).ignore();
@@ -257,18 +242,18 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
 
   const unsigned int nHPDs = 484;
 
-  const double Col    = min.UserParameters().Value("Col0");
-  const double Row    = min.UserParameters().Value("Row0");
-  const double ColErr = min.UserParameters().Error("Col0");
-  const double RowErr = min.UserParameters().Error("Row0");
+  const double Col    = result.col;
+  const double Row    = result.row;
+  const double ColErr = result.colErr;
+  const double RowErr = result.rowErr;
 
   const double x0    = localXFromPixels( Col );
   const double y0    = localYFromPixels( Row );
   const double xErr0 = localErrorFromPixels( ColErr );
-  const double yErr0 = localErrorFromPixels( RowErr ); 
+  const double yErr0 = localErrorFromPixels( RowErr );
 
-  const double Rad    = m_pixelsize * min.UserParameters().Value("Radius");
-  const double RadErr = m_pixelsize * min.UserParameters().Error("Radius");
+  const double Rad    = m_pixelsize * result.rad;
+  const double RadErr = m_pixelsize * result.radErr;
 
   const double OneOverXErrSq = ( xErr0>0.0  ? 1.0/(xErr0*xErr0) : 0.0 );
   const double OneOverYErrSq = ( yErr0>0.0  ? 1.0/(yErr0*yErr0) : 0.0 );
@@ -280,9 +265,9 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD",-0.5,nHPDs-0.5,nHPDs,ds);
 
   // Update these to allow the weighted mean of the fit results to be correctly computed
-  // when ROOT first are merged.  Need to compute 
+  // when ROOT first are merged.  Need to compute
   //                weighted mean     = Sum( x_i / error_i^2 ) / Sum( 1 / error_i^2 )
-  //                (error of mean)^2 = 1 /  Sum( 1 / error_i^2 ) 
+  //                (error of mean)^2 = 1 /  Sum( 1 / error_i^2 )
   plot1D( ID, "dPosXvsCopyNr",    "x-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,x0*OneOverXErrSq);
   plot1D( ID, "dPosXvsCopyNrErr", "x-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverXErrSq);
   plot1D( ID, "dPosYvsCopyNr",    "y-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,y0*OneOverYErrSq);
@@ -315,92 +300,3 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
 }
 
 //=============================================================================
-
-RichHPDImageSummary::HPDBoundaryFcn::HPDBoundaryFcn( const TH2* hist , 
-                                                     const double thr ) 
-  : m_errDef(1.),
-    m_threshold( thr ),
-    m_hist( hist ),
-    m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 )
-{ }
-
-RichHPDImageSummary::HPDBoundaryFcn::~HPDBoundaryFcn() {}
-
-unsigned int RichHPDImageSummary::HPDBoundaryFcn::findBoundary() const
-{
-  if ( NULL == m_hist ) return 0 ;
-  m_boundary.clear() ;
-
-  const int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
-  const double thr = m_threshold*m_hist->Integral()/(1.0*nbins);
-
-  for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
-  {
-    int ROW0 = -1;
-    int ROW1 = -1;
- 
-    for ( int irow = 0; irow <m_hist->GetNbinsY() ; ++irow )
-    {
-      if ( hasNeighbour( icol, irow, thr ) &&
-           m_hist->GetBinContent( icol+1, irow+1 ) > thr ) 
-      {
-        ROW0 = irow ;
-        break;
-      }
-    }
-    for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
-    {
-      if ( hasNeighbour( icol, irow, thr ) &&
-           m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
-      {
-        ROW1 = m_hist->GetNbinsX() - irow - 1;
-        break;
-      }
-    }
-    if ( -1 != ROW0 )
-    {
-      m_boundary.push_back( std::make_pair( icol, ROW0 ) );
-    }
-    if ( -1 != ROW1 && ROW1 != ROW0 ) 
-    {
-      m_boundary.push_back( std::make_pair( icol, ROW1 ) );
-    }
-  }
-
-  return m_boundary.size() ;
-}
-
-bool
-RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const int COL,
-                                                   const int ROW,
-                                                   const double thr ) const 
-{
-  for ( int icol = COL-1; icol <= COL+1 ; ++icol )
-  {
-    for ( int irow = ROW-1; irow <= ROW+1 ; ++irow )
-    {
-      if ( COL == icol && ROW == irow ) { continue ; }
-      else if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
-                irow >= 0 && irow < m_hist->GetNbinsY() )
-      {
-        if ( m_hist->GetBinContent( icol+1, irow+1 ) > thr ) return true ;
-      }
-    }
-  }
-  return false;
-}
-
-double
-RichHPDImageSummary::HPDBoundaryFcn::operator()( const std::vector<double>& par ) const
-{
-  double chi2 = 0.0;
-  for ( std::vector< std::pair<int,int> >::const_iterator iter = m_boundary.begin(); 
-        iter != m_boundary.end(); ++iter )
-  {
-    const double deltaCol = (1.0*iter->first) - par[0];
-    const double deltaRow = (m_sf*iter->second) - par[1];
-    const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
-    chi2 += ( dist-par[2] )*( dist-par[2] )*12.0;
-  }
-  return chi2 ;
-}

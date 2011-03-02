@@ -1,0 +1,7 @@
+<lcgdict>
+  <class name="Rich::HPDImage::HPDBoundaryFcn" />
+  <class name="Rich::HPDImage::HPDFit" />
+  <class name="Rich::HPDImage::HPDFit::Params" />
+  <class name="Rich::HPDImage::HPDFit::Result" />
+  <class name="TH2D" />
+</lcgdict>

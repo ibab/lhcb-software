@@ -7,33 +7,39 @@ package           RichHPDImageAnalysis
 version           v1r5p1
 
 #============================================================================
-# Structure, i.e. directories to process. 
-#============================================================================
-
-branches          cmt doc src python
+branches          cmt doc src python RichHPDImageAnalysis dict
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
-
-use RichRecBase         v*    Rich
-use AIDA                v* LCG_Interfaces
-use ROOT                v* LCG_Interfaces
+use RichRecBase         v*  Rich
+use AIDA                v*  LCG_Interfaces
+use ROOT                v*  LCG_Interfaces
+use COOL                v*  LCG_Interfaces # Needed for python environment
 use GaudiUtils          v*
 
-
 include_path      none
+
+# ================ environment ===============================================
+apply_pattern install_more_includes more=RichHPDImageAnalysis
+
+#============================================================================
+# ================ linker library ===========================================
+#============================================================================
+library RichHPDImageAnalysisLib ../src/lib/*.cpp
+apply_pattern linker_library library=RichHPDImageAnalysisLib
+macro_append RichHPDImageAnalysisLib_shlibflags "$(Boost_linkopts_serialization) -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic -lMinuit2" \
+  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMinuit2.lib"
+
 #============================================================================
 # Component library building rule
 #============================================================================
-library          RichHPDImageAnalysis    ../src/*.cpp 
-#============================================================================
-# define component library link options
-#============================================================================
-
-macro_append RichHPDImageAnalysis_shlibflags "$(Boost_linkopts_serialization) -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic -lMinuit2" \
-  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMinuit2.lib"
-
-
+library          RichHPDImageAnalysis    ../src/component/*.cpp 
 apply_pattern    component_library library=RichHPDImageAnalysis
+
+# =============== LCG Dictionaries ===========================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=RichHPDImageAnalysis                   \
+                  headerfiles=$(RICHHPDIMAGEANALYSISROOT)/dict/RichHPDImageAnalysisDict.h     \
+                  selectionfile=$(RICHHPDIMAGEANALYSISROOT)/dict/RichHPDImageAnalysisDict.xml \
+                  options="-U__MINGW32__"

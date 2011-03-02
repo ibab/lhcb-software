@@ -23,16 +23,22 @@ def initialise():
     # Initialise a few things
     from Configurables import DDDBConf, CondDB, LHCbApp
     DDDBConf(DataType = "2010")
-    LHCbApp().DDDBtag   = "head-20100518"
-    LHCbApp().CondDBtag = "head-20100730"
+    LHCbApp().DDDBtag   = "head-20101026"
+    LHCbApp().CondDBtag = "head-20101112"
     CondDB()
 
     # Set message level to warnings and above only
     msgSvc().setOutputLevel(4)
+    msgSvc().setOutputLevel("DeRichSystem",1)
+    msgSvc().setOutputLevel("DeRichHPD",1)
+    msgSvc().setOutputLevel("DeRichHPDPanel",1)
 
     # Finally, initialize GaudiPython
     import GaudiPython
     GaudiPython.AppMgr().initialize()
+
+    # Initialise various DeRich objects
+    loadRichDet()
 
 def msgSvc():
     import GaudiPython
@@ -54,6 +60,15 @@ def iDetDataSvc():
 def richSystem():
     return iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem"]
 
+def loadRichDet():
+    iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich1"]
+    iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2"]
+    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0"]
+    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
+    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel0"]
+    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel1"]
+    richSystem()
+    
 def rootFileListFromTextFile(rootFileList='RootFileNames.txt'):
 
     # Open the text file
@@ -87,11 +102,15 @@ def getHPD(copyNumber):
     # return the HPD
     return iDataSvc()[hpdLoc]
 
-def getHPDAlignment(copyNumber) : return getAlignment(copyNumber,"HPD")
+def getHPDAlignment(copyNumber) :
+    return getAlignment(copyNumber,"HPD")
 
-def getSiSensorAlignment(copyNumber) : return getAlignment(copyNumber,"SiSensor")
+def getSiSensorAlignment(copyNumber) :
+    return getAlignment(copyNumber,"SiSensor")
 
 def getAlignment(copyNumber,type):
+
+    #print "Getting", type, "alignment"
 
     from GaudiPython import gbl
 
@@ -103,12 +122,12 @@ def getAlignment(copyNumber,type):
     # Path to alignment condition
     alignLoc = "/dd/Conditions/Alignment/"+rich[smartID.rich()]+"/"+type+str(copyNumber.data())+"_Align"
 
-    # get the aligonment condition
+    # get the alignment condition
     align = iDataSvc()[alignLoc]
 
     # Force an update
-    umsSvc().invalidate(align)
-    align.forceUpdateMode()
+    #umsSvc().invalidate(align)
+    #align.forceUpdateMode()
 
     # Return the alignment condition
     return align
@@ -485,8 +504,8 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     printCanvas('[')
 
     # Run range for including in the fitted data
-    #minMaxFillForFit = [0,9999999] # All fills/runs
-    minMaxFillForFit = [952, 1430] # Range used by Matt for Mirror alignment 28/10/2010
+    minMaxFillForFit = [0,9999999] # All fills/runs
+    #minMaxFillForFit = [952, 1430] # Range used by Matt for Mirror alignment 28/10/2010
 
     for hpd,data in plotData.iteritems():
 
@@ -830,6 +849,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
+        #stopTime  = 9223372036854775807L
 
         # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :

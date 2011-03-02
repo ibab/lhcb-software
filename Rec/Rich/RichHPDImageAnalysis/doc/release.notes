@@ -4,6 +4,12 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-03-02 - Chris Jones
+ - Rework the code to seperate out the HPD fitting into a seperate linker 
+    library. This linker library is then used by both the component library
+    producing the image summaries and also the python code (as a dictionary
+    is also produced for the new classes).
+
 !========================= RichHPDImageAnalysis v1r5p1 2011-02-28 =========================
 ! 2011-02-25 - Chris Jones
  - Replace use of boost lexical cast to std::string with std::ostringstream, 

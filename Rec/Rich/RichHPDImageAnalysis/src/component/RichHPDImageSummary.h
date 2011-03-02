@@ -29,72 +29,37 @@
 #include <cmath>
 #include <sstream>
 
-// Minuit2
-#include "Minuit2/FunctionMinimum.h"
-#include "Minuit2/MnUserParameterState.h"
-#include "Minuit2/MnMigrad.h"
-#include "Minuit2/FCNBase.h"
+#include "RichHPDImageAnalysis/HPDFit.h"
 
 namespace Rich
 {
-  namespace Mon
+
+  /** @namespace HPDImage
+   *
+   *  General namespace for RICH HPD image analysis code
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   02/03/0211
+   */
+  namespace HPDImage
   {
 
-    /** @class RichHPDImageSummary RichHPDImageSummary.h
+    /** @class Summary RichHPDImageSummary.h
      *
      *  Monitors the HPD image movements within an HPD
      *
      *  @author Thomas BLAKE
      *  @date   2010-03-16
      */
-    class RichHPDImageSummary : public Rich::Rec::HistoAlgBase
+    class Summary : public Rich::Rec::HistoAlgBase
     {
-
-    private:
-
-      /** @class RichHPDImageSummary RichHPDImageSummary.h
-       *
-       *  Boundary function for HPD fit
-       *
-       *  @author Thomas BLAKE
-       *  @date   2010-03-16
-       */
-      class HPDBoundaryFcn : public ROOT::Minuit2::FCNBase
-      {
-
-      public:
-        /// Standard constructor
-        HPDBoundaryFcn( const TH2* hist = NULL, 
-                        const double thr = 0.0 );
-        virtual double operator()(const std::vector<double>& par ) const ;
-        virtual double Up() const{  return m_errDef; }
-        void setErrDef( const double def ){ m_errDef = def; }
-
-        unsigned int findBoundary() const;
-        double nPixels() const;
-
-        virtual ~HPDBoundaryFcn( ); ///< Destructor
-
-      protected:
-
-        bool hasNeighbour( const int COL, const int ROW, const double thr ) const ;
-
-      private:
-
-        double m_errDef ;
-        double m_threshold ;
-        const TH2* m_hist ;
-        double m_sf ;
-        mutable std::vector< std::pair< int, int > > m_boundary ;
-
-      };
 
     public:
 
       /// Standard constructor
-      RichHPDImageSummary( const std::string& name, ISvcLocator* pSvcLocator );
+      Summary( const std::string& name, ISvcLocator* pSvcLocator );
 
-      virtual ~RichHPDImageSummary( ); ///< Destructor
+      virtual ~Summary( ); ///< Destructor
 
       virtual StatusCode initialize();    ///< Algorithm initialization
 
@@ -129,17 +94,14 @@ namespace Rich
       /// Event Counter
       int m_nEvt ;
 
-      /// Fraction of average pixel value used to define image boundary
-      double m_cutFraction ;
-
       /// Display Smart ID warnings
       bool m_displayWarnings ;
 
       /// Minimum number of hits required in HPD
       unsigned int m_minOccupancy ;
 
-      /// Minimum number of pixels needed to define HPD edge
-      int m_minBoundary ;
+      /// Fit paramaters
+      HPDFit::Params m_params;
 
       /// Pointer to Rich Sys Detector Element
       const DeRichSystem * m_RichSys;
@@ -178,27 +140,21 @@ namespace Rich
 //=============================================================================
 
 inline double
-Rich::Mon::RichHPDImageSummary::localXFromPixels( const double col ) const
+Rich::HPDImage::Summary::localXFromPixels( const double col ) const
 {
   return -1.0 * ( col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx );
 }
 
 inline double
-Rich::Mon::RichHPDImageSummary::localYFromPixels( const double row ) const
+Rich::HPDImage::Summary::localYFromPixels( const double row ) const
 {
   return -1.0 * ( 0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize );
 }
 
 inline double
-Rich::Mon::RichHPDImageSummary::localErrorFromPixels( const double pixerr ) const
+Rich::HPDImage::Summary::localErrorFromPixels( const double pixerr ) const
 {
   return pixerr * m_pixelsize;
-}
-
-inline double 
-Rich::Mon::RichHPDImageSummary::HPDBoundaryFcn::nPixels() const
-{
-  return ( m_hist ? m_hist->Integral() : 0.0 );
 }
 
 #endif // RICHHPDIMAGEMOVEMENT_H
