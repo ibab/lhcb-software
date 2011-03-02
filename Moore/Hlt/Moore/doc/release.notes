@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v12r1 2011-03-02 ===================
 ! 2011-03-01 - Gerhard Raven
  - update online forking as specified by Niko
  - add a filter when offline writing MDF/RAW files, i.e. this now
