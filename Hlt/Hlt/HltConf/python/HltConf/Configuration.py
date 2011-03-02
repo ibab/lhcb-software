@@ -620,6 +620,14 @@ class HltConf(LHCbConfigurableUser):
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
             EndMembers.insert(1,  L0accept )  # after routing bits
+
+        ### store the BDT response (and a bit more) through ExtraInfo on particles:
+        HltSelReportsMaker().InfoLevelDecision = 3
+        HltSelReportsMaker().InfoLevelTrack = 3
+        HltSelReportsMaker().InfoLevelRecVertex = 3
+        HltSelReportsMaker().InfoLevelCaloCluster = 3
+        HltSelReportsMaker().InfoLevelParticle = 3
+
 ##################################################################################
     def __apply_configuration__(self):
         """

@@ -5,7 +5,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================== HltConf v9r5 2011-03-01 ===================
+!========================== HltConf v9r5 2011-03-02 ===================
+! 2011-03-02 - Gerhard Raven
+ - clean up HltInit.py
+ - Write (subset of) ExtraInfo of Particles to RawBank
+
 ! 2011-03-01 - V. Gligorov
  - Removed Hlt2CharmHadD02HHHHLinesConf from Hlt2.py until they
    are fixed to depend properly on the D2HHH lines.
