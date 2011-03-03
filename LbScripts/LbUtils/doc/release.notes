@@ -1,3 +1,9 @@
+2011-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/__init__.py: added the generic sorting of version
+	* LbUtils/python/LbUtils/CMT/Common.py:
+	* LbUtils/python/LbUtils/CMT/Project.py: core implementation of the CMTwhich utility.
+
 2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r0p1

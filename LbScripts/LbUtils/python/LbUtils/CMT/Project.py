@@ -9,6 +9,8 @@ from LbUtils import Env
 from LbUtils.Set import Set
 from LbUtils.afs.directory import isAFSDir, Directory, isMountPoint
 
+from LbUtils import versionSort
+
 # global import
 import logging
 import os
@@ -68,6 +70,10 @@ class Project(object):
         return self.fullLocation() == other.fullLocation()
 
     def fullLocation(self):
+        return self._fulllocation
+
+    def __str__(self):
+        """ string repr. used for sorting """
         return self._fulllocation
 
     def name(self):
@@ -433,35 +439,34 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
         for f in lsdir:
             fullname = os.path.join(path,f)
             if isProject(fullname):
-
                 tobeadded = False
-                tmproj = prjclass(fullname)
-                if name is None :
-                    tobeadded = True
-                elif doesDirMatchNameAndVersion(fullname, name, version, casesense) :
+                if doesDirMatchNameAndVersion(fullname, name, version, casesense) :
                     tobeadded = True
                 if select is not None and tobeadded:
                     if isDirSelected(fullname, select, casesense):
                         tobeadded = True
+                    else :
+                        tobeadded = False
                 if tobeadded :
+                    tmproj = prjclass(fullname)
                     projlist.add(tmproj)
                     log.debug("Found project at %s" % fullname)
 
-            if os.path.isdir(fullname):
+            elif os.path.isdir(fullname):
                 lsintdir = os.listdir(fullname)
                 for ff in lsintdir:
                     fn = os.path.join(fullname, ff)
                     if isProject(fn):
                         tobeadded = False
-                        tmproj = prjclass(fn)
-                        if name is None :
-                            tobeadded = True
-                        elif doesDirMatchNameAndVersion(fn, name, version, casesense) :
+                        if doesDirMatchNameAndVersion(fn, name, version, casesense) :
                             tobeadded = True
                         if select is not None and tobeadded:
                             if isDirSelected(fn, select, casesense):
                                 tobeadded = True
+                            else :
+                                tobeadded = False
                         if tobeadded :
+                            tmproj = prjclass(fn)
                             projlist.add(tmproj)
                             log.debug("Found project at %s" % fn)
 
@@ -497,6 +502,8 @@ def getProjectsFromDir(directory, name=None, version=None, casesense=True, selec
             else :
                 if 'CVS' in dirs:
                     dirs.remove('CVS')  # don't visit CVS directories
+                if '.svn' in dirs :
+                    dirs.remove('.svn')
                 for d in dirs : # don't visit hidden directories
                     if d.startswith(".") :
                         dirs.remove(d)
@@ -566,6 +573,18 @@ def getProjects(cmtprojectpath, name=None, version=None,
     for p in projlist :
         p.getBase(projlist)
     return FilterProjects(projlist, name=name, version=version, casesense=casesense)
+
+def findProject(cmtprojectpath, name, version=None, casesense=False):
+    """ find project in the path. if version is None find a versionless project
+    or the latest version of a regular project """
+    prj = None
+    for p in cmtprojectpath.split(os.pathsep) :
+        prjlist = getProjectsFromPath(p, name, version, casesense)
+        if len(prjlist) :
+            srtlist = versionSort(prjlist, reverse=True)
+            prj = srtlist[0]
+            break
+    return prj
 
 
 

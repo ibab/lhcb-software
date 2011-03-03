@@ -1,5 +1,7 @@
 
 # package import
+from LbUtils.CMT.Project import findProject
+
 from LbUtils.Env import getDefaultEnv
 from LbUtils.Processes import callCommand
 
@@ -26,35 +28,41 @@ def setCMTPathEnv(cmtpath=None, cmtprojectpath=None):
 
 
 def doesDirMatchVersion(directory, version, casesense=True):
-    if not casesense :
-        directory = directory.upper()
-        version = version.upper()
-    dirlist = directory.split(os.sep)
-    found = False
-    if dirlist[-1] == version :
+    if not version :
         found = True
+    else :
+        if not casesense :
+            directory = directory.upper()
+            version = version.upper()
+        dirlist = directory.split(os.sep)
+        found = False
+        if dirlist[-1] == version :
+            found = True
     return found
 
 def doesDirMatchName(directory, name, casesense=True):
-    if not casesense :
-        directory = directory.upper()
-        name = name.upper()
-    dirlist = directory.split(os.sep)
-    namelist = name.split(os.sep)
-    if len(namelist) == 1 and name.find("/") != -1 :
-        namelist = name.split("/")
-    found = True
-    for k in range(len(namelist)) :
-        if namelist[-1-k] != dirlist[-1-k] :
-            found = False
-            break
-    # with version directory
-    if not found :
+    if not name :
+        found = True
+    else :
+        if not casesense :
+            directory = directory.upper()
+            name = name.upper()
+        dirlist = directory.split(os.sep)
+        namelist = name.split(os.sep)
+        if len(namelist) == 1 and name.find("/") != -1 :
+            namelist = name.split("/")
         found = True
         for k in range(len(namelist)) :
-            if namelist[-1-k] != dirlist[-2-k] :
+            if namelist[-1-k] != dirlist[-1-k] :
                 found = False
                 break
+        # with version directory
+        if not found :
+            found = True
+            for k in range(len(namelist)) :
+                if namelist[-1-k] != dirlist[-2-k] :
+                    found = False
+                    break
     return found
 
 def doesDirMatchNameAndVersion(directory, name , version, casesense=True):
@@ -132,3 +140,16 @@ def CMTCommand(*args, **kwargs) :
 
     return out, err, code
 
+def CMTWrap(project, package, version=None, *cmtargs):
+    """ command wrapper which execute the command in the cmt directory of the project or package """
+    pass
+
+
+def CMTWhich(project, package=None, version=None, all_occurences=False):
+    """ function to extract the project or package class"""
+    prj = findProject(os.environ["CMTPROJECTPATH"], project, version, casesense=True)
+    if not prj :
+        # if nothing has been found try to use package as a version
+        prj = findProject(os.environ["CMTPROJECTPATH"], project, package, casesense=True)
+
+    return prj
