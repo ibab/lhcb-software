@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-03 - Thomas Blake
+ - Updated __init__.py to include Charm and CharmXsec lines
+
 ! 2011-03-03 - Paul Seyfert
  - Fixed minor bug in StrippingTrackEffDownMuon.py
 

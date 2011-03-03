@@ -18,7 +18,6 @@ import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 import StrippingBu2D0h_D02KShh_NoPID
 import StrippingBu2D0h_D02KShh_NoPID_WS
-import StrippingNoPIDDstarWithD02RSKPi
 import StrippingInclPhi
 import StrippingV0ForPID
 import StrippingB2JpsiXforBeta_s
@@ -66,11 +65,38 @@ import StrippingDY2ee
 import StrippingMuMuSS
 import StrippingLowMult
 import StrippingDiPhotonDiMuon
-import StrippingPromptCharm
 
 import StrippingDisplVertices
 
 import StrippingMiniBias
+
+import StrippingNoPIDDstarWithD02RSKPi
+
+import StrippingDstarD02KMuNu
+import StrippingD02MuMu
+import StrippingPromptCharm
+import StrippingD2hh
+import StrippingD2KS0H_conf
+import StrippingCharmedAndCharmedStrangeSpectroscopy
+import StrippingD2hhh_conf
+import StrippingD2XMuMuSS
+import StrippingDstarD02xx
+import StrippingDstarPromptWithD02HH
+import StrippingXicc
+import StrippingDstarD02KKmumuRegular
+import StrippingDstarD02KKpipiRegular
+import StrippingDstarPromptWithD02HHHH
+import StrippingDstarD2KShh
+
+import StrippingD02K3PiForXSec
+import StrippingD02KPiGeoForXSec
+import StrippingDstar2D0Pi_D02KPiForXSec
+import StrippingLambdac2PKPiForXSec
+import StrippingD2PhiPiForXSec
+import StrippingD2HHHForXSec
+import StrippingD02HHForXSec
+
+
 
 from sys import modules as _modules
 _this = _modules[__name__]
