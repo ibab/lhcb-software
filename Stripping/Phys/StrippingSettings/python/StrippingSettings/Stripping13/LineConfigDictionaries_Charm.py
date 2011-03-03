@@ -220,8 +220,6 @@ D2hhh = {
     'STREAM' : 'Charm'
     }
 
-from StrippingSelections.StrippingD2hhh_conf import D2hhhConf
-builderD2hhh = D2hhhConf(name='D2hhh',config=D2hhh['CONFIG'])
 
 # Full DST, Malcolm John
 # Test:Yes
