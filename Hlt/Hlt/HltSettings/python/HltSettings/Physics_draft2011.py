@@ -94,7 +94,7 @@ class Physics_draft2011( object ):
                                              ,'MultiMuonNoIP_PT'         :  500
                                              ,'MultiMuonNoIP_TrChi2'     :    4
                                              ,'MultiMuonNoIP_GT'         :  2.5
-                                             ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
+                                             ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
                                               }
 		       }
@@ -150,6 +150,6 @@ class Physics_draft2011( object ):
                   'Hlt1TrackMuon',
                   'Hlt1TrackAllL0',
                   'Hlt1TrackPhoton',
-		          'Hlt1SingleMuonHighPT',
-		          'Hlt1SingleMuonNoIP' ]
+                  'Hlt1SingleMuonHighPT',
+                  'Hlt1SingleMuonNoIP' ]
         return lines 
