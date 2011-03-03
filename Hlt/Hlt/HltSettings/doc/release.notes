@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r6   2011-03-02 ===================
+! 2011-Mar-03 - Gerhard Raven
+ - put back 'technical' Hlt1 lines 
+
 ! 2011003-03 - Johannes Albrecht
  - change prescale of single muon No IP to 100 
    (cuts to be revised for next release)
@@ -17,7 +21,6 @@
  - Added mising threshold block for Hlt2CharmHadD2KS0HLinesConf.
  - Brought slots for Hlt2CharmHadD02HHKsLinesConf up-to-date.
 
-!========================== HltSettings v5r6   2011-03-02 ===================
 ! 2010-03-02 - Plamen Hopchev
  - edit the included beam-gas lines in accord with the changed line names 
    in the latest Hlt1BeamGasLines.py (package Hlt/Hlt1Lines)

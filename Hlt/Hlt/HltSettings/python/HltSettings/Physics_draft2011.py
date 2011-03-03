@@ -53,6 +53,7 @@ class Physics_draft2011( object ):
 	"""
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
+        from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -97,6 +98,8 @@ class Physics_draft2011( object ):
                                              ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
                                               }
+                     , Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
+
 		       }
 
         from Muons_draft2011 import Muons_draft2011
@@ -131,25 +134,22 @@ class Physics_draft2011( object ):
         """
         Returns a list of active lines
         """
-        #'Hlt1ODINTechnical',
-        #'Hlt1Tell1Error' ,  
-        #'Hlt1Incident' ,    
-        #'Hlt1ErrorEvent',
-        lines = [ 'Hlt1BeamGasNoBeamBeam1',
-		  'Hlt1BeamGasNoBeamBeam2',
-		  'Hlt1BeamGasBeam1',
-                  'Hlt1BeamGasBeam2',
-                  'Hlt1BeamGasCrossingEnhancedBeam1',
-                  'Hlt1BeamGasCrossingEnhancedBeam2',
-                  'Hlt1BeamGasCrossingForcedReco',
-                  'Hlt1BeamGasCrossingParasitic',
-                  'Hlt1NoPVPassThrough',
-                  'Hlt1DiProtonLowMult',
-                  'Hlt1DiMuonLowMass',
-                  'Hlt1DiMuonHighMass',  
-                  'Hlt1TrackMuon',
-                  'Hlt1TrackAllL0',
-                  'Hlt1TrackPhoton',
-                  'Hlt1SingleMuonHighPT',
-                  'Hlt1SingleMuonNoIP' ]
+        lines = [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
+		        , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+                , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
+                , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
+                , 'Hlt1NoPVPassThrough'
+                , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
+		        , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+                , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                , 'Hlt1DiProtonLowMult'
+                , 'Hlt1Lumi' # , 'Hlt1LumiMidBeamCrossing', 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
+                , 'Hlt1L0Any'
+                , 'Hlt1MBNoBias' 
+                , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+                ]
+        lines += [ i + 'RateLimited' for i in lines
+                                     if i.startswith('Hlt1MBMicroBias')
+                                     or  i.startswith('Hlt1L0Any') ]
+
         return lines 
