@@ -19,10 +19,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   Summary::Summary( const std::string& name,
                     ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name , pSvcLocator ) ,
-      m_nEvt       ( 0    ),
-      m_pixelsize  ( 0.5  ),
-      m_siliconx   ( 16.0 ),
-      m_silicony   ( 16.0 )
+      m_nEvt       ( 0    )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
@@ -232,7 +229,7 @@ void Summary::summaryINFO( const unsigned int ID,
   const HPDFit::Result result = fitter.fit( *hist, m_params );
 
   // if fit failed, don't fill.
-  if ( ! result.OK )
+  if ( ! result.OK() )
   {
     std::ostringstream mess;
     mess << "Fit for HPD " << ID << " FAILED";
@@ -242,21 +239,15 @@ void Summary::summaryINFO( const unsigned int ID,
 
   const unsigned int nHPDs = 484;
 
-  const double Col    = result.col;
-  const double Row    = result.row;
-  const double ColErr = result.colErr;
-  const double RowErr = result.rowErr;
+  const double x0     = result.x();
+  const double y0     = result.y();
+  const double xErr0  = result.xErr();
+  const double yErr0  = result.yErr();
+  const double Rad    = result.radInMM();
+  const double RadErr = result.radErrInMM();
 
-  const double x0    = localXFromPixels( Col );
-  const double y0    = localYFromPixels( Row );
-  const double xErr0 = localErrorFromPixels( ColErr );
-  const double yErr0 = localErrorFromPixels( RowErr );
-
-  const double Rad    = m_pixelsize * result.rad;
-  const double RadErr = m_pixelsize * result.radErr;
-
-  const double OneOverXErrSq = ( xErr0>0.0  ? 1.0/(xErr0*xErr0) : 0.0 );
-  const double OneOverYErrSq = ( yErr0>0.0  ? 1.0/(yErr0*yErr0) : 0.0 );
+  const double OneOverXErrSq = ( xErr0>0.0  ? 1.0/(xErr0*xErr0)   : 0.0 );
+  const double OneOverYErrSq = ( yErr0>0.0  ? 1.0/(yErr0*yErr0)   : 0.0 );
   const double OneOverRErrSq = ( RadErr>0.0 ? 1.0/(RadErr*RadErr) : 0.0 );
 
   const double ds = distanceToCondDBValue( ID, x0, y0 );

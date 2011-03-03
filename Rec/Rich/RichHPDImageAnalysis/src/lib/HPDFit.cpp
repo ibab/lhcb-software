@@ -36,15 +36,15 @@ Rich::HPDImage::HPDFit::fit ( const TH2D& hist,
     const ROOT::Minuit2::FunctionMinimum min = migrad();
 
     // fill results
-    result.OK = min.IsValid();
-    if ( result.OK )
+    result.setOK( min.IsValid() );
+    if ( result.OK() )
     {
-      result.col    = min.UserParameters().Value("Col0");
-      result.colErr = min.UserParameters().Error("Col0");
-      result.row    = min.UserParameters().Value("Row0");
-      result.rowErr = min.UserParameters().Error("Row0");
-      result.rad    = min.UserParameters().Value("Radius");
-      result.radErr = min.UserParameters().Error("Radius");
+      result.setRowAndErr( min.UserParameters().Value("Row0"),
+                           min.UserParameters().Error("Row0") );
+      result.setColAndErr( min.UserParameters().Value("Col0"),
+                           min.UserParameters().Error("Col0") );
+      result.setRadAndErr( min.UserParameters().Value("Radius"),
+                           min.UserParameters().Error("Radius") );
     }
 
   }

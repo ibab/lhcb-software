@@ -56,11 +56,13 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
     """
     Returns the HPD local offset in mm
     """
+
     xoffset = (0,0)
     yoffset = (0,0)
+    
     if not fullFit:
-
         # Get the results from the summary histograms saved in the ROOT file
+
         xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
         yoffset = imageOffsetY( rootfile, hpdcopynr, minEntries )
         
@@ -84,8 +86,8 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
 
         # Extract the fit results
         if result.OK :
-            xoffset = (result.col,result.colErr)
-            yoffset = (result.row,result.rowErr)
+            xoffset = (result.x(),result.xErr())
+            yoffset = (result.y(),result.yErr())
             
         #import pyHPDImageFit
         #fitR = pyHPDImageFit.fit(rootfile,hpdcopynr,minEntries)
@@ -94,6 +96,8 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
         #    yoffset = fitR["YShift"]
         #else:
         #    raise Exception('HPDImageFitFailed')
+
+    print  (xoffset,yoffset)
         
     return (xoffset,yoffset)
 

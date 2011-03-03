@@ -115,13 +115,6 @@ namespace Rich
       /// Iterator over map of HPD CopyNr and Histogram pointers
       std::map< unsigned int , TH2D* >::iterator  m_iter;
 
-      /// Pixel size in mm
-      double m_pixelsize ;
-
-      /// Silicon size in mm
-      double m_siliconx ;
-      double m_silicony ;
-
       /// Flag for comparison against existing CondDB value
       bool m_compareCondDB;
 
@@ -138,23 +131,5 @@ namespace Rich
 } // namespace Rich
 
 //=============================================================================
-
-inline double
-Rich::HPDImage::Summary::localXFromPixels( const double col ) const
-{
-  return -1.0 * ( col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx );
-}
-
-inline double
-Rich::HPDImage::Summary::localYFromPixels( const double row ) const
-{
-  return -1.0 * ( 0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize );
-}
-
-inline double
-Rich::HPDImage::Summary::localErrorFromPixels( const double pixerr ) const
-{
-  return pixerr * m_pixelsize;
-}
 
 #endif // RICHHPDIMAGEMOVEMENT_H
