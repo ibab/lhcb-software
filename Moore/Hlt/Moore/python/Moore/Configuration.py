@@ -306,6 +306,7 @@ class Moore(LHCbConfigurableUser):
                 from Configurables import LoKi__VoidFilter as VoidFilter
                 writer = GaudiSequencer( 'WriteSequence'
                                        , Members = [ VoidFilter( "WriterFilter" 
+                                                               , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
                                                                , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
                                                                )
                                                    , writer 
