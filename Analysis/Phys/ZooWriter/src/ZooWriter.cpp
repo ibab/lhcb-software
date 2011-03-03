@@ -91,7 +91,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	boost::shared_ptr<ZooEv> ev(new ZooEv());
 	m_pev.swap(ev);
     }
-    m_T->Branch("Event",m_pev->Class()->GetName(), &m_pev, 1 << 16, 99);
+    m_T->Branch("Event",m_pev->Class()->GetName(), (void**)&(m_pev), 1 << 16, 99);
     m_sel.reserve(sel_collections.size());
     vector<string>::const_iterator j = sel_collections.begin();
     for (vector<string>::const_iterator i = sel_names.begin();
@@ -105,7 +105,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     } 
     for (vector<KnownSelection>::iterator i = m_sel.begin();
 	    i != m_sel.end(); ++i) {
-	m_T->Branch(i->name.c_str(),i->pref->Class()->GetName(), &(i->pref), 1 << 16, 99);
+	m_T->Branch(i->name.c_str(),i->pref->Class()->GetName(),(void**)&(i->pref), 1 << 16, 99);
     }
     // set the basket size for all branches to 64 kbytes
     m_T->SetBasketSize("*", 1 << 16);
@@ -286,7 +286,7 @@ StatusCode ZooWriter::initialize  ()
     // write covariance list and packed states list are needed sorted
     std::sort(m_covarianceList.begin(), m_covarianceList.end());
     std::sort(m_packedStatesList.begin(), m_packedStatesList.end());
-    
+
     // make sure selection/collection names make sense  
     if (m_sel_names.value().empty()) {
         error() << "No selections are specified to be saved!" << endmsg;
@@ -336,7 +336,7 @@ StatusCode ZooWriter::initialize  ()
 	error() << "MCAcceptanceMinCtau must be non-negative!" << endmsg;
 	return StatusCode::FAILURE;
     }
-	    
+
     // create ZooWriterContext
     boost::shared_ptr<ZooWriterContext> ctx(
 	    new ZooWriterContext(m_filename, m_treename,
