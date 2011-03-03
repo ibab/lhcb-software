@@ -31,10 +31,11 @@ namespace Rich
       class Params
       {
       public:
-        Params() : cutFraction(0.1), minBoundary(3) { }
+        Params() : cutFraction(0.1), minBoundary(3), type("Fit1") { }
       public:
         double cutFraction;
         unsigned int minBoundary;
+        std::string type;
       };
 
       /** @class Params RichHPDImageSummary.h

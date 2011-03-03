@@ -4,5 +4,6 @@
 
 #include "RichHPDImageAnalysis/HPDBoundaryFcn.h"
 #include "RichHPDImageAnalysis/HPDFit.h"
+#include "RichHPDImageAnalysis/GraphSmoother.h"
 
 #endif // DICT_RICHHPDIMAGEANALYSISDICT_H

@@ -12,7 +12,7 @@ def initialise():
     if not os.path.exists(tmpDir):
         os.mkdir(tmpDir)
     if not os.access(tmpDir,os.W_OK):
-        raise Exception('Temp Dir'+tmpDir+'Not Writable')
+        raise Exception('Temp Dir '+tmpDir+' Not Writable')
 
     from ROOT import gROOT
     # No info messages
@@ -29,9 +29,9 @@ def initialise():
 
     # Set message level to warnings and above only
     msgSvc().setOutputLevel(4)
-    msgSvc().setOutputLevel("DeRichSystem",1)
-    msgSvc().setOutputLevel("DeRichHPD",1)
-    msgSvc().setOutputLevel("DeRichHPDPanel",1)
+    #msgSvc().setOutputLevel("DeRichSystem",1)
+    #msgSvc().setOutputLevel("DeRichHPD",1)
+    #msgSvc().setOutputLevel("DeRichHPDPanel",1)
 
     # Finally, initialize GaudiPython
     import GaudiPython
@@ -296,6 +296,7 @@ def getRunFillData(rootfiles):
                 fillData['DataTakingDescription'] = res['Value']['DataTakingDescription']
             else:
                 print "ERROR Getting start/stop times for run", run
+                print res
                 import DIRAC
                 DIRAC.exit(1)
 
@@ -378,27 +379,28 @@ def runToFill(run):
     return fill
 
 def calibrationByRuns(rootfiles='RootFileNames.txt',
-                      fullFit=False,forceAverages=True):
-    return calibration(rootfiles,'Run',fullFit,forceAverages)
+                      fitType="Fit1",followType="FittedPol",pol=0):
+    return calibration(rootfiles,'Run',fitType,followType,pol)
 
 def calibrationByFills(rootfiles='RootFileNames.txt',
-                       fullFit=False,forceAverages=True):
-    return calibration(rootfiles,'Fill',fullFit,forceAverages)
+                       fitType="Fit1",followType="FittedPol",pol=0):
+    return calibration(rootfiles,'Fill',fitType,followType,pol)
 
-def calibration(rootfiles,type,fullFit,forceAverages):
+def calibration(rootfiles,type,fitType,followType,pol):
 
     import pyHistoParsingUtils
-    from ROOT import TFile, TGraphErrors, TGraph, TF1
+    from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3
     import GaudiPython
     from GaudiPython import gbl
     import datetime, time
     from PyCool import cool
     from math import sqrt
 
-    fitType = "CppFit"
-    if fullFit : fitType = "FullFit"
-    avType = "FollowMovements"
-    if forceAverages : avType = "Average"
+    if followType not in ["FittedPol","FollowMovements","Smoothed"]:
+        raise Exception("Unknown Follow Mode "+followType)
+
+    if fitType not in ["Fit1","CppFit"]:
+        raise Exception("Unknown Fit Mode "+fitType)
         
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -463,10 +465,10 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             # Get the offsets. Use try to catch errors
             try:
 
-                offsets = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fullFit)
-                xOff    = offsets[0]
-                yOff    = offsets[1]
-                plotData[hpdID][flag] = { "FitOK"   : True,
+                res = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fitType)
+                xOff = res["Result"][0]
+                yOff = res["Result"][1]
+                plotData[hpdID][flag] = { "FitOK"   : res['OK'],
                                           "ShiftR"  : rFromXY(xOff,yOff),
                                           "ShiftX"  : xOff,
                                           "ShiftY"  : yOff }
@@ -491,15 +493,26 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         # close the ROOT file
         file.Close()
 
-    # Average X and Y values
-    averageShifts = { }
-    averageShifts['All']     = { }
-    averageShifts['MagDown'] = { }
-    averageShifts['MagUp']   = { }
-    averageShifts['MagOff']  = { }
-
+    # Fitters
+    avTrendFit = { }
+    avTrendFit['MagDown'] = { }
+    avTrendFit['MagUp']   = { }
+    avTrendFit['MagOff']  = { }
+    # Splines
+    #splines = { }
+    #splines['MagDown'] = { }
+    #splines['MagUp']   = { }
+    #splines['MagOff']  = { }
+    # Smoothers
+    smoothers = { }
+    smoothers['MagDown'] = { }
+    smoothers['MagUp']   = { }
+    smoothers['MagOff']  = { }
+    
     # Make plots showing the variations
-    globals()["imageFileName"] = "HPDAlignBy"+type+"-"+fitType+avType+".pdf"
+    basename = "HPDAlignBy"+type+"-"+fitType+"-"+followType
+    if followType == "FittedPol" : basename += str(pol)
+    globals()["imageFileName"] = basename+".pdf"
     print "Making summary plots", globals()["imageFileName"]
     printCanvas('[')
 
@@ -520,47 +533,23 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         minMaxFlag = [999,-999]
 
         from array import array
-        vflag      = array('d')
-        vflagerr   = array('d')
-        vshiftR    = array('d')
-        vshiftRerr = array('d')
-        vshiftX    = array('d')
-        vshiftXerr = array('d')
-        vshiftY    = array('d')
-        vshiftYerr = array('d')
-        dbX        = array('d')
-        dbY        = array('d')
-        dbR        = array('d')
+        vflag      = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vflagerr   = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftR    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftRerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftX    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftXerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftY    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vshiftYerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        dbX        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        dbY        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        dbR        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
 
-        vflagMagDown      = array('d')
-        vflagerrMagDown   = array('d')
 
-        vflagMagUp      = array('d')
-        vflagerrMagUp   = array('d')
-
-        vflagMagOff      = array('d')
-        vflagerrMagOff   = array('d')
-
-        vshiftRMagDown    = array('d')
-        vshiftRerrMagDown = array('d')
-        vshiftXMagDown    = array('d')
-        vshiftXerrMagDown = array('d')
-        vshiftYMagDown    = array('d')
-        vshiftYerrMagDown = array('d')
-
-        vshiftRMagUp    = array('d')
-        vshiftRerrMagUp = array('d')
-        vshiftXMagUp    = array('d')
-        vshiftXerrMagUp = array('d')
-        vshiftYMagUp    = array('d')
-        vshiftYerrMagUp = array('d')
-
-        vshiftRMagOff    = array('d')
-        vshiftRerrMagOff = array('d')
-        vshiftXMagOff    = array('d')
-        vshiftXerrMagOff = array('d')
-        vshiftYMagOff    = array('d')
-        vshiftYerrMagOff = array('d')
+        dataColor   = 1
+        splineColor = 2
+        refColor    = 4
+        smoothColor = 38
         
         for fl in sorted(data.keys()):
 
@@ -571,184 +560,101 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             
                 if fl < minMaxFlag[0] : minMaxFlag[0] = fl
                 if fl > minMaxFlag[1] : minMaxFlag[1] = fl
-            
+
                 values = data[fl]
                 if values['FitOK'] :
-                
-                    vflag.append(fl)
-                    vflagerr.append(0.0)
-                    vshiftX.append(values['ShiftX'][0])
-                    vshiftXerr.append(values['ShiftX'][1])
-                    vshiftY.append(values['ShiftY'][0])
-                    vshiftYerr.append(values['ShiftY'][1])
-                    vshiftR.append(values['ShiftR'][0])
-                    vshiftRerr.append(values['ShiftR'][1])
-                    dbX.append(values["DBShiftX"])
-                    dbY.append(values["DBShiftY"])
-                    dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
 
-                    if polarity == 'MagDown':
-                        vflagMagDown.append(fl)
-                        vflagerrMagDown.append(0.0)
-                        vshiftXMagDown.append(values['ShiftX'][0])
-                        vshiftXerrMagDown.append(values['ShiftX'][1])
-                        vshiftYMagDown.append(values['ShiftY'][0])
-                        vshiftYerrMagDown.append(values['ShiftY'][1])
-                        vshiftRMagDown.append(values['ShiftR'][0])
-                        vshiftRerrMagDown.append(values['ShiftR'][1])
-                    if polarity == 'MagUp':
-                        vflagMagUp.append(fl)
-                        vflagerrMagUp.append(0.0)
-                        vshiftXMagUp.append(values['ShiftX'][0])
-                        vshiftXerrMagUp.append(values['ShiftX'][1])
-                        vshiftYMagUp.append(values['ShiftY'][0])
-                        vshiftYerrMagUp.append(values['ShiftY'][1])
-                        vshiftRMagUp.append(values['ShiftR'][0])
-                        vshiftRerrMagUp.append(values['ShiftR'][1])
-                    if polarity == 'MagOff':
-                        vflagMagOff.append(fl)
-                        vflagerrMagOff.append(0.0)
-                        vshiftXMagOff.append(values['ShiftX'][0])
-                        vshiftXerrMagOff.append(values['ShiftX'][1])
-                        vshiftYMagOff.append(values['ShiftY'][0])
-                        vshiftYerrMagOff.append(values['ShiftY'][1])
-                        vshiftRMagOff.append(values['ShiftR'][0])
-                        vshiftRerrMagOff.append(values['ShiftR'][1])
+                    vflag[polarity].append(fl)
+                    vflagerr[polarity].append(0.0)
+                    vshiftX[polarity].append(values['ShiftX'][0])
+                    vshiftXerr[polarity].append(values['ShiftX'][1])
+                    vshiftY[polarity].append(values['ShiftY'][0])
+                    vshiftYerr[polarity].append(values['ShiftY'][1])
+                    vshiftR[polarity].append(values['ShiftR'][0])
+                    vshiftRerr[polarity].append(values['ShiftR'][1])
+                    dbX[polarity].append(values["DBShiftX"])
+                    dbY[polarity].append(values["DBShiftY"])
+                    dbR[polarity].append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
                         
             else :
 
                 print "Skipping data from", type, fl, "from fit"
 
-        if len(vflag) > 0:
+        # Loop over polarities
 
-            alignColor     = 1
-            alignColorUp   = 28
-            alignColorDown = 35
-            alignColorOff  = 38    
-            refColor       = 4
+        for polarity in ['MagDown','MagUp','MagOff']:
 
-            linearFit = TF1("AverageFit","pol0",minMaxFlag[0],minMaxFlag[1])
-            linearFit.SetParName(0,"Fitted Shift")
-            linearFit.SetLineColor(alignColor)
-            linearFitUp = TF1("AverageFitUp","pol0",minMaxFlag[0],minMaxFlag[1])
-            linearFitUp.SetParName(0,"Fitted Shift Mag Up")
-            linearFitUp.SetLineColor(alignColorUp)
-            linearFitDown = TF1("AverageFitDown","pol0",minMaxFlag[0],minMaxFlag[1])
-            linearFitDown.SetParName(0,"Fitted Shift Mag Down")
-            linearFitDown.SetLineColor(alignColorDown)
-            linearFitOff = TF1("AverageFitOff","pol0",minMaxFlag[0],minMaxFlag[1])
-            linearFitOff.SetParName(0,"Fitted Shift Mag Off")
-            linearFitOff.SetLineColor(alignColorOff)
-            
-            plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
-            plotX.SetTitle( "X Shift HPD Copy Number "+idS )
-            plotX.GetXaxis().SetTitle(type+" Number")
-            plotX.GetYaxis().SetTitle("X Offset / mm" )
-            plotX.SetMarkerColor(alignColor)
-            plotX.SetLineColor(alignColor)
-            plotX.Fit(linearFit,"QRS")
-            avX = linearFit.GetParameter(0)
-            plotX.Draw("ALP")
-            plotXDB = TGraph( len(vflag), vflag, dbX )
-            plotXDB.SetMarkerColor(refColor)
-            plotXDB.SetLineColor(refColor)
-            plotXDB.Draw("LP")
-            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
-            if len(vflagMagUp) > 0 :
-                plotXUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftXMagUp,
-                                        vflagerrMagUp, vshiftXerrMagUp )
-                plotXUp.Fit(linearFitUp,"QRS")
-                linearFitUp.Draw('SAME')
-                avXUp = linearFitUp.GetParameter(0)
-            if len(vflagMagDown) > 0 :
-                plotXDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftXMagDown,
-                                          vflagerrMagDown, vshiftXerrMagDown )
-                plotXDown.Fit(linearFitDown,"QRS")
-                linearFitDown.Draw('SAME')
-                avXDown = linearFitDown.GetParameter(0)
-            if len(vflagMagOff) > 0 :
-                plotXOff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftXMagOff,
-                                          vflagerrMagOff, vshiftXerrMagOff )
-                plotXOff.Fit(linearFitOff,"QRS")
-                linearFitOff.Draw('SAME')
-                avXOff = linearFitOff.GetParameter(0)
-            printCanvas()
-            
-            plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
-            plotY.SetTitle( "Y Shift HPD Copy Number "+idS )
-            plotY.GetXaxis().SetTitle(type+" Number")
-            plotY.GetYaxis().SetTitle("Y Offset / mm" )
-            plotY.SetMarkerColor(alignColor)
-            plotY.SetLineColor(alignColor)
-            plotY.Fit(linearFit,"QRS")
-            avY = linearFit.GetParameter(0)
-            plotY.Draw("ALP")
-            plotYDB = TGraph( len(vflag), vflag, dbY )
-            plotYDB.SetMarkerColor(refColor)
-            plotYDB.SetLineColor(refColor)
-            plotYDB.Draw("LP")
-            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
-            if len(vflagMagUp) > 0 :
-                plotYUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftYMagUp,
-                                        vflagerrMagUp, vshiftYerrMagUp )
-                plotYUp.Fit(linearFitUp,"QRS")
-                linearFitUp.Draw('SAME')
-                avYUp = linearFitUp.GetParameter(0)
-            if len(vflagMagDown) > 0 :
-                plotYDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftYMagDown,
-                                          vflagerrMagDown, vshiftYerrMagDown )
-                plotYDown.Fit(linearFitDown,"QRS")
-                linearFitDown.Draw('SAME')
-                avYDown = linearFitDown.GetParameter(0)
-            if len(vflagMagOff) > 0 :
-                plotYOff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftYMagOff,
-                                          vflagerrMagOff, vshiftYerrMagOff )
-                plotYOff.Fit(linearFitOff,"QRS")
-                linearFitOff.Draw('SAME')
-                avYOff = linearFitOff.GetParameter(0)
-            printCanvas()
-            
-            # Save the fitted averages for this HPD
-            averageShifts['All'][hpd]     = [avX,avY]
-            averageShifts['MagUp'][hpd]   = [0,0]
-            averageShifts['MagDown'][hpd] = [0,0]
-            averageShifts['MagOff'][hpd]  = [0,0]
-            if len(vflagMagUp) > 0 :
-                averageShifts['MagUp'][hpd] = [avXUp,avYUp]
-            if len(vflagMagDown) > 0 :
-                averageShifts['MagDown'][hpd] = [avXDown,avYDown]
-            if len(vflagMagOff) > 0 :
-                averageShifts['MagOff'][hpd] = [avXOff,avYOff]
+            # If we have data, fill it properly
+            if len(vflag[polarity]) > 0:
 
-            plotR = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
-            plotR.SetTitle( "R Shift HPD Copy Number "+idS )
-            plotR.GetXaxis().SetTitle(type+" Number")
-            plotR.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
-            plotR.SetMarkerColor(alignColor)
-            plotR.SetLineColor(alignColor)
-            plotR.Fit(linearFit,"QRS")
-            plotR.Draw("ALP")
-            plotRDB = TGraph( len(vflag), vflag, dbR )
-            plotRDB.SetMarkerColor(refColor)
-            plotRDB.SetLineColor(refColor)
-            plotRDB.Draw("LP")
-            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
-            if len(vflagMagUp) > 0 :
-                plotRUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftRMagUp,
-                                        vflagerrMagUp, vshiftRerrMagUp )
-                plotRUp.Fit(linearFitUp,"QRS")
-                linearFitUp.Draw('SAME')
-            if len(vflagMagDown) > 0 :
-                plotRDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftRMagDown,
-                                          vflagerrMagDown, vshiftRerrMagDown )
-                plotRDown.Fit(linearFitDown,"QRS")
-                linearFitDown.Draw('SAME')
-            if len(vflagMagOff) > 0 :
-                plotROff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftRMagOff,
-                                          vflagerrMagOff, vshiftRerrMagOff )
-                plotROff.Fit(linearFitOff,"QRS")
-                linearFitOff.Draw('SAME')
-            printCanvas()
+                plotX = TGraphErrors( len(vflag[polarity]), vflag[polarity],
+                                      vshiftX[polarity], vflagerr[polarity], vshiftXerr[polarity] )
+                plotX.SetTitle( polarity+" X Shift : Copy Number "+idS )
+                plotX.GetXaxis().SetTitle(type+" Number")
+                plotX.GetYaxis().SetTitle("X Offset / mm" )
+                plotX.SetMarkerColor(dataColor)
+                plotX.SetLineColor(dataColor)
+                FitX = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxFlag[0],minMaxFlag[1])
+                FitX.SetParName(0,"Fitted Shift")
+                FitX.SetLineColor(dataColor)
+                plotX.Fit(FitX,"QRS")
+                plotX.Draw("ALP")
+                #plotXDB = TGraph( len(vflag[polarity]), vflag[polarity], dbX[polarity] )
+                #plotXDB.SetMarkerColor(refColor)
+                #plotXDB.SetLineColor(refColor)
+                #plotXDB.Draw("LP")
+                labelDataDB(polarity,dataColor,refColor)
+                #interpX = TSpline3( "SplineX"+polarity+idS, vflag[polarity], vshiftX[polarity],
+                #                    len(vflag[polarity]) )
+                #interpX.SetLineColor(splineColor)
+                #interpX.Draw("SAME")
+                smootherX = gbl.Rich.HPDImage.GraphSmoother(vflag[polarity],
+                                                            vshiftX[polarity],
+                                                            len(vflag[polarity]))
+                smoothedX = array('d')
+                for v in vflag[polarity] : smoothedX.append( smootherX.Eval(v) )
+                plotSmoothedX = TGraph( len(vflag[polarity]), vflag[polarity], smoothedX )
+                plotSmoothedX.SetMarkerColor(smoothColor)
+                plotSmoothedX.SetLineColor(smoothColor)
+                plotSmoothedX.Draw("LP")
+                printCanvas()
+
+                plotY = TGraphErrors( len(vflag[polarity]), vflag[polarity],
+                                      vshiftY[polarity], vflagerr[polarity], vshiftYerr[polarity] )
+                plotY.SetTitle( polarity+"Y Shift : Copy Number "+idS )
+                plotY.GetXaxis().SetTitle(type+" Number")
+                plotY.GetYaxis().SetTitle("Y Offset / mm" )
+                plotY.SetMarkerColor(dataColor)
+                plotY.SetLineColor(dataColor)
+                FitY = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxFlag[0],minMaxFlag[1])
+                FitY.SetParName(0,"Fitted Shift")
+                FitY.SetLineColor(dataColor)
+                plotY.Fit(FitY,"QRS")
+                plotY.Draw("ALP")
+                #plotYDB = TGraph( len(vflag[polarity]), vflag[polarity], dbY[polarity] )
+                #plotYDB.SetMarkerColor(refColor)
+                #plotYDB.SetLineColor(refColor)
+                #plotYDB.Draw("LP")
+                labelDataDB(polarity,dataColor,refColor)
+                #interpY = TSpline3( "SplineY"+polarity+idS, vflag[polarity], vshiftY[polarity],
+                #                    len(vflag[polarity]) )
+                #interpY.SetLineColor(splineColor)
+                #interpY.Draw("SAME")
+                smootherY = gbl.Rich.HPDImage.GraphSmoother(vflag[polarity],
+                                                            vshiftY[polarity],
+                                                            len(vflag[polarity]))
+                smoothedY = array('d')
+                for v in vflag[polarity] : smoothedY.append( smootherY.Eval(v) )
+                plotSmoothedY = TGraph( len(vflag[polarity]), vflag[polarity], smoothedY )
+                plotSmoothedY.SetMarkerColor(smoothColor)
+                plotSmoothedY.SetLineColor(smoothColor)
+                plotSmoothedY.Draw("LP")
+                printCanvas()
+
+                # Save fit results
+                avTrendFit[polarity][hpd] = [FitX,FitY]
+                #splines[polarity][hpd]    = [interpX,interpY]
+                smoothers[polarity][hpd]  = [smootherX,smootherY]
 
     # Close the PDF 
     printCanvas(']')
@@ -761,7 +667,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             alignData[flag][hpd] = values
 
     # Open new alignment SQL slice(s)
-    dbName = "HPDAlignBy"+type+"-"+fitType+avType+".db"
+    dbName = basename+".db"
     db = createDBFile(dbName)
 
     # List of paths already created in the DB
@@ -805,24 +711,23 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             siAlign = getSiSensorAlignment(copyNumber)
 
             # Get the offsets
-            if values["FitOK"] and not forceAverages :
+            if values["FitOK"] and followType == "FollowMovements":
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
-                text = "From Fits to each Fill"
+                text = type + " aligned FitType=" + fitType
             else:
-                if hpdID in averageShifts[polarity].keys():
-                    xOff = averageShifts[polarity][hpdID][0]
-                    yOff = averageShifts[polarity][hpdID][1]
-                    text = "From " + polarity + " Average"                      
+                if followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
+                    xOff = avTrendFit[polarity][hpdID][0].Eval(int(flag))
+                    yOff = avTrendFit[polarity][hpdID][1].Eval(int(flag))
+                    text = "From " + polarity + " Average Pol" + str(pol)
+                elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
+                    xOff = smoothers[polarity][hpdID][0].Eval(int(flag))
+                    yOff = smoothers[polarity][hpdID][1].Eval(int(flag))
+                    text = "From " + polarity + " Smoothed"
                 else:
-                    if hpdID in averageShifts['All'].keys():
-                        xOff = averageShifts['All'][hpdID][0]
-                        yOff = averageShifts['All'][hpdID][1]
-                        text = "From Overall Average"
-                    else:
-                        xOff = values["DBShiftX"]
-                        yOff = values["DBShiftY"]
-                        text = "From original DB"
+                    xOff = values["DBShiftX"]
+                    yOff = values["DBShiftY"]
+                    text = "From original DB"
 
             # Update the Si alignment with the image movement data
             paramName = "dPosXYZ"
@@ -849,7 +754,6 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
-        #stopTime  = 9223372036854775807L
 
         # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :
@@ -885,21 +789,15 @@ def createDBFile(name):
     return CondDBUI.CondDB( "sqlite_file:"+name+"/LHCBCOND",
                             create_new_db=True, readOnly=False )
 
-def labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor):
+def labelDataDB(polarity,alignColor,refColor):
     from ROOT import TText
     text = TText()
     text.SetNDC()
     text.SetTextSize(0.02)
     text.SetTextColor(alignColor)
-    text.DrawText( 0.13, 0.85, "All Fitted Image Shifts" )
-    text.SetTextColor(alignColorUp)
-    text.DrawText( 0.13, 0.82, "MagUp Fitted Image Shifts" )
-    text.SetTextColor(alignColorDown)
-    text.DrawText( 0.13, 0.79, "MagDown Fitted Image Shifts" )
-    text.SetTextColor(alignColorOff)
-    text.DrawText( 0.13, 0.76, "MagOff Fitted Image Shifts" )
-    text.SetTextColor(refColor)
-    text.DrawText( 0.13, 0.73, "LHCbCond" )
+    text.DrawText( 0.13, 0.85, polarity+" Fitted Image Shifts" )
+    #text.SetTextColor(refColor)
+    #text.DrawText( 0.13, 0.82, "LHCbCond" )
     
 def printCanvas(tag=''):
     canvas = rootCanvas()

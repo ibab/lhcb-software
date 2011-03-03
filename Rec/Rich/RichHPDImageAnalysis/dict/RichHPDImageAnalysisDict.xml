@@ -3,5 +3,6 @@
   <class name="Rich::HPDImage::HPDFit" />
   <class name="Rich::HPDImage::HPDFit::Params" />
   <class name="Rich::HPDImage::HPDFit::Result" />
+  <class name="Rich::HPDImage::GraphSmoother" />
   <class name="TH2D" />
 </lcgdict>

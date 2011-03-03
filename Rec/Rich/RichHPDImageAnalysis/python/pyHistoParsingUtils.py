@@ -52,15 +52,17 @@ def imageOffsetY( rootfile, hpdcopynr, minEntries ):
     """
     return imageOffset(rootfile,'dPosYvsCopyNr','dPosYvsCopyNrErr',hpdcopynr,minEntries)
 
-def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
+def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fitType = "CppFit" ):
     """
     Returns the HPD local offset in mm
     """
 
+    OK = True
+
     xoffset = (0,0)
     yoffset = (0,0)
     
-    if not fullFit:
+    if fitType == "CppFit" :
         # Get the results from the summary histograms saved in the ROOT file
 
         xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
@@ -76,6 +78,7 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
         params = gbl.Rich.HPDImage.HPDFit.Params()
         params.cutFraction = 0.1
         params.minBoundary = 3
+        params.type        = fitType
 
         # Get the histogram for this HPD
         image = rootfile.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdcopynr)+'_Image')
@@ -84,20 +87,13 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
         fitter = gbl.Rich.HPDImage.HPDFit()
         result = fitter.fit(image,params)
 
-        # Extract the fit results
-        if result.OK() :
+        # Extract the fit results"Mooo
+        OK = result.OK()
+        if OK :
             xoffset = (result.x(),result.xErr())
             yoffset = (result.y(),result.yErr())
-            
-        #import pyHPDImageFit
-        #fitR = pyHPDImageFit.fit(rootfile,hpdcopynr,minEntries)
-        #if fitR["OK"]:
-        #    xoffset = fitR["XShift"]
-        #    yoffset = fitR["YShift"]
-        #else:
-        #    raise Exception('HPDImageFitFailed')
         
-    return (xoffset,yoffset)
+    return { "OK" : OK, "Result" : (xoffset,yoffset) }
 
 def hpdCentreInPixels( rootfile, hpdcopynr, fullFit = False ):
     """
