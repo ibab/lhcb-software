@@ -3,8 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v38r2>2011-03-03 Brunel v38r2</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1, Lbcom v10r1,
+ Rec v11r2 and SQLDDDB v6r0, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
+
+Production release candidate for 2011 data taking
+
 - Changes to unit tests
-	. brunel-lumiconddbchecker to test online partition usage for lumi
+	. Add brunel-lumiconddbchecker to test online partition usage for lumi
 
 - Changes to references to reflect changes in Brunel v38r2 output
   . #118380 Possibility to configure VeloClusterPositionTool from DB (default)
