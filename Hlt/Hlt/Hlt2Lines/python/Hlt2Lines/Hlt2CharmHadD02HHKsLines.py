@@ -8,6 +8,7 @@ __version__ = '$Revision: $'
 ## ######################################################################
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from GaudiKernel.SystemOfUnits import MeV, mm
 
 class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
@@ -15,44 +16,41 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
     #------------------------
     __slots__ = {
                 ## Slots for K_S h h' lines
-                  'KshhTFHHTrkPLL'          : 1500.0     # in MeV
+                  'KshhTFHHTrkPLL'          : 1500.0 * MeV
                 , 'KshhTFHHTrkChi2UL'       : 5.0        # unitless -- 14 Jan: Mat changed from 20.0 to 5.0
-                , 'KshhTFHHTrkMaxPVIPLL'    : 0.1        # in mm
                 , 'KshhTFHHVtxChi2UL'       : 10.0       # unitless -- 14 Jan: Mat changed from 20.0 to 10.0
-                , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
-                , 'KshhTFHHPtLL'            : 1000.0     # in MeV
-                , 'KshhTFHHFDLL'            : 2.0        # in mm -- 26 Feb: Mat changed from 1mm to 2mm
+                , 'KshhTFHHPtLL'            : 1000.0 * MeV
+                , 'KshhTFHHFDLL'            : 2.0 * mm        # -- 26 Feb: Mat changed from 1mm to 2mm
                 , 'KshhTFHHTightTrkChi2UL'  : 2.0        # unitless -- 27 Feb: Mat adds for use in DD filter
                 , 'KshhTFHHTightVtxChi2UL'  : 5.0        # unitless -- 27 Feb: Mat adds for use in DD filter
-                , 'KshhTFHHTightFDLL'       : 4.0        # in mm -- 27 Feb: Mat adds for use in DD filter
-                , 'KshhTFHHTightPtLL'       : 1000.0     # in MeV -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightFDLL'       : 4.0 * mm       # -- 27 Feb: Mat adds for use in DD filter
+                , 'KshhTFHHTightPtLL'       : 1000.0 * MeV     # -- 27 Feb: Mat adds for use in DD filter
                 , 'KshhTFHHTightTrkPVIPChi2LL' : 12.5     # unitless -- 28 Feb: Mat adds for use in DD filter
-                , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
+                , 'KshhTFKsLLTrkPLL'        : 2000.0 * MeV
                 , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
                 , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
-                , 'KshhTFKsLLCombSymMassWin': 50.0       # in MeV
-                , 'KshhTFKsLLMothSymMassWin': 11.4       # in MeV
+                , 'KshhTFKsLLCombSymMassWin': 50.0 * MeV
+                , 'KshhTFKsLLMothSymMassWin': 11.4 * MeV
                 , 'KshhTFKsLLVtxChi2UL'     : 30.0       # unitless
-                , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0    # in mm
-                , 'KshhTFKsLLVtxPVDispZUL'  : 650.0      # in mm
+                , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0 * mm
+                , 'KshhTFKsLLVtxPVDispZUL'  : 650.0 * mm
                 , 'KshhTFKsLLVtxPVDispChi2LL' : 100.0    # unitless
                 , 'KshhTFKsLLDiraLL'        : 0.9997     # unitless
-                , 'KshhTFKsDDTrkPLL'        : 2000.0     # in MeV
+                , 'KshhTFKsDDTrkPLL'        : 2000.0 * MeV
                 , 'KshhTFKsDDTrkPVIPChi2LL' : 4.0        # unitless
                 , 'KshhTFKsDDTrkChi2UL'     : 10.0       # unitless -- 14 Jan: Mat changed from 20.0 to 10.0
-                , 'KshhTFKsDDCombSymMassWin': 80.0       # in MeV
-                , 'KshhTFKsDDMothSymMassWin': 24.9       # in MeV
+                , 'KshhTFKsDDCombSymMassWin': 80.0 * MeV
+                , 'KshhTFKsDDMothSymMassWin': 24.9 * MeV
                 , 'KshhTFKsDDVtxChi2UL'     : 20.0       # unitless -- 14 Jan: Mat changed from 30 to 20
-                , 'KshhTFKsDDVtxPVDispZLL'  : 0.0        # in mm
-                , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0     # in mm
+                , 'KshhTFKsDDVtxPVDispZLL'  : 0.0 * mm
+                , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0 * mm
                 , 'KshhTFKsDDVtxPVDispChi2LL' : 100.0    # unitless
                 , 'KshhTFKsDDDiraLL'        : 0.9999     # unitless -- 14 Jan: Mat changed from 0.9997 to 0.9999
                 , 'KshhTFDVtxChi2UL'        : 20.0       # unitless
-                , 'KshhTFDVtxPVDispLL'      : -1.0       # in mm
-                , 'KshhTFDPtLL'             : 2000.0     # in MeV -- 14 Jan: Mat changed from 500 to 2000
+                , 'KshhTFDPtLL'             : 2000.0 * MeV    # -- 14 Jan: Mat changed from 500 to 2000
                 , 'KshhTFDDiraLL'           : 0.0        # unitless -- 14 Jan: Mat changed from 0.999 to 0.0
-                , 'KshhTFDwKsLLSymMassWin'  : 100.0      # in MeV
-                , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
+                , 'KshhTFDwKsLLSymMassWin'  : 100.0 * MeV
+                , 'KshhTFDwKsDDSymMassWin'  : 120.0 * MeV
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 , 'HLT1FILTER'               : ''
@@ -155,7 +153,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         ## 14 Jan: Mat removes hard-coded cut on track p(chi2)
         incuts = "(TRCHI2DOF< %(KshhTFHHTrkChi2UL)s )" \
-                 "& (P> %(KshhTFHHTrkPLL)s *MeV)" % self.getProps()
+                 "& (P> %(KshhTFHHTrkPLL)s)" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -208,7 +206,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         # Construct a cut string for the vertexed combination.
         parentcuts = "(VFASPF(VCHI2PDOF)< %(KshhTFDVtxChi2UL)s )" \
-                     "& (PT> %(KshhTFDPtLL)s *MeV)" \
+                     "& (PT> %(KshhTFDPtLL)s)" \
                      "& (BPVLTIME() > 0.2*ps)" \
                      "& (BPVDIRA > %(KshhTFDDiraLL)s )" % self.getProps()
 
@@ -251,12 +249,12 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from HltTracking.HltPVs import PV3D
         KshhKsLLdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" \
-                                     "& (P> %(KshhTFKsLLTrkPLL)s *MeV)" \
+                                     "& (P> %(KshhTFKsLLTrkPLL)s)" \
                                      "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s )" % self.getProps() }
-        KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsLLparentcuts = "(ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s *MeV)" \
+        KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s" % self.getProps()
+        KshhKsLLparentcuts = "(ADMASS('KS0')< %(KshhTFKsLLMothSymMassWin)s)" \
                         "& (VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) " \
-                        "& in_range( %(KshhTFKsLLVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s *mm)" \
+                        "& in_range( %(KshhTFKsLLVtxPVDispZLL)s, BPVVDZ, %(KshhTFKsLLVtxPVDispZUL)s)" \
                         "& (BPVDIRA > %(KshhTFKsLLDiraLL)s )" \
                         "& (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsLL = Hlt2Member( CombineParticles
@@ -294,12 +292,12 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from HltTracking.HltPVs import PV3D
         KshhKsDDdaugcuts = { "pi+" : "(TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)"
-                                     "& (P> %(KshhTFKsDDTrkPLL)s *MeV)" \
+                                     "& (P> %(KshhTFKsDDTrkPLL)s)" \
                                      "& (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s )" % self.getProps() }
-        KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsDDparentcuts = "(ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s *MeV)" \
+        KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s" % self.getProps()
+        KshhKsDDparentcuts = "(ADMASS('KS0')< %(KshhTFKsDDMothSymMassWin)s)" \
                         "& (VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s )" \
-                        "& in_range(%(KshhTFKsDDVtxPVDispZLL)s *mm, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s *mm)" \
+                        "& in_range(%(KshhTFKsDDVtxPVDispZLL)s, BPVVDZ, %(KshhTFKsDDVtxPVDispZUL)s)" \
                         "& (BPVDIRA > %(KshhTFKsDDDiraLL)s )" \
                         "& (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsDD = Hlt2Member( CombineParticles
@@ -371,10 +369,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ###################################################################
 
         KshhHHcombcuts = """(AM<1450*MeV) 
-                            & (APT > %(KshhTFHHPtLL)s *MeV)
+                            & (APT > %(KshhTFHHPtLL)s)
                             & (AALLSAMEBPV)""" % self.getProps()
         KshhHHparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFHHVtxChi2UL)s )
-                              & (BPVVD > %(KshhTFHHFDLL)s *mm)""" % self.getProps()
+                              & (BPVVD > %(KshhTFHHFDLL)s)""" % self.getProps()
 
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import CombineParticles
@@ -390,13 +388,13 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [PV3D(), lclKshhTFInputKaons, lclKshhTFInputPions, combineKshhTF2Body ] )
 
         ## Special for down-down: Require that the two-body combination pass more cuts:
-        strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s * mm ),1)) 
-                              & (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s * mm),2)) 
+        strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s ),1)) 
+                              & (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s),2)) 
                               & (VFASPF(VCHI2PDOF) < %(KshhTFHHTightVtxChi2UL)s) 
-                              & (PT > %(KshhTFHHTightPtLL)s * MeV)
+                              & (PT > %(KshhTFHHTightPtLL)s)
                               & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),1))
                               & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),2))
-                              & (BPVVD > %(KshhTFHHTightFDLL)s *mm) )""" % self.getProps()
+                              & (BPVVD > %(KshhTFHHTightFDLL)s) )""" % self.getProps()
         charmKshhTF2BodyTighter = self.__quickFilter("charmKshhTF2BodyTighter", strTighterCuts, [ charmKshhTF2Body ] )
         ## Special for down-down: Require that the two-body combination be TOS on Hlt1Track:
         charmKshhTF2BodyReqTOS = self.__filterRequiringTOS("charmKshhTF2BodyReqTOS", charmKshhTF2BodyTighter )
@@ -409,11 +407,11 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         combineKshhTFD2HHKsLL = self.__KshhTFDCombine('CharmKshhTFD2HHKsLL'
                                         , [charmKshhTF2Body, charmKshhTFKsLL]
-                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s *MeV)" % self.getProps() } 
+                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s)" % self.getProps() } 
                                         )
         combineKshhTFD2HHKsDD = self.__KshhTFDCombine('CharmKshhTFD2HHKsDD'
                                         , [charmKshhTF2BodyReqTOS, charmKshhTFKsDD]
-                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s *MeV)" % self.getProps() } 
+                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s)" % self.getProps() } 
                                         )
 
         ## Make the lines
