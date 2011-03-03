@@ -3,6 +3,53 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v38r2>2011-03-03 BrunelSys v38r2</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1, Lbcom v10r1,
+ Rec v11r2 and SQLDDDB v6r1, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
+
+Production release candidate for 2011 data taking
+
+- Persistency changes:
+  . Add TT cluster and Muon information (# Muon Coords in each station and
+    # Muon tracks) to RecSummary object (RecEvent v2r35, RecAlgs v2r1))
+
+- New features:
+  . Add support for pileup offset calibration in Calo (CaloDet v10r10)
+  . Added possibility to load MuonID calibration from DB (MuonID v8r0)
+  . Possibility to configure VeloClusterPositionTool from DB (TrackTools v4r3)
+
+- New tuning:
+  . Rework the way the various DeRich objects initialise, moving as much as
+    possible to happen on demand (RichDet v16r1)
+  . Added MuonID tuning for 2010 and 2011 (MuonID v8r0)
+  . Add support for cluster offset correction in Calo (CaloReco v5r8p1)
+  . Minor improvement of PatSeedingTool momentum estimate (PatAlgorithms v4r12)
+  . Set the ForceBiDirectionnal in KalmanFilter back to True (TrackFitter v4r2)
+
+- Bug fixes
+  . Fix bug in accessing the (x)rootd protocol (MDF v3r29, v3r28)
+  . Pick up ROOT (5.28.00a) with a fixed memory leak in I/O subsystem
+    (LCG 60a, GaudiPooldDB v5r11)
+  . Added another special case for the order of service finalization
+    (NTupleSvc after ToolSvc, because of GaudiTupleTool) (GaudiSvc v18r13)
+  . Various fixes for ICC compilation warnings
+  . Various fixes for Coverity warnings (UNINIT_CTOR, leaks, sprintf etc.)
+  . Protect against numerical difficulties in PatSeed (PatAlgorithms v4r12)
+  . Protect against removal of essential layers in PatSeed (at least 2 X and 2
+    stereo layers have to remain) (PatAlgorithms v4r12)
+  . Fix in TrackStateProvider (TrackExtrapolators v2r30)
+  . Classical smoother was always putting fitresult in error mode 
+    (TrackFitEvent v5r7)
+
+- Monitoring changes:
+  . In TrajPoca, set the maximum warning to 0 to avoid printouts (LHCbAlgs v2r37)
+  . FastVeloHitManager prints in finalize, not destructor (FastVelo v1r5)
+  . Reduce verbosity of TrackEventFitter (TrackFitter v4r2)
+
+- Changes to unit tests
+	. Add brunel-lumiconddbchecker to test online partition usage for lumi
+
+
 </PRE><H1><A NAME=v38r1>2011-02-08 BrunelSys v38r1</A></H1><PRE>
 This version uses projects LCG 60, Gaudi v22r0, LHCb v32r0, Lbcom v10r0,
  Rec v11r1 (plus TrackFitter v4r1 and TrackTools v4r2) 
