@@ -117,7 +117,7 @@ def _converter( channel ) :
                 conditionTypes.update( [ conditionMapper[conditionData]  ])
     if not conditionTypes :         return { channel : None }
     elif len(conditionTypes) == 1 : return typeMapper[conditionTypes.pop()](channel)
-    else :                          raise RuntimeError('cannot handle cuts on multiple types. Help!')
+    else :                          return { channel : None }
 
 def _parseMask( mask ) :
     # keys are  GaudiPython.gbl.LHCb.L0DUDecision.Name[i]

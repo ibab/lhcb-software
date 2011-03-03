@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r6p1 2011-03-03 ===================
+! 2011-03-03 - Gerhard Raven
+ - remove restriction in L0candidates ... needed for 0x0032..
+
 !========================== Hlt1Lines v6r6   2011-03-01 ===================
 ! 2011-03-03 - Gerhard Raven
  - fix typo in Hlt1LumiLines
