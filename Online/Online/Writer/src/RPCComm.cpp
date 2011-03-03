@@ -52,7 +52,6 @@ void RPCComm::confirmFile(char *fileName, //still
   /* Now we fill up templates. */
   ret = snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
            fileName, adler32String, md5CharString, size, events, physEvents); 
-//           trgEventsCharString, statEventsCharString);
   if(ret < 0 || (unsigned int) ret > sizeof(xmlData)) {
     throw FailureException("Could not format rpc call correctly.");
   } 
@@ -79,8 +78,6 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   int ret;
   char headerData[1024];
   char response[RESPONSELEN];
-
-  char statEventsCharString[1024];
 
   size_t msg_size = snprintf(NULL, 0, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3],
