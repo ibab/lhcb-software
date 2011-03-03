@@ -558,8 +558,8 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## HPD image shift monitoring
     def hpdImageShifts(self,sequence):
-        from Configurables import Rich__Mon__RichHPDImageSummary
-        imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
+        from Configurables import Rich__HPDImage__Summary
+        imageSummary = Rich__HPDImage__Summary("RichHPDImageSummary")
         imageSummary.StatEntityList +=  [ ".*HPD.*" ]
         imageSummary.StatEntityList +=  [ ".*EventTime.*" ]
         sequence.Members += [imageSummary]

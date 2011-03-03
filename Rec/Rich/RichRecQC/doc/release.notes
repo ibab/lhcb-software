@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-03-03 - Chris Jones
+ - Adapt to change in HPD image monitoring algorithm name
+
 !========================= RichRecQC v2r48p1 2011-02-28 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
