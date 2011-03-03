@@ -619,7 +619,7 @@ void MDFWriterNet::closeFile(File *currFile)
  * the send thread will be stopped.
  */
 void  MDFWriterNet::handle(const Incident& inc)    {
-   *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+   *m_log << MSG::ERROR << "Got incident:" << inc.source() << " of type " << inc.type() << " (not an error but message threshold too high) "<< endmsg;
   if (inc.type() == "DAQ_CANCEL" ||  inc.type() == "DAQ_ERROR" ) {
       this->stopRetrying();
       m_srvConnection->stopRetrying();
@@ -758,7 +758,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
             break;
         }
         if(m_currFile == NULL) {
-            *m_log << MSG::ERROR << "Giving up to get new file name for run " << runNumber << endmsg;
+            *m_log << MSG::ERROR << "Giving up to get new file name for run " << runNumber << ". You should stop the run." << endmsg;
             if (pthread_mutex_unlock(&m_SyncFileList)) {
               *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
               return StatusCode::FAILURE;

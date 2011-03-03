@@ -11,6 +11,8 @@
 #include "Writer/Utils.h"
 #include "Writer/chunk_headers.h"
 
+#define RESPONSELEN 1024
+
 using namespace LHCb;
 
 /**
@@ -31,7 +33,7 @@ void RPCComm::confirmFile(char *fileName, //still
   int ret;
   char headerData[1024];
   char xmlData[4096];
-  char response[1024];
+  char response[RESPONSELEN];
 
   char adler32String[9];
   char md5CharString[33];
@@ -59,10 +61,11 @@ void RPCComm::confirmFile(char *fileName, //still
            "WriterHost",  strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response, sizeof(response));
-
+  ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
+ 
   if(ret < 0)
     throw FailureException("Could not run RPC call for confirm.");
+
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
@@ -75,7 +78,7 @@ void RPCComm::confirmFile(char *fileName, //still
 void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *statEvents) {
   int ret;
   char headerData[1024];
-  char response[1024];
+  char response[RESPONSELEN];
 
   char statEventsCharString[1024];
 
@@ -118,7 +121,7 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
            "WriterHost",  strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   free(xmlData);
   free(msg);
@@ -127,6 +130,7 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
 
   if(ret < 0)
     throw FailureException("Could not run RPC call for confirm.");
+
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
@@ -152,17 +156,18 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
 
   char headerData[1024];
   char xmlData[1024];
-  char response[1024];
+  char response[RESPONSELEN];
 
   snprintf(xmlData, sizeof(xmlData), OPEN_TEMPLATE, fileName, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
           "WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
     throw FailureException("Could not run RPC call for create.");
+
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
@@ -260,7 +265,7 @@ int RPCComm::isError(char *response)
 
 std::string RPCComm::createNewFile(unsigned int runNumber)
 {
-  char headerData[1024], xmlData[1024], response[1024];
+  char headerData[1024], xmlData[1024], response[RESPONSELEN];
   int ret;
   std::string file;
   char startStr[] = "<string>";
@@ -273,10 +278,11 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
           "WriterHost", (size_t) strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
     throw FailureException("Could not run RPC call for create"); 
+
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
@@ -306,7 +312,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
 
 std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID, std::string identifier)
 {
-  char headerData[1024], xmlData[1024], response[1024];
+  char headerData[1024], xmlData[1024], response[RESPONSELEN];
   int ret;
   std::string file;
   char startStr[] = "<string>";
@@ -319,7 +325,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
           "WriterHost", (size_t) strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
     throw FailureException("Could not run RPC call for create");
