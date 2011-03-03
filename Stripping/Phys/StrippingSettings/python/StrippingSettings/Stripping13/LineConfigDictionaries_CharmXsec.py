@@ -5,6 +5,8 @@ Stripping13 definitions.
 Dictionaries have the name of the line builder instance.
 """
 
+from GaudiKernel.SystemOfUnits import *
+
 # Philip Hunt
 # Test: 
 
