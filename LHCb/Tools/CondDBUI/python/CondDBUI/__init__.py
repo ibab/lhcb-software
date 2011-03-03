@@ -11,6 +11,8 @@ browser.
 '''
 
 import os, random, sys, re, time, datetime
+from multiprocessing.managers import BaseManager
+from multiprocessing import Process, cpu_count
 
 LOG_FORMAT = "%(levelname)s: (%(name)s) %(message)s"
 
@@ -36,6 +38,7 @@ def coolApp():
         _coolApp.connectionSvc().configuration().disablePoolAutomaticCleanUp()
         _coolApp.connectionSvc().configuration().setConnectionTimeOut(0)
     return _coolApp
+
 
 #########################################################################################
 #                                    Tag Class                                          #
@@ -739,59 +742,100 @@ class CondDB(object):
             headTag = Tag('HEAD', path)
             tagList.append(headTag)
 
-            # we check if the node is a single version folder.
+            # Check if the node is a single version folder.
             if self.isSingleVersionFolder(path):
                 return tagList
 
             # As we are going to use the os.path module, we need to be sure
             # that os.path.sep == '/'
+            sep = os.path.sep
+            os.path.sep = '/'
+
             try:
-                sep = os.path.sep
-                os.path.sep = '/'
-                # we get all the nodes objects of the given path, and retrieve all the
+                # Create manager to manipulate shared data
+                manager = BaseManager()
+                manager.register('TagMP', Tag)
+                manager.start()
+
+                # Get all the nodes objects of the given path, and retrieve all the
                 # tags defined for them.
-                nodeDict = {}
-                tagDict  = {}
+                tagDictMP = {}
+                nodeTagsDict = {}
                 nodeNameList = path.split('/')
                 nodePath = '/'
                 for nodeName in nodeNameList:
                     nodePath = os.path.join(nodePath, nodeName)
-                    if self.db.existsFolderSet(nodePath):
-                        nodeDict[nodePath] = self.db.getFolderSet(nodePath)
-                    else:
-                        nodeDict[nodePath] = self.db.getFolder(nodePath)
-                    for tagName in list(nodeDict[nodePath].listTags()):
-                        tagDict[tagName] = Tag(tagName, nodePath)
-                # We look for the parents of all the retrieved tags.
-                for tagName in tagDict.keys():
-                    tag = tagDict[tagName]
-                    if tag.path == '/':
-                        # The tags of the root node have no parents.
-                        continue
-                    else:
-                        node = nodeDict[tag.path]
-                        parentNode = nodeDict[os.path.dirname(tag.path)]
-                        for parentTagName in parentNode.listTags():
-                            try:
-                                if tagDict[parentTagName].child:
-                                    continue
-                                elif tag.name == node.findTagRelation(parentTagName):
-                                    tagDict[parentTagName].connectChild(tag)
-                            except RuntimeError, x:
-                                if str(x).find("No child tag can be found") >= 0:
-                                    # the folder does not conatin one of the parent tags
-                                    pass
-                                else:
-                                    raise
+                    node = self.getCOOLNode(nodePath)
+                    nodeTagsDict[nodePath] = node.listTags()
+                    for tagName in nodeTagsDict[nodePath]:
+                        tagDictMP[tagName] = manager.TagMP(tagName, nodePath)
+                        tagDictMP[tagName].path = nodePath
+                        tagDictMP[tagName].child = None
+                        tagDictMP[tagName].parents = []
+
+                # Determine input data decomposition on chunks to feed processes
+                chunkSize = len(tagDictMP)//cpu_count() + 1
+                chunks_coords = [(k,k + chunkSize)
+                                 for k in range(0,len(tagDictMP),chunkSize)]
+
+                # Setup and start parallel processes
+                jobs = []
+                for coord in chunks_coords:
+                    job = Process(target = self._establishTagsRelations,
+                                  args = (tagDictMP, coord, nodeTagsDict))
+                    jobs.append(job)
+                    job.start()
+
+                # Wait for the processes completion
+                import errno
+                for job in jobs:
+                    notintr = False
+                    while not notintr:
+                        # Avoid waiting interruption due to any signal sent to os.waitpid
+                        try:
+                            job.join()
+                            notintr = True
+                        except OSError, ose:
+                            if ose.errno != errno.EINTR:
+                                raise ose
 
             finally:
                 # recover the original value of os.path.sep
                 os.path.sep = sep
 
             # We return the list of the tags defined for the given node
-            for tagName in nodeDict[path].listTags():
-                tagList.append(tagDict[tagName])
+            for tagName in nodeTagsDict[path]:
+                tagList.append(tagDictMP[tagName]._getvalue())
+
             return tagList
+
+    def _establishTagsRelations(self, tagDict, tagDictCoords, nodeTagsDict):
+        # Get coordinates of a tagDict chunk to process
+        start, end = tagDictCoords
+        # Load process' own database instance to avoid SQLite conflicts with other processes
+        db = CondDB(self.connectionString)
+        # Look for the parents of all the tags given in tagDict.
+        for tagName in tagDict.keys()[start:end]:
+            tagProxy = tagDict[tagName]
+            tagPath = tagProxy.path
+            if tagPath != '/':
+                node = db.getCOOLNode(tagPath)
+                for parentTagName in nodeTagsDict[os.path.dirname(tagPath)]:
+                    try:
+                        if tagProxy.child:
+                            continue
+                        elif tagName == node.findTagRelation(parentTagName):
+                            tagDict[parentTagName].connectChild(tagProxy)
+                    except RuntimeError, x:
+                        if str(x).find("No child tag can be found") >= 0:
+                            # the folder does not contain one of the parent tags
+                            pass
+                        else:
+                            raise
+            else:
+                # The tags of the root node have no parents.
+                continue
+        return
 
 
     def createTagRelation(self, path, parentTag, tag):
