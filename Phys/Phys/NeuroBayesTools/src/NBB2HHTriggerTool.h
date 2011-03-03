@@ -83,9 +83,10 @@ private:
   IHistoTool*                 m_HistoTool;
 
 
+  float*   m_inArray;
+
 #ifdef __GNUC__
   Expert*  m_NBExpert;
-  float*   m_inArray;
 #endif
 
 

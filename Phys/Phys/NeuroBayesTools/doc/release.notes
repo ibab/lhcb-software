@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2011-03-03 - Ulrich Kerzle
+ - fix ifdef for Windows
+
 ! ====================== Phys/NeuroBayesTool v1r1 2011-02-28==================
 
 ! 2011-02-27 - Ulrich Kerzel
