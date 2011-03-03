@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011003-03 - Johannes Albrecht
+ - change prescale of single muon No IP to 100 
+   (cuts to be revised for next release)
+
 ! 2011-Mar-02 - Patrick Spradlin
  - Updated CharmHadronLines_draft2011.py.  Added thresholds for
    Hlt2CharmHadTwoBodyForMultiBodyConf and Hlt2CharmHadD02HHHHLinesConf.
