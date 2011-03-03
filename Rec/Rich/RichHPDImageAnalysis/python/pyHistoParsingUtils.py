@@ -85,7 +85,7 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
         result = fitter.fit(image,params)
 
         # Extract the fit results
-        if result.OK :
+        if result.OK() :
             xoffset = (result.x(),result.xErr())
             yoffset = (result.y(),result.yErr())
             
@@ -96,8 +96,6 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
         #    yoffset = fitR["YShift"]
         #else:
         #    raise Exception('HPDImageFitFailed')
-
-    print  (xoffset,yoffset)
         
     return (xoffset,yoffset)
 
