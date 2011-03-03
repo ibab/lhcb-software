@@ -156,7 +156,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiRecoFilterSequence.Members.append(
             Sequence('HltVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareVeloBW'
-                                                   , InputSelection   = fastVeloContainer
+                                                   , InputSelection   = 'TES:%s' % fastVeloContainer
                                                    , Code = [ 'TrBACKWARD' ]
                                                    , OutputSelection     = 'VeloBW'
                                                    , RequirePositiveInputs = False
