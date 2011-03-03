@@ -139,7 +139,7 @@ Lambdac2PKPiForXSec = {
      , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
      , 'PrescaleLambdac2PKPi'  :    0.1
      , 'PostscaleLambdac2PKPi' :    1.0
-    }
+    },
     'WG'          : ['Charm'],
     'STREAM'      : 'MiniBias'
     }
