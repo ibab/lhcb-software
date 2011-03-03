@@ -16,7 +16,7 @@ use CaloUtils    v*    Calo
 use L0Interfaces v*    L0
 use AIDA         v*    LCG_Interfaces -no_auto_imports
 # the configuration database :
-use L0TCK        v3r*  TCK
+use L0TCK        v4r*  TCK
 use L0Base       v*     L0
 # L0Muon needed at run time by L0Sequence.opts
 use L0Muon       v*    L0    -no_auto_imports

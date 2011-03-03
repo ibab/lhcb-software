@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+
+! 2011-03-03 - Olivier Deschamps
+ - requirements :  use L0TCK v4r* (FOI included in L0TCK)
+
 !========================= L0DU v10r12 2011-02-25 =========================
 ! 2011-01-24 - Olivier Deschamps
  - adapt to change in L0Event (new data DiMuonProd)
