@@ -293,7 +293,7 @@ def trackingDownPreFilter(name, prefilter):
 
     return GSWrapper(name="WrappedDownstreamTracking",
                      sequencer=jpsidotracking,
-                     output='Rec/Track/Downstream',
+                     output='Rec/Downstream/Tracks',
                      requiredSelections = [ prefilter])
 
 

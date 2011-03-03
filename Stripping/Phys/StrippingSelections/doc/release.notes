@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-03 - Paul Seyfert
+ - Fixed minor bug in StrippingTrackEffDownMuon.py
+
 ! 2011-03-02 - Andrew Powell
  - Updated lines in StrippingV0ForPID.py
 
