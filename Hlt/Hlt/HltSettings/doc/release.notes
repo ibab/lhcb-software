@@ -10,6 +10,8 @@
    Updated set of thresholds for Hlt2CharmHadD2HHHLines to remove those
    absorbed into Hlt2CharmHadTwoBodyForMultiBodyConf.
    Requires Hlt2Lines 119486.
+ - Added mising threshold block for Hlt2CharmHadD2KS0HLinesConf.
+ - Brought slots for Hlt2CharmHadD02HHKsLinesConf up-to-date.
 
 !========================== HltSettings v5r6   2011-03-02 ===================
 ! 2010-03-02 - Plamen Hopchev

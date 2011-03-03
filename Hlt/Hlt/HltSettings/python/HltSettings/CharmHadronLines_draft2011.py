@@ -38,6 +38,7 @@ class CharmHadronLines :
 
                   ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
+                  #, 'Hlt2CharmHadD02HHKsDD'
 
                   ### from Hlt2D2KS0HLines
                   , 'Hlt2CharmHadD2KS0Pi'
@@ -64,33 +65,33 @@ class CharmHadronLines :
         from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
         d.update( { Hlt2CharmHadD02HHLinesConf       : {
                         ## Cut values for basic D0 -> hh signal lines
-                          'Trk_PT_MIN'               : 800.0      # MeV
-                        , 'Trk_P_MIN'                : 5000.0     # MeV
+                          'Trk_PT_MIN'               : 800.0 * MeV
+                        , 'Trk_P_MIN'                : 5.0  * GeV
                         , 'Trk_MIPCHI2DV_MIN'        : 2.0        # neuter
                         , 'Trk_TRCHI2DOF_MAX'        : 3.0        # neuter
-                        , 'Pair_AMINDOCA_MAX'        : 0.10       # mm
-                        , 'Trk_Max_APT_MIN'          : 1500.0     # MeV
+                        , 'Pair_AMINDOCA_MAX'        : 0.10 * mm
+                        , 'Trk_Max_APT_MIN'          : 1500.0 * MeV
                         , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
                         , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
                         , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
-                        , 'D0_PT_MIN'                : 2000.0     # MeV
-                        , 'Sig_M_MIN'                : 1815.0     # MeV
-                        , 'Sig_M_MAX'                : 1915.0     # MeV
-                        , 'WideMass_M_MIN'           : 1715.0     # MeV
-                        , 'WideMass_M_MAX'           : 2015.0     # MeV
+                        , 'D0_PT_MIN'                : 2000.0 * MeV
+                        , 'Sig_M_MIN'                : 1815.0 * MeV
+                        , 'Sig_M_MAX'                : 1915.0 * MeV
+                        , 'WideMass_M_MIN'           : 1715.0 * MeV
+                        , 'WideMass_M_MAX'           : 2015.0 * MeV
                         ## 2-body inclusive!
-                        , 'Inc_Trk_PT_MIN'           : 500.0      # MeV
-                        , 'Inc_Trk_P_MIN'            : 5000.0     # MeV
+                        , 'Inc_Trk_PT_MIN'           : 500.0 * MeV
+                        , 'Inc_Trk_P_MIN'            : 5.0 * GeV
                         , 'Inc_Trk_MIPCHI2DV_MIN'    : 16.0       # neuter
                         , 'Inc_Trk_TRCHI2DOF_MAX'    : 3.0        # neuter
-                        , 'Inc_Pair_AMINDOCA_MAX'    : 0.15       # in mm
+                        , 'Inc_Pair_AMINDOCA_MAX'    : 0.15 * mm
                         , 'Inc_D0_BPVVDCHI2_MIN'     : 100.0      # neuter
-                        , 'Inc_Trk_Max_APT_MIN'      : 1000.0     # MeV
-                        , 'Inc_D0_PT_MIN'            : 1500.0     # MeV
-                        , 'Inc_D0_SUMPT_MIN'         : 1800.0     # MeV
+                        , 'Inc_Trk_Max_APT_MIN'      : 1000.0 * MeV
+                        , 'Inc_D0_PT_MIN'            : 1500.0 * MeV
+                        , 'Inc_D0_SUMPT_MIN'         : 1800.0 * MeV
                         , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
-                        , 'Inc_D0_MCOR_MIN'          : 300.       # MeV
-                        , 'Inc_D0_MCOR_MAX'          : 3200.      # MeV
+                        , 'Inc_D0_MCOR_MIN'          : 300.0 * MeV
+                        , 'Inc_D0_MCOR_MAX'          : 3200.0 * MeV
                         ## GEC
                         , 'GEC_Filter_NTRACK'        : True       # 
                         , 'GEC_NTRACK_MAX'           : 120        # 
@@ -136,63 +137,98 @@ class CharmHadronLines :
                     }
 
                     , Hlt2CharmHadD02HHKsLinesConf : {
-                        ## Slots for K_S h h' lines
-                          'KshhTFHHTrkPLL'          : 1500.0     # in MeV
-                        , 'KshhTFHHTrkChi2UL'       : 5.0        # unitless
-                        , 'KshhTFHHTrkMaxPVIPLL'    : 0.1        # in mm
-                        , 'KshhTFHHVtxChi2UL'       : 10.0       # unitless
-                        , 'KshhTFHHVtxPVDispLL'     : -1.0       # in mm
-                        , 'KshhTFHHPtLL'            : 500.0      # in MeV
-                        , 'KshhTFKsLLTrkPLL'        : 2000.0     # in MeV
-                        , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0        # unitless
-                        , 'KshhTFKsLLTrkChi2UL'     : 20.0       # unitless
-                        , 'KshhTFKsLLCombSymMassWin': 50.0       # in MeV
-                        , 'KshhTFKsLLMothSymMassWin': 11.4       # in MeV
-                        , 'KshhTFKsLLVtxChi2UL'     : 30.0       # unitless
-                        , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0    # in mm
-                        , 'KshhTFKsLLVtxPVDispZUL'  : 650.0      # in mm
-                        , 'KshhTFKsLLVtxPVDispChi2LL' : 100.0    # unitless
-                        , 'KshhTFKsLLDiraLL'        : 0.9997     # unitless
-                        , 'KshhTFKsDDTrkPLL'        : 2000.0     # in MeV
-                        , 'KshhTFKsDDTrkPVIPChi2LL' : 4.0        # unitless
-                        , 'KshhTFKsDDTrkChi2UL'     : 10.0       # unitless
-                        , 'KshhTFKsDDCombSymMassWin': 80.0       # in MeV
-                        , 'KshhTFKsDDMothSymMassWin': 24.9       # in MeV
-                        , 'KshhTFKsDDVtxChi2UL'     : 30.0       # unitless
-                        , 'KshhTFKsDDVtxPVDispZLL'  : 0.0        # in mm
-                        , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0     # in mm
-                        , 'KshhTFKsDDVtxPVDispChi2LL' : 100.0    # unitless
-                        , 'KshhTFKsDDDiraLL'        : 0.9999     # unitless
-                        , 'KshhTFDVtxChi2UL'        : 20.0       # unitless
-                        , 'KshhTFDVtxPVDispLL'      : -1.0       # in mm
-                        , 'KshhTFDPtLL'             : 2000.0     # in MeV
-                        , 'KshhTFDDiraLL'           : 0.0        # unitless
-                        , 'KshhTFDwKsLLSymMassWin'  : 100.0      # in MeV
-                        , 'KshhTFDwKsDDSymMassWin'  : 120.0      # in MeV
-                        , 'ComRobUseGEC'            : True       # do or do not 
-                        , 'ComRobGEC'               : 120        # max number of tracks
+                          'KshhTFHHTrkPLL'          : 1500.0 * MeV
+                        , 'KshhTFHHTrkChi2UL'       : 5.0
+                        , 'KshhTFHHVtxChi2UL'       : 10.0
+                        , 'KshhTFHHPtLL'            : 1000.0 * MeV
+                        , 'KshhTFHHFDLL'            : 2.0 * mm
+                        , 'KshhTFHHTightTrkChi2UL'  : 2.0
+                        , 'KshhTFHHTightVtxChi2UL'  : 5.0
+                        , 'KshhTFHHTightFDLL'       : 4.0 * mm
+                        , 'KshhTFHHTightPtLL'       : 1000.0 * MeV
+                        , 'KshhTFHHTightTrkPVIPChi2LL' : 12.5
+                        , 'KshhTFKsLLTrkPLL'        : 2000.0 * MeV
+                        , 'KshhTFKsLLTrkPVIPChi2LL' : 9.0
+                        , 'KshhTFKsLLTrkChi2UL'     : 20.0
+                        , 'KshhTFKsLLCombSymMassWin': 50.0 * MeV
+                        , 'KshhTFKsLLMothSymMassWin': 11.4 * MeV
+                        , 'KshhTFKsLLVtxChi2UL'     : 30.0
+                        , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0 * mm
+                        , 'KshhTFKsLLVtxPVDispZUL'  : 650.0 * mm
+                        , 'KshhTFKsLLVtxPVDispChi2LL' : 100.0
+                        , 'KshhTFKsLLDiraLL'        : 0.9997
+                        , 'KshhTFKsDDTrkPLL'        : 2000.0 * MeV
+                        , 'KshhTFKsDDTrkPVIPChi2LL' : 4.0
+                        , 'KshhTFKsDDTrkChi2UL'     : 10.0
+                        , 'KshhTFKsDDCombSymMassWin': 80.0 * MeV
+                        , 'KshhTFKsDDMothSymMassWin': 24.9 * MeV
+                        , 'KshhTFKsDDVtxChi2UL'     : 20.0
+                        , 'KshhTFKsDDVtxPVDispZLL'  : 0.0 * mm
+                        , 'KshhTFKsDDVtxPVDispZUL'  : 2300.0 * mm
+                        , 'KshhTFKsDDVtxPVDispChi2LL' : 100.0
+                        , 'KshhTFKsDDDiraLL'        : 0.9999
+                        , 'KshhTFDVtxChi2UL'        : 20.0
+                        , 'KshhTFDPtLL'             : 2000.0 * MeV
+                        , 'KshhTFDDiraLL'           : 0.0
+                        , 'KshhTFDwKsLLSymMassWin'  : 100.0 * MeV
+                        , 'KshhTFDwKsDDSymMassWin'  : 120.0 * MeV
+                        , 'ComRobUseGEC'            : True
+                        , 'ComRobGEC'               : 120
                         , 'HLT1FILTER'               : ''
                         , 'Prescale'                : { }
                         , 'Postscale'               : { }
                     }
 
                     , Hlt2CharmHadD02HHHHLinesConf : {
-                          'TrkPt_4Body'                 : 250.0    # in MeV
-                        , 'TrkP_4Body'                  : 2000.0   # in MeV
+                        ## 4Body
+                          'TrkPt_4Body'                 : 250.0 * MeV
+                        , 'TrkP_4Body'                  : 2000.0 * MeV
                         , 'TrkPVIPChi2_4Body'           : 2.0      # unitless
-                        , 'TrkChi2_4Body'               : 5.0      # unitless
-                        , 'PairMinDoca_4Body'      : 0.10     # in mm
+                        , 'TrkChi2_4Body'               : 3.0      # unitless
+                        , 'PairMinDoca_4Body'           : 0.10 * mm
                         , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
                         , 'VtxChi2_4Body'               : 20.0     # unitless
                         , 'DIPChi2_4Body'               : 25.0     # unitless
-                        , 'DSumPt_4Body'                : 2000.0   # sum pT
-                        , 'MCOR_MAX_4Body'                : 3500.    # MeV
-                        , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
+                        , 'DSumPt_4Body'                : 2000.0 * MeV
+                        , 'MCOR_MAX_4Body'              : 3500.0 * MeV
+                        , 'Sig_M_MIN'                   : 1800.0 * MeV
+                        , 'Sig_M_MAX'                   : 2040.0 * MeV
+                        , 'WideMass_M_MIN'              : 1700.0 * MeV
+                        , 'WideMass_M_MAX'              : 2100.0 * MeV
+                        , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
+                        , 'GEC_Filter_NTRACK'           : False
+                        , 'GEC_NTRACK_MAX'              : 120
                         # prescales
                         , 'Prescale'                  : {
-                            'Hlt2CharmHadD02HHHHWideMass'    : 0.1
+                                'Hlt2CharmHadD02HHHHWideMass'    : 0.1
                         }
                     }
+
+                    , Hlt2CharmHadD2KS0HLinesConf : {
+                          'KS0DaugTrackChi2'       : 3.0
+                        , 'KS0DaugMIPChi2'         : 90.0
+                        , 'KS0VertexChi2'          : 15.0
+                        , 'KS0PT'                  : 800.0 * MeV
+                        , 'BachPionP'              : 4500.0 * MeV
+                        , 'BachPionPT'             : 450.0 * MeV
+                        , 'BachPionTrackChi2'      : 5.0
+                        , 'BachPionMIPChi2'        : 30.0
+                        , 'BachKaonP'              : 4500.0 * MeV
+                        , 'BachKaonPT'             : 450. * MeV
+                        , 'BachKaonTrackChi2'      : 5.0
+                        , 'BachKaonMIPChi2'        : 30.0
+                        , 'DMesonComboLowMass'     : 1760.0 * MeV
+                        , 'DMesonComboHighMass'    : 2080.0 * MeV
+                        , 'DMesonMotherLowMass'    : 1770.0 * MeV
+                        , 'DMesonMotherHighMass'   : 2070.0 * MeV
+                        , 'DMesonMotherVertexChi2' : 15.0
+                        , 'DMesonMotherMIPChi2'    : 25.0
+                        , 'DMesonMotherPT'         : 1800.0 * MeV
+                        , 'Prescale'               : {
+                              'Hlt2CharmHadD2KS0Pi'    : 1.0
+                             , 'Hlt2CharmHadD2KS0K'    : 1.0 
+                              }
+                      }
                     
                   } )
 
