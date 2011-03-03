@@ -508,6 +508,8 @@ def calibration(rootfiles,type,fitType,followType,pol):
     smoothers['MagDown'] = { }
     smoothers['MagUp']   = { }
     smoothers['MagOff']  = { }
+    # Smoother sigma
+    smoothSigma = 15
     
     # Make plots showing the variations
     basename = "HPDAlignBy"+type+"-"+fitType+"-"+followType
@@ -612,7 +614,7 @@ def calibration(rootfiles,type,fitType,followType,pol):
                                                             vshiftX[polarity],
                                                             len(vflag[polarity]))
                 smoothedX = array('d')
-                for v in vflag[polarity] : smoothedX.append( smootherX.Eval(v) )
+                for v in vflag[polarity] : smoothedX.append( smootherX.Eval(v,smoothSigma) )
                 plotSmoothedX = TGraph( len(vflag[polarity]), vflag[polarity], smoothedX )
                 plotSmoothedX.SetMarkerColor(smoothColor)
                 plotSmoothedX.SetLineColor(smoothColor)
@@ -644,7 +646,7 @@ def calibration(rootfiles,type,fitType,followType,pol):
                                                             vshiftY[polarity],
                                                             len(vflag[polarity]))
                 smoothedY = array('d')
-                for v in vflag[polarity] : smoothedY.append( smootherY.Eval(v) )
+                for v in vflag[polarity] : smoothedY.append( smootherY.Eval(v,smoothSigma) )
                 plotSmoothedY = TGraph( len(vflag[polarity]), vflag[polarity], smoothedY )
                 plotSmoothedY.SetMarkerColor(smoothColor)
                 plotSmoothedY.SetLineColor(smoothColor)
@@ -721,8 +723,8 @@ def calibration(rootfiles,type,fitType,followType,pol):
                     yOff = avTrendFit[polarity][hpdID][1].Eval(int(flag))
                     text = "From " + polarity + " Average Pol" + str(pol)
                 elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
-                    xOff = smoothers[polarity][hpdID][0].Eval(int(flag))
-                    yOff = smoothers[polarity][hpdID][1].Eval(int(flag))
+                    xOff = smoothers[polarity][hpdID][0].Eval(int(flag),smoothSigma)
+                    yOff = smoothers[polarity][hpdID][1].Eval(int(flag),smoothSigma)
                     text = "From " + polarity + " Smoothed"
                 else:
                     xOff = values["DBShiftX"]
