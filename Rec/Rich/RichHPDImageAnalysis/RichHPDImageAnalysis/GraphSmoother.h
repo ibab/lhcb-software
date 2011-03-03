@@ -22,6 +22,7 @@ namespace Rich
 
     private:
 
+      /// Type for data container
       typedef std::vector< std::pair<double,double> > Data;
 
     public:
@@ -29,7 +30,7 @@ namespace Rich
       /// Standard constructor
       GraphSmoother( ) { }
 
-      /// Constructor from data values
+      /// Constructor from data values (python friendly...)
       GraphSmoother( const double* _x,
                      const double* _y,
                      const unsigned int nPoints );
@@ -38,13 +39,13 @@ namespace Rich
 
     public:
 
-      /// Get the 'smoothed' value at the given X
+      /// Get the 'smoothed' value at the given x
       double Eval( const double x,
-                   const double sigma = 100 ) const;
+                   const double sigma = 25 ) const;
 
     private:
 
-      Data m_data;
+      Data m_data; ///< The data ( list of (x,y) values )
  
     };
 
