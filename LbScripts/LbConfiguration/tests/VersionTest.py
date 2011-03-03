@@ -3,18 +3,18 @@
 from LbConfiguration.Version import CoreVersion, NotAVersion
 from LbConfiguration.Version import sortVersions, extractVersion, sortStrings
 from LbConfiguration.Version import LCGVersion
-from LbConfiguration.Version import genericSortStrings
+from LbUtils import versionSort
 
 import unittest
 
 class VersionTestCase(unittest.TestCase):
-    
+
     def setUp(self):
         unittest.TestCase.setUp(self)
-    
+
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-        
+
     def testConstructor(self):
         v1 = "v1r0"
         self.assertEqual(CoreVersion(v1).name(), v1)
@@ -32,7 +32,7 @@ class VersionTestCase(unittest.TestCase):
         self.assertNotEqual(CoreVersion(v3).version(), (1, 2, 2))
         self.assertNotEqual(CoreVersion(v3).version(), (1, 2, None))
         self.assertNotEqual(CoreVersion(v3).version(), (1, 1, None))
-        
+
         self.assertRaises(NotAVersion, CoreVersion, "v1r")
         self.assertRaises(NotAVersion, CoreVersion, "1r1")
         self.assertRaises(NotAVersion, CoreVersion, "v1r1p0l")
@@ -41,7 +41,7 @@ class VersionTestCase(unittest.TestCase):
     def testString(self):
         v1 = "v1r0"
         self.assertEqual("%s" % CoreVersion(v1) , v1)
-        
+
     def testComp(self):
         v1 = CoreVersion("v1r0")
         v2 = CoreVersion("v1r1")
@@ -55,7 +55,7 @@ class VersionTestCase(unittest.TestCase):
         self.assertTrue(v1 < v4)
         self.assertTrue(v1 < v5)
         self.assertTrue(v4 < v5)
-    
+
     def testListSort(self):
         vlist = ["v1r0","v1r1","v0r1","v2r0","v1r0p1","v1r0p0"]
         self.assertTrue(sortVersions(vlist) == ["v0r1", "v1r0","v1r0p0","v1r0p1", "v1r1", "v2r0"])
@@ -63,7 +63,7 @@ class VersionTestCase(unittest.TestCase):
         vlist = ["v1r0","v1r1","v0r","v2r0","v1r0p1","v1r0p0"]
         self.assertRaises(NotAVersion, sortVersions, vlist)
         self.assertTrue(sortVersions(vlist, safe=True) == ["v1r0", "v1r0p0", "v1r0p1", "v1r1", "v2r0"])
-    
+
         vlist = ["v1r0","v1r1","v0r","v2r0",None,"v1r0p0"]
         self.assertRaises(NotAVersion, sortVersions, vlist)
         self.assertTrue(sortVersions(vlist, safe=True) == ["v1r0", "v1r0p0", "v1r1", "v2r0"])
@@ -80,9 +80,9 @@ class VersionTestCase(unittest.TestCase):
         v1 = "wwe/GAUDI_v1r2.tar.gz"
         vlist = ["v1r0", "ddv2r0", "GAUDI_v0r0", v1, "blah"]
         self.assertRaises(AttributeError, sortStrings, vlist)
-        self.assertEqual(sortStrings(vlist, safe=True), 
+        self.assertEqual(sortStrings(vlist, safe=True),
                                      ["GAUDI_v0r0", "v1r0", "wwe/GAUDI_v1r2.tar.gz", "ddv2r0"])
-        self.assertEqual(sortStrings(vlist, safe=True, reverse=True), 
+        self.assertEqual(sortStrings(vlist, safe=True, reverse=True),
                                      ["ddv2r0", "wwe/GAUDI_v1r2.tar.gz", "v1r0", "GAUDI_v0r0"])
 
     def testLCGConstructor(self):
@@ -96,11 +96,11 @@ class VersionTestCase(unittest.TestCase):
         v2 = "59"
         self.assertEqual(LCGVersion(v2).name(), v2)
         self.assertEqual(LCGVersion(v2).version(), (59, ""))
-        
+
     def testLCGString(self):
         v1 = "43w"
         self.assertEqual("%s" % LCGVersion(v1) , v1)
-               
+
     def testLCGComp(self):
         v1 = LCGVersion("56")
         v2 = LCGVersion("57")
@@ -120,17 +120,17 @@ class VersionTestCase(unittest.TestCase):
         self.assertEqual(extractVersion(v1, versiontype=LCGVersion).name(), "56a")
         v2 = "CGCMT_58.tar.gz"
         self.assertEqual(extractVersion(v2, versiontype=LCGVersion).name(), "58")
-        
+
     def testGenericSort(self):
         vlist = ["v1r0","v1r1","v0r1","v2r0","v1r0p1","v1r0p0"]
-        self.assertTrue(genericSortStrings(vlist) == ["v0r1", "v1r0","v1r0p0","v1r0p1", "v1r1", "v2r0"])
+        self.assertTrue(versionSort(vlist) == ["v0r1", "v1r0","v1r0p0","v1r0p1", "v1r1", "v2r0"])
         vlist2 = ["GAUDI_v1r0","GAUDI_v1r1","GAUDI_v0r1","GAUDI_v2r0","GAUDI_v1r0p1","GAUDI_v1r0p0"]
-        self.assertTrue(genericSortStrings(vlist2) == ["GAUDI_v0r1", "GAUDI_v1r0","GAUDI_v1r0p0","GAUDI_v1r0p1", "GAUDI_v1r1", "GAUDI_v2r0"])
+        self.assertTrue(versionSort(vlist2) == ["GAUDI_v0r1", "GAUDI_v1r0","GAUDI_v1r0p0","GAUDI_v1r0p1", "GAUDI_v1r1", "GAUDI_v2r0"])
         vlist3 = ["54aa", "54ab", "56", "57", "54a", "57b", "57c", "54b"]
-        self.assertTrue(genericSortStrings(vlist3) == ["54a", "54aa", "54ab", "54b", "56", "57", "57b", "57c"])
+        self.assertTrue(versionSort(vlist3) == ["54a", "54aa", "54ab", "54b", "56", "57", "57b", "57c"])
         vlist4 = ["5.1.4", "5.1.1", "5.1", "5.1.0", "5.2.1", "5", "5.03.1", "5.1.1a", "5.1.010", "5.1.9"]
-        self.assertTrue(genericSortStrings(vlist4) == ["5", "5.1", "5.1.0", "5.1.1", "5.1.1a", "5.1.4", "5.1.9", "5.1.010", "5.2.1", "5.03.1"])
+        self.assertTrue(versionSort(vlist4) == ["5", "5.1", "5.1.0", "5.1.1", "5.1.1a", "5.1.4", "5.1.9", "5.1.010", "5.2.1", "5.03.1"])
 
-        
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,8 @@
+2011-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/Version.py: moved the generic sorting to LbUtils
+	* LbConfiguration/tests/VersionTest.py: use the generic sorting from LbUtils.
+
 2011-02-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py:

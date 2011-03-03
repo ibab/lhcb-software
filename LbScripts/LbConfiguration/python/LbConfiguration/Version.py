@@ -1,6 +1,8 @@
 """ LHCb version style definition and massaging """
 # $Id: Version.py,v 1.6 2010-04-14 15:45:05 marcocle Exp $
 
+from LbUtils import stringVersion2Tuple
+
 from fnmatch import fnmatch
 
 import re
@@ -119,26 +121,6 @@ def extractVersion(strname, versiontype=CoreVersion):
     return result
 
 
-def stringVersion2Tuple(strver):
-    sl = re.split("(\d+)", strver)
-    nsl = []
-    for i in sl :
-        if i :
-            if re.match("\d+", i) :
-                nsl.append(int(i))
-            else :
-                nsl.append(i)
-    return tuple(nsl)
-
-
-def genericSortStrings(strlist, reverse=False):
-    versionlist = [ (stringVersion2Tuple(s), s) for s in strlist ]
-    versionlist.sort()
-    if reverse :
-        versionlist.reverse()
-    return [ x[1] for x in versionlist ]
-
-
 def sortStrings(strlist, versiontype=CoreVersion, safe=False, reverse=False):
     if versiontype :
         versionlist = [ (extractVersion(s, versiontype=versiontype), s) for s in strlist ]
@@ -150,7 +132,7 @@ def sortStrings(strlist, versiontype=CoreVersion, safe=False, reverse=False):
     if reverse :
         versionlist.reverse()
     return [ x[1] for x in versionlist ]
-        
+
 def getVersionsFromDir(dirname, pattern=None, versiontype=CoreVersion, reverse=False):
     strlist = []
     for o in os.listdir(dirname) :
