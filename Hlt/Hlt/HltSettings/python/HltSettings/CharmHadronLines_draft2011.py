@@ -33,8 +33,8 @@ class CharmHadronLines :
                   , 'Hlt2CharmHadD2HHHWideMass'
 
                   ### from Hlt2CharmHadD02HHHHLines
-                  #, 'Hlt2CharmHadD02HHHH'
-                  #, 'Hlt2CharmHadD02HHHHWideMass'
+                  , 'Hlt2CharmHadD02HHHH'
+                  , 'Hlt2CharmHadD02HHHHWideMass'
 
                   ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
@@ -94,7 +94,7 @@ class CharmHadronLines :
                         , 'Inc_D0_MCOR_MAX'          : 3200.0 * MeV
                         ## GEC
                         , 'GEC_Filter_NTRACK'        : True       # 
-                        , 'GEC_NTRACK_MAX'           : 120        # 
+                        , 'GEC_NTRACK_MAX'           : 110        # 
                         , 'Postscale' : { 
                                           'Hlt2CharmHadD02KKWideMass'    : 0.1
                                          , 'Hlt2CharmHadD02KPiWideMass'  : 0.1
@@ -173,7 +173,7 @@ class CharmHadronLines :
                         , 'KshhTFDwKsLLSymMassWin'  : 100.0 * MeV
                         , 'KshhTFDwKsDDSymMassWin'  : 120.0 * MeV
                         , 'ComRobUseGEC'            : True
-                        , 'ComRobGEC'               : 120
+                        , 'ComRobGEC'               : 110
                         , 'HLT1FILTER'               : ''
                         , 'Prescale'                : { }
                         , 'Postscale'               : { }
@@ -196,8 +196,8 @@ class CharmHadronLines :
                         , 'WideMass_M_MIN'              : 1700.0 * MeV
                         , 'WideMass_M_MAX'              : 2100.0 * MeV
                         , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
-                        , 'GEC_Filter_NTRACK'           : False
-                        , 'GEC_NTRACK_MAX'              : 120
+                        , 'GEC_Filter_NTRACK'           : True
+                        , 'GEC_NTRACK_MAX'              : 110
                         # prescales
                         , 'Prescale'                  : {
                                 'Hlt2CharmHadD02HHHHWideMass'    : 0.1
