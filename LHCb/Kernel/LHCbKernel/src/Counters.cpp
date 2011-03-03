@@ -126,7 +126,7 @@ Gaudi::Numbers::~Numbers(){}
 // ============================================================================
 // retrieve the unique object identifier  (virtual) 
 // ============================================================================
-const CLID& Gaudi::Numbers::clID() const { return Gaudi::Counters::classID() ; }
+const CLID& Gaudi::Numbers::clID() const { return Gaudi::Numbers::classID() ; }
 // ============================================================================
 // retrieve the unique object identifier  (static) 
 // ============================================================================

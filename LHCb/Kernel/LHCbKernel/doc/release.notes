@@ -4,6 +4,14 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-03-03 - Vanya Belyaev
+
+ - src/Counters.cpp
+    fix stupid bug (cut-n-paste) with wrong class ID 
+
+ - dict/LHCbKernelDict.h
+    add explicit instantiations for two std::pairs
+
 ! 2011-02-27 - Chris Jones
  - Rewrite the RichSmartID class to support MaPMTs and HPDs, for Upgrade
    studies. Change redefines the meaning of some bits of the internal word,
