@@ -5,12 +5,12 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r5 2011-03-02 ===================
 ! 2011-Mar-02 - Patrick Spradlin
  - Added Hlt2CharmHadTwoBodyForMultiBodyConf and restored
    Hlt2CharmHadD02HHHHLinesConf to Hlt2Conf.__used_configurables__ list.
    Requires Hlt2Lines 119486.
 
-!========================== HltConf v9r5 2011-03-02 ===================
 ! 2011-03-02 - Gerhard Raven
  - remove usage of Hlt2BeamGasLinesConf
 
