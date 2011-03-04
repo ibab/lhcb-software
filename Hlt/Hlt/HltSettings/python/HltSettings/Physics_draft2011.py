@@ -70,7 +70,7 @@ class Physics_draft2011( object ):
                                             ,   'Photon_IP'     : 0.100
                                             ,   'Photon_IPChi2' : 16
                                             ,   'Photon_TrChi2' : 2.5
-                                            ,   'Photon_L0Channels' : 'Photon,Electron' 
+                                            ,   'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                 }
                      , Hlt1MuonLinesConf : { 'SingleMuonHighPT_P'        : 8000
                                              ,'SingleMuonHighPT_PT'      : 4800
