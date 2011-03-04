@@ -2,23 +2,15 @@
 # Maintainer : A. Poluektov
 
 package           StrippingSettings
-version           v1r6
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc options python
 include_path      none
 
-# Used packages. 
 #============================================================================
-use DaVinciKernel        v*     Phys
-use LoKiCore             v*     Phys
-use StrippingConf        v*     Phys
-use StrippingSelections  v*     Phys
-use PhysSelPython        v*     PhysSel
-private
-use LHCbAlgs             v*     Kernel  
-end_private
+use GaudiPolicy v*
 
 # Component library building rule
 #============================================================================

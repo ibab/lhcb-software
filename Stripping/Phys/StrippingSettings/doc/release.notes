@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Juan Palacios
+ - Removed all dependencies.
+ - Added dependency on GaudiPolicy.
+ - Removed modules Sept2010, Stripping11, Stripping12
+ - Moved StrippingSettings.Utils.lineBuilder to StrippingSelections.Utils.
+ - Increased to v2r0.
+
 ! ======================== StrippingSettings v1r6 2011-03-04 ==================
 
 ! 2011-03-02 - Andrew Powell
