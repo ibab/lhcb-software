@@ -46,11 +46,10 @@ TestCorrelations.Algorithms = ["FilterTrueTracks",
 
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
-from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 
-stream = StrippingStream("Bmuon")
-stream.appendLines( [ StrippingBd2KstarMuMuConf().Early_SignalLine() ] )
-
+from StrippingSelections.Utils import lineBuilder
+lineBuilder = lineBuilder('Stripping13.tmp', 'Bd2KstarMuMu')
+stream = StrippingStream("BKstarMuMuTest", Lines = lineBuilder.lines())
 sc = StrippingConf()
 sc.appendStream( stream )
 

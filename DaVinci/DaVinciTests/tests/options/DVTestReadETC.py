@@ -9,10 +9,10 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-from StrippingSelections import StreamDimuon
-
+from StrippingSelections.Utils import buildStream
+stream = buildStream('Stripping13.tmp', 'Dimuon')
 sc = StrippingConf()
-sc.appendStream( StreamDimuon.stream )
+sc.appendStream( stream )
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().EvtMax = -1
