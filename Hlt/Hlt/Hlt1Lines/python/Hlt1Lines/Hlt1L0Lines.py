@@ -16,8 +16,12 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1L0LinesConf(HltLinesConfigurableUser) :
    # note: we prescale everything _except_ for the .*RateLimited, which we rate limit instead
-   __slots__ = { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(100)' }
-               , 'Prescale'  : { 'Hlt1L0.*(?<!RateLimited)$' : 0.000001  }
+   __slots__ = { 'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(10)' 
+                               , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(100)'
+                               }
+               , 'Prescale'  : { 'Hlt1L0AnyNoSPD'            : 0.001
+                               , 'Hlt1L0.*(?<!RateLimited)$' : 0.000001  
+                               }
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }
 
@@ -39,13 +43,14 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
                  )
         #  How to deal with the MASKing ???
         #  Actually, we don't have to -- ODIN will do this 'upstream' of us ;-)
-        l = Line('L0Any' ,  L0DU = 'L0_DECISION_PHYSICS' 
-            , prescale = self.prescale
-            , postscale = self.postscale
-            )
 
-        l.clone( l.name().lstrip('Hlt1')+'RateLimited', prescale = self.prescale, postscale = self.postscale )
-        #Line('L0Forced', L0DU = 'L0_FORCEBIT'
-        #    , prescale = self.prescale
-        #    , postscale = self.postscale
-        #    )
+        for (name,l0du) in [ ('L0Any','L0_DECISION_PHYSICS'),('L0AnyNoSPD',"L0_CHANNEL_RE('.*NoSPD')") ] :
+            l = Line(name ,  L0DU = l0du
+                , prescale = self.prescale
+                , postscale = self.postscale
+                )
+
+            l.clone( name+'RateLimited'
+                   , prescale = self.prescale
+                   , postscale = self.postscale 
+                   )

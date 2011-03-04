@@ -4,8 +4,8 @@ from HltLine.HltLinesConfigurableUser import *
 class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
           'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
-        , 'DiProton_PT'         :     1.9  # GeV
-        , 'DiProton_P'          :    10.   # GeV  
+        , 'DiProton_PT'         :  1900.   # MeV
+        , 'DiProton_P'          : 10000.   # MeV  
         , 'DiProton_TrChi2'     :     5. 
         , 'DiProton_MassMin'    :  2900.   # MeV, after Vtx fit
         , 'DiProton_MassMax'    :  4500.   # MeV, after Vtx fit
@@ -17,8 +17,8 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
         , 'DiProton_VeloQcut'   :     3.   # From Track lines
           
         , 'DiProtonLowMult_SpdMult'    :    20.   # dimensionless, Spd Multiplicy cut 
-        , 'DiProtonLowMult_PT'         :     0.6  # GeV, same as LooseForward
-        , 'DiProtonLowMult_P'          :     6.   # GeV, same as LooseForward  
+        , 'DiProtonLowMult_PT'         :   600.   # MeV, same as LooseForward
+        , 'DiProtonLowMult_P'          :  6000.   # MeV, same as LooseForward  
         , 'DiProtonLowMult_MassMin'    :  2800.   # MeV, after Vtx fit
         , 'DiProtonLowMult_VtxDOCA'    :     0.3    
         , 'DiProtonLowMult_VtxChi2'    :    25.   # dimensionless
@@ -78,7 +78,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  (TrTNORMIDC > %(DiProton_TrNTHits)s )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass NHits', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nNHits' , LoKi.Monitoring.ContextSvc ) )            
-            >>  ( ( TrPT > %(DiProton_PT)s * GeV ) & ( TrP  > %(DiProton_P)s * GeV ) )
+            >>  ( ( TrPT > %(DiProton_PT)s * MeV ) & ( TrP  > %(DiProton_P)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
             >>  MakeDiProtons
@@ -108,7 +108,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass loose forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nLooseForward' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(DiProtonLowMult_PT)s * GeV ) & ( TrP  > %(DiProtonLowMult_P)s * GeV ) )
+            >>  ( ( TrPT > %(DiProtonLowMult_PT)s * MeV ) & ( TrP  > %(DiProtonLowMult_P)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
             >>  MakeDiProtonsLowMult

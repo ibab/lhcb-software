@@ -214,6 +214,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         # The pass-through NoPV line
         Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
                                         , prescale = self.prescale
-                                        , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon,lowMult','DiMuon,lowMult'] ] )
+                                        , L0DU = "L0_CHANNEL_RE('.*lowMult')"
                                         , postscale = self.postscale)
 

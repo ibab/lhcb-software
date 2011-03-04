@@ -8,6 +8,7 @@
 !========================== Hlt1Lines v6r6p1 2011-03-03 ===================
 ! 2011-03-03 - Gerhard Raven
  - remove restriction in L0candidates ... needed for 0x0032..
+ - add Hlt1L0AnyNoSPD
 
 !========================== Hlt1Lines v6r6   2011-03-01 ===================
 ! 2011-03-03 - Gerhard Raven
