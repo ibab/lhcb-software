@@ -1,5 +1,7 @@
 2011-03-04  hmd  <Hubert.Degaudenzi@cern.ch>
 
+	* LbUtils/python/LbUtils/CMT/Package.py: fixed the command line syntax
+	* LbUtils/python/LbUtils/CMT/Project.py:
 	* scripts/cmtwhich: New file.
 	* cmt/requirements: added the new cmtwhich command.
 

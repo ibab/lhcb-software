@@ -180,10 +180,10 @@ class Project(object):
                         self._clientlist.add(p)
         return self._clientlist
 
-    def packages(self, force=False):
+    def packages(self):
         if self._packagelist is None :
             self._packagelist = getPackagesFromDir(directory=self.fullLocation(), parentproject=self, pkgclass=self._pkgclass)
-        elif force :
+        else :
             self.updatePackages(getPackagesFromDir(directory=self.fullLocation(), parentproject=self, pkgclass=self._pkgclass))
         return self._packagelist
 
@@ -207,7 +207,19 @@ class Project(object):
                 self._packagelist.add(p)
 
     def hasPackage(self, package):
-        return package in self._packagelist
+        return package in self.packages()
+
+    def findPackage(self, name, version=None):
+        pkg = None
+        pkglist = getPackagesFromDir(self.fullLocation(), name, version, parentproject=self, pkgclass=self._pkgclass)
+        if len(pkglist) :
+            srtlist = versionSort(pkglist, reverse=True)
+            pkg = srtlist[0]
+            self.updatePackages(pkglist)
+
+        return pkg
+
+
 
     def binaryList(self):
         if self._binarylist is None :
@@ -590,7 +602,8 @@ def findProject(cmtprojectpath, name, version=None, casesense=False):
 
 def walk(top, topdown=True, toclients=False,
          onerror=None, alreadyfound=None,
-         cmtpath=None, cmtprojectpath=None):
+         cmtpath=None, cmtprojectpath=None,
+         light=False):
     if not alreadyfound:
         alreadyfound = Set()
     alreadyfound.add(top)
@@ -599,7 +612,7 @@ def walk(top, topdown=True, toclients=False,
         deps = proj.clients(cmtpath, cmtprojectpath)
     else :
         deps = proj.base(cmtpath, cmtprojectpath)
-    if proj.hasPackages() :
+    if not light and proj.hasPackages() :
         packs = proj.packages()
     else :
         packs = Set()
@@ -615,9 +628,35 @@ def walk(top, topdown=True, toclients=False,
 
 def CMTWhich(project, package=None, version=None, all_occurences=False):
     """ function to extract the project or package class"""
-    prj = findProject(os.environ["CMTPROJECTPATH"], project, version, casesense=True)
+    if version :
+        ver = version
+    else :
+        # case where no 3rd argument is passed
+        # try package as a version
+        ver = package
+    prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=True)
     if not prj :
-        # if nothing has been found try to use package as a version
-        prj = findProject(os.environ["CMTPROJECTPATH"], project, package, casesense=True)
+        # try versionless project or latest version of a project
+        ver = None
+        prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=True)
 
-    return prj
+    if package and not ver:
+        # case where there is a second argument
+        pkg =None
+        for p, _, _ in walk(prj, light=True) :
+            if p.version() :
+                pkg = p.findPackage(package)
+            else :
+                pkg = p.findPackage(package, version)
+            if pkg :
+                break
+#        if prj.version() :
+#            pkg = prj.findPackage(package)
+#        else :
+#            pkg = prj.findPackage(package, version)
+        result = pkg
+    else :
+        # there is only one argument
+        result = prj
+
+    return result

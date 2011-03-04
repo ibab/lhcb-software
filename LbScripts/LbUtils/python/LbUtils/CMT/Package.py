@@ -37,6 +37,9 @@ class Package(object):
         self._usedbybinary = None
     def __eq__(self, other):
         return self._fulllocation == other.fullLocation()
+    def __str__(self):
+        """ string repr. used for sorting """
+        return self._fulllocation
     def setLocation(self):
         self._parentprojectpath = self.parentProjectPath()
         if self._parentprojectpath :
@@ -452,7 +455,6 @@ def getPackagesFromDir(directory, name=None, version=None, casesense=True, selec
             root, dirs = data[0], data[1]
             if isPackage(root):
                 tobeadded = False
-                tmpack = pkgclass(root, parentproject)
                 if name is None :
                     tobeadded = True
                 elif Common.doesDirMatchNameAndVersion(root, name, version, casesense) :
@@ -461,11 +463,14 @@ def getPackagesFromDir(directory, name=None, version=None, casesense=True, selec
                     if Common.isDirSelected(root, select, casesense):
                         tobeadded = True
                 if tobeadded :
+                    tmpack = pkgclass(root, parentproject)
                     paklist.add(tmpack)
                 dirs[:] = [] # don't visit anything else: a CMT package cannot contains another one.
             else :
                 if 'CVS' in dirs:
                     dirs.remove('CVS')  # don't visit CVS directories
+                if '.svn' in dirs:
+                    dirs.remove('.svn')  # don't visit .svn directories
     except OSError, msg:
         log.warning("Cannot open path %s" % msg)
 
