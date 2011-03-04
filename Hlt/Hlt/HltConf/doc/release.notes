@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v9r5p1 2011-03-04 ===================
+! 2011-03-04 - Gerhard Raven
+ - add Hlt1L0AnyNoSPD
 
 !========================== HltConf v9r5 2011-03-02 ===================
 ! 2011-Mar-02 - Patrick Spradlin

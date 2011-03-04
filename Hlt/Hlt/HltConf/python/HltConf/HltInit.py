@@ -62,6 +62,8 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0ForcedDecision"                  :   72,
     "Hlt1L0AnyDecision"                     :   73,
     "Hlt1L0AnyRateLimitedDecision"          :   74,
+    "Hlt1L0AnyNoSPDDecision"                :   75,
+    "Hlt1L0AnyNoSPDRateLimitedDecision"     :   76,
     # XP
     "Hlt1XPressDecision"                    :   80,
     "Hlt1AlignVeloDecision"                 :   81,
