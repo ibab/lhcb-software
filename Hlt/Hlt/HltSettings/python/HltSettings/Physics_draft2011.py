@@ -41,7 +41,7 @@ class Physics_draft2011( object ):
 
     
     def L0TCK(self) :
-        return '0x002a'
+        return '0x0032'
 
     def HltType(self) :
         self.verifyType( Physics_draft2011 ) 
@@ -98,7 +98,7 @@ class Physics_draft2011( object ):
                                              ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
                                               }
-                     , Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
+                     #, Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
 
 		       }
 
@@ -117,7 +117,10 @@ class Physics_draft2011( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = []
+        hlt2 = ['Hlt2PassThrough','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
+
+        from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
+        hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
 
         from Muons_draft2011 import Muons_draft2011
         hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
@@ -143,8 +146,8 @@ class Physics_draft2011( object ):
 		        , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                 , 'Hlt1DiProtonLowMult'
-                , 'Hlt1Lumi' # , 'Hlt1LumiMidBeamCrossing', 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
-                , 'Hlt1L0Any'
+                , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+                , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
                 , 'Hlt1MBNoBias' 
                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
                 ]

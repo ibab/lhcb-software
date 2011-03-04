@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r6p1 2011-03-04 ===================
+! 2011-03-04 Gerhard Raven
+ - add Express lines, Lumi lines, Hlt2 technical lines, specify 0x0032 as L0
+
 ! 2011-03-04 Johannes Albrecht
  - adapt DiMuonJPsi
 
