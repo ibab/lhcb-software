@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Juan Palacios
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
+ - tests/test_bs2jpsiphi_prescaled_and_detatched.py
+  . Put units in config parameters, not in code. Represent them as strings.
+
 ! 2011-03-03 - Thomas Blake
  - Updated __init__.py to include Charm and CharmXsec lines
 

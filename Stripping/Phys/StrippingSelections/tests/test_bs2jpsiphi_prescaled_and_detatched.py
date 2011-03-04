@@ -3,8 +3,8 @@
 from StrippingUtils import LineBuilderTests
 from StrippingSelections.StrippingBs2JpsiPhiPrescaledAndDetatched import Bs2JpsiPhiPrescaledAndDetatchedConf as builder
 
-config_params = {'PhiPT' : 500.,
-                 'BsMassWin' : 300.,
+config_params = {'PhiPT' : '500.*MeV',
+                 'BsMassWin' : '300.*MeV',
                  'BsLTFITCHI2' : 14.,
                  'BsVCHI2' : 20.,
                  'DetatchedBsLTIME' : 15.,

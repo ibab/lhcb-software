@@ -109,9 +109,9 @@ def makePhi2KK(name, PhiPT) :
     Starts from DataOnDemand 'Phys/StdLoosePhi2KK'.
     Arguments:
     name             : name of the Selection.
-    PhiPT            : Minimum transverse momentum of Phi (MeV).
+    PhiPT            : Minimum transverse momentum of Phi.
     """
-    _code = "(PT> %(PhiPT)s *MeV)" % locals()
+    _code = "(PT> %(PhiPT)s)" % locals()
     _phiFilter = FilterDesktop(Code = _code)
     _stdPhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")
 
@@ -133,12 +133,12 @@ def makeBs2JpsiPhi(name,
     name        : name of the Selection.
     jpsiSel     : J/Psi -> Mu+Mu- Selection object.
     phiSel      : Phi -> K+K- Selection object.
-    BsMassWin   : Bs invariant mass window around PDG mass value (MeV).
+    BsMassWin   : Bs invariant mass window around PDG mass value.
     BsLTFITCHI2 : Maximum lifetime fit Chi2.
     BsVCHI2     : Maximum Bs vertex chi2 (per degree of freedom?)
     BsLTIME     : Minimum lifetime (ps).
     """
-    _motherCuts = "(ADMASS('B_s0')<%(BsMassWin)s *MeV) & (BPVLTFITCHI2()<%(BsLTFITCHI2)s) & (VFASPF(VCHI2)<%(BsVCHI2)s)" % locals()
+    _motherCuts = "(ADMASS('B_s0')<%(BsMassWin)s) & (BPVLTFITCHI2()<%(BsLTFITCHI2)s) & (VFASPF(VCHI2)<%(BsVCHI2)s)" % locals()
     if BsLTIME != None :
         _motherCuts += "& (BPVLTIME()> %(BsLTIME)s*ps)" % locals()
     #print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
