@@ -61,7 +61,7 @@ def dbaseFromModule(stripping, confModule, verbose = False) :
     if verbose :
         print 'Creating database for module', confModule
         
-    goodNames = filter(lambda x : x[0]!='_',
+    goodNames = filter(lambda x : x[0]!='_' and not isUnit(x),
                        confModule.__dict__.keys())
 
     if verbose :
@@ -72,3 +72,27 @@ def dbaseFromModule(stripping, confModule, verbose = False) :
 
     db.close()
 
+def isUnit(name) :
+    from GaudiKernel import SystemOfUnits as units
+    return hasattr(units, name)
+
+def addModuleToDbase(stripping, confModule, verbose = False) :
+    dbName = stripping.lower()
+    db = shelve.open( dbName )
+
+    if verbose :
+        print 'Adding module', confModule, 'to database', dbName
+        
+    goodNames = filter(lambda x : x[0]!='_' and not isUnit(x),
+                       confModule.__dict__.keys())
+
+    if verbose :
+        print 'Storing', goodNames, 'in database',  dbName
+    for k in goodNames :
+        if not k in db.keys() :
+            if verbose : print 'Store', k, 'in', dbName
+            db[k]=confModule.__dict__[k]
+        else :
+            print 'Key', k, 'already in database', dbName
+
+    db.close()

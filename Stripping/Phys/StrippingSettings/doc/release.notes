@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Juan Palacios
+ - StrippingSettings.Utils.dbaseFromModule, addModuleToDbase ignore units
+   from GaudiKernel.SystemOfUnits.
+
 ! 2011-03-04 - Thomas Blake
  - Updated LineConfigDictionaries to allow multiple streams
 
