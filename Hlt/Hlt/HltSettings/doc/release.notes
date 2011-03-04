@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-04 Johannes Albrecht
+ - adapt DiMuonJPsi
+
 ! 2011-03-03 V. Gligorov
  - Updated GECs in charm hlt2 hadron lines to < 110 tracks across the board.
 
