@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Thomas Blake
+ - Updated lines to import checkConfig from StrippingUtils
+ - Removed Stripping StrippingB2DiMuonX.py
+ 
+
 ! 2011-03-04 - Juan Palacios
  - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
  - tests/test_bs2jpsiphi_prescaled_and_detatched.py
