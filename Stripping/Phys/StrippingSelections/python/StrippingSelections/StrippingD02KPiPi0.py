@@ -37,7 +37,6 @@ class StrippingD02KPiPi0Conf(LineBuilder) :
                                ,'MergedLinePostscale'
                                ,'ResolvedLinePrescale'
                                ,'ResolvedLinePostscale'
-                               ,'prefix'
                                )
 
 ##############################################################
@@ -51,31 +50,31 @@ class StrippingD02KPiPi0Conf(LineBuilder) :
 	myResolvedPi0 = StdLooseResolvedPi0
         #---------------------------------------
         # hh selection
-        self.selkstar = makeD02KPiPi0kstar( 'D02KPiPi0_kstar',
+        self.selkstar = makeD02KPiPi0kstar( name + '_kstar',
                                       config,
                                       DecayDescriptor = '[K*(892)~0 -> K- pi+]cc',
 				      inputSel = [myPions,myKaons]
                                       )
         #---------------------------------------
         # B -> HHPi0 selections
-	self.selresolved = makeD02KPiPi0R( 'D02KPiPi0R',
+	self.selresolved = makeD02KPiPi0R( name + 'R',
                                            config,
                                            DecayDescriptor = '[D0 -> K*(892)~0 pi0]cc',
                                            inputSel = [self.selkstar, myResolvedPi0]
                                          )				       
-	self.selmerged = makeD02KPiPi0M( 'D02KPiPi0M',
+	self.selmerged = makeD02KPiPi0M( name + 'M',
                                          config,
                                          DecayDescriptor = '[D0 -> K*(892)~0 pi0]cc',
                                          inputSel = [self.selkstar, myMergedPi0]
                                          )
         #---------------------------------------
         # Stripping lines
-        self.D02KPiPi0R_line = StrippingLine("%(prefix)s_R" %locals()['config'],
+        self.D02KPiPi0R_line = StrippingLine(name + "_R" %locals()['config'],
                                              prescale = config['ResolvedLinePrescale'],
                                              postscale = config['ResolvedLinePostscale'],
                                              selection = self.selresolved
                                              )
-        self.D02KPiPi0M_line = StrippingLine("%(prefix)s_M" %locals()['config'],
+        self.D02KPiPi0M_line = StrippingLine(name + "_M" %locals()['config'],
                                              prescale = config['MergedLinePrescale'],
                                              postscale = config['MergedLinePostscale'],
                                              selection = self.selmerged
@@ -142,14 +141,14 @@ def makeD02KPiPi0M( name,
     _combCuts = "(AM>%(D0MinM)s *MeV) & (AM<%(D0MaxM)s *MeV)" % locals()['config']
     _motherCuts = "(BPVIPCHI2()<%(D0MaxIPChi2)s) & (BPVDIRA>%(D0MinDIRA)s)" % locals()['config']
 
-    _B = CombineParticles( DecayDescriptor = DecayDescriptor,
+    _D = CombineParticles( DecayDescriptor = DecayDescriptor,
                            MotherCut = _motherCuts,
                            CombinationCut = _combCuts,
                            DaughtersCuts = _daughterCuts
                            )
 
     return Selection( name+'Sel',
-                      Algorithm = _B,
+                      Algorithm = _D,
                       RequiredSelections = inputSel
                       )
 ##############################################################

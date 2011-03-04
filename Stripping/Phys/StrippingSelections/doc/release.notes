@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Olivier Deschamps for Regis Lefevre
+ - Updated StrippingD02KPiPi0
+
 ! 2011-03-04 - Thomas Blake
  - Updated StrippingB2HHPi0 due to problem with mulitple instantiations.
   . Added tests/test_B2HHPi0.py
