@@ -90,5 +90,99 @@ Jpsi2eeForElectronID = {
                    'eeVCHI2PDOF': 9.0},
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
-}
+    }
 
+
+MuIDCalib = {
+    'BUILDERTYPE' : 'MuIDCalibConf',
+    'WGs'         : [ 'ALL' ],
+    'STREAMS'     : [ 'Calibration' ],
+    'CONFIG'      : {
+    'PromptPrescale'         : 0.08,
+    'DetachedPrescale'       : 1.,
+    'DetachedNoMIPPrescale'  : 0.3,
+    'DetachedNoMIPKPrescale' : 1.
+    }
+    }
+
+MuIDCalibMicroDST = {
+    'BUILDERTYPE' : 'MuIDCalibConf',
+    'WGs'         : [ 'ALL' ],
+    'STREAMS'     : [ 'Leptonic' ],
+    'CONFIG'      : {
+    'PromptPrescale'         : 0.1,
+    'DetachedPrescale'       : 1.,
+    'DetachedNoMIPPrescale'  : 0.3,
+    'DetachedNoMIPKPrescale' : 1.
+    }
+    }
+
+TrackEffDownMuon = { 
+    'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
+    'WGs' : [ 'ALL' ],
+    'STREAMS' : [ 'Calibration' ],
+    'CONFIG' : {
+    'MuMom':                1000.   # MeV                                                                                                
+    ,       'MuTMom':               100.    # MeV                                                                                                
+    ,       'TrChi2':               10.     # MeV                                                                                                
+    ,       'MassPreComb':          2000.   # MeV                                                                                                
+    ,       'MassPostComb':         200.    # MeV                                                                                                
+    ,       'Doca':                 5.      # mm                                                                                                 
+    ,       'VertChi2':             25.     # adimensional                                                                                       
+    ,       'DataType':             '2010'
+    ,       'NominalLinePrescale':  1.
+    ,       'NominalLinePostscale': 1.
+    ,       'ValidationLinePrescale': 0.5
+    ,       'ValidationLinePostscale': 1.
+    } 
+    }
+
+TrackEffVeloMuon = { 
+    'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
+    'WGs' : [ 'ALL' ],
+    'STREAMS' : [ 'Calibration' ],
+    'CONFIG' : {
+    "TrChi2Mu":             10.     # adimensional                                                                                       
+    ,       "JpsiPt":               0.5     # GeV                                                                                                
+    ,       "TrPt":                 100.    # MeV                                                                                                
+    ,       "VertChi2":             25.     # adimensional                                                                                       
+    ,       "MassPreComb":          1000.   # MeV                                                                                                
+    ,       "MassPostComb":         400.    # MeV                                                                                                
+    ,       "Prescale":             1.      # MeV                                                                                                
+    ,       "Postscale":            1.      # MeV  
+    }
+    }
+
+TrackEffMuonTT = {
+    'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
+    'WGs' : [ 'ALL' ],
+    'STREAMS' : [ 'Calibration' ],
+    'CONFIG' : {
+    'JpsiMassWin'                 : 500,
+    'UpsilonMassWin'              : 1500,
+    'ZMassWin'                    : 40000,
+    'BMassWin'                    : 500,
+    'JpsiMuonTTPT'                : 0,
+    'UpsilonMuonTTPT'             : 500,
+    'ZMuonTTPT'                   : 500,
+    'JpsiLongPT'                  : 1000,
+    'UpsilonLongPT'               : 1000,
+    'ZLongPT'                     : 10000,
+    'JpsiPT'                      : 300,
+    'UpsilonPT'                   : 500,
+    'ZPT'                         : 500,
+    'JpsiLongMuonMinIPCHI2'       : 5,
+    'UpsilonLongMuonMinIPCHI2'    : 5,
+    'ZLongMuonMinIPCHI2'          : 5,
+    'JpsiLongMuonTrackCHI2'       : 5,
+    'UpsilonLongMuonTrackCHI2'    : 5,
+    'ZLongMuonTrackCHI2'          : 5,
+    'VertexChi2'                  : 10,
+    'LongMuonPID'                 : -2,
+    'JpsiPrescale'                : 1,
+    'UpsilonPrescale'             : 1,
+    'ZPrescale'                   : 1,
+    'BJpsiKPrescale'              : 1,
+    'Postscale'                   : 1
+    }
+    }
