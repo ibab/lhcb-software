@@ -38,8 +38,8 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             )
 
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
         Line('Forward', prescale = self.prescale, postscale = self.postscale
             , algos = [ tracks,
                         HltCopyTrackSelection( 'Hlt2ForwardDecision' 

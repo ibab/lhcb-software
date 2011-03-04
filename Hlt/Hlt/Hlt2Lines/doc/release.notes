@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v8r1p1 2011-03-04 ===================
+! 2011-03-04 - Gerhard Raven
+ - use BiKalman in Hlt2Forward
+
 !========================== Hlt2Lines v8r1 2011-03-02 ===================
 ! 2011-Mar-02 - Patrick Spradlin
  - Fixed a conflict created by the commit of Hlt2CharmHadD02HHHHLines.py.
