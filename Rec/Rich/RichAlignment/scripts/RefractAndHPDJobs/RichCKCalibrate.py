@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v37r8' ) )
+                j = Job( application = Brunel( version = 'v37r8p5' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -98,11 +98,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v37r8",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v37r8p5",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v37r8",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v37r8p5",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -128,6 +128,45 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     basejobname = jobType
     if name != "" : basejobname += "-"+name
     basejobname += "_BR-"+BrunelVer
+
+    # My input sandboxs
+    mySandBox     = [ ]
+    mySandBoxFLNs = [ ]
+
+    # List of DB related options to add to extraopts
+    dbopts = [ ]
+
+    # Main DB
+    #mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
+    #dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n"]
+    #dbopts += ["LHCbApp().CondDBtag = \"HEAD\"\n"]
+    #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+mainLHCbCond
+    #uploadFile("databases/"+mainLHCbCond,lfnname)
+    #mySandBoxFLNs += [lfnname]
+
+    # Custom DB slices for both job types (calibration and verification)
+    dbFiles  = [ ]
+    dbFiles += ["NewMDMSCondDB-28022011"]
+
+    # Only for Calibration jobs only
+    if jobType == "RefInCalib" :
+        dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
+        dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
+                        
+    # For verification jobs only, use custom DB Slice for n-1 corrections
+    if jobType == "RefInVerify" :
+        dbFiles += ["NewRichCKRefIndexCalib"]
+
+    # Configure additional DBs
+    for dbFile in dbFiles :
+        dbopts += ["CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n"]
+        # Add to actual sandbox
+        #mySandBox += ["databases/"+dbFile+".db"]
+        # Upload to LFNs
+        lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile+".db"
+        if not uploadFile("databases/"+dbFile+".db",lfnname) : return False
+        # Add to LFNs sandbox
+        mySandBoxFLNs += [lfnname]
 
     # Loop over the list of pickled run data files
     print "Submitting jobs for RunData", pickledRunsList
@@ -173,9 +212,6 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     tmpOptsFile = createTempOptsFile(j.name)
                     extraopts = open(tmpOptsFile,"w")
 
-                    # My input sandbox
-                    mySandBox = [ ]
-
                     # Basic additions
                     extraopts.write("from Brunel.Configuration import *\n")
                     extraopts.write("from Gaudi.Configuration import *\n")
@@ -183,34 +219,8 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     extraopts.write("HistogramPersistencySvc().OutputFile = \""+j.name+".root\"\n")
                     extraopts.write("Brunel().EvtMax = "+str(nEventsPerJob)+"\n")
 
-                    # Main DB
-                    #mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
-                    #extraopts.write("CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n")
-                    #extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
-                    #mySandBox += ["databases/"+mainLHCbCond]
-
-                    # Custom DB slices for both jobs
-                    dbFiles  = [ ]
-                    #dbFiles += ["inactiveHPD20101029"]
-                    #dbFiles += ["HPDAlignByFill-FullFitAverage"]
-                    #dbFiles += ["TrackingDB-v4.2OnlyITTTOT"]
-                    #dbFiles += ["AerogelTileCalib"]
-                    #dbFiles += ["FinalMagSwitchAlign"]
-                    #dbFiles += ["NewMirrorHPDAlignFieldPolarity"]
-
-                    # Only for Calibration jobs only
-                    if jobType == "RefInCalib" :
-                        extraopts.write("UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
-                        extraopts.write("UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
-                        
-                    # For verification jobs only, use custom DB Slice for n-1 corrections
-                    if jobType == "RefInVerify" :
-                        dbFiles += ["NewRichCKRefIndexCalib"]
-
-                    # Configure additional DBs
-                    for dbFile in dbFiles :
-                        extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
-                        mySandBox += ["databases/"+dbFile+".db"]
+                    # Add DB options
+                    for dbopt in dbopts : extraopts.write(dbopt)
 
                     # Close file
                     extraopts.close()
@@ -233,9 +243,6 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     j.merger = SmartMerger( files = [j.name+".root"],
                                             ignorefailed = True, overwrite = True )
 
-                    # Optional input files
-                    j.inputsandbox = mySandBox
-
                     # Dirac backend
                     j.backend = Dirac()
                     # maxCPUlimit = 50000
@@ -243,6 +250,10 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
                     # Force jobs to go to CERN only
                     j.backend.settings['Destination'] = 'LCG.CERN.ch'
+
+                    # Optional input files
+                    j.inputsandbox             = mySandBox
+                    j.backend.inputSandboxLFNs = mySandBoxFLNs
 
                     # Add to jobtree
                     addToJobTree(j,basejobname)
@@ -590,6 +601,22 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 # Utility Methods
 # ====================================================================================
 
+def uploadFile(pfn,lfn):
+    from Ganga.GPI import PhysicalFile, LogicalFile
+    res = LogicalFile(lfn).getReplicas()
+    OK = True
+    if len(res) == 0 :
+        print "Uploading", pfn, "to", lfn
+        newlfn = PhysicalFile(pfn).upload(lfn,"CERN-USER")
+        if len(newlfn.getReplicas()) == 0:
+            print "Problem uploading ..."
+            OK = False
+        else:
+            print "Upload SUCCESSFUL"
+    else:
+        print lfn, "already exists as", res
+    return OK
+
 def addToJobTree(j,dir):
     from Ganga.GPI import jobtree
     fulldir = "/RichCalibration/"+dir
@@ -718,15 +745,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -760,9 +787,8 @@ def getListOfRootFiles(cjobs):
 def dumpRootFileNamesToText(cjobs,filename='RootFileNames.txt'):
     names = getListOfRootFiles(cjobs)
     file = open(filename,'w')
-    #file.writelines(names)
+    print "Dumping", len(names), "ROOT file name(s) to", filename
     for name in names : file.write(name+"\n")
-    #for name in names : file.writeline(name)
     file.close()
     
 def getRootFile(j):
@@ -780,8 +806,7 @@ def getRootFile(j):
     return file
 
 def removeSubJobOutputData(js):
-    import os
-    import shutil
+    import os, shutil
     for j in js:
         if j.status == "completed":
             rootFile = getRootFile(j)
@@ -1083,6 +1108,11 @@ def drange(start,stop,step):
     while r < stop:
         yield r
         r += step
+
+def dateString():
+    import datetime
+    now = datetime.datetime.now()
+    return str(now.data)+str(now.month)+str(now.year)
 
 def dateTimeString():
     import datetime

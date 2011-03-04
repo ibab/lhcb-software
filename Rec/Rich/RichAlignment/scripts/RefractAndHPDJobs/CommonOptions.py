@@ -4,8 +4,8 @@ from Configurables import Brunel, LHCbApp
 importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 
-LHCbApp().DDDBtag   = "head-20101003"
-LHCbApp().CondDBtag = "head-20101010"
+LHCbApp().DDDBtag   = "head-20101026"
+LHCbApp().CondDBtag = "head-20101112"
 
 Brunel().OutputType = "None"
 
