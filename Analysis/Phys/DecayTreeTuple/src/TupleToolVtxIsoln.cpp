@@ -107,7 +107,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     vtx = P->endVertex();
     
   }
-  info()<<"vertex for P, ID " <<P->particleID().pid()<<" = " <<vtx<<" at "<<vtx->position()<<  endmsg;
+  debug()<<"vertex for P, ID " <<P->particleID().pid()<<" = " <<vtx<<" at "<<vtx->position()<<  endmsg;
   if( !vtx ){
     Error("Can't retrieve the  vertex for " + prefix );
     return StatusCode::FAILURE;

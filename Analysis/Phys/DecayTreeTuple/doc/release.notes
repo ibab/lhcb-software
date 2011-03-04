@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-03-04 - Patrick Koppenburg
+ - TupleToolVtxIsoln : Change info to debug
+
 ! 2011-03-01 - Yasmine Amhis 
  - TupleToolDecayTreeFitter 
    . minor bug fix   
