@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-04 - Johannes Albrecht
+ - Physcis_draft2011 and Electrons_draft2011:
+   add 4 electron lines to the setting
+
 ! 2011-03-04 V. Gligorov
  - Line TrackPhoton to L0 Photon/ElectronHi
 
