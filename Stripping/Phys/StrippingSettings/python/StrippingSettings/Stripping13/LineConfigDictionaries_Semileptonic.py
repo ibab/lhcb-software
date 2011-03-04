@@ -82,7 +82,7 @@ Bd2DstarMuNu = {
                    'B0dPV_DeltaZVtx' : 0.5 #  mm
                              }
       },
-    'STREAM' : 'Semileptonic' ,
+    'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic'] 
     
     }
@@ -168,7 +168,7 @@ B0q2DplusMuX = {
                               }
                  
                  },
-    'STREAM' : 'Semileptonic',
+    'STREAMS' : [ 'Semileptonic' ],
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -279,7 +279,7 @@ Bd2DstarTauNu = {
                               'B0dPV_DeltaZVtx' : 0.5 #  mm
                               }
                  },
-    'STREAM' : 'Bhadron',
+    'STREAM' : ['Bhadron'],
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -353,7 +353,7 @@ B2XuMuNu = {
                      "BFDCHI2HIGH"             : 225,   #adimensional
                      "XMuMassUpper"        : 5500 # MeV
                      },
-    'STREAM' : 'Semileptonic',
+    'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -378,7 +378,7 @@ B2DMuNuX = {
                   ,"DZ"            : 0.0    #mm
                   ,"DDocaChi2Max"  : 20     #adimensiional
                   },
-    'STREAM' : 'Semileptonic' ,
+    'STREAM' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -400,7 +400,7 @@ DForBSemi = {
                    'PT': 300.0,
                    'PionPIDK': 10.0,
                    'TRCHI2': 5.0},
-    'STREAM' : 'CharmControl',
+    'STREAM' : ['CharmControl'],
     'WGs'    : ['Semileptonic'] 
 }
 
@@ -423,6 +423,6 @@ D0ForBXX = {
                    'PionPIDK': 10.0,
                    'PreScale': 0.029999999999999999,
                    'TRCHI2': 5.0},
-    'STREAM' : 'CharmControl',
+    'STREAM' : ['CharmControl'],
     'WGs'    : ['Semileptonic'] 
     }
