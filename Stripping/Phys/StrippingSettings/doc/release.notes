@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v1r6 2011-03-04 ==================
+
 ! 2011-03-02 - Andrew Powell
  - Updated PID Calibration (V0ForPID) dictionaries
 
