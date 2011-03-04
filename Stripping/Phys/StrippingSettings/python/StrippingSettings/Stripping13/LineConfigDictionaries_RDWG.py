@@ -43,7 +43,7 @@ B2XGamma = {
                 ,'Bd2KstGammaPostScale'              : 1.0
                 },
     'WGs'    : ['RD'],
-    'STREAM' : 'Radiative' 
+    'STREAMS' : [ 'Radiative' ] 
     }
 
 
@@ -62,7 +62,7 @@ Bs2MuMuPhi = {
     , 'MuonMINIPCHI2'      : 9.0           # dimensionless
     },
     'WGs' : [ 'RD' ] ,
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 # Bd2KstarMuMu for MVA
@@ -106,7 +106,7 @@ Bd2KstarMuMu = {
     'Dimu_Dau_MaxIPCHI2'        : 9.0
     },
     'WGs' : [ 'RD' ] ,
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 
@@ -134,7 +134,7 @@ B2XMuMu =  {
     , 'KstarplusWINDOW'    : 300.0         # MeV
     },
     'WGs' : [ 'RD' ],
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 # B2XMuMu lines for Majorana searches
@@ -168,7 +168,7 @@ B2XMuMuSS = {
     'B2KMuMuSSLinePostscale'  : 1
     },
     'WGs' : [ 'RD' ] ,
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 
@@ -215,7 +215,7 @@ Bd2eeKstar = {
     'BIP'                     :    0.05    # mm
     },
     'WGs'    : [ 'RD' ],
-    'STREAM' : 'Dielectron'
+    'STREAMS' : [ 'Dielectron' ]
     }
 
 Bd2JpsieeKstar = {
@@ -257,7 +257,7 @@ Bd2JpsieeKstar = {
     'BIP'                     :    0.05    # mm
     },
     'WGs' : [ 'RD' ],
-    'STREAM' : 'Dielectron' 
+    'STREAMS' : [ 'Dielectron' ] 
     }
 
 
@@ -284,7 +284,7 @@ Bu2LLK = {
     ,  'Bu2mmKLinePostscale' : 1
     },
     'WGs'    : [ 'RD' ] ,
-    'STREAM' : 'Dimuon' 
+    'STREAMS' : [ 'Dimuon' ] 
     }
 
 
@@ -311,7 +311,7 @@ Bs2MuMuLines = {
     'BFDChi2_loose'         : 100
     },
     'WGs'    : [ 'RD' ],
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 ### B2MuMuMuMuLines
@@ -323,7 +323,7 @@ B2MuMuMuMuLines = {
     'B2MuMuMuMuLinePostscale'   : 1,
     },
     'WGs' : [ 'RD' ],
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 ### Stripping TriMuons
@@ -346,5 +346,5 @@ TriMuon = {
     ]
     },
     'WGs'    : [ 'RD' ] ,
-    'STREAM' : 'Dimuon' 
+    'STREAMS' : [ 'Dimuon' ] 
     }

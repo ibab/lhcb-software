@@ -20,7 +20,7 @@ BetaS = {
     ,       'Bs2JpsiPhiPrescale'    :       0.2
     ,       'Bs2JpsiEtaPrescale'    :       0.2
     },
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 # Neus
@@ -69,7 +69,7 @@ BetaSPsi2S = {
     'Ks_LinePrescale': 1,
     'Ks_LinePostscale':1
     },
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 # Neus
@@ -136,7 +136,7 @@ BetaSPsi2SMuMu = {
     'Ks_UnbiasedLinePrescale':1,
     'Ks_UnbiasedLinePostscale':1
     },
-    'STREAM' : 'Dimuon'
+    'STREAMS' : [ 'Dimuon' ]
     }
 
 # Bs2Jpsi(ee)Phi (Jibo and Artur)
@@ -176,7 +176,7 @@ BetaSBs2JpsieePhi = {
     , 'BsMassMax'             :  6000.    # MeV
     , 'BsDIRA'                :     0.99  # adimensional
     },
-    'STREAM' : 'Dielectron'
+    'STREAMS' : [ 'Dielectron' ]
     }
 
 # Quasi two-body (Fred Blanc)
@@ -195,7 +195,7 @@ BetaSQ2B = {
     'Q2BBMinTrkPT'    : 1500.,
     'Q2BBPVVDZ'       : 2. 
     },
-    'STREAM' : 'Bhadron'
+    'STREAMS' : [ 'Bhadron' ]
     }
 
 # Bs2Ph2PhiPhi (Sebastian)
@@ -214,7 +214,7 @@ BetaSBs2PhiPhi	= {
     , 'BsMassWindow'        : 300      # MeV/cc
     , 'WidePrescale'        : 0.05     # adimensional
     },
-    'STREAM' : 'Bhadron'
+    'STREAMS' : [ 'Bhadron' ]
     } 
 
 # Bs2KstKst (Paula)
@@ -235,7 +235,7 @@ BetaSBs2KstKst = {
     ,   "BDOCA"                 : 0.3   # mm
     ,  	"BIPCHI2"               : 25    # adimensional
     },
-    'STREAM' : 'Bhadron'
+    'STREAMS' : [ 'Bhadron' ]
     }
 
 # Cibran
@@ -258,7 +258,7 @@ BetaSBs2PhiKst = {
           ,     "BVCHI2"                : 15.0  # adimensional
           ,     "BDOCA"                 : 0.3   # mm
           },
-        'STREAM' : 'Bhadron'
+        'STREAMS' : [ 'Bhadron' ]
 	}
 
 # Bs2EtacPhi/Bs2ChicPhi (Katarzyna)
@@ -298,7 +298,7 @@ BetaSBs2EtacPhi = {
     'Bs_IPCHI2'               : 9.,
     'Bs_VCHI2_VDOF'           : 16.
     },
-    'STREAM'  : 'Bhadron'
+    'STREAMS'  : [ 'Bhadron' ]
     }
 
 BetaSBs2ChicPhi_Chic2KKPiPi = {
@@ -337,7 +337,7 @@ BetaSBs2ChicPhi_Chic2KKPiPi = {
     'Bs_IPCHI2'              : 9.,
     'Bs_VCHI2_VDOF'          : 16.
     },
-    'STREAM' : 'Bhadron' 
+    'STREAMS' : [ 'Bhadron' ] 
     }
 
 BetaSBs2ChicPhi_Chic2PiPiPiPi = {
@@ -373,5 +373,5 @@ BetaSBs2ChicPhi_Chic2PiPiPiPi = {
     'Bs_IPCHI2'               : 9.,
     'Bs_VCHI2_VDOF'           : 16.
     },
-    'STREAM' : 'Bhadron'
+    'STREAMS' : [ 'Bhadron' ]
     }

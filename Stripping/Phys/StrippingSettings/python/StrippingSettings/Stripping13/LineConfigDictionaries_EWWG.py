@@ -14,7 +14,7 @@ Z02MuMu = {
     'Z0MinMass' : 40.,
     'mucut' : 15.    
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     
     }
@@ -31,7 +31,7 @@ WMu = {
     'mucutlow' : 5.,
     'trkpchi2' : 0.001
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -67,7 +67,7 @@ DY2MuMu = {
     'muipdvchi2ratio' : 5.,
     'mupidreq' : -3.,
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -85,7 +85,7 @@ Z02ee = {
     'PrsCalMin' : 50.,
     'mipdvchi2ratio' : 5.
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -104,7 +104,7 @@ We = {
     'PrsCalMin' : 50.,
     'trkghostprob' : 0.6
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -135,7 +135,7 @@ DY2ee = {
     'PrsCalMin' : 50.,
     'mipdvchi2ratio' : 5.
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -162,7 +162,7 @@ MuMuSS = {
     'MuMuSSLine4MinMass' : 20.,
     'mucut' : 1.         
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -173,7 +173,7 @@ LowMult = {
     'LowMultPrescale'    : 1.0,
     'LowMultPostscale'   : 1.0    
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -184,7 +184,7 @@ DiPhotonDiMuon = {
     'PP2PPMuMuLinePrescale'    : 1.0,
     'PP2PPMuMuLinePostscale'   : 1.0   
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -200,7 +200,7 @@ SingleTrackTIS = {
     'LowPtCut'  : 5.,
     'HighPtCut' : 15.,
     },
-    'STREAM' : 'EW',
+    'STREAMS' : [ 'EW' ],
     'WGs'    : ['EW']
     }
 
@@ -263,6 +263,6 @@ DisplVertices = {
               'SingleLowMass': 1.0,
               'SinglePS': 0.050000000000000003}
                            },
-        'STREAM' : 'EW',
+        'STREAMS' : [ 'EW' ],
         'WGs'    : ['Exotics']
 }

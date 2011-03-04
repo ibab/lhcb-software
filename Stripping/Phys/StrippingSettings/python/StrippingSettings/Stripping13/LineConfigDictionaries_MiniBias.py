@@ -15,6 +15,6 @@ MiniBias = {
     'NoBiasLine_RE': "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))"
     },
     'WGs' : [ 'ALL' ],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ]
     }
 

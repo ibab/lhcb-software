@@ -22,7 +22,7 @@ B2hhLTUnbiased = {
                 , 'PostscaleNB'           :    1.0
                 , 'NetCut'                :    0.9
                 },
-    'STREAM' : 'Bhadron',
+    'STREAMS' : [ 'Bhadron' ],
     'WGs'    : ['GammaFromLoops']
     }
 

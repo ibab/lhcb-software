@@ -30,7 +30,7 @@ NoPIDDstarWithD02RSKPi = {
                 , 'Postscale'        : 1.0       ## unitless
                 , 'Monitor'          : None      ## Monitoring?
                 },
-    'STREAM' : 'Calibration',
+    'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }
 
@@ -45,7 +45,7 @@ InclPhi={
                 , 'LowPtPrescale'       : 0.0020   # adimensional
                 , 'LDPrescale'          : 0.00002  # adimensional
                 },
-    'STREAM' : 'Calibration',
+    'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }
 
@@ -62,7 +62,7 @@ V0ForPID = {
                 'LamLLIsMUON_Prescale_HiP' : 1.000,
                 'LamDDIsMUON_Prescale'     : 0.460
                 },
-    'STREAM' : 'Calibration',
+    'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }
 
@@ -88,7 +88,7 @@ Jpsi2eeForElectronID = {
                    'eeMaxMass': 4200.0,
                    'eeMinMass': 2200.0,
                    'eeVCHI2PDOF': 9.0},
-    'STREAM' : 'Calibration',
+    'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
 }
 

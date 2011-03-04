@@ -24,7 +24,7 @@ NeuroBayesMuMu = {
                 , 'PrescaleJPsi'         :  1.0
                 , 'PostscaleJPsi'        :  1.0
                 },
-    'STREAM' : 'Dimuon' ,
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -158,7 +158,7 @@ B2twobody = {
                 'MinDSD0DauIPChi2':   9.0,
                 'MaxDSD0DauTrkChi2':  5.0
                 },
-    'STREAM' : 'Bhadron'  ,
+    'STREAMS' : [ 'Bhadron' ] ,
     'WGs'    : [ 'FWG' ]
     }
 
@@ -240,7 +240,7 @@ FullDSTDiMuon = {
                    'Psi2MuMu_VCHI2PDOF': 20.0,
                    'Psi2MuMu_checkPV': False
                    },
-    'STREAM' : 'Dimuon' ,
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -313,7 +313,7 @@ MicroDSTDiMuon = {
                    'Psi2MuMu_VCHI2PDOF': 20.0,
                    'Psi2MuMu_checkPV': True
                    },
-    'STREAM' : 'Leptonic' ,
+    'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'FWG' ]
     }
 
@@ -340,7 +340,7 @@ Bc2JpsiH = {
                    'PionPT': 2000.0,
                    'PionTRCHI2DOF': 5.0
                    },
-    'STREAM' : 'Dimuon' ,
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -366,7 +366,7 @@ Bc2JpsiHDetached = {
                    'PionP': -5.0,
                    'PionPT': 1500.0,
                    'PionTRCHI2DOF': 5.0},
-    'STREAM'   : 'Dimuon' ,
+    'STREAMS'   : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
 }
 
@@ -388,7 +388,7 @@ JpsiMuMuforD0MuMu = {
                    'Jpsi2MuMuForD0mumu_Prescale': 1.0,
                    'Jpsi2MuMuForD0mumu_VCHI2PDOF': 10.0
                    },
-    'STREAM' : 'Dimuon' ,
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -433,7 +433,7 @@ BuToKX3872 = {
                 'X3872_MassWindowLoose': 190.0,
                 'X3872_VertexCHI2': 8.0,
                 'X3872_VertexCHI2Loose': 10.0},
-    'STREAM' : 'Dimuon' ,
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -490,7 +490,7 @@ FullDSTDiElectron = {
                    'Jpsi2ee_Prescale': 1.0,
                    'Jpsi2ee_VCHI2PDOF': 16.0,
                    'Jpsi2ee_checkPV': False},
-    'STREAM' : 'Dielectron' ,
+    'STREAMS' : [ 'Dielectron' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -547,7 +547,7 @@ MicroDSTDiElectron = {
                    'Jpsi2ee_Prescale': 1.0,
                    'Jpsi2ee_VCHI2PDOF': 16.0,
                    'Jpsi2ee_checkPV': True},
-    'STREAM' : 'Leptonic' ,
+    'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'FWG' ]
 }
 
@@ -570,7 +570,7 @@ Ccbar2Ppbar = {
                    'ProtonTRCHI2DOF': 5.0,
                    'SpdMult': 600.0,
                    'VtxCHI2': 9.0},
-    'STREAM' : 'CharmControl'  ,
+    'STREAMS' : [ 'CharmControl' ] ,
     'WGs'    : [ 'FWG' ]
 }
 
@@ -590,7 +590,7 @@ Ccbar2PpbarExclusive = {
                    'ProtonTRCHI2DOF': 5.0,
                    'SpdMult': 100.0,
                    'VtxCHI2': 9.0},
-    'STREAM' : 'CharmControl' ,
+    'STREAMS' : [ 'CharmControl' ] ,
     'WGs'    : [ 'FWG' ]
     }
 

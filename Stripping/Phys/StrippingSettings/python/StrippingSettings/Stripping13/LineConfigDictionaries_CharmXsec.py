@@ -62,7 +62,7 @@ D02K3PiForXSec = {
                        , 'Untagged' : None },    
     },
     'WG' : [ 'Charm' ],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
 
 
@@ -89,7 +89,7 @@ D02KPiGeoForXSec = {
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WG' : ['Charm'],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
     
 
@@ -115,7 +115,7 @@ Dstar2D0Pi_D02KPiForXSec = {
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WG' : ['Charm'],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
     
 
@@ -143,7 +143,7 @@ Lambdac2PKPiForXSec = {
      , 'PostscaleLambdac2PKPi' :    1.0
     },
     'WG'          : ['Charm'],
-    'STREAM'      : 'MiniBias'
+    'STREAMS'      : [ 'MiniBias' ] 
     }
 
 
@@ -167,7 +167,7 @@ D2PhiPiForXSec = {
     , 'PostscaleD2PhiPi'          :    1.0
     },
     'WG' : [ 'Charm' ],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
     
 
@@ -205,7 +205,7 @@ D2HHHForXSec = {
     , 'PostscaleD2KPPDCS' : 1.0
     },
     'WG' : [ 'Charm' ],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
 
 D02HHForXSec = { 
@@ -229,7 +229,7 @@ D02HHForXSec = {
      , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WG' : [ 'Charm' ],
-    'STREAM' : 'MiniBias'
+    'STREAMS' : [ 'MiniBias' ] 
     }
 
 

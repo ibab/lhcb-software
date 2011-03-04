@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Thomas Blake
+ - Updated LineConfigDictionaries to allow multiple streams
+
 ! 2011-03-04 - Juan Palacios
  - Removed all dependencies.
  - Added dependency on GaudiPolicy.

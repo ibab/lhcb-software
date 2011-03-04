@@ -39,7 +39,7 @@ DstarD02KMuNu = {
     'PrescaledLinePostscale' : 1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 
@@ -57,7 +57,7 @@ D02MuMu = {
     'DstD02PiPiPrescale'       : 0.1
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 #Micro-DST, Vanya BELYAEV
@@ -72,7 +72,7 @@ PromptCharm = {
     'LamCPrescale'    : 1.00
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 
@@ -113,7 +113,7 @@ D2hh = {
     'TaggedSCSLinePostscale': 1.,
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
 
 #Micro-DST, Sam Gregson
@@ -154,7 +154,7 @@ D2KS0H = {
     ,'KaonLinePostscale' : 1
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 #Micro-DST, Diego Milanes
@@ -171,7 +171,7 @@ CharmedAndCharmedStrangeSpectroscopy = {
     'DstarpPim_prescale' : 1
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 
@@ -217,7 +217,7 @@ D2hhh = {
     'D2HHHIncLinePostscale' : 1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 
@@ -258,7 +258,7 @@ D2XMuMu = {
     'D2PiPiPiCalLinePostscale': 1 
     } ,
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
 
 
@@ -305,7 +305,7 @@ DstarD02xx ={
     ,'prefix'         : '' 
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
 
 
@@ -334,7 +334,7 @@ DstarPromptWithD02HH = {
     'HHLinePostscale'   : 1.,         ## unitless
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
 
 # Mat Charles, Micro-DST
@@ -350,7 +350,7 @@ Xicc = {
     ,'signalPrescaleViaXic' : 1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm' 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 
@@ -391,7 +391,7 @@ DstarD02KKmumu = {
     , 'LinePostscale'  : 1.
     },
     'WGs' : ['Charm'],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
     
 
@@ -432,7 +432,7 @@ DstarD02KKpipi = {
     , 'LinePostscale'  : 1.
     },
     'WGs' : ['Charm'],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
     
 
@@ -477,7 +477,7 @@ DstarPromptWithD02HHHHNoPID = {
     ,'Postscale'        : 1
     },
     'WGs' : [ 'Charm' ],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
 
 DstarPromptWithD02HHHH = {
@@ -518,7 +518,7 @@ DstarPromptWithD02HHHH = {
     ,'Postscale'        : 1
     },
     'WGs' : ['Charm'],
-    'STREAM' : 'Charm'
+    'STREAMS' : [ 'Charm' ]
     }
    
 
@@ -580,7 +580,7 @@ DstarD2KShh = {
     ,'PPDDPostscale'        : 1.0
     },
     'WGs' : ['Charm'],
-    'STREAM' : 'CharmFull'
+    'STREAMS' : [ 'CharmFull' ]
     }
 
 
