@@ -28,6 +28,44 @@ def lineBuilder(stripping, lineBuilderName) :
     return lineBuilders()[_config['BUILDERTYPE']](lineBuilderName,
                                                   _config['CONFIG'])
 
+def buildStream(stripping, streamName = ''):
+    """
+    Create a StrippingStream from the lineBuilder database
+    Usage:
+    >>> streamDimuon = strippingStream('Stripping13','Dimuon')
+    """
+    
+    from StrippingConf.StrippingStream import StrippingStream
+    from StrippingSettings.Utils import strippingConfiguration
+    from StrippingSelections import lineBuilders
+
+
+    stream = StrippingStream( streamName )
+    _db = strippingConfiguration( stripping )
+    
+    for key in _db.keys():
+        _conf = dict( _db[key] )
+        if stream.name() in _conf['STREAMS']:
+            _lb = lineBuilders()[_conf['BUILDERTYPE']](key,_conf['CONFIG'])
+            stream.appendLines( _lb.lines() )
+    return stream
+
+def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
+    """
+    Clone the lines belonging to a StrippingStream with a
+    global prescale and return them as a flat list
+    >>> stream = StrippingStream('Test')
+    >>> lines  = cloneLinesFromStream(stream,prefix='Clone',prescale=1.0)
+    """
+
+    clonedLines = []
+    
+    for _line in stream.lines:
+        clonedLine = _line.clone( prefix + _line.name(), prescale = _line.prescale()*prescale )
+        clonedLines.append( clonedLine )
+    return clonedLines
+
+
 def buildStreams(stripping) :
     """
     Build and return a set of StrippingStreams for a given stripping
@@ -72,3 +110,4 @@ def buildStreams(stripping) :
         print 'Creating steam', stream, 'with lines', lines
         strippingStreams.append(StrippingStream(stream, Lines = lines))
     return strippingStreams
+

@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Thomas Blake
+ - Added finctionality to build single stream and clone the lines from 
+	 a single stream to Utils.py
+	 Usage:
+
+   >>> streamDimuon = strippingStream('Stripping13','Dimuon')
+	and
+	 >>> stream = StrippingStream('Test')
+   >>> lines  = cloneLinesFromStream(stream,prefix='Clone',prescale=1.0)	
+
+
 ! 2011-03-04 - Juan Palacios
  - Add function StrippingSelections.Utils.buildStreams, returns set of
    Strippingstreams for a given configuration:
