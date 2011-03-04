@@ -4,6 +4,11 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-03-04 - Roel Aaij
+ - Add instantiations to the dictionary for:
+   - Hlt::TSelection< LHCb::RecVertex >
+   - Hlt::TSelection< LHCb::Track >
+
 !========================== HltBase v12r0 2011-02-22 ===================
 ! 2011-02-20 - Gerhard Raven
  - remove match2dVelo from  IMatchTVeloTracks

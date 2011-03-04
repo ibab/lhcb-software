@@ -53,11 +53,12 @@ namespace
     Hlt::L0DiMuonCandidate::Range       m_m_4 ;    
     Hlt::L0DiMuonCandidate::Selection   m_m_5 ;
     
-    
     Hlt::TSelection<Hlt::Candidate>         m_a_1 ;
     Hlt::TSelection<Hlt::Stage>             m_a_2 ;
     Hlt::TSelection<Hlt::MultiTrack>        m_a_3 ;
     Hlt::TSelection<Hlt::L0DiMuonCandidate> m_a_4 ;
+    Hlt::TrackSelection                     m_a_5 ;
+    Hlt::VertexSelection                    m_a_6 ;
     
     __Instantiations() ;
     
