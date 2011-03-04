@@ -22,7 +22,7 @@ from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons
 
-name = 'MuIDCalib'
+default_name = 'MuIDCalib'
 class MuIDCalibConf( LineBuilder ):
     __configuration_keys__ = ('PromptPrescale',       #0.08
                               'DetachedPrescale',     #1.
