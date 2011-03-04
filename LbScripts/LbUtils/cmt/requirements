@@ -16,4 +16,6 @@ apply_pattern python_alias script=lockAFSDir
 apply_pattern python_alias script=tuneAFSVol
 apply_pattern python_alias script=change-svn-wc-format
 # apply_pattern python_alias script=expandTarBall
+apply_pattern python_alias script=cmtwhich
+
 

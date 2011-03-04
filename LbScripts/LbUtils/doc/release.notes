@@ -1,3 +1,8 @@
+2011-03-04  hmd  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/cmtwhich: New file.
+	* cmt/requirements: added the new cmtwhich command.
+
 2011-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/__init__.py: added the generic sorting of version
