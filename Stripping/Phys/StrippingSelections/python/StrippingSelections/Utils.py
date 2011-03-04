@@ -33,16 +33,23 @@ def buildStream(stripping, streamName = ''):
     Create a StrippingStream from the lineBuilder database
     Usage:
     >>> streamDimuon = strippingStream('Stripping13','Dimuon')
+    or:
+    >>> conf = strippingConfiguration('Stripping13')
+    >>> streamDimuon = strippingStream(conf,'Dimuon')
+    
     """
     
     from StrippingConf.StrippingStream import StrippingStream
     from StrippingSettings.Utils import strippingConfiguration
     from StrippingSelections import lineBuilders
 
-
     stream = StrippingStream( streamName )
-    _db = strippingConfiguration( stripping )
-    
+
+    if isinstance(stripping, basestring) :
+        _db = strippingConfiguration( stripping )
+    else :
+        _db = stripping
+        
     for key in _db.keys():
         _conf = dict( _db[key] )
         if stream.name() in _conf['STREAMS']:
@@ -61,7 +68,8 @@ def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
     clonedLines = []
     
     for _line in stream.lines:
-        clonedLine = _line.clone( prefix + _line.name(), prescale = _line.prescale()*prescale )
+        clonedLine = _line.clone( prefix + _line.name(),
+                                  prescale = _line.prescale()*prescale )
         clonedLines.append( clonedLine )
     return clonedLines
 
@@ -88,7 +96,8 @@ def buildStreams(stripping) :
     if isinstance(stripping, basestring) :
         scdb = strippingConfiguration(stripping)
     else :
-        scdb = stripping    
+        scdb = stripping
+        
     for k, v in scdb.iteritems() :
         if 'STREAMS' in v.keys() :
             for stream in v['STREAMS'] :

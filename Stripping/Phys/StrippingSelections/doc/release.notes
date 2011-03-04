@@ -4,12 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Juan Palacios
+ - Changed buildStream so it can take DB or dicitonary as well as stripping
+   configuration string.
+
 ! 2011-03-04 - Thomas Blake
  - Added finctionality to build single stream and clone the lines from 
 	 a single stream to Utils.py
 	 Usage:
 
-   >>> streamDimuon = strippingStream('Stripping13','Dimuon')
+   >>> streamDimuon = buildStream('Stripping13','Dimuon')
 	and
 	 >>> stream = StrippingStream('Test')
    >>> lines  = cloneLinesFromStream(stream,prefix='Clone',prescale=1.0)	
