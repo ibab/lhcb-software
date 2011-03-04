@@ -105,6 +105,10 @@ class Physics_draft2011( object ):
         from Muons_draft2011 import Muons_draft2011
         __update_conf__(thresholds,  Muons_draft2011().Thresholds() )
 
+
+	from Electrons_draft2011 import Electrons_draft2011
+        __update_conf__(thresholds,  Electrons_draft2011().Thresholds() )
+
         from Hadrons_draft2011 import Hadrons_draft2011
         __update_conf__(thresholds,  Hadrons_draft2011().Thresholds() )
 
@@ -124,6 +128,9 @@ class Physics_draft2011( object ):
 
         from Muons_draft2011 import Muons_draft2011
         hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
+
+	from Electrons_draft2011 import Electrons_draft2011
+        hlt2.extend( Electrons_draft2011().ActiveHlt2Lines() )
 
         from Hadrons_draft2011 import Hadrons_draft2011
         hlt2.extend( Hadrons_draft2011().ActiveHlt2Lines() )

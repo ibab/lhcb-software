@@ -18,21 +18,21 @@ class Electrons_draft2011:
         """
         
         lines = [
-            'Hlt2DiElectron',        
-            'Hlt2DiElectronLowMass',
-            'Hlt2DiElectronLowPID',
-            'Hlt2DiElectronJpsi',          
-            'Hlt2DiElectronPsi',           
+            #'Hlt2DiElectron',        
+            #'Hlt2DiElectronLowMass',
+            #'Hlt2DiElectronLowPID',
+            #'Hlt2DiElectronJpsi',          
+            #'Hlt2DiElectronPsi',           
             'Hlt2DiElectronB',
             'Hlt2DiElectronHighMass',
-            'Hlt2DiElectronVHighMass',
+            #'Hlt2DiElectronVHighMass',
             # single
-            'Hlt2SingleTFElectron',     
+            #'Hlt2SingleTFElectron',     
             'Hlt2SingleTFLowPtElectron',     
             'Hlt2SingleTFHighPtElectron',
-            'Hlt2SingleTFVHighPtElectron',
-            'Hlt2TFElectronPlusTrack',
-            'Hlt2TFElectronPlusTrackNoIP'
+            #'Hlt2SingleTFVHighPtElectron',
+            #'Hlt2TFElectronPlusTrack',
+            #'Hlt2TFElectronPlusTrackNoIP'
             ]
         
         return lines
