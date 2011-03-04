@@ -72,7 +72,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter as VoidFilter
 
-name = "Bu3hFrom2hBuilder"
+default_name = "Bu3hFrom2hBuilder"
 
 class Bu3hFrom2hBuilder(LineBuilder) :
     __configuration_keys__ = ('MaxTrSIZE',
