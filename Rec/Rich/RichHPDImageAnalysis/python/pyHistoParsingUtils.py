@@ -87,7 +87,7 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fitType = "CppFit" ):
         fitter = gbl.Rich.HPDImage.HPDFit()
         result = fitter.fit(image,params)
 
-        # Extract the fit results"Mooo
+        # Extract the fit results
         OK = result.OK()
         if OK :
             xoffset = (result.x(),result.xErr())

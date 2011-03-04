@@ -24,6 +24,10 @@ Rich::HPDImage::HPDFit::fit ( const TH2D& hist,
   if ( FCN.findBoundary() >= params.minBoundary )
   {
     
+    // Max 'reasonable' shift in mm
+    // Maybe should make a tunable parameter ..
+    const double maxShift = 3.0;
+
     ROOT::Minuit2::MnUserParameters par;
     par.Add("Col0",   16. , 0.5 );
     par.Add("Row0",   16. , 0.5 );
@@ -45,6 +49,12 @@ Rich::HPDImage::HPDFit::fit ( const TH2D& hist,
                            min.UserParameters().Error("Col0") );
       result.setRadAndErr( min.UserParameters().Value("Radius"),
                            min.UserParameters().Error("Radius") );
+      // Sanity checks ...
+      if ( fabs(result.x()) > maxShift ||
+           fabs(result.y()) > maxShift )
+      {
+        result.setOK( false );
+      }
     }
 
   }

@@ -379,14 +379,14 @@ def runToFill(run):
     return fill
 
 def calibrationByRuns(rootfiles='RootFileNames.txt',
-                      fitType="Fit1",followType="FittedPol",pol=0):
-    return calibration(rootfiles,'Run',fitType,followType,pol)
+                      fitType="Fit1",followType="Smoothed",pol=0,smoothSigmaHours=3):
+    return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
 
 def calibrationByFills(rootfiles='RootFileNames.txt',
-                       fitType="Fit1",followType="FittedPol",pol=0):
-    return calibration(rootfiles,'Fill',fitType,followType,pol)
+                       fitType="Fit1",followType="Smoothed",pol=0,smoothSigmaHours=12):
+    return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours)
 
-def calibration(rootfiles,type,fitType,followType,pol):
+def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
     import pyHistoParsingUtils
     from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3
@@ -401,7 +401,7 @@ def calibration(rootfiles,type,fitType,followType,pol):
 
     if fitType not in ["Fit1","CppFit"]:
         raise Exception("Unknown Fit Mode "+fitType)
-        
+       
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
 
@@ -467,7 +467,7 @@ def calibration(rootfiles,type,fitType,followType,pol):
 
                 res = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fitType)
                 xOff = res["Result"][0]
-                yOff = res["Result"][1]
+                yOff = res["Result"][1]                
                 plotData[hpdID][flag] = { "FitOK"   : res['OK'],
                                           "ShiftR"  : rFromXY(xOff,yOff),
                                           "ShiftX"  : xOff,
@@ -508,14 +508,14 @@ def calibration(rootfiles,type,fitType,followType,pol):
     smoothers['MagDown'] = { }
     smoothers['MagUp']   = { }
     smoothers['MagOff']  = { }
-    # Smoother sigma
-    smoothSigma = 15
     
-    # Make plots showing the variations
-    basename = "HPDAlignBy"+type+"-"+fitType+"-"+followType
+    # base name
+    basename = rootfiles.split(".")[0]+"-HPDAlignBy"+type+"-"+fitType+"-"+followType
     if followType == "FittedPol" : basename += str(pol)
+    if followType == "Smoothed"  : basename += str(smoothSigmaHours)+"hours"
+
+    # Set output PDF name
     globals()["imageFileName"] = basename+".pdf"
-    print "Making summary plots", globals()["imageFileName"]
     printCanvas('[')
 
     # Run range for including in the fitted data
@@ -531,8 +531,9 @@ def calibration(rootfiles,type,fitType,followType,pol):
         # HPD ID string
         idS = str(hpd) + " " + smartID.toString()
 
-        # Min max flag values
-        minMaxFlag = [999,-999]
+        # Min max values
+        #minMaxFlag   = [1e9,-1e9]
+        minMaxAvTime = [1e9,-1e9]
 
         from array import array
         vflag      = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
@@ -546,7 +547,8 @@ def calibration(rootfiles,type,fitType,followType,pol):
         dbX        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
         dbY        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
         dbR        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-
+        vTime      = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vTimeErr   = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
 
         dataColor   = 1
         splineColor = 2
@@ -557,14 +559,21 @@ def calibration(rootfiles,type,fitType,followType,pol):
 
             if fl >= minMaxFillForFit[0] and fl <= minMaxFillForFit[1] :
 
-                # Field Polarity
-                polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
-            
-                if fl < minMaxFlag[0] : minMaxFlag[0] = fl
-                if fl > minMaxFlag[1] : minMaxFlag[1] = fl
+                #if fl < minMaxFlag[0] : minMaxFlag[0] = fl
+                #if fl > minMaxFlag[1] : minMaxFlag[1] = fl
+
+                # Average time for run/fill
+                avTime = ( getUNIXTime(runFillData[type+"Data"][fl]["Start"]) +
+                           getUNIXTime(runFillData[type+"Data"][fl]["Stop"]) ) / 2e9
+
+                if avTime < minMaxAvTime[0] : minMaxAvTime[0] = avTime
+                if avTime > minMaxAvTime[1] : minMaxAvTime[1] = avTime
 
                 values = data[fl]
                 if values['FitOK'] :
+
+                    # Field Polarity
+                    polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
 
                     vflag[polarity].append(fl)
                     vflagerr[polarity].append(0.0)
@@ -577,6 +586,8 @@ def calibration(rootfiles,type,fitType,followType,pol):
                     dbX[polarity].append(values["DBShiftX"])
                     dbY[polarity].append(values["DBShiftY"])
                     dbR[polarity].append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
+                    vTime[polarity].append(avTime)
+                    vTimeErr[polarity].append(0.0)
                         
             else :
 
@@ -587,67 +598,55 @@ def calibration(rootfiles,type,fitType,followType,pol):
         for polarity in ['MagDown','MagUp','MagOff']:
 
             # If we have data, fill it properly
-            if len(vflag[polarity]) > 0:
+            if len(vTime[polarity]) > 0:
 
-                plotX = TGraphErrors( len(vflag[polarity]), vflag[polarity],
-                                      vshiftX[polarity], vflagerr[polarity], vshiftXerr[polarity] )
+                plotX = TGraphErrors( len(vTime[polarity]), vTime[polarity],
+                                      vshiftX[polarity], vTimeErr[polarity], vshiftXerr[polarity] )
                 plotX.SetTitle( polarity+" X Shift : Copy Number "+idS )
-                plotX.GetXaxis().SetTitle(type+" Number")
+                plotX.GetXaxis().SetTitle(type+" Average time (secs since UNIX epoch)")
                 plotX.GetYaxis().SetTitle("X Offset / mm" )
                 plotX.SetMarkerColor(dataColor)
                 plotX.SetLineColor(dataColor)
-                FitX = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxFlag[0],minMaxFlag[1])
+                FitX = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxAvTime[0],minMaxAvTime[1])
                 FitX.SetParName(0,"Fitted Shift")
                 FitX.SetLineColor(dataColor)
                 plotX.Fit(FitX,"QRS")
                 plotX.Draw("ALP")
-                #plotXDB = TGraph( len(vflag[polarity]), vflag[polarity], dbX[polarity] )
-                #plotXDB.SetMarkerColor(refColor)
-                #plotXDB.SetLineColor(refColor)
-                #plotXDB.Draw("LP")
-                labelDataDB(polarity,dataColor,refColor)
-                #interpX = TSpline3( "SplineX"+polarity+idS, vflag[polarity], vshiftX[polarity],
-                #                    len(vflag[polarity]) )
-                #interpX.SetLineColor(splineColor)
-                #interpX.Draw("SAME")
-                smootherX = gbl.Rich.HPDImage.GraphSmoother(vflag[polarity],
-                                                            vshiftX[polarity],
-                                                            len(vflag[polarity]))
+                labelDataDB(polarity,dataColor,smoothColor)
+                smootherX = gbl.Rich.HPDImage.GraphSmoother( len(vTime[polarity]),
+                                                             vTime[polarity],
+                                                             vshiftX[polarity],
+                                                             vTimeErr[polarity],
+                                                             vshiftXerr[polarity] )
                 smoothedX = array('d')
-                for v in vflag[polarity] : smoothedX.append( smootherX.Eval(v,smoothSigma) )
-                plotSmoothedX = TGraph( len(vflag[polarity]), vflag[polarity], smoothedX )
+                for t in vTime[polarity] : smoothedX.append( smootherX.Eval(t,3600*smoothSigmaHours) )
+                plotSmoothedX = TGraph( len(vTime[polarity]), vTime[polarity], smoothedX )
                 plotSmoothedX.SetMarkerColor(smoothColor)
                 plotSmoothedX.SetLineColor(smoothColor)
                 plotSmoothedX.Draw("LP")
                 printCanvas()
 
-                plotY = TGraphErrors( len(vflag[polarity]), vflag[polarity],
-                                      vshiftY[polarity], vflagerr[polarity], vshiftYerr[polarity] )
+                plotY = TGraphErrors( len(vTime[polarity]), vTime[polarity],
+                                      vshiftY[polarity], vTimeErr[polarity], vshiftYerr[polarity] )
                 plotY.SetTitle( polarity+"Y Shift : Copy Number "+idS )
-                plotY.GetXaxis().SetTitle(type+" Number")
+                plotY.GetXaxis().SetTitle(type+" Average time (secs since UNIX epoch)")
                 plotY.GetYaxis().SetTitle("Y Offset / mm" )
                 plotY.SetMarkerColor(dataColor)
                 plotY.SetLineColor(dataColor)
-                FitY = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxFlag[0],minMaxFlag[1])
+                FitY = TF1("AverageFitX"+polarity+idS,"pol"+str(pol),minMaxAvTime[0],minMaxAvTime[1])
                 FitY.SetParName(0,"Fitted Shift")
                 FitY.SetLineColor(dataColor)
                 plotY.Fit(FitY,"QRS")
                 plotY.Draw("ALP")
-                #plotYDB = TGraph( len(vflag[polarity]), vflag[polarity], dbY[polarity] )
-                #plotYDB.SetMarkerColor(refColor)
-                #plotYDB.SetLineColor(refColor)
-                #plotYDB.Draw("LP")
-                labelDataDB(polarity,dataColor,refColor)
-                #interpY = TSpline3( "SplineY"+polarity+idS, vflag[polarity], vshiftY[polarity],
-                #                    len(vflag[polarity]) )
-                #interpY.SetLineColor(splineColor)
-                #interpY.Draw("SAME")
-                smootherY = gbl.Rich.HPDImage.GraphSmoother(vflag[polarity],
-                                                            vshiftY[polarity],
-                                                            len(vflag[polarity]))
+                labelDataDB(polarity,dataColor,smoothColor)
+                smootherY = gbl.Rich.HPDImage.GraphSmoother( len(vTime[polarity]),
+                                                             vTime[polarity],
+                                                             vshiftY[polarity],
+                                                             vTimeErr[polarity],
+                                                             vshiftYerr[polarity] )
                 smoothedY = array('d')
-                for v in vflag[polarity] : smoothedY.append( smootherY.Eval(v,smoothSigma) )
-                plotSmoothedY = TGraph( len(vflag[polarity]), vflag[polarity], smoothedY )
+                for t in vTime[polarity] : smoothedY.append( smootherY.Eval(t,3600*smoothSigmaHours) )
+                plotSmoothedY = TGraph( len(vTime[polarity]), vTime[polarity], smoothedY )
                 plotSmoothedY.SetMarkerColor(smoothColor)
                 plotSmoothedY.SetLineColor(smoothColor)
                 plotSmoothedY.Draw("LP")
@@ -698,6 +697,9 @@ def calibration(rootfiles,type,fitType,followType,pol):
         unixStartTime = getUNIXTime(startTime)
         unixStopTime  = getUNIXTime(stopTime)
 
+        # Average time for run/fill in secs
+        avTime = ( unixStartTime + unixStopTime ) / 2e9
+
         # Set UMS to the start time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
@@ -719,18 +721,18 @@ def calibration(rootfiles,type,fitType,followType,pol):
                 text = type + " aligned FitType=" + fitType
             else:
                 if followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
-                    xOff = avTrendFit[polarity][hpdID][0].Eval(int(flag))
-                    yOff = avTrendFit[polarity][hpdID][1].Eval(int(flag))
+                    xOff = avTrendFit[polarity][hpdID][0].Eval(avTime)
+                    yOff = avTrendFit[polarity][hpdID][1].Eval(avTime)
                     text = "From " + polarity + " Average Pol" + str(pol)
                 elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
-                    xOff = smoothers[polarity][hpdID][0].Eval(int(flag),smoothSigma)
-                    yOff = smoothers[polarity][hpdID][1].Eval(int(flag),smoothSigma)
+                    xOff = smoothers[polarity][hpdID][0].Eval(avTime,3600*smoothSigmaHours)
+                    yOff = smoothers[polarity][hpdID][1].Eval(avTime,3600*smoothSigmaHours)
                     text = "From " + polarity + " Smoothed"
                 else:
                     xOff = values["DBShiftX"]
                     yOff = values["DBShiftY"]
                     text = "From original DB"
-
+ 
             # Update the Si alignment with the image movement data
             paramName = "dPosXYZ"
             vect = siAlign.paramAsDoubleVect(paramName)
@@ -791,26 +793,25 @@ def createDBFile(name):
     return CondDBUI.CondDB( "sqlite_file:"+name+"/LHCBCOND",
                             create_new_db=True, readOnly=False )
 
-def labelDataDB(polarity,alignColor,refColor):
+def labelDataDB(polarity,alignColor,smoothColor):
     from ROOT import TText
     text = TText()
     text.SetNDC()
     text.SetTextSize(0.02)
     text.SetTextColor(alignColor)
     text.DrawText( 0.13, 0.85, polarity+" Fitted Image Shifts" )
-    #text.SetTextColor(refColor)
-    #text.DrawText( 0.13, 0.82, "LHCbCond" )
+    text.SetTextColor(smoothColor)
+    text.DrawText( 0.13, 0.82, "Smoothed" )
     
 def printCanvas(tag=''):
     canvas = rootCanvas()
     canvas.Update()
     imageType = imageFileName.split(".")[1]
     canvas.Print(imageFileName+tag,imageType)
-    # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
-    #if tag == ']' and imageType == 'ps' :
-    #    import os
-    #    os.system('ps2pdf '+imageFileName)
-    #    os.remove(imageFileName)
+    if tag == '[' or tag == '{' :
+        print "Printing to", globals()["imageFileName"]
+    elif tag == ']' or tag == '}' :
+        print "Printing done ..."
         
 def rootCanvas():
     from ROOT import TCanvas
