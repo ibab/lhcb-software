@@ -45,10 +45,10 @@ B->D+3H channels
 from StrippingConf.StrippingStream import StrippingStream
 from Configurables import FilterDesktop, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+#from StrippingSelections.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from copy import copy
-from StrippingUtils.Utils import LineBuilder  #ADDED LINE
+from StrippingUtils.Utils import LineBuilder , checkConfig  #ADDED LINE
 from CommonParticles import StdLoosePions, StdLooseKaons, StdLooseProtons, StdLooseDplus
 
 

@@ -30,8 +30,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StandardParticles import StdLoosePions, StdLooseKaons
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils   import checkConfig 
-from StrippingUtils.Utils import LineBuilder
+from StrippingUtils.Utils import LineBuilder, checkConfig
 
 ## config = {
 ##     # KS0 daughter pion cuts

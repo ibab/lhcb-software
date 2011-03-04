@@ -12,7 +12,7 @@ from LHCbKernel.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 from PhysSelPython.Wrappers import Selection, AutomaticData
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import checkConfig
 
 
 #################

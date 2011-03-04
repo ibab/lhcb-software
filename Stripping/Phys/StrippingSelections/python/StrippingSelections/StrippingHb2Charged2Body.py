@@ -20,8 +20,7 @@ from StandardParticles                     import StdNoPIDsPions, StdLooseProton
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils   import checkConfig 
-from StrippingUtils.Utils        import LineBuilder
+from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 class Hb2Charged2BodyLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""

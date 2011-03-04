@@ -7,7 +7,7 @@ Bd->K*MuMu Lifetime biased selection
 """
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from Configurables import FilterDesktop, CombineParticles
 

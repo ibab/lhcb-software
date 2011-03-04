@@ -13,11 +13,11 @@ from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils.Utils import LineBuilder
+from StrippingUtils.Utils import LineBuilder, checkConfig
 
-from StrippingSelections.Utils import checkConfig
 
-name = "DstarD02xx"
+
+default_name = "DstarD02xx"
 
 class StrippingDstarD02xxConf(LineBuilder):
     """

@@ -23,7 +23,7 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import checkConfig
 
 confdict = {
   'DMassLower'             : -7.5     #MeV

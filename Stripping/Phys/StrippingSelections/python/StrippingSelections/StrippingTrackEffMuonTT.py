@@ -52,9 +52,8 @@ __all__ = ('StrippingTrackEffMuonTTConf',
 from Gaudi.Configuration import *
 from PhysSelPython.Wrappers import Selection, DataOnDemand, ChargedProtoParticleSelection
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StrippingUtils.Utils import LineBuilder
+from StrippingUtils.Utils import LineBuilder, checkConfig
 from StandardParticles import StdLooseKaons, StdLooseMuons 
 
 from Configurables import (MuonCombRec, 
@@ -68,7 +67,7 @@ from Configurables import (MuonCombRec,
                            )
 
 
-name = 'TrackEffMuonTT'
+default_name = 'TrackEffMuonTT'
 
 class StrippingTrackEffMuonTTConf(LineBuilder) :
     """

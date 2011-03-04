@@ -14,7 +14,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import checkConfig
 from Configurables import FilterDesktop, CombineParticles
 
 import GaudiKernel.SystemOfUnits as Units

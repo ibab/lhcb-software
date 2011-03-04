@@ -12,7 +12,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils.Utils import checkConfig
 from StrippingConf.StrippingLine import StrippingLine  
 
 defaultConfig = { 
