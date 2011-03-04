@@ -14,6 +14,9 @@ def initialise():
     if not os.access(tmpDir,os.W_OK):
         raise Exception('Temp Dir '+tmpDir+' Not Writable')
 
+    # Check results dir
+    if not os.path.exists("results") : os.mkdir("results")
+
     from ROOT import gROOT
     # No info messages
     gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
@@ -254,13 +257,23 @@ def getRunFillData(rootfiles):
         tmpTime = 0
         for filename in files:
             run = getIntInfo(filename,'Run')
-            # Get run start and stop times
-            if run in runTimeCache.keys():
-                res = runTimeCache[run]
-            else:
+            
+            # Get run start and stop times from cache if there
+            res = { 'OK' : False }
+            if run in runTimeCache.keys() : res = runTimeCache[run]
+
+            if not res['OK'] :
                 from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-                res = BookkeepingClient().getRunInformations(int(run))
-                runTimeCache[run] = res
+                nTries = 0
+                while not res['OK'] and nTries < 10:
+                    nTries = nTries + 1
+                    if nTries > 1 :
+                        print " -> Problem querying DB - Will try again after 5 secs ..."
+                        import time
+                        time.sleep(5)
+                    res = BookkeepingClient().getRunInformations(int(run))
+                if res['OK'] : runTimeCache[run] = res
+                
             if res['OK'] :
 
                 # Start and stop times
@@ -294,7 +307,9 @@ def getRunFillData(rootfiles):
                     tmpTime = unixEndTime
                     runfilldata["GlobalStopTime"] = stop
                 fillData['DataTakingDescription'] = res['Value']['DataTakingDescription']
+                
             else:
+                
                 print "ERROR Getting start/stop times for run", run
                 print res
                 import DIRAC
@@ -378,6 +393,16 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
+def runAll(files='MDMS-RootFiles.txt'):
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Fit1')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Fit1')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Fit1')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Fit1')
+    
 def calibrationByRuns(rootfiles='RootFileNames.txt',
                       fitType="Fit1",followType="Smoothed",pol=0,smoothSigmaHours=3):
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
@@ -513,9 +538,10 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     basename = rootfiles.split(".")[0]+"-HPDAlignBy"+type+"-"+fitType+"-"+followType
     if followType == "FittedPol" : basename += str(pol)
     if followType == "Smoothed"  : basename += str(smoothSigmaHours)+"hours"
+    basename += "-"+dateString()
 
     # Set output PDF name
-    globals()["imageFileName"] = basename+".pdf"
+    globals()["imageFileName"] = "results/"+basename+".pdf"
     printCanvas('[')
 
     # Run range for including in the fitted data
@@ -668,7 +694,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             alignData[flag][hpd] = values
 
     # Open new alignment SQL slice(s)
-    dbName = basename+".db"
+    dbName = "results/"+basename+".db"
     db = createDBFile(dbName)
 
     # List of paths already created in the DB
@@ -715,23 +741,20 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             siAlign = getSiSensorAlignment(copyNumber)
 
             # Get the offsets
-            if values["FitOK"] and followType == "FollowMovements":
+            text = basename
+            if   followType == "FollowMovements" and values["FitOK"]:
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
-                text = type + " aligned FitType=" + fitType
+            elif followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
+                xOff = avTrendFit[polarity][hpdID][0].Eval(avTime)
+                yOff = avTrendFit[polarity][hpdID][1].Eval(avTime)
+            elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
+                xOff = smoothers[polarity][hpdID][0].Eval(avTime,3600*smoothSigmaHours)
+                yOff = smoothers[polarity][hpdID][1].Eval(avTime,3600*smoothSigmaHours)
             else:
-                if followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
-                    xOff = avTrendFit[polarity][hpdID][0].Eval(avTime)
-                    yOff = avTrendFit[polarity][hpdID][1].Eval(avTime)
-                    text = "From " + polarity + " Average Pol" + str(pol)
-                elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
-                    xOff = smoothers[polarity][hpdID][0].Eval(avTime,3600*smoothSigmaHours)
-                    yOff = smoothers[polarity][hpdID][1].Eval(avTime,3600*smoothSigmaHours)
-                    text = "From " + polarity + " Smoothed"
-                else:
-                    xOff = values["DBShiftX"]
-                    yOff = values["DBShiftY"]
-                    text = "From original DB"
+                xOff = values["DBShiftX"]
+                yOff = values["DBShiftY"]
+                text = "From original DB"
  
             # Update the Si alignment with the image movement data
             paramName = "dPosXYZ"
