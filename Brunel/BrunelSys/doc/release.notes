@@ -3,13 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v38r2>2011-03-03 BrunelSys v38r2</A></H1><PRE>
+</PRE><H1><A NAME=v39r0>2011-03-04 BrunelSys v39r0</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1, Lbcom v10r1,
  Rec v11r2 and SQLDDDB v6r1, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
 
 Production release candidate for 2011 data taking
+Output data requires GaudiPoolDB v5r11 (i.e. Gaudi v22r1) to read
 
 - Persistency changes:
+  . Backward incompatible persistency change in Root 5.28.00a, data produced
+    with this release requires GaudiPoolDB v5r11 or later to read
   . Add TT cluster and Muon information (# Muon Coords in each station and
     # Muon tracks) to RecSummary object (RecEvent v2r35, RecAlgs v2r1))
 
