@@ -16,6 +16,7 @@ use LoKiCore             v*     Phys
 use GaudiConfUtils       v*     -no_auto_imports
 use StrippingUtils       v*     Phys
 use StrippingConf        v*     Phys
+use StrippingSettings    v*     Phys
 use PhysSelPython        v*     PhysSel
 use TisTosTobbing	 v*	Phys
 

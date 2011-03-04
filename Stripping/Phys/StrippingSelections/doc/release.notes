@@ -8,6 +8,14 @@
  - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
  - tests/test_bs2jpsiphi_prescaled_and_detatched.py
   . Put units in config parameters, not in code. Represent them as strings.
+ - Add dependency on Phys/StrippingSettings.
+ - Add function StrippingSelections.Utils.lineBuilder:
+    Create a line builder from a stripping version and a line builder
+    instance name.  The instance name must be registered in the database.
+    Usage:
+    lb = lineBuilder('Stripping13', 'B2XGamma')
+    print lb.lines()
+ - Increase to v2r0.
 
 ! 2011-03-03 - Thomas Blake
  - Updated __init__.py to include Charm and CharmXsec lines

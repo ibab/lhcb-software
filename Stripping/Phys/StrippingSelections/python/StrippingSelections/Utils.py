@@ -4,21 +4,19 @@ Helpers for construction of Stripping Selections
 __author__ = "Juan Palacios juan.palacios@cern.ch"
 __date__ = "30/06/2010"
 
-__all__ = ('checkConfig')
+__all__ = ('lineBuilder')
 
-def checkConfig(reference_keys, configuration) :
+def lineBuilder(stripping, lineBuilderName) :
     """
-    Check that all the required configuration parameters are present
-    in configuration.keys(), and that the number of keys in configuration
-    are as expected.
+    Create a line builder from a stripping version and a line builder
+    instance name.  The instance name must be registered in the database.
+    Usage:
+    lb = lineBuilder('Stripping13', 'B2XGamma')
+    print lb.lines()
     """
-    absentKeys = []
-    for key in reference_keys :
-        if key not in configuration.keys():
-            absentKeys.append(key)
+    from StrippingSelections import lineBuilders
+    from StrippingSettings.Utils import lineBuilderConfiguration
+    _config = lineBuilderConfiguration(stripping, lineBuilderName)
 
-    if len(absentKeys) != 0 :
-        raise KeyError('Keys missing in configuration: '+ str(absentKeys))
-
-    if len(configuration.keys()) != len(reference_keys) :
-        raise KeyError('Configuration has unexpected number of parameters.')
+    return lineBuilders()[_config['BUILDERTYPE']](lineBuilderName,
+                                                  _config['CONFIG'])
