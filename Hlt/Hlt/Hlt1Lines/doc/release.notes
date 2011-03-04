@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-04 - Plamen Hopchev
+ - Hlt1LumiLines : now count the velo tracks and vertices produced by 'private'
+   FastVelo and PatPV3D algorithms. The FastVelo alg is configured as in Offline
+   and uses a private HitManager
+
 !========================== Hlt1Lines v6r6p1 2011-03-03 ===================
 ! 2011-03-03 - Gerhard Raven
  - remove restriction in L0candidates ... needed for 0x0032..

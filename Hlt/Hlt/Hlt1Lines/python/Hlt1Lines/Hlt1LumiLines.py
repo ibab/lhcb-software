@@ -44,8 +44,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiCountHltTracks,
                                 LumiFlagMethod
                                 )
-    from HltTracking.HltTrackNames import HltSharedVeloTracksName,HltSharedTracksPrefix,_baseTrackLocation
-    veloContainer = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
+    containerNameLumiTracks = 'Hlt/Track/Lumi'
+    containerNameLumiVertex = 'Hlt/Vertex/Lumi'
+    
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
@@ -58,19 +59,44 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                              , 'NoBeam'       : 'RATE( 5)'
                                              }
                 , 'Postscale'              : { 'Hlt1LumiLow.*RateLimited' : 1.0 }
-                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    ,  veloContainer,   5,  200]
-                                        , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200]
-                                        , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100]
-                                        , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100]
-                                        , 'PV3D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV3D' ,   1,   20]
-                                        , 'RZVeloBW' : [LumiCountHltTracks, True    , 'VeloBW'          ,   5,  200]
-                                        , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500]
-                                        , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200]
-                                        , 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000]
+                , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    , containerNameLumiTracks  ,   5,  200]
+                                        , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons'        ,   5,  200]
+                                        , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'         ,   5,  100]
+                                        , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB'        ,   5,  100]
+                                        , 'PV3D'     : [LumiCountVertices , True    , containerNameLumiVertex  ,   1,   20]
+                                        , 'RZVeloBW' : [LumiCountHltTracks, True    , 'VeloBW'                 ,   5,  200]
+                                        , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'              ,   6,  500]
+                                        , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'           ,   3,  200]
+                                        , 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'                , 500, 6000]
                                         }
                 , 'OutputLevel'            : WARNING
                 }
 
+
+    def __lumi_track_and_vertex_seq__(self):
+        '''
+        returns a list of private lumi Velo tracking and vertexing algorithms
+        '''
+        ### create the tracking alg
+        from HltLine.HltDecodeRaw import DecodeVELO
+        algsDecodeVelo = [i for i in DecodeVELO.members()]
+        from Configurables import FastVeloTracking
+        algTr = FastVeloTracking( 'FastVeloLumiHlt'
+                                , OutputTracksName = self.containerNameLumiTracks
+                                , HitManagerName   = 'FastVeloLumiHltHitManager'
+                                )
+        ### create the vertexing alg
+        from Configurables import PatPV3D,PVOfflineTool,LSAdaptPV3DFitter
+        algPV = PatPV3D('PV3DLumiHlt' )
+        algPV.addTool(PVOfflineTool,"PVOfflineTool")
+        algPV.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
+        algPV.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+        algPV.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
+        algPV.PVOfflineTool.InputTracks = [ algTr.OutputTracksName ]
+        algPV.OutputVerticesName = self.containerNameLumiVertex
+        #return a list with the 2 algorithms
+        return algsDecodeVelo + [ algTr, algPV ]
+  
     def __create_lumi_algos__(self, postfix=''):
         '''
         returns algorithm sequences for Hlt1 Lumi Lines
@@ -141,9 +167,11 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 histoMaxBins.extend( [bins] )
                 if debugOPL <= DEBUG:
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
-                
+
+        ### get the private lumi velo reco algorithms
+        lumiVeloReco = self.__lumi_track_and_vertex_seq__()
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV3D().members(),
+                                                   Members = [ recoScaler ] + lumiVeloReco,
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
@@ -151,12 +179,10 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from Configurables import GaudiSequencer as Sequence
         lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
         lumiRecoFilterSequence.Members.append( recoScaler )
-        from HltTracking.HltReco import MinimalVelo
-        fastVeloContainer = MinimalVelo.outputSelection()
         lumiRecoFilterSequence.Members.append(
             Sequence('HltVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareVeloBW'
-                                                   , InputSelection   = 'TES:%s' % fastVeloContainer
+                                                   , InputSelection   = 'TES:%s' % self.containerNameLumiTracks
                                                    , Code = [ 'TrBACKWARD' ]
                                                    , OutputSelection     = 'VeloBW'
                                                    , RequirePositiveInputs = False
