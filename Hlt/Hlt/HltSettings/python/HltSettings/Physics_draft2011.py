@@ -84,7 +84,7 @@ class Physics_draft2011( object ):
                                              ,'DiMuonLowMass_PT'         :  500
                                              ,'DiMuonLowMass_TrChi2'     :    4
                                              ,'DiMuonLowMass_M'          : 1000
-                                             ,'DiMuonLowMass_IPChi2'     :    4
+                                             ,'DiMuonLowMass_IPChi2'     :    3
                                              ,'DiMuonHighMass_VxDOCA'    :  0.2
                                              ,'DiMuonHighMass_VxChi2'    :   25
                                              ,'DiMuonHighMass_P'         : 6000
