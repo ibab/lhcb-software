@@ -10,7 +10,7 @@ class MonSys
 protected:
   std::string m_name;
   lib_rtl_lock_t m_lockid;
-  std::vector<MonSubSys*> Subsyslist;
+  std::vector<MonSubSys*> *Subsyslist;
 public:
   MonSys();
   virtual ~MonSys();
