@@ -1,5 +1,6 @@
-# $Id: StrippingB2D3H.py,v 1.5 2011/02/21 sblusk bmaynard
+# $Id: StrippingB2D3H.py,v 1.6 2011/02/21 sblusk bmaynard
 """
+DaVinci v27r1
 Module for construction of B->D+3H Stripping Selections and StrippingLines.
 Provides functions to build 3H Final states in PiPiPi and KPiPi.
 D candidates are filtered from StdLooseD02HH and StdLooseDplus2XXX.
@@ -22,7 +23,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Steven Blusk', 'Brian Maynard']
 __date__ = '26/07/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 
 __all__ = ('B2D3HAllLinesConf',
@@ -39,16 +40,110 @@ __all__ = ('B2D3HAllLinesConf',
            'StrippingB2D3HNominal'
            )
 
+confdict =  {
+        "PionMinP"             : 2000.,
+        "PionMaxP"             : 500000.,
+        "PionMinPT"            : 200.,
+        "PionMinPTtight"       : 500.,      
+        "PionMinIPChisq"       : 6.25,
+        "PionPiDDLL"           : 12,
+        "KaonMinP"             : 2000.,
+        "KaonMaxP"             : 500000.,
+        "KaonMinPT"            : 200.,
+        "KaonMinPTtight"       : 500.,        
+        "KaonMinIPChisq"       : 6.25,
+        "ProtonMinP"             : 2000.,
+        "ProtonMaxP"             : 500000.,
+        "ProtonMinPT"            : 200.,
+        "ProtonMinIPChisq"       : 6.25,
+        "MinPT"                : 300.,
+        "TrkChisq"             : 4.0,
+        "TrkChisqtight"        : 4.0,        
+        "Bach3HMassWindow"     : 3000,
+        "Bach3HDocaMax"        : 0.6,
+        "Bach3HVtxChisq"       : 8.0,
+        "Bach3HMinPT"          : 1000.0, 
+        "Bach3HIP2PV"          : 0.0,
+        "Bach3HIPChisq2PV"     : 9.0,
+        "Bach3HVtxSepChisq"    : 36.0,
+        "Bach3HDiraPV"         : 0.98,
+        "Bach3HZVtxSep"        : 0.0,
+        "Bach3HDRPV"           : 0.1,
+        "DMinPT"               : 1000,
+        "DVtxChisq"            : 8.0,
+        "DMassWindow"          : 70,
+        "D0MassWindow"         : 70,
+        "DsMassWindow"         : 70,
+        "tightDMassWindow"     : 40,
+        "DDocaMax"             : 0.6,
+        "DIP2PV"               : 0.0,
+        "DIPChisq2PV"          : 4.0,
+        "DVtxSepChisq"         : 49.0,
+        "DDiraPV"              : 0.98,
+        "DZVtxSep"             : 0.0,
+        "DDRPV"                : 0.1,
+        "DStarMassWindow"      : 50,
+        "DStarMinPT"           : 1000,
+        "BMinPT"               : 0.0, 
+        "BVtxChisq"            : 8.0, #was 6.0
+        "BMassWindow"          : 300, 
+        "tightBMassWindow"     : 300,
+        "BIP2PV"               : 0.15,
+        "BIPChisq2PV"          : 16.0,
+        "BVtxSepChisq"         : 25.0,
+        "BDiraPV"              : 0.99994,
+        "BZVtxSep"             : 0.0,
+        "BDZVtxSep"            : -1.0,  
+        "BDRPV"                : 0.1,
+        "MaxTracks"                     : 300,
+        "B2D0PiPiPiAll_Prescale"        : 1.0,
+        "B2D0PiPiPiAll_Postscale"       : 1.0,
+        "B2DPiPiPiAll_Prescale"         : 1.0,
+        "B2DPiPiPiAll_Postscale"        : 1.0,
+        "B2DStarPiPiPiAll_Prescale"     : 1.0,
+        "B2DStarPiPiPiAll_Postscale"    : 1.0,
+        "B2D0PiPiPiSignal_Prescale"     : 1.0,
+        "B2D0PiPiPiSignal_Postscale"    : 1.0,
+        "B2DPiPiPiSignal_Prescale"      : 1.0,
+        "B2DPiPiPiSignal_Postscale"     : 1.0,
+        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
+        "B2DStarPiPiPiSignal_Postscale" : 1.0,
+        "B2D0KPiPiAll_Prescale"         : 1.0,
+        "B2D0KPiPiAll_Postscale"        : 1.0,
+        "B2DKPiPiAll_Prescale"          : 1.0,
+        "B2DKPiPiAll_Postscale"         : 1.0,
+        "B2DStarKPiPiAll_Prescale"      : 1.0,
+        "B2DStarKPiPiAll_Postscale"     : 1.0,
+        "B2D0KPiPiSignal_Prescale"      : 1.0,
+        "B2D0KPiPiSignal_Postscale"     : 1.0,
+        "B2DKPiPiSignal_Prescale"       : 1.0,
+        "B2DKPiPiSignal_Postscale"      : 1.0,
+        "B2DStarKPiPiSignal_Prescale"   : 1.0,
+        "B2DStarKPiPiSignal_Postscale"  : 1.0,
+        "B2DDAll_Prescale"              : 1.0,
+        "B2DDAll_Postscale"             : 1.0,
+        "B2DDSignal_Prescale"           : 1.0,
+        "B2DDSignal_Postscale"          : 1.0,
+        "B2DStarDAll_Prescale"          : 1.0,
+        "B2DStarDAll_Postscale"         : 1.0,
+        "B2DStarDSignal_Prescale"       : 1.0,
+        "B2DStarDSignal_Postscale"      : 1.0,
+        "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
+        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
+        "WSB2D3H_Prescale"              : 0.1,
+        "WSB2D3H_Postscale"             : 1.0
+        }
+
 """
 B->D+3H channels 
 """
 from StrippingConf.StrippingStream import StrippingStream
 from Configurables import FilterDesktop, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
-#from StrippingSelections.Utils import checkConfig
+from StrippingSelections.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from copy import copy
-from StrippingUtils.Utils import LineBuilder , checkConfig  #ADDED LINE
+from StrippingUtils.Utils import LineBuilder  #ADDED LINE
 from CommonParticles import StdLoosePions, StdLooseKaons, StdLooseProtons, StdLooseDplus
 
 
@@ -1747,208 +1842,4 @@ def filterB2D3H( name,
     _bFilter = FilterDesktop('SignalFilter'+name)
     _bFilter.Code = "(" + _dMassCut + " & " + _bMassCut + ")" 
 
-    return Selection ('SignalSel'+name, Algorithm = _bFilter, RequiredSelections = [bSel])    
-
-"""
-def StrippingB2D3HNominal(name="Def") :
-    from StrippingSelections.StrippingB2D3Hnew import B2D3HAllLinesConf as conf
-    config_params =  {
-        "PionMinP"             : 2000.,
-        "PionMaxP"             : 500000.,
-        "PionMinPT"            : 200.,
-        "PionMinPTtight"       : 500.,
-        "PionMinIPChisq"       : 6.5,
-        "PionPiDDLL"           : 10,
-        "KaonMinP"             : 2000.,
-        "KaonMaxP"             : 500000.,
-        "KaonMinPT"            : 200.,
-        "KaonMinPTtight"       : 500.,
-        "KaonMinIPChisq"       : 6.5,
-        "ProtonMinP"             : 2000.,
-        "ProtonMaxP"             : 500000.,
-        "ProtonMinPT"            : 200.,
-        "ProtonMinIPChisq"       : 6.5,       
-        "MinPT"                : 300.,
-        "TrkChisq"             : 6.0,
-        "TrkChisqtight"        : 5.0,
-        "Bach3HMassWindow"     : 2500,
-        "Bach3HDocaMax"        : 0.35,
-        "Bach3HVtxChisq"       : 7.0,
-        "Bach3HMinPT"          : 1000.0, 
-        "Bach3HIP2PV"          : 0.075,
-        "Bach3HIPChisq2PV"     : 11.0,
-        "Bach3HVtxSepChisq"    : 36.0,
-        "Bach3HDiraPV"         : 0.985,
-        "Bach3HZVtxSep"        : 2.0,
-        "Bach3HDRPV"           : 0.15,
-        "DMinPT"               : 1200,
-        "DVtxChisq"            : 7.0,
-        "DMassWindow"          : 100,
-        "D0MassWindow"         : 100,
-        "DsMassWindow"         : 100,
-        "tightDMassWindow"     : 40,
-        "DDocaMax"             : 0.35,
-        "DIP2PV"               : 0.070,
-        "DIPChisq2PV"          : 10.0,
-        "DVtxSepChisq"         : 25.0,
-        "DDiraPV"              : 0.992,
-        "DZVtxSep"             : 2.0,
-        "BDRPV"                : 0.15,
-        "DStarMassWindow"      : 40,
-        "DStarMinPT"           : 1250,
-        "BMinPT"               : 0.0, 
-        "BVtxChisq"            : 7.0,
-        "BMassWindow"          : 250, 
-        "tightBMassWindow"     : 150,
-        "BIP2PV"               : 0.10,
-        "BIPChisq2PV"          : 36.0,
-        "BVtxSepChisq"         : 25.0,
-        "BDiraPV"              : 0.99993,
-        "BZVtxSep"             : 2.0,  
-        "BDZVtxSep"            : -1.0,  
-        "BDRPV"                : 0.15,
-        "MaxTracks"                     : 300,
-        "B2D0PiPiPiAll_Prescale"        : 1.0,
-        "B2D0PiPiPiAll_Postscale"       : 1.0,
-        "B2DPiPiPiAll_Prescale"         : 1.0,
-        "B2DPiPiPiAll_Postscale"        : 1.0,
-        "B2DStarPiPiPiAll_Prescale"     : 1.0,
-        "B2DStarPiPiPiAll_Postscale"    : 1.0,
-        "B2D0PiPiPiSignal_Prescale"     : 1.0,
-        "B2D0PiPiPiSignal_Postscale"    : 1.0,
-        "B2DPiPiPiSignal_Prescale"      : 1.0,
-        "B2DPiPiPiSignal_Postscale"     : 1.0,
-        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
-        "B2DStarPiPiPiSignal_Postscale" : 1.0,
-        "B2D0KPiPiAll_Prescale"         : 1.0,
-        "B2D0KPiPiAll_Postscale"        : 1.0,
-        "B2DKPiPiAll_Prescale"          : 1.0,
-        "B2DKPiPiAll_Postscale"         : 1.0,
-        "B2DStarKPiPiAll_Prescale"      : 1.0,
-        "B2DStarKPiPiAll_Postscale"     : 1.0,
-        "B2D0KPiPiSignal_Prescale"      : 1.0,
-        "B2D0KPiPiSignal_Postscale"     : 1.0,
-        "B2DKPiPiSignal_Prescale"       : 1.0,
-        "B2DKPiPiSignal_Postscale"      : 1.0,
-        "B2DStarKPiPiSignal_Prescale"   : 1.0,
-        "B2DStarKPiPiSignal_Postscale"  : 1.0,
-        "B2DDAll_Prescale"              : 1.0,
-        "B2DDAll_Postscale"             : 1.0,
-        "B2DDSignal_Prescale"           : 1.0,
-        "B2DDSignal_Postscale"          : 1.0,
-        "B2DStarDAll_Prescale"          : 1.0,
-        "B2DStarDAll_Postscale"         : 1.0,
-        "B2DStarDSignal_Prescale"       : 1.0,
-        "B2DStarDSignal_Postscale"      : 1.0,
-        "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
-        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
-        "WSB2D3H_Prescale"              : 0.1,
-        "WSB2D3H_Postscale"             : 1.0
-        }
-
-    
-    b2d3h = conf(name,config_params)
-
-    return b2d3h
-"""
-
-def StrippingB2D3HLoose(name='Loose') :
-    from StrippingSelections.StrippingB2D3H import B2D3HAllLinesConf as conf
-    config_params =  {
-        "PionMinP"             : 2000.,
-        "PionMaxP"             : 500000.,
-        "PionMinPT"            : 200.,
-        "PionMinPTtight"       : 500.,      
-        "PionMinIPChisq"       : 6.25,
-        "PionPiDDLL"           : 12,
-        "KaonMinP"             : 2000.,
-        "KaonMaxP"             : 500000.,
-        "KaonMinPT"            : 200.,
-        "KaonMinPTtight"       : 500.,        
-        "KaonMinIPChisq"       : 6.25,
-        "ProtonMinP"             : 2000.,
-        "ProtonMaxP"             : 500000.,
-        "ProtonMinPT"            : 200.,
-        "ProtonMinIPChisq"       : 6.25,
-        "MinPT"                : 300.,
-        "TrkChisq"             : 4.0,
-        "TrkChisqtight"        : 4.0,        
-        "Bach3HMassWindow"     : 3000,
-        "Bach3HDocaMax"        : 0.6,
-        "Bach3HVtxChisq"       : 8.0,
-        "Bach3HMinPT"          : 1000.0, 
-        "Bach3HIP2PV"          : 0.0,
-        "Bach3HIPChisq2PV"     : 9.0,
-        "Bach3HVtxSepChisq"    : 36.0,
-        "Bach3HDiraPV"         : 0.98,
-        "Bach3HZVtxSep"        : 0.0,
-        "Bach3HDRPV"           : 0.1,
-        "DMinPT"               : 1000,
-        "DVtxChisq"            : 8.0,
-        "DMassWindow"          : 80,
-        "D0MassWindow"         : 80,
-        "DsMassWindow"         : 70,
-        "tightDMassWindow"     : 40,
-        "DDocaMax"             : 0.6,
-        "DIP2PV"               : 0.0,
-        "DIPChisq2PV"          : 4.0,
-        "DVtxSepChisq"         : 49.0,
-        "DDiraPV"              : 0.98,
-        "DZVtxSep"             : 0.0,
-        "DDRPV"                : 0.1,
-        "DStarMassWindow"      : 50,
-        "DStarMinPT"           : 1000,
-        "BMinPT"               : 0.0, 
-        "BVtxChisq"            : 8.0, #was 6.0
-        "BMassWindow"          : 300, 
-        "tightBMassWindow"     : 300,
-        "BIP2PV"               : 0.15,
-        "BIPChisq2PV"          : 16.0,
-        "BVtxSepChisq"         : 25.0,
-        "BDiraPV"              : 0.99994,
-        "BZVtxSep"             : 0.0,
-        "BDZVtxSep"            : -1.0,  
-        "BDRPV"                : 0.1,
-        "MaxTracks"                     : 300,
-        "B2D0PiPiPiAll_Prescale"        : 1.0,
-        "B2D0PiPiPiAll_Postscale"       : 1.0,
-        "B2DPiPiPiAll_Prescale"         : 1.0,
-        "B2DPiPiPiAll_Postscale"        : 1.0,
-        "B2DStarPiPiPiAll_Prescale"     : 1.0,
-        "B2DStarPiPiPiAll_Postscale"    : 1.0,
-        "B2D0PiPiPiSignal_Prescale"     : 1.0,
-        "B2D0PiPiPiSignal_Postscale"    : 1.0,
-        "B2DPiPiPiSignal_Prescale"      : 1.0,
-        "B2DPiPiPiSignal_Postscale"     : 1.0,
-        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
-        "B2DStarPiPiPiSignal_Postscale" : 1.0,
-        "B2D0KPiPiAll_Prescale"         : 1.0,
-        "B2D0KPiPiAll_Postscale"        : 1.0,
-        "B2DKPiPiAll_Prescale"          : 1.0,
-        "B2DKPiPiAll_Postscale"         : 1.0,
-        "B2DStarKPiPiAll_Prescale"      : 1.0,
-        "B2DStarKPiPiAll_Postscale"     : 1.0,
-        "B2D0KPiPiSignal_Prescale"      : 1.0,
-        "B2D0KPiPiSignal_Postscale"     : 1.0,
-        "B2DKPiPiSignal_Prescale"       : 1.0,
-        "B2DKPiPiSignal_Postscale"      : 1.0,
-        "B2DStarKPiPiSignal_Prescale"   : 1.0,
-        "B2DStarKPiPiSignal_Postscale"  : 1.0,
-        "B2DDAll_Prescale"              : 1.0,
-        "B2DDAll_Postscale"             : 1.0,
-        "B2DDSignal_Prescale"           : 1.0,
-        "B2DDSignal_Postscale"          : 1.0,
-        "B2DStarDAll_Prescale"          : 1.0,
-        "B2DStarDAll_Postscale"         : 1.0,
-        "B2DStarDSignal_Prescale"       : 1.0,
-        "B2DStarDSignal_Postscale"      : 1.0,
-        "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
-        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
-        "WSB2D3H_Prescale"              : 0.1,
-        "WSB2D3H_Postscale"             : 1.0
-        }
-
-
-    b2d3h = conf(name,config_params)
-
-    return b2d3h
+    return Selection ('SignalSel'+name, Algorithm = _bFilter, RequiredSelections = [bSel])
