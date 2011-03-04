@@ -1348,8 +1348,7 @@ class Hlt2Line(object):
             #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
             #  VELO on the other hand is dangerous during 'velo open' running...
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
-            #  add 4BsMuMu to ignore the non GEC Hlt1XYZ4BsMuMu lines
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!.*4BsMuMu).*Decision')"
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo).*Decision')"
 
 
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
