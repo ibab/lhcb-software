@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Thomas Blake
+ - Updated StrippingB2HHPi0 due to problem with mulitple instantiations.
+  . Added tests/test_B2HHPi0.py
+ - Updated StrippingB2hhLTUnbiased.py to remove hard coded  name = '...' 
+
+
 ! 2011-03-04 - Juan Palacios
  - Changed buildStream so it can take DB or dicitonary as well as stripping
    configuration string.

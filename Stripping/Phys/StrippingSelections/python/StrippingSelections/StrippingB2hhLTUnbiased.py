@@ -29,7 +29,7 @@ from StrippingUtils.Utils import LineBuilder
 #import GaudiKernel.SystemOfUnits as Units
 #from GaudiKernel.PhysicalConstants import c_light
 
-name = "B2hhLTUnbiased"
+default_name = "B2hhLTUnbiased"
 
 
 class StrippingB2hhLTUnbiasedConf(LineBuilder):

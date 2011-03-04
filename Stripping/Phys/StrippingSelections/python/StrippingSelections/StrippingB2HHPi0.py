@@ -42,7 +42,6 @@ class StrippingB2HHPi0Conf(LineBuilder) :
 			       ,'MergedLinePostscale'
 			       ,'ResolvedLinePrescale'
 			       ,'ResolvedLinePostscale'
-			       ,'prefix'
                                )
 
 ##############################################################
@@ -55,31 +54,31 @@ class StrippingB2HHPi0Conf(LineBuilder) :
 	myResolvedPi0 = StdLooseResolvedPi0
         #---------------------------------------
         # hh selection
-        self.selrho = makeB2HHPi0rho( 'B2HHPi0_rho',
+        self.selrho = makeB2HHPi0rho( name + '_rho',
                                       config,
                                       DecayDescriptor = 'rho(770)0 -> pi+ pi-',
 				      inputSel = [myPions]
                                       )
         #---------------------------------------
         # B -> HHPi0 selections
-	self.selresolved = makeB2HHPi0R( 'B2HHPi0R',
+	self.selresolved = makeB2HHPi0R( name + 'R',
 	                                 config,
 					 DecayDescriptor = 'B0 -> rho(770)0 pi0',
 					 inputSel = [self.selrho, myResolvedPi0]
                                          )				       
-	self.selmerged = makeB2HHPi0M( 'B2HHPi0M',
+	self.selmerged = makeB2HHPi0M( name + 'M',
 	                               config,
 				       DecayDescriptor = 'B0 -> rho(770)0 pi0',
 				       inputSel = [self.selrho, myMergedPi0]
                                        )
         #---------------------------------------
         # Stripping lines
-        self.B2HHPi0R_line = StrippingLine("%(prefix)s_R" %locals()['config'],
+        self.B2HHPi0R_line = StrippingLine(name + "_R" %locals()['config'],
                                            prescale = config['ResolvedLinePrescale'],
                                            postscale = config['ResolvedLinePostscale'],
                                            selection = self.selresolved
                                            )
-        self.B2HHPi0M_line = StrippingLine("%(prefix)s_M" %locals()['config'],
+        self.B2HHPi0M_line = StrippingLine(name + "_M" %locals()['config'],
                                            prescale = config['MergedLinePrescale'],
                                            postscale = config['MergedLinePostscale'],
                                            selection = self.selmerged
