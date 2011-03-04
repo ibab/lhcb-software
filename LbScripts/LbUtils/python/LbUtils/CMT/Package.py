@@ -1,7 +1,6 @@
 # local imports
-from Common import setCMTPathEnv, doesDirMatchNameAndVersion, isDirSelected
-from Common import addCMTTag, CMTLog
 
+import Common
 
 
 # package imports
@@ -48,7 +47,7 @@ class Package(object):
             self._parentprojectpath = self.parentProjectPath()
             if self._parentprojectpath :
                 strtoremove = self._parentprojectpath + os.sep
-                self._location = self._location.replace(strtoremove,"")            
+                self._location = self._location.replace(strtoremove,"")
         return self._location
     def fullLocation(self):
         return self._fulllocation
@@ -78,11 +77,11 @@ class Package(object):
 #                        words = line.split()
 #                        self._parentprojectpath = os.path.realpath(words[-2].replace(")",""))
                 for line in p.stderr:
-                    CMTLog(line[:-1])
+                    Common.CMTLog(line[:-1])
                 retcode = os.waitpid(p.pid, 0)[1]
                 if retcode != 0:
                     log.warning("return code of 'cmt show project' in %s is %s", wdir, retcode)
-                                
+
         return self._parentprojectpath
     def version(self):
         """ Get the version of the package given by "cmt show version" """
@@ -96,11 +95,11 @@ class Package(object):
             for line in p.stdout:
                 self._version = line[:-1]
             for line in p.stderr:
-                CMTLog(line[:-1])
+                Common.CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0:
                 log.warning("return code of 'cmt show version' in %s is %s", wdir, retcode)
-            
+
         return self._version
 
     def realVersion(self):
@@ -119,7 +118,7 @@ class Package(object):
                             self._realversion = words[1]
                             log.debug("Found version %s in file %s" % (self._realversion, fname))
                             break
-                f.close()            
+                f.close()
         return self._realversion
 
     def hasVersionDirectory(self):
@@ -128,17 +127,17 @@ class Package(object):
         if lastdir == self.realVersion():
             versiondir = True
         return versiondir
-    
+
     def coreName(self):
         if self._corename is None:
             self._corename = self.getMacroValue("package")
             if self._corename == self.realVersion() :
                 if self.hasVersionDirectory() :
-                    self._corename = self.location().split(os.sep)[-2]                    
+                    self._corename = self.location().split(os.sep)[-2]
                 else :
                     self._corename = self.location().split(os.sep)[-1]
         return self._corename
-    
+
     def name(self):
         if self._name is None :
             self._name = self.location()
@@ -188,7 +187,7 @@ class Package(object):
         else :
             env["CMTCONFIG"] = binary
             if binary.find("win32") != -1 and sys.platform != "win32" :
-                addCMTTag("WIN32", env)
+                Common.addCMTTag("WIN32", env)
         if self._constituents is None :
             self._constituents = dict()
         if self._allconstituents is None :
@@ -209,7 +208,7 @@ class Package(object):
             log.debug("Found %s constituents in %s for binary %s" % (len(self._constituents[binary]), self.name(), binary) )
 
         return self._constituents[binary]
-    
+
     def constituents(self, binary_list=None):
         if self._constituents is None :
             self._constituents = dict()
@@ -219,19 +218,19 @@ class Package(object):
             if not self._constituents.has_key(b) :
                 self._constituents[b] = self.binaryConstituents(b)
         return self._constituents
-    
+
     def hasBinaryConstituents(self, binary="default"):
         if self.binaryConstituents(binary) :
             return True
         else :
             return False
-    
+
     def _setCMTPathEnv(self, cmtpath=None, cmtprojectpath=None):
         if cmtpath is None:
             cmtpath = self.parentProjectPath()
-        setCMTPathEnv(cmtpath, cmtprojectpath)
+        Common.setCMTPathEnv(cmtpath, cmtprojectpath)
 
-    
+
     def binaryUsedPackages(self, cmtpath=None, cmtprojectpath=None, binary="default"):
         env = Env.getDefaultEnv()
         log = logging.getLogger()
@@ -242,12 +241,12 @@ class Package(object):
         else :
             env["CMTCONFIG"] = binary
             if binary.find("win32") != -1 and sys.platform != "win32" :
-                addCMTTag("WIN32", env)
+                Common.addCMTTag("WIN32", env)
         if self._usedpaklist is None :
             self._usedpaklist = dict()
         if self._allusedpaklist is None :
             self._allusedpaklist = Set()
-        indx = cmtpath, cmtprojectpath, binary 
+        indx = cmtpath, cmtprojectpath, binary
         if not self._usedpaklist.has_key(indx):
             self._usedpaklist[indx] = Set()
         if not self._usedpaklist[indx] :
@@ -287,22 +286,22 @@ class Package(object):
                         else :
                             packagelist.add(self.__class__(thepack, parentprojectpath=parentprojectpath))
             for line in p.stderr:
-                CMTLog(line[:-1])
+                Common.CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0:
                 log.warning("return code of 'cmt show uses' in %s is %s", wdir, retcode)
             for pak in packagelist :
                 if binary == "default" :
                     self._usedpaklist[indx].add(pak)
-                    self._allusedpaklist.add(pak)                    
+                    self._allusedpaklist.add(pak)
                 else :
 #                    if  pak.hasBinaryConstituents(binary):
                     self._usedpaklist[indx].add(pak)
                     self._allusedpaklist.add(pak)
         return self._usedpaklist[indx]
-                
-    def usedPackages(self, binary_list=None, cmtprojectpath=None, cmtpath=None): 
-        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+
+    def usedPackages(self, binary_list=None, cmtprojectpath=None, cmtpath=None):
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path)
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         if self._usedpaklist is None:
             self._usedpaklist = dict()
@@ -320,7 +319,7 @@ class Package(object):
         if self._usedbybinary is None :
             self._usedbybinary = Set()
         self._usedbybinary.add(binary)
-        
+
     def usedByBinary(self):
         return self._usedbybinary
 
@@ -339,12 +338,12 @@ class Package(object):
         else :
             env["CMTCONFIG"] = binary
             if binary.find("win32") != -1 and sys.platform != "win32" :
-                addCMTTag("WIN32", env)
+                Common.addCMTTag("WIN32", env)
         if self._extpaklist is None :
             self._extpaklist = dict()
         if self._allextpaklist is None :
             self._allextpaklist = Set()
-        indx = cmtpath, cmtprojectpath, binary 
+        indx = cmtpath, cmtprojectpath, binary
         if not self._extpaklist.has_key(indx):
             self._extpaklist[indx] = Set()
         if not self._extpaklist[indx] :
@@ -355,7 +354,7 @@ class Package(object):
         return self._extpaklist[indx]
 
     def externalPackages(self, cmtprojectpath=None, cmtpath=None, binary_list=None):
-        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path)
         self._setCMTPathEnv(cmtpath, cmtprojectpath)
         if self._extpaklist is None:
             self._extpaklist = dict()
@@ -380,7 +379,7 @@ class Package(object):
         p = Popen(["cmt", "show", "macro_value", macro_name], stdout=PIPE, stderr=PIPE, close_fds=True)
         macro_val = p.stdout.read()[:-1]
         for line in p.stderr:
-            CMTLog(line[:-1])
+            Common.CMTLog(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         if retcode != 0:
             log.debug("return code of 'cmt show macro_value %s' in %s is %s" % (macro_name, wdir, retcode))
@@ -397,13 +396,13 @@ class Package(object):
         p = Popen(["cmt", "show", "set_value", set_name], stdout=PIPE, stderr=PIPE, close_fds=True)
         set_val = p.stdout.read()[:-1]
         for line in p.stderr:
-            CMTLog(line[:-1])
+            Common.CMTLog(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         if retcode != 0:
             log.debug("return code of 'cmt show set_value %s' in %s is %s" % (set_name, wdir, retcode))
         os.chdir(here)
         return set_val
-        
+
 def hasRequirementsFile(dirpath):
     hasfile = False
     log = logging.getLogger()
@@ -456,10 +455,10 @@ def getPackagesFromDir(directory, name=None, version=None, casesense=True, selec
                 tmpack = pkgclass(root, parentproject)
                 if name is None :
                     tobeadded = True
-                elif doesDirMatchNameAndVersion(root, name, version, casesense) :
+                elif Common.doesDirMatchNameAndVersion(root, name, version, casesense) :
                     tobeadded = True
                 if select is not None and tobeadded:
-                    if isDirSelected(root, select, casesense):
+                    if Common.isDirSelected(root, select, casesense):
                         tobeadded = True
                 if tobeadded :
                     paklist.add(tmpack)

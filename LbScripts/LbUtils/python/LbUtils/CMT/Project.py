@@ -1,15 +1,15 @@
 
 # local import
 from Package import Package, getPackagesFromDir
-from Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
-from Common import CMTLog
+import Common
+
 
 # package imports
 from LbUtils import Env
 from LbUtils.Set import Set
 from LbUtils.afs.directory import isAFSDir, Directory, isMountPoint
 
-from LbUtils import versionSort
+from LbUtils.Common import versionSort
 
 # global import
 import logging
@@ -89,7 +89,7 @@ class Project(object):
             line = p.stdout.readline()[:-1]
             self._name = line.split()[0]
             for line in p.stderr:
-                CMTLog(line[:-1])
+                Common.CMTLog(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0 :
                 log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
@@ -130,7 +130,7 @@ class Project(object):
                 cmtprojectpath = os.sep.join(tmlist[:-1])
             else :
                 cmtprojectpath = os.sep.join(tmlist[:-2])
-        setCMTPathEnv(cmtpath, cmtprojectpath)
+        Common.setCMTPathEnv(cmtpath, cmtprojectpath)
         return cmtprojectpath
 
     def base(self, cmtpath=None, cmtprojectpath=None):
@@ -157,7 +157,7 @@ class Project(object):
                             if m :
                                 self._baselist.add(self.__class__(m.group(1)))
             for line in p.stderr:
-                CMTLog(line[:-1])
+                Common.CMTLog(line[:-1])
             os.waitpid(p.pid, 0)[1]
         return self._baselist
 
@@ -440,10 +440,10 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
             fullname = os.path.join(path,f)
             if isProject(fullname):
                 tobeadded = False
-                if doesDirMatchNameAndVersion(fullname, name, version, casesense) :
+                if Common.doesDirMatchNameAndVersion(fullname, name, version, casesense) :
                     tobeadded = True
                 if select is not None and tobeadded:
-                    if isDirSelected(fullname, select, casesense):
+                    if Common.isDirSelected(fullname, select, casesense):
                         tobeadded = True
                     else :
                         tobeadded = False
@@ -458,10 +458,10 @@ def getProjectsFromPath(path, name=None, version=None, casesense=False, select=N
                     fn = os.path.join(fullname, ff)
                     if isProject(fn):
                         tobeadded = False
-                        if doesDirMatchNameAndVersion(fn, name, version, casesense) :
+                        if Common.doesDirMatchNameAndVersion(fn, name, version, casesense) :
                             tobeadded = True
                         if select is not None and tobeadded:
-                            if isDirSelected(fn, select, casesense):
+                            if Common.isDirSelected(fn, select, casesense):
                                 tobeadded = True
                             else :
                                 tobeadded = False
@@ -490,10 +490,10 @@ def getProjectsFromDir(directory, name=None, version=None, casesense=True, selec
                 tmproj = prjclass(root)
                 if name is None :
                     tobeadded = True
-                elif doesDirMatchNameAndVersion(root, name, version, casesense) :
+                elif Common.doesDirMatchNameAndVersion(root, name, version, casesense) :
                     tobeadded = True
                 if select is not None and tobeadded:
-                    if isDirSelected(root, select, casesense):
+                    if Common.isDirSelected(root, select, casesense):
                         tobeadded = True
                 if tobeadded :
                     projlist.add(tmproj)
@@ -613,4 +613,11 @@ def walk(top, topdown=True, toclients=False,
         yield (proj, deps, packs)
 
 
+def CMTWhich(project, package=None, version=None, all_occurences=False):
+    """ function to extract the project or package class"""
+    prj = findProject(os.environ["CMTPROJECTPATH"], project, version, casesense=True)
+    if not prj :
+        # if nothing has been found try to use package as a version
+        prj = findProject(os.environ["CMTPROJECTPATH"], project, package, casesense=True)
 
+    return prj

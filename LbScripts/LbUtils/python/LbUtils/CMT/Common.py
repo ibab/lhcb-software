@@ -1,7 +1,4 @@
-
 # package import
-from LbUtils.CMT.Project import findProject
-
 from LbUtils.Env import getDefaultEnv
 from LbUtils.Processes import callCommand
 
@@ -143,13 +140,3 @@ def CMTCommand(*args, **kwargs) :
 def CMTWrap(project, package, version=None, *cmtargs):
     """ command wrapper which execute the command in the cmt directory of the project or package """
     pass
-
-
-def CMTWhich(project, package=None, version=None, all_occurences=False):
-    """ function to extract the project or package class"""
-    prj = findProject(os.environ["CMTPROJECTPATH"], project, version, casesense=True)
-    if not prj :
-        # if nothing has been found try to use package as a version
-        prj = findProject(os.environ["CMTPROJECTPATH"], project, package, casesense=True)
-
-    return prj
