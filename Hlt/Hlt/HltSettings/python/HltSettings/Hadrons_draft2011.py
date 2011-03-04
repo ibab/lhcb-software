@@ -37,7 +37,9 @@ class Hadrons_draft2011 :
             'Hlt2Bd2KstGammaWideBMass',
             'Hlt2Bd2KstGammaWideKMass',
             # HHPi0
-            'Hlt2B2HHPi0_Merged'
+            'Hlt2B2HHPi0_Merged',
+            # B2HH
+            'Hlt2B2HH'   
             ]
 
         # For inclusive phi extend using Albert's new setting
