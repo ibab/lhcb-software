@@ -525,6 +525,9 @@ class StrippingLine(object):
 #            raise AttributeError, "The line %s does not define valid output " % self.subname()
         return self._outputloc
 
+    def prescale( self ) :
+        return self._prescale
+
     def clone ( self , name , **args ) :
         """
         Clone the line
