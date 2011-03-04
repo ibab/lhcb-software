@@ -6,6 +6,11 @@ __date__ = "30/06/2010"
 
 __all__ = ('lineBuilder')
 
+from StrippingSettings.Utils import lineBuilderConfiguration
+from StrippingSettings.Utils import strippingConfiguration
+
+def checkConfig(reference_keys, configuration) :
+    pass
 def lineBuilder(stripping, lineBuilderName) :
     """
     Create a line builder from a stripping version and a line builder
@@ -15,8 +20,55 @@ def lineBuilder(stripping, lineBuilderName) :
     print lb.lines()
     """
     from StrippingSelections import lineBuilders
-    from StrippingSettings.Utils import lineBuilderConfiguration
-    _config = lineBuilderConfiguration(stripping, lineBuilderName)
+    if isinstance(stripping, basestring) :
+        _config = lineBuilderConfiguration(stripping, lineBuilderName)
+    else :
+        _config = stripping[lineBuilderName]
 
     return lineBuilders()[_config['BUILDERTYPE']](lineBuilderName,
                                                   _config['CONFIG'])
+
+def buildStreams(stripping) :
+    """
+    Build and return a set of StrippingStreams for a given stripping
+    configuration.
+    Usage:
+
+    >>> streams = buildStreams('Stripping13')
+    >>> for s in streams :
+    ...   print s.name(), s.lines
+
+
+    It is also possible to use a configuration dictionary directly:
+
+    >>> conf = strippingConfiguration('Stripping13')
+    >>> streams = buildStreams(conf)
+    
+    """
+    from StrippingConf.StrippingStream import StrippingStream
+    streams = {}
+    if isinstance(stripping, basestring) :
+        scdb = strippingConfiguration(stripping)
+    else :
+        scdb = stripping    
+    for k, v in scdb.iteritems() :
+        if 'STREAMS' in v.keys() :
+            for stream in v['STREAMS'] :
+                if stream in streams.keys() :
+                    streams[stream] += [k]
+                else :
+                    streams[stream] = [k]
+        else :
+            print 'ERROR: config',k,'had no STREAMS data. Ignore!!!'
+    builderMap = {}
+    for builder in scdb.keys() :
+        builderMap[builder] = lineBuilder(scdb, builder)
+
+    strippingStreams=[]
+    for stream, builderNames in streams.iteritems() :
+        lines=[]
+        for b in builderNames :
+            lines +=  [line for line in builderMap[b].lines()] 
+        print 'Creating steam', stream, 'with lines', lines
+        strippingStreams.append(StrippingStream(stream, Lines = lines))
+    return strippingStreams

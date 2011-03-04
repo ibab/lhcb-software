@@ -4,6 +4,23 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-04 - Juan Palacios
+ - Add function StrippingSelections.Utils.buildStreams, returns set of
+   Strippingstreams for a given configuration:
+    Build and return a set of StrippingStreams for a given stripping
+    configuration.
+    Usage:
+
+    >>> streams = buildStreams('Stripping13')
+    >>> for s in streams :
+    ...   print s.name(), s.lines
+
+
+    It is also possible to use a configuration dictionary directly:
+
+    >>> conf = strippingConfiguration('Stripping13')
+    >>> streams = buildStreams(conf)
+
 ! 2011-03-04 - Thomas Blake
  - Updated lines to import checkConfig from StrippingUtils
  - Removed Stripping StrippingB2DiMuonX.py
