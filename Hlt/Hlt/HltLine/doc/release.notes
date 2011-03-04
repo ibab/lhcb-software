@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-03-04 - Johannes Albrecht
+ - remove obsolete 4BsMuMu as HLT filter in HltLine
+
 !========================== HltLine v5r1  2011-03-01 ===================
 ! 2011-03-01 - Gerhard Raven
  - HltLine now recognizes TracksOutContainer as an output specifier
