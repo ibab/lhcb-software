@@ -3,20 +3,25 @@
 #include "dis.hxx"
 MonSys::MonSys()
 {
-  Subsyslist.clear();
+  Subsyslist = new std::vector<MonSubSys*>;
+  Subsyslist->clear();
 }
 MonSys::~MonSys()
 {
-  std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
-  {
-    delete *Iter;
-  }
-  Subsyslist.clear();
+//  std::vector <MonSubSys *>::iterator Iter;
+//  if (Subsyslist->size() > 0)
+//  {
+//    for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
+//   {
+//      delete *Iter;
+//    }
+//    Subsyslist->clear();
+//  }
+  delete Subsyslist;
 }
 void MonSys::addSubSys(MonSubSys *ss)
 {
-  Subsyslist.insert(Subsyslist.end(),ss);
+  Subsyslist->insert(Subsyslist->end(),ss);
 //  ss->setup((char*)m_name.c_str());
 }
 void MonSys::start()
@@ -25,7 +30,7 @@ void MonSys::start()
   DimServer::autoStartOn();
   DimServer::start(m_name.c_str());
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
@@ -36,7 +41,7 @@ void MonSys::stop()
 {
   DimServer::autoStartOff();
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
@@ -46,11 +51,11 @@ void MonSys::stop()
 void MonSys::remSubSys(MonSubSys *ss)
 {
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     if (*Iter == ss)
     {
-      Subsyslist.erase(Iter);
+      Subsyslist->erase(Iter);
       break;
     }
   }
@@ -60,7 +65,7 @@ void MonSys::Lock()
   std::vector <MonSubSys *>::iterator Iter;
 //  printf("Monitor System Locking\n");
   int i=0;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
 	MonSubSys *ss;
     ss = *Iter;
@@ -74,7 +79,7 @@ void MonSys::unLock()
   std::vector <MonSubSys *>::iterator Iter;
   int i=0;
 //  printf("Monitor System Un-Locking\n");
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
 	MonSubSys *ss;
     ss = *Iter;
@@ -108,7 +113,7 @@ MonSys *MonSys::setup(char *n)
 void MonSys::Clear()
 {
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
@@ -118,7 +123,7 @@ void MonSys::Clear()
 void MonSys::EORUpdate(int runo)
 {
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
@@ -128,7 +133,7 @@ void MonSys::EORUpdate(int runo)
 void MonSys::List()
 {
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
@@ -138,7 +143,7 @@ void MonSys::List()
 void MonSys::setRunNo(int runo)
 {
   std::vector <MonSubSys *>::iterator Iter;
-  for ( Iter = Subsyslist.begin( ) ; Iter != Subsyslist.end( ) ; Iter++ )
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
   {
     MonSubSys *ss;
     ss = *Iter;
