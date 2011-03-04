@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-03-04 - Chris Jones
+ - Add missing !HltMode to use of condition("RadiatorComposition") and some
+   basic protection against null pointer dereferencing
+
 ! 2011-02-27 - Chris Jones
  - Adapt to changes in RichSmartID class.
 

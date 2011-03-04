@@ -189,6 +189,8 @@ protected:
                            SmartRef<Condition> cond,
                            const std::string& Rvector ) const;
 
+public:
+
   /// Access HPD Panels on demand
   DeRichHPDPanel * hpdPanel( const Rich::Side panel ) const;
 

@@ -264,7 +264,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
     // debug printout
     verbose() << "PD     " << (int)hpdID << " " << hpdID
-              << " HPDhardID " << hardID << " L0 " << L0ID << " L1 board " << L1ID
+              << " HPDhardID " << hardID << " L0 " << L0ID << " L1 HardID " << L1ID
               << " L1 input " << L1IN << endmsg;
 
     // Sanity checks that this HPD is not already in the maps

@@ -118,7 +118,7 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   // scale factor
-  if ( hasCondition( "RadiatorComposition" ) )
+  if ( hasCondition( "RadiatorComposition" ) && !HltMode )
   {
     updMgrSvc()->registerCondition( this, condition("RadiatorComposition").path(),
                                     &DeRichGasRadiator::updateProperties );
@@ -223,12 +223,24 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   if ( gasParamCond )
   {
     curPressure = gasParamCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
-    curTemp = gasParamCond->param<double>("Temperature") * Gaudi::Units::kelvin;
+    curTemp     = gasParamCond->param<double>("Temperature") * Gaudi::Units::kelvin;
   }
   else // use the old conditions
   {
-    curPressure = m_pressureCond->param<double>("CurrentPressure");
-    curTemp     = m_temperatureCond->param<double>("CurrentTemperature");
+    if ( m_pressureCond )
+    { curPressure = m_pressureCond->param<double>("CurrentPressure"); }
+    else 
+    { 
+      error() << "Old CurrentPressure Condition missing !!" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    if ( m_temperatureCond )
+    { curTemp     = m_temperatureCond->param<double>("CurrentTemperature"); }
+    else 
+    { 
+      error() << "Old CurrentTemperature Condition missing !!" << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
 
   // (n-1) scale factor
