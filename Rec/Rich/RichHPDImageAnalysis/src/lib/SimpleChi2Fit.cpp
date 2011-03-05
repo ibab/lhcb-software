@@ -29,20 +29,14 @@ double SimpleChi2Fit::operator()( const std::vector<double>& par ) const
 {
   double chi2 = 0.0;
 
-  //std::cout << "Params " << par[0] << " " << par[1] << " " << par[2] << std::endl;
-
   for ( Pixel::List::const_iterator iter = m_boundary.begin();
         iter != m_boundary.end(); ++iter )
   {
-    //std::cout << "  Pixel " << iter->col << " " << iter->row << std::endl;
-
     const double deltaCol = ( 1.0  * iter->col ) - par[0];
     const double deltaRow = ( m_sf * iter->row ) - par[1];
     const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
     chi2 += std::pow( dist - par[2] , 2 ) * 12.0;
-
   }
 
-  //std::cout << "Chi^2 = " << chi2 << std::endl;
   return chi2 ;
 }

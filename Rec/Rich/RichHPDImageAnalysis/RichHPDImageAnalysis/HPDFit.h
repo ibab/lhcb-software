@@ -67,12 +67,12 @@ namespace Rich
         void setRadAndErr( const double val, const double err ) { m_rad = val; m_radErr = err; }
         void setBoundaryPixels( const Pixel::List& pixels ) { m_boundaryPixels = pixels; }
       public:
-        double row()    const { return m_row;    }
-        double rowErr() const { return m_rowErr; }
-        double col()    const { return m_col;    }
-        double colErr() const { return m_colErr; }
-        double radInPix()    const { return m_col;    }
-        double radErrInPix() const { return m_colErr; }
+        double row()         const { return m_row;    }
+        double rowErr()      const { return m_rowErr; }
+        double col()         const { return m_col;    }
+        double colErr()      const { return m_colErr; }
+        double radInPix()    const { return m_rad;    }
+        double radErrInPix() const { return m_radErr; }
         const Pixel::List& boundaryPixels() const { return m_boundaryPixels; }
       public:
         double x()    const { return -1.0*(m_col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx); }
