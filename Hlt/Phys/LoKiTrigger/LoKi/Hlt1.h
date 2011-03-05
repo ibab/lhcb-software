@@ -286,30 +286,30 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class RvSelection 
+    /** @class VxSelection 
      *  simple functor which acts as a source for the vertices
      *  Vertices are extracted from Hlt::IData
      *  @see Hlt::IData
      *  @see Hlt::IUnit
-     *  @see LoKi::Cuts::RvSELECTION
+     *  @see LoKi::Cuts::VxSELECTION
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class RvSelection : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Source
+    class VxSelection : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Source
     {
       // ======================================================================
     public:
       // ======================================================================
       /// constructor from the selection 
-      RvSelection ( const Hlt::TSelection<LHCb::RecVertex>* selection ) ;
+      VxSelection ( const Hlt::TSelection<LHCb::RecVertex>* selection ) ;
       /// constructor from the selection 
-      RvSelection ( const std::string&  selection ) ;
+      VxSelection ( const std::string&  selection ) ;
       /// constructor from the selection 
-      RvSelection ( const Hlt::Selection* selection ) ;
+      VxSelection ( const Hlt::Selection* selection ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~RvSelection() {}
+      virtual ~VxSelection() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  RvSelection* clone() const { return new RvSelection(*this) ; }
+      virtual  VxSelection* clone() const { return new VxSelection(*this) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ()  const ;
       /// OPTIONAL: the nice printout
@@ -326,7 +326,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// default constructor is disabled
-      RvSelection () ;
+      VxSelection () ;
       // ======================================================================
     private:
       // ======================================================================
@@ -336,26 +336,26 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class RvRegister
+    /** @class VxSink
      *  simple functor which register its input in Hlt Store 
      *  Vertices are copied to Hlt::IData
      *  @see IHltDataSvc
      *  @see Hlt::IUnit
-     *  @see LoKi::Cuts::RvREGISTER
+     *  @see LoKi::Cuts::VxSINK
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class RvRegister : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe
+    class VxSink : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Pipe
     {
       // ======================================================================
     public:
       // ======================================================================
       /// constructor from the selection 
-      RvRegister ( const std::string&  selection ) ;
+      VxSink ( const std::string&  selection ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~RvRegister() {}
+      virtual ~VxSink() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  RvRegister* clone() const { return new RvRegister(*this) ; }
+      virtual  VxSink* clone() const { return new VxSink(*this) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a )  const ;
       /// OPTIONAL: the nice printout
@@ -373,7 +373,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// default constructor is disabled
-      RvRegister() ;
+      VxSink() ;
       // ======================================================================
     private:
       // ======================================================================

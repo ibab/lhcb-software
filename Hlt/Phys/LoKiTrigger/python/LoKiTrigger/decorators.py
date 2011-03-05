@@ -175,7 +175,6 @@ def _decorate ( name = _name  ) :
         LoKi.Functor         ( 'void' , vT )   , ## the base
         LoKi.Dicts.SourceOps ( tT     , tT )   ) ## call-traits
 
-
     # =========================================================================
     ## LHCb::VertexBase specifics 
     # =========================================================================
@@ -201,7 +200,12 @@ def _decorate ( name = _name  ) :
         name                                   , ## module name  
         LoKi.Functor       ( vV , vV )         , ## the base
         LoKi.Dicts.PipeOps ( tV , tV )         ) ## call-traits
-    
+
+    # 'source' : void -> vector<T>    
+    _decorated |= _LoKiCore.getAndDecorateSources  (  
+        name                                   , ## module name  
+        LoKi.Functor         ( 'void' , vV )   , ## the base
+        LoKi.Dicts.SourceOps ( tV     , tV )   ) ## call-traits
 
     # =========================================================================
     ## various "info" operations

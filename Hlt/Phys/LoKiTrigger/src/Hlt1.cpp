@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// boost
+// ============================================================================
+#include <boost/foreach.hpp>
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
@@ -363,9 +367,9 @@ std::ostream& LoKi::Hlt1::TrRegister::fillStream ( std::ostream& s ) const
 // ==========================================================================
 // constructor from the selection 
 // ============================================================================
-LoKi::Hlt1::RvSelection::RvSelection 
+LoKi::Hlt1::VxSelection::VxSelection 
 ( const Hlt::TSelection<LHCb::RecVertex>* selection ) 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_selection ( selection )
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
@@ -374,9 +378,9 @@ LoKi::Hlt1::RvSelection::RvSelection
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
-LoKi::Hlt1::RvSelection::RvSelection 
+LoKi::Hlt1::VxSelection::VxSelection 
 ( const Hlt::Selection* sel ) 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_selection ( 0 ) 
 {
   Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
@@ -387,9 +391,9 @@ LoKi::Hlt1::RvSelection::RvSelection
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
-LoKi::Hlt1::RvSelection::RvSelection 
+LoKi::Hlt1::VxSelection::VxSelection 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_selection ( 0 )
   , m_selName ( selection )
 {
@@ -404,26 +408,31 @@ LoKi::Hlt1::RvSelection::RvSelection
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::Hlt1::RvSelection::result_type
-LoKi::Hlt1::RvSelection::operator() () const 
+LoKi::Hlt1::VxSelection::result_type
+LoKi::Hlt1::VxSelection::operator() () const 
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
-  return result_type ( m_selection->begin () , m_selection->end() ) ;
+  result_type out;
+  out.reserve( m_selection->size() );
+  BOOST_FOREACH( const LHCb::RecVertex* rv, *m_selection ) {
+     out.push_back( static_cast< const LHCb::VertexBase* >( rv ) );
+  }
+  return out;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
-std::ostream& LoKi::Hlt1::RvSelection::fillStream ( std::ostream& s ) const 
-{ return s << "RvSELECTION('" << selName() << "')" ; }
+std::ostream& LoKi::Hlt1::VxSelection::fillStream ( std::ostream& s ) const 
+{ return s << "VxSELECTION('" << selName() << "')" ; }
 // ============================================================================
 
 
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
-LoKi::Hlt1::RvRegister::RvRegister 
+LoKi::Hlt1::VxSink::VxSink 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe () 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Pipe () 
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
@@ -436,24 +445,24 @@ LoKi::Hlt1::RvRegister::RvRegister
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::Hlt1::RvRegister::result_type
-LoKi::Hlt1::RvRegister::operator() 
-  ( LoKi::Hlt1::RvRegister::argument a ) const 
+LoKi::Hlt1::VxSink::result_type
+LoKi::Hlt1::VxSink::operator() 
+  ( LoKi::Hlt1::VxSink::argument a ) const 
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* point to NULL!" ) ;  
   //
-  m_selection->insert ( m_selection->end() , a.begin() , a.end() ) ;
+  BOOST_FOREACH( const LHCb::VertexBase* vx, a ) {
+     m_selection->push_back( static_cast< const LHCb::RecVertex* >( vx ) );
+  }
   //
   return a ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
-std::ostream& LoKi::Hlt1::RvRegister::fillStream ( std::ostream& s ) const 
-{ return s << "RvREGISTER('" << selName() << "')" ; }
+std::ostream& LoKi::Hlt1::VxSink::fillStream ( std::ostream& s ) const 
+{ return s << "VxSINK('" << selName() << "')" ; }
 // ============================================================================
-
-
 
 // ============================================================================
 // constructor from the key and cuts 

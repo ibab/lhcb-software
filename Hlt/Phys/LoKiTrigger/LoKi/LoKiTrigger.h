@@ -20,7 +20,7 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *
  *  $Revision$
- *  Last Modification $Date:$ 
+ *  Last Modification $Date$ 
  *                 by $Author$ 
  */
 // ============================================================================

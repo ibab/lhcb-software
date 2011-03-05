@@ -44,6 +44,9 @@
   <class name = "LoKi::Hlt1::Selection" />
   <class name = "LoKi::Hlt1::Sink"      />
 
+  <class name = "LoKi::Hlt1::VxSelection" />
+  <class name = "LoKi::Hlt1::VxSink"      />
+
   <class name = "LoKi::Hlt1::Match"               />
   <class name = "LoKi::Hlt1::Match2"              />
   <class name = "LoKi::Hlt1::FilterMatch"         />
@@ -110,12 +113,6 @@
   <class name = "LoKi::RecVertices::MaxDOCAChi2" />
   <class name = "LoKi::RecVertices::DOCACut"     />
   
-  
-  <!-- 
-       <class name    = "LoKi::Hlt1::TrackBiFunction"     />
-       <class name    = "LoKi::Hlt1::TrackVertexFunction" />
-  -->
-  
   <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
@@ -145,166 +142,4 @@
     <class name ="LoKi::Stages::Cache_<double>"     />
 
   </exclusion>
-
-
-
-  <!-- LHCb::Track-remnants 
-       <class name = "LoKi::Hlt1::TrSelection" />
-       <class name = "LoKi::Hlt1::TrRegister"  />
-       <class name = "LoKi::Hlt1::TrTESInput"  />
-  --> 
-  
-
-  <!--
-
-  <class pattern   = "LoKi::HltBinders::HltBin*"      />
-  <class pattern   = "LoKi::HltBinders::BinderFun*"   />
-  <class pattern   = "LoKi::HltBinders::BinderValue*" />
-  <class name      = "LoKi::Dicts::HltBind" />
-
-  <class name = "LoKi::Functors::Empty<LHCb::Track*>"     />
-  <class name = "LoKi::Functors::Empty<LHCb::RecVertex*>" />
-  <class name = "LoKi::Functors::Size<LHCb::Track*>"      />
-  <class name = "LoKi::Functors::Size<LHCb::RecVertex*>"  />
-
-
-  <class pattern   = "LoKi::Tracks::*"                        />
-  <class pattern   = "LoKi::RecVertices::*"                   />
-  <class pattern   = "LoKi::Trigger::*"                       />
-
-  <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::R*>"    />
-  <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::R*>"    />
-
-  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::R*>"    />
-  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::R*>"    />
-
-  <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::T*>"   />
-  <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::R*>"   />
-  <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::T*>"   />
-  <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::R*>"   />
-
-  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::R*>"    />
-  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::T*>"    />
-  <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::R*>"    />
-  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::T*>"  />
-  <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::R*>"  />
-  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::T*>"  />
-  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::R*>"  />
-  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
-  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::R*>" />
-  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
-  <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::R*>" />
-  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
-  <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::R*>"   />
-
-  <class pattern   = "LoKi::Reference<*>"      />
-  <class pattern   = "LoKi::ConstReference<*>" />
-  <class pattern   = "LoKi::Holder<*>"    />
-  <class pattern   = "std::pair<*LHCb::Track*>"     />
-  <class pattern   = "std::pair<*LHCb::RecVertex*>" />
-
-
-  <function pattern = "LoKi::Dicts::TrInfo::info*" />
-
-  <enum name= "LHCb::Track::Flags"     />
-
-  <class pattern   = "LoKi::ITrHybrid**" />
-  <class pattern   = "LoKi::Hybrid::*"   />
-
-  <class pattern   = "LoKi::Hlt1::*" />
-
-
-
-
-  <exclusion>
-
-  <class pattern="LoKi::HltBinders::HltBinder*::Container" />
-  <class pattern="LoKi::HltBinders::HltBinder*::Pair"      />
-  <class name = "std::vector<const ContainedObject*>"           />
-
-
-  <class pattern="LoKi::Tracks::*">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::RecVertices::*">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Trigger::*">
-  <method name="=" />
-  </class>
-
-  <class pattern="LoKi::Dicts::*">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Interface&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::I*">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Hybrid::*">
-  <method name="=" />
-  </class>
-
-  <class pattern="LoKi::Functor&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Constant&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Valid&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::TheSame&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Identity&lt;*&gt;">
-  <method name="=" />
-  </class>
-
-  <class pattern="Gaudi::Range_&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="Gaudi::NamedRange_&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::RangeList_&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Keeper&lt;*&gt;">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
-  <method name="=" />
-  </class>
-
-  <class pattern="LoKi::Functors::*">
-  <method name="=" />
-  </class>
-  <class pattern="LoKi::Hlt1::*">
-  <method name="=" />
-  </class>
-
-
-  <class pattern = "std::pair&lt;*LHCb::*&gt;" >
-  <method name="=" />
-  </class>
-  <class pattern = "LoKi::Reference&lt;*LHCb::*&gt;" >
-  <method name="=" />
-  </class>
-
-  <class pattern = "LoKi::Holder&lt;*LHCb::*&gt;" >
-  <method name="=" />
-  </class>
-
-
-  </exclusion>
-
-  -->
-
 </lcgdict>

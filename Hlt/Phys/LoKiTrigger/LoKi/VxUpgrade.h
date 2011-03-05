@@ -110,7 +110,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// "sink": register selection in Hlt Data Service 
-      LoKi::Hlt1::RvRegister m_sink ; // register selection in Hlt Data Service 
+      LoKi::Hlt1::VxSink m_sink ; // register selection in Hlt Data Service 
       // ======================================================================
       /// TES location of vertices 
       std::string  m_location ;                     // TES location of vertices 

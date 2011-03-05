@@ -176,16 +176,19 @@ TS_CACHE_DOUBLE = LoKi.Stages.Cache1
 ## @see LoKi::Cuts::TS_CACHE_BOOL
 TS_CACHE_BOOL   = LoKi.Stages.Cache2
 
-
 ## @see LoKi::Cuts::TC_SELECTION
 TC_SELECTION    = LoKi.Hlt1.Selection
 ## @see LoKi::Cuts::SELECTION
 SELECTION       = LoKi.Hlt1.Selection
+## @see LoKi::Cuts::TV_SELECTION
+VX_SELECTION    = LoKi.Hlt1.VxSelection
 
 ## @see LoKi::Cuts::TC_SINK
 TC_SINK         = LoKi.Hlt1.Sink
 ## @see LoKi::Cuts::SINK
 SINK            = LoKi.Hlt1.Sink
+## @see LoKi::Cuts::VX_SINK
+VX_SINK         = LoKi.Hlt1.VxSink
 
 ## @see LoKi::Cuts::TC_SIZE
 TC_SIZE         = LoKi.Functors.Size  ( _TC ) ()

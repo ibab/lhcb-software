@@ -5,6 +5,16 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-05 - Roel Aaij
+ - Change RvSelection into VxSelection and RvRegister into VxSink.
+   The new functors are based on VertexBase instead of RecVertex, but still
+   use Hlt::TSelection< LHCb::RecVertex >. This allows filtering of Hlt
+   vertex selections using LoKi::Vertices functors.
+ - Add python symbols:
+   VX_SINK, VX_SELECTION
+ - Decorate vertex sources
+ - Removed a large unused section from LoKiTrigger.xml
+
 !========================== LoKiTrigger v11r8 2011-03-01 ===================
 ! 2011-03-01 - Gerhard Raven
  - enable code which requires LHCb v32r1

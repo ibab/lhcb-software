@@ -133,7 +133,7 @@ namespace LoKi
       /** the pseudo-source of vertices
        *  @attention! we'll not use it as the actual source!!
        */
-      LoKi::Hlt1::RvSelection                                m_vertices      ;
+      LoKi::Hlt1::VxSelection                                m_vertices      ;
       LoKi::FunctorFromFunctor<const LHCb::VertexBase*,bool> m_vxcut         ;
       bool                                                   m_vxcut_trivial ;
       // =====================================================================

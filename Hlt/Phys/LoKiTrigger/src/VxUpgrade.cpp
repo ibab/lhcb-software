@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// boost
+// ============================================================================
+#include "boost/foreach.hpp"
+// ============================================================================
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -100,7 +104,8 @@ LoKi::Hlt1::VxUpgrade::operator()
   typedef LHCb::RecVertex::Container    Vertices ;
   typedef std::vector<const LHCb::RecVertex*> INPUT    ;
   typedef std::vector<LHCb::RecVertex*> OUTPUT   ;
-  typedef std::vector<const LHCb::RecVertex*> CONST_OUTPUT   ;
+  typedef std::vector<const LHCb::VertexBase*> SINK_OUTPUT;
+  typedef std::vector<const LHCb::RecVertex*> CONST_OUTPUT;
   typedef SmartRefVector<LHCb::Track>   TRKs     ;
 
   //typedef std::vector<LHCb::Track*>     TRACKS   ;
@@ -110,6 +115,7 @@ LoKi::Hlt1::VxUpgrade::operator()
   Vertices* vertices = alg() -> getOrCreate<Vertices,Vertices> ( location() ) ;
   
   CONST_OUTPUT output ;
+  SINK_OUTPUT sink ;
   // loop over all input vertices 
   for ( INPUT::const_iterator ivx = a.begin() ; a.end() != ivx ; ++ivx ) 
   {
@@ -150,7 +156,10 @@ LoKi::Hlt1::VxUpgrade::operator()
       }  
     }
     // add vertices into the global list of vertices 
-    output.insert ( output.end() , out.begin() , out.end() ) ;
+    BOOST_FOREACH( const LHCb::RecVertex* rv, out ) {
+       sink.push_back( static_cast< const LHCb::VertexBase* >( rv ) );
+    }
+    output.insert( output.end(), out.begin(), out.end() );
     // add vertices into the TES constainer  -- this is where the ownership goes!!
     for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout )  {
         vertices -> insert ( *iout ) ; 
@@ -159,7 +168,8 @@ LoKi::Hlt1::VxUpgrade::operator()
   } // end of the loop over all vertices 
   //
   // register vertices for Hlt Data Service
-  return m_sink ( output ) ;
+  m_sink( sink );
+  return output;
 }
 // ============================================================================
 // OPTIONAL: nice printout
