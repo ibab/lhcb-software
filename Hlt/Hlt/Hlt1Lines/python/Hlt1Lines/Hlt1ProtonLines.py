@@ -26,9 +26,9 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
           }
         
     def DiProton_preambulo( self ):
-        from HltTracking.Hlt1Streamers import ( VeloCandidates,
-                                                TightForward,
-                                                FitTrack )
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+                                                       TightForward,
+                                                       FitTrack )
 
         ## define some "common" preambulo 
         Preambulo = [ VeloCandidates( "DiProton" ),                      
@@ -44,9 +44,9 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
 
 
     def DiProtonLowMult_preambulo( self ):
-        from HltTracking.Hlt1Streamers import ( VeloCandidates,
-                                                LooseForward,
-                                                FitTrack )
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+                                                       LooseForward,
+                                                       FitTrack )
         
         ## define some "common" preambulo 
         Preambulo = [ VeloCandidates( "DiProtonLowMult" ),                      

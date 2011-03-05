@@ -42,9 +42,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         return props
 
     def singleMuon_preambulo( self, properties ):
-        from HltTracking.Hlt1Streamers import ( VeloCandidates,
-                                                MatchVeloMuon, IsMuon,
-                                                LooseForward, FitTrack )
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+                                                       MatchVeloMuon, IsMuon,
+                                                       LooseForward, FitTrack )
         ## define some "common" preambulo 
         preambulo = [ VeloCandidates( properties[ 'name' ] ),
                       MatchVeloMuon,

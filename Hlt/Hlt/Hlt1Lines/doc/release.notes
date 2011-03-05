@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-05 - Roel Aaij
+ - Removed unused/unmaintained Hlt1VeloLines and Hlt1LTUnbiasedHadronLines
+ - Updated Hlt1 Muon, Track and Proton lines for removal of Hlt1Streamers in
+   HltTracking 119668.
+
 ! 2011-03-04 - Plamen Hopchev
  - Hlt1LumiLines : now count the velo tracks and vertices produced by 'private'
    FastVelo and PatPV3D algorithms. The FastVelo alg is configured as in Offline

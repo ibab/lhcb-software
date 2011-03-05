@@ -61,9 +61,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         return dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
-        from HltTracking.Hlt1Streamers import ( VeloCandidates,
-                                                LooseForward, TightForward,
-                                                FitTrack, MatchVeloMuon, IsMuon )
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+                                                       LooseForward, TightForward,
+                                                       FitTrack, MatchVeloMuon, IsMuon )
         from HltTracking.HltPVs import RecoPV3D
         Preambulo = [ VeloCandidates( prefix ),
                       RecoPV3D,
