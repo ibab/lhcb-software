@@ -601,20 +601,38 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 # Utility Methods
 # ====================================================================================
 
-def uploadFile(pfn,lfn):
+def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
+                              'PIC-USER','CNAF-USER','NIKHEF-USER','GRIDKA-USER']):
     from Ganga.GPI import PhysicalFile, LogicalFile
+
+    if len(sites) == 0 :
+        print 'ERROR : No sites requested'
+        return False
+
+    # Check if file has any replicas to start with
     res = LogicalFile(lfn).getReplicas()
     OK = True
     if len(res) == 0 :
-        print "Uploading", pfn, "to", lfn
-        newlfn = PhysicalFile(pfn).upload(lfn,"CERN-USER")
+
+        # First upload one copy
+        print "Uploading", pfn, "to", sites[0], lfn
+        newlfn = PhysicalFile(pfn).upload(lfn,sites[0])
         if len(newlfn.getReplicas()) == 0:
             print "Problem uploading ..."
             OK = False
         else:
             print "Upload SUCCESSFUL"
+            # Replicate to requested sites
+            for site in sites :
+                try:
+                    print ' -> Replicating to', site
+                    LogicalFile(lfn).replicate(site)
+                except Exception,e:
+                    print '  -> ERROR Replication FAILED'
+                    
     else:
         print lfn, "already exists as", res
+
     return OK
 
 def addToJobTree(j,dir):
@@ -1108,11 +1126,6 @@ def drange(start,stop,step):
     while r < stop:
         yield r
         r += step
-
-def dateString():
-    import datetime
-    now = datetime.datetime.now()
-    return str(now.data)+str(now.month)+str(now.year)
 
 def dateTimeString():
     import datetime
