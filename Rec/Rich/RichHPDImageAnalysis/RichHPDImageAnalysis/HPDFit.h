@@ -76,11 +76,11 @@ namespace Rich
         const Pixel::List& boundaryPixels() const { return m_boundaryPixels; }
       public:
         double x()    const { return -1.0*(m_col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx); }
-        double y()    const { return -1.0*(0.5*m_silicony - m_row*m_pixelsize - 0.5*m_pixelsize); }
         double xErr() const { return m_colErr * m_pixelsize; }
+        double y()    const { return -1.0*(0.5*m_silicony - m_row*m_pixelsize - 0.5*m_pixelsize); }
         double yErr() const { return m_rowErr * m_pixelsize; }
-        double radInMM()    const { return m_pixelsize * m_col;    }
-        double radErrInMM() const { return m_pixelsize * m_colErr; }
+        double radInMM()    const { return m_pixelsize * m_rad;    }
+        double radErrInMM() const { return m_pixelsize * m_radErr; }
       private:
         bool m_OK;
         double m_row,m_rowErr;
