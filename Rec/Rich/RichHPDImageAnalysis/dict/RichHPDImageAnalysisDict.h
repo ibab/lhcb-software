@@ -5,5 +5,7 @@
 #include "RichHPDImageAnalysis/HPDBoundaryFcn.h"
 #include "RichHPDImageAnalysis/HPDFit.h"
 #include "RichHPDImageAnalysis/GraphSmoother.h"
+#include "RichHPDImageAnalysis/HPDPixel.h"
+#include "RichHPDImageAnalysis/SimpleChi2Fit.h"
 
 #endif // DICT_RICHHPDIMAGEANALYSISDICT_H

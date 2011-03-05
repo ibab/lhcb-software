@@ -1,7 +1,7 @@
 
 def applyRootStyle():
     
-    from ROOT import gROOT, gStyle, kWhite, kBlack
+    from ROOT import gROOT, gStyle, kWhite, kBlack, TColor
 
     # Start from a plain default
     gROOT.SetStyle("Plain")
@@ -86,6 +86,17 @@ def applyRootStyle():
     # histogram divisions
     gStyle.SetNdivisions(505,"x")
     gStyle.SetNdivisions(510,"y")
+
+    # Style for 2D zcol plots
+    NRGBs = 5
+    NCont = 255
+    from array import array
+    stops = array('d',[ 0.00, 0.34, 0.61, 0.84, 1.00 ])
+    red   = array('d',[ 0.00, 0.00, 0.87, 1.00, 0.51 ])
+    green = array('d',[ 0.00, 0.81, 1.00, 0.20, 0.00 ])
+    blue  = array('d',[ 0.51, 1.00, 0.12, 0.00, 0.00 ])
+    TColor().CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont)
+    gStyle.SetNumberContours(NCont)
 
     # Force the style
     gROOT.ForceStyle()

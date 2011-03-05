@@ -3,6 +3,7 @@
 #define RICHHPDIMAGEANALYSIS_HPDFIT_H 1
 
 #include "TH2D.h"
+#include "RichHPDImageAnalysis/HPDPixel.h"
 
 namespace Rich
 {
@@ -31,7 +32,7 @@ namespace Rich
       class Params
       {
       public:
-        Params() : cutFraction(0.1), minBoundary(3), type("Fit1") { }
+        Params() : cutFraction(0.1), minBoundary(3), type("SimpleChi2") { }
       public:
         double cutFraction;
         unsigned int minBoundary;
@@ -64,6 +65,7 @@ namespace Rich
         void setRowAndErr( const double val, const double err ) { m_row = val; m_rowErr = err; }
         void setColAndErr( const double val, const double err ) { m_col = val; m_colErr = err; }
         void setRadAndErr( const double val, const double err ) { m_rad = val; m_radErr = err; }
+        void setBoundaryPixels( const Pixel::List& pixels ) { m_boundaryPixels = pixels; }
       public:
         double row()    const { return m_row;    }
         double rowErr() const { return m_rowErr; }
@@ -71,6 +73,7 @@ namespace Rich
         double colErr() const { return m_colErr; }
         double radInPix()    const { return m_col;    }
         double radErrInPix() const { return m_colErr; }
+        const Pixel::List& boundaryPixels() const { return m_boundaryPixels; }
       public:
         double x()    const { return -1.0*(m_col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx); }
         double y()    const { return -1.0*(0.5*m_silicony - m_row*m_pixelsize - 0.5*m_pixelsize); }
@@ -83,6 +86,8 @@ namespace Rich
         double m_row,m_rowErr;
         double m_col,m_colErr;
         double m_rad,m_radErr;
+      private:
+        Pixel::List m_boundaryPixels;
       };
 
     public:
@@ -93,8 +98,9 @@ namespace Rich
     public:
 
       /// Run a fit of the given 2D HPD image histogram
-      const Rich::HPDImage::HPDFit::Result fit ( const TH2D& hist,
-                                                 const Rich::HPDImage::HPDFit::Params& params ) const;
+      const Rich::HPDImage::HPDFit::Result 
+      fit ( const TH2D& hist,
+            const Rich::HPDImage::HPDFit::Params& params ) const;
 
     };
 

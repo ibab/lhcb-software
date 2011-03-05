@@ -429,7 +429,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     if followType not in ["FittedPol","FollowMovements","Smoothed"]:
         raise Exception("Unknown Follow Mode "+followType)
 
-    if fitType not in ["Fit1","CppFit"]:
+    if fitType not in ["SimpleChi2","FastRingFit","CppFit"]:
         raise Exception("Unknown Fit Mode "+fitType)
        
     # Load the list of root files
@@ -659,7 +659,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
                 plotY = TGraphErrors( len(vTime[polarity]), vTime[polarity],
                                       vshiftY[polarity], vTimeErr[polarity], vshiftYerr[polarity] )
-                plotY.SetTitle( polarity+"Y Shift : Copy Number "+idS )
+                plotY.SetTitle( polarity+" Y Shift : Copy Number "+idS )
                 plotY.GetXaxis().SetTitle(type+" Average time (secs since UNIX epoch)")
                 plotY.GetYaxis().SetTitle("Y Offset / mm" )
                 plotY.SetMarkerColor(dataColor)
