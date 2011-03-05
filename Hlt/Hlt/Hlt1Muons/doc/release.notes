@@ -4,6 +4,13 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2011-03-06 - Roel Aaij
+ - Updates to MatchVeloMuon:
+   - Stop looking for candidates once a good enough one is found.
+   - Remove memory pool purge, which causes a segfault if more than one
+     instance of the tool is used.
+   - Add debug printout.
+
 !========================== Hlt1Muons v1r1p1 2011-02-22 ==================
 ! 2011-02-22 - Gerhard Raven
  - cosmetic changes

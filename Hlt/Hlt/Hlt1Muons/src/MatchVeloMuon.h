@@ -48,7 +48,6 @@ private:
    double m_za;
    double m_zb;
 
-   double m_txTolerance;
    double m_xWindow;
    double m_yWindow;
 
@@ -69,7 +68,6 @@ private:
 
    // Temporary storage
    Hlt1MuonHit* m_magnetHit;
-   Candidates   m_candidates;
    Candidates   m_seeds;
 
    // Helper methods

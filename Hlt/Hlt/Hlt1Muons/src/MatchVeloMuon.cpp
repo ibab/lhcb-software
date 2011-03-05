@@ -40,11 +40,10 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
    : GaudiHistoTool ( type, name , parent ), m_nRegions( 0 ),
-     m_magnetHit( 0 ), m_candidates( 0 ), m_seeds( 0 )
+     m_magnetHit( 0 ), m_seeds( 0 )
 {
    declareInterface< ITracksFromTrack >(this);
 
-   declareProperty( "TXTolerance", m_txTolerance = 1.10 );
    declareProperty( "XWindow", m_xWindow = 300 );
    declareProperty( "YWindow", m_yWindow = 300 );
 
@@ -85,11 +84,7 @@ StatusCode MatchVeloMuon::initialize()
 StatusCode MatchVeloMuon::finalize()
 {
    clean();
-   bool released = boost::singleton_pool< Candidate, sizeof( Candidate ) >::release_memory();
-   if ( !released ) {
-      Warning( "some candidates still use memory, purging", StatusCode::SUCCESS );
-      boost::singleton_pool< Candidate, sizeof( Candidate ) >::purge_memory();
-   }
+   boost::singleton_pool< Candidate, sizeof( Candidate ) >::release_memory();
    return GaudiHistoTool::finalize();
 }
 
@@ -107,22 +102,24 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
    findSeeds( veloSeed.get(), seedStation );
    if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
-   BOOST_FOREACH( Candidate* c, m_seeds ) { addHits( c ); }
-
-   // Find the best candidate.
-   Candidates::const_iterator best = std::min_element
-      ( m_candidates.begin(), m_candidates.end(), bind
-        ( less< double >(), bind< double >( &Candidate::chi2DoF, _1 ),
-          bind< double >( &Candidate::chi2DoF, _2 ) ) );
-
-   if ( best == m_candidates.end() ) {
-      // No candidates found, we're done.
-      return StatusCode::SUCCESS;
-   } else {
-      // There is a best candidate, put the seed into the output unmidified.
-      tracks.push_back( const_cast< LHCb::Track* >( &seed ) );
-      return StatusCode::SUCCESS;
+   if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
    }
+   
+   BOOST_FOREACH( Candidate* c, m_seeds ) { 
+      addHits( c );
+      if ( msgLevel(MSG::DEBUG)) {
+         debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
+      }
+      if ( produceHistos() ) plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+      if ( c->chi2DoF() < m_maxChi2DoFX ) {
+         // There is a good enough candidate, put the seed into the output unmidified.
+         debug() << "Accepted candidate with chi2/DoF " << c->chi2DoF() << endmsg;
+         tracks.push_back( const_cast< LHCb::Track* >( &seed ) );
+         break;
+      }
+   }
+   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -149,9 +146,9 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
    double dz = ( zStation - zMagnet ) / veloSeed->cosTy();
    // double sign = ( veloSeed->tx() > 0) - ( veloSeed->tx() < 0 );
    double tanMin = ( veloSeed->tx() - dSlope ) / ( 1 + veloSeed->tx() * dSlope );
-   double xMin = xMagnet + dz * tanMin * m_txTolerance;
+   double xMin = xMagnet + dz * tanMin - m_xWindow;
    double tanMax = ( veloSeed->tx() + dSlope ) / ( 1 - veloSeed->tx() * dSlope );
-   double xMax = xMagnet + dz * tanMax * m_txTolerance;
+   double xMax = xMagnet + dz * tanMax + m_xWindow;
 
    // Calculate window in y
    double yMuon = 0., yRange = 0;
@@ -161,12 +158,30 @@ void MatchVeloMuon::findSeeds( const Candidate* veloSeed, const unsigned int see
    double yMin = yMuon - yRange;
    double yMax = yMuon + yRange;
 
+   if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Window: (" << xMin << "," << yMin << ") -> (" 
+              << xMax << "," << yMax << ")" << endmsg;
+      debug() << "Hits in seed station:" << endmsg;
+      for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
+         Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
+         BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+            debug() << hit->x() << " " << hit->y() << endmsg;
+         }
+      }
+   }
+
    for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
       const Hlt1MuonRegion& region = station.region( r );
       if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
 
       // Get hits
       Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
+      if ( msgLevel(MSG::DEBUG) ) {
+         debug() << "Hits in seed region " << r << ":" << endmsg;
+         BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+            debug() << hit->x() << " " << hit->y() << endmsg;
+         }
+      }
          
       if ( hits.empty() ) continue; 
 
@@ -240,13 +255,11 @@ void MatchVeloMuon::addHits( Candidate* seed )
       } else {
          ++nMissed ;
       }
-      if ( nMissed >= m_maxMissed ) break;
+      if ( nMissed > m_maxMissed ) break;
    }
-   // If a new candidate is good, store it.
-   if ( nMissed < m_maxMissed ) {
+   // If a new candidate is good, fit it.
+   if ( nMissed <= m_maxMissed ) {
       fitCandidate( seed );
-      if ( produceHistos() ) plot( seed->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-      if ( seed->chi2DoF() < m_maxChi2DoFX ) m_candidates.push_back( seed );
    }
 }
 
@@ -298,7 +311,6 @@ void MatchVeloMuon::clean()
    // delete leftover seeds
    BOOST_FOREACH( Candidate* candidate, m_seeds ) { delete candidate; }
    m_seeds.clear();
-   m_candidates.clear();
    delete m_magnetHit;
    m_magnetHit = 0;
 }

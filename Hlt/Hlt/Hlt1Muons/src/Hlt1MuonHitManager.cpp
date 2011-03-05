@@ -2,7 +2,6 @@
 // STL
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 // boost
 #include <boost/bind.hpp>
