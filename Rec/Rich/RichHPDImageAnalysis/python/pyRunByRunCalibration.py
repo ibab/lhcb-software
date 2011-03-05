@@ -217,6 +217,11 @@ def loadDict(filename):
         file.close()
     return data
 
+def dateString():
+    import datetime
+    now = datetime.datetime.now()
+    return now.strftime("%d%m%Y")
+
 def getRunFillData(rootfiles):
 
     print "Getting Run and Fill time information"
