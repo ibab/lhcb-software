@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-03-05 - Roel Aaij
+ - Moved Hlt1 track upgrade symbols for streamers from their temporary home 
+   in Hlt1Streamers back to Hlt1TrackUpgradeConf.
+ - Added FullPV3D to Hlt1PVs.py
+
 !========================== HltTracking v9r4  2011-03-02 ===================
 ! 2011-Mar-02 - Patrick Spradlin
  - Added Hlt2CharmHadTwoBodyForMultiBodyConf and restored

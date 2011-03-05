@@ -78,4 +78,4 @@ def PV3D():
 
 ## Symbols for streamer framework
 RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in _RecoPV3D().members() ]
-
+FullPV3D = "FullPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]

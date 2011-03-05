@@ -1,3 +1,10 @@
+# skip any of the next three lines, and we crash trying to instantiate the AppMgr.... ?!?!!!???
+# probably this is needed before Hlt1StreamerConf is imported...
+import PyCintex
+cpp      = PyCintex.makeNamespace('')
+LHCb     = cpp.LHCb
+__tmp = LHCb.Track.Long
+
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
                             PatForwardTool, 
@@ -5,10 +12,15 @@ from Configurables import ( PatSeedingTool,
                             
 from HltLine.HltLine import Hlt1Tool
 
-__all__ = ( 'ConfiguredPatSeeding',
-            'ConfiguredForward',
-            'ConfiguredFastKalman',
-            'ConfiguredMatchVeloMuon' )
+# =============================================================================
+## Configuration functions for convenience.
+# =============================================================================
+__all__ = ( 'MatchVeloL0Muon',
+            'TightForward',
+            'LooseForward',
+            'FitTrack',
+            'MatchVeloMuon',
+            'VeloCandidates' )
             
 def ConfiguredPatSeeding( minPSeed = 3000):
     # Add the option to define a minimum PT/P 
@@ -50,5 +62,87 @@ def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
                      , XWindow = 200
                      , YWindow = 200
                      ## Set this according to PatForward
-                     , MinMomentum = minP - 500 ).createConfigurable( parent )
+                     , MinMomentum = minP ).createConfigurable( parent )
 
+# =============================================================================
+## Symbols for streamer users
+# =============================================================================
+def to_name( conf ):
+    return conf.trTool().split( ':' )[ 0 ].split( '/' )[ -1 ]
+
+# Match Velo to L0 Muons
+from Configurables import ( GaudiSequencer,
+                            Hlt__L0Muon2Candidate,
+                            Hlt__L0Muon2Track )
+_L0SingleMuons = GaudiSequencer(
+    'L0SingleMuonPrep',
+    Members = [ 
+        ## convert: LHCb::L0MuonCandidate -> Hlt::Candidate
+        Hlt__L0Muon2Candidate( 'Hlt1L0MuonCandidates' ),
+        ## convert: LHCb::L0MuonCandidate -> Hlt::Candidate
+        Hlt__L0Muon2Track(
+            'Hlt1L0MuonTracks',
+            L0Channel      = 'Muon',
+            InputSelection = 'Hlt1L0MuonCandidates',
+            )
+        ]
+    )
+MatchVeloL0Muon = "MatchVeloL0Muon = TC_MATCH2( 'MatchVeloL0Muon' , VeloCandidates, \
+                              HltTracking.Hlt1StreamerConf.VeloL0Muon )" % \
+                   [ m.getFullName() for m in _L0SingleMuons.Members ]
+
+import HltLine.HltDecodeRaw 
+from Gaudi.Configuration import ToolSvc
+# =============================================================================
+## Forward upgrade configuration
+# =============================================================================
+from HltTracking.Hlt1TrackUpgradeConf import ConfiguredForward
+import Hlt1StreamerConf as Conf
+
+ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1250 )
+ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ),  6000,  500 )
+
+## Strings for users
+TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
+LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"
+
+# =============================================================================
+## Hlt trackfit upgrade configuration
+# =============================================================================
+from HltTracking.Hlt1TrackUpgradeConf import ConfiguredFastKalman
+ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
+## String for users
+FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
+
+# =============================================================================
+## Match Velo to Muon hits
+# =============================================================================
+from HltTracking.Hlt1TrackUpgradeConf import ConfiguredMatchVeloMuon
+ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 )
+## Strings for users
+MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon ) )"
+
+# =============================================================================
+## IsMuon
+# =============================================================================
+## Strings for users
+IsMuon = "IsMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon ) )"
+
+# ==============================================================================
+# Velo candidates
+# ==============================================================================
+from Configurables import Hlt__Track2Candidate
+import HltLine.HltDecodeRaw 
+from HltReco import MinimalVelo
+from HltLine.HltLine import bindMembers
+def VeloCandidates( lineName ):
+    selection = 'VeloCandidates%s' % lineName
+    tracks = Hlt__Track2Candidate (
+        'Velo2Candidates%s' % lineName,
+        Code            = "~TrBACKWARD"    , ## skip backward tracks 
+        InputSelection  = MinimalVelo.outputSelection(),
+        OutputSelection = selection,
+        )
+    bm = bindMembers ( None , [ MinimalVelo, tracks ] )
+    return "VeloCandidates = execute( %s ) * SELECTION( '%s' )" % \
+                ( [ m.getFullName() for m in bm.members() ], selection )
