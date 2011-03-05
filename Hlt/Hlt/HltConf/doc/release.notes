@@ -4,6 +4,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2011-03-05 - Roel Aaij
+ - Update Hlt1.py for move of streamer symbols to Hlt1TrackUpgradeConf
+   in HltTracking 119668.
+
 !========================== HltConf v9r5p1 2011-03-04 ===================
 ! 2011-03-04 - Gerhard Raven
  - add Hlt1L0AnyNoSPD

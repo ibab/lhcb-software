@@ -23,7 +23,6 @@ from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
 from Hlt1Lines.Hlt1LumiLines       import Hlt1LumiLinesConf
 from Hlt1Lines.Hlt1BeamGasLines    import Hlt1BeamGasLinesConf
 from Hlt1Lines.Hlt1L0Lines         import Hlt1L0LinesConf
-from Hlt1Lines.Hlt1VeloLines       import Hlt1VeloLinesConf
 from Hlt1Lines.Hlt1CosmicLines     import Hlt1CosmicLinesConf
 from Hlt1Lines.Hlt1MBLines         import Hlt1MBLinesConf
 from Hlt1Lines.Hlt1TrackLines      import Hlt1TrackLinesConf
@@ -35,7 +34,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1LumiLinesConf
                             , Hlt1BeamGasLinesConf
                             , Hlt1L0LinesConf
-                            , Hlt1VeloLinesConf
                             , Hlt1MuonLinesConf
                             , Hlt1TrackLinesConf
                             , Hlt1CosmicLinesConf
@@ -51,7 +49,7 @@ class Hlt1Conf(LHCbConfigurableUser):
 #      
    def __apply_configuration__(self):
       ## New event model
-      import HltTracking.Hlt1Streamers
+      import HltTracking.Hlt1TrackUpgradeConf
       from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
       factory = CoreFactory( "Hlt1Factory" )
       for m in [ "LoKiCore.decorators"    ,
