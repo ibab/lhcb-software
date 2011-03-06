@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v12r1 2011-03-06 ===================
 ! 2011-03-04 - Roel Aaij
  - Add instantiations to the dictionary for:
    - Hlt::TSelection< LHCb::RecVertex >
