@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-06 - Roel Aaij
+ - Fix a performance bug in UpgradeTool, leftover from r117500. When a seed
+   does not pass the upgrade, this is now also flagged and seen.
+
 ! 2011-03-05 - Roel Aaij
  - Change RvSelection into VxSelection and RvRegister into VxSink.
    The new functors are based on VertexBase instead of RecVertex, but still

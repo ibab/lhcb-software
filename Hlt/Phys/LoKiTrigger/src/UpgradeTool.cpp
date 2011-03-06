@@ -160,10 +160,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
     trk->addInfo ( recoID() , seed->key() ) ;
   }
   //
-  if ( !out.empty() ) {
-     // This is nasty...
-     const_cast< LHCb::Track* >( seed )->addInfo ( recoID() , out.size() );
-  }
+  // This is nasty... use the size to indicate success or failure
+  const_cast< LHCb::Track* >( seed )->addInfo ( recoID() , out.size() );
   // insert only "good" tracks into the stream 
   //
   LoKi::Algs::copy_if  
@@ -257,13 +255,16 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
   LHCb::Track::Container*    otracks ) const
 {  
   // not reconstructed yet ?
-  if ( -1 == seed->info ( recoID () , -1 ) ) 
+  double info = seed->info ( recoID () , -1 );
+  if ( -1 == info ) 
   {
     // recontruct it!!!
     StatusCode sc = reco ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
     { return Error ( "Failure from ITrackFromTrack tool, skip track", sc ) ; }
   }
+  // Previous reco failed, we're done
+  else if ( 0 == info ) { return StatusCode::SUCCESS; }
   // We don't own the track, so if it's already flagged, just return the seed
   else if ( !owner() ) { output.push_back( seed ); }
   // find in the list of recontructed 
