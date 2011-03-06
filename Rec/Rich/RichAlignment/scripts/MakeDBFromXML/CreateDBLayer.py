@@ -13,7 +13,10 @@ def getUNIXTime(dtime):
 def genXML(root,cond):
     file = open(root+cond)
     data = ""
-    for line in file : data += line
+    for line in file :
+        if -1 != line.find("../../../DTD/structure.dtd"):
+            line =  """<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">"""
+        data += line
     file.close()
     return data
 
