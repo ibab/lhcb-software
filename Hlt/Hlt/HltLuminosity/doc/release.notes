@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2011-03-06 - Vladik Balagura
+ - added LumiCountMuons.{cpp,h}
+
 !========================== HltLuminosity v2r17 2010-05-27 ===================
 ! 2010-05-23 - V. Gligorov
  - remove reference to PV2D from CollectLumiData and replace it with PV3D 
