@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-06 - Greig Cowan
+ - Added Gamma from trees line config dictionaries.
+ - Removed the old stream definition files. Stream building moved to AppConfig.
+
 ! 2011-03-04 - Juan Palacios
  - StrippingSettings.Utils.dbaseFromModule, addModuleToDbase ignore units
    from GaudiKernel.SystemOfUnits.
