@@ -104,6 +104,8 @@ for start in sorted(field.keys()):
 
         # Get CondDB path from file name and rootdir
         condName = condDBPathFromFile(align,path)
+
+        # Create DB path in DB file if first time
         if condName not in createdPaths :
             print " -> Creating DB path", condName
             db.createNode(condName)
