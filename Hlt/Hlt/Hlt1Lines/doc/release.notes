@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-06 - Roel Aaij
+ - Added a property to Hlt1MuonLines which allows timers to be added to all
+   items in the streamer which are in the Preambulo and not PV3D or GEC related.
+
 ! 2011-03-05 - Roel Aaij
  - Removed unused/unmaintained Hlt1VeloLines and Hlt1LTUnbiasedHadronLines
  - Updated Hlt1 Muon, Track and Proton lines for removal of Hlt1Streamers in

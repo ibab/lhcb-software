@@ -1,11 +1,13 @@
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import *
+import re
 
 class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     # steering variables
     __slots__ = { 
         #  Muon Lines
-         'SingleMuonHighPT_P'       : 8000
+        'DoTiming'                  : False
+        ,'SingleMuonHighPT_P'       : 8000
         ,'SingleMuonHighPT_PT'      : 4800
         ,'SingleMuonHighPT_TrChi2'  :    4
         ,'SingleMuonNoIP_P'         : 6000
@@ -28,11 +30,16 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'MultiMuonNoIP_PT'         :  500
         ,'MultiMuonNoIP_TrChi2'     :    4
         ,'MultiMuonNoIP_GT'         :  2.5
-        ,'channels'                 : { 'SingleMuonHighPT' : ( 'Muon', ),
+        ,'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                         'SingleMuonNoIP'   : ( 'Muon', ),
                                         'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                         'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
                                         'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' ) }
+        ,'Priorities'               : { 'SingleMuonHighPT' : 4,
+                                        'SingleMuonNoIP'   : 3,
+                                        'DiMuonLowMass'    : 2,
+                                        'DiMuonHighMass'   : 1,
+                                        'MultiMuonNoIP'    : 5 }
         }
     
     def localise_props( self, prefix ):
@@ -40,6 +47,21 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         props = dict( [ ( key.split( '_' )[ 1 ], ps[ key ] ) for key in ps if key.find( prefix ) != -1 ] )
         props[ 'name' ] = prefix
         return props
+
+    def do_timing( self, unit ):
+        reco = set()
+        for entry in unit.Preambulo:
+            s = entry.split( '=' )
+            if s[ 0 ].find( 'PV3D' ) != -1 or s[ 0 ].find( 'GEC' ) != -1: continue
+            if len( s ) > ( 1 ):
+                reco.add( s[ 0 ].strip() )
+        name = unit.name()[ 4 : unit.name().find( 'Streamer' ) ]
+        code = unit.Code
+        for step in reco:
+            sub = " ( timer( '%s_%s' )" % ( name, step ) + ' % ' +  step + ' ) '
+            code = re.sub( '\\s+%s\\s+' % step, sub, code )
+        unit.Code = code
+        return unit
 
     def singleMuon_preambulo( self, properties ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
@@ -192,12 +214,16 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
+        unit = streamer( self.localise_props( name ) )
+        if self.DoTiming: self.do_timing( unit )
+        priority = self.Priorities[ name ] if name in self.Priorities else None
         line = Hlt1Line(
             name,
             prescale  = self.prescale,
             postscale = self.postscale,
-            L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.channels[ name ] ] ) ,
-            algos = [ streamer( self.localise_props( name ) ) ] 
+            priority  = priority,
+            L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.L0Channels[ name ] ] ) ,
+            algos = [ unit ] 
             )
 
     def __apply_configuration__( self ) : 
