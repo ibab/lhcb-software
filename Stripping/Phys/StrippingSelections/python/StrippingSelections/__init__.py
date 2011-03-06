@@ -103,6 +103,13 @@ import StrippingD02HHForXSec
 import StrippingBu3hFrom2h
 import StrippingB2HHPi0
 
+# Calibration
+import StrippingTrackEffDownMuon
+# needs HltMuonRec, which causes problems
+#import StrippingTrackEffVeloMuon
+import StrippingTrackEffMuonTT
+import StrippingMuIDCalib
+
 from sys import modules as _modules
 _this = _modules[__name__]
 
