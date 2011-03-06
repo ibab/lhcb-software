@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v11r9 2011-03-06 ===================
 ! 2011-03-06 - Roel Aaij
  - Fix a performance bug in UpgradeTool, leftover from r117500. When a seed
    does not pass the upgrade, this is now also flagged and seen.
