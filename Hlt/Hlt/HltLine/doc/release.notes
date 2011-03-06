@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v5r1p1 2011-03-06 ===================
 ! 2010-03-04 - Johannes Albrecht
  - remove obsolete 4BsMuMu as HLT filter in HltLine
 
