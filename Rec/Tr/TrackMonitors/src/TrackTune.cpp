@@ -63,19 +63,19 @@ StatusCode TrackTune::execute()
   // output tuple
   Tuple myTuple = nTuple("Candidates");
 
-  const LHCb::Tracks* tracks = get<LHCb::Tracks*>(m_trackLocation);
-  const LHCb::Particle::Container* particles = get<LHCb::Particle::Container>(m_particleLocation);
+  const LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation);
+  const LHCb::Particle::Range particles = get<LHCb::Particle::Range>(m_particleLocation);
 
   std::vector<const LHCb::Particle* > tVec; 
   if (select(tVec,particles) == false) return StatusCode::SUCCESS ;
 
   for (std::vector<const LHCb::Particle* >::const_iterator iterP = tVec.begin(); iterP != tVec.end(); ++iterP ){
 
-    bool rec = isFound(tracks,*iterP);
+    bool rec = isFound(tracks,**iterP);
     myTuple <<  Tuples::Column("M", (*iterP)->measuredMass()) 
             <<  Tuples::Column("found",rec) 
 	    <<  Tuples::Column("PT", (*iterP)->pt())
-            <<  Tuples::Column("Candidates", particles->size());
+            <<  Tuples::Column("Candidates", particles.size());
 
     myTuple->write();
   }
@@ -84,28 +84,27 @@ StatusCode TrackTune::execute()
   //
 } // the end of the Algorihtm
 
-const LHCb::Track* TrackTune::track(const LHCb::Particle* part) const{
-
-  const LHCb::ProtoParticle* proto = part->proto();
+const LHCb::Track* TrackTune::track(const LHCb::Particle& part) const
+{
+  const LHCb::ProtoParticle* proto = part.proto();
   if (!proto || proto->charge() == 0) return 0;
   return proto->track() ;
 }
 
 
-bool TrackTune::isFound(const LHCb::Tracks* tracks, const LHCb::Particle* part) const {
-
-
+bool TrackTune::isFound(const LHCb::Track::Range& tracks, const LHCb::Particle& part) const
+{
   bool ok = true;
-  const SmartRefVector<LHCb::Particle>& daughters = part->daughters();
+  const SmartRefVector<LHCb::Particle>& daughters = part.daughters();
   for (SmartRefVector<LHCb::Particle>::const_iterator iter = daughters.begin(); 
       iter != daughters.end() && ok == true ; ++iter){
-     const LHCb::Track* aTrack = track(*iter);
+     const LHCb::Track* aTrack = track(**iter);
      if (!aTrack) {
        info() << "Failed to find track " << endmsg;
      }
      const double nHits = aTrack->nLHCbIDs();
      bool matchedTrack = false;
-     for (LHCb::Tracks::const_iterator iterT = tracks->begin(); iterT != tracks->end() && matchedTrack == false; ++iterT){
+     for (LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end() && matchedTrack == false; ++iterT){
        const double fracCommon = aTrack->nCommonLhcbIDs(**iterT)/double(nHits);
        plot(fracCommon, "purity", "purity",  0., 2., 100);
        if (fracCommon > m_minPurityCut) matchedTrack = true;
@@ -118,13 +117,13 @@ bool TrackTune::isFound(const LHCb::Tracks* tracks, const LHCb::Particle* part) 
 }
 
 
-bool TrackTune::select(std::vector<const LHCb::Particle* >& output, const LHCb::Particle::Container* input) const{
-
+bool TrackTune::select(std::vector<const LHCb::Particle* >& output, const LHCb::Particle::Range& input) const
+{
   if (m_selectBest == true){
     double bestChi2 = 9999.; const LHCb::Particle* bestPart = 0;
-    for (LHCb::Particle::Container::const_iterator iter = input->begin(); iter != input->end(); ++iter){
-      if (inMassRange(*iter) == false) continue;
-      LHCb::Vertex* vert  = (*iter)->endVertex();
+    for (LHCb::Particle::Range::const_iterator iter = input.begin(); iter != input.end(); ++iter){
+      if (inMassRange(**iter) == false) continue;
+      const LHCb::Vertex* vert  = (*iter)->endVertex();
       if (vert->chi2PerDoF() < bestChi2){
         bestChi2= vert->chi2PerDoF();
         bestPart = *iter;
@@ -133,15 +132,16 @@ bool TrackTune::select(std::vector<const LHCb::Particle* >& output, const LHCb::
     if (bestPart) output.push_back(bestPart);
   }   
   else {
-    for (LHCb::Particle::Container::const_iterator iter = input->begin(); iter != input->end(); ++iter){
+    for (LHCb::Particle::Range::const_iterator iter = input.begin(); iter != input.end(); ++iter){
       output.push_back(*iter);
     }
   }
   return (output.size() == 0 ? false : true ); 
 }
 
-bool TrackTune::inMassRange(const LHCb::Particle* particle) const {
-  const double m = particle->measuredMass();
+bool TrackTune::inMassRange(const LHCb::Particle& particle) const
+{
+  const double m = particle.measuredMass();
   return  (m > m_minMass && m< m_maxMass);
 }
 

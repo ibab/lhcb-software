@@ -24,13 +24,13 @@ class TrackTune: public GaudiTupleAlg{
 
  private:
 
-  const LHCb::Track* track(const LHCb::Particle* part) const;
+  const LHCb::Track* track(const LHCb::Particle& part) const;
 
-  bool isFound(const LHCb::Tracks* tracks, const LHCb::Particle* part) const;
+  bool isFound(const LHCb::Track::Range& tracks, const LHCb::Particle& part) const;
 
-  bool select(std::vector<const LHCb::Particle* >& output, const LHCb::Particle::Container* input) const; 
+  bool select(std::vector<const LHCb::Particle*>& output, const LHCb::Particle::Range& input) const; 
 
-  bool inMassRange(const LHCb::Particle* particle) const;
+  bool inMassRange(const LHCb::Particle& particle) const;
 
   std::string m_particleLocation;
   std::string m_trackLocation;
