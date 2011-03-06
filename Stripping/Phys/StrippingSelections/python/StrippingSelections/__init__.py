@@ -5,7 +5,13 @@ All line builders available via function lineBuilders().
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
+# Gamma from trees
 import StrippingB2DX
+import StrippingDstarD02Kpipi0
+import StrippingB2D3H
+import StrippingBu2D0h_D02KShh_NoPID
+import StrippingBu2D0h_D02KShh_NoPID_WS
+
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
@@ -16,8 +22,6 @@ import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
 import StrippingB2XuMuNu
 import StrippingB2DMuNuX
-import StrippingBu2D0h_D02KShh_NoPID
-import StrippingBu2D0h_D02KShh_NoPID_WS
 import StrippingInclPhi
 import StrippingV0ForPID
 import StrippingB2JpsiXforBeta_s

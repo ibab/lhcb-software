@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-06 - Greig Cowan
+ - Added some Gamma from trees lines to __init__.py
+
 ! 2011-03-04 - Olivier Deschamps for Regis Lefevre
  - Updated StrippingD02KPiPi0
 
