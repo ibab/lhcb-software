@@ -83,7 +83,7 @@ field[ datetime.datetime(  2010,  10,   24,    9,     0,   0  ) ] = dnAlign
 if os.path.exists(dbFileName) : os.remove(dbFileName)
 db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                       create_new_db=True, readOnly=False )
-print "Created DB", dbFileName
+print "Opened DB file", dbFileName
 
 createdPaths = [ ]
 lastMDsums   = { }
@@ -110,8 +110,8 @@ for start in sorted(field.keys()):
         md = fileMD5(path)
         if condName not in lastMDsums.keys() : lastMDsums[condName] = 0
 
-        if md != lastMDsums[condName]:
-            # Fill to DB
+        # Check if update is needed
+        if md != lastMDsums[condName] :
             print " -> Updating", condName
             addToDB(start,align,condName,db)
             lastMDsums[condName] = md
