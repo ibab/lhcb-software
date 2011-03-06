@@ -4,6 +4,9 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+!========================== LoKiFitters v4r1p2 2011-03-06 =====================
+! 2011-03-06 - Gerhard Raven
+ - kill some more WARNING/ERROR printouts...
 
 !========================== LoKiFitters v4r1p1 2011-01-21 =====================
 ! 2011-01-21 - Gerhard Raven

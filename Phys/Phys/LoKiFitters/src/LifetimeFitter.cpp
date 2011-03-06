@@ -165,7 +165,7 @@ StatusCode LoKi::LifetimeFitter::fit
   StatusCode sc = fitConst_ 
     ( &primary  , &particle , decay , lifetime , error , chi2 ) ;  
   if ( sc.isFailure() ) 
-  { return Error ( "The error from LoKi::DirectionFitBase" , sc ) ;  }
+  { return Error ( "The error from LoKi::DirectionFitBase" , sc, 0 ) ;  }
   
   // convert c*tau into time 
   lifetime /= Gaudi::Units::c_light ;

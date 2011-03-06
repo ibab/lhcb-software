@@ -165,7 +165,7 @@ StatusCode LoKi::DirectionFitBase::iterate
   //
   counter ( "chi2" ) += chi2 ;
   counter ( "ctau" ) += ctau ;
-  return Error ( "There is no convergency" , NoConvergency ) ;
+  return Error ( "There is no convergency" , NoConvergency, 0 ) ;
 }
 // ============================================================================
 // make the real fit 
@@ -195,7 +195,7 @@ StatusCode LoKi::DirectionFitBase::fitConst_
       error      , 
       chi2       ) ;
   
-  if ( sc.isFailure () ) { return Error ("fit_: the error from iterate" , sc ) ; }
+  if ( sc.isFailure () ) { return Error ("fit_: the error from iterate" , sc, 0 ) ; }
   
   return StatusCode::SUCCESS ;
 }
