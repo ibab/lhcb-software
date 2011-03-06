@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-06 - Vladik Balagura
+ - Added luminosity Muon counter in Hlt1LumiLines.py
+
 !========================== Hlt1Lines v6r7 2011-03-06 ===================
 ! 2011-03-06 - Roel Aaij
  - Added a property to Hlt1MuonLines which allows timers to be added to all

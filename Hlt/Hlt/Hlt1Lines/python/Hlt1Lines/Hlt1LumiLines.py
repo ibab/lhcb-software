@@ -42,7 +42,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiCountTracks,
                                 LumiFromL0DU,
                                 LumiCountHltTracks,
-                                LumiFlagMethod
+                                LumiFlagMethod,
+                                LumiCountMuons
                                 )
     containerNameLumiTracks = 'Hlt/Track/Lumi'
     containerNameLumiVertex = 'Hlt/Vertex/Lumi'
@@ -60,7 +61,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                              }
                 , 'Postscale'              : { 'Hlt1LumiLow.*RateLimited' : 1.0 }
                 , 'CounterDefinition' : { 'RZVelo'   : [LumiCountTracks   , True    , containerNameLumiTracks  ,   5,  200]
-                                        , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons'        ,   5,  200]
+#                                        , 'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons'        ,   5,  200]
                                         , 'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'         ,   5,  100]
                                         , 'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB'        ,   5,  100]
                                         , 'PV3D'     : [LumiCountVertices , True    , containerNameLumiVertex  ,   1,   20]
@@ -152,6 +153,14 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                               , ValueName='RandomMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
             
+        from Configurables import L0MuonCandidatesFromRaw
+        from Configurables import LumiCountMuons
+        lumiCountSequence.Members.append( L0MuonCandidatesFromRaw( seqCountName+'L0MuonsFromRaw'))
+        lumiCountSequence.Members.append( LumiCountMuons( seqCountName+'Muons'
+                                                          , CounterName='Muon'
+                                                          , Threshold='2.5'
+                                                          , InputSelection='Trig/L0/MuonCtrl'
+                                                          , OutputContainer='Hlt/LumiSummary' ) )
         # populate count sequence from the definition
         createdCounters = []
         histoThresholds = []
