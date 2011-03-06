@@ -137,6 +137,8 @@ TrackEffDownMuon = {
     } 
     }
 
+'''
+Not working because it needs HltMuonRec
 TrackEffVeloMuon = { 
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'WGs' : [ 'ALL' ],
@@ -152,7 +154,9 @@ TrackEffVeloMuon = {
     ,       "Postscale":            1.      # MeV  
     }
     }
-
+'''
+'''
+AttributeError: Configurable 'MuonTTTrack' does not have property 'Output'.
 TrackEffMuonTT = {
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'WGs' : [ 'ALL' ],
@@ -186,3 +190,4 @@ TrackEffMuonTT = {
     'Postscale'                   : 1
     }
     }
+'''

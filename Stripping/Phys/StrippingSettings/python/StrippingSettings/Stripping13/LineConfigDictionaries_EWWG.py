@@ -204,6 +204,7 @@ SingleTrackTIS = {
     'WGs'    : ['EW']
     }
 
+'''
 DisplVertices = {
 	'BUILDERTYPE'	: 'DisplVerticeLinesConf',
 	'CONFIG'	: {'MaterialVeto': {'Double': 0,
@@ -266,3 +267,4 @@ DisplVertices = {
         'STREAMS' : [ 'EW' ],
         'WGs'    : ['Exotics']
 }
+'''
