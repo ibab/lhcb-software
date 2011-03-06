@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Muons v1r2 2011-03-06 ==================
 ! 2011-03-06 - Roel Aaij
  - Updates to MatchVeloMuon:
    - Stop looking for candidates once a good enough one is found.
