@@ -215,7 +215,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
         unit = streamer( self.localise_props( name ) )
-        if self.DoTiming: self.do_timing( unit )
+        if self.getProp('DoTiming') : self.do_timing( unit )
         priority = self.Priorities[ name ] if name in self.Priorities else None
         line = Hlt1Line(
             name,
