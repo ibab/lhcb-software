@@ -74,24 +74,31 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fitType = "CppFit" ):
         from GaudiPython import gbl
         from ROOT import TH2D
 
-        # Setup the fit object
-        params = gbl.Rich.HPDImage.HPDFit.Params()
-        params.cutFraction = 0.1
-        params.minBoundary = 3
-        params.type        = fitType
-
         # Get the histogram for this HPD
         image = rootfile.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdcopynr)+'_Image')
 
-        # Do the fit
-        fitter = gbl.Rich.HPDImage.HPDFit()
-        result = fitter.fit(image,params)
+        # Check entries
+        if image.GetEntries() < minEntries :
+            
+            OK = False
+            
+        else:
 
-        # Extract the fit results
-        OK = result.OK()
-        if OK :
-            xoffset = (result.x(),result.xErr())
-            yoffset = (result.y(),result.yErr())
+            # Setup the fit object
+            params = gbl.Rich.HPDImage.HPDFit.Params()
+            params.cutFraction = 0.1
+            params.minBoundary = 3
+            params.type        = fitType
+
+            # Do the fit
+            fitter = gbl.Rich.HPDImage.HPDFit()
+            result = fitter.fit(image,params)
+
+            # Extract the fit results
+            OK = result.OK()
+            if OK :
+                xoffset = (result.x(),result.xErr())
+                yoffset = (result.y(),result.yErr())
         
     return { "OK" : OK, "Result" : (xoffset,yoffset) }
 

@@ -12,11 +12,6 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichDet/DeRichSystem.h"
 
-// Histogramming
-#include "AIDA/IHistogram2D.h"
-#include "TH2D.h"
-#include "GaudiUtils/Aida2ROOT.h"
-
 // Event Model
 #include "Event/ODIN.h"
 
@@ -29,7 +24,13 @@
 #include <cmath>
 #include <sstream>
 
+// Local
 #include "RichHPDImageAnalysis/HPDFit.h"
+
+// Histogramming
+#include "AIDA/IHistogram2D.h"
+#include "TH2D.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 namespace Rich
 {

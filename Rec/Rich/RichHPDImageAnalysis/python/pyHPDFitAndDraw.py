@@ -11,7 +11,7 @@ def rootCanvas():
         gROOT.SetBatch(True)
         import rootStyle
         rootStyle.applyRootStyle()
-        globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",825,750)
+        globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",815,750)
     return globals()["canvas"]
 
 def getRootFile(filename):

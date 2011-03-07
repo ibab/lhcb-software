@@ -399,21 +399,25 @@ def runToFill(run):
     return fill
 
 def runAll(files='MDMS-RootFiles.txt'):
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Fit1')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Fit1')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Fit1')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Fit1')
+    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='FastRingFit')
+    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='FastRingFit')
+    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='FastRingFit')
+    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='FastRingFit')
     
 def calibrationByRuns(rootfiles='RootFileNames.txt',
-                      fitType="Fit1",followType="Smoothed",pol=0,smoothSigmaHours=3):
+                      fitType="SimpleChi2",followType="Smoothed",pol=0,smoothSigmaHours=3):
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
 
 def calibrationByFills(rootfiles='RootFileNames.txt',
-                       fitType="Fit1",followType="Smoothed",pol=0,smoothSigmaHours=12):
+                       fitType="SimpleChi2",followType="Smoothed",pol=0,smoothSigmaHours=12):
     return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours)
 
 def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):

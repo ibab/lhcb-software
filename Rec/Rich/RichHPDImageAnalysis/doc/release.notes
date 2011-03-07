@@ -4,6 +4,13 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-03-07 - Chris Jones
+ - More improvements to the HPD fits
+  + Remove a bias in the HPD bounary finding, that resulted in top/bottom hits
+    being preferred over lef/right ones
+  + Add an 'intensity' to each pixel and use this in the fit. Helps the fit to
+    ignore rogue 'boundary' pixels
+
 ! 2011-03-02 - Chris Jones
  - Rework the code to seperate out the HPD fitting into a seperate linker 
     library. This linker library is then used by both the component library

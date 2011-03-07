@@ -1,6 +1,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 // local
 #include "RichHPDImageAnalysis/HPDBoundaryFcn.h"
@@ -34,40 +35,83 @@ void HPDBoundaryFcn::findBoundary() const
   {
     m_boundary.clear() ;
 
-    const int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
+    const int nbins  = m_hist->GetNbinsX() * m_hist->GetNbinsY();
     const double thr = m_threshold*m_hist->Integral()/(1.0*nbins);
 
-    for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
+    // First one way
     {
-      int ROW0(-1), ROW1(-1);
+      for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
+      {
+        int ROW0(-1), ROW1(-1);
 
-      for ( int irow = 0; irow <m_hist->GetNbinsY() ; ++irow )
-      {
-        if ( hasNeighbour( icol, irow, thr ) &&
-             m_hist->GetBinContent( icol+1, irow+1 ) > thr )
+        for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
         {
-          ROW0 = irow ;
-          break;
+          if ( hasNeighbour( icol, irow, thr ) &&
+               m_hist->GetBinContent( icol+1, irow+1 ) > thr )
+          {
+            ROW0 = irow ;
+            break;
+          }
         }
-      }
-      for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
-      {
-        if ( hasNeighbour( icol, irow, thr ) &&
-             m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
+        for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
         {
-          ROW1 = m_hist->GetNbinsX() - irow - 1;
-          break;
+          if ( hasNeighbour( icol, irow, thr ) &&
+               m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
+          {
+            ROW1 = m_hist->GetNbinsX() - irow - 1;
+            break;
+          }
         }
-      }
-      if ( -1 != ROW0 )
-      {
-        m_boundary.push_back( Pixel( icol, ROW0 ) );
-      }
-      if ( -1 != ROW1 && ROW1 != ROW0 )
-      {
-        m_boundary.push_back( Pixel( icol, ROW1 ) );
+        if ( -1 != ROW0 )
+        {
+          addPixel( icol, ROW0 );
+        }
+        if ( -1 != ROW1 && ROW1 != ROW0 )
+        {
+          addPixel( icol, ROW1 );
+        }
       }
     }
+
+    // Then the other way
+    {
+      for ( int irow = 0 ; irow < m_hist->GetNbinsY() ; ++irow )
+      {
+        int COL0(-1), COL1(-1);
+
+        for ( int icol = 0; icol < m_hist->GetNbinsX() ; ++icol )
+        {
+          if ( hasNeighbour( icol, irow, thr ) &&
+               m_hist->GetBinContent( icol+1, irow+1 ) > thr )
+          {
+            COL0 = icol ;
+            break;
+          }
+        }
+        for ( int icol = 0; icol < m_hist->GetNbinsX() ; ++icol )
+        {
+          if ( hasNeighbour( icol, irow, thr ) &&
+               m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
+          {
+            COL1 = m_hist->GetNbinsY() - icol - 1;
+            break;
+          }
+        }
+        if ( -1 != COL0 )
+        {
+          addPixel( COL0, irow );
+          
+        }
+        if ( -1 != COL1 && COL1 != COL0 )
+        {
+          addPixel( COL1, irow );
+        }
+      }
+    }
+
+    // Sort and remove duplicates
+    std::sort  ( m_boundary.begin(), m_boundary.end() );
+    std::unique( m_boundary.begin(), m_boundary.end() );
 
     m_boundaryFound = true;
   }
@@ -85,7 +129,7 @@ bool HPDBoundaryFcn::hasNeighbour( const int COL,
       else if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
                 irow >= 0 && irow < m_hist->GetNbinsY() )
       {
-        if ( m_hist->GetBinContent( icol+1, irow+1 ) > thr ) return true ;
+        if ( m_hist->GetBinContent( icol+1, irow+1 ) > thr ) return true;
       }
     }
   }

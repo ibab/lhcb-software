@@ -2,9 +2,9 @@
 #ifndef RICHHPDIMAGEANALYSIS_SIMPLECHI2FIT_H
 #define RICHHPDIMAGEANALYSIS_SIMPLECHI2FIT_H 1
 
+#include "RichHPDImageAnalysis/HPDPixel.h"
 #include "Minuit2/FCNBase.h"
 #include "TH2D.h"
-#include "RichHPDImageAnalysis/HPDPixel.h"
 
 namespace Rich
 {
@@ -34,7 +34,7 @@ namespace Rich
       virtual double operator()( const std::vector<double>& par ) const ;
 
       virtual double Up() const{  return m_errDef; }
-      void setErrDef( const double def ){ m_errDef = def; }
+      void setErrDef( const double def ) { m_errDef = def; }
 
     private:
 

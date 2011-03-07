@@ -35,7 +35,7 @@ double SimpleChi2Fit::operator()( const std::vector<double>& par ) const
     const double deltaCol = ( 1.0  * iter->col ) - par[0];
     const double deltaRow = ( m_sf * iter->row ) - par[1];
     const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
-    chi2 += std::pow( dist - par[2] , 2 ) * 12.0;
+    chi2 += iter->intensity * std::pow( dist - par[2] , 2 ) * 12.0;
   }
 
   return chi2 ;

@@ -2,8 +2,8 @@
 #ifndef LIB_HPDBOUNDARYFCN_H
 #define LIB_HPDBOUNDARYFCN_H 1
 
-#include "TH2D.h"
 #include "RichHPDImageAnalysis/HPDPixel.h"
+#include "TH2D.h"
 
 namespace Rich
 {
@@ -39,9 +39,18 @@ namespace Rich
 
     private:
 
+      /// Finds the HPD boundary pixels
       void findBoundary() const;
+
+      /// Checks if the given pixel has a neighbour
       bool hasNeighbour( const int COL, const int ROW, const double thr ) const ;
 
+      /// Add a pixel to the bounary list
+      inline void addPixel( const int col, const int row ) const
+      {
+        m_boundary.push_back( Pixel(col,row,m_hist->GetBinContent(col+1,row+1)) );
+      }
+      
     private:
 
       double m_threshold ;

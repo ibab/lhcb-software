@@ -2,8 +2,8 @@
 #ifndef RICHHPDIMAGEANALYSIS_HPDFIT_H
 #define RICHHPDIMAGEANALYSIS_HPDFIT_H 1
 
-#include "TH2D.h"
 #include "RichHPDImageAnalysis/HPDPixel.h"
+#include "TH2D.h"
 
 namespace Rich
 {
