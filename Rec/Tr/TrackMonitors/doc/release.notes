@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-03-07 - Mariusz Witek
+ - Add Vertex Compare, an algorithm to compare primary vertices from two locations
+
 ! 2011-03-06 - Wouter Hulsbergen
  - get particles and tracks by range in TrackTune
    (see https://savannah.cern.ch/bugs/?78977)
