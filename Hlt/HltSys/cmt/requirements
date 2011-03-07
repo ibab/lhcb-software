@@ -16,7 +16,7 @@ use HltDisplVertices    v3r3    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r6p4  Hlt   # Bruno de Paula
 use HltL0Conf           v3r0    Hlt   # Johannes Albrecht
 use HltLine             v5r1p1  Hlt   # Vanya Belyaev, Gerhard Raven
-use HltLuminosity       v2r17   Hlt   # Jaap Panman
+use HltLuminosity       v2r18   Hlt   # Jaap Panman
 use HltMuon             v4r0    Hlt   # to be removed at some point
 use HltRawData          v2r10p1 Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
