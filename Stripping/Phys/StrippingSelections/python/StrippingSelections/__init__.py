@@ -72,6 +72,8 @@ import StrippingDiPhotonDiMuon
 
 import StrippingDisplVertices
 
+import StrippingHighPtJets
+
 import StrippingMiniBias
 
 import StrippingNoPIDDstarWithD02RSKPi
