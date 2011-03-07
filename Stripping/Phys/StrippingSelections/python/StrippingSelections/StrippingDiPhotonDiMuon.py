@@ -32,11 +32,11 @@ class PP2PPMuMuConf(LineBuilder) :
 
 
                       
-        self.PP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuL0Line",
+        self.PP2PPMuMu_line = StrippingLine(self._myname+"NoPVLine",
                                             prescale = config['PP2PPMuMuLinePrescale'],
                                             postscale = config['PP2PPMuMuLinePostscale'],
                                             checkPV = False,
-                                            L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')",
+                                            HLT = "HLT_PASS('Hlt2DiMuonNoPVDecision')"
                                             )
         
         self.registerLine(self.PP2PPMuMu_line)
