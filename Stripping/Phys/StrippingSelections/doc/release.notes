@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-07 - Anton Poluektov 
+ - Fixed StrippingB2D3H.py to use FILTER in StrippingLine rather than VoidFilter
+
 ! 2011-02-07 - Georg Krocker
  - Fixed Outputlevel in PatVeloSpace Tracking used in TrackEffVeloMuonLine
 

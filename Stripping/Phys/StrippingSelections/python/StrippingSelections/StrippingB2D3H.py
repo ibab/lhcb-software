@@ -140,10 +140,10 @@ B->D+3H channels
 from StrippingConf.StrippingStream import StrippingStream
 from Configurables import FilterDesktop, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+#from StrippingSelections.Utils import checkConfig
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from copy import copy
-from StrippingUtils.Utils import LineBuilder  #ADDED LINE
+from StrippingUtils.Utils import LineBuilder, checkConfig  #ADDED LINE
 from CommonParticles import StdLoosePions, StdLooseKaons, StdLooseProtons, StdLooseDplus
 
 
@@ -297,9 +297,18 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
 
         checkConfig(B2D3HAllLinesConf.__configuration_keys__, config)
 
+#       Use FILTER agrument of StrippingLine instead of VoidFilter - A. Poluektov
 
-        self.EventFilter = MyEventFilter('B2D3H'+name,
-                                         MaxTracks = config['MaxTracks'])
+#        self.EventFilter = MyEventFilter('B2D3H'+name,
+#                                         MaxTracks = config['MaxTracks'])
+
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules = CoreFactory('CoreFactory').Modules
+        for i in ['LoKiTrigger.decorators']:
+          if i not in modules : modules.append(i)
+        self.EventFilter = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %s )" % config['MaxTracks']
+
         # First filter pions
         self.selPions = makePions( 'PionsForB2D3H'+name,
                                    PionMinP = config['PionMinP'],
@@ -976,68 +985,89 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.StrippingAllB2D0PiPiPiLine = StrippingLine('AllB2D0PiPiPiLine'+name,
                                                      prescale = config['B2D0PiPiPiAll_Prescale'],
                                                      postscale = config['B2D0PiPiPiAll_Postscale'],
-                                                     algos = [ self.EventFilter, self.B2D0PiPiPi],
+                                                     selection = self.B2D0PiPiPi,
+                                                     FILTER = self.EventFilter
 						     #FILTER = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %(MaxTracks)s )" %locals()
                                                      )
 
         self.StrippingAllB2D0KPiPiLine = StrippingLine('AllB2D0KPiPiLine'+name,
                                                      prescale = config['B2D0KPiPiAll_Prescale'],
                                                      postscale = config['B2D0KPiPiAll_Postscale'],
-                                                     algos = [ self.EventFilter, self.B2D0KPiPi]
+                                                     #algos = [ self.EventFilter, self.B2D0KPiPi], 
+                                                     selection = self.B2D0KPiPi, 
+                                                     FILTER = self.EventFilter
                                                      )
 
         self.StrippingAllUnbiasedB2DPiPiPiLine = StrippingLine('AllUnbiasedB2DPiPiPiLine'+name,
                                                     prescale = config['UnbiasedB2DPiPiPiAll_Prescale'],
                                                     postscale = config['UnbiasedB2DPiPiPiAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.UnbiasedB2DPiPiPiHLT1HLT2TIS]
+                                                    #algos = [ self.EventFilter, self.UnbiasedB2DPiPiPiHLT1HLT2TIS]
+                                                    selection = self.UnbiasedB2DPiPiPiHLT1HLT2TIS, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingAllB2DPiPiPiLine = StrippingLine('AllB2DPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiAll_Prescale'],
                                                     postscale = config['B2DPiPiPiAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.B2DPiPiPi]
+                                                    #algos = [ self.EventFilter, self.B2DPiPiPi]
+                                                    selection = self.B2DPiPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingAllB2DKPiPiLine = StrippingLine('AllB2DKPiPiLine'+name,
                                                    prescale = config['B2DKPiPiAll_Prescale'],
                                                    postscale = config['B2DKPiPiAll_Postscale'],
-                                                   algos = [ self.EventFilter, self.B2DKPiPi]
+                                                   #algos = [ self.EventFilter, self.B2DKPiPi]
+                                                   selection = self.B2DKPiPi, 
+                                                   FILTER = self.EventFilter
                                                    )
         
         self.StrippingAllB2DStarPiPiPiLine = StrippingLine('AllB2DStarPiPiPiLine'+name,
                                                         prescale = config['B2DStarPiPiPiAll_Prescale'],
                                                         postscale = config['B2DStarPiPiPiAll_Postscale'],
-                                                        algos = [ self.EventFilter, self.B2DStarPiPiPi]
+                                                        #algos = [ self.EventFilter, self.B2DStarPiPiPi]
+                                                        selection = self.B2DStarPiPiPi, 
+                                                        FILTER = self.EventFilter
                                                         )
 
         self.StrippingAllB2DStarKPiPiLine = StrippingLine('AllB2DStarKPiPiLine'+name,
                                                        prescale = config['B2DStarKPiPiAll_Prescale'],
                                                        postscale = config['B2DStarKPiPiAll_Postscale'],
-                                                       algos = [ self.EventFilter, self.B2DStarKPiPi]
+                                                       #algos = [ self.EventFilter, self.B2DStarKPiPi]
+                                                       selection = self.B2DStarKPiPi, 
+                                                       FILTER = self.EventFilter
                                                        )
 
         self.StrippingAllB2DDLine = StrippingLine('AllB2DDLine'+name,
                                                     prescale = config['B2DDAll_Prescale'],
                                                     postscale = config['B2DDAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.B2DD]
+                                                    #algos = [ self.EventFilter, self.B2DD]
+                                                    selection = self.B2DD, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingAllB2DStarDLine = StrippingLine('AllB2DStarDLine'+name,
                                                     prescale = config['B2DStarDAll_Prescale'],
                                                     postscale = config['B2DStarDAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.B2DStarD]
+                                                    #algos = [ self.EventFilter, self.B2DStarD]
+                                                    selection = self.B2DStarD, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingAllLambdaB2LambdaCPiPiPiLine = StrippingLine('AllLambdaB2LambdaCPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiAll_Prescale'],
                                                     postscale = config['B2DPiPiPiAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                    #algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                    selection = self.LambdaB2LambdaCPiPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingAllLambdaB2LambdaCKPiPiLine = StrippingLine('AllLambdaB2LambdaCKPiPiLine'+name,
                                                     prescale = config['B2DKPiPiAll_Prescale'],
                                                     postscale = config['B2DKPiPiAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.LambdaB2LambdaCKPiPi]
+                                                    #algos = [ self.EventFilter, self.LambdaB2LambdaCKPiPi]
+                                                    selection = self.LambdaB2LambdaCKPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         #---------------------------
@@ -1048,49 +1078,65 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.StrippingAllWSB2DPiPiPiLine = StrippingLine('AllWSB2DPiPiPiLine'+name,
                                                          prescale = config['WSB2D3H_Prescale'],
                                                          postscale = config['WSB2D3H_Postscale'],
-                                                         algos = [ self.EventFilter, self.WSB2DPiPiPi]
+                                                         #algos = [ self.EventFilter, self.WSB2DPiPiPi]
+                                                         selection = self.WSB2DPiPiPi, 
+                                                         FILTER = self.EventFilter
                                                          )
         
         self.StrippingAllWSB2DKPiPiLine = StrippingLine('AllWSB2DKPiPiLine'+name,
                                                         prescale = config['WSB2D3H_Prescale'],
                                                         postscale = config['WSB2D3H_Postscale'],
-                                                        algos = [ self.EventFilter, self.WSB2DKPiPi]
+                                                        #algos = [ self.EventFilter, self.WSB2DKPiPi]
+                                                        selection = self.WSB2DKPiPi, 
+                                                        FILTER = self.EventFilter
                                                         )
         
         self.StrippingAllWSB2DStarPiPiPiLine = StrippingLine('AllWSB2DStarPiPiPiLine'+name,
                                                              prescale = config['WSB2D3H_Prescale'],
                                                              postscale = config['WSB2D3H_Postscale'],
-                                                             algos = [ self.EventFilter, self.WSB2DStarPiPiPi]
+                                                             #algos = [ self.EventFilter, self.WSB2DStarPiPiPi]
+                                                             selection = self.WSB2DStarPiPiPi, 
+                                                             FILTER = self.EventFilter
                                                              )
         
         self.StrippingAllWSB2DStarKPiPiLine = StrippingLine('AllWSB2DStarKPiPiLine'+name,
                                                             prescale = config['WSB2D3H_Prescale'],
                                                             postscale = config['WSB2D3H_Postscale'],
-                                                            algos = [ self.EventFilter, self.WSB2DStarKPiPi]
+                                                            #algos = [ self.EventFilter, self.WSB2DStarKPiPi]
+                                                            selection = self.WSB2DStarKPiPi, 
+                                                            FILTER = self.EventFilter
                                                             )
         
         self.StrippingAllWSB2DDLine = StrippingLine('AllWSB2DDLine'+name,
                                                     prescale = config['WSB2D3H_Prescale'],
                                                     postscale = config['WSB2D3H_Postscale'],
-                                                    algos = [ self.EventFilter, self.WSB2DD]
+                                                    #algos = [ self.EventFilter, self.WSB2DD]
+                                                    selection = self.WSB2DD, 
+                                                    FILTER = self.EventFilter
                                                     )
         
         self.StrippingAllWSB2DStarDLine = StrippingLine('AllWSB2DStarDLine'+name,
                                                         prescale = config['WSB2D3H_Prescale'],
                                                         postscale = config['WSB2D3H_Postscale'],
-                                                        algos = [ self.EventFilter, self.WSB2DStarD]
+                                                        #algos = [ self.EventFilter, self.WSB2DStarD]
+                                                        selection = self.WSB2DStarD, 
+                                                        FILTER = self.EventFilter
                                                         )
         
         self.StrippingAllWSLambdaB2LambdaCPiPiPiLine = StrippingLine('AllWSLambdaB2LambdaCPiPiPiLine'+name,
                                                                      prescale = config['WSB2D3H_Prescale'],
                                                                      postscale = config['WSB2D3H_Postscale'],
-                                                                     algos = [ self.EventFilter, self.WSLambdaB2LambdaCPiPiPi]
+                                                                     #algos = [ self.EventFilter, self.WSLambdaB2LambdaCPiPiPi]
+                                                                     selection = self.WSLambdaB2LambdaCPiPiPi, 
+                                                                     FILTER = self.EventFilter
                                                                      )
         
         self.StrippingAllWSLambdaB2LambdaCKPiPiLine = StrippingLine('AllWSLambdaB2LambdaCKPiPiLine'+name,
                                                                     prescale = config['WSB2D3H_Prescale'],
                                                                     postscale = config['WSB2D3H_Postscale'],
-                                                                    algos = [ self.EventFilter, self.WSLambdaB2LambdaCKPiPi]
+                                                                    #algos = [ self.EventFilter, self.WSLambdaB2LambdaCKPiPi]
+                                                                    selection = self.WSLambdaB2LambdaCKPiPi, 
+                                                                    FILTER = self.EventFilter
                                                                     )
 
         
@@ -1102,60 +1148,80 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.StrippingSignalB2D0PiPiPiLine = StrippingLine('SignalB2D0PiPiPiLine'+name,
                                                      prescale = config['B2D0PiPiPiSignal_Prescale'],
                                                      postscale = config['B2D0PiPiPiSignal_Postscale'],
-                                                     algos = [  self.EventFilter, self.SignalB2D0PiPiPi]
+                                                     #algos = [  self.EventFilter, self.SignalB2D0PiPiPi]
+                                                     selection = self.SignalB2D0PiPiPi, 
+                                                     FILTER = self.EventFilter
                                                      )
 
         self.StrippingSignalB2D0KPiPiLine = StrippingLine('SignalB2D0KPiPiLine'+name,
                                                      prescale = config['B2D0KPiPiSignal_Prescale'],
                                                      postscale = config['B2D0KPiPiSignal_Postscale'],
-                                                     algos = [  self.EventFilter, self.SignalB2D0KPiPi]
+                                                     #algos = [  self.EventFilter, self.SignalB2D0KPiPi]
+                                                     selection = self.SignalB2D0KPiPi, 
+                                                     FILTER = self.EventFilter
                                                      )
 
         self.StrippingSignalB2DPiPiPiLine = StrippingLine('SignalB2DPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiSignal_Prescale'],
                                                     postscale = config['B2DPiPiPiSignal_Postscale'],
-                                                    algos = [  self.EventFilter, self.SignalB2DPiPiPi]
+                                                    #algos = [  self.EventFilter, self.SignalB2DPiPiPi]
+                                                    selection = self.SignalB2DPiPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingSignalB2DKPiPiLine = StrippingLine('SignalB2DKPiPiLine'+name,
                                                    prescale = config['B2DKPiPiSignal_Prescale'],
                                                    postscale = config['B2DKPiPiSignal_Postscale'],
-                                                   algos = [  self.EventFilter, self.SignalB2DKPiPi]
+                                                   #algos = [  self.EventFilter, self.SignalB2DKPiPi]
+                                                   selection = self.SignalB2DKPiPi, 
+                                                   FILTER = self.EventFilter
                                                    )
         
         self.StrippingSignalB2DStarPiPiPiLine = StrippingLine('SignalB2DStarPiPiPiLine'+name,
                                                         prescale = config['B2DStarPiPiPiSignal_Prescale'],
                                                         postscale = config['B2DStarPiPiPiSignal_Postscale'],
-                                                        algos = [  self.EventFilter, self.SignalB2DStarPiPiPi]
+                                                        #algos = [  self.EventFilter, self.SignalB2DStarPiPiPi]
+                                                        selection = self.SignalB2DStarPiPiPi, 
+                                                        FILTER = self.EventFilter
                                                         )
 
         self.StrippingSignalB2DStarKPiPiLine = StrippingLine('SignalB2DStarKPiPiLine'+name,
                                                        prescale = config['B2DStarKPiPiSignal_Prescale'],
                                                        postscale = config['B2DStarKPiPiSignal_Postscale'],
-                                                       algos = [  self.EventFilter, self.SignalB2DStarKPiPi]
+                                                       #algos = [  self.EventFilter, self.SignalB2DStarKPiPi]
+                                                       selection = self.SignalB2DStarKPiPi, 
+                                                       FILTER = self.EventFilter
                                                        )
         self.StrippingSignalB2DDLine = StrippingLine('SignalB2DDLine'+name,
                                                     prescale = config['B2DDAll_Prescale'],
                                                     postscale = config['B2DDAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.SignalB2DD]
+                                                    #algos = [ self.EventFilter, self.SignalB2DD]
+                                                    selection = self.SignalB2DD, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingSignalB2DStarDLine = StrippingLine('SignalB2DStarDLine'+name,
                                                     prescale = config['B2DStarDSignal_Prescale'],
                                                     postscale = config['B2DStarDSignal_Postscale'],
-                                                    algos = [ self.EventFilter, self.SignalB2DStarD]
+                                                    #algos = [ self.EventFilter, self.SignalB2DStarD]
+                                                    selection = self.SignalB2DStarD, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingSignalLambdaB2LambdaCPiPiPiLine = StrippingLine('SignalLambdaB2LambdaCPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiSignal_Prescale'],
                                                     postscale = config['B2DPiPiPiSignal_Postscale'],
-                                                    algos = [  self.EventFilter, self.SignalLambdaB2LambdaCPiPiPi]
+                                                    #algos = [  self.EventFilter, self.SignalLambdaB2LambdaCPiPiPi]
+                                                    selection = self.SignalLambdaB2LambdaCPiPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
         self.StrippingSignalLambdaB2LambdaCKPiPiLine = StrippingLine('SignalLambdaB2LambdaCKPiPiLine'+name,
                                                     prescale = config['B2DKPiPiSignal_Prescale'],
                                                     postscale = config['B2DKPiPiSignal_Postscale'],
-                                                    algos = [  self.EventFilter, self.SignalLambdaB2LambdaCKPiPi]
+                                                    #algos = [  self.EventFilter, self.SignalLambdaB2LambdaCKPiPi]
+                                                    selection = self.SignalLambdaB2LambdaCKPiPi, 
+                                                    FILTER = self.EventFilter
                                                     )
 
 
