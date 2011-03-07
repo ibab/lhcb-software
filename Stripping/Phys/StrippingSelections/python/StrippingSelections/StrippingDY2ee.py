@@ -84,7 +84,7 @@ class DY2eeConf(LineBuilder) :
                                      _DY1MassCut,
                                      _ecuta)
      
-        self.DY2ee_line1 = StrippingLine(self._myname+"DY2eeLine1",
+        self.DY2ee_line1 = StrippingLine(self._myname+"Line1",
                                             prescale = config['DY2eeLine1Prescale'],
                                             postscale = config['DY2eeLinePostscale'],
                                             selection = self.selDY2ee_1
@@ -97,7 +97,7 @@ class DY2eeConf(LineBuilder) :
                                      _DY2MassCut,
                                      _ecutb)
      
-        self.DY2ee_line2 = StrippingLine(self._myname+"DY2eeLine2",
+        self.DY2ee_line2 = StrippingLine(self._myname+"Line2",
                                             prescale = config['DY2eeLine2Prescale'],
                                             postscale = config['DY2eeLinePostscale'],
                                             selection = self.selDY2ee_2
@@ -110,7 +110,7 @@ class DY2eeConf(LineBuilder) :
                                      _DY3MassCut,
                                      _ecutb)
      
-        self.DY2ee_line3 = StrippingLine(self._myname+"DY2eeLine3",
+        self.DY2ee_line3 = StrippingLine(self._myname+"Line3",
                                             prescale = config['DY2eeLine3Prescale'],
                                             postscale = config['DY2eeLinePostscale'],
                                             selection = self.selDY2ee_3
@@ -123,7 +123,7 @@ class DY2eeConf(LineBuilder) :
                                      _DY4MassCut,
                                      _ecutc)
      
-        self.DY2ee_line4 = StrippingLine(self._myname+"DY2eeLine4",
+        self.DY2ee_line4 = StrippingLine(self._myname+"Line4",
                                             prescale = config['DY2eeLine4Prescale'],
                                             postscale = config['DY2eeLinePostscale'],
                                             selection = self.selDY2ee_4

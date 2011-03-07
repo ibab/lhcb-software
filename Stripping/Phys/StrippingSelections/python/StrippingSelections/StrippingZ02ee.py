@@ -46,7 +46,7 @@ class Z02eeConf(LineBuilder) :
                                      _Z0MinMass,
                                      _ecut)
      
-        self.Z02ee_line = StrippingLine(self._myname+"Z02eeLine",
+        self.Z02ee_line = StrippingLine(self._myname+"Line",
                                             prescale = config['Z02eeLinePrescale'],
                                             postscale = config['Z02eeLinePostscale'],
                                             selection = self.selZ02ee

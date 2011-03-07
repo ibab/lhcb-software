@@ -52,7 +52,7 @@ class WeConf(LineBuilder) :
         self.selWe = makeWe(self._myname+'We', 
                                _ecut)
         
-        self.We_line = StrippingLine(self._myname+"WeLine",
+        self.We_line = StrippingLine(self._myname+"Line",
                                      prescale = config['WeLinePrescale'],
                                      postscale = config['WeLinePostscale'],
                                      selection = self.selWe
@@ -63,7 +63,7 @@ class WeConf(LineBuilder) :
         self.selWe_ps = makeWe(self._myname+'We_ps', 
                                _ecut_ps)
         
-        self.We_line_ps = StrippingLine(self._myname+"WeLine_ps",
+        self.We_line_ps = StrippingLine(self._myname+"Line_ps",
                                      prescale = config['WeLinePrescale_ps'],
                                      postscale = config['WeLinePostscale'],
                                      selection = self.selWe_ps

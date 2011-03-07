@@ -56,7 +56,7 @@ class SingleTrackTISConf(LineBuilder) :
                                            , self.selLowPtHlt1TIS
                                            , "Hlt2.*Decision%TIS"
                                            )
-        self.lineSingleTrackTISLowPt = StrippingLine( self._myname + "LowPtTIS"
+        self.lineSingleTrackTISLowPt = StrippingLine( self._myname + "LowPt"
                                                       , prescale = config[ "LowPtPrescale" ]
                                                       , postscale = config[ "LowPtPostscale" ]
                                                       , checkPV = False
@@ -79,7 +79,7 @@ class SingleTrackTISConf(LineBuilder) :
                                             , self.selHighPtHlt1TIS
                                             , "Hlt2.*Decision%TIS"
                                             )
-        self.lineSingleTrackTISHighPt = StrippingLine( self._myname + "HighPtTIS"
+        self.lineSingleTrackTISHighPt = StrippingLine( self._myname + "HighPt"
                                                        , prescale = config[ "HighPtPrescale" ]
                                                        , postscale = config[ "HighPtPostscale" ]
                                                        , checkPV = False

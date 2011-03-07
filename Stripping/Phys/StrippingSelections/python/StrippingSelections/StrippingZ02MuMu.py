@@ -45,7 +45,7 @@ class Z02MuMuConf(LineBuilder) :
                                      _Z0MinMass,
                                      _mucut)
      
-        self.Z02MuMu_line = StrippingLine(self._myname+"Z02MuMuLine",
+        self.Z02MuMu_line = StrippingLine(self._myname+"Line",
                                           prescale = config['Z02MuMuLinePrescale'],
                                           postscale = config['Z02MuMuLinePostscale'],
                                           checkPV = False,
@@ -57,7 +57,7 @@ class Z02MuMuConf(LineBuilder) :
                                      _Z0MinMass,
                                      _mucut)
      
-        self.Z02MuMu_lineloose = StrippingLine(self._myname+"Z02MuMuLooseLine",
+        self.Z02MuMu_lineloose = StrippingLine(self._myname+"LooseLine",
                                                prescale = config['Z02MuMuLinePrescale'],
                                                postscale = config['Z02MuMuLinePostscale'],
                                                checkPV = False,
@@ -70,7 +70,7 @@ class Z02MuMuConf(LineBuilder) :
                                      _Z0MinMass,
                                      _mucut)
      
-        self.Z02MuMu_lineNoPIDs = StrippingLine(self._myname+"Z02MuMuNoPIDsLine",
+        self.Z02MuMu_lineNoPIDs = StrippingLine(self._myname+"NoPIDsLine",
                                                 prescale = config['Z02MuMuLinePrescale'],
                                                 postscale = config['Z02MuMuLinePostscale'],
                                                 checkPV = False,

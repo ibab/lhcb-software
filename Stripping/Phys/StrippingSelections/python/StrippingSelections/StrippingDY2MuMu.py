@@ -100,20 +100,20 @@ class DY2MuMuConf(LineBuilder) :
                                      _DY1MassCutHlt,
                                      _mucut1)
 
-        self.DY2MuMu_line1_ps = StrippingLine(self._myname+"DY2MuMuLine1_ps",
+        self.DY2MuMu_line1_ps = StrippingLine(self._myname+"Line1_ps",
                                             prescale = config['DY2MuMu1Line_psPrescale'],
                                             postscale = config['DY2MuMu1LinePostscale'],
                                             selection = self.selDY2MuMu1
                                             )
 
-        self.DY2MuMu_line1_Hlt = StrippingLine(self._myname+"DY2MuMuLine1_Hlt",
+        self.DY2MuMu_line1_Hlt = StrippingLine(self._myname+"Line1_Hlt",
                                             prescale = config['DY2MuMu1Line_HltPrescale'],
                                             postscale = config['DY2MuMu1LinePostscale'],
                                             HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')",
                                             selection = self.selDY2MuMu1_Hlt
                                             )
 
-        self.DY2MuMu_line1_Hlta = StrippingLine(self._myname+"DY2MuMuLine1_Hlta",
+        self.DY2MuMu_line1_Hlta = StrippingLine(self._myname+"Line1_Hlta",
                                             prescale = config['DY2MuMu1Line_HltaPrescale'],
                                             postscale = config['DY2MuMu1LinePostscale'],
                                             HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')",
@@ -135,20 +135,20 @@ class DY2MuMuConf(LineBuilder) :
                                      _DY2MassCutHlt,
                                      _mucut1)
 
-        self.DY2MuMu_line2 = StrippingLine(self._myname+"DY2MuMuLine2",
+        self.DY2MuMu_line2 = StrippingLine(self._myname+"Line2",
                                             prescale = config['DY2MuMu2LinePrescale'],
                                             postscale = config['DY2MuMu2LinePostscale'],
                                             selection = self.selDY2MuMu2
                                             )
 
-        self.DY2MuMu_line2_Hlt = StrippingLine(self._myname+"DY2MuMuLine2_Hlt",
+        self.DY2MuMu_line2_Hlt = StrippingLine(self._myname+"Line2_Hlt",
                                             prescale = config['DY2MuMu2Line_HltPrescale'],
                                             postscale = config['DY2MuMu2LinePostscale'],
                                             HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')",
                                             selection = self.selDY2MuMu2_Hlt
                                             )
 
-        self.DY2MuMu_line2_Hlta = StrippingLine(self._myname+"DY2MuMuLine2_Hlta",
+        self.DY2MuMu_line2_Hlta = StrippingLine(self._myname+"Line2_Hlta",
                                             prescale = config['DY2MuMu2Line_HltaPrescale'],
                                             postscale = config['DY2MuMu2LinePostscale'],
                                             HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')",
@@ -168,7 +168,7 @@ class DY2MuMuConf(LineBuilder) :
                                      _DY3MassCut,
                                      _mucut2)
 
-        self.DY2MuMu_line3 = StrippingLine(self._myname+"DY2MuMuLine3",
+        self.DY2MuMu_line3 = StrippingLine(self._myname+"Line3",
                                             prescale = config['DY2MuMu3LinePrescale'],
                                             postscale = config['DY2MuMu3LinePostscale'],
                                             selection = self.selDY2MuMu3
@@ -181,7 +181,7 @@ class DY2MuMuConf(LineBuilder) :
                                      _DY4MassCut,
                                      _mucut2)
 
-        self.DY2MuMu_line4 = StrippingLine(self._myname+"DY2MuMuLine4",
+        self.DY2MuMu_line4 = StrippingLine(self._myname+"Line4",
                                             prescale = config['DY2MuMu4LinePrescale'],
                                             postscale = config['DY2MuMu4LinePostscale'],
                                             selection = self.selDY2MuMu4

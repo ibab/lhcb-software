@@ -56,7 +56,7 @@ class WMuConf(LineBuilder) :
         # Prescaled Line, StdLooseMuons, Cut at 15GeV
         self.selWMu_ps = makeWMu(self._myname+'WMu_ps', _mucut)
      
-        self.WMu_lineps = StrippingLine(self._myname+"WMuLine_ps",
+        self.WMu_lineps = StrippingLine(self._myname+"Line_ps",
                                         prescale = config['WMuLinePrescale_ps'],
                                         postscale = config['WMuLinePostscale'],
                                         checkPV = False,
@@ -68,7 +68,7 @@ class WMuConf(LineBuilder) :
         self.selWMu_looseps = makeWMuLoose(self._myname+'WMu_looseps', 
                                            _mucut)
      
-        self.WMu_linelooseps = StrippingLine(self._myname+"WMuLine_looseps",
+        self.WMu_linelooseps = StrippingLine(self._myname+"Line_looseps",
                                              prescale = config['WMuLinePrescale_ps'],
                                              postscale = config['WMuLinePostscale'],
                                              checkPV = False,
@@ -80,7 +80,7 @@ class WMuConf(LineBuilder) :
         self.selWMu_NoPIDsps = makeWMuNoPIDs(self._myname+'WMu_NoPIDsps', 
                                              _mucutverytight)
      
-        self.WMu_lineNoPIDsps = StrippingLine(self._myname+"WMuLine_NoPIDsps",
+        self.WMu_lineNoPIDsps = StrippingLine(self._myname+"Line_NoPIDsps",
                                               prescale = config['WMuLinePrescale_ps'],
                                               postscale = config['WMuLinePostscale'],
                                               checkPV = False,
@@ -95,7 +95,7 @@ class WMuConf(LineBuilder) :
         self.selWMu = makeWMu(self._myname+'WMu', 
                               _mucuttight)
      
-        self.WMu_line = StrippingLine(self._myname+"WMuLine",
+        self.WMu_line = StrippingLine(self._myname+"Line",
                                       prescale = config['WMuLinePrescale'],
                                       postscale = config['WMuLinePostscale'],
                                       checkPV = False,
@@ -107,7 +107,7 @@ class WMuConf(LineBuilder) :
         self.selWMu_loose = makeWMuLoose(self._myname+'WMu_loose', 
                               _mucuttight)
      
-        self.WMu_lineloose = StrippingLine(self._myname+"WMuLine_loose",
+        self.WMu_lineloose = StrippingLine(self._myname+"Line_loose",
                                            prescale = config['WMuLinePrescale'],
                                            postscale = config['WMuLinePostscale'],
                                            checkPV = False,

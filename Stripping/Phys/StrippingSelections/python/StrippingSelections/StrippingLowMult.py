@@ -32,7 +32,7 @@ class LowMultConf(LineBuilder) :
 
 
                       
-        self.LowMult_line = StrippingLine(self._myname+"LowMult",
+        self.LowMult_line = StrippingLine(self._myname+"Line",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,
@@ -42,7 +42,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMult_line)
 
        
-        self.LowMultMuon_line = StrippingLine(self._myname+"LowMultMuon",
+        self.LowMultMuon_line = StrippingLine(self._myname+"MuonLine",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,
@@ -52,7 +52,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultMuon_line)
 
 
-        self.LowMultElectron_line = StrippingLine(self._myname+"LowMultElectron",
+        self.LowMultElectron_line = StrippingLine(self._myname+"ElectronLine",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,
@@ -62,7 +62,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultElectron_line)
 
 
-        self.LowMultHadron_line = StrippingLine(self._myname+"LowMultHadron",
+        self.LowMultHadron_line = StrippingLine(self._myname+"HadronLine",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,
@@ -72,7 +72,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultHadron_line)
 
 
-        self.LowMultPhoton_line = StrippingLine(self._myname+"LowMultPhoton",
+        self.LowMultPhoton_line = StrippingLine(self._myname+"PhotonLine",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,
@@ -82,7 +82,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultPhoton_line)
 
 
-        self.LowMultPP2PPMuMu_line = StrippingLine(self._myname+"LowMultPP2PPMuMu",
+        self.LowMultPP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
                                           prescale = config['LowMultPrescale'],
                                           postscale = config['LowMultPostscale'],
                                           checkPV = False,

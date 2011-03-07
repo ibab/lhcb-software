@@ -72,7 +72,7 @@ class MuMuSSConf(LineBuilder) :
                                      _MuMuSS1MassCut,
                                      _mucut)
      
-        self.MuMuSS_line1 = StrippingLine(self._myname+"MuMuSSLine1",
+        self.MuMuSS_line1 = StrippingLine(self._myname+"Line1",
                                           prescale = config['MuMuSSLine1Prescale'],
                                           postscale = config['MuMuSSLine1Postscale'],
                                           selection = self.selMuMuSS1
@@ -84,7 +84,7 @@ class MuMuSSConf(LineBuilder) :
                                      _MuMuSS2MassCut,
                                      _mucut)
      
-        self.MuMuSS_line2 = StrippingLine(self._myname+"MuMuSSLine2",
+        self.MuMuSS_line2 = StrippingLine(self._myname+"Line2",
                                           prescale = config['MuMuSSLine2Prescale'],
                                           postscale = config['MuMuSSLine2Postscale'],
                                           selection = self.selMuMuSS2
@@ -96,7 +96,7 @@ class MuMuSSConf(LineBuilder) :
                                      _MuMuSS3MassCut,
                                      _mucut)
      
-        self.MuMuSS_line3 = StrippingLine(self._myname+"MuMuSSLine3",
+        self.MuMuSS_line3 = StrippingLine(self._myname+"Line3",
                                           prescale = config['MuMuSSLine3Prescale'],
                                           postscale = config['MuMuSSLine3Postscale'],
                                           selection = self.selMuMuSS3
@@ -108,7 +108,7 @@ class MuMuSSConf(LineBuilder) :
                                      _MuMuSS4MassCut,
                                      _mucut)
      
-        self.MuMuSS_line4 = StrippingLine(self._myname+"MuMuSSLine4",
+        self.MuMuSS_line4 = StrippingLine(self._myname+"Line4",
                                           prescale = config['MuMuSSLine4Prescale'],
                                           postscale = config['MuMuSSLine4Postscale'],
                                           selection = self.selMuMuSS4

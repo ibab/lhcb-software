@@ -32,7 +32,7 @@ class PP2PPMuMuConf(LineBuilder) :
 
 
                       
-        self.PP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
+        self.PP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuL0Line",
                                             prescale = config['PP2PPMuMuLinePrescale'],
                                             postscale = config['PP2PPMuMuLinePostscale'],
                                             checkPV = False,

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-07 - William James Barter
+ - Updated names of EW lines as part of name is passed from dictionary.
+
 ! 2011-03-07 - Anton Poluektov 
  - Fixed StrippingB2D3H.py to use FILTER in StrippingLine rather than VoidFilter
 
