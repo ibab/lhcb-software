@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-07 - Marcin Kucharczyk
+ - Move StrippingHighPtJets to LineBuilder framework
+
 ! 2011-03-07 - William James Barter
  - Updated names of EW lines as part of name is passed from dictionary.
  - Updated DiPhotonDiMuon line to reduce rate. Now dependent on a different, HLT trigger, instead of an L0 trigger.
