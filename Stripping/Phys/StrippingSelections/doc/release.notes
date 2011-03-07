@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-02-07 - Georg Krocker
+ - Fixed Outputlevel in PatVeloSpace Tracking used in TrackEffVeloMuonLine
+
 ! 2011-03-06 - Greig Cowan
  - Added some Gamma from trees lines to __init__.py
 

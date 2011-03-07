@@ -308,7 +308,7 @@ def trackingPreFilter(name, prefilter):
 	
    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
-   Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").OutputLevel = 0;
+   #Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").OutputLevel = 0;
 	
 #	algos = [tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, Tf__PatVeloRTracking(), Tf__PatVeloSpaceTracking(),Tf__PatVeloGeneralTracking(), preve,vefit, HltMuonRec(), VeloMuonBuilder1]
 #	
