@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r18 2011-03-07 ===================
 ! 2011-03-06 - Vladik Balagura
  - added LumiCountMuons.{cpp,h}
 
