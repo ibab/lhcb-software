@@ -735,9 +735,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
               }
               return StatusCode::SUCCESS;  
             }
-            catch (std::exception &e) { 
+            catch (FailureException &e) { 
               m_currFile = NULL;
-              // Should catch the FailureException and all other std::exception based exceptions
               *m_log << MSG::ERROR
                      << " Exception: "
                      << e.what() << endmsg; 
@@ -745,15 +744,27 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
                      << runNumber
                      << " because of an unmanaged error"
                      << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                     << " Retrying until you stop run ..."
+                     <<  endmsg ; 
+              continue;
+            }
+            catch (std::exception &e) { 
+              m_currFile = NULL;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
+              *m_log << MSG::ERROR << " Could not get new file name for run "
+                     << runNumber
+                     << " because of an unmanaged error"
+                     << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                     << " Retrying until you stop run ..."
                      <<  endmsg ;
-              Incident incident(name(),"DAQ_ERROR");
-              m_incidentSvc->fireIncident(incident);
+               
               if (pthread_mutex_unlock(&m_SyncFileList)) {
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
                 return StatusCode::FAILURE;
               }
-          
-              return StatusCode::FAILURE;
+              continue;
             }
             break;
         }
@@ -1188,19 +1199,32 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
           *m_log << MSG::ERROR
                  << " Exception: "
                  << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-          *m_log << " Record is: FileName=" << cmd->file_name;
-          *m_log << " Run Number=" << cmd->run_no << endmsg;
+          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                 << " Record is: FileName=" << cmd->file_name
+                 << " Run Number=" << cmd->run_no << endmsg;
           continue;
         }
-        catch (std::exception &e) {
-          // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
+        catch (FailureException &e) {
+          m_currFile = NULL;
           *m_log << MSG::ERROR
                  << " Exception: "
                  << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-          *m_log << " Record is: FileName=" << cmd->file_name;
-          *m_log << " Run Number=" << cmd->run_no << endmsg;
+          *m_log << MSG::ERROR << " Could not get new file name for run "
+                 << " because of an unmanaged error"
+                 << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                 << " Retrying until you stop run ..."
+                 << " Record is: FileName=" << cmd->file_name
+                 << " Run Number=" << cmd->run_no << endmsg
+                 <<  endmsg ;
+          continue;
+        }
+        catch (std::exception &e) {
+          *m_log << MSG::ERROR
+                 << " Exception: "
+                 << e.what() << endmsg;
+          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                 << " Record is: FileName=" << cmd->file_name
+                 << " Run Number=" << cmd->run_no << endmsg;
         }
         break;
     }

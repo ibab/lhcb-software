@@ -11,6 +11,9 @@
 #include "Writer/Utils.h"
 #include "Writer/chunk_headers.h"
 
+#include <errno.h>
+#include <string.h>
+
 #define RESPONSELEN 1024
 
 using namespace LHCb;
@@ -201,24 +204,40 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
     throw FailureException("Could not connect to RPC server.");
   ret = sendBif1.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
+    int my_errno = errno;
     close(sockFd);
-    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out.");
-    throw FailureException("Could not send request header: disconnected.");
+    char msg[512];
+    snprintf(msg, 512, "Could not send request header: errno = %d, %s", my_errno, strerror(my_errno));
+//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out. ");
+    throw RetryException(msg);
     //throw std::runtime_error("Could not send request header.");
   } 
   ret = sendBif2.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
+    int my_errno = errno;
     close(sockFd);
     //throw std::runtime_error("Could not send request data.");
-    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request data: timed out.");
-    throw FailureException("Could not send request data: disconnected.");
+//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request data: timed out.");
+
+    char msg[512];
+    snprintf(msg, 512, "Could not send request data: errno = %d, %s", my_errno, strerror(my_errno));
+//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out. ");
+    throw RetryException(msg);
   }
   ret = recvBif.nbRecvTimeout();
   if(recvBif.getBytesRead() <= 0) {
+    int my_errno = errno;
     close(sockFd);
+
+    char msg[512];
+    snprintf(msg, 512, "Could not read request data: errno = %d, %s", my_errno, strerror(my_errno));
+
+    throw RetryException(msg);
+/*
     if(ret == BIF::TIMEDOUT) throw RetryException("Could not read request data: timed out.");
-    if(ret == BIF::DISCONNECTED) throw FailureException("Could not read request data: disconnected.");
+    if(ret == BIF::DISCONNECTED) throw RetryException("Could not read request data: disconnected.");
     throw FailureException("Could not read response data: unknown error.");
+*/
   }
 
   close(sockFd);

@@ -238,6 +238,7 @@ struct cmd_header* MM::moveSendPointer(void)
 
   /* At this point we have the list lock. */
   oldSendPointer = m_sendPointer;
+  //XXX 1 segfault happened here ... how is it possible ?
   m_sendPointer = m_sendPointer->next;
 
   pthread_mutex_unlock(&m_listLock);
