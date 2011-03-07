@@ -1,6 +1,13 @@
 #!/usr/bin/env python
-from StrippingSelections.Streams import allStreams
+#from StrippingSelections.Streams import allStreams
 import sys
+
+from StrippingConf.Configuration import StrippingConf
+from StrippingSelections.Utils import buildStreams
+
+allStreams = buildStreams('Stripping13.tmp')
+
+
 def test_stream_locations() :
     streamLocations = {}
     for stream in allStreams :

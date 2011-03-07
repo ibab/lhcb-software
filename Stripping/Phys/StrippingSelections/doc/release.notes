@@ -20,6 +20,7 @@
 
 
 ! 2011-03-04 - Juan Palacios
+ - Updated tests to use new streams from line builders.
  - Changed buildStream so it can take DB or dicitonary as well as stripping
    configuration string.
 

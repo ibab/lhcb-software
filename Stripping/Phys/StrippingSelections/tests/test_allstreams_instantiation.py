@@ -9,10 +9,13 @@ def test_instantiate_StrippingConf_with_all_streams() :
     This is the most basic test that should be run when modifying or
     adding Stripping Streams to StrippingSelections.Streams.allStreams.
     '''
-    from StrippingConf.Configuration import StrippingConf
-    from StrippingSelections.Streams import allStreams
 
-    sc = StrippingConf (Streams = allStreams)
+    from StrippingConf.Configuration import StrippingConf
+    from StrippingSelections.Utils import buildStreams
+
+    streams = buildStreams('Stripping13.tmp')
+
+    sc = StrippingConf (Streams = streams)
 
 if __name__ == '__main__' :
     test_instantiate_StrippingConf_with_all_streams()
