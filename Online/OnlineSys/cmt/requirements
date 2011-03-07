@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r50
+version v4r51
 
 branches cmt doc
  
@@ -23,7 +23,7 @@ use CondDBServer        v1r4     Online
 use DIM                 v19r15p3 Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r3     Online
-use Gaucho              v7r4     Online
+use Gaucho              v7r5     Online
 use GaudiCheckpointing  v0r4     Online
 use GaudiOnline         v2r50    Online
 use GaudiRootCnvTests   v1r1     Online
