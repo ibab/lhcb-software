@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-03-08 - Gerhard Raven
+ - replace 'use HltTCK v1r*' with 'use HltTCK v*'
+
 ! 2011-03-02 - Marco Cattaneo
  - Fix trivial compilation problem on Windows (logical not instead of !)
 
