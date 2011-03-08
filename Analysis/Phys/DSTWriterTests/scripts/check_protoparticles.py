@@ -16,6 +16,7 @@ def addEntry(self, key, value) :
 if __name__ == '__main__' :
 
     from GaudiConf.Configuration import *
+    
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
@@ -44,8 +45,8 @@ if __name__ == '__main__' :
 
     from Configurables import DaVinci
     dv = DaVinci()
-    dv.DataType = 'MC09'
-    dv.Simulation = True
+    dv.DataType = '2010'
+    dv.Simulation = False
     dv.InputType = 'DST'
     appMgr = AppMgr(outputlevel=4)
     appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
