@@ -25,7 +25,7 @@ TH2D* SobelFilter::filter() const
     // nonsense to keep ROOT happy
     static unsigned int iH(0);
     std::ostringstream id;
-    id << m_inHist->GetName() << "_SobelFiltered_" << iH++;
+    id << m_inHist->GetName() << "_SobelFiltered_" << ++iH;
 
     // make a new histogram for the Sobel filtered image
     sobelHist = new TH2D ( id.str().c_str(),
@@ -42,10 +42,9 @@ TH2D* SobelFilter::filter() const
       for ( int j = 1; j < m_inHist->GetNbinsY()-1; ++j )
       {
 
-        // ignore centre region (IFB)
+        // ignore centre region
         if ( std::sqrt(std::pow(i-15.5,2)+std::pow(j-15.5,2)) > m_params.centreRegionSize )
         {
-
           double array[3][3];
           array[0][0] = m_inHist->GetBinContent(i  , j+2);    // top left
           array[0][1] = m_inHist->GetBinContent(i+1, j+2);    // above
@@ -60,7 +59,6 @@ TH2D* SobelFilter::filter() const
           const double new_intensity_y = array[0][2] + 2*array[1][2] + array[2][2] - array[0][0] - 2*array[1][0] - array[2][0];
           const double new_intensity   = std::sqrt( std::pow(new_intensity_x,2) + std::pow(new_intensity_y,2) );
           sobelHist->Fill( i, j, new_intensity );
-
         }
 
       }

@@ -3,6 +3,9 @@
 #include <cmath>
 #include <map>
 #include <sstream>
+#include <algorithm>
+
+#include "boost/assign/list_of.hpp"
 
 // local
 #include "RichHPDImageAnalysis/CleanHPDImage.h"
@@ -26,7 +29,7 @@ TH2D* Clean::filter() const
     // nonsense to keep ROOT happy
     static unsigned int iH(0);
     std::ostringstream id;
-    id << m_inHist->GetName() << "_Cleaned_" << iH++; 
+    id << m_inHist->GetName() << "_Cleaned_" << ++iH;
 
     // make a new histogram for the cleaned image
     cleanedHist = new TH2D ( id.str().c_str(),
@@ -78,25 +81,25 @@ TH2D* Clean::filter() const
           pixOK &= ( xCount[i] > 0 && yCount[j] > 0 );
 
           // skip very hot columns/rows
-          pixOK &= ( xCount[i]/totalSum < m_params.hotRowColFraction &&
-                     yCount[j]/totalSum < m_params.hotRowColFraction );
+          pixOK &= ( xCount[i]/totalSum < m_params.hotRowColFraction );
+          pixOK &= ( yCount[j]/totalSum < m_params.hotRowColFraction );
 
-          // ignore centre region 
+          // Skip hot 'bi' columns or rows
+          pixOK &= ( (xCount[i]+xCount[i+1])/totalSum < m_params.hotRowColFraction );
+          pixOK &= ( (yCount[j]+yCount[j+1])/totalSum < m_params.hotRowColFraction );
+
+          // ignore centre region
           pixOK &= ( std::sqrt(std::pow(i-15.5,2)+std::pow(j-15.5,2)) > m_params.centreRegionSize );
 
           // dead pixels (empty, but neighbours have lots of hits)
           if ( pixOK && bin_cont < m_params.minBinContent )
           {
             const double neigh_cont = avFromNeighbours(i,j);
-            if ( neigh_cont > avBinCont * m_params.neighbourFracForDeadPix )
-            {
-              // pixel is dead Jim
-              pixOK = false;
-            }
+            if ( neigh_cont > avBinCont * m_params.neighbourFracForDeadPix ) { pixOK = false; }
           }
- 
+
           // Fill into final plot
-          if ( pixOK ) 
+          if ( pixOK )
           {
             cleanedHist->Fill( i, j, bin_cont );
           }
@@ -107,11 +110,11 @@ TH2D* Clean::filter() const
 
         }
       }
-      
+
     }
-    
+
   }
-  
+
   return cleanedHist;
 }
 
