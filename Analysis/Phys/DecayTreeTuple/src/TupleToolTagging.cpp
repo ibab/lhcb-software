@@ -76,7 +76,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_activeTaggers.push_back("VtxCharge");
   
   
-  declareProperty("TaggingToolName", m_toolName = "BTaggingTool" );
+  declareProperty("TaggingToolName", m_toolName = "",
+                  "The Tagging Tool, if empty string, the tool will be retrieved from the parent DVAlg");
   // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
 
   declareProperty("ActiveTaggers", m_activeTaggers );
@@ -89,14 +90,20 @@ StatusCode TupleToolTagging::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
-                             StatusCode::FAILURE);
-
-  m_tagging = m_dva->flavourTagging();
-
-  if( !m_tagging ){
-    Error("Unable to retrieve the IBTaggingTool tool");
-    return StatusCode::FAILURE;
+  //if (m_dva==NULL) return Error("Couldn't get parent DVAlgorithm", 
+  //                           StatusCode::FAILURE);
+  
+  //if null string, get parent DVA, else use own private tool
+  if(m_toolName == "" && m_dva!=NULL) m_tagging = m_dva->flavourTagging();
+  else if (m_toolName != "") m_tagging = tool<IBTaggingTool>( m_toolName, this );
+  
+  if( !m_tagging && m_dva==NULL  )
+  {
+    return Error("Unable to retrieve the IBTaggingTool tool, unable to retrieve parent DVAlg",StatusCode::FAILURE);
+  }  
+  if( !m_tagging )
+  {
+    return Error("Unable to retrieve the IBTaggingTool tool",StatusCode::FAILURE);
   }
 
   return StatusCode::SUCCESS;

@@ -4,12 +4,18 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+! 2011-03-08 - Rob Lambert
+ - Fixed TupleToolTagging to allow multiple different tagging tools,
+   each with different options as required, see bug #79090
+
 ! 2011-03-04 - Patrick Koppenburg
  - TupleToolVtxIsoln : Change info to debug
 
 ! 2011-03-01 - Yasmine Amhis 
  - TupleToolDecayTreeFitter 
    . minor bug fix   
+
 ! 2011-02-22 - Patrick Koppenburg
  - TupleToolVtxIsoln: 
    . Remove useless limitation to pid 511
