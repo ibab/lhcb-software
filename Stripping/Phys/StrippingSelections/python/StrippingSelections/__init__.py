@@ -107,8 +107,7 @@ import StrippingB2HHPi0
 
 # Calibration
 import StrippingTrackEffDownMuon
-# needs HltMuonRec, which causes problems
-#import StrippingTrackEffVeloMuon
+import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
 import StrippingMuIDCalib
 
