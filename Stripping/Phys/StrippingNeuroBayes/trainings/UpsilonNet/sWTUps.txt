@@ -1,0 +1,165 @@
+
+[1mRooFit v3.12 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2009 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+read #entries 791135
+now read entry 0 of 791135
+now read entry 79113 of 791135
+now read entry 158226 of 791135
+now read entry 237339 of 791135
+now read entry 316452 of 791135
+now read entry 395565 of 791135
+now read entry 474678 of 791135
+now read entry 553791 of 791135
+now read entry 632904 of 791135
+now read entry 712017 of 791135
+now read entry 791130 of 791135
+DataStore RooData (data)
+  Contains 254771 entries
+  Observables: 
+    1)  m = 8.88965  L(8.5 - 9.9)  "mass"
+DataStore RooData (data)
+  Contains 254771 entries
+  Observables: 
+    1)  m = 8.88965  L(8.5 - 9.9)  "mass"
+[#1] INFO:Minization -- RooMinuit::optimizeConst: activating const optimization
+ **********
+ **   13 **MIGRAD        2500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ MINUIT WARNING IN MIGrad    
+ ============== VARIABLE4 IS AT ITS LOWER ALLOWED LIMIT.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=-2.19804e+06 FROM MIGRAD    STATUS=INITIATE       50 CALLS          51 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  lambda      -7.63538e-01   3.76769e-01   0.00000e+00   3.33759e+04
+   2  mean         9.45000e+00   1.00000e-02   0.00000e+00   1.00008e+04
+   3  nBG          1.00000e+03   4.95000e+02   0.00000e+00  -4.28916e+07
+   4  nUps1S       1.10657e+05   1.00000e+07   6.45864e-02  -2.04151e+05
+   5  sigma        8.00000e-02   9.00000e-03   0.00000e+00  -1.20581e+05
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-2.85009e+06 FROM MIGRAD    STATUS=CONVERGED     375 CALLS         376 TOTAL
+                     EDM=3.8388e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  lambda      -5.98797e-01   5.98048e-03   4.63946e-03  -1.53310e-01
+   2  mean         9.44937e+00   4.01007e-04   9.32942e-03  -1.45291e-01
+   3  nBG          2.12774e+05   5.17752e+02   1.21507e-04  -3.37248e-02
+   4  nUps1S       4.19975e+04   3.12195e+02   1.49629e-04   3.92225e+00
+   5  sigma        5.19479e-02   4.08059e-04   9.25532e-03   6.45483e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  3.577e-05  8.529e-08 -5.679e-01  5.685e-01  5.943e-07 
+  8.529e-08  1.608e-07  3.456e-03 -3.470e-03 -7.161e-09 
+ -5.679e-01  3.456e-03  2.681e+05 -5.534e+04 -5.826e-02 
+  5.685e-01 -3.470e-03 -5.534e+04  9.747e+04  5.843e-02 
+  5.943e-07 -7.161e-09 -5.826e-02  5.843e-02  1.665e-07 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.33672   1.000  0.036 -0.183  0.304  0.244
+        2  0.06795   0.036  1.000  0.017 -0.028 -0.044
+        3  0.37363  -0.183  0.017  1.000 -0.342 -0.276
+        4  0.53912   0.304 -0.028 -0.342  1.000  0.459
+        5  0.48701   0.244 -0.044 -0.276  0.459  1.000
+ **********
+ **   18 **HESSE        2500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-2.85009e+06 FROM HESSE     STATUS=OK             31 CALLS         407 TOTAL
+                     EDM=3.87529e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  lambda      -5.98797e-01   5.98228e-03   1.85579e-04   2.35936e+00
+   2  mean         9.44937e+00   4.01107e-04   3.73177e-04  -1.26368e-02
+   3  nBG          2.12774e+05   5.18277e+02   4.86030e-06  -1.47851e+00
+   4  nUps1S       4.19975e+04   3.12799e+02   5.98518e-06  -1.52981e+00
+   5  sigma        5.19479e-02   4.09022e-04   3.70213e-04  -6.78775e-02
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  3.579e-05  8.388e-08 -5.713e-01  5.713e-01  5.991e-07 
+  8.388e-08  1.609e-07  3.593e-03 -3.593e-03 -8.104e-09 
+ -5.713e-01  3.593e-03  2.686e+05 -5.584e+04 -5.908e-02 
+  5.713e-01 -3.593e-03 -5.584e+04  9.784e+04  5.909e-02 
+  5.991e-07 -8.104e-09 -5.908e-02  5.909e-02  1.673e-07 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.33753   1.000  0.035 -0.184  0.305  0.245
+        2  0.07174   0.035  1.000  0.017 -0.029 -0.049
+        3  0.37596  -0.184  0.017  1.000 -0.344 -0.279
+        4  0.54165   0.305 -0.029 -0.344  1.000  0.462
+        5  0.49066   0.245 -0.049 -0.279  0.462  1.000
+[#1] INFO:Minization -- RooMinuit::optimizeConst: deactivating const optimization
+
+  RooFitResult: minimized FCN value: -2.85009e+06, estimated distance to minimum: 3.87529e-05
+                coviarance matrix quality: Full, accurate covariance matrix
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+                lambda   -7.6354e-01   -5.9880e-01 +/-  5.98e-03  <none>
+                  mean    9.4500e+00    9.4494e+00 +/-  4.01e-04  <none>
+                   nBG    1.0000e+03    2.1277e+05 +/-  5.18e+02  <none>
+                nUps1S    1.0000e+01    4.1998e+04 +/-  3.13e+02  <none>
+                 sigma    8.0000e-02    5.1948e-02 +/-  4.09e-04  <none>
+
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(fit) directly selected PDF components: (combBG)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(fit) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(fit) directly selected PDF components: (gauss)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(fit) indirectly selected PDF components: ()
+[#1] INFO:Eval -- RooRealVar::setRange(m) new range named 'SBHigh' created with bounds [9.6,9.9]
+[#1] INFO:Eval -- RooRealVar::setRange(m) new range named 'SBLow' created with bounds [8.5,9.3]
+[#1] INFO:Eval -- RooRealVar::setRange(m) new range named 'Signal' created with bounds [9.3,9.6]
+F_1_b 0.82056 F_1_s 0.00388567 F_2_b 0.17944 F_2_s 0.996114
+
+2x2 matrix is as follows
+
+     |      0    |      1    |
+-------------------------------
+   0 |   0.003886      0.8206 
+   1 |     0.9961      0.1794 
+
+inverse
+
+2x2 matrix is as follows
+
+     |      0    |      1    |
+-------------------------------
+   0 |    -0.2197       1.005 
+   1 |       1.22   -0.004758 
+
+
+2x2 matrix is as follows
+
+     |      0    |      1    |
+-------------------------------
+   0 |    -0.2197       1.005 
+   1 |       1.22   -0.004758 
+
+------------- now test sWeights ------------- 
+
+2x2 matrix is as follows
+
+     |      0    |      1    |
+-------------------------------
+   0 |    -0.2197       1.005 
+   1 |       1.22   -0.004758 
+
+sWeights sP_sig(bin 1) = -0.219721 sP_sig(bin 2) = 1.00476
+         sP_bg (bin 1) = 1.21972 sP_bg (bin 2) = -0.00475792
+now read entry 0 of 254771
+now read entry 25477 of 254771
+now read entry 50954 of 254771
+now read entry 76431 of 254771
+now read entry 101908 of 254771
+now read entry 127385 of 254771
+now read entry 152862 of 254771
+now read entry 178339 of 254771
+now read entry 203816 of 254771
+now read entry 229293 of 254771
+now read entry 254770 of 254771
+nSig = 42465.9

@@ -354,7 +354,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 
   
   // "full" network, all variables, including (lifetime-) biasing ones
-  found=m_ExpertiseName.find("mumu_net_full.nb");
+  found=m_ExpertiseName.find("full.nb");
   if (found != std::string::npos) {
     m_inArray[  0 ] =  muPlus->pt()/Gaudi::Units::GeV;      
     m_inArray[  1 ] =  muMinus->pt()/Gaudi::Units::GeV;     
@@ -386,7 +386,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 
   
   // "medium" network: kinematic variables, Calorimeter, PID
-  found=m_ExpertiseName.find("mumu_net_noip.nb");
+  found=m_ExpertiseName.find("noip.nb");
   if (found != std::string::npos) {
 
     m_inArray[  0 ] =  muPlus->pt()/Gaudi::Units::GeV; 
