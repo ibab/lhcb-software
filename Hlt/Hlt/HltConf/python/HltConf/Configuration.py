@@ -198,35 +198,31 @@ class HltConf(LHCbConfigurableUser):
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'SPD','CALO','MUON,minbias','PU','SPD40','PU20' ] ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','LocalPi0','GlobalPi0'] ] )
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron,lowMult','Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] ] )
                       , 12 : "L0_CHANNEL('CALO')" # note: need to take into account prescale in L0...
-                      , 13 : "L0_CHANNEL('Hadron')" 
-                      , 14 : "L0_CHANNEL_RE('Electron|Photon')"
+                      , 13 : "L0_CHANNEL( 'Hadron' )"
+                      , 14 : "L0_CHANNEL_RE('Electron|Photon')" 
                       , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
+                      , 16 : "L0_CHANNEL_RE('.*NoSPD')" 
+                      , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
-                      , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
                       , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')" 
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
-                      , 40 : "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
-                      , 41 : "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
+                      , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
                       , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
-                      , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
-                      , 45 : "HLT_PASS_RE('Hlt1Photon.*Decision')"
                       , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
                       , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
                       , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 52 : "HLT_PASS_RE('Hlt1.*SingleHadron.*Decision')"
-                      , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
-                      , 54 : "HLT_PASS_RE('Hlt1.*(SingleMuon|DiMuon|MuTrack).*Decision')"
+                      , 54 : "HLT_PASS_RE('Hlt1.*Muon.*Decision')"
                       , 55 : "HLT_PASS_RE('Hlt1Track.*Decision')"  
                       , 56 : "HLT_PASS_RE('Hlt1TrackAllL0.*Decision')"
                       , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
@@ -237,21 +233,23 @@ class HltConf(LHCbConfigurableUser):
                       , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
                       , 67 : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"
                       , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
-                      , 69 : "HLT_PASS_RE('Hlt2.*MuTrack.*Decision')"
+                      , 69 : "HLT_PASS_RE('Hlt2.*DY.*Decision')"
                       , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
                       , 71 : "HLT_PASS_RE('Hlt2.*Charm.*Decision')"
                       , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
                       , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
-                      , 74 : "HLT_PASS_RE('Hlt2.*B2D2.*Decision')"
-                      , 75 : "HLT_PASS_RE('Hlt2.*IncDiProton.*Decision')"
-                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|B2JpsiX|Dst2|diphotonDiMuon|DisplVertices).*Decision')"
+                      , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
+                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')" ## CHECK all exclusives covered.
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!PassThrough).*Decision')"
-                      , 78 : "HLT_PASS_RE('Hlt2.*(SingleMuon|DiMuon|MuTrack).*Decision')"
-                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi|B2D2).*Decision')"
+                      , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
+                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi).*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
                       , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"   
                       , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"   
                       , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"   
+                      , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"   
+                      , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"   
+                      , 87 : "HLT_PASS_RE('Hlt2DisplVertices.*Decision')"
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
@@ -390,11 +388,10 @@ class HltConf(LHCbConfigurableUser):
         HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( [ i.decision() for i in lines1 ],
                                 [ ("L0"         , "Hlt1L0.*Decision"),
                                   ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
-                                  ("Velo"       , "Hlt1Velo.*Decision"),
-                                  ("Hadron"     , "Hlt1.*Hadron.*Decision"),
-                                  ("SingleMuon" , "Hlt1.*(SingleMuon|MuTrack).*Decision"),
-                                  ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
-                                  ("ECAL"       , "Hlt1.*(Electron|Pho).*Decision"),
+                                  ("SingleMuon" , "Hlt1(Single|Track)Muon.*Decision"),
+                                  ("DiMuon"     , "Hlt1DiMuon.*Decision"),
+                                  ("TrackAllL0" , "Hlt1TrackAllL0.*Decision"),
+                                  ("ECAL"       , "Hlt1.*(Electron|Photon).*Decision"),
                                   ("Commissioning" , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
                                   ("MinBias"    , "Hlt1MB.*Decision"),
                                   ("Global"     , ".*Global.*"),
@@ -404,18 +401,15 @@ class HltConf(LHCbConfigurableUser):
         HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( [ i.decision() for i in lines2 ],
                                  [ ("Topo"           , "Hlt2Topo.*Decision"),
                                    ("IncPhi"         , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2(Single.*Muon|MuTrack).*Decision"),
+                                   ("SingleMuon"     , "Hlt2Single.*Muon.*Decision"),
                                    ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
                                    ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
-                                   ("B2JpsiX"        , "Hlt2B.*2Jpsi.*Decision"),
-                                   ("B2XPhi"         , "Hlt2B.*2Phi.*Decision"),
                                    ("B2HH"           , "Hlt2B2HH.*Decision"),
                                    ("Express"        , "Hlt2Express.*Decision"),
                                    ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
                                    ("Charm"          , "Hlt2Charm.*Decision"),
-                                   ("B2LLX"          , "Hlt2Bu2(ee|MuMu).*Decision"),
                                    ("Global"         , ".*Global.*"),
                                    ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                  ]

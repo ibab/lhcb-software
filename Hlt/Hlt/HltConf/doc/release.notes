@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-08 - Roel Aaij, Eric v. Herwijnen
+ - Update RoutingBits definition for changed names of Hlt lines.
+
 !========================== HltConf v9r6 2011-03-06 ===================
 ! 2011-03-05 - Roel Aaij
  - Update Hlt1.py for move of streamer symbols to Hlt1TrackUpgradeConf
