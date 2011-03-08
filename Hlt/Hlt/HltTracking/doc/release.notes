@@ -5,6 +5,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-03-08 - Jibo He
+ - Hlt2TrackingConfigurations.py
+   RichHypos changed to 3 hypothesis for both Protons
+   PT cut changed to 1.9 GeV for Hlt2BiKalmanFittedRichForProtons
+   PT cut changed to 0.5 GeV for Hlt2BiKalmanFittedRichForLowPTProtons
+ 
 !========================== HltTracking v9r5  2011-03-06 ===================
 ! 2011-03-05 - Roel Aaij
  - Moved Hlt1 track upgrade symbols for streamers from their temporary home 
