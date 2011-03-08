@@ -10,7 +10,7 @@ namespace Rich
   namespace HPDImage
   {
 
-    /** @class HPDFit RichHPDImageSummary.h
+    /** @class HPDFit RichHPDImageAnalysis/RichHPDFit.h
      *
      *  Simple class to do a fit to the image in an HPD
      *
@@ -22,7 +22,7 @@ namespace Rich
 
     public:
 
-      /** @class Params RichHPDImageSummary.h
+      /** @class Params RichHPDImageAnalysis/RichHPDFit.h
        *
        *  Fit parameters for HPDFit
        *
@@ -32,14 +32,14 @@ namespace Rich
       class Params
       {
       public:
-        Params() : cutFraction(0.1), minBoundary(3), type("SimpleChi2") { }
+        Params() : type           ( "Sobel" ),
+                   cleanHistogram ( true    )   { }
       public:
-        double cutFraction;
-        unsigned int minBoundary;
         std::string type;
+        bool cleanHistogram;
       };
 
-      /** @class Params RichHPDImageSummary.h
+      /** @class Params RichHPDImageAnalysis/RichHPDFit.h
        *
        *  Fit result for HPDFit
        *
@@ -53,10 +53,10 @@ namespace Rich
         static const double m_siliconx  = 16.0; ///< Silicon x size in mm
         static const double m_silicony  = 16.0; ///< Silicon y size in mm
       public:
-        Result() : m_OK(false),
-                   m_row(0),m_rowErr(0),
-                   m_col(0),m_colErr(0),
-                   m_rad(0),m_radErr(0)  { }
+        Result() : m_OK ( false ),
+                   m_row ( 0 ), m_rowErr ( 0 ),
+                   m_col ( 0 ), m_colErr ( 0 ),
+                   m_rad ( 0 ), m_radErr ( 0 )   { }
       public:
         void setOK( const bool OK ) { m_OK = OK; }
       public:
@@ -65,7 +65,6 @@ namespace Rich
         void setRowAndErr( const double val, const double err ) { m_row = val; m_rowErr = err; }
         void setColAndErr( const double val, const double err ) { m_col = val; m_colErr = err; }
         void setRadAndErr( const double val, const double err ) { m_rad = val; m_radErr = err; }
-        void setBoundaryPixels( const Pixel::List& pixels ) { m_boundaryPixels = pixels; }
       public:
         double row()         const { return m_row;    }
         double rowErr()      const { return m_rowErr; }
@@ -73,7 +72,6 @@ namespace Rich
         double colErr()      const { return m_colErr; }
         double radInPix()    const { return m_rad;    }
         double radErrInPix() const { return m_radErr; }
-        const Pixel::List& boundaryPixels() const { return m_boundaryPixels; }
       public:
         double x()    const { return -1.0*(m_col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx); }
         double xErr() const { return m_colErr * m_pixelsize; }
@@ -86,8 +84,6 @@ namespace Rich
         double m_row,m_rowErr;
         double m_col,m_colErr;
         double m_rad,m_radErr;
-      private:
-        Pixel::List m_boundaryPixels;
       };
 
     public:
@@ -95,12 +91,22 @@ namespace Rich
       /// Default contructor
       HPDFit() { }
 
+      /// Destructor
+      ~HPDFit() { }
+
     public:
 
       /// Run a fit of the given 2D HPD image histogram
-      const Rich::HPDImage::HPDFit::Result 
-      fit ( const TH2D& hist,
-            const Rich::HPDImage::HPDFit::Params& params ) const;
+      HPDFit::Result fit ( const TH2D& hist,
+                           const Params& params ) const;
+
+      /// Get the boundary pixels (read only access)
+      const Pixel::List & boundaryPixels() const { return m_boundaryPixels; }
+
+    private:
+
+      /// List of boundary pixels
+      mutable Pixel::List m_boundaryPixels;
 
     };
 

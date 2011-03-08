@@ -1,5 +1,6 @@
 
 # Globals
+fitter        = None
 imageFileName = ''
 canvas        = None
 tempDir       = "/var/nwork/pciy/jonesc/tmp/HPDImageAlign"
@@ -43,6 +44,12 @@ def initialise():
     # Initialise various DeRich objects
     loadRichDet()
 
+def hpdfitter():
+    from GaudiPython import gbl
+    if globals()['fitter'] == None :
+        globals()['fitter'] = gbl.Rich.HPDImage.HPDFit()
+    return globals()['fitter']
+        
 def msgSvc():
     import GaudiPython
     return GaudiPython.AppMgr().service('MessageSvc','IMessageSvc')
@@ -399,19 +406,19 @@ def runToFill(run):
     return fill
 
 def runAll(files='MDMS-RootFiles.txt'):
-    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='FastRingFit')
-    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='FastRingFit')
-    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='FastRingFit')
-    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='FastRingFit')
     
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+   
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+ 
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+ 
 def calibrationByRuns(rootfiles='RootFileNames.txt',
                       fitType="SimpleChi2",followType="Smoothed",pol=0,smoothSigmaHours=3):
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
@@ -422,8 +429,7 @@ def calibrationByFills(rootfiles='RootFileNames.txt',
 
 def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
-    import pyHistoParsingUtils
-    from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3
+    from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3, TH2D
     import GaudiPython
     from GaudiPython import gbl
     import datetime, time
@@ -433,7 +439,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     if followType not in ["FittedPol","FollowMovements","Smoothed"]:
         raise Exception("Unknown Follow Mode "+followType)
 
-    if fitType not in ["SimpleChi2","FastRingFit","CppFit"]:
+    if fitType not in ["Sobel","SimpleChi2","FastRingFit"]:
         raise Exception("Unknown Fit Mode "+fitType)
        
     # Load the list of root files
@@ -444,7 +450,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     maxHPDID = 484
 
     # Min number of entries in HPD alignment histogram for update
-    minHPDEntries = 1000
+    minHPDEntries = 500
 
     # Get the run/fill info
     runFillData = getRunFillData(rootfiles)
@@ -495,21 +501,26 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
             # Make sure this HPD has an entry
             if hpdID not in plotData.keys() : plotData[hpdID] = { }
-               
-            # Get the offsets. Use try to catch errors
-            try:
 
-                res = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fitType)
-                xOff = res["Result"][0]
-                yOff = res["Result"][1]                
-                plotData[hpdID][flag] = { "FitOK"   : res['OK'],
-                                          "ShiftR"  : rFromXY(xOff,yOff),
-                                          "ShiftX"  : xOff,
-                                          "ShiftY"  : yOff }
-                
-            except Exception,e:
+            # Default status failed
+            plotData[hpdID][flag] = { "FitOK" : False }
 
-                plotData[hpdID][flag] = { "FitOK" : False }
+            # Get the histogram for this HPD
+            image = file.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdID)+'_Image')
+            if image != None :
+                if image.GetEntries() >= minHPDEntries :
+                    # Setup the fit object
+                    params      = gbl.Rich.HPDImage.HPDFit.Params()
+                    params.type = fitType
+                    # Do the fit
+                    result = hpdfitter().fit(image,params)
+                    # Get the results
+                    xOff   = (result.x(),result.xErr())
+                    yOff   = (result.y(),result.yErr())             
+                    plotData[hpdID][flag] = { "FitOK"   : result.OK(),
+                                              "ShiftR"  : rFromXY(xOff,yOff),
+                                              "ShiftX"  : xOff,
+                                              "ShiftY"  : yOff }
 
             # Save the DB values for plotting
             dbShift = siAlign.paramAsDoubleVect("dPosXYZ")

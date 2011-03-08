@@ -23,9 +23,9 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
-  declareProperty( "BoundaryCutThreshold" , m_params.cutFraction = 0.1 );
+  //declareProperty( "BoundaryCutThreshold" , m_params.cutFraction = 0.1 );
   declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
-  declareProperty( "MinBoundaryPixels" , m_params.minBoundary = 3 );
+  //declareProperty( "MinBoundaryPixels" , m_params.minBoundary = 3 );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );

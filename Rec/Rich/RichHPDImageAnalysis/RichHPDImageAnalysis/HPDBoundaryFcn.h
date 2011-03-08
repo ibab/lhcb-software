@@ -10,7 +10,7 @@ namespace Rich
   namespace HPDImage
   {
 
-    /** @class RichHPDImageSummary RichHPDImageSummary.h
+    /** @class HPDBoundaryFcn HPDBoundaryFcn.h
      *
      *  Boundary function for HPD fit
      *
@@ -22,41 +22,54 @@ namespace Rich
 
     public:
 
+      /** @class Params HPDBoundaryFcn.h
+       *
+       *  Fit parameters for HPDBoundaryFcn
+       *
+       *  @author Chris Jones
+       *  @date   02/03/0211
+       */
+      class Params
+      {
+      public:
+        Params()
+          : cutFraction ( 0.1 ),
+            minBoundary ( 5   ) { }
+      public:
+        double       cutFraction;
+        unsigned int minBoundary;
+      };
+
+    public:
+
       /// Standard constructor
-      HPDBoundaryFcn( const TH2* hist = NULL,
-                      const double thr = 0.0 );
+      HPDBoundaryFcn( const TH2* hist      = NULL,
+                      const Params& params = Params() );
 
-      virtual ~HPDBoundaryFcn( ); ///< Destructor
-
-    public:
-
-      /// Type for list of boundary pixels
-      typedef Rich::HPDImage::Pixel::List Boundary;
+      ~HPDBoundaryFcn( ) {} ///< Destructor
 
     public:
-
-      const Boundary& boundary() const;
+      
+      /// Finds the HPD boundary pixels
+      void findBoundary( Pixel::List & boundary ) const;
 
     private:
-
-      /// Finds the HPD boundary pixels
-      void findBoundary() const;
 
       /// Checks if the given pixel has a neighbour
-      bool hasNeighbour( const int COL, const int ROW, const double thr ) const ;
+      bool hasNeighbour( const int COL, 
+                         const int ROW, 
+                         const double thr,
+                         const int area = 1 ) const ;
 
       /// Add a pixel to the bounary list
-      inline void addPixel( const int col, const int row ) const
-      {
-        m_boundary.push_back( Pixel(col,row,m_hist->GetBinContent(col+1,row+1)) );
-      }
-      
+      void addPixel( const int col, 
+                     const int row,
+                     Pixel::List & boundary ) const;
+
     private:
 
-      double m_threshold ;
       const TH2* m_hist ;
-      mutable Boundary m_boundary ;
-      mutable bool m_boundaryFound;
+      Params m_params;
 
     };
 

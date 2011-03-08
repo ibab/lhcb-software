@@ -35,18 +35,23 @@ namespace Rich
         : col(_col), row(_row), intensity(_intensity) 
       { }
 
+      /// Copy Constructor
+      Pixel( const Pixel & pix ) 
+        : col(pix.col), row(pix.row), intensity(pix.intensity)
+      { }
+
       ~Pixel( ) { } ///< Destructor
 
     public:
 
       /// Sorting operator
-      inline bool operator<  ( const Pixel & pixel ) const
+      inline bool operator <  ( const Pixel & pixel ) const
       { 
         return this->col <  pixel.col && this->row <  pixel.row ;
       }
 
       /// Equality operator
-      inline bool operator== ( const Pixel & pixel ) const
+      inline bool operator == ( const Pixel & pixel ) const
       { 
         return this->col == pixel.col && this->row == pixel.row ;
       }

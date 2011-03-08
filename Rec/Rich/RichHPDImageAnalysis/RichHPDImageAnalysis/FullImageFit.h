@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef RICHHPDIMAGEANALYSIS_SIMPLECHI2FIT_H
-#define RICHHPDIMAGEANALYSIS_SIMPLECHI2FIT_H 1
+#ifndef RICHHPDIMAGEANALYSIS_FullImageFit_H
+#define RICHHPDIMAGEANALYSIS_FullImageFit_H 1
 
 #include "RichHPDImageAnalysis/HPDPixel.h"
 #include "Minuit2/FCNBase.h"
@@ -11,28 +11,25 @@ namespace Rich
   namespace HPDImage
   {
 
-    /** @class SimpleChi2Fit RichHPDImageAnalysis/SimpleChi2Fit.h
+    /** @class FullImageFit RichHPDImageAnalysis/FullImageFit.h
      *
-     *  Simple Chi^2 fit
+     *  Fit to the full histogram image.
      *
      *  @author Chris Jones
      *  @date   2011-03-05
      */
-    class SimpleChi2Fit : public ROOT::Minuit2::FCNBase
+    class FullImageFit : public ROOT::Minuit2::FCNBase
     {
 
     public:
 
       /// Default Constructor
-      SimpleChi2Fit() 
-        : m_errDef(0), m_hist(NULL), m_sf(0), m_boundary(NULL) 
-      { }
+      FullImageFit() : m_errDef(0), m_hist(NULL), m_sf(0) { }
 
       /// Constructor
-      SimpleChi2Fit( const TH2* hist,
-                     const Pixel::List& list );
+      FullImageFit( const TH2* hist );
 
-      virtual ~SimpleChi2Fit( ); ///< Destructor
+      virtual ~FullImageFit( ); ///< Destructor
 
     public:
 
@@ -46,11 +43,10 @@ namespace Rich
       double m_errDef ;
       const TH2* m_hist ;
       double m_sf ;
-      const Pixel::List * m_boundary ;
 
     };
 
   }
 }
 
-#endif // RICHHPDIMAGEANALYSIS_SIMPLECHI2FIT_H
+#endif // RICHHPDIMAGEANALYSIS_FullImageFit_H

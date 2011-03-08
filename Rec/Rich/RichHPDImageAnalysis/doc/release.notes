@@ -10,6 +10,11 @@
     being preferred over lef/right ones
   + Add an 'intensity' to each pixel and use this in the fit. Helps the fit to
     ignore rogue 'boundary' pixels
+  + Add a HPD image cleaner that performs various preprocessing tasks on each 
+    image before fitting
+     + Removes hot/dead pixels
+     + removes dead pixel rows and columns
+     + Removes the centre region (IFB area)
 
 ! 2011-03-02 - Chris Jones
  - Rework the code to seperate out the HPD fitting into a seperate linker 

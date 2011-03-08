@@ -18,7 +18,7 @@ SimpleChi2Fit::SimpleChi2Fit( const TH2* hist ,
   : m_errDef     ( 1.   ),
     m_hist       ( hist ),
     m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 ),
-    m_boundary   ( list )
+    m_boundary   ( &list )
 { }
 
 SimpleChi2Fit::~SimpleChi2Fit() {} 
@@ -29,8 +29,8 @@ double SimpleChi2Fit::operator()( const std::vector<double>& par ) const
 {
   double chi2 = 0.0;
 
-  for ( Pixel::List::const_iterator iter = m_boundary.begin();
-        iter != m_boundary.end(); ++iter )
+  for ( Pixel::List::const_iterator iter = m_boundary->begin();
+        iter != m_boundary->end(); ++iter )
   {
     const double deltaCol = ( 1.0  * iter->col ) - par[0];
     const double deltaRow = ( m_sf * iter->row ) - par[1];
