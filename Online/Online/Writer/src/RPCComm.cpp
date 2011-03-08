@@ -66,13 +66,13 @@ void RPCComm::confirmFile(char *fileName, //still
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
  
   if(ret < 0)
-    throw FailureException("Could not run RPC call for confirm.");
+    throw RetryException("Could not run RPC call for confirm.");
 
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
   if (ret != 0)
-    throw FailureException(response);
+    throw RetryException(response);
 
   return;
 }
@@ -129,13 +129,13 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   msg = NULL;
 
   if(ret < 0)
-    throw FailureException("Could not run RPC call for confirm.");
+    throw RetryException("Could not run RPC call for confirm.");
 
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
   if (ret != 0)
-    throw FailureException(response);
+    throw RetryException(response);
 
   return;
 }
@@ -166,13 +166,13 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
-    throw FailureException("Could not run RPC call for create.");
+    throw RetryException("Could not run RPC call for create.");
 
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
   if (ret != 0)
-    throw FailureException(response);
+    throw RetryException(response);
 
   return;
 }
@@ -201,43 +201,30 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
   BIF recvBif(sockFd, response, responseLen);
 
   if(sockFd < 0)
-    throw FailureException("Could not connect to RPC server.");
+    throw RetryException("Could not connect to RPC server.");
   ret = sendBif1.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
     int my_errno = errno;
     close(sockFd);
     char msg[512];
     snprintf(msg, 512, "Could not send request header: errno = %d, %s", my_errno, strerror(my_errno));
-//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out. ");
     throw RetryException(msg);
-    //throw std::runtime_error("Could not send request header.");
   } 
   ret = sendBif2.nbSendTimeout();
   if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED) {
     int my_errno = errno;
     close(sockFd);
-    //throw std::runtime_error("Could not send request data.");
-//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request data: timed out.");
-
     char msg[512];
     snprintf(msg, 512, "Could not send request data: errno = %d, %s", my_errno, strerror(my_errno));
-//    if(ret == BIF::TIMEDOUT) throw RetryException("Could not send request header: timed out. ");
     throw RetryException(msg);
   }
   ret = recvBif.nbRecvTimeout();
   if(recvBif.getBytesRead() <= 0) {
     int my_errno = errno;
     close(sockFd);
-
     char msg[512];
     snprintf(msg, 512, "Could not read request data: errno = %d, %s", my_errno, strerror(my_errno));
-
     throw RetryException(msg);
-/*
-    if(ret == BIF::TIMEDOUT) throw RetryException("Could not read request data: timed out.");
-    if(ret == BIF::DISCONNECTED) throw RetryException("Could not read request data: disconnected.");
-    throw FailureException("Could not read response data: unknown error.");
-*/
   }
 
   close(sockFd);
@@ -297,13 +284,13 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
-    throw FailureException("Could not run RPC call for create"); 
+    throw RetryException("Could not run RPC call for create"); 
 
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
   if (ret != 0)
-    throw FailureException(response);
+    throw RetryException(response);
 
   std::string res(response);
 
@@ -344,12 +331,12 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
-    throw FailureException("Could not run RPC call for create");
+    throw RetryException("Could not run RPC call for create");
   ret = isError(response); 
   if (ret == 2)
     throw DiscardException(response);
   if (ret != 0)
-    throw FailureException(response);
+    throw RetryException(response);
 
   std::string res(response);
 

@@ -619,7 +619,7 @@ void MDFWriterNet::closeFile(File *currFile)
  * the send thread will be stopped.
  */
 void  MDFWriterNet::handle(const Incident& inc)    {
-   *m_log << MSG::ERROR << "Got incident:" << inc.source() << " of type " << inc.type() << " (not an error but message threshold too high) "<< endmsg;
+   *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL" ||  inc.type() == "DAQ_ERROR" ) {
       this->stopRetrying();
       m_srvConnection->stopRetrying();
@@ -764,7 +764,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
                 return StatusCode::FAILURE;
               }
-              continue;
+              break;
             }
             break;
         }
@@ -1209,7 +1209,7 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
           *m_log << MSG::ERROR
                  << " Exception: "
                  << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not get new file name for run "
+          *m_log << MSG::ERROR << " Could not get new file name "
                  << " because of an unmanaged error"
                  << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                  << " Retrying until you stop run ..."
@@ -1264,6 +1264,20 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
       *m_log << " MD5 Sum=" << md5buf << endmsg;
       continue;
     }
+    catch (FailureException &e) {
+      m_currFile = NULL;
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not get new file name "
+             << " because of an unmanaged error"
+             << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Retrying until you stop run ..."
+             << " Record is: FileName=" << cmd->file_name
+             << " Run Number=" << cmd->run_no << endmsg
+             <<  endmsg ;
+      continue;
+    }
     catch (std::exception &e) {
       char md5buf[33];
       unsigned char *md5sum = pdu->md5_sum;
@@ -1272,7 +1286,6 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
@@ -1313,6 +1326,20 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
       *m_log << " MD5 Sum=" << md5buf << endmsg;
       continue;
     }
+    catch (FailureException &e) {
+      m_currFile = NULL;
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
+      *m_log << MSG::ERROR << " Could not get new file name "
+             << " because of an unmanaged error"
+             << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Retrying until you stop run ..."
+             << " Record is: FileName=" << cmd->file_name
+             << " Run Number=" << cmd->run_no << endmsg
+             <<  endmsg ;
+      continue;
+    }
     catch (std::exception &e) {
       char md5buf[33];
       unsigned char *md5sum = pdu->md5_sum;
@@ -1321,7 +1348,6 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      // Should catch the FailureException, discard (shouldn't be) and all other std::exception based exceptions
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
