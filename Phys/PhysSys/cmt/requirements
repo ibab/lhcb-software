@@ -1,7 +1,11 @@
 package PhysSys
-version v12r1
+version v12r2
 
 branches doc cmt
+
+# temporary patch
+
+use  LHCbKernel                 v12r8p1  Kernel
 
 ####################################################################
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
