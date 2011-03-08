@@ -39,17 +39,24 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
         'trackChi2'           #    :    5.0
         , 'MuMuMassMin'
         , 'MuMuMassMax'
+        , 'MuMuMassHighMin'
+        , 'MuMuMassHighMax'        
         , 'JPsiMassMin'       #    :    3.04 # GeV
         , 'JPsiMassMax'       #    :    3.14 # GeV
         , 'vertexChi2'        #    :   25.0
         , 'NBCutJPsi'         #    :    0.7
         , 'NBCutMuMu'         #    :    0.95
+        , 'NBCutMuMuHigh'     #    :    
         , 'ExpertiseJPsi'     #    : 'Muon/mumu_net_noip.nb'
-        , 'ExpertiseMuMu'     #    : 'Muon/mumu_net_full.nb'        
+        , 'ExpertiseMuMu'     #    : 'Muon/mumu_net_full.nb'
+        , 'ExpertiseMuMuHigh'
         , 'NBVersionJPsi'     #    : "TuneSep2010"
         , 'NBVersionMuMu'
+        , 'NBVersionMuMuHigh'
         , 'PrescaleMuMu'
         , 'PostscaleMuMu'
+        , 'PrescaleMuMuHigh'
+        , 'PostscaleMuMuHigh'
         , 'PrescaleJPsi'
         , 'PostscaleJPsi'
         )
@@ -63,6 +70,12 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
         self.SelMuMu           = self.MuMu(name+"MuMu",
                                            massMin    = config['MuMuMassMin'],
                                            massMax    = config['MuMuMassMax'],
+                                           trackChi2  = config['trackChi2'],
+                                           vertexChi2 = config['vertexChi2']
+                                           )
+        self.SelMuMuHigh       = self.MuMu(name+"MuMuHigh",
+                                           massMin    = config['MuMuMassHighMin'],
+                                           massMax    = config['MuMuMassHighMax'],
                                            trackChi2  = config['trackChi2'],
                                            vertexChi2 = config['vertexChi2']
                                            )
@@ -83,6 +96,16 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
                                              massMax       = config['MuMuMassMax'],
                                              nBins         = 120,
                                              doPlot        = False)
+        
+        self.SelMuMuHighNB     = self.MuMuNB(name+"MuMuHighNB",
+                                             self.SelMuMuHigh  ,
+                                             Expertise     = config['ExpertiseMuMuHigh'],
+                                             NBVersion     = config['NBVersionMuMuHigh'],
+                                             NBCut         = config['NBCutMuMuHigh'],
+                                             massMin       = config['MuMuMassHighMin'],
+                                             massMax       = config['MuMuMassHighMax'],
+                                             nBins         = 120,
+                                             doPlot        = False)
 
         self.SelJPsiNB         = self.MuMuNB(name+"JPsiNB",
                                              self.SelJPsi  ,
@@ -99,6 +122,11 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
                                                postscale = config['PostscaleMuMu'],
                                                selection = self.SelMuMuNB
                                                )
+        self.mumuHighLine      = StrippingLine(name+"MuMuHighNBLine",
+                                               prescale  = config['PrescaleMuMuHigh'],
+                                               postscale = config['PostscaleMuMuHigh'],
+                                               selection = self.SelMuMuHighNB
+                                               )        
         
         self.jPsiLine          = StrippingLine(name+"JPsiNBLine",
                                                prescale  = config['PrescaleJPsi'],
@@ -107,6 +135,7 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
                                                )
                 
         self.registerLine(self.mumuLine)
+        self.registerLine(self.mumuHighLine)
         self.registerLine(self.jPsiLine)
 
 

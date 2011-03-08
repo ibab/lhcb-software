@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-08 - Ulrich Kerzel
+- add MuMuHigh NeuroBayes line, trained on Upsilon(1S) with 2010 Data, upper mass cut at 130 GeV 
+
 ! 2011-03-07 - Marcin Kucharczyk
  - Move StrippingHighPtJets to LineBuilder framework
 
