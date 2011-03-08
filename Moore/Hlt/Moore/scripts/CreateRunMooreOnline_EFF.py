@@ -53,7 +53,7 @@ if len(sys.argv)>3:
     f.close()
     f = open(setup, 'w')
     for input in txt.splitlines():
-        line = input
+        line = input.replace('echo ','#echo ')
         line = re.sub('test -f [^ ]*StripPath.sh','false', line)
         m = re.match('export ([^=]+)="([^"]+)"',line)
         if m :
@@ -83,7 +83,7 @@ export HOME=/home/$(/usr/bin/whoami)
 # pick up 'our' setup... 
 source %(setup)s
 
-echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
+####echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
 
 export LOGFIFO=/tmp/logGaudi.fifo
 
@@ -111,7 +111,7 @@ elif test "${APP_STARTUP_OPTS}" = "-forking";      ## RunInfo flag=1
     unset  CHECKPOINT_DIR;
     unset  CHECKPOINT_FILE;
     export gaudi_exe="exec -a ${UTGID} ${GAUDIONLINEROOT}/${CMTCONFIG}/GaudiCheckpoint.exe";
-    echo   "FORKING: gaudi_exe: ${gaudi_exe}"
+    ####echo   "FORKING: gaudi_exe: ${gaudi_exe}"
     export LD_PRELOAD=${CHECKPOINT_BIN}/libCheckpointing.so;
 elif test "${APP_STARTUP_OPTS}" = "-checkpoint";   ## Not handled by RunInfo. Used to create checkpoints.
     then
@@ -138,13 +138,12 @@ elif test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
 	    echo "== File:  ${CHECKPOINT_FILE}";
 	    echo "== Testing CHECKPOINT file......Please be patient.";
 	    echo "=============================================================================";
-	    python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py
-	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 3 -e -i ${CHECKPOINT_FILE};
-	    echo "============================================================================="
+	    eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py`;
+	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -i ${CHECKPOINT_FILE};
+	    echo "=============================================================================";
 	fi;
-	python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py | \\
-	    exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe \\
-	    -p 3 -e -i ${CHECKPOINT_FILE};
+	eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py` | \\
+        exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -i ${CHECKPOINT_FILE};
     else
 	echo " [FATAL] =============================================================================";
 	echo " [FATAL] == File:  ${CHECKPOINT_FILE}";

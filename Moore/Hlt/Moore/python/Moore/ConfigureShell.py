@@ -3,6 +3,14 @@ import os
 sep = '/'
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
 
+def copyNewFile(checkpoint):
+  print 'echo "  [INFO] Copy new checkpoint:'+checkpoint+'.gz to RAM.";'
+  print 'rm -f /dev/shm/Checkpoint.data;'
+  print 'cp '+checkpoint+'.gz  /dev/shm/Checkpoint.data.gz;'
+  print 'cp '+checkpoint+'.md5 /dev/shm/Checkpoint.data.md5;'
+  print '/bin/gunzip /dev/shm/Checkpoint.data.gz;'
+  print 'export CHECKPOINT_FILE=/dev/shm/Checkpoint.data;'
+  
 #=========================================================================================
 def configureForRunning():
   import OnlineEnvBase as Online
@@ -30,10 +38,24 @@ def configureForRunning():
   elif os.environ.has_key('TEST_CHECKPOINT'):
     startup="-restore"
 
-  if Mode != 0:
+  if Mode==2 and not os.environ.has_key('TEST_CHECKPOINT'):
+    md5 = ''
+    shm_md5 = ''
+    try:
+      md5 = open(checkpoint+".md5","r").read()
+      shm_md5 = open('/dev/shm/Checkpoint.data.md5').read()
+      if shm_md5 == md5:
+        print 'echo "  [INFO] Checkpoint file is up to date";'
+      else:
+        copyNewFile(checkpoint)
+    except Exception,X:
+      copyNewFile(checkpoint)
+    print 'export CHECKPOINT_DIR=/dev/shm;'
+    print 'export CHECKPOINT_FILE=/dev/shm/Checkpoint.data;'
+  elif Mode != 0:
     print 'export CHECKPOINT_DIR='+directory+';'
     print 'export CHECKPOINT_FILE='+checkpoint+';'
-    
+
   # Number of CPUs online:
   # os.sysconf('SC_NPROCESSORS_ONLN')
   #
