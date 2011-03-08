@@ -7,7 +7,9 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/FilterParticlesBase.h"
-class IJetMaker;
+#include <utility>
+#include "Kernel/IJetMaker.h"
+
 //autor: Albert Bursche
 class TupleToolWZJets : public TupleToolBase, virtual public IParticleTupleTool {
 public:
@@ -40,6 +42,7 @@ private:
   bool m_remOverlap;
   bool m_IsoJetAbsID;
   Tuples::Tuple* m_tuple;
+  std::string m_prefix;
   const IJetMaker* m_AdditionalJetMaker;
   const IJetMaker* m_IsoJetMaker;
   const IParticleFilter* m_LokiAddJetFilter;
@@ -60,8 +63,7 @@ private:
   LoKi::Types::Fun m_DETA;
   LoKi::Types::Fun m_DR2;
   bool WriteJetToTuple(const LHCb::Particle*,std::string prefix);
-  double MaxSumNPart(const LHCb::Particle* jet,unsigned int n,const LoKi::Types::Fun& fun = LoKi::Cuts::PT);
-
+  double MaxSumNPart(const LHCb::Particle* jet,unsigned int n,const LoKi::Types::Fun& fun = LoKi::Cuts::PT,SmartRefVector< LHCb::Particle >* SortedDaughters = NULL);
   template <class T1,class T2>
   class Comperator
   {
@@ -73,7 +75,10 @@ private:
     bool operator()(T1 t1,T2 t2)
     {return m_fun(t1)>m_fun(t2);}
   };
-
+  LHCb::Particles& GetParticles();
+  void AddDecProducts(LHCb::Particles&);
+  bool StoreAdditionalJets(const IJetMaker::Jets& AddJets);
+  bool MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets);
 };
 
 #endif // TUPLETOOLJETS_H

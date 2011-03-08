@@ -3,7 +3,10 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
-
+! 2011-03-08 - Albert Bursche
+ - Some code cleanup in TupleToolWZJets.
+   Added some meaning to 'Verbose' flag.
+   Results with Verbose = True should be equal to those calculated before.   
 
 ! 2011-03-08 - Rob Lambert
  - Fixed TupleToolTagging to allow multiple different tagging tools,
