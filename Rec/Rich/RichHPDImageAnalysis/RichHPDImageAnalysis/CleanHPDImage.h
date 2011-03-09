@@ -69,10 +69,6 @@ namespace Rich
       TH2D* filter() const;
 
     private:
-
-      typedef std::vector<int> Ints;
-
-    private:
       
       /// Compute average bin content from neighbours
       double avFromNeighbours(  const int COL,

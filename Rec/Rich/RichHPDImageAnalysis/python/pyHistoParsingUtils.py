@@ -52,55 +52,20 @@ def imageOffsetY( rootfile, hpdcopynr, minEntries ):
     """
     return imageOffset(rootfile,'dPosYvsCopyNr','dPosYvsCopyNrErr',hpdcopynr,minEntries)
 
-def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fitType = "CppFit" ):
+def hpdLocalOffset( rootfile, hpdcopynr, minEntries ):
     """
     Returns the HPD local offset in mm
     """
 
     OK = True
 
-    xoffset = (0,0)
-    yoffset = (0,0)
-    
-    if fitType == "CppFit" :
-        # Get the results from the summary histograms saved in the ROOT file
+    xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
+    yoffset = imageOffsetY( rootfile, hpdcopynr, minEntries )
+    radius  = hpdImageRadius( rootfile, hpdcopynr, minEntries )
 
-        xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
-        yoffset = imageOffsetY( rootfile, hpdcopynr, minEntries )
+    res = { "ShiftX" : xoffset, "ShiftY" : yoffset, "Radius" : radius }
         
-    else:
-        # Do a full fit
-        
-        from GaudiPython import gbl
-        from ROOT import TH2D
-
-        # Get the histogram for this HPD
-        image = rootfile.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdcopynr)+'_Image')
-
-        # Check entries
-        if image.GetEntries() < minEntries :
-            
-            OK = False
-            
-        else:
-
-            # Setup the fit object
-            params = gbl.Rich.HPDImage.HPDFit.Params()
-            params.cutFraction = 0.1
-            params.minBoundary = 3
-            params.type        = fitType
-
-            # Do the fit
-            fitter = gbl.Rich.HPDImage.HPDFit()
-            result = fitter.fit(image,params)
-
-            # Extract the fit results
-            OK = result.OK()
-            if OK :
-                xoffset = (result.x(),result.xErr())
-                yoffset = (result.y(),result.yErr())
-        
-    return { "OK" : OK, "Result" : (xoffset,yoffset) }
+    return { "OK" : OK, "Result" : res }
 
 def hpdCentreInPixels( rootfile, hpdcopynr, fullFit = False ):
     """
