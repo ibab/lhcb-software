@@ -5,6 +5,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2011-03-09 - Anton Poluektov 
+ - Fix outputLocation passed to StrippingAlg. 
+
 ! 2011-03-04 - Juan Palacios
  - Add StrippingLine.prescale() method.
  - Increase to v4r1.

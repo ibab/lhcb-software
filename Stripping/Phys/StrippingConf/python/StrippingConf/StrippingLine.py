@@ -452,7 +452,7 @@ class StrippingLine(object):
             
         mdict.update( { 'HltDecReportsLocation' : HDRLocation } )
         if (self.outputLocation()) : 
-    	    mdict.update( { 'OutputLocation' : "/Event/" + self.outputLocation() + "/Particles" } )
+    	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
 #        mdict.update( { 'ANNSvc' : 'StripANNSvc' } )
         
         __mdict = deepcopy ( mdict ) 
