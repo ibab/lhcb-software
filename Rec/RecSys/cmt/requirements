@@ -1,5 +1,5 @@
 package RecSys
-version           v11r2
+version           v11r2p1
 
 branches cmt doc tests
 
@@ -29,8 +29,8 @@ use MuonTrackRec         v3r4p1  Muon # Giacomo Graziani
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r3    Rec  # Chris Jones
 use GlobalReco           v6r35   Rec  # Chris Jones
-use LumiAlgs             v5r0    Rec  # Jaap Panman
-use RecAlgs              v2r1    Rec  # Marco Cattaneo
+use LumiAlgs             v5r0p1  Rec  # Jaap Panman
+use RecAlgs              v2r2    Rec  # Marco Cattaneo
 use RecConf		 v2r0	 Rec  # Rob Lambert
 use RecInterfaces        v1r0    Rec  # Chris Jones
 
@@ -80,7 +80,7 @@ use TrackFitEvent        v5r7    Tr   # Eduardo Rodrigues
 use TrackFitter          v4r2    Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r0p1  Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r30p1 Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r31   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r29   Tr   # Wouter Hulsbergen
 use TrackTools           v4r3    Tr   # Eduardo Rodrigues
 use TrackUtils           v1r41   Tr   # Eduardo Rodrigues

@@ -5,6 +5,21 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r2p1>2011-03-10 RecSys v11r2p1</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r1p1
+
+- This is a production version of Rec, required to pick up certain
+  patches for 2011 data.
+
+- The L0TCK major version has increased requiring a
+  L0DU (Lbcom) and Rec/LumiAlgs v5r0p1 patch
+
+- The RecHeader now also holds for each event a string of the 
+  raw file GUID, required before we can use conditions to 
+  perform DQ checks, This is filled by RecInit in Rec/RecAlgs v2r2
+
+- Minor changes were also made to Tr/TrackMonitors v3r31
+
 </PRE><H1><A NAME=v11r2>2011-02-28 RecSys v11r2</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r1
 
