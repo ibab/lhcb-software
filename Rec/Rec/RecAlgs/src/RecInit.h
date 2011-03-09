@@ -31,5 +31,7 @@ protected:
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
   IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
+  std::string m_rawEventLocation;               ///< Location where we get the RawEvent
+  bool m_abortOnFID;               ///< If I can't find the raw file ID, do I abort?
 };
 #endif // RECINIT_H

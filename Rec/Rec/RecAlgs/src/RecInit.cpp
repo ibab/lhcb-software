@@ -7,6 +7,7 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiAlg/IGenericTool.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
@@ -39,6 +40,10 @@ RecInit::RecInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator )
 {
+  declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default, 
+                   "where to find the raw event" );
+  declareProperty( "AbortOnFID"  ,  m_abortOnFID = true, 
+                   "If I can't find the raw file ID, do I abort? Default true=yes.");
 }
 
 //=============================================================================
@@ -97,12 +102,37 @@ StatusCode RecInit::execute()
   const ulonglong    evtNumber = odin->eventNumber();
 
   this->printEventRun( evtNumber, runNumber, 0, odin->eventTime() );
-
+  
   // Initialize the random number
   std::vector<long int> seeds = getSeeds( runNumber, evtNumber );
   sc = this->initRndm( seeds );
   if ( sc.isFailure() ) return sc;  // error printed already by initRndm
-
+  
+  // get the file ID from the raw event
+  std::string event_fname="";
+  if( !exist<LHCb::RawEvent>(m_rawEventLocation) )
+  {
+    if(m_abortOnFID) return Error("RawBank cannot be loaded, fileID cannot be found");
+    Warning("RawBank cannot be loaded, fileID cannot be found",StatusCode::SUCCESS).ignore();
+  } 
+  else 
+  {
+    LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
+    IOpaqueAddress* eAddr = event->registry()->address();
+    // obtain the fileID
+    if ( eAddr ) 
+    {
+      event_fname = eAddr->par()[0];
+      if ( msgLevel(MSG::DEBUG) ) debug() << "RunInfo record from Event: " << event_fname << endmsg;
+    } 
+    else 
+    {
+      if(m_abortOnFID) return Error("Registry cannot be loaded from Event, fileID cannot be found");
+      Warning("Registry cannot be loaded from Event, fileID cannot be found",StatusCode::SUCCESS).ignore();
+    }
+  }
+  const std::string rawID=event_fname;
+  
   // Create the Reconstruction event header
   LHCb::RecHeader* header = new LHCb::RecHeader();
   header->setApplicationName( this->appName() );
@@ -112,6 +142,7 @@ StatusCode RecInit::execute()
   header->setRandomSeeds( seeds );
   header->setCondDBTags( this->condDBTags() );
   header->setGpsTime( odin->gpsTime() );
+  header->setRawID( rawID );
   put( header, LHCb::RecHeaderLocation::Default );
 
   // Create a ProcStatus if it does not already exist
