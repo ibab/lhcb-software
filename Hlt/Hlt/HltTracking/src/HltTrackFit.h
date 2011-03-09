@@ -40,7 +40,6 @@ protected:
 
 private:
 
-  int m_pid;
   std::string m_fitName;
   ITrackFitter* m_fit;
 

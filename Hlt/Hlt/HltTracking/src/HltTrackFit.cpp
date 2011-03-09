@@ -30,12 +30,13 @@ HltTrackFit::HltTrackFit( const std::string& type,
 {
   declareInterface<ITracksFromTrack>(this);
   declareProperty("FitterName", m_fitName = "TrackMasterFitter/Fit");
-  declareProperty("PID",m_pid=211);
 }
+
 //=============================================================================
-// Destructor
-//=============================================================================
-HltTrackFit::~HltTrackFit() {} 
+HltTrackFit::~HltTrackFit()
+{
+
+} 
 
 //=============================================================================
 StatusCode HltTrackFit::initialize() 
@@ -49,22 +50,18 @@ StatusCode HltTrackFit::initialize()
  return sc;
 }
 
+//=============================================================================
 StatusCode HltTrackFit::tracksFromTrack(
 		const LHCb::Track& seed,
 		std::vector<LHCb::Track*>& tracks )
 {
   std::auto_ptr<LHCb::Track> tr( seed.clone() );
   StatusCode sc = StatusCode::SUCCESS;
-  //fit the track only if it hasn't been fitted before ..
-  if(tr->checkFitHistory(LHCb::Track::FitUnknown) ){
-    sc = m_fit->fit(*tr,LHCb::ParticleID(m_pid));
-    if( sc.isFailure() ) {
-        warning() << "fit failed" << endmsg;
-        return StatusCode::FAILURE;
-    }
-    //FIXME this should be done inside the fit, but it isn't .. 
-    tr->setFitHistory(LHCb::Track::StdKalman);
+  sc = m_fit->fit( *tr );
+  if( sc.isFailure() ) {
+     warning() << "Fit failed." << endmsg;
+  } else {
+     tracks.push_back( tr.release() );
   }
-  tracks.push_back(tr.release());
   return sc;
 }

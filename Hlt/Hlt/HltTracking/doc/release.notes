@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-03-09 - Roel Aaij
+ - Remove the check for fit history from HltTrackFit.
+
 ! 2011-03-08 - Jibo He
  - Hlt2TrackingConfigurations.py
    RichHypos changed to 3 hypothesis for both Protons
