@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-09 - Greig Cowan
+ - Updated NB mumu stripping line dictionary for high masses.
+
 ! 2011-03-06 - Greig Cowan
  - Added Gamma from trees line config dictionaries.
  - Removed the old stream definition files. Stream building moved to AppConfig.

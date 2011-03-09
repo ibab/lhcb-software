@@ -7,23 +7,30 @@ Dictionaries have the name of the line builder instance.
 
 NeuroBayesMuMu = {
     'BUILDERTYPE' : 'StrippingNeuroBayesMuMuConf',
-    'CONFIG' : {'trackChi2'              :    5.0
-                , 'MuMuMassMin'          :    0.0
-                , 'MuMuMassMax'          :   20.0
-                , 'JPsiMassMin'          :    3.04 # GeV
-                , 'JPsiMassMax'          :    3.14 # GeV
-                , 'vertexChi2'           :   25.0
-                , 'NBCutJPsi'            :    0.7
-                , 'NBCutMuMu'            :    0.95
-                , 'ExpertiseJPsi'        : 'Muon/mumu_net_noip.nb'
-                , 'ExpertiseMuMu'        : 'Muon/mumu_net_full.nb'
-                , 'NBVersionJPsi'        : "TuneSep2010"
-                , 'NBVersionMuMu'        : "TuneSep2010"
-                , 'PrescaleMuMu'         :  1.0
-                , 'PostscaleMuMu'        :  1.0
-                , 'PrescaleJPsi'         :  1.0
-                , 'PostscaleJPsi'        :  1.0
-                },
+    'CONFIG' : { 'trackChi2'           :    5.0
+              , 'MuMuMassMin'       :    0.0
+              , 'MuMuMassMax'       :   12.0
+              , 'MuMuMassHighMin'   :    8.5
+              , 'MuMuMassHighMax'   :  130.0
+              , 'JPsiMassMin'       :    3.04 # GeV
+              , 'JPsiMassMax'       :    3.14 # GeV
+              , 'vertexChi2'        :   25.0
+              , 'NBCutJPsi'         :    0.7
+              , 'NBCutMuMu'         :    0.95
+              , 'NBCutMuMuHigh'     :   -0.7
+              , 'ExpertiseJPsi'     : 'Muon/mumu_net_noip.nb'
+              , 'ExpertiseMuMu'     : 'Muon/mumu_net_full.nb'
+              , 'ExpertiseMuMuHigh' : 'Muon/mumuhighmass_full.nb'
+              , 'NBVersionJPsi'     : "TuneSep2010"
+              , 'NBVersionMuMu'     : "TuneSep2010"
+              , 'NBVersionMuMuHigh' : "TuneSep2010"
+              , 'PrescaleMuMu'      : 1.0
+              , 'PostscaleMuMu'     : 1.0
+              , 'PrescaleMuMuHigh'  : 1.0
+              , 'PostscaleMuMuHigh' : 1.0
+              , 'PrescaleJPsi'      : 1.0
+              , 'PostscaleJPsi'     : 1.0
+              },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'FWG' ]
     }

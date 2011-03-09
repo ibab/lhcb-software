@@ -204,7 +204,6 @@ SingleTrackTIS = {
     'WGs'    : ['EW']
     }
 
-'''
 DisplVertices = {
 	'BUILDERTYPE'	: 'DisplVerticeLinesConf',
 	'CONFIG'	: {'MaterialVeto': {'Double': 0,
@@ -267,4 +266,21 @@ DisplVertices = {
         'STREAMS' : [ 'EW' ],
         'WGs'    : ['Exotics']
 }
-'''
+
+HighPtjets = {
+	'BUILDERTYPE' : 'HighPtJetsLinesConf',
+	'CONFIG' : {
+           'MinWeightSeedCut' : 6
+    	,  'ConeExtFactorCut' : 4.0
+    	,  'MaxDeltaPhiCut'   : 5.4
+    	,  'MaxDeltaEtaCut'   : 0.15
+    	,  'Min1stJetPtCut'   : 10.0
+    	,  'Min2ndJetPtCut'   : 7.0
+    	,  'JetMultCut'       : 2
+    	,  'MaxRPVCut'        : 0.8
+    	,  'scale'            : 1.0
+ 	},
+	'STREAMS': [ 'EW' ],
+	'WGs' : [ 'Exotics' ]
+}
+

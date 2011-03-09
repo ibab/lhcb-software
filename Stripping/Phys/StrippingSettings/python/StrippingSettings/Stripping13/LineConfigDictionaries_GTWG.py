@@ -295,6 +295,7 @@ DstarD02Kpipi0 = {
     'WGs' : [ 'GammaFromTrees' ]
 }
 
+# line currently does not meet stripping requirements
 B2D3H = {
     'BUILDERTYPE' : 'B2D3HAllLinesConf',
     'CONFIG' : {
