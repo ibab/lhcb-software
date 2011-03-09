@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v12r3 2011-03-09 ===================
 ! 2011-03-09 - Eric v. Herwijnen & Markus Frank
  - updates to checkpointing/forking support
 
