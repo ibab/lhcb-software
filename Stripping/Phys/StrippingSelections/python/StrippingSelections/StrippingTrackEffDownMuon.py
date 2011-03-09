@@ -113,7 +113,7 @@ def selMuonPParts(name, DataType, downstreamSeq):
    """
        Make ProtoParticles out of Downstream tracks
    """
-   unpacker = UnpackTrack(name+"UnpackTrack")
+   unpacker = UnpackTrack(name+"UnpackTrack")  # do we need this or is it here for historical reason ?
    unpacker.InputName="pRec/Downstream/Tracks"
    unpacker.OutputName="Rec/Downstream/Tracks"
 
@@ -122,14 +122,14 @@ def selMuonPParts(name, DataType, downstreamSeq):
    cm.configureMuonIDAlg(idalg)
    idalg.TrackLocation = "Rec/Downstream/Tracks"
    idalg.MuonIDLocation = "Rec/Muon/MuonPID/Downstream"
-   idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream"
+   idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream …but just to be »Klugscheißer«
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
    downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
    downprotos.InputTrackLocation = ["Rec/Downstream/Tracks"]
    downprotos.OutputProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
-   tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ]
+   tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
    #if (trackcont == "Best") :
    #	tracktypes = [ "Long" ]
    downprotos.TrackSelector.TrackTypes = tracktypes
@@ -221,7 +221,7 @@ def selHlt1Jpsi(name):
    """
    #Hlt1Jpsi = TisTosParticleTagger(name+"Hlt1Jpsi")
    Hlt1Jpsi = TisTosParticleTagger(
-   TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
+   TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False

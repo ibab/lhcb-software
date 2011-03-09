@@ -251,7 +251,7 @@ def selHlt1Jpsi(name):
    """
    #Hlt1Jpsi = TisTosParticleTagger(name+"Hlt1Jpsi")
    Hlt1Jpsi = TisTosParticleTagger(
-   TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
+   TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False

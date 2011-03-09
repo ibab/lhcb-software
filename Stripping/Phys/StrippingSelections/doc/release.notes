@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-09 - Paul Seyfert
+ - Included further trigger line (needed for restripping) to TrackEffVeloMuon and DownMuon
+
 ! 2011-03-08 - Greig Cowan
  - Removed some obsolete stripping lines
 
