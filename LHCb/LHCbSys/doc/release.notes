@@ -5,10 +5,25 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v32r1p1>2011-03-10 LHCbSys v32r1p1</A></H1><PRE>
+This version uses Gaudi v22r1 and LCG_60a
+Production version for 2011 startup
+
+This is a patch release to take a few package revisions required for
+2011 data taking. 
+
+- Event/RecEvent v2r36:
+  . Added rawID to the RecHeader, the string raw file UID.
+  . Required such that a conditions DB can be used for DQ
+
+- Kernel/LHCbKernel v12r8p1:
+  . Fixed bug in counters.cpp, wrong class ID
+
 
 </PRE><H1><A NAME=v32r1>2011-02-24 LHCbSys v32r1</A></H1><PRE>
 This version uses Gaudi v22r1 and LCG_60a
 Production version for 2011 startup
+
 
 - Packages modified: CaloDAQ v4r21, MDF v3r29, CaloDet v10r10, DDDB v1r41,
     DetDesc v18r23, DetDescChecks v5r5, MuonDet v9r5, RichDet v16r1, STDet v4r24,

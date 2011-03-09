@@ -1,5 +1,5 @@
 package LHCbSys
-version v32r1
+version           v32r1p1
 
 branches doc cmt test
 
@@ -56,7 +56,7 @@ use LumiEvent             v3r1    Event   # Jaap Panman
 use MCEvent               v2r19   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v4r5    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r13  Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r35   Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v2r36   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r3    Event   # Chris Jones
 use TrackEvent            v5r11   Event   # Wouter Hulsbergen
 use VeloEvent             v16r10  Event   # Tomasz Szumlak, Chris Parkes
@@ -87,7 +87,7 @@ use HistoStrings          v1r0    Kernel  # Vanya Belyaev
 use HltInterfaces         v4r3    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r37   Kernel  # Marco Cattaneo
-use LHCbKernel            v12r8   Kernel  # Marco Cattaneo
+use LHCbKernel            v12r8p1 Kernel  # Marco Cattaneo
 use LHCbMath              v3r24   Kernel  # Juan Palacios
 use MCInterfaces          v1r13   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r9    Kernel  # Vanya Belyaev 
