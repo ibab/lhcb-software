@@ -19,6 +19,9 @@ This is a patch release to take a few package revisions required for
 - Kernel/LHCbKernel v12r8p1:
   . Fixed bug in counters.cpp, wrong class ID
 
+ - Det/RichDet v16r1p1
+  . Fixed an Hlt specific database handling bug
+
 
 </PRE><H1><A NAME=v32r1>2011-02-24 LHCbSys v32r1</A></H1><PRE>
 This version uses Gaudi v22r1 and LCG_60a
