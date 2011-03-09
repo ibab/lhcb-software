@@ -36,8 +36,8 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     , algos = [ tracking
                               , Member( 'Hlt::TrackFilter','All'
                                       , Code = [ 'TrALL' ]
-                                      , InputSelection = 'TES:%s' % tracking.outputSelection()
-                                      , OutputSelection = '%Decision'
+                                      , Input = 'TES:%s' % tracking.output()
+                                      , Output = '%Decision'
                                       ) 
                               ]
                     , postscale = self.postscale

@@ -27,5 +27,5 @@ class Hlt1CosmicLinesConf(HltLinesConfigurableUser):
         Line('CosmicOT'  
             , prescale = self.prescale
             , postscale = self.postscale
-            , algos = [ DecodeOT, HltCosmicsOT('Hlt1CosmicOTDecision', OutputSelection = 'Hlt1CosmicOTDecision') ]
+            , algos = [ DecodeOT, HltCosmicsOT('Hlt1CosmicOTDecision', Output = 'Hlt1CosmicOTDecision') ]
             )

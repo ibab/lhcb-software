@@ -76,15 +76,15 @@ def _muon( channel ) :
     from HltLine.HltDecodeRaw import DecodeL0MUON
     from Configurables import HltL0MuonCandidates,L0MuonCandidatesFromRaw
     name = _name(channel)
-    #note: explicitly set the OutputSelection so we can pick it up downstream...
-    return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
+    #note: explicitly set the Output so we can pick it up downstream...
+    return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, Output = name)]) }
 
 def _calo( channel , calomaker ) :
     from HltLine.HltDecodeRaw import DecodeL0CALO
     from Configurables import HltL0CaloCandidates
     name = _name(channel)
-    #note: explicitly set the OutputSelection so we can pick it up downstream...
-    x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
+    #note: explicitly set the Output so we can pick it up downstream...
+    x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, Output = name) ]) }
     HltL0CaloCandidates(name).addTool(calomaker,name='CaloMakerTool')
     HltL0CaloCandidates(name).CaloMakerTool = calomaker.__name__
     return x
