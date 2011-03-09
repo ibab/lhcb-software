@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r2 2011-03-09 =========================
 ! 2011-03-09 - Rob Lambert
  - Modified RecInit.cpp
    Add raw file GUID to rec header. Requires Event/RecEvent 
