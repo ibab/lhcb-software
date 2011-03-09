@@ -5,31 +5,35 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v13r1>2011-03-06 HltSys v13r2/A></H1><PRE>
+</PRE><H1><A NAME=v13r2p1>2011-03-09 HltSys v13r2p1</A></H1><PRE>
+! 2011-03-06 - Gerhard Raven
+ - small tweaks compared to v13r2, pick up PHYS v12r1p1
+
+</PRE><H1><A NAME=v13r2>2011-03-06 HltSys v13r2</A></H1><PRE>
 ! 2011-03-06 - Gerhard Raven
  - small fixes, tweaks compared to v13r1
 
-</PRE><H1><A NAME=v13r1>2011-03-01 HltSys v13r1/A></H1><PRE>
+</PRE><H1><A NAME=v13r1>2011-03-01 HltSys v13r1</A></H1><PRE>
 ! 2011-03-01 - Gerhard Raven
  - release intended for first data in 2011, based on PHYS_v12r1
 
-</PRE><H1><A NAME=v13r0>2011-02-22 HltSys v13r0/A></H1><PRE>
+</PRE><H1><A NAME=v13r0>2011-02-22 HltSys v13r0</A></H1><PRE>
 ! 2011-02-22 - Gerhard Raven
  - continued development on top of PHYS_v12r0
 
-</PRE><H1><A NAME=v12r6p1>2011-02-19 HltSys v12r6p1/A></H1><PRE>
+</PRE><H1><A NAME=v12r6p1>2011-02-19 HltSys v12r6p1</A></H1><PRE>
 ! 2011-02-19 - Gerhard Raven
  - update LoKiTrigger to insure independence of upgrades
 
-</PRE><H1><A NAME=v12r6>2011-02-16 HltSys v12r6/A></H1><PRE>
+</PRE><H1><A NAME=v12r6>2011-02-16 HltSys v12r6</A></H1><PRE>
 ! 2011-02-16 - Gerhard Raven
  - continued development...
 
-</PRE><H1><A NAME=v12r5>2011-02-10 HltSys v12r5/A></H1><PRE>
+</PRE><H1><A NAME=v12r5>2011-02-10 HltSys v12r5</A></H1><PRE>
 ! 2011-02-10 - Gerhard Raven
  - v12r5 fixes several issues with v12r4. Do not use v12r4.
 
-</PRE><H1><A NAME=v12r4>2011-02-07 HltSys v12r4/A></H1><PRE>
+</PRE><H1><A NAME=v12r4>2011-02-07 HltSys v12r4</A></H1><PRE>
 ! 2011-02-07 - Gerhard Raven
  - first release on top of LHCb v32r0, Phys v11r0
 
@@ -37,39 +41,39 @@ Purpose: LHCb High Level Trigger packages.
  - Add Hlt/Hlt1Muons which contains new code for Hlt1 Muon
    lines
 
-</PRE><H1><A NAME=v12r2>2011-01-18 HltSys v12r2/A></H1><PRE>
+</PRE><H1><A NAME=v12r2>2011-01-18 HltSys v12r2</A></H1><PRE>
 ! 2011-01-18 - Gerhard Raven
  - Move forward to Phys v10r0
 
-</PRE><H1><A NAME=v12r1>2010-12-16 HltSys v12r1/A></H1><PRE>
+</PRE><H1><A NAME=v12r1>2010-12-16 HltSys v12r1</A></H1><PRE>
 ! 2010-12-16 - Gerhard Raven
  - Move forward to latest LHCb development software stack
 
-</PRE><H1><A NAME=v12r0>2010-12-08 HltSys v12r0/A></H1><PRE>
+</PRE><H1><A NAME=v12r0>2010-12-08 HltSys v12r0</A></H1><PRE>
 ! 2010-12-08 - Gerhard Raven
  - Hlt development release intended for  preparation of 2011 running
 
 
-</PRE><H1><A NAME=v11r4>2010-11-04 HltSys v11r4/A></H1><PRE>
+</PRE><H1><A NAME=v11r4>2010-11-04 HltSys v11r4</A></H1><PRE>
 ! 2010-11-04 - Juan Palacios
  - Hlt code identical to v11r3. Built on Phys v9r12
 
-</PRE><H1><A NAME=v11r3>2010-10-04 HltSys v11r3/A></H1><PRE>
+</PRE><H1><A NAME=v11r3>2010-10-04 HltSys v11r3</A></H1><PRE>
 ! 2010-10-04 - Gerhard Raven
  - update tags on top of Phys v9r11
 
 ! 2010-09-24 - Rob Lambert
  - changed TisTosTobbing for HltTisTosTobbing
 
-</PRE><H1><A NAME=v11r2>2010-09-08 HltSys v11r2/A></H1><PRE>
+</PRE><H1><A NAME=v11r2>2010-09-08 HltSys v11r2</A></H1><PRE>
 ! 2010-09-29 - Gerhard Raven
  - update tags for even higher mu running: re-optimize Hlt2...
 
-</PRE><H1><A NAME=v11r1>2010-09-08 HltSys v11r1/A></H1><PRE>
+</PRE><H1><A NAME=v11r1>2010-09-08 HltSys v11r1</A></H1><PRE>
  - change trackupgrade implementation: common output shares
    common (public) tool so things are consistent by construction
 
-</PRE><H1><A NAME=v11r0>2010-08-26 HltSys v11r0/A></H1><PRE>
+</PRE><H1><A NAME=v11r0>2010-08-26 HltSys v11r0</A></H1><PRE>
  - towards 10^32, with mu of 1.5 and above...
 
 </PRE><H1><A NAME=v10r7>2010-08-21 HltSys v10r7</A></H1><PRE>
