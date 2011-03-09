@@ -134,6 +134,9 @@ namespace LHCb  {
     /// Service overload: stop the service
     virtual StatusCode stop();
 
+    /// Service overload: restart the service
+    virtual StatusCode restart();
+
     /// Service overload: finalize the service
     virtual StatusCode finalize();
 
@@ -361,6 +364,11 @@ StatusCode CheckpointSvc::start() {
 StatusCode CheckpointSvc::stop() {
   waitChildren();
   return Service::stop();
+}
+
+/// Service overload: restart the service
+StatusCode CheckpointSvc::restart() {
+  return StatusCode::SUCCESS;
 }
 
 /// Service overload: finalize the service
