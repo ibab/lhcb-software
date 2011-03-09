@@ -6,6 +6,15 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r1p1>2011-02-28 LbcomSys v10r1p1</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r1p1
+
+- Production candidate for 2011 data-taking
+
+This patch takes in only one required package to fix the major version of L0TCK.
+
+- L0/L0DU v10r12p1
+
 </PRE><H1><A NAME=v10r1>2011-02-28 LbcomSys v10r1</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r1
 

@@ -1,5 +1,5 @@
 package LbcomSys
-version           v10r1
+version           v10r1p1
 
 branches doc cmt tests
 
@@ -21,11 +21,11 @@ use DAQMonitors       v1r3    DAQ       # Olivier Deschamps
 use HltDAQ            v2r7    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v11r2p1 L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v10r12  L0        # Olivier Deschamps   
-use L0Muon            v9r2    L0        # Andrei Tsarogorodtsev, Julien Cogan
-use L0MuonMonitor     v2r1p1  L0        # Julien Cogan
-use PuVeto            v7r7p1  L0        # Serena Oggero
+use L0Calo            v11r2p1  L0        # Olivier Deschamps, Patrick Robbe
+use L0DU              v10r12p1 L0        # Olivier Deschamps   
+use L0Muon            v9r2     L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0MuonMonitor     v2r1p1   L0        # Julien Cogan
+use PuVeto            v7r7p1   L0        # Serena Oggero
 
 # Muon
 use MuonAssociators   v3r3    Muon      # Alessia Satta
