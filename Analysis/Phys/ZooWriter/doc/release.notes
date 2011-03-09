@@ -3,6 +3,13 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+
+! 2011-03-09 - Georg Alexander Krocker
+ - Added Doxyfile to build doxygen documentation
+ - Added some doxy documentation to the sources
+ - Paul fixed a bug in the ZooWriter related to casting of boost shared pointers
+   but not reported it to the release notes
+ 
 ! 2011-03-02 - Georg Alexander Krocker
  - Removed PhysDesktop for DaVinci version > v27r1
  - Fixed compillation error due to boost bug in Zoo.cpp

@@ -91,6 +91,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	boost::shared_ptr<ZooEv> ev(new ZooEv());
 	m_pev.swap(ev);
     }
+    ///\todo Check what Paul has done here
     m_T->Branch("Event",m_pev->Class()->GetName(), (void**)&(m_pev), 1 << 16, 99);
     m_sel.reserve(sel_collections.size());
     vector<string>::const_iterator j = sel_collections.begin();

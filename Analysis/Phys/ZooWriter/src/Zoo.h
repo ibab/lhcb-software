@@ -43,7 +43,7 @@ typedef ROOT::Math::PxPyPzEVector     zooLorentzVector;
 typedef ROOT::Math::XYZPoint          XYZPoint;
 
 /** @class ZooStable
- *    Stable (tracked) particles information
+ *    \brief Stable (tracked) particles information
  */
 class ZooStable : public TObject 
 {
@@ -54,7 +54,8 @@ class ZooStable : public TObject
   ZooStable(int trackType, int charge) :
     m_trackType(trackType), m_charge(charge) {
   }
-  
+ 
+  ///Gives back the track type from which the particle was build:
   int trackType() const { return m_trackType; };
   int charge()    const { return m_charge; };
   
@@ -67,7 +68,7 @@ class ZooStable : public TObject
       
       
 /** @ZooTreefitInfo
- *   Information from fit of the complete decay tree
+ *  \brief Information from fit of the complete decay tree
  */
 class ZooTreefitInfo : public TObject
 {
@@ -136,7 +137,7 @@ class ZooTreefitInfo : public TObject
 
 
 /** @class ZooDecay
- *     Decayed particles information
+ *     \brief Decayed (composite) particles information
  */
 class ZooDecay : public TObject
 {
@@ -192,7 +193,7 @@ class ZooDecay : public TObject
 
 
 /** @class ZooMCP
- *     Represend MC particles with relations to other MC particles
+ *   \brief Represend MC particles with relations to other MC particles
  */
 class ZooMCP : public TObject
 {
@@ -357,7 +358,7 @@ class ZooMCP : public TObject
 };
 
 /** @class ZooTagging
- *     tagging information information
+ *    \brief tagging information information
  */
 class ZooTagging : public TObject
 {
@@ -433,6 +434,9 @@ class ZooTagging : public TObject
 	ClassDef(ZooTagging,2)
 };
 
+/** @class ZooMCBkg
+ *    \brief MC background information and flags
+ */
 class ZooMCBkg : public TObject
 {  
     public:
@@ -454,6 +458,10 @@ class ZooMCBkg : public TObject
 
 	ClassDef(ZooMCBkg,3);
 };
+
+/** @class ZooTrigger
+ *    \brief trigger information
+ */
 
 class ZooTrigger : public TObject
 {
