@@ -5,6 +5,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r6p1 2011-03-09 ===================
 ! 2011-03-08 - Roel Aaij, Eric v. Herwijnen
  - Update RoutingBits definition for changed names of Hlt lines.
 
