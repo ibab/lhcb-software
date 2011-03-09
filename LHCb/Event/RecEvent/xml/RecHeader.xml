@@ -11,6 +11,8 @@
       name="RecHeader"
       id="105"
      >
+       <import name="string"  std="TRUE"/>
+       
        <location name= "Default"
                  place="LHCb::ProcessHeaderLocation::Rec"
                  noQuote="TRUE"
@@ -31,10 +33,15 @@
         type="ulonglong"
         init="0"
        />
+       <attribute
+        name="rawID"
+        desc="UUID of the raw file to which this event belongs"
+        type="std::string"
+       />
 
        <constructor 
 		desc     = "Copy constructor. Creates a new RecHeader with the same information." 
-		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber()), m_gpsTime(head.gpsTime())">
+		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber()), m_gpsTime(head.gpsTime()), m_rawID(head.rawID())">
                 <arg const="TRUE" name="head" type="LHCb::RecHeader"/>
                 <code/>
        </constructor>

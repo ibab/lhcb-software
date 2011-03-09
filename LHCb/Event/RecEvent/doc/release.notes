@@ -5,6 +5,11 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-03-09 - Rob Lambert
+ - Add rawID to RecHeader. A std::string.
+   This is the UID of the file input to Brunel for this event.
+   Filled by RecInit, for RecAlgs>=v2r2
+
 !========================= RecEvent v2r35 2011-02-22 =========================
 ! 2011-02-21 - Chris Jones
  - Add TT cluster information to RecSummary object
