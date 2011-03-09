@@ -153,14 +153,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                               , ValueName='RandomMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
             
-        from Configurables import L0MuonCandidatesFromRaw
-        from Configurables import LumiCountMuons
-        lumiCountSequence.Members.append( L0MuonCandidatesFromRaw( seqCountName+'L0MuonsFromRaw'))
-        lumiCountSequence.Members.append( LumiCountMuons( seqCountName+'Muons'
-                                                          , CounterName='Muon'
-                                                          , Threshold='2.5'
-                                                          , InputSelection='Trig/L0/MuonCtrl'
-                                                          , OutputContainer='Hlt/LumiSummary' ) )
         # populate count sequence from the definition
         createdCounters = []
         histoThresholds = []
@@ -177,6 +169,17 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 if debugOPL <= DEBUG:
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
 
+        from Configurables import LumiCountMuons
+        lumiCountSequence.Members.append( LumiCountMuons( seqCountName+'Muons'
+                                                          , CounterName='Muon'
+                                                          , Threshold='2.5'
+                                                          , InputSelection='Trig/L0/MuonCtrl'
+                                                          , OutputContainer='Hlt/LumiSummary' ) )
+
+        # Add L0MuonCandidatesFromRaw to the lumi reco sequence
+        from Configurables import L0MuonCandidatesFromRaw
+        lumiRecoSequence.Members.append( L0MuonCandidatesFromRaw() )
+        
         ### get the private lumi velo reco algorithms
         lumiVeloReco = self.__lumi_track_and_vertex_seq__()
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,

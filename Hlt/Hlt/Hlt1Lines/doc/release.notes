@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-09 - Roel Aaij
+ - Put L0MuonCandidatesFromRaw into the LumiRecoSequence to avoid multiple
+   instances of this algorithm.
+
 ! 2011-03-06 - Vladik Balagura
  - Added luminosity Muon counter in Hlt1LumiLines.py
 
