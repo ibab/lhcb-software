@@ -145,7 +145,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         zMin, zMax = self.HelperBeamsZRange(whichBeam)
         from Configurables import BeamGasProtoVertex
         protoVtxAlgo = BeamGasProtoVertex( 'BGProtoVertex_' + lineName
-                       , Input              = 'TES:%s' % InpTracksName
+                       , InputSelection     = 'TES:%s' % InpTracksName
                        , zTracksMin         = zMin
                        , zTracksMax         = zMax
                        , zTracksExcludeLumiRegionLow = self.getProp("BGVtxExclRangeMin") if ("Cross" in lineName) else 0.
@@ -292,10 +292,10 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### Algorithm to check for existing Velo tracks
         from HltTracking.HltReco import MinimalVelo
         from Configurables import LoKi__VoidFilter as VoidFilter
-        algCheckTracks = VoidFilter('Hlt1BeamGasCheckVeloTracks' , Code = "CONTAINS('%s') > 0" % MinimalVelo.output() )
+        algCheckTracks = VoidFilter('Hlt1BeamGasCheckVeloTracks' , Code = "CONTAINS('%s') > 0" % MinimalVelo.outputSelection() )
 
         ### ProtoVertexing algorithm
-        algProtoVertex = self.GetProtoVertexingAlg( lineName, MinimalVelo.output() )
+        algProtoVertex = self.GetProtoVertexingAlg( lineName, MinimalVelo.outputSelection() )
 
         ### Get the tracking algo(s) - Fast or Pat
         if   'FastVelo' in self.getProp("TrackingConf"): algTracking = [ self.GetTrackingAlg(self.getProp("TrackContName")) ]

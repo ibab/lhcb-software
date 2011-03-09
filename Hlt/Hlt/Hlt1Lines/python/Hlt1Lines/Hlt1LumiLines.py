@@ -17,18 +17,18 @@ def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
               seq.Members +=  DecodeL0DU.members() 
           alg = LumiFromL0DU(  seqName + 'L0DU' )
           if alg not in seq.Members :
-               alg.Input='Trig/L0/L0DUReport'
-               alg.Output='Hlt/LumiSummary' 
+               alg.InputSelection='Trig/L0/L0DUReport'
+               alg.OutputContainer='Hlt/LumiSummary' 
                seq.Members += [ alg ]
           if name in alg.CounterMap :
               raise KeyError('Key %s already present'%name)
           alg.CounterMap.update( { name : value } ) 
         return _fun
     return lambda name, inputSel : seq.Members.append( counterKind( seqName + name
-                                                     , Input = inputSel
+                                                     , InputSelection = inputSel
                                                      , CounterName = name
                                                      , Enable = enableNonL0Counters
-                                                     , Output='Hlt/LumiSummary' ) )
+                                                     , OutputContainer='Hlt/LumiSummary' ) )
 
 ####### operator, meet arguments...
 def _combine( op, arg ) :
@@ -140,7 +140,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Method'
                                                               , ValueName='L0RateMethod'
-                                                              , Output='Hlt/LumiSummary' ) )
+                                                              , OutputContainer='Hlt/LumiSummary' ) )
             
         # LumiMid lines are not flagged - to be used for on-line reporting only
         elif postfix.find('Mid') > -1  :
@@ -151,7 +151,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Random'
                                                               , ValueName='RandomMethod'
-                                                              , Output='Hlt/LumiSummary' ) )
+                                                              , OutputContainer='Hlt/LumiSummary' ) )
             
         # populate count sequence from the definition
         createdCounters = []
@@ -194,9 +194,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiRecoFilterSequence.Members.append(
             Sequence('HltVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareVeloBW'
-                                                   , Input = 'TES:%s' % self.containerNameLumiTracks
+                                                   , InputSelection   = 'TES:%s' % self.containerNameLumiTracks
                                                    , Code = [ 'TrBACKWARD' ]
-                                                   , Output = 'VeloBW'
+                                                   , OutputSelection     = 'VeloBW'
                                                    , RequirePositiveInputs = False
                                                    ) ]
                      , MeasureTime = True
