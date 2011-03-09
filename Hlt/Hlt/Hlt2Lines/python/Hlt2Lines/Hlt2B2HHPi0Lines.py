@@ -31,8 +31,10 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
                     ,'BMinDIRA_M'           : 0.99987   # unitless
                     ,'BMinDIRA_R'           : 0.99987   # unitless
 
-                    ,'HLT1FILTER'           : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
-
+                    ,'L0FILTER'             : "Photon,Electron"
+                    ,'HLT1FILTER'           : ""
+                    # "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
+                    
                     ,'Prescale'             : {   'Hlt2B2HHPi0_Merged'       : 1.0
                                                 , 'Hlt2B2HHPi0_Resolved'     : 1.0
                                                   } 
@@ -63,7 +65,6 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             "pi-"  : "(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()
             ,"pi+" : "(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRCHI2DOF<%(TrackMaxChi2Ndof)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % self.getProps()   
                                  } 
-            #, CombinationCut = "AALL" % self.getProps()
             , CombinationCut = "(AMAXDOCA('LoKi::DistanceCalculator')<%(MaxDOCA)s *mm)& (AALLSAMEBPV) & (AMINCHILD(MINTREE('pi+'==ABSID,TRCHI2DOF))<%(MaxMinTrackChi2Ndof)s)" % self.getProps()
             , MotherCut      = "(VFASPF(VCHI2)<%(BMaxVtxChi2)s) & (BPVVDCHI2>%(BMinVVDChi2)s)" % self.getProps()
             , ParticleCombiners = {'' : 'TrgVertexFitter'}
@@ -82,15 +83,16 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             , ParticleCombiners = {'' : 'TrgVertexFitter'}
             , Inputs = [ Hlt2Rho4HHPi0, MergedPi0s ])
         
-        
         ############################################################################
         #    Merged Pi0
         ############################################################################
+        l0filter = self.getProp("L0FILTER").split(',')
         hltfilter = self.getProp("HLT1FILTER")
         if hltfilter == "" : hltfilter = None
         
         line = Hlt2Line('B2HHPi0_Merged'
-                        , HLT = hltfilter
+                        , L0DU = "|".join(["L0_CHANNEL('%s')" % channel for channel in l0filter])
+                        , HLT = hltfilter         
                         , prescale = self.prescale
                         , algos = [ PV3D(), BiKalmanFittedPions, Hlt2Rho4HHPi0, MergedPi0s, Hlt2B2HHPi0 ]
                         , postscale = self.postscale
@@ -101,6 +103,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         #    Resolved Pi0
         ############################################################################
         line.clone('B2HHPi0_Resolved'
+                   , L0DU = "|".join(["L0_CHANNEL('%s')" % channel for channel in l0filter])
                    , HLT = hltfilter
                    , prescale = self.prescale
                    , algos = [ PV3D(), BiKalmanFittedPions, Hlt2Rho4HHPi0, ResolvedPi0s, Hlt2B2HHPi0 ]
