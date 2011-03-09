@@ -15,22 +15,24 @@ tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
           'NeutralCCChangePIDTool' : 'IChangePIDTool',
           'GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
-          'OnOfflineTool' : 'IOnOffline',
+#          'OnOfflineTool' : 'IOnOffline',
           'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
           'P2VVAngleCalculator' : 'IP2VVAngleCalculator',
-          'ParticleDescendants' : 'IParticleDescendants',
-          'PhysDesktop' : 'IPhysDesktop'
+          'ParticleDescendants' : 'IParticleDescendants'
                             }
 
 if __name__ == '__main__' :
 
     from GaudiPython.Bindings import AppMgr
     import PartProp.Service
+    from Configurables import LHCbApp
     from Configurables import ParticlePropertySvc, LHCb__ParticlePropertySvc
     ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt')
     LHCb__ParticlePropertySvc(ParticlePropertiesFile = '$DAVINCITOOLSROOT/tests/data/ParticleTable.txt')
     import sys
+
+    LHCbApp()
 
     errors = ['======== Error Summary =========================================']
     successes = ['======== Success Summary =======================================']

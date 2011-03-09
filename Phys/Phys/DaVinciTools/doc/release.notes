@@ -4,6 +4,13 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-03-09 - Juan Palacios
+ - tests/test_instantiate_tools.py
+  . Instantiate LHCbApp to give access to some services needed by some tools.
+  . Remove test for OnOfflineTool. This cannot be instantiated by itself, for
+    some reason.
+ - Increase to v22r4p1
+
 !========================== DaVinciTools v22r4 2011-02-28 ===================
 
 ! 2011-02-28 - Juan Palacios
