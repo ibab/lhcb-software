@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v5r0p1 2011-03-09 =========================
 ! 2011-03-08 - Gerhard Raven
  - replace 'use HltTCK v1r*' with 'use HltTCK v*'
 
