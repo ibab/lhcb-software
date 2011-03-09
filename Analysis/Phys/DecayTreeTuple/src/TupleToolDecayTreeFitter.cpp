@@ -20,34 +20,6 @@
 
 using namespace LHCb;
 
-/**@class TupleToolDecayTreeFitter 
-
-    * History : this tool was written during the study of the b->JpsiX    lifetimes. This means that the tool is not generic. 
-                But it happened to be very useful for debugging and understanding the fitting code  aka : DecayTreeFitter. 
-    * Advice  : Most of the output of this code could be saved via the LoKi style lines.    
-
-
-    * Usage   : One can plug this Tool in DecayTreeTuple. 
-    * Configuration : 
-    
-        - particleToFit = ["Lambda_b0"] # name of the head of the tree.
-	- refit = True # save a fit with no contraints. 
-	- constrainToPV = True  # save a fit to compute the lifetime. 
-	- constrainToOneDaughter = True  # save a fit where one of the daughters in constrained. 
-	- daughterToConstrain = ["J/psi(1S)"] # chose the daughter to constrain. 
-	- constrainToAllDaughters = True # save a fit where more than one daughter is constrained. 
-        - daughtersToConstrain = ["J/psi(1S)","Lambda0"] #chose the daughters to constrain.
-	-
-    * Outputs: 
-       - for each fit is saved: 
-          - The status, the chi2, the number of degres of freedom of the fit. 
-	  - The fitted mass, mass error for example : Lambda_b0_massConAllDaughters_M ...
-	  - The fitted lifetime, and error : Lambda_b0_taufitctau (ctau is given in mm).
-
-
-**/
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolDecayTreeFitter
 // Yasmine Amhis and Matt Needham. 

@@ -4,7 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-03-09 - Yasmine Amhis 
 
+   - TupleToolDecayTreeFitter 
+   . Move comment from .cpp to .h	
 ! 2011-03-09 - Yasmine Amhis
   - TupleToolDecayTreeFitter 
   . add doc and comments	
