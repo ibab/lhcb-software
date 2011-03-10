@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v12r4p1 2011-03-10 ================
+
 ! 2011-03-10 - Juan Palacios
  - options/BTaggingTool.py
   . Fix InputLocations of TaggingPartilces algorithm. All locations need to
