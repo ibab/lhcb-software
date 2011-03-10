@@ -8,6 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v8r1 2011-03-10 ==================
+
+! 2011-03-10 - Juan Palacios
+ - Looking at the QM tests, it seems the StdMassConstrainedJpsi2MuMu interference
+   had a large effect on the efficienct of StdLTUnbiasedJpsi2MuMu, which
+   uses StdLooseJpsi2MuMu.
+ - Increase to v8r1.
+
 ! 2011-02-24 - Roel Aaij
  - Changed StdMassConstrainedJpsi2MuMu from a FilterDesktop to a CombineParticles.
    This will prevent the StdLooseJpsi2MuMu from also having the mass constraint
