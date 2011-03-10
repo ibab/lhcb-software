@@ -4,6 +4,14 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v2r3 2011-03-10 ==================
+
+! 2011-03-10 - Juan Palacios
+ - Add scripts/check_gec.py for checking global event counters.
+ - Add options/davinci_mdst_configurablegenerators.py
+  . Script to wtire DSTs usinf ConfigurableGenerators.
+ - Increase to v2r3
+
 ! ========================== DstwriterTests v2r2 2011-01-19 ==================
 
 ! 2011-01-19 - Juan Palacios
