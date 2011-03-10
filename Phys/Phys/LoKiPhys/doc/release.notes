@@ -5,6 +5,11 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+ - kill bad concept of 'Element'-functor
+ - cmt/requirements 
+    version increment to v10r0 
+ 
 ! ========================== LoKiPhys v9r9 2011-02-20 =========================
 
 ! 2011-02-17 - Vanya Belyaev

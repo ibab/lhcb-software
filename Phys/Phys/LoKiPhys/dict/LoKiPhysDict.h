@@ -58,6 +58,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2007-12-01
  */
@@ -300,8 +304,6 @@ namespace
     LoKi::Dicts::FunValOps<const LHCb::VertexBase*>  m_fo6 ;
     LoKi::Dicts::CutValOps<const LHCb::Particle*>    m_fo51;
     LoKi::Dicts::CutValOps<const LHCb::VertexBase*>  m_fo61;
-    LoKi::Dicts::ElementOps<const LHCb::Particle*>   m_fo7 ;
-    LoKi::Dicts::ElementOps<const LHCb::VertexBase*> m_fo8 ;
     LoKi::Dicts::SourceOps<const LHCb::Particle*>    m_fo9 ;
     LoKi::Dicts::SourceOps<const LHCb::VertexBase*>  m_f10 ;
     // infor
@@ -359,7 +361,7 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_LOKIPHYSDICT_H
 // ============================================================================

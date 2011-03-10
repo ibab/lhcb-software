@@ -18,6 +18,18 @@ namespace LoKi
 {
   // ==========================================================================
   /** @namespace LoKi::PhysTypes LoKi/PhysTypes.h
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-02-11
    */
@@ -65,11 +77,6 @@ namespace LoKi
     // type of "fun-val"  for LHCb::Particle (assignable)
     typedef LoKi::Assignable<CutVals>::Type                       CutVal   ; 
     
-    // type of "element"  for LHCb::Particle (interface)
-    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Element   Elements ;
-    // type of "element"  for LHCb::Particle (assignable)
-    typedef LoKi::Assignable<Elements>::Type                      Element  ; 
-
     // type of "source"  for LHCb::Particle (interface)
     typedef LoKi::BasicFunctors<const LHCb::Particle*>::Source    Sources  ;
     // type of "source"  for LHCb::Particle (assignable)
@@ -97,12 +104,7 @@ namespace LoKi
     // type of "cut-val"  for LHCb::VertexBase (interface)
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::CutVal  VCutVals  ;
     // type of "cut-val"  for LHCb::VertexBase (assignable)
-    typedef LoKi::Assignable<VCutVals>::Type                      VCutVal   ; 
-    
-    // type of "element"  for LHCb::VertexBase (interface)
-    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Element VElements ;
-    // type of "element"  for LHCb::VertexBase (assignable)
-    typedef LoKi::Assignable<VElements>::Type                     VElement  ; 
+    typedef LoKi::Assignable<VCutVals>::Type                      VCutVal   ;
 
     // type of "source"  for  LHCb::VertexBase (interface)
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  VSources  ;
@@ -151,10 +153,6 @@ namespace LoKi
     typedef LoKi::PhysTypes::CutVals                            CutVals   ;
     // type for "cut-val" for LHCb::Particle (assignable)
     typedef LoKi::PhysTypes::CutVal                             CutVal    ;
-    // type for "element" for LHCb::Particle (interface)
-    typedef LoKi::PhysTypes::Elements                           Elements  ;
-    // type for "element" for LHCb::Particle (assignable)
-    typedef LoKi::PhysTypes::Element                            Element   ;
     // type for "source" for LHCb::Particle (interface)
     typedef LoKi::PhysTypes::Sources                            Sources   ;
     // type for "source" for LHCb::Particle (assignable)
@@ -180,10 +178,6 @@ namespace LoKi
     typedef LoKi::PhysTypes::VCutVals                           VCutVals  ;
     // type for "cut-val" for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VCutVal                            VCutVal   ;
-    // type for "element" for LHCb::VertexBase (interface)
-    typedef LoKi::PhysTypes::VElements                          VElements ;
-    // type for "element" for LHCb::VertexBase (assignable)
-    typedef LoKi::PhysTypes::VElement                           VElement  ;
     // type for "source" for LHCb::VertexBase (interface)
     typedef LoKi::PhysTypes::VSources                           VSources  ;
     // type for "source" for LHCb::VertexBase (assignable)
@@ -212,7 +206,7 @@ namespace LoKi
   // ==========================================================================  
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PHYSTYPES_H
 // ============================================================================

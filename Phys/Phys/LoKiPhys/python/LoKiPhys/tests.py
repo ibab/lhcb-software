@@ -60,7 +60,7 @@ def test1() :
     print ' v>>yields(ID)                   : %s'%(v>>yields(ID))
     print ' v>>process(ID)>>min_value(P)    : %s'%(v>>process(ID)>>min_value(P))
     print ' v>>(process(ID)>>min_value(P))  : %s'%(v>>(process(ID)>>min_value(P)))
-    print '(v>>min_element(ID)).name()      : %s'%(v>>min_element(ID)).name()
+    print '(v>>min_element(ID))[0].name()   : %s'%(v>>min_element(ID))[0].name()
     print ' v>>min_value(ID)                : %s'%(v>>min_value(ID))
     print ' v>>("e+"!=ABSID)>>SIZE          : %s'%(v>>('e+'!=ABSID)>>SIZE)
     print ' v>>select("mu+"!=ABSID)>>EPMTY  : %s'%(v>>select('mu+'!=ABSID)>>EMPTY)

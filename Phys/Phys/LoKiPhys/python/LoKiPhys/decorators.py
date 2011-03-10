@@ -142,16 +142,6 @@ def _decorate ( name = _name ) :
         LoKi.Functor   (_vv,bool)              , ## the base
         LoKi.Dicts.CutValOps(v)                ) ## call-traits
 
-    # "element": vector<T> -> T
-    _decorated |= _LoKiCore.getAndDecorateElements (  
-        name                                   , ## module name  
-        LoKi.Functor   (_vp,p)                 , ## the base
-        LoKi.Dicts.ElementOps(p,p)             ) ## call-traits
-    _decorated |= _LoKiCore.getAndDecorateElements (  
-        name                                   , ## module name  
-        LoKi.Functor   (_vv,v)                 , ## the base
-        LoKi.Dicts.ElementOps(v,v)             ) ## call-traits    
-    
     # 'source' : void -> vector<T>
     _decorated |= _LoKiCore.getAndDecorateSources  (  
         name                                   , ## module name  
