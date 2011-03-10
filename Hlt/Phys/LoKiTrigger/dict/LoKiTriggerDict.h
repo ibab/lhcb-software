@@ -43,6 +43,8 @@
 #include "LoKi/ITrgFunctorAntiFactory.h"
 #include "LoKi/TrgEngine.h"
 // ============================================================================
+#include "LoKi/BeamLineFunctions.h"
+// ============================================================================
 /** @file
  *  Reflex dictionary for LoKiTrigger package
  *

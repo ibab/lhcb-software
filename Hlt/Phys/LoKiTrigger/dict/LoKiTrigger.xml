@@ -113,9 +113,14 @@
   <class name = "LoKi::RecVertices::MaxDOCAChi2" />
   <class name = "LoKi::RecVertices::DOCACut"     />
   
+  <class name = "LoKi::Vertices::BeamSpotRho"     />
+  
   <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
+    </class>
+    <class name="LoKi::Vertices::BeamSpotRho" >
+      <field name = "m_veloDet"/>
     </class>
   </exclusion>
 

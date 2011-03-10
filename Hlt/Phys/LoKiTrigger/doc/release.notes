@@ -5,6 +5,20 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+
+ - LoKi/BeamLineFunctions.h
+   srs/BeamLineFunctions.cpp
+
+    add *skeleton* for VX_BEAMSPOTRHO functor
+       
+      " ...  >> ( VX_BEAMSPOTRHO() > 5 * mm ) >> ... "
+
+ - cmt/requirements 
+
+     1. add dependency on VeloDet 
+     2. version increment to v11r10 
+
 !========================== LoKiTrigger v11r9 2011-03-06 ===================
 ! 2011-03-06 - Roel Aaij
  - Fix a performance bug in UpgradeTool, leftover from r117500. When a seed
