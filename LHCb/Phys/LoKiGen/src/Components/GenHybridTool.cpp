@@ -27,13 +27,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-29
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Hybrid 
   {
+    // ========================================================================
     /** @class GenTool 
      *
      *  Concrete impelmentation of LoKi::IGenHybridTool interface 
@@ -194,32 +203,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      // elements
-      // ======================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&     pycode  , 
-        LoKi::Types::GElement& func    , 
-        const std::string&     context ) 
-      { return _get ( pycode , m_gelement  , func , context ) ; }
-      // ======================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&      pycode  , 
-        LoKi::Types::GVElement& func    , 
-        const std::string&      context ) 
-      { return _get ( pycode , m_gvelement , func , context ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
       // sources
       // ======================================================================
       /** "Factory": get the the object form python code 
@@ -301,17 +284,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      // elements
-      // ======================================================================
-      /// set the C++ "element" for HepMC::GenParticle
-      virtual void set ( const LoKi::Types::GElements&   cut ) 
-      { LoKi::Hybrid::Base::_set ( m_gelement  , cut ) ; }
-      /// set the C++ "element" for HepMC::GenVertex
-      virtual void set ( const LoKi::Types::GVElements&  cut ) 
-      { LoKi::Hybrid::Base::_set ( m_gvelement , cut ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
       // sources
       // ======================================================================
       /// set the C++ "source" for HepMC::GenParticle
@@ -322,6 +294,7 @@ namespace LoKi
       { LoKi::Hybrid::Base::_set ( m_gvsource , cut ) ; }
       // ======================================================================
     protected:
+      // ======================================================================
       /// constrcutor
       GenTool
       ( const std::string& type   ,
@@ -329,22 +302,28 @@ namespace LoKi
         const IInterface*  parent ) ;
       /// destrcutor 
       virtual ~GenTool();
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       GenTool() ; ///< the default constructor is disabled     
       // the copy constructor is disabled 
       GenTool           ( const GenTool& )  ; ///< the copy constructor is disabled 
       // the assignement operator  is disabled 
       GenTool& operator=( const GenTool& )  ; ///< no assignement 
+      // ======================================================================
     private:
-      /// helper method to sdave many lines:
+      // ======================================================================
+      /// helper method to save many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
       ( const std::string& pycode  , 
         TYPE1*&            local   , 
         TYPE2&             output  , 
         const std::string& context ) ;
+      // ======================================================================
     protected:
+      // ======================================================================
       //
       //   local holders of cuts 
       //
@@ -363,9 +342,6 @@ namespace LoKi
       // fun-vals: 
       LoKi::Types::GFunVals*   m_gfunval    ;    
       LoKi::Types::GVFunVals*  m_gvfunval   ;    
-      // elements: 
-      LoKi::Types::GElements*   m_gelement  ;    
-      LoKi::Types::GVElements*  m_gvelement ;    
       // sources:
       LoKi::Types::GSources*    m_gsource   ;    
       LoKi::Types::GVSources*   m_gvsource  ;    
@@ -375,9 +351,12 @@ namespace LoKi
       std::string m_actor   ;
       typedef std::vector<std::string> Lines   ;
       Lines       m_lines   ;
+      // ======================================================================
     } ;
-  } // end of namespace LoKi::Hybrid
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // helper method to sdave many lines:
 // ============================================================================
@@ -431,9 +410,6 @@ LoKi::Hybrid::GenTool::GenTool
   // fun-vals:
   , m_gfunval     ( 0 )
   , m_gvfunval    ( 0 )
-  // elements
-  , m_gelement    ( 0 )
-  , m_gvelement   ( 0 )
   // sources
   , m_gsource     ( 0 )
   , m_gvsource    ( 0 )
@@ -486,9 +462,6 @@ StatusCode LoKi::Hybrid::GenTool::finalize  ()
   // funvals:
   if ( 0 != m_gfunval   ) { delete m_gfunval   ; m_gfunval   = 0  ; }
   if ( 0 != m_gvfunval  ) { delete m_gvfunval  ; m_gvfunval  = 0  ; }
-  // elements:
-  if ( 0 != m_gelement  ) { delete m_gelement  ; m_gelement  = 0  ; }
-  if ( 0 != m_gvelement ) { delete m_gvelement ; m_gvelement = 0  ; }
   // sources:
   if ( 0 != m_gsource   ) { delete m_gsource   ; m_gsource   = 0  ; }
   if ( 0 != m_gvsource  ) { delete m_gvsource  ; m_gvsource  = 0  ; }

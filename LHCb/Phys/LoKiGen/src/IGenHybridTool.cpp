@@ -22,13 +22,21 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IGenHybridTool ( "LoKi::IGenHybridTool" , 2 , 0 ) ;
+  const InterfaceID IID_IGenHybridTool ( "LoKi::IGenHybridTool" , 3 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

@@ -10,11 +10,32 @@
 #include "LoKi/Interface.h"
 #include "LoKi/IGenHybridTool.h"
 // ===========================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid 
   {
-    /** @class GenEngineActor GenHybridEngineActor.h LoKi/GenHybridEngineActor.h
+    // ========================================================================
+    /** @class GenEngineActor LoKi/GenHybridEngineActor.h
      *  
      *  This file is a part of LoKi project - 
      *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -105,19 +126,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      // elements
-      // ======================================================================
-      /// propagate the element to the tool 
-      StatusCode process
-      ( const std::string&             name , 
-        const LoKi::Types::GElements&  func ) const ;
-      /// propagate the element to the tool 
-      StatusCode process
-      ( const std::string&             name , 
-        const LoKi::Types::GVElements& func ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
       // sources 
       // ======================================================================
       /// propagate the source to the tool 
@@ -130,27 +138,37 @@ namespace LoKi
         const LoKi::Types::GVSources& func ) const ;
       // ======================================================================
     protected:
+      // ======================================================================
       /// Standard constructor
       GenEngineActor() ;
-      virtual ~GenEngineActor( ); ///< Destructor
+      virtual ~GenEngineActor( ); // Destructor
+      // ======================================================================
     private:
-      // just to save some lines 
+      // ======================================================================
+      /// just to save some lines 
       template <class TYPE>
       inline StatusCode _add 
-      ( const std::string& name , const TYPE& cut ) const ; ///< just to save some lines 
+      ( const std::string& name , const TYPE& cut ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the copy contructor is disabled 
       GenEngineActor           ( const GenEngineActor& );
       // the assignement operator is disabled 
       GenEngineActor& operator=( const GenEngineActor& );
+      // ======================================================================
     private:
+      // ======================================================================
       // the tool itself 
       LoKi::Interface<LoKi::IGenHybridTool> m_tool ;
+      // ======================================================================
     };
-  } // end of namepspace LoKi 
-} // end of namespace LoKi
-// ===========================================================================
-// The END 
-// ===========================================================================
+    // ========================================================================
+  } //                                             end of namespace LoKi:Hybrid
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
+//                                                                      The END 
+// ============================================================================
 #endif // LOKI_MCCUTSHOLDER_H
-// ===========================================================================
+// ============================================================================

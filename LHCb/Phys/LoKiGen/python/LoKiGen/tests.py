@@ -67,7 +67,7 @@ def test1() :
     print ' v>>GID                           : %s'%(v>>GID)
     print ' v>>yields(GID)                   : %s'%(v>>yields(GID))
     print ' v>>process(GID)>>min_value(GP)   : %s'%(v>>process(GID)>>min_value(GP))
-    print '(v>>min_element(GID)).name()      : %s'%(v>>min_element(GID)).name()
+    print '(v>>min_element(GID))[0].name()   : %s'%(v>>min_element(GID))[0].name()
     print ' v>>min_value(GID)                : %s'%(v>>min_value(GID))
     print ' v>>("e+"!=GABSID)>>GSIZE         : %s'%(v>>('e+'!=GABSID)>>GSIZE)
     print ' v>>select("mu+"!=GABSID)>>GEMPTY : %s'%(v>>select('mu+'!=GABSID)>>GEMPTY)

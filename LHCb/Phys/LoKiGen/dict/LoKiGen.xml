@@ -59,7 +59,6 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*HepMC::*>"  />
   <class pattern   = "LoKi::Dicts::CutValOps<*HepMC::*>"  />
-  <class pattern   = "LoKi::Dicts::ElementOps<*HepMC::*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*HepMC::*>"  />
 
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Gen*>"    />

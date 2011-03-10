@@ -265,8 +265,6 @@ GFunVals   = LoKi.Functor             ( _vgp , 'double'  )
 GFunVal    = LoKi.FunctorFromFunctor  ( _vgp , 'double'  )
 GCutVals   = LoKi.Functor             ( _vgp , bool      )
 GCutVal    = LoKi.FunctorFromFunctor  ( _vgp , bool      )
-GElements  = LoKi.Functor             ( _vgp , _GP       ) 
-GElement   = LoKi.FunctorFromFunctor  ( _vgp , _GP       )
 GSources   = LoKi.Functor             ('void', _vgp      )
 GSource    = LoKi.FunctorFromFunctor  ('void', _vgp      )
 
@@ -278,10 +276,7 @@ GVPipe     = LoKi.FunctorFromFunctor  ( _vgv , _vgv      )
 GVFunVals  = LoKi.Functor             ( _vgv , 'double'  )
 GVFunVal   = LoKi.FunctorFromFunctor  ( _vgv , 'double'  )
 GVCutVals  = LoKi.Functor             ( _vgv , bool      )
-GVcutVal   = LoKi.FunctorFromFunctor  ( _vgv , bool      )
-GVElements = LoKi.Functor             ( _vgv , _GV       ) 
-GVElement  = LoKi.FunctorFromFunctor  ( _vgv , _GV       ) 
-
+GVCutVal   = LoKi.FunctorFromFunctor  ( _vgv , bool      )
 
 GSOURCE    = LoKi.GenParticles.SourceTES
 

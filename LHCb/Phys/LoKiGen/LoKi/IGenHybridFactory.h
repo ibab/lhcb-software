@@ -18,18 +18,39 @@
 // ============================================================================
 #include "LoKi/GenTypes.h"
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
 namespace LoKi
 {
+  // ==========================================================================
   /** @class IGenHybridFactory IMCHybridFactory.h LoKi/IMCHybridFactory.h
    *  The abstract interface to "hybrid factory"  
-   *  @author Vanya BELYAEV ibelayev@physics.syr.edu
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-06-10
    */
   class IGenHybridFactory : public virtual IAlgTool
   {
   public: 
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     // predicates 
@@ -159,32 +180,6 @@ namespace LoKi
     ( const std::string&     pycode       ,
       LoKi::Types::GVFunVal& func         ,
       const std::string&     context = "" )  = 0 ;
-    // ========================================================================
-  public:
-    // ========================================================================
-    // elements
-    // ========================================================================
-    /** "Factory": get the the object form python code 
-     *  @param pycode the python pseudo-code of the function
-     *  @param func the placeholder for the result 
-     *  @param context context code fragment to be executed 
-     *  @return StatusCode 
-     */
-    virtual StatusCode get
-    ( const std::string&     pycode       ,
-      LoKi::Types::GElement& func         , 
-      const std::string&     context = "" )  = 0 ;
-    // ========================================================================
-    /** "Factory": get the the object form python code 
-     *  @param pycode the python pseudo-code of the function
-     *  @param func the placeholder for the result 
-     *  @param context context code fragment to be executed 
-     *  @return StatusCode 
-     */
-    virtual StatusCode get
-    ( const std::string&      pycode       ,
-      LoKi::Types::GVElement& func         ,
-      const std::string&      context = "" )  = 0 ;
     // ========================================================================
   public:
     // ========================================================================

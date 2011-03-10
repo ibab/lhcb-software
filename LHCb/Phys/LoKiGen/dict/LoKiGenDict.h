@@ -50,8 +50,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2007-12-01
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -411,12 +419,10 @@ namespace
     LoKi::Dicts::PipeOps<const HepMC::GenParticle*>        m_fo2  ;
     LoKi::Dicts::FunValOps<const HepMC::GenParticle*>      m_fo3  ;
     LoKi::Dicts::CutValOps<const HepMC::GenParticle*>      m_fo31 ;
-    LoKi::Dicts::ElementOps<const HepMC::GenParticle*>     m_fo4  ;
     LoKi::Dicts::MapsOps<const HepMC::GenVertex*>          m_fo5  ;
     LoKi::Dicts::PipeOps<const HepMC::GenVertex*>          m_fo6  ;
     LoKi::Dicts::FunValOps<const HepMC::GenVertex*>        m_fo7  ;
     LoKi::Dicts::CutValOps<const HepMC::GenVertex*>        m_fo71 ;
-    LoKi::Dicts::ElementOps<const HepMC::GenVertex*>       m_fo8  ;
     LoKi::Dicts::SourceOps<const HepMC::GenVertex*>        m_fo9  ;
     LoKi::Dicts::SourceOps<const HepMC::GenParticle*>      m_fo10 ;
     /// mathematics:

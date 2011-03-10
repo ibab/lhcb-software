@@ -29,8 +29,16 @@ namespace HepMC { class GenVertex   ; }
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -91,10 +99,6 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::CutVal  GCutVals   ;
     // type of "cut-val" for HepMC::GenParticle   (assignable)
     typedef LoKi::Assignable<GCutVals>::Type                        GCutVal    ;
-    // type of "element" for HepMC::GenParticle   (interface)
-    typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::Element GElements  ;
-    // type of "element" for HepMC::GenParticle   (assignable)
-    typedef LoKi::Assignable<GElements>::Type                       GElement   ;
     // type of "source" for HepMC::GenParticle   (interface)
     typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::Source  GSources   ;
     // type of "source" for HepMC::GenParticle   (assignable)
@@ -118,10 +122,6 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::CutVal    GVCutVals  ;
     // type of "cut-val" for HepMCGenVertex   (assignable)
     typedef LoKi::Assignable<GVCutVals>::Type                       GVCutVal   ;
-    // type of "element" for HepMCGenVertex   (interface)
-    typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::Element   GVElements ;
-    // type of "element" for HepMCGenVertex   (assignable)
-    typedef LoKi::Assignable<GVElements>::Type                      GVElement  ;
     // type of "source" for HepMCGenVertex   (interface)
     typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::Source    GVSources  ;
     // type of "source" for HepMCGenVertex   (assignable)
@@ -177,10 +177,6 @@ namespace LoKi
     typedef LoKi::GenTypes::GCutVals      GCutVals  ;
     // type of "cut-val" for HepMC::GenParticle  (assignable)
     typedef LoKi::GenTypes::GCutVal       GCutVal   ;
-    // type of "element" for HepMC::GenParticle  (interface)
-    typedef LoKi::GenTypes::GElements     GElements ;
-    // type of "element" for HepMC::GenParticle  (assignable)
-    typedef LoKi::GenTypes::GElement      GElement  ;
     // type of "source" for HepMC::GenParticle  (interface)
     typedef LoKi::GenTypes::GSources      GSources  ;
     // type of "source" for HepMC::GenParticle  (assignable)
@@ -204,18 +200,14 @@ namespace LoKi
     typedef LoKi::GenTypes::GVCutVals     GVCutVals  ;
     // type of "cut-val" for HepMC::GenVertex  (assignable)
     typedef LoKi::GenTypes::GVCutVal      GVCutVal   ;
-    // type of "element" for HepMC::GenVertex  (interface)
-    typedef LoKi::GenTypes::GVElements    GVElements ;
-    // type of "element" for HepMC::GenVertex  (assignable)
-    typedef LoKi::GenTypes::GVElement     GVElement  ;
     // type of "source" for HepMC::GenVertex  (interface)
     typedef LoKi::GenTypes::GVSources     GVSources  ;
     // type of "source" for HepMC::GenVertex  (assignable)
     typedef LoKi::GenTypes::GVSource      GVSource   ;
     // ========================================================================
-  } // end of namespace Types
+  } //                                                   end of namespace Types
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi 
 {
@@ -234,9 +226,9 @@ namespace LoKi
   Constant<const HepMC::GenVertex*,bool>::fillStream  ( std::ostream& s ) const 
   { return s << ( this->m_value ? "GVALL" : "GVNONE" ) ; }
   // ==========================================================================  
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_GENTYPES_H
 // ============================================================================
