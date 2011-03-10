@@ -23,9 +23,8 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
-  //declareProperty( "BoundaryCutThreshold" , m_params.cutFraction = 0.1 );
-  declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
-  //declareProperty( "MinBoundaryPixels" , m_params.minBoundary = 3 );
+  declareProperty( "MinHPDOccupancy", m_minOccupancy = 500 );
+  declareProperty( "HPDFitType" ,     m_params.type );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );
@@ -63,6 +62,8 @@ StatusCode Summary::initialize()
 
     m_histo.insert( std::make_pair(hpdID.data(),this->create2D(name.str()) ) );
   }
+
+  info() << m_params << endmsg;
 
   return sc;
 }

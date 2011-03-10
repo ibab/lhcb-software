@@ -22,7 +22,7 @@
     producing the image summaries and also the python code (as a dictionary
     is also produced for the new classes).
 
-!========================= RichHPDImageAnalysis v1r5p1 2011-02-28 =========================
+!================= RichHPDImageAnalysis v1r5p1 2011-02-28 ====================
 ! 2011-02-25 - Chris Jones
  - Replace use of boost lexical cast to std::string with std::ostringstream, 
    to appease icc11 and coverity

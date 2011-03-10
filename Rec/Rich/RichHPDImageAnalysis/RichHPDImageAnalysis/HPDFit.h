@@ -2,6 +2,7 @@
 #ifndef RICHHPDIMAGEANALYSIS_HPDFIT_H
 #define RICHHPDIMAGEANALYSIS_HPDFIT_H 1
 
+#include <iostream>
 #include "RichHPDImageAnalysis/HPDPixel.h"
 #include "TH2D.h"
 
@@ -33,10 +34,21 @@ namespace Rich
       {
       public:
         Params() : type           ( "Sobel" ),
-                   cleanHistogram ( true    )   { }
+                   cleanHistogram (  true   ),
+                   maxImageShift  (  3.0    ) // in mm
+        { }
       public:
         std::string type;
         bool cleanHistogram;
+        double maxImageShift;
+      public:
+        /// Overload output to ostream
+        friend inline std::ostream& operator << ( std::ostream& os,
+                                                  const Params & params )
+        { return params.fillStream(os); }
+      private:
+        /// Print this object
+        std::ostream& fillStream( std::ostream& os ) const;
       };
 
       /** @class Params RichHPDImageAnalysis/RichHPDFit.h

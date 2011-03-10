@@ -32,14 +32,18 @@ using namespace Rich::HPDImage;
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
                              const Params& params ) const
 {
+  // Make a results object to return
   Result result;
+
+  // Clear working boundary list
   Pixel::List & boundary = m_boundaryPixels;
   boundary.clear();
 
+  // Clean the HPD image if requested
   const TH2D * hToUse = &hist;
   if ( params.cleanHistogram )
   {
-    Clean cleaner(&hist);
+    const Clean cleaner(&hist);
     hToUse = cleaner.filter();
   }
 
@@ -48,7 +52,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   {
 
     // Sobel filter the cleaned histogram
-    SobelFilter sobel(hToUse);
+    const SobelFilter sobel(hToUse);
     TH2D * sobelH = sobel.filter();
 
     // Get image boundary pixels
@@ -74,23 +78,18 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
       // minimise
       const ROOT::Minuit2::FunctionMinimum min_pre = migrad_pre();
 
-      // fill results
+      // If pre fit is OK, do second fit with outlier rejection
       if ( min_pre.IsValid() )
       {
         result.setOK( true );
-
-        // Make a copy of original boundary pixels
-        const Pixel::List originalBoundary = boundary;
 
         // Outlier rejection
         BoundaryOutlierRejection::FitResult outlier_result;
         outlier_result.row    = min_pre.UserParameters().Value("Row0");
         outlier_result.col    = min_pre.UserParameters().Value("Col0");
         outlier_result.radius = min_pre.UserParameters().Value("Radius");
-        const BoundaryOutlierRejection outliers( sobelH,
-                                                 originalBoundary,
-                                                 outlier_result );
-
+        const BoundaryOutlierRejection outliers( sobelH, boundary, outlier_result );
+        
         // Get new pixel list
         outliers.reject(boundary);
         if ( !boundary.empty() )
@@ -228,17 +227,23 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
     throw std::exception( );
   }
 
-  // Max 'reasonable' shift in mm
-  // Maybe should make a tunable parameter ..
-  const double maxShift = 3.0;
-
   // Sanity checks ...
-  result.setOK( result.OK() &&
-                fabs(result.x()) < maxShift &&
-                fabs(result.y()) < maxShift );
+  result.setOK( result.OK()                             &&
+                fabs(result.x()) < params.maxImageShift &&
+                fabs(result.y()) < params.maxImageShift );
 
   // cleanup
   if ( params.cleanHistogram ) { delete hToUse; }
 
   return result;
+}
+
+std::ostream& HPDFit::Params::fillStream ( std::ostream& os ) const
+{
+  os << "{" 
+     << " Fit Type = " << type
+     << " | Max. Image Shift = " << maxImageShift;
+  if ( cleanHistogram ) { os << " | HPD Cleaning"; }
+  else { os << " | No HPD Cleaning"; }
+  return os << " }";
 }

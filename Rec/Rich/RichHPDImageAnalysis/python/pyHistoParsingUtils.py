@@ -24,7 +24,7 @@ def imageOffset( rootfile, histname, errorHistName, hpdcopynr, minEntries = 1 ):
   
     if None == hist or None == errorHist or None == entriesHist :
 
-        raise Exception('HistogramMissing')
+        raise Exception('Histogram '+fullhistname+' Missing')
 
     else:
 
@@ -80,7 +80,7 @@ def hpdImageRadius( rootfile, hpdcopynr, minEntries ):
     """
     Returns the HPD photocathode radius in mm
     """
-    return imageOffset(rootfile,'RadiusvsCopyNr','RadiusvsCopyNrErr',hpdcopynr,minEntries)
+    return imageOffset(rootfile,'RadiusvsCopyNr','RadiusErrvsCopyNr',hpdcopynr,minEntries)
 
 def hpdImageRadiusInPixels( rootfile, hpdcopynr, minEntries ):
     """

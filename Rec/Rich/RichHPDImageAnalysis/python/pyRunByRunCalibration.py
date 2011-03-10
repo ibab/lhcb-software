@@ -8,42 +8,45 @@ initialised   = False
 
 def initialise():
 
-    # Check temp dir is valid
-    tmpDir = globals()['tempDir']
-    import os
-    if not os.path.exists(tmpDir):
-        os.mkdir(tmpDir)
-    if not os.access(tmpDir,os.W_OK):
-        raise Exception('Temp Dir '+tmpDir+' Not Writable')
-
-    # Check results dir
-    if not os.path.exists("results") : os.mkdir("results")
-
-    from ROOT import gROOT
-    # No info messages
-    gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
-    # Batch mode (no TCanvas)
-    gROOT.SetBatch(True)
+    if not globals()['initialised'] :
     
-    # Initialise a few things
-    from Configurables import DDDBConf, CondDB, LHCbApp
-    DDDBConf(DataType = "2010")
-    LHCbApp().DDDBtag   = "head-20101026"
-    LHCbApp().CondDBtag = "head-20101112"
-    CondDB()
+        # Check temp dir is valid
+        tmpDir = globals()['tempDir']
+        import os
+        if not os.path.exists(tmpDir):
+            os.mkdir(tmpDir)
+            if not os.access(tmpDir,os.W_OK):
+                raise Exception('Temp Dir '+tmpDir+' Not Writable')
 
-    # Set message level to warnings and above only
-    msgSvc().setOutputLevel(4)
-    #msgSvc().setOutputLevel("DeRichSystem",1)
-    #msgSvc().setOutputLevel("DeRichHPD",1)
-    #msgSvc().setOutputLevel("DeRichHPDPanel",1)
+        # Check results dir
+        if not os.path.exists("results") : os.mkdir("results")
 
-    # Finally, initialize GaudiPython
-    import GaudiPython
-    GaudiPython.AppMgr().initialize()
+        from ROOT import gROOT
+        # No info messages
+        gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
+        # Batch mode (no TCanvas)
+        gROOT.SetBatch(True)
 
-    # Initialise various DeRich objects
-    loadRichDet()
+        import GaudiPython
+    
+        # Initialise a few things
+        from Configurables import DDDBConf, CondDB, LHCbApp
+        DDDBConf(DataType = "2010")
+        LHCbApp().DDDBtag   = "head-20101026"
+        LHCbApp().CondDBtag = "head-20101112"
+        CondDB()
+
+        # Set message level to warnings and above only
+        msgSvc().setOutputLevel(4)
+
+        # Finally, initialize GaudiPython
+        GaudiPython.AppMgr().initialize()
+
+        # Initialise various DeRich objects
+        loadRichDet()
+
+        # flag as done
+        globals()['initialised'] = True
 
 def hpdfitter():
     from GaudiPython import gbl
@@ -408,21 +411,21 @@ def runToFill(run):
 
 def runAll(files='MDMS-RootFiles.txt'):
 
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
-   
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
 
     calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
     calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
     calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
- 
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
+
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
+
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
  
 def calibrationByRuns(rootfiles='RootFileNames.txt',
                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3):
@@ -441,18 +444,13 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     from PyCool import cool
     from math import sqrt
 
-    if not globals()['initialised'] :
-        initialise()
-        globals()['initialised'] = True
+    initialise()
 
     if followType not in ["FittedPol","FollowMovements","Smoothed"]:
         raise Exception("Unknown Follow Mode "+followType)
 
     if fitType not in ["Sobel","SimpleChi2","FastRingFit","CppFit"]:
         raise Exception("Unknown Fit Mode "+fitType)
-
-    canvas = rootCanvas()
-    canvas.Divide(1,2)
                        
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -516,7 +514,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
             # Special case for CppFit ....
             if fitType == "CppFit" :
-                
+              
                 import pyHistoParsingUtils
 
                 # Get the offsets. Use try to catch errors
@@ -641,19 +639,43 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         refColor    = 4
         smoothColor = 38
 
-        xPlots = { }
-        yPlots = { }
-        rPlots = { }
+        xPlots  = { }
+        yPlots  = { }
+        rPlots  = { }
+        xPlotsS = { }
+        yPlotsS = { }
+        rPlotsS = { }
         for polarity in ['MagDown','MagUp','MagOff']:
             xPlots[polarity] = TH1D( polarity+"-XShifts"+str(hpd),
                                      polarity+" X-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
             xPlots[polarity].GetXaxis().SetTitle("X Shifts / mm")
+            xPlots[polarity].SetMarkerColor(dataColor)
+            xPlots[polarity].SetLineColor(dataColor)
             yPlots[polarity] = TH1D( polarity+"-YShifts"+str(hpd),
                                      polarity+" Y-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
             yPlots[polarity].GetXaxis().SetTitle("Y Shifts / mm")
+            yPlots[polarity].SetMarkerColor(dataColor)
+            yPlots[polarity].SetLineColor(dataColor)
             rPlots[polarity] = TH1D( polarity+"-Radius"+str(hpd),
                                      polarity+" Image Radius : Copy Number "+idS, 100, 6.0, 7.0 )
             rPlots[polarity].GetXaxis().SetTitle("Image Radius / mm")
+            rPlots[polarity].SetMarkerColor(dataColor)
+            rPlots[polarity].SetLineColor(dataColor)
+            xPlotsS[polarity] = TH1D( polarity+"-XShiftsSmooth"+str(hpd),
+                                     polarity+" Smoothed X-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
+            xPlotsS[polarity].GetXaxis().SetTitle("X Shifts / mm")
+            xPlotsS[polarity].SetMarkerColor(smoothColor)
+            xPlotsS[polarity].SetLineColor(smoothColor)
+            yPlotsS[polarity] = TH1D( polarity+"-YShiftsSmooth"+str(hpd),
+                                     polarity+" Smoothed Y-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
+            yPlotsS[polarity].GetXaxis().SetTitle("Y Shifts / mm")
+            yPlotsS[polarity].SetMarkerColor(smoothColor)
+            yPlotsS[polarity].SetLineColor(smoothColor)
+            rPlotsS[polarity] = TH1D( polarity+"-RadiusSmooth"+str(hpd),
+                                     polarity+" Smoothed Image Radius : Copy Number "+idS, 100, 6.0, 7.0 )
+            rPlotsS[polarity].GetXaxis().SetTitle("Image Radius / mm")
+            rPlotsS[polarity].SetMarkerColor(smoothColor)
+            rPlotsS[polarity].SetLineColor(smoothColor)
 
         for fl in sorted(data.keys()):
 
@@ -675,6 +697,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                     # Field Polarity
                     polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
 
+                    # Fill arrays
                     vflag[polarity].append(fl)
                     vflagerr[polarity].append(0.0)
                     vshiftX[polarity].append(values['ShiftX'][0])
@@ -691,6 +714,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                     vRadius[polarity].append(values['Radius'][0])
                     vRadErr[polarity].append(values['Radius'][1])
 
+                    # Fill plots
                     xPlots[polarity].Fill( values['ShiftX'][0] )
                     yPlots[polarity].Fill( values['ShiftY'][0] )
                     rPlots[polarity].Fill( values['Radius'][0] )
@@ -704,6 +728,10 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
             # If we have data, fill it properly
             if len(vTime[polarity]) > 0:
+
+                canvas = rootCanvas()
+                canvas.Clear()
+                canvas.Divide(1,2)
                 
                 # ======================================================================================
                 canvas.cd(1)
@@ -726,13 +754,21 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                                                              vTimeErr[polarity],
                                                              vshiftXerr[polarity] )
                 smoothedX = array('d')
-                for t in vTime[polarity] : smoothedX.append( smootherX.Eval(t,3600*smoothSigmaHours) )
+                for t in vTime[polarity] :
+                    val = smootherX.Eval(t,3600*smoothSigmaHours)
+                    smoothedX.append( val )
+                    xPlotsS[polarity].Fill(val)
                 plotSmoothedX = TGraph( len(vTime[polarity]), vTime[polarity], smoothedX )
                 plotSmoothedX.SetMarkerColor(smoothColor)
                 plotSmoothedX.SetLineColor(smoothColor)
                 plotSmoothedX.Draw("LP")
                 canvas.cd(2)
-                xPlots[polarity].Draw()
+                if xPlots[polarity].GetMaximum() > xPlotsS[polarity].GetMaximum():
+                    xPlots[polarity].Draw()
+                    xPlotsS[polarity].Draw('SAME')
+                else:
+                    xPlotsS[polarity].Draw()
+                    xPlots[polarity].Draw('SAME')
                 printCanvas() 
                 # ======================================================================================
 
@@ -757,13 +793,21 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                                                              vTimeErr[polarity],
                                                              vshiftYerr[polarity] )
                 smoothedY = array('d')
-                for t in vTime[polarity] : smoothedY.append( smootherY.Eval(t,3600*smoothSigmaHours) )
+                for t in vTime[polarity] :
+                    val = smootherY.Eval(t,3600*smoothSigmaHours) 
+                    smoothedY.append( val )
+                    yPlotsS[polarity].Fill(val)
                 plotSmoothedY = TGraph( len(vTime[polarity]), vTime[polarity], smoothedY )
                 plotSmoothedY.SetMarkerColor(smoothColor)
                 plotSmoothedY.SetLineColor(smoothColor)
                 plotSmoothedY.Draw("LP")
                 canvas.cd(2)
-                yPlots[polarity].Draw()
+                if yPlots[polarity].GetMaximum() > yPlotsS[polarity].GetMaximum():
+                    yPlots[polarity].Draw()
+                    yPlotsS[polarity].Draw('SAME')
+                else:
+                    yPlotsS[polarity].Draw()
+                    yPlots[polarity].Draw('SAME')
                 printCanvas()
                 # ======================================================================================
 
@@ -788,13 +832,21 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                                                                vTimeErr[polarity],
                                                                vRadErr[polarity] )
                 smoothedRad = array('d')
-                for t in vTime[polarity] : smoothedRad.append( smootherRad.Eval(t,3600*smoothSigmaHours) )
+                for t in vTime[polarity] :
+                    val =smootherRad.Eval(t,3600*smoothSigmaHours) 
+                    smoothedRad.append( val )
+                    rPlotsS[polarity].Fill(val)
                 plotSmoothedRad = TGraph( len(vTime[polarity]), vTime[polarity], smoothedRad )
                 plotSmoothedRad.SetMarkerColor(smoothColor)
                 plotSmoothedRad.SetLineColor(smoothColor)
                 plotSmoothedRad.Draw("LP")
                 canvas.cd(2)
-                rPlots[polarity].Draw()
+                if rPlots[polarity].GetMaximum() > rPlotsS[polarity].GetMaximum():
+                    rPlots[polarity].Draw()
+                    rPlotsS[polarity].Draw('SAME')
+                else:
+                    rPlotsS[polarity].Draw()
+                    rPlots[polarity].Draw('SAME')
                 printCanvas()
                 # ======================================================================================
 
