@@ -35,6 +35,11 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    */
@@ -43,7 +48,7 @@ namespace LoKi
   public:
     // ========================================================================
     /// interface machinery 
-    DeclareInterfaceID(LoKi::IHybridTool, 4, 0);
+    DeclareInterfaceID(LoKi::IHybridTool, 5, 0);
     // ========================================================================
   public:
     // ========================================================================
@@ -105,15 +110,6 @@ namespace LoKi
     /// set the C++ "cut-val" for LHCb::ProtoParticles 
     virtual void set ( const LoKi::Types::PPCutVals& cut ) = 0 ;
     // ========================================================================
-    // elements:
-    // ========================================================================
-    /// set the C++ "element" for LHCb::Particle  
-    virtual void set ( const LoKi::Types::Elements&   cut ) = 0 ;
-    /// set the C++ "element" for LHCb::Vertex 
-    virtual void set ( const LoKi::Types::VElements&  cut ) = 0 ;
-    /// set the C++ "element" for LHCb::ProtoParticles
-    virtual void set ( const LoKi::Types::PPElements& cut ) = 0 ;
-    // ========================================================================
     // sources:
     // ========================================================================
     /// set the C++ "source" for LHCb::Particle  
@@ -134,7 +130,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_IHYBRIDTOOL_H
 // ============================================================================

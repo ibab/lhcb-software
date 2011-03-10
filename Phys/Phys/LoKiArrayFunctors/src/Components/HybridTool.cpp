@@ -25,6 +25,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-29
  */
@@ -44,6 +48,10 @@ namespace LoKi
      *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
      *  contributions and advices from G.Raven, J.van Tilburg, 
      *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
+     *  By usage of this code one clearly states the disagreement 
+     *  with the campain of Dr.O.Callot et al.: 
+     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2004-06-29
@@ -339,46 +347,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================      
-      // "elements"
-      // ======================================================================
-      /** "Factory": get the the object from python code
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the context lines to be executed 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&    pycode  ,
-        LoKi::Types::Element& func    ,
-        const std::string&    context )
-      { return _get ( pycode , m_elements , func , context ) ; }
-      // ======================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the context lines to be executed 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&     pycode  ,
-        LoKi::Types::VElement& func    ,
-        const std::string&     context ) 
-      { return _get ( pycode , m_velements , func , context ) ; }
-      // ======================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the context lines to be executed 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&      pycode  ,
-        LoKi::Types::PPElement& func    ,
-        const std::string&      context ) 
-      { return _get ( pycode , m_ppelements , func , context ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================      
       // "sources"
       // ======================================================================
       /** "Factory": get the the object from python code
@@ -509,20 +477,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      // elements  
-      // ======================================================================
-      /// set the C++ "element" for LHCb::Particle  
-      virtual void set ( const LoKi::Types::Elements&    cut )
-      { LoKi::Hybrid::Base::_set ( m_elements   , cut ) ; }
-      /// set the C++ "element" for LHCb::Vertex 
-      virtual void set ( const LoKi::Types::VElements&   cut ) 
-      { LoKi::Hybrid::Base::_set ( m_velements  , cut ) ; }
-      /// set the C++ "element" for LHCb::ProtoParticle
-      virtual void set ( const LoKi::Types::PPElements&   cut ) 
-      { LoKi::Hybrid::Base::_set ( m_ppelements  , cut ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
       // sources
       // ======================================================================
       /// set the C++ "source" for LHCb::Particle  
@@ -593,10 +547,6 @@ namespace LoKi
       LoKi::Types::CutVals*    m_cutvals    ;
       LoKi::Types::VCutVals*   m_vcutvals   ;      
       LoKi::Types::PPCutVals*  m_ppcutvals  ;      
-      // elements:
-      LoKi::Types::Elements*   m_elements   ;
-      LoKi::Types::VElements*  m_velements  ;      
-      LoKi::Types::PPElements* m_ppelements ;      
       // sources:
       LoKi::Types::Sources*    m_sources    ;
       LoKi::Types::VSources*   m_vsources   ;      
@@ -677,10 +627,6 @@ LoKi::Hybrid::Tool::Tool
   , m_cutvals    ( 0 )
   , m_vcutvals   ( 0 )  
   , m_ppcutvals  ( 0 )  
-// "elements":
-  , m_elements   ( 0 )
-  , m_velements  ( 0 )  
-  , m_ppelements ( 0 )  
 // "sources":
   , m_sources    ( 0 )
   , m_vsources   ( 0 )  
@@ -764,10 +710,6 @@ StatusCode LoKi::Hybrid::Tool::finalize  ()
   if ( 0 != m_cutvals    ) { delete m_cutvals    ; m_cutvals    = 0  ; }
   if ( 0 != m_vcutvals   ) { delete m_vcutvals   ; m_vcutvals   = 0  ; }
   if ( 0 != m_ppcutvals  ) { delete m_ppcutvals  ; m_ppcutvals  = 0  ; }
-  // elements:
-  if ( 0 != m_elements   ) { delete m_elements   ; m_elements   = 0  ; }
-  if ( 0 != m_velements  ) { delete m_velements  ; m_velements  = 0  ; }
-  if ( 0 != m_ppelements ) { delete m_ppelements ; m_ppelements = 0  ; }
   // sources:
   if ( 0 != m_sources    ) { delete m_sources    ; m_sources    = 0  ; }
   if ( 0 != m_vsources   ) { delete m_vsources   ; m_vsources   = 0  ; }

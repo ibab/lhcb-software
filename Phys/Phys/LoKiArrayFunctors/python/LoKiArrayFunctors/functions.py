@@ -2,7 +2,7 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL:$
+# $URL$
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -257,8 +257,6 @@ AVAL_MAX   = LoKi.AParticles.MaxVal
 ##AFunVal    = LoKi.FunctorFromFunctor  ( _va , 'double'  )
 ##ACutVals   = LoKi.Functor             ( _va ,  bool     )
 ##ACutVal    = LoKi.FunctorFromFunctor  ( _va ,  bool     )
-##AElements  = LoKi.Functor             ( _va , _T        ) 
-##AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
 #
 
 # ==============================================================================

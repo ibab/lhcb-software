@@ -5,6 +5,12 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+
+ - kill the bad concept of 'Element'-functor
+ - cmt/requirements 
+    version increment to v10r0
+
 !========================== LoKiArrayFunctors v9r3 2010-08-19 =================
 
 ! 2010-08-05 - Vanya Belyaev

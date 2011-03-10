@@ -235,26 +235,6 @@ StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&            name , 
   const LoKi::Types::PPCutVals& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
-// elements
-// ============================================================================
-// propagate the element to the tool 
-// ============================================================================
-StatusCode LoKi::Hybrid::EngineActor::process
-( const std::string&           name , 
-  const LoKi::Types::Elements& cut  ) const { return _add ( name , cut ) ; }
-// ============================================================================
-// propagate the element to the tool 
-// ============================================================================
-StatusCode LoKi::Hybrid::EngineActor::process
-( const std::string&            name , 
-  const LoKi::Types::VElements& cut  ) const { return _add ( name , cut ) ; }
-// ============================================================================
-// propagate the element to the tool 
-// ============================================================================
-StatusCode LoKi::Hybrid::EngineActor::process
-( const std::string&             name , 
-  const LoKi::Types::PPElements& cut  ) const { return _add ( name , cut ) ; }
-// ============================================================================
 // sources
 // ============================================================================
 // propagate the source to the tool 
