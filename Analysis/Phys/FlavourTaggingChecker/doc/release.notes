@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r6p1 2011-03-10 ==========
+
 ! 2011-02-23 - Juan Palacios
  - Remove last references to LHCb::Particles. 
  - Increase to v6r6p1.
