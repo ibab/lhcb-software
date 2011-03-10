@@ -5,6 +5,17 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-03-10 - Juan Palacios
+ - options/BTaggingTool.py
+  . Fix InputLocations of TaggingPartilces algorithm. All locations need to
+    be explicitly pre-pended by a "Phys/". Locations, algorithms are now:
+
+    Phys/TaggingElectrons/Particles    CombinedParticleMaker/TaggingElectrons
+    Phys/TaggingParticles/Particles    FilterDesktop/TaggingParticles
+    Phys/TaggingPions/Particles        CombinedParticleMaker/TaggingPions
+    Phys/TaggingMuons/Particles        CombinedParticleMaker/TaggingMuons
+
+
 ! 2011-02-23 - Juan Palacios
  - Remove reference to Particle::Container.
  - Increase to v12r4p1

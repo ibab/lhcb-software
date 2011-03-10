@@ -1,5 +1,4 @@
 ##############################################################################
-# $Id: BTaggingTool.py,v 1.9 2009-12-11 15:15:05 musy Exp $
 #
 # Tagging options
 #
@@ -12,6 +11,12 @@ from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter, ProtoP
 mName = "TaggingMuons"
 eName = "TaggingElectrons"
 pName = "TaggingPions"
+tagName = 'TaggingParticles'
+
+hat = 'Phys/'
+leaf = '/Particles'
+
+mLoc, eLoc, pLoc, tagLoc = [ hat+name+leaf for name in mName, eName, pName, tagName]
 
 taggerMuons = CombinedParticleMaker(mName)
 taggerMuons.Particle = 'Muon'
@@ -26,21 +31,17 @@ taggerElectrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'4.0'" 
 taggerPions = CombinedParticleMaker(pName)
 taggerPions.Particle = 'Pion'
 
-tagName = 'TaggingParticles'
+
 taggingParticles = FilterDesktop(tagName)
-taggingParticles.InputLocations = [ eName, mName, pName ]
+taggingParticles.Inputs = [ eLoc, mLoc, pLoc ]
 taggingParticles.Code = "(P>2.0*GeV)"    
 
-hat = '/Event/Phys/'
+
 
 dod = DataOnDemandSvc()
-dod.AlgMap.update( { hat + mName + '/Particles' : 'CombinedParticleMaker/'+mName ,
-                     hat + mName + '/Vertices'  : 'CombinedParticleMaker/'+mName } )
-dod.AlgMap.update( { hat + eName + '/Particles' : 'CombinedParticleMaker/'+eName ,
-                     hat + eName + '/Vertices'  : 'CombinedParticleMaker/'+eName } )
-dod.AlgMap.update( { hat + pName + '/Particles' : 'CombinedParticleMaker/'+pName ,
-                     hat + pName + '/Vertices'  : 'CombinedParticleMaker/'+pName } )
-dod.AlgMap.update( { hat + tagName + '/Particles' : 'FilterDesktop/'+tagName ,
-                     hat + tagName + '/Vertices'  : 'FilterDesktop/'+tagName } )
+dod.AlgMap.update( { mLoc   : 'CombinedParticleMaker/'+mName } )
+dod.AlgMap.update( { eLoc   : 'CombinedParticleMaker/'+eName } )
+dod.AlgMap.update( { pLoc   : 'CombinedParticleMaker/'+pName } )
+dod.AlgMap.update( { tagLoc : 'FilterDesktop/'+tagName       } )
 
 ##############################################################################
