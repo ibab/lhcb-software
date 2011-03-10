@@ -8,10 +8,16 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 3
+StdVeryLooseDiMuon                                          SUCCESS Number of counters : 7
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |         13 |(  13.0000 +- 3.36303  )%|   -------   |   -------   |
- | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "# J/psi(1S) -> mu+  mu- "                      |      1000 |       4082 |     4.0820 |     8.2469 |      0.0000 |      91.000 |
+ | "# Phys/StdVeryLooseMuons"                      |      1000 |       4421 |     4.4210 |     3.7005 |      0.0000 |      23.000 |
+ | "# input particles"                             |      1000 |       4421 |     4.4210 |     3.7005 |      0.0000 |      23.000 |
+ | "# mu+"                                         |      1000 |       2227 |     2.2270 |     2.2171 |      0.0000 |      19.000 |
+ | "# mu-"                                         |      1000 |       2194 |     2.1940 |     2.3247 |      0.0000 |      17.000 |
+ | "# selected"                                    |      1000 |       4082 |     4.0820 |     8.2469 |      0.0000 |      91.000 |
+ |*"#accept"                                       |      1000 |        745 |(  74.5000 +- 1.37831  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
+countErrorLines({"FATAL":0})
 </extension>

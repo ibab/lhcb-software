@@ -33,12 +33,11 @@ TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["FilterTrueTracks",
                                "StdVeryLooseMuons",
-                               "StdLooseMuons",
-                               "StdLooseKaons",
-                               "StdLoosePions",
+                               "StdNoPIDsKaons",
+                               "StdNoPIDsPions",
                                "StdVeryLooseDiMuon",
-                               "StdVeryLooseDetachedKst2Kpi", 
-                               "Early_Signal_Bd2KstarMuMu" ]
+                               "Sel_Bd2KstarMuMu_Kstar",
+                               "StrippingBd2KstarMuMu_BdToKstarMuMuLine" ]
 ###
 # DaVinci
 ###
