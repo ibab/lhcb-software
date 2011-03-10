@@ -50,7 +50,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     
     def localise_props( self, prefix ):
         ps = self.getProps()
-        props = dict( [ ( key.split( '_' )[ 1 ], ps[ key ] ) for key in ps if key.find( prefix ) != -1 ] )
+        props = dict( [ ( key.split( '_', 1 )[ 1 ], ps[ key ] ) for key in ps if key.find( prefix ) != -1 ] )
         props[ 'name' ] = prefix
         return props
 
