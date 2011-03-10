@@ -63,12 +63,10 @@ namespace Rich
         {
           // Additional info for the warning message
           const Rich::DAQ::Level1HardwareID l1ID = m_RichSys->level1HardwareID(hpdID);
-          const Rich::DetectorType          rich = m_RichSys->richDetector(l1ID);
           // construct the error message
           std::ostringstream mess;
-          mess << rich << " " << "L1ID=" << l1ID;
-          mess << "L0ID=" << l0id;
-          mess << " " << type << " mismatch : data=" << t1 << " DB=" << t2;
+          mess << hpdID << " L1HardID=" << l1ID << " L0ID=" << l0id
+               << " '" << type << "' mismatch : Data=" << t1 << " DB=" << t2;
           Warning( mess.str(), StatusCode::FAILURE, m_nErrorMess ).ignore();
         }
       }

@@ -74,11 +74,12 @@ StatusCode DataDBCheck::execute()
         iL1Map != l1Map.end(); ++iL1Map )
   {
     const Rich::DAQ::Level1HardwareID & l1HardID = iL1Map->first;
+    const Rich::DAQ::Level1LogicalID   l1LogID   = m_RichSys->level1LogicalID(l1HardID);
     const Rich::DAQ::IngressMap & ingressMap     = iL1Map->second;
     for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
           iIngressMap != ingressMap.end(); ++iIngressMap )
     {
-      //const Rich::DAQ::L1IngressID & l1IngressID = iIngressMap->first;
+      const Rich::DAQ::L1IngressID & l1IngressID = iIngressMap->first;
       const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
       const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
       for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
@@ -88,7 +89,9 @@ StatusCode DataDBCheck::execute()
         const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
         const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
-        const Rich::DAQ::Level0ID l0ID               = hpdHeader.l0ID();      
+        const Rich::DAQ::Level0ID l0ID               = hpdHeader.l0ID();  
+        const Rich::DetectorType  rich               = hpdID.rich();
+        const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
 
         // Only do the DB check on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
@@ -103,9 +106,21 @@ StatusCode DataDBCheck::execute()
           const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
 
           // compare to that in the data itself
-          compare( "Level1HardwareID", hpdID, l0ID, l1HardID,   db_l1HardID );
-          compare( "Level1Input",      hpdID, l0ID, l1Input,    db_l1Input  );
-          compare( "Level0ID",         hpdID, l0ID, l0ID,       db_l0ID     );
+          compare( "Level1HardwareID-Data-DB", hpdID, l0ID, l1HardID,   db_l1HardID );
+          compare( "Level1Input-Data-DB",      hpdID, l0ID, l1Input,    db_l1Input  );
+          compare( "Level0ID-Data-DB",         hpdID, l0ID, l0ID,       db_l0ID     );
+
+          // Internal consistency checks
+          // Get l1HardID from RICH and l1LogicalID
+          const Rich::DAQ::Level1HardwareID new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
+          compare( "Level1HardwareID-DB-DB", hpdID, l0ID, new_l1HardID, l1HardID );
+          // HPD hardware ID
+          const Rich::DAQ::HPDHardwareID new_hpdHardID = m_RichSys->hpdHardwareID(l1HardID,l1Input);
+          compare( "HPDHardwareID-DB-DB", hpdID, l0ID, new_hpdHardID, hpdHardID );
+          const Rich::DAQ::L1InputWithinIngress l1InputWithinIngress = l1Input.l1InputWithinIngress();
+          // L1 input
+          const Rich::DAQ::Level1Input new_l1Input(l1IngressID,l1InputWithinIngress);
+          compare( "L1Input-DB-DB", hpdID, l0ID, l1Input, new_l1Input );
 
           // Is this L0ID already in the map... If so this is an error.
           L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
@@ -132,7 +147,7 @@ StatusCode DataDBCheck::execute()
         }
         catch ( const GaudiException & excpt )
         {
-          Error( excpt.message() ).ignore();
+          Error( excpt.message() + " " + excpt.tag() ).ignore();
         }
 
       } // loop over HPDs

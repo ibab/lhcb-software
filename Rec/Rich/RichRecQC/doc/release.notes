@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-03-10 - Chris Jones
+ - Add some more internal consistency checks to Rich::DAQ::DataDBCheck
+
 ! 2011-03-03 - Chris Jones
  - Adapt to change in HPD image monitoring algorithm name
 
