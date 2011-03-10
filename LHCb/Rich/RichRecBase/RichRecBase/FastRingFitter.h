@@ -4,9 +4,6 @@
  *
  *  Header file for class : Rich::Rec::FastRingFitter
  *
- *  CVS Log :-
- *  $Id: FastRingFitter.h,v 1.3 2008-09-19 06:40:03 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-01
  */
@@ -52,25 +49,34 @@ namespace Rich
        */
       class Result
       {
+
       public:
+
         /// Default Constructor
         Result() : Radius(0), XCenter(0), YCenter(0), Variance(0), Status(0) { }
+
       public:
+
         /// overload printout to ostream operator <<
         friend inline std::ostream& operator << ( std::ostream& s,
                                                   const Result & result )
         {
           return s << "[ Status="  << result.Status
                    << " Radius="   << result.Radius
+                   << " XCenter="   << result.XCenter
+                   << " YCenter="   << result.YCenter
                    << " Variance=" << result.Variance
                    << " ]";
         }
+
       public:
+
         double  Radius;        ///< Fitted radius
         double  XCenter;       ///< Fitted x point of centre
         double  YCenter;       ///< Fitted y point of centre
         double  Variance;      ///< the variance estimate
         int     Status;        ///< Fit status code
+
       };
 
     public:

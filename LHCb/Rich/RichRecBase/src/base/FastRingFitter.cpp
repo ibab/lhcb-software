@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : Rich::Rec::FastRingFitter
  *
- *  CVS Log :-
- *  $Id: FastRingFitter.cpp,v 1.5 2009-06-03 08:40:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-01
  */
