@@ -7,7 +7,7 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
-!========================== KaliCalo v4r8p1 2011-03-10 ========================
+!========================== KaliCalo v4r9 2011-03-10 ==========================
 
 ! 2011-02-24 - Daria Savrina
  - Added prefix "Phys/" for the InputLocations according to the DaVinci v28r0
