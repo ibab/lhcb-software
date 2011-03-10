@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-10 - Patrick Spradlin
+ - Modified the following Charm hadron configurables to incorporate a unique
+   prefix into the names of each of its components to avoid conflicts.
+
 !========================== Hlt2Lines v8r2 2011-03-10 ===================
 ! 2011-03-10 - Johannes Albrecht 
  - update single electron names

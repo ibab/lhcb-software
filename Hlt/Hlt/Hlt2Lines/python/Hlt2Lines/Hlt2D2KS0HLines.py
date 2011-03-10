@@ -38,14 +38,15 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   , 'DMesonMotherVertexChi2' : 15.0
                   , 'DMesonMotherMIPChi2'    : 25.0
                   , 'DMesonMotherPT'         : 1800.0 * MeV
+                  , 'name_prefix'              : 'CharmHadD2KS0H'
                   ## prescales
                   , 'Prescale'                  : {
-                        'Hlt2CharmHadD2KS0Pi'    : 1.0
-                       , 'Hlt2CharmHadD2KS0K'    : 1.0 
+                        'Hlt2CharmHadD2KS0H_D2KS0Pi'    : 1.0
+                       , 'Hlt2CharmHadD2KS0H_D2KS0K'    : 1.0 
                         }
                   , 'HltANNSvcID'  : {
-                       'Hlt2CharmHadD2KS0PiDecision' : 50913
-                       ,'Hlt2CharmHadD2KS0KDecision' : 50914
+                       'Hlt2CharmHadD2KS0H_D2KS0PiDecision' : 50913
+                       ,'Hlt2CharmHadD2KS0H_D2KS0KDecision' : 50914
                         }
                 }
 
@@ -153,7 +154,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                           )
         return bindMembers(name, [PV3D()] + inputSeq + [combineCharmD2KS0h])
 
- 
+
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -170,12 +171,15 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         # Filter the KS0s and the bachelor pions and kaons
        
         # Filter the StdLooseLL KS0s
-        KS0LLForD2KS0h = self.__KS0LLFilter('CharmInputKS0sForD2KS0h', [ KsData ] )
+        ksName = self.getProp('name_prefix') + '_KS0LL'
+        KS0LLForD2KS0h = self.__KS0LLFilter(ksName, [ KsData ] )
 
         # Filter the bachelor pions and kaons 
+        pionName = self.getProp('name_prefix') + 'BachelorPions'
+        kaonName = self.getProp('name_prefix') + 'BachelorKaons'
 
-        pionsBachelorForD2KS0h = self.__BachelorPionFilter('CharmInputBachelorPionsD2KS0h', [ BiKalmanFittedPions] )
-        kaonsBachelorForD2KS0h = self.__BachelorKaonFilter('CharmInputBachelorKaonsD2KS0h', [ BiKalmanFittedKaons] )
+        pionsBachelorForD2KS0h = self.__BachelorPionFilter(pionName, [ BiKalmanFittedPions] )
+        kaonsBachelorForD2KS0h = self.__BachelorKaonFilter(kaonName, [ BiKalmanFittedKaons] )
        
         # Stage 2
         # Stage 2a - bachelor hadron = pion
@@ -183,21 +187,21 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         # Build the D(s)
 
         # Make D2KS0Pi
-        Hlt2CharmD2KS0Pi = self.__D2KS0hCombine(  name = 'CharmHadD2KS0Pi'  
+        kSPiName = self.getProp('name_prefix') + '_D2KS0Pi'
+        Hlt2CharmD2KS0Pi = self.__D2KS0hCombine(  name = kSPiName 
                                                   , inputSeq = [ KS0LLForD2KS0h, pionsBachelorForD2KS0h]           
                                                   , decayDesc =  ['[D+ -> KS0 pi+]cc'] 
                                                  )   
 
-        # Stage 2b - bachelor hadron = kaon
 
         # Build the D(s)
 
         # Make D2KS0K
-        Hlt2CharmD2KS0K = self.__D2KS0hCombine(  name = 'CharmHadD2KS0K'  
+        kSKName  = self.getProp('name_prefix') + '_D2KS0K'
+        Hlt2CharmD2KS0K = self.__D2KS0hCombine(  name = kSKName
                                                   , inputSeq = [ KS0LLForD2KS0h, kaonsBachelorForD2KS0h]           
                                                   , decayDesc =  ['[D+ -> KS0 K+]cc'] 
                                                  )   
-        
 
 
         ###########################################################################
@@ -206,22 +210,22 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 
         ### D(s)->KS0Pi line
 
-        line = Hlt2Line('CharmHadD2KS0Pi', prescale = self.prescale
+        line = Hlt2Line(kSPiName, prescale = self.prescale
                         , algos = [ PV3D(), KS0LLForD2KS0h, pionsBachelorForD2KS0h, Hlt2CharmD2KS0Pi]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2KS0PiDecision"
+        decName = 'Hlt2' + kSPiName + 'Decision'
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
         
         ### D(s)->KS0K line
 
-        line2 = Hlt2Line('CharmHadD2KS0K', prescale = self.prescale
+        line2 = Hlt2Line(kSKName, prescale = self.prescale
                         , algos = [ PV3D(), KS0LLForD2KS0h, kaonsBachelorForD2KS0h, Hlt2CharmD2KS0K]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
-        decName2 = "Hlt2CharmHadD2KS0KDecision"
+        decName2 = 'Hlt2' + kSKName + 'Decision'
         annSvcID2 = self._scale(decName2,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName2 : annSvcID2 } )

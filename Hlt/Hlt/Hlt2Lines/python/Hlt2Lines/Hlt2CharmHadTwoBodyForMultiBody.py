@@ -38,6 +38,7 @@ class Hlt2CharmHadTwoBodyForMultiBodyConf(HltLinesConfigurableUser) : # {
                   , 'Pair_BPVVD_MIN'            :    3.0 * mm
                   , 'Pair_SumAPT_MIN'           : 2000.0 * MeV
                   , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
+                  , 'name_prefix'              : 'CharmHadTwoBodyForMultiBody'
                   ##
                   , '__hlt2TwoBodySeq__'       : None
                 }
@@ -85,7 +86,7 @@ class Hlt2CharmHadTwoBodyForMultiBodyConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoBodyMotherCut
                           , Inputs = [ BiKalmanFittedPions, BiKalmanFittedKaons ])
 
-        twoBodySeq = bindMembers('CharmHadTwoBodyForMultiBody', [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), Charm2BodyCombine ])
+        twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), Charm2BodyCombine ])
  
         self.setProp('__hlt2TwoBodySeq__', twoBodySeq)
     # }

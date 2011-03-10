@@ -54,6 +54,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 , 'HLT1FILTER'               : ''
+                , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
+                , 'name_prefix'              : 'CharmHadD02HHKs'
                 , 'Prescale'                : { }
                 , 'Postscale'               : { }
                 # The HltANNSvc ID numbers for each line should be configurable.
@@ -125,7 +127,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
         # }
             
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD02HHKsKillTooManyInTrkAlg'
+        filtName = 'Hlt2' + self.getProp('name_prefix')  + 'KillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter(filtName
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -258,14 +261,14 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                         "& (BPVDIRA > %(KshhTFKsLLDiraLL)s )" \
                         "& (BPVVDCHI2> %(KshhTFKsLLVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsLL = Hlt2Member( CombineParticles
-                                      , "KsLL"
+                                      , "CombKsLL"
                                       , DecayDescriptor = "KS0 -> pi+ pi-"
                                       , DaughtersCuts   = KshhKsLLdaugcuts
                                       , CombinationCut  = KshhKsLLcombcuts
                                       , MotherCut       = KshhKsLLparentcuts
                                       , Inputs  = [ BiKalmanFittedPions ]
                                       )
-        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
+        charmKshhTFKsLL = bindMembers( name, [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
         return charmKshhTFKsLL
 
     ###################################################################
@@ -301,14 +304,14 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                         "& (BPVDIRA > %(KshhTFKsDDDiraLL)s )" \
                         "& (BPVVDCHI2> %(KshhTFKsDDVtxPVDispChi2LL)s )" % self.getProps()
         combineKshhTFKsDD = Hlt2Member( CombineParticles
-                                      , "KsDD"
+                                      , "CombKsDD"
                                       , DecayDescriptor = "KS0 -> pi+ pi-"
                                       , DaughtersCuts   = KshhKsDDdaugcuts
                                       , CombinationCut  = KshhKsDDcombcuts
                                       , MotherCut       = KshhKsDDparentcuts
                                       , Inputs  = [ BiKalmanFittedDownPions ]
                                       )
-        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
+        charmKshhTFKsDD = bindMembers( name, [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
         return charmKshhTFKsDD
 
     ###################################################################
@@ -319,10 +322,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
     ##
     def __filterRequiringTOS(self,name,input) :
         from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop
         from Configurables import TisTosParticleTagger
-        filterTOS = TisTosParticleTagger(name+"TOSFilter")
-        filterTOS.TisTosSpecs = { "Hlt1Track.*Decision%TOS":0 }
+
+        filterTOS = TisTosParticleTagger('Hlt2'+name+"TOSFilter")
+        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
         filterTOS.Inputs = [ input.outputSelection() ]
         return bindMembers(name, [ input, filterTOS ])
 
@@ -350,8 +353,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ## Input particles for 2-body HH part of KsHH
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclKshhTFInputKaons = self.__KshhTFHHInPartFilter('CharmKshhTFHHInputKaons', [ BiKalmanFittedKaons] )
-        lclKshhTFInputPions = self.__KshhTFHHInPartFilter('CharmKshhTFHHInputPions', [ BiKalmanFittedPions] )
+        inPionsName = self.getProp('name_prefix') + 'InputPions'
+        inKaonsName = self.getProp('name_prefix') + 'InputKaons'
+        lclKshhTFInputKaons = self.__KshhTFHHInPartFilter(inKaonsName, [ BiKalmanFittedKaons] )
+        lclKshhTFInputPions = self.__KshhTFHHInPartFilter(inPionsName, [ BiKalmanFittedPions] )
 
 
         ## 2-body construction for KsHH
@@ -385,7 +390,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                      )
 
         from HltTracking.HltPVs import PV3D
-        charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [PV3D(), lclKshhTFInputKaons, lclKshhTFInputPions, combineKshhTF2Body ] )
+        twoBodyName = self.getProp('name_prefix') + '2Body'
+        charmKshhTF2Body = bindMembers( twoBodyName,  [PV3D(), lclKshhTFInputKaons, lclKshhTFInputPions, combineKshhTF2Body ] )
 
         ## Special for down-down: Require that the two-body combination pass more cuts:
         strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s ),1)) 
@@ -395,29 +401,35 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                               & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),1))
                               & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFHHTightTrkPVIPChi2LL)s ),2))
                               & (BPVVD > %(KshhTFHHTightFDLL)s) )""" % self.getProps()
-        charmKshhTF2BodyTighter = self.__quickFilter("charmKshhTF2BodyTighter", strTighterCuts, [ charmKshhTF2Body ] )
+        twoBodyTighterName = self.getProp('name_prefix') + '2BodyTighter'
+        charmKshhTF2BodyTighter = self.__quickFilter(twoBodyTighterName, strTighterCuts, [ charmKshhTF2Body ] )
         ## Special for down-down: Require that the two-body combination be TOS on Hlt1Track:
-        charmKshhTF2BodyReqTOS = self.__filterRequiringTOS("charmKshhTF2BodyReqTOS", charmKshhTF2BodyTighter )
+        twoBodyTighterTOSName = twoBodyTighterName
+        charmKshhTF2BodyTighterReqTOS = self.__filterRequiringTOS(twoBodyTighterTOSName, charmKshhTF2BodyTighter )
 
         ## Ks reconstruction
-        charmKshhTFKsLL = self.__makeKsLL("CharmKshhTFKsLL")
-        charmKshhTFKsDD = self.__makeKsDD("CharmKshhTFKsDD")
+        ksLLName = self.getProp('name_prefix') + 'LL'
+        ksDDName = self.getProp('name_prefix') + 'DD'
+        charmKshhTFKsLL = self.__makeKsLL(ksLLName)
+        charmKshhTFKsDD = self.__makeKsDD(ksDDName)
 
         ## D0 -> K_S K* construction sequences.
         ###################################################################
-        combineKshhTFD2HHKsLL = self.__KshhTFDCombine('CharmKshhTFD2HHKsLL'
+        combineKshhTFD2HHKsLL = self.__KshhTFDCombine(ksLLName
                                         , [charmKshhTF2Body, charmKshhTFKsLL]
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s)" % self.getProps() } 
                                         )
-        combineKshhTFD2HHKsDD = self.__KshhTFDCombine('CharmKshhTFD2HHKsDD'
-                                        , [charmKshhTF2BodyReqTOS, charmKshhTFKsDD]
+
+
+        combineKshhTFD2HHKsDD = self.__KshhTFDCombine(ksDDName
+                                        , [charmKshhTF2BodyTighterReqTOS, charmKshhTFKsDD]
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s)" % self.getProps() } 
                                         )
 
         ## Make the lines
         ###################################################################
-        self.__makeLine('CharmHadD02HHKsLL' , algos = [ combineKshhTFD2HHKsLL ])
-        self.__makeLine('CharmHadD02HHKsDD' , algos = [ combineKshhTFD2HHKsDD ])
+        self.__makeLine(ksLLName, algos = [ combineKshhTFD2HHKsLL ])
+        self.__makeLine(ksDDName, algos = [ combineKshhTFD2HHKsDD ])
 
 
     # }

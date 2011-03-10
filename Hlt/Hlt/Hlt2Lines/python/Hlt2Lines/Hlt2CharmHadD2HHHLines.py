@@ -17,12 +17,13 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                   , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
                   , 'GEC_Filter_NTRACK'           : True     # do or do not
                   , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
+                  , 'name_prefix'              : 'CharmHadD2HHH'
                   # prescales
                   , 'Prescale'                  : {
                         'Hlt2CharmHadD2HHHWideMass'    : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHad2BodyForD2HHHDecision' : 50910
+                          'Hlt2CharmHadD2HHH2BodyDecision'    : 50910
                         , 'Hlt2CharmHadD2HHHDecision'         : 50911
                         , 'Hlt2CharmHadD2HHHWideMassDecision' : 50912
                         }
@@ -51,7 +52,8 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         if self.getProp('GEC_Filter_NTRACK') : 
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
 
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD2HHHKillTooManyInTrkAlg'
+        filtName = 'Hlt2' + self.getProp('name_prefix')  + 'KillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter(filtName
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -142,7 +144,8 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                                  )
 
         return bindMembers(name, inputSeq + [filter])
- 
+
+
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -153,8 +156,10 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         
         # Filter pions and kaons with LowIP Cut
-        pionsLowIP = self.__InPartFilterLowIP('Charm3BodyInputPionsLowIP', [ BiKalmanFittedPions] )
-        kaonsLowIP = self.__InPartFilterLowIP('Charm3BodyInputKaonsLowIP', [ BiKalmanFittedKaons] )
+        pionLowIPName = self.getProp('name_prefix') + 'PionsLowIP'
+        kaonLowIPName = self.getProp('name_prefix') + 'KaonsLowIP'
+        pionsLowIP = self.__InPartFilterLowIP(pionLowIPName, [ BiKalmanFittedPions] )
+        kaonsLowIP = self.__InPartFilterLowIP(kaonLowIPName, [ BiKalmanFittedKaons] )
 
 
         from Hlt2CharmHadTwoBodyForMultiBody import Hlt2CharmHadTwoBodyForMultiBodyConf
@@ -164,48 +169,53 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         #Second Stage - picks up a low pt track too
 
         # Filter low PT pions and kaons 
-
-        pionsFor3Body = self.__InPartFilter3Body('CharmInputPions3Body', [ BiKalmanFittedSecondLoopPions] )
-        kaonsFor3Body = self.__InPartFilter3Body('CharmInputKaons3Body', [ BiKalmanFittedSecondLoopKaons] )
+        pionSLName = self.getProp('name_prefix') + 'Pions2ndLoop'
+        kaonSLName = self.getProp('name_prefix') + 'Kaons2ndLoop'
+        pionsFor3Body = self.__InPartFilter3Body(pionSLName, [ BiKalmanFittedSecondLoopPions] )
+        kaonsFor3Body = self.__InPartFilter3Body(kaonSLName, [ BiKalmanFittedSecondLoopKaons] )
  
         # Make 3Body 
-        Charm3BodyCombine = self.__3BodyCombine (  name = 'CharmHadD2HHH'
+        Charm3BodyCombine = self.__3BodyCombine (  name = self.getProp('name_prefix')
                                                   , inputSeq = [ Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP ]
                                                   , decayDesc = ["D+ -> K*(892)0 pi+", "D+ -> K*(892)0 pi-"
                                                                 ,"D+ -> K*(892)0 K+",  "D+ -> K*(892)0 K-"
                                                                 ,"D+ -> K*(892)- pi+", "D+ -> K*(892)+ pi-"
                                                                 ,"D+ -> K*(892)- K+",  "D+ -> K*(892)+ K-" ]
                                                  )   
+
         # 3Body line
-        Hlt2Charm3Body = self.__3BodyFilter ( name = 'CharmHadD2HHH', inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
+        modeName = self.getProp('name_prefix')
+        wideMassName = modeName + 'WideMass'
+        Hlt2Charm3Body = self.__3BodyFilter ( name = modeName, inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
         # 3Body WideMass line - with prescale
-        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = 'CharmHadD2HHHWideMass', inputSeq = [Charm3BodyCombine], extracode = "in_range(1700*MeV, M, 2100*MeV)")
+        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = wideMassName, inputSeq = [Charm3BodyCombine], extracode = "in_range(1700*MeV, M, 2100*MeV)")
 
         ###########################################################################
         # Define the Hlt2 Lines
         #
         # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
-        line = Hlt2Line('CharmHad2BodyForD2HHH', prescale = self.prescale
+        twoBodyName = self.getProp('name_prefix') + '2Body'
+        line = Hlt2Line(twoBodyName, prescale = self.prescale
                         , algos = [ self.__seqGEC(), PV3D(), Hlt2Charm2BodyFor3Body]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHad2BodyForD2HHHDecision"
+        decName = 'Hlt2' + twoBodyName + 'Decision'
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
-        line = Hlt2Line('CharmHadD2HHH', prescale = self.prescale
+        line = Hlt2Line(modeName, prescale = self.prescale
                         , algos = [self.__seqGEC(), PV3D(), Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3Body]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2HHHDecision"
+        decName = 'Hlt2' + modeName + 'Decision'
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
-        line = Hlt2Line('CharmHadD2HHHWideMass', prescale = self.prescale
+        line = Hlt2Line(wideMassName , prescale = self.prescale
                         , algos = [self.__seqGEC(), PV3D(), Hlt2Charm2BodyFor3Body, pionsFor3Body, kaonsFor3Body, kaonsLowIP, pionsLowIP, Hlt2Charm3BodyWideMass]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2HHHWideMassDecision"
+        decName = 'Hlt2' + wideMassName + 'Decision'
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )

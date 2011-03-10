@@ -41,30 +41,31 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                 , 'Inc_Pair_AMINDOCA_MAX'    : 0.15 * mm
                 , 'Inc_D0_BPVVDCHI2_MIN'     : 100.0      # neuter
                 , 'Inc_Trk_Max_APT_MIN'      : 1000.0 * MeV
-                , 'Inc_D0_PT_MIN'            : 1500.0 * MeV
-                , 'Inc_D0_SUMPT_MIN'         : 1800.0 * MeV
+                , 'Inc_D0_APT_MIN'           : 1500.0 * MeV
+                , 'Inc_D0_SumAPT_MIN'        : 1800.0 * MeV
                 , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
-                , 'Inc_D0_MCOR_MIN'          : 300.0 * MeV
-                , 'Inc_D0_MCOR_MAX'          : 3200.0 * MeV
+                , 'Inc_D0_BPVCORRM_MIN'      : 300.0 * MeV
+                , 'Inc_D0_BPVCORRM_MAX'      : 3200.0 * MeV
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : True       # do or do not
                 , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                , 'name_prefix'              : 'CharmHadD02HH'
                 , 'Prescale'         : { }
-                , 'Postscale'        : { 'Hlt2CharmHadD02KKWideMass'     : 0.10
-                                         , 'Hlt2CharmHadD02KPiWideMass'  : 0.10
-                                         , 'Hlt2CharmHadD02PiPiWideMass' : 0.10
+                , 'Postscale'        : { 'Hlt2CharmHadD02HH_D02KKWideMass'     : 0.10
+                                         , 'Hlt2CharmHadD02HH_D02KPiWideMass'  : 0.10
+                                         , 'Hlt2CharmHadD02HH_D02PiPiWideMass' : 0.10
                                        }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : { ## Signal lines
-                                     'Hlt2CharmHadD02KKDecision'     : 50880
-                                   , 'Hlt2CharmHadD02KPiDecision'    : 50881
-                                   , 'Hlt2CharmHadD02PiPiDecision'   : 50882
+                                     'Hlt2CharmHadD02HH_D02KKDecision'     : 50880
+                                   , 'Hlt2CharmHadD02HH_D02KPiDecision'    : 50881
+                                   , 'Hlt2CharmHadD02HH_D02PiPiDecision'   : 50882
                                    ## Inclusive lines
-                                   , 'Hlt2CharmHad2BodyIncDecision'  : 50870 
+                                   , 'Hlt2CharmHadD02HH2BodyIncDecision'  : 50870 
                                    ## Wide mass lines
-                                   , 'Hlt2CharmHadD02KKWideMassDecision'   : 50890
-                                   , 'Hlt2CharmHadD02KPiWideMassDecision'  : 50891
-                                   , 'Hlt2CharmHadD02PiPiWideMassDecision' : 50892
+                                   , 'Hlt2CharmHadD02HH_D02KKWideMassDecision'   : 50890
+                                   , 'Hlt2CharmHadD02HH_D02KPiWideMassDecision'  : 50891
+                                   , 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision' : 50892
                                    }
                   }
 
@@ -180,10 +181,18 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
+        ## Daughter cuts
+        daugCuts = "(TRCHI2DOF< %(Inc_Trk_TRCHI2DOF_MAX)s)" \
+                   "& (PT> %(Inc_Trk_PT_MIN)s)" \
+                   "& (P> %(Inc_Trk_P_MIN)s)" \
+                   "& (MIPCHI2DV(PRIMARY)> %(Inc_Trk_MIPCHI2DV_MIN)s)" % self.getProps()
+
         # Construct a cut string for the combination.
         combcuts = "(AM<2000*MeV)" \
                    "& ((APT1 > %(Inc_Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Inc_Trk_Max_APT_MIN)s))" \
+                   "& (APT > %(Inc_D0_APT_MIN)s)" \
+                   "& (APT1 + APT2 > %(Inc_D0_SumAPT_MIN)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
                         "< %(Inc_Pair_AMINDOCA_MAX)s )" % self.getProps()
 
@@ -194,7 +203,9 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + '&' + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = "(BPVVDCHI2> %(Inc_D0_BPVVDCHI2_MIN)s )" % self.getProps()
+        parentcuts = "(BPVVDCHI2 > %(Inc_D0_BPVVDCHI2_MIN)s )" \
+                     "& (in_range(%(Inc_D0_BPVCORRM_MIN)s,BPVCORRM,%(Inc_D0_BPVCORRM_MAX)s))" \
+                     "& (BPVIPCHI2() > %(Inc_D0_BPVIPCHI2_MIN)s)" % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
@@ -203,36 +214,13 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                                        , 'Combine'
                                        , DecayDescriptors = decayDesc
                                        , Inputs = inputSeq
+                                       , DaughtersCuts = { "pi+" : daugCuts }
                                        , CombinationCut = combcuts
                                        , MotherCut = parentcuts
                                      )    
 
         combSeq = bindMembers( name, inputSeq + [ combineTopoNBody ] )
         return combSeq
-    # }
-
-    def __filterInc(self, name, inputSeq, extracode = None) : # {
-        """
-        Filter combinatorics for inclusive selection.  
-        Returns a bindMembers.
-        """
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-
-        codestr = "(PT > %(Inc_D0_PT_MIN)s)" \
-                  "& (SUMTREE(PT,('pi+'==ABSID),0.0) > %(Inc_D0_SUMPT_MIN)s)" \
-                  "& (in_range(%(Inc_D0_MCOR_MIN)s,BPVCORRM,%(Inc_D0_MCOR_MAX)s))" \
-                  "& (BPVIPCHI2() > %(Inc_D0_BPVIPCHI2_MIN)s)" \
-                  % self.getProps()
-        if extracode :
-          codestr = codestr + '&' + extracode
-        filter = Hlt2Member( FilterDesktop
-                             , 'Filter'
-                             , Inputs = inputSeq
-                             , Code = codestr
-                           )    
-        filterSeq = bindMembers( name, inputSeq + [ filter ] )
-        return filterSeq
     # }
 
 
@@ -259,8 +247,9 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         if self.getProp('GEC_Filter_NTRACK') : # {
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
-            
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD02HHKillTooManyInTrkAlg'
+
+        filtName = 'Hlt2' + self.getProp('name_prefix')  + 'KillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter( filtName
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -291,29 +280,6 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         return filterSeq
     # }
 
-    def __inPartFilterInc(self, name, inputContainers) : # {
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D 
-
-        incuts = "(TRCHI2DOF< %(Inc_Trk_TRCHI2DOF_MAX)s)" \
-                 "& (PT> %(Inc_Trk_PT_MIN)s)" \
-                 "& (P> %(Inc_Trk_P_MIN)s)" \
-                 "& (MIPCHI2DV(PRIMARY)> %(Inc_Trk_MIPCHI2DV_MIN)s)" % self.getProps()
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , Inputs = inputContainers
-                            , Code = incuts
-                           )    
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
-
-        return filterSeq
-    # }    
-
-   
 
 
     def __apply_configuration__(self) :
@@ -321,15 +287,20 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         ## Input particles
         ### ###############################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclInputKaons = self.__inPartFilter('CharmHadD02HHKaons', [ BiKalmanFittedKaons] )
-        lclInputPions = self.__inPartFilter('CharmHadD02HHPions', [ BiKalmanFittedPions] )
+        pionName = self.getProp('name_prefix') + 'Pions'
+        kaonName = self.getProp('name_prefix') + 'Kaons'
+        lclInputKaons = self.__inPartFilter(kaonName, [ BiKalmanFittedKaons] )
+        lclInputPions = self.__inPartFilter(pionName, [ BiKalmanFittedPions] )
 
 
         ## D0 -> h- h+ lines
         ### ###############################################################
-        decayModes = {   'CharmHadD02KK'   : "D0 -> K- K+"
-                       , 'CharmHadD02KPi'  : "[D0 -> K- pi+]cc"
-                       , 'CharmHadD02PiPi' : "D0 -> pi- pi+"
+        decayModes = {   'D02KK'   : { 'descriptor' : "D0 -> K- K+"
+                                        , 'inList' : [ lclInputKaons ] }
+                       , 'D02KPi'  : { 'descriptor' : "[D0 -> K- pi+]cc"
+                                        , 'inList' : [ lclInputKaons, lclInputPions ] }
+                       , 'D02PiPi' : { 'descriptor' : "D0 -> pi- pi+"
+                                        , 'inList' : [lclInputPions] }
                      }
 
         sigMassCut  = "in_range(%s, M, %s)" \
@@ -340,12 +311,12 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                          self.getProp('WideMass_M_MAX'))
 
 
-        for modeName in decayModes.keys() : # {
+        for mode in decayModes.keys() : # {
             ## Combinatorics
+            modeName = self.getProp('name_prefix') + '_' + mode
             d02hhComb = self.__combine(  name = modeName
-                                , inputSeq = [ lclInputKaons, 
-                                               lclInputPions ]
-                                , decayDesc = [ decayModes[modeName] ]
+                                , inputSeq = decayModes[mode]['inList']
+                                , decayDesc = [ decayModes[mode]['descriptor'] ]
                            )
 
             ## Signal window filter
@@ -378,20 +349,15 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
         ### ###############################################################
         ## 2-body inclusive line
         ### ###############################################################
-        lclInputPionsInc = self.__inPartFilterInc('CharmHadD02HHIncPions',
-                                                  [ BiKalmanFittedPions] )
+        inclName = self.getProp('name_prefix') + '2BodyInc'
 
-        charmInc = self.__combineInc(  name = 'CharmHad2BodyInc'
-                                , inputSeq = [ lclInputPionsInc ]
+        charmIncSeq = self.__combineInc(  name = inclName
+                                , inputSeq = [ BiKalmanFittedPions ]
                                 , decayDesc = [  "D0 -> pi+ pi-"
                                                , "D0 -> pi+ pi+"
                                                , "D0 -> pi- pi-"]
                                )
 
-        charmIncSeq = self.__filterInc('CharmHad2BodyInc'
-                                     , [charmInc]
-                                    )
-
         ## Make the inclusive line!
-        self.__makeLine("CharmHad2BodyInc",algos=[charmIncSeq])
+        self.__makeLine(inclName, algos=[charmIncSeq])
 
