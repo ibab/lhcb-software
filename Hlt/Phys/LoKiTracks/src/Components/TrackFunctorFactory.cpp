@@ -1,7 +1,5 @@
 // $Id$
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
@@ -28,6 +26,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-29
  *
@@ -36,6 +38,7 @@
  *                 by $Author$ 
  *
  */
+// ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
@@ -159,18 +162,6 @@ namespace LoKi
        *  @return StatusCode 
        */
       virtual StatusCode get
-      ( const std::string&      pycode  , 
-        LoKi::Types::TrElement& func    , 
-        const std::string&      context ) 
-      { return _get ( pycode , m_trElements  , func , context ) ; }
-      // ========================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the context lines to be executed 
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
       ( const std::string&     pycode  , 
         LoKi::Types::TrSource& func    , 
         const std::string&     context )
@@ -199,9 +190,6 @@ namespace LoKi
       /// set the C++ "cutvals"  for Tracks 
       virtual void set ( const LoKi::Types::TrCutVals&  fun ) 
       { LoKi::Hybrid::Base::_set ( m_trCutVals   , fun ) ; }
-      /// set the C++ "elements" for Tracks 
-      virtual void set ( const LoKi::Types::TrElements& fun ) 
-      { LoKi::Hybrid::Base::_set ( m_trElements  , fun ) ; }
       /// set the C++ "sources"  for Tracks 
       virtual void set ( const LoKi::Types::TrSources&  fun ) 
       { LoKi::Hybrid::Base::_set ( m_trSources   , fun ) ; }
@@ -245,7 +233,6 @@ namespace LoKi
       LoKi::Types::TrPipes*    m_trPipes    ;
       LoKi::Types::TrFunVals*  m_trFunVals  ;
       LoKi::Types::TrCutVals*  m_trCutVals  ;
-      LoKi::Types::TrElements* m_trElements ;
       LoKi::Types::TrSources*  m_trSources  ;
       //
       typedef std::vector<std::string> Modules ;
@@ -310,7 +297,6 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
   , m_trPipes     ( 0 ) 
   , m_trFunVals   ( 0 ) 
   , m_trCutVals   ( 0 ) 
-  , m_trElements  ( 0 ) 
   , m_trSources   ( 0 )
 //
   , m_modules   (   ) 
@@ -370,7 +356,6 @@ StatusCode LoKi::Hybrid::TrackFunctorFactory::finalize  ()
   if ( 0 != m_trPipes    ) { delete m_trPipes    ; m_trPipes    = 0  ; }
   if ( 0 != m_trFunVals  ) { delete m_trFunVals  ; m_trFunVals  = 0  ; }
   if ( 0 != m_trCutVals  ) { delete m_trCutVals  ; m_trCutVals  = 0  ; }
-  if ( 0 != m_trElements ) { delete m_trElements ; m_trElements = 0  ; }
   if ( 0 != m_trSources  ) { delete m_trSources  ; m_trSources  = 0  ; }
   //  
   // finalize the base 

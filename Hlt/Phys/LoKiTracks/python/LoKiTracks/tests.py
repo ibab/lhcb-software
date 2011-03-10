@@ -127,8 +127,8 @@ def test1() :
     print ' v>>(select(TrP>10)>>TrEMPTY)      : %s'%(v>>(select(TrP>10)>>TrEMPTY))  
     print ' v>>select(TrP>10)>>TrEPMTY        : %s'%(v>>select(TrP>10)>>TrEMPTY)  
 
-    print ' v>>min_element(TrP)               : %s'%(v>>min_element(TrP))
-    print ' v>>max_element(TrP)               : %s'%(v>>max_element(TrP))
+    print ' v>>min_element(TrP)[0]            : %s'%(v>>min_element(TrP))[0]
+    print ' v>>max_element(TrP)[0]            : %s'%(v>>max_element(TrP))[0]
 
 def test2() :
     """

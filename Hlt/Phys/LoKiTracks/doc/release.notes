@@ -5,6 +5,12 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+
+ - kill bad concept of 'Element'-functor 
+ - cmt/requirements 
+     version increment to v2r0 
+
 !========================== LoKiTracks v1r8 2011-02-10 ===================
 ! 2011-02-09 - Vanya Belyaev
 

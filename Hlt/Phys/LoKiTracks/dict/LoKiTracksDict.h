@@ -18,6 +18,25 @@
 #include "LoKi/ITrackFunctorAntiFactory.h"
 #include "LoKi/TrackEngine.h"
 // ============================================================================
+/** @file
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ 
+ *  $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -218,7 +237,6 @@ namespace
     LoKi::Dicts::MapsOps   <const LHCb::Track*>               m_fo1  ;
     LoKi::Dicts::PipeOps   <const LHCb::Track*>               m_fo3  ;
     LoKi::Dicts::FunValOps <const LHCb::Track*>               m_fo5  ;
-    LoKi::Dicts::ElementOps<const LHCb::Track*>               m_fo7  ;
     LoKi::Dicts::SourceOps <const LHCb::Track*>               m_fo9  ;
     LoKi::Dicts::CutValOps <const LHCb::Track*>               m_fo11 ;
     // infor 

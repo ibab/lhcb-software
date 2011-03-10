@@ -35,23 +35,15 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::T*>"  />
   <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::T*>"  />
-  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
   
   <function pattern = "LoKi::Dicts::TrInfo::info*" />
-  
-  
+    
   <class name = "LoKi::ITrackFunctorFactory"     />
   <class name = "LoKi::ITrackFunctorAntiFactory" />
   <class name = "LoKi::Hybrid::TrackEngine"      />
   
-
   <class pattern   = "LoKi::Hlt1::*" />
-  
-  <!-- 
-       <class pattern   = "LoKi::Hybrid::*"   />
-  --> 
-
   
 </lcgdict>

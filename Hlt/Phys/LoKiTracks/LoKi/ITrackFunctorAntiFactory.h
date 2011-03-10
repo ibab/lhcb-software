@@ -3,8 +3,6 @@
 #ifndef LOKI_ITRACKHYBRIDTOOL_H 
 #define LOKI_ITRACKHYBRIDTOOL_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files
 // ============================================================================
 // STD & STL
@@ -35,6 +33,10 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    *
@@ -48,7 +50,7 @@ namespace LoKi
   public:
     // ========================================================================
     /// InterfaceID
-    DeclareInterfaceID ( ITrackFunctorAntiFactory , 1 , 0 ) ;
+    DeclareInterfaceID ( ITrackFunctorAntiFactory , 2 , 0 ) ;
     // ========================================================================
   public:
     // ========================================================================
@@ -68,8 +70,6 @@ namespace LoKi
     virtual void set ( const LoKi::Types::TrFunVals&  fun ) = 0 ;
     /// set the C++ "cutvals"  for Tracks 
     virtual void set ( const LoKi::Types::TrCutVals&  fun ) = 0 ;
-    /// set the C++ "elements" for Tracks 
-    virtual void set ( const LoKi::Types::TrElements& fun ) = 0 ;
     /// set the C++ "sources"  for Tracks 
     virtual void set ( const LoKi::Types::TrSources&  fun ) = 0 ;
     // ========================================================================

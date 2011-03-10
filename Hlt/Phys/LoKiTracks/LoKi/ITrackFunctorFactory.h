@@ -3,8 +3,6 @@
 #ifndef LOKI_ITRACKHYBRIDFACTORY_H 
 #define LOKI_ITRACKHYBRIDFACTORY_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL
@@ -23,6 +21,11 @@
 /** @file
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
  * 
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
@@ -47,7 +50,7 @@ namespace LoKi
   public:
     // ========================================================================
     /// InterfaceID
-    DeclareInterfaceID ( ITrackFunctorFactory , 1 , 0 ) ;
+    DeclareInterfaceID ( ITrackFunctorFactory , 2 , 0 ) ;
     // ========================================================================
   public:
     // ========================================================================
@@ -120,17 +123,6 @@ namespace LoKi
     ( const std::string&     pycode       , 
       LoKi::Types::TrCutVal& func         , 
       const std::string&     context = "" ) = 0 ;
-    // ========================================================================
-    /** "Factory": get the the object form python code 
-     *  @param pycode the python pseudo-code of the function
-     *  @param func the placeholder for the result 
-     *  @param context the context lines to be executed 
-     *  @return StatusCode 
-     */
-    virtual StatusCode get
-    ( const std::string&      pycode       , 
-      LoKi::Types::TrElement& func         , 
-      const std::string&      context = "" ) = 0 ;
     // ========================================================================
     /** "Factory": get the the object form python code 
      *  @param pycode the python pseudo-code of the function

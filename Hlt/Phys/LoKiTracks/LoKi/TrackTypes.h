@@ -19,6 +19,19 @@ namespace LoKi
   // ==========================================================================
   /** @namespace LoKi::TrackTypes 
    *  helper namespace  to collect the types needed for "Track"-functions
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
    *  @date 2007-07-06
    */
@@ -56,11 +69,6 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::Track*>::CutVal    TrCutVals ;
     /// type of 'fun-val'   for Tracks    (assignable)
     typedef LoKi::Assignable<TrCutVals>::Type                  TrCutVal  ;
-    
-    /// type of 'element'   for Tracks    (interface)
-    typedef LoKi::BasicFunctors<const LHCb::Track*>::Element   TrElements ;
-    /// type of 'element'   for Tracks    (assignable)
-    typedef LoKi::Assignable<TrElements>::Type                 TrElement  ;
     
     /// type of 'source'   for Tracks    (interface)
     typedef LoKi::BasicFunctors<const LHCb::Track*>::Source    TrSources  ;
@@ -106,11 +114,6 @@ namespace LoKi
     typedef LoKi::TrackTypes::TrCutVals  TrCutVals ;
     /// type for "fun-vals" for Track  (assignable)
     typedef LoKi::TrackTypes::TrCutVal   TrCutVal  ;
-    
-    /// type for "elements" for Track  (interface)
-    typedef LoKi::TrackTypes::TrElements TrElements ;
-    /// type for "elements" for Track  (assignable)
-    typedef LoKi::TrackTypes::TrElement  TrElement  ;
     
     /// type for "sources" for Track  (interface)
     typedef LoKi::TrackTypes::TrSources TrSources   ;
