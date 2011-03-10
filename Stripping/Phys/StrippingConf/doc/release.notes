@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v4r1 2011-03-10 ====================
+
 ! 2011-03-09 - Anton Poluektov 
  - Fix outputLocation passed to StrippingAlg. 
 
