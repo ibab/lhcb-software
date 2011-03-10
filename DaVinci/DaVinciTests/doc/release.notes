@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-03-10 - Juan Palacios
+ - commonparticles.test_standardintermediate_run
+  . StdLTUnbiasedJpsi2MuMu efficiency changed due to fix in Jpsi mass
+    constraint interference. I think we need to add efficiency tests for
+    more CommonParticles.
+ - Increase to v2r3.
+
 ! 2011-03-04 - Juan Palacios
  - Adapt some tests to new stripping structure.
 
