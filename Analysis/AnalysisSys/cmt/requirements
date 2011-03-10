@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v6r0
+version v6r1
 
 branches doc cmt
 
@@ -11,11 +11,11 @@ use  DSTWriterTests             v2r2     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  FlavourTagging             v12r4    Phys   # Marc Grabalosa
+use  FlavourTagging             v12r4p1  Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r14p1  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5p2   Rich   # Chris Jones
-use  KaliCalo                   v4r8p1   Phys   # Vanya Belyaev
+use  KaliCalo                   v4r9     Phys   # Vanya Belyaev
 ####################################################################
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
 use  DaVinciMCTools     	v9r28    Phys   # Juan Palacios
@@ -26,10 +26,10 @@ use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r6     Phys   # Marco Musy
+use  FlavourTaggingChecker      v6r6p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r4p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r3p1   Phys   # Neal Gueissaz
-use  DecayTreeTuple             v3r12    Phys   # Rob Lambert
+use  DecayTreeTuple             v3r13    Phys   # Rob Lambert
 use  LoKiJets                   v5r4     Phys   # Victor Coco
 ####################################################################
 #

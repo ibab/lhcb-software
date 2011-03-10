@@ -3,9 +3,15 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v6r1>2011-03-10 Analysis v6r1 </A></H1><PRE>
+
+ *** Based on Phys v12r1p1. Patch release for HLT.
+  * Patches to FlavourTagging, DecayTreeTuple, KaliCalo.
+
+
 </PRE><H1><A NAME=v6r0>2011-02-21 Analysis v6r0 </A></H1><PRE>
 
- *** Based on Phys v10r0. Backwards-incompatible baseline for early stripping13 developments. ***
+ *** Based on Phys v12r0. Backwards-incompatible baseline for early stripping13 developments. ***
 
 
 </PRE><H1><A NAME=v5r0>2011-01-19 Analysis v5r0 </A></H1><PRE>
