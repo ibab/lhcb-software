@@ -17,18 +17,17 @@ class CharmHadronLines :
         """
 
         lines = [ ### from Hlt2CharmHadD02HHLines
-                  'Hlt2CharmHadD02KK'
-                  , 'Hlt2CharmHadD02KPi'
-                  , 'Hlt2CharmHadD02PiPi'
+                  'Hlt2CharmHadD02HH_D02KK'
+                  , 'Hlt2CharmHadD02HH_D02KPi'
+                  , 'Hlt2CharmHadD02HH_D02PiPi'
                   ## Inclusive lines
-                  #, 'Hlt2CharmHad2BodyInc'
+                  #, 'Hlt2CharmHadD02HH2BodyInc'
                   ## Wide mass lines
-                  , 'Hlt2CharmHadD02KKWideMass'
-                  , 'Hlt2CharmHadD02KPiWideMass'
-                  , 'Hlt2CharmHadD02PiPiWideMass'
+                  , 'Hlt2CharmHadD02HH_D02KKWideMass'
+                  , 'Hlt2CharmHadD02HH_D02KPiWideMass'
+                  , 'Hlt2CharmHadD02HH_D02PiPiWideMass'
 
                   ### from Hlt2CharmHadD2HHHLines
-                  #, 'Hlt2CharmHad2BodyForD2HHH'
                   , 'Hlt2CharmHadD2HHH'
                   , 'Hlt2CharmHadD2HHHWideMass'
 
@@ -41,8 +40,8 @@ class CharmHadronLines :
                   #, 'Hlt2CharmHadD02HHKsDD'
 
                   ### from Hlt2D2KS0HLines
-                  , 'Hlt2CharmHadD2KS0Pi'
-                  , 'Hlt2CharmHadD2KS0K'
+                  , 'Hlt2CharmHadD2KS0H_D2KS0Pi'
+                  , 'Hlt2CharmHadD2KS0H_D2KS0K'
              ]
         
         return lines
@@ -87,11 +86,11 @@ class CharmHadronLines :
                         , 'Inc_Pair_AMINDOCA_MAX'    : 0.15 * mm
                         , 'Inc_D0_BPVVDCHI2_MIN'     : 100.0      # neuter
                         , 'Inc_Trk_Max_APT_MIN'      : 1000.0 * MeV
-                        , 'Inc_D0_PT_MIN'            : 1500.0 * MeV
-                        , 'Inc_D0_SUMPT_MIN'         : 1800.0 * MeV
+                        , 'Inc_D0_APT_MIN'           : 1500.0 * MeV
+                        , 'Inc_D0_SumAPT_MIN'        : 1800.0 * MeV
                         , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
-                        , 'Inc_D0_MCOR_MIN'          : 300.0 * MeV
-                        , 'Inc_D0_MCOR_MAX'          : 3200.0 * MeV
+                        , 'Inc_D0_BPVCORRM_MIN'      : 300.0 * MeV
+                        , 'Inc_D0_BPVCORRM_MAX'      : 3200.0 * MeV
                         ## GEC
                         , 'GEC_Filter_NTRACK'        : True       # 
                         , 'GEC_NTRACK_MAX'           : 110        # 
