@@ -70,7 +70,7 @@ def _decorate ( name = _name  ) :
         LoKi.Functor        (_d,_d)                      , ## the base 
         LoKi.Dicts.FunCalls (_d)                         , ## call-traits 
         LoKi.Dicts.FuncOps  (_d,_d)                      ) ## operators
-    # vetcor<double> -> double 
+    # vector<double> -> double 
     _decorated  |= _LoKiCore.getAndDecorateFunctions  (
         name                                             , ## module name 
         LoKi.Functor        (_v,_d)                      , ## the base 

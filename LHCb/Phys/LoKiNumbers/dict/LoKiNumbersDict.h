@@ -24,6 +24,19 @@
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 
  *  deal only with "plain numbers"
+ *
+ *  This file is a part of LoKi project -
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2007-12-01
  */
@@ -208,7 +221,6 @@ namespace LoKi
       typedef double TYPE  ;
       typedef double TYPE2 ;
       typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
-      typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef LoKi::BasicFunctors<TYPE2>::Function     Func    ;
       typedef LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
@@ -219,11 +231,6 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
       ( const Pipe& fun , const Pipe&      fun2 ) 
-      { return fun >>                      fun2 ; }
-      // __rshift__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
-      __rshift__ 
-      ( const Pipe& fun , const Element&   fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
@@ -375,7 +382,6 @@ namespace LoKi
       typedef LoKi::BasicFunctors<TYPE>::Source        Source ;
       typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
       typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
-      typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
       typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef LoKi::BasicFunctors<TYPE2>::Function     Func    ;
@@ -630,9 +636,9 @@ namespace
     // ========================================================================
   }; 
   // ==========================================================================
-} // end of anonymous namespace 
+} //                                                 end of anonymous namespace 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DICT_LOKINUMBERSDICT_H
 // ============================================================================

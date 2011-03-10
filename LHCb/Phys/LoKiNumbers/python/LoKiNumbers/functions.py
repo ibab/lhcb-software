@@ -68,8 +68,6 @@ XPipe     = XMap
 
 XFunVals  = LoKi.Functor            ( _v , _d   )
 XFunVal   = LoKi.FunctorFromFunctor ( _v , _d   )
-XElements = XFunVals 
-XElement  = XFunVal 
 XSources  = LoKi.Functor            ( 'void' , _v )
 XSource   = LoKi.FunctorFromFunctor ( 'void' , _v )
 
@@ -193,11 +191,11 @@ if not hasattr ( XVector , "__iter__" ) :
     XVector. __repr__ = _vct_prnt_
     
 
-# if not hasattr ( Gaudi.Math , 'blind' ) :
-#        import LHCbMath.Types
+if not hasattr ( Gaudi.Math , 'blind' ) :
+    import LHCbMath.Types
         
 ## @see Gaudi::Math::blind
-# blind     = Gaudi.Math.blind
+blind     = Gaudi.Math.blind
 
 # =============================================================================
 if '__main__' == __name__ :

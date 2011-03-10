@@ -61,13 +61,25 @@ print 'inp >> ~in_list ( X , [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ~in_list ( X , [ 1
 
 
 inp2  = doubles ( -10 , 1 , -9 , 10 , 0 , 1 , 1 , 1 ,  -1  )
-print ' inp2 >> ( X > -5 )                         :%s ' % ( inp2 >> ( X > -5 ) )
-print ' inp2 >> ( X <  5 )                         :%s ' % ( inp2 >> ( X <  5 ) )
-print ' inp2 >> union          ( X > -5 , X < 5 )  :%s ' % ( inp2 >> union           ( X > -5 , X < 5 ) )
-print ' inp2 >> intersection   ( X > -5 , X < 5 )  :%s ' % ( inp2 >> intersection    ( X > -5 , X < 5 ) )
-print ' inp2 >> difference     ( X > -5 , X < 5 )  :%s ' % ( inp2 >> difference      ( X > -5 , X < 5 ) )
-print ' inp2 >> sym_difference ( X > -5 , X < 5 )  :%s ' % ( inp2 >> sym_difference  ( X > -5 , X < 5 ) )
-print ' inp2 >> includes       ( X > -5 , X > 0 )  :%s ' % ( inp2 >> includes        ( X > -5 , X > 0 ) )
+print 'inp2 >> ( X > -5 )                         :%s ' % ( inp2 >> ( X > -5 ) )
+print 'inp2 >> ( X <  5 )                         :%s ' % ( inp2 >> ( X <  5 ) )
+print 'inp2 >> union          ( X > -5 , X < 5 )  :%s ' % ( inp2 >> union           ( X > -5 , X < 5 ) )
+print 'inp2 >> intersection   ( X > -5 , X < 5 )  :%s ' % ( inp2 >> intersection    ( X > -5 , X < 5 ) )
+print 'inp2 >> difference     ( X > -5 , X < 5 )  :%s ' % ( inp2 >> difference      ( X > -5 , X < 5 ) )
+print 'inp2 >> sym_difference ( X > -5 , X < 5 )  :%s ' % ( inp2 >> sym_difference  ( X > -5 , X < 5 ) )
+print 'inp2 >> includes       ( X > -5 , X > 0 )  :%s ' % ( inp2 >> includes        ( X > -5 , X > 0 ) )
+
+print 'inp2 >> sum ( X          )    :%s ' % ( inp2 >> sum ( X          ) )
+print 'inp2 >> sqrt ( sum ( X**2 ) ) :%s ' % ( inp2 >> sqrt ( sum ( X**2 ) ) )
+print 'inp2 >> sum ( X , X <  0 )    :%s ' % ( inp2 >> sum ( X , X <  0 ) )
+print 'inp2 >> sum ( X , X >= 0 )    :%s ' % ( inp2 >> sum ( X , X >= 0 ) )
+
+
+print 'inp2 >> mean    ( X**3 , X >= 0 ) :%s ' % ( inp2 >> mean    ( X**3 , X >= 0 ) )
+print 'inp2 >> meanErr ( X**3 , X >= 0 ) :%s ' % ( inp2 >> meanErr ( X**3 , X >= 0 ) )
+print 'inp2 >> rms     ( X**3 , X >= 0 ) :%s ' % ( inp2 >> rms     ( X**3 , X >= 0 ) )
+print 'inp2 >> eff     ( X>0 ) :%s ' % ( inp2 >> eff    ( X > 0 ) )
+print 'inp2 >> effErr  ( X>0 ) :%s ' % ( inp2 >> effErr ( X > 0 ) )
 
 
 # =============================================================================
