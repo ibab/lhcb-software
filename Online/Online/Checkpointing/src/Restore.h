@@ -69,8 +69,10 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(void) checkpointing_sys_process_file(int fd, void* par, checkpointing_string_handler_t handler);
   /// Initialize basic variables from stack
   STATIC(void) checkpointing_sys_init_stack(SysInfo* sys, Stack* s);
-  /// Setup process UTGID/argv[0] if availible
+  /// Setup process UTGID if availible
   STATIC(int) checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid);
+  /// Force process UTGID/argv[0] if availible
+  STATIC(int) checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid);
 
   // CHECKPOINTING_NAMESPACE::
 }

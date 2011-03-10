@@ -47,6 +47,10 @@ int MainThread::setUTGID(const char* new_utgid) {
   return chkpt_sys.setUTGID(new_utgid);
 }
 
+int MainThread::forceUTGID(const char* new_utgid) {
+  return chkpt_sys.forceUTGID(new_utgid);
+}
+
 MainThread::MainThread()  {
   LibC::getSymbol("__clone",s_cloneFunc);
   chkpt_sys.motherofall   = &s_thread;// new Thread();

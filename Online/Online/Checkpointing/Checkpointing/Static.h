@@ -101,8 +101,10 @@ namespace CHECKPOINTING_NAMESPACE    {
     long write(int fd);
     /// Initialize basic variables from stack
     void init_stack(Stack* s);
-    /// Setup process UTGID/argv[0] if availible
+    /// Setup process UTGID if availible
     int setUTGID(const char* new_utgid);
+    /// Force process UTGID/argv[0] if availible
+    int forceUTGID(const char* new_utgid);
 
     /// After successful restore update the process environment from file.
     long setEnvironment();

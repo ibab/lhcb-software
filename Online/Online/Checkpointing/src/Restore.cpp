@@ -705,6 +705,11 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
 
 /// Setup process UTGID/argv[0] if availible
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* /* sys */, const char* new_utgid) {
+  return ::setenv("UTGID",new_utgid,1);
+}
+
+/// Force process UTGID if availible
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* /* sys */, const char* new_utgid) {
 #if 0
   if ( 0 == new_utgid ) {
     mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
@@ -731,5 +736,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* /* sys
     m_strncpy(sys->utgid,new_utgid,sys->utgidLen-1);
   }
 #endif
-  return ::setenv("UTGID",new_utgid,1);
+  if ( new_utgid ) {
+  //return ::setenv("UTGID",new_utgid,1);
+  }
+  return 1;
 }

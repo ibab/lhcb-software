@@ -110,6 +110,11 @@ int SysInfo::setUTGID(const char* new_utgid) {
   return checkpointing_sys_set_utgid(this, new_utgid);
 }
 
+/// Setup process UTGID/argv[0] if availible
+int SysInfo::forceUTGID(const char* new_utgid) {
+  return checkpointing_sys_force_utgid(this, new_utgid);
+}
+
 static void handle_set_env_string(void* /* par */, const char* s) {
   char* q = (char*)m_chrfind(s,'=');
   if ( q ) {
