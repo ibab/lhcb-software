@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IMCHybridTool ( "LoKi::IMCHybridTool" , 3 , 0 ) ;
+  const InterfaceID IID_IMCHybridTool ( "LoKi::IMCHybridTool" , 4 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

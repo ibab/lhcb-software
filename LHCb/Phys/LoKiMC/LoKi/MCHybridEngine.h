@@ -29,8 +29,15 @@ namespace LoKi
      *  contributions and advices from G.Raven, J.van Tilburg, 
      *  A.Golutvin, P.Koppenburg have been used in the design.
      *
+     *  By usage of this code one clearly states the disagreement 
+     *  with the campain of Dr.O.Callot et al.: 
+     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2004-06-30
+     *                    $Revision$
+     *  Last modification $Date$
+     *                 by $Author$
      */
     class GAUDI_API MCEngine
     {
@@ -105,19 +112,6 @@ namespace LoKi
       StatusCode process 
       ( const std::string&             name , 
         const LoKi::Types::MCVFunVals& func ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      // elements 
-      // ======================================================================
-      /// add the element
-      StatusCode process
-      ( const std::string&              name , 
-        const LoKi::Types::MCElements&  func ) const ;
-      /// add the element
-      StatusCode process 
-      ( const std::string&              name , 
-        const LoKi::Types::MCVElements& func ) const ;
       // ======================================================================
     public:
       // ======================================================================

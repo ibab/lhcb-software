@@ -33,8 +33,16 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
+   *
+   *                    $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
   class GAUDI_API IMCHybridTool : public virtual IAlgTool 
   {
@@ -90,15 +98,6 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    // elements
-    // ========================================================================
-    /// set the C++ element for LHCb::MCParticle 
-    virtual void set ( const LoKi::Types::MCElements&  cut ) = 0 ;
-    /// set the C++ element for LHCb::MCVertex 
-    virtual void set ( const LoKi::Types::MCVElements& cut ) = 0 ;
-    // ========================================================================
-  public:
-    // ========================================================================
     // sources
     // ========================================================================
     /// set the C++ source for LHCb::MCParticle 
@@ -108,13 +107,14 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    // destructor : virtual and protected 
-    virtual ~IMCHybridTool() ; ///< destructor : virtual and protected 
+    /// destructor : virtual and protected 
+    virtual ~IMCHybridTool() ;            // destructor : virtual and protected 
     // ========================================================================
   };
-} // end of namespace LoKi 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_IMCHYBRIDTOOL_H
 // ============================================================================

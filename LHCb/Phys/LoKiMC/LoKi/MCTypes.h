@@ -30,14 +30,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-10 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
 {
   // ==========================================================================
-  /** @namespace  LoKi::MCTypes MCTypes.h LoKi/MCTypes.h
+  /** @namespace  LoKi::MCTypes LoKi/MCTypes.h
    *  
    *  Helper namespace to collect some useful MC data types 
    *
@@ -95,10 +103,6 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::FunVal  MCFunVals  ;
     /// type of "fun-val" for LHCb::MCParticle   (assignable)
     typedef LoKi::Assignable<MCFunVals>::Type                     MCFunVal   ;
-    /// type of "element" for LHCb::MCParticle   (interface)
-    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Element MCElements ;
-    /// type of "element" for LHCb::MCParticle   (assignable)
-    typedef LoKi::Assignable<MCElements>::Type                    MCElement  ;
     /// type of "source" for LHCb::MCParticle   (interface)
     typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Source  MCSources  ;
     /// type of "source" for LHCb::MCParticle   (assignable)
@@ -118,16 +122,12 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::FunVal    MCVFunVals  ;
     /// type of "fun-val" for LHCb::MCVertex   (assignable)
     typedef LoKi::Assignable<MCVFunVals>::Type                    MCVFunVal   ;
-    /// type of "element" for LHCb::MCVertex   (interface)
-    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Element   MCVElements ;
-    /// type of "element" for LHCb::MCVertex   (assignable)
-    typedef LoKi::Assignable<MCVElements>::Type                   MCVElement  ;
     /// type of "source" for LHCb::MCVertex   (interface)
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Source    MCVSources  ;
     /// type of "source" for LHCb::MCVertex   (assignable)
     typedef LoKi::Assignable<MCVSources>::Type                    MCVSource   ;
     // ========================================================================
-  } // end of namespace LoKi::MCTypes
+  } //                                           end of namespace LoKi::MCTypes
   // ==========================================================================
   namespace Types 
   { 
@@ -171,10 +171,6 @@ namespace LoKi
     typedef LoKi::MCTypes::MCFunVals             MCFunVals   ;
     /// type of "fun-val" for LHCb::MCParticle   (assignable)
     typedef LoKi::MCTypes::MCFunVal              MCFunVal    ;
-    /// type of "element" for LHCb::MCParticle   (interface)
-    typedef LoKi::MCTypes::MCElements            MCElements  ;
-    /// type of "element" for LHCb::MCParticle   (assignable)
-    typedef LoKi::MCTypes::MCElement             MCElement   ;
     /// type of "source"  for LHCb::MCParticle   (interface)
     typedef LoKi::MCTypes::MCSources             MCSources   ;
     /// type of "source"  for LHCb::MCParticle   (assignable)
@@ -194,18 +190,14 @@ namespace LoKi
     typedef LoKi::MCTypes::MCVFunVals            MCVFunVals  ;
     /// type of "fun-val" for LHCb::MCVertex     (assignable)
     typedef LoKi::MCTypes::MCVFunVal             MCVFunVal   ;
-    /// type of "element" for LHCb::MCVertex     (interface)
-    typedef LoKi::MCTypes::MCVElements           MCVElements ;
-    /// type of "element" for LHCb::MCVertex     (assignable)
-    typedef LoKi::MCTypes::MCVElement            MCVElement  ;
     /// type of "source"  for LHCb::MCVertex     (interface)
     typedef LoKi::MCTypes::MCVSources            MCVSources  ;
     /// type of "source"  for LHCb::MCVertex     (assignable)
     typedef LoKi::MCTypes::MCVSource             MCVSource   ;
     // ========================================================================
-  } // end of namespace LoKi::Types
+  } //                                             end of namespace LoKi::Types
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi 
 {
@@ -224,9 +216,9 @@ namespace LoKi
   Constant<const LHCb::MCVertex*,bool>::fillStream  ( std::ostream& s ) const 
   { return s << ( this->m_value ? "MCVALL" : "MCVNONE" ) ; }
   // ==========================================================================  
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_MCTYPES_H
 // ============================================================================

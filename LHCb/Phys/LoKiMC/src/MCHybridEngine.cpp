@@ -18,8 +18,15 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-30 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 // constructor
@@ -110,20 +117,6 @@ StatusCode LoKi::Hybrid::MCEngine::process
 StatusCode LoKi::Hybrid::MCEngine::process
 ( const std::string&             name , 
   const LoKi::Types::MCVFunVals& cut  ) const { return _process ( name , cut ) ; }
-// ============================================================================
-// elements:
-// ============================================================================
-// add the element 
-// ============================================================================
-StatusCode LoKi::Hybrid::MCEngine::process
-( const std::string&             name , 
-  const LoKi::Types::MCElements& cut  ) const { return _process ( name , cut ) ; }
-// ============================================================================
-// add the element
-// ============================================================================
-StatusCode LoKi::Hybrid::MCEngine::process
-( const std::string&              name , 
-  const LoKi::Types::MCVElements& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // sources 
 // ============================================================================

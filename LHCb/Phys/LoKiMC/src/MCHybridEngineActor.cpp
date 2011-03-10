@@ -22,8 +22,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 // helper method to descrease number of lines 
@@ -169,20 +177,6 @@ StatusCode LoKi::Hybrid::MCEngineActor::process
 StatusCode LoKi::Hybrid::MCEngineActor::process
 ( const std::string&             name , 
   const LoKi::Types::MCVFunVals& func ) const { return _add ( name , func ) ; }
-// ============================================================================
-// elements:
-// ============================================================================
-// propagate the element to the tool 
-// ============================================================================
-StatusCode LoKi::Hybrid::MCEngineActor::process
-( const std::string&             name , 
-  const LoKi::Types::MCElements& func ) const { return _add ( name , func ) ; }
-// ============================================================================
-// propagate the element to the tool 
-// ============================================================================
-StatusCode LoKi::Hybrid::MCEngineActor::process
-( const std::string&              name , 
-  const LoKi::Types::MCVElements& func ) const { return _add ( name , func ) ; }
 // ============================================================================
 // sources
 // ============================================================================

@@ -76,7 +76,7 @@ def test1() :
     print ' v>>yields(MCID)                   : %s'%(v>>yields(MCID))
     print ' v>>process(MCID)>>min_value(MCP)  : %s'%(v>>process(MCID)>>min_value(MCP))
     print ' v>>(process(MCID)>>min_value(MCP)): %s'%(v>>(process(MCID)>>min_value(MCP)))
-    print '(v>>min_element(MCID)).name()      : %s'%(v>>min_element(MCID)).name()
+    print '(v>>min_element(MCID))[0].name()   : %s'%(v>>min_element(MCID))[0].name()
     print ' v>>min_value(MCID)                : %s'%(v>>min_value(MCID))
     print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)
     print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)

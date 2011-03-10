@@ -121,8 +121,6 @@ namespace
     LoKi::Dicts::FunValOps<const LHCb::MCVertex*>    m_fo6  ;
     LoKi::Dicts::CutValOps<const LHCb::MCParticle*>  m_fo51 ;
     LoKi::Dicts::CutValOps<const LHCb::MCVertex*>    m_fo61 ;
-    LoKi::Dicts::ElementOps<const LHCb::MCParticle*> m_fo7  ;
-    LoKi::Dicts::ElementOps<const LHCb::MCVertex*>   m_fo8  ;
     LoKi::Dicts::SourceOps<const LHCb::MCParticle*>  m_fo9  ;
     LoKi::Dicts::SourceOps<const LHCb::MCVertex*>    m_fo10 ;
     // calls 
@@ -153,9 +151,9 @@ namespace
     // ========================================================================
    } ;  
   //===========================================================================
-} // end of anonymout namespace 
+} //                                                 end of anonymout namespace 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_LOKIMCDICT_H
 // ============================================================================

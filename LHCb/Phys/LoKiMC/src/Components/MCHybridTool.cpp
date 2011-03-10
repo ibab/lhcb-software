@@ -27,11 +27,19 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2004-06-29
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Hybrid 
   {
     // ========================================================================
@@ -205,34 +213,6 @@ namespace LoKi
       // ========================================================================
     public:
       // ========================================================================
-      // elements:
-      // ========================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the code fragment to be pre-executed
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&      pycode  , 
-        LoKi::Types::MCElement& func    ,
-        const std::string&      context ) 
-      { return _get ( pycode , m_mcelement , func , context ) ; }
-      // ========================================================================
-      /** "Factory": get the the object form python code 
-       *  @param pycode the python pseudo-code of the function
-       *  @param func the placeholder for the result 
-       *  @param context the code fragment to be pre-executed
-       *  @return StatusCode 
-       */
-      virtual StatusCode get
-      ( const std::string&       pycode  , 
-        LoKi::Types::MCVElement& func    , 
-        const std::string&       context ) 
-      { return _get ( pycode , m_mcvelement  , func , context ) ; }
-      // ========================================================================
-    public:
-      // ========================================================================
       // sources:
       // ========================================================================
       /** "Factory": get the the object form python code 
@@ -316,17 +296,6 @@ namespace LoKi
       // ========================================================================
     public:
       // ========================================================================
-      // elements:
-      // ========================================================================
-      /// set the C++ element for LHCb::MCParticle  
-      virtual void set ( const LoKi::Types::MCElements&    cut ) 
-      { LoKi::Hybrid::Base::_set ( m_mcelement  , cut ) ; }
-      /// set the C++ element for LHCb::MCVertex 
-      virtual void set ( const LoKi::Types::MCVElements&   cut ) 
-      { LoKi::Hybrid::Base::_set ( m_mcvelement  , cut ) ; }
-      // ========================================================================
-    public:
-      // ========================================================================
       // sources
       // ========================================================================
       /// set the C++ source for LHCb::MCParticle  
@@ -376,9 +345,6 @@ namespace LoKi
       // funvals:
       LoKi::Types::MCFunVals*   m_mcfunvals  ;
       LoKi::Types::MCVFunVals*  m_mcvfunvals ;
-      // elements:
-      LoKi::Types::MCElements*  m_mcelement  ;
-      LoKi::Types::MCVElements* m_mcvelement ;
       // sources:
       LoKi::Types::MCSources*   m_mcsource   ;
       LoKi::Types::MCVSources*  m_mcvsource  ;
@@ -389,8 +355,10 @@ namespace LoKi
       typedef std::vector<std::string> Lines   ;
       Lines       m_lines   ;
     } ;
-  } // end of namespace LoKi::Hybrid 
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // helper method to sdave many lines:
 // ============================================================================
@@ -445,9 +413,6 @@ LoKi::Hybrid::MCTool::MCTool
   // funvals:
   , m_mcfunvals   ( 0 )
   , m_mcvfunvals  ( 0 )
-  // elements:
-  , m_mcelement   ( 0 )
-  , m_mcvelement  ( 0 )
   // sources:
   , m_mcsource    ( 0 )
   , m_mcvsource   ( 0 )
@@ -500,9 +465,6 @@ StatusCode LoKi::Hybrid::MCTool::finalize  ()
   // funvals:
   if ( 0 != m_mcfunvals  ) { delete m_mcfunvals  ; m_mcfunvals  = 0  ; }
   if ( 0 != m_mcvfunvals ) { delete m_mcvfunvals ; m_mcvfunvals = 0  ; }
-  // elements:
-  if ( 0 != m_mcelement  ) { delete m_mcelement  ; m_mcelement  = 0  ; }
-  if ( 0 != m_mcvelement ) { delete m_mcvelement ; m_mcvelement = 0  ; }
   // sources:
   if ( 0 != m_mcsource   ) { delete m_mcsource   ; m_mcsource   = 0  ; }
   if ( 0 != m_mcvsource  ) { delete m_mcvsource  ; m_mcvsource  = 0  ; }

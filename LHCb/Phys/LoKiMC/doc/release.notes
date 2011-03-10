@@ -15,6 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+
+ - kill bad concept of 'Element'-functor
+ - cmt/requirements
+    version increment to v10r0
+
 !========================= LoKiMC v9r5 2011-02-22 =========================
 ! 2011-02-21 - Marco Cattaneo
  - Suppress Intel compiler warnings about missing default constructor

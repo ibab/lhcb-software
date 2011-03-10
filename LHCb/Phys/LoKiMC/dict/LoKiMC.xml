@@ -63,7 +63,6 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::MC*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::MC*>"  />
   <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::MC*>"  />
-  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::MC*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::MC*>"  />
 
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
