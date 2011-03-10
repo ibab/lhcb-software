@@ -1347,8 +1347,9 @@ class Hlt2Line(object):
         if not HLT :
             #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
             #  VELO on the other hand is dangerous during 'velo open' running...
+            #  the veto of NoPV removes the high rate of L0 low mult 
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo).*Decision')"
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV).*Decision')"
 
 
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
