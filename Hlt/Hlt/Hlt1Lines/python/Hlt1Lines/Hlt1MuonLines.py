@@ -10,9 +10,15 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'SingleMuonHighPT_P'       : 8000
         ,'SingleMuonHighPT_PT'      : 4800
         ,'SingleMuonHighPT_TrChi2'  :    4
+        ,'SingleMuonHighPT_TrNTHits'   : 0 #OFF
+        ,'SingleMuonHighPT_Velo_NHits' : 0 #OFF
+        ,'SingleMuonHighPT_Velo_Qcut'  : 999 #OFF
         ,'SingleMuonNoIP_P'         : 6000
         ,'SingleMuonNoIP_PT'        : 1300
         ,'SingleMuonNoIP_TrChi2'    :    4
+        ,'SingleMuonNoIP_TrNTHits'   : 16
+        ,'SingleMuonNoIP_Velo_NHits' : 9
+        ,'SingleMuonNoIP_Velo_Qcut'  : 3
         ,'DiMuonLowMass_VxDOCA'     :  0.2
         ,'DiMuonLowMass_VxChi2'     :   25
         ,'DiMuonLowMass_P'          : 6000
@@ -84,10 +90,12 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloCandidates
+            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )  )
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
             >>  LooseForward
+            >>  (TrTNORMIDC > %(TrNTHits)s ) 
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
             >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
