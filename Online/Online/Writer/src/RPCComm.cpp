@@ -71,14 +71,14 @@ void RPCComm::confirmFile(char *fileName, //still
   ret = isError(response);
   if (ret == 2){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw DiscardException(response);
   }
   if (ret != 0){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw RetryException(response);
@@ -144,14 +144,14 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   ret = isError(response); 
   if (ret == 2){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw DiscardException(response);
   }
   if (ret != 0){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw RetryException(response);
@@ -191,14 +191,14 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   ret = isError(response); 
   if (ret == 2){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw DiscardException(response);
   }
   if (ret != 0){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw RetryException(response);
@@ -319,14 +319,14 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   ret = isError(response); 
   if (ret == 2){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw DiscardException(response);
   }
   if (ret != 0){ 
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i) {
+    for(unsigned int i=0; i<strlen(response); ++i) {
       if(response[i]=='\n') response[i] =' ';
     }
     throw RetryException(response);
@@ -376,14 +376,14 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   ret = isError(response); 
   if (ret == 2){
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i){
+    for(unsigned int i=0; i<strlen(response); ++i){
       if(response[i]=='\n') response[i] =' ';
     }
     throw DiscardException(response);
   }
   if (ret != 0) {
     // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
-    for(int i=0; i<strlen(response); ++i){
+    for(unsigned int i=0; i<strlen(response); ++i){
       if(response[i]=='\n') response[i] =' ';
     }
     throw RetryException(response); 
