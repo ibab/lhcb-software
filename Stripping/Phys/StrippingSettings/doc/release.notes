@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v2r0 2011-03-10 ==================
+
 ! 2011-03-09 - Greig Cowan
  - Updated NB mumu stripping line dictionary for high masses.
 
