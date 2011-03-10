@@ -405,11 +405,11 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFElectronDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFElectron'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFHighPtElectronDecision" :
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleElectronTFHighPtDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFHighPtElectron'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFVHighPtElectronDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFVHighPtElectron'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFLowPtElectronDecision" :
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleElectronTFLowPtDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFLowPtElectron'] } )
 
         """
@@ -459,7 +459,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                              , Inputs = [ BiKalmanFittedElectrons ]
                                              )
 
-        SingleTFLowPtElectronLine = Hlt2Line("SingleTFLowPtElectron"
+        SingleTFLowPtElectronLine = Hlt2Line("SingleElectronTFLowPt"
                                              , prescale = self.prescale
                                              , L0DU = L0Req
                                              , HLT = Hlt1Req
@@ -482,7 +482,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                    , Inputs = [ BiKalmanFittedElectrons ]
                                                    )
 
-        SingleTFHighPtElectronLine = Hlt2Line("SingleTFHighPtElectron"
+        SingleTFHighPtElectronLine = Hlt2Line("SingleElectronTFHighPt"
                                               , prescale = self.prescale
                                               , L0DU = L0Req
                                               , HLT = Hlt1Req
