@@ -28,8 +28,8 @@ class Electrons_draft2011:
             #'Hlt2DiElectronVHighMass',
             # single
             #'Hlt2SingleTFElectron',     
-            'Hlt2SingleTFLowPtElectron',     
-            'Hlt2SingleTFHighPtElectron',
+            'Hlt2SingleElectronTFLowPt',     
+            'Hlt2SingleElectronTFHighPt',
             #'Hlt2SingleTFVHighPtElectron',
             #'Hlt2TFElectronPlusTrack',
             #'Hlt2TFElectronPlusTrackNoIP'
