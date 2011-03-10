@@ -5,6 +5,11 @@ from PyCool import cool
 import os
 import datetime
 
+def dateString():
+    import datetime
+    now = datetime.datetime.now()
+    return now.strftime("%d%m%Y")
+
 def getUNIXTime(dtime):
     import time
     t = time.mktime(dtime.timetuple())
@@ -15,14 +20,16 @@ def genXML(root,cond):
     data = ""
     for line in file :
         if -1 != line.find("../../../DTD/structure.dtd"):
-            line =  """<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">"""
-        data += line
+            data += """<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">"""
+        else:
+            data += line
     file.close()
     return data
 
 def addToDB(startTime,rootToFiles,condPath,db):
     start = getUNIXTime(startTime) 
     stop  = cool.ValidityKeyMax
+    print " -> Condition", condPath, "updated"
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
 
 def findXMLFiles(rootdir):
@@ -50,17 +57,22 @@ def fileMD5(file):
 # Mirror alignment
 #upAlign    = "/usera/jonesc/NFS/DetDB/CurrentDB/Up"
 #dnAlign    = "/usera/jonesc/NFS/DetDB/CurrentDB/Down"
-#dbFileName = "NewMirrorHPDAlignFieldPolarity.db"
+#dbFileName = "NewMirrorHPDAlignFieldPolarity"
 
 # Detector Numbers
 #upAlign = "/usera/jonesc/NFS/DetDB/DetNumbers"
 #dnAlign = "/usera/jonesc/NFS/DetDB/DetNumbers"
-#dbFileName = "NewDetNumbersCondDB.db"
+#dbFileName = "NewDetNumbersCondDB"
+
+# Detector Numbers - test
+upAlign = "/usera/jonesc/NFS/DetDB/DetNumbers-tmp"
+dnAlign = "/usera/jonesc/NFS/DetDB/DetNumbers-tmp"
+dbFileName = "NewDetNumbersCondDB-tmp"
 
 # MDMS
-upAlign = "/usera/jonesc/NFS/DetDB/MDMS"
-dnAlign = "/usera/jonesc/NFS/DetDB/MDMS"
-dbFileName = "NewMDMSCondDB.db"
+#upAlign = "/usera/jonesc/NFS/DetDB/MDMS"
+#dnAlign = "/usera/jonesc/NFS/DetDB/MDMS"
+#dbFileName = "NewMDMSCondDB"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -68,25 +80,28 @@ dbFileName = "NewMDMSCondDB.db"
 # Hardcode the field changes. Format is date of change and the new polarity
 field = { }
 #                          Year  Month  Day   Hour   Min  Sec
-field[ datetime.datetime(  2009,  9,     1,    1,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  4,     5,    2,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  4,     6,    2,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  5,     8,   22,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  5,    14,   12,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  5,    15,   16,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  5,    19,    5,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  7,    13,    4,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  7,    28,   21,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  8,    18,    8,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  8,    29,   17,     0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,  9,    22,   16,     0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  10,   24,    9,     0,   0  ) ] = dnAlign 
+#field[ datetime.datetime(  2009,  9,     1,    1,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  4,     5,    2,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  4,     6,    2,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  5,     8,   22,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  5,    14,   12,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  5,    15,   16,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  5,    19,    5,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  7,    13,    4,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  7,    28,   21,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  8,    18,    8,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  8,    29,   17,     0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,  9,    22,   16,     0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  10,   24,    9,     0,   0  ) ] = dnAlign
+
+field[ datetime.datetime(  2011,  1,   1,    1,     0,   0  ) ] = dnAlign 
 
 # Open a new DB file
-if os.path.exists(dbFileName) : os.remove(dbFileName)
-db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
+fulDBname = dbFileName + "-" + dateString() + ".db"
+if os.path.exists(fulDBname) : os.remove(fulDBname)
+db = CondDBUI.CondDB( "sqlite_file:"+fulDBname+"/LHCBCOND",
                       create_new_db=True, readOnly=False )
-print "Opened DB file", dbFileName
+print "Opened DB file", fulDBname
 
 createdPaths = [ ]
 lastMDsums   = { }
@@ -117,7 +132,6 @@ for start in sorted(field.keys()):
 
         # Check if update is needed
         if md != lastMDsums[condName] :
-            print " -> Updating", condName
             addToDB(start,align,condName,db)
             lastMDsums[condName] = md
         else:
