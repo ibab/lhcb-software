@@ -4,9 +4,6 @@
  *
  * Implementation of vaious fast mathematical functions for the Rich
  *
- * CVS Log :-
- * $Id: FastMaths.h,v 1.2 2007-09-10 13:27:01 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 02/09/2007
  */
