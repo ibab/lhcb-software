@@ -4,7 +4,7 @@
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       Generators
-version       v10r9
+version       v10r10
 
 #============================================================================
 # Structure, i.e. directories to process. 
