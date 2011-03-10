@@ -68,11 +68,21 @@ void RPCComm::confirmFile(char *fileName, //still
   if(ret < 0)
     throw RetryException("Could not run RPC call for confirm.");
 
-  ret = isError(response); 
-  if (ret == 2)
+  ret = isError(response);
+  if (ret == 2){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw DiscardException(response);
-  if (ret != 0)
+  }
+  if (ret != 0){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw RetryException(response);
+  }
 
   return;
 }
@@ -132,10 +142,20 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
     throw RetryException("Could not run RPC call for confirm.");
 
   ret = isError(response); 
-  if (ret == 2)
+  if (ret == 2){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw DiscardException(response);
-  if (ret != 0)
+  }
+  if (ret != 0){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw RetryException(response);
+  }
 
   return;
 }
@@ -169,10 +189,20 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
     throw RetryException("Could not run RPC call for create.");
 
   ret = isError(response); 
-  if (ret == 2)
+  if (ret == 2){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw DiscardException(response);
-  if (ret != 0)
+  }
+  if (ret != 0){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw RetryException(response);
+  }
 
   return;
 }
@@ -287,13 +317,24 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
     throw RetryException("Could not run RPC call for create"); 
 
   ret = isError(response); 
-  if (ret == 2)
+  if (ret == 2){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw DiscardException(response);
-  if (ret != 0)
+  }
+  if (ret != 0){ 
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i) {
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw RetryException(response);
+  }
 
   std::string res(response);
 
+  //XXX Should be spotted beforehand in isError
   err = res.find(failStr);
   if(err != res.npos) {
       throw RetryException("RunDB answer is error");
@@ -333,13 +374,24 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   if (ret < 0)
     throw RetryException("Could not run RPC call for create");
   ret = isError(response); 
-  if (ret == 2)
+  if (ret == 2){
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i){
+      if(response[i]=='\n') response[i] =' ';
+    }
     throw DiscardException(response);
-  if (ret != 0)
-    throw RetryException(response);
+  }
+  if (ret != 0) {
+    // Test if MsgStream segfault comes again. And corrects the fact that after \n, message level is INFO instead of ERROR !
+    for(int i=0; i<strlen(response); ++i){
+      if(response[i]=='\n') response[i] =' ';
+    }
+    throw RetryException(response); 
+  } 
 
   std::string res(response);
 
+  //XXX Should be spotted beforehand in isError
   err = res.find(failStr);
   if(err != res.npos) {
       throw RetryException("RunDB answer is error");

@@ -412,7 +412,7 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
-  *m_log << MSG::INFO << "createAndOpenFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
+  *m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
   std::string identifier( getenv("UTGID") );
   return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
@@ -709,25 +709,25 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
             }
             catch (RetryException &e) {
               m_currFile = NULL;
-              *m_log << MSG::ERROR
-                     << " Exception: "
-                     << e.what() << endmsg; 
               *m_log << MSG::ERROR << " Could not get new file name for run "
                      << runNumber
                      << ". Retrying ... "
                      << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                      <<  endmsg ;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
               continue;
             }
             catch (DiscardException &e) {
               m_currFile = NULL;
-              *m_log << MSG::ERROR
-                     << " Exception: "
-                     << e.what() << endmsg;
               *m_log << MSG::ERROR << " Run "
                      << runNumber
                      << " closed, and no file to be written. All subsequent events will be discarded."
                      <<  endmsg ;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg;
               m_discardCurrentRun = true;
               if (pthread_mutex_unlock(&m_SyncFileList)) {
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
@@ -737,28 +737,28 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
             }
             catch (FailureException &e) { 
               m_currFile = NULL;
-              *m_log << MSG::ERROR
-                     << " Exception: "
-                     << e.what() << endmsg; 
               *m_log << MSG::ERROR << " Could not get new file name for run "
                      << runNumber
                      << " because of an unmanaged error"
                      << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                      << " Retrying until you stop run ..."
                      <<  endmsg ; 
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
               continue;
             }
             catch (std::exception &e) { 
               m_currFile = NULL;
-              *m_log << MSG::ERROR
-                     << " Exception: "
-                     << e.what() << endmsg; 
               *m_log << MSG::ERROR << " Could not get new file name for run "
                      << runNumber
                      << " because of an unmanaged error"
                      << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                      << " Retrying until you stop run ..."
                      <<  endmsg ;
+              *m_log << MSG::ERROR
+                     << " Exception: "
+                     << e.what() << endmsg; 
                
               if (pthread_mutex_unlock(&m_SyncFileList)) {
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
@@ -1196,35 +1196,39 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
           m_rpcObj->createFile(cmd->file_name, cmd->run_no);
         }
         catch(RetryException &e) {
+          *m_log << MSG::ERROR << " Could not create Run Database Record." 
+                 << " Retrying."
+                 << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+                 << " Record is: FileName=" << cmd->file_name
+                 << " Run Number=" << cmd->run_no << endmsg;
           *m_log << MSG::ERROR
                  << " Exception: "
                  << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-                 << " Record is: FileName=" << cmd->file_name
-                 << " Run Number=" << cmd->run_no << endmsg;
           continue;
         }
         catch (FailureException &e) {
           m_currFile = NULL;
-          *m_log << MSG::ERROR
-                 << " Exception: "
-                 << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not get new file name "
-                 << " because of an unmanaged error"
-                 << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+          *m_log << MSG::ERROR << " Could not create Run Database Record"
+                 << " because of a failure! Retrying."
+                 << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                  << " Retrying until you stop run ..."
                  << " Record is: FileName=" << cmd->file_name
                  << " Run Number=" << cmd->run_no << endmsg
                  <<  endmsg ;
-          continue;
-        }
-        catch (std::exception &e) {
           *m_log << MSG::ERROR
                  << " Exception: "
                  << e.what() << endmsg;
-          *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+          continue;
+        }
+        catch (std::exception &e) {
+          *m_log << MSG::ERROR << " Could not create Run Database Record"
+                 << " because of an unmanaged exception!"
+                 << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
                  << " Record is: FileName=" << cmd->file_name
                  << " Run Number=" << cmd->run_no << endmsg;
+          *m_log << MSG::ERROR
+                 << " Exception: "
+                 << e.what() << endmsg;
         }
         break;
     }
@@ -1255,27 +1259,28 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      *m_log << MSG::ERROR << " Could not update Run Database Record"
+             << ". Retrying."
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Record is: FileName=" << cmd->file_name
+             << " Adler32 Sum=" << pdu->adler32_sum
+             << " MD5 Sum=" << md5buf << endmsg;
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
-      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-      *m_log << " Record is: FileName=" << cmd->file_name;
-      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
       continue;
     }
     catch (FailureException &e) {
       m_currFile = NULL;
-      *m_log << MSG::ERROR
-             << " Exception: "
-             << e.what() << endmsg;
-      *m_log << MSG::ERROR << " Could not get new file name "
-             << " because of an unmanaged error"
-             << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-             << " Retrying until you stop run ..."
+      *m_log << MSG::ERROR << " Could not update Run Database Record"
+             << " because of a failure. Retrying."
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
              << " Record is: FileName=" << cmd->file_name
              << " Run Number=" << cmd->run_no << endmsg
              <<  endmsg ;
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
       continue;
     }
     catch (std::exception &e) {
@@ -1286,13 +1291,15 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      *m_log << MSG::ERROR << " Could not update Run Database Record"
+             << " because of an unmanaged error!"
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Record is: FileName=" << cmd->file_name
+             << " Adler32 Sum=" << pdu->adler32_sum
+             << " MD5 Sum=" << md5buf << endmsg;
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
-      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-      *m_log << " Record is: FileName=" << cmd->file_name;
-      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
     }
     break;
   }
@@ -1317,27 +1324,28 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      *m_log << MSG::ERROR << " Could not confirm Run Database Record"
+             << ". Retrying."
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Record is: FileName=" << cmd->file_name
+             << " Adler32 Sum=" << pdu->adler32_sum
+             << " MD5 Sum=" << md5buf << endmsg;
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
-      *m_log << MSG::ERROR << " Could not confirm Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-      *m_log << " Record is: FileName=" << cmd->file_name;
-      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
       continue;
     }
     catch (FailureException &e) {
       m_currFile = NULL;
-      *m_log << MSG::ERROR
-             << " Exception: "
-             << e.what() << endmsg;
       *m_log << MSG::ERROR << " Could not get new file name "
-             << " because of an unmanaged error"
-             << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-             << " Retrying until you stop run ..."
+             << " because of a failure. Retrying."
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
              << " Record is: FileName=" << cmd->file_name
              << " Run Number=" << cmd->run_no << endmsg
              <<  endmsg ;
+      *m_log << MSG::ERROR
+             << " Exception: "
+             << e.what() << endmsg;
       continue;
     }
     catch (std::exception &e) {
@@ -1348,13 +1356,15 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+      *m_log << MSG::ERROR << " Could not update Run Database Record"
+             << " because of an unmanaged error!"
+             << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+             << " Record is: FileName=" << cmd->file_name
+             << " Adler32 Sum=" << pdu->adler32_sum
+             << " MD5 Sum=" << md5buf << endmsg;
       *m_log << MSG::ERROR
              << " Exception: "
              << e.what() << endmsg;
-      *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-      *m_log << " Record is: FileName=" << cmd->file_name;
-      *m_log << " Adler32 Sum=" << pdu->adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
     }
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
          << "RunNumber: "  << cmd->run_no << " "
