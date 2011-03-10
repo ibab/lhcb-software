@@ -39,6 +39,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
@@ -1292,14 +1296,6 @@ namespace LoKi
       , m_val1 ( val1 )
       , m_val2 ( val2 )
     {}
-    /// copy constructor 
-    SimpleSwitch ( const SimpleSwitch& right ) 
-      : LoKi::AuxFunBase          ( right )
-      , LoKi::Functor<TYPE,TYPE2> ( right ) 
-      , m_cut               ( right.m_cut  ) 
-      , m_val1              ( right.m_val1 ) 
-      , m_val2              ( right.m_val2 ) 
-    {}
     /// destructor 
     virtual ~SimpleSwitch() {}
     /// MANDATORY: clone method ("virtual constructor")
@@ -1314,7 +1310,7 @@ namespace LoKi
   private:
     // ========================================================================
     /// the default constructor is disabled    
-    SimpleSwitch() ; // the default constructor is disabled    
+    SimpleSwitch() ;                     // the default constructor is disabled    
     // ========================================================================
   private:
     // ========================================================================
@@ -1438,13 +1434,6 @@ namespace LoKi
       , m_cut  ( cut  ) 
       , m_two  ( LoKi::Constant<TYPE,TYPE2>( fun1 ) ,
                  LoKi::Constant<TYPE,TYPE2>( fun2 ) )
-    {}
-    /// copy constructor 
-    Switch ( const Switch& right ) 
-      : LoKi::AuxFunBase          ( right ) 
-      , LoKi::Functor<TYPE,TYPE2> ( right ) 
-      , m_cut               ( right.m_cut ) 
-      , m_two               ( right.m_two ) 
     {}
     /// destructor 
     virtual ~Switch() {}

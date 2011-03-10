@@ -12,6 +12,7 @@
 #include "GaudiKernel/IStatSvc.h"
 #include "GaudiKernel/ICounterSvc.h"
 #include "GaudiKernel/IChronoSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/SmartIF.h"
 // ============================================================================
 // PartProp
@@ -35,6 +36,10 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
@@ -60,6 +65,7 @@ LoKi::Services::Services()
   , m_statSvc    ( 0 ) 
   , m_cntSvc     ( 0 ) 
   , m_chronoSvc  ( 0 ) 
+  , m_updateSvc  ( 0 ) 
 {
   LoKi::Welcome::instance() ;
 }
@@ -72,6 +78,8 @@ LoKi::Services::~Services(){}
 // ===========================================================================
 StatusCode LoKi::Services::releaseAll() 
 {
+  // release services 
+  if ( 0 != m_updateSvc  ) { m_updateSvc  -> release () ; m_updateSvc  = 0 ; }
   // release services 
   if ( 0 != m_chronoSvc  ) { m_chronoSvc  -> release () ; m_chronoSvc  = 0 ; }
   // release services 
@@ -287,6 +295,25 @@ IChronoSvc* LoKi::Services::chronoSvc     () const
   m_chronoSvc -> addRef() ;
   //
   return m_chronoSvc  ;
+}
+// ===========================================================================
+// accessor to Chrono Service 
+// ===========================================================================
+IUpdateManagerSvc* LoKi::Services::updateSvc     () const 
+{
+  if ( 0 != m_updateSvc ) { return m_updateSvc ; }
+  // get the service form LoKi 
+  SmartIF<IUpdateManagerSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( "IUpdateManagerSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_updateSvc = svc ;
+  m_updateSvc -> addRef() ;
+  //
+  return m_updateSvc  ;
 }
 // ===========================================================================
 // The END 

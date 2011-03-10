@@ -22,6 +22,7 @@
 #include "GaudiKernel/IStatSvc.h"
 #include "GaudiKernel/ICounterSvc.h"
 #include "GaudiKernel/IChronoSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================
 // PartProp
@@ -329,6 +330,28 @@ public:
     return m_chronoSvc ;
   }   
   // ==========================================================================
+  /** get the pointer to Update Manager Service  
+   *  @return pointer to Update MAnager Service 
+   *  @see IChronoSvc 
+   */
+  IUpdateManagerSvc* updateSvc () const 
+  {
+    if ( 0 != m_updateSvc ) { return m_updateSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "UpdateManagerSvc", m_updateSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_updateSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'UpdateManagerSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_updateSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IUpdateManagerSvc* points to NULL" , sc ) ; 
+    }
+    //
+    return m_updateSvc ;
+  }   
+  // ==========================================================================
 public:
   // ==========================================================================
   /// Inform that a new incident has occured
@@ -420,12 +443,16 @@ public:
     { LoKi::AuxFunBase::setLoKiSvc ( 0 ) ; }
     //
     if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
-    if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; }    
-    if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; }    
-    if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; }    
-    if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; }    
-    if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; }    
+    if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; } 
+    if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; } 
     if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
+    if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; } 
+    if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; } 
+    if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; } 
+    if ( 0 != m_statSvc     ) { m_statSvc     -> release() ; m_statSvc     = 0 ; } 
+    if ( 0 != m_cntSvc      ) { m_cntSvc      -> release() ; m_cntSvc      = 0 ; } 
+    if ( 0 != m_chronoSvc   ) { m_chronoSvc   -> release() ; m_chronoSvc   = 0 ; } 
+    if ( 0 != m_updateSvc   ) { m_updateSvc   -> release() ; m_updateSvc   = 0 ; } 
     //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 != rep.reporter() ) { rep.setReporter( 0 ).ignore() ; }
@@ -460,13 +487,17 @@ public:
     if ( LoKi::AuxFunBase::lokiSvc().same( this ) ) 
     { LoKi::AuxFunBase::setLoKiSvc ( 0 ) ; }
     //
-    if ( 0 != m_toolSvc      ) { m_toolSvc     -> release () ; m_toolSvc     = 0 ; }    
-    if ( 0 != m_ppSvc        ) { m_ppSvc       -> release () ; m_ppSvc       = 0 ; }
-    if ( 0 != m_contextSvc   ) { m_contextSvc  -> release () ; m_contextSvc  = 0 ; }
-    if ( 0 != m_histoSvc     ) { m_histoSvc    -> release () ; m_histoSvc    = 0 ; }
-    if ( 0 != m_evtSvc       ) { m_evtSvc      -> release () ; m_evtSvc      = 0 ; }
-    if ( 0 != m_rndmSvc      ) { m_rndmSvc     -> release () ; m_rndmSvc     = 0 ; }
-    if ( 0 != m_incidentSvc  ) { m_incidentSvc -> release () ; m_incidentSvc = 0 ; }
+    if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
+    if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; } 
+    if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; } 
+    if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
+    if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; } 
+    if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; } 
+    if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; } 
+    if ( 0 != m_statSvc     ) { m_statSvc     -> release() ; m_statSvc     = 0 ; } 
+    if ( 0 != m_cntSvc      ) { m_cntSvc      -> release() ; m_cntSvc      = 0 ; } 
+    if ( 0 != m_chronoSvc   ) { m_chronoSvc   -> release() ; m_chronoSvc   = 0 ; } 
+    if ( 0 != m_updateSvc   ) { m_updateSvc   -> release() ; m_updateSvc   = 0 ; } 
     //
     {
       /// subscribe the incident:
@@ -551,6 +582,9 @@ public:
     // IChronoSvc 
     else if ( IChronoSvc::interfaceID           () == iid && 0 != chronoSvc   () ) 
     { return chronoSvc   ()     -> queryInterface ( iid , ppI ) ; }
+    // IUpdateManagerSvc 
+    else if ( IUpdateManagerSvc::interfaceID    () == iid && 0 != updateSvc   () ) 
+    { return updateSvc   ()     -> queryInterface ( iid , ppI ) ; }
     // a bit more fun with the reporter 
     else if ( LoKi::IReporter::interfaceID      () == iid && 0 != reporter    () ) 
     { return reporter    ()     -> queryInterface ( iid , ppI ) ; }
@@ -587,6 +621,7 @@ protected:
     , m_statSvc      (  0 )
     , m_cntSvc       (  0 ) 
     , m_chronoSvc    (  0 ) 
+    , m_updateSvc    (  0 ) 
     //
     //
     , m_reporter     (  0 )
@@ -607,6 +642,7 @@ protected:
     if ( 0 != m_reporter && 0 != m_toolSvc ) 
     { m_toolSvc -> releaseTool ( m_reporter ) ; }
     m_reporter = 0 ;
+    //
     if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
     if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; } 
     if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; } 
@@ -617,6 +653,7 @@ protected:
     if ( 0 != m_statSvc     ) { m_statSvc     -> release() ; m_statSvc     = 0 ; } 
     if ( 0 != m_cntSvc      ) { m_cntSvc      -> release() ; m_cntSvc      = 0 ; } 
     if ( 0 != m_chronoSvc   ) { m_chronoSvc   -> release() ; m_chronoSvc   = 0 ; } 
+    if ( 0 != m_updateSvc   ) { m_updateSvc   -> release() ; m_updateSvc   = 0 ; } 
   }   
   // ==========================================================================
 private:
@@ -650,6 +687,8 @@ private:
   mutable ICounterSvc*          m_cntSvc       ;        //             counters
   /// chrono
   mutable IChronoSvc*           m_chronoSvc    ;        //               chrono
+  /// update
+  mutable IUpdateManagerSvc*    m_updateSvc    ;        //               update
   /// the default reporter 
   mutable LoKi::IReporter*      m_reporter     ;        // the default reporter 
   /// the name of the default reporter 

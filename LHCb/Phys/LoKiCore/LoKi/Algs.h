@@ -23,13 +23,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
-{  
-  /** @namespace  LoKi::Algs Algs.h LoKi/Algs.h
+{
+  // ==========================================================================
+  /** @namespace  LoKi::Algs LoKi/Algs.h
    *
    *  Helper namespace with auxillary 
    *  functions/algorithms of the general interest 
@@ -745,10 +754,11 @@ namespace LoKi
       return _found_N ( first , last , cuts , indices ) ;
     }
     // ========================================================================
-  } // end of namespace LoKi::Algs  
-} // end of namespace LoKi
+  } //                                              end of namespace LoKi::Algs  
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_ALGS_H
 // ============================================================================

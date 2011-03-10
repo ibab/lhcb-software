@@ -21,6 +21,24 @@
 #include  "LoKi/Math.h"
 #include  "LoKi/Streamers.h"
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-10-31 
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -434,21 +452,70 @@ namespace LoKi
       __max_abs_value__   ( const Func& fun , const double val ) 
       { return LoKi::max_abs_value<TYPE2>  ( fun , val ) ; }
       // min element 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,TYPE2>
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
       __min_element__     ( const Func& fun ) 
       { return LoKi::min_element<TYPE2>( fun ) ; }
       // abs min element 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,TYPE2>
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
       __min_abs_element__ ( const Func& fun ) 
       { return LoKi::min_abs_element<TYPE2>( fun ) ; }      
       // max element 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,TYPE2>
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
       __max_element__     ( const Func& fun ) 
       { return LoKi::max_element<TYPE2>( fun ) ; }
       // abs min element 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,TYPE2>
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
       __max_abs_element__ ( const Func& fun ) 
       { return LoKi::max_abs_element<TYPE2>( fun ) ; }
+      // ======================================================================
+      // sum over the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __sum__ ( const Func&  fun , const double init = 0 ) 
+      { return LoKi::sum ( fun , init ) ; }
+      // sum over the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __sum__ ( const Func&  fun , 
+                const Cuts&  cut , const double init = 0 )
+      { return LoKi::sum ( fun , cut , init ) ; }
+      // ======================================================================
+      // product over the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __product__ ( const Func&  fun , const double init = 1 ) 
+      { return LoKi::product ( fun , init ) ; }
+      // sum over the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __product__ ( const Func&  fun , 
+                    const Cuts&  cut , const double init = 1 )
+      { return LoKi::product ( fun , cut , init ) ; }
+      // ======================================================================
+      // statistics 
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __mean__   ( const Func& fun   )
+      { return LoKi::mean     ( fun )  ; }
+      // statistics 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __mean__   ( const Func& fun  , 
+                   const Cuts& cut  ) 
+      { return LoKi::mean     ( fun , cut )  ; }      
+      // statistics 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __rms__    ( const Func& fun   )
+      { return LoKi::rms      ( fun )  ; }
+      // statistics 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __rms__    ( const Func& fun  , 
+                   const Cuts& cut  ) 
+      { return LoKi::rms      ( fun , cut )  ; }      
+      // statistics 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __meanErr__   ( const Func& fun   )
+      { return LoKi::meanErr  ( fun )  ; }
+      // statistics 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __meanErr__   ( const Func& fun  , 
+                      const Cuts& cut  ) 
+      { return LoKi::meanErr  ( fun , cut )  ; }      
       // ======================================================================
     } ;
     // ========================================================================
@@ -659,6 +726,24 @@ namespace LoKi
       { return LoKi::Functors::Includes <std::vector<TYPE2>,TYPE2>
           ( LoKi::filter<TYPE2> ( fun  ) , LoKi::filter<TYPE2> ( fun2 ) ) ; }
       // ======================================================================
+      // statistics 
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __eff__  ( const Cuts& cut  ) 
+      { return LoKi::eff   ( cut ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __eff__  ( const Cuts& cut  , 
+                 const Cuts& cut2 ) 
+      { return LoKi::eff   ( cut , cut2 ) ; }
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __effErr__  ( const Cuts& cut  ) 
+      { return LoKi::effErr   ( cut ) ; }
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __effErr__  ( const Cuts& cut  , 
+                    const Cuts& cut2 ) 
+      { return LoKi::effErr   ( cut , cut2 ) ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MapsOps
@@ -809,7 +894,6 @@ namespace LoKi
       // ======================================================================
       typedef typename LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
       typedef typename LoKi::BasicFunctors<TYPE>::Map           Map     ;
-      typedef typename LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef typename LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
       typedef typename LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;
@@ -841,11 +925,6 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
       __rshift__ 
       ( const Pipe& fun , const CutVal&    fun2 ) 
-      { return fun >>                      fun2 ; }
-      // __rshift__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
-      __rshift__ 
-      ( const Pipe& fun , const Element&   fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
@@ -1086,70 +1165,6 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class ElementOps
-     *  Wrapper class for operations with 'element-selection'-functors
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-11-30
-     */
-    template <class TYPE, class TYPE2=TYPE>
-    class  ElementOps 
-    {
-    private:
-      // ======================================================================
-      typedef typename LoKi::BasicFunctors<TYPE>::Element       Element ;
-      typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;
-      typedef typename LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
-      // ======================================================================
-    public:
-      // ======================================================================
-      static typename Element::result_type __call__ 
-      ( const Element& fun , typename Element::argument a ) 
-      { return fun ( a )  ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      // __rshift__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
-      __rshift__ 
-      ( const Element& fun , const Func&   fun2 ) 
-      { return LoKi::Compose<std::vector<TYPE>,TYPE,double,TYPE2>( fun ,fun2 ) ; }
-      // __rshift__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-      __rshift__ 
-      ( const Element& fun , const Cuts&   fun2 ) 
-      { return LoKi::Compose<std::vector<TYPE>,TYPE,bool,TYPE2>( fun ,fun2 ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      // __rrshift__ 
-      static TYPE
-      __rrshift__ ( const Element& fun , const std::vector<TYPE>& val ) 
-      { return fun ( val ) ; }
-      // __rrshift__ 
-      static TYPE
-      __rrshift__ ( const Element& fun , 
-                    const typename std::vector<TYPE>::value_type& val ) 
-      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
-      // __rrshift__ 
-      static TYPE 
-      __rrshift__ ( const Element&                                fun , 
-                    const Gaudi::Range_<std::vector<TYPE> >&      val ) 
-      { return val >> fun ; }
-      // __rrshift__ 
-      static TYPE 
-      __rrshift__ ( const Element&                                fun , 
-                    const Gaudi::NamedRange_<std::vector<TYPE> >& val ) 
-      { return val >> fun  ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      // __tee__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
-      __tee__     ( const Element& fun ) 
-      { return LoKi::tee<TYPE>( fun ) ; }        
-      // ======================================================================
-    };
-    // ========================================================================
     /** @class SourceOps
      *  Wrapper class for operations with 'source'-functors
      *  @see LoKi::BasicFunctors 
@@ -1164,7 +1179,6 @@ namespace LoKi
       typedef typename LoKi::BasicFunctors<TYPE>::Source        Source ;
       typedef typename LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
       typedef typename LoKi::BasicFunctors<TYPE>::Map           Map     ;
-      typedef typename LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef typename LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
       typedef typename LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;

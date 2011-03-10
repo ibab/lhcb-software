@@ -16,6 +16,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Dicts 
   {
     // ========================================================================
@@ -25,17 +26,33 @@ namespace LoKi
      *             to few classes, for all other cases one needs to 
      *             look for template specializations 
      *
+     *
+     *  This file is a part of LoKi project - 
+     *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+     *
+     *  The package has been designed with the kind help from
+     *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+     *  contributions and advices from G.Raven, J.van Tilburg, 
+     *  A.Golutvin, P.Koppenburg have been used in the design.
+     *
+     *  By usage of this code one clearly states the disagreement 
+     *  with the campain of Dr.O.Callot et al.: 
+     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+     *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-29
      */
     template <class TYPE>
     class FunCalls 
     {
+      // ======================================================================
     private:
+      // ======================================================================
       typedef TYPE                                                Type ;
       typedef typename LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static typename Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
       static typename Fun::result_type __call__ 
@@ -84,10 +101,12 @@ namespace LoKi
     class CutCalls 
     {
     private:
+      // ======================================================================
       typedef TYPE                                                 Type ;
       typedef typename LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static typename Fun::result_type __call__ 
       ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
       static typename Fun::result_type __call__ 
@@ -104,11 +123,12 @@ namespace LoKi
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
-      //
+      // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Dicts
-} //end of namespace LoKi
+  } //                                             end of namespace LoKi::Dicts
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

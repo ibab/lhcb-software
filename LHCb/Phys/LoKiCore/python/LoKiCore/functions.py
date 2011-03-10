@@ -443,6 +443,24 @@ def max_abs_value ( s , *a ) :
     return s.__max_abs_value__ ( *a )
 
 # =============================================================================
+## get a sum over stream 
+def sum ( s , *a ) :
+    """
+    Get a sum over functionin the stream
+    
+    """
+    return s.__sum__ ( *a )
+
+# =============================================================================
+## get a sum over the stream 
+def product ( s , *a ) :
+    """
+    Get a sum over functionin the stream
+    
+    """
+    return s.__product__ ( *a )
+
+# =============================================================================
 ## find the element from decay tree or container whcih minimize the function
 def min_element ( s , *a ) :
     """
@@ -829,7 +847,108 @@ def timer ( obj , *args ) :
             if hasattr ( arg0 , '__timer__' ) : return timer ( arg0 , obj ) 
     ##
     raise TypeErorr, "Invalid arguments "
+
+# =============================================================================
+## create 'mean-over-stream' vector-functor:
+#
+#  @code
+#
+#    >>> fun = PT
+#    >>> meanPT = mean ( PT )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-04
+def mean ( obj , *args ) :
+    """
+    Create ``mean-over-stream'' vector-functor
+
+    >> mean ( PT ) >> 
     
+    """
+    return obj.__mean__ ( *args )
+# =============================================================================
+## create 'mean-error-over-stream' vector-functor:
+#
+#  @code
+#
+#    >>> fun = PT
+#    >>> errPT = meanErr ( PT )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-04
+def meanErr ( obj , *args ) :
+    """
+    Create ``mean-error-over-stream'' vector-functor
+
+    >> meanErr ( PT ) >> 
+    
+    """
+    return obj.__meanErr__ ( *args )
+# =============================================================================
+## create 'rms-over-stream' vector-functor:
+#
+#  @code
+#
+#    >>> fun = PT
+#    >>> rmsPT = rms ( PT )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-04
+def rms ( obj , *args ) :
+    """
+    Create ``mean-error-over-stream'' vector-functor
+
+    >> rms ( PT ) >> 
+    
+    """
+    return obj.__rms__ ( *args )
+# =============================================================================
+## create 'efficiency-over-stream' vector-functor:
+#
+#  @code
+#
+#    >>> fun = PT > 1 * GeV 
+#    >>> effPT = eff ( fun )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-04
+def eff ( obj , *args ) :
+    """
+    Create ``mean-error-over-stream'' vector-functor
+
+    >> eff ( PT  > 1 * GeV  ) >> 
+    
+    """
+    return obj.__eff__ ( *args )
+# =============================================================================
+## create 'efficiency-error-over-stream' vector-functor:
+#
+#  @code
+#
+#    >>> fun = PT > 1 * GeV 
+#    >>> effPT = eff ( fun )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-04
+def effErr ( obj , *args ) :
+    """
+    Create ``mean-error-over-stream'' vector-functor
+
+    >> effErr ( PT  > 1 * GeV  ) >> 
+    
+    """
+    return obj.__effErr__ ( *args )
+
 # =============================================================================
 ##  create the 'conditional source/cause' 
 #

@@ -1,4 +1,3 @@
-
 // $Id$
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
@@ -13,8 +12,26 @@
 #include "LoKi/FuncCast.h"
 #include "LoKi/BasicFunctors.h"
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-10-31 
+ */
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Dicts
    *  Helper namespace for the building thee proper dictionries for LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -40,6 +57,7 @@ namespace LoKi
       // ======================================================================      
       LoKi::Valid<TYPE>                  m_301  ;      
       // ======================================================================      
+      /// undefined constructor 
       Funcs () ; // undefined constructor 
       // ======================================================================
     } ;
@@ -58,8 +76,6 @@ namespace LoKi
       LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >   m_100 ;
       // "map"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> > m_101 ;
-      // "element"
-      LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>                 m_102 ;
       // "funval"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,double>               m_103 ;
       // "cutval" 
@@ -72,11 +88,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Dicts 
+  } //                                             end of namespace LoKi::Dicts 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_FUNCS_H
 // ============================================================================

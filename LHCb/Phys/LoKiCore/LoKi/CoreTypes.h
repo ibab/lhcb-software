@@ -19,14 +19,22 @@
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
 {  
   // ==========================================================================
-  /** @namespace LoKi::CoreTypes CoreTypes.h LoKi/CoreTypes.h
+  /** @namespace LoKi::CoreTypes LoKi/CoreTypes.h
    *  The core namespace for some "core"  types 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -62,9 +70,6 @@ namespace LoKi
     /// function or element selection: std::vector<double> -> double 
     typedef LoKi::BasicFunctors<double>::FunVal                XFunVals  ;
     typedef LoKi::Assignable<XFunVals>::Type                   XFunVal   ;
-    /// the same 
-    typedef LoKi::BasicFunctors<double>::Element               XElements ; 
-    typedef LoKi::Assignable<XElements>::Type                  XElement  ;
     /// source : void -> std::vector<double> 
     typedef LoKi::BasicFunctors<double>::Source                XSources  ; 
     typedef LoKi::Assignable<XSources>::Type                   XSource   ;
@@ -113,10 +118,6 @@ namespace LoKi
     typedef LoKi::CoreTypes::XFunVals            XFunVals  ;
     // ditto, but assignable 
     typedef LoKi::CoreTypes::XFunVal             XFunVal   ;
-    /// the same 
-    typedef LoKi::CoreTypes::XElements           XElements ; 
-    // ditto, but assignable 
-    typedef LoKi::CoreTypes::XElement            XElement  ; 
     /// source : void -> std::vector<double> 
     typedef LoKi::CoreTypes::XSources            XSources  ; 
     // ditto, but assignable 
@@ -126,9 +127,10 @@ namespace LoKi
     // ditto, but assignable 
     typedef LoKi::CoreTypes::FSource             FSource   ; 
     // ========================================================================
-  }  // end of namespace LoKi::Types
+  } //                                             end of namespace LoKi::Types
   // ==========================================================================
-}  // end of namespace LoKi
+} //                                                      end of namespace LoKi
+// ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
@@ -144,9 +146,9 @@ namespace LoKi
   Constant<double,bool>::fillStream ( std::ostream& s ) const 
   { return s << ( this->m_value ? "XALL" : "XNONE" ) ; }
   // ==========================================================================  
-} // end of namespace LoKi
-// ========================================================================
-// The END 
-// ========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
+//                                                                      The END 
+// ============================================================================
 #endif // LOKI_CORETYPES_H
-// ========================================================================
+// ============================================================================

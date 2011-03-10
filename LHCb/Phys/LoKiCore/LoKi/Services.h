@@ -19,6 +19,7 @@ class IRndmGenSvc          ;
 class ICounterSvc          ;
 class IStatSvc             ;
 class IChronoSvc           ;
+class IUpdateManagerSvc    ;
 // ============================================================================
 /** @file
  *
@@ -29,6 +30,10 @@ class IChronoSvc           ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
@@ -73,6 +78,8 @@ namespace LoKi
     ICounterSvc*          cntSvc      () const ;
     /// accessor to Chrono Service 
     IChronoSvc*           chronoSvc   () const ;
+    /// accessor to Chrono Service 
+    IUpdateManagerSvc*    updateSvc   () const ;
     /// destructor (virtual) 
     virtual ~Services() ;
     // ========================================================================
@@ -114,29 +121,31 @@ namespace LoKi
   private:
     // ========================================================================
     /// The major service : LoKi service 
-    LoKi::ILoKiSvc*        m_lokiSvc      ; // the major service for LoKi 
+    LoKi::ILoKiSvc*            m_lokiSvc      ; // the major service for LoKi 
     /// The source of particle properties 
     mutable LHCb::IParticlePropertySvc* m_ppSvc ; // particle properties 
     /// The algorithm context service: needed for "context" services
-    mutable IAlgContextSvc* m_contextSvc  ; // algorithm context 
+    mutable IAlgContextSvc*    m_contextSvc  ; // algorithm context 
     /// The source of random numbers 
-    mutable IRndmGenSvc*   m_randSvc       ; // the source of random numbers 
+    mutable IRndmGenSvc*       m_randSvc       ; // the source of random numbers 
     /// The histogram storage 
-    mutable IHistogramSvc* m_histoSvc      ; // the histogram storage 
+    mutable IHistogramSvc*     m_histoSvc      ; // the histogram storage 
     /// The event data service 
-    mutable IDataProviderSvc* m_evtSvc     ; // the evetn data service 
+    mutable IDataProviderSvc*  m_evtSvc     ; // the event data service 
     /// The statistical service 
-    mutable IStatSvc*         m_statSvc    ; // the statistical service 
+    mutable IStatSvc*          m_statSvc    ; // the statistical service 
     /// The counter service 
-    mutable ICounterSvc*      m_cntSvc     ; // the counter service 
+    mutable ICounterSvc*       m_cntSvc     ; // the counter service 
     /// The chrono 
-    mutable IChronoSvc*       m_chronoSvc  ; // the chrono service 
-    // =======================================================================
+    mutable IChronoSvc*        m_chronoSvc  ; // the chrono service 
+    /// The update 
+    mutable IUpdateManagerSvc* m_updateSvc  ; // the update service 
+    // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_SERVICES_H
 // ============================================================================

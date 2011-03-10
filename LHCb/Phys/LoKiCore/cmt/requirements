@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiCore
-version            v10r9p1
+version            v11r0
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
