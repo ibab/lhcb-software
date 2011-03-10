@@ -21,7 +21,20 @@ namespace LoKi
   // ==========================================================================
   /** @namespace LoKi::PPTypes   LoKi/PPTypes.h
    *  Collection of basic types  to deal with protoparticles 
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
+   *   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2010-05-26
    */
   namespace PPTypes 
@@ -62,11 +75,6 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::ProtoParticle*>::CutVal    PPCutVals  ;
     /// type of "fun-val"  for LHCb::ProtoParticle (assignable)
     typedef LoKi::Assignable<PPCutVals>::Type                          PPCutVal   ; 
-    //
-    /// type of "element"  for LHCb::ProtoParticle (interface)
-    typedef LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Element   PPElements ;
-    /// type of "element"  for LHCb::Particle (assignable)
-    typedef LoKi::Assignable<PPElements>::Type                         PPElement  ; 
     //
     /// type of "source"  for LHCb::ProtoParticle (interface)
     typedef LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Source    PPSources  ;
@@ -111,10 +119,6 @@ namespace LoKi
     typedef LoKi::PPTypes::PPCutVals                            PPCutVals   ;
     /// type for "cut-val" for LHCb::ProtoParticle (assignable)
     typedef LoKi::PPTypes::PPCutVal                             PPCutVal    ;
-    /// type for "element" for LHCb::ProtoParticle (interface)
-    typedef LoKi::PPTypes::PPElements                           PPElements  ;
-    /// type for "element" for LHCb::ProtoParticle (assignable)
-    typedef LoKi::PPTypes::PPElement                            PPElement   ;
     /// type for "source" for LHCb::ProtoParticle (interface)
     typedef LoKi::PPTypes::PPSources                            PPSources   ;
     /// type for "source" for LHCb::ProtoParticle (assignable)

@@ -21,6 +21,25 @@
 #include "LoKi/PPTypes.h"
 #include "LoKi/ProtoParticles.h"
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace
 {
   // ==========================================================================
@@ -41,7 +60,6 @@ namespace
     LoKi::Dicts::PipeOps<const LHCb::ProtoParticle*>        m_o4  ;
     LoKi::Dicts::FunValOps<const LHCb::ProtoParticle*>      m_o5  ;
     LoKi::Dicts::CutValOps<const LHCb::ProtoParticle*>      m_o51 ;
-    LoKi::Dicts::ElementOps<const LHCb::ProtoParticle*>     m_o6  ;
     LoKi::Dicts::SourceOps<const LHCb::ProtoParticle*>      m_fo7 ;
     // info
     LoKi::Dicts::InfoOps<const LHCb::ProtoParticle*>        m_io  ;
@@ -55,9 +73,9 @@ namespace
     // ========================================================================
   } ;
   // ==========================================================================
-}
+} // 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DICT_LOKIPROTOPARTICLESDICT_H
 // ============================================================================

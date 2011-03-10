@@ -409,8 +409,6 @@ PPFunVals   = LoKi.Functor             ( _ppv , 'double' )
 PPFunVal    = LoKi.FunctorFromFunctor  ( _ppv , 'double' )
 PPCutVals   = LoKi.Functor             ( _ppv , bool     )
 PPCutVal    = LoKi.FunctorFromFunctor  ( _ppv , bool     )
-PPElements  = LoKi.Functor             ( _ppv , _PP      ) 
-PPElement   = LoKi.FunctorFromFunctor  ( _ppv , _PP      ) 
 PPSources   = LoKi.Functor             ('void', _ppv     )
 PPSource    = LoKi.FunctorFromFunctor  ('void', _ppv     )
 #

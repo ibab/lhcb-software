@@ -6,6 +6,12 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-10 - Vanya Belyaev
+
+ - kill bad concept of 'Element'-functor
+ - cmt/requirements 
+    version increment to v2r0 
+
 !========================== LoKiProtoParticles v1r3 2011-01-18 ================
 
 ! 2011-01-12 - Vanya Belyaev
