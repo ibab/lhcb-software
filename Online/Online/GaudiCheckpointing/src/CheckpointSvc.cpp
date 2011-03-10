@@ -63,6 +63,8 @@ namespace LHCb  {
     int                       m_childWait;
     /// Property to make children sleep after fork
     int                       m_childSleep;
+    /// Property to force UTGID to environ and argv[0]
+    int                       m_forceUTGID;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
     /// Property: Set to 1 if the file descriptor table should be dump during child restart
@@ -287,6 +289,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("FirstChild",         m_firstChild    = 0);
   declareProperty("ChildWait",          m_childWait     = 0);
   declareProperty("ChildSleep",         m_childSleep    = 250);
+  declareProperty("ForceUtgid",         m_forceUTGID    = 0);
 }
 
 /// IInterface implementation : queryInterface
@@ -655,6 +658,9 @@ int CheckpointSvc::forkChild(int which) {
     m_masterProcess = false;    // Flag child locally
     m_numInstances = 0;
     m_useCores = false;
+    if ( m_forceUTGID>0 ) {
+      chkpt->forceUTGID(utgid.c_str());
+    }
     if ( m_childWait>0 ) {
       bool r = true;
       int cnt = m_childWait;
