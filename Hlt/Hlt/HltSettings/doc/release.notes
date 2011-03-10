@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-10 - Johannes Albrecht
+ - Electrons_draft2011: update single e names
+
 !========================== HltSettings v5r6p2 2011-03-06 ===================
 ! 2011-03-04 - Johannes Albrecht
  - Physcis_draft2011 and Electrons_draft2011:
