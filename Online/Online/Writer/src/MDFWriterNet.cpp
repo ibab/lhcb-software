@@ -280,7 +280,7 @@ StatusCode MDFWriterNet::initialize(void)
       return StatusCode::FAILURE;
   } else {
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
-        m_incidentSvc->addListener(this, "DAQ_ERROR");
+//        m_incidentSvc->addListener(this, "DAQ_ERROR");
   }
 
   m_TotEvts=0;
@@ -620,7 +620,7 @@ void MDFWriterNet::closeFile(File *currFile)
  */
 void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL" ||  inc.type() == "DAQ_ERROR" ) {
+  if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/ ) {
       this->stopRetrying();
       m_srvConnection->stopRetrying();
   }
@@ -826,16 +826,16 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   ++m_TotEvts;
 
   // If we can interpret the header, we perform all statistic computing. 
-  // Else we just go to the next event, while a DAQ_ERROR has already been triggered.
+  // Else we just go to the next event.
   if( checkHeader(mHeader, len)) {
     // check type of event
     if( checkForPhysStat(mHeader, len)) {
         m_currFile->incPhysStat();
     }
-//    incTriggerType(mHeader, len);
-
     countRouteStat(mHeader, len);
-
+  }
+  else {
+    return StatusCode::SUCCESS;
   }
  
   struct timeval tv;
@@ -1116,17 +1116,17 @@ inline bool MDFWriterNet::checkHeader(const MDFHeader *mHeader, size_t) {
 
   if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) ) {
       *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
-      Incident incident(name(),"DAQ_ERROR");
-      m_incidentSvc->fireIncident(incident);
+//      Incident incident(name(),"DAQ_ERROR");
+//      m_incidentSvc->fireIncident(incident);
       return false;
   }
 
   // Expect a version 3 only, to apply header1 later :)
   if(mHeader->headerVersion() != 3) {
       *m_log << MSG::ERROR << WHERE << "Unknown MDFHeader version " << mHeader->headerVersion() << ", aborting!" << endmsg;
-      Incident incident(name(),"DAQ_ERROR");
-      m_incidentSvc->fireIncident(incident);
-
+//      Incident incident(name(),"DAQ_ERROR");
+//      m_incidentSvc->fireIncident(incident);
+      return false;
   }
 
   return true; 
