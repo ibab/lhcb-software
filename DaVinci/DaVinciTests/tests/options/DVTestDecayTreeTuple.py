@@ -17,12 +17,13 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
-from StrippingSelections import StrippingBd2JpsiKS
-
-stream = StrippingStream("Test")
-stream.appendLines( [ StrippingBd2JpsiKS.line1 ] )
+from StrippingSelections.Utils import lineBuilder
+lineBuilder = lineBuilder('Stripping13.tmp', 'BetaS')
+line = lineBuilder.lineFromName('StrippingBetaSBd2JpsiKsUnbiasedLine')
+stream = StrippingStream("B2JpsiXTest", Lines = [line])
 sc = StrippingConf()
 sc.appendStream( stream )
+
 ########################################################################
 #
 # The Decay Tuple
@@ -40,7 +41,7 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = [StrippingBd2JpsiKS.line1.outputLocation()]
+tuple.Inputs = [line.outputLocation()]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
