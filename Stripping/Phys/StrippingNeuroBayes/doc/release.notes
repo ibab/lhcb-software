@@ -4,6 +4,8 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!======================= StrippingNeuroBayes v1r3 2011-03-10 =================
+
 ! 2011-03-08 - Ulrich Kerzel
 - Add Network optimised on Upsilon (1S) from 2010 Data  
 
