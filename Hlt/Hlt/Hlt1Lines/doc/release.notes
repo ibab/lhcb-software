@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-10 - Johannes Albrecht
+ - add track quality to single muon lines
+
 !========================== Hlt1Lines v6r7p1 2011-03-09 ===================
 ! 2011-03-09 - Roel Aaij
  - Put L0MuonCandidatesFromRaw into the LumiRecoSequence to avoid multiple
