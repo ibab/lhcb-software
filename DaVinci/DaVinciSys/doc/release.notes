@@ -3,6 +3,16 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r1>2011-03-10 DaVinci v28r1. For stripping13 line developments and validation.</A></H1><PRE>
+
+  *** Based on LHCb v32r1p1 stack. 
+   
+  * Quick patch release, mainly for HLT but including many patches and 
+    improvements to Phys, Analysis and Stripping.
+  * First version using stripping configuration build from python database.
+  * Includes stripping lines up to 2011-03-10 ~15:00 CET
+  * Important patches to FlavourTagging, MicroDST global event counters.
+
 </PRE><H1><A NAME=v28r0>2011-02-24 DaVinci v28r0. For stripping13 line developments and validation.</A></H1><PRE>
 
   *** Based on LHCb v32r0 stack. 
