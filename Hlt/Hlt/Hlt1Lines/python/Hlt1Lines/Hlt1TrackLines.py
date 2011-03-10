@@ -178,7 +178,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon','MuonHigh'] ] ) 
+             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
              , algos =  self.hlt1TrackMuon_Streamer( "TrackMuon", self.localise_props( "Muon" ) )
              )
         Line ( 'TrackPhoton'
