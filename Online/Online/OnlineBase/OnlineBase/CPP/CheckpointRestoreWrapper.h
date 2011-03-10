@@ -24,8 +24,10 @@ class CheckpointRestoreWrapper  {
  public:
   /// Initialization callback with startup arguments
   virtual void init_instance(int argc, char** argv, char** environ) = 0;
-  /// Setup process UTGID/argv[0] if availible
+  /// Setup process UTGID if availible
   virtual int setUTGID(const char* new_utgid)  = 0;
+  /// Force process UTGID/argv[0] if availible
+  virtual int forceUTGID(const char* new_utgid)  = 0;
   /// Set the printout level for the checkpoint/restore mechanism
   virtual int setPrint(int new_level) = 0;
   /// Give access to the restart type after a call to "checkpoint". 0==checkpointing, 1=restart from checkpoint
