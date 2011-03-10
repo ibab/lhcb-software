@@ -15,17 +15,41 @@ import os
 def main(): 
    all_gts("LHCBCOND","HLT")
    last_gt_lts("LHCBCOND","HLT")
-   print    all_gts("LHCBCOND","HLT") 
-   print last_gt_lts("LHCBCOND","HLT")
+   if last_gt_lts("LHCBCOND","HLT") is None:
+      print "No LHCBCOND tag."
+   else:  
+      print "LHCBCOND" 
+      print last_gt_lts("LHCBCOND","HLT")[0]
+      answer=raw_input("Make snapshot? y or n")
+      if answer == "y":
+         os.system('./MakeSnapShot.sh '+last_gt_lts("LHCBCOND","HLT")[0])
+      else:
+         print "No snapshot made."	 
    all_gts("DDDB","HLT")
    last_gt_lts("DDDB","HLT")
-   print    all_gts("DDDB","HLT") 
-   print last_gt_lts("DDDB","HLT")
+   if last_gt_lts("DDDB","HLT")[0] is None:
+      print "No DDDB tag."
+   else:   
+      print "DDDB"
+      print last_gt_lts("DDDB","HLT")[0]
+      answer=raw_input("Make snapshot? y or n")
+      if answer == "y":
+         os.system('./MakeSnapShot.sh '+last_gt_lts("DDDB","HLT")[0])
+      else:
+         print "No snapshot made."	
    all_gts("SIMCOND","HLT")
    last_gt_lts("SIMCOND","HLT")
-   print    all_gts("SIMCOND","HLT") 
-   print last_gt_lts("SIMCOND","HLT")   
-#   os.system('./MakeSnapShot.sh '+tag+' '+name)
+   if last_gt_lts("SIMCOND","HLT") is None:
+      print "No SIMCOND tag."
+   else:   
+      print "SIMCOND"
+      print last_gt_lts("SIMCOND","HLT")[0]   
+      answer=raw_input("Make snapshot? y or n")
+      if answer == "y":
+         os.system('./MakeSnapShot.sh '+last_gt_lts("SIMCOND","HLT")[0])
+      else:
+         print "No snapshot made."	
+#   
 
     
 if __name__ == '__main__':
