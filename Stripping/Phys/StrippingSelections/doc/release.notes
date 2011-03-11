@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-11 - Michel De Cian
+ - Updated StrippingTrackEffMuonTT.py: Triggers can now be set via the config dict, removed dependence on Hlt2MuTrack
+
 ! 2011-03-11 - William James Barter
  - removed StrippingLowMultLine - was requiring a trigger that was not approved for running this year.
 
