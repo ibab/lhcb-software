@@ -6,6 +6,7 @@
 // ============================================================================
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SmartIF.h"
@@ -42,27 +43,50 @@
 // ============================================================================
 // Constructor from velo-detector name 
 // ============================================================================
-LoKi::Vertices::BeamSpotRho::BeamSpotRho ( const std::string& name ) 
+LoKi::Vertices::BeamSpotRho::BeamSpotRho 
+( const std::string& condition ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
-  , m_velo    ( name ) 
-  , m_veloDet (      ) 
+  , m_condName  ( condition ) 
+  , m_condition (           ) 
 {
   //
   LoKi::ILoKiSvc* svc = lokiSvc() ;
+  // 
+  // 1. Get The condition
+  //
   Assert ( 0 != svc      , "Unable to reach LoKi Service!"  ) ;
   SmartIF<ISvcLocator> loc ( svc ) ;
   Assert ( loc.isValid() , "Unable to reach ServiceLocator" ) ;
   //
   SmartIF<IDataProviderSvc> det = 
     loc->service<IDataProviderSvc>( "DetectorDataSvc" , true ) ;
-  //
   Assert ( det.isValid() , "Unable to reach Detector Service" ) ;
   //
-  SmartDataPtr<DeVelo> veloDet (  det , name ) ;
-  Assert ( !(!veloDet) , "Unable to locate DETECTOR='" + name + "'" ) ;
+  SmartDataPtr<Condition> cond (  det , m_condName ) ;
+  Assert ( !(!cond) , "Unable to locate CONDITION='" + m_condName + "'" ) ;
   //
-  m_veloDet = veloDet ;
+  m_condition = cond ;
+  //
+  // 2. Register condition for Update Manager Service 
+  //
+  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
+  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
+  //
+  upd -> registerCondition
+    ( this                                          , 
+      m_condName                                    ,
+      &LoKi::Vertices::BeamSpotRho::updateCondition ) ;
+  //
 }  
+// ============================================================================
+// update the condition
+// ============================================================================
+StatusCode LoKi::Vertices::BeamSpotRho::updateCondition () 
+{ 
+  return Warning ( "updateCondition: not yet implemented" ) ; 
+}
+// ======================================================================
+
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
@@ -86,7 +110,7 @@ LoKi::Vertices::BeamSpotRho::operator()
     return LoKi::Constants::InvalidDistance ;
   }
   //
-  Assert ( !(!m_veloDet) , "Invalid Detector!" ) ;
+  Assert ( !(!m_condition) , "Invalid CONDITION!" ) ;
   //
   Warning  ( "Not yet implemented, return +100" ) ;
   //
@@ -99,9 +123,7 @@ LoKi::Vertices::BeamSpotRho::operator()
 // ============================================================================
 std::ostream& LoKi::Vertices::BeamSpotRho::fillStream( std::ostream& s ) const 
 { 
-  std::string _name = "";
-  if ( DeVeloLocation::Default != m_velo ) { _name = "'" + m_velo + "'" ; }
-  return s << "VX_BEAMSPOTRHO(" << _name << ")" ;
+  return s << "VX_BEAMSPOTRHO(" << m_condName << ")" ;
 }
 
 

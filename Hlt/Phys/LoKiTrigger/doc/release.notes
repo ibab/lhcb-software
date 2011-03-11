@@ -6,6 +6,12 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-11 - Vanya Belyaev
+
+ - BeamLineFunctions:
+     remove DeVelo
+     use Condition
+
+! 2011-03-11 - Vanya Belyaev
  - kill bad concept of "Element"-functor 
  - cmt/requirements 
      version increment to v12r0 

@@ -18,7 +18,7 @@ use               LoKiCore        v*    Phys
 use               LoKiNumbers     v*    Phys 
 use               LoKiTracks      v*    Phys 
 use               KalmanFilter    v*    Phys 
-use               VeloDet         v*    Det
+use               DetDesc         v*    Det
 
 
 # ================ own includes ===============================================

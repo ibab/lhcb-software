@@ -16,9 +16,9 @@
 #include "LoKi/Interface.h"
 #include "LoKi/BasicFunctors.h"
 // ============================================================================
-// VeloDet 
+// Condition
 // ============================================================================
-#include "VeloDet/DeVelo.h"
+#include "DetDesc/Condition.h"
 // ============================================================================
 /** @file 
  *  Collection of "beam-line"-related functors 
@@ -64,7 +64,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Constructor from velo-detector name 
-      BeamSpotRho ( const std::string& name = DeVeloLocation::Default ) ;
+      BeamSpotRho ( const std::string& condition ) ;
       /// MANDATORY: virtual destructor 
       virtual ~BeamSpotRho() ;
       /// MANDATOTY: clone method ("virtual constructor")
@@ -74,12 +74,22 @@ namespace LoKi
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// update the condition
+      StatusCode updateCondition () ;  
+      // ======================================================================
     private:
       // ======================================================================
-      /// velo det name 
-      std::string             m_velo    ;
-      /// velo detector 
-      LoKi::Interface<DeVelo> m_veloDet ;                      // velo detector 
+      /// the default constructior is disabled 
+      BeamSpotRho () ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// condition name 
+      std::string                m_condName ;
+      /// condition
+      LoKi::Interface<Condition> m_condition ;                     // condition
       // ======================================================================
     };
     // ========================================================================
