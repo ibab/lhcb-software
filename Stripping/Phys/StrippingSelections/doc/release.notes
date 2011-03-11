@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2011-03-11 - Victor Coco
+ - update test_TriMuons.py with correct HLT requierement
+
 !========================== StrippingSelections v3r1 2011-03-10 ===============
 
 ! 2011-03-09 - Paul Seyfert
