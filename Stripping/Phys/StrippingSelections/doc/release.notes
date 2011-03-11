@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-11 - William James Barter
+ - removed StrippingLowMultLine - was requiring a trigger that was not approved for running this year.
+
 ! 2011-03-11 - Thomas Blake
  - Fixed DataOnDemand for Bs2MuMuPhi and B2XMuMu
  - Updated StrippingBd2KstarMuMu to solve timing problems

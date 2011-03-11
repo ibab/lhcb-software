@@ -30,17 +30,6 @@ class LowMultConf(LineBuilder) :
 
         self._myname = name
 
-
-                      
-        self.LowMult_line = StrippingLine(self._myname+"Line",
-                                          prescale = config['LowMultPrescale'],
-                                          postscale = config['LowMultPostscale'],
-                                          checkPV = False,
-                                          HLT = "HLT_PASS('Hlt2LowMultDecision')"
-                                          )
-        
-        self.registerLine(self.LowMult_line)
-
        
         self.LowMultMuon_line = StrippingLine(self._myname+"MuonLine",
                                           prescale = config['LowMultPrescale'],
