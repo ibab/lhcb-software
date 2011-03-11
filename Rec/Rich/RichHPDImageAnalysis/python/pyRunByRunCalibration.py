@@ -412,20 +412,20 @@ def runToFill(run):
 def runAll(files='MDMS-RootFiles.txt'):
 
     calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
 
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
 
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
+    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
+    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
+    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
 
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
+    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
  
 def calibrationByRuns(rootfiles='RootFileNames.txt',
                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3):
@@ -976,7 +976,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 alignMDsums[xmlpath] = mdsum
             else:
                 print "  -> Alignment for", xmlpath, "same as previous -> No update"
-            
+
     print "Done ..."
 
 def createDBFile(name):

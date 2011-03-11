@@ -31,6 +31,7 @@ namespace Rich
       class Params
       {
       public:
+        /// Default Constructor
         Params() 
           : hotBinFractor           ( 5.0  ), 
             centreRegionSize        ( 3.0  ),

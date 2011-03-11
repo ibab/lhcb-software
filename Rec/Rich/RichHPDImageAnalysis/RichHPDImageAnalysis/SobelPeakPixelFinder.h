@@ -32,12 +32,15 @@ namespace Rich
       class Params
       {
       public:
+        /// Default Constructor
         Params()
-          : cutFraction ( 2.25 ),
-            minBoundary ( 5    ) { }
+          : cutFractor    ( 2.25 ),
+            minBoundary   ( 5    ),
+            neighbourFrac ( 0.50 )  { }
       public:
-        double       cutFraction;
-        unsigned int minBoundary;
+        double       cutFractor;
+        unsigned int minBoundary;   ///< Minimum number of pixels for the boundary
+        double       neighbourFrac;
       };
 
     public:
@@ -46,7 +49,7 @@ namespace Rich
       SobelPeakPixelFinder( const TH2* hist = NULL,
                             const Params& params = Params() );
 
-      virtual ~SobelPeakPixelFinder( ); ///< Destructor
+      ~SobelPeakPixelFinder( ) { } ///< Destructor
 
     public:
 
@@ -62,6 +65,12 @@ namespace Rich
       double localThreshold( const int COL, 
                              const int ROW,
                              const int area = 3 ) const;
+
+      /// select neighbouring pixels to include in the boundary
+      void selectNeighbours( const int COL, 
+                             const int ROW,
+                             Pixel::List & boundary,
+                             const int area = 1 ) const;
 
     private:
 

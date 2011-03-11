@@ -31,6 +31,7 @@ namespace Rich
       class Params
       {
       public:
+        /// Default Constructor
         Params() 
           : centreRegionSize ( 7.5  )
         { }

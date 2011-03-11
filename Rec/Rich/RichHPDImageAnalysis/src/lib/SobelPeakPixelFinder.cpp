@@ -16,55 +16,84 @@ using namespace Rich::HPDImage;
 
 SobelPeakPixelFinder::SobelPeakPixelFinder( const TH2* hist ,
                                             const Params& params )
-  : m_hist          ( hist   ),
-    m_params        ( params ) { }
-
-SobelPeakPixelFinder::~SobelPeakPixelFinder() {}
+  : m_hist   ( hist   ),
+    m_params ( params ) { }
 
 void SobelPeakPixelFinder::findBoundary( Pixel::List & boundary ) const
 {
+  boundary.clear();
+
   if ( m_hist )
   {
-    boundary.clear() ;
 
-    const int nbins         = m_hist->GetNbinsX()  * m_hist->GetNbinsY();
-    const double global_thr = m_params.cutFraction * m_hist->Integral() / (1.0*nbins);
+    const int nbins         = m_hist->GetNbinsX() * m_hist->GetNbinsY();
+    const double global_thr = m_params.cutFractor * m_hist->Integral() / (double)nbins;
 
-    for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
+    for ( int icol = 0 ; icol < m_hist->GetNbinsX(); ++icol )
     {
-      for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
+      for ( int irow = 0; irow < m_hist->GetNbinsY(); ++irow )
       {
         //const double local_thr = localThreshold(icol,irow);
         if ( isPeak( icol, irow, global_thr ) )
         {
           boundary.push_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
+          selectNeighbours( icol, irow, boundary );
         }
       }
     }
 
     // Sort
-    std::sort ( boundary.begin(), boundary.end() );
+    std::sort   ( boundary.begin(), boundary.end() );
+
+    // remove duplicates
+    std::unique ( boundary.begin(), boundary.end() );
 
     // Enough hits
-    if ( boundary.size() < m_params.minBoundary )
-    {
-      boundary.clear();
-    }
+    if ( boundary.size() < m_params.minBoundary ) { boundary.clear(); }
 
+  }
+
+}
+
+void
+SobelPeakPixelFinder::selectNeighbours( const int COL,
+                                        const int ROW,
+                                        Pixel::List & boundary,
+                                        const int area ) const
+{
+  if ( m_params.neighbourFrac < 1.0 )
+  {
+    const double binCont = m_hist->GetBinContent(COL+1,ROW+1);
+    if ( binCont > 0 )
+    {
+      for ( int icol = COL-area; icol <= COL+area; ++icol )
+      {
+        if ( COL == icol ) { continue ; }
+        for ( int irow = ROW-area; irow <= ROW+area; ++irow )
+        {
+          if ( ROW == irow ) { continue ; }
+          if ( m_hist->GetBinContent(icol+1,irow+1)/binCont > m_params.neighbourFrac )
+          {
+            boundary.push_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
+          }
+        }
+      }
+    }
   }
 }
 
-double SobelPeakPixelFinder::localThreshold( const int COL, 
+double SobelPeakPixelFinder::localThreshold( const int COL,
                                              const int ROW,
                                              const int area ) const
 {
   double threshold(0);
   unsigned int sum(0);
-  for ( int icol = COL-area; icol <= COL+area ; ++icol )
+  for ( int icol = COL-area; icol <= COL+area; ++icol )
   {
-    for ( int irow = ROW-area; irow <= ROW+area ; ++irow )
+    if ( COL == icol ) { continue ; }
+    for ( int irow = ROW-area; irow <= ROW+area; ++irow )
     {
-      if ( COL == icol && ROW == irow ) { continue ; }
+      if ( ROW == irow ) { continue ; }
       if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
            irow >= 0 && irow < m_hist->GetNbinsY() )
       {
@@ -73,7 +102,7 @@ double SobelPeakPixelFinder::localThreshold( const int COL,
       }
     }
   }
-  return ( sum>0 ? m_params.cutFraction*threshold/(double)sum : 0.0 );
+  return ( sum>0 ? m_params.cutFractor * threshold/(double)sum : 0.0 );
 }
 
 bool SobelPeakPixelFinder::isPeak( const int COL,

@@ -125,6 +125,9 @@ namespace Rich
       /// Flag to turn on the saving of 2D histograms
       bool m_keep2Dhistos;
 
+      /// HPD Fitter
+      const Rich::HPDImage::HPDFit m_fitter;
+
     };
 
   } // namespae Mon

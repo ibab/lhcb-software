@@ -26,6 +26,7 @@ namespace Rich
       class Point
       {
       public:
+        /// Default Constructor
         Point( const double _x  =  0,
                const double _y  =  0,
                const double _ex = -1,

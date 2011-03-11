@@ -226,8 +226,7 @@ void Summary::summaryINFO( const unsigned int ID,
   if ( nPix < m_minOccupancy ) return ;
 
   // Do the fit
-  const Rich::HPDImage::HPDFit fitter;
-  const HPDFit::Result result = fitter.fit( *hist, m_params );
+  const HPDFit::Result result = m_fitter.fit( *hist, m_params );
 
   // if fit failed, don't fill.
   if ( ! result.OK() )

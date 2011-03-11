@@ -32,6 +32,7 @@ namespace Rich
       class FitResult
       {
       public:
+        /// Default Constructor
         FitResult() : row(0), col(0), radius(0) { }
       public:
         double row,col,radius;
@@ -46,6 +47,7 @@ namespace Rich
       class Params
       {
       public:
+        /// Default Constructor
         Params() : maxDistance(1.5) { }
       public:
         double maxDistance;
@@ -59,7 +61,7 @@ namespace Rich
                                 const FitResult& result,
                                 const Params& params = Params() );
 
-      ~BoundaryOutlierRejection( ) {} ///< Destructor
+      ~BoundaryOutlierRejection( ) { } ///< Destructor
 
     public:
 

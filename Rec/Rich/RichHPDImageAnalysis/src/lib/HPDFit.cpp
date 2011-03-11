@@ -247,3 +247,14 @@ std::ostream& HPDFit::Params::fillStream ( std::ostream& os ) const
   else { os << " | No HPD Cleaning"; }
   return os << " }";
 }
+
+std::ostream& HPDFit::Result::fillStream ( std::ostream& os ) const
+{
+  os << "{ OK = " << OK()
+     << " | (col,row) = (" << col() << "+-" << colErr() << "," 
+     << row() << "+-" << rowErr() << ")"
+     << " | (x,y) = (" << x() << "+-" << xErr() << "," << y() << "+-" << yErr() << ")"
+     << " | radius =" << radInMM() << "+-" << radErrInMM()
+     << " }";
+  return os;
+}

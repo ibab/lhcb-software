@@ -33,6 +33,7 @@ namespace Rich
       class Params
       {
       public:
+        /// Default Constructor
         Params() : type           ( "Sobel" ),
                    cleanHistogram (  true   ),
                    maxImageShift  (  3.0    ) // in mm
@@ -91,6 +92,14 @@ namespace Rich
         double yErr() const { return m_rowErr * m_pixelsize; }
         double radInMM()    const { return m_pixelsize * m_rad;    }
         double radErrInMM() const { return m_pixelsize * m_radErr; }
+      public:
+        /// Overload output to ostream
+        friend inline std::ostream& operator << ( std::ostream& os,
+                                                  const Result & result )
+        { return result.fillStream(os); }
+      private:
+        /// Print this object
+        std::ostream& fillStream( std::ostream& os ) const;
       private:
         bool m_OK;
         double m_row,m_rowErr;
@@ -101,7 +110,7 @@ namespace Rich
     public:
 
       /// Default contructor
-      HPDFit() { }
+      HPDFit() { m_boundaryPixels.reserve(100); }
 
       /// Destructor
       ~HPDFit() { }

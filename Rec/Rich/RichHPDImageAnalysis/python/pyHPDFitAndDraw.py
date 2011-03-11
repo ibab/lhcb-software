@@ -1,5 +1,22 @@
 # Globals
 canvas = None
+fitter = None
+
+def hpdfitter():
+    from GaudiPython import gbl
+    if globals()['fitter'] == None :
+        globals()['fitter'] = gbl.Rich.HPDImage.HPDFit()
+    return globals()['fitter']
+
+# Get the run number from file name (ugly, but works ...)
+def getIntInfo(filename,type):
+    run   = 0
+    split = ''
+    splits = filename.split('_')
+    for split in splits:
+        s = split.split('-')
+        if s[0] == type : run = s[1]
+    return int(run.split('.')[0])
 
 def rootCanvas():
     from ROOT import TCanvas
@@ -50,19 +67,18 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
         return
     
     canvas.cd(1)
-    image.Draw('zcol')
+    image.DrawCopy('zcol')
     
     # Cleaner
     cleaner = gbl.Rich.HPDImage.Clean(image)
     cleanedImage = cleaner.filter()
+    
     canvas.cd(2)
     cleanedImage.Draw('zcol')
     
     # Sobel filter
     sobelFilter = gbl.Rich.HPDImage.SobelFilter(cleanedImage)
     sobelImage = sobelFilter.filter()
-    canvas.cd(3)
-    sobelImage.Draw('zcol')
     
     # Fit parameters
     params = gbl.Rich.HPDImage.HPDFit.Params()
@@ -70,15 +86,12 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
     params.cleanHistogram = clean
 
     # Do the fit
-    fitter = gbl.Rich.HPDImage.HPDFit()
-    result = fitter.fit(image,params)
+    result = hpdfitter().fit(image,params)
 
-    canvas.cd(4)
-    image.SetTitle(image.GetTitle()+" "+fitType+" fit")
-    image.Draw('zcol')
-
+    canvas.cd(3)
+    sobelImage.Draw('zcol')
+    
     if result.OK() :
-        from ROOT import TEllipse
         print "Fit OK : centre",result.col(),",",result.row(),"radius",result.radInPix()
 
         # Draw circle
@@ -101,6 +114,13 @@ def fitHPD(filename,copyNumber,fitType='Sobel',clean=True,plotFile=""):
             p.SetFillColor(1)
             p.SetLineWidth(2)
             p.DrawEllipse( pixel.col, pixel.row, 0.2, 0.2, 0, 360, 0 )
+
+    canvas.cd(4)
+    image.SetTitle(image.GetTitle()+" "+fitType+" fit")
+    image.Draw('zcol')
+    if result.OK() :
+        circle.Draw()
+        centre.Draw()
             
     # Print the result
     if plotFile == "" :
@@ -117,8 +137,11 @@ def plotAll(filename,fitType='SimpleChi2'):
     # Make a root Canvas
     canvas = rootCanvas()
     canvas.Divide(2,2)
+
+    # Run number from file
+    run = getIntInfo(filename,'Run')
         
-    plotname = "hpdPlots/"+fitType+"-allHPDs.pdf"
+    plotname = "hpdPlots/Run-"+str(run)+"_"+fitType+"_allHPDs.pdf"
     canvas.Print(plotname+"[")
 
     for hpd in range(0,484):

@@ -25,6 +25,7 @@ void HPDBoundaryFcn::addPixel( const int col,
                                Pixel::List & boundary ) const
 {
   boundary.push_back( Pixel(col,row,m_hist->GetBinContent(col+1,row+1)) );
+  //boundary.push_back( Pixel(col,row,1.0) ); // As in 2010 results
 }
 
 void HPDBoundaryFcn::findBoundary( Pixel::List & boundary ) const
@@ -72,6 +73,7 @@ void HPDBoundaryFcn::findBoundary( Pixel::List & boundary ) const
     }
 
     // Then the other way
+    // Disable to reproduce 2010 results
     {
       for ( int irow = 0 ; irow < m_hist->GetNbinsY() ; ++irow )
       {
@@ -98,7 +100,6 @@ void HPDBoundaryFcn::findBoundary( Pixel::List & boundary ) const
         if ( -1 != COL0 )
         {
           addPixel( COL0, irow, boundary );
-          
         }
         if ( -1 != COL1 && COL1 != COL0 )
         {
@@ -107,15 +108,14 @@ void HPDBoundaryFcn::findBoundary( Pixel::List & boundary ) const
       }
     }
 
-    // Sort and remove duplicates
+    // Sort
     std::sort  ( boundary.begin(), boundary.end() );
+
+    // remove duplicates
     std::unique( boundary.begin(), boundary.end() );
 
     // Enough hits
-    if ( boundary.size() < m_params.minBoundary )
-    {
-      boundary.clear();
-    }
+    if ( boundary.size() < m_params.minBoundary ) { boundary.clear(); }
 
   }
 }
@@ -127,9 +127,10 @@ bool HPDBoundaryFcn::hasNeighbour( const int COL,
 {
   for ( int icol = COL-area; icol <= COL+area ; ++icol )
   {
+    if ( COL == icol ) { continue ; }
     for ( int irow = ROW-area; irow <= ROW+area ; ++irow )
     {
-      if ( COL == icol && ROW == irow ) { continue ; }
+      if ( ROW == irow ) { continue ; }
       if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
            irow >= 0 && irow < m_hist->GetNbinsY() )
       {
