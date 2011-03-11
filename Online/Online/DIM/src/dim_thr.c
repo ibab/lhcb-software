@@ -50,14 +50,16 @@ void *dim_tcpip_thread(void *tag)
 	IO_thread = pthread_self();
 
 	dim_tcpip_init(1);
+	if(INIT_thread)
+	{
+#ifndef darwin
+		sem_post(&DIM_INIT_Sema);
+#else
+		sem_post(DIM_INIT_Semap);
+#endif
+	}
 	while(1)
     {
-		if(INIT_thread)
-#ifndef darwin
-			sem_post(&DIM_INIT_Sema);
-#else
-			sem_post(DIM_INIT_Semap);
-#endif
 		tcpip_task();
 		/*
 #ifndef darwin
@@ -84,16 +86,16 @@ void *dim_dtq_thread(void *tag)
 	ALRM_thread = pthread_self();
 
 	dim_dtq_init(1);
-	while(1)
-	  {
-		if(INIT_thread)
-		  {
+	if(INIT_thread)
+	{
 #ifndef darwin
-			sem_post(&DIM_INIT_Sema);
+		sem_post(&DIM_INIT_Sema);
 #else
-			sem_post(DIM_INIT_Semap);
+		sem_post(DIM_INIT_Semap);
 #endif
-		  }
+	}
+	while(1)
+	{
 		dtq_task();
 		/*
 #ifndef darwin
@@ -194,6 +196,10 @@ void dim_stop()
 		pthread_cancel(IO_thread);
 	if(ALRM_thread)
 		pthread_cancel(ALRM_thread);
+	if(IO_thread) 
+		pthread_join(IO_thread,0);
+	if(ALRM_thread) 
+		pthread_join(ALRM_thread,0);
 #ifndef darwin 		
 	sem_destroy(&DIM_INIT_Sema);
 	/*
@@ -209,10 +215,6 @@ void dim_stop()
 	sem_close(DIM_WAIT_Semap);
 	*/
 #endif
-	if(IO_thread) 
-		pthread_join(IO_thread,0);
-	if(ALRM_thread) 
-		pthread_join(ALRM_thread,0);
 	dim_tcpip_stop();
 	dim_dtq_stop();	
 	IO_thread = 0;

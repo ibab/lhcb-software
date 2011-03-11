@@ -1100,7 +1100,7 @@ printf("Trying port %d, ret = %d\n", *port, ret);
 		}
 	}
 
-	if( (ret = listen(path, 16)) == -1 )
+	if( (ret = listen(path, SOMAXCONN)) == -1 )
 	{
 		closesock(path);
 		return(0);

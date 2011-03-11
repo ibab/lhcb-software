@@ -910,18 +910,25 @@ void update_show_servers();
 extern void get_all_colors();
 extern void set_title();
 extern void set_icon_title();
+char dns_node[64];
+int dns_port;
+char title[128],icon_title[128];
 
-        char text[128];
-        int len;
 	if(tag){}
-	sprintf(text,"DID - DIM Information Display on ");
-	len = strlen(text);
-        dim_get_dns_node(text+len);
-	len = strlen(text);
-	sprintf(text+len,":%d",dim_get_dns_port());
+	dic_get_dns_node(dns_node);
+    dns_port = dic_get_dns_port();
+	if(dns_port != DNS_PORT)
+	{
+		sprintf(title,"DID - DIM Information Display DNS=%s:%d",dns_node,dns_port);
+	}
+	else
+	{
+		sprintf(title,"DID - DIM Information Display DNS=%s",dns_node);
+	}
+	sprintf(icon_title,"DID %s",dns_node);
 	get_all_colors(display,Matrix_id[Curr_matrix]);
-	set_title(toplevel_widget,text);
-	set_icon_title(toplevel_widget,"DID");
+	set_title(toplevel_widget,title);
+	set_icon_title(toplevel_widget,icon_title);
 	Timer_q = dtq_create();
 	dic_info_service("DIS_DNS/SERVER_INFO",MONITORED,0,0,0,update_servers,0,
 						&no_link,1);
