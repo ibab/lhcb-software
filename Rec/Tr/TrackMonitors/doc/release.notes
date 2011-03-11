@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= TrackMonitors v1r31 2011-03-09 =========================
+! 2011-03-11 - Mariusz Witek
+ - Add PV cov matrix to Vertex Compare ntuple
+
+!========================= TrackMonitors v1r31 2011-03-09 =========================
 ! 2011-03-07 - Mariusz Witek
  - Add Vertex Compare, an algorithm to compare primary vertices from two locations
 

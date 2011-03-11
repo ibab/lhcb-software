@@ -139,6 +139,19 @@ StatusCode VertexCompare::execute() {
   double errx        = -99999.;
   double erry        = -99999.;
   double errz        = -99999.;
+  double covxx1      = -99999.;
+  double covyy1      = -99999.;
+  double covzz1      = -99999.;
+  double covxy1      = -99999.;
+  double covxz1      = -99999.;  
+  double covyz1      = -99999.;
+
+  double covxx2      = -99999.;
+  double covyy2      = -99999.;
+  double covzz2      = -99999.;
+  double covxy2      = -99999.;
+  double covxz2      = -99999.;  
+  double covyz2      = -99999.;
 
   int ntracks_part  = 0;
   int ntracks_part2 = 0;
@@ -157,12 +170,26 @@ StatusCode VertexCompare::execute() {
     double sigx_part1 = (covPV_part1(0,0));
     double sigy_part1 = (covPV_part1(1,1));
     double sigz_part1 = (covPV_part1(2,2));
+    covxx1 = sigx_part1;
+    covyy1 = sigy_part1;
+    covzz1 = sigz_part1;
+    covxy1 = (covPV_part1(0,1));
+    covxz1 = (covPV_part1(0,2));
+    covyz1 = (covPV_part1(1,2));
+    
 
     Gaudi::SymMatrix3x3 covPV_part2 = fullVrt2.at(link.at(oIt)).covMatrix();
     double sigx_part2 = (covPV_part2(0,0));
     double sigy_part2 = (covPV_part2(1,1));
     double sigz_part2 = (covPV_part2(2,2));
 
+    covxx2 = sigx_part2;
+    covyy2 = sigy_part2;
+    covzz2 = sigz_part2;
+    covxy2 = (covPV_part2(0,1));
+    covxz2 = (covPV_part2(0,2));
+    covyz2 = (covPV_part2(1,2));
+    
     double x1 = vrtf.position().x();
     double y1 = vrtf.position().y();
     double z1 = vrtf.position().z();
@@ -244,6 +271,19 @@ StatusCode VertexCompare::execute() {
       myTuple->column("errx",     errx);
       myTuple->column("erry",     erry);
       myTuple->column("errz",     errz);
+      myTuple->column("covxx1",   covxx1);
+      myTuple->column("covyy1",   covyy1);
+      myTuple->column("covzz1",   covzz1);
+      myTuple->column("covxy1",   covxy1);
+      myTuple->column("covxz1",   covxz1);
+      myTuple->column("covyz1",   covyz1);
+      myTuple->column("covxx2",   covxx2);
+      myTuple->column("covyy2",   covyy2);
+      myTuple->column("covzz2",   covzz2);
+      myTuple->column("covxy2",   covxy2);
+      myTuple->column("covxz2",   covxz2);
+      myTuple->column("covyz2",   covyz2);
+
       myTuple->write();
     }
     oIt++;
