@@ -469,7 +469,6 @@ class Tree(object):
         yield self
         for i in self.nodes: 
            for x in i._inorder() : yield x
- 
 
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     (lhs,rhs) = (tck2id(lhs,cas),tck2id(rhs,cas))
@@ -491,9 +490,6 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
             print ''.join( unified_diff(l.fmt(), r.fmt(), 
                                         l.fqn(), r.fqn(),
                                         lhs, rhs, n=0) )
-
-
-
 
 def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
@@ -544,12 +540,10 @@ def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
           retlist.append((identLine, v))
     return retlist
 
-
-
 def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     tree = execInSandbox( _getConfigTree, id, cas ) 
     import re
-    if algname : 
+    if algname :
         reqNode = re.compile(algname)
         matchNode = lambda x : reqNode.match(x.leaf.name)
     else :
@@ -574,11 +568,11 @@ def orphanScan( cas = ConfigAccessSvc() ) :
 
 def getConfigurations( cas = ConfigAccessSvc() ) :
     return execInSandbox( _getConfigurations, cas )
+
 def getTCKInfo(x) :
     for (i,j) in getConfigurations().iteritems() :
         if x in j['TCK'] : return (j['hlttype'],j['release'])
     return None
-
 
 def getReleases( cas = ConfigAccessSvc() ) :
     return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
@@ -661,17 +655,27 @@ def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
     return [ _lookupProperty(table,i.split('/')[-1],'DecisionName') for i in lines ]
 
+def _sortReleases( release ):
+    version = release.split('_')[ 1 ]
+    import re
+    m = re.compile('v(\d+)r(\d+)(?:p(\d+))?').match( version )
+    return [ int( x ) if x else 0 for x in m.groups() ]
+
+def _sortConfigs( config ):
+    return config[ 'TCK' ] if config[ 'TCK'] else []
 
 def printConfigurations( info ) :
     #print 'hello world'
     #for i in info.itervalues() : print i.info
     #print 'goodbye world'
-    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] )) : 
+    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ), key = _sortReleases ) : 
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]
         for hlttype in sorted(set( [ i['hlttype'] for i in confInRelease ] ) ) :
+            confInHltType = sorted( [ i for i in confInRelease if i['hlttype']==hlttype ], key = _sortConfigs )
             print '    ' + hlttype
-            [ i.printSimple('      ') for i in confInRelease if i['hlttype']==hlttype ] 
+            [ i.printSimple('      ') for i in confInHltType ]
+
 def dumpForPVSS( info, root ) :
     if not os.access(root,os.F_OK) : os.makedirs(root)    
     for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ) ) : 
