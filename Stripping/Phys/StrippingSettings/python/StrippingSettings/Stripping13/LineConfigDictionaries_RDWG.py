@@ -80,34 +80,35 @@ Bd2KstarMuMu = {
     'Postscale_BuToKMuMu'       : 1.0,
     'Prescale_BuToKMuMuSS'      : 1.0,
     'Postscale_BuToKMuMuSS'     : 1.0,
-    'B_Comb_MassLow'            : 4600.0,
-    'B_Comb_MassHigh'           : 6000.0,
-    'B_MassLow'                 : 4850.0,
-    'B_MassHigh'                : 5780.0,
-    'B_VertexCHI2'              : 6.0,
-    'B_IPCHI2'                  : 16.0,
-    'B_DIRA'                    : 0.014,
-    'B_FlightCHI2'              : 121.0,
-    'Dau_VertexCHI2'            : 12.0,
-    'Dau_DIRA'                  : -0.9,
-    'Kstar_Comb_MassLow'        : 550.0,
-    'Kstar_Comb_MassHigh'       : 2200.0,
-    'Kstar_MassLow'             : 600.0,
-    'Kstar_MassHigh'            : 2000.0,
-    'Kstar_MinIPCHI2'           : 4.0,
-    'Kstar_FlightChi2'          : 25.0,
-    'Dimu_FlightChi2'           : 81.0,
-    'Track_CHI2nDOF'            : 5.0,
-    'Hadron_MinIPCHI2'          : 9.0,
-    'Muon_MinIPCHI2'            : 9.0,
-    'Muon_IsMuon'               : False,
-    'B_Dau_MaxIPCHI2'           : 9.0,
-    'Kstar_Dau_MaxIPCHI2'       : 9.0,
-    'Dimu_Dau_MaxIPCHI2'        : 9.0
+    'B_Comb_MassLow'      : 4600.0,
+    'B_Comb_MassHigh'     : 6000.0,
+    'B_MassLow'           : 4850.0,
+    'B_MassHigh'          : 5780.0,
+    'B_VertexCHI2'        :    6.0,
+    'B_IPCHI2'            :   16.0,
+    'B_DIRA'              :   0.9999,
+    'B_FlightCHI2'        :  121.0,
+    'B_Dau_MaxIPCHI2'     : 9.0, 
+    'Dau_VertexCHI2'      :   12.0,
+    'Dau_DIRA'            :   -0.9,
+    'Kstar_Comb_MassLow'  :  550.0,
+    'Kstar_Comb_MassHigh' : 2200.0,
+    'Kstar_MassLow'       :  600.0,
+    'Kstar_MassHigh'      : 2000.0,
+    'Kstar_MinIPCHI2'     :    0.0,
+    'Kstar_FlightChi2'    :   9.0, 
+    'Kstar_Dau_MaxIPCHI2' : 9.0, 
+    'Dimu_FlightChi2'     :   9.0, 
+    'Dimu_Dau_MaxIPCHI2'  : 9.0, 
+    'Track_CHI2nDOF'      :    5.0,
+    'Hadron_MinIPCHI2'    :    9.0, 
+    'Muon_MinIPCHI2'      :    9.0,
+    'Muon_IsMuon'         :   False
     },
     'WGs' : [ 'RD' ] ,
     'STREAMS' : [ 'Dimuon' ]
     }
+
 
 
 # B2XMuMu for RD
@@ -330,21 +331,23 @@ B2MuMuMuMuLines = {
 
 TriMuon = {
     'BUILDERTYPE'  : 'StrippingTriMuonsConf',
-    'CONFIG'       : {
+    'CONFIG'       :  {
     'GoodMuons'    : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  6 ) " ,
     'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) " ,
     'TightMuons'   : " ( PT > 1.5 * GeV ) & ( BPVIPCHI2 () > 16 ) " ,
-    'HLT'          : " HLT_PASS_RE('Hlt.*(MicroBias|Muon|MuMu|DiMu).*Decision') " , 
-    '3mu-Prescale' : 1.00 , 
-    'Bc-Prescale'  : 1.00 , 
-    'Tau-Prescale' : 1.00 , 
+    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Mu.*Decision') " ,
+    '3mu-Prescale' : 1.00 ,
+    'Bc-Prescale'  : 1.00 ,
+    'Tau-Prescale' : 1.00 ,
     'Preambulo'    : [
     'chi2vx = VFASPF(VCHI2) '                               ,
     "from GaudiKernel.PhysicalConstants import c_light"     ,
     "ctau    =                    BPVLTIME ( ) * c_light "  ,
-    "ctauBc  = PDGM('B_c+') / M * BPVLTIME ( ) * c_light "  
+    "ctauBc  = PDGM('B_c+') / M * BPVLTIME ( ) * c_light " 
     ]
     },
     'WGs'    : [ 'RD' ] ,
     'STREAMS' : [ 'Dimuon' ] 
     }
+
+

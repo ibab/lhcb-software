@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-11 - Thomas Blake
+ - Updated line dictionary for displaced vertices, BdKstMuMu and TriMuons
+
+
 ! ======================== StrippingSettings v2r0 2011-03-10 ==================
 
 ! 2011-03-09 - Greig Cowan

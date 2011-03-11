@@ -5,6 +5,8 @@ Stripping13 definitions.
 Dictionaries have the name of the line builder instance.
 """
 
+from GaudiKernel.SystemOfUnits import *
+
 
 Z02MuMu = {
     'BUILDERTYPE'  : 'Z02MuMuConf',
@@ -205,66 +207,87 @@ SingleTrackTIS = {
     }
 
 DisplVertices = {
-	'BUILDERTYPE'	: 'DisplVerticeLinesConf',
-	'CONFIG'	: {'MaterialVeto': {'Double': 0,
-                  'PreselVelo': 5,
-                  'SingleDown': 0,
-                  'SingleHighMass': 0,
-                  'SingleLowMass': 5,
-                  'SinglePS': 0},
- 'MaxMass': {'Double': 14000000.0,
-             'SingleDown': 14000000.0,
-             'SingleHighMass': 14000000.0,
-             'SingleLowMass': 12000.0,
-             'SinglePS': 14000000.0},
- 'MaxSumPt': {'Double': 14000000.0,
-              'SingleDown': 14000000.0,
-              'SingleHighMass': 14000000.0,
-              'SingleLowMass': 14000000.0,
-              'SinglePS': 14000000.0},
- 'MinMass': {'Double': 3000.0,
-             'PreselVelo': 3000.0,
-             'SingleDown': 3000.0,
-             'SingleHighMass': 12000.0,
-             'SingleLowMass': 6800.0,
-             'SinglePS': 5000.0},
- 'MinR': {'Double': 0.29999999999999999,
-          'PreselVelo': 0.29999999999999999,
-          'SingleDown': 0.29999999999999999,
-          'SingleHighMass': 0.29999999999999999,
-          'SingleLowMass': 0.29999999999999999,
-          'SinglePS': 0.29999999999999999},
- 'MinSumPt': {'Double': 3000.0,
-              'PreselVelo': 3000.0,
-              'SingleDown': 3500.0,
-              'SingleHighMass': 6000.0,
-              'SingleLowMass': 6000.0,
-              'SinglePS': 5000.0},
- 'MinZ': {'Double': -10000.0,
-          'SingleDown': 100.0,
-          'SingleHighMass': -10000.0,
-          'SingleLowMass': -10000.0,
-          'SinglePS': -10000.0},
- 'NCands': {'Double': 2,
-            'SingleDown': 1,
-            'SingleHighMass': 1,
-            'SingleLowMass': 1,
-            'SinglePS': 1},
- 'NTracks': {'Double': 4,
-             'PreselVelo': 4,
-             'SingleDown': 4,
-             'SingleHighMass': 5,
-             'SingleLowMass': 6,
-             'SinglePS': 5},
- 'RCutMethod': 'FromUpstreamPV',
- 'prescale': {'Double': 1.0,
-              'SingleDown': 1.0,
-              'SingleHighMass': 1.0,
-              'SingleLowMass': 1.0,
-              'SinglePS': 0.050000000000000003}
-                           },
-        'STREAMS' : [ 'EW' ],
-        'WGs'    : ['Exotics']
+    'BUILDERTYPE'	: 'DisplVerticeLinesConf',
+    'CONFIG'	: {
+    'NCands':{
+       'SinglePS': 1 ,
+       'SingleLowMass': 1 ,
+       'SingleHighMass': 1 ,
+       'SingleDown': 1 ,
+       'Double':2
+    },
+    'RCutMethod' : 'FromUpstreamPV',
+    'MinR':{
+       'PreselVelo':     0.3*mm ,
+       'SinglePS': 0.3*mm ,
+       'SingleLowMass': 0.3*mm ,
+       'SingleHighMass': 0.3*mm ,
+       'SingleDown': 0.3*mm ,
+       'Double': 0.3*mm
+    },
+    'MinMass':{
+       'PreselVelo':     3.*GeV ,
+       'SinglePS': 5.*GeV  ,
+       'SingleLowMass': 6.8*GeV ,
+       'SingleHighMass':  12.*GeV,
+       'SingleDown':  3.*GeV,
+       'Double': 3.*GeV
+    },
+    'MinSumPt':{
+       'PreselVelo':     3.*GeV ,
+       'SinglePS': 5.*GeV  ,
+       'SingleLowMass': 6.*GeV ,
+       'SingleHighMass':  6.*GeV,
+       'SingleDown':  3.5*GeV,
+       'Double': 3.*GeV
+    },
+    'MaxMass':{
+       'SinglePS': 14*TeV ,
+       'SingleLowMass': 12.*GeV,
+       'SingleHighMass':  14*TeV ,
+       'SingleDown':  14*TeV,
+       'Double': 14*TeV
+    },
+    'MaxSumPt':{
+       'SinglePS': 14*TeV ,
+       'SingleLowMass': 14*TeV,
+       'SingleHighMass':  14*TeV ,
+       'SingleDown':  14*TeV ,
+       'Double': 14*TeV
+    },
+    'NTracks':{
+       'PreselVelo':     4,
+       'SinglePS': 5,
+       'SingleLowMass': 6,
+       'SingleHighMass':  5 ,
+       'SingleDown':  4 ,
+       'Double': 4
+    },
+    'MinZ':{
+       'SinglePS': -10*m,
+       'SingleLowMass':  -10*m,
+       'SingleHighMass':   -10*m ,
+       'SingleDown': 100*mm  ,
+       'Double': -10*m
+    },
+    'MaterialVeto':{
+       'PreselVelo':     5 ,
+       'SinglePS': 0,
+       'SingleLowMass': 5,
+       'SingleHighMass':  0 ,
+       'SingleDown':  0 ,
+       'Double': 0
+    },
+    'prescale':{
+       'SinglePS': 0.05,
+       'SingleLowMass': 1.,
+       'SingleHighMass':  1. ,
+       'SingleDown':  1. ,
+       'Double': 1.
+    }
+    },
+    'STREAMS' : [ 'EW' ],
+    'WGs'    : ['Exotics']
 }
 
 HighPtjets = {
