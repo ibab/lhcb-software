@@ -161,7 +161,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
                        "(BPVDIRA> %(Dau_DIRA)s)" %config
         
         self.KstarCombCut = "(AM > %(Kstar_Comb_MassLow)s * MeV) & " \
-                            "(AM < %(Kstar_Comb_MassHigh)s * MeV)" %config
+                            "(AM < %(Kstar_Comb_MassHigh)s * MeV) & " \
+                            "(ADOCACHI2CUT(20.,''))" %config
 
         self.KstarCut = DaughterCuts + " & (M > %(Kstar_MassLow)s * MeV) & " \
                         "(M < %(Kstar_MassHigh)s * MeV) & " \
@@ -180,32 +181,32 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         self.PionCut = TrackCuts + " & " + HadronCuts
         
         self.MuonCut = TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s)" %config
-        if(config["Muon_IsMuon"]):
-            self.MuonCut += " & (ISMUON)"
+        
+        #if(config["Muon_IsMuon"]):
+        #    self.MuonCut += " & (ISMUON)"
 
-        self.KstarFilterCut = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
-        self.DiMuonFilterCut = self.DiMuonCut + " & (2 == NINTREE((ABSID=='mu-') & " + self.MuonCut + "))"
+        self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
+        #self.DiMuonFilterCut = self.DiMuonCut + " & (2 == NINTREE((ABSID=='mu-') & " + self.MuonCut + "))"
 
         #########################
         ## Make the selections ##
         #########################
 
         Sel_Kaon = self.__Selection_FilterKaon__(self.name, self.KaonCut, config['UseNoPIDsHadrons'])
-
-        Sel_Kstar = None
-
-        if(config['UseNoPIDsHadrons']):
+        
+        Sel_Kstar = self.__Selection_CreateKstar__(self.name, self.KstarCombCut, self.KstarCut, self.KaonCut, self.PionCut, config['UseNoPIDsHadrons'] )
+        
+        #if(config['UseNoPIDsHadrons']):
+        
+        # must build the K* ourselves from the NoPIDs particles
+        #    Sel_Kstar = self.__Selection_CreateKstar__(self.name, self.KstarCombCut, self.KstarCut, self.KaonCut, self.PionCut)
+        #else:    
+        # can just filter the StdVeryLooseDetachedKst2Kpi built using StdLooseKaons and StdLoosePions
+        #    Sel_Kstar = self.__Selection_FilterKstar__(self.name, self.KstarFilterCut)
+        
             
-            # must build the K* ourselves from the NoPIDs particles
-            Sel_Kstar = self.__Selection_CreateKstar__(self.name, self.KstarCombCut, self.KstarCut, self.KaonCut, self.PionCut)
-        else:
-            
-            # can just filter the StdVeryLooseDetachedKst2Kpi built using StdLooseKaons and StdLoosePions
-            Sel_Kstar = self.__Selection_FilterKstar__(self.name, self.KstarFilterCut)
-
-            
-        Sel_DiMuon = self.__Selection_FilterDiMuon__(self.name, self.DiMuonFilterCut)
-        Sel_DiMuonSS = self.__Selection_CreateDiMuonSS__(self.name, self.DiMuonCut, self.MuonCut)
+        Sel_DiMuon   = self.__Selection_CreateDiMuon__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'] )
+        Sel_DiMuonSS = self.__Selection_CreateDiMuonSS__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'] ) 
 
         Sel_BdToKstarMuMu = self.__Selection_CreateBdToKstarMuMu__(self.name, [Sel_DiMuon, Sel_Kstar], self.BdCombCut, self.BdCut)
         Sel_BdToKstarMuMuSS = self.__Selection_CreateBdToKstarMuMu__(self.name + "SS", [Sel_DiMuonSS, Sel_Kstar], self.BdCombCut, self.BdCut)
@@ -274,7 +275,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         print "-- the cuts below should be compiled from the ones above --"
         print "-----------------------------------------------------------"
         print " "
-        print "DiMuonFilter cut:   ", self.DiMuonFilterCut
+        #print "DiMuonFilter cut:   ", self.DiMuonFilterCut
         print "KstarFilter cut:    ", self.KstarFilterCut
         
         return True
@@ -315,25 +316,26 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
     ## Filter Kstar ## 
     ##################
 
-    def __Selection_CreateKstar__(self, lName, KstarCombCut, KstarCut, KaonCut, PionCut):
+    def __Selection_CreateKstar__(self, lName, KstarCombCut, KstarCut, KaonCut, PionCut, UseNoPIDsParticles ):
         '''
         Make K* using StdNoPID common particles
         '''
 
-        from StandardParticles import StdNoPIDsPions
-        from StandardParticles import StdNoPIDsKaons
+        from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdLooseKaons, StdLoosePions
 
+        _requires =  [StdNoPIDsKaons, StdNoPIDsPions] if UseNoPIDsParticles else [StdLooseKaons, StdLoosePions] 
+        
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineKstar = CombineParticles()
 
         CombineKstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 
         CombineKstar.CombinationCut = KstarCombCut
-        CombineKstar.MotherCut = KstarCut
+        CombineKstar.MotherCut      = KstarCut
         CombineKstar.DaughtersCuts = { "K+" : KaonCut, "pi-" : PionCut }
 
         from PhysSelPython.Wrappers import Selection
-        SelKstar = Selection("Sel_" + lName + "_Kstar", Algorithm = CombineKstar, RequiredSelections = [StdNoPIDsPions, StdNoPIDsKaons])
+        SelKstar = Selection("Sel_" + lName + "_Kstar", Algorithm = CombineKstar, RequiredSelections = _requires ) #[StdNoPIDsPions, StdNoPIDsKaons])
 
         return SelKstar
     
@@ -358,40 +360,82 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
     ## Make / Filter DiMuon ## 
     ##########################
     
-    def __Selection_FilterDiMuon__(self, lName, DiMuonCuts):
+    def __Selection_FilterDiMuon__(self, lName, DiMuonCuts, MuonCuts, IsMuonFlag ):
         '''
         DiMuon filter for Bd -> KstarMuMu (from StdVeryLooseDiMuon)
         '''
 
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterDiMuon = FilterDesktop()
-        FilterDiMuon.Code = DiMuonCuts
+        FilterDiMuon.Code = DiMuonCuts + " & (2 == NINTREE((ABSID=='mu-') & "+MuonCuts+"))"
 
         from PhysSelPython.Wrappers import DataOnDemand
-        StdDiMuon = DataOnDemand(Location = "Phys/StdVeryLooseDiMuon/Particles")
 
+        StdDiMuon = None
+        
+        if IsMuonFlag :
+            StdDiMuon = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
+        else:
+            StdDiMuon = DataOnDemand(Location = "Phys/StdVeryLooseDiMuon/Particles")
+            
         from PhysSelPython.Wrappers import Selection
         SelDiMuon = Selection("Sel_" + lName + "_DiMuon", Algorithm = FilterDiMuon, RequiredSelections = [StdDiMuon])
         
         return SelDiMuon
 
-    def __Selection_CreateDiMuonSS__(self, lName, DiMuonCuts, MuonCuts):
+    def __Selection_CreateDiMuon__(self, lName, DiMuonCuts, MuonCuts, IsMuonFlag):
+        '''
+        Create a new dimuon from scratch
+        '''
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        CombineDiMuon = CombineParticles()
+        CombineDiMuon.DecayDescriptor = "[J/psi(1S) -> mu- mu+]cc"
+        CombineDiMuon.DaughtersCuts = { "mu+" : MuonCuts, "mu-" : MuonCuts }
+        CombineDiMuon.MotherCut     = DiMuonCuts
+
+        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
+        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        
+        from PhysSelPython.Wrappers import Selection
+        SelDiMuon = Selection("Sel_" + lName + "_DiMuon", Algorithm = CombineDiMuon, RequiredSelections = [ Muons ] )
+        return SelDiMuon
+        
+    def __Selection_CreateDiMuonSS__(self, lName, DiMuonCuts, MuonCuts, IsMuonFlag):
         '''
         Clone the StdVeryLooseDiMuon to build same sign candidates
         '''
-  
-        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon as StdDiMuon
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        CombineDiMuonSS = CombineParticles()
+        CombineDiMuonSS.DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
+        CombineDiMuonSS.DaughtersCuts = { "mu+" : MuonCuts, "mu-" : MuonCuts }
+        CombineDiMuonSS.MotherCut     = DiMuonCuts
 
-        DiMuonSS = StdDiMuon.clone("Combine_" + lName + "_DiMuonSS")
-        DiMuonSS.DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
-
-        DiMuonSS.DaughtersCuts = { "mu+" :  MuonCuts }
-        DiMuonSS.MotherCut = DiMuonCuts
-
+        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
+        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        
         from PhysSelPython.Wrappers import Selection
-        SelDiMuonSS = Selection("Sel_" + lName + "_DiMuonSS", Algorithm = DiMuonSS, RequiredSelections = self.GetRequiredSels(DiMuonSS))
-
+        SelDiMuonSS = Selection("Sel_" + lName + "_DiMuonSS", Algorithm = CombineDiMuonSS, RequiredSelections = [ Muons ] )
         return SelDiMuonSS
+
+##  from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
+##         from CommonParticles.StdLooseDimuon import StdLooseDiMuon
+    
+##         DiMuonSS = None
+
+##         if IsMuonFlag:
+##             DiMuonSS = StdLooseDiMuon.clone("Combine_" + lName + "_DiMuonSS")
+##         else:
+##             DiMuonSS = StdVeryLooseDiMuon.clone("Combine_" + lName + "_DiMuonSS")
+
+##         DiMuonSS.DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
+
+##         DiMuonSS.DaughtersCuts = { "mu+" :  MuonCuts }
+##         DiMuonSS.MotherCut = DiMuonCuts
+
+##         from PhysSelPython.Wrappers import Selection
+##         SelDiMuonSS = Selection("Sel_" + lName + "_DiMuonSS", Algorithm = DiMuonSS, RequiredSelections = self.GetRequiredSels(DiMuonSS))
+
+##         return SelDiMuonSS
         
     #####################
     ## Construct the B ##
@@ -451,5 +495,5 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
             return _requires
         
         else:
-            raise Exception("Algorithm does not have propert 'Inputs'") 
+            raise Exception("Algorithm does not have property 'Inputs'") 
             

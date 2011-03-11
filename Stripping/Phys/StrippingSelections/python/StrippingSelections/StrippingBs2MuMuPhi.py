@@ -75,7 +75,7 @@ class Bs2MuMuPhiConf(LineBuilder) :
         """
         Filter muons from StdLooseMuons
         """  
-        _muons = AutomaticData(Location = 'Phys/StdLooseMuons')
+        _muons = AutomaticData(Location = 'Phys/StdLooseMuons/Particles')
         _filter = FilterDesktop(Code = self.__MuonCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_Muons",
                          RequiredSelections = [ _muons ] ,
@@ -87,7 +87,7 @@ class Bs2MuMuPhiConf(LineBuilder) :
         """
         Filter kaons from StdLooseKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdLooseKaons')
+        _kaons = AutomaticData(Location = 'Phys/StdLooseKaons/Particles')
         _filter = FilterDesktop(Code = self.__KaonCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_Kaons",
                          RequiredSelections = [ _kaons ] ,

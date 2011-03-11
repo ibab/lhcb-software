@@ -135,7 +135,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter muons from StdLooseMuons
         """  
-        _muons = AutomaticData(Location = 'Phys/StdLooseMuons')
+        _muons = AutomaticData(Location = 'Phys/StdLooseMuons/Particles')
         _filter = FilterDesktop( Code = self.__MuonCuts__(conf) ) 
         _sel = Selection("Selection_"+self.name+"_Muons",
                          RequiredSelections = [ _muons ] ,
@@ -174,7 +174,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter kaons from StdLooseKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdLooseKaons')
+        _kaons = AutomaticData(Location = 'Phys/StdLooseKaons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdLooseKaons",
                          RequiredSelections = [ _kaons ] ,
@@ -185,7 +185,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter kaons from StdNoPIDsKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdNoPIDsKaons')
+        _kaons = AutomaticData(Location = 'Phys/StdNoPIDsKaons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdNoPIDsKaons",
                          RequiredSelections = [ _kaons ] ,
@@ -198,7 +198,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter pions from StdLoosePions
         """  
-        _pions = AutomaticData(Location = 'Phys/StdLoosePions')
+        _pions = AutomaticData(Location = 'Phys/StdLoosePions/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdLoosePions",
                          RequiredSelections = [ _pions ] ,
@@ -209,7 +209,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter pions from StdNoPIDsPions
         """  
-        _pions = AutomaticData(Location = 'Phys/StdNoPIDsPions')
+        _pions = AutomaticData(Location = 'Phys/StdNoPIDsPions/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
         _sel = Selection("Selection_"+self.name+"_StdNoPIDsPions",
                          RequiredSelections = [ _pions ] ,
@@ -231,8 +231,8 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter kshort from StdLooseKshort
         """  
-        _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD')
-        _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL')
+        _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD/Particles')
+        _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL/Particles')
         _filter_ksdd = FilterDesktop(Code = self.__KsCuts__(conf))
         _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))
         
@@ -263,8 +263,8 @@ class B2XMuMuConf(LineBuilder) :
         """
         Filter kshort from Std Pi0
         """  
-        _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0')
-        _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0')
+        _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0/Particles')
+        _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0/Particles')
         _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf))
         _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf))
         

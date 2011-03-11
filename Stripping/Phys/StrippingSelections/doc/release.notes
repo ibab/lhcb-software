@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-11 - Thomas Blake
+ - Fixed DataOnDemand for Bs2MuMuPhi and B2XMuMu
+ - Updated StrippingBd2KstarMuMu to solve timing problems
 
 ! 2011-03-11 - Victor Coco
  - update test_TriMuons.py with correct HLT requierement
