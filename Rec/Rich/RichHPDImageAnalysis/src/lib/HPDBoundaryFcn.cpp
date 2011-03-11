@@ -127,10 +127,9 @@ bool HPDBoundaryFcn::hasNeighbour( const int COL,
 {
   for ( int icol = COL-area; icol <= COL+area ; ++icol )
   {
-    if ( COL == icol ) { continue ; }
     for ( int irow = ROW-area; irow <= ROW+area ; ++irow )
     {
-      if ( ROW == irow ) { continue ; }
+      if ( COL == icol && ROW == irow ) { continue ; }
       if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
            irow >= 0 && irow < m_hist->GetNbinsY() )
       {

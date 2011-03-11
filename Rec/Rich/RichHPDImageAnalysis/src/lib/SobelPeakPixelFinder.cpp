@@ -68,10 +68,9 @@ SobelPeakPixelFinder::selectNeighbours( const int COL,
     {
       for ( int icol = COL-area; icol <= COL+area; ++icol )
       {
-        if ( COL == icol ) { continue ; }
         for ( int irow = ROW-area; irow <= ROW+area; ++irow )
         {
-          if ( ROW == irow ) { continue ; }
+          if ( COL == icol && ROW == irow ) { continue ; }
           if ( m_hist->GetBinContent(icol+1,irow+1)/binCont > m_params.neighbourFrac )
           {
             boundary.push_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
@@ -90,10 +89,9 @@ double SobelPeakPixelFinder::localThreshold( const int COL,
   unsigned int sum(0);
   for ( int icol = COL-area; icol <= COL+area; ++icol )
   {
-    if ( COL == icol ) { continue ; }
     for ( int irow = ROW-area; irow <= ROW+area; ++irow )
     {
-      if ( ROW == irow ) { continue ; }
+      if ( COL == icol && ROW == irow ) { continue ; }
       if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
            irow >= 0 && irow < m_hist->GetNbinsY() )
       {
