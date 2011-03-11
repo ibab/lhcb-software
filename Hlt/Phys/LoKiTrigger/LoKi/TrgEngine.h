@@ -3,8 +3,6 @@
 #ifndef LOKI_TRGENGINE_H 
 #define LOKI_TRGENGINE_H 1
 // ===========================================================================
-// $URL$
-// ===========================================================================
 // Include files
 // ===========================================================================
 #include <string>
@@ -31,6 +29,10 @@ namespace LoKi
      *  contributions and advices from G.Raven, J.van Tilburg, 
      *  A.Golutvin, P.Koppenburg have been used in the design.
      *
+     *  By usage of this code one clearly states the disagreement 
+     *  with the campain of Dr.O.Callot et al.: 
+     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+     *  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2004-06-30e
      *
@@ -77,11 +79,6 @@ namespace LoKi
       StatusCode process 
       ( const std::string&              name , 
         const LoKi::Types::TC_FunVals&  fun  ) const ;
-      // ======================================================================
-      /// add the function 
-      StatusCode process 
-      ( const std::string&              name , 
-        const LoKi::Types::TC_Elements& fun  ) const ;
       // ======================================================================
       /// add the function 
       StatusCode process 

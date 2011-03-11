@@ -3,13 +3,16 @@
 #ifndef LOKI_TRIGGERTYPES_H 
 #define LOKI_TRIGGERTYPES_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files 
 // ============================================================================
 // HltBase 
 // ============================================================================
 #include "Event/HltCandidate.h"
+// ============================================================================
+// Event 
+// ============================================================================
+#include "Event/Track.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -22,6 +25,11 @@
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
@@ -79,11 +87,6 @@ namespace  LoKi
     /// type of 'fun-val'   for Candidates    (assignable)
     typedef LoKi::Assignable<TC_CutVals>::Type                     TC_CutVal   ;
     
-    /// type of 'element'   for Candidates    (interface)
-    typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Element   TC_Elements ;
-    /// type of 'element'   for Candidates    (assignable)
-    typedef LoKi::Assignable<TC_Elements>::Type                    TC_Element  ;
-    
     /// type of 'source'   for Candidates    (interface)
     typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Source    TC_Sources  ;
     /// type of 'source'   for Candidates    (assignable)
@@ -123,11 +126,6 @@ namespace  LoKi
     typedef LoKi::BasicFunctors<const Hlt::Stage*>::CutVal    TS_CutVals  ;
     /// type of 'fun-val'   for Stages    (assignable)
     typedef LoKi::Assignable<TS_CutVals>::Type                     TS_CutVal   ;
-    
-    /// type of 'element'   for Stages    (interface)
-    typedef LoKi::BasicFunctors<const Hlt::Stage*>::Element   TS_Elements ;
-    /// type of 'element'   for Stages    (assignable)
-    typedef LoKi::Assignable<TS_Elements>::Type                    TS_Element  ;
     
     /// type of 'source'   for Stages    (interface)
     typedef LoKi::BasicFunctors<const Hlt::Stage*>::Source    TS_Sources  ;
@@ -176,11 +174,6 @@ namespace  LoKi
     /// type for "fun-vals" for Candidate  (assignable)
     typedef LoKi::TriggerTypes::TC_CutVal   TC_CutVal   ;
     
-    /// type for "elements" for Candidate  (interface)
-    typedef LoKi::TriggerTypes::TC_Elements TC_Elements ;
-    /// type for "elements" for Candidate  (assignable)
-    typedef LoKi::TriggerTypes::TC_Element  TC_Element  ;
-    
     /// type for "sources" for Candidate  (interface)
     typedef LoKi::TriggerTypes::TC_Sources TC_Sources   ;
     /// type for "sources" for Candidate  (assignable)
@@ -221,11 +214,6 @@ namespace  LoKi
     typedef LoKi::TriggerTypes::TS_CutVals  TS_CutVals  ;
     /// type for "fun-vals" for Stage  (assignable)
     typedef LoKi::TriggerTypes::TS_CutVal   TS_CutVal   ;
-    
-    /// type for "elements" for Stage  (interface)
-    typedef LoKi::TriggerTypes::TS_Elements TS_Elements ;
-    /// type for "elements" for Stage  (assignable)
-    typedef LoKi::TriggerTypes::TS_Element  TS_Element  ;
     
     /// type for "sources" for Stage  (interface)
     typedef LoKi::TriggerTypes::TS_Sources TS_Sources   ;
@@ -294,7 +282,7 @@ namespace LoKi
 // ============================================================================
 // Local 
 // ============================================================================
-#include "LoKi/OldTypes.h"
+// #include "LoKi/OldTypes.h"
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

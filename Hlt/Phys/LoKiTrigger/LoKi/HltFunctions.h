@@ -1,7 +1,5 @@
 // $Id$
 // ============================================================================
-// $URL$
-// ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
 // ============================================================================
@@ -12,6 +10,7 @@
 #include "LoKi/TriggerTypes.h"
 #include "LoKi/Interface.h"
 #include "LoKi/HltBinders.h"
+#include "LoKi/OldTypes.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -22,6 +21,11 @@
  * 
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
  * 
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
@@ -29,8 +33,11 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
+ *
+ *  @todo HltFunctions.h check if we need all this stuff..
  */
 namespace LoKi 
 {
@@ -235,11 +242,11 @@ namespace LoKi
       { return s << "TTrDA" ; }
     } ;    
     // ========================================================================
-  } // end of namespace LoKi::Tracks
+  } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_HLTFUNCTIONS_H
 // ============================================================================

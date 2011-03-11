@@ -22,6 +22,19 @@
 // ============================================================================
 /** @file
  *  Implementation file for functions from namespace LoKi::Hlt 
+ *
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @date 2008-11-10 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
@@ -565,9 +578,9 @@ std::ostream& LoKi::Hlt1::TrTESInput::fillStream ( std::ostream& s ) const
 // constructor from the key and cuts 
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
-( const std::string&         key  , 
-  const LoKi::Types::RVCuts& cuts ) 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+( const std::string&                                 key  , 
+  const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts )
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -585,9 +598,9 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 // constructor from the key and cuts 
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
-( const LoKi::Types::RVCuts& cuts ,
-  const std::string&         key  )
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+( const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts ,
+  const std::string&                                 key  )
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -606,10 +619,10 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
 ( const std::string&         key  )
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
-  , m_cut  ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
+  , m_cut  ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) ) 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;

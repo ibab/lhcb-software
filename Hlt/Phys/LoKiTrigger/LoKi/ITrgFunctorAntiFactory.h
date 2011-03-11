@@ -3,8 +3,6 @@
 #ifndef LOKI_ITRGANTIFACTORY_H 
 #define LOKI_ITRGANTIFACTORY_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files
 // ============================================================================
 // STD & STL
@@ -35,6 +33,10 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *  
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    *
@@ -64,8 +66,6 @@ namespace LoKi
     virtual void set ( const LoKi::Types::TC_FunVals&  fun ) = 0 ;
     /// set the C++ "cutvals"  for Candidates 
     virtual void set ( const LoKi::Types::TC_CutVals&  fun ) = 0 ;
-    /// set the C++ "elements" for Candidates 
-    virtual void set ( const LoKi::Types::TC_Elements& fun ) = 0 ;
     /// set the C++ "sources"  for Candidates 
     virtual void set ( const LoKi::Types::TC_Sources&  fun ) = 0 ;
     // ========================================================================

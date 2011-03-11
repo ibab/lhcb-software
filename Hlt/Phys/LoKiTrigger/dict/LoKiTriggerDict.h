@@ -51,10 +51,15 @@
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
- *  By usage of this code one clearly states the disagreement
- *  with the campain of Dr.O.Callot et al.:
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  * 
@@ -83,7 +88,6 @@ namespace LoKi
        //
        typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
        typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
-       typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
        typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
        typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
        typedef LoKi::BasicFunctors<TYPE>::Function     Func    ;
@@ -115,11 +119,6 @@ namespace LoKi
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
        __rshift__
        ( const Pipe& fun , const CutVal&    fun2 )
-       { return fun >>                      fun2 ; }
-       // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
-       __rshift__
-       ( const Pipe& fun , const Element&   fun2 )
        { return fun >>                      fun2 ; }
        // __rshift__
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
@@ -318,7 +317,6 @@ namespace LoKi
       typedef LoKi::BasicFunctors<TYPE>::Source        Source ;
       typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
       typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
-      typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
       typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef LoKi::BasicFunctors<TYPE2>::Function     Func    ;
@@ -581,7 +579,6 @@ namespace
     LoKi::Dicts::PipeOps    <const Hlt::Candidate*>  m_fo2 ;
     LoKi::Dicts::FunValOps  <const Hlt::Candidate*>  m_fo3 ;
     LoKi::Dicts::CutValOps  <const Hlt::Candidate*>  m_fo4 ;
-    LoKi::Dicts::ElementOps <const Hlt::Candidate*>  m_fo5 ;
     LoKi::Dicts::SourceOps  <const Hlt::Candidate*>  m_fo6 ;
     // calls
     LoKi::Dicts::FunCalls   <Hlt::Candidate>         m_c1  ;

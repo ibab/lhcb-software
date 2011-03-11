@@ -204,7 +204,7 @@ namespace LoKi
      * 
      *  @code 
      * 
-     *   const RV_DOCACUT good = RC_DOCACUT ( 0.1 * mm , 36 ) ;
+     *   const RV_DOCACUT good = RV_DOCACUT ( 0.1 * mm , 36 ) ;
      *
      *   const LHCb::VertexBase* v = ... ;
      *

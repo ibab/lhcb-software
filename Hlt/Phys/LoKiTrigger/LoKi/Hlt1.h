@@ -445,15 +445,15 @@ namespace LoKi
      *  @date   2009-07-13
      */
     class RvTESInput
-      : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Source 
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Source 
     {
     public: 
       // ======================================================================
       /// constructor from the key and cuts 
       RvTESInput ( const std::string&         key  , 
-                   const LoKi::Types::RVCuts& cuts ) ;
+                   const LoKi::Functor<const LHCb::VertexBase*,bool>&  cuts ) ;
       /// constructor from the key aand cuts 
-      RvTESInput ( const LoKi::Types::RVCuts& cuts ,
+      RvTESInput ( const LoKi::Functor<const LHCb::VertexBase*,bool>&  cuts ,
                    const std::string&         key  ) ;
       /// constructor from the key and cuts 
       RvTESInput ( const std::string&         key  ) ;
@@ -476,9 +476,11 @@ namespace LoKi
       /// get the key 
       const std::string&         key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
-      const LoKi::Types::RVCuts& cuts () const { return m_cut  ; }  //  get cut 
+      const LoKi::Functor<const LHCb::VertexBase*,bool>&  
+      cuts () const { return m_cut  ; }  //  get cut 
       /// get the cuts 
-      const LoKi::Types::RVCuts& cut  () const { return m_cut  ; }  //  get cut 
+      const LoKi::Functor<const LHCb::VertexBase*,bool>&  
+      cut  () const { return m_cut  ; }  //  get cut 
       // ======================================================================      
     private:
       // ======================================================================
@@ -487,7 +489,7 @@ namespace LoKi
       /// The Key 
       Hlt::IUnit::Key              m_key  ;                     //  The Key
       /// The Cut 
-      LoKi::Types::RVCut           m_cut  ;                     //  The Cut
+      LoKi::FunctorFromFunctor<const LHCb::VertexBase*,bool> m_cut  ;                     //  The Cut
       // ======================================================================      
     };   
     // ========================================================================

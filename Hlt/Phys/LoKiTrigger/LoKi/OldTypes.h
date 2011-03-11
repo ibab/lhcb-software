@@ -58,11 +58,6 @@ namespace LoKi
     /// type of 'fun-val'   for Vertices (assignable)
     typedef LoKi::Assignable<RVCutVals>::Type                        RVCutVal  ;
     
-    /// type of 'element'   for Vertices (interface)
-    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Element           RVElements ;
-    /// type of 'element'   for Vertices (assignable)
-    typedef LoKi::Assignable<RVElements>::Type                       RVElement  ;
-    
     /// type of 'source'   for Vertices (interface)
     typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Source            RVSources  ;
     /// type of 'source'   for Vertices (assignable)
@@ -187,16 +182,12 @@ namespace LoKi
     /// type for "fun-vals" for Vertex  (assignable)
     typedef LoKi::TrackTypes::RVCutVal   RVCutVal  ;
     
-    /// type for "elements" for Vertex  (interface)
-    typedef LoKi::TrackTypes::RVElements RVElements ;
-    /// type for "elements" for Vertex  (assignable)
-    typedef LoKi::TrackTypes::RVElement  RVElement  ;
-    
     /// type for "sources" for Vertex  (interface)
     typedef LoKi::TrackTypes::RVSources RVSources   ;
     /// type for "sources" for Vertex  (assignable)
     typedef LoKi::TrackTypes::RVSource  RVSource    ;
-
+    
+    // ========================================================================
   } // end of namespace LoKi::Types 
   // ==========================================================================
 } // end of namespace LoKi
