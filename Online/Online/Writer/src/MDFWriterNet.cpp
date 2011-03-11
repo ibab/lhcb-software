@@ -297,6 +297,7 @@ StatusCode MDFWriterNet::initialize(void)
   m_currentRunNumber=0;
   m_CleanUpStop = false;
   m_Finalized = false;
+  m_StopRetry = false;
 
   if (pthread_mutex_init(&m_SyncFileList, NULL)) {
     *m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
@@ -308,7 +309,7 @@ StatusCode MDFWriterNet::initialize(void)
     return StatusCode::FAILURE;
   }
 
-  *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
+  *m_log << MSG::WARNING << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -318,7 +319,7 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
-  *m_log << MSG::INFO << " Writer " << getpid() 
+  *m_log << MSG::WARNING << " Writer " << getpid() 
          << " Finalizing." << endmsg;
 
   m_CleanUpStop = true;
@@ -412,7 +413,7 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
-  *m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
+  *m_log << MSG::WARNING << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
   std::string identifier( getenv("UTGID") );
   return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
@@ -702,7 +703,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     }
     if(!m_currFile) {
         // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-        while(!m_StopRetry) {
+        do {
             /* The RunDb generates file names now */
             try {
               m_currFile = createAndOpenFile(runNumber);
@@ -766,8 +767,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
               }
               break;
             }
-            break;
         }
+        while(!m_StopRetry && (m_currFile == NULL));
         if(m_currFile == NULL) {
             *m_log << MSG::ERROR << "Giving up to get new file name for run " << runNumber << ". You should stop the run." << endmsg;
             if (pthread_mutex_unlock(&m_SyncFileList)) {
