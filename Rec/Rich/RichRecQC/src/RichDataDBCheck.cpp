@@ -91,10 +91,11 @@ StatusCode DataDBCheck::execute()
         const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
         const Rich::DAQ::Level0ID l0ID               = hpdHeader.l0ID();  
         const Rich::DetectorType  rich               = hpdID.rich();
-        const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
 
         // Only do the DB check on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
+
+        const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
 
         // use a try block in case of DB lookup errors
         try
@@ -112,6 +113,7 @@ StatusCode DataDBCheck::execute()
 
           // Internal consistency checks
           // Get l1HardID from RICH and l1LogicalID
+          /*
           const Rich::DAQ::Level1HardwareID new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
           compare( "Level1HardwareID-DB-DB", hpdID, l0ID, new_l1HardID, l1HardID );
           // HPD hardware ID
@@ -121,6 +123,7 @@ StatusCode DataDBCheck::execute()
           // L1 input
           const Rich::DAQ::Level1Input new_l1Input(l1IngressID,l1InputWithinIngress);
           compare( "L1Input-DB-DB", hpdID, l0ID, l1Input, new_l1Input );
+          */
 
           // Is this L0ID already in the map... If so this is an error.
           L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
