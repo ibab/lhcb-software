@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-12 - V. Gligorov
+ - Hlt1TrackLines : add option to activate timers.
+
 !========================== Hlt1Lines v6r7p2 2011-03-10 ===================
 ! 2011-03-10 - Roel Aaij
  - Fix localisation of properties if there is an underscore in the name of
