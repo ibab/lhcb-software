@@ -7,6 +7,7 @@
 #include "IGetElementsToBeAligned.h"
 #include "TrackInterfaces/ITrackKalmanFilter.h"
 #include "Event/TrackFitResult.h"
+#include "Event/FitNode.h"
 
 namespace Al
 {
@@ -32,7 +33,7 @@ namespace Al
   private:  
     const Al::TrackResiduals* compute(const LHCb::Track& track) const ;
     Al::TrackResiduals* create( const LHCb::Track& track, 
-				const std::vector<const LHCb::Node*>& nodes,
+				const std::vector<const LHCb::FitNode*>& nodes,
 				std::vector<size_t>& residualnodeindices,
 				size_t& refnodeindex ) const ;
   private:
@@ -40,7 +41,6 @@ namespace Al
     mutable ResidualMap m_residuals ;
     bool m_testPosDef ;
     ToolHandle<IGetElementsToBeAligned> m_elementTool ;
-    ToolHandle<ITrackKalmanFilter> m_kalmanFilter ;
   } ;
   
 }
@@ -50,7 +50,6 @@ namespace Al
 #include <iostream>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "Event/FitNode.h"
 #include "Event/Track.h"
 
   
@@ -64,12 +63,10 @@ namespace Al
 				       const std::string& name,
 				       const IInterface* parent)
     : GaudiTool(type,name,parent),
-      m_elementTool("GetElementsToBeAligned"),
-      m_kalmanFilter("TrackKalmanFilter",this)
+      m_elementTool("GetElementsToBeAligned")
   {
     // interfaces
     declareInterface<ITrackResidualTool>(this);
-    declareProperty("KalmanFilter",m_kalmanFilter) ;
     declareProperty("TestPosDef",m_testPosDef = false) ;
   }
   
@@ -79,14 +76,12 @@ namespace Al
     if (sc.isFailure()) return Error("Failed to initialize",sc);
     sc = m_elementTool.retrieve() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
-    sc = m_kalmanFilter.retrieve() ;
     return sc ;
   }
   
   StatusCode TrackResidualTool::finalize()
   {
     m_elementTool.release().ignore() ;
-    m_kalmanFilter.release().ignore() ;
     return GaudiTool::finalize();
   }
 
@@ -151,16 +146,16 @@ namespace Al
   }
   
   Al::TrackResiduals* TrackResidualTool::create( const LHCb::Track& track, 
-						 const std::vector<const LHCb::Node*>& nodes,
+						 const std::vector<const LHCb::FitNode*>& nodes,
 						 std::vector<size_t>& residualnodeindices,
 						 size_t& refnodeindex ) const
   {
     // first select nodes with a measurement and equip them with an index in the original list
-    typedef std::pair<const LHCb::Node*, size_t> NodeWithIndex ;
+    typedef std::pair<const LHCb::FitNode*, size_t> NodeWithIndex ;
     std::vector< NodeWithIndex > nodeswithindex ;
     nodeswithindex.reserve( nodes.size()) ;
     size_t index(0) ;
-    for( std::vector<const LHCb::Node*>::const_iterator it = nodes.begin();
+    for( std::vector<const LHCb::FitNode*>::const_iterator it = nodes.begin();
 	 it != nodes.end(); ++it, ++index )
       if( (*it)->hasMeasurement() && (*it)->type() != LHCb::Node::Outlier ) 
 	nodeswithindex.push_back( NodeWithIndex(*it,index) ) ;
@@ -179,7 +174,7 @@ namespace Al
     residualnodeindices.reserve( nodeswithindex.size() ) ;
     Al::TrackResiduals* rc = new Al::TrackResiduals(track) ;
     rc->m_residuals.reserve( nodeswithindex.size() ) ;
-    rc->m_state = nodeswithindex.front().first->state() ;
+    rc->m_state = nodeswithindex.front().first->classicalSmoothedState() ;
     for( std::vector< NodeWithIndex >::const_iterator it = nodeswithindex.begin() ;
 	 it != nodeswithindex.end(); ++it ) {
       const LHCb::Node* node = it->first ;
@@ -210,15 +205,11 @@ namespace Al
   const Al::TrackResiduals* TrackResidualTool::compute(const LHCb::Track& track) const
   {
     debug() << "In TrackResidualTool::Compute" << endreq ;
-    
-    // Call one iteration with the smoother gain if necessary
-    if( track.fitHistory() != LHCb::Track::StdKalman ) {
-      StatusCode sc = m_kalmanFilter->fit( const_cast<LHCb::Track&>(track) ) ;
-      if( sc.isFailure() ) {
-	Warning("Track refit failed.",StatusCode::SUCCESS,0).ignore() ;
-	return 0 ;
-      }
-    }
+
+    // this is not stricktly necessary, but let's do it anyway
+    LHCb::KalmanFitResult* fr = 
+      const_cast<LHCb::KalmanFitResult*>(static_cast<const LHCb::KalmanFitResult*>(track.fitResult())) ;
+    fr->setBiDirectionnalSmoother(false) ;
     
     // ingredients
     // - smoothed states plus covariance
@@ -245,16 +236,16 @@ namespace Al
     ++end ;
     
     // put all these nodes in a new container, to make things easier
-    std::vector<const LHCb::Node*> nodes ;
-    nodes.insert(nodes.end(),begin,end) ;
-    
+    std::vector<const LHCb::FitNode*> nodes ;
+    for(LHCb::Track::ConstNodeRange::const_iterator it = begin; it != end; ++it)
+      nodes.push_back( static_cast<const LHCb::FitNode*>(*it) ) ;
     size_t numnodes = nodes.size() ;
     
     // These are the diagonal elements. At first we just copy these
     bool error = false ;
     std::vector< const Gaudi::TrackSymMatrix* > diagcov(numnodes,0) ;
     for( size_t irow = 0; irow<numnodes; ++irow) {
-      diagcov[irow] = &(nodes[irow]->state().covariance()) ;
+      diagcov[irow] = &(nodes[irow]->classicalSmoothedState().covariance()) ;
       if( m_testPosDef && ! testPosDef( *(diagcov[irow]) ) ) {
 	warning() << "Found non pos def matrix on track of type: " << track.type() << " "
 		  << *(diagcov[irow]) << endreq ;
@@ -288,7 +279,7 @@ namespace Al
       assert( node && prevnode ) ;
 
       smoothergainmatrix[k-1] = prevnode->smootherGainMatrix() ;
-      Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->state().covariance() ;
+      Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->classicalSmoothedState().covariance() ;
       offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
       
       if( m_testPosDef && !testPosDef(constructNxN<4>( *(diagcov[k-1]),*(diagcov[k]),C_km1_k) ) ) {
@@ -301,19 +292,13 @@ namespace Al
     // need to do this off-diagonal by off-diagonal. The easiest is
     // probably to do it on demand, but the following should also work. Note that
     // this is also where things become really slow.
+    if ( !error && (error=fr->inError()) )
+      warning() << "Error in KalmanFitResult: " << fr->getError() << endreq ;
     
     Al::TrackResiduals* residuals(0) ;
 
     if( !error ) {
 
-      // FIX ME: replace this with an 'on-demand' computation
-      //       for(size_t l=2; l<numnodes; ++l) {
-      // 	for(size_t k=l-1; k>0; --k) {
-      // 	  assert( offdiagcov[l][k] != 0 ) ;
-      // 	  offdiagcov[l][k-1] = new Gaudi::TrackMatrix( (*(offdiagcov[l][k])) * Transpose(smoothergainmatrix[k-1]) ) ;
-      // 	}
-      //       }
-    
       //       // for now, just check that every element is filled
       //       for( size_t irow = 1; irow<numnodes; ++irow) for(size_t icol = 0; icol<irow; ++icol)
       // 	if( offdiagcov[irow][icol] == 0 )
