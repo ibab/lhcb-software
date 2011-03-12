@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-12 V. Gligorov
+ - Hadrons_draft2011: Add B2HHLTUnbiased  
+
 ! 2011-Mar-10 - Patrick Spradlin
  - Some names in CharmHadronLines_draft2011 updated to conform to changes in
    Required Hlt2Lines r119978.
