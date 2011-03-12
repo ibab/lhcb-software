@@ -39,7 +39,8 @@ class Hadrons_draft2011 :
             # HHPi0
             'Hlt2B2HHPi0_Merged',
             # B2HH
-            'Hlt2B2HH'   
+            'Hlt2B2HH',
+            'Hlt2B2HHLTUnbiased'
             ]
 
         # For inclusive phi extend using Albert's new setting
@@ -52,8 +53,10 @@ class Hadrons_draft2011 :
         return lines
 
     def Thresholds(self) : 
+
+        from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf 
        
-        d = { }
+        d = { Hlt2B2HHLTUnbiasedLinesConf : {'NetCut' : (1.0 + (0.85))*0.5 } }
  
         from TopoLines_draft2011 import TopoLines
         d.update ( TopoLines().Thresholds() )
