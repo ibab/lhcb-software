@@ -17,6 +17,7 @@
 // from Event
 #include "Event/TwoProngVertex.h"
 #include "Event/ODIN.h"
+#include "Event/Particle.h"
 
 // from DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -80,6 +81,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("TracksLocation"              , m_tracksLocation     = TrackLocation::Default  );
   declareProperty("VertexLocation"              , m_vertexLocation     = "" );
   declareProperty("DimuonLocation"              , m_dimuonLocation     = "" );
+  declareProperty("ParticleLocation"            , m_particleLocation   = "" );
   declareProperty("ProjectorSelector"           , m_projSelectorName   = "TrackProjectorSelector");
   declareProperty("UseCorrelations"             , m_correlation        = true                    );
   declareProperty("UpdateInFinalize"            , m_updateInFinalize   = false                   );
@@ -278,6 +280,20 @@ StatusCode AlignAlgorithm::execute() {
   size_t numusedtracks(0) ;
   size_t numusedvertices(0) ;
   size_t numuseddimuons(0) ;
+  if( !m_particleLocation.empty() ) {
+    LHCb::Particle::Range particles = get<LHCb::Particle::Range>(m_particleLocation) ;
+    BOOST_FOREACH( const LHCb::Particle* p, particles ) {
+      const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(*p) ;
+      if( res && accumulate( *res ) ) {
+	m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
+	++numuseddimuons ;
+	numusedtracks += res->numTracks() ;
+	error() << "Still need to remove tracks used in particle." << endreq ;
+	//removeVertexTracks( *res, selectedtracks ) ;
+      }
+    }
+  }
+  
   if( !m_dimuonLocation.empty() ) {
     const LHCb::TwoProngVertices* vertices = get<LHCb::TwoProngVertices>(m_dimuonLocation);
     if(vertices ) {
@@ -604,6 +620,18 @@ namespace {
     bool operator()( const SmartRef<TYPE>& lhs ) { return &(*lhs) == m_p ;}
   } ;
 }
+
+
+// void AlignAlgorithm::removeUsedTracks( const Al::MultiTrackResidual& vertex,
+// 				       TrackContainer& tracks) const
+// { 
+//   TrackContainer unusedtracks ;
+//   for( TrackContainer::iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
+//     if( std::find_if( vertex.tracks().begin(), vertex.tracks().end(),
+// 		      IsEqual<LHCb::Track>(**itrack) )==vertex.tracks().end() )
+//       unusedtracks.push_back(*itrack) ;
+//   tracks = unusedtracks ;
+// }
 
 void AlignAlgorithm::selectVertexTracks( const LHCb::RecVertex& vertex,
 					 const TrackContainer& tracks,

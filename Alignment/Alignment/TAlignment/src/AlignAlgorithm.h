@@ -128,6 +128,7 @@ private:
   std::string                       m_tracksLocation;                ///< Tracks for alignment
   std::string                       m_vertexLocation;                ///< Vertices for alignment
   std::string                       m_dimuonLocation;                ///< J/psi vertcies for alignment
+  std::string                       m_particleLocation;              ///< particles with mass constraint for alignment
   std::string                       m_projSelectorName;              ///< Name of projector selector tool
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
   ToolHandle<Al::ITrackResidualTool>   m_trackresidualtool ;
