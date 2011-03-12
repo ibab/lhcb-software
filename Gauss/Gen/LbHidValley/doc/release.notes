@@ -19,6 +19,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-12 - Vanya Belyaev
+
+ - resurrect standalone application 
+   (Add few empty dummy functions) 
+ - cmt/requirements 
+   version increment to v2r4 
+
 !========================= LbHidValley v2r3 2009-12-02 ========================
 ! 2009-12-02 - Gloria CORTI
  - Remove HidValley.opts that is now obsolete and introduce empty HidValley.py
