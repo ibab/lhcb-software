@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-12 - V. Gligorov
+ - Add routing bit for OR of 2,3,4-body regular topo lines.
+
 !========================== HltConf v9r6p1 2011-03-09 ===================
 ! 2011-03-08 - Roel Aaij, Eric v. Herwijnen
  - Update RoutingBits definition for changed names of Hlt lines.
