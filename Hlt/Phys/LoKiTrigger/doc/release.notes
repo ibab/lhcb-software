@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-12 - Vanya Belyaev
+
+ - kill Elements...
+
 ! 2011-03-11 - Vanya Belyaev
 
  - BeamLineFunctions:
