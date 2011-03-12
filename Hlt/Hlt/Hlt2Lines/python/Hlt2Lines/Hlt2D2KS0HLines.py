@@ -38,6 +38,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   , 'DMesonMotherVertexChi2' : 15.0
                   , 'DMesonMotherMIPChi2'    : 25.0
                   , 'DMesonMotherPT'         : 1800.0 * MeV
+                  , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD2KS0H'
                   ## prescales
                   , 'Prescale'                  : {
@@ -155,6 +156,18 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         return bindMembers(name, [PV3D()] + inputSeq + [combineCharmD2KS0h])
 
 
+    def __filterHlt1TOS(self, name, input) : # {
+        from HltLine.HltLine import bindMembers
+        from Configurables import TisTosParticleTagger
+
+        filterTOS = TisTosParticleTagger('Hlt2'+name+'Hlt1TOSFilter')
+        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+        filterTOS.Inputs = [ input.outputSelection() ]
+
+        return bindMembers(name, [ input, filterTOS ])
+    # }
+
+ 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -188,20 +201,24 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 
         # Make D2KS0Pi
         kSPiName = self.getProp('name_prefix') + '_D2KS0Pi'
-        Hlt2CharmD2KS0Pi = self.__D2KS0hCombine(  name = kSPiName 
+        hlt2CharmD2KS0PiComb = self.__D2KS0hCombine(  name = kSPiName 
                                                   , inputSeq = [ KS0LLForD2KS0h, pionsBachelorForD2KS0h]           
                                                   , decayDesc =  ['[D+ -> KS0 pi+]cc'] 
                                                  )   
 
+        # Stage 2b - bachelor hadron = kaon
+        Hlt2CharmD2KS0Pi = self.__filterHlt1TOS(kSPiName, hlt2CharmD2KS0PiComb)
 
         # Build the D(s)
 
         # Make D2KS0K
         kSKName  = self.getProp('name_prefix') + '_D2KS0K'
-        Hlt2CharmD2KS0K = self.__D2KS0hCombine(  name = kSKName
+        hlt2CharmD2KS0KComb = self.__D2KS0hCombine(  name = kSKName
                                                   , inputSeq = [ KS0LLForD2KS0h, kaonsBachelorForD2KS0h]           
                                                   , decayDesc =  ['[D+ -> KS0 K+]cc'] 
                                                  )   
+
+        Hlt2CharmD2KS0K = self.__filterHlt1TOS(kSKName, hlt2CharmD2KS0KComb)
 
 
         ###########################################################################

@@ -17,6 +17,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                   , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
                   , 'GEC_Filter_NTRACK'           : True     # do or do not
                   , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
+                  , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD2HHH'
                   # prescales
                   , 'Prescale'                  : {
@@ -146,6 +147,18 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         return bindMembers(name, inputSeq + [filter])
 
 
+    def __filterHlt1TOS(self, name, input) : # {
+        from HltLine.HltLine import bindMembers
+        from Configurables import TisTosParticleTagger
+
+        filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
+        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+        filterTOS.Inputs = [ input.outputSelection() ]
+
+        return bindMembers(name, [ input, filterTOS ])
+    # }
+
+
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -183,12 +196,15 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                                                                 ,"D+ -> K*(892)- K+",  "D+ -> K*(892)+ K-" ]
                                                  )   
 
+        tosName = self.getProp('name_prefix')
+        Charm3BodyCombineToS =  self.__filterHlt1TOS( tosName, Charm3BodyCombine )
+
         # 3Body line
         modeName = self.getProp('name_prefix')
         wideMassName = modeName + 'WideMass'
-        Hlt2Charm3Body = self.__3BodyFilter ( name = modeName, inputSeq = [Charm3BodyCombine], extracode = "in_range(1800*MeV, M, 2040*MeV)")
+        Hlt2Charm3Body = self.__3BodyFilter ( name = modeName, inputSeq = [Charm3BodyCombineToS], extracode = "in_range(1800*MeV, M, 2040*MeV)")
         # 3Body WideMass line - with prescale
-        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = wideMassName, inputSeq = [Charm3BodyCombine], extracode = "in_range(1700*MeV, M, 2100*MeV)")
+        Hlt2Charm3BodyWideMass = self.__3BodyFilter (name = wideMassName, inputSeq = [Charm3BodyCombineToS], extracode = "in_range(1700*MeV, M, 2100*MeV)")
 
         ###########################################################################
         # Define the Hlt2 Lines

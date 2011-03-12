@@ -49,6 +49,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : True       # do or do not
                 , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                 , 'name_prefix'              : 'CharmHadD02HH'
                 , 'Prescale'         : { }
                 , 'Postscale'        : { 'Hlt2CharmHadD02HH_D02KKWideMass'     : 0.10
@@ -170,6 +171,18 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                            )
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
+    # }
+
+
+    def __filterHlt1TOS(self, name, input) : # {
+        from HltLine.HltLine import bindMembers
+        from Configurables import TisTosParticleTagger
+
+        filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
+        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+        filterTOS.Inputs = [ input.outputSelection() ]
+
+        return bindMembers(name, [ input, filterTOS ])
     # }
 
 
@@ -319,9 +332,11 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                                 , decayDesc = [ decayModes[mode]['descriptor'] ]
                            )
 
+            d02hhTOS = self.__filterHlt1TOS(modeName, d02hhComb)
+
             ## Signal window filter
             d02hhSigSeq = self.__filter( name = modeName
-                                     , inputSeq = [ d02hhComb ]
+                                     , inputSeq = [ d02hhTOS ]
                                      , extracode = sigMassCut
                            )
 
@@ -332,7 +347,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
             ## Wide mass window filter
             wmModeName = modeName + 'WideMass'
             d02hhWMSeq = self.__filter( name = wmModeName
-                                     , inputSeq = [ d02hhComb ]
+                                     , inputSeq = [ d02hhTOS ]
                                      , extracode = wideMassCut
                            )
 

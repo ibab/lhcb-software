@@ -420,6 +420,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s)" % self.getProps() } 
                                         )
 
+        ksLLTOSName = ksLLName
+        combineKshhTFD2HHKsLLToS = self.__filterRequiringTOS(ksLLTOSName, combineKshhTFD2HHKsLL )
 
         combineKshhTFD2HHKsDD = self.__KshhTFDCombine(ksDDName
                                         , [charmKshhTF2BodyTighterReqTOS, charmKshhTFKsDD]
@@ -428,7 +430,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         ## Make the lines
         ###################################################################
-        self.__makeLine(ksLLName, algos = [ combineKshhTFD2HHKsLL ])
+        self.__makeLine(ksLLName, algos = [ combineKshhTFD2HHKsLLToS ])
         self.__makeLine(ksDDName, algos = [ combineKshhTFD2HHKsDD ])
 
 

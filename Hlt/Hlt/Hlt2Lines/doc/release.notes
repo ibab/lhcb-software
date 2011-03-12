@@ -8,8 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-12 - Patrick Spradlin
+ - Added filters to the charm lines to accept only candidates that are TOS
+   on Hlt1Track.
+
 ! 2011-Mar-10 - Patrick Spradlin
- - Modified the following Charm hadron configurables to incorporate a unique
+ - Modified the Charm hadron configurables to incorporate a unique
    prefix into the names of each of its components to avoid conflicts.
 
 !========================== Hlt2Lines v8r2 2011-03-10 ===================

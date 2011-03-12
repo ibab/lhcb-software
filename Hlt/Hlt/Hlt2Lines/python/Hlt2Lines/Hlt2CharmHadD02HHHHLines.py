@@ -29,6 +29,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
                   , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                  , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD02HHHH'
                   # prescales
                   , 'Prescale'                  : {
@@ -167,6 +168,18 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         return bindMembers(name, inputSeq + [filter])
 
 
+    def __filterHlt1TOS(self, name, input) : # {
+        from HltLine.HltLine import bindMembers
+        from Configurables import TisTosParticleTagger
+
+        filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
+        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+        filterTOS.Inputs = [ input.outputSelection() ]
+
+        return bindMembers(name, [ input, filterTOS ])
+    # }
+
+
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -205,6 +218,8 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                                                                   ,"D0 -> K*(892)0 pi+ pi-",  "D0 -> K*(892)0 K+ K-" ]
                                                  )   
 
+        tosName = self.getProp('name_prefix')
+        Charm4BodyCombineToS =  self.__filterHlt1TOS( tosName, Charm4BodyCombine )
 
         sigMassCut  = "in_range(%s, M, %s)" \
                       % (self.getProp('Sig_M_MIN'), self.getProp('Sig_M_MAX'))
@@ -216,9 +231,9 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
         # 4Body line
         modeName = self.getProp('name_prefix')
         wideMassName = modeName + 'WideMass'
-        Hlt2Charm4Body = self.__4BodyFilter ( name = modeName, inputSeq = [Charm4BodyCombine], extracode = sigMassCut )
+        Hlt2Charm4Body = self.__4BodyFilter ( name = modeName, inputSeq = [Charm4BodyCombineToS], extracode = sigMassCut )
         # 4Body WideMass line - with prescale
-        Hlt2Charm4BodyWideMass = self.__4BodyFilter (name = wideMassName, inputSeq = [Charm4BodyCombine], extracode = wideMassCut )
+        Hlt2Charm4BodyWideMass = self.__4BodyFilter (name = wideMassName, inputSeq = [Charm4BodyCombineToS], extracode = wideMassCut )
 
         ###########################################################################
         # Define the Hlt2 Lines
