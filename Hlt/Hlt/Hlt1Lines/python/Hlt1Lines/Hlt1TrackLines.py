@@ -74,6 +74,22 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                       IsMuon ]
         return Preambulo
 
+    def do_timing( self, unit ):
+        reco = set()
+        for entry in unit.Preambulo:
+            s = entry.split( '=' )
+            if s[ 0 ].find( 'PV3D' ) != -1 or s[ 0 ].find( 'GEC' ) != -1: continue
+            if len( s ) > ( 1 ):
+                reco.add( s[ 0 ].strip() )
+        steps = []
+        name = unit.name()[ 4 : unit.name().find( 'Streamer' ) ]
+        code = unit.Code
+        for step in reco:
+            sub = " ( timer( '%s_%s' )" % ( name, step ) + ' % ' +  step + ' ) '
+            code = re.sub( '\\s+%s\\s+' % step, sub, code )
+        unit.Code = code
+        return unit
+
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         from Configurables import LoKi__HltUnit as HltUnit
