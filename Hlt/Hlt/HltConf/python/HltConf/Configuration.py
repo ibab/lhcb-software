@@ -249,6 +249,7 @@ class HltConf(LHCbConfigurableUser):
                       , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"   
                       , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"   
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"   
+                      , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       , 87 : "HLT_PASS_RE('Hlt2DisplVertices.*Decision')"
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
