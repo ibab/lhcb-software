@@ -1,4 +1,4 @@
-## @package TAlignment
+# @package TAlignment
 #  Configurable for TAlignment package
 #  @author Johan Blouw <johan.blouw@physi.uni-heidelberg.de>
 #  @date   29/01/2009
@@ -231,9 +231,6 @@ class TAlignment( LHCbConfigurableUser ):
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
                         
-            trackresidualtool = Al__TrackResidualTool("Al::TrackResidualTool")
-            trackresidualtool.KalmanFilter.BiDirectionalFit = False
-            
             alignSequencer.Members.append(alignAlg)
 
                              
