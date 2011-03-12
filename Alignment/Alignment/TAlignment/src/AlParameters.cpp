@@ -100,7 +100,7 @@ std::string AlParameters::parName(int parindex)
 
 double AlParameters::signedSqrt(double root)
 {
-  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
+  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : root ) ;
 }
 
 std::ostream& AlParameters::fillStream(std::ostream& os) const 
