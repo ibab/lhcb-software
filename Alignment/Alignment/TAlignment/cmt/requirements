@@ -58,5 +58,12 @@ apply_pattern reflex_dictionary                                       \
 apply_pattern install_python_modules
 #============================================================================
 
+#private
+#macro_remove cppoptimized_s "-O2"
+#macro_append cppoptimized_s "-O1"
+##macro_remove cppdebugflags "-O2"
+##macro_append cppdebugflags " -O1"
+#end_private
+
 macro TAlignmentDict_use_linkopts $(use_linkopts)
 
