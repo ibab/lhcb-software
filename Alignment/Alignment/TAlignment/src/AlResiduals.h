@@ -113,15 +113,16 @@ namespace Al
   public:
     /// Standard constructor
     MultiTrackResiduals(double chi2, int ndof, size_t numexthits,
-			size_t numtracks, double vertexchi2, int vertexndof) 
-      : Residuals(chi2,ndof,numexthits),m_numtracks(numtracks),m_vertexchi2(vertexchi2),m_vertexndof(vertexndof) {}
+			std::vector<const TrackResiduals*>& tracks,
+			double vertexchi2, int vertexndof) 
+      : Residuals(chi2,ndof,numexthits),m_tracks(tracks),m_vertexchi2(vertexchi2),m_vertexndof(vertexndof) {}
     ~MultiTrackResiduals( ) {}; ///< Destructor
     double vertexChi2() const { return m_vertexchi2 ; }
     int    vertexNDoF() const { return m_vertexndof ; }
-    size_t numTracks() const { return m_numtracks ; }
+    size_t numTracks() const { return m_tracks.size() ; }
   private:
     friend class VertexResidualTool ;
-    size_t m_numtracks ;
+    std::vector<const TrackResiduals*> m_tracks ;
     double m_vertexchi2 ;
     int    m_vertexndof ;
   };

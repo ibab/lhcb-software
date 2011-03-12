@@ -5,10 +5,21 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "LHCbMath/MatrixInversion.h"
 #include "Event/Node.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 
 class ITrackExtrapolator ;
 namespace LHCb {
   class RecVertex ; 
+}
+
+namespace 
+{
+  // helper structure to hold nformation needed to apply a mass constraint
+  struct MassConstraint
+  {
+    std::vector<double> daughtermasses ;
+    double mothermass ;
+  } ;
 }
 
 namespace Al
@@ -33,19 +44,22 @@ namespace Al
     virtual StatusCode finalize(); 
     // incident service handle
     void handle( const Incident& incident ) ;
-    // used tracks are removed from the list
+    // process a vertex (primary vertex of twoprongvertex)
     const Al::MultiTrackResiduals* get(const LHCb::RecVertex& vertex) const ;
+    // process a particle. this applies a mass constraint.
+    const Al::MultiTrackResiduals* get(const LHCb::Particle& particle) const ;
   private:
     // create a new MultiTrackResiduals
     const Al::MultiTrackResiduals* compute(const TrackResidualContainer& tracks,
 					   const Gaudi::XYZPoint& vertexestimate,
-					   bool connstraintDiMuonMass ) const ;
+					   const MassConstraint* massconstraint ) const ;
     // extrapolate the state in trackresiduals to position z
     StatusCode extrapolate( const Al::TrackResiduals& trackin,
 			    double z, TrackContribution& trackout ) const ;
   private:
     ToolHandle<ITrackResidualTool> m_trackresidualtool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
+    IParticlePropertySvc* m_propertysvc ;
     double m_chiSquarePerDofCut ;
     bool   m_computeCorrelations ;
     size_t m_maxHitsPerTrackForCorrelations ;
@@ -65,14 +79,17 @@ namespace Al
 #include <algorithm>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+
 #include "Event/TwoProngVertex.h"
+#include "Event/Particle.h"
 #include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "ITrackResidualTool.h"
 #include <boost/assign/list_of.hpp> 
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include <boost/foreach.hpp> 
 #include "GaudiKernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
+
 
 namespace Al
 {
@@ -85,6 +102,7 @@ namespace Al
     : GaudiTool(type,name,parent),
       m_trackresidualtool("Al::TrackResidualTool"), // important: use the toolsvc, because of caching!
       m_extrapolator("TrackMasterExtrapolator"),
+      m_propertysvc(0),
       m_chiSquarePerDofCut(10),
       m_maxHitsPerTrackForCorrelations(9999)
   {
@@ -107,13 +125,13 @@ namespace Al
     m_extrapolator.retrieve().ignore() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
     
-    IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+    m_propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
     for (std::vector<std::string>::const_iterator iterS = m_daughterNames.begin(); iterS != m_daughterNames.end() ; ++iterS){
-      const double tmass = propertysvc->find(*iterS)->mass() ;
+      const double tmass = m_propertysvc->find(*iterS)->mass() ;
       m_daughterMass.push_back(tmass);
       info() << "Adding daughter " << *iterS <<  " with mass " <<  tmass << endreq;
     }
-    m_parentMass = propertysvc->find(m_parentName)->mass() ;
+    m_parentMass = m_propertysvc->find(m_parentName)->mass() ;
     info() << "parent mass " << m_parentMass << endreq ;
     return sc ;
   }
@@ -149,12 +167,52 @@ namespace Al
 	assert(0) ;
       }
     }
-      
 
-    bool constrainMass = dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ;
-    rc = compute( trackresiduals, vertex.position(), constrainMass ) ;
+    MassConstraint* mconstraint(0) ;
+    // we'll keep this for backward compatibility
+    if( dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ) {
+      mconstraint = new MassConstraint() ;
+      mconstraint->daughtermasses =  m_daughterMass ;
+      mconstraint->mothermass = m_parentMass ;
+    }
+    rc = compute( trackresiduals, vertex.position(), mconstraint ) ;
     if(rc) m_residuals.push_back(rc) ;
+    
+    delete mconstraint ;
+    return rc ;
+  }
 
+  const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::Particle& p) const
+  {
+    // loop over the list of vertices, collect tracks in the vertex
+    const Al::MultiTrackResiduals* rc(0) ;
+    TrackResidualContainer trackresiduals ;
+    MassConstraint mconstraint ;
+    mconstraint.mothermass = m_propertysvc->find( p.particleID().pid() )->mass() ;
+    
+    bool success(true) ;
+    BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters()) {
+      if( daughter->proto() && daughter->proto()->track()) {
+	const LHCb::Track* track = daughter->proto()->track() ;
+	const Al::TrackResiduals* trackres = m_trackresidualtool->get( *track ) ;
+	if( trackres ) {
+	  trackresiduals.push_back( trackres ) ;
+	  mconstraint.daughtermasses.push_back(  m_propertysvc->find( p.particleID().pid() )->mass() ) ;
+	} else {
+	  warning() << "No residuals returned by trackresidualtool!" << endreq ;
+	  success = false ;
+	}
+      } else {
+	warning() << "Composite contains daughter that is not a track. Need to adapt code for that." << endreq ;
+	success = false ;
+	assert(0) ;
+      }
+    }
+    
+    if(success) {
+      rc = compute( trackresiduals, p.endVertex()->position(), &mconstraint ) ;
+      if(rc) m_residuals.push_back(rc) ;
+    }
     return rc ;
   }
 
@@ -171,7 +229,7 @@ namespace Al
 
   const Al::MultiTrackResiduals* VertexResidualTool::compute(const TrackResidualContainer& tracks,
 							     const Gaudi::XYZPoint& vertexestimate,
-							     bool constrainMass) const
+							     const MassConstraint* mconstraint) const
   {
     Al::MultiTrackResiduals* rc(0) ;
     bool success = true ;
@@ -203,11 +261,11 @@ namespace Al
 	++nacceptedtracks ;
       }
       else {
-	warning() << "Extrapolation failed. Will not add track to vertex." << endreq ;
+	warning() << "Extrapolation failed. Rejecting vertex." << endreq ;
+	success = false ;
       }
     }
     
-    success = nacceptedtracks>=2 ;
 
     if(success) {
       // now vertex the states
@@ -218,24 +276,29 @@ namespace Al
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
       double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
       
-      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainMass ) {
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && mconstraint ) {
 	assert( nacceptedtracks == 2 ) ;
 	//	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
 	debug() << "mass before constraint: "
-		<< vertex.mass(m_daughterMass) << " +/- " << vertex.massErr(m_daughterMass) << endreq ;
+		<< vertex.mass(mconstraint->daughtermasses) 
+		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
-	fitstatus = vertex.constrainMass( m_daughterMass, m_parentMass ) ;	
+	fitstatus = vertex.constrainMass( mconstraint->daughtermasses, mconstraint->mothermass) ;
 	debug() << "mass afterconstraint: "
-		<< vertex.mass(m_daughterMass) << " +/- " << vertex.massErr(m_daughterMass) << endreq ;
+		<< vertex.mass(mconstraint->daughtermasses)
+		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
 	debug() << "error on qop of first track, original, after vertex fit, after mass fit: "
 		<< std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
 		<< qopbefore << " "
 		<< std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
-	
       }
       // this is the chisquare including an eventual mass constraint
       double vchi2 = vertex.chi2() ; // cache it, because I know it is slow
- 
+
+      counter("vchi2") += vchi2 ;
+      counter("vchi2orig") += vchi2orig ;
+      //counter("niter") += vertex.nIter() ;
+       
       debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << vertex.nDoF() << endreq ;
       debug() << "Vertex position orig/new="
 	      << vertexestimate << "/" << vertex.position() << endreq ;
@@ -245,7 +308,10 @@ namespace Al
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
-	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, states.size(), vchi2, vertex.nDoF()  ) ;
+	std::vector<const Al::TrackResiduals*> tracks ;
+	BOOST_FOREACH( const TrackContribution& atrack, states) 
+	  tracks.push_back( atrack.trackresiduals ) ;
+	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, tracks, vchi2, vertex.nDoF()  ) ;
 	rc->m_residuals.reserve(numresiduals) ;
 	debug() << "created the vertex: " << numresiduals << endreq ;
 
@@ -372,8 +438,8 @@ namespace Al
 	  warning() << "VertexResidualTool::compute failed" << endreq ;
 	} 
       } else {
-	warning() << "rejected vertex with chisqu/dof: "
-		  << vchi2 / vertex.nDoF() << " isConstrained = " << constrainMass << endreq ;
+	warning() << "rejected vertex with chisqu/dof: " << vchi2 / vertex.nDoF() 
+		  << " isConstrained = " << bool(mconstraint!=0) << endreq ;
       } 
     } else {
 	warning() << "not enough tracks for vertex anymore" << endreq ;
