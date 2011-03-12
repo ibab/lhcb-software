@@ -3,6 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2011-03-12 - Wouter Hulsbergen
+ - adapt to changes in trackfit
+ - prepare  functionality to process Particles with mass constraints 
+   rather than TwoProngVertices (not entirely finished yet)
+ - removed isfinite
+
 ! 2010-10-25 Silvia Borghi
  - Update the Velo Detector and Module survey with the proper z position
 
