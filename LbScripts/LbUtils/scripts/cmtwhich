@@ -13,6 +13,11 @@ class CMTWhichScript(Script):
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
+        parser.set_defaults(casesense=True)
+        parser.add_option("-i", "--case-insensitive",
+                          action="store_false",
+                          dest="casesense",
+                          help="case insensitive version")
 
     def main(self):
         log = logging.getLogger()
@@ -31,7 +36,9 @@ class CMTWhichScript(Script):
         if len(args) > 2 :
             version = args[2]
 
-        print CMTWhich(project, package, version, all_occurences=False)
+        print CMTWhich(project, package, version,
+                       all_occurences=False,
+                       casesense=opts.casesense)
 
         return 0
 

@@ -1,3 +1,10 @@
+2011-03-12  hmd  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/CMT/__init__.py:
+	* LbUtils/python/LbUtils/CMT/Common.py:
+	* LbUtils/python/LbUtils/CMT/Project.py:
+	* LbUtils/scripts/cmtwhich: added case insensitive switch.
+
 2011-03-04  hmd  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/CMT/Package.py: fixed the command line syntax

@@ -137,6 +137,3 @@ def CMTCommand(*args, **kwargs) :
 
     return out, err, code
 
-def CMTWrap(project, package, version=None, *cmtargs):
-    """ command wrapper which execute the command in the cmt directory of the project or package """
-    pass

@@ -626,7 +626,7 @@ def walk(top, topdown=True, toclients=False,
         yield (proj, deps, packs)
 
 
-def CMTWhich(project, package=None, version=None, all_occurences=False):
+def CMTWhich(project, package=None, version=None, all_occurences=False, casesense=True):
     """ function to extract the project or package class"""
     if version :
         ver = version
@@ -634,29 +634,32 @@ def CMTWhich(project, package=None, version=None, all_occurences=False):
         # case where no 3rd argument is passed
         # try package as a version
         ver = package
-    prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=True)
+    prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
     if not prj :
         # try versionless project or latest version of a project
         ver = None
-        prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=True)
+        prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
 
-    if package and not ver:
+    if prj and package and not ver:
         # case where there is a second argument
         pkg =None
-        for p, _, _ in walk(prj, light=True) :
+        for p, _, _ in walk(prj, cmtprojectpath=os.environ["CMTPROJECTPATH"],light=True) :
             if p.version() :
                 pkg = p.findPackage(package)
             else :
                 pkg = p.findPackage(package, version)
             if pkg :
                 break
-#        if prj.version() :
-#            pkg = prj.findPackage(package)
-#        else :
-#            pkg = prj.findPackage(package, version)
         result = pkg
     else :
         # there is only one argument
         result = prj
 
     return result
+
+def CMTWrap(project, package, version=None, casesense=True, *cmtargs):
+    """ command wrapper which execute the command in the cmt directory of the project or package """
+    cmtpak = CMTWhich(project, package, version, casesense=casesense)
+    if cmtpak :
+        pass
+
