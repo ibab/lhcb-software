@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-03-13 - Victor Coco
+ - update HltLines.py: Hlt2DisplVertices becomes Hlt2SelDV
+
 !========================== HltLine v5r1p2 2011-03-10 ===================
 ! 2010-03-10 - Johannes Albrecht
  - add NoPV to the default vetos of the HLT filter
