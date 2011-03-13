@@ -36,7 +36,7 @@ class Calibration_VeloMicroBias :
         """
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt2Lines.Hlt2CharmHadD02HHKsLines import Hlt2CharmHadD02HHKsLinesConf
-        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '(ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger)'
+        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '( (ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) | (ODIN_TRGTYP == LHCb.ODIN.TimingTrigger) )'
                                  ,'Prescale' : { 'Hlt1MBMicroBias.*' : 0.01 } 
 #                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 'RATE(5000)' }
                                    }
