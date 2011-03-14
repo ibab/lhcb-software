@@ -5,6 +5,15 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2011-03-14 - Vanya Belyaev
+
+ - TreeCloners.cpp 
+
+    fix a bug, that under certains condition could result 
+    in inclorrect cloning 
+
+ - Increase version to v2r3p1.
+
 !========================= DaVinciTypes v2r3 2011-01-31 =========================
 ! 2011-01-16 - Vanya Belyaev
  - TreeCloners.cpp 

@@ -99,11 +99,12 @@ LHCb::Particle* DaVinci::cloneTree
   if ( clonemap.end() != i1 ) { return i1->second ; }            // RETURN 
   //
   // clone it!
-  LHCb::Particle*    np = original->clone() ;
+  LHCb::Particle*    np = original -> clone() ;
   s_COUNTER.incParticles() ;
   clonemap[ original ]  = np  ;
   //
-  np->clearDaughters() ;
+  np -> clearDaughters (   ) ;
+  np -> setEndVertex   ( 0 ) ;
   // 
   typedef SmartRefVector<LHCb::Particle> SRVP ;
   //
@@ -120,18 +121,18 @@ LHCb::Particle* DaVinci::cloneTree
     if ( clonemap.end() != i2 ) { dau_clone = i2->second                   ; }
     else                        { dau_clone = cloneTree ( dau , clonemap ) ; }
     //
-    np->addToDaughters ( dau_clone ) ;
+    if ( 0 != dau_clone ) { np -> addToDaughters ( dau_clone ) ; }  // NB!
     //
   }
   //
-  const LHCb::Vertex* ov = original->endVertex() ;
+  const LHCb::Vertex* ov = original -> endVertex() ;
   if ( 0 == ov ) { return np ; }                                      // RETURN
   //
-  LHCb::Vertex* nv = ov->clone() ;
+  LHCb::Vertex* nv = ov -> clone() ;
   s_COUNTER.incVertices () ;
   //
-  np -> setEndVertex           ( nv) ;
-  nv -> clearOutgoingParticles () ;
+  np -> setEndVertex           ( nv ) ;
+  nv -> clearOutgoingParticles (    ) ;
   //
   const SRVP& outgoing = ov->outgoingParticles() ;
   for ( SRVP::const_iterator io = outgoing.begin() ; 
@@ -145,7 +146,7 @@ LHCb::Particle* DaVinci::cloneTree
     if ( clonemap.end() != i3 ) { out_clone = i3->second                   ; }
     else                        { out_clone = cloneTree ( out , clonemap ) ; }
     //
-    nv->addToOutgoingParticles ( out ) ;
+    if ( 0 != out_clone ) { nv -> addToOutgoingParticles ( out_clone ) ; } // NB!
     //
   }
   // 
