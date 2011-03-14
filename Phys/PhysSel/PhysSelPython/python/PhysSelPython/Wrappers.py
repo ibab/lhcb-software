@@ -63,6 +63,10 @@ def checkName(name) :
     if configurableExists(name) :
         raise NameError('Could not instantiate Selection '+name+' because Configurable with the same name already exists. Try a different name for your Selection')
 
+def checkConfigurable(obj) :
+    if type(obj).__name__ == obj.name() :
+        raise NameError('Could not instantiate Selection because input Configurable '+obj.name()+' has default name. This is too unsafe to be allowed.')
+
 def selectionWrapper(selType, name, *args, **kwargs) :
     """
     Construct a selection of type selType with construction arguments.
@@ -74,6 +78,7 @@ def selectionWrapper(selType, name, *args, **kwargs) :
 
     algorithm = kwargs.pop('Algorithm')
     if isConfigurable( algorithm )  :
+        checkConfigurable( algorithm)
         algGen=CloneCallable(algorithm)
         kwargs['ConfGenerator'] = algGen
     else :
