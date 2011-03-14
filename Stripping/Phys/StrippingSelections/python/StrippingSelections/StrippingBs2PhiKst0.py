@@ -26,7 +26,7 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-name = "Bs2PhiKst"
+default_name = "Bs2PhiKst"
 
 
 
@@ -202,7 +202,7 @@ def makeKst2Kpi(name,
 
     _KstarFilter = FilterDesktop("_filterFor"+name)
     _KstarFilter.Code = KstarCuts
-    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles"")
+    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
 
 
     return Selection (name,

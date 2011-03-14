@@ -6,6 +6,7 @@
 
 ! 2011-03-14 - Greig Cowan
  - Updated some lines to add /Particles at end of DataOnDemand.
+ - Fixed buggy lines using Configurables.
 
 ! 2011-03-11 - Michel De Cian
  - Updated StrippingTrackEffMuonTT.py: Triggers can now be set via the config dict, removed dependence on Hlt2MuTrack

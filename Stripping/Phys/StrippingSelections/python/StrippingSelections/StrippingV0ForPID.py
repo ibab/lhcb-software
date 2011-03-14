@@ -104,14 +104,14 @@ from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
 # @date 2010-09-05
 # =============================================================================
 
-from Configurables import CombineParticles, FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand        
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions, StdNoPIDsDownPions, StdNoPIDsProtons, StdNoPIDsDownProtons
 
-import logging
-log = logging.getLogger('StrippingPromptCharm')
+#import logging
+#log = logging.getLogger('StrippingPromptCharm')
 
 # =============================================================================
 ## Define the default configuration 
@@ -228,8 +228,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
                 raise KeyError("Invalid key is specified: '%s'" % key )
             
             val = _config[key]
-            if val != _default_configuration_ [ key ] : 
-                log.warning ('StrippingV0ForPID: new configuration: %-16s : %s ' %( key , _config[key] ) )
+            #if val != _default_configuration_ [ key ] : 
+            #    log.warning ('StrippingV0ForPID: new configuration: %-16s : %s ' %( key , _config[key] ) )
 
         self._name            = name
 

@@ -29,7 +29,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 
-name = "Bs2KstKst"
+default_name = "Bs2KstKst"
 
 
 class StrippingBs2KstKstConf(LineBuilder):
