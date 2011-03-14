@@ -159,7 +159,7 @@ def makePhi2KK( name,
         "& (PT > %(PhiPT)s *MeV)" \
         "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
     print 'makeJpsiPhi2KK Code =', _code
-    StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK")
+    StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")
     _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi",
                                Code = _code)
 
@@ -202,7 +202,7 @@ def makeKst2Kpi(name,
 
     _KstarFilter = FilterDesktop("_filterFor"+name)
     _KstarFilter.Code = KstarCuts
-    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi")
+    _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles"")
 
 
     return Selection (name,

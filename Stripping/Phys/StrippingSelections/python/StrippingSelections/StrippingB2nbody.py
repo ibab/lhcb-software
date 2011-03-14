@@ -526,8 +526,8 @@ def makeKs(name, MaxKsDeltaM, MinKsPt, MaxKsVertChi2DOF, MinKsPVVDChi2, MinKsIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 2 )"%locals()
     _KsFilter = FilterDesktop(Code = _code)
-    _stdKsLL    = DataOnDemand(Location = "Phys/StdLooseKsLL")
-    _stdKsDD    = DataOnDemand(Location = "Phys/StdLooseKsDD")
+    _stdKsLL    = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
+    _stdKsDD    = DataOnDemand(Location = "Phys/StdLooseKsDD/Particles")
     _KsMerged = MergedSelection( "MergedKsFor" + name, RequiredSelections = [_stdKsDD,_stdKsLL] )
     return Selection (name, Algorithm = _KsFilter, RequiredSelections = [_KsMerged])
 
@@ -545,8 +545,8 @@ def makeLm(name, MaxLmDeltaM, MinLmPt, MaxLmVertChi2DOF, MinLmPVVDChi2, MinLmIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPrtTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPiTrkChi2)s , 2 )"%locals()
     _LmFilter = FilterDesktop(Code = _code)
-    _stdLmLL    = DataOnDemand(Location = "Phys/StdLooseLambdaLL")
-    _stdLmDD    = DataOnDemand(Location = "Phys/StdLooseLambdaDD")
+    _stdLmLL    = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
+    _stdLmDD    = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
     _LmMerged = MergedSelection( "MergedLmFor" + name, RequiredSelections = [_stdLmDD,_stdLmLL] )
     return Selection (name, Algorithm = _LmFilter, RequiredSelections = [_LmMerged])
 
@@ -564,7 +564,7 @@ def makeDz(name, MaxDzDeltaM, MinDzPt, MaxDzVertChi2DOF, MinDzPVVDChi2, MinDzIPC
     _code+="& (ADMASS('D0') < %(MaxDzDeltaM)s*MeV)"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDzPIDK)s , 1 )"%locals()
     _DzFilter = FilterDesktop(Code = _code)
-    _stdDz = DataOnDemand(Location = "Phys/StdLooseD02KPi")
+    _stdDz = DataOnDemand(Location = "Phys/StdLooseD02KPi/Particles")
     return Selection (name, Algorithm = _DzFilter, RequiredSelections = [_stdDz])
 
 def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPChi2, MinDpDauPt, MinDpDauIPChi2, MaxDpDauTrkChi2, MinDpPIDK):
@@ -584,7 +584,7 @@ def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPC
     _code+="& (ADMASS('D+') < %(MaxDpDeltaM)s*MeV)"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDpPIDK)s , 1 )"%locals()
     _DpFilter = FilterDesktop(Code = _code)
-    _stdDp = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
+    _stdDp = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
     return Selection (name, Algorithm = _DpFilter, RequiredSelections = [_stdDp])
 
 def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPChi2, MinDsDauPt, MinDsDauIPChi2, MaxDsDauTrkChi2, MinDsPIDK):
@@ -605,7 +605,7 @@ def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPC
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 1 )"%locals()
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 2 )"%locals()
     _DsFilter = FilterDesktop(Code = _code)
-    _stdDs = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
+    _stdDs = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
     return Selection (name, Algorithm = _DsFilter, RequiredSelections = [_stdDs])
 
 def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPChi2, MinLcDauPt, MinLcDauIPChi2, MaxLcDauTrkChi2, MinLcPIDK, MinLcPIDp):
@@ -626,7 +626,7 @@ def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPC
     _code+="& CHILDCUT ( PIDK-PIDpi > %(MinLcPIDK)s , 1 )"%locals()
     _code+="& CHILDCUT ( PIDp-PIDpi > %(MinLcPIDp)s , 2 )"%locals()
     _LcFilter = FilterDesktop(Code = _code)
-    _stdLc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi")
+    _stdLc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi/Particles")
     return Selection (name, Algorithm = _LcFilter, RequiredSelections = [_stdLc])
 
 
@@ -643,7 +643,7 @@ def makePh(name, MaxPhDeltaM, MinPhPt, MaxPhVertChi2DOF, MinPhPVVDChi2, MinPhIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxPhDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxPhDauTrkChi2)s , 2 )"%locals()
     _PhFilter = FilterDesktop(Code = _code)
-    _stdPh = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK")
+    _stdPh = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK/Particles")
     return Selection (name, Algorithm = _PhFilter, RequiredSelections = [_stdPh])
 
 def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPChi2, MinKSDauPt, MinKSDauIPChi2, MaxKSDauTrkChi2):
@@ -659,7 +659,7 @@ def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 2 )"%locals()
     _KSFilter = FilterDesktop(Code = _code)
-    _stdKS = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi")
+    _stdKS = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi/Particles")
     return Selection (name, Algorithm = _KSFilter, RequiredSelections = [_stdKS])
                                                             
 def makeJp(name, MaxJpDeltaM, MinJpPt, MaxJpVertChi2DOF, MinJpPVVDChi2, MinJpIPChi2, MinJpDauPt, MinJpDauIPChi2, MaxJpDauTrkChi2):
@@ -675,7 +675,7 @@ def makeJp(name, MaxJpDeltaM, MinJpPt, MaxJpVertChi2DOF, MinJpPVVDChi2, MinJpIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxJpDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxJpDauTrkChi2)s , 2 )"%locals()
     _JpFilter = FilterDesktop(Code = _code)
-    _stdJp = DataOnDemand(Location = "Phys/StdLooseDiMuon")
+    _stdJp = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
     return Selection (name, Algorithm = _JpFilter, RequiredSelections = [_stdJp])
 
 def makeDS(name, MaxDSDeltaM, MinDSPt, MaxDSVertChi2DOF, MinDSPVVDChi2, MinDSIPChi2, MinDSPiPt, MinDSPiIPChi2,MaxDSPiTrkChi2, MaxDSD0DeltaM,
@@ -697,7 +697,7 @@ def makeDS(name, MaxDSDeltaM, MinDSPt, MaxDSVertChi2DOF, MinDSPVVDChi2, MinDSIPC
     _code+="& ( NINGENERATION ( ( MIPCHI2DV ( PRIMARY ) > %(MinDSD0DauIPChi2)s ) , 2 ) == 2 )"%locals()
     _code+="& ( NINGENERATION ( ( TRCHI2DOF < %(MaxDSD0DauTrkChi2)s ) , 2 ) == 2 )"%locals()
     _DSFilter = FilterDesktop(Code = _code)
-    _stdDS = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi")
+    _stdDS = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi/Particles")
     return Selection (name, Algorithm = _DSFilter, RequiredSelections = [_stdDS])
                                                                
 

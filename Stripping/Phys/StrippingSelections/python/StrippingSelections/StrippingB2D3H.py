@@ -1303,7 +1303,7 @@ def makePions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, PionPiDDLL, T
     TrkChisq              : Cut on Track Chisq/DOF
     """
 
-    _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
     _pionFilter = FilterDesktop("_filterFor"+name)
     _pionFilter.Code = "( (P > %(PionMinP)s *MeV) & (P < %(PionMaxP)s *MeV) & (PT> %(PionMinPT)s *MeV) & (PIDK < %(PionPiDDLL)s )" \
                        "& (MIPCHI2DV(PRIMARY)> %(PionMinIPChisq)s )  ) " %locals()
@@ -1325,7 +1325,7 @@ def makeTightPions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq
     TrkChisq              : Cut on Track Chisq/DOF
     """
 
-    _stdLoosePions = DataOnDemand(Location = "Phys/StdTightPions")
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
     _pionFilter = FilterDesktop("_filterFor"+name)
     _pionFilter.Code = "( (P > %(PionMinP)s *MeV) & (P < %(PionMaxP)s *MeV) & (PT> %(PionMinPT)s *MeV) " \
                        "& (MIPCHI2DV(PRIMARY)> %(PionMinIPChisq)s )  ) " %locals()
@@ -1347,7 +1347,7 @@ def makeKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq):
     TrkChisq              : Cut on Track Chisq/DOF
     """
 
-    _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+    _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
     _kaonFilter = FilterDesktop("_filterFor"+name)
     _kaonFilter.Code = "( (P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV) " \
                        "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s )  ) " %locals()
@@ -1369,7 +1369,7 @@ def makeTightKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq
     TrkChisq              : Cut on Track Chisq/DOF
     """
 
-    _stdLooseKaons = DataOnDemand(Location = "Phys/StdTightKaons")
+    _stdLooseKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
     _kaonFilter = FilterDesktop("_filterFor"+name)
     _kaonFilter.Code = "( (P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV) " \
                        "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s )  ) " %locals()
@@ -1391,7 +1391,7 @@ def makeProtons(name, ProtonMinP, ProtonMaxP, ProtonMinPT, ProtonMinIPChisq, Trk
     TrkChisq              : Cut on Track Chisq/DOF
     """
 
-    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons")
+    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
     _protonFilter = FilterDesktop("_filterFor"+name)
     _protonFilter.Code = "( (P > %(ProtonMinP)s *MeV) & (P < %(ProtonMaxP)s *MeV) & (PT> %(ProtonMinPT)s *MeV) " \
                        "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(ProtonMinIPChisq)s )  ) " %locals()

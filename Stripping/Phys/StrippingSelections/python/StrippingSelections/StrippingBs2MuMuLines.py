@@ -205,7 +205,7 @@ def makeDefault(name) :
                               "& (BPVVDCHI2> 225)"\
                               "& (BPVIPCHI2()< 25) "
                              
-    _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons/Particles")
 
     return Selection (name,
                       Algorithm = Bs2MuMuNoMuID,
@@ -240,7 +240,7 @@ def makeBs2mmWide(name) :
                                 "& (BPVVDCHI2> 225)"\
                                 "& (BPVIPCHI2()< 25) "
     
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
     return Selection (name,
                       Algorithm = Bs2MuMuWideMass,
@@ -283,7 +283,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
                                    "& (BPVVDCHI2> %(BFDChi2)s)"\
                                    "& (BPVIPCHI2()< %(BIPChi2)s) "% locals()
 
-    _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons")
+    _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons/Particles")
 
     return Selection (name,
                       Algorithm = Bs2MuMuNoMuIDLoose,
@@ -321,7 +321,7 @@ def makeDetachedJPsi(name) :
                              "& (BPVDIRA > 0) "\
                              "& (BPVVDCHI2>169)"
 
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
     return Selection (name,
                       Algorithm = DetachedJPsi,
@@ -357,7 +357,7 @@ def makeDetachedJPsiLoose(name) :
                                   "& (BPVDIRA > 0) "\
                                   "& (BPVVDCHI2>100)"
 
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
     return Selection (name,
                       Algorithm = DetachedJPsiLoose,
@@ -390,7 +390,7 @@ def makePromptJPsi(name) :
     PromptJPsi.MotherCut = "(VFASPF(VCHI2)<15) "\
                            "& (ADMASS('J/psi(1S)') < 100*MeV )"
     
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
     return Selection (name,
                       Algorithm = PromptJPsi,

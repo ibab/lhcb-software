@@ -106,7 +106,7 @@ def makeDefault(name) :
                               "& (BPVIPCHI2()< 25) "
     
 
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
     return Selection (name,
                       Algorithm = Detached4mu,

@@ -132,7 +132,7 @@ class InclPhiConf(LineBuilder):
         #print Phi2KK_DC
         #print Phi2KK_CC
         #print Phi2KK_MC
-        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
         _Phi2KK =  CombineParticles(
                          #  "_"+name+"Phi2KK"
                             DecayDescriptor = "phi(1020) -> K+ K-"
@@ -169,7 +169,7 @@ class InclPhiConf(LineBuilder):
         #print Phi2KK_CC
         #print Phi2KK_MC
 
-        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+        #_StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
 
         _Phi2KK = CombineParticles(
                          #  "_"+name+"Phi2KK"
@@ -202,7 +202,7 @@ class InclPhiConf(LineBuilder):
         pmalg.addTool(TrackSelector)
         pmalg.TrackSelector.TrackTypes = ['Downstream','Long']
         DownNoPIDsKaons = pmalg
-        _DownNoPIDsKaons = DataOnDemand(Location = "Phys/"+name+'NoPIDsKaons' )
+        _DownNoPIDsKaons = DataOnDemand(Location = "Phys/"+name+'NoPIDsKaons/Particles' )
 
         #Phi2KK_DC = ""
         Phi2KK_CC = self._Phi2KK_CC(config)

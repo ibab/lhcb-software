@@ -47,7 +47,7 @@ class StrippingJpsippForD0MuMuConf(LHCbConfigurableUser):
         ProtonForD0mumuCut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) " % self.getProps()
         MomForD0mumuCut =  "(BPVDIRA> %(DDira)s) & (INGENERATION( (BPVIPCHI2()>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)" % self.getProps()
         CombForD0mumuCut  =       "(AMAXDOCA('')< %(doca)s *mm) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)& (ADAMASS('J/psi(1S)')< %(JpsiMassWin)s *MeV)"% self.getProps()
-        _TightProtons = DataOnDemand(Location = "Phys/StdNoPIDsProtons")
+        _TightProtons = DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
         _JpsippForD0mumu = CombineParticles("_JpsippForD0mumu")
 #        _JpsippForD0mumu.InputLocations = [ "StdLooseProtons" ]
         _JpsippForD0mumu.DecayDescriptor = "J/psi(1S) -> p+ p~-" 
