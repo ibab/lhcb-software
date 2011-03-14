@@ -287,7 +287,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   }
   if(newHeader != NULL) { 
       m_mmObj.enqueueCommand(newHeader);
-      if(failureCnt >= 5) {
+      if(failureCnt >= 30) {
           l_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
       } 
       failureCnt=0;
