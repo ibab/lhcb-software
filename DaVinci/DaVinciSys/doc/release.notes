@@ -3,7 +3,7 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v28r1>2011-03-10 DaVinci v28r1. For stripping13 line developments and validation.</A></H1><PRE>
+</PRE><H1><A NAME=v28r1p1>2011-03-14 DaVinci v28r1p1. For stripping13 line developments and validation and first 2011 data HLT.</A></H1><PRE>
 
   *** Based on LHCb v32r1p1 stack. 
    
