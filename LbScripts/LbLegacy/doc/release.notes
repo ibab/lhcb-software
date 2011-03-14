@@ -1,3 +1,8 @@
+2011-03-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the version of LbScripts in the banner in
+	debug mode.
+
 2011-03-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: fixed osc_vis dependency extraction. Removed obsolete CVS update for

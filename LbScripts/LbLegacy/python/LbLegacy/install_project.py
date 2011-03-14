@@ -2276,6 +2276,8 @@ def main():
     thelog.info('=' * line_size)
     thelog.info(('<<< %s - Start of install_project.py %s with python %s >>>' % (start_time, script_version, txt_python_version)).center(line_size))
     thelog.info('=' * line_size)
+    thelog.debug(("Using LbScripts %s" % lbscripts_version).center(line_size))
+    thelog.debug('-' * line_size)
     thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
 
