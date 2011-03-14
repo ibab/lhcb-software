@@ -5,6 +5,14 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+
+! 2011-03-14 - Wouter Hulsbergen
+ - Fix problem in 3DTransformationFunctions that is due to a bug in
+ compilor optimization in SLC5. The bug was already fixed in a similar
+ piece of code in the alignment project, but hadn't realized that it
+ was used in more than one place. (Will soon remove code duplication by
+ fixing TAlignment/src/AlParameters.)
+
 !========================= DetDesc v18r23 2011-02-22 =========================
 ! 2011-02-15 - Chris Jones
  - Add to Material and Mixture classes a new reset() method, that resets the

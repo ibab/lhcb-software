@@ -101,8 +101,14 @@ ROOT::Math::SMatrix<double,6,6> getTransformJacobian( const Gaudi::Transform3D& 
   
   // R ( deps ) R^{-1} for each three components
   Matrix3x3 RdrotR[3] ;
-  for(int i=0; i<3; ++i) RdrotR[i] = R * (drot[i] * Rinv) ;
-  
+  //for(int i=0; i<3; ++i) RdrotR[i] = R * (drot[i] * Rinv) ;
+  // this breaks in optimization on SLC5. the solution was to create a
+  // temporary in the loop. (Thanks Lorenzo)
+  for(int i=0; i<3; ++i) {
+    Matrix3x3 tmp = drot[i] * Rinv ;
+    RdrotR[i] = R * tmp ;
+  }
+
   // now construct all components of the jacobian
   Matrix6x6 jacobian ;
   
