@@ -270,7 +270,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   do {
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
-          if(failureCnt%60==0) {
+          if(failureCnt%60==0 && failureCnt!=0) {
 //              *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
               l_log << MSG::WARNING << "Writing an event was delayed due to back pressure from the writerd. Performance drop -> /clusterlogs/services/writerd.log" << endmsg;
           }
@@ -287,7 +287,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   }
   if(newHeader != NULL) { 
       m_mmObj.enqueueCommand(newHeader);
-      if(failureCnt !=0) {
+      if(failureCnt >= 5) {
           l_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
       } 
       failureCnt=0;

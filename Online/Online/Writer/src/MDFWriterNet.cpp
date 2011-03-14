@@ -309,7 +309,7 @@ StatusCode MDFWriterNet::initialize(void)
     return StatusCode::FAILURE;
   }
 
-  *m_log << MSG::WARNING << " Writer " << getpid() << " Initialized." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -319,7 +319,7 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
-  *m_log << MSG::WARNING << " Writer " << getpid() 
+  *m_log << MSG::INFO << " Writer " << getpid() 
          << " Finalizing." << endmsg;
 
   m_CleanUpStop = true;
@@ -413,7 +413,7 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
-  *m_log << MSG::WARNING << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
+  *m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
   std::string identifier( getenv("UTGID") );
   return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
