@@ -147,3 +147,23 @@ def getVersionsFromDir(dirname, pattern=None, versiontype=CoreVersion, reverse=F
     if reverse :
         versionlist.reverse()
     return versionlist
+
+
+def LHCb2CMT(project, version):
+    """ coonvert LHCb project version to raw CMT version:
+        DaVinci, v20r3 -> DAVINCI, DAVINCI_v20r3
+    """
+    cmtproj = project.upper()
+    cmtvers = "%s_%s" % (project, version)
+
+    return (cmtproj, cmtvers)
+
+def CMT2LHCb(project, version):
+    """ coonvert raw CMT project version to LHCb version:
+        DAVINCI, DAVINCI_v20r3 -> DaVinci, v20r3
+    """
+
+    lbproj = None
+    lbvers = None
+
+    return (lbproj, lbvers)

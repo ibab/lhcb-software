@@ -1,3 +1,7 @@
+2011-03-14  hmd  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/Version.py: added version scheme converter drafts.
+
 2011-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/Version.py: moved the generic sorting to LbUtils
