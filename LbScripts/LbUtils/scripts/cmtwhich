@@ -7,6 +7,7 @@ from LbUtils.Script import Script
 
 import logging
 import sys
+import os
 
 
 class CMTWhichScript(Script):
@@ -18,6 +19,11 @@ class CMTWhichScript(Script):
                           action="store_false",
                           dest="casesense",
                           help="case insensitive version")
+        parser.set_defaults(cmt_dir=False)
+        parser.add_option("-d", "--cmt-dir",
+                          action="store_true",
+                          dest="cmt_dir",
+                          help="print the path to the cmt directory instead of the base dir")
 
     def main(self):
         log = logging.getLogger()
@@ -36,9 +42,14 @@ class CMTWhichScript(Script):
         if len(args) > 2 :
             version = args[2]
 
-        print CMTWhich(project, package, version,
+        p = CMTWhich(project, package, version,
                        all_occurences=False,
                        casesense=opts.casesense)
+
+        if opts.cmt_dir :
+            print os.path.join(str(p), "cmt")
+        else :
+            print str(p)
 
         return 0
 
