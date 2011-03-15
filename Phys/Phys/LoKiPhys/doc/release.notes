@@ -5,6 +5,13 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-15 - Vanya Belyaev
+
+ - add symbol : RV_TrFUN 
+
+    adapter for track-function 
+
+
 ! 2011-03-10 - Vanya Belyaev
  - kill bad concept of 'Element'-functor
  - cmt/requirements 

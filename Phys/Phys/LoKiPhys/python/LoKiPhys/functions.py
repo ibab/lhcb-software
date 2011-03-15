@@ -638,6 +638,8 @@ RV_TrSUM   = LoKi.Vertices.RecVertex2TrackSum
 RV_TrHAS   = LoKi.Vertices.RecVertex2TrackHas
 ## @see LoKi::Cuts::RV_TrCUT
 RV_TrCUT   = LoKi.Vertices.RecVertex2TrackCut
+## @see LoKi::Cuts::RV_TrFUN
+RV_TrFUN   = LoKi.Vertices.RecVertex2TrackFun
 ## @see LoKi::Cuts::RV_TrNUM
 RV_TrNUM   = LoKi.Vertices.RecVertex2TrackNum
 ## @see LoKi::Cuts::RV_MASS
@@ -1029,6 +1031,7 @@ PPCUT   = LoKi.Particles.ProtoPCut
 TRFUN   = LoKi.Particles.TrackFun
 ## @see LoKi::Cuts::TRCUT
 TRCUT   = LoKi.Particles.TrackCut
+
 
 
 ## Legacy stuff
