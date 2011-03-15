@@ -10,53 +10,47 @@
 
 static const InterfaceID IID_IHpdUkL1DisableTool ( "Rich::Mon::IHpdUkL1DisableTool", 1, 0 );
 
-/** @class IHpdUkL1DisableTool IHpdUkL1DisableTool.h IHpdUkL1DisableTool.h
- *   
- *
- *  @author Ulrich Kerzel
- *  @date   2008-06-30
- */
-
 namespace Rich
 {
   namespace Mon
   {
 
+    /** @class IHpdUkL1DisableTool RichKernel/IHpdUkL1DisableTool.h
+     *
+     *  Interface to HPD disabling tool, for Online monitoring
+     *
+     *  @author Ulrich Kerzel
+     *  @date   2008-06-30
+     */
     class IHpdUkL1DisableTool : virtual public IAlgTool,
-                                virtual public IIncidentListener   {
-    public: 
-      
+                                virtual public IIncidentListener
+    {
+    public:
+
       // Return the interface ID
       static const InterfaceID& interfaceID() { return IID_IHpdUkL1DisableTool; }
-      
+
       virtual StatusCode initialize         ()                                 = 0;
-      virtual StatusCode finalize           ()                                 = 0; 
+      virtual StatusCode finalize           ()                                 = 0;
+
       virtual void       SetDisableThreshold(int threshold = 10)               = 0;
-      virtual void       DisableHPD         (const LHCb::RichSmartID &smartID) = 0; 
+      virtual void       DisableHPD         (const LHCb::RichSmartID &smartID) = 0;
+
       virtual void       DisableHPD         (const Rich::DAQ::Level1LogicalID      &l1LogicalID,
                                              const Rich::DAQ::L1InputWithinIngress &l1InputIngress,
                                              const Rich::DAQ::L1IngressID          &ingressID,
                                              const Rich::DetectorType              &richDetector) =0;
 
-      virtual void       DisableHPD         ( const Rich::DAQ::Level1LogicalID&      l1LogicalID,
-                                              const Rich::DAQ::L1InputWithinIngress& l1InputIngress,
-                                              const Rich::DAQ::L1IngressID&          ingressID,
-                                              const Rich::DetectorType&              richDetector,
-					      const unsigned long&                   index ) = 0;
-
-
-      virtual void        ReportHPD          (const LHCb::RichSmartID &smartID) = 0; 
+      virtual void        ReportHPD          (const LHCb::RichSmartID &smartID) = 0;
       virtual void        ReportHPD          (const Rich::DAQ::Level1LogicalID      &l1LogicalID,
                                               const Rich::DAQ::L1InputWithinIngress &l1InputIngress,
                                               const Rich::DAQ::L1IngressID          &ingressID,
                                               const Rich::DetectorType              &richDetector) =0;
-     virtual void       ClearHPDList       ()                                 = 0;
 
-                   
-    protected:
-      
-    private:
+      virtual void       ClearHPDList       ()                                 = 0;
+
     }; // class
+
   } // namespace Mon
 } // namespace Rich
 #endif // ICAMERATOOL_H
