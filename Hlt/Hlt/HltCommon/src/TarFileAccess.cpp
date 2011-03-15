@@ -159,7 +159,7 @@ namespace TarFileAccess_details {
             if (i!=myIndex.end()) {
                 // slice works relative to the current file offset, as it works on an istream...
                 m_file.seekg(0,std::ios_base::beg);
-                cerr << "got file " << i->second.name << " of size " << i->second.size <<  " at offset " << i->second.offset << (i->second.compressed?" (compressed) ":"") << endl;
+                // cerr << "got file " << i->second.name << " of size " << i->second.size <<  " at offset " << i->second.offset << (i->second.compressed?" (compressed) ":"") << endl;
                 io::filtering_istream *in = new io::filtering_istream();
                 if (i->second.compressed) {
 #ifdef _WIN32
