@@ -274,7 +274,7 @@ namespace ConfigTarFileAccessSvc_details {
 
   bool TarFile::append(const string& name, std::stringstream& is) {
 #ifndef _WIN32
-    if (m_compressOnWrite && is.str().size()>512 && name.compare(name.size()-3,3,".gz")!=0 ) {
+    if (m_compressOnWrite && is.str().size()>512 && (name.size()<3||name.compare(name.size()-3,3,".gz")!=0) ) {
         std::stringstream out;
         io::filtering_istream in;
         in.push(io::gzip_compressor(9));
@@ -492,7 +492,7 @@ DECLARE_SERVICE_FACTORY(ConfigTarFileAccessSvc)
   if (!def.empty()) def += "/config.tar";
   declareProperty("File", m_name = def);
   declareProperty("Mode", m_mode = "ReadOnly");
-  declareProperty("CompressOnWrite", m_compress = false );
+  declareProperty("CompressOnWrite", m_compress = true );
 }
 
 //=============================================================================
