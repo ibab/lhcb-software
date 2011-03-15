@@ -19,8 +19,8 @@
 #include <grp.h>
 #include <sys/stat.h>
 #else 
-  typedef int uid_t;
-  typedef int gid_t;
+typedef int uid_t;
+typedef int gid_t;
 #endif
 using namespace std;
 
@@ -88,9 +88,9 @@ namespace {
     }
 
 
-    size_t maxValWithDigits(unsigned digits, unsigned bitsPerDigit) {
-        return (1UL << (digits*bitsPerDigit)) - 1 ;
-    }
+    //size_t maxValWithDigits(unsigned digits, unsigned bitsPerDigit) {
+    //    return (1UL << (digits*bitsPerDigit)) - 1 ;
+    //}
 
     template <typename T> 
     char* putString(const char* s, T& buffer ) {
@@ -138,12 +138,13 @@ namespace {
 namespace TarFileAccess_details {
     class TarFile {
     public:
-        TarFile(const std::string& name, ios::openmode mode = ios::in ) 
+        TarFile(const std::string& name, ios::openmode mode = ios::in, bool compressOnWrite = false ) 
             : m_name(name)
             , m_leof(0)
             , m_indexUpToDate(false) 
             , m_myUid(0)
             , m_myGid(0)
+            , m_compressOnWrite( compressOnWrite )
         {
                 m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
         }
@@ -154,24 +155,22 @@ namespace TarFileAccess_details {
             if (i!=myIndex.end()) {
                 // slice works relative to the current file offset, as it works on an istream...
                 m_file.seekg(0,std::ios_base::beg);
-                // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
-                return true;
-            }
+                if (i->second.compressed) {
 #ifndef _WIN32
-            // try to read a gzipped version of the filename
-            i = myIndex.find(name+".gz");
-            if (i!=myIndex.end()) {
-                // slice works relative to the current file offset, as it works on an istream...
-                m_file.seekg(0,std::ios_base::beg);
-                io::filtering_istream in;
-                in.push(io::gzip_decompressor());
-                in.push(io::slice(m_file,i->second.offset,i->second.size));
-                // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                io::copy(in, os, 8192);
+                    io::filtering_istream in;
+                    in.push(io::gzip_decompressor());
+                    in.push(io::slice(m_file,i->second.offset,i->second.size));
+                    // suggest an 8K buffer size as hint -- most config items are smaller than that...
+                    io::copy(in, os, 8192);
+#else 
+                    return false;
+#endif
+                } else {
+                    // suggest an 8K buffer size as hint -- most config items are smaller than that...
+                    io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
+                }
                 return true;
             }
-#endif
             return false;
         }
 
@@ -197,13 +196,15 @@ namespace TarFileAccess_details {
         }
     private:
         struct Info {
-            Info(size_t offset) : size(0),type( TarFileType(0) ),offset(offset) {}
+            Info() : size(0),type( TarFileType(0) ),offset(0),compressed(false) {}
             std::string      name;
             size_t           size;
             TarFileType      type;
             size_t           offset;
+            bool             compressed;
         };
 
+        bool _append(const string& name, std::stringstream& is);
         bool index(std::streamoff start=0) const;
         const std::map<Gaudi::StringKey,Info>&  getIndex() const {
             if (!m_indexUpToDate) m_indexUpToDate = index();
@@ -268,17 +269,31 @@ namespace TarFileAccess_details {
         mutable std::string m_uname;
         mutable uid_t m_myUid;
         mutable gid_t m_myGid;
+        bool m_compressOnWrite;
     };
 
     bool TarFile::append(const string& name, std::stringstream& is) {
+#ifndef _WIN32
+        if (m_compressOnWrite && is.str().size()>512 && (name.size()<3||name.compare(name.size()-3,3,".gz")!=0) ) {
+            std::stringstream out;
+            io::filtering_istream in;
+            in.push(io::gzip_compressor(9));
+            in.push(is);
+            io::copy(in,out, is.str().size());
+            // TODO: check that the compressed version actually occupies less blocks
+            //       if not, it's useless to compress..
+            return _append(name+".gz",out);
+        } 
+#endif
+        return _append(name,is);
+    }
+
+    bool TarFile::_append(const string& name, std::stringstream& is) {
               //TODO: check if file is open in read/write mode...
               m_indexUpToDate = false;
               std::string bstring = is.str();
               size_t size = bstring.size();
               const char* buffer = bstring.c_str();
-              // TODO: if size exceed the blocksize, perform gzip compression, and see if it reduces the # of blocks...
-              //       if so, write the .gz version instead
-
                if (m_file.tellp()>=0 && m_leof!=m_file.tellp() ) {
                    m_file.seekp(m_leof,ios::beg); // where do we start writing?
                }
@@ -408,6 +423,13 @@ namespace TarFileAccess_details {
                     // so we overwrite the truncated one with the long one...
                     info.name = fname.str();
                 }
+                info.offset = m_file.tellg(); // this goes here, as the longlink handling
+                                              // reads an extra block...
+                // if name ends in .gz, assume it is gzipped.
+                // Strip the name down, and flag as compressed in info.
+                info.compressed = (info.name.size()>3 && info.name.compare(info.name.size()-3,3,".gz") == 0 );
+                if (info.compressed) info.name = info.name.substr( 0, info.name.size()-3 ) ; 
+
                 return true;
     }
 
@@ -416,7 +438,7 @@ namespace TarFileAccess_details {
             if (offset==0) m_index.clear();
             m_file.seekg(offset,ios::beg);
             while (m_file.read( (char*) &header, sizeof(header) )) {
-                Info info(m_file.tellg());
+                Info info;
                 if (!interpretHeader( header, info))  {
                     // check whether we're at the end of the file: (at least) two all-zero headers)
                     if (isZero(header)) {
@@ -427,7 +449,7 @@ namespace TarFileAccess_details {
                             return true;
                         }
                     }
-                    std::cerr << "failed to interpret header @ " << offset << " in tarfile " << m_name << std::endl;
+                    std::cerr << "failed to interpret header preceeding  " << m_file.tellg() << " in tarfile " << m_name << std::endl;
                     m_file.seekg(0,std::ios::beg);
                     return false;
                 }
@@ -452,7 +474,7 @@ namespace TarFileAccess_details {
             m_file.clear();
             m_file.seekg(0,std::ios::beg);
             return true;
-    };
+    }
 }
 //=============================================================================
 // implementation of TarFileAccess
@@ -511,7 +533,6 @@ std::vector<std::string>
 TarFileAccess::listdir(const std::string &url) {
     std::pair<TarFileAccess_details::TarFile*, std::string> resolved = resolve(url);
     if (resolved.first==0) return std::vector<std::string>();
-
     assert(1==0); 
     return std::vector<std::string>();
 }
