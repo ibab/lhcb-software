@@ -4,7 +4,7 @@ version v28r1p2
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r1p1 Phys
+use  DaVinci                 	v28r1p2 Phys
 use  DaVinciTests               v2r3
 
 # Patches
