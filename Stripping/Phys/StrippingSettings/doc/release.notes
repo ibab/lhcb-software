@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-15 - Thomas Blake
+ - Updated line config dictionaries and dbase 
+
 ! 2011-03-11 - Thomas Blake
  - Updated line dictionary for displaced vertices, BdKstMuMu and TriMuons
 

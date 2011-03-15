@@ -122,13 +122,13 @@ TrackEffDownMuon = {
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
     'CONFIG' : {
-    'MuMom':                1000.   # MeV                                                                                                
-    ,       'MuTMom':               100.    # MeV                                                                                                
-    ,       'TrChi2':               10.     # MeV                                                                                                
-    ,       'MassPreComb':          2000.   # MeV                                                                                                
-    ,       'MassPostComb':         200.    # MeV                                                                                                
-    ,       'Doca':                 5.      # mm                                                                                                 
-    ,       'VertChi2':             25.     # adimensional                                                                                       
+    'MuMom':                1000.   
+    ,       'MuTMom':               100.
+    ,       'TrChi2':               10. 
+    ,       'MassPreComb':          2000.
+    ,       'MassPostComb':         200. 
+    ,       'Doca':                 5.   
+    ,       'VertChi2':             25.  
     ,       'DataType':             '2010'
     ,       'NominalLinePrescale':  1.
     ,       'NominalLinePostscale': 1.
@@ -142,13 +142,13 @@ TrackEffVeloMuon = {
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
     'CONFIG' : {
-    "TrChi2Mu":             10.     # adimensional                                                                                       
-    ,       "JpsiPt":               0.5     # GeV                                                                                                
-    ,       "TrPt":                 100.    # MeV                                                                                                
-    ,       "VertChi2":             25.     # adimensional                                                                                       
-    ,       "MassPreComb":          1000.   # MeV                                                                                                
-    ,       "MassPostComb":         400.    # MeV                                                                                                
-    ,       "Prescale":             1.      # MeV                                                                                                
+    "TrChi2Mu":             10.     # adimensional
+    ,       "JpsiPt":               0.5     # GeV
+    ,       "TrPt":                 100.    # MeV
+    ,       "VertChi2":             25.     # adimensional
+    ,       "MassPreComb":          1000.   # MeV
+    ,       "MassPostComb":         400.    # MeV
+    ,       "Prescale":             1.      # MeV
     ,       "Postscale":            1.      # MeV  
     }
     }
@@ -157,7 +157,7 @@ TrackEffMuonTT = {
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {
+    'CONFIG'  : {
     'JpsiMassWin'                 : 500,
     'UpsilonMassWin'              : 1500,
     'ZMassWin'                    : 40000,
@@ -168,17 +168,25 @@ TrackEffMuonTT = {
     'JpsiLongPT'                  : 1000,
     'UpsilonLongPT'               : 1000,
     'ZLongPT'                     : 10000,
-    'JpsiPT'                      : 300,
-    'UpsilonPT'                   : 500,
-    'ZPT'                         : 500,
-    'JpsiLongMuonMinIPCHI2'       : 5,
-    'UpsilonLongMuonMinIPCHI2'    : 5,
-    'ZLongMuonMinIPCHI2'          : 5,
+    'JpsiPT'                      : 500,
+    'UpsilonPT'                   : 0,
+    'ZPT'                         : 0,
+    'JpsiLongMuonMinIP'           : 0.1,
+    'UpsilonLongMuonMinIP'        : 0,
+    'ZLongMuonMinIP'              : 0,
     'JpsiLongMuonTrackCHI2'       : 5,
     'UpsilonLongMuonTrackCHI2'    : 5,
     'ZLongMuonTrackCHI2'          : 5,
     'VertexChi2'                  : 10,
-    'LongMuonPID'                 : -2,
+    'LongMuonPID'                 : 0,
+    'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
+    'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0}, 
+    'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0}, 
+    'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
+    'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0}, 
+    'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0}, 
     'JpsiPrescale'                : 1,
     'UpsilonPrescale'             : 1,
     'ZPrescale'                   : 1,
