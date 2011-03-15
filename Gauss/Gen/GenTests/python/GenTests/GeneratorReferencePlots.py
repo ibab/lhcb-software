@@ -48,6 +48,9 @@ class GeneratorLogFile:
         self.PythiaVersion = grepPattern( 'This is PYTHIA version (\S+)' , line )
       if ( self.TotalCrossSection == None ):
         self.TotalCrossSection = grepPattern( 'All included subprocesses *I *\d+ *\d+ I *(\S+)' , line )
+        if (self.TotalCrossSection != None):
+          if ('D' in self.TotalCrossSection):
+            self.TotalCrossSection = self.TotalCrossSection.replace('D', 'E')
       if ( self.TotalInteractions == None ):
         self.TotalInteractions = grepPattern( 'Number of generated interactions : (\d+)' , line )
       if ( self.TotalIntWithB == None ):
@@ -68,6 +71,8 @@ class GeneratorLogFile:
         self.TotalEventsAfterCut = grepPattern( 'Number of events for generator level cut, before : \d+, after : (\d+)' , line )
       if ( self.TotalTime == None ):
         self.TotalTime = grepPattern( 'SequencerTime... *INFO *Generation *\| *(\S+)' , line )
+        if ( self.TotalTime == None ):
+          self.TotalTime = 0.
     f.close()
     
   def eventType(self):
@@ -183,10 +188,10 @@ class GeneratorWebPage:
       self.refVersion = 'v26r1'
     self.pythiaVersion = P 
     if P == None:
-      self.pythiaVersion = '6.416'
+      self.pythiaVersion = '6.424.2'
     self.refPythiaVersion = RPV
     if RPV == None:
-      self.refPythiaVersion = '6.325'
+      self.refPythiaVersion = '6.418.2'
   def setEventType(self,E):
     self.eventType = E
   def addQuantity(self,N,R,C):
@@ -470,39 +475,32 @@ def main():
   if options.verbose:
     print "Read reference histogram file: " + options.referenceHistoName 
   refFile = TFile( options.referenceHistoName ) 
-  IntREF = gDirectory.Get( 'GeneratorAnalysis/h150' )
-  PrimaryVtxXREF = gDirectory.Get( 'GeneratorAnalysis/h101' ) 
-  PrimaryVtxYREF = gDirectory.Get( 'GeneratorAnalysis/h102' ) 
-  PrimaryVtxZREF = gDirectory.Get( 'GeneratorAnalysis/h103' ) 
-  MultiplicityREF = gDirectory.Get( 'GeneratorAnalysis/h201' ) 
-  PseudorapREF = gDirectory.Get( 'GeneratorAnalysis/h202' ) 
-  PtREF = gDirectory.Get( 'GeneratorAnalysis/h207' ) 
-  ProcessREF = gDirectory.Get( 'GeneratorAnalysis/h109' ) 
-  MultInLHCbREF = gDirectory.Get( 'GeneratorAnalysis/h301' ) 
-  PtInLHCbREF = gDirectory.Get( 'GeneratorAnalysis/h307' ) 
-  BHadFracREF = gDirectory.Get( 'GeneratorAnalysis/h1000' ) 
-  BHadSpinREF = gDirectory.Get( 'GeneratorAnalysis/h1001' ) 
-  NeutralMultiplicityREF = gDirectory.Get( 'GeneratorAnalysis/h501' ) 
-  NeutralEnergyREF = gDirectory.Get( 'GeneratorAnalysis/h503' ) 
+ 
+  IntREF = gDirectory.Get( 'GenMonitorAlg/10' )
+  PrimaryVtxXREF = gDirectory.Get( 'GenMonitorAlg/11' ) 
+  PrimaryVtxYREF = gDirectory.Get( 'GenMonitorAlg/12' ) 
+  PrimaryVtxZREF = gDirectory.Get( 'GenMonitorAlg/13' ) 
+  MultiplicityREF = gDirectory.Get( 'GenMonitorAlg/3' ) 
+  PseudorapREF = gDirectory.Get( 'GenMonitorAlg/44' )
+  PtREF = gDirectory.Get( 'GenMonitorAlg/45' )
+  ProcessREF = gDirectory.Get( 'GenMonitorAlg/5' )
+  MultInLHCbREF = gDirectory.Get( 'GenMonitorAlg/4' ) 
+  
   
   #####  Histos    
   if options.verbose:
     print "Compare with histogram file: " + options.HistoName
   aFile = TFile( options.HistoName ) 
-  Int = gDirectory.Get( 'GeneratorAnalysis/150' )
-  PrimaryVtxX = gDirectory.Get( 'GeneratorAnalysis/101' ) 
-  PrimaryVtxY = gDirectory.Get( 'GeneratorAnalysis/102' ) 
-  PrimaryVtxZ = gDirectory.Get( 'GeneratorAnalysis/103' ) 
-  Multiplicity = gDirectory.Get( 'GeneratorAnalysis/201' ) 
-  Pseudorap = gDirectory.Get( 'GeneratorAnalysis/202' ) 
-  Pt = gDirectory.Get( 'GeneratorAnalysis/207' ) 
-  Process = gDirectory.Get( 'GeneratorAnalysis/109' ) 
-  MultInLHCb = gDirectory.Get( 'GeneratorAnalysis/301' ) 
-  PtInLHCb = gDirectory.Get( 'GeneratorAnalysis/307' ) 
-  BHadFrac = gDirectory.Get( 'GeneratorAnalysis/1000' ) 
-  BHadSpin = gDirectory.Get( 'GeneratorAnalysis/1001' ) 
-  NeutralMultiplicity = gDirectory.Get( 'GeneratorAnalysis/501' ) 
-  NeutralEnergy = gDirectory.Get( 'GeneratorAnalysis/503' ) 
+
+  Int = gDirectory.Get( 'GenMonitorAlg/10' )
+  PrimaryVtxX = gDirectory.Get( 'GenMonitorAlg/11' ) 
+  PrimaryVtxY = gDirectory.Get( 'GenMonitorAlg/12' ) 
+  PrimaryVtxZ = gDirectory.Get( 'GenMonitorAlg/13' ) 
+  Multiplicity = gDirectory.Get( 'GenMonitorAlg/3' )
+  Pseudorap = gDirectory.Get( 'GenMonitorAlg/44' )
+  Pt = gDirectory.Get( 'GenMonitorAlg/45' )
+  Process = gDirectory.Get( 'GenMonitorAlg/5' )
+  MultInLHCb = gDirectory.Get( 'GenMonitorAlg/4' ) 
   
   c1 = TCanvas( 'c1' , 'Gauss' , 200 , 10 , 800 , 800 ) 
   
@@ -537,21 +535,21 @@ def main():
   
   ####################################################################
   multiplicityRefHist = GeneratorHisto( c1 , MultiplicityREF , Multiplicity ,
-    "N(charged particles)" , "N/5" , "Multiplicity of charged particles in 4#pi" ,
+    "N(charged particles)" , "N/5" , "Multiplicity of stable charged particles in 4#pi" ,
     "Multiplicity" , True )
   multiplicityRefHist.plot()
   webPage.addPlot(multiplicityRefHist)
   
   ####################################################################
   pseudorapRefHist = GeneratorHisto( c1 , PseudorapREF , Pseudorap ,
-    "#eta" , "N/0.2" , "#eta of charged particles in 4#pi" ,
+    "#eta" , "N/0.2" , "#eta of stable charged particles in 4#pi" ,
     "Pseudorapidity" , False )
   pseudorapRefHist.plot()
   webPage.addPlot(pseudorapRefHist)
   
   ####################################################################
   ptRefHist = GeneratorHisto( c1 , PtREF , Pt , 
-    "p_{T} (GeV/c)" , "N/40 MeV/c" , "p_{T} of charged particles in 4#pi" ,
+    "p_{T} (GeV/c)" , "N/40 MeV/c" , "p_{T} of stable charged particles in 4#pi" ,
     "Pt" , True )
   ptRefHist.plot()
   webPage.addPlot(ptRefHist)
@@ -571,39 +569,6 @@ def main():
   webPage.addPlot(multiplicityInLHCbRefHist)
   
   ####################################################################
-  ptInLHCbRefHist = GeneratorHisto( c1 , PtInLHCbREF , PtInLHCb ,
-    "p_{T} (GeV/c)" , "N/40 MeV/c" , "p_{T} of charged particles in LHCb" ,
-    "PtInLHCb" , True )
-  ptInLHCbRefHist.plot()
-  webPage.addPlot(ptInLHCbRefHist)
-
-  ####################################################################
-  bHadFracRefHist = GeneratorHisto( c1 , BHadFracREF , BHadFrac ,
-    "B hadron type" , "N" , "B Hadron Fractions" ,
-    "BHadronFraction" , False )
-  bHadFracRefHist.plot()
-  webPage.addPlot(bHadFracRefHist)
-  
-  ####################################################################
-  bHadSpinRefHist = GeneratorHisto( c1 , BHadSpinREF , BHadSpin ,
-    "B hadron spin" , "N" , "B Hadron Spin State" ,
-    "BHadronSpin" , False )
-  bHadSpinRefHist.plot()
-  webPage.addPlot(bHadSpinRefHist)
-    
-  ####################################################################
-  neutralMultiplicityRefHist = GeneratorHisto( c1 , NeutralMultiplicityREF , NeutralMultiplicity , 
-    "N(neutral particles)" , "N/2" , "Stable neutral particles multiplicity in LHCb" ,
-    "NeutralMultiplicity" , True )
-  neutralMultiplicityRefHist.plot()
-  webPage.addPlot(neutralMultiplicityRefHist)
-  
-  ####################################################################
-  neutralEnergyRefHist = GeneratorHisto( c1 , NeutralEnergyREF , NeutralEnergy ,
-    "E (GeV)" , "N/1 GeV" , "Stable neutral energy in LHCb" ,
-    "NeutralEnergy" , True )
-  neutralEnergyRefHist.plot()
-  webPage.addPlot(neutralEnergyRefHist)  
   
   refFile.Close()
   aFile.Close()
