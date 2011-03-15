@@ -5,6 +5,7 @@
 !               tests with Gauss
 !=============================================================================
 
+!========================= GenTests v1r5 2011-03-15 ==========================
 ! 2011-03-15 - Silvia Miglioranzi
  - Updated the GeneratorReferencePlots.py script to take into account new 
    histos names and different format ("D" instead of "E") in the cross section
