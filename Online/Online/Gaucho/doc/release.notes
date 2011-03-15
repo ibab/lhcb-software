@@ -3,6 +3,9 @@
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
 
+! 2011-03-15 - Olivier Callot
+ - Dirty patch to allow access to HLT (Adder) histograms from the presenter
+
 ! 2009-11-05 - Eric van Herwijnen
  - moved msg in MonProfile.splitObject - not understood bug
  - Set timerCycle to desiredDeltaTCycle - 1

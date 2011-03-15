@@ -28,11 +28,19 @@ HistTask::HistTask(std::string task,std::string dns)
   m_RPC = 0;
   for (i=0;i<svcs->size();i++)
   {
+    //std::cout << i << " -> " << svcs->at(i) << std::endl;
+    
     int status = boost::regex_search(svcs->at(i),m_taskexp);
     if (status)
     {
       m_service = std::string("MON_")+svcs->at(i).substr(0,svcs->at(i).find("@"))+std::string("/Histos/HistCommand");
+
+      //=== TEMPORARY PATCH === Beat should fix the names !!!
+      if ( svcs->at(i).substr(0,5) == "PART0" ) m_service = "MON_LHCb_Adder/Histos/HistCommand";
+      //=========================================================================================
+
       m_RPC = new RPCRec((char*)m_service.c_str(),3,true);
+      std::cout << "Found service " << m_service << std::endl;
     }
   }
 }
@@ -53,6 +61,7 @@ int HistTask::Directory(std::vector<std::string> &hists)
 int HistTask::Histos(std::vector<std::string> &hists,std::vector<TObject*> &histos)
 {
   int status;
+  if (m_RPC == 0) return 1;
   RPCCommRead *rrd;
   int rdlen = sizeof(RPCCommRead);
   unsigned int i;
