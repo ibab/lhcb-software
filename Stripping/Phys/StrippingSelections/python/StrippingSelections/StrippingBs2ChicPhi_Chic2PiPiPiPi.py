@@ -14,13 +14,13 @@ __all__ = (
 
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 
-name = "Bs2ChicPhi_Chic2PiPiPiPi"
+default_name = "Bs2ChicPhi_Chic2PiPiPiPi"
 
 
 config_params = {

@@ -203,7 +203,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
                               )
 
     ## get the default configuration 
-    @staticmethod
+    #@staticmethod
     def defaultConfiguration( key = None ) :
         
         from copy import deepcopy
@@ -364,7 +364,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             return self.K0S_LL
 
         _K0S = CombineParticles(
-            "StripK0S" ,
+            #self.name + "StripK0S" ,
             DecayDescriptor = "KS0 -> pi+ pi-" ,
             Preambulo       = self._Preambulo + self._k0smonitor ,
             DaughtersCuts   = {
@@ -396,9 +396,9 @@ class StrippingV0ForPIDConf(LineBuilder) :
         """
         if hasattr ( self , 'K0S_DD' ) :
             return self.K0S_DD
-
+        
         _K0S = CombineParticles(
-            "StripK0S_DD" ,
+            #self.name + "StripK0S_DD" ,
             DecayDescriptor = "KS0 -> pi+ pi-" ,
             Preambulo       = self._Preambulo + self._k0smonitor ,
             DaughtersCuts   = {
@@ -432,7 +432,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             return self.Lam0_LL
 
         _Lam0 = CombineParticles(
-#            "StripLam0" ,
+            #self.name + "StripLam0" ,
             DecayDescriptor = "[ Lambda0 -> p+ pi-]cc" ,
             Preambulo       = self._Preambulo + self._lam0monitor,
             DaughtersCuts   = {
@@ -466,7 +466,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             return self.Lam0_DD
 
         _Lam0 = CombineParticles(
-            #            "StripLam0_DD" ,
+            #self.name + "StripLam0_DD" ,
             DecayDescriptor = "[ Lambda0 -> p+ pi-]cc" ,
             Preambulo       = self._Preambulo + self._lam0monitor,
             DaughtersCuts   = {
@@ -501,9 +501,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         K0S = self.K0S()
         _K0S_LL_Bin1_Filter = FilterDesktop (
-            ##
-#            'K0S_LL_Bin1_Filter' ,
-            ##
+            #self.name + 'K0S_LL_Bin1_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._k0smonitor,
@@ -532,9 +530,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             return self.K0S_DD_Bin1_V0ForPID
 
         _K0S_DD_Bin1_Filter = FilterDesktop (
-            ##
-#            'K0S_DD_Bin1_Filter' ,
-            ##
+            #self.name + 'K0S_DD_Bin1_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._k0smonitor,
@@ -565,9 +561,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         Lam0 = self.Lam0()
         _Lam0_LL_Bin1_Filter = FilterDesktop (
-            ##
-#            'Lam0_LL_Bin1_Filter' ,
-            ##
+            #self.name + 'Lam0_LL_Bin1_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._lam0monitor,
@@ -597,9 +591,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         Lam0 = self.Lam0()
         _Lam0_LL_Bin2_Filter = FilterDesktop (
-            ##
-#            'Lam0_LL_Bin2_Filter' ,
-            ##
+            #self.name + 'Lam0_LL_Bin2_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._lam0monitor,
@@ -630,9 +622,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         
         Lam0 = self.Lam0()
         _Lam0_LL_Bin1_IsMUON_Filter = FilterDesktop (
-            ##
-#            'Lam0_LL_Bin1_Filter' ,
-            ##
+            #self.name + 'Lam0_LL_Bin1_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._lam0monitor,
@@ -662,9 +652,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         
         Lam0 = self.Lam0()
         _Lam0_LL_Bin2_IsMUON_Filter = FilterDesktop (
-            ##
-#            'Lam0_LL_Bin2_Filter' ,
-            ##
+            #self.name + 'Lam0_LL_Bin2_Filter' ,
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
             Preambulo    = self._lam0monitor,
@@ -695,7 +683,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0DD = self.Lam0DD()
         _Lam0_DD_Bin1_Filter = FilterDesktop (
             ##
-#            'Lam0_DD_Bin1_Filter' ,
+            #self.name + 'Lam0_DD_Bin1_Filter' ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
@@ -727,7 +715,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0DD = self.Lam0DD()
         _Lam0_DD_Bin1_IsMUON_Filter = FilterDesktop (
             ##
-#            'Lam0_DD_Bin1_Filter' ,
+            #self.name + 'Lam0_DD_Bin1_Filter' ,
             ##
             Monitor      = self._monitor  ,
             HistoProduce = self._monitor  ,
