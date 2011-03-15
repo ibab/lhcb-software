@@ -12,6 +12,10 @@
 #include <algorithm>
 #include <time.h>
 
+#include "GaudiKernel/ToolFactory.h"
+
+
+
 #ifndef _WIN32
 #include <unistd.h>
 #include <sys/types.h>
@@ -149,29 +153,25 @@ namespace TarFileAccess_details {
                 m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
         }
         bool good() const { return m_file.good(); }
-        bool fillStream(const std::string& name,ostream& os) {
+        istream* open(const std::string& name) {
             const map<Gaudi::StringKey,Info>& myIndex = getIndex();
             map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
             if (i!=myIndex.end()) {
                 // slice works relative to the current file offset, as it works on an istream...
                 m_file.seekg(0,std::ios_base::beg);
+                cerr << "got file " << i->second.name << " of size " << i->second.size <<  " at offset " << i->second.offset << (i->second.compressed?" (compressed) ":"") << endl;
+                io::filtering_istream *in = new io::filtering_istream();
                 if (i->second.compressed) {
-#ifndef _WIN32
-                    io::filtering_istream in;
-                    in.push(io::gzip_decompressor());
-                    in.push(io::slice(m_file,i->second.offset,i->second.size));
-                    // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                    io::copy(in, os, 8192);
-#else 
-                    return false;
+#ifdef _WIN32
+                    return 0;
+#else
+                    in->push(io::gzip_decompressor());
 #endif
-                } else {
-                    // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                    io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
                 }
-                return true;
+                in->push(io::slice(m_file,i->second.offset,i->second.size));
+                return in;
             }
-            return false;
+            return 0;
         }
 
         bool exists(const std::string& path) {
@@ -476,10 +476,19 @@ namespace TarFileAccess_details {
             return true;
     }
 }
+
+// Factory implementation
+DECLARE_TOOL_FACTORY(TarFileAccess)
+
 //=============================================================================
 // implementation of TarFileAccess
 //=============================================================================
-TarFileAccess::TarFileAccess() {}
+TarFileAccess::TarFileAccess( const std::string& type
+                            , const std::string& name
+                            , const IInterface* parent )
+    : base_class(type,name,parent)
+{
+}
 
 TarFileAccess::~TarFileAccess() {
     for (container_t::iterator i = m_tarFiles.begin(); i!=m_tarFiles.end();++i) {
@@ -501,15 +510,18 @@ TarFileAccess::protocols() const {
 
 std::pair<TarFileAccess_details::TarFile*,std::string>
 TarFileAccess::resolve(const std::string& url) {
-    // parse tarfile:/foo/bar/xxx.tar/some/file 
-    //                                ^       ^ file name inside tar file
-    //               ^              ^ tar name
-    static boost::regex tar("^[tT]ar[fF]ile:(.*.tar)(.*)$");
+    // parse tarfile:///foo/bar/xxx.tar/some/file 
+    //                                  ^       ^ file name inside tar file
+    //                 ^              ^ tar name
+    // VFSSvc dictates a :// as seperator between protocol and rest
+    static boost::regex tar("^[tT]ar[fF]ile://(.*.tar)/+(.*)$");
     boost::smatch what;
     if(!boost::regex_match(url, what, tar)) {
+        error() << " could not parse url " << url << endmsg;
         // could not parse url, invalid url
         return make_pair((TarFileAccess_details::TarFile*)0,url);
     }
+    debug() << " resolved url into tarfile " <<  what.str(1) << " and file " << what.str(2) << endmsg;
 
     // check if tarname already known; if not, open and index
     container_t::iterator tarFile =  m_tarFiles.find(what.str(1));
@@ -528,31 +540,17 @@ TarFileAccess::resolve(const std::string& url) {
 
 }
 
-
-std::vector<std::string> 
-TarFileAccess::listdir(const std::string &url) {
-    std::pair<TarFileAccess_details::TarFile*, std::string> resolved = resolve(url);
-    if (resolved.first==0) return std::vector<std::string>();
-    assert(1==0); 
-    return std::vector<std::string>();
-}
-
 std::auto_ptr<std::istream> 
 TarFileAccess::open(const std::string &url) {
-    std::auto_ptr<std::istream> stream;
-
     std::pair<TarFileAccess_details::TarFile*, std::string> resolved = resolve(url);
-    if (resolved.first==0) return stream;
-
-    // if exists, dump into stringstream
-    // TODO: use io::slice to implement zero-copy.. but beware of parent lifetime!
-    //        i.e. must keep track of 'open' files somehow... inherit from istream,
-    //        forward to 'internal' istream, and, in destructor notify that we closed
-    //        using a call-back??? -- not needed! we can use ios_base::register_callback
-    //        to implement this!!
-    // TODO: support automated ungzipping ...
-    std::stringstream *ss = new std::stringstream(std::stringstream::in|std::stringstream::out);
-    stream.reset(ss);
-    if (!resolved.first->fillStream( resolved.second, *ss)) stream.reset(0);
-    return stream;
+    return std::auto_ptr<std::istream> ( resolved.first!=0 ? resolved.first->open(resolved.second) : 0 ) ;
+    //std::auto_ptr<std::istream> is( resolved.first!=0 ? resolved.first->open(resolved.second) : 0 ) ;
+    //if (is->get()==0) error() << "Failed to resolve url " << url << endmsg;
+    //return is;
 }
+
+MsgStream& TarFileAccess::msg(MSG::Level level) const {
+  if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
+  return *m_msg << level;
+}
+
