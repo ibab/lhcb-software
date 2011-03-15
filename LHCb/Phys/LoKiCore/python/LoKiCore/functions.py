@@ -706,8 +706,8 @@ def union ( fun1 , fun2 ) :
     >>> result = union ( fun1 , fun2 ) 
     
     """
-    if hasattr ( fun1 , '_union_' ) : return fun1._union_ ( fun2 )
-    return fun2._union_ ( fun1 )
+    if hasattr ( fun1 , '__union__' ) : return fun1.__union__ ( fun2 )
+    return fun2.__union__ ( fun1 )
 
 # =============================================================================
 ##  create the 'intersection' for two streamers
@@ -733,8 +733,9 @@ def intersection ( fun1 , fun2 ) :
     >>> result = intersection ( fun1 , fun2 ) 
     
     """
-    if hasattr ( fun1 , '_intersection_' ) : return fun1._intersection_ ( fun2 )
-    return fun2._intersection_ ( fun1 )
+    if hasattr ( fun1 , '__intersection__' ) :
+        return fun1.__intersection__ ( fun2 )
+    return fun2.__intersection__ ( fun1 )
 
 
 # =============================================================================
@@ -761,7 +762,7 @@ def difference ( fun1 , fun2 ) :
     >>> result = difference ( fun1 , fun2 ) 
     
     """
-    return fun1._difference_ ( fun2 )
+    return fun1.__difference__ ( fun2 )
 
 # =============================================================================
 ##  create the 'symmetric-difference' for two streamers
@@ -787,8 +788,9 @@ def sym_difference ( fun1 , fun2 ) :
     >>> result = sym_difference ( fun1 , fun2 ) 
     
     """
-    if hasattr ( fun1 , '_sym_difference_' ) : return fun1._sym_difference_ ( fun2 )
-    return fun2._sym_difference_ ( fun1 )
+    if hasattr ( fun1 , '__sym_difference__' ) :
+        return fun1.__sym_difference__ ( fun2 )
+    return fun2.__sym_difference__ ( fun1 )
 
 
 # =============================================================================
@@ -815,7 +817,7 @@ def includes ( fun1 , fun2 ) :
     >>> result = includes ( fun1 , fun2 ) 
     
     """
-    return fun1._includes_ ( fun2 )
+    return fun1.__includes__ ( fun2 )
 
 
 # =============================================================================

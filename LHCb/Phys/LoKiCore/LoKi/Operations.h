@@ -30,6 +30,35 @@ namespace LoKi
   namespace Operations 
   {
     // ========================================================================
+    /** @struct Unique
+     *  Helper structure to define "unique" for container 
+     *  @see LoKi::BasicFunctors::Pipe
+     *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-05
+     */
+    template <class TYPE> 
+    struct Unique : public std::unary_function < std::vector<TYPE> , 
+                                                 std::vector<TYPE> >
+    {
+      // ======================================================================
+      typedef std::vector<TYPE> _Type ;
+      // ======================================================================
+      /// the main method 
+      _Type operator() ( const _Type& a )  const
+      {
+        //
+        if  ( a.empty() ) { return a ; } // RETURN 
+        //
+        _Type _a ( a ) ;
+        //
+        std::stable_sort ( _a.begin() , _a.end () ) ;
+        typename _Type::iterator _ia = std::unique ( _a.begin () , _a.end() ) ;
+        //
+        return _Type ( _a.begin() , _ia ) ;
+      } 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @struct Union 
      *  Helper structure to represent the union of two containters 
      *  @see std::set_union      
@@ -51,7 +80,11 @@ namespace LoKi
       _Type operator() ( const _Type& a , const _Type& b )  const
       {
         // 
-        if ( &a == &b ) { return a ; }                               // RETURN 
+        if ( &a == &b    ) { return a ; }                               // RETURN
+        //
+        LoKi::Operations::Unique<TYPE> _unique ;
+        if      (  a.empty () ) { return _unique ( b ) ; }
+        else if (  b.empty () ) { return _unique ( a ) ; }
         //
         _Type _r ;
         _Type _a ( a ) ;
@@ -93,7 +126,11 @@ namespace LoKi
       _Type operator() ( const _Type& a , const _Type& b )  const
       {
         // 
-        if ( &a == &b ) { return _Type() ; }                         // RETURN 
+        if ( &a == &b   ) { return _Type() ; }                         // RETURN 
+        //
+        LoKi::Operations::Unique<TYPE> _unique ;
+        if      (  a.empty () ) { return           a   ; }
+        else if (  b.empty () ) { return _unique ( a ) ; }
         //
         _Type _r ;
         _Type _a ( a ) ;
@@ -179,6 +216,8 @@ namespace LoKi
       {
         // 
         if ( &a == &b ) { return a ; }                                // RETURN 
+        // 
+        if ( a.empty() || b.empty() ) { return _Type() ; } // RETURN
         //
         _Type _r ;
         _Type _a ( a ) ;
@@ -236,33 +275,6 @@ namespace LoKi
           ( _a.begin () , _ia , 
             _b.begin () , _ib ) ;
         //
-      } 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @struct Unique
-     *  Helper structure to define "unique" for container 
-     *  @see LoKi::BasicFunctors::Pipe
-     *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
-     *  @date 2010-06-05
-     */
-    template <class TYPE> 
-    struct Unique : public std::unary_function < std::vector<TYPE> , 
-                                                 std::vector<TYPE> >
-    {
-      // ======================================================================
-      typedef std::vector<TYPE> _Type ;
-      // ======================================================================
-      /// the main method 
-      _Type operator() ( const _Type& a )  const
-      {
-        //
-        _Type _a ( a ) ;
-        //
-        std::stable_sort ( _a.begin() , _a.end () ) ;
-        typename _Type::iterator _ia = std::unique ( _a.begin () , _a.end() ) ;
-        //
-        return _Type ( _a.begin() , _ia ) ;
       } 
       // ======================================================================
     } ;

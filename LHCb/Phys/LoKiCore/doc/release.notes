@@ -18,6 +18,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-15 - Vanya Belyaev
+
+ - fix the names for FUnOps:
+     Reflex now ignores the names prependended by single underscore... :-( 
+     fix it...
+ - optimize the "set-difference" and "set-intersection"
+
 ! 2011-03-10 - Vanya Belyaev
 
  - Kill the concept of "Element"

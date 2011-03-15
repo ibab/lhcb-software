@@ -1721,7 +1721,7 @@ def decoratePredicateOps ( cuts , opers ) :
         _has_ . __doc__  += opers.__has__  . __doc__
 
 
-    if hasattr ( opers , '_union_' ) :
+    if hasattr ( opers , '__union__' ) :
         def _union_ ( s , s2 ) :
             """
             Union of two streamers
@@ -1731,10 +1731,10 @@ def decoratePredicateOps ( cuts , opers ) :
             >>> u = union ( fun1 , fun2 ) 
             
             """
-            return opers._union_ ( s , s2 )
-        _union_ .__doc__ += opers ._union_ . __doc__ 
+            return opers.__union__ ( s , s2 )
+        _union_ .__doc__ += opers .__union__ . __doc__ 
 
-    if hasattr ( opers , '_intersection_' ) :
+    if hasattr ( opers , '__intersection__' ) :
         def _intersection_ ( s , s2 ) :
             """
             Intersection of two streamers
@@ -1744,10 +1744,10 @@ def decoratePredicateOps ( cuts , opers ) :
             >>> u = intersection ( fun1 , fun2 ) 
             
             """
-            return opers._intersection_ ( s , s2 )
-        _intersection_ .__doc__ += opers ._intersection_ . __doc__ 
+            return opers.__intersection__ ( s , s2 )
+        _intersection_ .__doc__ += opers .__intersection__ . __doc__ 
 
-    if hasattr ( opers , '_difference_' ) :
+    if hasattr ( opers , '__difference__' ) :
         def _difference_ ( s , s2 ) :
             """
             Difference of two streamers
@@ -1757,10 +1757,10 @@ def decoratePredicateOps ( cuts , opers ) :
             >>> u = difference ( fun1 , fun2 ) 
             
             """
-            return opers._difference_ ( s , s2 )
-        _difference_ .__doc__ += opers ._difference_ . __doc__ 
+            return opers.__difference__ ( s , s2 )
+        _difference_ .__doc__ += opers .__difference__ . __doc__ 
 
-    if hasattr ( opers , '_sym_difference_' ) :
+    if hasattr ( opers , '__sym_difference__' ) :
         def _sym_difference_ ( s , s2 ) :
             """
             Symmetric difference of two streamers
@@ -1770,8 +1770,8 @@ def decoratePredicateOps ( cuts , opers ) :
             >>> u = sym_difference ( fun1 , fun2 ) 
             
             """
-            return opers._sym_difference_ ( s , s2 )
-        _sym_difference_ .__doc__ += opers ._sym_difference_ . __doc__ 
+            return opers.__sym_difference__ ( s , s2 )
+        _sym_difference_ .__doc__ += opers .__sym_difference__ . __doc__ 
 
     if hasattr ( opers , '_includes_' ) :
         def _includes_ ( s , s2 ) :
@@ -1808,21 +1808,21 @@ def decoratePredicateOps ( cuts , opers ) :
         if _timer_   : cut . __timer__   = _timer_     # timer
 
         if _union_         :
-            cut . _union_         =  _union_
+            cut . __union__         =  _union_
             if not hasattr ( cut , '__add__'  ) : cut .__add__  = _union_
             
         if _intersection_  :
-            cut . _intersection_  =  _intersection_
+            cut . __intersection__  =  _intersection_
             if not hasattr ( cut , '__mul__'  ) : cut .__mul__  = _intersection_
             
         if _difference_  :
-            cut . _difference_  =  _difference_
+            cut . __difference__  =  _difference_
             if not hasattr ( cut , '__sub__'  ) : cut .__sub__  = _difference_
 
         if _sym_difference_    :
-            cut . _sym_difference_  =  _sym_difference_
+            cut . __sym_difference__  =  _sym_difference_
         
-        if _includes_          : cut . _includes_  =  _includes_
+        if _includes_          : cut . __includes__  =  _includes_
 
         if _eff_       : cut .__eff__     =  _eff_
         if _effErr_    : cut .__effErr__  =  _effErr_
@@ -2067,7 +2067,7 @@ def decorateMaps ( funcs , opers ) :
         # documentation        
         _tee_ .__doc__  += opers . __tee__     . __doc__
         
-    if hasattr ( opers , '_union_' ) :
+    if hasattr ( opers , '__union__' ) :
         def _union_ ( s , s2 ) :
             """
             Union of two streamers
@@ -2077,10 +2077,10 @@ def decorateMaps ( funcs , opers ) :
             >>> u = union ( fun1 , fun2 ) 
             
             """
-            return opers._union_ ( s , s2 )
-        _union_ .__doc__ += opers ._union_ . __doc__ 
+            return opers.__union__ ( s , s2 )
+        _union_ .__doc__ += opers .__union__ . __doc__ 
 
-    if hasattr ( opers , '_intersection_' ) :
+    if hasattr ( opers , '__intersection__' ) :
         def _intersection_ ( s , s2 ) :
             """
             Intersection of two streamers
@@ -2090,10 +2090,10 @@ def decorateMaps ( funcs , opers ) :
             >>> u = intersection ( fun1 , fun2 ) 
             
             """
-            return opers._intersection_ ( s , s2 )
-        _intersection_ .__doc__ += opers ._intersection_ . __doc__ 
+            return opers.__intersection__ ( s , s2 )
+        _intersection_ .__doc__ += opers .__intersection__ . __doc__ 
 
-    if hasattr ( opers , '_difference_' ) :
+    if hasattr ( opers , '__difference__' ) :
         def _difference_ ( s , s2 ) :
             """
             Difference of two streamers
@@ -2103,10 +2103,10 @@ def decorateMaps ( funcs , opers ) :
             >>> u = difference ( fun1 , fun2 ) 
             
             """
-            return opers._difference_ ( s , s2 )
-        _difference_ .__doc__ += opers ._difference_ . __doc__ 
+            return opers.__difference__ ( s , s2 )
+        _difference_ .__doc__ += opers .__difference__ . __doc__ 
 
-    if hasattr ( opers , '_sym_difference_' ) :
+    if hasattr ( opers , '__sym_difference__' ) :
         def _sym_difference_ ( s , s2 ) :
             """
             Symmetric difference of two streamers
@@ -2116,10 +2116,10 @@ def decorateMaps ( funcs , opers ) :
             >>> u = sym_difference ( fun1 , fun2 ) 
             
             """
-            return opers._sym_difference_ ( s , s2 )
-        _sym_difference_ .__doc__ += opers ._sym_difference_ . __doc__ 
+            return opers.__sym_difference__ ( s , s2 )
+        _sym_difference_ .__doc__ += opers .__sym_difference__ . __doc__ 
 
-    if hasattr ( opers , '_includes_' ) :
+    if hasattr ( opers , '__includes__' ) :
         def _includes_ ( s , s2 ) :
             """
             ``Includes'' of two streamers
@@ -2129,8 +2129,8 @@ def decorateMaps ( funcs , opers ) :
             >>> u = includes ( fun1 , fun2 ) 
             
             """
-            return opers._includes_ ( s , s2 )
-        _includes_ .__doc__ += opers ._includes_ . __doc__ 
+            return opers.__includes__ ( s , s2 )
+        _includes_ .__doc__ += opers .__includes__ . __doc__ 
 
     # finally redefine the functions:
     for fun in funcs :
@@ -2140,29 +2140,24 @@ def decorateMaps ( funcs , opers ) :
         if _tee_     : fun . __tee__      =  _tee_
 
         if _union_         :
-            fun . _union_         =  _union_
-            if not hasattr ( fun , '__or__'   ) : fun .__or__   = _union_
-            if not hasattr ( fun , '__add__'  ) : fun .__add__  = _union_
-            if not hasattr ( fun , '__ror__'  ) : fun .__ror__  = _union_
-            if not hasattr ( fun , '__radd__' ) : fun .__radd__ = _union_
+            fun . __union__         =  _union_
+            fun . __add__           =  _union_
+            fun . __radd__          =  _union_
             
         if _intersection_  :
-            fun . _intersection_  =  _intersection_
-            if not hasattr ( fun , '__and__'  ) : fun .__and__  = _intersection_
-            if not hasattr ( fun , '__mul__'  ) : fun .__mul__  = _intersection_
-            if not hasattr ( fun , '__rand__' ) : fun .__rand__ = _intersection_
-            if not hasattr ( fun , '__rmul__' ) : fun .__rmul__ = _intersection_
+            fun . __intersection__  =  _intersection_
             
         if _difference_  :
-            fun . _difference_  =  _difference_
-            if not hasattr ( fun , '__sub__'  ) : fun .__sub__  = _difference_
+            fun . __difference__  =  _difference_
+            fun .__sub__          = _difference_
 
         if _sym_difference_    :
-            fun . _sym_difference_  =  _sym_difference_
-            if not hasattr ( fun , '__xor__'  ) : fun .__xor__  = _sym_difference_
-            if not hasattr ( fun , '__rxor__' ) : fun .__rxor__ = _sym_difference_
+            fun . __sym_difference__  =  _sym_difference_
+            fun . __xor__             =  _sym_difference_
+            fun . __rxor__            =  _sym_difference_
         
-        if _includes_          : fun . _includes_  =  _includes_
+        if _includes_  :
+            fun . __includes__  =  _includes_
 
 
     return decorateShifts ( funcs , opers )   ## RETURN 

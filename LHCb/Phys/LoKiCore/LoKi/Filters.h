@@ -1328,8 +1328,12 @@ namespace LoKi
       typename LoKi::Functors::Union<TYPE,TYPE2>::result_type operator() 
         ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
       {
+        typename LoKi::Functor <TYPE,std::vector<TYPE2> >::result_type
+          r1 = this -> fun1 ( a ) ;
+        if ( r1.empty() ) { return r1 ; } // RETURN 
+        //
         LoKi::Operations::Difference<TYPE2> _diff ;
-        return _diff ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+        return _diff ( r1  , this->fun2 ( a )  ) ;
       }
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
@@ -1363,8 +1367,12 @@ namespace LoKi
       typename LoKi::Functors::Union<void,TYPE2>::result_type operator() 
         ( /* typename LoKi::Functors::Union<TYPE,TYPE2>::argument a */ ) const 
       {
+        typename LoKi::Functor <void,std::vector<TYPE2> >::result_type
+          r1 = this -> fun1 ( /* a */ ) ;
+        if ( r1.empty() ) { return r1 ; } // RETURN
+        //
         LoKi::Operations::Difference<TYPE2> _diff ;
-        return _diff ( this->fun1 ( /* a */ ) , this->fun2 ( /* a */ ) ) ;
+        return _diff ( r1 , this->fun2 ( /* a */ ) ) ;
       }
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
