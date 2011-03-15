@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & STD 
+// ============================================================================
+#include <cmath>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ISvcLocator.h"
@@ -41,7 +45,7 @@
  *                 by $Author:$ 
  */
 // ============================================================================
-// Constructor from velo-detector name 
+// Constructor from condition name 
 // ============================================================================
 LoKi::Vertices::BeamSpotRho::BeamSpotRho 
 ( const std::string& condition ) 
@@ -50,53 +54,114 @@ LoKi::Vertices::BeamSpotRho::BeamSpotRho
   , m_condition (           ) 
 {
   //
-  LoKi::ILoKiSvc* svc = lokiSvc() ;
-  // 
-  // 1. Get The condition
+  if ( m_condName.empty () ) 
+  { m_condName = "/dd/Conditions/Online/Velo/MotionSystem" ; }
+  //
+  LoKi::ILoKiSvc* svc = lokiSvc() ;  
   //
   Assert ( 0 != svc      , "Unable to reach LoKi Service!"  ) ;
   SmartIF<ISvcLocator> loc ( svc ) ;
   Assert ( loc.isValid() , "Unable to reach ServiceLocator" ) ;
   //
-  SmartIF<IDataProviderSvc> det = 
-    loc->service<IDataProviderSvc>( "DetectorDataSvc" , true ) ;
+  SmartIF<IDataProviderSvc> det =  loc->service<IDataProviderSvc>( "DetectorDataSvc" , true ) ;
   Assert ( det.isValid() , "Unable to reach Detector Service" ) ;
   //
   SmartDataPtr<Condition> cond (  det , m_condName ) ;
   Assert ( !(!cond) , "Unable to locate CONDITION='" + m_condName + "'" ) ;
   //
-  m_condition = cond ;
+  const double xRC = cond -> paramAsDouble ( "ResolPosRC" ) ;
+  const double xLA = cond -> paramAsDouble ( "ResolPosLA" ) ;
+  const double   Y = cond -> paramAsDouble ( "ResolPosY"  ) ;
   //
-  // 2. Register condition for Update Manager Service 
+  m_beamSpotX = (xRC + xLA ) / 2;
+  m_beamSpotY = Y ;
   //
-  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
-  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
+  m_condition = cond;
   //
-  upd -> registerCondition
-    ( this                                          , 
-      m_condName                                    ,
-      &LoKi::Vertices::BeamSpotRho::updateCondition ) ;
+  registerCondition () ;
   //
 }  
 // ============================================================================
-// update the condition
+// Copy Constructor 
 // ============================================================================
-StatusCode LoKi::Vertices::BeamSpotRho::updateCondition () 
-{ 
-  return Warning ( "updateCondition: not yet implemented" ) ; 
+LoKi::Vertices::BeamSpotRho::BeamSpotRho 
+( const LoKi::Vertices::BeamSpotRho& right ) 
+  : LoKi::AuxFunBase                                       ( right ) 
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ( right ) 
+  , m_condName  ( right.m_condName  ) 
+  , m_condition ( right.m_condition ) 
+{
+  registerCondition() ;
 }
-// ======================================================================
-
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Vertices::BeamSpotRho::~BeamSpotRho(){}
+LoKi::Vertices::BeamSpotRho::~BeamSpotRho() { unregisterCondition () ; }
 // ============================================================================
 // MANDATOTY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Vertices::BeamSpotRho*
-LoKi::Vertices::BeamSpotRho::clone() const 
+LoKi::Vertices::BeamSpotRho::clone() const
 { return new LoKi::Vertices::BeamSpotRho ( *this ) ; }
+// ============================================================================
+// register the condition
+// ============================================================================
+StatusCode LoKi::Vertices::BeamSpotRho::registerCondition () 
+{
+  //
+  LoKi::ILoKiSvc* svc = lokiSvc() ;  
+  Assert ( 0 != svc , "Unable to reach LoKi Service!"  ) ;
+  //
+  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
+  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
+  //
+  LoKi::Vertices::BeamSpotRho* this_ = this ;
+  upd -> registerCondition
+    ( this_                                         , 
+      m_condName                                    ,
+      &LoKi::Vertices::BeamSpotRho::updateCondition ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// unregister the condition
+// ============================================================================
+StatusCode LoKi::Vertices::BeamSpotRho::unregisterCondition () 
+{
+  //
+  LoKi::ILoKiSvc* svc = lokiSvc() ;  
+  Assert ( 0 != svc , "Unable to reach LoKi Service!"  ) ;
+  //
+  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
+  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
+  //
+  LoKi::Vertices::BeamSpotRho* this_ = this ;
+  upd -> unregister ( this_ ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// update the condition
+// ============================================================================
+StatusCode LoKi::Vertices::BeamSpotRho::updateCondition () 
+{
+  //
+  Assert ( !(!m_condition) , "Condition is invalid!" ) ;
+  //
+  // Get the parameters
+  //
+  const double xRC = m_condition -> paramAsDouble ( "ResolPosRC" ) ;
+  const double xLA = m_condition -> paramAsDouble ( "ResolPosLA" ) ;
+  const double   Y = m_condition -> paramAsDouble ( "ResolPosY"  ) ;
+  
+  m_beamSpotX = (xRC + xLA ) / 2;
+  m_beamSpotY = Y ;
+  //
+  return Warning ( "Update for '"      + 
+                   m_condName          + 
+                   "' is performed "   , 
+                   StatusCode::SUCCESS ) ;
+}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -112,26 +177,17 @@ LoKi::Vertices::BeamSpotRho::operator()
   //
   Assert ( !(!m_condition) , "Invalid CONDITION!" ) ;
   //
-  Warning  ( "Not yet implemented, return +100" ) ;
-  //
-  //
-  //
-  return +100 ;
+  const double x_diff = v -> position().x() - m_beamSpotX ;
+  const double y_diff = v -> position().y() - m_beamSpotY ;
+  
+  return std::sqrt( x_diff * x_diff + y_diff * y_diff) ;
+  
 }
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
 std::ostream& LoKi::Vertices::BeamSpotRho::fillStream( std::ostream& s ) const 
-{ 
-  return s << "VX_BEAMSPOTRHO(" << m_condName << ")" ;
-}
-
-
-
-
-
-
-
+{ return s << "VX_BEAMSPOTRHO('" << m_condName << "')" ; }
 
 // ============================================================================
 // The END 

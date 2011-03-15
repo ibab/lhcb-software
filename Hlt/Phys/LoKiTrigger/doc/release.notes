@@ -5,6 +5,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-15 - Vanya Belyaev
+ - update BeamSpotRho function 
+
 ! 2011-03-12 - Vanya Belyaev
 
  - kill Elements...

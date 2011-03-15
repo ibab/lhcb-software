@@ -258,47 +258,47 @@ namespace LoKi
        // ======================================================================
        // _union_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _union_          ( const Pipe& fun  , const Pipe& fun2 )
+       __union__          ( const Pipe& fun  , const Pipe& fun2 )
        { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
        // _union_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _union_          ( const Pipe& fun  , const Cuts& fun2 )
+       __union__          ( const Pipe& fun  , const Cuts& fun2 )
        { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>
            ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
        // _intersection_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _intersection_   ( const Pipe& fun  , const Pipe& fun2 )
+       __intersection__   ( const Pipe& fun  , const Pipe& fun2 )
        { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
        // _intersection_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _intersection_   ( const Pipe& fun  , const Cuts& fun2 )
+       __intersection__   ( const Pipe& fun  , const Cuts& fun2 )
        { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>
            ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
        // _difference_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _difference_     ( const Pipe& fun  , const Pipe& fun2 )
+       __difference__     ( const Pipe& fun  , const Pipe& fun2 )
        { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
        // _difference_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _difference_     ( const Pipe& fun  , const Cuts& fun2 )
+       __difference__     ( const Pipe& fun  , const Cuts& fun2 )
        { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>
            ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
        // _sym_difference_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _sym_difference_ ( const Pipe& fun  , const Pipe& fun2 )
+       __sym_difference__ ( const Pipe& fun  , const Pipe& fun2 )
        { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
        // _sym_difference_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       _sym_difference_ ( const Pipe& fun  , const Cuts& fun2 )
+       __sym_difference__ ( const Pipe& fun  , const Cuts& fun2 )
        { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>
            ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
        // _includes_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-       _includes_       ( const Pipe& fun  , const Pipe& fun2 )
+       __includes__       ( const Pipe& fun  , const Pipe& fun2 )
        { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
        // _includes_
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-       _includes_       ( const Pipe& fun  , const Cuts& fun2 )
+       __includes__       ( const Pipe& fun  , const Cuts& fun2 )
        { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>
            ( fun , LoKi::filter<TYPE>  ( fun2 ) ) ; }
        // =====================================================================
@@ -446,25 +446,25 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      // _union_ 
+      // __union__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
-      _union_          ( const Source& fun  , const Source& fun2 ) 
+      __union__          ( const Source& fun  , const Source& fun2 ) 
       { return LoKi::Functors::Union         <void,TYPE>( fun , fun2 ) ; }
-      // _intersection_ 
+      // __intersection__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
-      _intersection_   ( const Source& fun  , const Source& fun2 ) 
+      __intersection__   ( const Source& fun  , const Source& fun2 ) 
       { return LoKi::Functors::Intersection  <void,TYPE>( fun , fun2 ) ; }
-      // _difference_ 
+      // __difference__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
-      _difference_     ( const Source& fun  , const Source& fun2 ) 
+      __difference__     ( const Source& fun  , const Source& fun2 ) 
       { return LoKi::Functors::Difference    <void,TYPE>( fun , fun2 ) ; }
-      // _sym_difference_ 
+      // __sym_difference__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
-      _sym_difference_ ( const Source& fun  , const Source& fun2 ) 
+      __sym_difference__ ( const Source& fun  , const Source& fun2 ) 
       { return LoKi::Functors::SymDifference <void,TYPE>( fun , fun2 ) ; }
-      // _includes_ 
+      // __includes__ 
       static LoKi::FunctorFromFunctor<void,bool>
-      _includes_       ( const Source& fun  , const Source& fun2 ) 
+      __includes__       ( const Source& fun  , const Source& fun2 ) 
       { return LoKi::Functors::Includes      <void,TYPE>( fun , fun2 ) ; }
       // ======================================================================
     }; 

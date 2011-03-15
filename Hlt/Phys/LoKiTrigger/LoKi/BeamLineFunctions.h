@@ -10,6 +10,9 @@
 // Event
 // ============================================================================
 #include "Event/VertexBase.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -63,8 +66,10 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// Constructor from velo-detector name 
+      /// Constructor from condition name 
       BeamSpotRho ( const std::string& condition ) ;
+      /// Copy constructor  
+      BeamSpotRho ( const BeamSpotRho& ) ;
       /// MANDATORY: virtual destructor 
       virtual ~BeamSpotRho() ;
       /// MANDATOTY: clone method ("virtual constructor")
@@ -77,19 +82,29 @@ namespace LoKi
     public:
       // ======================================================================
       /// update the condition
-      StatusCode updateCondition () ;  
+      StatusCode     updateCondition () ;  
       // ======================================================================
     private:
       // ======================================================================
-      /// the default constructior is disabled 
-      BeamSpotRho () ;
+      /// register condition 
+      StatusCode   registerCondition () ;
+      /// unregister condition 
+      StatusCode unregisterCondition () ;
       // ======================================================================
     private:
       // ======================================================================
+      /// default constructor is disabled 
+      BeamSpotRho () ;                       // default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// beam spot
+      double m_beamSpotX ;   
+      double m_beamSpotY ;   
       /// condition name 
       std::string                m_condName ;
-      /// condition
-      LoKi::Interface<Condition> m_condition ;                     // condition
+      /// the condition
+      LoKi::Interface<Condition> m_condition ;              // the condition 
       // ======================================================================
     };
     // ========================================================================
