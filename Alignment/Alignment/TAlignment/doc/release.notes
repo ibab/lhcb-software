@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v5r4 2011-03-15 =========================
 ! 2011-03-12 - Wouter Hulsbergen
  - adapt to changes in trackfit
  - prepare  functionality to process Particles with mass constraints 
