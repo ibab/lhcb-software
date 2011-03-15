@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v39r2 2010-03-15 ============================
 ! 2011-02-07 - Silvia Miglioranzi
  - Updated ref files for QMTests gauss-dev, gauss-mc09 and gauss-up (on slc4 
    64,32 and slc5 platforms).
