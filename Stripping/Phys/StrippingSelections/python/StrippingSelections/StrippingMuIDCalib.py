@@ -10,6 +10,7 @@ __all__     = ( 'MuIDCalibConf',
                 'makePromptSelection',
                 'makeDetachedSelection',
                 'makeDetachedNoMIPSelection', 
+                'makeDetachedNoMIPHiPSelection', 
                 'makeDetachedNoMIPKSelection'
                 )
 
@@ -24,10 +25,11 @@ from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons
 
 default_name = 'MuIDCalib'
 class MuIDCalibConf( LineBuilder ):
-    __configuration_keys__ = ('PromptPrescale',       #0.08
-                              'DetachedPrescale',     #1.
-                              'DetachedNoMIPPrescale', #0.25
-                              'DetachedNoMIPKPrescale', #1.
+    __configuration_keys__ = ('PromptPrescale',           #0.08  #0.3 or more
+                              'DetachedPrescale',         #1.    #0.
+                              'DetachedNoMIPPrescale',    #0.25  #1.
+                              'DetachedNoMIPHiPPrescale', #1.    #0.
+                              'DetachedNoMIPKPrescale',   #1.    #0.
                               )
 
     def __init__( self, name, config ) :
@@ -51,6 +53,9 @@ class MuIDCalibConf( LineBuilder ):
         self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
         self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPPrescale' ], selection = self.sel_DetachedNoMIP ) 
       
+        self.sel_DetachedNoMIPHiP  = makeDetachedNoMIPHiPSelection( name + "_FromBNoMipHiPCombine", self.selStdNoPIDMuons )
+        self.line_DetachedNoMIPHiP = StrippingLine( name + '_JpsiFromBNoPIDNoMipHiP', prescale = config[ 'DetachedNoMIPHiPPrescale' ], selection = self.sel_DetachedNoMIPHiP ) 
+
         self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( name + "_FromBNoMipWithKCombine", self.sel_DetachedNoMIP, self.selStdNoPIDKaons )
         self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
   
@@ -61,6 +66,7 @@ class MuIDCalibConf( LineBuilder ):
         self.registerLine( self.line_Prompt )
         self.registerLine( self.line_Detached )
         self.registerLine( self.line_DetachedNoMIP )
+        self.registerLine( self.line_DetachedNoMIPHiP )
         self.registerLine( self.line_DetachedNoMIPK )
 
 
@@ -131,6 +137,31 @@ def makeDetachedNoMIPSelection( name, muons ):
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
                                     CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
                                     MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
+                                    )
+    return Selection( name, 
+                      Algorithm = combination,
+                      RequiredSelections = [muons] )
+
+def makeDetachedNoMIPHiPSelection( name, muons ):
+    '''
+    Create b -> Jpsi -> mumu candidates out of no pid muons without mip cuts
+    TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
+    '''
+    #(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) &
+    mucocut = '(P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>25)'
+    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
+    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+
+    probe1cuts = "(CHILDCUT(P>40*GeV,1))"
+    probe2cuts = "(CHILDCUT(P>40*GeV,2))"
+
+    child1cuts = tag1cuts + " & " + probe2cuts 
+    child2cuts = tag2cuts + " & " + probe1cuts 
+
+    combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
+                                    DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
+                                    CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + child1cuts + " ) | (" + child2cuts + " ) ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
