@@ -5,6 +5,11 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-03-15 - Alex Shires
+ - Add in DaughtersInLHCbAcceptance tool to src/components. 
+   Allows both DecProdCut and a momentum cut to be made on tracks - 
+   default values are 3 GeV for muons and 1 GeV for other charged tracks
+
 ! 2011-03-10 - Paolo Gandini
  - Introdude a new cut for applying a cut on minimum value on invariant mass 
    of D0 mu in Bu->D0 mu nu decay. The value can be set via the property 
