@@ -20,10 +20,10 @@ using namespace Rich::DAQ;
 DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni )
 
 // Standard constructor, initializes variables
-DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
-  : HistoAlgBase ( name, pSvcLocator ),
-    m_decoder    ( NULL ) { }
+  DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,
+                                                ISvcLocator* pSvcLocator )
+    : HistoAlgBase ( name, pSvcLocator ),
+      m_decoder    ( NULL ) { }
 
 // Destructor
 DataDecodingErrorMoni::~DataDecodingErrorMoni() { }
@@ -41,73 +41,114 @@ StatusCode DataDecodingErrorMoni::initialize()
   return sc;
 }
 
-StatusCode DataDecodingErrorMoni::prebookHistograms()
+const Rich::HistoAlgBase::BinLabels & DataDecodingErrorMoni::labels()
 {
   using namespace boost::assign;
-  const BinLabels labels = list_of
+  static const BinLabels labels = list_of
     ("L1 Ingress Truncated")("ODIN/Ingress BXID MisMatch")
     ("HPD Inhibit")("HPD DB Lookup")("Ingress/HPD EventID MisMatch")
     ("Extended HPD Header");
-  richProfile1D( HID("decodingErrors"), "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6,
-                 "DAQ Decoding Error Types", "Error Rate (%)", labels );
+  return labels;
+}
+
+StatusCode DataDecodingErrorMoni::prebookHistograms()
+{
+  richProfile1D( HID("decodingErrors"), 
+                 "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6,
+                 "DAQ Decoding Error Types", "Error Rate (%)", labels() );
   return StatusCode::SUCCESS;
 }
 
 // Main execution
 StatusCode DataDecodingErrorMoni::execute()
 {
+  StatusCode sc = StatusCode::SUCCESS;
 
   // Obtain RichSmartIDs from raw decoding
   const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
-
-  // Get the ODIN
-  const LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
   // Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
         iL1 != data.end(); ++iL1 )
   {
-    // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
-    {
-      const Rich::DAQ::IngressInfo & ingressInfo       = iIn->second;
-      const Rich::DAQ::L1IngressHeader & ingressHeader = ingressInfo.ingressHeader();
 
-      // Check if all HPDs are suppressed
-      richProfile1D( HID("decodingErrors") )
-        -> fill( 1, ingressHeader.hpdsSuppressed() ? 100 : 0 );
-      
-      // Check BX ID between Rich and ODIN
-      richProfile1D( HID("decodingErrors") )
-        -> fill( 2, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100 : 0 ); 
+    // All boards combined
+    sc = sc && makePlots( (*iL1).second, -1 );
 
-      // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
-      {
-        const bool inhibit = (*iHPD).second.header().inhibit();
-        // inhibited HPDs
-        richProfile1D( HID("decodingErrors") ) -> fill( 3, inhibit ? 100 : 0 ); 
-        if ( !inhibit )
-        {
-          // Invalid HPD (BD lookup error)
-          richProfile1D( HID("decodingErrors") )
-            -> fill( 4, !(*iHPD).second.hpdID().isValid() ? 100 : 0 ); 
-          // Event IDs
-          richProfile1D( HID("decodingErrors") )
-            -> fill( 5, 
-                     (*iIn).second.ingressHeader().eventID() != 
-                     (*iHPD).second.header().eventID() ? 100 : 0 ); 
-          // HPD header in extended mode
-          richProfile1D( HID("decodingErrors") )
-            -> fill( 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0 );       
-        }
-      } // loop over HPDs
-
-    } // ingresses
+    // Each L1 board on its own
+    sc = sc && makePlots( (*iL1).second, (int)(*iL1).first.data() );
 
   } // L1 boards
 
-  return StatusCode::SUCCESS;
+  return sc;
+}
+
+AIDA::IProfile1D * 
+DataDecodingErrorMoni::getHisto( const int l1ID )
+{
+  AIDA::IProfile1D * histo(NULL);
+  if ( l1ID < 0 ) 
+  {
+    histo = richProfile1D( HID("decodingErrors") );
+  }
+  else
+  {
+    std::ostringstream id,title;
+    id << "decodingErrors-L1hardID" << l1ID;
+    title << "L1-HardwareID " << l1ID << " DAQ Decoding Error Rates (%)";
+    histo = richProfile1D( HID(id.str()), title.str(), 0.5, 6.5, 6,
+                           "DAQ Decoding Error Types", "Error Rate (%)", labels() );
+  }
+  return histo;
+}
+
+StatusCode
+DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
+                                  const int l1ID )
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
+  // Histo
+  AIDA::IProfile1D * histo = getHisto(l1ID);
+  if ( !histo ) return Error( "Null Decoding Error Histogram Pointer" );
+
+  // Get the ODIN
+  const LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+
+  // loop over ingresses for this L1 board
+  for ( Rich::DAQ::IngressMap::const_iterator iIn = inMap.begin();
+        iIn != inMap.end(); ++iIn )
+  {
+    const Rich::DAQ::IngressInfo & ingressInfo       = iIn->second;
+    const Rich::DAQ::L1IngressHeader & ingressHeader = ingressInfo.ingressHeader();
+
+    // Check if all HPDs are suppressed
+    histo -> fill( 1, ingressHeader.hpdsSuppressed() ? 100.0 : 0.0 );
+
+    // Check BX ID between Rich and ODIN
+    histo -> fill( 2, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0 );
+
+    // Loop over HPDs in this ingress
+    for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+          iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+    {
+      const bool inhibit = (*iHPD).second.header().inhibit();
+      // inhibited HPDs
+      histo -> fill( 3, inhibit ? 100.0 : 0.0 );
+      if ( !inhibit )
+      {
+        // Invalid HPD (BD lookup error)
+        histo  -> fill( 4, !(*iHPD).second.hpdID().isValid() ? 100.0 : 0.0 );
+        // Event IDs
+        histo -> fill( 5,
+                       (*iIn).second.ingressHeader().eventID() !=
+                       (*iHPD).second.header().eventID() ? 100.0 : 0.0 );
+        // HPD header in extended mode
+        histo -> fill( 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0 );
+      }
+    } // loop over HPDs
+
+  } // ingresses
+
+  return sc;
 }

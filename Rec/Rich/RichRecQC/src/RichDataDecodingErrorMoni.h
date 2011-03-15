@@ -62,6 +62,18 @@ namespace Rich
       
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
+
+    private:
+
+      /// Make plots for given L1 board
+      StatusCode makePlots( const Rich::DAQ::IngressMap & inMap,
+                            const int l1ID );
+
+      /// Get histo labels
+      const Rich::HistoAlgBase::BinLabels & labels();
+
+      /// Get histogram
+      AIDA::IProfile1D * getHisto( const int l1ID );
       
     private: // data
 

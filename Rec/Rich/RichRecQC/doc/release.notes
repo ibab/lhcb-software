@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-03-15 - Chris Jones
+ - Extend the Decoding error monitor to make a summary plot for each L1
+   board separately, as well as the overall combined summary
+
 ! 2011-03-10 - Chris Jones
  - Add some more internal consistency checks to Rich::DAQ::DataDBCheck
 

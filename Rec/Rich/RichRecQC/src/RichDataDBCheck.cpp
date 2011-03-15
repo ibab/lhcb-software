@@ -95,16 +95,15 @@ StatusCode DataDBCheck::execute()
         // Only do the DB check on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
 
-        const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
-
         // use a try block in case of DB lookup errors
         try
         {
 
           // look up information from DB for this HPD
-          const Rich::DAQ::Level1HardwareID db_l1HardID = m_RichSys->level1HardwareID(hpdID);
-          const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
-          const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
+          const Rich::DAQ::HPDHardwareID    db_hpdHardID = m_RichSys->hardwareID(hpdID);
+          const Rich::DAQ::Level1HardwareID db_l1HardID  = m_RichSys->level1HardwareID(hpdID);
+          const Rich::DAQ::Level1Input      db_l1Input   = m_RichSys->level1InputNum(hpdID);
+          const Rich::DAQ::Level0ID         db_l0ID      = m_RichSys->level0ID(hpdID);
 
           // compare to that in the data itself
           compare( "Level1HardwareID-Data-DB", hpdID, l0ID, l1HardID,   db_l1HardID );
@@ -113,17 +112,15 @@ StatusCode DataDBCheck::execute()
 
           // Internal consistency checks
           // Get l1HardID from RICH and l1LogicalID
-          /*
           const Rich::DAQ::Level1HardwareID new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
           compare( "Level1HardwareID-DB-DB", hpdID, l0ID, new_l1HardID, l1HardID );
           // HPD hardware ID
           const Rich::DAQ::HPDHardwareID new_hpdHardID = m_RichSys->hpdHardwareID(l1HardID,l1Input);
-          compare( "HPDHardwareID-DB-DB", hpdID, l0ID, new_hpdHardID, hpdHardID );
+          compare( "HPDHardwareID-DB-DB", hpdID, l0ID, new_hpdHardID, db_hpdHardID );
           const Rich::DAQ::L1InputWithinIngress l1InputWithinIngress = l1Input.l1InputWithinIngress();
           // L1 input
           const Rich::DAQ::Level1Input new_l1Input(l1IngressID,l1InputWithinIngress);
           compare( "L1Input-DB-DB", hpdID, l0ID, l1Input, new_l1Input );
-          */
 
           // Is this L0ID already in the map... If so this is an error.
           L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
