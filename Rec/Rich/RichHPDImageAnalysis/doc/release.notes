@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-03-15 - Chris Jones
+ - Some minor improvements to the monitor gaudi algorithm
+
 ! 2011-03-07 - Chris Jones
  - More improvements to the HPD fits
   + Remove a bias in the HPD bounary finding, that resulted in top/bottom hits

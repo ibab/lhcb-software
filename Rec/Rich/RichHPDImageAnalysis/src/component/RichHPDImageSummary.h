@@ -71,7 +71,7 @@ namespace Rich
     private:
 
       /// Perform fit and publish HPD summary information
-      void summaryINFO( const unsigned int ID, const TH2D* hist ) const;
+      void summaryINFO( const LHCb::RichSmartID id, const TH2D* hist ) const;
 
       //  Conditional booking of 2D histograms
       TH2D* create2D( const std::string& name )  ;
@@ -86,7 +86,7 @@ namespace Rich
       double localErrorFromPixels( const double pixerr ) const;
 
       /// Distance from image centre to existing CondDB value
-      double distanceToCondDBValue( const unsigned int ID,
+      double distanceToCondDBValue( const Rich::DAQ::HPDCopyNumber copyNumber,
                                     const double x0,
                                     const double y0 ) const ;
 
@@ -110,11 +110,11 @@ namespace Rich
       /// Raw Buffer Decoding tool
       const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder;
 
-      /// Map between HPD CopyNr and Histogram pointer
-      std::map< unsigned int , TH2D* > m_histo;
+      /// Type for mapping between HPD and histogram
+      typedef std::map< LHCb::RichSmartID , TH2D* > PD2Histo;
 
-      /// Iterator over map of HPD CopyNr and Histogram pointers
-      std::map< unsigned int , TH2D* >::iterator  m_iter;
+      /// Map between HPD CopyNr and Histogram pointer
+      PD2Histo m_histo;
 
       /// Flag for comparison against existing CondDB value
       bool m_compareCondDB;

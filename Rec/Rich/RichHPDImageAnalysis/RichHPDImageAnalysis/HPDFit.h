@@ -110,7 +110,7 @@ namespace Rich
     public:
 
       /// Default contructor
-      HPDFit() { m_boundaryPixels.reserve(100); }
+      HPDFit() { m_boundaryPixels.reserve(1024); }
 
       /// Destructor
       ~HPDFit() { }

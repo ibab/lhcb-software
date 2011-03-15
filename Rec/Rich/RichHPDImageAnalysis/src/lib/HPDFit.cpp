@@ -67,7 +67,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
       ROOT::Minuit2::MnUserParameters par_pre;
       par_pre.Add ( "Col0",   16.0 , 0.5 );
       par_pre.Add ( "Row0",   16.0 , 0.5 );
-      par_pre.Add ( "Radius", 16.0 , 0.5 );
+      par_pre.Add ( "Radius", 12.5 , 0.5 );
 
       // The function to minimise
       SimpleChi2Fit FCN_pre( sobelH, boundary );
@@ -99,7 +99,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
           ROOT::Minuit2::MnUserParameters par;
           par.Add ( "Col0",   16.0 , 0.5 );
           par.Add ( "Row0",   16.0 , 0.5 );
-          par.Add ( "Radius", 16.0 , 0.5 );
+          par.Add ( "Radius", 12.5 , 0.5 );
 
           // The function to minimise
           SimpleChi2Fit FCN( sobelH, boundary );

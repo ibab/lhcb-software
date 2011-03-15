@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 {
   setProperty( "StatPrint", false );
   declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
-  declareProperty( "MinHPDOccupancy", m_minOccupancy = 500 );
+  declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
   declareProperty( "HPDFitType" ,     m_params.type );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
@@ -50,6 +50,7 @@ StatusCode Summary::initialize()
 
   const LHCb::RichSmartID::Vector & activeHPDs = m_RichSys->activeHPDRichSmartIDs();
 
+  m_histo.clear();
   for (  LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
          iHPD != activeHPDs.end(); ++iHPD )
   {
@@ -60,7 +61,7 @@ StatusCode Summary::initialize()
 
     if ( msgLevel(MSG::DEBUG) ) debug() << " Booking histogram " << name.str() << endmsg ;
 
-    m_histo.insert( std::make_pair(hpdID.data(),this->create2D(name.str()) ) );
+    m_histo.insert( std::make_pair(*iHPD,this->create2D(name.str()) ) );
   }
 
   info() << m_params << endmsg;
@@ -116,8 +117,7 @@ StatusCode Summary::execute()
 
         const LHCb::RichSmartID::Vector& hitIDs = (iHPD->second).smartIDs() ;
 
-        const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( smartID );
-        TH2D* hist = m_histo[ hpdID.data() ];
+        TH2D* hist = m_histo[ smartID ];
 
         if ( NULL == hist )
         {
@@ -154,14 +154,14 @@ StatusCode Summary::finalize()
     debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
   }
 
-  for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
+  for ( PD2Histo::iterator m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
   {
     summaryINFO( m_iter->first, m_iter->second );
   }
 
   if ( !m_keep2Dhistos )
   {
-    for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
+    for ( PD2Histo::iterator m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
     {
       delete m_iter->second;
     }
@@ -193,15 +193,15 @@ TH2D* Summary::create2D( const std::string& name )
 
 //=============================================================================
 
-double Summary::distanceToCondDBValue( const unsigned int ID,
+double Summary::distanceToCondDBValue( const Rich::DAQ::HPDCopyNumber copyNumber,
                                        const double x0,
                                        const double y0 ) const
 {
-  const LHCb::RichSmartID smartID = m_RichSys->richSmartID( Rich::DAQ::HPDCopyNumber(ID) );
+  const LHCb::RichSmartID smartID = m_RichSys->richSmartID( copyNumber );
 
   std::ostringstream sensorpath;
-  sensorpath << m_RichSys->getDeHPDLocation(smartID);
-  sensorpath << "/SiSensor:" << ID;
+  sensorpath << m_RichSys->getDeHPDLocation(smartID)
+             << "/SiSensor:" << copyNumber.data();
 
   DetectorElement * dd = getDet<DetectorElement>( sensorpath.str() );
 
@@ -217,23 +217,29 @@ double Summary::distanceToCondDBValue( const unsigned int ID,
 
 //=============================================================================
 
-void Summary::summaryINFO( const unsigned int ID,
+void Summary::summaryINFO( const LHCb::RichSmartID id,
                            const TH2D* hist ) const
 {
   if ( !hist ) return;
 
+  const Rich::DAQ::HPDCopyNumber copyNumber = m_RichSys->copyNumber( id );
+
   const unsigned int nPix = (unsigned int) (hist->Integral());
-  if ( nPix < m_minOccupancy ) return ;
+  if ( nPix < m_minOccupancy )
+  {
+    debug() << "Fit for HPD " << copyNumber << " ABORTED -> Too few hits (" << nPix << ")" << endmsg;
+    return;
+  }
 
   // Do the fit
   const HPDFit::Result result = m_fitter.fit( *hist, m_params );
 
   // if fit failed, don't fill.
-  if ( ! result.OK() )
+  if ( !result.OK() )
   {
     std::ostringstream mess;
-    mess << "Fit for HPD " << ID << " FAILED";
-    Warning( mess.str() ).ignore();
+    mess << "Fit for HPD " << copyNumber << " FAILED | #hits = " << nPix;
+    Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
     return;
   }
 
@@ -250,33 +256,33 @@ void Summary::summaryINFO( const unsigned int ID,
   const double OneOverYErrSq = ( yErr0>0.0  ? 1.0/(yErr0*yErr0)   : 0.0 );
   const double OneOverRErrSq = ( RadErr>0.0 ? 1.0/(RadErr*RadErr) : 0.0 );
 
-  const double ds = distanceToCondDBValue( ID, x0, y0 );
+  const double ds = distanceToCondDBValue( copyNumber, x0, y0 );
 
   plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
-  plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD",-0.5,nHPDs-0.5,nHPDs,ds);
+  plot1D( copyNumber.data(), "dPosCondDBvsCopyNr", "Distance versus HPD",-0.5,nHPDs-0.5,nHPDs,ds);
 
   // Update these to allow the weighted mean of the fit results to be correctly computed
   // when ROOT first are merged.  Need to compute
   //                weighted mean     = Sum( x_i / error_i^2 ) / Sum( 1 / error_i^2 )
   //                (error of mean)^2 = 1 /  Sum( 1 / error_i^2 )
-  plot1D( ID, "dPosXvsCopyNr",    "x-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,x0*OneOverXErrSq);
-  plot1D( ID, "dPosXvsCopyNrErr", "x-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverXErrSq);
-  plot1D( ID, "dPosYvsCopyNr",    "y-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,y0*OneOverYErrSq);
-  plot1D( ID, "dPosYvsCopyNrErr", "y-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverYErrSq);
+  plot1D( copyNumber.data(), "dPosXvsCopyNr",    "x-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,x0*OneOverXErrSq);
+  plot1D( copyNumber.data(), "dPosXvsCopyNrErr", "x-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverXErrSq);
+  plot1D( copyNumber.data(), "dPosYvsCopyNr",    "y-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,y0*OneOverYErrSq);
+  plot1D( copyNumber.data(), "dPosYvsCopyNrErr", "y-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverYErrSq);
 
-  plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD",-0.5,nHPDs-0.5,nHPDs,Rad*OneOverRErrSq);
-  plot1D( ID, "RadiusErrvsCopyNr", "Fitted image radius error vs HPD",-0.5,nHPDs-0.5,nHPDs,OneOverRErrSq);
+  plot1D( copyNumber.data(), "RadiusvsCopyNr", "Fitted image radius vs HPD",-0.5,nHPDs-0.5,nHPDs,Rad*OneOverRErrSq);
+  plot1D( copyNumber.data(), "RadiusErrvsCopyNr", "Fitted image radius error vs HPD",-0.5,nHPDs-0.5,nHPDs,OneOverRErrSq);
 
-  plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,nHPDs-0.5,nHPDs,nPix);
+  plot1D( copyNumber.data(), "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,nHPDs-0.5,nHPDs,nPix);
 
   if ( m_compareCondDB && ( ds < m_maxMovement ) )
   {
-    if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << ID <<  endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << copyNumber <<  endmsg;
   }
   else
   {
     std::ostringstream nameHPD;
-    nameHPD << "RICH_HPD_" << ID;
+    nameHPD << "RICH_HPD_" << copyNumber;
 
     if ( msgLevel(MSG::DEBUG) ) debug() << "Adding counter " << nameHPD.str() << endmsg ;
 
