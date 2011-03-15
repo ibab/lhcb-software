@@ -18,6 +18,5 @@
 #pragma link C++ class CreateTrendingHistogramDialog;
 #pragma link C++ class PresenterPage;
 #pragma link C++ class DisplayHistogram;
-//#pragma link C++ class Offline;
 
 #endif

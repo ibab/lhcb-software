@@ -153,7 +153,13 @@ public:
       M_PartitionList,
       M_Previous_Interval,
       M_Next_Interval,
-      SET_REFERENCE_COMMAND
+      SET_REFERENCE_COMMAND,
+      M_TrendLastTwoHours,
+      M_TrendLastDay,
+      M_TrendLastWeek,
+      M_TrendLastMonth,
+      M_TrendLastYear,
+      M_TrendAll
     };
 
   struct obsolete_BulkHistoOptions {
@@ -582,6 +588,7 @@ public:
   TGPictureButton*  m_historyPlotsButton;
   TGPictureButton*  m_pickReferenceHistoButton;
   TGComboBox*       m_historyIntervalComboBox;
+  TGComboBox*       m_trendDurationComboBox;
   TGComboBox*       m_partitionSelectorComboBox;
   TGPictureButton*  m_setReferenceButton;
 
@@ -715,6 +722,8 @@ public:
   PresenterInformation m_presenterInfo ;
 
   PresenterPage m_presenterPage;  ///< Contains the current page description and contents
+  int m_trendDuration;
+  int m_trendEnd;
 
   /// Display page name in status bar and load comments
   void displayStatusAndComments( OnlineHistPage * page ) ;

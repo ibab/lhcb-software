@@ -9,6 +9,7 @@ class TH1;
 class TPad;
 class TImagePalette;
 class TImage;
+class TGraph;
 
 /** @class DisplayHistogram DisplayHistogram.h
  *  This class contains the information on a histogram, for display
@@ -26,12 +27,10 @@ public:
   OnlineHistogram* histo() { return m_onlineHist; }
 
   void setShortName( std::string name ) { m_shortName = name; }
-
   std::string shortName() { return m_shortName; }
 
-  void setRootHist( TH1* rootH ) { m_rootHistogram = rootH; }
-
   TH1* rootHist() { return m_rootHistogram; }
+  void setRootHist( TH1* rootH ) { m_rootHistogram = rootH; }
 
   std::string rootName();
 
@@ -40,7 +39,6 @@ public:
   void createDummyHisto( );
 
   TH1* referenceHist() { return m_referenceHist; }
-
   void setReferenceHistogram( TH1* ref );
   
   void normalizeReference();
@@ -68,17 +66,23 @@ public:
 
   void prepareForDisplay();
 
+  void createGraph( std::vector<std::pair<int,double> > values, bool update );
+  
 protected:
 
 private:
   OnlineHistogram* m_onlineHist; ///< the online histogram.
   std::string m_shortName;
   bool m_isOverlap;
+  bool m_isTrendPlot;
   TH1* m_rootHistogram;   ///< pointer to the underlying ROOT histogram
   TH1* m_offsetHistogram; ///< pointer to offset histogram
   TH1* m_referenceHist;   ///< reference histogram
   TPad* m_hostingPad;     ///< TPad for this histogram
   TImage* m_histogramImage ; ///< histogram image
   TImagePalette* m_prettyPalette ; ///< palette 
+  TGraph* m_timeGraph;
+  double* m_timeArray;
+  double* m_valueArray;
 };
 #endif // DISPLAYHISTOGRAM_H

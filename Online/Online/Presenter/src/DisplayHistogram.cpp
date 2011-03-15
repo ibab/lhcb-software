@@ -14,6 +14,15 @@
 #include <TPad.h>
 #include <TStyle.h>
 #include <TImage.h>
+#include <TGraph.h>
+
+// Trending
+#include "Trending/ITrendingTool.h"
+
+// Boost
+#include <boost/filesystem.hpp>
+#include "boost/date_time/posix_time/posix_time.hpp"
+#include "boost/date_time/posix_time/posix_time_types.hpp"
 
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "OMAlib/OMAlib.h"
@@ -40,13 +49,21 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_onlineHist( hist ),
   m_shortName( "" ),
   m_isOverlap( false ),
+  m_isTrendPlot( false ),
   m_rootHistogram( NULL ),
   m_offsetHistogram( NULL),
   m_referenceHist( NULL ),
   m_hostingPad( NULL ),
   m_histogramImage( NULL ),
-  m_prettyPalette( NULL )
+  m_prettyPalette( NULL ),
+  m_timeGraph( NULL ),
+  m_timeArray( NULL ),
+  m_valueArray( NULL )
 {
+  if ( hist->type() == OnlineHistDBEnv::TRE ) {
+    m_isTrendPlot = true;
+    m_shortName = hist->algorithm();  // this is in fact the variable name!
+  }
 }
 //=============================================================================
 // Destructor
@@ -57,22 +74,29 @@ DisplayHistogram::~DisplayHistogram() {
   if ( NULL != m_offsetHistogram ) delete m_offsetHistogram;
   m_offsetHistogram = 0;
   if ( NULL != m_referenceHist ) delete m_referenceHist;
-  m_referenceHist = 0;  
+  m_referenceHist = 0;
   if ( NULL != m_histogramImage ) delete m_histogramImage;
   m_histogramImage = NULL;
   if ( NULL != m_prettyPalette ) delete m_prettyPalette;
   m_prettyPalette = NULL;
+  if ( NULL != m_timeGraph ) delete m_timeGraph;
+  m_timeGraph = NULL;
+  if ( NULL != m_timeArray ) delete m_timeArray;
+  m_timeArray = NULL;
+  if ( NULL != m_valueArray ) delete m_valueArray;
+  m_valueArray = NULL;
+
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 std::string DisplayHistogram::rootName ( ) {
-  return m_onlineHist->rootName(); 
+  return m_onlineHist->rootName();
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void DisplayHistogram::deleteRootHist ( ) {
   if (NULL != m_rootHistogram ) delete m_rootHistogram;
@@ -257,12 +281,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     if ( hasOption( "MARGIN_RIGHT"  , &fopt ) ) pad->SetRightMargin( fopt ) ;
     pad->SetBit(kNoContextMenu);
     pad->SetFillColor( 10 );
-    pad->Draw(); 
+    pad->Draw();
   }
   m_hostingPad = pad;
-  
+
   pad->cd();
-  
+
   if ( 0 != m_rootHistogram ) {
     if (TH2D::Class() == m_rootHistogram->IsA() && fastHitmapDraw ) {
       if (NULL == m_histogramImage) {
@@ -272,7 +296,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       if ( NULL == m_prettyPalette ) {
         m_prettyPalette = new TImagePalette(1,0);
       }
-      
+
       m_histogramImage->SetImage( (const Double_t *)((TH2D*)m_rootHistogram)->GetArray(),
                                   ((TH2D*)m_rootHistogram)->GetNbinsX() + 2,
                                   ((TH2D*)m_rootHistogram)->GetNbinsY() + 2,
@@ -283,7 +307,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       std::cout << "  option for drawing " << opt << std::endl;
       m_rootHistogram->Draw(opt.c_str());
     }
+  } else if ( 0 != m_timeGraph ) {
+    std::string opt =  m_isOverlap ? "SAME" : "ALP";
+    std::cout << "  option for drawing " << opt << std::endl;
+    m_timeGraph->Draw(opt.c_str());
   }
+
   setDrawingOptions( pad );
 
   // fit if requested
@@ -317,14 +346,14 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
         drawPattern -> SetName(  m_onlineHist->identifier().c_str() ) ;
 
         drawPattern->SetFillColor( 10 );
-        
+
         TPad *padsav = (TPad*)gPad;
         TObject *obj;
-        
+
         dynamic_cast< TAttLine* >( drawPattern ) -> Copy( (TAttLine&) *pad ) ;
         dynamic_cast< TAttFill* >( drawPattern ) -> Copy( (TAttFill&) *pad ) ;
         dynamic_cast< TAttPad*  >( drawPattern ) -> Copy( (TAttPad& ) *pad ) ;
-        
+
         TIter next( drawPattern -> GetListOfPrimitives() ) ;
         while ( ( obj=next() ) ) {
           pad->cd();
@@ -345,137 +374,129 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 //
 //=========================================================================
 void DisplayHistogram::setDrawingOptions( TPad* pad ) {
-  if ( ( 0 == m_onlineHist ) || 
+  if ( ( 0 == m_onlineHist ) ||
        ( 0 == m_rootHistogram ) ) return ;
   if ( m_isOverlap ) return;
-  
+
   int iopt = 0;
   float fopt = 0.0;
   std::string sopt("");
 
-  // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat
-  // doesn't resize the Pave.. thus it's better to set the global stat options also
-  // before drawing
-  /*
-    if (m_historyTrendPlotMode) { // special settings for trend mode
-    m_rootHistogram->SetDrawOption("E1");
-    m_rootHistogram->SetStats(0);
-    TPaveStats* stats =
-    (TPaveStats*) m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+  if ( m_isTrendPlot ) { // special settings for trend mode
+    /*
+      m_rootHistogram->SetDrawOption("E1");
+      m_rootHistogram->SetStats(0);
+      TPaveStats* stats = (TPaveStats*) m_rootHistogram->GetListOfFunctions()->FindObject("stats");
 
-    if (stats) stats->Delete();
-    pad->SetLogx(0);
-    pad->SetLogy(0);
-    fopt=.16f;
-    pad->SetBottomMargin( (Float_t) fopt);
-    bool histByRun=false;
-    if( 0 != m_presenterInfo )
-    histByRun = m_presenterInfo -> globalHistoryByRun() ;
+      if (stats) stats->Delete();
+      pad->SetLogx(0);
+      pad->SetLogy(0);
+      fopt=.16f;
+      pad->SetBottomMargin( (Float_t) fopt);
+      bool histByRun=false;
+      //if( 0 != m_presenterInfo ) histByRun = m_presenterInfo -> globalHistoryByRun() ;
 
-    if ( histByRun ) {
-    m_rootHistogram->GetXaxis()->SetTitle("run");
-    fopt=1.2f;
-    m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
-    }
-    else {
-    m_rootHistogram->GetXaxis()->SetTitle("time");
-    fopt=1.6f;
-    m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
-    }
-    std::string ylab="Average";
-    if (hasOption("LABEL_X", &sopt))
-    ylab = ylab + " (" + sopt + ")";
+      if ( histByRun ) {
+      m_rootHistogram->GetXaxis()->SetTitle("run");
+      fopt=1.2f;
+      m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
+      } else {
+      m_rootHistogram->GetXaxis()->SetTitle("time");
+      fopt=1.6f;
+      m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
+      }
+      std::string ylab="Average";
+      if (hasOption("LABEL_X", &sopt)) ylab = ylab + " (" + sopt + ")";
+      m_rootHistogram->SetYTitle (ylab.data());
+    */
+  } else {
+    int statOpt = 0;
+    if( false == hasOption("STATS", &statOpt)) statOpt = pres::s_defStatOptions;
+    if (0 != statOpt) {
+      int statStyle=0;
+      if (hasOption("STATTRANSP", &iopt)) if ( iopt > 0 ) statStyle=1001;
+      gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
+      gStyle->SetOptStat( statOpt );
+      TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
 
-    m_rootHistogram->SetYTitle (ylab.data());
-    }
-    else { // normal case
-  */
-  int statOpt = 0;
-  if( false == hasOption("STATS", &statOpt)) statOpt = pres::s_defStatOptions;
-  if (0 != statOpt) {
-    int statStyle=0;
-    if (hasOption("STATTRANSP", &iopt)) if ( iopt > 0 ) statStyle=1001;
-    gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
-    gStyle->SetOptStat( statOpt );
-    TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+      if (stats) {
+        double x1=stats->GetX1NDC();
+        double x2=stats->GetX2NDC();
+        double y1=stats->GetY1NDC();
+        double y2=stats->GetY2NDC();
+        if (hasOption("STAT_X_OFFS", &fopt)) x1 = fopt;
+        if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
+        if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
+        if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
-    if (stats) {
-      double x1=stats->GetX1NDC();
-      double x2=stats->GetX2NDC();
-      double y1=stats->GetY1NDC();
-      double y2=stats->GetY2NDC();
-      if (hasOption("STAT_X_OFFS", &fopt)) x1 = fopt;
-      if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
-      if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
-      if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+        stats->SetX1NDC(x1);
+        stats->SetX2NDC(x2);
+        stats->SetY1NDC(y1);
+        stats->SetY2NDC(y2);
+      }
+    }
+    // title pave
+    TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
+    if (titpave) {
+      int optTit=1;
+      if(hasOption("NOTITLE", &iopt)) {
+        if ( iopt > 0 ) optTit = 0;    //user requires no title window
+      }
+      if( 0 == optTit) {
+        // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
+        titpave->SetX1NDC(-2);
+        titpave->SetX2NDC(-1);
+      } else {
+        double x1=titpave->GetX1NDC();
+        double x2=titpave->GetX2NDC();
+        double y1=titpave->GetY1NDC();
+        double y2=titpave->GetY2NDC();
+        if (hasOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
+        if (hasOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
+        if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
+        if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
-      stats->SetX1NDC(x1);
-      stats->SetX2NDC(x2);
-      stats->SetY1NDC(y1);
-      stats->SetY2NDC(y2);
+        titpave->SetX1NDC(x1);
+        titpave->SetX2NDC(x2);
+        titpave->SetY1NDC(y1);
+        titpave->SetY2NDC(y2);
+      }
     }
-  }
-  // title pave
-  TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
-  if (titpave) {
-    int optTit=1;
-    if(hasOption("NOTITLE", &iopt)) {
-      if ( iopt > 0 ) optTit = 0;    //user requires no title window
-    }
-    if( 0 == optTit) {
-      // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
-      titpave->SetX1NDC(-2);
-      titpave->SetX2NDC(-1);
-    } else {
-      double x1=titpave->GetX1NDC();
-      double x2=titpave->GetX2NDC();
-      double y1=titpave->GetY1NDC();
-      double y2=titpave->GetY2NDC();
-      if (hasOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
-      if (hasOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
-      if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
-      if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
-      titpave->SetX1NDC(x1);
-      titpave->SetX2NDC(x2);
-      titpave->SetY1NDC(y1);
-      titpave->SetY2NDC(y2);
+    if (hasOption("DRAWOPTS", &sopt) ) {
+      if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
+      //if (m_fitfunction) { // remove HIST option that disables showing the fit
+      //  if (sopt.find("HIST") < sopt.size()) {
+      //    sopt.erase(sopt.find("HIST"), 4);
+      //  }
+      // }
+      m_rootHistogram->SetDrawOption(sopt.c_str());
     }
-  }
-  
-  if (hasOption("DRAWOPTS", &sopt) ) {
-    if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
-    //if (m_fitfunction) { // remove HIST option that disables showing the fit
-    //  if (sopt.find("HIST") < sopt.size()) {
-    //    sopt.erase(sopt.find("HIST"), 4);
+    if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
+    if (hasOption("LOGY", &iopt)) {
+      if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
+      // Set log scale also if the minimum and maximum scale is not 0
+      else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
+                ( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
+      else pad->SetLogy( 0 );
+    }
+
+    int gridx = gStyle->GetPadGridX();
+    int gridy = gStyle->GetPadGridY();
+    if (hasOption("GRIDX", &iopt)) gridx=iopt;
+    if (hasOption("GRIDY", &iopt)) gridy=iopt;
+    pad->SetGrid(gridx, gridy);
+    if ( m_rootHistogram->GetDimension() > 1) {
+      if (hasOption("LOGZ", &iopt)) pad->SetLogz(1);
+      if (hasOption("THETA", &fopt)) pad->SetTheta(fopt);
+      if (hasOption("PHI", &fopt)) pad->SetPhi(fopt);
+    }
+
+    if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
+    if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
+    if(hasOption("PADCOLOR", &iopt)) pad->SetFillColor(iopt);
     //  }
-    // }
-    m_rootHistogram->SetDrawOption(sopt.c_str());
   }
-  if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
-  if (hasOption("LOGY", &iopt)) {
-    if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
-    // Set log scale also if the minimum and maximum scale is not 0
-    else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
-              ( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
-    else pad->SetLogy( 0 );
-  }
-
-  int gridx = gStyle->GetPadGridX();
-  int gridy = gStyle->GetPadGridY();
-  if (hasOption("GRIDX", &iopt)) gridx=iopt;
-  if (hasOption("GRIDY", &iopt)) gridy=iopt;
-  pad->SetGrid(gridx, gridy);
-  if ( m_rootHistogram->GetDimension() > 1) {
-    if (hasOption("LOGZ", &iopt)) pad->SetLogz(1);
-    if (hasOption("THETA", &fopt)) pad->SetTheta(fopt);
-    if (hasOption("PHI", &fopt)) pad->SetPhi(fopt);
-  }
-
-  if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
-  if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
-  if(hasOption("PADCOLOR", &iopt)) pad->SetFillColor(iopt);
-  //  }
 }
 
 //=========================================================================
@@ -489,85 +510,85 @@ void DisplayHistogram::setDisplayOptions ( ) {
   //boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
 
   //if ( oraLock && rootLock ) {
-    int iopt = 0;
-    float fopt = 0.0;
-    std::string sopt;
-    if (hasOption("LABEL_X", &sopt))  m_rootHistogram->SetXTitle (sopt.data());
-    if (hasOption("LABEL_Y", &sopt)) m_rootHistogram->SetYTitle (sopt.data());
-    if (hasOption("LABEL_Z", &sopt)) m_rootHistogram->SetZTitle (sopt.data());
-    double bxmin=m_rootHistogram->GetXaxis()->GetXmin();
-    double bxmax=m_rootHistogram->GetXaxis()->GetXmax();
+  int iopt = 0;
+  float fopt = 0.0;
+  std::string sopt;
+  if (hasOption("LABEL_X", &sopt))  m_rootHistogram->SetXTitle (sopt.data());
+  if (hasOption("LABEL_Y", &sopt)) m_rootHistogram->SetYTitle (sopt.data());
+  if (hasOption("LABEL_Z", &sopt)) m_rootHistogram->SetZTitle (sopt.data());
+  double bxmin=m_rootHistogram->GetXaxis()->GetXmin();
+  double bxmax=m_rootHistogram->GetXaxis()->GetXmax();
 
-    if (hasOption("XMIN", &fopt)) { bxmin=fopt; }
-    if (hasOption("XMAX", &fopt)) { bxmax=fopt; }
-    m_rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
+  if (hasOption("XMIN", &fopt)) { bxmin=fopt; }
+  if (hasOption("XMAX", &fopt)) { bxmax=fopt; }
+  m_rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
 
-    if (m_onlineHist->dimension() <2) { // 1d histograms
-      if (hasOption("YMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
-      if (hasOption("YMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
-    } else {  // 2d histograms
-      double bymin = m_rootHistogram->GetYaxis()->GetXmin();
-      double bymax = m_rootHistogram->GetYaxis()->GetXmax();
-      if (hasOption("YMIN", &fopt)) { bymin=fopt; }
-      if (hasOption("YMAX", &fopt)) { bymax=fopt; }
-      m_rootHistogram->GetYaxis()->SetRangeUser(bymin, bymax);
-      if (hasOption("ZMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
-      if (hasOption("ZMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
-    }
-    if (hasOption("STATS", &iopt)) m_rootHistogram->SetStats(0 != iopt);
+  if (m_onlineHist->dimension() <2) { // 1d histograms
+    if (hasOption("YMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
+    if (hasOption("YMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
+  } else {  // 2d histograms
+    double bymin = m_rootHistogram->GetYaxis()->GetXmin();
+    double bymax = m_rootHistogram->GetYaxis()->GetXmax();
+    if (hasOption("YMIN", &fopt)) { bymin=fopt; }
+    if (hasOption("YMAX", &fopt)) { bymax=fopt; }
+    m_rootHistogram->GetYaxis()->SetRangeUser(bymin, bymax);
+    if (hasOption("ZMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
+    if (hasOption("ZMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
+  }
+  if (hasOption("STATS", &iopt)) m_rootHistogram->SetStats(0 != iopt);
 
-    if (hasOption("SHOWTITLE", &sopt)) m_rootHistogram->SetTitle(sopt.c_str());
+  if (hasOption("SHOWTITLE", &sopt)) m_rootHistogram->SetTitle(sopt.c_str());
 
-    if (hasOption("FILLSTYLE", &iopt)) m_rootHistogram->SetFillStyle(iopt);
-    if (hasOption("FILLCOLOR", &iopt)) m_rootHistogram->SetFillColor(iopt);
-    if (hasOption("LINESTYLE", &iopt)) m_rootHistogram->SetLineStyle(iopt);
-    if (hasOption("LINECOLOR", &iopt)) m_rootHistogram->SetLineColor(iopt);
-    if (hasOption("LINEWIDTH", &iopt)) m_rootHistogram->SetLineWidth(iopt);
-    if (hasOption("MARKERSIZE", &fopt)) m_rootHistogram->SetMarkerSize((Size_t)fopt);
-    if (hasOption("MARKERSTYLE", &iopt)) m_rootHistogram->SetMarkerStyle(iopt);
-    if (hasOption("MARKERCOLOR", &iopt)) m_rootHistogram->SetMarkerColor(iopt);
+  if (hasOption("FILLSTYLE", &iopt)) m_rootHistogram->SetFillStyle(iopt);
+  if (hasOption("FILLCOLOR", &iopt)) m_rootHistogram->SetFillColor(iopt);
+  if (hasOption("LINESTYLE", &iopt)) m_rootHistogram->SetLineStyle(iopt);
+  if (hasOption("LINECOLOR", &iopt)) m_rootHistogram->SetLineColor(iopt);
+  if (hasOption("LINEWIDTH", &iopt)) m_rootHistogram->SetLineWidth(iopt);
+  if (hasOption("MARKERSIZE", &fopt)) m_rootHistogram->SetMarkerSize((Size_t)fopt);
+  if (hasOption("MARKERSTYLE", &iopt)) m_rootHistogram->SetMarkerStyle(iopt);
+  if (hasOption("MARKERCOLOR", &iopt)) m_rootHistogram->SetMarkerColor(iopt);
 
-    if (hasOption("TIT_X_SIZE", &fopt)) m_rootHistogram->GetXaxis()->SetTitleSize(fopt);
-    if (hasOption("TIT_X_OFFS", &fopt)) m_rootHistogram->GetXaxis()->SetTitleOffset(fopt);
-    if (hasOption("LAB_X_SIZE", &fopt)) m_rootHistogram->GetXaxis()->SetLabelSize(fopt);
-    if (hasOption("LAB_X_OFFS", &fopt)) m_rootHistogram->GetXaxis()->SetLabelOffset(fopt);
-    if (hasOption("NDIVX", &iopt)) m_rootHistogram->SetNdivisions(iopt,"X");
+  if (hasOption("TIT_X_SIZE", &fopt)) m_rootHistogram->GetXaxis()->SetTitleSize(fopt);
+  if (hasOption("TIT_X_OFFS", &fopt)) m_rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+  if (hasOption("LAB_X_SIZE", &fopt)) m_rootHistogram->GetXaxis()->SetLabelSize(fopt);
+  if (hasOption("LAB_X_OFFS", &fopt)) m_rootHistogram->GetXaxis()->SetLabelOffset(fopt);
+  if (hasOption("NDIVX", &iopt)) m_rootHistogram->SetNdivisions(iopt,"X");
 
-    if (hasOption("TIT_Y_SIZE", &fopt)) m_rootHistogram->GetYaxis()->SetTitleSize(fopt);
-    if (hasOption("TIT_Y_OFFS", &fopt)) m_rootHistogram->GetYaxis()->SetTitleOffset(fopt);
-    if (hasOption("LAB_Y_SIZE", &fopt)) m_rootHistogram->GetYaxis()->SetLabelSize(fopt);
-    if (hasOption("LAB_Y_OFFS", &fopt)) m_rootHistogram->GetYaxis()->SetLabelOffset(fopt);
-    if (hasOption("NDIVY", &iopt)) m_rootHistogram->SetNdivisions(iopt,"Y");
+  if (hasOption("TIT_Y_SIZE", &fopt)) m_rootHistogram->GetYaxis()->SetTitleSize(fopt);
+  if (hasOption("TIT_Y_OFFS", &fopt)) m_rootHistogram->GetYaxis()->SetTitleOffset(fopt);
+  if (hasOption("LAB_Y_SIZE", &fopt)) m_rootHistogram->GetYaxis()->SetLabelSize(fopt);
+  if (hasOption("LAB_Y_OFFS", &fopt)) m_rootHistogram->GetYaxis()->SetLabelOffset(fopt);
+  if (hasOption("NDIVY", &iopt)) m_rootHistogram->SetNdivisions(iopt,"Y");
 
-    if (hasOption("TIT_Z_SIZE", &fopt)) m_rootHistogram->GetZaxis()->SetTitleSize(fopt);
-    if (hasOption("TIT_Z_OFFS", &fopt)) m_rootHistogram->GetZaxis()->SetTitleOffset(fopt);
-    if (hasOption("LAB_Z_SIZE", &fopt)) m_rootHistogram->GetZaxis()->SetLabelSize(fopt);
-    if (hasOption("LAB_Z_OFFS", &fopt)) m_rootHistogram->GetZaxis()->SetLabelOffset(fopt);
+  if (hasOption("TIT_Z_SIZE", &fopt)) m_rootHistogram->GetZaxis()->SetTitleSize(fopt);
+  if (hasOption("TIT_Z_OFFS", &fopt)) m_rootHistogram->GetZaxis()->SetTitleOffset(fopt);
+  if (hasOption("LAB_Z_SIZE", &fopt)) m_rootHistogram->GetZaxis()->SetLabelSize(fopt);
+  if (hasOption("LAB_Z_OFFS", &fopt)) m_rootHistogram->GetZaxis()->SetLabelOffset(fopt);
 
-    if (hasOption("NORM", &fopt)) if (fopt>0.) m_rootHistogram->SetNormFactor(fopt);
+  if (hasOption("NORM", &fopt)) if (fopt>0.) m_rootHistogram->SetNormFactor(fopt);
 
-    // custom bin labels
-    if ( 0 != m_rootHistogram->GetXaxis()) {
-      if (m_onlineHist->nXbinlabels() > 0) {
-        unsigned int  nbins = m_rootHistogram->GetNbinsX() ;
-        if ( m_onlineHist->nXbinlabels() < nbins ) nbins = m_onlineHist->nXbinlabels();
-        for (unsigned int il = 0; il < nbins; il++) {
-          sopt = m_onlineHist->binlabel(il,0);
-          m_rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
-        }
+  // custom bin labels
+  if ( 0 != m_rootHistogram->GetXaxis()) {
+    if (m_onlineHist->nXbinlabels() > 0) {
+      unsigned int  nbins = m_rootHistogram->GetNbinsX() ;
+      if ( m_onlineHist->nXbinlabels() < nbins ) nbins = m_onlineHist->nXbinlabels();
+      for (unsigned int il = 0; il < nbins; il++) {
+        sopt = m_onlineHist->binlabel(il,0);
+        m_rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
       }
     }
-    if (0 != m_rootHistogram->GetYaxis()) {
-      if (m_onlineHist->nYbinlabels() > 0) {
-        unsigned int  nbins = m_rootHistogram->GetNbinsY() ;
-        if ( m_onlineHist->nYbinlabels() < nbins ) nbins = m_onlineHist->nYbinlabels();
-        for (unsigned int il = 0; il < nbins; il++) {
-          sopt = m_onlineHist->binlabel(il,1);
-          m_rootHistogram->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
-        }
+  }
+  if (0 != m_rootHistogram->GetYaxis()) {
+    if (m_onlineHist->nYbinlabels() > 0) {
+      unsigned int  nbins = m_rootHistogram->GetNbinsY() ;
+      if ( m_onlineHist->nYbinlabels() < nbins ) nbins = m_onlineHist->nYbinlabels();
+      for (unsigned int il = 0; il < nbins; il++) {
+        sopt = m_onlineHist->binlabel(il,1);
+        m_rootHistogram->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
       }
     }
-    //}
+  }
+  //}
 }
 
 //=========================================================================
@@ -575,14 +596,14 @@ void DisplayHistogram::setDisplayOptions ( ) {
 //=========================================================================
 void DisplayHistogram::fit ( OMAlib* analysisLib ) {
   if ( 0 == m_onlineHist ) return ;
-  if ( ( m_onlineHist->hasFitFunction() ) && 
+  if ( ( m_onlineHist->hasFitFunction() ) &&
        ( 0 != m_rootHistogram ) ) {
     std::string Name;
     std::vector<float> initValues;
     gStyle -> SetOptFit( 1111111 ) ;
     m_onlineHist->getFitFunction( Name, &initValues);
 
-    std::cout << "fitting histogram " << m_onlineHist->identifier() 
+    std::cout << "fitting histogram " << m_onlineHist->identifier()
               << " with function "<< Name << std::endl;
 
     OMAFitFunction* requestedFit =  analysisLib->getFitFunction(Name);
@@ -598,11 +619,11 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 bool DisplayHistogram::hasOption( const char* str, int* iopt ) {
   if ( !m_onlineHist->getDisplayOption( str, iopt ) ) return false;
-  //std::cout << m_onlineHist->identifier() << " has option " << str 
+  //std::cout << m_onlineHist->identifier() << " has option " << str
   //          << " set to value " << *iopt << std::endl;
   return true;
 }
@@ -613,10 +634,10 @@ bool DisplayHistogram::hasOption( const char* str, float* fopt ) {
   //          << " set to value " << *fopt << std::endl;
   return true;
 }
-  
+
 bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
   if ( !m_onlineHist->getDisplayOption( str, sopt ) ) return false;
-  //std::cout << m_onlineHist->identifier() << " has option " << str 
+  //std::cout << m_onlineHist->identifier() << " has option " << str
   //          << " set to value " << *sopt << std::endl;
   return true;
 }
@@ -626,7 +647,7 @@ bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
 //=========================================================================
 void DisplayHistogram::setOffsetHistogram ( ) {
   if ( NULL == m_rootHistogram ) return;
-  
+
   std::cout << "Set offset for " << m_rootHistogram->GetTitle() << std::endl;
   if ( m_offsetHistogram ) { delete m_offsetHistogram; m_offsetHistogram = 0;}
   if ( 0 != dynamic_cast<TProfile*>(m_rootHistogram) ) {
@@ -662,18 +683,18 @@ void DisplayHistogram::prepareForDisplay ( ) {
           m_rootHistogram->SetBinError(i, j, sqrt( pow(m_rootHistogram->GetBinError(i, j), 2) -
                                                    pow(m_offsetHistogram->GetBinError(i, j), 2)) );
         }
-      } 
-      std::cout << "Subtract offset 2D size " << m_rootHistogram->GetNbinsX() << " x " 
+      }
+      std::cout << "Subtract offset 2D size " << m_rootHistogram->GetNbinsX() << " x "
                 << m_rootHistogram->GetNbinsY() << std::endl;
     } else {
       for (int i = 1; i <= m_rootHistogram->GetNbinsX(); ++i) {
         m_rootHistogram->SetBinContent(i, m_rootHistogram->GetBinContent(i) - m_offsetHistogram->GetBinContent(i));
-        m_rootHistogram->SetBinError(i, sqrt( pow(m_rootHistogram->GetBinError(i), 2) - 
+        m_rootHistogram->SetBinError(i, sqrt( pow(m_rootHistogram->GetBinError(i), 2) -
                                               pow(m_offsetHistogram->GetBinError(i), 2) ) );
       }
       std::cout << "Subtract offset 1D size " << m_rootHistogram->GetNbinsX() << std::endl;
     }
-    
+
   }
   if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram) ) {
     if ((TH2D::Class() == m_rootHistogram->IsA()) && m_histogramImage) {
@@ -681,6 +702,74 @@ void DisplayHistogram::prepareForDisplay ( ) {
                                   ((TH2D*)m_rootHistogram)->GetNbinsX() + 2,
                                   ((TH2D*)m_rootHistogram)->GetNbinsY() + 2, m_prettyPalette);
     }
+  }
+}
+//=========================================================================
+// Set the time graph from argument
+//=========================================================================
+void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, bool update ) {
+  int size = values.size();
+  if ( NULL != m_timeArray ) delete m_timeArray;
+  if ( NULL != m_valueArray ) delete m_valueArray;
+  m_timeArray = new double[ size ] ;
+  m_valueArray = new double[ size ] ;
+  double* p = m_timeArray;
+  double* q = m_valueArray;
+  for ( std::vector<std::pair<int,double> >::iterator itT = values.begin(); values.end() != itT; ++itT ) {
+    *p++ = (*itT).first - 3600.;
+    *q++ = (*itT).second;
+  }
+  std::cout << "Create graph size " << size
+            << " min " << m_timeArray[0] << " max " << m_timeArray[size-1] << std::endl;
+
+  if ( !update ) {
+    if ( NULL != m_timeGraph ) {
+      delete m_timeGraph;
+    }
+    m_timeGraph = new TGraph( size , m_timeArray , m_valueArray ) ;
+    m_timeGraph->SetEditable ( kFALSE );
+  } else {
+    m_timeGraph->Clear();
+    m_timeGraph->DrawGraph( size, m_timeArray, m_valueArray );
+  }
+
+  m_timeGraph->SetTitle( m_shortName.c_str() );
+  m_timeGraph->GetXaxis()->SetTimeDisplay( 1 ) ;
+  m_timeGraph->GetXaxis()->SetTimeFormat( "#splitline{%d/%m/%y}{%H:%M:%S}" ) ;
+  m_timeGraph->GetXaxis()->SetTimeOffset( 0 ) ;
+
+  if ( m_isOverlap ) {
+    std::string sopt = "SAME";
+    m_timeGraph->SetDrawOption(sopt.c_str());
+  }
+
+  //== Set good defaults if not set by the individual histogram
+  createDummyHisto();
+  m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03 );
+  m_rootHistogram->GetXaxis()->SetLabelSize( 0.03 );
+
+  //== Set properties...
+  setDisplayOptions();
+
+  TAxis * grax = m_timeGraph -> GetYaxis() ;
+  TAxis * hax  = m_rootHistogram -> GetYaxis() ;
+
+  (( TNamed ) (*hax)).Copy( *grax ) ;
+  (( TAttAxis ) (*hax)).Copy( *grax ) ;
+
+  grax = m_timeGraph -> GetXaxis() ;
+  hax  = m_rootHistogram -> GetXaxis() ;
+  (( TAttAxis ) (*hax)).Copy( *grax ) ;
+  grax -> SetRangeUser( m_timeArray[0], m_timeArray[size-1] ) ;
+
+  (( TAttMarker ) (*m_rootHistogram)).Copy( *m_timeGraph ) ;
+  (( TAttLine )   (*m_rootHistogram)).Copy( *m_timeGraph ) ;
+
+  delete m_rootHistogram;
+  m_rootHistogram = 0;
+
+  if ( update && m_hostingPad != NULL ) {
+    m_hostingPad->Modified();
   }
 }
 //=============================================================================

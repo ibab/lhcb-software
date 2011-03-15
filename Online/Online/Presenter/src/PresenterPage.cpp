@@ -16,6 +16,13 @@
 #include "PresenterPage.h"
 #include "HistogramIdentifier.h"
 
+// Trending
+#include "Trending/ITrendingTool.h" 
+// global variable
+namespace PresenterGaudi { 
+  extern ITrendingTool * trendingTool ;
+};
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PresenterPage
 //
@@ -32,6 +39,7 @@ PresenterPage::PresenterPage( ) {
   m_onlineHistosOnPage.clear();
   m_tasks.clear();
   m_analysis.clear();
+  m_trends.clear();
 }
 //=============================================================================
 // Destructor
@@ -52,6 +60,10 @@ void PresenterPage::clear ( ) {
     delete (*itA).displayHisto;
   }
   m_analysis.clear();
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    (*itF).histos.clear();
+  }
+  m_trends.clear();
 }
 
 //=========================================================================
@@ -63,29 +75,60 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
   anaHistos.reserve( 100 ); // avoid relocation
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
+    OnlineHistogram* myHist = (*itHP)->histo;
 
-    if ( !(*itHP)->histo->isAnaHist() ) {
+    //== Is it a trend plot ?
+ 
+    if ( myHist->type() == OnlineHistDBEnv::TRE ) {
+      std::string file = myHist->hname();
+      if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
+      std::string variable = myHist->algorithm();
+      bool existed = false;
+      for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+        if ( (*itF).fileName == file ) {
+          std::cout << "  ++ add variable " << variable << " to file " << file << std::endl;
+          (*itF).histos.push_back( DisplayHistogram( myHist ) );
+          existed = true;
+          break;
+        }
+      }
+      if ( !existed ) {
+        TrendingFile tFile;
+        tFile.fileName = file;
+        tFile.startTime = 0;
+        tFile.endTime = 0;
+        tFile.histos.push_back( DisplayHistogram( myHist ) );
+        m_trends.push_back( tFile );
+        std::cout << "  ** new variable " << variable << " to file " << file << std::endl;
+      }
+
+      //== Is it a normal histogram ?
+
+    } else if ( !myHist->isAnaHist() ) {
       bool existed = false;
       for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-        if ( (*itT).name == (*itHP)->histo->task() ) {
-          (*itT).histos.push_back( DisplayHistogram( (*itHP)->histo ) );
+        if ( (*itT).name == myHist->task() ) {
+          (*itT).histos.push_back( DisplayHistogram( myHist ) );
           existed = true;
-          std::cout << (*itHP)->histo->task() << " ++ Histo   " << (*itHP)->histo->dimServiceName() << std::endl;
+          std::cout << myHist->task() << " ++ Histo   " << myHist->dimServiceName() << std::endl;
           break;
         }
       }
       if ( !existed ) {
         TaskHistos newTask;
-        newTask.name = (*itHP)->histo->task();
+        newTask.name = myHist->task();
         newTask.dead = false;
-        newTask.histos.push_back( DisplayHistogram( (*itHP)->histo ) );
+        newTask.histos.push_back( DisplayHistogram( myHist ) );
         m_tasks.push_back( newTask );
-        std::cout << (*itHP)->histo->task() << " ** Histo   " << (*itHP)->histo->dimServiceName() << std::endl;
+        std::cout << myHist->task() << " ** Histo   " << myHist->dimServiceName() << std::endl;
       }
     } else {    //== Analysis histograms: Get the source histograns
-      anaHistos.push_back( (*itHP )->histo );
+      anaHistos.push_back( myHist );
     }
   }
+
+  //== Post process the analysis histograms as they can be nested
+
   for ( std::vector<OnlineHistogram*>::iterator itOH = anaHistos.begin(); anaHistos.end() != itOH; ++itOH ) {
     AnalysisHisto myAna;
     myAna.displayHisto = new DisplayHistogram( *itOH );
@@ -140,6 +183,8 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
 //  Load from the monitoring service
 //=========================================================================
 void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
+  if ( m_tasks.size() == 0 ) return;
+  
   std::vector<std::string> knownTasks;
   HistTask::TaskList( "", knownTasks );
 
@@ -151,18 +196,35 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
   
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     bool foundTheTask = false;
+    std::string taskName = (*itT).name;
+    if ( taskName == "GauchoJob" ) taskName = "Adder";
+
     for ( std::vector<std::string>::iterator itS = knownTasks.begin();
           knownTasks.end() != itS; ++itS ) {
       if ( (*itS).find( partition ) != 0 ) continue;
-      if ( (*itS).find( (*itT).name ) == std::string::npos ) continue;
+      if ( (*itS).find( taskName ) == std::string::npos ) continue;
       (*itT).location = *itS;
+      //==== TEMPORARY PATCH === force partition number !!!!!
+      if ( taskName == "Adder" ) (*itT).location = "PART01_Adder_1";  
       foundTheTask = true;
       break;
     }
     if ( foundTheTask ) {
+      std::cout << "Search for services of task " << (*itT).location << std::endl;
       HistTask myHists( (*itT).location );
 
       std::vector<std::string> histNames;
+
+      /*
+      //== Print the list of services...
+      int kk = myHists.Directory( histNames );
+      std::cout << "Directory returned status " << kk << std::endl;
+      for ( std::vector<std::string>::iterator itS = histNames.begin(); histNames.end() != itS  ; ++itS ) {
+        std::cout << "      -" << *itS << "-" << std::endl;
+      }
+      histNames.clear();
+      */
+
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
         std::string dimName = (*itH).histo()->dimServiceName();
@@ -173,9 +235,13 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
           if ( pos < dimName.size() ) {
             dimName.erase( 0, pos+1 );
           }
+          if ( dimName.find( "GauchoJob/" ) == 0 ) {
+            dimName.erase( 0, 10 );
+            dimName = dimName.substr(0, dimName.find("/"))+"/"+dimName;
+          }
         }
         (*itH).setShortName( dimName );
-        std::cout << "  ++ Search for    " << dimName << std::endl;
+        std::cout << "  ++ Search for '" << dimName << "'" << std::endl;
         histNames.push_back( dimName );
       }
       std::vector<TObject*> results;
@@ -207,8 +273,10 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
               delete results[indx];
               (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
               (*itH).prepareForDisplay();
-              (*itH).setDrawingOptions( (*itH).hostingPad() );
-              (*itH).hostingPad()->Modified();
+              if ( 0 != (*itH).hostingPad() ) {
+                (*itH).setDrawingOptions( (*itH).hostingPad() );
+                (*itH).hostingPad()->Modified();
+              }
             } else {
               if ( NULL != (*itH).rootHist() ) delete (*itH).rootHist();
               (*itH).setRootHist( (TH1*) results[indx] );
@@ -250,7 +318,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       }
     }
   }
-  std::cout << "   ... display prepared" << std::endl;
+  std::cout << " ... histograms loaded from DIM" << std::endl;
 }
 //=========================================================================
 // Clear the reference on all plots of the page
@@ -326,6 +394,8 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
 //  Build the analysis histograms
 //=========================================================================
 bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
+  if ( m_analysis.size() == 0 ) return true;
+  std::cout << "Build analysis histograms " << std::endl;
   for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
     std::cout << "Get creator for algorithm '" << (*itA).algorithm << "'" << std::endl;
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>( analysisLib->getAlg( (*itA).algorithm ) );
@@ -412,7 +482,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
 void PresenterPage::loadFromArchive( Archive* archive,
                                      const std::string & timePoint,
                                      const std::string & pastDuration ) {
-  std::cout << "Load from Archivem time  Point " << timePoint
+  std::cout << "Load from Archive, time  Point " << timePoint
             << " pastDuration " << pastDuration << std::endl;
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     archive->setFiles( (*itT).name, timePoint, pastDuration );
@@ -423,6 +493,7 @@ void PresenterPage::loadFromArchive( Archive* archive,
       (*itH).prepareForDisplay();
     }
   }
+  std::cout << "Archive loaded" << std::endl;
 }
 
 //=========================================================================
@@ -437,6 +508,14 @@ DisplayHistogram*  PresenterPage::displayHisto( OnlineHistoOnPage* onl ) {
 //== Give the (first) DisplayHistogram for the specified OnlineHistogram
 //=========================================================================
 DisplayHistogram* PresenterPage::displayHisto( OnlineHistogram* onlHist ) {
+  if ( onlHist->type() == OnlineHistDBEnv::TRE ) {
+    for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+      for ( std::vector<DisplayHistogram>::iterator itDH = (*itF).histos.begin(); (*itF).histos.end() != itDH; ++itDH ) {
+        if ( (*itDH).histo() == onlHist ) return &(*itDH);
+      }
+    }
+    return NULL;
+  } 
   if ( onlHist->isAnaHist() ) {
     for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
       if ( (*itA).displayHisto->histo() == onlHist ) return (*itA).displayHisto;
@@ -501,6 +580,7 @@ void PresenterPage::resetOffsetHistograms ( ) {
 //  Draw the full page
 //=========================================================================
 void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool fastHitMapDraw ) {
+
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
 
@@ -566,6 +646,61 @@ void PresenterPage::updateDrawingOptions ( ) {
       TPad* pad = dispH->hostingPad();
       if ( NULL != pad ) dispH->setDrawingOptions( pad );
     }
+  }
+}
+
+//=========================================================================
+//  Fill the tren plots. Start and end time in integer. If endTime is zero, startTime is an offset
+//=========================================================================
+void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update ) {
+  std::cout << "  ++ Trending size " << m_trends.size() << std::endl;
+  if ( m_trends.size() == 0 ) return;
+  
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin();
+        m_trends.end() != itF; ++itF ) { 
+    bool status = PresenterGaudi::trendingTool -> openRead( (*itF).fileName ) ;
+    if ( !status ) {
+      std::cerr << "Trend file does not exist : " << (*itF).fileName << std::endl ;
+      for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
+            (*itF).histos.end() != itH; ++itH ) {
+        (*itH).createDummyHisto();
+      }
+      continue ;
+    }
+    //== Handle the time offset case
+    if ( 0 == endTime ) {
+      endTime   = (int)::time( 0 );
+      startTime = endTime - startTime;
+      startTime = 3600 * (startTime/3600);  // round to the starting hour...
+    }
+    std::cout << "Select for time range: " << startTime << " to " << endTime << std::endl;
+    
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
+          (*itF).histos.end() != itH; ++itH ) {
+      status = PresenterGaudi::trendingTool->select( startTime , endTime , (*itH).shortName() );
+      if ( ! status ) {
+        std::cerr << "  unknown tag name " << (*itH).shortName() << std::endl ;
+        (*itH).createDummyHisto();
+        continue;
+      }
+
+      int theTime ;
+      float theValue ;
+      std::vector< std::pair<int,double> > values ;
+      values.push_back( std::pair<int,double>( startTime, 0. ) ) ;
+      // Read the values in the selected time interval and fill a vector
+      while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
+        if ( theTime < startTime ) continue;
+        if ( theTime > endTime   ) continue;
+        values.push_back( std::pair<int,double>( theTime, theValue ) );
+      }
+      values.push_back( std::pair<int,double>( endTime, values.back().second  ) ) ;
+      values[0].second = values[1].second;
+      std::cout << "from " << values[0].first << " to " << values[values.size()-1].first 
+                << " , size " << values.size() << std::endl;
+      (*itH).createGraph( values, update );
+    }
+    PresenterGaudi::trendingTool->closeFile( ) ;
   }
 }
 //=============================================================================

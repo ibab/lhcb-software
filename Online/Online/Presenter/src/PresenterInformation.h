@@ -3,6 +3,7 @@
 #define PRESENTER_PRESENTERINFORMATION_H_
 
 #include "presenter.h"
+#include <ctime>
 
 /** @class PresenterInformation PresenterInformation.h
  *
@@ -103,6 +104,11 @@ class PresenterInformation
   /// Get reference Run
   int referenceRun( ) const { return m_referenceRun; } ;
 
+  std::time_t startTimeC() const { return m_startTimeC; }
+  std::time_t endTimeC()   const { return m_endTimeC;   }
+
+  void setTimeC( std::string endTime, std::string duration, bool add=false );
+
  private:
   pres::PresenterMode m_presenterMode ;      ///< presenter mode
   bool                m_globalHistoryByRun ; ///< global history mode
@@ -117,7 +123,8 @@ class PresenterInformation
   std::string         m_globalPastDuration ; ///< Past duration
   std::string         m_globalStepSize ;     ///< Step size
   bool                m_historyMode ;        ///< history mode
-
+  std::time_t         m_startTimeC;
+  std::time_t         m_endTimeC;
 }; 
 
 #endif /*PRESENTER_PRESENTERINFORMATION_H_*/

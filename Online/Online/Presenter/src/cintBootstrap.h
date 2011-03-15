@@ -10,4 +10,6 @@
 #include "ReferenceDialog.h"
 #include "HistoPropDialog.h"
 #include "CreateTrendingHistogramDialog.h"
+#include "PresenterPage.h"
+#include "DisplayHistogram.h"
 #endif /*CINTBOOTSTRAP_H_*/

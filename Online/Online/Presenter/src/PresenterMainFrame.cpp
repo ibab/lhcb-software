@@ -196,6 +196,9 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_archive    = new Archive( &m_presenterInfo , m_savesetPath ,
                               m_referencePath ) ;
   m_archive->setVerbosity(m_verbosity);
+
+  m_trendDuration = 2*3600;
+  m_trendEnd      = 0;
 }
 
 //==============================================================================
@@ -229,7 +232,7 @@ PresenterMainFrame::~PresenterMainFrame() {
        ++dbString) {
     delete *dbString;
   }
-  
+
   std::map<std::string*, std::string*>::iterator dbCreds;
   for (dbCreds = m_knownDbCredentials.begin();
        dbCreds != m_knownDbCredentials.end(); ++dbCreds) {
@@ -238,12 +241,12 @@ PresenterMainFrame::~PresenterMainFrame() {
   }
 
   if (0 != m_intervalPickerData) {
-    delete m_intervalPickerData ; 
+    delete m_intervalPickerData ;
     m_intervalPickerData = NULL;
   }
-  if (0 != m_clockTimer) { 
+  if (0 != m_clockTimer) {
     delete m_clockTimer;
-    m_clockTimer = NULL; 
+    m_clockTimer = NULL;
   }
   if (0 != m_pageRefreshTimer) {
     delete m_pageRefreshTimer;
@@ -259,9 +262,9 @@ PresenterMainFrame::~PresenterMainFrame() {
     delete m_knownHistoryPartitionList;
     m_knownHistoryPartitionList = NULL;
   }
-  if (0 != m_benchmark) { 
-    delete m_benchmark; 
-    m_benchmark = NULL; 
+  if (0 != m_benchmark) {
+    delete m_benchmark;
+    m_benchmark = NULL;
   }
   if (gPresenter == this) { gPresenter = 0; }
 }
@@ -360,7 +363,7 @@ void PresenterMainFrame::buildGUI() {
     m_iconLevel    = gClient->GetPicture("bld_vbox.png");
 
     m_stockNewFormula = picpool->GetPicture("stock_new_formula_xpm",
-                                             (char**)stock_new_formula_xpm);
+                                            (char**)stock_new_formula_xpm);
 
     // File menu
     m_fileMenu = new TGPopupMenu(fClient->GetRoot());
@@ -436,7 +439,7 @@ void PresenterMainFrame::buildGUI() {
                            PAGE_EDITOR_OFFLINE_MODE_COMMAND);
       m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
     }
-    
+
     m_toolMenu->AddEntry(m_toolOnline, ONLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
     m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
@@ -526,11 +529,11 @@ void PresenterMainFrame::buildGUI() {
                             this, "reportToLog()");
 
     //=== These are needed only for page edition ===
-    if ( m_editingAllowed ) { 
+    if ( m_editingAllowed ) {
 
       // New page
       const TGPicture* newPage16pic = picpool->GetPicture("newPage16",
-                                                        (char**)newPage16);
+                                                          (char**)newPage16);
       m_newPageButton = new TGPictureButton(m_toolBar, newPage16pic,
                                             CLEAR_PAGE_COMMAND);
       m_newPageButton->SetToolTipText("New page");
@@ -584,8 +587,8 @@ void PresenterMainFrame::buildGUI() {
       m_logoutButton->Connect("Clicked()", "PresenterMainFrame", this,
                               "logoutFromHistogramDB()");
     }
-    //=== These are for normal display (refresh)    
-    
+    //=== These are for normal display (refresh)
+
     // Start
     const TGPicture* ed_executepic = picpool->GetPicture("ed_execute.png");
     m_startRefreshButton = new TGPictureButton(m_toolBar, ed_executepic,
@@ -628,6 +631,27 @@ void PresenterMainFrame::buildGUI() {
     m_partitionSelectorComboBox -> Resize(122,22);
     m_partitionSelectorComboBox -> Connect("Selected(int)", "PresenterMainFrame",
                                            this, "partitionSelectorComboBoxHandler(int)");
+
+    //== Selecte the length of Trending plot
+    m_trendDurationComboBox = new TGComboBox(m_toolBar, -1,
+                                             kHorizontalFrame | kSunkenFrame | kDoubleBorder |
+                                             kOwnBackground);
+    m_toolBar->AddFrame(new TGLabel(m_toolBar,"Trend legth: ") , menuBarCenterY );
+    m_toolBar->AddFrame(m_trendDurationComboBox , menuBarCenterY );
+    m_trendDurationComboBox->SetEnabled(true);
+    // Select history by run
+    m_trendDurationComboBox->AddEntry("Last 2 hours",  M_TrendLastTwoHours ) ;
+    m_trendDurationComboBox->Select( M_TrendLastTwoHours,  false);
+    m_trendDurationComboBox->AddEntry("Last 24 hours", M_TrendLastDay);
+    m_trendDurationComboBox->AddEntry("Last 7 days",   M_TrendLastWeek);
+    m_trendDurationComboBox->AddEntry("Last 30 days",  M_TrendLastMonth);
+    m_trendDurationComboBox->AddEntry("Last Year",     M_TrendLastYear);
+    m_trendDurationComboBox->AddEntry("Since 2010",    M_TrendAll);
+    m_trendDurationComboBox->Resize(112,22);
+    m_trendDurationComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
+                                     this, "handleCommand(Command)");
+
+
     //== Select the reference
     const TGPicture* referPic = picpool->GetPicture("reference", (char**)reference_xpm);
     m_setReferenceButton = new TGPictureButton( m_toolBar, referPic, SET_REFERENCE_COMMAND );
@@ -704,7 +728,7 @@ void PresenterMainFrame::buildGUI() {
     m_overlayReferenceHistoButton->SetState(kButtonDisabled);
 
     // Set reference
-    if ( m_editingAllowed ) { 
+    if ( m_editingAllowed ) {
       const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
       m_pickReferenceHistoButton = new TGPictureButton( m_toolBar , f1_tpic ,
                                                         PICK_REFERENCE_HISTO_COMMAND ) ;
@@ -715,7 +739,7 @@ void PresenterMainFrame::buildGUI() {
       m_pickReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
                                           this, "pickReferenceHistogram()");
     }
-    
+
     // Clone Histo
     const TGPicture* inspectHistogram16pic =
       picpool->GetPicture("inspectHistogram16", (char**)inspectHistogram16);
@@ -740,7 +764,7 @@ void PresenterMainFrame::buildGUI() {
 
 
     // Edit Histogram properties
-    if ( m_editingAllowed ) { 
+    if ( m_editingAllowed ) {
       const TGPicture* editProperties16pic =
         picpool->GetPicture("editProperties16", (char**)editProperties16);
       m_editHistoButton = new TGPictureButton(m_toolBar, editProperties16pic,
@@ -751,9 +775,9 @@ void PresenterMainFrame::buildGUI() {
       m_editHistoButton->Connect("Clicked()", "PresenterMainFrame",
                                  this, "editHistogramProperties()");
     }
-    
+
     // Delete histo from Canvas
-    if ( m_editingAllowed ) { 
+    if ( m_editingAllowed ) {
       const TGPicture* editDelete16pic =
         picpool->GetPicture("editDelete16", (char**)editDelete16);
       m_deleteHistoFromCanvasButton =
@@ -766,7 +790,7 @@ void PresenterMainFrame::buildGUI() {
       m_deleteHistoFromCanvasButton->Connect("Clicked()", "PresenterMainFrame",
                                              this, "deleteSelectedHistoFromCanvas()");
     }
-    
+
 
     m_toolBarDock->AddFrame(m_toolBar,
                             new TGLayoutHints(kLHintsTop |
@@ -898,7 +922,7 @@ void PresenterMainFrame::buildGUI() {
                                               kHorizontalFrame);
     m_alarmHistogramTreeList->AddRoot("Alarms");
     m_alarmHistogramTreeList->GetFirstItem()->SetPictures(m_iconAnalysisAlarm,
-                                                            m_iconAnalysisAlarm);
+                                                          m_iconAnalysisAlarm);
     m_alarmHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
     m_alarmHistogramTreeList->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                        "PresenterMainFrame", this ,
@@ -1018,7 +1042,7 @@ void PresenterMainFrame::buildGUI() {
     horizontalSplitter->SetFrame( mainCanvasInfoGroupFrame , false ) ;
     centralPageFrame->AddFrame( horizontalSplitter,
                                 new TGLayoutHints( kLHintsBottom | kLHintsExpandX ));
-    
+
 
     //====================
 
@@ -1062,7 +1086,7 @@ void PresenterMainFrame::buildGUI() {
     m_histoSvcListTree->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                  "PresenterMainFrame", this,
                                  "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-    
+
     fViewPort664->AddFrame(m_histoSvcListTree);
     m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout( m_histoSvcListTree));
     m_histoSvcListTree->MapSubwindows();
@@ -1151,7 +1175,7 @@ void PresenterMainFrame::buildGUI() {
     m_databaseHistogramTreeList->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                           "PresenterMainFrame", this,
                                           "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-    
+
     m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
                                    M_AddDBHistoToPage_COMMAND);
@@ -1178,7 +1202,7 @@ void PresenterMainFrame::buildGUI() {
                                           new TGLayoutHints(kLHintsLeft | kLHintsTop |
                                                             kLHintsExpandX | kLHintsExpandY,
                                                             0, 0, 0, 0));
-    
+
 
     m_mainHorizontalFrame->AddFrame(m_leftMiscFrame,
                                     new TGLayoutHints(kLHintsLeft |
@@ -1539,42 +1563,44 @@ void PresenterMainFrame::handleCommand(Command cmd) {
       loadSelectedPageFromDB( m_currentPageName , pres::s_startupFile ,
                               m_savesetFileName ) ;
     break;
-  case M_File_Picker: {
-    TGFileInfo fileInfo;
-    const char* fileTypes[] = {"ROOT files", "*.root",
-                               "All files", "*",
-                               0 , 0};
-    fileInfo.fFileTypes = fileTypes;
-    fileInfo.fIniDir = StrDup(m_savesetPath.c_str());
-    fileInfo.SetMultipleSelection(false);
+  case M_File_Picker:
+    {
+      TGFileInfo fileInfo;
+      const char* fileTypes[] = {"ROOT files", "*.root",
+                                 "All files", "*",
+                                 0 , 0};
+      fileInfo.fFileTypes = fileTypes;
+      fileInfo.fIniDir = StrDup(m_savesetPath.c_str());
+      fileInfo.SetMultipleSelection(false);
 
-    std::cout << "*** Start the FileDialog ***" << std::endl;
-    new TGFileDialog(fClient->GetRoot(),this,kFDOpen,&fileInfo);
-    if (0 != fileInfo.fFilename) {
-      m_savesetFileName = std::string(fileInfo.fFilename);
-      std::cout << "*** Selected " << m_savesetFileName << std::endl;
-      std::size_t pos = m_savesetFileName.find( "castor:/" ) ;
-      if ( std::string::npos != pos )
-        // file is in Castor, change path to reflect this
-        m_savesetFileName.erase( 0 , pos ) ;
+      std::cout << "*** Start the FileDialog ***" << std::endl;
+      new TGFileDialog(fClient->GetRoot(),this,kFDOpen,&fileInfo);
+      if (0 != fileInfo.fFilename) {
+        m_savesetFileName = std::string(fileInfo.fFilename);
+        std::cout << "*** Selected " << m_savesetFileName << std::endl;
+        std::size_t pos = m_savesetFileName.find( "castor:/" ) ;
+        if ( std::string::npos != pos )
+          // file is in Castor, change path to reflect this
+          m_savesetFileName.erase( 0 , pos ) ;
 
-      if(false == m_savesetFileName.empty()) {
-        if (pres::EditorOffline == presenterMode() ) refreshHistogramSvcList(pres::s_withTree);
+        if(false == m_savesetFileName.empty()) {
+          if (pres::EditorOffline == presenterMode() ) refreshHistogramSvcList(pres::s_withTree);
 
-        m_previousIntervalButton->SetState(kButtonDisabled);
-        m_nextIntervalButton->SetState(kButtonDisabled);
-        m_currentPageName = selectedPageFromDbTree();
+          m_previousIntervalButton->SetState(kButtonDisabled);
+          m_nextIntervalButton->SetState(kButtonDisabled);
+          m_currentPageName = selectedPageFromDbTree();
 
-        std::cout << "loadingPage " << m_loadingPage << "current page " << m_currentPageName << std::endl;
-        if (!m_currentPageName.empty() && (false == m_loadingPage)) {
-          std::cout << "Load page after selection of filename" << std::endl;
-          loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile,
-                                 m_savesetFileName) ;
+          std::cout << "loadingPage " << m_loadingPage << "current page " << m_currentPageName << std::endl;
+          if (!m_currentPageName.empty() && (false == m_loadingPage)) {
+            std::cout << "Load page after selection of filename" << std::endl;
+            loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile,
+                                   m_savesetFileName) ;
+          }
+
         }
-        
       }
     }
-  }
+
     break;
   case M_Move_COMMAND:
     moveSelectedInDB();
@@ -1606,6 +1632,37 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case SET_REFERENCE_COMMAND:
     setReference();
     break;
+  case M_TrendLastTwoHours:
+    m_trendDuration = 2*3600;
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+  case M_TrendLastDay:
+    m_trendDuration = 24*3600;
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+  case M_TrendLastWeek:
+    m_trendDuration = 7*24*3600;
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+  case M_TrendLastMonth:
+    m_trendDuration = 30*24*3600;
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+  case M_TrendLastYear:
+    m_trendDuration = 365*24*3600;
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+  case M_TrendAll:
+    m_trendDuration = 10*365*24*3600;  // take 10 years...
+    m_trendEnd      = 0;
+    refreshPage();
+    break;
+    
   default:
     if (m_verbosity >= pres::Debug)
       std::cout << "zut. TGButton WidgetId from gTQSender is corrupt"
@@ -1890,7 +1947,7 @@ void PresenterMainFrame::reportToLog() {
         sprintf( runChar, "%d", getRun.getInt() );
         runNumber = std::string( runChar );
         std::cout << "Run number " << runNumber << std::endl;
-        
+
       } else if ( "/OfflineDataQuality/" == m_currentPageName.substr(0, 20) ) {
         username =  shiftdb.getDQPiquet().c_str();
         system   = m_currentPageName.substr( 20 );
@@ -1981,15 +2038,15 @@ void PresenterMainFrame::setReference() {
   }
   SetLayoutBroken(true);
 
-    ReferenceDialog* referenceDialog = new ReferenceDialog(this, 646, 435 );
-    // Default values.
-    std::string tck  = m_presenterInfo.currentTCK();
-    int referenceRun = m_presenterInfo.referenceRun();
-    referenceDialog->setParameters( tck, referenceRun );
-    fClient->WaitFor(dynamic_cast<TGWindow*>( referenceDialog ));
-    m_presenterInfo.setTCK( tck );
-    m_presenterInfo.setReferenceRun( referenceRun );
-    
+  ReferenceDialog* referenceDialog = new ReferenceDialog(this, 646, 435 );
+  // Default values.
+  std::string tck  = m_presenterInfo.currentTCK();
+  int referenceRun = m_presenterInfo.referenceRun();
+  referenceDialog->setParameters( tck, referenceRun );
+  fClient->WaitFor(dynamic_cast<TGWindow*>( referenceDialog ));
+  m_presenterInfo.setTCK( tck );
+  m_presenterInfo.setReferenceRun( referenceRun );
+
   if ( m_resumePageRefreshAfterLoading ) startPageRefresh() ;
 }
 
@@ -2981,17 +3038,19 @@ void PresenterMainFrame::reconfigureGUI() {
     m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
 
     m_historyIntervalComboBox->SetEnabled(false);
+    m_trendDurationComboBox->SetEnabled(true);
+
   } else if ( pres::History == presenterMode()) {
     disablePageRefresh();
     stopPageRefresh();
 
     m_toolMenu->CheckEntry(OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
-    if  ( m_editingAllowed ) {  
+    if  ( m_editingAllowed ) {
       m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
       m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
     }
-    
+
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
 
@@ -3018,6 +3077,7 @@ void PresenterMainFrame::reconfigureGUI() {
     m_viewMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
 
     m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
+    m_trendDurationComboBox->SetEnabled(false);
 
     // hide refreshHistoDBListTree
     if (( pres::Online == m_prevPresenterMode) &&
@@ -3124,7 +3184,7 @@ void PresenterMainFrame::hideDBTools() {
     m_savePageToDatabaseButton->SetState(kButtonDisabled);
     m_pickReferenceHistoButton->SetState(kButtonDisabled);
   }
-  
+
   m_fileMenu->EnableEntry(LOGIN_COMMAND);
   m_fileMenu->DisableEntry(LOGOUT_COMMAND);
   m_fileMenu->DisableEntry(SAVE_PAGE_TO_DB_COMMAND);
@@ -3138,7 +3198,7 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
     m_logoutButton->SetState(kButtonUp);
     m_loginButton->SetState(kButtonDisabled);
   }
-  
+
   m_fileMenu->DisableEntry(LOGIN_COMMAND);
   m_fileMenu->EnableEntry(LOGOUT_COMMAND);
 
@@ -3287,7 +3347,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
           const char* dimDnsServerNode = DimClient::getDnsNode();
 
           //if (m_verbosity >= pres::Verbose)
-            std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
+          std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
 
           setStatusBarText(dimDnsServerNode, 2);
           if (pres::s_withTree == tree) {
@@ -3654,7 +3714,7 @@ void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void PresenterMainFrame::addHistoToHistoDB() {
   disableAutoCanvasLayoutBtn();
@@ -3737,7 +3797,7 @@ void PresenterMainFrame::addHistoToHistoDB() {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
                                          pres::ServicePlotMode overlapMode){
@@ -3821,7 +3881,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
       dbRootHist->getRootHistogram()->SetStats(paintStats);
 
       TString paintDrawOption;
-      
+
       std::cout << "== addHistosToPage: histogram type " << dbRootHist->histogramType() << std::endl;
 
       if ( s_pfixMonH1D == dbRootHist->histogramType()) {
@@ -4323,9 +4383,9 @@ void PresenterMainFrame::loadNextPage() {
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
                                                 const std::string & pastDuration ) {
-  
+
   std::cout << "Enter loadSelectedPageFromDB" << std::endl;
-  
+
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
     if ( m_groupPages.empty() ) fillGroupPages( node ) ;
@@ -4355,11 +4415,13 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("08:00:00") ) ;
+        m_presenterInfo.setTimeC( pres::s_Now, std::string("08:00:00") );
         m_message = "History for last 8 hours";
       } else if ( "last 1 hour" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("01:00:00") ) ;
+        m_presenterInfo.setTimeC( pres::s_Now, std::string("01:00:00") );
         m_message = "History for last hour";
       } else if ( "preset file" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
@@ -4380,6 +4442,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                               m_intervalPickerData->startRun() ,
                               m_runDb -> getCurrentStartTime().c_str() ,
                               m_runDb -> getCurrentRunDuration().c_str() ) ;
+            m_presenterInfo.setTimeC( m_runDb -> getCurrentStartTime(),  m_runDb -> getCurrentRunDuration(), true );
           } else {
             m_message = Form("History from run %d to %d",
                              m_intervalPickerData->startRun(),
@@ -4389,6 +4452,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           m_message = Form("History from %s to %s",
                            m_intervalPickerData->getStartTimeString(),
                            m_intervalPickerData->getEndTimeString());
+            m_presenterInfo.setTimeC( m_intervalPickerData->getStartTimeString(),  
+                                      m_intervalPickerData->getEndTimeString(), true );
         }
       }
       if (m_verbosity >= pres::Verbose)
@@ -4417,28 +4482,36 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         if ( pres::Online == m_presenterInfo.presenterMode() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );
           m_presenterPage.loadFromDIM( partition, false );
+          m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
         } else if (  pres::History == m_presenterInfo.presenterMode() ) {
+
+          std::cout << "Load archive, global time '" <<  m_presenterInfo.globalTimePoint() 
+                    << "' duration '" << m_presenterInfo.globalPastDuration() << "'" << std::endl;
+
           m_presenterPage.loadFromArchive( m_archive,
-                                           m_presenterInfo.globalTimePoint(), 
+                                           m_presenterInfo.globalTimePoint(),
                                            m_presenterInfo.globalPastDuration() );
+          
+          m_presenterPage.fillTrendingPlots( m_presenterInfo.startTimeC(),
+                                             m_presenterInfo.endTimeC(), false );
         } else {
           std::cout << "**** Unsupported presenter mode " <<  m_presenterInfo.presenterMode() << " ****" << std::endl;
-        }        
-        std::cout << "Build analysis histograms " << std::endl;
+        }
         bool status = m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  // Only after histos are loaded...
         if ( !status ) {
           std::cout << "Load references for analysis, and rebuild..." << std::endl;
-          m_presenterPage.uploadReference( m_analysisLib, 
-                                           m_presenterInfo.referenceRun(), 
+          m_presenterPage.uploadReference( m_analysisLib,
+                                           m_presenterInfo.referenceRun(),
                                            m_presenterInfo.currentTCK() );
-          m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  
-        }        
-          
+          m_presenterPage.buildAnalysisHistos( m_analysisLib, false );
+        }
+        std::cout << "Analysis prepared" << std::endl;
+
         // Display status bar and comments
         displayStatusAndComments( page ) ;
 
         std::cout << "  Status page displayed." << std::endl;
-        
+
         m_presenterPage.drawPage( editorCanvas, m_analysisLib, m_fastHitMapDraw );
       }
 
@@ -5020,76 +5093,27 @@ void PresenterMainFrame::refreshPage() {
   std::cout << "refreshing..." << std::endl;
 
   editorCanvas->cd();
-  
+
   if ( pres::Online == m_presenterInfo.presenterMode() ) {
     std::string partition = currentPartition();
     m_presenterPage.loadFromDIM( partition, true );
+    m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd, true );
   } else if (  pres::History == m_presenterInfo.presenterMode() ) {
     m_presenterPage.loadFromArchive( m_archive,
-                                     m_presenterInfo.globalTimePoint(), 
+                                     m_presenterInfo.globalTimePoint(),
                                      m_presenterInfo.globalPastDuration() );
+    m_presenterPage.fillTrendingPlots(  m_presenterInfo.startTimeC(),
+                                        m_presenterInfo.endTimeC(), true );
   } else {
     std::cout << "**** Unsupported presenter mode " <<  m_presenterInfo.presenterMode() << " ****" << std::endl;
-  }        
+  }
   std::cout << "Build analysis histograms " << std::endl;
   m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
 
   editorCanvas->Update();
   m_presenterPage.updateDrawingOptions();
   editorCanvas->Update();
-  
-  /*
-  bool parallelRefresh = threadSafePage();
-  if ( ! isBatch() ) {
-    if( parallelRefresh ) {
-      if (m_verbosity >= pres::Debug)
-        std::cout << "refreshing histograms in parallel..." << std::endl;
 
-      ParallelWait parallelWait ;
-      parallelWait.refreshHistograms( &dbHistosOnPage , &m_presenterInfo ,
-                                      m_mainStatusBar ) ;
-
-    }
-    else {
-      if (m_verbosity >= pres::Debug)
-        std::cout << "refreshing histograms one by one..." << std::endl;
-      std::vector<DbRootHist*>::iterator dbHistosOnPageIt;
-      for (dbHistosOnPageIt = dbHistosOnPage.begin() ;
-           dbHistosOnPageIt != dbHistosOnPage.end() ; ++dbHistosOnPageIt ) {
-        (*dbHistosOnPageIt)->fillHistogram();
-        (*dbHistosOnPageIt)->normalizeReference();
-      }
-    }
-    if (! gROOT->IsInterrupted()) editorCanvas->Update();
-  }
-  else {
-    std::vector<DbRootHist*>::iterator dump_dbHistosOnPageIt;
-    dump_dbHistosOnPageIt = dbHistosOnPage.begin();
-    editorCanvas->cd();
-    while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
-      if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
-        (*dump_dbHistosOnPageIt)->fillHistogram();
-        (*dump_dbHistosOnPageIt)->normalizeReference();
-      }
-
-      std::string plotName( currentPartition() ) ;
-      plotName.append(" ").append(m_presenterInfo.currentTime()->AsSQLString());
-      (*dump_dbHistosOnPageIt)->getRootHistogram()->SetTitle(plotName.c_str());
-
-      (*dump_dbHistosOnPageIt)->getRootHistogram()->Draw();
-      (*dump_dbHistosOnPageIt)->fit();
-
-      gPad->Modified();
-      editorCanvas->Modified();
-      editorCanvas->Update();
-      std::string dumpFile = m_imagePath + pres::s_slash +
-        (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;
-      if (! gROOT->IsInterrupted()) editorCanvas->SaveAs(dumpFile.c_str());
-
-      dump_dbHistosOnPageIt++;
-    }
-  }
-  */
 }
 
 //==============================================================================
@@ -5129,8 +5153,8 @@ void PresenterMainFrame::enableReferenceOverlay() {
        ++enableRef_dbHistosOnPageIt )
     (*enableRef_dbHistosOnPageIt)->referenceHistogram( DbRootHist::Show );
 
-  m_presenterPage.uploadReference( m_analysisLib, 
-                                   m_presenterInfo.referenceRun(), 
+  m_presenterPage.uploadReference( m_analysisLib,
+                                   m_presenterInfo.referenceRun(),
                                    m_presenterInfo.currentTCK() );
 
   editorCanvas->Update();

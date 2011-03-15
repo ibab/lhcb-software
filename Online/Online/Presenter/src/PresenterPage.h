@@ -28,6 +28,13 @@ struct AnalysisHisto {
   std::vector<OnlineHistogram*> onlineHistos;
 };
 
+struct TrendingFile {
+  std::string fileName;
+  int  startTime;
+  int  endTime;
+  std::vector<DisplayHistogram> histos;
+};
+
 /** @class PresenterPage PresenterPage.h
  *  This describes the current page in the Presenter
  *
@@ -90,7 +97,9 @@ public:
   void drawPage( TCanvas* canvas, OMAlib* analysisLib, bool fastHitMapDraw );
 
   void updateDrawingOptions();
-  
+
+  void fillTrendingPlots ( int startTime, int endTime, bool update=false );
+
 protected:
 
 private:
@@ -100,5 +109,6 @@ private:
   std::vector<OnlineHistoOnPage*> m_onlineHistosOnPage;  ///< Histogram decription from the database
   std::vector<TaskHistos> m_tasks;
   std::vector<AnalysisHisto> m_analysis;
+  std::vector<TrendingFile> m_trends;
 };
 #endif // PRESENTERPAGE_H
