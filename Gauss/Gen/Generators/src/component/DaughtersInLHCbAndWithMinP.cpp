@@ -1,8 +1,8 @@
-// $Id: DaughtersInLHCbAcceptance.cpp,v 1.7 2008-07-09 14:33:47 robbep Exp $
+// $Id: DaughtersInLHCbAndWithMinP.cpp,v 1.7 2008-07-09 14:33:47 robbep Exp $
 // Include files 
 
 // local
-#include "DaughtersInLHCbAcceptance.h"
+#include "DaughtersInLHCbAndWithMinP.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -21,20 +21,20 @@
 #include "Generators/IDecayTool.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : DaughtersInLHCbAcceptance
+// Implementation file for class : DaughtersInLHCbAndWithMinP
 //
 // 2005-03-02 : Alex Shires
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( DaughtersInLHCbAcceptance );
+DECLARE_TOOL_FACTORY( DaughtersInLHCbAndWithMinP );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DaughtersInLHCbAcceptance::DaughtersInLHCbAcceptance( const std::string& type,
+DaughtersInLHCbAndWithMinP::DaughtersInLHCbAndWithMinP( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
@@ -43,19 +43,19 @@ DaughtersInLHCbAcceptance::DaughtersInLHCbAcceptance( const std::string& type,
     declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * Gaudi::Units::mrad ) ;
     declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * Gaudi::Units::mrad ) ;
     declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
-    declareProperty( "MuonP" ,           m_minMuonP = 3000 * Gaudi::Units::MeV ) ;
-    declareProperty( "TrackP" ,          m_minTrackP = 1000 * Gaudi::Units::MeV ) ;
+    declareProperty( "MinMuonP" ,        m_minMuonP = 3000 * Gaudi::Units::MeV ) ;
+    declareProperty( "MinTrackP" ,       m_minTrackP = 1000 * Gaudi::Units::MeV ) ;
 }
 
 //=============================================================================
 // Destructor 
 //=============================================================================
-DaughtersInLHCbAcceptance::~DaughtersInLHCbAcceptance( ) { ; }
+DaughtersInLHCbAndWithMinP::~DaughtersInLHCbAndWithMinP( ) { ; }
 
 //=============================================================================
-// Acceptance function
+// AndWithMinP function
 //=============================================================================
-bool DaughtersInLHCbAcceptance::applyCut( ParticleVector & theParticleVector ,
+bool DaughtersInLHCbAndWithMinP::applyCut( ParticleVector & theParticleVector ,
                                 const HepMC::GenEvent * /* theEvent */ ,
                                 const LHCb::GenCollision * /* theHardInfo */ )
   const {
@@ -72,9 +72,9 @@ bool DaughtersInLHCbAcceptance::applyCut( ParticleVector & theParticleVector ,
 }
 
 //=============================================================================
-// Functions to test if all daughters are in acceptance
+// Functions to test if all daughters are in AndWithMinP
 //=============================================================================
-bool DaughtersInLHCbAcceptance::passCuts( const HepMC::GenParticle * theSignal ) const {
+bool DaughtersInLHCbAndWithMinP::passCuts( const HepMC::GenParticle * theSignal ) const {
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
   if ( 0 == EV ) return true ;
 
@@ -150,7 +150,7 @@ bool DaughtersInLHCbAcceptance::passCuts( const HepMC::GenParticle * theSignal )
 }
 
 
-bool DaughtersInLHCbAcceptance::momentumCut( const HepMC::GenParticle *p, 
+bool DaughtersInLHCbAndWithMinP::momentumCut( const HepMC::GenParticle *p, 
                                            const double pmin ) const 
 {
    bool pass(true);  
