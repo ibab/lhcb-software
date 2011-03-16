@@ -6,6 +6,10 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Vanya Belyaev
+
+ - update for new method names 
+
 ! 2011-03-10 - Vanya Belyaev
  - kill bad concept of 'Element'-functor
  - cmt/requirements
