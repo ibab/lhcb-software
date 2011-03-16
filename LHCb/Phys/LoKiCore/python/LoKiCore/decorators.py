@@ -1783,8 +1783,8 @@ def decoratePredicateOps ( cuts , opers ) :
             >>> u = includes ( fun1 , fun2 ) 
             
             """
-            return opers._includes_ ( s , s2 )
-        _includes_ .__doc__ += opers ._includes_ . __doc__ 
+            return opers.__includes__ ( s , s2 )
+        _includes_ .__doc__ += opers .__includes__ . __doc__ 
 
     # perform the actual decoration 
     for cut in cuts : 
