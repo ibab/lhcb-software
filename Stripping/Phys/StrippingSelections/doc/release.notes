@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Thomas Latham
+ - Updated StrippingBeamGas to LineBuilder framework
+
 ! 2011-03-16 - Michel De Cian
  - Changed TrackEffMuonTT.py to write out muonTT tracks to 'Rec/TrackEffMuonTT_SelMakeMuonTT/Tracks'
 
