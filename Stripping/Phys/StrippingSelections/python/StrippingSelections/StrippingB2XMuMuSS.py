@@ -19,8 +19,8 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'PionMINIPCHI2' : 4     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
-                  'KaonPT'        : 300.  ,    #MeV
-                  'KaonPIDK'      : -1.   ,    #adimensional
+                  'KaonPT'        : 500.  ,    #MeV
+                  #'KaonPIDK'      : -1.   ,    #adimensional
                   'KaonMINIPCHI2' : 4     ,    #adminensional
                   
                   'DimuonMass'    : 250.  ,    #MeV
@@ -73,7 +73,7 @@ class B2XMuMuSSConf(LineBuilder) :
         
                               , 'KaonP'
                               , 'KaonPT'
-                              , 'KaonPIDK'
+                              #, 'KaonPIDK'
                               , 'KaonMINIPCHI2'
                               
                               , 'DimuonMass'
@@ -105,7 +105,6 @@ class B2XMuMuSSConf(LineBuilder) :
         selKaons = makeKaons(name="KaonsFor"+name
                              , KaonP = config['KaonP']
                              , KaonPT = config['KaonPT']
-                             , KaonPIDK = config['KaonPIDK']
                              , KaonMINIPCHI2 = config['KaonMINIPCHI2'])
 
         # 2 : Make pions
@@ -316,13 +315,12 @@ def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCH
                      RequiredSelections = [ kaonSel, muonSel ] )
                     
 #####################################################
-def makeKaons(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2):
+def makeKaons(name, KaonP, KaonPT, KaonMINIPCHI2):
     """
     Kaon selection
     """
     _code = "(P > %(KaonP)s *MeV) & "\
             "(PT > %(KaonPT)s *MeV) &"\
-            "(PIDK-PIDpi > %(KaonPIDK)s) & "\
             "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Sophie Redford
+ - StrippingB2XMuMuSS.py
+ Removed kaon PID cut from kaon lines.
+
 ! 2011-03-15 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  Improved the selection; added a cut on the missing-pt corrected mass.
