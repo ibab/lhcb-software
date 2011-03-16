@@ -1773,7 +1773,7 @@ def decoratePredicateOps ( cuts , opers ) :
             return opers.__sym_difference__ ( s , s2 )
         _sym_difference_ .__doc__ += opers .__sym_difference__ . __doc__ 
 
-    if hasattr ( opers , '_includes_' ) :
+    if hasattr ( opers , '__includes__' ) :
         def _includes_ ( s , s2 ) :
             """
             ``Includes'' of two streamers
@@ -1813,11 +1813,10 @@ def decoratePredicateOps ( cuts , opers ) :
             
         if _intersection_  :
             cut . __intersection__  =  _intersection_
-            if not hasattr ( cut , '__mul__'  ) : cut .__mul__  = _intersection_
             
         if _difference_  :
             cut . __difference__  =  _difference_
-            if not hasattr ( cut , '__sub__'  ) : cut .__sub__  = _difference_
+            cut . __sub__         = _difference_
 
         if _sym_difference_    :
             cut . __sym_difference__  =  _sym_difference_
