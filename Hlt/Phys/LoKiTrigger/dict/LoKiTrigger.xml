@@ -120,7 +120,7 @@
       <field name = "m_expression"/>
     </class>
     <class name="LoKi::Vertices::BeamSpotRho" >
-      <field name = "m_veloDet"/>
+      <field name = "m_condition"/>
     </class>
   </exclusion>
 

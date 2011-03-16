@@ -48,9 +48,10 @@
 // Constructor from condition name 
 // ============================================================================
 LoKi::Vertices::BeamSpotRho::BeamSpotRho 
-( const std::string& condition ) 
+( const double& bound ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
-  , m_condName  ( condition ) 
+  , m_resolverBound  ( bound ) 
+  , m_condName  ( "/dd/Conditions/Online/Velo/MotionSystem" ) 
   , m_condition (           ) 
 {
   //
@@ -73,8 +74,11 @@ LoKi::Vertices::BeamSpotRho::BeamSpotRho
   const double xLA = cond -> paramAsDouble ( "ResolPosLA" ) ;
   const double   Y = cond -> paramAsDouble ( "ResolPosY"  ) ;
   //
-  m_beamSpotX = (xRC + xLA ) / 2;
+  m_beamSpotX = ( xRC + xLA ) / 2;
   m_beamSpotY = Y ;
+  //
+  m_veloClosed = true;
+  if ( xRC > m_resolverBound || xLA > m_resolverBound ) m_veloClosed = false ;
   //
   m_condition = cond;
   //
@@ -88,8 +92,9 @@ LoKi::Vertices::BeamSpotRho::BeamSpotRho
 ( const LoKi::Vertices::BeamSpotRho& right ) 
   : LoKi::AuxFunBase                                       ( right ) 
   , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function ( right ) 
-  , m_condName  ( right.m_condName  ) 
-  , m_condition ( right.m_condition ) 
+  , m_resolverBound  ( right.m_resolverBound  ) 
+  , m_condName       ( right.m_condName  ) 
+  , m_condition      ( right.m_condition ) 
 {
   registerCondition() ;
 }
@@ -153,14 +158,20 @@ StatusCode LoKi::Vertices::BeamSpotRho::updateCondition ()
   const double xRC = m_condition -> paramAsDouble ( "ResolPosRC" ) ;
   const double xLA = m_condition -> paramAsDouble ( "ResolPosLA" ) ;
   const double   Y = m_condition -> paramAsDouble ( "ResolPosY"  ) ;
-  
+  //
   m_beamSpotX = (xRC + xLA ) / 2;
   m_beamSpotY = Y ;
   //
-  return Warning ( "Update for '"      + 
-                   m_condName          + 
-                   "' is performed "   , 
-                   StatusCode::SUCCESS ) ;
+  // If resolver x position > 1 mm, velo is considered as open
+  m_veloClosed = true;
+  if ( std::abs(xRC) > m_resolverBound 
+       || std::abs(xLA) > m_resolverBound ) m_veloClosed = false ;
+  //
+  //Warning ( "Update for '"      + 
+  //                 m_condName          + 
+  //                 "' is performed "   , 
+  //                 StatusCode::SUCCESS )
+  return StatusCode::SUCCESS  ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -177,9 +188,14 @@ LoKi::Vertices::BeamSpotRho::operator()
   //
   Assert ( !(!m_condition) , "Invalid CONDITION!" ) ;
   //
+  
+  // if the velo is opened ( x resolver position > m_resolverBound ) return -1.
+  if ( ! m_veloClosed ) return -1.;
+  
+  // return radial distance from vertex to beam spot
   const double x_diff = v -> position().x() - m_beamSpotX ;
   const double y_diff = v -> position().y() - m_beamSpotY ;
-  
+
   return std::sqrt( x_diff * x_diff + y_diff * y_diff) ;
   
 }
@@ -187,7 +203,7 @@ LoKi::Vertices::BeamSpotRho::operator()
 // OPTIONAL: nice printout 
 // ============================================================================
 std::ostream& LoKi::Vertices::BeamSpotRho::fillStream( std::ostream& s ) const 
-{ return s << "VX_BEAMSPOTRHO('" << m_condName << "')" ; }
+{ return s << "VX_BEAMSPOTRHO('" << m_resolverBound << "')" ; }
 
 // ============================================================================
 // The END 

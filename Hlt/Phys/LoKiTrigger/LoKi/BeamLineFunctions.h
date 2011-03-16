@@ -67,7 +67,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Constructor from condition name 
-      BeamSpotRho ( const std::string& condition ) ;
+      BeamSpotRho ( const double& bound ) ;
       /// Copy constructor  
       BeamSpotRho ( const BeamSpotRho& ) ;
       /// MANDATORY: virtual destructor 
@@ -98,9 +98,14 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      /// resolver bound for closure
+      double m_resolverBound; 
+
       /// beam spot
       double m_beamSpotX ;   
       double m_beamSpotY ;   
+      /// velo closed condition
+      bool m_veloClosed ;
       /// condition name 
       std::string                m_condName ;
       /// the condition

@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Victor Coco
+ - update BeamSpotRho function with threshold 
+   to ensure the velo is closed
+   replace m_veloDet by m_condition in LoKiTrigger.xml 
+
 ! 2011-03-15 - Vanya Belyaev
  - update BeamSpotRho function 
 
