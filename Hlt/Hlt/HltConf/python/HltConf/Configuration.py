@@ -196,6 +196,8 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltRoutingBitsWriter
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                      ,  3 : 'ODIN_TRUE' 
+                      ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
                       , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] ] )

@@ -5,6 +5,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Gerhard Raven
+ - Add two more routing bits to monitor all and lumi input rates (already have 
+   the L0 physics and beamgas input rate):
+   3 : 'ODIN_TRUE' ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger
+
 ! 2011-03-12 - V. Gligorov
  - Add routing bit for OR of 2,3,4-body regular topo lines.
 
