@@ -247,7 +247,7 @@ FullDSTDiMuon = {
                    'Psi2MuMu_VCHI2PDOF': 20.0,
                    'Psi2MuMu_checkPV': False
                    },
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : [ 'LeptonicFull' ],
     'WGs'    : [ 'FWG' ]
     }
 
@@ -323,6 +323,30 @@ MicroDSTDiMuon = {
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'FWG' ]
     }
+
+Bc2JpsiMu = {
+    'BUILDERTYPE' : 'Bc2JpsiMuXConf',
+    'CONFIG' : {
+    'LinePrescale'        :    1.   ,
+    'LinePostscale'       :    1.   ,
+    'MuonTRCHI2DOF'       :    5.   ,  # adimentional 
+    'MuonPT'              : 1200.   ,  # MeV
+    'MuonP'               :   -5.   ,  # MeV, not applied now
+    'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
+    'MuMuMassWindow'      :  200.   ,  # MeV, 10 sigma, may decreased to 150
+    'MuMuVtxCHI2'         :    9.   ,  # adimentional
+    'MuMuPT'              :  -10.   ,  # MeV, not applied 
+    'MuonBcTRCHI2DOF'     :    5.   ,  # adimentional     
+    'MuonBcPT'            : 2500.   ,  # MeV
+    'MuonBcP'             :   -5.   ,  # MeV, not applied now
+    'BcUpperMass'         : 6400.   ,  # MeV, Upper limit for partial rec. 
+    'BcLowerMass'         : 3200.   ,  # MeV, Lower limit for partial rec.
+    'BcVtxCHI2'           :    9.   ,  # adimentional
+    'BcPT'                : 4000.      # MeV, May incrase up to 5000 MeV if needed       
+    },
+    'STREAMS' : [ 'Dimuon' ] ,
+    'WGs'    : [ 'FWG' ]
+  }
 
 Bc2JpsiH = {
     'BUILDERTYPE'	: 'Bc2JpsiHConf',
@@ -497,7 +521,7 @@ FullDSTDiElectron = {
                    'Jpsi2ee_Prescale': 1.0,
                    'Jpsi2ee_VCHI2PDOF': 16.0,
                    'Jpsi2ee_checkPV': False},
-    'STREAMS' : [ 'Dielectron' ],
+    'STREAMS' : [ 'LeptonicFull' ],
     'WGs'    : [ 'FWG' ]
     }
 

@@ -183,18 +183,18 @@ BetaSBs2JpsieePhi = {
 BetaSQ2B = {
     'WGs'		: ['betas'],
     'BUILDERTYPE' 	: 'B2Quasi2Body4piConf',
-    'CONFIG' 	: {
-    'Q2BPrescale'     : 1.,
-    'Q2BResMinPT'     : 1500.,
-    'Q2BResMinP'      : 10.,
-    'Q2BResMaxMass'   : 900.,
-    'Q2BResVtxChiDOF' : 4.,
-    'Q2BBMinM'        : 2800.,
-    'Q2BBMaxM'        : 5700.,
-    'Q2BBVtxChi2DOF'  : 4.,
-    'Q2BBMinTrkPT'    : 1500.,
-    'Q2BBPVVDZ'       : 2. 
-    },
+    'CONFIG' 	: {'Q2BPrescale'     : 1.,
+                'Q2BResMinPT'     : 1500.,
+                'Q2BResMinP'      : 10.,
+                'Q2BResMaxMass'   : 1000.,
+                'Q2BResVtxChiDOF' : 9.,
+                'Q2BBMinM'        : 2500.,
+                'Q2BBMaxM'        : 5700.,
+                'Q2BBMinCorrM'    : 3500.,
+                'Q2BBMaxCorrM'    : 7000.,
+                'Q2BBVtxChi2DOF'  : 9.,
+                'Q2BBMinTrkPT'    : 1500. 
+	},
     'STREAMS' : [ 'Bhadron' ]
     }
 

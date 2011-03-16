@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Greig Cowan
+ - Updated many line configurations and the Stripping13 database.
+
 ! 2011-03-15 - Thomas Blake
  - Updated line config dictionaries and dbase 
 

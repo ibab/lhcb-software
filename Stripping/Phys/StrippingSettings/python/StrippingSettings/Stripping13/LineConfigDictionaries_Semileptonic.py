@@ -5,6 +5,30 @@ Stripping13 definitions.
 Dictionaries have the name of the line builder instance.
 """
 
+Bs2PhiMuMu = {
+   'BUILDERTYPE' : 'Bs2PhiMuMuLinesConf',
+   'CONFIG' : {
+    "MINIPCHI2"      : 4.00   # adimensiional
+    ,"TRCHI2"        : 10.0   # adimensiional
+    ,"KaonPIDK"      : 1e-10  # adimensiional
+    ,"PhiPT"         : 100    # MeV
+    ,"MuonMINIPCHI2" : 2.25   # adimensiional
+    ,"MuonPIDmu"     : -5.0  # adimensiional
+    ,"MuonTRCHI2"    : 10.0   # adimensiional
+    ,"BsMassWin"     : 250.0  # MeV
+    ,"BsVCHI2DOF"    : 8.0   # adimensiional
+    ,"BsDIRA"        : 0.9993  # adimensiional
+    ,"BsFDCHI2"      : 25.0   # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"f0MassWin"     : 200.0  # MeV
+    ,"VCHI2"         : 10.0   # adimensiional
+    ,"BsIPCHI2"      : 36.0  # adimensiional
+    ,"DocaChi2Max"   : 20  #mm
+    },
+   'STREAMS' : [ 'Dimuon' ],
+   'WGs' : [ 'Semileptonic' ]
+}
+
 Bd2DstarMuNu = {
     'BUILDERTYPE' : 'Bd2DstarMuNuAllLinesConf',
     'CONFIG' :
@@ -84,7 +108,6 @@ Bd2DstarMuNu = {
       },
     'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic'] 
-    
     }
 
 B0q2DplusMuX = {
@@ -382,6 +405,32 @@ B2DMuNuX = {
     'WGs'    : ['Semileptonic'] 
     }
 
+
+DstarVeryLooseWithD02Kpi = {
+    'BUILDERTYPE' : 'DstarVeryLooseWithD02KpiOneLineConf',
+    'CONFIG' : {'Prescale'    : 0.08 ,
+                'Postscale'   : 1.0 ,
+                #kaon parameters
+                'KPT'         : 350,# MeV
+                #'KTrChi2'     :  8,
+                'KIPChi2'     :  0,
+                'KTrPID'      : -5,
+                #pion parameters
+                'PiPT'        : 350, # MeV
+                #'PiTrChi2'    :  8, # 10   # 5
+                'PiIPChi2'    :  0, # 4    # 4
+                #D0-resonance parameters
+                'D0MassW'     : 60, # 40  # 40 #MeV
+                'D0_BPVVDCHI2': 50,
+                #Dstar-resonance parameters
+                #'slowPiTrChi2': 8, # 10 # 5
+                'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
+                'Dstar_VCHI2' : 25, # 20 # 15
+                'DstarMassW'  : 80 # 50 # 80 MeV
+        },
+    'STREAMS' : ['CharmControl'],
+    'WGs'    : ['Semileptonic'] 
+}
 
 DForBSemi = {
     'BUILDERTYPE'	: 'DforBSemiLinesConf',
