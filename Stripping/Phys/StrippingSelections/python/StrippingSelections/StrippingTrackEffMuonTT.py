@@ -513,7 +513,8 @@ def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjPar
     MakeMuonTT.MC = False
     MakeMuonTT.OutputLevel = 4
     #
-    return Selection(name+"_SelMakeMuonTT", Algorithm = MakeMuonTT,  InputDataSetter=None)
+    #return Selection(name+"_SelMakeMuonTT", Algorithm = MakeMuonTT,  InputDataSetter=None)
+    return Selection(name+"_SelMakeMuonTT", Algorithm = MakeMuonTT,  OutputBranch='Rec', Extension='Tracks', InputDataSetter=None)
 # ########################################################################################
 # Make the protoparticles
 # ########################################################################################
