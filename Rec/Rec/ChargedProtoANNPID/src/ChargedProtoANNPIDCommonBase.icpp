@@ -2,6 +2,12 @@
 // local
 #include "ChargedProtoANNPIDCommonBase.h"
 
+// GaudiAlg
+#include "GaudiAlg/CheckForNaN.h"
+
+// Boost
+#include "boost/assign/list_of.hpp"
+
 //=============================================================================
 // Constructor initialisation
 //=============================================================================
@@ -62,27 +68,68 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 //=============================================================================
 
 template <class PBASE>
+const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt & 
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
+{
+  static const StringToInt sToI = boost::assign::map_list_of
+    ( "RichUsedAero"          , (int)LHCb::ProtoParticle::LastGlobal + 1 )
+    ( "RichUsedR1Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 2 )
+    ( "RichUsedR2Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 3 )
+    ( "RichAboveElThres"      , (int)LHCb::ProtoParticle::LastGlobal + 4 )
+    ( "RichAboveMuThres"      , (int)LHCb::ProtoParticle::LastGlobal + 5 )
+    ( "RichAbovePiThres"      , (int)LHCb::ProtoParticle::LastGlobal + 6 )
+    ( "RichAboveKaThres"      , (int)LHCb::ProtoParticle::LastGlobal + 7 )
+    ( "RichAbovePrThres"      , (int)LHCb::ProtoParticle::LastGlobal + 8 )
+    ( "MuonIsLooseMuon"       , (int)LHCb::ProtoParticle::LastGlobal + 9 )
+    ( "MuonIsMuon"            , (int)LHCb::ProtoParticle::LastGlobal + 10 )
+    ( "TrackLikelihood"       , (int)LHCb::ProtoParticle::LastGlobal + 11 )
+    ( "TrackGhostProbability" , (int)LHCb::ProtoParticle::LastGlobal + 12 )
+    ( "NumProtoParticles"     , (int)LHCb::ProtoParticle::LastGlobal + 13 )
+    ( "NumCaloHypos"          , (int)LHCb::ProtoParticle::LastGlobal + 14 );
+  return sToI;
+}
+
+template <class PBASE>
+std::string
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringID( const int id ) const
+{
+  std::string name("");
+  // special cases
+  for ( StringToInt::const_iterator iI = stringToIntMap().begin();
+        iI != stringToIntMap().end(); ++iI )
+  {
+    if ( iI->second == id )
+    {
+      name = iI->first;
+      break;
+    }
+  }
+  // defaults from ProtoParticle
+  if ( name.empty() )
+  {
+    std::ostringstream _name;
+    _name << (LHCb::ProtoParticle::additionalInfo)(id);
+    name = _name.str();
+  }
+  return name;
+}
+
+template <class PBASE>
 int 
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
 {
   int id(0);
   // special cases
-  if      ( "RichUsedAero"           == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 1; }
-  else if ( "RichUsedR1Gas"          == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 2; }
-  else if ( "RichUsedR2Gas"          == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 3; }
-  else if ( "RichAboveElThres"       == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 4; }
-  else if ( "RichAboveMuThres"       == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 5; }
-  else if ( "RichAbovePiThres"       == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 6; }
-  else if ( "RichAboveKaThres"       == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 7; }
-  else if ( "RichAbovePrThres"       == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 8; }
-  else if ( "MuonIsLooseMuon"        == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 9; }
-  else if ( "MuonIsMuon"             == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 10; }
-  else if ( "TrackLikelihood"        == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 11; }
-  else if ( "TrackGhostProbability"  == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 12; }
-  else if ( "NumProtoParticles"      == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 13; }
-  else if ( "NumCaloHypos"           == name ) { id = (int)LHCb::ProtoParticle::LastGlobal + 14; }
-  // Default, use enum from ProtoParticle
-  else                                  { id = (int)LHCb::ProtoParticle::convertExtraInfo(name); }
+  StringToInt::const_iterator iI = stringToIntMap().find(name);
+  if ( iI != stringToIntMap().end() )
+  {
+    id = iI->second;
+  }
+  else // Default, use enum from ProtoParticle
+  {
+    id = (int)LHCb::ProtoParticle::convertExtraInfo(name);
+  }
+  // return
   return id;
 }
 
@@ -263,6 +310,21 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   else
   {
     var = proto->info( (LHCb::ProtoParticle::additionalInfo)input, -999 );
+  }
+
+  // Check information is OK
+
+  // Not Finite ?
+  if ( !lfin(var) )
+  {
+    Warning( "Variable " + stringID(input) + " is not finite -> Setting to 0." ).ignore();
+    var = 0.0;
+  }
+  // NaN ?
+  if ( lnan(var) )
+  {
+    Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0." ).ignore(); 
+    var = 0.0;
   }
 
   // return the variable

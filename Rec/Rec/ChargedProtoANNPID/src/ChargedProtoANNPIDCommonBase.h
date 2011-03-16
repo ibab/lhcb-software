@@ -15,6 +15,8 @@
 // STL
 #include <string>
 #include <vector>
+#include <map>
+#include <sstream>
 
 // Gaudi
 #include "GaudiKernel/ISvcLocator.h"
@@ -86,13 +88,24 @@ namespace ANNGlobalPID
     /// Type for list of inputs
     typedef std::vector<int> IntInputs;
 
-  public:
+    /// Type for Mapping between string and int IDs
+    typedef std::map<std::string,int> StringToInt;
+
+  protected:
+    
+    /// Mapping between string and int IDs
+    const StringToInt & stringToIntMap() const;
 
     /// Convert a variable name string to ID number
     int variableID( const std::string & name ) const;
 
+    /// Convert a variable name string to ID number
+    std::string stringID( const int id ) const;
+
     /// Convert variable names string to ID numbers
     IntInputs variableIDs( const StringInputs & names ) const;
+
+  public:
 
     /// Get the value for the given input int ID
     double getInput( const LHCb::ProtoParticle * proto,
