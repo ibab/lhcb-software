@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-16 - Greig Cowan
+ - Added new helper functions to Utils.py
+
 ! 2011-03-16 - Sophie Redford
  - StrippingB2XMuMuSS.py
  Removed kaon PID cut from kaon lines.

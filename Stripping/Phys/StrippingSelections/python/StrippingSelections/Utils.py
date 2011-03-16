@@ -74,6 +74,16 @@ def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
     return clonedLines
 
 
+def cloneStream( stream, newStreamName = 'Full', linePrefix = 'Full', prescale = 1.0 ):
+	"""
+	Clone the stream
+	"""
+	from StrippingConf.StrippingStream import StrippingStream
+	lines = cloneLinesFromStream( stream, linePrefix, prescale )
+	stream = StrippingStream( newStreamName )
+	stream.appendLines( lines )
+	return stream
+
 def buildStreams(stripping) :
     """
     Build and return a set of StrippingStreams for a given stripping
