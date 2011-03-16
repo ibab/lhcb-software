@@ -12,6 +12,8 @@ import StrippingB2D3H
 import StrippingBu2D0h_D02KShh_NoPID
 import StrippingBu2D0h_D02KShh_NoPID_WS
 
+import StrippingDstarVeryLooseWithD02Kpi
+import StrippingBs2PhiMuMu
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
@@ -50,6 +52,7 @@ import StrippingBd2JpsieeKstar
 
 import StrippingDiMuonNew
 import StrippingBc2JpsiHNew
+import StrippingBc2JpsiMuXNew
 import StrippingJpsiMuMuforD0MuMu
 import StrippingBuToKX3872
 import StrippingSingleTrackTIS
@@ -110,6 +113,7 @@ import StrippingTrackEffDownMuon
 import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
 import StrippingMuIDCalib
+import StrippingD02KPiPi0
 
 from sys import modules as _modules
 _this = _modules[__name__]

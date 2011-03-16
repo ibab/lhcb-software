@@ -68,7 +68,7 @@ def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
     clonedLines = []
     
     for _line in stream.lines:
-        clonedLine = _line.clone( prefix + _line.name(),
+        clonedLine = _line.clone( prefix + _line.name().lstrip('Stripping'),
                                   prescale = _line.prescale()*prescale )
         clonedLines.append( clonedLine )
     return clonedLines

@@ -12,6 +12,7 @@
 
 ! 2011-03-16 - Greig Cowan
  - Added new helper functions to Utils.py
+ - Major clean-up of the StrippingSelections. Lines which are not LineBuilders have been removed.
 
 ! 2011-03-16 - Sophie Redford
  - StrippingB2XMuMuSS.py
