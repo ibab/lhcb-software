@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-03-16 - Helder Lopes
+ - Fixed bug in MuonIDAlg: Null ProbMu and ProbNonMu in method calcMuonLL_tanhdist_landau
+   change to low value to avoid log(ProbMu) and log(ProbNonMu) divergence.
+
 !========================= MuonID v8r0p1 2011-03-02 =========================
 ! 2011-03-02 - Gerhard Raven
  - move WARNING message during initialize to INFO

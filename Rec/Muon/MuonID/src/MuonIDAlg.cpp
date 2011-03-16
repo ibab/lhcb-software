@@ -1505,6 +1505,16 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   ProbNonMu = calc_ProbNonMu(myDist, parNonMu);
   if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
 
+  // Using histograms it's not unexpected that some bins are empty. Use very small prob as a protection for the log
+  if(ProbMu<1.e-20) {
+    debug() << "calcMuonLL_tanhdist_landau: Found null ProbMu: " << ProbMu << endmsg;
+    ProbMu = 1.e-6;
+  }
+  if(ProbNonMu<1.e-20) {
+    debug() << "calcMuonLL_tanhdist_landau: Found null ProbNonMu: " << ProbNonMu << endmsg;
+    ProbNonMu = 1.e-6;
+  }
+
 
   // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
