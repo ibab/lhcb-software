@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Roel Aaij
+ - Add SinkTES with python symbol RV_SINKTES; it puts a container of 
+   LHCb::RecVertex in the TES.
+
 ! 2011-03-15 - Vanya Belyaev
 
  - add symbol : RV_TrFUN 

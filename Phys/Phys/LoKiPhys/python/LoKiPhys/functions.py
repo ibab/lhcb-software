@@ -1009,6 +1009,7 @@ SOURCEDESKTOP  = LoKi.Particles.SourceDesktop
 VSOURCE        = LoKi.Vertices.SourceTES
 VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
+RV_SINKTES     = LoKi.Vertices.SinkTES
 
 NUMBER         = LoKi.Particles.TESCounter
 VNUMBER        = LoKi.Vertices.TESCounter
