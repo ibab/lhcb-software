@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Greig Cowan
+ - Added configuration dictionary for B2KShh lines.
+
 ! ======================== StrippingSettings v2r1 2011-03-17 ==================
 
 ! 2011-03-17 - Greig Cowan
