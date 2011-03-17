@@ -16,7 +16,7 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1L0LinesConf(HltLinesConfigurableUser) :
    # note: we prescale everything _except_ for the .*RateLimited, which we rate limit instead
-   __slots__ = { 'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(10)' 
+   __slots__ = { 'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(100)' 
                                , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(100)'
                                }
                , 'Prescale'  : { 'Hlt1L0AnyNoSPD'            : 0.001
