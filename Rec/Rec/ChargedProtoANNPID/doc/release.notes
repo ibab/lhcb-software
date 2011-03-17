@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r3p1 2011-03-17 =========================
 ! 2011-03-16 - Chris Jones
  - Add protection against NaN and infinite input variables
 
