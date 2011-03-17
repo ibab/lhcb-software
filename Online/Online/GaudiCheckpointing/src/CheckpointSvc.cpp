@@ -626,10 +626,8 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
   if ( dns ) {
     log << "DIM_DNS_NODE:" << dns << " ";
     ::dis_set_dns_node((char*)dns);
-    //    ::dic_set_dns_node((char*)dns);
   }
   log << endmsg;
-  //  ::dim_init();
   //
   // We have to overload the underlying dim command, since for the 
   // forker instance all Gaudi actions are over....
@@ -719,9 +717,7 @@ int CheckpointSvc::execChild() {
   string proc = RTL::processName();
   if ( dns ) {
     ::dis_set_dns_node((char*)dns);
-    //    ::dic_set_dns_node((char*)dns);
   }
-  //  ::dim_init();
   m_fsm->connectDIM(0);
   return StatusCode::SUCCESS;
 }

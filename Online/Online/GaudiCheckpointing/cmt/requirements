@@ -10,6 +10,7 @@ use GaudiKernel   v*
 use DIM           v* Online
 use OnlineBase    v* Online
 use GaudiOnline   v* Online -no_auto_imports
+use Python        v* LCG_Interfaces
 
 apply_pattern install_python_modules
 
