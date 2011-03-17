@@ -120,6 +120,9 @@ namespace LHCb    {
     /// IService overload: stop MEP manager service
     virtual StatusCode stop();
 
+    /// IService overload: restart MEP manager service
+    virtual StatusCode restart();
+
     /// IService overload: Finalize MEP manager service
     virtual StatusCode finalize();
 

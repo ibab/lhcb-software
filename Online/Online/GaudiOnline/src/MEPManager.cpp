@@ -23,7 +23,7 @@ using namespace LHCb;
 extern "C" int mep_install(int argc , char** argv);
 
 /// Standard service constructor
-MEPManager::MEPManager(const string& nam, ISvcLocator* loc)    
+MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
 : Service(nam, loc), m_partitionID(0x103), m_mepID(MEP_INV_DESC)
 {
   m_procName = RTL::processName();
@@ -174,6 +174,10 @@ StatusCode MEPManager::start()  {
     return error("Failed to initialize base class Service.");
   }
   return (m_connectWhen == "start") ? i_init() : sc;
+}
+
+StatusCode MEPManager::restart()  {
+  return StatusCode::SUCCESS;
 }
 
 StatusCode MEPManager::i_init()  {

@@ -20,7 +20,8 @@
 #undef _POSIX_C_SOURCE
 #endif
 #include "Python.h"
-
+extern "C" void _PyGILState_Init(PyInterpreterState *, PyThreadState *);
+extern "C" void _PyGILState_Fini();
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
 
@@ -62,14 +63,30 @@ GaudiTask::PythonInterpreter::~PythonInterpreter() {
   ::Py_Finalize();
 }
 
+void GaudiTask::PythonInterpreter::reinitializeGIL() {
+  if ( ::Py_IsInitialized() ) {
+    PyThreadState *tstate = 0;
+    PyInterpreterState *interp = 0;
 
-// Static thread routine to execute a Gaudi runable
-static int execRunable(void* arg)  {
+    ::_PyGILState_Fini();
+    ::PyOS_AfterFork();
+    tstate = PyThreadState_GET();
+    interp = tstate->interp;
+    ::_PyGILState_Init(interp, tstate);
+  }
+}
+
+/// Static thread routine to execute a Gaudi runable
+int GaudiTask::execRunable(void* arg)  {
   std::pair<IRunable*,GaudiTask*>* p = (std::pair<IRunable*,GaudiTask*>*)arg;
   try {
-    int ret = p->first->run();
-    p->second->setEventThread(false);
+    IRunable*  r = p->first;
+    GaudiTask* t = p->second;
     delete p;
+    PythonInterpreter::reinitializeGIL();
+    int ret = r->run();
+    t->setEventThread(false);
+    //::Py_Finalize();
     return ret;
   }
   catch(...) {

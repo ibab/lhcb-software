@@ -31,6 +31,7 @@ namespace LHCb  {
     struct PythonInterpreter {
       PythonInterpreter();
       ~PythonInterpreter();
+      static void reinitializeGIL();
     };
     /// Handle to python interpreter
     std::auto_ptr<PythonInterpreter> m_python;
@@ -60,6 +61,9 @@ namespace LHCb  {
     int               m_nerr;
     /// Flag to indicate if runable has stopped executing
     bool              m_eventThread;
+
+    // Static thread routine to execute a Gaudi runable
+    static int execRunable(void* arg);
 
     /// Access to message service object
     IMessageSvc* msgSvc();
