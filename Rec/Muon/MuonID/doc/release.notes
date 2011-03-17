@@ -2,6 +2,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Rob Lambert
+ - Fixed debug printout, only prepare string if debug is required.
+
 ! 2011-03-16 - Helder Lopes
  - Fixed bug in MuonIDAlg: Null ProbMu and ProbNonMu in method calcMuonLL_tanhdist_landau
    change to low value to avoid log(ProbMu) and log(ProbNonMu) divergence.
