@@ -27,7 +27,6 @@ cfgfiles="$cfgfiles /etc/xdg/LHCb/default"
 
 for c in $cfgfiles
 do
-  echo $c
   if [[ -r $c ]]; then
     eval `cat $c | sed -n -e '/^[^+]/s/\([^=]*\)[=]\(.*\)/\1="\2"; export \1;/gp'`
     break;

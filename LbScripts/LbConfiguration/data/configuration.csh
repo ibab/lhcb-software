@@ -24,7 +24,6 @@ set cfgfiles="$cfgfiles /etc/default/LHCb"
 set cfgfiles="$cfgfiles /etc/xdg/LHCb/default"
 
 foreach c ( $cfgfiles )
-  echo $c
   if ( -r $c ) then
     eval `cat $c | sed -n -e '/^[^+]/s/\(\\\$[^ ]*\)/"\\\\\1"/' -e '/^[^+]/s/\([^=]*\)[=]\(.*\)/setenv \1 \"\2\";/gp'`
   break
