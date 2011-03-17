@@ -825,17 +825,17 @@ StatusCode MuonIDAlg::execute() {
         Warning(" doID failed for track ",StatusCode::SUCCESS,0).ignore();
         if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << *iTrack << endmsg;
       }
-
+      
       pMuids->insert( pMuid, (*iTrack)->key() );
       LHCb::Track* mutrack = 0;
-
+      
       // Build mutrack if IsMuonLoose is 1
       if (pMuid->IsMuonLoose()) {
         mutrack = makeMuonTrack(*pMuid);
         pMuid->setMuonTrack( mutrack );
         mutracks->insert( mutrack, (*iTrack)->key() );
       }
-
+      
       // If required, save all tracks. If tracks already created, simply clone them
       if (m_DoAllMuonTracks) {
         LHCb::Track* mutrack_all;
@@ -843,7 +843,7 @@ StatusCode MuonIDAlg::execute() {
         else mutrack_all = makeMuonTrack(*pMuid);
         mutracks_all->insert( mutrack_all, (*iTrack)->key() );
       }
-
+      
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
         Warning(" calcSharedHits failed for track ",StatusCode::SUCCESS,0).ignore();
@@ -2103,9 +2103,9 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
   //=====================================================================
 
   double Prob=0;
-  TF1 * myF = new TF1("myF",land,0,m_x*m_nMax,2);
-  myF->SetParameters(parNonMu[0],parNonMu[1]);
-  Prob = myF->Integral(0,dist0);
+  TF1 myF("myF",land,0,m_x*m_nMax,2);
+  myF.SetParameters(parNonMu[0],parNonMu[1]);
+  Prob = myF.Integral(0,dist0);
 
   if(parNonMu[2]>0){
     if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
@@ -2293,10 +2293,10 @@ double MuonIDAlg::calcNorm(double *par){
 
   double Norm = 0.;
 
-  TF1 * myF = new TF1("myF",land2,0,m_x*m_nMax,5);
-  myF->SetParameters(par[0],par[1],par[2],par[3],par[4]);
-  Norm = myF->Integral(0,m_x*m_nMax);
-
+  TF1 myF("myF",land2,0,m_x*m_nMax,5);
+  myF.SetParameters(par[0],par[1],par[2],par[3],par[4]);
+  Norm = myF.Integral(0,m_x*m_nMax);
+  
   return Norm;
 }
 
@@ -2310,9 +2310,9 @@ double MuonIDAlg::calcNorm_nmu(double *par){
 
   double Norm = 0.;
 
-  TF1 * myF = new TF1("myF",land,0,m_x*m_nMax,2);
-  myF->SetParameters(par[0],par[1]);
-  Norm = myF->Integral(0,m_x*m_nMax);
+  TF1 myF("myF",land,0,m_x*m_nMax,2);
+  myF.SetParameters(par[0],par[1]);
+  Norm = myF.Integral(0,m_x*m_nMax);
 
   return Norm;
 }

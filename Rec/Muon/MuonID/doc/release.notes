@@ -2,6 +2,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Rob Lambert
+ - Fixed the same memory leak which was duplicated 5 times or so in the code.
+
 ! 2011-03-17 - Gerhard Raven
  - fix memory leak (see https://savannah.cern.ch/bugs/index.php?79569 )
 
