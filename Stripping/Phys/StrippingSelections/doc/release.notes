@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Greig Cowan
+ - Added StrippingB2KShh to __init__.py
+
 ! 2011-03-17 - Thomas Latham
  - Updated StrippingB2KShh to LineBuilder framework
 

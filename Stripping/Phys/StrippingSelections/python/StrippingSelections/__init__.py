@@ -11,6 +11,7 @@ import StrippingDstarD02Kpipi0
 import StrippingB2D3H
 import StrippingBu2D0h_D02KShh_NoPID
 import StrippingBu2D0h_D02KShh_NoPID_WS
+import StrippingB2KShh
 
 import StrippingDstarVeryLooseWithD02Kpi
 import StrippingBs2PhiMuMu
