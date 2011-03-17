@@ -7,7 +7,7 @@ from TrackSys.PatChecking import ConfigureEffCheckTools
 from Configurables import ( TrackAssociator, TrackAssociatorUpgrade, TrackResChecker, TrackOccupChecker,
                             TrackEffChecker, TrackSelector, MCReconstructible,
                             MCParticleSelector, PrimaryVertexChecker, PatLHCbID2MCParticle,PatLHCbIDUp2MCParticle,
-                            VeloPixChecker,VeloPixV0s,PatPVOffline)
+                            VeloPixChecker,VeloPixV0s,PatPVOffline, PatCheckerUpgrade, PatCounterUpgrade)
 
 def PatCheckingUpgrade():
     
@@ -50,7 +50,7 @@ def PatCheckingUpgrade():
 
         GaudiSequencer("CheckPatSeq").Members  += [ TrackResChecker("TrackResChecker")];
 
-        
+        GaudiSequencer("CheckPatSeq").Members  += [ PatCheckerUpgrade("PatChecker")];
         ## remove GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("Velo"),TrackEffChecker("VeloRZ")
         
         GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("VeloPix"),

@@ -12,11 +12,15 @@ from Configurables import RecSysConf
 
 from Configurables import (  ProcessPhase,DecodeVeloRawBuffer,MuonIDAlg,
                              VeloPixRawBankToLiteCluster,VeloPixRawBankToPartialCluster,
-                             PatLHCbIDUp2MCParticle,PatLHCbIDUp2MCHit,CheatedVeloPixPat,Tf__Tsa__Seed,
+                             PatLHCbIDUp2MCParticle,PatLHCbIDUp2MCHit,
+                             CheatedVeloPixPat,
+                             VeloPixPatLinear,
+                             Tf__Tsa__Seed,
                              TrackStateInitAlg,TrackStateInitTool,
                              TrackEventCloneKiller, TrackPrepareVelo, VeloPixLiteMeasurementProvider,
                              TrackAddLikelihood,PatForward,PatSeedFit,PatSeeding,PatVeloTT,PatVeloTTTool,
-                             TrackMatchVeloSeed, PatDownstream,PatMatch,Tf__PatVeloPixFitLHCbIDs,Tf__PatVeloFitLHCbIDs  )
+                             TrackMatchVeloSeed, PatDownstream,PatMatch,Tf__PatVeloPixFitLHCbIDs,Tf__PatVeloFitLHCbIDs,
+			     PatCheckerUpgrade  )
 
 def ConfiguredFitVeloPix( Name = "FitVeloPix",
                        TracksInContainer = "Rec/Track/PreparedVeloPix"):
@@ -123,8 +127,15 @@ def RecoTrackingUpgrade(exclude=[]):
        DataOnDemandSvc().NodeMap[ "/Event/Link" ]    = "DataObject"
        DataOnDemandSvc().NodeMap[ "/Event/Link/MC" ] = "DataObject"
 
-       ## Cheated Pattern recognition
+
+       from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_      
+       GaudiSequencer("RecoVELOPIXSeq").Members    += [ DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits")
+                                                       ]#,unfitChecker, fitChecker,fitFwdChecker]
+
+ 
+        ## Cheated Pattern recognition
        GaudiSequencer("RecoVELOPIXSeq").Members += [PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix"),
+#                                                    VeloPixPatLinear("VeloPixPatLinearing")]
                                                     CheatedVeloPixPat("CheatedPatVeloPixTracking")]
        patLHCbID2MCP = PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix")
        patLHCbID2MCP.LinkVELO = False
@@ -135,7 +146,6 @@ def RecoTrackingUpgrade(exclude=[]):
        
        cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
        cheatPat.MinimalMCHitForTrack = 2
-
 
    ######### Definition/Replacement of Tracking
    track = ProcessPhase("Track")
@@ -258,8 +268,8 @@ def RecoTrackingUpgrade(exclude=[]):
            TrackStateInitAlg("InitVeloPixTTFit").TrackLocation = "Rec/Track/VeloPixTT"
            fitter = ConfiguredFitVeloPixTT(  "FitVeloPixTT", "Rec/Track/VeloPixTT")
            GaudiSequencer("TrackVeloPixTTFitSeq").Members += [ fitter ]
-
-
+        
+#       GaudiSequencer("TrackCheckSeq").Members += [PatCheckerUpgrade("checker")] 
        
 
 
