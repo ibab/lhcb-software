@@ -28,6 +28,7 @@ use AppConfig           v3r*                -no_auto_imports
 
 # Patches
 use MuonID              v8r0p2  Muon
+use LoKiPhys            v10r0   Phys
 
 
 
