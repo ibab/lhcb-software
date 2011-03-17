@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Plamen Hopchev
+ - added VanDerMeerScan_BeamGasConf_Mar11.py and made a new version of
+   the settings for the VDM scan which use it	
+
 ! 2011-03-16 - Johannes Albrecht
  - add setting for T-station micro bias
 
