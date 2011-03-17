@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiCheckpointing 
-version           v0r4
+version           v0r5
 #============================================================================
 branches          cmt doc src
 # dependency list
@@ -10,7 +10,6 @@ use GaudiKernel   v*
 use DIM           v* Online
 use OnlineBase    v* Online
 use GaudiOnline   v* Online -no_auto_imports
-use Python        v* LCG_Interfaces
 
 apply_pattern install_python_modules
 
