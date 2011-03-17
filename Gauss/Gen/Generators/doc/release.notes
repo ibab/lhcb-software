@@ -5,8 +5,9 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v10r10 2011-03-17 =========================
 ! 2011-03-16 - Alex Shires
- - rename tool to DaughtersInLHCbAndWithMinP
+ - Rename tool from DaughtersInLHCbAcceptance to DaughtersInLHCbAndWithMinP
 
 ! 2011-03-15 - Alex Shires
  - Add in DaughtersInLHCbAcceptance tool to src/components. 
