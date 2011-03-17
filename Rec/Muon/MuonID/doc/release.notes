@@ -2,6 +2,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v8r0p2 2011-03-17 =========================
 ! 2011-03-17 - Rob Lambert
  - Fixed the same memory leak which was duplicated 5 times or so in the code.
 
