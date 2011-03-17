@@ -1,5 +1,5 @@
 package MooreSys
-version v12r3
+version v12r4
 branches doc cmt
 
 #=======================================================
@@ -8,7 +8,7 @@ branches doc cmt
 
 use  Moore              v12r3   Hlt
 # patches
-use MuonID              v8r0p1  Muon
+use MuonID              v8r0p2  Muon
 
 # Declare this as a container package
 apply_pattern container_package
