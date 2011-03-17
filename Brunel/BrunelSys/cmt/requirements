@@ -1,5 +1,5 @@
 package BrunelSys
-version           v39r0p1
+version           v39r0p2
 
 branches cmt doc tests
  
@@ -8,9 +8,11 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v39r0p1   Rec
+use Brunel v39r0p2   Rec
 
 # Add here any component libraries to be added as patches
+use MuonID             v8r0p2    Muon
+use ChargedProtoANNPID v1r3p1    Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
