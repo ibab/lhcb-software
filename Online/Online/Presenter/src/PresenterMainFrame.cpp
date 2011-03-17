@@ -2218,6 +2218,7 @@ void PresenterMainFrame::startPageRefresh() {
     m_pageRefreshTimer->TurnOn();
     m_refreshingPage = true;
   }
+  m_resumePageRefreshAfterLoading = false;
 }
 
 //==============================================================================
@@ -3591,6 +3592,7 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
                                                    GetSelectedEntry())
                       ->GetText()->GetString() );
     setPartition( partition_entry ) ;
+    m_runDb->setPartition( partition_entry );
   }
   if (isConnectedToHistogramDB() && (false == m_currentPageName.empty()) &&
       (false == m_loadingPage))

@@ -122,6 +122,7 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
   if ( 1 != m_rootHistogram->GetDimension() ) return;
 
   // standard plot style
+  m_hostingPad->cd();
   m_referenceHist->SetLineStyle(2);
   m_referenceHist->SetLineColor(2); // red
   // normalization
@@ -163,6 +164,7 @@ void DisplayHistogram::normalizeReference ( ) {
       }
     }
     m_referenceHist->SetNormFactor(normFactor);
+    std::cout << "Normalization of reference = " << normFactor << std::endl;
   }
 }
 
@@ -770,6 +772,30 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
 
   if ( update && m_hostingPad != NULL ) {
     m_hostingPad->Modified();
+  }
+}
+
+//=========================================================================
+//  Copy the argument into the root histogram
+//=========================================================================
+void DisplayHistogram::copyFrom ( TH1* src) {
+  if ( 0 == m_rootHistogram ) return;
+  if ( 0 != dynamic_cast<TH2D*>(m_rootHistogram) ) {
+    if ( 0 ==  dynamic_cast<TH2D*>(src) ) return;
+    if ( m_rootHistogram->GetNbinsX() != src->GetNbinsX() ) return;
+    if ( m_rootHistogram->GetNbinsY() != src->GetNbinsY() ) return;
+    for (int i=1; i<= m_rootHistogram->GetNbinsX() ; ++i) {
+      for (int j=1; j <= m_rootHistogram->GetNbinsY() ; ++j) {
+        m_rootHistogram->SetBinContent(i, j, src->GetBinContent(i, j) );
+        m_rootHistogram->SetBinError(  i, j, src->GetBinError( i, j ) );
+      }
+    }
+  } else {
+    if ( m_rootHistogram->GetNbinsX() != src->GetNbinsX() ) return;
+    for (int i = 1; i <= m_rootHistogram->GetNbinsX(); ++i) {
+      m_rootHistogram->SetBinContent(i, src->GetBinContent(i) );
+      m_rootHistogram->SetBinError(i,   src->GetBinError(i) );
+    }
   }
 }
 //=============================================================================

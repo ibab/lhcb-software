@@ -268,8 +268,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
             std::cout << "++ set histo " << histNames[indx] << std::endl;
             if ( update && 
                  ( (*itH).rootHist()->GetNbinsX() == ((TH1*)results[indx])->GetNbinsX() ) ) {
-              (*itH).rootHist()->Reset();
-              (*itH).rootHist()->Add( (TH1*)results[indx], 1. );
+              (*itH).copyFrom(  (TH1*)results[indx] );
               delete results[indx];
               (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
               (*itH).prepareForDisplay();
@@ -379,9 +378,11 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
         TH1* tmp = analysisLib->findRootHistogram( (*itH).histo(), f );
-        TH1* out = (TH1*)tmp->Clone();
-        (*itH).setReferenceHistogram( out );
-        delete tmp;
+        if ( 0 != tmp ) {
+          TH1* out = (TH1*)tmp->Clone();
+          (*itH).setReferenceHistogram( out );
+          delete tmp;
+        }
       }
       std::cout << "*** References are set ***" << std::endl;
       f->Close();
@@ -441,7 +442,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
                                htitle,
                                NULL,
                                ref );
-        if ( refHists.size() == (*itA).onlineHistos.size() ) {
+        if ( !update && refHists.size() == (*itA).onlineHistos.size() ) {
           refH = creator->exec( &refHists,
                                 &(*itA).params,
                                 htitle, //(*itA).displayHisto->histo()->htitle(),
@@ -449,17 +450,15 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
                                 NULL,
                                 ref );
         }
-        std::cout << "Created analysis histogram " << htitle << std::endl;
+        std::cout << "Created analysis histogram " << htitle << " pointer " << rootH;
+        if ( rootH ) std::cout << " integral " << rootH->Integral();
+        std::cout << std::endl;
       }
       if ( rootH ) {
         if ( update ) {
-          (*itA).displayHisto->rootHist()->Reset();
-          (*itA).displayHisto->rootHist()->Add( rootH, 1. );
-          if ( refH ) {
-            (*itA).displayHisto->referenceHist()->Reset();
-            (*itA).displayHisto->referenceHist()->Add( refH, 1. );
-          }
-        } else {
+          (*itA).displayHisto->copyFrom( rootH );
+          delete rootH;
+         } else {
           (*itA).displayHisto->setRootHist( rootH );
           (*itA).displayHisto->setDisplayOptions( );
           if ( refH ) (*itA).displayHisto->setReferenceHistogram( refH );

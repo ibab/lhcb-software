@@ -826,7 +826,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     if ( rootFile -> IsZombie() ) {
       std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
     } else {
-      std::cout << " ++ file " << (*itF).file_string() << " is open" << std::endl;
+      std::cout << " ++ file " << (*itF).file_string() << " is open. Serach for " << dispHist->rootName() << std::endl;
       TH1* archiveHisto;
       rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
       if (archiveHisto) {
@@ -837,7 +837,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
         
         if ( !dispHist->rootHist( ) ) {
           dispHist->setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
-          //dispHist->rootHistogramReset( ) ;
+          dispHist->rootHist()->Reset( ) ;
         }
       }
     }

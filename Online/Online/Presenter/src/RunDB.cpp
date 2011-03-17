@@ -366,7 +366,7 @@ std::vector< int > RunDB::getListOfRuns( int /*runNumber*/ ) {
 bool RunDB::checkRun( int runNumber ) {
   if ( runNumber == getCurrentRunNumber() ) return true ;
 
-  std::cout << "checkRun in run database: Open webstream at " << m_address << std::endl;
+  std::cout << "checkRun in run database run " << runNumber << " : Open webstream at " << m_address << std::endl;
 
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
@@ -428,7 +428,10 @@ bool RunDB::checkRun( int runNumber ) {
         boost::posix_time::time_duration dur = et - st ;
         m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
 
-        if ( ( dest == getDestination() ) && ( part == getPartition() ) ) {
+        std::cout << "Dest " << dest << " part " << part << std::endl;
+
+        if ( ( getDestination() == "" || dest == getDestination() ) && 
+             ( part == getPartition() ) ) {
           m_currentRunNumber = runNumber ;
           return true ;
         }
