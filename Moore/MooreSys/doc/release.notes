@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v12r4>2011-03-17 Moore v12r4</A></H1><PRE>
+still based on HLT_v13r2p1, minor patches applied
+
 </PRE><H1><A NAME=v12r3>2011-03-10 Moore v12r3</A></H1><PRE>
 based on HLT_v13r2p1, minor patches for Physics_Feb11 setting
 
