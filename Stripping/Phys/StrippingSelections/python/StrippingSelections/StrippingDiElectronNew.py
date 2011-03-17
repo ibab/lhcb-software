@@ -9,18 +9,20 @@ Inclusive DiElectron lines, including:
 5. Jpsi2eeLine
 
 #--------------------------
-# To use this for Full DST
+# To use this for Dielectron stream
 #--------------------------
 from StrippingSelections.StrippingDiElectronNew import DiElectronConf
-FullDSTDiElectronConf = DiElectronConf( config = DiElectronConf.config_default )
-stream.appendLines( FullDSTDiElectronConf.Lines )
+from StrippingSelections.StrippingDiElectronNew import config_default as config_FullDSTDiElectron
+FullDSTDiElectronConf = DiElectronConf( name=None, config = config_FullDSTDiElectron )
+stream.appendLines( FullDSTDiElectronConf.lines() )
 
 #--------------------------
-# For MicroDST
+# For Leptonic MicroDST stream 
 #--------------------------
 from StrippingSelections.StrippingDiElectronNew import DiElectronConf
-MicroDSTDiElectronConf = DiElectronConf( name = 'MicroDST', config = DiElectronConf.config_microDST )
-stream.appendLines( MicroDSTDiElectronConf.MicroDSTLines )
+from StrippingSelections.StrippingDiElectronNew import config_microDST as config_MicroDSTDiElectron
+MicroDSTDiElectronConf = DiElectronConf( name = 'MicroDST', config = config_MicroDSTDiElectron )
+stream.appendLines( MicroDSTDiElectronConf.lines() )
 '''
 
 __author__=['Jibo He']
@@ -32,6 +34,8 @@ __all__ = (
     )
 
 config_default= {
+        'MicroDST'                                      :  False  ,
+        
         # DiElectron line
         'DiElectron_Prescale'                           :     1.  ,
         'DiElectron_Postscale'                          :     1.  ,
@@ -46,7 +50,7 @@ config_default= {
         'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
 
         # DiElectronLowMass line
-        'DiElectronLowMass_Prescale'                    :     0.2 ,
+        'DiElectronLowMass_Prescale'                    :     0.05 ,
         'DiElectronLowMass_Postscale'                   :     1.  ,
         'DiElectronLowMass_checkPV'                     : False   ,   
         
@@ -72,7 +76,7 @@ config_default= {
         'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
 
         # BiasedDiElectronLowMass line
-        'BiasedDiElectronLowMass_Prescale'              :     1.  ,
+        'BiasedDiElectronLowMass_Prescale'              :     0.1 ,
         'BiasedDiElectronLowMass_Postscale'             :     1.  ,
 
         'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
@@ -101,6 +105,8 @@ config_default= {
 
 
 config_microDST= {
+        'MicroDST'                                      :  True   ,
+        
         # DiElectron line
         'DiElectron_Prescale'                           :     1.  ,
         'DiElectron_Postscale'                          :     1.  ,        
@@ -179,6 +185,8 @@ from StrippingUtils.Utils import LineBuilder
 class DiElectronConf(LineBuilder):
     
     __configuration_keys__ = (
+        'MicroDST',
+        
         # DiElectron line
         'DiElectron_Prescale',
         'DiElectron_Postscale',
@@ -289,7 +297,6 @@ class DiElectronConf(LineBuilder):
                                                       eePT              = config['DiElectronLowMass_PT']
                                                       )
         self.DiElectronLowMassLine = StrippingLine( name + 'DiElectronLowMass' + 'Line',
-                                                    HLT = "HLT_PASS('Hlt2UnbiasedTFDiElectronLowMassDecision')",
                                                     prescale  = config['DiElectronLowMass_Prescale'],
                                                     postscale = config['DiElectronLowMass_Postscale'],
                                                     checkPV   = config['DiElectronLowMass_checkPV'],
@@ -333,7 +340,6 @@ class DiElectronConf(LineBuilder):
             eePT              = config['BiasedDiElectronLowMass_PT']
             )
         self.BiasedDiElectronLowMassLine = StrippingLine( name + 'BiasedIncDiElectronLowMass' + 'Line',
-                                                          HLT = "HLT_PASS('Hlt2BiasedTFDiElectronLowMassDecision')",
                                                           prescale  = config['BiasedDiElectronLowMass_Prescale'],
                                                           postscale = config['BiasedDiElectronLowMass_Postscale'],
                                                           selection = self.SelBiasedDiElectronLowMass
@@ -359,12 +365,16 @@ class DiElectronConf(LineBuilder):
                                           selection = self.SelJpsi2ee
                                           )
         
-
-        self.registerLine( self.DiElectronLine )
-        self.registerLine( self.DiElectronLowMassLine )
-        self.registerLine( self.BiasedDiElectronLine )
-        self.registerLine( self.BiasedDiElectronLowMassLine )
-        self.registerLine( self.Jpsi2eeLine )
+        if config['MicroDST']:
+            self.registerLine( self.DiElectronLine )
+            self.registerLine( self.BiasedDiElectronLine )
+            
+        else:    
+            self.registerLine( self.DiElectronLine )
+            self.registerLine( self.DiElectronLowMassLine )
+            self.registerLine( self.BiasedDiElectronLine )
+            self.registerLine( self.BiasedDiElectronLowMassLine )
+            self.registerLine( self.Jpsi2eeLine )
             
         self.AllLines = [
             self.DiElectronLine,

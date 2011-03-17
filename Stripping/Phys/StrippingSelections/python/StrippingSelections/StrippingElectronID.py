@@ -23,7 +23,7 @@ __all__ = (
 
 
 config_default =  {
-        'LinePrescale'            :    0.4  ,
+        'LinePrescale'            :    1.   ,
         'LinePostscale'           :    1.   ,
 
         'Both_PT'                 :  500.   ,  # MeV
@@ -46,7 +46,7 @@ config_default =  {
         'eeMinMass'               : 2200.   ,  # MeV 
         'eeMaxMass'               : 4200.   ,  # MeV
                 
-        'eeFDCHI2'                :  225.    
+        'eeFDCHI2'                :  400.    
         }
 
 from Gaudi.Configuration import *

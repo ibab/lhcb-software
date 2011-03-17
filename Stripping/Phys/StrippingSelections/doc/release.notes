@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Jibo He
+ - DiMuon, DiElectron, Bc2JpsiH lines revisited
+
 ! 2011-03-17 - Paul Seyfert
  - Added access to HLT configuration in TrackEffDownMuon and TrackEffVeloMuon (for restripping of 2010)
 

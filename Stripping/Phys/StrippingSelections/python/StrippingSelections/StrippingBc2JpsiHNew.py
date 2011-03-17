@@ -34,7 +34,7 @@ config_default =  {
     'BcVtxCHI2'           :    9.   ,  # adimentional
     'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'PionIPCHI2'          :    0.   ,
+    'PionIPCHI2'          :   -1.   ,
     'MuonIPCHI2'          :   -1.   ,
     'MuMuIPCHI2'          :   -1.   ,
     'BcIPCHI2'            :    5.0e+9,
@@ -55,17 +55,17 @@ config_detached =  {
     'MuMuPT'              :  -10.   ,  # MeV, not applied 
     
     'PionTRCHI2DOF'       :    5.   ,  # adimentional     
-    'PionPT'              : 1500.   ,  # MeV
+    'PionPT'              : 1400.   ,  # MeV
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
     'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'PionIPCHI2'          :    4.   ,
+    'PionIPCHI2'          :   -1.   ,
     'MuonIPCHI2'          :   -1.   ,
     'MuMuIPCHI2'          :   -1.   ,
-    'BcIPCHI2'            :   25.   ,
-    'BcLTIME'             :   -1.0e+9  
+    'BcIPCHI2'            :    5.0e+9,
+    'BcLTIME'             :    0.1  
     }
 
 

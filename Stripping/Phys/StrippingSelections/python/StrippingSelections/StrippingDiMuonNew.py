@@ -32,15 +32,16 @@ To include lines for DiMuon stream
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
 from StrippingSelections.StrippingDiMuonNew import config_default as config_FullDSTDiMuon
 FullDSTDiMuonConf = DiMuonConf( name = None, config =config_FullDSTDiMuon  )
-stream.appendLines( FullDSTDiMuonConf.AllLines )
+stream.appendLines( FullDSTDiMuonConf.lines() )
 
 --------------------------
 For MicroDST
 --------------------------
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
-from StrippingSelections.StrippingDiMuonNew import config_default as MicroDSTDiMuon
+from StrippingSelections.StrippingDiMuonNew import config_microDST as MicroDSTDiMuon
 MicroDSTDiMuonConf = DiMuonConf( name = 'MicroDST', config = MicroDSTDiMuon )
-stream.appendLines( MicroDSTDiMuonConf.MicroDSTLines )
+stream.appendLines( MicroDSTDiMuonConf.lines() )
+
 
 '''
 
