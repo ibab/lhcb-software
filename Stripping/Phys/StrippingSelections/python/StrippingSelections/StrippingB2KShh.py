@@ -1,218 +1,241 @@
+# $Id: StrippingB2KShh.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
+"""
+Module for construction of Bd/Bs->KShh stripping Selections and StrippingLines.
+Provides functions to build KS->DD, KS->LL, Bd/Bs selections.
+Provides class B2KShhConf, which constructs the Selections and StrippingLines
+given a configuration dictionary.
+Selections based on previous version of the line by Jussara Miranda.
+Exported symbols (use python help!):
+   - B2KShhConf
+"""
 
-__author__ = 'Jussara Miranda'
-__date__ = '02/04/2010'
-__version__ = '$Revision: 1.5 $'
+__author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
+__date__ = '16/03/2011'
+__version__ = '$Revision: 1.1 $'
 
-'''
-Stripping selection for B->KShh' , B==(Bs,Bd); h,h'=(K+-,pi+-) 
-'''
-#################################################################
-#  This strip is GOOD for both Bd and Bs to KSLL of KSDD and hh'(h,h'=k,pi)
-#  Asymmetrical mass window, Bd: (-200,+280 MeV)
-#  There are 2 lines KSLLhh and the KSDDhh (hh==K+-,pi+-) 
-#################################################################
+__all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLoosePions, StdLooseKaons
 
-class StrippingB2KShhConf(LHCbConfigurableUser):
-    __slots__ = { 
-           'B_Mlow'          :  200. 
-        ,  'B_Mhigh'         :  280.   
-        ,  'B_dira'          :  0.999   
-        ,  'B_FDpvsv'        :  1.0   
-        ,  'B_Vchi2'         :  12.   
-        ,  'B_IPPTmax'       :  0.05   
-        ,  'B_pointpt'       :  0.16   
-        ,  'B_IPsumhh'       :  0.0 
-	,  'TrackCHI2DOF'    :  5. 
-        ,  'DOCAhh'          :  0.3   
-        ,  'KS_Mwindow'      :  30.   
-        ,  'B_IP_LL'         :  0.08   
-        ,  'B_PTmed_LL'      :  800.   
-        ,  'B_PTsum_LL'      :  4000.   
-        ,  'B_FDchi2_LL'     :  40.   
-        ,  'KS_FDCHI2opv_LL' :  50.    
-        ,  'KS_VCHI2_LL'     :  12.    
-        ,  'B_IP_DD'         :  0.08   
-        ,  'B_PTmed_DD'      :  800.   
-        ,  'B_PTsum_DD'      :  4300.
-        ,  'B_FDchi2_DD'     :  30.   
-        ,  'KS_FDCHI2opv_DD' :  50.   
-        ,  'KS_VCHI2_DD'     :  12.   
-        ,  'KS_P_DD'         :  6000.   
-        }
+default_config = {'Trk_Chi2'         : 4.0,
+                  'KS_DD_MassWindow' : 30.0,
+                  'KS_DD_VtxChi2'    : 12.0,
+                  'KS_DD_FDChi2'     : 50.0,
+                  'KS_DD_Pmin'       : 6000.0,
+                  'KS_LL_MassWindow' : 30.0,
+                  'KS_LL_VtxChi2'    : 12.0,
+                  'KS_LL_FDChi2'     : 50.0,
+		  'B_Mlow'           : 200.0,
+		  'B_Mhigh'          : 280.0,
+		  'BDaug_MedPT_PT'   : 800.0,
+		  'BDaug_MaxPT_IP'   : 0.05,
+		  'hh_DOCA'          : 0.3,
+		  'BDaug_DD_PTsum'   : 4300.0,
+		  'BDaug_LL_PTsum'   : 4000.0,
+		  'B_VtxChi2'        : 12.0,
+		  'B_Dira'           : 0.999,
+		  'B_IPwrtPV'        : 0.08,
+		  'B_FDwrtPV'        : 1.0,
+		  'B_DD_FDChi2'      : 30.0,
+		  'B_LL_FDChi2'      : 40.0,
+		  'GEC_MaxTracks'    : 250,
+		  'Prescale'         : 1.0,
+		  'Postscale'        : 1.0
+		  }
 
-    _propertyDocDct = {
-           'B_Mlow'          : """ KSpipi low mass window """
-        ,  'B_Mhigh'         : """ KSpipi high mass window """    
-        ,  'B_dira'          : """ LL B cos angle    """    
-        ,  'B_FDpvsv'        : """ B flight distance to the closest PV """    
-        ,  'B_Vchi2'         : """ B Vertex chi2 """    
-        ,  'B_IPPTamax'      : """ IP of the B daughter with the higest PT """    
-        ,  'B_pointpt'       : """ B BPVTRGPOINTINGWPT """
-        ,  'B_IPsumhh'       : """ sum of hh IP's """   
-	,  'TrackCHI2DOF'    : """ track chidof to all tracks""" 
-        ,  'DOCAhh'          : """ DOCA of hh """   
-        ,  'KS_Mwindow'      : """ KS mass window """    
-        ,  'B_IP_LL'         : """ B IP- for candidates with KSLL """    
-        ,  'B_PTmed_LL'      : """ B daughter with medimum PT - for candidates with KSLL"""    
-        ,  'B_PTsum_LL'      : """ B daughter PT sum - for candidates  with KSLL"""
-        ,  'B_FDchi2_LL'     : """ B flight distance - for candidates  with KSLL"""
-        ,  'KS_FDCHI2opv_LL' : """ KS flight distance wrt CHI2 PV - for candidates  with KSLL"""
-        ,  'KS_VCHI2_LL'     : """ KS vertex chi2 - for candidates  with KSLL"""
-        ,  'B_IP_DD'         : """ B IP- for candidates with KSDD """    
-        ,  'B_PTmed_DD'      : """ B daughter with medimum PT - for candidates with KSDD"""  
-        ,  'B_PTsum_DD'      : """ B daughter PT sum - for candidates  with KSDD"""    
-        ,  'B_FDchi2_DD'     : """ B flight distance - for candidates  with KSDD"""    
-        ,  'KS_FDCHI2opv_DD' : """ KS flight distance CHI2 wrt PV - for candidates  with KSDD"""    
-        ,  'KS_VCHI2_DD'     : """ KS vetex CHI2  - for candidates  with KSDD"""    
-        ,  'KS_P_DD'         : """ KS momentum  - for candidates  with KSDD"""    
-        }
+class B2KShhConf(LineBuilder) :
+    """
+    Builder of B->KShh stripping Selection and StrippingLine.
+    Constructs B -> KS h+ h- Selections and StrippingLines from a configuration dictionary.
+    Usage:
+    >>> config = { .... }
+    >>> b2kshhConf = B2KShhConf('B2KShhTest',config)
+    >>> b2kshhLines = b2kshhConf.lines
+    >>> for line in line :
+    >>>  print line.name(), line.outputLocation()
+    The lines can be used directly to build a StrippingStream object.
 
-    ###############################################
-    # Create StrippingLines with these selections #
-    ###############################################
-    def B2KSLLhh( self ) :
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        B2KShh_StrippingNumTracksGEC=self.GEC_NumTracks_Alg()
-        KSLLforB2KShh = self.KSLLforB2KShhAlg()
-        B2KSLLhh = self.B2KSLLhhAlg()
-        return StrippingLine('B2KSLLhh_line'
-                             , prescale = 1
-                             , algos = [B2KShh_StrippingNumTracksGEC,KSLLforB2KShh,B2KSLLhh]
-                            , postscale = 1
-                             )
-    def B2KSDDhh( self ) :
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        B2KShh_StrippingNumTracksGEC=self.GEC_NumTracks_Alg()
-        KSDDforB2KShh = self.KSDDforB2KShhAlg()
-        B2KSDDhh = self.B2KSDDhhAlg()
-        return StrippingLine('B2KSDDhh_line'
-                             , prescale = 1
-                             , algos = [B2KShh_StrippingNumTracksGEC,KSDDforB2KShh,B2KSDDhh]
-                             , postscale = 1
-                             )
-    ##############
-    #  #of tracks#
-    ##############
+    Exports as instance data members:
+    selKS2DD               : KS -> Down Down Selection object
+    selKS2LL               : KS -> Long Long Selection object
+    selB2KSDDhh            : B -> KS(DD) h+ h- Selection object
+    selB2KSLLhh            : B -> KS(LL) h+ h- Selection object
+    dd_line                : StrippingLine made out of selB2KSDDhh
+    ll_line                : StrippingLine made out of selB2KSLLhh
+    lines                  : List of lines, [dd_line, ll_line]
 
-    def GEC_NumTracks_Alg( self ):
-        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-        modules =  CoreFactory('CoreFactory').Modules
-        for i in [ 'LoKiTrigger.decorators' ] :
-            if i not in modules : modules.append(i)
+    Exports as class data member:
+    B2KShhConf.__configuration_keys__ : List of required configuration parameters.
+    """
 
-        # Define the GEC on number of tracks, needed in order to control
-        # the time for the combinatorics
-        B2KShh_StrippingNumTracksGEC = VoidFilter('B2KShh_StrippingNumTracksGEC'
-                                     , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 250 )"
-                                           )
-        return B2KShh_StrippingNumTracksGEC
+    __configuration_keys__ = ('Trk_Chi2',
+                              'KS_DD_MassWindow',
+                              'KS_DD_VtxChi2',
+                              'KS_DD_FDChi2',
+                              'KS_DD_Pmin',
+                              'KS_LL_MassWindow',
+                              'KS_LL_VtxChi2',
+                              'KS_LL_FDChi2',
+                              'B_Mlow',
+                              'B_Mhigh',
+                              'BDaug_MedPT_PT',
+                              'BDaug_MaxPT_IP',
+                              'hh_DOCA',
+                              'BDaug_DD_PTsum',
+                              'BDaug_LL_PTsum',
+                              'B_VtxChi2',
+                              'B_Dira',
+                              'B_IPwrtPV',
+                              'B_FDwrtPV',
+                              'B_DD_FDChi2',
+                              'B_LL_FDChi2',
+                              'GEC_MaxTracks',
+                              'Prescale',
+                              'Postscale'
+                              )
 
+    def __init__(self, name, config) :
 
-    ########
-    # KSLL # 
-    ########
-    def KSLLforB2KShhAlg(self):
-        from Configurables import FilterDesktop
-        import GaudiKernel.SystemOfUnits as Units
-        KSLL_FilterCuts="(ADMASS('KS0')<%(KS_Mwindow)s *MeV )  \
-	                 & (BPVVDCHI2 > %(KS_FDCHI2opv_LL)s) \
-	                 & (VFASPF(VCHI2)<%(KS_VCHI2_LL)s) \
-			 & (CHILDCUT((TRCHI2DOF < %(TrackCHI2DOF)s),1)) \
-			 & (CHILDCUT((TRCHI2DOF < %(TrackCHI2DOF)s),2)) "% self.getProps()
+        LineBuilder.__init__(self, name, config)
 
-	KSLLforB2KShh=FilterDesktop("StripKSLLforB2KShh")
-	KSLLforB2KShh.InputLocations = ["StdLooseKsLL"]
-	KSLLforB2KShh.Code=KSLL_FilterCuts
-	
-        return KSLLforB2KShh
-    ########
-    # KSDD # 
-    ########
-    def KSDDforB2KShhAlg(self):
-        from Configurables import FilterDesktop
-        import GaudiKernel.SystemOfUnits as Units
-        KSDD_FilterCuts="(ADMASS('KS0')<%(KS_Mwindow)s *MeV) \
-	                & (P > %(KS_P_DD)s *MeV) \
-	                & (BPVVDCHI2 > %(KS_FDCHI2opv_DD)s) \
-		        & (VFASPF(VCHI2)<%(KS_VCHI2_DD)s)"% self.getProps()
+        dd_name = name+'DD'
+        ll_name = name+'LL'
 
-	KSDDforB2KShh=FilterDesktop("StripKSDDforB2KShh")
-	KSDDforB2KShh.InputLocations = ["StdLooseKsDD"]
-	KSDDforB2KShh.Code=KSDD_FilterCuts
-	
-        return KSDDforB2KShh
+        GECCode = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < %s" % config['GEC_MaxTracks'],
+	           'Preambulo' : ["from LoKiTrigger.decorators import *"]}
 
-    #############
-    # B-KSLL hh # 
-    #############
-    def B2KSLLhhAlg(self):
-        from Configurables import CombineParticles
-        import GaudiKernel.SystemOfUnits as Units    
-        
-        BLL_CombCuts= " (AM>(5279-%(B_Mlow)s) *MeV)\
-	               &(AM<(5279+%(B_Mhigh)s) *MeV)\
-	               &(ANUM(PT > %(B_PTmed_LL)s *MeV)>=2) \
-	               &((APT1+APT2+APT3)>%(B_PTsum_LL)s *MeV) \
-	               &(AVAL_MAX(MIPDV(PRIMARY), PT)>%(B_IPPTmax)s) \
-		       &(ADOCA(1,2)< %(DOCAhh)s)\
-		       &((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%(B_IPsumhh)s)"% self.getProps()
+	self.pions = StdLoosePions
+	self.kaons = StdLooseKaons
 
-        BLL_MotherCuts="(VFASPF(VCHI2)<%(B_Vchi2)s)\
-		       &(BPVTRGPOINTINGWPT<%(B_pointpt)s)\
-		       &(BPVDIRA>%(B_dira)s)\
-		       &(MIPDV(PRIMARY)<%(B_IP_LL)s)\
-		       &(VFASPF(VMINVDDV(PRIMARY))>%(B_FDpvsv)s)\
-		       &(BPVVDCHI2>%(B_FDchi2_LL)s)"% self.getProps()
+        self.makeKS2DD( 'KSfor'+dd_name, config )
+        self.makeKS2LL( 'KSfor'+ll_name, config )
 
-	B2KSLLhh=CombineParticles("StripB2KSLLhh")
-	B2KSLLhh.InputLocations = [ "StripKSLLforB2KShh","StdTightKaons","StdLoosePions"]
-	B2KSLLhh.DecayDescriptors = ["B0 -> pi+ pi- KS0 ", \
-	                             "B0 -> K+ K- KS0 ",  \
-				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 "]
-	B2KSLLhh.DaughtersCuts = {"K+":"(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps() ,"pi+": "(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps()}
-	B2KSLLhh.CombinationCut = BLL_CombCuts
-	B2KSLLhh.MotherCut = BLL_MotherCuts
-        return B2KSLLhh
-    ##############
-    #  B-KSDD hh #  
-    ##############
-    def B2KSDDhhAlg(self):
-        from Configurables import CombineParticles
-        import GaudiKernel.SystemOfUnits as Units    
-#		      &(DOCA(1,2'LoKi::TrgDistanceCalculator')< %(DOCAhh)s)\
-        
-        BDD_CombCuts=" (AM>(5279-%(B_Mlow)s) *MeV)\
-	              &(AM<(5279+%(B_Mhigh)s) *MeV)\
-	              &(AVAL_MAX(MIPDV(PRIMARY), PT)>%(B_IPPTmax)s)\
-		      &((APT1+APT2+APT3)>%(B_PTsum_DD)s *MeV)\
-	              &(ANUM(PT > %(B_PTmed_DD)s *MeV)>=2)\
-		      &(ADOCA(1,2)< %(DOCAhh)s)\
-		      &((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))> %(B_IPsumhh)s)"% self.getProps()
+	self.makeB2KSDDhh( dd_name, config )
+	self.makeB2KSLLhh( ll_name, config )
 
-        BDD_MotherCuts="(VFASPF(VCHI2)<%(B_Vchi2)s)\
-		       &(BPVTRGPOINTINGWPT<%(B_pointpt)s)\
-		       &(BPVDIRA>%(B_dira)s)\
-		       &(MIPDV(PRIMARY)<%(B_IP_DD)s)\
-		       &(VFASPF(VMINVDDV(PRIMARY))>%(B_FDpvsv)s)\
-		       &(BPVVDCHI2>%(B_FDchi2_DD)s)"% self.getProps()
+        self.dd_line = StrippingLine(dd_name+"Line",
+                                     prescale = config['Prescale'],
+                                     postscale = config['Postscale'],
+                                     selection = self.selB2KSDDhh,
+				     FILTER = GECCode
+                                     )
+        self.ll_line = StrippingLine(ll_name+"Line",
+                                     prescale = config['Prescale'],
+                                     postscale = config['Postscale'],
+                                     selection =  self.selB2KSLLhh,
+				     FILTER = GECCode
+                                     )
 
-	B2KSDDhh=CombineParticles("StripB2KSDDhh")
-	B2KSDDhh.InputLocations = [ "StripKSDDforB2KShh","StdTightKaons","StdLoosePions"]
-	B2KSDDhh.DecayDescriptors = ["B0 -> pi+ pi- KS0 ",  \
-	                             "B0 -> K+ K- KS0 ", \
-				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 "]
-	B2KSDDhh.DaughtersCuts = {"K+":"(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps() ,"pi+": "(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps()}
-	B2KSDDhh.CombinationCut = BDD_CombCuts
-	B2KSDDhh.MotherCut = BDD_MotherCuts
-        return B2KSDDhh
+        self.registerLine(self.dd_line)
+        self.registerLine(self.ll_line)
 
+    def makeKS2DD( self, name, config ) :
+        # define all the cuts
+        _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
+	_vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
+	_fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
+	_momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
+	_allCuts = _massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_momCut
 
-    def getProps(self) :
-        d = dict()
-        for (k,v) in self.getDefaultProperties().iteritems() :
-            d[k] = getattr(self,k) if hasattr(self,k) else v
-        return d
+        # get the KS's to filter
+        _stdKSDD = DataOnDemand( Location = "Phys/StdLooseKsDD/Particles" )
+
+        # make the filter
+        _filterKSDD = FilterDesktop( Code = _allCuts )
+
+        # make and store the Selection object
+        self.selKS2DD = Selection( name, Algorithm = _filterKSDD, RequiredSelections = [_stdKSDD] )
+
+    def makeKS2LL( self, name, config ) :
+        # define all the cuts
+        _massCut    = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MassWindow']
+	_vtxCut     = "(VFASPF(VCHI2)<%s)"     % config['KS_LL_VtxChi2']
+	_fdCut      = "(BPVVDCHI2>%s)"         % config['KS_LL_FDChi2']
+	_trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
+	_trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
+	_allCuts = _massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2
+
+        # get the KS's to filter
+        _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
+
+        # make the filter
+        _filterKSLL = FilterDesktop( Code = _allCuts )
+
+        # make and store the Selection object
+        self.selKS2LL = Selection( name, Algorithm = _filterKSLL, RequiredSelections = [_stdKSLL] )
+
+    def makeB2KSDDhh( self, name, config ) :
+        """
+        Create and store a B -> KS(DD) h+ h- Selection object.
+        Arguments:
+        name             : name of the Selection.
+        config           : config dictionary
+        """
+
+	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
+	_massCutHigh    = "(AM>(5279+%s)*MeV)"               % config['B_Mhigh']
+	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
+	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
+	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
+	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_DD_PTsum']
+
+	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_hhDocaCut+'&'+_daugPtSumCut
+
+	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
+	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
+	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_IPwrtPV']
+	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
+	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
+
+	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipCut+'&'+_fdCut+'&'+_fdChi2Cut
+
+	_B = CombineParticles()
+	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
+	                        "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
+				"B0 -> K+ K- KS0" ]
+	_B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+	_B.CombinationCut = _combCuts
+	_B.MotherCut = _motherCuts
+
+        self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions, self.kaons ])
+
+    def makeB2KSLLhh( self, name, config ) :
+        """
+        Create and store a B -> KS(LL) h+ h- Selection object.
+        Arguments:
+        name             : name of the Selection.
+        config           : config dictionary
+        """
+
+	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
+	_massCutHigh    = "(AM>(5279+%s)*MeV)"               % config['B_Mhigh']
+	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
+	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
+	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
+	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LL_PTsum']
+
+	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_hhDocaCut+'&'+_daugPtSumCut
+
+	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
+	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
+	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_IPwrtPV']
+	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
+	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
+
+	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipCut+'&'+_fdCut+'&'+_fdChi2Cut
+
+	_B = CombineParticles()
+	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
+	                        "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
+				"B0 -> K+ K- KS0" ]
+	_B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+	_B.CombinationCut = _combCuts
+	_B.MotherCut = _motherCuts
+
+        self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions, self.kaons ])
+

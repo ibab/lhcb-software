@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Thomas Latham
+ - Updated StrippingB2KShh to LineBuilder framework
+
 !========================== StrippingSelections v3r2 2011-03-16 ===============
 
 ! 2011-03-17 - Greig Cowan
