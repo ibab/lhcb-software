@@ -4,6 +4,14 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!=========================== DaVinciTests v2r4 2011-03-16 ====================
+
+! 2011-03-17 - Juan Palacios
+ - Fix stripping.test_bd2kstarmumu_sim2010 efficiency table.
+ - Increase timeout of kali.pi0.
+ - Undate tagging.test_tag.
+ - Increase to v2r4.
+
 !=========================== DaVinciTests v2r3 2011-03-10 ====================
 
 ! 2011-03-10 - Juan Palacios

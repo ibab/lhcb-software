@@ -35,7 +35,7 @@ TestCorrelations.Algorithms = ["FilterTrueTracks",
                                "StdVeryLooseMuons",
                                "StdNoPIDsKaons",
                                "StdNoPIDsPions",
-                               "StdVeryLooseDiMuon",
+                               "Sel_Bd2KstarMuMu_DiMuon",
                                "Sel_Bd2KstarMuMu_Kstar",
                                "StrippingBd2KstarMuMu_BdToKstarMuMuLine" ]
 ###

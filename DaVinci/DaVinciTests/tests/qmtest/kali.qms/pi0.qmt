@@ -4,4 +4,7 @@
   <argument name="program"> 
 	<text>$KALICALOROOT/python/KaliCalo/KaliPi0.py</text>
   </argument>
+  <argument name="timeout">
+        <integer>3600</integer>
+  </argument>
 </extension>
