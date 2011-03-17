@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Johannes Albrecht
+ - create new setting: Physics_Mar2011, add micro bias lines
+
 ! 2011-03-17 - Plamen Hopchev
  - added VanDerMeerScan_BeamGasConf_Mar11.py and made a new version of
    the settings for the VDM scan which use it	
