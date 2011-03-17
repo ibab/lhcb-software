@@ -1,3 +1,9 @@
+2011-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added checks for VO_LHCB_SW_DIR. If MYSITEROOT has only one
+	entry, an attempt is made to correct the value of that variable. It will succeed only if
+	$MYSTEROOT==$VO_LHCB_SW_DIR/lib.
+
 2011-03-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added the version of LbScripts in the banner in
@@ -22,7 +28,7 @@
 	* scripts/mkproject: fixed problem with the --not-parallel option. It was alway active
 	because of the -p option.
 
-2011-02-21  hubert  <hubert@hphub>
+2011-02-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: fixed usage of the TempDir class.
 

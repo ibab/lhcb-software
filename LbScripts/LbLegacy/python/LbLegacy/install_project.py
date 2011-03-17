@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '110217'
+script_version = '110317'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r0p1"
@@ -1629,7 +1629,6 @@ def _multiPathJoin(path, subdir):
 
 
 def createBaseDirs(pname, pversion):
-    global multiple_mysiteroot
     global cmtconfig
     global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir, etc_dir
     global bootscripts_dir, targz_dir, tmp_dir
@@ -1637,32 +1636,7 @@ def createBaseDirs(pname, pversion):
 
     log = logging.getLogger()
 
-    mysiteroot = None
-    # removes the trailing "/" at the end of the path
-    if os.environ.has_key("MYSITEROOT") :
-        mysiteroot = os.environ["MYSITEROOT"]
-    else:
-        if os.environ.has_key("VO_LHCB_SW_DIR") :
-            candidate_dir = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
-            if os.path.isdir(candidate_dir) :
-                log.warning("Using no MYSITEROOT defined. Using MYSITEROOT=$VO_LHCB_SW_DIR/lib")
-                log.warning("With VO_LHCB_SW_DIR=%s" % os.environ["VO_LHCB_SW_DIR"])
-                mysiteroot = candidate_dir
-
-    if not mysiteroot :
-        sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
-
-    path_list = []
-    for p in  mysiteroot.split(os.pathsep) :
-        while p.endswith(os.sep) :
-            p = p[:-1]
-        path_list.append(p)
-    if len(path_list) > 1 :
-        multiple_mysiteroot = True
-    else :
-        multiple_mysiteroot = False
-    mysiteroot = os.pathsep.join(path_list)
-    os.environ["MYSITEROOT"] = mysiteroot
+    mysiteroot = os.environ["MYSITEROOT"]
 
 
     mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
@@ -2131,8 +2105,8 @@ def checkBinaryName(binary):
     if binary not in binary_list:
         print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s' % (os.getenv('CMTCONFIG'), LbConfiguration.Platform.binary_list)
         print 'do you want to continue? [yes|no]'
-        next = sys.stdin.readline()
-        if next.lower()[0] != 'y':
+        nextin = sys.stdin.readline()
+        if nextin.lower()[0] != 'y':
             sys.exit()
         extra_binary = binary
 
@@ -2249,6 +2223,61 @@ def parseArgs():
 
     return pname, pversion, binary
 
+def checkMySiteRoot():
+    global multiple_mysiteroot
+    log = logging.getLogger()
+
+    if not os.environ.has_key("MYSITEROOT") :
+        log.warning("The env variable MYSITEROOT is not set")
+        if os.environ.has_key("VO_LHCB_SW_DIR") :
+            os.environ["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"].rstrip(os.sep)
+            fallback_mysiteroot = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
+            if os.path.exists(fallback_mysiteroot) :
+                log.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
+                os.environ["MYSITEROOT"] = fallback_mysiteroot
+    else :
+        # cleanup the MYSITEROOT variable. It can be a path
+        os.environ["MYSITEROOT"] = os.environ["MYSITEROOT"].strip(os.pathsep)
+        mylst = []
+        for l in os.environ["MYSITEROOT"].split(os.pathsep) :
+            # clean up extra /
+            mylst.append(l.rstrip(os.sep))
+        os.environ["MYSITEROOT"] = os.pathsep.join(mylst)
+
+    if not os.environ.has_key("MYSITEROOT") :
+        log.fatal('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
+        sys.exit(1)
+    else :
+        log.debug("MYSITEROOT is set to %s" % os.environ["MYSITEROOT"])
+
+    if len(os.environ["MYSITEROOT"].split(os.pathsep)) > 1 :
+        multiple_mysiteroot = True
+    else :
+        multiple_mysiteroot = False
+
+
+    if os.environ.has_key("VO_LHCB_SW_DIR") :
+        os.environ["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"].rstrip(os.sep)
+        log.debug("The VO_LHCB_SW_DIR variable is set to %s" % os.environ["VO_LHCB_SW_DIR"])
+        test_vo_dir = os.environ["VO_LHCB_SW_DIR"]
+        test_mysiteroot = os.environ["MYSITEROOT"]
+        if not multiple_mysiteroot :
+            if os.path.join(test_vo_dir, "lib") == test_mysiteroot :
+                log.debug("VO_LHCB_SW_DIR is already correctly defined to %s (${MYSITEROOT}==${VO_LHCB_SW_DIR}/lib) " % test_vo_dir)
+            else :
+                log.warning("VO_LHCB_SW_DIR isn't correctly defined (${MYSITEROOT}!=${VO_LHCB_SW_DIR}/lib) ")
+                del os.environ["VO_LHCB_SW_DIR"]
+                log.warning("The VO_LHCB_SW_DIR variable has been removed from the environment")
+
+    if not os.environ.has_key("VO_LHCB_SW_DIR") and not multiple_mysiteroot:
+        # only tries to set VO_LHCB_SW_DIR if MYSITEROOT has one entry
+        test_mysiteroot = os.environ["MYSITEROOT"]
+        mysite_parent = os.path.dirname(test_mysiteroot)
+        if os.path.basename(test_mysiteroot) == "lib" :
+            log.warning("Setting VO_LHCB_SW_DIR to %s" % mysite_parent)
+        else :
+            log.debug("Impossible to set VO_LHCB_SW_DIR")
+
 #---------------------------------------------------------------------
 def main():
 
@@ -2281,19 +2310,8 @@ def main():
     thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
 
-    if not os.environ.has_key("MYSITEROOT") :
-        thelog.warning("The env variable MYSITEROOT is not set")
-        if os.environ.has_key("VO_LHCB_SW_DIR") :
-            thelog.debug("The env VO_LHCB_SW_DIR is set to %s" % os.environ["VO_LHCB_SW_DIR"])
-            fallback_mysiteroot = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
-            if os.path.exists(fallback_mysiteroot) :
-                thelog.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
-                os.environ["MYSITEROOT"] = fallback_mysiteroot
+    checkMySiteRoot()
 
-
-    if not os.environ.has_key("MYSITEROOT") :
-        thelog.fatal('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
-        sys.exit(1)
 
     if not check_only and fix_perm:
         changePermissions('install_project.py', recursive=False)
