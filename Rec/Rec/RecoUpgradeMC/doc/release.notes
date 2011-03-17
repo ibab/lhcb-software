@@ -4,6 +4,11 @@
 ! Purpose     : Package for the reconstruction with truth in upgraded detector
 !               classes
 !-----------------------------------------------------------------------------
+! 2011-03-17 -Wenbin Qian
+ - Modifed cheat pat to make real cheat pat
+ - add cluster sort for patlhcbid
+ - add two new counters for efficiency study
+ 
 
 !========================== RecoUpgradeMC v1r1 2010-09-24 =====================
 ! 2010-10-01 - Rob Lambert

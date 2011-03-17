@@ -48,6 +48,12 @@
       if ( !found ) m_partList.push_back( part );
     }  
     
+    struct increasingSensor {
+     bool operator() ( LHCb::VeloPixCluster* clust1, LHCb::VeloPixCluster* clust2 ) const{
+       return clust1->channelID().sensor() < clust2->channelID().sensor();
+     }
+  }  increasingSensor;
+
   private:
     bool        m_level1;
     std::string m_targetName;

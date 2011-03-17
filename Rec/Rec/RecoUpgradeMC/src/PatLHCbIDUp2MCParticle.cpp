@@ -80,7 +80,6 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
       veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
 
     LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
-
     if (clusters){
       LHCb::VeloClusters::const_iterator iClus;
 
@@ -246,12 +245,16 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
     debug()<<"# clusters: "<<clusters->size()<<endmsg;
     
     if (clusters){
+      
+      std::sort( clusters->begin(), clusters->end(), increasingSensor);
+      
       LHCb::VeloPixClusters::const_iterator iClus;
       
       for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
         m_partList.clear();
         part = veloPixLink.first((*iClus)->channelID() );
-        if (part == NULL ){
+	
+	if (part == NULL ){
           debug()<<"No associated MCP"<<endreq;
           continue;
         }
@@ -264,7 +267,6 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
         for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
                 m_partList.begin(); m_partList.end() != itP; ++itP ) {
           LHCb::LHCbID temp = LHCb::LHCbID((*iClus)->lCluster().channelID()).velopixID();
-          
           lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
         }
       }

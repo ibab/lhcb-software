@@ -46,7 +46,7 @@ private:
   bool m_UseLinearFit;
   std::string m_veloPixFitterName;
   LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
-  
+ bool m_stateAtBeam;  
 }; 
 
 #endif // CHEATEDVELOPIXPAT_H
