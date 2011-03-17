@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Greig Cowan
+ - Fixed config dictionaries for Jibo's new lines.
+
 ! ======================== StrippingSettings v2r1 2011-03-16 ==================
 
 ! 2011-03-16 - Greig Cowan
