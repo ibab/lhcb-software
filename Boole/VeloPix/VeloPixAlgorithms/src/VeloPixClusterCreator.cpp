@@ -185,7 +185,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           // Fill new cluster
           VeloPixCluster* newCluster = 
                           new VeloPixCluster(newLiteCluster,totVec);
-          clusterCont->insert(newCluster,dgt.key);
+          clusterCont->insert(newCluster,baryCenterChID);
       	} 
       } else {
         Warning("channelToNeighbours failure");

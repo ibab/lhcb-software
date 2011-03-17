@@ -2,6 +2,8 @@
 ! Package     : VeloPix/VeloPixAlgorithms
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
+! 2011-03-17 -Wenbin Qian
+- make cluster id == litecluster id
 
 !================= VeloPixAlgorithms v2r0 2010-10-04 ======================
 ! 2010-09-22 - Victor Coco
