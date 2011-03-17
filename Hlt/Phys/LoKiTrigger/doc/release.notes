@@ -5,6 +5,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Roel Aaij
+ - Add a bit better protection in VxSink
+
 ! 2011-03-16 - Victor Coco
  - update BeamSpotRho function with threshold 
    to ensure the velo is closed

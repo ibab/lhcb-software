@@ -465,7 +465,9 @@ LoKi::Hlt1::VxSink::operator()
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* point to NULL!" ) ;  
   //
   BOOST_FOREACH( const LHCb::VertexBase* vx, a ) {
-     m_selection->push_back( static_cast< const LHCb::RecVertex* >( vx ) );
+     const LHCb::RecVertex* rvx = dynamic_cast< const LHCb::RecVertex* >( vx );
+     Assert( 0 != rvx, "VertexBase is not a RecVertex" );
+     m_selection->push_back( rvx );
   }
   //
   return a ;
