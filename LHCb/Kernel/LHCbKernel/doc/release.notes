@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2011-03-17 - Wenbin Qian
+ - add VeloPix ID cout
 
 ! 2011-03-03 - Vanya Belyaev
 

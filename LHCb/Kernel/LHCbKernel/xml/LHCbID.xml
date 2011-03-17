@@ -364,6 +364,7 @@ return LHCb::RichSmartID(id);
         const   = "TRUE"
         desc    = "General ID: returns detector ID = internal unsigned int">
         <code>
+if (isVeloPix()) return velopixID().channelID();
 if (isVelo()) return veloID().channelID();
 if (isST()) return stID().channelID();
 if (isOT()) return otID().channelID();
