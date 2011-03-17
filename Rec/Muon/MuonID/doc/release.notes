@@ -3,6 +3,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-17 - Rob Lambert
+ - Move 0-protection check to 1e-30 and ensure consistency
+
+! 2011-03-17 - Rob Lambert
  - Fixed debug printout, only prepare string if debug is required.
 
 ! 2011-03-16 - Helder Lopes
