@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version v12r3
+version v12r4
 
 branches doc cmt options python
 
@@ -27,10 +27,7 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use MuonID              v8r0p1  Muon
-use LoKiFitters         v4r1p2  Phys
-use RichDet             v16r1p1 Det
-use L0DU                v10r12p1    L0
+use MuonID              v8r0p2  Muon
 
 
 
@@ -77,7 +74,7 @@ private
 #tag ONLINE_OVERRULE_MOORE_SETUP
 macro Create_RunMooreOnline_output  "../job/runMooreOnline_EFF.sh"
 macro Create_RunMooreOnline_command "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) " \
-        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r51" 
+        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r50" 
 apply_pattern CallCommand  target=Create_RunMooreOnline
 
 # copy the TCK manifest for the _current_ release to the install area...
