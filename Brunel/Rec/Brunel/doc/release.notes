@@ -10,7 +10,9 @@ This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
 Patch version for production to pick up fixes in MuonID and Rich which
 were provoking NAN and other oddities in production.
 
-Fixes in: Muon/MuonID v8r0p1 and Rec/ChargedProtoANNPID v1r3p1
+MuonID had a large memory leak as discussed here: https://savannah.cern.ch/bugs/?79569
+
+Fixes in: Muon/MuonID v8r0p2 and Rec/ChargedProtoANNPID v1r3p1
 
 </PRE><H1><A NAME=v39r0p1>2011-03-10 Brunel v39r0p1</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
