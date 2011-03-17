@@ -94,6 +94,7 @@ class Muons_draft2011 :
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
             ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
+            ,'UnbiasedJPsiHighPt'      : 3000     # MeV
             ,'UnbiasedPsi2SPt'         : 0.0      # MeV
             ,'UnbiasedPsi2SMuPt'       : 0.0      # MeV
             ,'UnbiasedPsi2SMassWindow' : 120      # MeV
