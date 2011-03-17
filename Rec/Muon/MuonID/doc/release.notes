@@ -2,6 +2,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Gerhard Raven
+ - fix memory leak (see https://savannah.cern.ch/bugs/index.php?79569 )
+
 ! 2011-03-17 - Rob Lambert
  - Move 0-protection check to 1e-30 and ensure consistency
 

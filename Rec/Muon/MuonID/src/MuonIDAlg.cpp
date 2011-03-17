@@ -2081,9 +2081,9 @@ double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
   //=====================================================================
 
   double ProbMu=0;
-  TF1 * myF = new TF1("myF",land2,0,m_x*m_nMax,5);
-  myF->SetParameters(parMu[0],parMu[1],parMu[2],parMu[3],parMu[4]);
-  ProbMu = myF->Integral(0,dist0);
+  TF1  myF("myF",land2,0,m_x*m_nMax,5);
+  myF.SetParameters(parMu[0],parMu[1],parMu[2],parMu[3],parMu[4]);
+  ProbMu = myF.Integral(0,dist0);
 
   if(parMu[5]>0){
     return ProbMu = ProbMu/parMu[5];
