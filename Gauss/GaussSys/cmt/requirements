@@ -1,5 +1,5 @@
 package GaussSys
-version v39r1
+version v39r2
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v39r1 Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v39r2 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # NEEDED FOR MC10
@@ -16,9 +16,9 @@ use GaudiConf           v13r8
 
 # Generator packages: Basic configuration
 macro GENSER_use        "GENSER       v8r0    Gen"  WIN32 ""
-macro EvtGen_use        "EvtGen       v11r10  Gen"  WIN32 ""
+macro EvtGen_use        "EvtGen       v11r11  Gen"  WIN32 ""
 macro EvtGenExtras_use  "EvtGenExtras v2r5p1  Gen"  WIN32 ""
-macro Generators_use    "Generators   v10r9   Gen"  WIN32 ""
+macro Generators_use    "Generators   v10r10  Gen"  WIN32 ""
 macro LbPythia_use      "LbPythia     v9r0p1  Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
@@ -88,7 +88,7 @@ use BlsMoniSim          v1r1      Bls
 use XmlVis              v1r12      Vis
 
 # Test packages for new releases or installations on new platforms
-use GenTests            v1r4      Gen
+use GenTests            v1r5      Gen
 use SimChecks           v1r0      Sim
 
 # Allow to run the QMTests  
