@@ -209,9 +209,10 @@ class HltConf(LHCbConfigurableUser):
                       , 16 : "L0_CHANNEL_RE('.*NoSPD')" 
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 32 : "HLT_PASS('Hlt1Global')"
-                      , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
-                      , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
-                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )
+                      , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')"  # lumi stream
+                      , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
+                      , 35 : "HLT_PASS_SUBSTR('Hlt1BeamGas')" # for beamgas stream??
+                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )  # express stream
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')" 
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"

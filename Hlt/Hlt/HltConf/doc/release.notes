@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2011-03-17 - Gerhard Raven
+ - tweak routing bits for stream definitions...
+
 ! 2011-03-16 - Gerhard Raven
  - Add two more routing bits to monitor all and lumi input rates (already have 
    the L0 physics and beamgas input rate):
