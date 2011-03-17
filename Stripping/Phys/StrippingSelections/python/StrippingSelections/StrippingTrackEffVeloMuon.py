@@ -4,6 +4,9 @@
 #
 # @authors G. Krocker, P. Seyfert, S. Wandernoth
 # @date 2010-Aug-17
+#
+# @authors P. Seyfert, A. Jaeger
+# @date 2011-Mar-17
 # 
 #######################################################################
 
@@ -51,6 +54,10 @@ confdict={
 		,	"MassPostComb":		400.	# MeV
 		,	"Prescale":		1.	# MeV
 		,	"Postscale":		1.	# MeV
+		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+		,	'HLT1PassOnAll': True
+		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
+		,	'HLT2PassOnAll': False
          }
 
 class StrippingTrackEffVeloMuonConf(LineBuilder):
@@ -66,6 +73,10 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 				'MassPostComb',
                               	'Prescale',
                               	'Postscale',
+				'HLT1TisTosSpecs',
+		   	        'HLT1PassOnAll',
+				'HLT2TisTosSpecs',
+				'HLT2PassOnAll'
                               )
 
     def __init__(self, name, config) :
@@ -75,8 +86,10 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 	
 	#algos.append(self.VeloCaloMuons())
 	
-	self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name)
-	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi)
+	self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
+	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
+
+
 	
 	self.TrackingPreFilter = trackingPreFilter('TrackingPreFilter'+name, self.TisTosPreFilter2Jpsi)
 	self.VeloMuProtoPFilter = selMuonPParts('VeloMuon'+name, self.TrackingPreFilter)
@@ -244,42 +257,44 @@ Define TisTos Prefilters
 
 
 #def selHlt1Jpsi(name, longPartsFilter):
-def selHlt1Jpsi(name):
+def selHlt1Jpsi(name, HLT1TisTosSpecs, HLT1PassOnAll):
    """
    Filter the long track muon to be TOS on a HLT1 single muon trigger,
    for J/psi selection
    """
    #Hlt1Jpsi = TisTosParticleTagger(name+"Hlt1Jpsi")
    Hlt1Jpsi = TisTosParticleTagger(
-   TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
+   TisTosSpecs = HLT1TisTosSpecs #{ "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False
    ,TOSFrac = { 4:0.0, 5:0.0 }
    ,NoRegex = True
    )
+   Hlt1Jpsi.PassOnAll = HLT1PassOnAll
    #Hlt1Jpsi.PassOnAll = True # TESTING!
    #
    return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdLooseMuons ])
 
 #########################################################
-def selHlt2Jpsi(name, hlt1Filter):
+def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
    """
    Filter the long track muon to be TOS on a HLT2 single muon trigger,
    for J/psi selection
    """
    #Hlt2Jpsi = TisTosParticleTagger("Hlt2Jpsi")
    Hlt2Jpsi = TisTosParticleTagger(
-   TisTosSpecs = { "Hlt2SingleMuon.*Decision%TOS" : 0}
+   TisTosSpecs =HLT2TisTosSpecs #{ "Hlt2SingleMuon.*Decision%TOS" : 0}
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False
    ,TOSFrac = { 4:0.0, 5:0.0 }
    ,NoRegex = False
    )
-    #Hlt2Jpsi.PassOnAll = True # TESTING!
-    #
-   return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ StdLooseMuons ])
+   Hlt2Jpsi.PassOnAll = HLT2PassOnAll
+   #Hlt2Jpsi.PassOnAll = True # TESTING!
+   #
+   return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ hlt1Filter ])
 ##########################################################
         
 
