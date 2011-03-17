@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v39r0p2>2011-03-17 Brunel v39r0p2</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
+ Rec v11r2p1 and SQLDDDB v6r1, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
+
+Patch version for production to pick up fixes in MuonID and Rich which
+were provoking NAN and other oddities in production.
+
+Fixes in: Muon/MuonID v8r0p1 and Rec/ChargedProtoANNPID v1r3p1
+
 </PRE><H1><A NAME=v39r0p1>2011-03-10 Brunel v39r0p1</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
  Rec v11r2p1 and SQLDDDB v6r1, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
