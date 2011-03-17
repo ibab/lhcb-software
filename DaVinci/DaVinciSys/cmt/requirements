@@ -12,6 +12,7 @@ use  DaVinciTests               v2r4
 use PhysSelPython               v9r2    PhysSel
 use StrippingSettings           v2r1    Phys
 use StrippingSelections         v3r2    Phys
+use MuonID                      v8r0p2  Muon
 
 # Declare this as a container package
 apply_pattern container_package
