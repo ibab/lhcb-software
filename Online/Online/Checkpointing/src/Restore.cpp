@@ -709,33 +709,29 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* /* sys
 }
 
 /// Force process UTGID if availible
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* /* sys */, const char* new_utgid) {
-#if 0
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid) {
+  int len = m_strlen(new_utgid);
   if ( 0 == new_utgid ) {
     mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
   }
   else if ( sys->utgid == 0 ) {
     mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);
   }
-  else if ( sys->utgidLen < int(::strlen(new_utgid)) ) {
+  else if ( sys->utgidLen != len ) {
     mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack with length [%d].\n",
 		new_utgid,sys->utgidLen);
   }
-  else if ( !sys->arg0 || sys->arg0Len < int(::strlen(new_utgid)) ) {
+  else if ( !sys->arg0 || sys->arg0Len != len ) {
     mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace argv[0] from process stack with length [%d].\n",
 		new_utgid,sys->arg0Len);
     mtcp_abort();
   }
   if ( sys->arg0 ) {
-    size_t len = m_strlen(new_utgid);
-    m_memset(sys->arg0,0,sys->arg0Len);
-    m_strncpy(sys->arg0,new_utgid,sys->arg0Len-1);
+    //m_memcpy(sys->arg0,new_utgid,len);
   }
   if ( sys->utgid ) {
-    m_memset(sys->utgid,0,sys->utgidLen);
-    m_strncpy(sys->utgid,new_utgid,sys->utgidLen-1);
+    m_memcpy(sys->utgid,new_utgid,len);
   }
-#endif
   if ( new_utgid ) {
   //return ::setenv("UTGID",new_utgid,1);
   }
