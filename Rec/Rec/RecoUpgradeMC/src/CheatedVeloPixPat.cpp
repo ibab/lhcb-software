@@ -124,7 +124,7 @@ StatusCode CheatedVeloPixPat::execute() {
     unsigned int prevSensor = 200;
     // Loop over the LHCbID corresponding to this MCParticle
 
-    if(part->key() >= linkedIds.size()) continue;
+    if( (unsigned int) part->key() >= linkedIds.size()) continue;
     for ( std::vector<int>::const_iterator itIm = linkedIds[part->key()].begin();
           linkedIds[part->key()].end() != itIm; ++itIm ) {
       // Get the Lite cluster corresponding to the LHCbID
