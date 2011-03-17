@@ -32,11 +32,9 @@
 // constructor from the service, TES location and cuts 
 // ============================================================================
 LoKi::Vertices::SinkTES::SinkTES 
-( const std::string&            path , 
-  IDataProviderSvc*             svc  )
+( const std::string&            path )
    : LoKi::Vertices::SinkTES::_Sink () 
    , m_path    ( path ) 
-   , m_dataSvc ( svc  ) 
 {
    // get GaudiAlgorithm 
    GaudiAlgorithm*  alg = LoKi::AlgUtils::getGaudiAlg( *this, true ) ;
@@ -56,7 +54,6 @@ LoKi::Vertices::SinkTES::SinkTES
    : LoKi::AuxFunBase               ( right ) 
    , LoKi::Vertices::SinkTES::_Sink ( right ) 
    , m_path    ( right.m_path    ) 
-   , m_dataSvc ( right.m_dataSvc ) 
 {
    // get GaudiAlgorithm 
    GaudiAlgorithm*  alg = LoKi::AlgUtils::getGaudiAlg( *this, true ) ;
@@ -83,17 +80,9 @@ LoKi::Vertices::SinkTES::operator()
    //
    Assert ( !m_path.empty() , "No TES location is specified!" ) ;
    //
-   if ( !m_dataSvc ) {
-      const LoKi::Services& svcs = LoKi::Services::instance() ;
-      m_dataSvc = svcs.evtSvc();
-      Assert ( m_dataSvc.validPointer(),
-               "Could not locate valid IDataProviderSvc" ) ;
-   }  
-   //
    LHCb::RecVertices* out = new LHCb::RecVertices();
    //
-   StatusCode sc = m_dataSvc->registerObject( "/Event/" + m_path, out );
-   Assert ( sc.isSuccess(), "Could not register vertices in the TES" );
+   alg()->put(out,m_path);
    //
    BOOST_FOREACH( const LHCb::VertexBase* vx, a ) {
       const LHCb::RecVertex* tmp = dynamic_cast< const LHCb::RecVertex* >( vx );

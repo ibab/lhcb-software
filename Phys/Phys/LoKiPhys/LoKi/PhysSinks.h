@@ -5,10 +5,6 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/IDataProviderSvc.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
@@ -40,8 +36,7 @@ namespace LoKi
          // ======================================================================
          /// constructor from the service and TES location
          SinkTES 
-         ( const std::string&            path                                  , 
-           IDataProviderSvc*             svc  = 0                              ) ; 
+         ( const std::string&            path                                  ) ; 
          /// copy constructor
          SinkTES ( const SinkTES& right ) ;
          /// MANDATORY: virtual destructor 
@@ -63,20 +58,11 @@ namespace LoKi
          // ======================================================================
          /// get the path 
          const std::string& path() const { return m_path ; }
-         /// get the service
-         const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
-         { return m_dataSvc ; }      
          // ======================================================================
       public:
          // ======================================================================
          /// set the  paths
          void setPath   ( const std::string& value ) { m_path = value ; }
-         /// set the  service 
-         void setDataSvc ( const                 IDataProviderSvc*  value ) 
-         { m_dataSvc = value ; }
-         /// set the  service 
-         void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
-         { m_dataSvc = value ; }
          // ======================================================================
       private:
          // ======================================================================
@@ -84,8 +70,6 @@ namespace LoKi
          // ======================================================================
          /// TES locations of vertices  
          std::string m_path;
-         /// data provder service 
-         mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc;
          /// the algorithm
          mutable const GaudiAlgorithm* m_alg;
          // ======================================================================
