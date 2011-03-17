@@ -54,6 +54,7 @@ class Physics_draft2011( object ):
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
+        from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -98,6 +99,8 @@ class Physics_draft2011( object ):
                                              ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
                                               }
+                     , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBias.*' : 0 } } # make dormant by default,
+                                                                                      # but allow switching it on for first 2011 data...
                      #, Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
 
 		       }
@@ -155,7 +158,7 @@ class Physics_draft2011( object ):
                 , 'Hlt1DiProtonLowMult'
                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-                , 'Hlt1MBNoBias' 
+                , 'Hlt1MBNoBias' , 'Hlt1MBMicroBiasVelo', 'Hlt1MBMicroBiasTStation'
                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
                 ]
         lines += [ i + 'RateLimited' for i in lines
