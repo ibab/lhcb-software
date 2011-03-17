@@ -3,6 +3,8 @@
 ! Responsible : Victor Coco
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
+! 2011-03-17 -Wenbin Qian
+ -  add new pat rec alg for velopix
 
 !========================== RecoUpgrade v2r0 2010-09-24 =====================
 ! 2010-09-23 - Victor Coco
