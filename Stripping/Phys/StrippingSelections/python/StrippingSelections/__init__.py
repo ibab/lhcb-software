@@ -114,6 +114,7 @@ import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
 import StrippingMuIDCalib
 import StrippingD02KPiPi0
+import StrippingBeamGas
 
 from sys import modules as _modules
 _this = _modules[__name__]

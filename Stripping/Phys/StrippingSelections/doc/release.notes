@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Greig Cowan
+ - Added BeamGas line to __init__.py
+
 !========================== StrippingSelections v3r2 2011-03-16 ===============
 
 ! 2011-03-16 - Thomas Latham
