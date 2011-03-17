@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Wenbin Qian
+ - bug fix for VeloPixRawBankToLiteCluster.cpp 
+
 !=========================  VeloPixDAQ v1r3 2010-09-28 =======================
 ! 2010-09-22 - Victor Coco
  - Replace hardcoded container location by proper location definition

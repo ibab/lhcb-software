@@ -129,7 +129,7 @@ inline VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::pos_iterator
 template<class CLUSTERWORD>
 inline void VeloPixRawBankDecoder<CLUSTERWORD>::pos_iterator::decode() const
 {
-  if(m_pos < m_decoder->m_nClusters) m_cluster = CLUSTERWORD(m_decoder->m_bank[m_pos]);
+  if(m_pos < m_decoder->m_nClusters) m_cluster = CLUSTERWORD(m_decoder->m_bank[m_pos+1]);
 
   return;
 }
