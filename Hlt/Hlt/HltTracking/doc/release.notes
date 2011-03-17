@@ -5,6 +5,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v9r6 2011-03-17 ===================
 ! 2011-03-17 - Roel Aaij
  - Add beam spot filter to HltPVs, output of PatPV3D is stored as ProtoPV3D
    and the default PV3D is replaced by the filtered vertices.
