@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-17 - Liming Zhang
+ - StrippingD0forBXX.py
+   Add lines RS & WS D*+ -> D0 pi+, D0->K3pi with missing one pion 
+   the lines can be used for pion detection asymmetry study.
+
 ! 2011-03-17 - Jibo He
  - DiMuon, DiElectron, Bc2JpsiH lines revisited
 
