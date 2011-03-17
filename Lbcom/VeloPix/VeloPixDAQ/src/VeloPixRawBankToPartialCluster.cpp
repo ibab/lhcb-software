@@ -7,12 +7,10 @@
 // Kernel
 #include "Kernel/VeloPixChannelID.h"
 #include "Kernel/FastClusterContainer.h"
-#include "Linker/LinkedTo.h"
 // Event
 #include "Event/VeloPixLiteCluster.h"
 #include "Event/VeloPixCluster.h"
 #include "Event/RawEvent.h"
-#include "Event/MCParticle.h"
 // VeloPixelDet
 #include "VeloPixDet/DeVeloPix.h"
 // Local
@@ -165,7 +163,7 @@ void VeloPixRawBankToPartialCluster::createPartialCluster(
   const std::vector< std::pair< LHCb::VeloPixChannelID, int > >  vectorCHID;
 
   VeloPixCluster* newCluster = new VeloPixCluster(newLiteCluster,vectorCHID);
-  
+
   clusCont->insert(newCluster,achan_central);
   
   if (achan_central.pixel()!=achan.pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;

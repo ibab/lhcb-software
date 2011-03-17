@@ -184,8 +184,6 @@ void PrepareVeloPixRawBank::makeBank(
   std::vector<const VeloPixCluster*>::const_iterator iC = begin;
   for(; iC != end; ++iC) {
     const LHCb::VeloPixCluster* cluster = *iC;
-    info()<<cluster->channelID()<<endmsg;    
-  info()<<cluster->lCluster().channelID().pixel()<<endmsg;
     // Get vectors of active channelIDs and Tots
     std::vector< std::pair<LHCb::VeloPixChannelID,int> > totVec;
     totVec = cluster->pixelHitVec();
@@ -197,19 +195,15 @@ void PrepareVeloPixRawBank::makeBank(
       activeChIDs.push_back(pair.first);
       ToTs.push_back(pair.second);
     }
-  info()<<cluster->lCluster().channelID().pixel()<<endmsg;
     // Pack LiteCluster
     double maxFract = 7; // 3 bits
     unsigned int xFract =
              int(ceil(cluster->lCluster().interPixelFractionX() * maxFract));
     unsigned int yFract =
              int(ceil(cluster->lCluster().interPixelFractionY() * maxFract));
-   info()<<cluster->channelID()<<endmsg;    
-   info()<<cluster->lCluster().channelID().pixel()<<endmsg;
     VeloPixClusterWord vplcw(cluster->lCluster().channelID().pixel(),
                   cluster->lCluster().clustToT(),xFract,yFract,
                   cluster->lCluster().isLongPixel());
-    info()<<vplcw.pixel()<<endmsg;
     SiDAQ::buffer_word packedCluster;
     packedCluster = static_cast<SiDAQ::buffer_word>(vplcw.value());
     m_clusterLiteBuffer.push_back(packedCluster);
