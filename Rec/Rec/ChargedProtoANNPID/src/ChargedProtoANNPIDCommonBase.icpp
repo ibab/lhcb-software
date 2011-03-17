@@ -67,20 +67,21 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 }
 //=============================================================================
 
+//=============================================================================
 template <class PBASE>
 const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt & 
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
 {
   static const StringToInt sToI = boost::assign::map_list_of
-    ( "RichUsedAero"          , (int)LHCb::ProtoParticle::LastGlobal + 1 )
-    ( "RichUsedR1Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 2 )
-    ( "RichUsedR2Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 3 )
-    ( "RichAboveElThres"      , (int)LHCb::ProtoParticle::LastGlobal + 4 )
-    ( "RichAboveMuThres"      , (int)LHCb::ProtoParticle::LastGlobal + 5 )
-    ( "RichAbovePiThres"      , (int)LHCb::ProtoParticle::LastGlobal + 6 )
-    ( "RichAboveKaThres"      , (int)LHCb::ProtoParticle::LastGlobal + 7 )
-    ( "RichAbovePrThres"      , (int)LHCb::ProtoParticle::LastGlobal + 8 )
-    ( "MuonIsLooseMuon"       , (int)LHCb::ProtoParticle::LastGlobal + 9 )
+    ( "RichUsedAero"          , (int)LHCb::ProtoParticle::LastGlobal + 1  )
+    ( "RichUsedR1Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 2  )
+    ( "RichUsedR2Gas"         , (int)LHCb::ProtoParticle::LastGlobal + 3  )
+    ( "RichAboveElThres"      , (int)LHCb::ProtoParticle::LastGlobal + 4  )
+    ( "RichAboveMuThres"      , (int)LHCb::ProtoParticle::LastGlobal + 5  )
+    ( "RichAbovePiThres"      , (int)LHCb::ProtoParticle::LastGlobal + 6  )
+    ( "RichAboveKaThres"      , (int)LHCb::ProtoParticle::LastGlobal + 7  )
+    ( "RichAbovePrThres"      , (int)LHCb::ProtoParticle::LastGlobal + 8  )
+    ( "MuonIsLooseMuon"       , (int)LHCb::ProtoParticle::LastGlobal + 9  )
     ( "MuonIsMuon"            , (int)LHCb::ProtoParticle::LastGlobal + 10 )
     ( "TrackLikelihood"       , (int)LHCb::ProtoParticle::LastGlobal + 11 )
     ( "TrackGhostProbability" , (int)LHCb::ProtoParticle::LastGlobal + 12 )
@@ -88,7 +89,9 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
     ( "NumCaloHypos"          , (int)LHCb::ProtoParticle::LastGlobal + 14 );
   return sToI;
 }
+//=============================================================================
 
+//=============================================================================
 template <class PBASE>
 std::string
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringID( const int id ) const
@@ -113,7 +116,9 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringID( const int id ) cons
   }
   return name;
 }
+//=============================================================================
 
+//=============================================================================
 template <class PBASE>
 int 
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
@@ -132,25 +137,24 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string
   // return
   return id;
 }
-
 //=============================================================================
 
+//=============================================================================
 template <class PBASE>
 typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::IntInputs
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableIDs( const StringInputs & names ) const
 {
   IntInputs inputs;
   inputs.reserve(names.size());
-  for ( StringInputs::const_iterator i = names.begin();
-        i != names.end(); ++i )
+  for ( StringInputs::const_iterator i = names.begin(); i != names.end(); ++i )
   {
     inputs.push_back( variableID(*i) );
   }
   return inputs;
 }
-
 //=============================================================================
 
+//=============================================================================
 template <class PBASE>
 double
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoParticle * proto,
@@ -317,16 +321,17 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   // Not Finite ?
   if ( !lfin(var) )
   {
-    Warning( "Variable " + stringID(input) + " is not finite -> Setting to 0." ).ignore();
+    this->Warning( "Variable " + stringID(input) + " is infinite -> Setting to 0" ).ignore();
     var = 0.0;
   }
   // NaN ?
   if ( lnan(var) )
   {
-    Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0." ).ignore(); 
+    this->Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0" ).ignore(); 
     var = 0.0;
   }
 
   // return the variable
   return var;
 }
+//=============================================================================

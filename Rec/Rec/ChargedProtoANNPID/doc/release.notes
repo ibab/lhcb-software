@@ -4,7 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Chris Jones
+ - Fix icc11 compilation issue with last commit
+
 !========================= ChargedProtoANNPID v1r3p1 2011-03-17 =========================
+
 ! 2011-03-16 - Chris Jones
  - Add protection against NaN and infinite input variables
 
