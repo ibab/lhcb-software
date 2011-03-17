@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
+! 2011-03-17 Wenbin Qian
+ - changes to has VeloPix to make it correct, not hasVeloR, but has Velo
+
+! 2011-03-17 Wenbin Qian
+- sort clusters to make program correct
 
 !========================== BooleUMC v1r2 2010-10-04 =========================
 ! 2010-09-22 - Victor Coco

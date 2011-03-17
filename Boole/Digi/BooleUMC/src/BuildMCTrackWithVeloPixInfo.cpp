@@ -121,7 +121,7 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
   
   //== particle-> VeloDigit links
   LHCb::VeloPixClusters* veloPixClus = get<LHCb::VeloPixClusters>( LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
-  
+  std::sort( veloPixClus->begin(), veloPixClus->end(), increasingSensor);
   for ( LHCb::VeloPixClusters::const_iterator vIt = veloPixClus->begin() ;
         veloPixClus->end() != vIt ; vIt++ ) {
     int sensor = (*vIt)->channelID().sensor();
@@ -135,8 +135,7 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
             lastVeloPix[MCNum] = sensor;
             if ( sens->isSquare() ) {
               veloPix[MCNum]++;
-              if(isVerbose)
-                verbose() << "MC " << MCNum << " VeloPix sensor " << sensor << " nbVeloPix " << veloPix[MCNum] << endmsg;
+              if(isVerbose)  verbose() << "MC " << MCNum << " VeloPix sensor " << sensor << " nbVeloPix " << veloPix[MCNum] << endmsg;
             }
           }
         }
@@ -217,13 +216,12 @@ StatusCode BuildMCTrackWithVeloPixInfo::execute() {
   for ( LHCb::MCParticles::const_iterator itP = mcParts->begin();
         mcParts->end() != itP; itP++ ) {
     MCNum = (*itP)->key();    
-    int mask = station[MCNum];    
-    if ( 2 < veloPix[MCNum] )    mask |= MCTrackInfo::maskVeloR;
+    int mask = station[MCNum];
+    if ( 2 < veloPix[MCNum] )    mask |= MCTrackInfo::maskHasVelo;
     if ( 15 < veloPix[MCNum]   ) veloPix[MCNum]   = 15;
     
     mask |= (veloPix[MCNum]  <<MCTrackInfo::multVeloR );
     
-
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
       if(isDebug) debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
@@ -280,7 +278,7 @@ void BuildMCTrackWithVeloPixInfo::computeAcceptance ( std::vector<int>& station 
     }
   }
   for ( unsigned int MCNum = 0; station.size() > MCNum; MCNum++ ){
-    if ( 2 < nVeloPix[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVeloR;
+    if ( 2 < nVeloPix[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVelo;
   }
   //== TT
   

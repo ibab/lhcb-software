@@ -68,6 +68,12 @@ protected:
   
   void computeAcceptance ( std::vector<int>& station ) ;
 
+  struct increasingSensor {
+     bool operator() ( LHCb::VeloPixCluster* clust1, LHCb::VeloPixCluster* clust2 ) const{
+       return clust1->channelID().sensor() < clust2->channelID().sensor();
+     }
+  }  increasingSensor;
+
 private:
   DeVeloPix*       m_veloPix;
 
