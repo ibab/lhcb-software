@@ -34,8 +34,9 @@ class VanDerMeerScan_Mar11 :
     
     def ActiveHlt1Lines(self) :
         """ Returns a list of active Hlt1 Lines """
-        lines = [ 'Hlt1L0CALO'
-                #, 'Hlt1Lumi'
+        lines = [ 'Hlt1Lumi'
+                , 'Hlt1L0CALO'
+                , 'Hlt1L0PU'
                 ]              
 
         ### Add the beam-gas Lines
@@ -56,17 +57,13 @@ class VanDerMeerScan_Mar11 :
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
         
         thresholds = {
-                       Hlt1L0LinesConf : { 'Prescale'  : { 'Hlt1L0CALO'   : 'RATE(1000)' } }
-                     }
-
-        '''
+                       Hlt1L0LinesConf : { 'Prescale'  : { 'Hlt1L0CALO'   : 'RATE(25)' } }
+                     , Hlt1L0LinesConf : { 'Prescale'  : { 'Hlt1L0PU'     : 'RATE(25)' } }
                      , Hlt1LumiLinesConf : { 'MaxRate'    : 40000000 #take all
                                            , 'Prescale'   : { 'Hlt1Lumi' :  1. }
                                            , 'Postscale'  : { 'Hlt1Lumi' :  1. }
                                            }
-        '''
-
-
+                     }
         ### Extend the config dictionary with the beam-gas VDM settings
         from VanDerMeerScan_BeamGasConf_Mar11 import VanDerMeerScan_BeamGasConf_Mar11
         bgThres = VanDerMeerScan_BeamGasConf_Mar11().Thresholds()
