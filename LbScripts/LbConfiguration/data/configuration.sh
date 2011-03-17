@@ -1,4 +1,4 @@
-#!/bin/sh
+
 
 # default file to be tested in order
 # 1) $XDG_CONFIG_HOME/LHCb/default (if XDG_CONFIG_HOME exists)

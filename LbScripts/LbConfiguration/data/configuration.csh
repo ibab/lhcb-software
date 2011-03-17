@@ -1,4 +1,4 @@
-#!/bin/csh
+
 
 # default file to be tested in order
 # 1) $XDG_CONFIG_HOME/LHCb/default (if XDG_CONFIG_HOME exists)
@@ -26,7 +26,7 @@ set cfgfiles="$cfgfiles /etc/xdg/LHCb/default"
 foreach c ( $cfgfiles )
   if ( -r $c ) then
     eval `cat $c | sed -n -e '/^[^+]/s/\(\\\$[^ ]*\)/"\\\\\1"/' -e '/^[^+]/s/\([^=]*\)[=]\(.*\)/setenv \1 \"\2\";/gp'`
-  break
+    break
   endif
 end
 

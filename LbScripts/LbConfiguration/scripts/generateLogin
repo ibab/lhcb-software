@@ -526,10 +526,12 @@ def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, build
     if prodlink :
         prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers2}", "InstallArea")
     f = open(script, "w")
-    content = getConfigurationFragment(shell, "configuration")
     if shell == "sh" :
-        content += """
+        content = """#!/bin/sh
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
+"""
+        content += getConfigurationFragment(shell, "configuration")
+        content += """
   lbvers2=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers2=dev
@@ -547,12 +549,19 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   fi
   export LBLOGIN_DONE=yes
   unset lbvers2
+
+"""
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
 fi
 
 """
     elif shell == "csh" :
-        content += """
+        content = """#!/bin/csh
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
+"""
+        content += getConfigurationFragment(shell, "configuration")
+        content += """
   set lbvers2=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers2=dev
@@ -570,10 +579,17 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   endif
   setenv LBLOGIN_DONE yes
   unset lbvers2
+
+"""
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
 endif
 
 """
     elif shell == "bat" :
+        content = """
+"""
+        content += getConfigurationFragment(shell, "configuration")
         content += """
 IF DEFINED HOME (
   IF NOT EXIST %HOME%\.noLHCBLoginscript (
@@ -600,7 +616,9 @@ IF DEFINED HOME (
 )
 """
 
-    content += getConfigurationFragment(shell, "postscript")
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
+"""
     f.write(content)
     f.close()
 #    fixNative(script)
@@ -614,8 +632,11 @@ def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, build
     f = open(script, "w")
     content = getConfigurationFragment(shell, "configuration")
     if shell == "sh" :
-        content += """
+        content = """#!/bin/sh
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
+"""
+        content += getConfigurationFragment(shell, "configuration")
+        content += """
   lbvers3=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers3=dev
@@ -639,13 +660,20 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
         content += """
   fi
   unset lbvers3
+
+"""
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
 fi
 
 """
 
     elif shell == "csh" :
-        content += """
+        content = """#!/bin/csh
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
+"""
+        content += getConfigurationFragment(shell, "configuration")
+        content += """
   set lbvers3=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers3=dev
@@ -669,10 +697,16 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
         content += """
   endif
   unset lbvers3
+
+"""
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
 endif
 
 """
     elif shell == "bat" :
+        content = ""
+        content += getConfigurationFragment(shell, "configuration")
         content += """
 IF DEFINED HOME (
   IF NOT EXIST %HOME%\.noLHCBLoginscript (
@@ -699,7 +733,9 @@ IF DEFINED HOME (
   set lbvers3=
 )
 """
-    content += getConfigurationFragment(shell, "postscript")
+        content += getConfigurationFragment(shell, "postscript")
+        content += """
+"""
     f.write(content)
     f.close()
 #    fixNative(script)

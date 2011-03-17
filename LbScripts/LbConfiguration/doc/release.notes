@@ -1,5 +1,8 @@
 2011-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* data/configuration.csh:
+	* data/configuration.sh:
+	* scripts/generateLogin: made the .noLHCBLoginscript the outermost check
 	* LbConfiguration/data/configuration.csh:
 	* LbConfiguration/data/configuration.sh: removed supurious echo statements.
 	* LbConfiguration/scripts/generateLogin: fixed localisation of LBCONFIGURATIONTROOT when
