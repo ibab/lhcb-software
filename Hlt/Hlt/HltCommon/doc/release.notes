@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v8r1   2011-03-17 ==================
 ! 2011-03-15 - Gerhard Raven
  - TarFileAccess now fully functional.
 
