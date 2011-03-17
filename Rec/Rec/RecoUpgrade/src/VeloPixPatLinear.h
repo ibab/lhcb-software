@@ -29,7 +29,7 @@ public:
   void findQuadruplets(int);
   void findTriplets(int);
    void findCrossed(int);
-  int extendTrack(VeloPixTrack& , int, bool);
+  void extendTrack(VeloPixTrack& , int, bool);
   void makeLHCbTracks( LHCb::Tracks* output );
   void mergeClones();
   void addAnotherSideHits();

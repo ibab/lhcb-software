@@ -135,8 +135,8 @@ def RecoTrackingUpgrade(exclude=[]):
  
         ## Cheated Pattern recognition
        GaudiSequencer("RecoVELOPIXSeq").Members += [PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix"),
-#                                                    VeloPixPatLinear("VeloPixPatLinearing")]
-                                                    CheatedVeloPixPat("CheatedPatVeloPixTracking")]
+                                                    VeloPixPatLinear("VeloPixPatLinearing")]
+#                                                    CheatedVeloPixPat("CheatedPatVeloPixTracking")]
        patLHCbID2MCP = PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix")
        patLHCbID2MCP.LinkVELO = False
        patLHCbID2MCP.LinkTT = False
@@ -144,8 +144,8 @@ def RecoTrackingUpgrade(exclude=[]):
        patLHCbID2MCP.LinkOT = False
        patLHCbID2MCP.LinkVELOPIX = True
        
-       cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
-       cheatPat.MinimalMCHitForTrack = 2
+#       cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
+#       cheatPat.MinimalMCHitForTrack = 2
 
    ######### Definition/Replacement of Tracking
    track = ProcessPhase("Track")

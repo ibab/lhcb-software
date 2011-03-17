@@ -208,9 +208,10 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
             (*c1)->addused();
             (*c2)->addused();
             (*c3)->addused();
+            
             if(iCase == 0)
-              int nMissed = extendTrack(newtrack, sens0+8, true);
-            else int nMissed = extendTrack(newtrack, sens0+10, true);
+              extendTrack(newtrack, sens0+8, true);
+            else extendTrack(newtrack, sens0+10, true);
             m_tracks.push_back(newtrack);
             newtrack.removeXHit(&(*(*c2)));
           }//loop c2
@@ -276,8 +277,8 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
           (*c1)->addused();
           (*c2)->addused();
           if(iCase == 0)
-            int nMissed = extendTrack(newtrack, sens0+6, true);
-          else int nMissed = extendTrack(newtrack, sens0+8, true);
+            extendTrack(newtrack, sens0+6, true);
+          else  extendTrack(newtrack, sens0+8, true);
           m_tracks.push_back(newtrack);
           newtrack.removeXHit(&(*(*c1)));
         }//loop c1
@@ -351,8 +352,8 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
           (*c1)->addused();
           (*c2)->addused();
           if(iCase == 0)
-            int nMissed = extendTrack(newtrack, sens0+5, true);
-          else int nMissed = extendTrack(newtrack, sens0+7, true);
+            extendTrack(newtrack, sens0+5, true);
+          else extendTrack(newtrack, sens0+7, true);
            m_tracks.push_back(newtrack);
           newtrack.removeXHit(&(*(*c1)));
         }//loop c1
@@ -363,7 +364,7 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
   }//loop icase
 }
 
-int VeloPixPatLinear::extendTrack( VeloPixTrack& newtrack, int sens0,  bool forward)
+void VeloPixPatLinear::extendTrack( VeloPixTrack& newtrack, int sens0,  bool forward)
 {
   int nMiss = 0;
   int sign;
@@ -412,7 +413,6 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
     sens0 = sens0 + sign * 2;
     inside =((sens0 > 0) && (sens0 < m_sensor));
   }
-  return nMiss;
 }
 
 void VeloPixPatLinear::addAnotherSideHits()

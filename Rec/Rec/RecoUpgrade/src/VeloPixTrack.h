@@ -167,7 +167,7 @@ public:
   
   Gaudi::TrackSymMatrix covariance( double z ){
     Gaudi::TrackSymMatrix cov;
-    cov(0,0) = 6.e-5;
+    cov(0,0) = 6.e-5 + 0*z;
     cov(1,1) = 6.e-5;
     cov(2,2) = 6.e-5;
     cov(3,3) = 6.e-5;
