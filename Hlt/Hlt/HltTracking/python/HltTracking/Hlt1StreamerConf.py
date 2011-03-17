@@ -172,9 +172,17 @@ VeloL0Muon = LoKi.Hlt1.MatchConf   (
     "chi2_PatMatchL0Muon"          ,                   ##            "Quality"
     ""                             )                   ##           "Quality2"
 # =============================================================================
-
-
-
+VeloElectron = LoKi.Hlt1.MatchConf   (
+    "MatchVeloElectron"            ,                   ##               "Tool"
+    "Hlt1/Track/VeloElectron"      ,                   ##          "TESOutput"
+    LHCb.Track.Velo                ,                   ##          "TrackType"
+    False                          ,                   ##        "TransferIDs"
+    False                          ,                   ##  "TransferAncestors"
+    False                          ,                   ##       "TransferInfo"
+    "chi2_VeloElectron"            ,                   ##            "Quality"
+    ""                             ,                   ##           "Quality2"
+    50                             )                   ##        "Quality Cut"
+# =============================================================================
 
 # =============================================================================
 # High-level embedded stuff

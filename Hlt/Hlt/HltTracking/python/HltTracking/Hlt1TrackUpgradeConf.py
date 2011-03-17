@@ -87,8 +87,8 @@ _L0SingleMuons = GaudiSequencer(
             )
         ]
     )
-MatchVeloL0Muon = "MatchVeloL0Muon = TC_MATCH2( 'MatchVeloL0Muon' , VeloCandidates, \
-                              HltTracking.Hlt1StreamerConf.VeloL0Muon )" % \
+MatchVeloL0Muon = "MatchVeloL0Muon = ( execute( %s ) * TC_MATCH2( 'MatchVeloL0Muon' , VeloCandidates, \
+                   HltTracking.Hlt1StreamerConf.VeloL0Muon ) )" % \
                    [ m.getFullName() for m in _L0SingleMuons.Members ]
 
 import HltLine.HltDecodeRaw 
@@ -96,7 +96,6 @@ from Gaudi.Configuration import ToolSvc
 # =============================================================================
 ## Forward upgrade configuration
 # =============================================================================
-from HltTracking.Hlt1TrackUpgradeConf import ConfiguredForward
 import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 10000, 1250 )
@@ -109,7 +108,6 @@ LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTr
 # =============================================================================
 ## Hlt trackfit upgrade configuration
 # =============================================================================
-from HltTracking.Hlt1TrackUpgradeConf import ConfiguredFastKalman
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
 FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
@@ -117,7 +115,6 @@ FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerCon
 # =============================================================================
 ## Match Velo to Muon hits
 # =============================================================================
-from HltTracking.Hlt1TrackUpgradeConf import ConfiguredMatchVeloMuon
 ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 )
 ## Strings for users
 MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon ) )"

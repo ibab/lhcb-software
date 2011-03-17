@@ -5,6 +5,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Roel Aaij
+ - Add beam spot filter to HltPVs, output of PatPV3D is stored as ProtoPV3D
+   and the default PV3D is replaced by the filtered vertices.
+ - Add first version of MatchVeloElectron from Mariusz and its configuration.
+ - Remove obsolete TrackMatch callbacks.
+
 !========================== HltTracking v9r5p1 2011-03-09 ===================
 ! 2011-03-09 - Roel Aaij
  - Remove the check for fit history from HltTrackFit.

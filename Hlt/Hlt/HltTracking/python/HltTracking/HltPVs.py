@@ -40,37 +40,58 @@ from Gaudi.Configuration import *
 # Configure PV algorithms
 #############################################################################################
 from HltLine.HltLine import bindMembers
+from HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
+from HltVertexNames import _vertexLocation
 
-PV3DSelection = 'PV3D'
+ProtoPV3DSelection = 'Proto' + PV3DSelection
 
 def _RecoPV3D():
     from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
     from HltVertexNames import HltSharedVerticesPrefix
-    from HltVertexNames import Hlt3DPrimaryVerticesName,_vertexLocation
     from HltVertexNames import HltGlobalVertexLocation
     from HltReco import MinimalVelo
 
     from Configurables import PatPV3D
     from Configurables import PVOfflineTool, LSAdaptPV3DFitter
 
-    output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
-
+    output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,PV3DSelection)
+    proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
-    recoPV3D.OutputVerticesName = output3DVertices
+    recoPV3D.OutputVerticesName = proto3DVertices
     recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
 
     from Configurables import HltCopySelection_LHCb__RecVertex_ as HltCopyVertexSelection
     preparePV3D = HltCopyVertexSelection( 'Hlt1PreparePV3D'
-                                   , InputSelection = "TES:" + recoPV3D.OutputVerticesName
-                                   , RequirePositiveInputs = False
-                                   , OutputSelection   = PV3DSelection )
+                                          , InputSelection = "TES:" + recoPV3D.OutputVerticesName
+                                          , RequirePositiveInputs = False
+                                          , OutputSelection   = ProtoPV3DSelection )
+    
+    from Configurables import LoKi__HltUnit as HltUnit
+    ## Define the locations, both TES and HltDataSvc
+    locations = { 'source' : ProtoPV3DSelection,
+                  'tes'    : output3DVertices,
+                  'hlt'    : PV3DSelection }
 
-    return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D ] )
+    ## Hlt vertex beamspot filter
+    filterPV3D = HltUnit(
+        'Hlt1FilterPV3D',
+        OutputLevel = 1,
+        Preambulo = [ 'from LoKiPhys.decorators import *',
+                      'from LoKiTrigger.decorators import *' ],
+        Code = """
+        VX_SELECTION( '%(source)s' )
+        >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.5 * mm )
+        >> RV_SINKTES( '%(tes)s' )
+        >> VX_SINK( '%(hlt)s' )
+        >> ~VEMPTY
+        """ % locations
+        )
+    return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D, filterPV3D ] ).setOutputSelection( PV3DSelection )
 
 def PV3D():
     from HltReco import MinimalVelo

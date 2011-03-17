@@ -3,41 +3,12 @@ _global   = PyCintex.makeNamespace('')
 cpp      = _global
 LHCb     = cpp.LHCb
 
-def MatchCallback(key) :
-  settings = { 'VeloCalo' :   { "Tool" : "HltVeloTCaloMatch"
-                              , "RecoID" :  100 # TODO
-                              , "TransferIDs":True
-                              , "TransferAncestor":True
-                              , "TransferInfo":False
-                              , "TrackType":  LHCb.Track.Velo
-                              , "TESOutput": "Hlt1/Track/VeloCalo"
-                              , "Quality":"Chi2Y"
-                              , "Quality2":"Chi2X"
-                              }
-             , 'VeloTDist' :  { "Tool":"HltMatchTVeloTracks"
-                              , "RecoID":  101 # //TODO
-                              , "TransferIDs":True
-                              , "TransferAncestor":True
-                              , "TransferInfo":False
-                              , "TrackType": LHCb.Track.Long
-                              , "TESOutput": "Hlt1/Track/VeloTDist"
-                              , "Quality":"deltaX"
-                              , "Quality2":"deltaY"
-                              }
-             , 'VeloT' :      { "Tool":"PatMatchTool"
-                              , "RecoID":  102 #//TODO
-                              , "TransferIDs":True
-                              , "TransferAncestor":True
-                              , "TransferInfo":True
-                              , "TrackType":  LHCb.Track.Long
-                              , "TESOutput": "Hlt1/Track/VeloT" # //TODO
-                              , "Quality":"chi2_PatMatch"
-                              , "Quality2":""
-                              }
+__all__ = ( 'MatchVeloElectron' )
+# =============================================================================
+## Symbols for streamer users
+# =============================================================================
+import HltLine.HltDecodeRaw
+from Configurables import Hlt__L0Calo2Candidate
+cc = Hlt__L0Calo2Candidate( 'Hlt1L0CaloCandidates' )
 
-             }
-
-  def callback(configurable) :
-        for k,v in settings[key].iteritems() : setattr(configurable,k,v)
-
-  return callback
+MatchVeloElectron = "MatchVeloElectron = ( ( execute( DecodeL0CALO ) & execute( %s ) ) * TC_MATCHFLTR( '', 'Hlt1L0CaloCandidates', HltTracking.Hlt1StreamerConf.VeloElectron )" % cc.getFullName()
