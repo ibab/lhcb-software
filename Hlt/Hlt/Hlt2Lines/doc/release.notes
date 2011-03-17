@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-17 - Albert Puig
+ - Tied Hlt2B2XGammaLines to (L0Electron || L0Photon).
+
 ! 2011-Mar-12 - Patrick Spradlin
  - Added filters to the charm lines to accept only candidates that are TOS
    on Hlt1Track.

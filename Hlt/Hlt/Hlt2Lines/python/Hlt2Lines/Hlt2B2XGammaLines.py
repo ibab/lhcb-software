@@ -35,7 +35,9 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'BMassWinSB'   : 2000     # MeV
                    ,'B0DirAngle'   : 0.045  #0.999    # Dimensionless
                   # HLT filter
-                   ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
+                   #,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
+                   ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV).*Decision')"
+                   ,'L0FILTER'     : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
                   # Pre- and postscale
                    ,'Prescale'     : { 'Hlt2Bs2PhiGamma$'   : 1.0
                                       ,'Hlt2Bs2PhiGamma.+' : 0.1       # prescale by a factor of 10
@@ -75,6 +77,10 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         hltfilter = self.getProp("HLT1FILTER")
         if hltfilter == "" :
           hltfilter = None
+        
+        l0filter = self.getProp("L0FILTER")
+        if l0filter == "" :
+          l0filter = None
         
         ############################################################################
         #    Make Phi and Kstar candidates
@@ -131,6 +137,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2PhiGamma'
                         , prescale = self.prescale
                         , HLT = hltfilter
+                        , L0DU = l0filter
                         , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, BiKalmanFittedPhotons, Hlt2BstoPhiGamma ]
                         , postscale = self.postscale
                         )
@@ -175,6 +182,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2KstGamma'
                         , prescale = self.prescale
                         , HLT = hltfilter
+                        , L0DU = l0filter
                         , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, BiKalmanFittedPhotons, Hlt2BdtoKstGamma]
                         , postscale = self.postscale
                         )
