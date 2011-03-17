@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2011-03-17 - Wenbin Qian
+  - add PatVeloPix History for track
+
 !========================= TrackEvent v5r11 2011-02-22 =========================
 ! 2011-02-12 - Chris Jones
  - Fix uninitialised m_flags member of State class in various Constructors.
