@@ -5,6 +5,7 @@
 #include <iostream>
 #include "RichHPDImageAnalysis/HPDPixel.h"
 #include "TH2D.h"
+#include "RichKernel/RichDAQDefinitions.h"
 
 namespace Rich
 {
@@ -39,9 +40,9 @@ namespace Rich
                    maxImageShift  (  3.0    ) // in mm
         { }
       public:
-        std::string type;
-        bool cleanHistogram;
-        double maxImageShift;
+        std::string type;     ///< Fit type
+        bool cleanHistogram;  ///< Flag to turn on image cleaning prior to the fit
+        double maxImageShift; ///< Max allowed image shift for a good fit
       public:
         /// Overload output to ostream
         friend inline std::ostream& operator << ( std::ostream& os,
@@ -62,35 +63,53 @@ namespace Rich
       class Result
       {
       public:
+        /// Default Constructor
         Result() : m_OK ( false ),
                    m_row ( 0 ), m_rowErr ( 0 ),
                    m_col ( 0 ), m_colErr ( 0 ),
-                   m_rad ( 0 ), m_radErr ( 0 ),
-                   m_pixelsize ( 0.5  ),
-                   m_siliconx  ( 16.0 ),
-                   m_silicony  ( 16.0 )  { }
+                   m_rad ( 0 ), m_radErr ( 0 )  { }
       public:
+        /// Set the fit status
         void setOK( const bool OK ) { m_OK = OK; }
-      public:
+        /// Access the fit status
         bool OK() const { return m_OK; }
       public:
+        /// Set the row number for the centre point and error
         void setRowAndErr( const double val, const double err ) { m_row = val; m_rowErr = err; }
+        /// Set the column number for the centre point and error
         void setColAndErr( const double val, const double err ) { m_col = val; m_colErr = err; }
+        /// Set the image radius and error
         void setRadAndErr( const double val, const double err ) { m_rad = val; m_radErr = err; }
       public:
+        /// Access the row number for the centre point
         double row()         const { return m_row;    }
+        /// Access the row number error for the centre point
         double rowErr()      const { return m_rowErr; }
+        /// Access the column number for the centre point
         double col()         const { return m_col;    }
+        /// Access the column number error for the centre point
         double colErr()      const { return m_colErr; }
+        /// Access the image radius (in pixel units)
         double radInPix()    const { return m_rad;    }
+        /// Access the image radius error (in pixel units)
         double radErrInPix() const { return m_radErr; }
       public:
-        double x()    const { return -1.0*(m_col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx); }
-        double xErr() const { return m_colErr * m_pixelsize; }
-        double y()    const { return -1.0*(0.5*m_silicony - m_row*m_pixelsize - 0.5*m_pixelsize); }
-        double yErr() const { return m_rowErr * m_pixelsize; }
-        double radInMM()    const { return m_pixelsize * m_rad;    }
-        double radErrInMM() const { return m_pixelsize * m_radErr; }
+        /// Access the x shift in the image centre position from the centre of the silicon sensor
+        double x()    const { return -1.0 * ( m_col*Rich::DAQ::PixelSize + 
+                                              0.5*Rich::DAQ::PixelSize - 
+                                              0.25*Rich::DAQ::NumPixelColumns ); }
+        /// Access the error in the x shift in the image centre position from the centre of the silicon sensor
+        double xErr() const { return m_colErr * Rich::DAQ::PixelSize; }
+        /// Access the y shift in the image centre position from the centre of the silicon sensor
+        double y()    const { return -1.0 * ( 0.25*Rich::DAQ::NumPixelColumns - 
+                                              m_row*Rich::DAQ::PixelSize - 
+                                              0.5*Rich::DAQ::PixelSize ); }
+        /// Access the error in the y shift in the image centre position from the centre of the silicon sensor
+        double yErr() const { return m_rowErr * Rich::DAQ::PixelSize; }
+        /// Access the radius of the image in mm 
+        double radInMM()    const { return m_rad    * Rich::DAQ::PixelSize; }
+        ///Access the error on the radius of the image in mm 
+        double radErrInMM() const { return m_radErr * Rich::DAQ::PixelSize; }
       public:
         /// Overload output to ostream
         friend inline std::ostream& operator << ( std::ostream& os,
@@ -100,14 +119,13 @@ namespace Rich
         /// Print this object
         std::ostream& fillStream( std::ostream& os ) const;
       private:
-        bool m_OK;
-        double m_row,m_rowErr;
-        double m_col,m_colErr;
-        double m_rad,m_radErr;
-      private: // variables
-        double m_pixelsize; ///< Pixel size in mm
-        double m_siliconx;  ///< Silicon x size in mm
-        double m_silicony;  ///< Silicon y size in mm
+        bool m_OK;        ///< Fit status
+        double m_row;     ///< Row number of centre point
+        double m_rowErr;  ///< Error on the row number of centre point
+        double m_col;     ///< Column number of centre point
+        double m_colErr;  ///< Error on the column number of centre point
+        double m_rad;     ///< Image radius in pixel units
+        double m_radErr;  ///< Error on the image radius in pixel units
       };
 
     public:
