@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-18 - Roel Aaij
+ - Adapt Hlt1MuonLines and Hlt1Proton lines to beamspot filtering.
+
 ! 2011-03-18 - Gerhard Raven
  - add PV3D beamspot filter to Hlt1TrackLines
 
