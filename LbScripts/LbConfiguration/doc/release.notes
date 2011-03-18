@@ -1,3 +1,7 @@
+2011-03-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added missing i686-slc5-gcc43-opt binary to the supported list.
+
 2011-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* data/configuration.csh:
