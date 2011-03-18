@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! ========================== LoKiPhys v9r99 2011-03-18 =========================
+! 2011-03-18 - Gerhard Raven 
+ - tag as v9r99 to keep CMT happy when including it in Moore...
+
 ! ========================== LoKiPhys v10r0 2011-03-17 =========================
 ! 2011-03-17 - Roel Aaij
  - Add SinkTES with python symbol RV_SINKTES; it puts a container of 
