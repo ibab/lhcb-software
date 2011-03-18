@@ -54,6 +54,7 @@ class Physics_Mar2011( object ):
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
+	from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -97,9 +98,16 @@ class Physics_Mar2011( object ):
                                              ,'MultiMuonNoIP_GT'         :  2.5
                                              ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
-                                              }
-                     #, Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
-
+					     }
+		       
+		       #, Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
+		       
+		       # micro bias lines switched off for high mu physics running              
+		       , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBiasVelo'             : 0
+							    ,'Hlt1MBMicroBiasTStation'        : 0
+							    ,'Hlt1MBMicroBiasVeloRateLimited'  : 0
+							    ,'Hlt1MBMicroBiasTStationRateLimited' :0 }}
+		       
 		       }
 
         from Muons_draft2011 import Muons_draft2011
@@ -157,9 +165,10 @@ class Physics_Mar2011( object ):
 		  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
 		  , 'Hlt1MBNoBias' 
 		  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
-		  , 'Hlt1MBMicroBiasVeloRateLimited','Hlt1MBMicroBiasTStationRateLimited'
+		  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
 		  ]
 	lines += [ i + 'RateLimited' for i in lines
-		   if i.startswith('Hlt1L0Any') ]
+		   if i.startswith('Hlt1MBMicroBias')
+		   or i.startswith('Hlt1L0Any') ]
 
         return lines 
