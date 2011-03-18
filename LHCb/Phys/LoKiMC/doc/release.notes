@@ -15,6 +15,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+
+ - add protetcion against double lock 
+
 ! 2011-03-10 - Vanya Belyaev
 
  - kill bad concept of 'Element'-functor

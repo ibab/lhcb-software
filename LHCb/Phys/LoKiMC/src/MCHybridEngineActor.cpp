@@ -96,6 +96,10 @@ StatusCode LoKi::Hybrid::MCEngineActor::releaseTool
 StatusCode LoKi::Hybrid::MCEngineActor::connectTool 
 (       LoKi::IMCHybridTool*       tool )
 {
+  //
+  LoKi::Report::Assert 
+    ( !m_tool.validPointer() , "LoKi::Hybrid::MCEngineActor: double lock?" ) ;
+  //
   // substitute the tool 
   m_tool =  tool ;
   // 
