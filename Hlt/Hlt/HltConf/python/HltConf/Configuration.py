@@ -275,12 +275,8 @@ class HltConf(LHCbConfigurableUser):
         persistify vertices
         """
         ## and persist some vertices...
-        selections = []
-        from HltLine.HltLine     import hlt1Lines
-        for i in hlt1Lines() :
-               if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
-        vertices = [ i for i in selections if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
         from Configurables import HltVertexReportsMaker
+        vertices =[ 'PV3D', 'ProtoPV3D'  ] 
         HltVertexReportsMaker().VertexSelections = vertices
         HltVertexReportsMaker().Context = "HLT"
         ## do not write out the candidates for the vertices we store 

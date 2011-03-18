@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2011-03-18 - Gerhard Raven
+ - persist PV3D and ProtoPV3D in rawbank
+
 !========================== HltConf v9r6p2 2011-03-17 ===================
 ! 2011-03-17 - Gerhard Raven
  - tweak routing bits for stream definitions...

@@ -169,6 +169,7 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesSingleMuonNoIP'          :10114,
     'VeloCandidatesDiProtonLowMult'         :10115,
     'VeloBW'                                :10116,
+    'ProtoPV3D'                             :10117,
 
     #
     # 11K - 20K : added automatically by configuration...
