@@ -1,0 +1,43 @@
+#============================================================================
+# Created    : 2010-10-06
+# Maintainer : Andrew Powell (LHCb)04
+#============================================================================
+package           CalibDataProduction
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src CalibDataProduction dict lib
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use   GaudiPolicy     v*
+use   Reflex          v*    LCG_Interfaces
+use   ROOT            v*    LCG_Interfaces
+
+#============================================================================
+apply_pattern install_more_includes more=CalibDataProduction
+#====================== Generate Reflex Dictionary ==========================
+apply_pattern reflex_dictionary_src                                                 \
+              dictionary=CalibDataProduction                                        \
+              headerfiles=$(CALIBDATAPRODUCTIONROOT)/dict/CalibDataProductionDict.h \
+              options="-U__MINGW32__ --split=classdef"
+#============================================================================
+# Component library building rule
+#============================================================================
+library          CalibDataProductionLib    ../src/ResonanceMassFit.cpp  ../$(tag)/dict/CalibDataProduction/CalibDataProductionDict_dict_classdef.cpp
+#============================================================================
+# define linker library link options
+#============================================================================
+apply_pattern linker_library library=CalibDataProductionLib
+macro_append CalibDataProductionLib_dependencies CalibDataProductionGen
+macro_append ROOT_linkopts "  -lRooFitCore -lRooFit -lRooStats -lMatrix -lMathCore -lMathMore -lCintex "
+
+#============================================================================
+macro CalibDataProduction_use_linkopts $(use_linkopts)
+#====================== Build Reflex Dictionary =============================
+apply_pattern reflex_dictionary_lib                           \
+              dictionary=CalibDataProduction
