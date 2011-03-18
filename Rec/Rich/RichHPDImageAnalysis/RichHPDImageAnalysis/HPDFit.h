@@ -61,15 +61,14 @@ namespace Rich
        */
       class Result
       {
-      private:
-        static const double m_pixelsize =  0.5; ///< Pixel size in mm
-        static const double m_siliconx  = 16.0; ///< Silicon x size in mm
-        static const double m_silicony  = 16.0; ///< Silicon y size in mm
       public:
         Result() : m_OK ( false ),
                    m_row ( 0 ), m_rowErr ( 0 ),
                    m_col ( 0 ), m_colErr ( 0 ),
-                   m_rad ( 0 ), m_radErr ( 0 )   { }
+                   m_rad ( 0 ), m_radErr ( 0 ),
+                   m_pixelsize ( 0.5  ),
+                   m_siliconx  ( 16.0 ),
+                   m_silicony  ( 16.0 )  { }
       public:
         void setOK( const bool OK ) { m_OK = OK; }
       public:
@@ -105,6 +104,10 @@ namespace Rich
         double m_row,m_rowErr;
         double m_col,m_colErr;
         double m_rad,m_radErr;
+      private: // variables
+        double m_pixelsize; ///< Pixel size in mm
+        double m_siliconx;  ///< Silicon x size in mm
+        double m_silicony;  ///< Silicon y size in mm
       };
 
     public:
