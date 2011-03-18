@@ -1,6 +1,9 @@
 2011-03-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed removal of the .html file in overwrite mode.
+	* python/LbLegacy/install_project.py:
+	- fixed removal of the .html file in overwrite mode.
+	- fixed copy of existing install_project.py into .old. This was breaking when installing
+	remotely (not in the current directory) and when a self update was performed.
 
 2011-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

@@ -1251,7 +1251,8 @@ def getMySelf():
         if os.path.exists(old_install) :
             log.debug("Removing %s" % old_install)
             os.remove(old_install)
-        shutil.copy(the_install, old_install)
+        if os.path.exists(the_install) : # needed if installing to a remote location
+            shutil.copy(the_install, old_install)
         shutil.copy(new_install, the_install)
         newscript = os.path.join(mysiteroot, the_install)
         if sys.platform != "win32" :
