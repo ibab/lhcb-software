@@ -55,6 +55,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         return props
 
     def do_timing( self, unit ):
+        from Configurables import LoKi__HltUnit as HltUnit
+        if not isinstance( unit, HltUnit ):
+            return unit
         reco = set()
         for entry in unit.Preambulo:
             s = entry.split( '=' )
@@ -69,12 +72,20 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         unit.Code = code
         return unit
 
+    def add_gec( self, unit ):
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
+        gec = Hlt1GECLooseStreamer().split( '=', 1 )[ 0 ]
+        unit.Code = unit.Code.replace( 'VeloCandidates', '%s * VeloCandidates' % gec ) 
+        return unit
+
     def singleMuon_preambulo( self, properties ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        MatchVeloMuon, IsMuon,
                                                        LooseForward, FitTrack )
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         ## define some "common" preambulo 
-        preambulo = [ VeloCandidates( properties[ 'name' ] ),
+        preambulo = [ Hlt1GECLooseStreamer(),
+                      VeloCandidates( properties[ 'name' ] ),
                       MatchVeloMuon,
                       LooseForward,
                       FitTrack,
@@ -90,8 +101,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )  )
             >>  MatchVeloMuon
+            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )  )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
             >>  LooseForward
@@ -110,20 +121,20 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return unit
+        from HltTracking.HltReco import Velo
+        return [ Velo, self.add_gec( unit ) ]
 
     def diMuon_preambulo( self, properties ):
-        from HltTracking.HltPVs import RecoPV3D
         ## define some "common" preambulo 
         preambulo = self.singleMuon_preambulo( properties ) + \
-             [ RecoPV3D,
-               "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
+             [ "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
                "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
                "from LoKiPhys.decorators import RV_MASS" ]
         return preambulo
 
     def diMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltReco import Velo
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -154,18 +165,17 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return unit
+        return [ Velo, self.add_gec( unit ) ]
 
     def diMuonDetached_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
-
+        from HltTracking.HltPVs import PV3D
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  RecoPV3D
             >>  MatchVeloMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -190,10 +200,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return unit
+        return [ PV3D(), self.add_gec( unit ) ]
 
     def multiMuon_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltReco import Velo
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -218,12 +229,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  TC_SIZE > %(GT)s
             """ % properties
             )
-        return unit
+        return [ Velo, self.add_gec( unit ) ]
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
-        unit = streamer( self.localise_props( name ) )
-        if self.getProp('DoTiming') : self.do_timing( unit )
+        algos = [ self.do_timing( unit ) if self.getProp('DoTiming') else unit for unit in streamer( self.localise_props( name ) ) ]
         priority = self.Priorities[ name ] if name in self.Priorities else None
         line = Hlt1Line(
             name,
@@ -231,7 +241,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             postscale = self.postscale,
             priority  = priority,
             L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.L0Channels[ name ] ] ) ,
-            algos = [ unit ] 
+            algos = algos
             )
 
     def __apply_configuration__( self ) : 
