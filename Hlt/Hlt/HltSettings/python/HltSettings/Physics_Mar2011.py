@@ -100,8 +100,6 @@ class Physics_Mar2011( object ):
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
 					     }
 		       
-		       #, Hlt1L0LinesConf : { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(10)' } }
-		       
 		       # micro bias lines switched off for high mu physics running              
 		       , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBiasVelo'             : 0
 							    ,'Hlt1MBMicroBiasTStation'        : 0
