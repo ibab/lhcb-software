@@ -5,6 +5,10 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+
+ - add protection against double lock 
+
 ! 2011-03-10 - Vanya Belyaev
 
  - kill the bad concept of 'Element'-functor
