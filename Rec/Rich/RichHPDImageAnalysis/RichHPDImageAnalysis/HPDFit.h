@@ -131,11 +131,11 @@ namespace Rich
     public:
 
       /// Default contructor
-      HPDFit() { m_boundaryPixels.reserve(1024); }
-
+      HPDFit();
+      
       /// Destructor
       ~HPDFit() { }
-
+      
     public:
 
       /// Run a fit of the given 2D HPD image histogram
