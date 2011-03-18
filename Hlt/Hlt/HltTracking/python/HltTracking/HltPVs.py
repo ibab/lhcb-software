@@ -69,18 +69,18 @@ def PV3D():
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
     filterPV3D = HltUnit(
-        'HltFilterPV3D',
+        'HltPV3D',
         OutputLevel = 1,
         Preambulo = [ 'from LoKiPhys.decorators import *',
                       'from LoKiTrigger.decorators import *' ],
         Code = """
-        execute( '%(algo)s' ) * VSOURCE( '%(tesInput)s' )
+        execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
         >> VX_SINK( '%(hltProto)s' )
         >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.5 * mm )
         >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
-        """ % { 'algo'     : recoPV3D.getFullName(),
+        """ % { 'algo'     : ','.join( [ "'%s'"%m.getFullName() for m in MinimalVelo.members() + [ recoPV3D ] ] ),
                 'tesInput' : recoPV3D.OutputVerticesName,
                 'hltProto' : ProtoPV3DSelection,
                 'tesFinal' : output3DVertices,
@@ -88,8 +88,9 @@ def PV3D():
 
         )
     from HltReco import MinimalVelo
-    return bindMembers( "HltPVsPV3D", [ MinimalVelo, filterPV3D ] ).setOutputSelection( PV3DSelection )
+    return bindMembers( "HltPVsPV3D", [ filterPV3D ] ).setOutputSelection( PV3DSelection )
 
 ## Symbols for streamer framework
-FullPV3D = "FullPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
-RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
+# don't work, as this now contains a HltUnit, and we get into trouble if we go recursive in HltUnit
+#FullPV3D = "FullPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
+#RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
