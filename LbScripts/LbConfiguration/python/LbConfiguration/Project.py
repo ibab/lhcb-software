@@ -173,8 +173,6 @@ class ProjectConf(ProjectBaseConf):
             tbname += "_%s" % version
             if cmtconfig :
                 tbname += "_%s" % cmtconfig
-                if cmtconfig not in binary_list :
-                    log.error("The CMTCONFIG value %s is not known" % cmtconfig)
             if full :
                 tbname += ".tar.gz"
 
