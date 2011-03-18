@@ -45,6 +45,8 @@ class CreateTrendingHistogramDialog : public TGTransientFrame {
   /// Open a file dialog window to choose the name of the trend file
   void OpenFileDialog() ;
 
+  void UpdateTags();
+
  private:
   const TGWindow *    m_rootFrame ; ///< Root frame of this window
   TGTextEntry * m_nameEntry ; ///< Entry for the histo name

@@ -283,6 +283,11 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setRundbConfig( startupSettings["rundb-settings"].as<std::string>() ) ;
     }
 
+    if (startupSettings.count("editing-allowed") ) {
+      std::cout << "Set editing-allowed to " << startupSettings["editing-allowed"].as<bool>() << std::endl;
+      presenterMainFrame.enableEditing(startupSettings["editing-allowed"].as<bool>());
+    }
+
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {
         messageLevelCli = pres::Silent;
@@ -351,11 +356,8 @@ int main(int argc, char* argv[]) {
     if (startupSettings.count("enable-alarm-display") )
       presenterMainFrame.enableAlarmDisplay(startupSettings["enable-alarm-display"].as<bool>());
 
-    if (startupSettings.count("editing-allowed") )
-      presenterMainFrame.enableEditing(startupSettings["editing-allowed"].as<bool>());
-
     if (startupSettings.count("hide-problem-list") &&
-	( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) 
+        ( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) 
       presenterMainFrame.toggleShowKnownProblemList() ;
 
     if (startupSettings.count("startup-histograms")) 
@@ -395,7 +397,7 @@ int main(int argc, char* argv[]) {
         presenterMainFrame.setDumpFormat(startupSettings["dump-format"].as<std::string>());
       }
     }
-    
+
     if (( pres::Batch != presenterMainFrame.presenterMode( ) ) ) {
       if (gROOT->IsBatch()) {
         std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;

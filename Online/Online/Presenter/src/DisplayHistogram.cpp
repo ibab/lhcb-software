@@ -310,7 +310,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       m_rootHistogram->Draw(opt.c_str());
     }
   } else if ( 0 != m_timeGraph ) {
-    std::string opt =  m_isOverlap ? "SAME" : "ALP";
+    std::string opt =  m_isOverlap ? "SAME" : "AL";
     std::cout << "  option for drawing " << opt << std::endl;
     m_timeGraph->Draw(opt.c_str());
   }
@@ -710,16 +710,22 @@ void DisplayHistogram::prepareForDisplay ( ) {
 // Set the time graph from argument
 //=========================================================================
 void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, bool update ) {
-  int size = values.size();
+  int size = 2*values.size() - 1;
   if ( NULL != m_timeArray ) delete m_timeArray;
   if ( NULL != m_valueArray ) delete m_valueArray;
   m_timeArray = new double[ size ] ;
   m_valueArray = new double[ size ] ;
   double* p = m_timeArray;
   double* q = m_valueArray;
+  double lastV = -9999.;
   for ( std::vector<std::pair<int,double> >::iterator itT = values.begin(); values.end() != itT; ++itT ) {
     *p++ = (*itT).first - 3600.;
+    if ( lastV != -9999. ) {
+      *p++ = (*itT).first - 3600.;
+      *q++ = lastV;
+    }
     *q++ = (*itT).second;
+    lastV = (*itT).second;
   }
   std::cout << "Create graph size " << size
             << " min " << m_timeArray[0] << " max " << m_timeArray[size-1] << std::endl;
@@ -731,8 +737,15 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     m_timeGraph = new TGraph( size , m_timeArray , m_valueArray ) ;
     m_timeGraph->SetEditable ( kFALSE );
   } else {
-    m_timeGraph->Clear();
-    m_timeGraph->DrawGraph( size, m_timeArray, m_valueArray );
+    int nbPrev = m_timeGraph->GetN();
+    if ( nbPrev > size ) {
+      for ( int kk = nbPrev; size <= kk ; --kk ) {
+        m_timeGraph->RemovePoint( kk );
+      }
+    }
+    for ( int ll = 0 ; size > ll ; ++ll ) {
+      m_timeGraph->SetPoint( ll, m_timeArray[ll], m_valueArray[ll] );
+    }
   }
 
   m_timeGraph->SetTitle( m_shortName.c_str() );

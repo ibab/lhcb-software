@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-18 - Olivier Callot
+ - Fix the trend plot and its refresh.
+
 ! 2011-03-17 - Olivier Callot
  - Fix refresh of analysis histograms (Muon shift page 5)
  - Fix double values in history per run

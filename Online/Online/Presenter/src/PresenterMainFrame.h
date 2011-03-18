@@ -154,6 +154,7 @@ public:
       M_Previous_Interval,
       M_Next_Interval,
       SET_REFERENCE_COMMAND,
+      M_TrendLastTenMinutes,
       M_TrendLastTwoHours,
       M_TrendLastDay,
       M_TrendLastWeek,
@@ -441,7 +442,7 @@ public:
   /// Set format for image saving
   void setDumpFormat(const std::string & dumpFormat) {
     m_dumpFormat = dumpFormat; } ;
-  
+
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;

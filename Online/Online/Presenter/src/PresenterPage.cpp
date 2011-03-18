@@ -670,7 +670,6 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
     if ( 0 == endTime ) {
       endTime   = (int)::time( 0 );
       startTime = endTime - startTime;
-      startTime = 3600 * (startTime/3600);  // round to the starting hour...
     }
     std::cout << "Select for time range: " << startTime << " to " << endTime << std::endl;
     

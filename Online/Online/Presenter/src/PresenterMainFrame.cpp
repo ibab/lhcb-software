@@ -125,7 +125,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_alarmDisplayEnabled(true),
   m_alarmDisplay(NULL),
   m_msgBoxReturnCode(0),
-  m_editingAllowed( false ),
+  m_editingAllowed( true ),
   m_menuDock(NULL),
   m_toolBarDock(NULL),
   m_databaseHistogramsDock(NULL),
@@ -163,8 +163,6 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   gStyle->SetFrameFillColor(10);
   gStyle->SetStatStyle(0);
   gStyle->SetPaintTextFormat("3.0f");  //== Added 17/03/2010: Make Calo plot nicer.
-
-  m_editingAllowed = false;
 
   m_pageRefreshTimer = new TTimer( pres::s_pageRefreshRate ) ;
   m_pageRefreshTimer->TurnOff();
@@ -640,6 +638,7 @@ void PresenterMainFrame::buildGUI() {
     m_toolBar->AddFrame(m_trendDurationComboBox , menuBarCenterY );
     m_trendDurationComboBox->SetEnabled(true);
     // Select history by run
+    m_trendDurationComboBox->AddEntry("Last 10 minutes", M_TrendLastTenMinutes ) ;
     m_trendDurationComboBox->AddEntry("Last 2 hours",  M_TrendLastTwoHours ) ;
     m_trendDurationComboBox->Select( M_TrendLastTwoHours,  false);
     m_trendDurationComboBox->AddEntry("Last 24 hours", M_TrendLastDay);
@@ -1631,6 +1630,11 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case SET_REFERENCE_COMMAND:
     setReference();
+    break;
+  case M_TrendLastTenMinutes:
+    m_trendDuration = 600;
+    m_trendEnd      = 0;
+    refreshPage();
     break;
   case M_TrendLastTwoHours:
     m_trendDuration = 2*3600;
