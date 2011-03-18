@@ -5,6 +5,23 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+ - add few symbols:
+    TrPX 
+    TrPY 
+    TrPZ
+    TrHAST
+    TrHASVELO
+    TrHASTT
+
+ - TrackEngineActor:
+
+      add protectetion against double lock 
+
+ - cmt/requirements 
+
+     version increment to v2r1 
+
 !========================== LoKiTracks v2r0 2011-03-17 ===================
 ! 2011-03-10 - Vanya Belyaev
 

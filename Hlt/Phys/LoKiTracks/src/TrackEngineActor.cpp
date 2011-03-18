@@ -93,7 +93,13 @@ StatusCode LoKi::Hybrid::TrackEngineActor::releaseTool
 StatusCode LoKi::Hybrid::TrackEngineActor::connectTool 
 (       LoKi::ITrackFunctorAntiFactory* tool )
 {
+  //
+  LoKi::Report::Assert 
+    ( !m_tool.validPointer() , 
+      "LoKi::Hybrid::TrackEngineActor: attempt for double lock!" ) ;
+  //
   // substitute the tool 
+  //
   m_tool =  tool ;
   // 
   if ( !m_tool.validPointer() ) 

@@ -114,6 +114,12 @@ TrNONE        = LoKi.Constant( _T , bool ) ( False )
 TrONE         = LoKi.Constant( _T , 'double' ) ( 1.0 )
 ## @see LoKi::Cuts::TrP
 TrP           = LoKi.Tracks.Momentum          () 
+## @see LoKi::Cuts::TrPX
+TrPX          = LoKi.Tracks.MomentumX         () 
+## @see LoKi::Cuts::TrPY
+TrPY          = LoKi.Tracks.MomentumY         () 
+## @see LoKi::Cuts::TrPZ
+TrPZ          = LoKi.Tracks.MomentumZ         () 
 ## @see LoKi::Cuts::TrPIDSELECTED
 TrPIDSELECTED = LoKi.Tracks.CheckFlag ( LHCb.Track.PIDSelected ) 
 ## @see LoKi::Cuts::TrPROBCHI2 
@@ -152,6 +158,12 @@ TrFIRSTHITZ   = LoKi.Tracks.StateZ ( LHCb.State.FirstMeasurement )
 ## @see LoKi::Cuts::TrCOV2
 TrCOV2        = LoKi.Tracks.Cov2
 
+## @see LoKi::Cuts::TrHAST
+TrHAST        = LoKi.Tracks.HasT    () 
+## @see LoKi::Cuts::TrHAST
+TrHASVELO     = LoKi.Tracks.HasVelo () 
+## @see LoKi::Cuts::TrHASTT
+TrHASTT       = LoKi.Tracks.HasTT   () 
 
 ## @see LoKi::Cuts::TrPATQUALITY 
 TrPATQUALITY    = LoKi.Tracks.Info  ( LHCb.Track.PatQuality       , -1000 ) 

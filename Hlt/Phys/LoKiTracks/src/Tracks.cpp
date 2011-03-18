@@ -701,6 +701,115 @@ std::ostream& LoKi::Tracks::NTHits::fillStream( std::ostream& s ) const
 // ============================================================================
 
 
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::MomentumX::result_type
+LoKi::Tracks::MomentumX::operator() 
+  ( LoKi::Tracks::MomentumX::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidMomentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  return t -> momentum () . X () ;
+}
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::MomentumY::result_type
+LoKi::Tracks::MomentumY::operator() 
+  ( LoKi::Tracks::MomentumY::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidMomentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  return t -> momentum () . Y () ;
+}
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::MomentumZ::result_type
+LoKi::Tracks::MomentumZ::operator() 
+  ( LoKi::Tracks::MomentumZ::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidMomentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  return t -> momentum () . Z () ;
+}
+
+
+
+
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::HasT::result_type
+LoKi::Tracks::HasT::operator() 
+  ( LoKi::Tracks::HasT::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'false'") ;
+    return false ;
+  }
+  return t -> hasT ()  ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::HasT::fillStream( std::ostream& s ) const 
+{ return s << "TrHAST" ; }
+// ============================================================================
+
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::HasVelo::result_type
+LoKi::Tracks::HasVelo::operator() 
+  ( LoKi::Tracks::HasVelo::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'false'") ;
+    return false ;
+  }
+  return t -> hasVelo ()  ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::HasVelo::fillStream( std::ostream& s ) const 
+{ return s << "TrHASVELO" ; }
+// ============================================================================
+
+
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::HasTT::result_type
+LoKi::Tracks::HasTT::operator() 
+  ( LoKi::Tracks::HasTT::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'false'") ;
+    return false ;
+  }
+  return t -> hasTT ()  ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Tracks::HasTT::fillStream( std::ostream& s ) const 
+{ return s << "TrHASTT" ; }
+// ============================================================================
 
 // ============================================================================
 // The END 

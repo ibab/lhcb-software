@@ -28,6 +28,20 @@ namespace LoKi
   // ==========================================================================
   /** @namespace LoKi::Tracks Tracks.h LoKi/Tracks.h
    *  Namespace with few basic "track"-functors 
+   *  @see LHCb::Track
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-06-08
    */
@@ -142,6 +156,72 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "TrP" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MomentumX 
+     *  @see LoKi::Cuts::TrPX 
+     *  simple evaluator of momentum of the track
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date   2011-03-18
+     */  
+    class GAUDI_API MomentumX : public LoKi::Tracks::Momentum
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~MomentumX () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  MomentumX* clone() const { return new MomentumX(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrPX" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MomentumY
+     *  @see LoKi::Cuts::TrPY
+     *  simple evaluator of momentum of the track
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date   2011-03-18
+     */  
+    class GAUDI_API MomentumY : public LoKi::Tracks::Momentum
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~MomentumY () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  MomentumY* clone() const { return new MomentumY(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrPY" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MomentumZ
+     *  @see LoKi::Cuts::TrPZ
+     *  simple evaluator of momentum of the track
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date   2011-03-18
+     */  
+    class GAUDI_API MomentumZ : public LoKi::Tracks::Momentum
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~MomentumZ () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  MomentumZ* clone() const { return new MomentumZ(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrPZ" ; }
       // ======================================================================
     } ;
     // ========================================================================
@@ -685,6 +765,72 @@ namespace LoKi
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class HasT 
+     *  Check if track is of a type that goes thro T stations
+     *  @see LHCb::Track::hasT
+     *  @see LoKi::Cuts::TrHAST
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-03-18
+     */
+    class GAUDI_API HasT 
+      : public LoKi::BasicFunctors<const LHCb::Track*>::Predicate 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~HasT() {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  HasT* clone() const { return new HasT ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class HasVelo
+     *  Check if track is of a type that goes thro Velo
+     *  @see LHCb::Track::hasVelo
+     *  @see LoKi::Cuts::TrHASVELO
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-03-18
+     */
+    class GAUDI_API HasVelo : public LoKi::Tracks::HasT 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~HasVelo() {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  HasVelo* clone() const { return new HasVelo ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class HasTT
+     *  Check if track is of a type that goes thro TT
+     *  @see LHCb::Track::hasTT
+     *  @see LoKi::Cuts::TrHASTT
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-03-18
+     */
+    class GAUDI_API HasTT : public LoKi::Tracks::HasT 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor  
+      virtual ~HasTT () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  HasTT* clone() const { return new HasTT ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 

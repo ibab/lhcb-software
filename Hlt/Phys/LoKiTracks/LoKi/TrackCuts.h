@@ -517,6 +517,57 @@ namespace LoKi
      */
     const LoKi::Tracks::Momentum                                          TrP ;
     // ========================================================================
+    /** @var TrPX
+     *  trivial estimator of the x-component momentum of the track
+     *
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const double px = TrPX ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::Momentum
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::MomentumX                                       TrPX ;
+    // ========================================================================
+    /** @var TrPY
+     *  trivial estimator of the y-component momentum of the track
+     *
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const double py = TrPY ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::MomentumY
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::MomentumY                                       TrPY ;
+    // ========================================================================
+    /** @var TrPZ
+     *  trivial estimator of the z-component momentum of the track
+     *
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const double pz = TrPZ ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::MomentumZ
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::MomentumZ                                       TrPZ ;
+    // ========================================================================
     /** @var TrPIDSELECTED
      *  simple objects which check the "Flag" of the track:
      *
@@ -623,6 +674,60 @@ namespace LoKi
      *  @date   2007-06-08
      */
     const LoKi::Tracks::TransverseMomentum                               TrPT ;
+    // =========================================================================
+    /** @var TrHAST
+     *  Check if track is of a type that goes thro T
+     
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const bool ok = TrHAST ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::HasT
+     *  @see LHCb::Track::hasT
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::HasT                                           TrHAST ;
+    // ========================================================================
+    /** @var TrHASVELO
+     *  Check if track is of a type that goes thro Velo
+     
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const bool ok = TrHASVELO ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::HasVelo
+     *  @see LHCb::Track::hasVelo
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::HasVelo                                     TrHASVELO ;
+    // ========================================================================
+    /** @var TrHASTT
+     *  Check if track is of a type that goes thro TT
+     
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const bool ok = TrHASTT ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::HasTT
+     *  @see LHCb::Track::hasTT 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-03-18
+     */
+    const LoKi::Tracks::HasTT                                         TrHASTT ;
     // ========================================================================
     /** @var TrQ
      *  trivial estimator of the charge of the track 
