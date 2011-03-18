@@ -176,7 +176,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
     //go through the velos
     float minweight=std::numeric_limits<float>::infinity(); 
-    float mindist, minchi2;
+    float mindist=std::numeric_limits<float>::infinity();
     for (veloIter = veloTracks.begin(); veloIter != veloTracks.end() ; ++veloIter) {
       if ((*veloIter)->history() != LHCb::Track::PatVelo &&
 	  (*veloIter)->history() != LHCb::Track::PatVeloGeneral &&
@@ -209,15 +209,15 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
       // -- hard coded after determination on private ntuple
       if (reg == 0)
-	m_distancecut = 100;
+	m_distancecut = 30*30;//100;
       if (reg == 1)
-	m_distancecut = 200;
+	m_distancecut = 60*60;//200;
       if (reg == 2)
-	m_distancecut = 9000;
+	m_distancecut = 110*110;//9000;
       if (reg == 3)
-	m_distancecut = 38000;
-      m_distancecut*=m_distcutmultiplyer;
+	m_distancecut = 200*200;//38000;
 
+      m_distancecut*=m_distcutmultiplyer;
       if (weighteddistance>m_distancecut) continue;
 
 
@@ -265,7 +265,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	std::vector< LHCb::LHCbID > muonids = (*muonIter)->lhcbIDs();                        // pointers to the other ids
 	aCopy->addToLhcbIDs(muonids);                                                        // to insert them here
 	if (sc.isFailure()) {delete aCopy; aCopy=NULL; continue;}
-	m_linearextrapolator->propagate(*monitorstate, chamber.z(),LHCb::ParticleID(13));
+//	m_linearextrapolator->propagate(*monitorstate, chamber.z(),LHCb::ParticleID(13));
 	
 	aCopy->firstState().setQOverP(qp);
 
@@ -279,9 +279,9 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
 
 	sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
-	if (sc.isFailure()) continue;
+	if (sc.isFailure()) {delete aCopy; aCopy=NULL;continue;}
 
-	delete monitorstate;
+	if (monitorstate) delete monitorstate;
 	aCopy->clearAncestors();
 	// -- unfortunately this will not be stored on DST :(
 	aCopy->addToAncestors(*veloIter);
@@ -294,17 +294,19 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	if (goodCopy) delete goodCopy;                        
 	minweight=weight;
 	mindist = weighteddistance;
-	minchi2 = float(aCopy->chi2());
+//	minchi2 = float(aCopy->chi2());
 	goodCopy=aCopy;
 	
       }
-      if (aCopy && aCopy != goodCopy) delete aCopy;          // clean up      
+      if (aCopy && aCopy != goodCopy) {delete aCopy;aCopy=NULL;}          // clean up      
     } 
     if (minweight==std::numeric_limits<float>::infinity()) {
       continue; // -- nothing was found
     }
 
     goodCopy->setType(LHCb::Track::Long);
+    goodCopy->addInfo(4444,1);
+    goodCopy->addInfo(4445,mindist);
     trackvector->add(goodCopy);
     goodCopy=NULL; // clean up
   }
