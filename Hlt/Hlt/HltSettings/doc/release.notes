@@ -4,10 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r8 2011-03-18 ===================
 ! 2011-03-18 - Johannes Albrecht
  - modify Mb lines
 
-!========================== HltSettings v5r8 2011-03-17 ===================
 ! 2011-03-17 - Johannes Albrecht
  - create new setting: Physics_Mar2011, add micro bias lines
 
