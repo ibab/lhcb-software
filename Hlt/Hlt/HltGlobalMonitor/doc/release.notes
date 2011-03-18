@@ -3,6 +3,10 @@ Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+! 2011-03-18 - Roel Aaij
+ - Add beamspot monitoring histograms.
+
 !========================== HltGlobalMonitor v3r6p4 2010-09-20 ===================
 ! 2010-09-20 - Gerhard Raven
  - reset trend plots on runChange incident, and not just beginRun...
