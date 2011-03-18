@@ -44,13 +44,13 @@ inline StatusCode LoKi::Hybrid::GenEngineActor::_add
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::GenEngineActor::addCut/Fun(): LoKi::IGenHybridTool* is not connected!") ;  
-  };
+  }
   // one more check 
   if ( name != m_tool->name() )
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::GenEngineActor::addCut/Fun() : mismatch in LoKi::IGenHybridTool name!") ;  
-  };
+  }
   // set the cut for the tool 
   m_tool->set ( cut ) ;
   // 
@@ -94,7 +94,12 @@ StatusCode LoKi::Hybrid::GenEngineActor::releaseTool
 // ============================================================================
 StatusCode LoKi::Hybrid::GenEngineActor::connectTool 
 (       LoKi::IGenHybridTool*       tool )
-{
+{ 
+  //
+  LoKi::Report::Assert
+    ( !m_tool.validPointer() ,
+      "LoKi::Hybrid::GenEngineActor: double lock?" ) ;
+  //
   // substitute the tool 
   m_tool =  tool ;
   // 

@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+
+ - add protection against double lock
+
 ! 2011-03-10 - Vanya Belyaev
 
  - update for removal of 'Element'-concept
