@@ -18,6 +18,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+
+ - add protection against the double locking 
+
 ! 2011-03-15 - Vanya Belyaev
 
  - fix the names for FUnOps:

@@ -87,7 +87,12 @@ StatusCode LoKi::Hybrid::CoreEngineActor::releaseTool
 StatusCode LoKi::Hybrid::CoreEngineActor::connectTool 
 (       LoKi::Hybrid::ICoreAntiFactory*       tool )
 {
+  //
+  LoKi::Report::Assert 
+    ( !m_tool.validPointer() , "LoKi::Hybrid::CoreEngineActor: double lock?" )  ;
+  //
   // substitute the tool 
+  //
   m_tool =  tool ;
   // 
   if ( !m_tool.validPointer() ) 
