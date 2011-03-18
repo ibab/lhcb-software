@@ -70,7 +70,6 @@ def PV3D():
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
     filterPV3D = HltUnit(
         'HltPV3D',
-        OutputLevel = 1,
         Preambulo = [ 'from LoKiPhys.decorators import *',
                       'from LoKiTrigger.decorators import *' ],
         Code = """
