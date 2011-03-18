@@ -9,7 +9,7 @@ branches doc cmt
 use  Moore              v12r4   Hlt
 # patches
 use MuonID              v8r0p2  Muon
-use LoKiPhys            v10r0   Phys
+use LoKiPhys            v9r99   Phys
 
 # Declare this as a container package
 apply_pattern container_package
