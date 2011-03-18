@@ -286,12 +286,7 @@ StatusCode HltGlobalMonitor::initialize()
       return sc;
    }
 
-   const double xRC = m_veloCondition->paramAsDouble ( "ResolPosRC" );
-   const double xLA = m_veloCondition->paramAsDouble ( "ResolPosLA" );
-   const double   Y = m_veloCondition->paramAsDouble ( "ResolPosY"  );
-
-   m_beamSpotX = ( xRC + xLA ) / 2;
-   m_beamSpotY = Y;
+   updateCondition().ignore();
 
    // Book the vertex monitoring histograms
    std::vector< double > edges = boost::assign::list_of( 1 )( 10 );
@@ -301,7 +296,7 @@ StatusCode HltGlobalMonitor::initialize()
       BOOST_FOREACH( double e, edges ) {
          std::stringstream s;
          s << name << "_Beamspot_" << e;
-         histo = book2D( s.str().c_str(), -e, e, e * 100, -e, e, e * 100 );
+         histo = book2D( s.str().c_str(), -e, e, 100, -e, e, 100 );
          HistoMap::iterator it = m_vertexHistos.find( name );
          if ( it == m_vertexHistos.end() ) {
             m_vertexHistos[ name ] = HistoVector( 1, histo );
@@ -436,8 +431,8 @@ void HltGlobalMonitor::monitorVertices()
       const HistoVector& histos = m_vertexHistos[ entry.first ];
       BOOST_FOREACH( AIDA::IHistogram2D* histo, histos ) {
          BOOST_FOREACH( const LHCb::RecVertex* vx, *vertices ) {
-            double dx = m_beamSpotX - vx->position().x();
-            double dy = m_beamSpotY - vx->position().y();
+            double dx = vx->position().x() - m_beamSpotX;
+            double dy = vx->position().y() - m_beamSpotY;
             histo->fill( dx, dy );
          }
       }
