@@ -4,6 +4,12 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+
+ - add protection against double locking 
+ - cmt/requirements    
+     version increment to v3r6
+
 !========================= LoKiHlt v3r5 2011-02-22 =========================
 ! 2011-02-21 - Marco Cattaneo
  - Suppress Intel compiler warnings about missing default constructor

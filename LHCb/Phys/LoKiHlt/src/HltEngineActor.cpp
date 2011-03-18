@@ -87,6 +87,11 @@ StatusCode LoKi::Hybrid::HltEngineActor::releaseTool
 StatusCode LoKi::Hybrid::HltEngineActor::connectTool 
 (       LoKi::Hybrid::IHltAntiFactory*       tool )
 {
+  //
+  LoKi::Report::Assert 
+    ( !m_tool.validPointer() , 
+      "LoKi::Hybrid::HltEngineActor: double lock?" ) ;                      
+  //
   // substitute the tool 
   m_tool =  tool ;
   // 
