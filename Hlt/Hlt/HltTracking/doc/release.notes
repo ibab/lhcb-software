@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2011-03-18 - Roel Aaij + Gerhard Raven
+ - technical changes to avoid recursive HltUnits due to PV3D filtering...
+   (really, really bad sideeffects!)
 
 !========================== HltTracking v9r6 2011-03-17 ===================
 ! 2011-03-17 - Roel Aaij

@@ -45,7 +45,7 @@ from HltVertexNames import _vertexLocation
 
 ProtoPV3DSelection = 'Proto' + PV3DSelection
 
-def _RecoPV3D():
+def PV3D():
     from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
     from HltVertexNames import HltSharedVerticesPrefix
     from HltVertexNames import HltGlobalVertexLocation
@@ -65,38 +65,31 @@ def _RecoPV3D():
     recoPV3D.OutputVerticesName = proto3DVertices
     recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
 
-    from Configurables import HltCopySelection_LHCb__RecVertex_ as HltCopyVertexSelection
-    preparePV3D = HltCopyVertexSelection( 'Hlt1PreparePV3D'
-                                          , InputSelection = "TES:" + recoPV3D.OutputVerticesName
-                                          , RequirePositiveInputs = False
-                                          , OutputSelection   = ProtoPV3DSelection )
-    
     from Configurables import LoKi__HltUnit as HltUnit
-    ## Define the locations, both TES and HltDataSvc
-    locations = { 'source' : ProtoPV3DSelection,
-                  'tes'    : output3DVertices,
-                  'hlt'    : PV3DSelection }
-
     ## Hlt vertex beamspot filter
+    ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
     filterPV3D = HltUnit(
-        'Hlt1FilterPV3D',
+        'HltFilterPV3D',
         OutputLevel = 1,
         Preambulo = [ 'from LoKiPhys.decorators import *',
                       'from LoKiTrigger.decorators import *' ],
         Code = """
-        VX_SELECTION( '%(source)s' )
+        execute( '%(algo)s' ) * VSOURCE( '%(tesInput)s' )
+        >> VX_SINK( '%(hltProto)s' )
         >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.5 * mm )
-        >> RV_SINKTES( '%(tes)s' )
-        >> VX_SINK( '%(hlt)s' )
+        >> RV_SINKTES( '%(tesFinal)s' )
+        >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
-        """ % locations
-        )
-    return bindMembers( "HltPVsRecoPV3D", [ recoPV3D, preparePV3D, filterPV3D ] ).setOutputSelection( PV3DSelection )
+        """ % { 'algo'     : recoPV3D.getFullName(),
+                'tesInput' : recoPV3D.OutputVerticesName,
+                'hltProto' : ProtoPV3DSelection,
+                'tesFinal' : output3DVertices,
+                'hltFinal' : PV3DSelection   }
 
-def PV3D():
+        )
     from HltReco import MinimalVelo
-    return bindMembers( "HltPVsPV3D", [ MinimalVelo, _RecoPV3D() ])
+    return bindMembers( "HltPVsPV3D", [ MinimalVelo, filterPV3D ] ).setOutputSelection( PV3DSelection )
 
 ## Symbols for streamer framework
-RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in _RecoPV3D().members() ]
 FullPV3D = "FullPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
+RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
