@@ -3,6 +3,10 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+
+! 2011-03-18 - Chris Jones
+ - Only call dumpBits in RichSmartID::fillStream in RICHDEBUG mode
+
 ! 2011-03-17 - Wenbin Qian
  - add VeloPix ID cout
 

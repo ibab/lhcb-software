@@ -1,11 +1,5 @@
 
-// Include files
-//#include <cmath>
-//#include <vector>
 #include <iostream>
-//#include <iomanip>
-//#include <float.h>
-
 #include "Kernel/RichSmartID.h"
 
 using namespace std;

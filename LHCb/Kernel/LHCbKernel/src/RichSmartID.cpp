@@ -29,8 +29,10 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
 {
   s << "{";
 
-  // Dump the bits
+  // Dump the bits in DEBUG mode
+#ifdef RICHDEBUG
   s << " "; dumpBits(s);
+#endif
 
   // Type
   s << ( idType() == HPDID ? " HPD" : " MaPMT" );
