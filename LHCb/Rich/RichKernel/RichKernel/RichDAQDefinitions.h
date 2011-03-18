@@ -68,6 +68,9 @@ namespace Rich
     /// Number of pixel columns in the HPD chip
     static const ShortType NumPixelColumns = 32;
 
+    /// Number of pixel rows in the HPD chip
+    static const ShortType NumPixelRows    = 32;
+
     /// Size of HPD (LHCb) pixel in mm
     static const double PixelSize = 0.5;
 

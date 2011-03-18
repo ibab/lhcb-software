@@ -66,4 +66,16 @@
   <class name  = "Rich::IGenericHPDAnalysisTool::Result"  />
   <class name  = "Rich::IGenericHPDAnalysisTool::Results" />
 
+  <variable name = "Rich::DAQ::MaxDataSize" />
+  <variable name = "Rich::DAQ::NumAlicePixelsPerLHCbPixel" />
+  <variable name = "Rich::DAQ::MaxDataSizeALICE" />
+  <variable name = "Rich::DAQ::BitsPerDataWord" />
+  <variable name = "Rich::DAQ::NumIngressPerL1" />
+  <variable name = "Rich::DAQ::NumL1InputsPerIngress" />
+  <variable name = "Rich::DAQ::MaxL1Inputs" />
+  <variable name = "Rich::DAQ::MaxZSAddress" />
+  <variable name = "Rich::DAQ::NumPixelColumns" />
+  <variable name = "Rich::DAQ::NumPixelRows" />
+  <variable name = "Rich::DAQ::PixelSize" />
+
 </lcgdict>
