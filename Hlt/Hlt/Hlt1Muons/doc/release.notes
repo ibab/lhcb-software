@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2011-03-18 - Roel Aaij
+ - Add HltVeloIsMuon, a tool like MatchVeloMuon, but using the momentum
+   estimate and IsMuon search windows.
+
 !========================== Hlt1Muons v1r2 2011-03-06 ==================
 ! 2011-03-06 - Roel Aaij
  - Updates to MatchVeloMuon:

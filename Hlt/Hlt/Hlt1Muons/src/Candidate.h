@@ -68,6 +68,7 @@ public:
       m_slope = 0.;
       m_p = 0.;
 
+      m_fitted = false;
       m_chi2 = 0.;
       m_nDoF = 0;
    }
@@ -183,6 +184,16 @@ public:
       return m_p;
    }
 
+   bool& fitted()
+   {
+      return m_fitted;
+   }
+
+   bool fitted() const
+   {
+      return m_fitted;
+   }
+
    double& chi2()
    {
       return m_chi2;
@@ -243,6 +254,7 @@ private:
 
    Hlt1ConstMuonHits m_hits;
 
+   bool m_fitted;
    double m_chi2;
    unsigned int m_nDoF;
 
