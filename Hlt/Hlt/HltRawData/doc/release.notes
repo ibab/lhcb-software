@@ -4,6 +4,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2011-03-18 - Gerhard Raven
+ - if a TES based vertex is already specified as selection, take the selection
+   only...
 !========================== HltRawData v2r10p1 2010-02-22 ===================
 ! 2011-02-18 - Gerhard Raven
  - fix some coverity warnings

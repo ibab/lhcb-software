@@ -1,6 +1,7 @@
 // $Id: HltVertexReportsMaker.cpp,v 1.13 2010-06-01 14:29:21 graven Exp $
 // Include files 
 #include <vector>
+#include <algorithm>
 #include <utility>
 #include "boost/foreach.hpp"
 
@@ -37,6 +38,16 @@ namespace Gaudi {
 
 using namespace LHCb;
 
+namespace {
+    class matchByName : public std::unary_function<bool,const Hlt::Selection*> {
+
+    public:
+        matchByName(const std::string& name) : m_name(name) { }
+        bool operator()(const Hlt::Selection* x) const { return x->id().str() == m_name; }
+    private:
+        std::string m_name;
+    };
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVertexReportsMaker
@@ -131,7 +142,12 @@ StatusCode HltVertexReportsMaker::initialize() {
   if (im == selectionNameToIntMap.end() ) {
      Warning( " selectionName="+pvSelectionName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 10 );
   } else {
-    m_tesSelections.push_back(std::make_pair(pvSelectionName,hlt2PVLocation));
+    // check we don't already have this one from the datasvc...
+    if (std::find_if( m_selections.begin(), m_selections.end(), matchByName(pvSelectionName) ) == m_selections.end() ) {
+        m_tesSelections.push_back(std::make_pair(pvSelectionName,hlt2PVLocation));
+    } else {
+        warning() << " got " << pvSelectionName << " also from datasvc ... using the one from the datasvc" << endmsg;
+    }
   }
 
   return StatusCode::SUCCESS;
