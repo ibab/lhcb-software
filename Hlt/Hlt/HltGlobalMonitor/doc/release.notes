@@ -4,6 +4,7 @@ Package Coordinator : Bruno Souza de Paula
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r7   2011-03-18 ===================
 ! 2011-03-18 - Roel Aaij
  - Add beamspot monitoring histograms.
 
