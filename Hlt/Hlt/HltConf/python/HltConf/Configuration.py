@@ -415,6 +415,16 @@ class HltConf(LHCbConfigurableUser):
                                  ]
                                  )
 
+        # Configure vertex monitoring
+        from HltTracking.HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
+        from HltTracking.HltVertexNames import ( _vertexLocation,
+                                                 HltSharedVerticesPrefix,
+                                                 HltGlobalVertexLocation )                  
+        from HltTracking.HltPVs import ProtoPV3DSelection
+        pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
+        proto = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, ProtoPV3DSelection )
+        HltGlobalMonitor().VertexLocations = { 'PV3D'  : pv3d,
+                                               'Proto' : proto }
 
         def _recurse(c,fun) :
             fun(c)

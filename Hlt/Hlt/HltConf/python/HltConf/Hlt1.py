@@ -58,7 +58,8 @@ class Hlt1Conf(LHCbConfigurableUser):
                  "LoKiNumbers.decorators" ,
                  "LoKiCore.functions"     ,
                  "LoKiCore.math"          ,
-                 "LoKiHlt.algorithms"     ] :
+                 "LoKiHlt.algorithms"     ,
+                 "LoKiPhys.decorators"    ] :
          if not m in factory.Modules : factory.Modules.append ( m )
       factory.Lines += [
          "from GaudiKernel.SystemOfUnits import GeV, MeV, mm" ,

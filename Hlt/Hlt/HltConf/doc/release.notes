@@ -5,6 +5,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Roel Aaij
+ - Configure vertex monitoring by HltGlobalMonitor
 
 ! 2011-03-18 - Gerhard Raven
  - persist PV3D and ProtoPV3D in rawbank
