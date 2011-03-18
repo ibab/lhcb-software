@@ -93,6 +93,10 @@ StatusCode LoKi::Hybrid::TrgEngineActor::releaseTool
 StatusCode LoKi::Hybrid::TrgEngineActor::connectTool 
 (       LoKi::ITrgFunctorAntiFactory* tool )
 {
+  LoKi::Report::Assert 
+    ( !m_tool.validPointer() ,
+      "LoKi::Hybrid::TrgEngineActor: double lock?" ) ;
+  //
   // substitute the tool 
   m_tool =  tool ;
   // 

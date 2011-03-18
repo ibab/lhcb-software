@@ -5,6 +5,12 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-18 - Vanya Belyaev
+ - add protection against double lock 
+
+ - cmt/requirements 
+     version increment to v12r1 
+
 !========================== LoKiTrigger v12r0 2011-03-17 ===================
 ! 2011-03-17 - Roel Aaij
  - Add a bit better protection in VxSink
