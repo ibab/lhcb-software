@@ -1,3 +1,7 @@
+2011-03-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed removal of the .html file in overwrite mode.
+
 2011-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added checks for VO_LHCB_SW_DIR. If MYSITEROOT has only one
