@@ -832,9 +832,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [   
+            PV3D    ()     ,    ## recontruct PV
             Muons          ,    ## get muons  
             Check_3mu      ,    ## require at least 3 muons 
-            PV3D    ()     ,    ## recontruct PV
             GoodMuons      ,    ## select good muons
             Check_3GoodMu  ,    ## require at least 3 good muons            
             TightMuons     ,    ## select tight muons 
@@ -889,9 +889,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [  
+            PV3D    ()    ,  ## recontruct PV
             Muons         ,  ## get muons  
             Check_3mu     ,  ## require at least 3 muons 
-            PV3D    ()    ,  ## recontruct PV
             GoodMuons     ,  ## select good muons 
             Check_3GoodMu ,  ## require at least 3 "good" muons 
             tau_3mu          ## check for tau->3mu candidates 
