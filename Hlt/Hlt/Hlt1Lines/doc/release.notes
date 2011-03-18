@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-18 - Gerhard Raven
+ - add PV3D beamspot filter to Hlt1TrackLines
+
 !========================== Hlt1Lines v6r7p3 2011-03-17 ===================
 ! 2011-03-12 - V. Gligorov
  - Hlt1TrackLines : add option to activate timers.

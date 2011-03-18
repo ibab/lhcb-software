@@ -64,9 +64,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        LooseForward, TightForward,
                                                        FitTrack, MatchVeloMuon, IsMuon )
-        from HltTracking.HltPVs import RecoPV3D
         Preambulo = [ VeloCandidates( prefix ),
-                      RecoPV3D,
                       TightForward,
                       LooseForward,
                       MatchVeloMuon,
@@ -101,7 +99,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
         lineCode = """ 
         %(gec)s * VeloCandidates
-        >> RecoPV3D
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
@@ -131,7 +128,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Preambulo = self.hlt1Track_Preambulo( name )+[gec],
             Code = lineCode
             )       
-        return [ hlt1TrackNonMuon_Unit ]
+        from HltTracking.HltPVs import PV3D
+        return [ PV3D(), hlt1TrackNonMuon_Unit ]
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
@@ -143,7 +141,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
         lineCode = """ 
         %(gec)s * VeloCandidates
-        >>  RecoPV3D
         >>  MatchVeloMuon
         >>  tee  ( monitor( TC_SIZE > 0, '# pass MatchVeloMuon', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nMatchVeloMuon' , LoKi.Monitoring.ContextSvc ) )
@@ -179,7 +176,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Preambulo = self.hlt1Track_Preambulo( name ) + [ gec ],
             Code = lineCode
             )    
-        return [ hlt1TrackMuon_Unit ]
+        from HltTracking.HltPVs import PV3D
+        return [ PV3D(), hlt1TrackMuon_Unit ]
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line
