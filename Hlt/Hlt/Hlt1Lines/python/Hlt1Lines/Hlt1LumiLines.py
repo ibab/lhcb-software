@@ -172,7 +172,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from Configurables import LumiCountMuons
         lumiCountSequence.Members.append( LumiCountMuons( seqCountName+'Muons'
                                                           , CounterName='Muon'
-                                                          , Threshold='2.5'
+                                                          , Threshold='2.0'
                                                           , InputSelection='Trig/L0/MuonCtrl'
                                                           , OutputContainer='Hlt/LumiSummary' ) )
 
