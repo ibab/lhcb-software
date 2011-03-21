@@ -52,7 +52,7 @@ void ShiftDB::readWebFile( const boost::gregorian::date * day ) {
   }
 
   // Send HTTP request to web server
-  web_stream << "GET /shiftdb_report.py?format=twiki&"
+  web_stream << "GET /shiftdb_report.php?format=twiki&"
              << "sDate=" << boost::gregorian::to_iso_string( *day ) 
              << " HTTP/1.0\r\n" 
              << "Host:" << hostName << "\r\n\r\n" 
