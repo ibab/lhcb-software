@@ -1,5 +1,5 @@
 
-__author__ = ['Phillip Urquijo']
+__author__ = ['Phillip Urquijo, Alessandra Borgia']
 __date__ = '08/05/2010'
 __version__ = '$Revision: 1.4 $'
 
@@ -43,7 +43,7 @@ B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 #  Rate = 0.046, Timing = 0.087 , Prescale = 0.2
 #
 #  Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-#  Rate = 0.055, Timing = 0.404, Prescale = 0.5
+#  Rate = 0.055, Timing = 0.404, Prescale = 0.25
 #
 #  K line: Bs0->K+ mu- nu signal line.
 #  Rate = 0.053, Timing = 0.057, Prescale = 0.5
@@ -99,7 +99,7 @@ Pi line: B0->pi+ mu- nu signal line.
 Rate = 0.046, Timing = 0.087 , Prescale = 0.2
 
 Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-Rate = 0.055, Timing = 0.404, Prescale = 0.5
+Rate = 0.055, Timing = 0.404, Prescale = 0.25
 
 K line: Bs0->K+ mu- nu signal line.
 Rate = 0.053, Timing = 0.057, Prescale = 0.5
@@ -120,7 +120,7 @@ K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the rho line.
 Rate = 0.0106, Timing = 0.049, Prescale=0.5
 
 
-Last modification $Date: 2010-10-04 $
+Last modification $Date: 2011-03-21 $
                by $Author: aborgia $
 """
 
@@ -332,7 +332,7 @@ class B2XuMuNuBuilder(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import DataOnDemand
         return StrippingLine(self._name+'Bd2PiLine',
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              prescale = 0.2,
                              FILTER = {'Code' :
                                        """
@@ -349,7 +349,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.25,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -365,7 +365,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -381,7 +381,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -397,7 +397,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -413,7 +413,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.2,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -429,7 +429,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarLine', prescale = 1.,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -445,7 +445,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
