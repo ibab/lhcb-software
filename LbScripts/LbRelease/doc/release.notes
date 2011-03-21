@@ -1,3 +1,8 @@
+2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/buildLCGTar:
+	* scripts/buildTar: changed realpath into abspath.
+
 2011-03-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: replaced 'realpath' with 'abspath'

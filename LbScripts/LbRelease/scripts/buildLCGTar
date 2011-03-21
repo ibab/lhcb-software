@@ -13,9 +13,9 @@ import os
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.5 $")
 
 
-    
+
 class BuildLCGTarScript(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
@@ -55,7 +55,7 @@ class BuildLCGTarScript(Script):
                           dest = "html",
                           action = "store_false",
                           help = "Prevent the creation of the html dependency file")
-        
+
         parser.set_defaults(cmtconfig=[])
         parser.add_option("-c", "--cmtconfig",
                            action = "append",
@@ -74,15 +74,15 @@ class BuildLCGTarScript(Script):
             if len(args) > 1 :
                 version   = args[1]
         if opts.output_dir :
-            opts.output_dir = os.path.realpath(opts.output_dir)
+            opts.output_dir = os.path.abspath(opts.output_dir)
             if not os.path.exists(opts.output_dir) :
                 log.fatal("The output directory %s doesn't exist" % opts.output_dir)
-                
-        status = buildLCGTar(project, version, opts.cmtconfig, 
-                             opts.top_dir, opts.output_dir, 
+
+        status = buildLCGTar(project, version, opts.cmtconfig,
+                             opts.top_dir, opts.output_dir,
                              opts.overwrite, opts.update,
                              opts.md5, opts.html)
-        
+
         return status
 
 if __name__ == '__main__':

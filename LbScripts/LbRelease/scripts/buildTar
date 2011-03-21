@@ -13,9 +13,9 @@ import os
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.5 $")
 
 
-    
+
 class BuildTarScript(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
@@ -67,7 +67,7 @@ class BuildTarScript(Script):
                           dest = "recursive",
                           action = "store_false",
                           help = "Prevent the recursive creation of the tarballs")
-        
+
         parser.set_defaults(cmtconfig=[])
         parser.add_option("-c", "--cmtconfig",
                            action = "append",
@@ -86,13 +86,13 @@ class BuildTarScript(Script):
             if len(args) > 1 :
                 version   = args[1]
         if opts.output_dir :
-            opts.output_dir = os.path.realpath(opts.output_dir)
+            opts.output_dir = os.path.abspath(opts.output_dir)
 
-        status = buildTar(project, version, opts.cmtconfig, 
-                          opts.top_dir, opts.output_dir, 
+        status = buildTar(project, version, opts.cmtconfig,
+                          opts.top_dir, opts.output_dir,
                           opts.overwrite, opts.overwrite_shared, opts.update,
                           opts.md5, opts.html, opts.recursive)
-        
+
         return status
 
 if __name__ == '__main__':
