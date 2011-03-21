@@ -8,12 +8,11 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
 
   //"NNet", "Probability"
   declareProperty( "UseObsoleteSV", m_UseObsoleteSV       = false );
-  declareProperty( "AverageOmega",  m_AverageOmega        = 0.41 );
+  declareProperty( "Vtx_AverageOmega",  m_AverageOmega        = 0.41 );
 
-  declareProperty( "PowerK",        m_PowerK              = 0.4 );
-  declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.17 );
-  declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
-
+  declareProperty( "Vtx_PowerK",        m_PowerK              = 0.4 );
+  declareProperty( "Vtx_MinimumVCharge",m_MinimumVCharge      = 0.17 );
+  declareProperty( "Vtx_ProbMin",   m_ProbMin_vtx         = 0.53);
   declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.451 ); 
   declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.358 ); 
   declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.398 ); 

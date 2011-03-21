@@ -37,23 +37,15 @@
    EventListFileName = DATAFILE
    EventListFileName = none                Ignore any list
 
-
 EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 ##################################################################
 
 # Will first search in current dir and then in $FLAVOURTAGGINGOPTS:
-#IncludeFile cuts_Moriond.py  #By default
-#IncludeFile cuts_mc2010_nu25_v1.py  #For MC
+#IncludeFile ../options/cuts_Moriond.py  #By default
+#IncludeFile ../options/cuts_Moriond_nocal.py  
+#IncludeFile ../options/cuts_Moriond_oldOSK.py 
+#IncludeFile ../options/cuts_Moriond_oldOSK_nocal.py
 
-# Some old configurations
-#IncludeFile cuts_strip12_v3.py #same as Moriond
-#IncludeFile cuts_strip12_v2.py
-#IncludeFile cuts_strip12_v1.py
-#IncludeFile cuts_strip12.py
-#IncludeFile cuts_strip10_v1.py
-#IncludeFile cuts_strip10.py
-#IncludeFile cuts_strip9.py
-#IncludeFile cuts_mc2010.py
-#IncludeFile cuts_mc2010_nu25.py
+
 
 

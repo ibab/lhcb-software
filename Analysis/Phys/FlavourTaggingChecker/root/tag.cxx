@@ -42,7 +42,7 @@ int main () {
       if( requireHlt1 && event.Hlt1()==0 ) continue;
       if( requireHlt2 && event.Hlt2()==0 ) continue;
       if( requireTis  && event.L0TisTos()&2) continue;
-      //if( event.backgroundCategory() != 0) continue;
+      //if( event.backgroundCat() != 0) continue;
       //if( event.pileup() == 1 )   continue;
       //if( event.multiplicity()<30) continue;
       //if( event.TrueTag()== -1 ) continue;
@@ -54,14 +54,17 @@ int main () {
       Particles parts = event.particles();//candidate particles
 
       Particle* BSpart = event.signalB();
+      Particle* BOpart = event.oppositeB();
       //fatal()<<"BSID: "<<BSpart->ID()<<", BSMCID: "<<BSpart->MCID()<<endreq;
       //if (BSpart->ID()==-531) continue; //only B+/B-
+      //if (BOpart->ID()<0) continue; //only B+/B- Bs
 
       //Individual tagger's response:
       Tagger* tmuon = mutool .tag(event);
       Tagger* tele  = eletool.tag(event);
       Tagger* tkaon = ktool  .tag(event);
       Tagger* tsame = event.isBs()? kStool.tag(event):pStool.tag(event);
+      //Tagger* tsame = new Tagger;        
       Tagger* tvtx  = vtxtool.tag(event);
    
       //Combination of tagger's decisions:
@@ -96,7 +99,6 @@ int main () {
       //************************************************************************
 
       //shortcuts
-      Particle* BOpart = event.oppositeB();
       double     Btime = event.BProperTime(); //in ps
       bool        isBs = event.isBs();
       bool       isTis = event.L0TisTos()&2;

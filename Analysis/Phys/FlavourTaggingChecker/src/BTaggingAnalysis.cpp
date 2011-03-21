@@ -28,6 +28,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_descend(0),
   m_pvReFitter(0),
   m_TriggerTisTosTool(0),
+  m_L0TriggerTisTosTool(0),
   m_assoc(0),
   m_svtool(0),
   m_fitter(0),
@@ -69,6 +70,11 @@ StatusCode BTaggingAnalysis::initialize() {
     m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
     if ( !m_TriggerTisTosTool ) {   
       fatal() << "TriggerTisTosTool could not be found" << endreq;
+      return StatusCode::FAILURE;
+    }
+    m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+    if ( !m_L0TriggerTisTosTool ) {   
+      fatal() << "L0TriggerTisTosTool could not be found" << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -276,7 +282,7 @@ StatusCode BTaggingAnalysis::execute() {
     piperr(0), pipPU(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), 
     pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
-  std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCx(0), pMCy(0), pMCz(0), 
+  std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
   std::vector<float> pdeta(0), pdphi(0), pdQ(0);
@@ -924,7 +930,6 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
   debug()<<" trig: "<<trigger
          <<" (Hlt1Global and Hlt2Global can include triggers in no physics lines)"<<endreq;
   tuple -> column ("L0byName", L0DecisionByName);
-
   tuple -> column ("trig", trigger);
 
   //TIS TOS ----------------------------------------
@@ -932,42 +937,38 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
   long HltTisTos = 0;
   if(m_requireTrigger) {
     if(m_requireTisTos) {
-      m_TriggerTisTosTool->setOfflineInput( *AXBS );
+      m_L0TriggerTisTosTool->setOfflineInput( *AXBS );
       //***************************************************************
       //Fill the decision, tis and tos parametres for the L0 as a whole             
       bool decision=false;
       bool tis=0;
       bool tos=0;
-      ITriggerTisTos::TisTosDecision classifiedL0Dec = //emulation of L0
-        m_TriggerTisTosTool->selectionTisTos(m_TriggerTisTosTool  
-                                             ->triggerSelectionNames("Hlt1L0.*Decision") ); 
-      decision = m_TriggerTisTosTool->hltObjectSummaries("Hlt1L0.*Decision").size()!=0;
+      m_L0TriggerTisTosTool->setTriggerInput("L0.*Decision");
+      ITriggerTisTos::TisTosTob classifiedL0Dec( m_L0TriggerTisTosTool->tisTosTrigger() );     
+      decision = classifiedL0Dec.decision();
       debug()<<"L0Global: "<<decision
              <<", tis: "<<classifiedL0Dec.tis()
              <<", tos: "<<classifiedL0Dec.tos()<<endreq;
       if(classifiedL0Dec.tis()) L0TisTos += 10;
       if(classifiedL0Dec.tos()) L0TisTos +=  1;
-      //Save L0 lines
-      std::vector<std::string> l0lines = m_TriggerTisTosTool->triggerSelectionNames();
-      bool linedecision = false;
-      for ( unsigned int i=0; i!=l0lines.size(); i++){
-        linedecision = m_TriggerTisTosTool->hltObjectSummaries(l0lines.at(i) ).size() > 0;
-        ITriggerTisTos::TisTosDecision lineL0Dec = 
-          m_TriggerTisTosTool->selectionTisTos( m_TriggerTisTosTool
-                                                ->triggerSelectionNames( l0lines.at(i) ) );
-        debug()<<" "<<l0lines.at(i)<<" dec: "<<linedecision
-               <<", tis: "<<lineL0Dec.tis()
-               <<", tos:"<<lineL0Dec.tos()<<endreq;
-      }
 
+      std::vector<std::string> l0lines = m_L0TriggerTisTosTool->triggerSelectionNames();
+      for ( unsigned int i=0; i!=l0lines.size(); i++){
+        m_L0TriggerTisTosTool->triggerTisTos(l0lines.at(i),decision,tis,tos);
+        debug()<<" "<<l0lines.at(i)<<" dec: "<<decision
+               <<", tis: "<<tis
+               <<", tos:"<<tos<<endreq;
+      }
+      m_TriggerTisTosTool->setOfflineInput( *AXBS );
+     
+      //***************************************************************
+      //Do the Hlt1                                                                 
+      m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
+      m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+      debug()<<"HLT1Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
+      if(tis) HltTisTos +=  1000;
+      if(tos) HltTisTos +=   100;
       if(m_saveHlt1Lines){
-        //***************************************************************
-        //Do the Hlt1                                                                 
-        m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
-        m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
-        debug()<<"HLT1Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
-        if(tis) HltTisTos +=  1000;
-        if(tos) HltTisTos +=   100;
         //Look and save HLT1 lines
         std::vector<std::string> hltlines = m_TriggerTisTosTool->triggerSelectionNames();
         bool linehltdecision = false;
@@ -983,14 +984,15 @@ StatusCode BTaggingAnalysis::FillTrigger (Tuple& tuple, const Particle* AXBS) {
           tuple->column( hltlines.at(i), hltlinetrigger ); 
         }
       }
+      
+      //***************************************************************
+      //Do the Hlt2                                                                 
+      m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
+      m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+      debug()<<"HLT2Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
+      if(tis)   HltTisTos +=    10;
+      if(tos)   HltTisTos +=     1;
       if(m_saveHlt2Lines) {
-        //***************************************************************
-        //Do the Hlt2                                                                 
-        m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
-        m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
-        debug()<<"HLT2Global: "<<decision<<", tis: "<<tis<<", tos: "<<tos<<endreq;
-        if(tis)   HltTisTos +=    10;
-        if(tos)   HltTisTos +=     1;
         //Look and save HLT2 lines
         std::vector<std::string> hlt2lines = m_TriggerTisTosTool->triggerSelectionNames();
         bool linehlt2decision = false;
@@ -1025,7 +1027,8 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
           << "  pT="<<AXBS->pt()/GeV<< endreq;
 
   std::vector<float> sigID, sigMothID, sigP, sigPt, sigPhi, sigMass;
-  std::vector<float> sigMCP, sigVx, sigVy, sigVz;
+  std::vector<float> sigVx, sigVy, sigVz;
+  std::vector<float> sigMCID, sigMCMothID, sigMCP, sigMCPt, sigMCPhi;
   
   Particle::ConstVector::const_iterator ip;
   for ( ip = axdaugh.begin(); ip != axdaugh.end(); ip++){
@@ -1050,7 +1053,22 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
     if (m_EnableMC) {
       //mc truth to use as link 
       const MCParticle* mcp = m_assoc->relatedMCP( *ip );
-      if( mcp ) sigMCP.push_back(mcp->p()/GeV); else sigMCP.push_back(0); 
+      if( mcp ) {
+        sigMCP.push_back(mcp->p()/GeV);
+        sigMCPt.push_back(mcp->pt()/GeV);
+        sigMCPhi.push_back(mcp->momentum().Phi());
+        sigMCID.push_back(mcp->particleID().pid());
+        const MCParticle* sigmcmother = mcp->mother();
+        if(sigmcmother) sigMCMothID.push_back(sigmcmother->particleID().pid());
+        else sigMCMothID.push_back(0);
+      }
+      else {
+        sigMCP.push_back(0);
+        sigMCPt.push_back(0);
+        sigMCPhi.push_back(0);
+        sigMCID.push_back(0);
+        sigMCMothID.push_back(0);
+      }
     }
   
   }
@@ -1064,8 +1082,12 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
   tuple -> farray ("sVx",     sigVx, "M", 10);
   tuple -> farray ("sVy",     sigVy, "M", 10);
   tuple -> farray ("sVz",     sigVz, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCP",    sigMCP, "M", 10);
-
+  if (m_EnableMC) tuple -> farray ("sMCID",     sigMCID, "M", 10);
+  if (m_EnableMC) tuple -> farray ("sMCMothID", sigMCMothID, "M", 10);
+  if (m_EnableMC) tuple -> farray ("sMCP",      sigMCP, "M", 10);
+  if (m_EnableMC) tuple -> farray ("sMCPt",     sigMCPt, "M", 10);
+  if (m_EnableMC) tuple -> farray ("sMCPhi",    sigMCPhi, "M", 10);
+  
   return axdaugh;
 }
 

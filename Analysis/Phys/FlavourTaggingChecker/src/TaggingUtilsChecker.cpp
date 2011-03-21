@@ -99,7 +99,7 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
     ip=ipC*zsign;
     iperr=ipC/sqrt(ipChi2);
   }
-  info()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
+  debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
   return sc2;
 }
 

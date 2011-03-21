@@ -96,6 +96,8 @@ private:
   IParticleDescendants*      m_descend;
   IPVReFitter*               m_pvReFitter;
   ITriggerTisTos*            m_TriggerTisTosTool;
+  ITriggerTisTos*            m_L0TriggerTisTosTool;
+
   IParticle2MCAssociator*    m_assoc; 
   ISecondaryVertexTool*      m_svtool;
   IVertexFit *               m_fitter;

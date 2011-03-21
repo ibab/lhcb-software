@@ -79,6 +79,7 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
   int tagcat  = theTag->category();
 
   if(tagdec) {if(tagdec==truetag) nrt[tagcat]++; else nwt[tagcat]++;}
+  if(tagdec) {if(tagdec==truetag) nrt[6]++; else nwt[6]++;} //add 6cat, all cat
 
   Particle* imuon = tmuon_dec? tmuon->taggerparts().at(0) : NULL;
   Particle* iele  = tele_dec ? tele ->taggerparts().at(0) : NULL;
@@ -292,7 +293,7 @@ void PerformanceMonitor::printStats() {
     double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
-    if(it<maxnrofcat){
+    if((it<maxnrofcat) and (it!=6)){ //not count the average cat
       rtt      += rtag;
       wtt      += wtag;
       ef_tot   += eftag;
@@ -310,14 +311,26 @@ void PerformanceMonitor::printStats() {
 
     //PRINT: ----------------------------------
     cout.setf(ios::fixed);
-    if(it<maxnrofcat) cout<<VIOLETA<<setw(2)<< it; else cout<<AZUL<<"**";
-    cout<<BOLD<< cats<<setprecision(2)
-        <<" "<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
-        <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
-        <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
-        <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
-        <<" "<<setw(7)<< (int) wtag<<ENDC
-        << endl;
+    //    if((it<maxnrofcat) and (it!=6)) cout<<VIOLETA<<setw(2)<< it; else cout<<AZUL<<"**";
+    if (it!=6){
+      if(it<maxnrofcat) cout<<VIOLETA<<setw(2)<< it; else cout<<AZUL<<"**";
+      cout<<BOLD<< cats<<setprecision(2)
+	  <<" "<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
+	  <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
+	  <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
+	  <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
+	  <<" "<<setw(7)<< (int) wtag<<ENDC
+	  << endl;
+    }
+    if(it==6) {
+      cout<<ROJO<<setw(2)<<"Average    "<<setprecision(2)
+	  <<" "<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
+	  <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
+	  <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
+	  <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
+	  <<" "<<setw(7)<< (int) wtag<<ENDC
+	  << endl;
+    }
   }
 
   //calculate global tagging performances -------------------------------

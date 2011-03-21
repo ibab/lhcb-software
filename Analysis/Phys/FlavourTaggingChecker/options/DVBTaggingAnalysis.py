@@ -12,7 +12,7 @@ from Configurables import GaudiSequencer, DaVinci
 ########################################################################
 # CheatedSelection. 
 
-from Configurables import CheatedSelection, PhysDesktop
+from Configurables import CheatedSelection
 
 cheatsel = CheatedSelection("CheatedSelection")
 cheatsel.InputLocations = [ "Phys/TaggingPions" ]
@@ -29,8 +29,6 @@ location = "Phys/CheatedSelection"
 tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
 
-tag.addTool( PhysDesktop )
-tag.PhysDesktop.OutputLevel = 4
 tag.addTool( TriggerTisTos )
 tag.TriggerTisTos.OutputLevel = 4
 tag.addTool( TaggingUtilsChecker )
@@ -48,9 +46,9 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN, good for mc
 tag.BTaggingTool.OutputLevel = 4
 
-#Import cuts 
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_Moriond.py') # defalult
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25_v1.py') # mc nu=2.5
+#Import cuts
+#from FlavourTagging.Tunings import TuneTool
+#TuneTool(tag,"MC10") #for example
 
 ########################################################################
 # Flavour tagging Checker:
@@ -79,8 +77,6 @@ tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
 tagana.OutputLevel = 4
 
-tagana.addTool( PhysDesktop )
-tagana.PhysDesktop.OutputLevel = 5
 tagana.addTool( TriggerTisTos )
 tagana.TriggerTisTos.OutputLevel = 5
 tagana.addTool( TaggingUtilsChecker )
@@ -107,7 +103,7 @@ MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 DaVinci().EvtMax     = 500                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
-DaVinci().TupleFile  = "test.root"     # Ntuple
+DaVinci().TupleFile  = "analysis.root"     # Ntuple
 
 DaVinci().Simulation = True
 DaVinci().DataType   = "2010" 
