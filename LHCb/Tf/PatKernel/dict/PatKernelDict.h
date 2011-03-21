@@ -3,6 +3,7 @@
 
 #include "PatKernel/IPatDebugTool.h"
 #include "PatKernel/IPatDebugTTTool.h"
+#include "PatKernel/IPatTTCounter.h"
 
 #endif // DICT_PATKERNELDICT_H
 
