@@ -9,17 +9,17 @@ and only the files that it installed for the package.
 
 Command line:
 
-   install.py [-x exclusion1 [-x exclusion2 ...]] [-l logfile] source1 [source2 ...] dest  
+   install.py [-x exclusion1 [-x exclusion2 ...]] [-l logfile] source1 [source2 ...] dest
    install.py -u [-l logfile] [dest1 ...]
-   
+
 @author: Marco Clemencic <marco.clemencic@cern.ch>
 """
 _version = "$Id: install.py,v 1.2 2009-08-07 16:56:14 hmdegaud Exp $"
 
 import os, sys
 from os import (makedirs, listdir, rmdir, walk, sep)
-from os.path import (exists, isdir, getmtime, split, join, realpath, dirname,
-                     normpath, splitext, splitdrive)
+from os.path import (exists, isdir, getmtime, split, join, dirname,
+                     normpath, abspath, splitext, splitdrive)
 from pickle import (dump, load)
 from fnmatch import fnmatch
 import itertools, shutil
@@ -47,7 +47,7 @@ def main():
     #                  dest="permission",
     #                  help="modify the permission of the destination file (see 'man chown'). Unix only.")
     (opts,args) = parser.parse_args()
-    
+
     # options consistency check
     if opts.uninstall:
         if opts.exclusions:
@@ -56,8 +56,8 @@ def main():
         try:
             log = load(open(opts.logfile,"rb"))
         except:
-            log = LogFile() 
-        uninstall(log,opts.destination,realpath(dirname(opts.logfile)))
+            log = LogFile()
+        uninstall(log,opts.destination, abspath(dirname(opts.logfile)))
         if log:
             dump(log,open(opts.logfile,"wb"))
         else:
@@ -74,14 +74,14 @@ def main():
         try:
             log = load(open(opts.logfile,"rb"))
         except:
-            log = LogFile() 
+            log = LogFile()
         if opts.symlink :
             if len(opts.sources) != 1:
                 parser.error("no more that 2 args with --symlink")
-            opts.destination, opts.destname = split(opts.destination) 
+            opts.destination, opts.destname = split(opts.destination)
         install(opts.sources,opts.destination,
-                log,opts.exclusions,opts.destname, 
-                opts.symlink, realpath(dirname(opts.logfile)))
+                log,opts.exclusions,opts.destname,
+                opts.symlink, abspath(dirname(opts.logfile)))
         dump(log,open(opts.logfile,"wb"))
 
 class LogFile:
@@ -90,7 +90,7 @@ class LogFile:
     """
     def __init__(self):
         self._installed_files = {}
-        
+
     def get_dest(self,source):
         try:
             return self._installed_files[source]
@@ -102,16 +102,16 @@ class LogFile:
 
     def get_sources(self):
         return self._installed_files.keys()
-    
+
     def remove(self,source):
         try:
             del  self._installed_files[source]
         except KeyError:
             pass
-    
+
     def __len__(self):
         return self._installed_files.__len__()
-        
+
 def filename_match(name,patterns,default=False):
     """
     Check if the name is matched by any of the patterns in exclusions.
@@ -121,10 +121,10 @@ def filename_match(name,patterns,default=False):
             return True
     return default
 
-def expand_source_dir(source, destination, exclusions = [], 
-                      destname = None, logdir = realpath(".")):
+def expand_source_dir(source, destination, exclusions = [],
+                      destname = None, logdir = abspath(".")):
     """
-    Generate the list of copies. 
+    Generate the list of copies.
     """
     expansion = {}
     src_path,src_name = split(source)
@@ -134,7 +134,7 @@ def expand_source_dir(source, destination, exclusions = [],
     else:
         to_replace = src_path
         replacement = destination
-    
+
     for dirname, dirs, files in walk(source):
         if to_replace:
             dest_path=dirname.replace(to_replace,replacement)
@@ -155,7 +155,7 @@ def remove(file, logdir):
     try:
         print "Remove '%s'"%file
         os.remove(file)
-        # For python files, remove the compiled versions too 
+        # For python files, remove the compiled versions too
         if splitext(file)[-1] == ".py":
             for c in ['c', 'o']:
                 if exists(file + c):
@@ -169,9 +169,9 @@ def remove(file, logdir):
     except OSError, x: # ignore file-not-found errors
         if x.errno in [2, 13] :
             print "Previous removal ignored"
-        else: 
+        else:
             raise
-        
+
 
 def getCommonPath(dirname, filename):
     # if the 2 components are on different drives (windows)
@@ -194,11 +194,11 @@ def getCommonPath(dirname, filename):
 
 def getRelativePath(dirname, filename):
     """ calculate the relative path of filename with regards to dirname """
-    # Translate the filename to the realpath of the parent directory + basename
+    # Translate the filename to the abspath of the parent directory + basename
     filepath,basename = os.path.split(filename)
-    filename = os.path.join(os.path.realpath(filepath),basename)
+    filename = os.path.join(os.path.abspath(filepath),basename)
     # Get the absolute pathof the destination directory
-    dirname = os.path.realpath(dirname)
+    dirname = os.path.abspath(dirname)
     commonpath = getCommonPath(dirname, filename)
     # for windows if the 2 components are on different drives
     if not commonpath:
@@ -209,8 +209,8 @@ def getRelativePath(dirname, filename):
         relname = (os.path.pardir+os.path.sep)*len(reldir.split(os.path.sep)) \
              + relname
     return relname
-    
-def update(src,dest,old_dest = None, syml = False, logdir = realpath(".")):
+
+def update(src,dest,old_dest = None, syml = False, logdir = abspath(".")):
     realdest = normpath(join(logdir, dest))
     dest_path = split(realdest)[0]
     realsrc = normpath(join(dest_path,src))
@@ -238,7 +238,7 @@ def update(src,dest,old_dest = None, syml = False, logdir = realpath(".")):
     #        remove(old_dest,logdir)
 
 def install(sources, destination, logfile, exclusions = [],
-            destname = None, syml = False, logdir = realpath(".")):
+            destname = None, syml = False, logdir = abspath(".")):
     """
     Copy sources to destination keeping track of what has been done in logfile.
     The destination must be a directory and sources are copied into it.
@@ -271,14 +271,14 @@ def install(sources, destination, logfile, exclusions = [],
                     old_dest = last_done[k]
                     del last_done[k]
                 except KeyError:
-                    old_dest = None  
+                    old_dest = None
                 update(k,to_do[k],old_dest,syml,logdir)
-            # remove files that were copied but are not anymore in the list 
+            # remove files that were copied but are not anymore in the list
             for old_dest in last_done.values():
                 remove(old_dest,logdir)
             logfile.set_dest(src,to_do) # update log
 
-def uninstall(logfile, destinations = [], logdir=realpath(".")):
+def uninstall(logfile, destinations = [], logdir=abspath(".")):
     """
     Remove copied files using logfile to know what to remove.
     If destinations is not empty, only the files/directories specified are
@@ -298,6 +298,6 @@ def uninstall(logfile, destinations = [], logdir=realpath(".")):
                     del dest[subs]
             if not dest:
                 logfile.remove(s)
-            
+
 if __name__ == "__main__":
     main()
