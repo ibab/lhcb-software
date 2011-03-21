@@ -153,7 +153,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         if ( (*itT).name == taskName ) {
           for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
                 (*itT).histos.end() != itH; ++itH ) {
-            if ( (*itH).histo() == histo ) {
+            if ( (*itH).histo()->identifier() == histo->identifier() ) {
               std::cout << "              already existing " << histo->identifier() << std::endl;
               existed = true;
               break;
@@ -216,18 +216,15 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       std::cout << "Search for services of task " << (*itT).location << std::endl;
       HistTask myHists( (*itT).location );
 
+      std::vector<std::string> knownNames;
+      //== Get the list of services...
+      int kk = myHists.Directory( knownNames );
+      std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
+      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+      //  std::cout << "      -" << *itS << "-" << std::endl;
+      //}
+
       std::vector<std::string> histNames;
-
-      /*
-      //== Print the list of services...
-      int kk = myHists.Directory( histNames );
-      std::cout << "Directory returned status " << kk << std::endl;
-      for ( std::vector<std::string>::iterator itS = histNames.begin(); histNames.end() != itS  ; ++itS ) {
-        std::cout << "      -" << *itS << "-" << std::endl;
-      }
-      histNames.clear();
-      */
-
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
         std::string dimName = (*itH).histo()->dimServiceName();
@@ -244,8 +241,12 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
           }
         }
         (*itH).setShortName( dimName );
-        std::cout << "  ++ Search for '" << dimName << "'" << std::endl;
-        histNames.push_back( dimName );
+        if ( std::find( knownNames.begin(), knownNames.end(), dimName ) != knownNames.end() ) {
+          std::cout << "  ++ Search for '" << dimName << "'" << std::endl;
+          histNames.push_back( dimName );
+        } else {
+          std::cout << "  -- Not found '" << dimName << "'" << std::endl;
+        }
       }
       std::vector<TObject*> results;
       std::cout << "before calling Histos, size " << histNames.size() << std::endl;
@@ -260,34 +261,36 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
         while ( results.size() < histNames.size() ) results.push_back( 0 );
       }
       
-      unsigned int indx = 0;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        if ( (*itH).shortName() == histNames[indx] ) {
-          if ( 0 == results[indx] ) {
-            std::cout << "-- not found " << histNames[indx] << std::endl;
-            (*itH).createDummyHisto();
-          } else {
-            std::cout << "++ set histo " << histNames[indx] << std::endl;
-            if ( update && 
-                 ( (*itH).rootHist()->GetNbinsX() == ((TH1*)results[indx])->GetNbinsX() ) ) {
-              (*itH).copyFrom(  (TH1*)results[indx] );
-              delete results[indx];
-              (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
-              (*itH).prepareForDisplay();
-              if ( 0 != (*itH).hostingPad() ) {
-                (*itH).setDrawingOptions( (*itH).hostingPad() );
-                (*itH).hostingPad()->Modified();
+        bool found = false;
+        for ( unsigned int indx = 0 ; histNames.size() > indx ; ++indx ) {
+          if ( (*itH).shortName() == histNames[indx] ) {            
+            if ( 0 != results[indx] ) {
+              found = true;
+              if ( update && 
+                   ( (*itH).rootHist()->GetNbinsX() == ((TH1*)results[indx])->GetNbinsX() ) ) {
+                std::cout << "++ upd histo " << histNames[indx] << std::endl;
+                (*itH).copyFrom(  (TH1*)results[indx] );
+                delete results[indx];
+                (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
+                (*itH).prepareForDisplay();
+                if ( 0 != (*itH).hostingPad() ) {
+                  (*itH).setDrawingOptions( (*itH).hostingPad() );
+                  (*itH).hostingPad()->Modified();
+                }
+              } else {
+                std::cout << "++ set histo " << histNames[indx] << std::endl;
+                if ( NULL != (*itH).rootHist() ) delete (*itH).rootHist();
+                (*itH).setRootHist( (TH1*) results[indx] );
+                (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
+                (*itH).prepareForDisplay();
               }
-            } else {
-              if ( NULL != (*itH).rootHist() ) delete (*itH).rootHist();
-              (*itH).setRootHist( (TH1*) results[indx] );
-              (*itH).setDisplayOptions();  // Pass the DB flags to the root histogram
-              (*itH).prepareForDisplay();
             }
           }
-          indx++;
-        } else {
+        }
+        if ( !found ) {
+          std::cout << "-- not found " << (*itH).shortName() << std::endl;
           (*itH).createDummyHisto();
         }
       }
@@ -427,7 +430,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
         DisplayHistogram* dispH = displayHisto( (*itOH) );
         std::cout << "  get OnlineHistogram " << itOH-(*itA).onlineHistos.begin()
                   << " hname " << (*itOH)->hname()
-                  << " pointer " <<  dispH << std::endl;
+                  << " pointer " << dispH << std::endl;
 
         if ( NULL != dispH ) {
           rootHists.push_back( dispH->rootHist() );
@@ -526,7 +529,7 @@ DisplayHistogram* PresenterPage::displayHisto( OnlineHistogram* onlHist ) {
   }
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
-      if ( (*itDH).histo() == onlHist ) return &(*itDH);
+      if ( (*itDH).histo()->identifier() == onlHist->identifier() ) return &(*itDH);
     }
   }
   return NULL;
