@@ -1,3 +1,7 @@
+2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/CMT/Project.py: fixed CMTWhich: now handles correctly 3 arguments.
+
 2011-03-14  hmd  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/scripts/cmtwhich: added "-d" option to return the cmt directory instead of the main

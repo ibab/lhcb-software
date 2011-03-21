@@ -630,36 +630,36 @@ def CMTWhich(project, package=None, version=None, all_occurences=False, casesens
     """ function to extract the project or package class"""
     if version :
         ver = version
+        pak = package
     else :
         # case where no 3rd argument is passed
         # try package as a version
         ver = package
+        pak = None
+
     prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
+
     if not prj :
         # try versionless project or latest version of a project
         ver = None
+        pak = package
         prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
 
-    if prj and package and not ver:
+    result = prj
+
+    if prj and pak :
         # case where there is a second argument
         pkg =None
         for p, _, _ in walk(prj, cmtprojectpath=os.environ["CMTPROJECTPATH"],light=True) :
             if p.version() :
-                pkg = p.findPackage(package)
+                pkg = p.findPackage(pak)
             else :
-                pkg = p.findPackage(package, version)
+                pkg = p.findPackage(pak, version)
             if pkg :
                 break
         result = pkg
-    else :
-        # there is only one argument
-        result = prj
+
 
     return result
 
-def CMTWrap(project, package, version=None, casesense=True, *cmtargs):
-    """ command wrapper which execute the command in the cmt directory of the project or package """
-    cmtpak = CMTWhich(project, package, version, casesense=casesense)
-    if cmtpak :
-        pass
 
