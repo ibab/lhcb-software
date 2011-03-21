@@ -1931,7 +1931,7 @@ def useTarFileModule():
             usetfm = True
     return usetfm
 
-def untarFile(fname):
+def untarFile(fname, output_path=""):
     log = logging.getLogger()
 
     retcode = 0
@@ -1977,11 +1977,11 @@ def untarFile(fname):
                         if sys.platform == 'win32'and tarinfo.issym():
                             log.info('%s %s %s' % (j, tarinfo.name, tarinfo.issym()))
                         else:
-                            tar.extract(tarinfo)
+                            tar.extract(tarinfo, path=output_path)
                     else:
                         if fname.find('script') != -1:
                             j = j + 1
-                            tar.extract(tarinfo)
+                            tar.extract(tarinfo, path=output_path)
                 except tarfile.ExtractError:
                     os.remove(filename)
                     log.warning('extract error %s %s ' % (filename, tarinfo.name))
@@ -2024,6 +2024,8 @@ def untarFile(fname):
             strcmd = 'tar --extract --ungzip --touch --backup=simple --file %s' % filename
             if fix_perm :
                 strcmd = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
+            if output_path :
+                strcmd += " --directory=%s " % output_path
             try:
                 for l in tarFileList(filename) :
                     if os.path.isfile(l) :
