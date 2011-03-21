@@ -920,7 +920,7 @@ class SubversionCmd(RevisionControlSystem):
         @param global_tag: if True and project == True, check out the complete
                            project tag, otherwise only the 'cmt' directory
         """
-        from os.path import exists, join, dirname, realpath, isdir
+        from os.path import exists, join, dirname, abspath, isdir
         # check for the validity of the version
         # (this implies a check on the existence of the module)
         if not self.hasVersion(module, version, project):
@@ -934,7 +934,7 @@ class SubversionCmd(RevisionControlSystem):
             dest = "." # If not specified, use local directory
         # we should create Eclipse-friendly configuration if we are in an Eclipse
         # workspace (i.e. exists(<dest>/../.metadata) or if we are asked explicitly
-        eclipse = eclipse or exists(join(dirname(realpath(dest)), ".metadata"))
+        eclipse = eclipse or exists(join(dirname(abspath(dest)), ".metadata"))
 
         src, dst = self._computePaths(module, version, project, vers_dir, global_tag)
 
@@ -991,11 +991,11 @@ class SubversionCmd(RevisionControlSystem):
             if not project:
                 # add package-specific configuration
                 from LbConfiguration import eclipseConfigurationAddPackage
-                eclipseConfigurationAddPackage(os.path.realpath(dest), module)
+                eclipseConfigurationAddPackage(abspath(dest), module)
             else:
                 # add project-specific configuration
                 from LbConfiguration import createEclipseConfiguration
-                createEclipseConfiguration(os.path.realpath(dst),
+                createEclipseConfiguration(abspath(dst),
                                            os.environ.get("CMTPROJECTPATH",""))
 
 
